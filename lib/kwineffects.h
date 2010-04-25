@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 132
+#define KWIN_EFFECT_API_VERSION_MINOR 133
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -374,6 +374,12 @@ class KWIN_EXPORT Effect
          * You shouldn't paint anything here.
          **/
         virtual void postPaintWindow( EffectWindow* w );
+
+        /**
+         * Called on Transparent resizes.
+         * return true if your effect substitutes the XOR rubberband
+        */
+        virtual bool isResizeEffect() { return false; }
 
         /**
          * Can be called to draw multiple copies (e.g. thumbnails) of a window.

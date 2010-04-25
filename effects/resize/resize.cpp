@@ -55,50 +55,82 @@ void ResizeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     effects->prePaintScreen( data, time );
     }
 
+void ResizeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
+    {
+    if( m_active && w == m_resizeWindow )
+        data.mask |= PAINT_WINDOW_TRANSFORMED;
+    effects->prePaintWindow( w, data, time );
+    }
+
 void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    effects->paintWindow( w, mask, region, data );
     if( m_active && w == m_resizeWindow )
         {
-        QRegion intersection = m_originalWindowRect.intersected( m_currentGeometry );
-        QRegion paintRegion = m_originalWindowRect.united( m_currentGeometry ).subtracted( intersection );
-        float alpha = 0.8f;
-        QColor color = KColorScheme( QPalette::Normal, KColorScheme::Selection ).background().color();
+        if( m_features & TextureScale )
+            {
+            data.xTranslate += m_currentGeometry.x() - m_originalGeometry.x();
+            data.xScale *= m_currentGeometry.width();
+            data.xScale /= m_originalGeometry.width();
+            data.yTranslate += m_currentGeometry.y() - m_originalGeometry.y();
+            data.yScale *= m_currentGeometry.height();
+            data.yScale /= m_originalGeometry.height();
+            }
+        effects->paintWindow( w, mask, region, data );
+
+        if( m_features & Outline )
+        {
+            QRegion intersection = m_originalGeometry.intersected( m_currentGeometry );
+            QRegion paintRegion = QRegion(m_originalGeometry).united( m_currentGeometry ).subtracted( intersection );
+            float alpha = 0.8f;
+            QColor color = KColorScheme( QPalette::Normal, KColorScheme::Selection ).background().color();
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        if( effects->compositingType() == OpenGLCompositing)
-            {
-            glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-            glColor4f( color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f, alpha );
-            glBegin( GL_QUADS );
-            foreach( const QRect &r, paintRegion.rects() )
+            if( effects->compositingType() == OpenGLCompositing)
                 {
-                glVertex2i( r.x(), r.y() );
-                glVertex2i( r.x() + r.width(), r.y() );
-                glVertex2i( r.x() + r.width(), r.y() + r.height() );
-                glVertex2i( r.x(), r.y() + r.height() );
+                glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+                glEnable( GL_BLEND );
+                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+                glColor4f( color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f, alpha );
+                glBegin( GL_QUADS );
+                foreach( const QRect &r, paintRegion.rects() )
+                    {
+                    glVertex2i( r.x(), r.y() );
+                    glVertex2i( r.x() + r.width(), r.y() );
+                    glVertex2i( r.x() + r.width(), r.y() + r.height() );
+                    glVertex2i( r.x(), r.y() + r.height() );
+                    }
+                glEnd();
+                glPopAttrib();
                 }
-            glEnd();
-            glPopAttrib();
-            }
 #endif
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if( effects->compositingType() == XRenderCompositing)
-            {
-            XRenderColor col;
-            col.alpha = int( alpha * 0xffff );
-            col.red = int( alpha * 0xffff * color.red() / 255 );
-            col.green = int( alpha * 0xffff * color.green() / 255 );
-            col.blue= int( alpha * 0xffff * color.blue() / 255 );
-            foreach( const QRect &r, paintRegion.rects() )
-                XRenderFillRectangle( display(), PictOpOver, effects->xrenderBufferPicture(),
-                    &col, r.x(), r.y(), r.width(), r.height());
-            }
+            if( effects->compositingType() == XRenderCompositing)
+                {
+                XRenderColor col;
+                col.alpha = int( alpha * 0xffff );
+                col.red = int( alpha * 0xffff * color.red() / 255 );
+                col.green = int( alpha * 0xffff * color.green() / 255 );
+                col.blue= int( alpha * 0xffff * color.blue() / 255 );
+                foreach( const QRect &r, paintRegion.rects() )
+                    XRenderFillRectangle( display(), PictOpOver, effects->xrenderBufferPicture(),
+                        &col, r.x(), r.y(), r.width(), r.height());
+                }
 #endif
+            }
         }
+        else
+            effects->paintWindow( w, mask, region, data );
+    }
+
+void ResizeEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig("Resize");
+    m_features = 0;
+    if ( conf.readEntry( "TextureScale", true ) )
+        m_features |= TextureScale;
+    if ( conf.readEntry( "Outline", false ) )
+        m_features |= Outline;
     }
 
 void ResizeEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
@@ -112,7 +144,7 @@ void ResizeEffect::windowUserMovedResized( EffectWindow* w, bool first, bool las
         {
         m_active = true;
         m_resizeWindow = w;
-        m_originalWindowRect = w->geometry();
+        m_originalGeometry = w->geometry();
         m_currentGeometry = w->geometry();
         w->addRepaintFull();
         }

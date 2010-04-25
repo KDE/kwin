@@ -47,6 +47,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
 
+        bool provideResizeEffect();
+
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
         virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList );

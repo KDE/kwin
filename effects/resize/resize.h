@@ -32,16 +32,20 @@ class ResizeEffect
     public:
         ResizeEffect();
         ~ResizeEffect();
+        virtual inline bool isResizeEffect() { return true; }
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void reconfigure( ReconfigureFlags );
         virtual void windowUserMovedResized( EffectWindow *w, bool first, bool last );
         virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
     private:
+        enum Feature { TextureScale = 1<<0, Outline = 1<<1 };
         bool m_active;
+        int m_features;
         EffectWindow* m_resizeWindow;
-        QRegion m_originalWindowRect;
-        QRect m_currentGeometry;
+        QRect m_currentGeometry, m_originalGeometry;
     };
 
 }

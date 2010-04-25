@@ -213,6 +213,14 @@ void EffectsHandlerImpl::postPaintWindow( EffectWindow* w )
     // no special final code
     }
 
+bool EffectsHandlerImpl::provideResizeEffect()
+    {
+    for( int i = 0; i < loaded_effects.size(); ++i )
+        if( loaded_effects.at(i).second->isResizeEffect() )
+            return true;
+    return false;
+    }
+
 void EffectsHandlerImpl::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( current_draw_window < loaded_effects.size())
