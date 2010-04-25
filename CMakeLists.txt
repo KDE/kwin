@@ -123,7 +123,6 @@ set(kwin_KDEINIT_SRCS
    tilinglayouts/floating/floating.cpp
    )
 
-add_subdirectory( tilinglayouts )
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
 
