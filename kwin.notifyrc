@@ -6778,15 +6778,21 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[x-test]=xxTiling Enabledxx
 Comment=Tiling mode has been enabled
+Comment[x-test]=xxTiling mode has been enabledxx
 Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[x-test]=xxTiling Disabledxx
 Comment=Tiling mode has been disabled
+Comment[x-test]=xxTiling mode has been disabledxx
 Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[x-test]=xxTiling Layout Changedxx
 Comment=Tiling Layout has been changed
+Comment[x-test]=xxTiling Layout has been changedxx
 Action=Popup
