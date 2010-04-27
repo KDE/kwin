@@ -119,6 +119,8 @@ public:
     void setButtonSize(KDecorationDefines::BorderSize size);
     qreal buttonSizeFactor() const;
 
+    DecorationPosition decorationPosition() const;
+
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
     static char mapButtonToChar(AuroraeButtonType type);

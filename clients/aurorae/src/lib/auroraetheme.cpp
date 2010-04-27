@@ -450,4 +450,9 @@ qreal AuroraeTheme::buttonSizeFactor() const
     }
 }
 
+DecorationPosition AuroraeTheme::decorationPosition() const
+{
+    return (DecorationPosition)d->themeConfig.decorationPosition();
+}
+
 } // namespace

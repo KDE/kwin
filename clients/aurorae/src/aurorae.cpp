@@ -256,18 +256,34 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     borders(borderLeft, borderRight, borderTop, borderBottom);
     int paddingLeft, paddingTop, paddingRight, paddingBottom;
     padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
+    int titleEdgeLeft, titleEdgeRight, titleEdgeTop, titleEdgeBottom;
+    AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, maximized);
+    switch (AuroraeFactory::instance()->theme()->decorationPosition()) {
+    case DecorationTop:
+        borderTop = titleEdgeTop;
+        break;
+    case DecorationLeft:
+        borderLeft = titleEdgeLeft;
+        break;
+    case DecorationRight:
+        borderRight = titleEdgeRight;
+        break;
+    case DecorationBottom:
+        borderBottom = titleEdgeBottom;
+        break;
+    default:
+        break; // nothing
+    }
     if (point.x() >= (m_view->width() -  borderRight - paddingRight)) {
         pos |= PositionRight;
     } else if (point.x() <= borderLeft + paddingLeft) {
         pos |= PositionLeft;
     }
 
-    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
-    int titleEdgeLeft, titleEdgeRight, titleEdgeTop, titleEdgeBottom;
-    AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, maximized);
     if (point.y() >= m_view->height() - borderBottom - paddingBottom) {
         pos |= PositionBottom;
-    } else if (point.y() <= titleEdgeTop + paddingTop ) {
+    } else if (point.y() <= borderTop + paddingTop ) {
         pos |= PositionTop;
     }
 
