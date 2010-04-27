@@ -6778,21 +6778,47 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[pt]=Mosaico Activado
+Name[sv]=Sida vid sida aktiverad
+Name[uk]=Мозаїчне розташування увімкнено
 Name[x-test]=xxTiling Enabledxx
+Name[zh_TW]=鋪排已開啟
 Comment=Tiling mode has been enabled
+Comment[ia]=Le modo de tegula ha essite habilitate
+Comment[pt]=O modo em mosaico (lado-a-lado) foi activado
+Comment[sv]=Sida vid sida har aktiverats
+Comment[uk]=Було увімкнено режим мозаїчного розташування
 Comment[x-test]=xxTiling mode has been enabledxx
+Comment[zh_TW]=鋪排模式已開啟
 Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[pt]=Mosaico Desactivado
+Name[sv]=Sida vid sida inaktiverad
+Name[uk]=Мозаїчне розташування вимкнено
 Name[x-test]=xxTiling Disabledxx
+Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
+Comment[ia]=Le mode de tegulas  ha essite dishabilitate
+Comment[pt]=O modo em mosaico (lado-a-lado) foi desactivado
+Comment[sv]=Sida vid sida har inaktiverats
+Comment[uk]=Було вимкнено режим мозаїчного розташування
 Comment[x-test]=xxTiling mode has been disabledxx
+Comment[zh_TW]=鋪排模式已關閉
 Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[pt]=Disposição em Mosaico Alterada
+Name[sv]=Utläggning sida vid sida ändrad
+Name[uk]=Мозаїчне компонування змінено
 Name[x-test]=xxTiling Layout Changedxx
+Name[zh_TW]=鋪排佈局已變更
 Comment=Tiling Layout has been changed
+Comment[pt]=A disposição das janelas em mosaico (lado-a-lado) mudou
+Comment[sv]=Utläggning sida vid sida har ändrats
+Comment[uk]=Було змінено мозаїчне компонування
 Comment[x-test]=xxTiling Layout has been changedxx
+Comment[zh_TW]=鋪排佈局已變更
 Action=Popup
