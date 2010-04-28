@@ -8,6 +8,7 @@ Comment[en_GB]=KWin Window Manager
 Comment[es]=Gestor de ventanas KWin
 Comment[et]=Kwini aknahaldur
 Comment[hr]=Upravitelj prozora KWin
+Comment[is]=KWin gluggastjóri
 Comment[kk]=KWin терезе менеджері
 Comment[km]=កម្មវិធី​គ្រប់គ្រង​បង្អួច KWin
 Comment[lt]=KWin Langų tvarkyklė
@@ -6778,6 +6779,7 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[km]=បានបើក​ក្រឡា​ក្បឿង
 Name[pt]=Mosaico Activado
 Name[sv]=Sida vid sida aktiverad
 Name[uk]=Мозаїчне розташування увімкнено
@@ -6785,6 +6787,7 @@ Name[x-test]=xxTiling Enabledxx
 Name[zh_TW]=鋪排已開啟
 Comment=Tiling mode has been enabled
 Comment[ia]=Le modo de tegula ha essite habilitate
+Comment[km]=បានបើក​របៀប​ក្រឡា​ក្បឿង
 Comment[pt]=O modo em mosaico (lado-a-lado) foi activado
 Comment[sv]=Sida vid sida har aktiverats
 Comment[uk]=Було увімкнено режим мозаїчного розташування
@@ -6794,6 +6797,7 @@ Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[km]=បានបិទ​ក្រឡា​ក្បឿង
 Name[pt]=Mosaico Desactivado
 Name[sv]=Sida vid sida inaktiverad
 Name[uk]=Мозаїчне розташування вимкнено
@@ -6801,6 +6805,7 @@ Name[x-test]=xxTiling Disabledxx
 Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
 Comment[ia]=Le mode de tegulas  ha essite dishabilitate
+Comment[km]=បាន​បិទ​របៀប​ក្រឡាក្បឿង
 Comment[pt]=O modo em mosaico (lado-a-lado) foi desactivado
 Comment[sv]=Sida vid sida har inaktiverats
 Comment[uk]=Було вимкнено режим мозаїчного розташування
@@ -6810,12 +6815,14 @@ Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[km]=បានផ្លាស់ប្ដូរ​ប្លង់​ក្រឡា​ក្បឿង
 Name[pt]=Disposição em Mosaico Alterada
 Name[sv]=Utläggning sida vid sida ändrad
 Name[uk]=Мозаїчне компонування змінено
 Name[x-test]=xxTiling Layout Changedxx
 Name[zh_TW]=鋪排佈局已變更
 Comment=Tiling Layout has been changed
+Comment[km]=បាន​ផ្លាស់ប្ដូរ​ប្លង់​ក្រឡា​ក្បឿង
 Comment[pt]=A disposição das janelas em mosaico (lado-a-lado) mudou
 Comment[sv]=Utläggning sida vid sida har ändrats
 Comment[uk]=Було змінено мозаїчне компонування
