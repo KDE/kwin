@@ -12,6 +12,7 @@ X-KDE-Weight=60
 
 Name=Task Switcher
 Name[en_GB]=Task Switcher
+Name[ia]=Commutator de Carga
 Name[is]=Verkefnaskiptir
 Name[kk]=Тапсырма ауыстырғышы
 Name[km]=កម្មវិធី​ប្ដូរ​ភារកិច្ច​
@@ -41,6 +42,7 @@ Comment[fy]=It gedrach foar it rinnen troch finsters ynstelle
 Comment[gl]=Configura o comportamento do percorrido polas fiestras.
 Comment[he]=הגדר התנהגות בעת ניווט דרך חלונות.
 Comment[hr]=Podešavanje ponašanja hoda kroz prozore.
+Comment[ia]=Configurar le comportamento pro navigar intra fenestras
 Comment[id]=Atur perilaku untuk bernavigasi melalui jendela.
 Comment[is]=Stilla hegðun flakks á milli glugga.
 Comment[it]=Configura come si naviga tra le finestre
