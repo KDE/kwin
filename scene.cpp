@@ -186,7 +186,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     foreach( Window* w, stacking_order ) // bottom to top
         {
         WindowPrePaintData data;
-        data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        data.mask = orig_mask | ( (w->isOpaque() && !w->toplevelDecorationHasAlpha())? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
         data.clip = QRegion();
@@ -229,7 +229,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         {
         Window* w = stacking_order[ i ];
         WindowPrePaintData data;
-        data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        data.mask = orig_mask | ( (w->isOpaque() && !w->toplevelDecorationHasAlpha()) ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
         data.paint = region;
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
@@ -438,6 +438,14 @@ bool Scene::Window::isVisible() const
 bool Scene::Window::isOpaque() const
     {
     return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
+    }
+
+bool Scene::Window::toplevelDecorationHasAlpha( void ) const
+    {
+    if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->visibleRect().size())
+        return false;
+
+    return Workspace::self()->decorationHasAlpha();
     }
 
 bool Scene::Window::isPaintingEnabled() const

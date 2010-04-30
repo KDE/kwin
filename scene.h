@@ -186,6 +186,8 @@ class Scene::Window
         bool isVisible() const;
         // is the window fully opaque
         bool isOpaque() const;
+        // does the decoration has alpha channel
+        bool toplevelDecorationHasAlpha( void ) const;
         // shape of the window
         QRegion shape() const;
         QRegion clientShape() const;
