@@ -486,7 +486,7 @@ WindowQuadList Scene::Window::buildQuads( bool force ) const
     if( cached_quad_list != NULL && !force )
         return *cached_quad_list;
     WindowQuadList ret;
-    if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->size())
+    if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->visibleRect().size())
         ret = makeQuads( WindowQuadContents, shape()); // has no decoration
     else
         {
