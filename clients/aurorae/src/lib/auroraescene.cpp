@@ -283,6 +283,39 @@ void AuroraeScene::drawBackground(QPainter *painter, const QRectF &rect)
     } else {
         frame->paintFrame(painter, r, sourceRect);
     }
+
+    // inner border support
+    if (frame->hasElementPrefix("innerborder") && !maximized) {
+        if (!isActive() && frame->hasElementPrefix("innerborder-inactive")) {
+            frame->setElementPrefix("innerborder-inactive");
+        } else {
+            frame->setElementPrefix("innerborder");
+        }
+        qreal leftMargin, topMargin, rightMargin, bottomMargin;
+        frame->getMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+        int leftBorder, topBorder, rightBorder, bottomBorder;
+        m_theme->borders(leftBorder, topBorder, rightBorder, bottomBorder, maximized);
+        int leftPadding, topPadding, rightPadding, bottomPadding;
+        m_theme->padding(leftPadding, topPadding, rightPadding, bottomPadding);
+        qreal width = r.width() - leftBorder - rightBorder - leftPadding - rightPadding + leftMargin + rightMargin;
+        qreal height = r.height() - topBorder - bottomBorder - topPadding - bottomPadding + topMargin + bottomMargin;
+        QPointF point = QPointF(leftBorder + leftPadding - leftMargin, topBorder + topPadding - topMargin);
+        frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+        frame->resizeFrame(QSizeF(width, height));
+        if (isAnimating() && frame->hasElementPrefix("innerborder-inactive")) {
+            QPixmap target = frame->framePixmap();
+            frame->setElementPrefix("innerborder-inactive");
+            if (!isActive()) {
+                frame->setElementPrefix("innerborder");
+            }
+            frame->resizeFrame(QSizeF(width, height));
+            QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
+                                                            target, m_animationProgress);
+            painter->drawPixmap(point, result);
+        } else {
+            frame->paintFrame(painter, point);
+        }
+    }
     painter->restore();
 }
 
