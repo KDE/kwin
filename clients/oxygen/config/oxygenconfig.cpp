@@ -27,8 +27,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "config.h"
-#include "config.moc"
+#include "oxygenconfig.h"
+#include "oxygenconfig.moc"
 
 #include "../oxygenconfiguration.h"
 #include "../oxygenshadowconfiguration.h"

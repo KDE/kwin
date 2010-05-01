@@ -2,12 +2,12 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
 
 
 set(kwin_oxygen_config_PART_SRCS
-    config.cpp
-    itemmodel.cpp
+    oxygenitemmodel.cpp
     ../oxygenconfiguration.cpp
     ../oxygenshadowconfiguration.cpp
     ../oxygenexception.cpp
     ../oxygenexceptionlist.cpp
+    oxygenconfig.cpp
     oxygenconfigurationui.cpp
     oxygendetectwidget.cpp
     oxygenexceptiondialog.cpp

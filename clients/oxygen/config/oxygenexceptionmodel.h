@@ -25,7 +25,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "listmodel.h"
+#include "oxygenlistmodel.h"
 #include "../oxygenexception.h"
 
 namespace Oxygen
