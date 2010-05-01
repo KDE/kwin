@@ -37,6 +37,55 @@
 
 namespace Aurorae {
 
+AuroraeButtonGroup::AuroraeButtonGroup(AuroraeTheme *theme, AuroraeButtonGroup::ButtonGroup group)
+    : QGraphicsWidget()
+    , m_theme(theme)
+    , m_group(group)
+{
+}
+
+void AuroraeButtonGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+    Plasma::FrameSvg *decoration = m_theme->decoration();
+    QString basePrefix;
+    QString prefix;
+    AuroraeScene *s = static_cast<AuroraeScene*>(scene());
+    switch (m_group) {
+    case LeftGroup:
+        basePrefix = "buttongroup-left";
+        break;
+    case RightGroup:
+        basePrefix = "buttongroup-right";
+        break;
+    }
+    if (!decoration->hasElementPrefix(basePrefix)) {
+        return;
+    }
+    if (!s->isActive() && decoration->hasElementPrefix(basePrefix + "-inactive")) {
+        prefix = basePrefix + "-inactive";
+    } else {
+        prefix = basePrefix;
+    }
+    decoration->setElementPrefix(prefix);
+    decoration->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+    decoration->resizeFrame(size());
+    if (s->isAnimating() && decoration->hasElementPrefix(basePrefix + "-inactive")) {
+        QPixmap target = decoration->framePixmap();
+        decoration->setElementPrefix(basePrefix + "-inactive");
+        if (!s->isActive()) {
+            decoration->setElementPrefix(basePrefix);
+        }
+        decoration->resizeFrame(size());
+        QPixmap result = Plasma::PaintUtils::transition(decoration->framePixmap(),
+                                                        target, s->animationProgress());
+        painter->drawPixmap(0, 0, result);
+    } else {
+        decoration->paintFrame(painter);
+    }
+}
+
 AuroraeButton::AuroraeButton(AuroraeTheme* theme, AuroraeButtonType type)
     : QGraphicsWidget()
     , m_theme(theme)

@@ -88,7 +88,7 @@ void AuroraeScene::init()
     leftButtonsLayout->setOrientation(orientation);
     initButtons(leftButtonsLayout, buttonsToDirection(m_leftButtonOrder));
 
-    m_leftButtons = new QGraphicsWidget;
+    m_leftButtons = new AuroraeButtonGroup(m_theme, AuroraeButtonGroup::LeftGroup);
     m_leftButtons->setLayout(leftButtonsLayout);
     addItem(m_leftButtons);
 
@@ -99,7 +99,7 @@ void AuroraeScene::init()
     rightButtonsLayout->setOrientation(orientation);
     initButtons(rightButtonsLayout, buttonsToDirection(m_rightButtonOrder));
 
-    m_rightButtons = new QGraphicsWidget;
+    m_rightButtons = new AuroraeButtonGroup(m_theme, AuroraeButtonGroup::RightGroup);
     m_rightButtons->setLayout(rightButtonsLayout);
     addItem(m_rightButtons);
 

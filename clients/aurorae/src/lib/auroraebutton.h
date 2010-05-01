@@ -36,6 +36,22 @@ namespace Aurorae {
 
 class AuroraeTheme;
 
+class AuroraeButtonGroup : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    enum ButtonGroup {
+        LeftGroup = 0,
+        RightGroup
+    };
+    AuroraeButtonGroup(AuroraeTheme *theme, ButtonGroup group);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+
+private:
+    AuroraeTheme *m_theme;
+    ButtonGroup m_group;
+};
+
 class AuroraeButton : public QGraphicsWidget
 {
     Q_OBJECT
