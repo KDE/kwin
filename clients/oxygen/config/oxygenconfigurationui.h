@@ -55,7 +55,11 @@ namespace Oxygen
     //! shadow configuration
     QVector<OxygenShadowConfigurationUI*> shadowConfigurations;
 
+    //! toggle expert mode
+    void toggleExpertMode( bool );
+
     protected slots:
+
     //! shadow mode changed
     void shadowModeChanged( int );
 
@@ -63,6 +67,11 @@ namespace Oxygen
 
     //! emmited when changed
     bool changed( void );
+
+    private:
+
+    //! expert mode
+    bool expertMode_;
 
   };
 

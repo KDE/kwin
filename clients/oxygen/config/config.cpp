@@ -50,7 +50,8 @@ namespace Oxygen
 {
 
   //_______________________________________________________________________
-  Config::Config( KConfig*, QWidget* parent ): QObject( parent )
+  Config::Config( KConfig*, QWidget* parent ):
+    QObject( parent )
   {
 
     KGlobal::locale()->insertCatalog("kwin_clients");
@@ -59,9 +60,9 @@ namespace Oxygen
     KConfigGroup configurationGroup( configuration_, "Windeco");
 
     userInterface_ = new OxygenConfigurationUI( parent );
-    connect( userInterface_, SIGNAL(changed()), SIGNAL( changed() ) );
 
     load( configurationGroup );
+    connect( userInterface_, SIGNAL(changed()), SLOT( updateChanged() ) );
     userInterface_->show();
 
   }
@@ -74,6 +75,9 @@ namespace Oxygen
     delete configuration_;
   }
 
+  //_______________________________________________________________________
+  void Config::toggleExpertMode( bool value )
+  { userInterface_->toggleExpertMode( value ); }
 
   //_______________________________________________________________________
   void Config::load( const KConfigGroup& )
@@ -92,10 +96,46 @@ namespace Oxygen
 
     // install in ui
     userInterface_->ui.exceptions->setExceptions( exceptions );
-
+    updateChanged();
 
   }
 
+  //_______________________________________________________________________
+  void Config::updateChanged( void )
+  {
+
+    OxygenConfiguration configuration( KConfigGroup( configuration_, "Windeco") );
+    bool modified( false );
+
+    if( userInterface_->ui.titleAlignment->currentIndex() != userInterface_->ui.titleAlignment->findText( configuration.titleAlignmentName( true ) ) ) modified = true;
+    else if( userInterface_->ui.buttonSize->currentIndex() != userInterface_->ui.buttonSize->findText( configuration.buttonSizeName( true ) ) ) modified = true;
+    else if( userInterface_->ui.blendColor->currentIndex() != userInterface_->ui.blendColor->findText( configuration.blendColorName( true ) ) ) modified = true;
+    else if( userInterface_->ui.frameBorder->currentIndex() != userInterface_->ui.frameBorder->findText( configuration.frameBorderName( true ) ) ) modified = true;
+    else if( userInterface_->ui.sizeGripMode->currentIndex() != userInterface_->ui.sizeGripMode->findText( configuration.sizeGripModeName( true ) ) ) modified = true;
+    else if( userInterface_->ui.shadowMode->currentIndex() != userInterface_->ui.shadowMode->findText( configuration.shadowModeName( true ) ) ) modified = true;
+    else if( userInterface_->ui.shadowCacheMode->currentIndex() != userInterface_->ui.shadowCacheMode->findText( configuration.shadowCacheModeName( true ) ) ) modified = true;
+
+    else if( userInterface_->ui.drawSeparator->isChecked() != configuration.drawSeparator() ) modified = true;
+    else if( userInterface_->ui.titleOutline->isChecked() !=  configuration.drawTitleOutline() ) modified = true;
+    else if( userInterface_->shadowConfigurations[0]->isChecked() !=  configuration.useOxygenShadows() ) modified = true;
+    else if( userInterface_->shadowConfigurations[1]->isChecked() !=  configuration.useDropShadows() ) modified = true;
+    else if( userInterface_->ui.tabsEnabled->isChecked() !=  configuration.tabsEnabled() ) modified = true;
+    else if( userInterface_->ui.useAnimations->isChecked() !=  configuration.useAnimations() ) modified = true;
+    else if( userInterface_->ui.animateTitleChange->isChecked() !=  configuration.animateTitleChange() ) modified = true;
+    else if( userInterface_->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
+
+    // shadow configurations
+    else if( shadowConfigurationChanged( OxygenShadowConfiguration( QPalette::Active ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
+    else if( shadowConfigurationChanged( OxygenShadowConfiguration( QPalette::Inactive ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
+
+    // exceptions
+    else if( exceptionListChanged() ) modified = true;
+
+    // emit relevant signals
+    if( modified ) emit changed();
+    emit changed( modified );
+
+  }
 
   //_______________________________________________________________________
   void Config::save( KConfigGroup& )
@@ -126,12 +166,18 @@ namespace Oxygen
       OxygenConfig::SIZE_GRIP_MODE,
       OxygenConfiguration::sizeGripModeName( OxygenConfiguration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ), false ) );
 
+    configurationGroup.writeEntry(
+      OxygenConfig::SHADOW_CACHE_MODE,
+      OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ), false ) );
+
     configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->ui.drawSeparator->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::USE_DROP_SHADOWS, userInterface_->shadowConfigurations[1]->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->shadowConfigurations[0]->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::TABS_ENABLED, userInterface_->ui.tabsEnabled->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::USE_ANIMATIONS, userInterface_->ui.useAnimations->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::ANIMATE_TITLE_CHANGE, userInterface_->ui.animateTitleChange->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, userInterface_->ui.narrowButtonSpacing->isChecked() );
 
     // write exceptions
     userInterface_->ui.exceptions->exceptions().write( *configuration_ );
@@ -178,8 +224,7 @@ namespace Oxygen
     // install default exceptions
     userInterface_->ui.exceptions->setExceptions( OxygenExceptionList::defaultList() );
 
-    // emit changed signal
-    emit changed();
+    updateChanged();
 
   }
 
@@ -199,9 +244,11 @@ namespace Oxygen
     userInterface_->shadowConfigurations[1]->setChecked( configuration.useDropShadows() );
     userInterface_->ui.tabsEnabled->setChecked( configuration.tabsEnabled() );
     userInterface_->ui.useAnimations->setChecked( configuration.useAnimations() );
+    userInterface_->ui.animateTitleChange->setChecked( configuration.animateTitleChange() );
+    userInterface_->ui.narrowButtonSpacing->setChecked( configuration.useNarrowButtonSpacing() );
     userInterface_->ui.shadowMode->setCurrentIndex( userInterface_->ui.shadowMode->findText( configuration.shadowModeName( true ) ) );
+    userInterface_->ui.shadowCacheMode->setCurrentIndex( userInterface_->ui.shadowCacheMode->findText( configuration.shadowCacheModeName( true ) ) );
   }
-
 
   //_______________________________________________________________________
   void Config::loadShadowConfiguration( QPalette::ColorGroup colorGroup, const OxygenShadowConfiguration& configuration )
@@ -216,7 +263,31 @@ namespace Oxygen
   }
 
   //_______________________________________________________________________
-  void Config::aboutOxygen( void )
-  {}
+  bool Config::shadowConfigurationChanged( const OxygenShadowConfiguration& configuration, const OxygenShadowConfigurationUI& ui ) const
+  {
+    bool modified( false );
+
+    if( ui.ui.shadowSize->value() != configuration.shadowSize() ) modified = true;
+    else if( 0.1*ui.ui.verticalOffset->value() != configuration.verticalOffset() ) modified = true;
+    else if( ui.ui.innerColor->color() != configuration.innerColor() ) modified = true;
+    else if( ui.ui.useOuterColor->isChecked() != configuration.useOuterColor() ) modified = true;
+    else if( ui.ui.useOuterColor->isChecked() && ui.ui.outerColor->color() != configuration.outerColor() ) modified = true;
+    return modified;
+  }
+
+  //_______________________________________________________________________
+  bool Config::exceptionListChanged( void ) const
+  {
+
+    // get saved list
+    OxygenExceptionList exceptions;
+    exceptions.read( *configuration_ );
+    if( exceptions.empty() )
+    { exceptions = OxygenExceptionList::defaultList(); }
+
+    // compare to current
+    return exceptions != userInterface_->ui.exceptions->exceptions();
+
+  }
 
 }

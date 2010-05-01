@@ -60,21 +60,27 @@ namespace Oxygen {
     //! emmited whenever configuration is changed
     void changed();
 
+    //! emmited whenever configuration is changed
+    void changed( bool );
+
     public slots:
 
     //! load configuration
-    void load( const KConfigGroup& conf );
+    void load( const KConfigGroup& );
 
     //! save configuration
-    void save( KConfigGroup& conf );
+    void save( KConfigGroup& );
 
     //! restore defaults
-    void defaults();
+    void defaults( void );
+
+    //! toggle expert mode
+    void toggleExpertMode( bool );
 
     private slots:
 
-    //! about oxygen
-    void aboutOxygen( void );
+    //! update change state
+    void updateChanged( void );
 
     private:
 
@@ -86,6 +92,15 @@ namespace Oxygen {
 
     //! load configuration
     void saveShadowConfiguration( QPalette::ColorGroup, const OxygenShadowConfigurationUI& ) const;
+
+    //! returns true if shadow configuration changed
+    bool shadowConfigurationChanged( const OxygenShadowConfiguration&, const OxygenShadowConfigurationUI& ) const;
+
+    //! returns true if exception list is changed
+    bool exceptionListChanged( void ) const;
+
+    //! expert mode
+    bool expertMode_;
 
     //! user interface
     OxygenConfigurationUI *userInterface_;

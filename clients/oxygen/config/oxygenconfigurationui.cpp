@@ -39,7 +39,8 @@ namespace Oxygen
 
   //_________________________________________________________
   OxygenConfigurationUI::OxygenConfigurationUI( QWidget* parent ):
-    QWidget( parent )
+    QWidget( parent ),
+    expertMode_( false )
     {
 
     ui.setupUi( this );
@@ -98,6 +99,11 @@ namespace Oxygen
         << OxygenConfiguration::shadowModeName( OxygenConfiguration::KWinShadows, true )
         << OxygenConfiguration::shadowModeName( OxygenConfiguration::NoShadows, true ) );
 
+    ui.shadowCacheMode->insertItems(0, QStringList()
+        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheDisabled, true )
+        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheVariable, true )
+        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheMaximum, true ) );
+
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
     connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SLOT(shadowModeChanged(int)) );
@@ -120,9 +126,30 @@ namespace Oxygen
 
     connect( ui.tabsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.useAnimations, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui.animateTitleChange, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
+
+    connect( ui.useAnimations, SIGNAL( toggled( bool ) ), ui.animateTitleChange, SLOT( setEnabled( bool ) ) );
+
+    toggleExpertMode( false );
+
+  }
+
+  //_________________________________________________________
+  void OxygenConfigurationUI::toggleExpertMode( bool value )
+  {
+
+    expertMode_ = value;
+    ui.animateTitleChange->setVisible( expertMode_ );
+    ui.narrowButtonSpacing->setVisible( expertMode_ );
+    ui.shadowCacheModeLabel->setVisible( expertMode_ );
+    ui.shadowCacheMode->setVisible( expertMode_ );
+
+    if( expertMode_ ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    else ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 
   }
 
