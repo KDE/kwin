@@ -24,8 +24,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygen.h"
-#include "oxygen.moc"
+#include "oxygenfactory.h"
+#include "oxygenfactory.moc"
 #include "oxygenclient.h"
 
 #include <cassert>

@@ -26,7 +26,6 @@
 
 #include "oxygenshadowcache.h"
 #include "oxygenclient.h"
-#include "oxygen.h"
 #include "oxygenhelper.h"
 
 #include <cassert>

@@ -28,7 +28,6 @@
 #include "oxygenbutton.h"
 #include "oxygenbutton.moc"
 #include "oxygenclient.h"
-#include "oxygen.h"
 
 #include <cmath>
 

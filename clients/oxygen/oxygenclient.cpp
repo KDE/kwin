@@ -28,7 +28,6 @@
 #include "oxygenclient.h"
 #include "oxygenclient.moc"
 
-#include "oxygen.h"
 #include "oxygenbutton.h"
 #include "oxygensizegrip.h"
 #include "tileset.h"

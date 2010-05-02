@@ -30,7 +30,7 @@
 
 #include <kcommondecoration.h>
 
-#include "oxygen.h"
+#include "oxygenfactory.h"
 #include "oxygenanimation.h"
 
 namespace Oxygen

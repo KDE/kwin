@@ -28,7 +28,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygen.h"
+#include "oxygenfactory.h"
 #include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
 #include "oxygentitleanimationdata.h"
