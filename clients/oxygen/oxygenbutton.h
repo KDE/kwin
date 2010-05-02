@@ -1,8 +1,8 @@
-#ifndef oxygenbutton_h
-#define oxygenbutton_h
+#ifndef Button_h
+#define Button_h
 
 //////////////////////////////////////////////////////////////////////////////
-// oxygenbutton.h
+// Button.h
 // -------------------
 //
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
@@ -35,125 +35,125 @@
 
 namespace Oxygen
 {
-  class OxygenClient;
+    class Client;
 
-  enum ButtonStatus {
-    Normal,
-    Hovered,
-    Pressed
-  };
+    enum ButtonStatus {
+        Normal,
+        Hovered,
+        Pressed
+    };
 
-  Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
+    Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 
-  class OxygenButton : public KCommonDecorationButton
-  {
+        class Button : public KCommonDecorationButton
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    //! declare animation progress property
-    Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+            //! declare animation progress property
+            Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
 
-    public:
+            public:
 
-    //! constructor
-    explicit OxygenButton(OxygenClient &parent,
-      const QString &tip=NULL,
-      ButtonType type=ButtonHelp );
+            //! constructor
+            explicit Button(Client &parent,
+            const QString &tip=NULL,
+            ButtonType type=ButtonHelp );
 
-    //! destructor
-    ~OxygenButton();
+        //! destructor
+        ~Button();
 
-    //! destructor
-    QSize sizeHint() const;
+        //! destructor
+        QSize sizeHint() const;
 
-    //! button type
-    ButtonType type( void ) const
-    { return type_; }
+        //! button type
+        ButtonType type( void ) const
+        { return type_; }
 
-    //! set force inactive
-    /*! returns true if value was actually changed */
-    void setForceInactive( const bool& value )
-    { forceInactive_ = value; }
+        //! set force inactive
+        /*! returns true if value was actually changed */
+        void setForceInactive( const bool& value )
+        { forceInactive_ = value; }
 
-    //! configuration reset
-    virtual void reset( unsigned long );
+        //! configuration reset
+        virtual void reset( unsigned long );
 
-    //!@name glow animation
-    //@{
+        //!@name glow animation
+        //@{
 
-    //! return animation object
-    virtual const Animation::Pointer& glowAnimation() const
-    { return glowAnimation_; }
+        //! return animation object
+        virtual const Animation::Pointer& glowAnimation() const
+        { return glowAnimation_; }
 
-    void setGlowIntensity( qreal value )
-    { glowIntensity_ = value; }
+        void setGlowIntensity( qreal value )
+        { glowIntensity_ = value; }
 
-    qreal glowIntensity( void ) const
-    { return glowIntensity_; }
+        qreal glowIntensity( void ) const
+        { return glowIntensity_; }
 
-    //@}
+        //@}
 
-    protected:
+        protected:
 
-    //! press event
-    void mousePressEvent(QMouseEvent* );
+        //! press event
+        void mousePressEvent(QMouseEvent* );
 
-    //! release event
-    void mouseReleaseEvent(QMouseEvent* );
+        //! release event
+        void mouseReleaseEvent(QMouseEvent* );
 
-    //! enter event
-    void enterEvent( QEvent* );
+        //! enter event
+        void enterEvent( QEvent* );
 
-    //! leave event
-    void leaveEvent(QEvent* );
+        //! leave event
+        void leaveEvent(QEvent* );
 
-    //! paint
-    void paintEvent(QPaintEvent* );
+        //! paint
+        void paintEvent(QPaintEvent* );
 
-    //! draw icon
-    void drawIcon(QPainter*, QPalette&, ButtonType& );
+        //! draw icon
+        void drawIcon(QPainter*, QPalette&, ButtonType& );
 
-    //! color
-    QColor buttonDetailColor(const QPalette& );
+        //! color
+        QColor buttonDetailColor(const QPalette& );
 
-    //! color
-    QColor buttonDetailColor(const QPalette&, bool active );
+        //! color
+        QColor buttonDetailColor(const QPalette&, bool active );
 
-    //! true if animation is in progress
-    bool isAnimated( void ) const
-    { return glowAnimation().data()->isRunning(); }
+        //! true if animation is in progress
+        bool isAnimated( void ) const
+        { return glowAnimation().data()->isRunning(); }
 
-    //! true if button is active
-    bool isActive( void ) const;
+        //! true if button is active
+        bool isActive( void ) const;
 
-    //! true if buttons hover are animated
-    bool animateButtonHover( void ) const;
+        //! true if buttons hover are animated
+        bool animateButtonHover( void ) const;
 
-    private:
+        private:
 
-    //! parent client
-    const OxygenClient &client_;
+        //! parent client
+        const Client &client_;
 
-    //! helper
-    OxygenDecoHelper &helper_;
+        //! helper
+        OxygenDecoHelper &helper_;
 
-    //! button type
-    ButtonType type_;
+        //! button type
+        ButtonType type_;
 
-    //! button status
-    ButtonState status_;
+        //! button status
+        ButtonState status_;
 
-    //! true if button should be forced inactive
-    bool forceInactive_;
+        //! true if button should be forced inactive
+        bool forceInactive_;
 
-    //! glow animation
-    Animation::Pointer glowAnimation_;
+        //! glow animation
+        Animation::Pointer glowAnimation_;
 
-    //! glow intensity
-    qreal glowIntensity_;
+        //! glow intensity
+        qreal glowIntensity_;
 
 
-  };
+    };
 
 } //namespace Oxygen
 

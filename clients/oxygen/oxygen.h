@@ -40,124 +40,122 @@
 namespace Oxygen
 {
 
-  class OxygenClient;
+    class Client;
 
-  //! buttons
-  enum ButtonType
-  {
-    ButtonHelp=0,
-    ButtonMax,
-    ButtonMin,
-    ButtonClose,
-    ButtonMenu,
-    ButtonSticky,
-    ButtonAbove,
-    ButtonBelow,
-    ButtonShade,
-    ButtonTypeCount,
+    //! buttons
+    enum ButtonType {
+        ButtonHelp=0,
+        ButtonMax,
+        ButtonMin,
+        ButtonClose,
+        ButtonMenu,
+        ButtonSticky,
+        ButtonAbove,
+        ButtonBelow,
+        ButtonShade,
+        ButtonTypeCount,
 
-    // Close only one tab
-    ButtonItemClose=100,
+        // Close only one tab
+        ButtonItemClose=100,
 
-    // shows the window menu for one tab
-    ButtonItemMenu
+        // shows the window menu for one tab
+        ButtonItemMenu
 
-  };
+    };
 
-  Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
+    Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
-  enum
-  {
+    enum {
 
-    //! this is the top title bar edge
-    TFRAMESIZE = 3,
+        //! this is the top title bar edge
+        TFRAMESIZE = 3,
 
-    /*!
-      this is the extra title bar top and bottom edges
-      needed to outline active window title bar
-    */
-    HFRAMESIZE = 4
-  };
+        /*!
+        this is the extra title bar top and bottom edges
+        needed to outline active window title bar
+        */
+        HFRAMESIZE = 4
+    };
 
-  //! window decoration factory
-  class OxygenFactory: public QObject, public KDecorationFactoryUnstable
-  {
+    //! window decoration factory
+    class Factory: public QObject, public KDecorationFactoryUnstable
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
+            public:
 
-    //! constructor
-    OxygenFactory();
+            //! constructor
+            Factory();
 
-    //! destructor
-    virtual ~OxygenFactory();
+        //! destructor
+        virtual ~Factory();
 
-    //! create decoration
-    virtual KDecoration *createDecoration(KDecorationBridge *b);
+        //! create decoration
+        virtual KDecoration *createDecoration(KDecorationBridge *b);
 
-    //! configuration reset
-    virtual bool reset(unsigned long changed);
+        //! configuration reset
+        virtual bool reset(unsigned long changed);
 
-    //! configuration capabilities
-    virtual bool supports( Ability ability ) const;
+        //! configuration capabilities
+        virtual bool supports( Ability ability ) const;
 
-    //! true if initialized
-    virtual bool initialized()
-    { return initialized_; }
+        //! true if initialized
+        virtual bool initialized()
+        { return initialized_; }
 
-    //! helper
-    virtual OxygenDecoHelper& helper( void )
-    { return helper_; }
+        //! helper
+        virtual OxygenDecoHelper& helper( void )
+        { return helper_; }
 
-    //! shadow cache
-    virtual OxygenShadowCache& shadowCache( void )
-    { return shadowCache_; }
+        //! shadow cache
+        virtual ShadowCache& shadowCache( void )
+        { return shadowCache_; }
 
-    //! shadow cache
-    virtual const OxygenShadowCache& shadowCache( void ) const
-    { return shadowCache_; }
+        //! shadow cache
+        virtual const ShadowCache& shadowCache( void ) const
+        { return shadowCache_; }
 
-    //! get configuration for a give client
-    virtual OxygenConfiguration configuration( const OxygenClient& );
+        //! get configuration for a give client
+        virtual Configuration configuration( const Client& );
 
-    private:
+        private:
 
-    //! read configuration from KConfig
-    bool readConfig();
+        //! read configuration from KConfig
+        bool readConfig();
 
-    //! default configuration
-    const OxygenConfiguration& defaultConfiguration( void ) const
-    { return defaultConfiguration_; }
+        //! default configuration
+        const Configuration& defaultConfiguration( void ) const
+        { return defaultConfiguration_; }
 
-    //! default configuration
-    OxygenConfiguration& defaultConfiguration( void )
-    { return defaultConfiguration_; }
+        //! default configuration
+        Configuration& defaultConfiguration( void )
+        { return defaultConfiguration_; }
 
-    //! initialization
-    void setInitialized( bool value )
-    { initialized_ = value; }
+        //! initialization
+        void setInitialized( bool value )
+        { initialized_ = value; }
 
-    //! set default configuration
-    void setDefaultConfiguration( OxygenConfiguration value )
-    { defaultConfiguration_ = value; }
+        //! set default configuration
+        void setDefaultConfiguration( Configuration value )
+        { defaultConfiguration_ = value; }
 
-    //! initialization flag
-    bool initialized_;
+        //! initialization flag
+        bool initialized_;
 
-    //! helper
-    OxygenDecoHelper helper_;
+        //! helper
+        OxygenDecoHelper helper_;
 
-    //! shadow cache
-    OxygenShadowCache shadowCache_;
+        //! shadow cache
+        ShadowCache shadowCache_;
 
-    //! default configuration
-    OxygenConfiguration defaultConfiguration_;
+        //! default configuration
+        Configuration defaultConfiguration_;
 
-    //! exceptions
-    OxygenExceptionList exceptions_;
+        //! exceptions
+        ExceptionList exceptions_;
 
-  };
+    };
 
 }
 

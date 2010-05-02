@@ -31,12 +31,12 @@ namespace Oxygen
 {
 
   //_______________________________________________________
-  OxygenException::OxygenException( KConfigGroup group ):
-    OxygenConfiguration( group )
+  Exception::Exception( KConfigGroup group ):
+    Configuration( group )
   {
 
     // used to set default values when entries are not found in kconfig
-    OxygenException default_configuration;
+    Exception default_configuration;
 
     // exception type
     setType( type(
@@ -59,10 +59,10 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  void OxygenException::write( KConfigGroup& group ) const
+  void Exception::write( KConfigGroup& group ) const
   {
 
-    OxygenConfiguration::write( group );
+    Configuration::write( group );
     group.writeEntry( OxygenConfig::TYPE, typeName( false ) );
     group.writeEntry( OxygenConfig::PATTERN, regExp().pattern() );
     group.writeEntry( OxygenConfig::ENABLED, enabled() );
@@ -71,7 +71,7 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  QString OxygenException::typeName( Type type, bool translated )
+  QString Exception::typeName( Type type, bool translated )
   {
     switch( type )
     {
@@ -84,7 +84,7 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  OxygenException::Type OxygenException::type( const QString& value, bool translated )
+  Exception::Type Exception::type( const QString& value, bool translated )
   {
     if( value == typeName( WindowTitle, translated ) ) return WindowTitle;
     else if( value == typeName( WindowClassName, translated ) ) return WindowClassName;

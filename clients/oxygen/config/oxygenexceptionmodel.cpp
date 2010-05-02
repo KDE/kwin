@@ -29,7 +29,7 @@ namespace Oxygen
 {
 
   //_______________________________________________
-  const QString OxygenExceptionModel::column_titles_[ OxygenExceptionModel::n_columns ] =
+  const QString ExceptionModel::column_titles_[ ExceptionModel::n_columns ] =
   {
     "",
     i18n("Exception Type"),
@@ -37,14 +37,14 @@ namespace Oxygen
   };
 
   //__________________________________________________________________
-  QVariant OxygenExceptionModel::data( const QModelIndex& index, int role ) const
+  QVariant ExceptionModel::data( const QModelIndex& index, int role ) const
   {
 
     // check index, role and column
     if( !index.isValid() ) return QVariant();
 
     // retrieve associated file info
-    const OxygenException& exception( get(index) );
+    const Exception& exception( get(index) );
 
     // return text associated to file and column
     if( role == Qt::DisplayRole )
@@ -73,7 +73,7 @@ namespace Oxygen
   }
 
   //__________________________________________________________________
-  QVariant OxygenExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
+  QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
   {
 
     if(

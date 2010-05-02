@@ -45,69 +45,69 @@
 namespace Oxygen
 {
 
-  class DetectDialog : public KDialog
-  {
-
-    Q_OBJECT
-
-    public:
-
-    //! constructor
-    DetectDialog( QWidget* );
-
-    //! read window properties or select one from mouse grab
-    void detect( WId window );
-
-    //! selected class
-    QByteArray selectedClass() const;
-
-    //! window information
-    const KWindowInfo& windowInfo() const
-    { return info; }
-
-    //! exception type
-    OxygenException::Type exceptionType() const
+    class DetectDialog : public KDialog
     {
-        if( ui.windowClassCheckBox->isChecked() ) return OxygenException::WindowClassName;
-        else if( ui.windowTitleCheckBox->isChecked() ) return OxygenException::WindowTitle;
-        else return OxygenException::WindowClassName;
-    }
 
-    signals:
+        Q_OBJECT
 
-    void detectionDone( bool );
+        public:
 
-    protected:
+        //! constructor
+        DetectDialog( QWidget* );
 
-    virtual bool eventFilter( QObject* o, QEvent* e );
+        //! read window properties or select one from mouse grab
+        void detect( WId window );
 
-    private:
+        //! selected class
+        QByteArray selectedClass() const;
 
-    //! select window from grab
-    void selectWindow();
+        //! window information
+        const KWindowInfo& windowInfo() const
+        { return info; }
 
-    //! read window properties
-    void readWindow( WId window );
+        //! exception type
+        Exception::Type exceptionType() const
+        {
+            if( ui.windowClassCheckBox->isChecked() ) return Exception::WindowClassName;
+            else if( ui.windowTitleCheckBox->isChecked() ) return Exception::WindowTitle;
+            else return Exception::WindowClassName;
+        }
 
-    //! find window under cursor
-    WId findWindow();
+        signals:
 
-    //! execute
-    void executeDialog( void );
+        void detectionDone( bool );
 
-    //! window machine
-    QString machine;
+        protected:
 
-    //! main widget
-    Ui_DetectWidget ui;
+        virtual bool eventFilter( QObject* o, QEvent* e );
 
-    //! invisible dialog used to grab mouse
-    KDialog* grabber;
+        private:
 
-    //! current window information
-    KWindowInfo info;
+        //! select window from grab
+        void selectWindow();
 
-  };
+        //! read window properties
+        void readWindow( WId window );
+
+        //! find window under cursor
+        WId findWindow();
+
+        //! execute
+        void executeDialog( void );
+
+        //! window machine
+        QString machine;
+
+        //! main widget
+        Ui_DetectWidget ui;
+
+        //! invisible dialog used to grab mouse
+        KDialog* grabber;
+
+        //! current window information
+        KWindowInfo info;
+
+    };
 
 } // namespace
 

@@ -30,77 +30,77 @@
 namespace Oxygen
 {
 
-  //______________________________________________________________
-  void OxygenExceptionList::read( const KConfig& config )
-  {
-
-    clear();
-
-    for( int index = 0; true; index++ )
+    //______________________________________________________________
+    void ExceptionList::read( const KConfig& config )
     {
 
-      KConfigGroup group( &config, exceptionGroupName( index ) );
-      if( group.exists() )
-      {
-        OxygenException exception( group );
-        if( exception.regExp().isValid() ) push_back( exception );
-      } else break;
+        clear();
+
+        for( int index = 0; true; index++ )
+        {
+
+            KConfigGroup group( &config, exceptionGroupName( index ) );
+            if( group.exists() )
+            {
+                Exception exception( group );
+                if( exception.regExp().isValid() ) push_back( exception );
+            } else break;
+
+        }
 
     }
 
-  }
-
-  //______________________________________________________________
-  void OxygenExceptionList::write( KConfig& config )
-  {
-
-    // remove previous group
-    for( int index = 0; true ;index++ )
-    {
-      KConfigGroup group( &config, exceptionGroupName( index ) );
-      if( group.exists() ) group.deleteGroup();
-      else break;
-    }
-
-    // also add exceptions
-    int index(0);
-    for( OxygenExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
+    //______________________________________________________________
+    void ExceptionList::write( KConfig& config )
     {
 
-      KConfigGroup group( &config, exceptionGroupName( index ) );
-      iter->write( group );
+        // remove previous group
+        for( int index = 0; true ;index++ )
+        {
+            KConfigGroup group( &config, exceptionGroupName( index ) );
+            if( group.exists() ) group.deleteGroup();
+            else break;
+        }
+
+        // also add exceptions
+        int index(0);
+        for( ExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
+        {
+
+            KConfigGroup group( &config, exceptionGroupName( index ) );
+            iter->write( group );
+
+        }
+
 
     }
 
+    //______________________________________________________________
+    ExceptionList ExceptionList::defaultList( void )
+    {
 
-  }
+        ExceptionList out;
 
-  //______________________________________________________________
-  OxygenExceptionList OxygenExceptionList::defaultList( void )
-  {
+        // default exception that covers most commonly used gtk based applications
+        Exception exception;
+        exception.setType( Exception::WindowClassName );
+        exception.regExp().setPattern( "(Firefox)|(Thunderbird)|(Gimp)" );
+        exception.setBlendColor( Exception::NoBlending );
+        exception.setMask( Exception::BlendColor );
+        exception.setEnabled( true );
 
-    OxygenExceptionList out;
+        out.push_back( exception );
+        return out;
 
-    // default exception that covers most commonly used gtk based applications
-    OxygenException exception;
-    exception.setType( OxygenException::WindowClassName );
-    exception.regExp().setPattern( "(Firefox)|(Thunderbird)|(Gimp)" );
-    exception.setBlendColor( OxygenException::NoBlending );
-    exception.setMask( OxygenException::BlendColor );
-    exception.setEnabled( true );
+    }
 
-    out.push_back( exception );
-    return out;
-
-  }
-
-  //_______________________________________________________________________
-  QString OxygenExceptionList::exceptionGroupName( int index )
-  {
-    QString out;
-    QTextStream( &out ) << "Windeco Exception " << index;
-    return out;
-  }
+    //_______________________________________________________________________
+    QString ExceptionList::exceptionGroupName( int index )
+    {
+        QString out;
+        QTextStream( &out ) << "Windeco Exception " << index;
+        return out;
+    }
 
 
 }

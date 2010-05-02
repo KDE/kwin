@@ -59,7 +59,7 @@ namespace Oxygen
     configuration_ = new KConfig( "oxygenrc" );
     KConfigGroup configurationGroup( configuration_, "Windeco");
 
-    userInterface_ = new OxygenConfigurationUI( parent );
+    userInterface_ = new ConfigurationUi( parent );
 
     load( configurationGroup );
     connect( userInterface_, SIGNAL(changed()), SLOT( updateChanged() ) );
@@ -84,15 +84,15 @@ namespace Oxygen
   {
 
     // load standard configuration
-    loadConfiguration( OxygenConfiguration( KConfigGroup( configuration_, "Windeco") ) );
-    loadShadowConfiguration( QPalette::Active, OxygenShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ) );
-    loadShadowConfiguration( QPalette::Inactive, OxygenShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ) );
+    loadConfiguration( Configuration( KConfigGroup( configuration_, "Windeco") ) );
+    loadShadowConfiguration( QPalette::Active, ShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ) );
+    loadShadowConfiguration( QPalette::Inactive, ShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ) );
 
     // load exceptions
-    OxygenExceptionList exceptions;
+    ExceptionList exceptions;
     exceptions.read( *configuration_ );
     if( exceptions.empty() )
-    { exceptions = OxygenExceptionList::defaultList(); }
+    { exceptions = ExceptionList::defaultList(); }
 
     // install in ui
     userInterface_->ui.exceptions->setExceptions( exceptions );
@@ -104,7 +104,7 @@ namespace Oxygen
   void Config::updateChanged( void )
   {
 
-    OxygenConfiguration configuration( KConfigGroup( configuration_, "Windeco") );
+    Configuration configuration( KConfigGroup( configuration_, "Windeco") );
     bool modified( false );
 
     if( userInterface_->ui.titleAlignment->currentIndex() != userInterface_->ui.titleAlignment->findText( configuration.titleAlignmentName( true ) ) ) modified = true;
@@ -125,8 +125,8 @@ namespace Oxygen
     else if( userInterface_->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
 
     // shadow configurations
-    else if( shadowConfigurationChanged( OxygenShadowConfiguration( QPalette::Active ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
-    else if( shadowConfigurationChanged( OxygenShadowConfiguration( QPalette::Inactive ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
+    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Active ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
+    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Inactive ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
 
     // exceptions
     else if( exceptionListChanged() ) modified = true;
@@ -148,27 +148,27 @@ namespace Oxygen
     // to the configuration file are *not* translated using current locale
     configurationGroup.writeEntry(
       OxygenConfig::TITLE_ALIGNMENT,
-      OxygenConfiguration::titleAlignmentName( OxygenConfiguration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ), false ) );
+      Configuration::titleAlignmentName( Configuration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::BUTTON_SIZE,
-      OxygenConfiguration::buttonSizeName( OxygenConfiguration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ), false ) );
+      Configuration::buttonSizeName( Configuration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::BLEND_COLOR,
-      OxygenConfiguration::blendColorName( OxygenConfiguration::blendColor( userInterface_->ui.blendColor->currentText(), true ), false ) );
+      Configuration::blendColorName( Configuration::blendColor( userInterface_->ui.blendColor->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::FRAME_BORDER,
-      OxygenConfiguration::frameBorderName( OxygenConfiguration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ), false ) );
+      Configuration::frameBorderName( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::SIZE_GRIP_MODE,
-      OxygenConfiguration::sizeGripModeName( OxygenConfiguration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ), false ) );
+      Configuration::sizeGripModeName( Configuration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::SHADOW_CACHE_MODE,
-      OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ), false ) );
+      Configuration::shadowCacheModeName( Configuration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ), false ) );
 
     configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->ui.drawSeparator->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
@@ -184,7 +184,7 @@ namespace Oxygen
 
     // write shadow configuration
     configurationGroup.writeEntry( OxygenConfig::SHADOW_MODE,
-        OxygenConfiguration::shadowModeName( OxygenConfiguration::shadowMode( userInterface_->ui.shadowMode->currentText(), true ), false ) );
+        Configuration::shadowModeName( Configuration::shadowMode( userInterface_->ui.shadowMode->currentText(), true ), false ) );
     saveShadowConfiguration( QPalette::Active, *userInterface_->shadowConfigurations[0] );
     saveShadowConfiguration( QPalette::Inactive, *userInterface_->shadowConfigurations[1] );
 
@@ -195,7 +195,7 @@ namespace Oxygen
 
 
   //_______________________________________________________________________
-  void Config::saveShadowConfiguration( QPalette::ColorGroup colorGroup, const OxygenShadowConfigurationUI& ui ) const
+  void Config::saveShadowConfiguration( QPalette::ColorGroup colorGroup, const ShadowConfigurationUi& ui ) const
   {
 
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
@@ -215,21 +215,21 @@ namespace Oxygen
   {
 
     // install default configuration
-    loadConfiguration( OxygenConfiguration() );
+    loadConfiguration( Configuration() );
 
     // load shadows
-    loadShadowConfiguration( QPalette::Active, OxygenShadowConfiguration( QPalette::Active ) );
-    loadShadowConfiguration( QPalette::Inactive, OxygenShadowConfiguration( QPalette::Inactive ) );
+    loadShadowConfiguration( QPalette::Active, ShadowConfiguration( QPalette::Active ) );
+    loadShadowConfiguration( QPalette::Inactive, ShadowConfiguration( QPalette::Inactive ) );
 
     // install default exceptions
-    userInterface_->ui.exceptions->setExceptions( OxygenExceptionList::defaultList() );
+    userInterface_->ui.exceptions->setExceptions( ExceptionList::defaultList() );
 
     updateChanged();
 
   }
 
   //_______________________________________________________________________
-  void Config::loadConfiguration( const OxygenConfiguration& configuration )
+  void Config::loadConfiguration( const Configuration& configuration )
   {
 
     userInterface_->ui.titleAlignment->setCurrentIndex( userInterface_->ui.titleAlignment->findText( configuration.titleAlignmentName( true ) ) );
@@ -251,10 +251,10 @@ namespace Oxygen
   }
 
   //_______________________________________________________________________
-  void Config::loadShadowConfiguration( QPalette::ColorGroup colorGroup, const OxygenShadowConfiguration& configuration )
+  void Config::loadShadowConfiguration( QPalette::ColorGroup colorGroup, const ShadowConfiguration& configuration )
   {
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
-    OxygenShadowConfigurationUI* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
+    ShadowConfigurationUi* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
     ui->ui.shadowSize->setValue( configuration.shadowSize() );
     ui->ui.verticalOffset->setValue( 10*configuration.verticalOffset() );
     ui->ui.innerColor->setColor( configuration.innerColor() );
@@ -263,7 +263,7 @@ namespace Oxygen
   }
 
   //_______________________________________________________________________
-  bool Config::shadowConfigurationChanged( const OxygenShadowConfiguration& configuration, const OxygenShadowConfigurationUI& ui ) const
+  bool Config::shadowConfigurationChanged( const ShadowConfiguration& configuration, const ShadowConfigurationUi& ui ) const
   {
     bool modified( false );
 
@@ -280,10 +280,10 @@ namespace Oxygen
   {
 
     // get saved list
-    OxygenExceptionList exceptions;
+    ExceptionList exceptions;
     exceptions.read( *configuration_ );
     if( exceptions.empty() )
-    { exceptions = OxygenExceptionList::defaultList(); }
+    { exceptions = ExceptionList::defaultList(); }
 
     // compare to current
     return exceptions != userInterface_->ui.exceptions->exceptions();

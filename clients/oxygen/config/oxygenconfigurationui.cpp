@@ -38,7 +38,7 @@ namespace Oxygen
 {
 
   //_________________________________________________________
-  OxygenConfigurationUI::OxygenConfigurationUI( QWidget* parent ):
+  ConfigurationUi::ConfigurationUi( QWidget* parent ):
     QWidget( parent ),
     expertMode_( false )
     {
@@ -47,62 +47,62 @@ namespace Oxygen
 
     // basic configuration
     ui.frameBorder->insertItems(0, QStringList()
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNoSide, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderTiny, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderDefault, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderLarge, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryLarge, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderHuge, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryHuge, true )
-      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderOversized, true )
+      << Configuration::frameBorderName( Configuration::BorderNone, true )
+      << Configuration::frameBorderName( Configuration::BorderNoSide, true )
+      << Configuration::frameBorderName( Configuration::BorderTiny, true )
+      << Configuration::frameBorderName( Configuration::BorderDefault, true )
+      << Configuration::frameBorderName( Configuration::BorderLarge, true )
+      << Configuration::frameBorderName( Configuration::BorderVeryLarge, true )
+      << Configuration::frameBorderName( Configuration::BorderHuge, true )
+      << Configuration::frameBorderName( Configuration::BorderVeryHuge, true )
+      << Configuration::frameBorderName( Configuration::BorderOversized, true )
       );
 
     ui.label->setBuddy( ui.frameBorder );
 
     ui.titleAlignment->insertItems(0, QStringList()
-      << OxygenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
-      << OxygenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
-      << OxygenConfiguration::titleAlignmentName( Qt::AlignRight, true )
+      << Configuration::titleAlignmentName( Qt::AlignLeft, true )
+      << Configuration::titleAlignmentName( Qt::AlignHCenter, true )
+      << Configuration::titleAlignmentName( Qt::AlignRight, true )
       );
 
     ui.label_2->setBuddy( ui.titleAlignment );
 
     ui.buttonSize->insertItems(0, QStringList()
-      << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonSmall, true )
-      << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonDefault, true )
-      << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonLarge, true )
-      << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonHuge, true )
+      << Configuration::buttonSizeName( Configuration::ButtonSmall, true )
+      << Configuration::buttonSizeName( Configuration::ButtonDefault, true )
+      << Configuration::buttonSizeName( Configuration::ButtonLarge, true )
+      << Configuration::buttonSizeName( Configuration::ButtonHuge, true )
       );
 
     ui.label_3->setBuddy( ui.buttonSize );
 
     // advanced configuration
     ui.blendColor->insertItems(0, QStringList()
-      << OxygenConfiguration::blendColorName( OxygenConfiguration::NoBlending, true )
-      << OxygenConfiguration::blendColorName( OxygenConfiguration::RadialBlending, true )
+      << Configuration::blendColorName( Configuration::NoBlending, true )
+      << Configuration::blendColorName( Configuration::RadialBlending, true )
       );
 
     ui.label_4->setBuddy( ui.blendColor );
 
     // draw size grip
     ui.sizeGripMode->insertItems(0, QStringList()
-      << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
-      << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripWhenNeeded, true )
+      << Configuration::sizeGripModeName( Configuration::SizeGripNever, true )
+      << Configuration::sizeGripModeName( Configuration::SizeGripWhenNeeded, true )
       );
 
     ui.label_5->setBuddy( ui.sizeGripMode );
 
     // shadows
     ui.shadowMode->insertItems(0, QStringList()
-        << OxygenConfiguration::shadowModeName( OxygenConfiguration::OxygenShadows, true )
-        << OxygenConfiguration::shadowModeName( OxygenConfiguration::KWinShadows, true )
-        << OxygenConfiguration::shadowModeName( OxygenConfiguration::NoShadows, true ) );
+        << Configuration::shadowModeName( Configuration::OxygenShadows, true )
+        << Configuration::shadowModeName( Configuration::KWinShadows, true )
+        << Configuration::shadowModeName( Configuration::NoShadows, true ) );
 
     ui.shadowCacheMode->insertItems(0, QStringList()
-        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheDisabled, true )
-        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheVariable, true )
-        << OxygenConfiguration::shadowCacheModeName( OxygenConfiguration::CacheMaximum, true ) );
+        << Configuration::shadowCacheModeName( Configuration::CacheDisabled, true )
+        << Configuration::shadowCacheModeName( Configuration::CacheVariable, true )
+        << Configuration::shadowCacheModeName( Configuration::CacheMaximum, true ) );
 
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
@@ -139,7 +139,7 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  void OxygenConfigurationUI::toggleExpertMode( bool value )
+  void ConfigurationUi::toggleExpertMode( bool value )
   {
 
     expertMode_ = value;
@@ -154,10 +154,10 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  void OxygenConfigurationUI::shadowModeChanged( int index )
+  void ConfigurationUi::shadowModeChanged( int index )
   {
-    bool enabled( ui.shadowMode->itemText( index ) == OxygenConfiguration::shadowModeName( OxygenConfiguration::OxygenShadows, true ) );
-    foreach( OxygenShadowConfigurationUI* shadowConfiguration, shadowConfigurations )
+    bool enabled( ui.shadowMode->itemText( index ) == Configuration::shadowModeName( Configuration::OxygenShadows, true ) );
+    foreach( ShadowConfigurationUi* shadowConfiguration, shadowConfigurations )
     { shadowConfiguration->setEnabled( enabled ); }
   }
 }

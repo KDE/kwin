@@ -38,8 +38,8 @@
 
 namespace Oxygen {
 
-  class OxygenConfiguration;
-  class OxygenShadowConfiguration;
+  class Configuration;
+  class ShadowConfiguration;
 
   // oxygen configuration object
   class Config: public QObject
@@ -85,16 +85,16 @@ namespace Oxygen {
     private:
 
     //! load configuration
-    void loadConfiguration( const OxygenConfiguration& );
+    void loadConfiguration( const Configuration& );
 
     //! load configuration
-    void loadShadowConfiguration( QPalette::ColorGroup, const OxygenShadowConfiguration& );
+    void loadShadowConfiguration( QPalette::ColorGroup, const ShadowConfiguration& );
 
     //! load configuration
-    void saveShadowConfiguration( QPalette::ColorGroup, const OxygenShadowConfigurationUI& ) const;
+    void saveShadowConfiguration( QPalette::ColorGroup, const ShadowConfigurationUi& ) const;
 
     //! returns true if shadow configuration changed
-    bool shadowConfigurationChanged( const OxygenShadowConfiguration&, const OxygenShadowConfigurationUI& ) const;
+    bool shadowConfigurationChanged( const ShadowConfiguration&, const ShadowConfigurationUi& ) const;
 
     //! returns true if exception list is changed
     bool exceptionListChanged( void ) const;
@@ -103,7 +103,7 @@ namespace Oxygen {
     bool expertMode_;
 
     //! user interface
-    OxygenConfigurationUI *userInterface_;
+    ConfigurationUi *userInterface_;
 
     //! kconfiguration object
     KConfig *configuration_;

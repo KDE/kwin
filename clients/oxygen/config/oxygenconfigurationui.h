@@ -39,7 +39,7 @@ namespace Oxygen
 {
 
   //_____________________________________________
-  class OxygenConfigurationUI: public QWidget
+  class ConfigurationUi: public QWidget
   {
 
     Q_OBJECT
@@ -47,13 +47,13 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenConfigurationUI( QWidget* );
+    ConfigurationUi( QWidget* );
 
     //! ui
     Ui_OxygenConfigurationUI ui;
 
     //! shadow configuration
-    QVector<OxygenShadowConfigurationUI*> shadowConfigurations;
+    QVector<ShadowConfigurationUi*> shadowConfigurations;
 
     //! toggle expert mode
     void toggleExpertMode( bool );

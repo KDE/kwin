@@ -32,7 +32,7 @@ namespace Oxygen
 {
 
   //! qlistview for object counters
-  class OxygenExceptionModel: public ListModel<OxygenException>
+  class ExceptionModel: public ListModel<Exception>
   {
 
     public:

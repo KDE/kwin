@@ -33,65 +33,65 @@
 namespace Oxygen
 {
 
-  class OxygenClient;
+    class Client;
 
-  //! implements size grip for all widgets
-  class OxygenSizeGrip: public QWidget
-  {
+    //! implements size grip for all widgets
+    class SizeGrip: public QWidget
+    {
 
-    public:
+        public:
 
-    //! constructor
-    OxygenSizeGrip( OxygenClient* );
+        //! constructor
+        SizeGrip( Client* );
 
-    //! constructor
-    virtual ~OxygenSizeGrip( void );
+        //! constructor
+        virtual ~SizeGrip( void );
 
-    //! event filter
-    virtual bool eventFilter( QObject*, QEvent* );
+        //! event filter
+        virtual bool eventFilter( QObject*, QEvent* );
 
-    public slots:
+        public slots:
 
-    //! update background color
-    void activeChange( void );
+        //! update background color
+        void activeChange( void );
 
-    protected slots:
+        protected slots:
 
-    //! embed into parent widget
-    void embed( void );
+        //! embed into parent widget
+        void embed( void );
 
-    protected:
+        protected:
 
-    //!@name event handlers
-    //@{
+        //!@name event handlers
+        //@{
 
-    //! paint
-    virtual void paintEvent( QPaintEvent* );
+        //! paint
+        virtual void paintEvent( QPaintEvent* );
 
-    //! mouse press
-    virtual void mousePressEvent( QMouseEvent* );
+        //! mouse press
+        virtual void mousePressEvent( QMouseEvent* );
 
-    //@}
+        //@}
 
-    //! client
-    OxygenClient& client( void ) const
-    { return *client_; }
+        //! client
+        Client& client( void ) const
+        { return *client_; }
 
-    //! update position
-    void updatePosition( void );
+        //! update position
+        void updatePosition( void );
 
-    private:
+        private:
 
-    //! grip size
-    enum {
-      OFFSET = 0,
-      GRIP_SIZE = 14
+        //! grip size
+        enum {
+            OFFSET = 0,
+            GRIP_SIZE = 14
+        };
+
+        // oxygen client
+        Client* client_;
+
     };
-
-    // oxygen client
-    OxygenClient* client_;
-
-  };
 
 
 }

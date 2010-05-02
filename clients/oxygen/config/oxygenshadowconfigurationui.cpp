@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// OxygenShadowConfigurationUI.cpp
+// ShadowConfigurationUi.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -33,7 +33,7 @@ namespace Oxygen
 {
 
   //_________________________________________________________
-  OxygenShadowConfigurationUI::OxygenShadowConfigurationUI( QWidget* parent ):
+  ShadowConfigurationUi::ShadowConfigurationUi( QWidget* parent ):
     QGroupBox( parent )
   {
     ui.setupUi( this );

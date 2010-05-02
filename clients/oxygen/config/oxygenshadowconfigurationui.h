@@ -1,7 +1,7 @@
-#ifndef OxygenShadowConfigurationUI_h
-#define OxygenShadowConfigurationUI_h
+#ifndef ShadowConfigurationUi_h
+#define ShadowConfigurationUi_h
 //////////////////////////////////////////////////////////////////////////////
-// OxygenShadowConfigurationUI.h
+// ShadowConfigurationUi.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -32,7 +32,7 @@ namespace Oxygen
 {
 
   //_____________________________________________
-  class OxygenShadowConfigurationUI: public QGroupBox
+  class ShadowConfigurationUi: public QGroupBox
   {
 
     Q_OBJECT
@@ -40,7 +40,7 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenShadowConfigurationUI( QWidget* );
+    ShadowConfigurationUi( QWidget* );
     Ui_ShadowConfiguraionUI ui;
 
     signals:

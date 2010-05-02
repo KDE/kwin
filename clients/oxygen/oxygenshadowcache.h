@@ -38,195 +38,195 @@ class OxygenHelper;
 namespace Oxygen
 {
 
-  class OxygenClient;
-  class OxygenShadowCache
-  {
-    public:
-
-    //! constructor
-    OxygenShadowCache( OxygenDecoHelper& helper );
-
-    //! destructor
-    virtual ~OxygenShadowCache( void )
-    {}
-
-    //! cache size
-    void setEnabled( bool enabled )
+    class Client;
+    class ShadowCache
     {
-        enabled_ = enabled;
-        if( enabled )
+        public:
+
+        //! constructor
+        ShadowCache( OxygenDecoHelper& helper );
+
+        //! destructor
+        virtual ~ShadowCache( void )
+        {}
+
+        //! cache size
+        void setEnabled( bool enabled )
         {
+            enabled_ = enabled;
+            if( enabled )
+            {
 
-            shadowCache_.setMaxCost( 1<<6 );
-            animatedShadowCache_.setMaxCost( maxIndex_<<6 );
+                shadowCache_.setMaxCost( 1<<6 );
+                animatedShadowCache_.setMaxCost( maxIndex_<<6 );
 
-        } else {
+            } else {
 
-            shadowCache_.setMaxCost( 1 );
-            animatedShadowCache_.setMaxCost( 1 );
+                shadowCache_.setMaxCost( 1 );
+                animatedShadowCache_.setMaxCost( 1 );
 
-        }
-    }
-
-    //! max animation index
-    int maxIndex( void ) const
-    { return maxIndex_; }
-
-    //! max animation index
-    void setMaxIndex( int value )
-    {
-        maxIndex_ = value;
-        if( enabled_ )
-        {
-
-            shadowCache_.setMaxCost( 1<<6 );
-            animatedShadowCache_.setMaxCost( maxIndex_<<6 );
-
+            }
         }
 
-    }
+        //! max animation index
+        int maxIndex( void ) const
+        { return maxIndex_; }
 
-    //! invalidate caches
-    void invalidateCaches( void )
-    {
-      shadowCache_.clear();
-      animatedShadowCache_.clear();
-    }
+        //! max animation index
+        void setMaxIndex( int value )
+        {
+            maxIndex_ = value;
+            if( enabled_ )
+            {
 
-    //! returns true if provided shadow configuration changes with respect to stored
-    /*!
-    use OxygenShadowConfiguration::colorRole() to decide whether it should be stored
-    as active or inactive
-    */
-    bool shadowConfigurationChanged( const OxygenShadowConfiguration& ) const;
+                shadowCache_.setMaxCost( 1<<6 );
+                animatedShadowCache_.setMaxCost( maxIndex_<<6 );
 
-    //! set shadowConfiguration
-    /*!
-    use OxygenShadowConfiguration::colorRole() to decide whether it should be stored
-    as active or inactive
-    */
-    void setShadowConfiguration( const OxygenShadowConfiguration& );
+            }
 
-    //! shadow size
-    qreal shadowSize( void ) const
-    {
-        qreal activeSize( activeShadowConfiguration_.isEnabled() ? activeShadowConfiguration_.shadowSize():0 );
-        qreal inactiveSize( inactiveShadowConfiguration_.isEnabled() ? inactiveShadowConfiguration_.shadowSize():0 );
-        qreal size( qMax( activeSize, inactiveSize ) );
+        }
 
-        // even if shadows are disabled,
-        // you need a minimum size to allow corner rendering
-        return qMax( size, qreal(5.0) );
-    }
+        //! invalidate caches
+        void invalidateCaches( void )
+        {
+            shadowCache_.clear();
+            animatedShadowCache_.clear();
+        }
 
-    //! get shadow matching client
-    TileSet* tileSet( const OxygenClient* );
+        //! returns true if provided shadow configuration changes with respect to stored
+        /*!
+        use ShadowConfiguration::colorRole() to decide whether it should be stored
+        as active or inactive
+        */
+        bool shadowConfigurationChanged( const ShadowConfiguration& ) const;
 
-    //! get shadow matching client and opacity
-    TileSet* tileSet( const OxygenClient*, qreal );
+        //! set shadowConfiguration
+        /*!
+        use ShadowConfiguration::colorRole() to decide whether it should be stored
+        as active or inactive
+        */
+        void setShadowConfiguration( const ShadowConfiguration& );
 
-    //! Key class to be used into QCache
-    /*! class is entirely inline for optimization */
-    class Key
-    {
+        //! shadow size
+        qreal shadowSize( void ) const
+        {
+            qreal activeSize( activeShadowConfiguration_.isEnabled() ? activeShadowConfiguration_.shadowSize():0 );
+            qreal inactiveSize( inactiveShadowConfiguration_.isEnabled() ? inactiveShadowConfiguration_.shadowSize():0 );
+            qreal size( qMax( activeSize, inactiveSize ) );
 
-      public:
+            // even if shadows are disabled,
+            // you need a minimum size to allow corner rendering
+            return qMax( size, qreal(5.0) );
+        }
 
-      //! explicit constructor
-      explicit Key( void ):
-        index(0),
-        active(false),
-        useOxygenShadows(false),
-        isShade(false),
-        hasTitleOutline(false),
-        hasBorder( true )
-      {}
+        //! get shadow matching client
+        TileSet* tileSet( const Client* );
 
-      //! constructor from client
-      Key( const OxygenClient* );
+        //! get shadow matching client and opacity
+        TileSet* tileSet( const Client*, qreal );
 
-      //! constructor from int
-      Key( int hash ):
-        index( hash>>5 ),
-        active( (hash>>4)&1 ),
-        useOxygenShadows( (hash>>3)&1 ),
-        isShade( (hash>>2)&1 ),
-        hasTitleOutline( (hash>>1)&1 ),
-        hasBorder( hash&1 )
-      {}
+        //! Key class to be used into QCache
+        /*! class is entirely inline for optimization */
+        class Key
+        {
 
-      //! hash function
-      int hash( void ) const
-      {
+            public:
 
-        // note this can be optimized because not all of the flag configurations are actually relevant
-        // allocate 3 empty bits for flags
-        return
-          ( index << 5 ) |
-          ( active << 4 ) |
-          (useOxygenShadows << 3 ) |
-          (isShade<<2) |
-          (hasTitleOutline<<1) |
-          (hasBorder<<0);
+            //! explicit constructor
+            explicit Key( void ):
+                index(0),
+                active(false),
+                useOxygenShadows(false),
+                isShade(false),
+                hasTitleOutline(false),
+                hasBorder( true )
+            {}
 
-      }
+            //! constructor from client
+            Key( const Client* );
 
-      int index;
-      bool active;
-      bool useOxygenShadows;
-      bool isShade;
-      bool hasTitleOutline;
-      bool hasBorder;
+            //! constructor from int
+            Key( int hash ):
+                index( hash>>5 ),
+                active( (hash>>4)&1 ),
+                useOxygenShadows( (hash>>3)&1 ),
+                isShade( (hash>>2)&1 ),
+                hasTitleOutline( (hash>>1)&1 ),
+                hasBorder( hash&1 )
+            {}
+
+            //! hash function
+            int hash( void ) const
+            {
+
+                // note this can be optimized because not all of the flag configurations are actually relevant
+                // allocate 3 empty bits for flags
+                return
+                    ( index << 5 ) |
+                    ( active << 4 ) |
+                    (useOxygenShadows << 3 ) |
+                    (isShade<<2) |
+                    (hasTitleOutline<<1) |
+                    (hasBorder<<0);
+
+            }
+
+            int index;
+            bool active;
+            bool useOxygenShadows;
+            bool isShade;
+            bool hasTitleOutline;
+            bool hasBorder;
+
+        };
+
+        //! complex pixmap (when needed)
+        QPixmap shadowPixmap( const Client*, bool active ) const;
+
+        //! simple pixmap
+        QPixmap simpleShadowPixmap( const QColor& color, const Key& key ) const
+        { return simpleShadowPixmap( color, key, key.active ); }
+
+        //! simple pixmap
+        QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
+
+        protected:
+
+        OxygenHelper& helper( void ) const
+        { return helper_; }
+
+        private:
+
+        //! draw gradient into rect
+        /*! a separate method is used in order to properly account for corners */
+        void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
+
+        //! helper
+        OxygenDecoHelper& helper_;
+
+        //! caching enable state
+        bool enabled_;
+
+        //! max index
+        /*! it is used to set caches max cost, and calculate animation opacity */
+        int maxIndex_;
+
+        //! shadow configuration
+        ShadowConfiguration activeShadowConfiguration_;
+
+        //! shadow configuration
+        ShadowConfiguration inactiveShadowConfiguration_;
+
+        //! cache
+        typedef QCache<int, TileSet> TileSetCache;
+
+        //! shadow cache
+        TileSetCache shadowCache_;
+
+        //! animated shadow cache
+        TileSetCache animatedShadowCache_;
 
     };
-
-    //! complex pixmap (when needed)
-    QPixmap shadowPixmap( const OxygenClient*, bool active ) const;
-
-    //! simple pixmap
-    QPixmap simpleShadowPixmap( const QColor& color, const Key& key ) const
-    { return simpleShadowPixmap( color, key, key.active ); }
-
-    //! simple pixmap
-    QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
-
-    protected:
-
-    OxygenHelper& helper( void ) const
-    { return helper_; }
-
-    private:
-
-    //! draw gradient into rect
-    /*! a separate method is used in order to properly account for corners */
-    void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
-
-    //! helper
-    OxygenDecoHelper& helper_;
-
-    //! caching enable state
-    bool enabled_;
-
-    //! max index
-    /*! it is used to set caches max cost, and calculate animation opacity */
-    int maxIndex_;
-
-    //! shadow configuration
-    OxygenShadowConfiguration activeShadowConfiguration_;
-
-    //! shadow configuration
-    OxygenShadowConfiguration inactiveShadowConfiguration_;
-
-    //! cache
-    typedef QCache<int, TileSet> TileSetCache;
-
-    //! shadow cache
-    TileSetCache shadowCache_;
-
-    //! animated shadow cache
-    TileSetCache animatedShadowCache_;
-
-  };
 
 }
 

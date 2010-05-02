@@ -38,48 +38,48 @@
 namespace Oxygen
 {
 
-  class DetectDialog;
+    class DetectDialog;
 
-  //! oxygen exceptions list
-  class OxygenExceptionDialog: public KDialog
-  {
+    //! oxygen exceptions list
+    class ExceptionDialog: public KDialog
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
+        public:
 
-    //! constructor
-    OxygenExceptionDialog( QWidget* parent );
+        //! constructor
+        ExceptionDialog( QWidget* parent );
 
-    //! set exception
-    void setException( OxygenException );
+        //! set exception
+        void setException( Exception );
 
-    //! get exception
-    OxygenException exception( void ) const;
+        //! get exception
+        Exception exception( void ) const;
 
-    private slots:
+        private slots:
 
-    void selectWindowProperties( void );
+        void selectWindowProperties( void );
 
-    void readWindowProperties( bool );
+        void readWindowProperties( bool );
 
-    private:
+        private:
 
-    Ui_OxygenExceptionWidget ui;
+        Ui_OxygenExceptionWidget ui;
 
-    //! map mask and checkbox
-    typedef std::map< OxygenException::AttributesMask, QCheckBox*> CheckBoxMap;
+        //! map mask and checkbox
+        typedef std::map< Exception::AttributesMask, QCheckBox*> CheckBoxMap;
 
-    //! map mask and checkbox
-    CheckBoxMap checkboxes_;
+        //! map mask and checkbox
+        CheckBoxMap checkboxes_;
 
-    //! internal exception
-    OxygenException exception_;
+        //! internal exception
+        Exception exception_;
 
-    //! detection dialog
-    DetectDialog* detectDialog;
+        //! detection dialog
+        DetectDialog* detectDialog;
 
-  };
+    };
 
 }
 

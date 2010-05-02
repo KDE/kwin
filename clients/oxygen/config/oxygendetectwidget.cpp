@@ -46,129 +46,129 @@
 namespace Oxygen
 {
 
-  //_________________________________________________________
-  DetectDialog::DetectDialog( QWidget* parent ):
-    KDialog( parent ),
-    grabber( 0 )
-  {
-
-    // define buttons
-    setButtons( Ok|Cancel );
-    showButtonSeparator( false );
-
-    QWidget* local( new QWidget( this ) );
-    ui.setupUi( local );
-    ui.windowClassCheckBox->setChecked( true );
-
-    // central widget
-    setMainWidget( local );
-
-  }
-
-  //_________________________________________________________
-  void DetectDialog::detect(  WId window )
-  {
-    if( window == 0 ) selectWindow();
-    else readWindow( window );
-  }
-
-  //_________________________________________________________
-  void DetectDialog::readWindow( WId window )
-  {
-
-    if( window == 0 )
+    //_________________________________________________________
+    DetectDialog::DetectDialog( QWidget* parent ):
+        KDialog( parent ),
+        grabber( 0 )
     {
-      emit detectionDone( false );
-      return;
+
+        // define buttons
+        setButtons( Ok|Cancel );
+        showButtonSeparator( false );
+
+        QWidget* local( new QWidget( this ) );
+        ui.setupUi( local );
+        ui.windowClassCheckBox->setChecked( true );
+
+        // central widget
+        setMainWidget( local );
+
     }
 
-    info = KWindowSystem::windowInfo( window, -1U, -1U );
-    if( !info.valid())
+    //_________________________________________________________
+    void DetectDialog::detect(  WId window )
     {
-      emit detectionDone( false );
-      return;
+        if( window == 0 ) selectWindow();
+        else readWindow( window );
     }
 
-    QString wmclass_class = info.windowClassClass();
-    QString wmclass_name = info.windowClassName();
-    QString title = info.name();
-
-    ui.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
-    ui.windowTitle->setText( title );
-    emit detectionDone( exec() == KDialog::Accepted );
-
-    return;
-
-  }
-
-  //_________________________________________________________
-  void DetectDialog::selectWindow()
-  {
-
-    // use a dialog, so that all user input is blocked
-    // use WX11BypassWM and moving away so that it's not actually visible
-    // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
-    grabber->move( -1000, -1000 );
-    grabber->setModal( true );
-    grabber->show();
-    grabber->grabMouse( Qt::CrossCursor );
-    grabber->installEventFilter( this );
-
-  }
-
-  //_________________________________________________________
-  bool DetectDialog::eventFilter( QObject* o, QEvent* e )
-  {
-    // check object and event type
-    if( o != grabber ) return false;
-    if( e->type() != QEvent::MouseButtonRelease ) return false;
-
-    // delete old grabber
-    delete grabber;
-    grabber = 0;
-
-    // check button
-    if( static_cast< QMouseEvent* >( e )->button() != Qt::LeftButton ) return true;
-
-    // read window information
-    readWindow( findWindow() );
-
-    return true;
-  }
-
-  //_________________________________________________________
-  WId DetectDialog::findWindow()
-  {
-
-    Window root;
-    Window child;
-    uint mask;
-    int rootX, rootY, x, y;
-    Window parent = QX11Info::appRootWindow();
-    Atom wm_state = XInternAtom( QX11Info::display(), "WM_STATE", False );
-
-    // why is there a loop of only 10 here
-    for( int i = 0; i < 10; ++i )
+    //_________________________________________________________
+    void DetectDialog::readWindow( WId window )
     {
-      XQueryPointer( QX11Info::display(), parent, &root, &child, &rootX, &rootY, &x, &y, &mask );
-      if( child == None ) return 0;
-      Atom type;
-      int format;
-      unsigned long nitems, after;
-      unsigned char* prop;
-      if( XGetWindowProperty(
-        QX11Info::display(), child, wm_state, 0, 0, False,
-        AnyPropertyType, &type, &format, &nitems, &after, &prop ) == Success )
-      {
-        if( prop != NULL ) XFree( prop );
-        if( type != None ) return child;
-      }
-      parent = child;
+
+        if( window == 0 )
+        {
+            emit detectionDone( false );
+            return;
+        }
+
+        info = KWindowSystem::windowInfo( window, -1U, -1U );
+        if( !info.valid())
+        {
+            emit detectionDone( false );
+            return;
+        }
+
+        QString wmclass_class = info.windowClassClass();
+        QString wmclass_name = info.windowClassName();
+        QString title = info.name();
+
+        ui.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
+        ui.windowTitle->setText( title );
+        emit detectionDone( exec() == KDialog::Accepted );
+
+        return;
+
     }
 
-    return 0;
+    //_________________________________________________________
+    void DetectDialog::selectWindow()
+    {
 
-  }
+        // use a dialog, so that all user input is blocked
+        // use WX11BypassWM and moving away so that it's not actually visible
+        // grab only mouse, so that keyboard can be used e.g. for switching windows
+        grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
+        grabber->move( -1000, -1000 );
+        grabber->setModal( true );
+        grabber->show();
+        grabber->grabMouse( Qt::CrossCursor );
+        grabber->installEventFilter( this );
+
+    }
+
+    //_________________________________________________________
+    bool DetectDialog::eventFilter( QObject* o, QEvent* e )
+    {
+        // check object and event type
+        if( o != grabber ) return false;
+        if( e->type() != QEvent::MouseButtonRelease ) return false;
+
+        // delete old grabber
+        delete grabber;
+        grabber = 0;
+
+        // check button
+        if( static_cast< QMouseEvent* >( e )->button() != Qt::LeftButton ) return true;
+
+        // read window information
+        readWindow( findWindow() );
+
+        return true;
+    }
+
+    //_________________________________________________________
+    WId DetectDialog::findWindow()
+    {
+
+        Window root;
+        Window child;
+        uint mask;
+        int rootX, rootY, x, y;
+        Window parent = QX11Info::appRootWindow();
+        Atom wm_state = XInternAtom( QX11Info::display(), "WM_STATE", False );
+
+        // why is there a loop of only 10 here
+        for( int i = 0; i < 10; ++i )
+        {
+            XQueryPointer( QX11Info::display(), parent, &root, &child, &rootX, &rootY, &x, &y, &mask );
+            if( child == None ) return 0;
+            Atom type;
+            int format;
+            unsigned long nitems, after;
+            unsigned char* prop;
+            if( XGetWindowProperty(
+                QX11Info::display(), child, wm_state, 0, 0, False,
+                AnyPropertyType, &type, &format, &nitems, &after, &prop ) == Success )
+            {
+                if( prop != NULL ) XFree( prop );
+                if( type != None ) return child;
+            }
+            parent = child;
+        }
+
+        return 0;
+
+    }
 
 }

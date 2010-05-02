@@ -1,7 +1,7 @@
-#ifndef OxygenExceptionListWidget_h
-#define OxygenExceptionListWidget_h
+#ifndef oxygenexceptionlistwidget_h
+#define oxygenexceptionlistwidget_h
 //////////////////////////////////////////////////////////////////////////////
-// OxygenExceptionListWidget.h
+// oxygenexceptionlistwidget.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -33,79 +33,79 @@
 namespace Oxygen
 {
 
-  class OxygenExceptionListWidget: public QWidget
-  {
+    class ExceptionListWidget: public QWidget
+    {
 
-    //! Qt meta object
-    Q_OBJECT
+        //! Qt meta object
+        Q_OBJECT
 
-    public:
+        public:
 
-    //! constructor
-    explicit OxygenExceptionListWidget( QWidget* = 0, OxygenConfiguration default_configuration = OxygenConfiguration() );
+        //! constructor
+        explicit ExceptionListWidget( QWidget* = 0, Configuration default_configuration = Configuration() );
 
-    //! set exceptions
-    void setExceptions( const OxygenExceptionList& );
+        //! set exceptions
+        void setExceptions( const ExceptionList& );
 
-    //! get exceptions
-    OxygenExceptionList exceptions( void ) const;
+        //! get exceptions
+        ExceptionList exceptions( void ) const;
 
-    signals:
+        signals:
 
-    //! emitted when list is changed
-    void changed( void );
+        //! emitted when list is changed
+        void changed( void );
 
-    protected:
+        protected:
 
-    //! model
-    const OxygenExceptionModel& _model() const
-    { return model_; }
+        //! model
+        const ExceptionModel& _model() const
+        { return model_; }
 
-    //! model
-    OxygenExceptionModel& _model()
-    { return model_; }
+        //! model
+        ExceptionModel& _model()
+        { return model_; }
 
-    protected slots:
+        protected slots:
 
-    //! update button states
-    virtual void _updateButtons( void );
+        //! update button states
+        virtual void _updateButtons( void );
 
-    //! add
-    virtual void _add( void );
+        //! add
+        virtual void _add( void );
 
-    //! edit
-    virtual void _edit( void );
+        //! edit
+        virtual void _edit( void );
 
-    //! remove
-    virtual void _remove( void );
+        //! remove
+        virtual void _remove( void );
 
-    //! toggle
-    virtual void _toggle( const QModelIndex& );
+        //! toggle
+        virtual void _toggle( const QModelIndex& );
 
-    //! move up
-    virtual void _up( void );
+        //! move up
+        virtual void _up( void );
 
-    //! move down
-    virtual void _down( void );
+        //! move down
+        virtual void _down( void );
 
-    private:
+        private:
 
-    //! resize columns
-    void _resizeColumns( void ) const;
+        //! resize columns
+        void _resizeColumns( void ) const;
 
-    //! check exception
-    bool _checkException( OxygenException& );
+        //! check exception
+        bool _checkException( Exception& );
 
-    //! default configuration
-    OxygenConfiguration default_configuration_;
+        //! default configuration
+        Configuration default_configuration_;
 
-    //! model
-    OxygenExceptionModel model_;
+        //! model
+        ExceptionModel model_;
 
-    //! ui
-    Ui_OxygenExceptionListWidget ui;
+        //! ui
+        Ui_OxygenExceptionListWidget ui;
 
-  };
+    };
 
 }
 

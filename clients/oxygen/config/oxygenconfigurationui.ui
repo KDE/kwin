@@ -254,7 +254,7 @@
        <item row="2" column="0" colspan="3">
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
-          <widget class="Oxygen::OxygenShadowConfigurationUI" name="inactiveShadowConfiguration">
+          <widget class="Oxygen::ShadowConfigurationUi" name="inactiveShadowConfiguration">
            <property name="title">
             <string>Window Drop-Down Shadow</string>
            </property>
@@ -264,7 +264,7 @@
           </widget>
          </item>
          <item>
-          <widget class="Oxygen::OxygenShadowConfigurationUI" name="activeShadowConfiguration">
+          <widget class="Oxygen::ShadowConfigurationUi" name="activeShadowConfiguration">
            <property name="title">
             <string>Active Window Glow</string>
            </property>
@@ -296,7 +296,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="Oxygen::OxygenExceptionListWidget" name="exceptions" native="true"/>
+        <widget class="Oxygen::ExceptionListWidget" name="exceptions" native="true"/>
        </item>
       </layout>
      </widget>
@@ -317,13 +317,13 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Oxygen::OxygenShadowConfigurationUI</class>
+   <class>Oxygen::ShadowConfigurationUi</class>
    <extends>QGroupBox</extends>
    <header>oxygenshadowconfigurationui.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Oxygen::OxygenExceptionListWidget</class>
+   <class>Oxygen::ExceptionListWidget</class>
    <extends>QWidget</extends>
    <header>oxygenexceptionlistwidget.h</header>
    <container>1</container>

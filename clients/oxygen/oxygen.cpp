@@ -37,255 +37,255 @@
 
 extern "C"
 {
-  KDE_EXPORT KDecorationFactory* create_factory()
-  { return new Oxygen::OxygenFactory(); }
+    KDE_EXPORT KDecorationFactory* create_factory()
+    { return new Oxygen::Factory(); }
 }
 
 namespace Oxygen
 {
 
-  //___________________________________________________
-  OxygenFactory::OxygenFactory():
-    initialized_( false ),
-    helper_( "oxygenDeco" ),
-    shadowCache_( helper_ )
-  {
-    readConfig();
-    setInitialized( true );
-  }
-
-  //___________________________________________________
-  OxygenFactory::~OxygenFactory()
-  { setInitialized( false ); }
-
-  //___________________________________________________
-  KDecoration* OxygenFactory::createDecoration(KDecorationBridge* bridge )
-  { return (new OxygenClient( bridge, this ))->decoration(); }
-
-  //___________________________________________________
-  bool OxygenFactory::reset(unsigned long changed)
-  {
-
-    // read in the configuration
-    setInitialized( false );
-    bool configuration_changed = readConfig();
-    setInitialized( true );
-
-    if( configuration_changed || (changed & (SettingDecoration | SettingButtons | SettingBorder)) )
+    //___________________________________________________
+    Factory::Factory():
+        initialized_( false ),
+        helper_( "oxygenDeco" ),
+        shadowCache_( helper_ )
     {
-
-      return true;
-
-    } else {
-
-      if( changed & SettingColors ) shadowCache().invalidateCaches();
-      resetDecorations(changed);
-      return false;
-
+        readConfig();
+        setInitialized( true );
     }
 
-  }
+    //___________________________________________________
+    Factory::~Factory()
+    { setInitialized( false ); }
 
-  //___________________________________________________
-  bool OxygenFactory::readConfig()
-  {
+    //___________________________________________________
+    KDecoration* Factory::createDecoration(KDecorationBridge* bridge )
+    { return (new Client( bridge, this ))->decoration(); }
 
-    bool changed( false );
-
-    /*
-    always reload helper
-    this is needed to properly handle
-    color contrast settings changed
-    */
-    helper().reloadConfig();
-
-    // create a config object
-    KConfig config("oxygenrc");
-    KConfigGroup group( config.group("Windeco") );
-    OxygenConfiguration configuration( group );
-    if( !( configuration == defaultConfiguration() ) )
+    //___________________________________________________
+    bool Factory::reset(unsigned long changed)
     {
-      setDefaultConfiguration( configuration );
-      changed = true;
-    }
 
-    // initialize shadow cache
-    switch( defaultConfiguration().shadowCacheMode() )
-    {
-        case OxygenConfiguration::CacheDisabled:
-        {
-            shadowCache_.setEnabled( false );
-            break;
-        }
+        // read in the configuration
+        setInitialized( false );
+        bool configuration_changed = readConfig();
+        setInitialized( true );
 
-        default:
-        case OxygenConfiguration::CacheVariable:
+        if( configuration_changed || (changed & (SettingDecoration | SettingButtons | SettingBorder)) )
         {
-            shadowCache_.setEnabled( true );
-            shadowCache_.setMaxIndex( qMin( 256, int( 120*defaultConfiguration().animationsDuration()/1000 ) ) );
-            break;
-        }
 
-        case OxygenConfiguration::CacheMaximum:
-        {
-            shadowCache_.setEnabled( true );
-            shadowCache_.setMaxIndex( 256 );
-            break;
+            return true;
+
+        } else {
+
+            if( changed & SettingColors ) shadowCache().invalidateCaches();
+            resetDecorations(changed);
+            return false;
+
         }
 
     }
 
-    // read exceptionsreadConfig
-    OxygenExceptionList exceptions( config );
-    if( !( exceptions == exceptions_ ) )
-    {
-      exceptions_ = exceptions;
-      changed = true;
-    }
-
-    // shadow mode
-    if( configuration.shadowMode() != OxygenConfiguration::OxygenShadows )
-    {
-      defaultConfiguration().setUseOxygenShadows( false );
-      defaultConfiguration().setUseDropShadows( false );
-    }
-
-    // read shadow configurations
-    OxygenShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
-    activeShadowConfiguration.setEnabled( defaultConfiguration().useOxygenShadows() );
-    if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
-    {
-      shadowCache().setShadowConfiguration( activeShadowConfiguration );
-      changed = true;
-    }
-
-    // read shadow configurations
-    OxygenShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
-    inactiveShadowConfiguration.setEnabled( defaultConfiguration().useDropShadows() );
-    if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
-    {
-      shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
-      changed = true;
-    }
-
-    if( changed )
+    //___________________________________________________
+    bool Factory::readConfig()
     {
 
-      shadowCache().invalidateCaches();
-      helper().invalidateCaches();
-      return true;
+        bool changed( false );
 
-    } else return false;
+        /*
+        always reload helper
+        this is needed to properly handle
+        color contrast settings changed
+        */
+        helper().reloadConfig();
 
-  }
-
-  //_________________________________________________________________
-  bool OxygenFactory::supports( Ability ability ) const
-  {
-    switch( ability )
-    {
-
-      // announce
-      case AbilityAnnounceButtons:
-      case AbilityAnnounceColors:
-
-      // buttons
-      case AbilityButtonMenu:
-      case AbilityButtonHelp:
-      case AbilityButtonMinimize:
-      case AbilityButtonMaximize:
-      case AbilityButtonClose:
-      case AbilityButtonOnAllDesktops:
-      case AbilityButtonAboveOthers:
-      case AbilityButtonBelowOthers:
-      case AbilityButtonSpacer:
-      case AbilityButtonShade:
-
-      //       // colors
-      //       case AbilityColorTitleBack:
-      //       case AbilityColorTitleFore:
-      //       case AbilityColorFrame:
-
-      // compositing
-      case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
-      return defaultConfiguration().shadowMode() != OxygenConfiguration::KWinShadows;
-
-      case AbilityUsesAlphaChannel:
-      return true;
-
-      // tabs
-      case AbilityClientGrouping:
-      return defaultConfiguration().tabsEnabled();
-
-      // no colors supported at this time
-      default:
-      return false;
-    };
-  }
-
-
-
-  //____________________________________________________________________
-  OxygenConfiguration OxygenFactory::configuration( const OxygenClient& client )
-  {
-
-    QString window_title;
-    QString class_name;
-    for( OxygenExceptionList::const_iterator iter = exceptions_.constBegin(); iter != exceptions_.constEnd(); ++iter )
-    {
-
-      // discard disabled exceptions
-      if( !iter->enabled() ) continue;
-
-      /*
-      decide which value is to be compared
-      to the regular expression, based on exception type
-      */
-      QString value;
-      switch( iter->type() )
-      {
-        case OxygenException::WindowTitle:
+        // create a config object
+        KConfig config("oxygenrc");
+        KConfigGroup group( config.group("Windeco") );
+        Configuration configuration( group );
+        if( !( configuration == defaultConfiguration() ) )
         {
-          value = window_title.isEmpty() ? (window_title = client.caption()):window_title;
-          break;
+            setDefaultConfiguration( configuration );
+            changed = true;
         }
 
-        case OxygenException::WindowClassName:
+        // initialize shadow cache
+        switch( defaultConfiguration().shadowCacheMode() )
         {
-          if( class_name.isEmpty() )
-          {
-            // retrieve class name
-            KWindowInfo info( client.windowId(), 0, NET::WM2WindowClass );
-            QString window_class_name( info.windowClassName() );
-            QString window_class( info.windowClassClass() );
-            class_name = window_class_name + ' ' + window_class;
-          }
+            case Configuration::CacheDisabled:
+            {
+                shadowCache_.setEnabled( false );
+                break;
+            }
 
-          value = class_name;
-          break;
+            default:
+            case Configuration::CacheVariable:
+            {
+                shadowCache_.setEnabled( true );
+                shadowCache_.setMaxIndex( qMin( 256, int( 120*defaultConfiguration().animationsDuration()/1000 ) ) );
+                break;
+            }
+
+            case Configuration::CacheMaximum:
+            {
+                shadowCache_.setEnabled( true );
+                shadowCache_.setMaxIndex( 256 );
+                break;
+            }
+
         }
 
-        default: assert( false );
+        // read exceptionsreadConfig
+        ExceptionList exceptions( config );
+        if( !( exceptions == exceptions_ ) )
+        {
+            exceptions_ = exceptions;
+            changed = true;
+        }
 
-      }
+        // shadow mode
+        if( configuration.shadowMode() != Configuration::OxygenShadows )
+        {
+            defaultConfiguration().setUseOxygenShadows( false );
+            defaultConfiguration().setUseDropShadows( false );
+        }
 
-      if( iter->regExp().indexIn( value ) < 0 ) continue;
+        // read shadow configurations
+        ShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
+        activeShadowConfiguration.setEnabled( defaultConfiguration().useOxygenShadows() );
+        if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
+        {
+            shadowCache().setShadowConfiguration( activeShadowConfiguration );
+            changed = true;
+        }
 
-      OxygenConfiguration configuration( defaultConfiguration() );
+        // read shadow configurations
+        ShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
+        inactiveShadowConfiguration.setEnabled( defaultConfiguration().useDropShadows() );
+        if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
+        {
+            shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
+            changed = true;
+        }
 
-      // propagate all features found in mask to the output configuration
-      if( iter->mask() & OxygenException::FrameBorder ) configuration.setFrameBorder( iter->frameBorder() );
-      if( iter->mask() & OxygenException::BlendColor ) configuration.setBlendColor( iter->blendColor() );
-      if( iter->mask() & OxygenException::DrawSeparator ) configuration.setDrawSeparator( iter->drawSeparator() );
-      if( iter->mask() & OxygenException::TitleOutline ) configuration.setDrawTitleOutline( iter->drawTitleOutline() );
-      if( iter->mask() & OxygenException::SizeGripMode ) configuration.setSizeGripMode( iter->sizeGripMode() );
-      configuration.setHideTitleBar( iter->hideTitleBar() );
-      return configuration;
+        if( changed )
+        {
+
+            shadowCache().invalidateCaches();
+            helper().invalidateCaches();
+            return true;
+
+        } else return false;
 
     }
 
-    return defaultConfiguration();
+    //_________________________________________________________________
+    bool Factory::supports( Ability ability ) const
+    {
+        switch( ability )
+        {
 
-  }
+            // announce
+            case AbilityAnnounceButtons:
+            case AbilityAnnounceColors:
+
+            // buttons
+            case AbilityButtonMenu:
+            case AbilityButtonHelp:
+            case AbilityButtonMinimize:
+            case AbilityButtonMaximize:
+            case AbilityButtonClose:
+            case AbilityButtonOnAllDesktops:
+            case AbilityButtonAboveOthers:
+            case AbilityButtonBelowOthers:
+            case AbilityButtonSpacer:
+            case AbilityButtonShade:
+
+            //       // colors
+            //       case AbilityColorTitleBack:
+            //       case AbilityColorTitleFore:
+            //       case AbilityColorFrame:
+
+            // compositing
+            case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
+            return defaultConfiguration().shadowMode() != Configuration::KWinShadows;
+
+            case AbilityUsesAlphaChannel:
+            return true;
+
+            // tabs
+            case AbilityClientGrouping:
+            return defaultConfiguration().tabsEnabled();
+
+            // no colors supported at this time
+            default:
+            return false;
+        };
+    }
+
+
+
+    //____________________________________________________________________
+    Configuration Factory::configuration( const Client& client )
+    {
+
+        QString window_title;
+        QString class_name;
+        for( ExceptionList::const_iterator iter = exceptions_.constBegin(); iter != exceptions_.constEnd(); ++iter )
+        {
+
+            // discard disabled exceptions
+            if( !iter->enabled() ) continue;
+
+            /*
+            decide which value is to be compared
+            to the regular expression, based on exception type
+            */
+            QString value;
+            switch( iter->type() )
+            {
+                case Exception::WindowTitle:
+                {
+                    value = window_title.isEmpty() ? (window_title = client.caption()):window_title;
+                    break;
+                }
+
+                case Exception::WindowClassName:
+                {
+                    if( class_name.isEmpty() )
+                    {
+                        // retrieve class name
+                        KWindowInfo info( client.windowId(), 0, NET::WM2WindowClass );
+                        QString window_class_name( info.windowClassName() );
+                        QString window_class( info.windowClassClass() );
+                        class_name = window_class_name + ' ' + window_class;
+                    }
+
+                    value = class_name;
+                    break;
+                }
+
+                default: assert( false );
+
+            }
+
+            if( iter->regExp().indexIn( value ) < 0 ) continue;
+
+            Configuration configuration( defaultConfiguration() );
+
+            // propagate all features found in mask to the output configuration
+            if( iter->mask() & Exception::FrameBorder ) configuration.setFrameBorder( iter->frameBorder() );
+            if( iter->mask() & Exception::BlendColor ) configuration.setBlendColor( iter->blendColor() );
+            if( iter->mask() & Exception::DrawSeparator ) configuration.setDrawSeparator( iter->drawSeparator() );
+            if( iter->mask() & Exception::TitleOutline ) configuration.setDrawTitleOutline( iter->drawTitleOutline() );
+            if( iter->mask() & Exception::SizeGripMode ) configuration.setSizeGripMode( iter->sizeGripMode() );
+            configuration.setHideTitleBar( iter->hideTitleBar() );
+            return configuration;
+
+        }
+
+        return defaultConfiguration();
+
+    }
 
 } //namespace Oxygen

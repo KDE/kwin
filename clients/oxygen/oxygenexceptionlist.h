@@ -34,33 +34,33 @@
 namespace Oxygen
 {
 
-  //! oxygen exceptions list
-  class OxygenExceptionList: public QList<OxygenException>
-  {
+    //! oxygen exceptions list
+    class ExceptionList: public QList<Exception>
+    {
 
-    public:
+        public:
 
-    //! default constructor
-    OxygenExceptionList( void )
-    {}
+        //! default constructor
+        ExceptionList( void )
+        {}
 
-    //! default constructor
-    OxygenExceptionList( const KConfig& config )
-    { read( config ); }
+        //! default constructor
+        ExceptionList( const KConfig& config )
+        { read( config ); }
 
-    //! read from KConfig
-    void read( const KConfig& );
+        //! read from KConfig
+        void read( const KConfig& );
 
-    //! write to kconfig
-    void write( KConfig& );
+        //! write to kconfig
+        void write( KConfig& );
 
-    //! default exception list
-    static OxygenExceptionList defaultList( void );
+        //! default exception list
+        static ExceptionList defaultList( void );
 
-    //! generate exception group name for given exception index
-    static QString exceptionGroupName( int index );
+        //! generate exception group name for given exception index
+        static QString exceptionGroupName( int index );
 
-  };
+    };
 
 }
 

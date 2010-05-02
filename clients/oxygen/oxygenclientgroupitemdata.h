@@ -38,183 +38,182 @@
 namespace Oxygen
 {
 
-  class OxygenClient;
-
-  //! animation type
-  enum AnimationType
-  {
-    AnimationNone = 0,
-    AnimationEnter = 1<<0,
-    AnimationMove = 1<<1,
-    AnimationLeave = 1<<2,
-    AnimationSameTarget = 1<<3
-  };
-
-  Q_DECLARE_FLAGS(AnimationTypes, AnimationType)
-
-  //! tab data
-  class ClientGroupItemData
-  {
-
-    public:
-
-    //! constructor
-    explicit ClientGroupItemData( void )
-    {}
-
-    //! destructor
-    virtual ~ClientGroupItemData( void )
-    {}
-
-    //! reset all rects to argument
-    void reset( const QRect& rect )
-    {
-      refBoundingRect_ = rect;
-      startBoundingRect_ = rect;
-      endBoundingRect_ = rect;
-      boundingRect_ = rect;
-    }
-
-    //! tab active rect
-    QRect activeRect_;
-
-    //! reference bounding rect
-    /*! it is usually identical to activeRect unless there is only one tab in window */
-    QRect refBoundingRect_;
-
-    //! tab drawing rect
-    QRect startBoundingRect_;
-
-    //! tab drawing rect
-    QRect endBoundingRect_;
-
-    //! tab drawing rect
-    QRect boundingRect_;
-
-    //! tab button
-    typedef QWeakPointer<OxygenButton> ButtonPointer;
-    ButtonPointer closeButton_;
-
-  };
-
-  class ClientGroupItemDataList: public QObject, public QList<ClientGroupItemData>
-  {
-
-    Q_OBJECT
-
-    //! declare animation progress property
-    Q_PROPERTY( qreal progress READ progress WRITE setProgress )
-
-    public:
-
-    //! invalid item index
-    enum { NoItem = -1 };
-
-    //! constructor
-    ClientGroupItemDataList( OxygenClient* parent );
-
-    //! dirty state
-    void setDirty( const bool& value )
-    { dirty_ = value; }
-
-    //! dirty state
-    bool isDirty( void ) const
-    { return dirty_; }
-
-    //! enable animations
-    void setAnimationsEnabled( bool value )
-    { animationsEnabled_ = value; }
-
-    //! animations enabled
-    bool animationsEnabled( void ) const
-    { return animationsEnabled_; }
-
-    //! true if being animated
-    bool isAnimated( void ) const
-    { return animationType_ != AnimationNone; }
+    class Client;
 
     //! animation type
-    AnimationTypes animationType( void ) const
-    { return animationType_; }
+    enum AnimationType {
+        AnimationNone = 0,
+        AnimationEnter = 1<<0,
+        AnimationMove = 1<<1,
+        AnimationLeave = 1<<2,
+        AnimationSameTarget = 1<<3
+    };
 
-    //! return item index matching QPoint, or -1 if none
-    int itemAt( const QPoint&, bool ) const;
+    Q_DECLARE_FLAGS(AnimationTypes, AnimationType)
 
-    //! returns true if index is target
-    bool isTarget( int index ) const
-    { return index == targetItem_; }
+    //! tab data
+    class ClientGroupItemData
+    {
 
-    //! start animation
-    /* might need to add the side of the target here */
-    void animate( AnimationTypes, int = NoItem );
+        public:
 
-    //! true if animation is in progress
-    bool isAnimationRunning( void ) const
-    { return animation().data()->isRunning(); }
+        //! constructor
+        explicit ClientGroupItemData( void )
+        {}
 
-    //! update button activity
-    void updateButtonActivity( int visibleItem ) const;
+        //! destructor
+        virtual ~ClientGroupItemData( void )
+        {}
 
-    //! update buttons
-    void updateButtons( bool alsoUpdate ) const;
+        //! reset all rects to argument
+        void reset( const QRect& rect )
+        {
+            refBoundingRect_ = rect;
+            startBoundingRect_ = rect;
+            endBoundingRect_ = rect;
+            boundingRect_ = rect;
+        }
 
-    //! target rect
-    const QRect& targetRect( void ) const
-    { return targetRect_; }
+        //! tab active rect
+        QRect activeRect_;
 
-    //!@name animation progress
-    //@{
+        //! reference bounding rect
+        /*! it is usually identical to activeRect unless there is only one tab in window */
+        QRect refBoundingRect_;
 
-    //! return animation object
-    virtual const Animation::Pointer& animation() const
-    { return animation_; }
+        //! tab drawing rect
+        QRect startBoundingRect_;
 
-    void setProgress( qreal value )
-    { progress_ = value; }
+        //! tab drawing rect
+        QRect endBoundingRect_;
 
-    qreal progress( void ) const
-    { return progress_; }
+        //! tab drawing rect
+        QRect boundingRect_;
 
-    //@}
+        //! tab button
+        typedef QWeakPointer<Button> ButtonPointer;
+        ButtonPointer closeButton_;
 
-    protected slots:
+    };
 
-    //! update bounding rects
-    void updateBoundingRects( bool alsoUpdate = true );
+    class ClientGroupItemDataList: public QObject, public QList<ClientGroupItemData>
+    {
 
-    private:
+        Q_OBJECT
 
-    //! client
-    OxygenClient& client_;
+        //! declare animation progress property
+        Q_PROPERTY( qreal progress READ progress WRITE setProgress )
 
-    //! dirty flag
-    /* used to trigger update at next paintEvent */
-    bool dirty_;
+        public:
 
-    //! true if animations are enabled
-    bool animationsEnabled_;
+        //! invalid item index
+        enum { NoItem = -1 };
 
-    //! animation
-    Animation::Pointer animation_;
+        //! constructor
+        ClientGroupItemDataList( Client* parent );
 
-    //! last animation type
-    AnimationTypes animationType_;
+        //! dirty state
+        void setDirty( const bool& value )
+        { dirty_ = value; }
 
-    //! animation progress
-    qreal progress_;
+        //! dirty state
+        bool isDirty( void ) const
+        { return dirty_; }
 
-    //! dragged item
-    int draggedItem_;
+        //! enable animations
+        void setAnimationsEnabled( bool value )
+        { animationsEnabled_ = value; }
 
-    //! target item
-    int targetItem_;
+        //! animations enabled
+        bool animationsEnabled( void ) const
+        { return animationsEnabled_; }
 
-    //! target rect
-    QRect targetRect_;
+        //! true if being animated
+        bool isAnimated( void ) const
+        { return animationType_ != AnimationNone; }
 
-  };
+        //! animation type
+        AnimationTypes animationType( void ) const
+        { return animationType_; }
 
-  Q_DECLARE_OPERATORS_FOR_FLAGS(Oxygen::AnimationTypes)
+        //! return item index matching QPoint, or -1 if none
+        int itemAt( const QPoint&, bool ) const;
+
+        //! returns true if index is target
+        bool isTarget( int index ) const
+        { return index == targetItem_; }
+
+        //! start animation
+        /* might need to add the side of the target here */
+        void animate( AnimationTypes, int = NoItem );
+
+        //! true if animation is in progress
+        bool isAnimationRunning( void ) const
+        { return animation().data()->isRunning(); }
+
+        //! update button activity
+        void updateButtonActivity( int visibleItem ) const;
+
+        //! update buttons
+        void updateButtons( bool alsoUpdate ) const;
+
+        //! target rect
+        const QRect& targetRect( void ) const
+        { return targetRect_; }
+
+        //!@name animation progress
+        //@{
+
+        //! return animation object
+        virtual const Animation::Pointer& animation() const
+        { return animation_; }
+
+        void setProgress( qreal value )
+        { progress_ = value; }
+
+        qreal progress( void ) const
+        { return progress_; }
+
+        //@}
+
+        protected slots:
+
+        //! update bounding rects
+        void updateBoundingRects( bool alsoUpdate = true );
+
+        private:
+
+        //! client
+        Client& client_;
+
+        //! dirty flag
+        /* used to trigger update at next paintEvent */
+        bool dirty_;
+
+        //! true if animations are enabled
+        bool animationsEnabled_;
+
+        //! animation
+        Animation::Pointer animation_;
+
+        //! last animation type
+        AnimationTypes animationType_;
+
+        //! animation progress
+        qreal progress_;
+
+        //! dragged item
+        int draggedItem_;
+
+        //! target item
+        int targetItem_;
+
+        //! target rect
+        QRect targetRect_;
+
+    };
+
+    Q_DECLARE_OPERATORS_FOR_FLAGS(Oxygen::AnimationTypes)
 
 }
 

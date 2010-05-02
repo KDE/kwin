@@ -43,8 +43,8 @@
 namespace Oxygen
 {
 
-    class OxygenSizeGrip;
-    class OxygenClient : public KCommonDecorationUnstable
+    class SizeGrip;
+    class Client : public KCommonDecorationUnstable
     {
 
         Q_OBJECT
@@ -56,10 +56,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        OxygenClient(KDecorationBridge *b, OxygenFactory *f);
+        Client(KDecorationBridge *b, Factory *f);
 
         //! destructor
-        virtual ~OxygenClient();
+        virtual ~Client();
 
         //! decoration name
         virtual QString visibleName() const;
@@ -112,7 +112,7 @@ namespace Oxygen
         virtual void reset( unsigned long changed );
 
         //! return associated configuration
-        const OxygenConfiguration& configuration( void ) const
+        const Configuration& configuration( void ) const
         { return configuration_; }
 
         //!@name glow animation
@@ -144,7 +144,7 @@ namespace Oxygen
         { return factory_->helper(); }
 
         //! helper class
-        OxygenShadowCache& shadowCache( void ) const
+        ShadowCache& shadowCache( void ) const
         { return factory_->shadowCache(); }
 
         //!@name metrics and color definitions
@@ -284,7 +284,7 @@ namespace Oxygen
         //@}
 
         //! close tab matching give button
-        virtual bool closeItem( const OxygenButton* );
+        virtual bool closeItem( const Button* );
 
         //! index of item matching point
         int itemClicked( const QPoint& position, bool between = false ) const
@@ -339,7 +339,7 @@ namespace Oxygen
         { return (bool)sizeGrip_; }
 
         //! size grip
-        OxygenSizeGrip& sizeGrip( void ) const
+        SizeGrip& sizeGrip( void ) const
         { return *sizeGrip_; }
 
         //@}
@@ -360,13 +360,13 @@ namespace Oxygen
         private:
 
         //! factory
-        OxygenFactory* factory_;
+        Factory* factory_;
 
         //! size grip widget
-        OxygenSizeGrip* sizeGrip_;
+        SizeGrip* sizeGrip_;
 
         //! configuration
-        OxygenConfiguration configuration_;
+        Configuration configuration_;
 
         //! glow animation
         Animation::Pointer glowAnimation_;
