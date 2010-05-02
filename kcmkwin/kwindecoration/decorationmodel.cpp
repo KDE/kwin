@@ -90,7 +90,7 @@ void DecorationModel::findDecorations()
                     const KDesktopFile desktopFile( filename );
                     const QString libName = desktopFile.desktopGroup().readEntry( "X-KDE-Library" );
 
-                    if( !libName.isEmpty() && libName.startsWith( "kwin3_" ) )
+                    if( !libName.isEmpty() && libName.startsWith( QLatin1String( "kwin3_" ) ) )
                         {
                         if( libName == "kwin3_aurorae" )
                             {

@@ -152,7 +152,7 @@ void KWinDecorationConfigDialog::slotSelectionChanged()
 
 QString KWinDecorationConfigDialog::styleToConfigLib( const QString& styleLib ) const
     {
-    if( styleLib.startsWith( "kwin3_" ))
+    if( styleLib.startsWith( QLatin1String( "kwin3_" )))
         return "kwin_" + styleLib.mid( 6 ) + "_config";
     else
         return styleLib + "_config";
