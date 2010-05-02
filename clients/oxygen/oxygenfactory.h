@@ -32,10 +32,9 @@
 #include <kdeversion.h>
 
 #include "oxygenconfiguration.h"
+#include "oxygendecohelper.h"
 #include "oxygenexceptionlist.h"
-
 #include "oxygenshadowcache.h"
-#include "helper.h"
 
 namespace Oxygen
 {
@@ -105,7 +104,7 @@ namespace Oxygen
         { return initialized_; }
 
         //! helper
-        virtual OxygenDecoHelper& helper( void )
+        virtual DecoHelper& helper( void )
         { return helper_; }
 
         //! shadow cache
@@ -144,7 +143,7 @@ namespace Oxygen
         bool initialized_;
 
         //! helper
-        OxygenDecoHelper helper_;
+        DecoHelper helper_;
 
         //! shadow cache
         ShadowCache shadowCache_;

@@ -25,21 +25,25 @@
 
 //! helper class
 /*! contains utility functions used at multiple places in oxygen style */
-class OxygenDecoHelper : public OxygenHelper
+namespace Oxygen
 {
+    class DecoHelper : public OxygenHelper
+    {
 
-    public:
+        public:
 
-    explicit OxygenDecoHelper(const QByteArray &componentName);
-    virtual ~OxygenDecoHelper() {}
+        explicit DecoHelper(const QByteArray &componentName);
+        virtual ~DecoHelper() {}
 
-    //!@name decoration specific helper functions
-    //!
-    //@{
-    virtual QPixmap windecoButton(const QColor &color, bool pressed, int size = 21);
-    virtual QPixmap windecoButtonGlow(const QColor &color, int size = 21);
-    //@}
+        //!@name decoration specific helper functions
+        //!
+        //@{
+        virtual QPixmap windecoButton(const QColor &color, bool pressed, int size = 21);
+        virtual QPixmap windecoButtonGlow(const QColor &color, int size = 21);
+        //@}
 
-};
+    };
+
+}
 
 #endif // __OXYGEN_STYLE_HELPER_H

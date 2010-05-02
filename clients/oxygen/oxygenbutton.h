@@ -135,7 +135,7 @@ namespace Oxygen
         const Client &client_;
 
         //! helper
-        OxygenDecoHelper &helper_;
+        DecoHelper &helper_;
 
         //! button type
         ButtonType type_;

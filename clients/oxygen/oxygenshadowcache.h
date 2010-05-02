@@ -27,13 +27,12 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygendecohelper.h"
+#include "oxygenshadowconfiguration.h"
+
 #include <QtCore/QCache>
 #include <QtGui/QRadialGradient>
 
-#include "oxygenshadowconfiguration.h"
-#include "helper.h"
-
-class OxygenHelper;
 
 namespace Oxygen
 {
@@ -44,7 +43,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        ShadowCache( OxygenDecoHelper& helper );
+        ShadowCache( DecoHelper& helper );
 
         //! destructor
         virtual ~ShadowCache( void )
@@ -192,7 +191,7 @@ namespace Oxygen
 
         protected:
 
-        OxygenHelper& helper( void ) const
+        DecoHelper& helper( void ) const
         { return helper_; }
 
         private:
@@ -202,7 +201,7 @@ namespace Oxygen
         void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
 
         //! helper
-        OxygenDecoHelper& helper_;
+        DecoHelper& helper_;
 
         //! caching enable state
         bool enabled_;

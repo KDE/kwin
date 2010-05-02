@@ -28,12 +28,12 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygenfactory.h"
+#include "oxygenanimation.h"
 #include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
+#include "oxygendecohelper.h"
+#include "oxygenfactory.h"
 #include "oxygentitleanimationdata.h"
-#include "oxygenanimation.h"
-#include "helper.h"
 
 #include <kcommondecoration.h>
 #include <QtCore/QBasicTimer>
@@ -140,7 +140,7 @@ namespace Oxygen
         //@}
 
         //! helper class
-        OxygenDecoHelper& helper( void ) const
+        DecoHelper& helper( void ) const
         { return factory_->helper(); }
 
         //! helper class

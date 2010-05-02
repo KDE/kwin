@@ -37,7 +37,7 @@ namespace Oxygen
 {
 
     //_______________________________________________________
-    ShadowCache::ShadowCache( OxygenDecoHelper& helper ):
+    ShadowCache::ShadowCache( DecoHelper& helper ):
         helper_( helper ),
         activeShadowConfiguration_( ShadowConfiguration( QPalette::Active ) ),
         inactiveShadowConfiguration_( ShadowConfiguration( QPalette::Inactive ) )
