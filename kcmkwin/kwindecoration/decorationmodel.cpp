@@ -201,7 +201,7 @@ QVariant DecorationModel::data( const QModelIndex& index, int role ) const
             if( m_plugins->loadPlugin( m_decorations[ index.row() ].libraryName ) &&
                 m_plugins->factory() != NULL )
                 {
-                foreach( KDecorationDefines::BorderSize size, m_plugins->factory()->borderSizes() )
+                foreach( KDecorationDefines::BorderSize size, m_plugins->factory()->borderSizes() ) // krazy:exclude=foreach
                     sizes << int(size) ;
                 }
             return sizes;
