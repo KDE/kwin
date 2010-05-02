@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QComboBox" name="borderSizesCombo">
+    <widget class="KComboBox" name="borderSizesCombo">
      <item>
       <property name="text">
        <string>Tiny</string>
@@ -74,7 +74,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QComboBox" name="buttonSizesCombo">
+    <widget class="KComboBox" name="buttonSizesCombo">
      <item>
       <property name="text">
        <string>Tiny</string>
@@ -114,6 +114,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
