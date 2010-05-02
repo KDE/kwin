@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef PREVIEWMODEL_H
-#define PREVIEWMODEL_H
+#ifndef KWIN_DECORATIONMODEL_H
+#define KWIN_DECORATIONMODEL_H
 #include <QAbstractListModel>
 #include <QPixmap>
 #include <KConfig>
@@ -134,4 +134,4 @@ class DecorationModel : public QAbstractListModel
 
 } // namespace KWin
 
-#endif // PREVIEWMODEL_H
+#endif // KWIN_DECORATIONMODEL_H
