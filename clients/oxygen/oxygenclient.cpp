@@ -37,7 +37,6 @@
 
 #include <KLocale>
 #include <KColorUtils>
-#include <KDebug>
 
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
@@ -112,8 +111,6 @@ namespace Oxygen
     {
 
         KCommonDecoration::init();
-
-        kDebug(1212) << " widget: " << widget()->metaObject()->className() << endl;
 
         widget()->setAttribute(Qt::WA_NoSystemBackground );
         widget()->setAutoFillBackground( false );
