@@ -139,7 +139,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
     }
     if (path.isEmpty()) {
         kDebug(1216) << "Could not find decoration svg: aborting";
-        d->themeName = QString();
+        d->themeName.clear();
         return;
     }
     d->decoration = new Plasma::FrameSvg(this);
