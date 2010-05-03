@@ -6868,8 +6868,10 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[en_GB]=Tiling Enabled
 Name[ia]=tegulas Habilitate
 Name[km]=បានបើក​ក្រឡា​ក្បឿង
+Name[nl]=Tegelen ingeschakeld
 Name[pt]=Mosaico Activado
 Name[pt_BR]=Mosaico habilitado
 Name[sv]=Sida vid sida aktiverad
@@ -6877,9 +6879,11 @@ Name[uk]=Мозаїчне розташування увімкнено
 Name[x-test]=xxTiling Enabledxx
 Name[zh_TW]=鋪排已開啟
 Comment=Tiling mode has been enabled
+Comment[en_GB]=Tiling mode has been enabled
 Comment[ia]=Le modo de tegula ha essite habilitate
 Comment[ja]=タイリングモードが有効になりました
 Comment[km]=បានបើក​របៀប​ក្រឡា​ក្បឿង
+Comment[nl]=Tegelenmodus is ingeschakeld
 Comment[pt]=O modo em mosaico (lado-a-lado) foi activado
 Comment[pt_BR]=O modo em mosaico foi habilitado
 Comment[sv]=Sida vid sida har aktiverats
@@ -6890,8 +6894,10 @@ Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[en_GB]=Tiling Disabled
 Name[ia]=tegulas dishabilitate
 Name[km]=បានបិទ​ក្រឡា​ក្បឿង
+Name[nl]=Tegelen uitgeschakeld
 Name[pt]=Mosaico Desactivado
 Name[pt_BR]=Mosaico desabilitado
 Name[sv]=Sida vid sida inaktiverad
@@ -6899,9 +6905,11 @@ Name[uk]=Мозаїчне розташування вимкнено
 Name[x-test]=xxTiling Disabledxx
 Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
+Comment[en_GB]=Tiling mode has been disabled
 Comment[ia]=Le mode de tegulas  ha essite dishabilitate
 Comment[ja]=タイリングモードが無効になりました
 Comment[km]=បាន​បិទ​របៀប​ក្រឡាក្បឿង
+Comment[nl]=Tegelenmodus is gedeactiveerd
 Comment[pt]=O modo em mosaico (lado-a-lado) foi desactivado
 Comment[pt_BR]=O modo em mosaico foi desabilitado
 Comment[sv]=Sida vid sida har inaktiverats
@@ -6912,8 +6920,10 @@ Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[en_GB]=Tiling Layout Changed
 Name[ia]=Layout a tegulas Cambiate
 Name[km]=បានផ្លាស់ប្ដូរ​ប្លង់​ក្រឡា​ក្បឿង
+Name[nl]=Tegelindeling gewijzigd
 Name[pt]=Disposição em Mosaico Alterada
 Name[pt_BR]=Leiaute em mosaico alterado
 Name[sv]=Utläggning sida vid sida ändrad
@@ -6921,8 +6931,10 @@ Name[uk]=Мозаїчне компонування змінено
 Name[x-test]=xxTiling Layout Changedxx
 Name[zh_TW]=鋪排佈局已變更
 Comment=Tiling Layout has been changed
+Comment[en_GB]=Tiling Layout has been changed
 Comment[ia]=Le Layout a tegulas ha essite cambiate
 Comment[km]=បាន​ផ្លាស់ប្ដូរ​ប្លង់​ក្រឡា​ក្បឿង
+Comment[nl]=Tegelindeling is gewijzigd
 Comment[pt]=A disposição das janelas em mosaico (lado-a-lado) mudou
 Comment[pt_BR]=O leiaute das janelas em mosaico foi alterado
 Comment[sv]=Utläggning sida vid sida har ändrats
