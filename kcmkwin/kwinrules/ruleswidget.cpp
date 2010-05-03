@@ -96,6 +96,7 @@ RulesWidget::RulesWidget( QWidget* parent )
     SETUP( noborder, set );
     SETUP( skiptaskbar, set );
     SETUP( skippager, set );
+    SETUP( skipswitcher, set );
     SETUP( acceptfocus, force );
     SETUP( closeable, force );
     SETUP( autogroup, force );
@@ -147,6 +148,7 @@ UPDATE_ENABLE_SLOT( below )
 UPDATE_ENABLE_SLOT( noborder )
 UPDATE_ENABLE_SLOT( skiptaskbar )
 UPDATE_ENABLE_SLOT( skippager )
+UPDATE_ENABLE_SLOT( skipswitcher )
 UPDATE_ENABLE_SLOT( acceptfocus )
 UPDATE_ENABLE_SLOT( closeable )
 UPDATE_ENABLE_SLOT( autogroup )
@@ -436,6 +438,7 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_SET_RULE( noborder, );
     CHECKBOX_SET_RULE( skiptaskbar, );
     CHECKBOX_SET_RULE( skippager, );
+    CHECKBOX_SET_RULE( skipswitcher, );
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
     CHECKBOX_FORCE_RULE( autogroup, );
@@ -530,6 +533,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_SET_RULE( noborder, );
     CHECKBOX_SET_RULE( skiptaskbar, );
     CHECKBOX_SET_RULE( skippager, );
+    CHECKBOX_SET_RULE( skipswitcher, );
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
     CHECKBOX_FORCE_RULE( autogroup, );
@@ -651,6 +655,7 @@ void RulesWidget::prefillUnusedValues( const KWindowInfo& info )
     CHECKBOX_PREFILL( noborder,, info.frameGeometry() == info.geometry() );
     CHECKBOX_PREFILL( skiptaskbar,, info.state() & NET::SkipTaskbar );
     CHECKBOX_PREFILL( skippager,, info.state() & NET::SkipPager );
+    CHECKBOX_PREFILL( skipswitcher,, false );
     //CHECKBOX_PREFILL( acceptfocus, );
     //CHECKBOX_PREFILL( closeable, );
     //CHECKBOX_PREFILL( autogroup, );

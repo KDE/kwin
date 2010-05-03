@@ -1670,6 +1670,8 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         return false;
     if( !w->visibleInClientGroup() )
         return false;
+    if( w->isSkipSwitcher() )
+        return false;
     switch( m_mode )
         {
         case ModeAllDesktops:

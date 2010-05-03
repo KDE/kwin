@@ -346,7 +346,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             d.xTranslate += qRound( newPos.x() - w->x() );
             d.yTranslate += qRound( newPos.y() - w->y() );
 
-            if( isUsingPresentWindows() && w->isDock() )
+            if( isUsingPresentWindows() && ( w->isDock() || w->isSkipSwitcher() ) )
                 {
                 // fade out panels if present windows is used
                 d.opacity *= ( 1.0 - timeline.value() );
@@ -1200,7 +1200,7 @@ void DesktopGridEffect::setup()
                 foreach( EffectWindow* w, effects->stackingOrder() )
                     {
                     if( w->isOnDesktop( i ) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                        w->visibleInClientGroup() )
+                        w->visibleInClientGroup() && !w->isSkipSwitcher() )
                         {
                         manager.manage( w );
                         }

@@ -1544,6 +1544,13 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     return EffectWindowList();
     }
 
+bool EffectWindowImpl::isSkipSwitcher() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->skipSwitcher();
+    return false;
+    }
+
 WindowQuadList EffectWindowImpl::buildQuads( bool force ) const
     {
     return sceneWindow()->buildQuads( force );

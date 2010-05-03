@@ -70,6 +70,7 @@ class RulesWidget
         void updateEnablenoborder();
         void updateEnableskiptaskbar();
         void updateEnableskippager();
+        void updateEnableskipswitcher();
         void updateEnableacceptfocus();
         void updateEnablecloseable();
         void updateEnableautogroup();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>441</height>
+    <height>462</height>
    </rect>
   </property>
   <layout class="QVBoxLayout">
@@ -19,16 +19,8 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="TabPage1" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>681</width>
-        <height>416</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage1">
+      <attribute name="title">
        <string>&amp;Window</string>
       </attribute>
       <layout class="QGridLayout">
@@ -246,16 +238,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>681</width>
-        <height>416</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage2">
+      <attribute name="title">
        <string>Window &amp;Extra</string>
       </attribute>
       <layout class="QGridLayout">
@@ -542,16 +526,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage3" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>681</width>
-        <height>416</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage3">
+      <attribute name="title">
        <string>&amp;Geometry</string>
       </attribute>
       <layout class="QGridLayout">
@@ -1088,16 +1064,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage4" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>681</width>
-        <height>416</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage4">
+      <attribute name="title">
        <string>&amp;Preferences</string>
       </attribute>
       <layout class="QGridLayout">
@@ -1115,13 +1083,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="enable_skippager">
-         <property name="text">
-          <string>Skip pa&amp;ger</string>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="0">
         <widget class="QCheckBox" name="enable_skiptaskbar">
          <property name="text">
@@ -1136,51 +1097,51 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QCheckBox" name="enable_acceptfocus">
          <property name="text">
           <string>Accept &amp;focus</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QCheckBox" name="enable_closeable">
          <property name="text">
           <string>&amp;Closeable</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="0" >
-        <widget class="QCheckBox" name="enable_autogroup" >
-         <property name="text" >
+       <item row="8" column="0">
+        <widget class="QCheckBox" name="enable_autogroup">
+         <property name="text">
           <string>Autogroup with &amp;identical</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="0" >
-        <widget class="QCheckBox" name="enable_autogroupfg" >
-         <property name="text" >
+       <item row="9" column="0">
+        <widget class="QCheckBox" name="enable_autogroupfg">
+         <property name="text">
           <string>Autog&amp;roup in foreground</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="0" >
-        <widget class="QCheckBox" name="enable_autogroupid" >
-         <property name="text" >
+       <item row="10" column="0">
+        <widget class="QCheckBox" name="enable_autogroupid">
+         <property name="text">
           <string>Autogroup by I&amp;D</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="0" >
-        <widget class="QCheckBox" name="enable_opacityactive" >
-         <property name="text" >
+       <item row="11" column="0">
+        <widget class="QCheckBox" name="enable_opacityactive">
+         <property name="text">
           <string>A&amp;ctive opacity in %</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="1" >
-        <widget class="KComboBox" name="rule_opacityactive" >
-         <property name="enabled" >
+       <item row="11" column="1">
+        <widget class="KComboBox" name="rule_opacityactive">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
@@ -1200,9 +1161,9 @@
          </item>
         </widget>
        </item>
-       <item row="10" column="2" colspan="2" >
-        <widget class="KRestrictedLine" name="opacityactive" >
-         <property name="enabled" >
+       <item row="11" column="2" colspan="2">
+        <widget class="KRestrictedLine" name="opacityactive">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="validChars">
@@ -1260,7 +1221,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="6" column="2">
         <widget class="QCheckBox" name="acceptfocus">
          <property name="enabled">
           <bool>false</bool>
@@ -1270,7 +1231,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="2">
+       <item row="7" column="2">
         <widget class="QCheckBox" name="closeable">
          <property name="enabled">
           <bool>false</bool>
@@ -1280,102 +1241,36 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="2" >
-        <widget class="QCheckBox" name="autogroup" >
-         <property name="enabled" >
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="autogroup">
+         <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text" >
+         <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="8" column="2" >
-        <widget class="QCheckBox" name="autogroupfg" >
-         <property name="enabled" >
+       <item row="9" column="2">
+        <widget class="QCheckBox" name="autogroupfg">
+         <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text" >
+         <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="9" column="2" >
-        <widget class="KLineEdit" name="autogroupid" >
-         <property name="enabled" >
+       <item row="10" column="2">
+        <widget class="KLineEdit" name="autogroupid">
+         <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="9" column="1" >
-        <widget class="KComboBox" name="rule_autogroupid" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text" >
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="8" column="1" >
-        <widget class="KComboBox" name="rule_autogroupfg" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text" >
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="1" >
-        <widget class="KComboBox" name="rule_autogroup" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text" >
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="6" column="1" >
-        <widget class="KComboBox" name="rule_closeable" >
-         <property name="enabled" >
+       <item row="10" column="1">
+        <widget class="KComboBox" name="rule_autogroupid">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
@@ -1395,7 +1290,73 @@
          </item>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="9" column="1">
+        <widget class="KComboBox" name="rule_autogroupfg">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="KComboBox" name="rule_autogroup">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="KComboBox" name="rule_closeable">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="1">
         <widget class="KComboBox" name="rule_acceptfocus">
          <property name="enabled">
           <bool>false</bool>
@@ -1602,7 +1563,7 @@
          </item>
         </widget>
        </item>
-       <item row="14" column="1" >
+       <item row="15" column="1">
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -1618,9 +1579,9 @@
          </property>
         </spacer>
        </item>
-       <item row="11" column="1" >
-        <widget class="KComboBox" name="rule_opacityinactive" >
-         <property name="enabled" >
+       <item row="12" column="1">
+        <widget class="KComboBox" name="rule_opacityinactive">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
@@ -1640,9 +1601,9 @@
          </item>
         </widget>
        </item>
-       <item row="11" column="2" colspan="2" >
-        <widget class="KRestrictedLine" name="opacityinactive" >
-         <property name="enabled" >
+       <item row="12" column="2" colspan="2">
+        <widget class="KRestrictedLine" name="opacityinactive">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="validChars">
@@ -1650,16 +1611,16 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="0" >
-        <widget class="QCheckBox" name="enable_opacityinactive" >
-         <property name="text" >
+       <item row="12" column="0">
+        <widget class="QCheckBox" name="enable_opacityinactive">
+         <property name="text">
           <string>I&amp;nactive opacity in %</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="0" >
-        <widget class="QCheckBox" name="enable_shortcut" >
-         <property name="text" >
+       <item row="14" column="0">
+        <widget class="QCheckBox" name="enable_shortcut">
+         <property name="text">
           <string>Shortcut</string>
          </property>
          <property name="shortcut">
@@ -1667,9 +1628,9 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="1" >
-        <widget class="KComboBox" name="rule_shortcut" >
-         <property name="enabled" >
+       <item row="14" column="1">
+        <widget class="KComboBox" name="rule_shortcut">
+         <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
@@ -1704,28 +1665,28 @@
          </item>
         </widget>
        </item>
-       <item row="13" column="5" >
-        <widget class="QPushButton" name="shortcut_edit" >
-         <property name="text" >
+       <item row="14" column="5">
+        <widget class="QPushButton" name="shortcut_edit">
+         <property name="text">
           <string>Edit...</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="2" colspan="3" >
-        <widget class="KRestrictedLine" name="shortcut" >
-         <property name="enabled" >
+       <item row="14" column="2" colspan="3">
+        <widget class="KRestrictedLine" name="shortcut">
+         <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
+       <item row="13" column="0">
         <widget class="QCheckBox" name="enable_tilingoption">
          <property name="text">
           <string>T&amp;iling</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <widget class="KComboBox" name="rule_tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -1747,7 +1708,7 @@
          </item>
         </widget>
        </item>
-       <item row="12" column="2">
+       <item row="13" column="2">
         <widget class="KComboBox" name="tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -1764,18 +1725,71 @@
          </item>
         </widget>
        </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="enable_skippager">
+         <property name="text">
+          <string>Skip pa&amp;ger</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="enable_skipswitcher">
+         <property name="text">
+          <string>Skip &amp;switcher</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="KComboBox" name="rule_skipswitcher">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="5" column="2">
+        <widget class="QCheckBox" name="skipswitcher">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage5" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>681</width>
-        <height>416</height>
-       </rect>
-      </property>
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage5">
+      <attribute name="title">
        <string>W&amp;orkarounds</string>
       </attribute>
       <layout class="QGridLayout">
@@ -2195,7 +2209,7 @@
    </item>
   </layout>
  </widget>
-  <customwidgets>
+ <customwidgets>
   <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
@@ -2280,9 +2294,9 @@
   <tabstop>enable_skippager</tabstop>
   <tabstop>rule_skippager</tabstop>
   <tabstop>skippager</tabstop>
-  <tabstop>enable_acceptfocus</tabstop>
-  <tabstop>rule_acceptfocus</tabstop>
-  <tabstop>acceptfocus</tabstop>
+  <tabstop>enable_skipswitcher</tabstop>
+  <tabstop>rule_skipswitcher</tabstop>
+  <tabstop>skipswitcher</tabstop>
   <tabstop>enable_closeable</tabstop>
   <tabstop>rule_closeable</tabstop>
   <tabstop>closeable</tabstop>
@@ -2326,6 +2340,15 @@
   <tabstop>enable_disableglobalshortcuts</tabstop>
   <tabstop>rule_disableglobalshortcuts</tabstop>
   <tabstop>disableglobalshortcuts</tabstop>
+  <tabstop>enable_autogroupfg</tabstop>
+  <tabstop>enable_autogroupid</tabstop>
+  <tabstop>autogroupfg</tabstop>
+  <tabstop>autogroupid</tabstop>
+  <tabstop>rule_autogroupid</tabstop>
+  <tabstop>rule_autogroupfg</tabstop>
+  <tabstop>enable_acceptfocus</tabstop>
+  <tabstop>rule_acceptfocus</tabstop>
+  <tabstop>acceptfocus</tabstop>
  </tabstops>
  <resources/>
  <connections>

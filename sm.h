@@ -58,6 +58,7 @@ struct SessionInfo
     bool keepBelow;
     bool skipTaskbar;
     bool skipPager;
+    bool skipSwitcher;
     bool noBorder;
     NET::WindowType windowType;
     QString shortcut;

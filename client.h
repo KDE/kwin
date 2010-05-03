@@ -179,6 +179,9 @@ class Client
         bool skipPager() const;
         void setSkipPager( bool );
 
+        bool skipSwitcher() const;
+        void setSkipSwitcher( bool set );
+
         bool keepAbove() const;
         void setKeepAbove( bool );
         bool keepBelow() const;
@@ -556,6 +559,7 @@ class Client
         uint Pping : 1; ///< Does it support _NET_WM_PING?
         uint input : 1; ///< Does the window want input in its wm_hints
         uint skip_pager : 1;
+        uint skip_switcher : 1;
         uint motif_may_resize : 1;
         uint motif_may_move : 1;
         uint motif_may_close : 1;
@@ -803,6 +807,11 @@ inline bool Client::skipTaskbar( bool from_outside ) const
 inline bool Client::skipPager() const
     {
     return skip_pager;
+    }
+
+inline bool Client::skipSwitcher() const
+    {
+    return skip_switcher;
     }
 
 inline bool Client::keepAbove() const

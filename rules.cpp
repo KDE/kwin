@@ -61,6 +61,7 @@ Rules::Rules()
     , shaderule( UnusedSetRule )
     , skiptaskbarrule( UnusedSetRule )
     , skippagerrule( UnusedSetRule )
+    , skipswitcherrule( UnusedSetRule )
     , aboverule( UnusedSetRule )
     , belowrule( UnusedSetRule )
     , fullscreenrule( UnusedSetRule )
@@ -165,6 +166,7 @@ void Rules::readFromCfg( const KConfigGroup& cfg )
     READ_SET_RULE( shade,, false);
     READ_SET_RULE( skiptaskbar,, false);
     READ_SET_RULE( skippager,, false);
+    READ_SET_RULE( skipswitcher,, false);
     READ_SET_RULE( above,, false);
     READ_SET_RULE( below,, false);
     READ_SET_RULE( fullscreen,, false);
@@ -253,6 +255,7 @@ void Rules::write( KConfigGroup& cfg ) const
     WRITE_SET_RULE( shade, );
     WRITE_SET_RULE( skiptaskbar, );
     WRITE_SET_RULE( skippager, );
+    WRITE_SET_RULE( skipswitcher, );
     WRITE_SET_RULE( above, );
     WRITE_SET_RULE( below, );
     WRITE_SET_RULE( fullscreen, );
@@ -293,6 +296,7 @@ bool Rules::isEmpty() const
         && shaderule == UnusedSetRule
         && skiptaskbarrule == UnusedSetRule
         && skippagerrule == UnusedSetRule
+        && skipswitcherrule == UnusedSetRule
         && aboverule == UnusedSetRule
         && belowrule == UnusedSetRule
         && fullscreenrule == UnusedSetRule
@@ -494,6 +498,11 @@ bool Rules::update( Client* c )
         updated = updated || skippager != c->skipPager();
         skippager = c->skipPager();
         }
+    if( skipswitcherrule == ( SetRule )Remember)
+        {
+        updated = updated || skipswitcher != c->skipSwitcher();
+        skipswitcher = c->skipSwitcher();
+        }
     if( aboverule == ( SetRule )Remember)
         {
         updated = updated || above != c->keepAbove();
@@ -621,6 +630,7 @@ bool Rules::applyShade( ShadeMode& sh, bool init ) const
 
 APPLY_RULE( skiptaskbar, SkipTaskbar, bool )
 APPLY_RULE( skippager, SkipPager, bool )
+APPLY_RULE( skipswitcher, SkipSwitcher, bool )
 APPLY_RULE( above, KeepAbove, bool )
 APPLY_RULE( below, KeepBelow, bool )
 APPLY_RULE( fullscreen, FullScreen, bool )
@@ -687,6 +697,7 @@ void Rules::discardUsed( bool withdrawn )
     DISCARD_USED_SET_RULE( shade );
     DISCARD_USED_SET_RULE( skiptaskbar );
     DISCARD_USED_SET_RULE( skippager );
+    DISCARD_USED_SET_RULE( skipswitcher );
     DISCARD_USED_SET_RULE( above );
     DISCARD_USED_SET_RULE( below );
     DISCARD_USED_SET_RULE( fullscreen );
@@ -811,6 +822,7 @@ CHECK_RULE( Minimize, bool )
 CHECK_RULE( Shade, ShadeMode )
 CHECK_RULE( SkipTaskbar, bool )
 CHECK_RULE( SkipPager, bool )
+CHECK_RULE( SkipSwitcher, bool )
 CHECK_RULE( KeepAbove, bool )
 CHECK_RULE( KeepBelow, bool )
 CHECK_RULE( FullScreen, bool )
@@ -863,6 +875,7 @@ void Client::applyWindowRules()
     setShade( shadeMode());
     setSkipTaskbar( skipTaskbar(), true );
     setSkipPager( skipPager());
+    setSkipSwitcher( skipSwitcher());
     setKeepAbove( keepAbove());
     setKeepBelow( keepBelow());
     setFullScreen( isFullScreen(), true );

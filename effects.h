@@ -271,6 +271,8 @@ class EffectWindowImpl : public EffectWindow
         virtual EffectWindow* findModal();
         virtual EffectWindowList mainWindows() const;
 
+        virtual bool isSkipSwitcher() const;
+
         virtual WindowQuadList buildQuads( bool force = false ) const;
 
         virtual void minimize() const;

@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 133
+#define KWIN_EFFECT_API_VERSION_MINOR 134
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -998,6 +998,12 @@ class KWIN_EXPORT EffectWindow
         virtual bool isModal() const = 0;
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;
+
+        /**
+        * Returns whether the window should be excluded from window switching effects.
+        * @since 4.5
+        */
+        virtual bool isSkipSwitcher() const = 0;
 
         /**
          * Returns the unmodified window quad list. Can also be used to force rebuilding.

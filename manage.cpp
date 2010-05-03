@@ -407,6 +407,7 @@ bool Client::manage( Window w, bool isMapped )
         setKeepBelow( session->keepBelow );
         setSkipTaskbar( session->skipTaskbar, true );
         setSkipPager( session->skipPager );
+        setSkipSwitcher( session->skipSwitcher );
         setShade( session->shaded ? ShadeNormal : ShadeNone );
         setOpacity( session->opacity );
         if( session->maximized != MaximizeRestore )
@@ -469,6 +470,7 @@ bool Client::manage( Window w, bool isMapped )
         setKeepBelow( rules()->checkKeepBelow( info->state() & NET::KeepBelow, !isMapped ));
         setSkipTaskbar( rules()->checkSkipTaskbar( info->state() & NET::SkipTaskbar, !isMapped ), true );
         setSkipPager( rules()->checkSkipPager( info->state() & NET::SkipPager, !isMapped ));
+        setSkipSwitcher( rules()->checkSkipSwitcher( false, !isMapped ));
         if( info->state() & NET::DemandsAttention )
             demandAttention();
         if( info->state() & NET::Modal )

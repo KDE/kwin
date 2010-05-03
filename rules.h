@@ -70,6 +70,7 @@ class WindowRules
         ShadeMode checkShade( ShadeMode shade, bool init = false ) const;
         bool checkSkipTaskbar( bool skip, bool init = false ) const;
         bool checkSkipPager( bool skip, bool init = false ) const;
+        bool checkSkipSwitcher( bool skip, bool init = false ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
         bool checkKeepBelow( bool below, bool init = false ) const;
         bool checkFullScreen( bool fs, bool init = false ) const;
@@ -126,6 +127,7 @@ class Rules
         bool applyShade( ShadeMode& shade, bool init ) const;
         bool applySkipTaskbar( bool& skip, bool init ) const;
         bool applySkipPager( bool& skip, bool init ) const;
+        bool applySkipSwitcher( bool& skip, bool init ) const;
         bool applyKeepAbove( bool& above, bool init ) const;
         bool applyKeepBelow( bool& below, bool init ) const;
         bool applyFullScreen( bool& fs, bool init ) const;
@@ -236,6 +238,8 @@ class Rules
         SetRule skiptaskbarrule;
         bool skippager;
         SetRule skippagerrule;
+        bool skipswitcher;
+        SetRule skipswitcherrule;
         bool above;
         SetRule aboverule;
         bool below;

@@ -1429,6 +1429,15 @@ void Client::setSkipPager( bool b )
     updateWindowRules();
     }
 
+void Client::setSkipSwitcher( bool set )
+    {
+    set = rules()->checkSkipSwitcher( set );
+    if( set == skipSwitcher() )
+        return;
+    skip_switcher = set;
+    updateWindowRules();
+    }
+
 void Client::setModal( bool m )
     { // Qt-3.2 can have even modal normal windows :(
     if( modal == m )
