@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             layout = new lay( w );\
             layout->setLayoutType( lay##L );\
             KNotification::event( "tilinglayoutchanged", \
-                                i18n( "Layout changed to %1" ).arg( #lay ),\
+                                i18n( "Layout changed to %1", i18n(#lay) ),\
                                 QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );\
             break
 

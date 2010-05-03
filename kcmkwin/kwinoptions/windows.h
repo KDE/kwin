@@ -236,8 +236,8 @@ private:
   QCheckBox *tilingOn;
   QLabel *tilingLayoutLabel;
   QLabel *tilingRaiseLabel;
-  QComboBox *tilingLayoutCombo;
-  QComboBox *tilingRaiseCombo;
+  KComboBox *tilingLayoutCombo;
+  KComboBox *tilingRaiseCombo;
   void setTilingOn( bool );
   void setTilingLayout( int );
   void setTilingRaisePolicy( int );

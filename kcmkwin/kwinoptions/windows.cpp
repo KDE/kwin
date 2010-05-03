@@ -654,7 +654,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     tilingLayoutLabel = new QLabel( i18n("Default Tiling &Layout"), tilBox );
     tilBoxLay->addWidget( tilingLayoutLabel, 1, 0 );
 
-    tilingLayoutCombo = new QComboBox( tilBox );
+    tilingLayoutCombo = new KComboBox( tilBox );
 
     // NOTE: add your layout to the bottom of this list
     tilingLayoutCombo->addItem( "Spiral" );
@@ -668,7 +668,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     tilingRaiseLabel = new QLabel( i18n("Floating &Windows Raising"), tilBox );
     tilBoxLay->addWidget( tilingRaiseLabel, 2, 0 );
 
-    tilingRaiseCombo = new QComboBox( tilBox );
+    tilingRaiseCombo = new KComboBox( tilBox );
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Raise/Lower all floating windows" ) );
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Raise/Lower current window only") );
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Floating windows are always on top" ) );

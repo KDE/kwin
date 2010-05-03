@@ -149,7 +149,7 @@ void Columns::arrange( QRect wgeom )
 
     int mult = 0;
     int originalTop = wgeom.y();
-    for( QList<Tile *>::const_iterator it = ++tiled.constBegin() ; it != tiled.constEnd() ; it++ )
+    for( QList<Tile *>::const_iterator it = ++tiled.constBegin() ; it != tiled.constEnd() ; ++it )
         {
         if( (*it)->floating() )
             continue;
