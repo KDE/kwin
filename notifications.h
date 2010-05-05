@@ -60,6 +60,7 @@ class Notify
             DemandAttentionOther,
             CompositingSlow,
             CompositingSuspendedDbus,
+            TilingLayoutChanged,
             DesktopChange = 100
             };
 

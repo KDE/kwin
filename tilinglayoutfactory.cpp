@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtGlobal>
 #include <QList>
-#include <knotification.h>
 #include <klocale.h>
 #include <kdebug.h>
 
+#include "notifications.h"
 #include "tile.h"
 #include "client.h"
 
@@ -39,9 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             kDebug(1212) << #lay;\
             layout = new lay( w );\
             layout->setLayoutType( lay##L );\
-            KNotification::event( "tilinglayoutchanged", \
-                                i18n( "Layout changed to %1", i18n(#lay) ),\
-                                QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );\
+            Notify::raise( Notify::TilingLayoutChanged,                 \
+                           i18n( "Layout changed to %1", i18n(#lay) ) ); \
             break
 
 namespace KWin

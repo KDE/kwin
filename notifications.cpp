@@ -106,6 +106,9 @@ bool Notify::raise( Event e, const QString& message, Client* c )
         case CompositingSuspendedDbus:
             event = "compositingsuspendeddbus";
             break;
+        case TilingLayoutChanged:
+            event = "tilinglayoutchanged";
+            break;
         default:
             if ((e > DesktopChange) && (e <= DesktopChange+20))
             {
