@@ -82,7 +82,9 @@ void Workspace::slotToggleTiling()
 
 void Workspace::createTile( Client *c )
     {
-    if( c == NULL ) return;
+    if( c == NULL )
+        return;
+
     if( c->desktop() < 0 || c->desktop() >= tilingLayouts.size() ) return;
 
     kDebug(1212) << "Now tiling " << c->caption();
