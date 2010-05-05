@@ -85,11 +85,11 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
 
     if( phase == SMSavePhase2 || phase == SMSavePhase2Full )
         {
-        cg.writeEntry( "tiling", tilingMode() );
-        if( tilingMode() )
+        cg.writeEntry( "tiling", tilingEnabled() );
+        if( tilingEnabled() )
             {
             kDebug(1212) << "Tiling was ON";
-            setTilingMode( false );
+            setTilingEnabled( false );
             }
         }
 
@@ -180,7 +180,7 @@ void Workspace::loadSessionInfo()
     session.clear();
     KConfigGroup cg(kapp->sessionConfig(), "Session");
 
-    setTilingMode( cg.readEntry( "tiling", false ) );
+    setTilingEnabled( cg.readEntry( "tiling", false ) );
 
     int count =  cg.readEntry( "count",0 );
     int active_client = cg.readEntry( "active",0 );

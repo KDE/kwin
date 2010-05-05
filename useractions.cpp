@@ -668,7 +668,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     if ( !c )
         return;
 
-    if( tilingMode()
+    if( tilingEnabled()
         && (    op == Options::MaximizeOp
              || op == Options::HMaximizeOp
              || op == Options::VMaximizeOp

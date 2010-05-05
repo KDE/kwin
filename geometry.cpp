@@ -2816,7 +2816,7 @@ void Client::finishMoveResize( bool cancel )
 
     leaveMoveResize();
 
-    if( workspace()->tilingMode() )
+    if( workspace()->tilingEnabled() )
         {
         if( wasResize )
             workspace()->notifyWindowResizeDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
@@ -3045,7 +3045,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     if( isResize())
         {
         // query layout for supported resize mode
-        if( workspace()->tilingMode() )
+        if( workspace()->tilingEnabled() )
             {
             mode = workspace()->supportedTilingResizeMode( this, mode );
             }
@@ -3085,7 +3085,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             case PositionCenter:
                 // exception for tiling
                 // Center means no resizing allowed
-                if( workspace()->tilingMode() )
+                if( workspace()->tilingEnabled() )
                     {
                     finishMoveResize( false );
                     buttonDown = false;
@@ -3308,7 +3308,7 @@ void Client::performMoveResize()
         }
     else
         {
-        if( !workspace()->tilingMode() )
+        if( !workspace()->tilingEnabled() )
             setGeometry( moveResizeGeom );
         positionGeometryTip();
         }

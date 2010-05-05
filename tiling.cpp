@@ -35,17 +35,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-bool Workspace::tilingMode() const
+bool Workspace::tilingEnabled() const
     {
-    return tilingMode_;
+    return tilingEnabled_;
     }
 
-void Workspace::setTilingMode( bool tiling )
+void Workspace::setTilingEnabled( bool tiling )
     {
-    if( tilingMode() == tiling ) return;
-    tilingMode_ = tiling;
+    if( tilingEnabled() == tiling ) return;
+    tilingEnabled_ = tiling;
 
-    if( tilingMode_ )
+    if( tilingEnabled_ )
         {
         tilingLayouts.resize( numberOfDesktops() + 1 );
         foreach( Client *c, stackingOrder() )
@@ -62,15 +62,15 @@ void Workspace::setTilingMode( bool tiling )
 
 void Workspace::slotToggleTiling()
     {
-    if ( tilingMode() )
+    if ( tilingEnabled() )
         {
-        setTilingMode( false );
+        setTilingEnabled( false );
         QString message = i18n( "Tiling Disabled" );
         KNotification::event( "tilingdisabled", message, QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );
         }
     else
         {
-        setTilingMode( true );
+        setTilingEnabled( true );
         QString message = i18n( "Tiling Enabled" );
         KNotification::event( "tilingenabled", message, QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );
         }
@@ -84,7 +84,7 @@ void Workspace::createTile( Client *c )
     if( c->desktop() < 0 || c->desktop() >= tilingLayouts.size() ) return;
 
     kDebug(1212) << "Now tiling " << c->caption();
-    if( !tilingMode() || !tileable(c) )
+    if( !tilingEnabled() || !tileable(c) )
         return;
 
     Tile *t = new Tile( c, clientArea( PlacementArea, c ) );
@@ -144,7 +144,7 @@ void Workspace::belowCursor()
 
 Tile* Workspace::getNiceTile() const
     {
-    if( !tilingMode() ) return NULL;
+    if( !tilingEnabled() ) return NULL;
     if( !tilingLayouts.value( activeClient()->desktop() ) ) return NULL;
     
     return tilingLayouts[ activeClient()->desktop() ]->findTile( activeClient() );

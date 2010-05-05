@@ -96,7 +96,7 @@ Workspace::Workspace( bool restore )
     , desktopGrid_( new int[2] )
     , currentDesktop_( 0 )
     , desktopLayoutDynamicity_( false )
-    , tilingMode_( false )
+    , tilingEnabled_( false )
     // Unsorted
     , active_popup( NULL )
     , active_popup_client( NULL )
@@ -473,7 +473,7 @@ void Workspace::init()
         CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
 
     // Enable/disable tiling
-    setTilingMode( options->tilingOn );
+    setTilingEnabled( options->tilingOn );
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
@@ -660,7 +660,7 @@ void Workspace::removeClient( Client* c, allowed_t )
         tab_box->nextPrev( true );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
-    if( tilingMode() && tilingLayouts.value(c->desktop()) )
+    if( tilingEnabled() && tilingLayouts.value(c->desktop()) )
         {
         removeTile( c );
         }
@@ -1151,7 +1151,7 @@ void Workspace::slotReconfigure()
         discardUsedWindowRules( *it, false );
         }
 
-    setTilingMode( options->tilingOn );
+    setTilingEnabled( options->tilingOn );
     // just so that we reset windows in the right manner, 'activate' the current active window
     notifyWindowActivated( activeClient() );
     rootInfo->setSupported( NET::WM2FrameOverlap, mgr->factory()->supports( AbilityExtendIntoClientArea ) );
@@ -1421,7 +1421,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             {
             int old_desktop = movingClient->desktop();
             movingClient->setDesktop( new_desktop );
-            if( tilingMode() )
+            if( tilingEnabled() )
                 {
                 notifyWindowDesktopChanged( movingClient, old_desktop );
                 }

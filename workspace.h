@@ -174,8 +174,8 @@ class Workspace : public QObject, public KDecorationDefines
         //-------------------------------------------------
         // Tiling
     public:
-        bool tilingMode() const;
-        void setTilingMode( bool tiling );
+        bool tilingEnabled() const;
+        void setTilingEnabled( bool tiling );
         void updateAllTiles();
         void notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
@@ -305,7 +305,7 @@ class Workspace : public QObject, public KDecorationDefines
         int currentDesktop_;
         bool desktopLayoutDynamicity_;
 
-        bool tilingMode_;
+        bool tilingEnabled_;
         QVector<TilingLayout *> tilingLayouts;
 
         //-------------------------------------------------
