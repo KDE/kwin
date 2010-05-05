@@ -657,9 +657,9 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     tilingLayoutCombo = new KComboBox( tilBox );
 
     // NOTE: add your layout to the bottom of this list
-    tilingLayoutCombo->addItem( "Spiral" );
-    tilingLayoutCombo->addItem( "Columns" );
-    tilingLayoutCombo->addItem( "Floating" );
+    tilingLayoutCombo->addItem( i18nc("Spiral", "Spiral tiling layout") );
+    tilingLayoutCombo->addItem( i18nc("Columns", "Two-column horizontal tiling layout") );
+    tilingLayoutCombo->addItem( i18nc("Floating", "Floating layout, windows aren't tiled at all") );
 
     tilingLayoutLabel->setBuddy( tilingLayoutCombo );
     connect( tilingLayoutCombo, SIGNAL( activated(int) ), SLOT( changed() ) );
