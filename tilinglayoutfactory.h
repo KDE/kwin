@@ -34,16 +34,16 @@ class TilingLayoutFactory
          * Remember to suffix an L for now
          */
         enum Layouts {
-            First, // special, do not modify/move
-            DefaultL,
+            FirstLayout, // special, do not modify/move
+            DefaultLayout,
 
             /* Actual layouts */
-            SpiralL,
-            ColumnsL,
-            FloatingL,
+            SpiralLayout,
+            ColumnsLayout,
+            FloatingLayout,
             /* Put your layout above this line ^^^ */
 
-            Last // special, do not modify/move
+            LastLayout // special, do not modify/move
         };
 
         static TilingLayout* createLayout( int type, Workspace * );

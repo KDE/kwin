@@ -98,7 +98,7 @@ void Workspace::createTile( Client *c )
 
     if( !tilingLayouts.value(c->desktop()) )
         {
-        tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout( TilingLayoutFactory::DefaultL, this );
+        tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout( TilingLayoutFactory::DefaultLayout, this );
         }
     tilingLayouts[c->desktop()]->addTile( t );
     tilingLayouts[c->desktop()]->commit();
@@ -224,7 +224,7 @@ void Workspace::notifyWindowDesktopChanged( Client *c, int old_desktop )
         // TODO: copied from createTile(), move this into separate method?
         if( !tilingLayouts.value( c->desktop() ) )
             {
-            tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout( TilingLayoutFactory::DefaultL, this );
+            tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout( TilingLayoutFactory::DefaultLayout, this );
             }
 
         if( t )

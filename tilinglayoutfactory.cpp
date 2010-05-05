@@ -35,10 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // w is the workspace pointer
 #define ADD_LAYOUT( lay ) \
-            case lay##L:\
+            case lay##Layout:\
             kDebug(1212) << #lay;\
             layout = new lay( w );\
-            layout->setLayoutType( lay##L );\
+            layout->setLayoutType( lay##Layout );\
             Notify::raise( Notify::TilingLayoutChanged,                 \
                            i18n( "Layout changed to %1", i18n(#lay) ) ); \
             break
@@ -48,13 +48,13 @@ namespace KWin
 
 TilingLayout* TilingLayoutFactory::createLayout( int type, Workspace *w )
     {
-    Q_ASSERT( type != First && type != Last );
+    Q_ASSERT( type != FirstLayout && type != LastLayout );
     TilingLayout *layout;
 
     /* For new layouts, make a case entry here */
     switch( type )
         {
-        case DefaultL: // NOTE: fall through makes first layout default
+        case DefaultLayout: // NOTE: fall through makes first layout default
             layout = createLayout( indexToLayoutIndex( options->tilingLayout ), w );
             break;
 
@@ -78,18 +78,18 @@ TilingLayout* TilingLayoutFactory::cycleLayout( TilingLayout *curr, bool next )
         {
         type++;
 
-        if( type >= Last )
-            type = First + 1;
+        if( type >= LastLayout )
+            type = FirstLayout + 1;
         }
     else
         {
         type--;
 
-        if( type <= First )
-            type = Last - 1;
+        if( type <= FirstLayout )
+            type = LastLayout - 1;
         }
 
-    QList<Tile *> tiles = curr->tiles(); //root->flatten();
+    QList<Tile *> tiles = curr->tiles();
 
     TilingLayout *l = createLayout( type, curr->workspace() );
 
@@ -115,11 +115,11 @@ TilingLayout* TilingLayoutFactory::cycleLayout( TilingLayout *curr, bool next )
  */
 int TilingLayoutFactory::indexToLayoutIndex( int index )
     {
-    int layout = DefaultL + index + 1;
-    if( layout >= Last )
-        layout = DefaultL + 1;
-    if( layout <= First )
-        layout = Last - 1;
+    int layout = DefaultLayout + index + 1;
+    if( layout >= LastLayout )
+        layout = DefaultLayout + 1;
+    if( layout <= FirstLayout )
+        layout = LastLayout - 1;
     return layout;
     }
 } // end namespace
