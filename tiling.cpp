@@ -129,20 +129,7 @@ bool Workspace::tileable( Client *c )
         return false;
     }
 
-    kDebug(1212) << "c->isNormalWindow()" << c->isNormalWindow() ;
-    kDebug(1212) << "c->isUtility()     " <<  c->isUtility() ;
-    kDebug(1212) << "c->isDialog()      " <<  c->isDialog() ;
-    kDebug(1212) << "c->isSplash()      " <<  c->isSplash() ;
-    kDebug(1212) << "c->isToolbar()     " <<  c->isToolbar() ;
-    kDebug(1212) << "c->isPopupMenu()   " <<  c->isPopupMenu() ;
-    kDebug(1212) << "c->isTransient()   " <<  c->isTransient() ;
-    if( !c->isNormalWindow() ||
-        c->isUtility() ||
-        c->isDialog() ||
-        c->isSplash() ||
-        c->isToolbar() ||
-        c->isPopupMenu() ||
-        c->isTransient() )
+    if( !c->isNormalWindow() )
         {
             return false;
         }
