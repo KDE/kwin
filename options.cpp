@@ -125,7 +125,7 @@ unsigned long Options::updateSettings()
     shadeHoverInterval = config.readEntry("ShadeHoverInterval", 250 );
 
     tilingOn = config.readEntry( "TilingOn", false );
-    tilingLayout = config.readEntry( "TilingDefaultLayout", 0 );
+    tilingLayout = static_cast<TilingLayoutFactory::Layouts>(config.readEntry( "TilingDefaultLayout", 0 ));
     tilingRaisePolicy = config.readEntry( "TilingRaisePolicy", 0 );
 
     // important: autoRaise implies ClickRaise

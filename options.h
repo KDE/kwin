@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "placement.h"
 #include "utils.h"
+#include "tilinglayoutfactory.h"
 
 namespace KWin
 {
@@ -124,7 +125,7 @@ class Options : public KDecorationOptions
         /**
          * Tiling Layout
          */
-        int tilingLayout;
+        enum TilingLayoutFactory::Layouts tilingLayout;
 
         /**
          * Tiling window raise policy.
