@@ -98,6 +98,10 @@ TilingLayout* TilingLayoutFactory::cycleLayout( TilingLayout *curr, bool next )
         curr->removeTileNoArrange( t );
     }
 
+    if( tiles.length() == 0 )
+      return l;
+
+    // so that we don't rearrange after every call
     Tile *last = tiles.takeLast();
     foreach( Tile *t, tiles )
     {
