@@ -55,11 +55,7 @@ void Workspace::setTilingMode( bool tiling )
         }
     else
         {
-        foreach( TilingLayout *t, tilingLayouts )
-            {
-            if( t )
-                delete t;
-            }
+        qDeleteAll( tilingLayouts );
         tilingLayouts.clear();
         }
     }
