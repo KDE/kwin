@@ -176,6 +176,8 @@ class Workspace : public QObject, public KDecorationDefines
     public:
         bool tilingEnabled() const;
         void setTilingEnabled( bool tiling );
+        bool tileable( Client *c );
+        void createTile( Client *c );
         void updateAllTiles();
         void notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
@@ -843,9 +845,7 @@ class Workspace : public QObject, public KDecorationDefines
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
 
         Tile* getNiceTile() const;
-        void createTile( Client *c );
         void removeTile( Client *c );
-        bool tileable( Client *c );
         // int, and not Tile::Direction because 
         // we are using a forward declaration for Tile
         Tile* findAdjacentTile( Tile *ref, int d );
