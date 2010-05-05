@@ -1152,6 +1152,11 @@ void Workspace::slotReconfigure()
         }
 
     setTilingEnabled( options->tilingOn );
+    foreach( TilingLayout *layout, tilingLayouts )
+        {
+        if( layout )
+          layout->reconfigureTiling();
+        }
     // just so that we reset windows in the right manner, 'activate' the current active window
     notifyWindowActivated( activeClient() );
     rootInfo->setSupported( NET::WM2FrameOverlap, mgr->factory()->supports( AbilityExtendIntoClientArea ) );

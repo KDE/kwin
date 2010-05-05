@@ -126,6 +126,8 @@ void TilingLayout::swapTiles( Tile *a, Tile *b )
 
 void TilingLayout::addTileNoArrange( Tile * t )
     {
+    if( findTile( t->client() ) )
+        return;
     m_tiles.append( t );
     postAddTile( t );
     }
@@ -177,6 +179,28 @@ void TilingLayout::toggleFloatTile( Client *c )
 
     if( t )
       arrange( layoutArea( t ) );
+    }
+
+void TilingLayout::reconfigureTiling()
+    {
+      //TODO also check 'untiled' windows to see if they are now requesting tiling
+    foreach( Tile *t, tiles() )
+        {
+        if( t->client()->rules()->checkTilingOption( t->floating() ? 1 : 0 ) == 1 )
+            t->floatTile();
+        else
+            t->unfloatTile();
+        }
+
+    if( tiles().length() > 0 )
+        arrange( layoutArea( tiles().first() ) );
+
+    foreach( Client *c, workspace()->stackingOrder() )
+        {
+        if( c->rules()->checkTilingOption( 0 ) == 1 )
+            workspace()->createTile( c );
+        }
+
     }
 
 Tile* TilingLayout::findTileBelowPoint( const QPoint &p ) const

@@ -54,6 +54,7 @@ class TilingLayout
         void removeTile( Client *c );
         void toggleFloatTile( Client *c );
         void swapTiles( Tile *a, Tile *b );
+        void reconfigureTiling();
 
         virtual KDecorationDefines::Position resizeMode( Client *c, KDecorationDefines::Position currentMode ) const;
 
