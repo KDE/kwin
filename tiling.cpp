@@ -134,6 +134,12 @@ bool Workspace::tileable( Client *c )
             return false;
         }
 
+    // 0 means tile it, if we get 1 (floating), don't tile
+    if( c->rules()->checkTilingOption( 0 ) == 1 )
+        {
+        return false;
+        }
+
     return true;
     }
 
