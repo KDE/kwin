@@ -297,6 +297,9 @@ QRegion WebClient::calcMask(void) const
 {
   QRegion mask(0, 0, width(), height());
 
+  if (maximizeMode() == MaximizeFull)
+      return mask;
+  
   int r(width());
   int b(height());
 
