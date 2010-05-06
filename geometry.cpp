@@ -2660,7 +2660,7 @@ void Client::clearbound()
 
 void Client::doDrawbound( const QRect& geom, bool clear )
     {
-    if( effects && static_cast<EffectsHandlerImpl*>(effects)->provideResizeEffect() )
+    if( effects && static_cast<EffectsHandlerImpl*>(effects)->providesResizeEffect() )
         return; // done by effect
     if( decoration != NULL && decoration->drawbound( geom, clear ) )
         return; // done by decoration
@@ -3281,11 +3281,11 @@ void Client::performMoveResize()
     bool transparent = false;
     if( isResize() )
         {
-        haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provideResizeEffect();
-        transparent = haveResizeEffect || options->resizeMode == Options::Transparent;
+        haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->providesResizeEffect();
+        transparent = haveResizeEffect || rules()->checkMoveResizeMode( options->resizeMode) != Options::Opaque;
         }
-    else
-        transparent = options->moveMode == Options::Transparent;
+    else if ( isMove())
+        transparent = rules()->checkMoveResizeMode( options->moveMode) != Options::Opaque;
     
 #ifdef HAVE_XSYNC
     if( isResize() && !transparent && sync_counter != None && !sync_resize_pending )
