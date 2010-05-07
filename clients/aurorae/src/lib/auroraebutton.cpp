@@ -330,7 +330,7 @@ void AuroraeButton::paintButton(QPainter *painter, Plasma::FrameSvg *frame, Butt
         AuroraeScene *s = static_cast<AuroraeScene*>(scene());
         if (s->isAnimating()) {
             animationPrefix = prefix;
-            if (prefix.endsWith("-inactive")) {
+            if (prefix.endsWith(QLatin1String("-inactive"))) {
                 animationPrefix.remove("-inactive");
             } else {
                 animationPrefix = animationPrefix + "-inactive";
