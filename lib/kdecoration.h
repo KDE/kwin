@@ -110,6 +110,7 @@ public:
         CloseClientGroupOp, // Close the group
         MoveClientInGroupLeftOp, // Move left in the group
         MoveClientInGroupRightOp, // Move right in the group
+        ToggleClientTiledStateOp, // put a floating client into tiling
         ClientGroupDragOp
         };
     /**

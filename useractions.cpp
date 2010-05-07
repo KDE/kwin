@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
+#include "tile.h"
+#include "tilinglayout.h"
 
 #include <fixx11h.h>
 #include <QPushButton>
@@ -190,6 +192,22 @@ QMenu* Workspace::clientPopup()
             popup->addSeparator();
             }
 
+        // create it anyway
+        mTilingStateOpAction = popup->addAction( i18nc("When in tiling mode, toggle's the window's floating/tiled state", "&Float Window") );
+        // then hide it
+        mTilingStateOpAction->setVisible(false);
+        // actions for window tiling
+        if( tilingEnabled() )
+            {
+            kaction = qobject_cast<KAction*>( keys->action("Toggle Floating") );
+            mTilingStateOpAction->setCheckable( true );
+            mTilingStateOpAction->setData( Options::ToggleClientTiledStateOp );
+            if( kaction!=0 )
+                mTilingStateOpAction->setShortcut( kaction->globalShortcut().primary() );
+            }
+
+        popup->addSeparator();
+
         action = popup->addMenu( advanced_popup );
         action->setText( i18n("Ad&vanced") );
 
@@ -265,6 +283,18 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
+
+    if( tilingEnabled() )
+        {
+        int desktop = active_popup_client->desktop();
+        if( tilingLayouts.value(desktop) )
+            {
+            Tile *t = tilingLayouts[desktop]->findTile(active_popup_client);
+            if( t )
+                mTilingStateOpAction->setChecked( t->floating() );
+            }
+        }
+    mTilingStateOpAction->setVisible( tilingEnabled() );
 
     delete switch_to_tab_popup;
     switch_to_tab_popup = 0;
@@ -787,6 +817,14 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             }
         case Options::CloseClientGroupOp:
             c->clientGroup()->closeAll();
+        case Options::ToggleClientTiledStateOp:
+            {
+            int desktop = c->desktop();
+            if( tilingLayouts.value( desktop ) )
+                {
+                tilingLayouts[desktop]->toggleFloatTile( c );
+                }
+            }
         }
     }
 

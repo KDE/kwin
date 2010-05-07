@@ -924,6 +924,7 @@ class Workspace : public QObject, public KDecorationDefines
         QAction* mMoveOpAction;
         QAction* mMaximizeOpAction;
         QAction* mShadeOpAction;
+        QAction* mTilingStateOpAction;
         QAction* mKeepAboveOpAction;
         QAction* mKeepBelowOpAction;
         QAction* mFullScreenOpAction;
