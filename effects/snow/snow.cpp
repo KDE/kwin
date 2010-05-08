@@ -144,8 +144,7 @@ void SnowEffect::snowing( QRegion& region )
             mShader->setUniform( "top", rect.y() );
             mShader->setUniform( "bottom", rect.y() + rect.height() );
             }
-        else
-            glNewList( list, GL_COMPILE_AND_EXECUTE );
+
         for (int i=0; i<flakes.count(); i++)
             {
             SnowFlake& flake = flakes[i];
@@ -202,8 +201,7 @@ void SnowEffect::snowing( QRegion& region )
             {
             mShader->unbind();
             }
-        else
-            glEndList();
+
         glDisable( GL_BLEND );
         texture->unbind();
         glPopAttrib();
