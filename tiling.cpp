@@ -226,10 +226,8 @@ void Workspace::notifyWindowDesktopChanged( Client *c, int old_desktop )
         }
     }
 
-// TODO: make this configurable
 /*
- * If a floating window was activated, raise all floating windows.
- * If a tiled window was activated, lower all floating windows.
+ * Implements the 3 raising modes in Window Behaviour -> Advanced
  */
 void Workspace::notifyWindowActivated( Client *c )
     {

@@ -27,6 +27,14 @@ namespace KWin
 class Workspace;
 class TilingLayout;
 class Tile;
+
+/**
+ * The tiling layout factory is used to create tiling layouts.
+ * To add a new layout, include the appropriate header in tilinglayoutfactory.cpp
+ * and use the ADD_LAYOUT macro to create a case entry.
+ * Also insert your layout in the Layouts enumeration. Do NOT
+ * change the position of FirstLayout and LastLayout
+ */
 class TilingLayoutFactory
     {
     public:

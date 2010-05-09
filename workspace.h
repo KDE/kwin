@@ -178,7 +178,14 @@ class Workspace : public QObject, public KDecorationDefines
         void setTilingEnabled( bool tiling );
         bool tileable( Client *c );
         void createTile( Client *c );
+        // updates geometry of tiles on all desktops,
+        // this rearranges the tiles.
         void updateAllTiles();
+
+        // The notification funtions are called from 
+        // various points in existing code so that
+        // tiling can take any action if required.
+        // They are defined in tiling.cpp
         void notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void notifyWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
@@ -308,6 +315,10 @@ class Workspace : public QObject, public KDecorationDefines
         bool desktopLayoutDynamicity_;
 
         bool tilingEnabled_;
+        // Each tilingLayout is for one virtual desktop.
+        // The length is always one more than the number of
+        // virtual desktops so that we can quickly index them
+        // without having to remember to subtract one.
         QVector<TilingLayout *> tilingLayouts;
 
         //-------------------------------------------------
@@ -679,15 +690,19 @@ class Workspace : public QObject, public KDecorationDefines
         void suspendCompositing();
         void suspendCompositing( bool suspend );
 
+        // user actions, usually bound to shortcuts
+        // and also provided through the D-BUS interface.
         void slotToggleTiling();
         void slotToggleFloating();
         void slotNextTileLayout();
         void slotPreviousTileLayout();
 
+        // Changes the focused client
         void slotLeft();
         void slotRight();
         void slotTop();
         void slotBottom();
+        // swaps active and adjacent client.
         void slotMoveLeft();
         void slotMoveRight();
         void slotMoveTop();
@@ -844,6 +859,8 @@ class Workspace : public QObject, public KDecorationDefines
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
 
+        // try to get a decent tile, either the one with
+        // focus or the one below the mouse.
         Tile* getNiceTile() const;
         void removeTile( Client *c );
         // int, and not Tile::Direction because 

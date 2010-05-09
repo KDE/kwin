@@ -60,6 +60,7 @@ Tile* TilingLayout::findTile( Client *c ) const
 
 void TilingLayout::clientMinimizeToggled( Client *c )
     {
+    // just rearrange since that will check for state
     Tile *t = findTile( c );
     if( t )
         arrange( layoutArea( t ) );
@@ -81,6 +82,7 @@ void TilingLayout::clientResized( Client *c, const QRect &moveResizeGeom, const 
     commit();
     }
 
+// tries to swap the tile with the one in the new position right now
 void TilingLayout::clientMoved( Client *c, const QRect &moveResizeGeom, const QRect &orig )
     {
     if( moveResizeGeom == orig )

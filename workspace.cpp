@@ -1422,6 +1422,9 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         // Now propagate the change, after hiding, before showing
         rootInfo->setCurrentDesktop( currentDesktop() );
 
+        // if the client is moved to another desktop, that desktop may
+        // not have an existing layout. In addition this tiling layout
+        // will require rearrangement, so notify about desktop changes.
         if( movingClient && !movingClient->isOnDesktop( new_desktop ))
             {
             int old_desktop = movingClient->desktop();

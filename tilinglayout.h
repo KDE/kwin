@@ -39,6 +39,10 @@ class TilingLayout
         TilingLayout( Workspace *w );
         virtual ~TilingLayout();
         
+        /**
+         * Reimplement this to decide how the client(s) should
+         * be resized.
+         */
         virtual void clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void clientMoved( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void clientMinimizeToggled( Client *c );
@@ -56,14 +60,33 @@ class TilingLayout
         void swapTiles( Tile *a, Tile *b );
         void reconfigureTiling();
 
+        /**
+         * All tiling layouts do not allow the user to manually
+         * resize clients. This method will be called when the user
+         * attempts a resize. Return any valid position to allow
+         * resizing in that direction. currentMode will be the direction
+         * of resize attempted by the user. You do not have to return the same value.
+         * If you do not want to allow resizing at all, or you do not
+         * want to allow resizing for this client, then return KDecorationDefines::PositionCenter.
+         */
         virtual KDecorationDefines::Position resizeMode( Client *c, KDecorationDefines::Position currentMode ) const;
 
         const QList<Tile *>& tiles() const;
         Tile* findTile( Client *c ) const;
 
     protected:
+        /**
+         * Get a pointer to the Workspace.
+         */
         Workspace * workspace() const;
+        /**
+         * Get a area in which the Tile can be placed.
+         */
         const QRect layoutArea( Tile *t ) const;
+        /**
+         * Hooks called after a tile is added to
+         * layout and before it is removed.
+         */
         // currently only required by floating layout
         virtual void postAddTile( Tile *t );
         virtual void preRemoveTile( Tile *t );

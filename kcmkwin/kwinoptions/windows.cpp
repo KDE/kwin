@@ -669,6 +669,10 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     tilBoxLay->addWidget( tilingRaiseLabel, 2, 0 );
 
     tilingRaiseCombo = new KComboBox( tilBox );
+    // when a floating window is activated, all other floating
+    // windows are also brought to the front, above the tiled windows
+    // when a tiled window is focused, all floating windows go to the back.
+    // NOTE: If the user has explicitly set a client to "keep above others", that will be respected.
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Raise/Lower all floating windows" ) );
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Raise/Lower current window only") );
     tilingRaiseCombo->addItem( i18nc( "Window Raising Policy", "Floating windows are always on top" ) );

@@ -698,6 +698,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     if ( !c )
         return;
 
+    // Allows us to float a window when it is maximized, if it is tiled.
     if( tilingEnabled()
         && (    op == Options::MaximizeOp
              || op == Options::HMaximizeOp
