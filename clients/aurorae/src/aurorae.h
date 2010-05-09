@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
+class QGraphicsSceneMouseEvent;
 class QGraphicsView;
 class QGraphicsScene;
 
@@ -86,11 +87,18 @@ private slots:
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
+    void tabMouseButtonPress(QGraphicsSceneMouseEvent *e, int index);
+    void tabMouseButtonRelease(QGraphicsSceneMouseEvent *e, int index);
+
+protected:
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
 private:
     void updateWindowShape();
+    void checkTabs(bool force = false);
     AuroraeScene *m_scene;
     QGraphicsView *m_view;
+    bool m_clickInProgress;
 };
 
 }

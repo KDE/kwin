@@ -28,21 +28,23 @@
 #include <QtGui/QStyle>
 #include <KDE/KColorUtils>
 #include <KDE/KGlobalSettings>
+#include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/PaintUtils>
 
 namespace Aurorae
 {
 
-AuroraeTab::AuroraeTab(AuroraeTheme* theme, const QString& caption)
+AuroraeTab::AuroraeTab(AuroraeTheme* theme, const QString& caption, int index)
     : QGraphicsWidget()
     , m_theme(theme)
     , m_caption(caption)
+    , m_index(index)
+    , m_dblClicked(false)
 {
     m_effect = new QGraphicsDropShadowEffect(this);
     if (m_theme->themeConfig().useTextShadow()) {
         setGraphicsEffect(m_effect);
     }
-    setAcceptedMouseButtons(Qt::NoButton);
     connect(m_theme, SIGNAL(buttonSizesChanged()), SLOT(buttonSizesChanged()));
 }
 
@@ -72,6 +74,11 @@ void AuroraeTab::setCaption(const QString& caption)
     update();
 }
 
+void AuroraeTab::setIndex(int index)
+{
+    m_index = index;
+}
+
 void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
@@ -81,7 +88,47 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
     AuroraeScene *s = static_cast<AuroraeScene*>(scene());
     const bool active = s->isActive();
+    const bool useTabs = (s->tabCount() > 1);
+    const bool focused = s->isFocusedTab(m_index);
     const ThemeConfig &conf = m_theme->themeConfig();
+    if (useTabs) {
+        painter->save();
+        Plasma::FrameSvg *decoration = m_theme->decoration();
+        if (!decoration->hasElementPrefix("tab-active-focused") && m_index < s->tabCount()-1) {
+            QColor color = active ? conf.activeTextColor(true, false) : conf.inactiveTextColor(true, false);
+            painter->setPen(color);
+            QPointF point1 = rect().topRight();
+            QPointF point2 = rect().bottomRight();
+            if (m_theme->decorationPosition() == DecorationLeft ||
+                m_theme->decorationPosition() == DecorationRight) {
+                point1 = rect().topRight();
+            point2 = rect().topLeft();
+            }
+            painter->drawLine(point1, point2);
+        } else if (decoration->hasElementPrefix("tab-active-focused")) {
+            QString element = "tab-active-";
+            if (!active && decoration->hasElementPrefix("tab-inactive-focused")) {
+                element = "tab-inactive-";
+            }
+            bool useFocused = true;
+            if (!focused) {
+                if (element.startsWith(QLatin1String("tab-active")) &&
+                    decoration->hasElementPrefix("tab-active-unfocused")) {
+                    useFocused = false;
+                }
+                if (element.startsWith(QLatin1String("tab-inactive")) &&
+                    decoration->hasElementPrefix("tab-inactive-unfocused")) {
+                    useFocused = false;
+                }
+            }
+            element.append(useFocused ? "focused" : "unfocused");
+            decoration->setElementPrefix(element);
+            decoration->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+            decoration->resizeFrame(size());
+            decoration->paintFrame(painter);
+        }
+        painter->restore();
+    }
     Qt::Alignment align = conf.alignment();
     if (align != Qt::AlignCenter && QApplication::layoutDirection() == Qt::RightToLeft) {
         // have to swap the alignment to be consistent with other kwin decos.
@@ -124,14 +171,14 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     QPainter p(&pix);
     QColor color;
     if (active) {
-        color = conf.activeTextColor();
+        color = conf.activeTextColor(useTabs, focused);
         if (s->isAnimating()) {
-            color = KColorUtils::mix(conf.inactiveTextColor(), conf.activeTextColor(), s->animationProgress());
+            color = KColorUtils::mix(conf.inactiveTextColor(useTabs, focused), conf.activeTextColor(useTabs, focused), s->animationProgress());
         }
     } else {
-        color = conf.inactiveTextColor();
+        color = conf.inactiveTextColor(useTabs, focused);
         if (s->isAnimating()){
-            color = KColorUtils::mix(conf.activeTextColor(), conf.inactiveTextColor(), s->animationProgress());
+            color = KColorUtils::mix(conf.activeTextColor(useTabs, focused), conf.inactiveTextColor(useTabs, focused), s->animationProgress());
         }
     }
     p.setPen(color);
@@ -173,6 +220,33 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 void AuroraeTab::buttonSizesChanged()
 {
     updateGeometry();
+}
+
+void AuroraeTab::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mousePressEvent(event);
+    event->accept();
+    emit mouseButtonPress(event, m_index);
+}
+
+void AuroraeTab::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
+    if (m_dblClicked && event->button() == Qt::LeftButton) {
+        // eat event
+        m_dblClicked = false;
+        return;
+    }
+    emit mouseButtonRelease(event, m_index);
+}
+
+void AuroraeTab::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseDoubleClickEvent(event);
+    if (event->button() == Qt::LeftButton) {
+        m_dblClicked = true;
+        emit mouseDblClicked();
+    }
 }
 
 } // namespace

@@ -66,7 +66,39 @@ public:
     int rightButtonsWidth() const;
     void setButtons(const QString &left, const QString &right);
 
-    void setCaption(const QString &caption);
+    /**
+    * Updates the caption for the decoration with given index.
+    * @param caption The new caption
+    * @param index The index of the tab
+    */
+    void setCaption(const QString &caption, int index = 0);
+    /**
+    * Updates the captions of all tabs.
+    * @param captions The new captions
+    */
+    void setCaptions(const QStringList &captions);
+    /**
+    * Adds a tab with given caption to the end of the tab list.
+    */
+    void addTab(const QString &caption);
+    /**
+    * Adds a tab for each of the given captions to the end of the tab list.
+    */
+    void addTabs(const QStringList &captions);
+    /**
+    * Removes the last tab from the list, if there are at least two tabs.
+    */
+    void removeLastTab();
+    /**
+    * current number of tabs
+    */
+    int tabCount() const;
+    void setFocusedTab(int index);
+    int focusedTab() const;
+    /**
+    * @returns true if the tab at given index is the focused one.
+    */
+    bool isFocusedTab(int index) const;
     const QString &leftButtons() const;
     const QString &rightButtons() const;
 
@@ -86,6 +118,8 @@ Q_SIGNALS:
     void titleDoubleClicked();
     void titleMouseMoved(Qt::MouseButton, Qt::MouseButtons);
     void wheelEvent(int delta);
+    void tabMouseButtonPress(QGraphicsSceneMouseEvent*, int);
+    void tabMouseButtonRelease(QGraphicsSceneMouseEvent*, int);
 
     void activeChanged();
 
@@ -120,9 +154,10 @@ private:
     bool m_keepBelow;
     QString m_leftButtonOrder;
     QString m_rightButtonOrder;
-    QString m_caption;
     bool m_dblClicked;
     bool m_contextHelp;
+    int m_tabCount;
+    int m_focusedTab;
 };
 
 } // namespace

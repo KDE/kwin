@@ -54,6 +54,7 @@ AuroraeScene::AuroraeScene(Aurorae::AuroraeTheme* theme, const QString& leftButt
     , m_rightButtonOrder(rightButtons)
     , m_dblClicked(false)
     , m_contextHelp(contextHelp)
+    , m_tabCount(0)
 {
     init();
     connect(m_theme, SIGNAL(themeChanged()), SLOT(resetTheme()));
@@ -69,6 +70,7 @@ void AuroraeScene::init()
     if (!m_theme->isValid()) {
         return;
     }
+    m_tabCount = 0;
     Qt::Orientation orientation = Qt::Horizontal;
     switch ((DecorationPosition)m_theme->themeConfig().decorationPosition()) {
     case DecorationLeft: // fall through
@@ -109,12 +111,8 @@ void AuroraeScene::init()
     titleLayout->setContentsMargins(0, 0, 0, 0);
     titleLayout->setOrientation(orientation);
     m_title = new QGraphicsWidget;
-    AuroraeTab *tab = new AuroraeTab(m_theme, m_caption);
-    connect(this, SIGNAL(activeChanged()), tab, SLOT(activeChanged()));
-    titleLayout->addItem(tab);
     m_title->setLayout(titleLayout);
     addItem(m_title);
-    tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     setActive(m_active, false);
     updateLayout();
@@ -759,14 +757,94 @@ void AuroraeScene::setButtons(const QString &left, const QString &right)
     resetTheme();
 }
 
-void AuroraeScene::setCaption(const QString &caption)
+void AuroraeScene::setCaption(const QString &caption, int index)
 {
-    m_caption = caption;
     foreach (QGraphicsItem *item, items()) {
         if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
-            tab->setCaption(caption);
+            if (tab->index() == index) {
+                tab->setCaption(caption);
+            }
         }
     }
+}
+
+void AuroraeScene::setCaptions(const QStringList &captions)
+{
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            if (tab->index() < captions.size()) {
+                tab->setCaption(captions[tab->index()]);
+            }
+        }
+    }
+}
+
+void AuroraeScene::addTab(const QString &caption)
+{
+    AuroraeTab *tab = new AuroraeTab(m_theme, caption, m_tabCount);
+    ++m_tabCount;
+    connect(this, SIGNAL(activeChanged()), tab, SLOT(activeChanged()));
+    connect(tab, SIGNAL(mouseButtonPress(QGraphicsSceneMouseEvent*,int)),
+            SIGNAL(tabMouseButtonPress(QGraphicsSceneMouseEvent*,int)));
+    connect(tab, SIGNAL(mouseButtonRelease(QGraphicsSceneMouseEvent*,int)),
+            SIGNAL(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)));
+    connect(tab, SIGNAL(mouseDblClicked()), SIGNAL(titleDoubleClicked()));
+    connect(tab, SIGNAL(mouseMoved(Qt::MouseButton,Qt::MouseButtons)),
+            SIGNAL(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)));
+    static_cast<QGraphicsLinearLayout*>(m_title->layout())->addItem(tab);
+    tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_title->layout()->invalidate();
+}
+
+void AuroraeScene::addTabs(const QStringList &captions)
+{
+    foreach (const QString &caption, captions) {
+        addTab(caption);
+    }
+}
+
+void AuroraeScene::removeLastTab()
+{
+    if (m_tabCount < 2) {
+        return;
+    }
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            if (tab->index() == m_tabCount-1) {
+                m_title->layout()->removeAt(tab->index());
+                removeItem(tab);
+                --m_tabCount;
+                m_title->layout()->invalidate();
+                return;
+            }
+        }
+    }
+}
+
+int AuroraeScene::tabCount() const
+{
+    return m_tabCount;
+}
+
+int AuroraeScene::focusedTab() const
+{
+    return m_focusedTab;
+}
+
+void AuroraeScene::setFocusedTab(int index)
+{
+    if (m_focusedTab != index) {
+        m_focusedTab = index;
+        m_title->update();
+    }
+}
+
+bool AuroraeScene::isFocusedTab(int index) const
+{
+    if (m_tabCount == 1) {
+        return true;
+    }
+    return (index == m_focusedTab);
 }
 
 void AuroraeScene::mousePressEvent(QGraphicsSceneMouseEvent* event)

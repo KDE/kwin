@@ -31,13 +31,28 @@ class AuroraeTab : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    AuroraeTab(AuroraeTheme *theme, const QString &caption);
+    AuroraeTab(AuroraeTheme *theme, const QString &caption, int index);
     virtual ~AuroraeTab();
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     void setCaption(const QString &caption);
+    void setIndex(int index);
+    int index() const {
+        return m_index;
+    }
+
+Q_SIGNALS:
+    void mouseButtonPress(QGraphicsSceneMouseEvent *e, int index);
+    void mouseButtonRelease(QGraphicsSceneMouseEvent *e, int index);
+    void mouseDblClicked();
+    void mouseMoved(Qt::MouseButton, Qt::MouseButtons);
 
 public Q_SLOTS:
     void activeChanged();
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private Q_SLOTS:
     void buttonSizesChanged();
@@ -45,7 +60,9 @@ private Q_SLOTS:
 private:
     AuroraeTheme *m_theme;
     QString m_caption;
+    int m_index;
     QGraphicsDropShadowEffect *m_effect;
+    bool m_dblClicked;
 };
 
 }

@@ -32,6 +32,10 @@ void ThemeConfig::load(const KConfig &conf)
     KConfigGroup general(&conf, "General");
     m_activeTextColor = general.readEntry("ActiveTextColor", QColor(Qt::black));
     m_inactiveTextColor = general.readEntry("InactiveTextColor", QColor(Qt::black));
+    m_activeFocusedTextColor = general.readEntry("ActiveFocusedTabColor", m_activeTextColor);
+    m_activeUnfocusedTextColor = general.readEntry("ActiveUnfocusedTabColor", m_inactiveTextColor);
+    m_inactiveFocusedTextColor = general.readEntry("InactiveFocusedTabColor", m_inactiveTextColor);
+    m_inactiveUnfocusedTextColor = general.readEntry("InactiveUnfocusedTabColor", m_inactiveTextColor);
     m_useTextShadow = general.readEntry("UseTextShadow", false);
     m_activeTextShadowColor = general.readEntry("ActiveTextShadowColor", QColor(Qt::white));
     m_inactiveTextShadowColor = general.readEntry("InactiveTextShadowColor", QColor(Qt::white));
@@ -103,6 +107,30 @@ void ThemeConfig::load(const KConfig &conf)
     m_paddingRight = border.readEntry("PaddingRight", 0);
     m_paddingTop = border.readEntry("PaddingTop", 0);
     m_paddingBottom = border.readEntry("PaddingBottom", 0);
+}
+
+QColor ThemeConfig::activeTextColor(bool useTabs, bool focused) const
+{
+    if (!useTabs) {
+        return m_activeTextColor;
+    }
+    if (focused) {
+        return m_activeFocusedTextColor;
+    } else {
+        return m_activeUnfocusedTextColor;
+    }
+}
+
+QColor ThemeConfig::inactiveTextColor(bool useTabs, bool focused) const
+{
+    if (!useTabs) {
+        return m_inactiveTextColor;
+    }
+    if (focused) {
+        return m_inactiveFocusedTextColor;
+    } else {
+        return m_inactiveUnfocusedTextColor;
+    }
 }
 
 } //namespace

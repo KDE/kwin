@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QGraphicsView>
+#include <QGraphicsSceneMouseEvent>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -99,6 +100,8 @@ bool AuroraeFactory::supports(Ability ability) const
         return m_theme->hasButton(HelpButton);
     case AbilityProvidesShadow:
         return true; // TODO: correct value from theme
+    case AbilityClientGrouping:
+        return true;
     default:
         return false;
     }
@@ -125,6 +128,7 @@ AuroraeFactory *AuroraeFactory::s_instance = NULL;
 *******************************************************/
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
     : KDecorationUnstable(bridge, factory)
+    , m_clickInProgress(false)
 {
     m_scene = new AuroraeScene(AuroraeFactory::instance()->theme(),
                                options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
@@ -148,6 +152,10 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(m_scene, SIGNAL(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)), 
             SLOT(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)));
     connect(m_scene, SIGNAL(wheelEvent(int)), SLOT(titlebarMouseWheelOperation(int)));
+    connect(m_scene, SIGNAL(tabMouseButtonPress(QGraphicsSceneMouseEvent*,int)),
+            SLOT(tabMouseButtonPress(QGraphicsSceneMouseEvent*,int)));
+    connect(m_scene, SIGNAL(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)),
+            SLOT(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)));
     connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChanged(bool)));
     connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChanged(bool)));
 }
@@ -162,6 +170,7 @@ void AuroraeClient::init()
     createMainWidget();
     widget()->setAttribute(Qt::WA_TranslucentBackground);
     widget()->setAttribute(Qt::WA_NoSystemBackground);
+    widget()->installEventFilter(this);
     m_view = new QGraphicsView(m_scene, widget());
     m_view->setAttribute(Qt::WA_TranslucentBackground);
     m_view->setFrameShape(QFrame::NoFrame);
@@ -181,7 +190,6 @@ void AuroraeClient::init()
     m_scene->setShade(isShade());
     m_scene->setKeepAbove(keepAbove());
     m_scene->setKeepBelow(keepBelow());
-    m_scene->setCaption(caption());
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
 }
 
@@ -194,7 +202,7 @@ void AuroraeClient::activeChange()
 
 void AuroraeClient::captionChange()
 {
-    m_scene->setCaption(caption());
+    checkTabs(true);
 }
 
 void AuroraeClient::iconChange()
@@ -393,6 +401,55 @@ void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons but
     QApplication::sendEvent(widget(), event);
     delete event;
     event = 0;
+}
+
+void AuroraeClient::checkTabs(bool force)
+{
+    if (m_scene->tabCount() == 1 && clientGroupItems().count() == 1 && !force) {
+        return;
+    }
+    while (m_scene->tabCount() < clientGroupItems().count()) {
+        m_scene->addTab(QString());
+    }
+    while (m_scene->tabCount() > clientGroupItems().count()) {
+        m_scene->removeLastTab();
+    }
+    QStringList captions;
+    foreach (const ClientGroupItem &item, clientGroupItems()) {
+        captions << item.title();
+    }
+    m_scene->setCaptions(captions);
+    m_scene->setFocusedTab(visibleClientGroupItem());
+}
+
+bool AuroraeClient::eventFilter(QObject *o, QEvent *e)
+{
+    if (o != widget()) {
+        return false;
+    }
+    if (e->type() == QEvent::Paint) {
+        checkTabs();
+    }
+    return false;
+}
+
+void AuroraeClient::tabMouseButtonPress(QGraphicsSceneMouseEvent *e, int index)
+{
+    if (buttonToWindowOperation(e->buttons()) == OperationsOp) {
+        displayClientMenu(index, e->screenPos());
+        return;
+    }
+    titlePressed(e->button(), e->buttons());
+    m_clickInProgress = true;
+}
+
+void AuroraeClient::tabMouseButtonRelease(QGraphicsSceneMouseEvent *e, int index)
+{
+    if (m_clickInProgress) {
+        setVisibleClientGroupItem(index);
+    }
+    titleReleased(e->button(), e->buttons());
+    m_clickInProgress = false;
 }
 
 } // namespace Aurorae

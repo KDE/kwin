@@ -33,13 +33,9 @@ public:
     void load(const KConfig &conf);
     ~ThemeConfig() {};
     // active window
-    QColor activeTextColor() const {
-        return m_activeTextColor;
-    }
+    QColor activeTextColor(bool useTabs = false, bool focused = true) const;
     // inactive window
-    QColor inactiveTextColor() const {
-        return m_inactiveTextColor;
-    }
+    QColor inactiveTextColor(bool useTabs = false, bool focused = true) const;
     QColor activeTextShadowColor() const {
         return m_activeTextShadowColor;
     }
@@ -191,7 +187,11 @@ public:
 
 private:
     QColor m_activeTextColor;
+    QColor m_activeFocusedTextColor;
+    QColor m_activeUnfocusedTextColor;
     QColor m_inactiveTextColor;
+    QColor m_inactiveFocusedTextColor;
+    QColor m_inactiveUnfocusedTextColor;
     QColor m_activeTextShadowColor;
     QColor m_inactiveTextShadowColor;
     int m_textShadowOffsetX;
