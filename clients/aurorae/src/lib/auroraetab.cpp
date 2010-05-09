@@ -242,7 +242,6 @@ void AuroraeTab::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void AuroraeTab::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem::mouseDoubleClickEvent(event);
     if (event->button() == Qt::LeftButton) {
         m_dblClicked = true;
         emit mouseDblClicked();
