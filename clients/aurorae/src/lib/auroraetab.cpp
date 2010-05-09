@@ -40,6 +40,9 @@ AuroraeTab::AuroraeTab(AuroraeTheme* theme, const QString& caption, int index)
     , m_caption(caption)
     , m_index(index)
     , m_dblClicked(false)
+    , m_uid(-1)
+    , m_dragAllowed(true)
+    , m_clickInProgress(false)
 {
     m_effect = new QGraphicsDropShadowEffect(this);
     if (m_theme->themeConfig().useTextShadow()) {
@@ -222,16 +225,29 @@ void AuroraeTab::buttonSizesChanged()
     updateGeometry();
 }
 
+void AuroraeTab::setUniqueTabId(long int id)
+{
+    m_uid = id;
+    if (m_clickInProgress) {
+        m_dragAllowed = true;
+    }
+}
+
 void AuroraeTab::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
     event->accept();
+    m_clickPos = event->pos();
+    m_clickInProgress = true;
+    m_dragAllowed = false;
     emit mouseButtonPress(event, m_index);
 }
 
 void AuroraeTab::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
+    m_dragAllowed = false;
+    m_clickInProgress = false;
     if (m_dblClicked && event->button() == Qt::LeftButton) {
         // eat event
         m_dblClicked = false;
@@ -242,9 +258,32 @@ void AuroraeTab::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void AuroraeTab::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    m_clickInProgress = false;
     if (event->button() == Qt::LeftButton) {
         m_dblClicked = true;
         emit mouseDblClicked();
+    }
+}
+
+void AuroraeTab::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    AuroraeScene *s = static_cast<AuroraeScene*>(scene());
+    if (s->tabCount() >= 1 && m_dragAllowed &&
+        (event->pos() - m_clickPos).manhattanLength() >= KGlobalSettings::dndEventDelay()) {
+        QDrag *drag = new QDrag(event->widget());
+        QMimeData *data = new QMimeData;
+        QString itemData = QString().setNum(m_uid) + '/' + QString().setNum(m_index);
+        data->setData(m_theme->tabDragMimeType(), itemData.toAscii());
+        drag->setMimeData(data);
+        QPixmap pix(size().toSize());
+        pix.fill(Qt::transparent);
+        QPainter painter(&pix);
+        s->render(&painter, pix.rect(), sceneBoundingRect());
+        drag->setPixmap(pix);
+        drag->exec();
+        if (!drag->target() && s->tabCount() > 1) {
+            emit tabRemoved(m_index);
+        }
     }
 }
 

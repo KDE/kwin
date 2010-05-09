@@ -50,6 +50,7 @@ public:
     KDecorationDefines::BorderSize borderSize;
     bool showTooltips;
     KDecorationDefines::BorderSize buttonSize;
+    QString dragMimeType;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
@@ -427,6 +428,16 @@ void AuroraeTheme::setButtonSize(KDecorationDefines::BorderSize size)
 {
     d->buttonSize = size;
     emit buttonSizesChanged();
+}
+
+void AuroraeTheme::setTabDragMimeType(const QString &mime)
+{
+    d->dragMimeType = mime;
+}
+
+const QString &AuroraeTheme::tabDragMimeType() const
+{
+    return d->dragMimeType;
 }
 
 qreal AuroraeTheme::buttonSizeFactor() const

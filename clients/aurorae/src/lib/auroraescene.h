@@ -99,6 +99,11 @@ public:
     * @returns true if the tab at given index is the focused one.
     */
     bool isFocusedTab(int index) const;
+    /**
+    * Sets the unique tab id for dragging the tab specified by \p index.
+    * When the tab is clicked this will enable dragging till the mouse is released.
+    */
+    void setUniqueTabDragId(int index, long int id);
     const QString &leftButtons() const;
     const QString &rightButtons() const;
 
@@ -120,6 +125,9 @@ Q_SIGNALS:
     void wheelEvent(int delta);
     void tabMouseButtonPress(QGraphicsSceneMouseEvent*, int);
     void tabMouseButtonRelease(QGraphicsSceneMouseEvent*, int);
+    void tabRemoved(int);
+    void tabMoved(int index, int before);
+    void tabMovedToGroup(long int uid, int before);
 
     void activeChanged();
 
@@ -130,6 +138,9 @@ protected:
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     virtual void wheelEvent(QGraphicsSceneWheelEvent* event);
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
+    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
 private Q_SLOTS:
     void resetTheme();

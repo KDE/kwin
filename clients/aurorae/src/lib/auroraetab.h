@@ -39,12 +39,13 @@ public:
     int index() const {
         return m_index;
     }
+    void setUniqueTabId(long int id);
 
 Q_SIGNALS:
     void mouseButtonPress(QGraphicsSceneMouseEvent *e, int index);
     void mouseButtonRelease(QGraphicsSceneMouseEvent *e, int index);
     void mouseDblClicked();
-    void mouseMoved(Qt::MouseButton, Qt::MouseButtons);
+    void tabRemoved(int index);
 
 public Q_SLOTS:
     void activeChanged();
@@ -53,6 +54,7 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 private Q_SLOTS:
     void buttonSizesChanged();
@@ -63,6 +65,10 @@ private:
     int m_index;
     QGraphicsDropShadowEffect *m_effect;
     bool m_dblClicked;
+    QPointF m_clickPos;
+    long int m_uid;
+    bool m_dragAllowed;
+    bool m_clickInProgress;
 };
 
 }

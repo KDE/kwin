@@ -50,6 +50,7 @@ void AuroraeFactory::init()
     m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     m_theme->setShowTooltips(options()->showTooltips());
+    m_theme->setTabDragMimeType(clientGroupItemDragMimeType());
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -156,6 +157,9 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
             SLOT(tabMouseButtonPress(QGraphicsSceneMouseEvent*,int)));
     connect(m_scene, SIGNAL(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)),
             SLOT(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)));
+    connect(m_scene, SIGNAL(tabRemoved(int)), SLOT(tabRemoved(int)));
+    connect(m_scene, SIGNAL(tabMoved(int,int)), SLOT(tabMoved(int,int)));
+    connect(m_scene, SIGNAL(tabMovedToGroup(long int,int)), SLOT(tabMovedToGroup(long int,int)));
     connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChanged(bool)));
     connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChanged(bool)));
 }
@@ -438,6 +442,8 @@ void AuroraeClient::tabMouseButtonPress(QGraphicsSceneMouseEvent *e, int index)
     if (buttonToWindowOperation(e->buttons()) == OperationsOp) {
         displayClientMenu(index, e->screenPos());
         return;
+    } else if (buttonToWindowOperation(e->buttons()) == ClientGroupDragOp) {
+        m_scene->setUniqueTabDragId(index, itemId(index));
     }
     titlePressed(e->button(), e->buttons());
     m_clickInProgress = true;
@@ -450,6 +456,21 @@ void AuroraeClient::tabMouseButtonRelease(QGraphicsSceneMouseEvent *e, int index
     }
     titleReleased(e->button(), e->buttons());
     m_clickInProgress = false;
+}
+
+void AuroraeClient::tabRemoved(int index)
+{
+    removeFromClientGroup(index);
+}
+
+void AuroraeClient::tabMoved(int index, int before)
+{
+    moveItemInClientGroup(index, before);
+}
+
+void AuroraeClient::tabMovedToGroup(long int uid, int before)
+{
+    moveItemToClientGroup(uid, before);
 }
 
 } // namespace Aurorae

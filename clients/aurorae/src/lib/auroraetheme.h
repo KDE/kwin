@@ -121,6 +121,9 @@ public:
 
     DecorationPosition decorationPosition() const;
 
+    void setTabDragMimeType(const QString &mime);
+    const QString &tabDragMimeType() const;
+
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
     static char mapButtonToChar(AuroraeButtonType type);

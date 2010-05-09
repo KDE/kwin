@@ -27,8 +27,10 @@
 #include <QtCore/QPropertyAnimation>
 #include <QtGui/QGraphicsLinearLayout>
 #include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QIcon>
 #include <QtGui/QPainter>
+#include <QtGui/QWidget>
 // KDE
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/PaintUtils>
@@ -789,8 +791,7 @@ void AuroraeScene::addTab(const QString &caption)
     connect(tab, SIGNAL(mouseButtonRelease(QGraphicsSceneMouseEvent*,int)),
             SIGNAL(tabMouseButtonRelease(QGraphicsSceneMouseEvent*,int)));
     connect(tab, SIGNAL(mouseDblClicked()), SIGNAL(titleDoubleClicked()));
-    connect(tab, SIGNAL(mouseMoved(Qt::MouseButton,Qt::MouseButtons)),
-            SIGNAL(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)));
+    connect(tab, SIGNAL(tabRemoved(int)), SIGNAL(tabRemoved(int)));
     static_cast<QGraphicsLinearLayout*>(m_title->layout())->addItem(tab);
     tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_title->layout()->invalidate();
@@ -847,6 +848,16 @@ bool AuroraeScene::isFocusedTab(int index) const
     return (index == m_focusedTab);
 }
 
+void AuroraeScene::setUniqueTabDragId(int index, long int id)
+{
+    for (int i=0; i<m_title->layout()->count(); ++i) {
+        if (static_cast<AuroraeTab*>(m_title->layout()->itemAt(i))->index() == index) {
+            static_cast<AuroraeTab*>(m_title->layout()->itemAt(i))->setUniqueTabId(id);
+            break;
+        }
+    }
+}
+
 void AuroraeScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mousePressEvent(event);
@@ -889,6 +900,51 @@ void AuroraeScene::wheelEvent(QGraphicsSceneWheelEvent* event)
     QGraphicsScene::wheelEvent(event);
     if (!event->isAccepted()) {
         emit wheelEvent(event->delta());
+    }
+}
+
+void AuroraeScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+    QGraphicsScene::dragEnterEvent(event);
+    if (event->mimeData()->hasFormat(m_theme->tabDragMimeType())) {
+        event->accept();
+    }
+}
+
+void AuroraeScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+    QGraphicsScene::dragMoveEvent(event);
+    if (event->mimeData()->hasFormat(m_theme->tabDragMimeType())) {
+        event->accept();
+    }
+}
+
+void AuroraeScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    QGraphicsScene::dropEvent(event);
+    if (event->mimeData()->hasFormat(m_theme->tabDragMimeType())) {
+        QList<QByteArray> ids = event->mimeData()->data(m_theme->tabDragMimeType()).split('/');
+        bool insideScene = false;
+        foreach (QGraphicsView *view, views()) {
+            if (view->window() == event->source()->window()) {
+                insideScene = true;
+                break;
+            }
+        }
+        int index = -1;
+        if (QGraphicsItem *item = itemAt(event->scenePos())) {
+            if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+                index = tab->index();
+            }
+        }
+        if (insideScene) {
+            // move inside decoration
+            emit tabMoved(ids[1].toInt(), index);
+        } else {
+            // move to this decoration
+            long source = ids[0].toLong();
+            emit tabMovedToGroup(source, index);
+        }
     }
 }
 

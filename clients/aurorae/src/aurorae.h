@@ -89,6 +89,9 @@ private slots:
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
     void tabMouseButtonPress(QGraphicsSceneMouseEvent *e, int index);
     void tabMouseButtonRelease(QGraphicsSceneMouseEvent *e, int index);
+    void tabRemoved(int index);
+    void tabMoved(int index, int before);
+    void tabMovedToGroup(long int uid, int before);
 
 protected:
     virtual bool eventFilter(QObject *o, QEvent *e);
