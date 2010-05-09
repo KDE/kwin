@@ -176,13 +176,13 @@ QMenu* Workspace::clientPopup()
         // Actions for window tabbing
         if( decorationSupportsClientGrouping() )
             {
-            mRemoveTabGroup = popup->addAction( i18n("Remove &from group") );
+            mRemoveTabGroup = popup->addAction( i18n("Remove &From Group") );
             kaction = qobject_cast<KAction*>( keys->action("Remove TabGroup") );
             if( kaction!=0 )
                 mRemoveTabGroup->setShortcut( kaction->globalShortcut().primary() );
             mRemoveTabGroup->setData( Options::RemoveClientFromGroupOp );
 
-            mCloseGroup = popup->addAction( i18n("Close entire &group") );
+            mCloseGroup = popup->addAction( i18n("Close Entire &Group") );
             mCloseGroup->setIcon( KIcon( "window-close" ) );
             kaction = qobject_cast<KAction*>( keys->action("Close TabGroup") );
             if( kaction!=0 )
@@ -337,7 +337,7 @@ void Workspace::initSwitchToTab()
 
     QAction* action = switch_to_tab_popup->menuAction();
     popup->insertAction( mRemoveTabGroup, action );
-    action->setText( i18n("Switch to window tab") );
+    action->setText( i18n("Switch to Window Tab") );
     }
 
 void Workspace::slotSwitchToTab( QAction* action )
@@ -378,9 +378,9 @@ void Workspace::switchToTabPopupAboutToShow()
     if( !switch_to_tab_popup )
         return;
     switch_to_tab_popup->clear();
-    QAction* action = switch_to_tab_popup->addAction( i18n( "To the left" ));
+    QAction* action = switch_to_tab_popup->addAction( i18n( "To the Left" ));
     action->setData( 0 );
-    action = switch_to_tab_popup->addAction( i18n( "To the right" ));
+    action = switch_to_tab_popup->addAction( i18n( "To the Right" ));
     action->setData( 1 );
     switch_to_tab_popup->addSeparator();
     int index = 2;
@@ -409,7 +409,7 @@ void Workspace::initAddToTabGroup()
 
     QAction* action = add_tabs_popup->menuAction();
     popup->insertAction( mRemoveTabGroup, action );
-    action->setText( i18n("Move window to group") );
+    action->setText( i18n("Move Window to Group") );
     }
 
 void Workspace::slotAddToTabGroup( QAction* action )
