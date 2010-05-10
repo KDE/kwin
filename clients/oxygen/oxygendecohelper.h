@@ -27,7 +27,7 @@
 /*! contains utility functions used at multiple places in oxygen style */
 namespace Oxygen
 {
-    class DecoHelper : public OxygenHelper
+    class DecoHelper : public Helper
     {
 
         public:

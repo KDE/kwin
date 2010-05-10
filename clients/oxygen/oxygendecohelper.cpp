@@ -26,7 +26,7 @@ namespace Oxygen
 {
     //______________________________________________________________________________
     DecoHelper::DecoHelper(const QByteArray &componentName):
-        OxygenHelper(componentName)
+        Helper(componentName)
         {}
 
     //______________________________________________________________________________

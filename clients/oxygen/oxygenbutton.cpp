@@ -218,8 +218,8 @@ namespace Oxygen
             buttonDetailColor( palette );
 
         QColor glow = (type_ == ButtonClose || type_ == ButtonItemClose ) ?
-            KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
-            KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
+            helper_.viewNegativeTextBrush().brush(palette).color():
+            helper_.viewHoverBrush().brush(palette).color();
         glow = helper_.calcDarkColor( glow );
 
         if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
@@ -331,7 +331,7 @@ namespace Oxygen
             case ButtonAbove:
             if(isChecked()) {
                 QPen newPen = painter->pen();
-                newPen.setColor(KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
+                newPen.setColor(helper_.viewHoverBrush().brush(palette).color());
                 painter->setPen(newPen);
             }
 
@@ -344,7 +344,7 @@ namespace Oxygen
             case ButtonBelow:
             if(isChecked()) {
                 QPen newPen = painter->pen();
-                newPen.setColor(KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
+                newPen.setColor(helper_.viewHoverBrush().brush( palette ).color() );
                 painter->setPen(newPen);
             }
 
