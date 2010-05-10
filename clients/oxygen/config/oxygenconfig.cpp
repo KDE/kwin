@@ -125,8 +125,8 @@ namespace Oxygen
     else if( userInterface_->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
 
     // shadow configurations
-    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Active ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
-    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Inactive ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
+    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
+    else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
 
     // exceptions
     else if( exceptionListChanged() ) modified = true;
