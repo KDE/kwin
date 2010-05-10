@@ -106,10 +106,11 @@ namespace Oxygen
 
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
-    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SLOT(shadowModeChanged(int)) );
-    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
 
     // connections
+    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SLOT(shadowModeChanged(int)) );
+    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
+    connect( ui.shadowCacheMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.drawSeparator, SLOT( setDisabled( bool ) ) );
 
     connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
