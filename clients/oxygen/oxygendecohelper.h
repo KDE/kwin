@@ -42,6 +42,8 @@ namespace Oxygen
         virtual QPixmap windecoButtonGlow(const QColor &color, int size = 21);
         //@}
 
+        virtual QRegion decoRoundedMask( const QRect&, int left = 1, int right = 1, int top = 1, int bottom = 1 ) const;
+
     };
 
 }

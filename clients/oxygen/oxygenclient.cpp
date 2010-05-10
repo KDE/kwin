@@ -265,15 +265,25 @@ namespace Oxygen
     QRegion Client::calcMask( void ) const
     {
 
-        if( isMaximized() )
-        { return widget()->rect(); }
-
+        if( isMaximized() ) { return widget()->rect(); }
         QRect frame( widget()->rect().adjusted(
             layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
             -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
 
-        if( configuration().frameBorder() == Configuration::BorderNone && !isShade() ) return helper().roundedMask( frame, 1, 1, 1, 0 );
-        else return helper().roundedMask( frame );
+        if( configuration().frameBorder() == Configuration::BorderNone && !isShade() )
+        {
+
+            return compositingActive() ?
+                helper().decoRoundedMask( frame, 1, 1, 1, 0 ):
+                helper().roundedMask( frame, 1, 1, 1, 0 );
+
+        } else {
+
+            return compositingActive() ?
+                helper().decoRoundedMask( frame ):
+                helper().roundedMask( frame );
+
+        }
 
     }
 
@@ -1239,7 +1249,7 @@ namespace Oxygen
     void Client::updateWindowShape()
     {
 
-        if(isMaximized() || compositingActive() ) clearMask();
+        if(isMaximized()) clearMask();
         else setMask( calcMask() );
 
     }

@@ -144,4 +144,18 @@ namespace Oxygen
 
         return *pixmap;
     }
+
+    //_______________________________________________________________________
+    QRegion DecoHelper::decoRoundedMask( const QRect& r, int left, int right, int top, int bottom ) const
+    {
+        // get rect geometry
+        int x, y, w, h;
+        r.getRect(&x, &y, &w, &h);
+
+        QRegion mask(x + 3*left, y + 0*top, w-3*(left+right), h-0*(top+bottom));
+        mask += QRegion(x + 0*left, y + 3*top, w-0*(left+right), h-3*(top+bottom));
+        mask += QRegion(x + 1*left, y + 1*top, w-1*(left+right), h-1*(top+bottom));
+
+        return mask;
+    }
 }

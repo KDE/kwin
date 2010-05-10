@@ -234,12 +234,13 @@ namespace Oxygen
                 {
 
                     // mid gradient
-                    const qreal gradientSize = qMin( shadowSize, (shadowSize+fixedSize)/2 );
+                    const qreal gradientSize = qMin( shadowSize, (shadowSize+2*fixedSize)/3 );
                     const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
                     const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     const int nPoints = 7;
                     const qreal x[7] = {0, 4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
+                    //const qreal values[7] = {0.55, 0.25, 0.20, 0.1, 0.06, 0.015, 0 };
                     const qreal values[7] = {0.55, 0.25, 0.20, 0.1, 0.06, 0.015, 0 };
                     QRadialGradient rg = QRadialGradient( size+8.0*hoffset, size+8.0*voffset, gradientSize );
                     QColor c = shadowConfiguration.midColor();
