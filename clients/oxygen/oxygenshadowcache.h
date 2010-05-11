@@ -30,6 +30,7 @@
 #include "oxygendecohelper.h"
 #include "oxygenshadowconfiguration.h"
 
+#include <cmath>
 #include <QtCore/QCache>
 #include <QtGui/QRadialGradient>
 
@@ -193,6 +194,62 @@ namespace Oxygen
 
         DecoHelper& helper( void ) const
         { return helper_; }
+
+        //! square utility function
+        static qreal square( qreal x )
+        { return x*x; }
+
+        //! functions used to draw shadows
+        class Parabolic
+        {
+            public:
+
+            //! constructor
+            Parabolic( qreal amplitude, qreal width ):
+                amplitude_( amplitude ),
+                width_( width )
+            {}
+
+            //! destructor
+            virtual ~Parabolic( void )
+            {}
+
+            //! value
+            virtual qreal operator() ( qreal x ) const
+            { return qMax( 0.0, amplitude_*(1.0 - square(x/width_) ) ); }
+
+            private:
+
+            qreal amplitude_;
+            qreal width_;
+
+        };
+
+        //! functions used to draw shadows
+        class Gaussian
+        {
+            public:
+
+            //! constructor
+            Gaussian( qreal amplitude, qreal width ):
+                amplitude_( amplitude ),
+                width_( width )
+            {}
+
+            //! destructor
+            virtual ~Gaussian( void )
+            {}
+
+            //! value
+            virtual qreal operator() ( qreal x ) const
+            { return amplitude_*std::exp( -square(x/width_) ); }
+
+            private:
+
+            qreal amplitude_;
+            qreal width_;
+
+        };
 
         private:
 
