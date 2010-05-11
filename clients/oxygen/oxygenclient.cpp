@@ -30,7 +30,6 @@
 
 #include "oxygenbutton.h"
 #include "oxygensizegrip.h"
-#include "tileset.h"
 
 #include <cassert>
 #include <cmath>
@@ -804,7 +803,7 @@ namespace Oxygen
         int offset = -3;
         int voffset = 5-shadowSize;
         QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
-        helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Top|TileSet::Left|TileSet::Right );
+        helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
 
     }
 
