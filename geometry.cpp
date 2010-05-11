@@ -2155,7 +2155,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
-    workspace()->notifyWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
+    workspace()->notifyTilingWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
     // client itself is not damaged
     const QRect deco_rect = decorationRect().translated( geom.x(), geom.y() );
     addWorkspaceRepaint( deco_rect_before_block );
@@ -2819,9 +2819,9 @@ void Client::finishMoveResize( bool cancel )
     if( workspace()->tilingEnabled() )
         {
         if( wasResize )
-            workspace()->notifyWindowResizeDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
+            workspace()->notifyTilingWindowResizeDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
         else if( wasMove )
-            workspace()->notifyWindowMoveDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
+            workspace()->notifyTilingWindowMoveDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
         }
     else
         {
@@ -3095,7 +3095,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 abort();
                 break;
             }
-        workspace()->notifyWindowResize( this, moveResizeGeom, initialMoveResizeGeom );
+        workspace()->notifyTilingWindowResize( this, moveResizeGeom, initialMoveResizeGeom );
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize( this, moveResizeGeom, mode );
 
@@ -3270,7 +3270,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     if ( isMove() )
         {
-        workspace()->notifyWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
+        workspace()->notifyTilingWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
         workspace()->checkElectricBorder(globalPos, xTime());
     }
     }

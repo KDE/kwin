@@ -261,7 +261,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
         static_cast<EffectsHandlerImpl*>(effects)->windowActivated( active_client ? active_client->effectWindow() : NULL );
 
     if( tilingEnabled() )
-        notifyWindowActivated( active_client );
+        notifyTilingWindowActivated( active_client );
     --set_active_client_recursion;
     }
 

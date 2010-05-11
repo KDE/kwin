@@ -169,14 +169,14 @@ void Workspace::updateAllTiles()
 /*
  * Resize the neighbouring clients to close any gaps
  */
-void Workspace::notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig )
+void Workspace::notifyTilingWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig )
     {
     if( tilingLayouts.value( c->desktop() ) == NULL )
         return;
     tilingLayouts[ c->desktop() ]->clientResized( c, moveResizeGeom, orig );
     }
 
-void Workspace::notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig )
+void Workspace::notifyTilingWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig )
     {
     if( tilingLayouts.value( c->desktop() ) == NULL )
         {
@@ -187,23 +187,23 @@ void Workspace::notifyWindowMove( Client *c, const QRect &moveResizeGeom, const 
     updateAllTiles();
     }
 
-void Workspace::notifyWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled )
+void Workspace::notifyTilingWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled )
     {
     if( canceled )
-        notifyWindowResize( c, orig, moveResizeGeom );
+        notifyTilingWindowResize( c, orig, moveResizeGeom );
     else
-        notifyWindowResize( c, moveResizeGeom, orig );
+        notifyTilingWindowResize( c, moveResizeGeom, orig );
     }
 
-void Workspace::notifyWindowMoveDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled )
+void Workspace::notifyTilingWindowMoveDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled )
     {
     if( canceled )
-        notifyWindowMove( c, orig, moveResizeGeom );
+        notifyTilingWindowMove( c, orig, moveResizeGeom );
     else
-        notifyWindowMove( c, moveResizeGeom, orig );
+        notifyTilingWindowMove( c, moveResizeGeom, orig );
     }
 
-void Workspace::notifyWindowDesktopChanged( Client *c, int old_desktop )
+void Workspace::notifyTilingWindowDesktopChanged( Client *c, int old_desktop )
     {
     if( c->desktop() < 1 || c->desktop() > numberOfDesktops() )
         return;
@@ -229,7 +229,7 @@ void Workspace::notifyWindowDesktopChanged( Client *c, int old_desktop )
 /*
  * Implements the 3 raising modes in Window Behaviour -> Advanced
  */
-void Workspace::notifyWindowActivated( Client *c )
+void Workspace::notifyTilingWindowActivated( Client *c )
     {
     if( c == NULL )
         return;
@@ -271,7 +271,7 @@ void Workspace::notifyWindowActivated( Client *c )
         }
     }
 
-void Workspace::notifyWindowMinimizeToggled( Client *c )
+void Workspace::notifyTilingWindowMinimizeToggled( Client *c )
     {
     if( tilingLayouts.value( c->desktop() ) )
         {
@@ -279,7 +279,7 @@ void Workspace::notifyWindowMinimizeToggled( Client *c )
         }
     }
 
-void Workspace::notifyWindowMaximized( Client *c, Options::WindowOperation op )
+void Workspace::notifyTilingWindowMaximized( Client *c, Options::WindowOperation op )
     {
     if( tilingLayouts.value( c->desktop() ) )
         {
@@ -394,42 +394,42 @@ void Workspace::moveTile( int d )
         }
     }
 
-void Workspace::slotLeft()
+void Workspace::slotFocusTileLeft()
     {
     focusTile( Tile::Left );
     }
 
-void Workspace::slotRight()
+void Workspace::slotFocusTileRight()
     {
     focusTile( Tile::Right );
     }
 
-void Workspace::slotTop()
+void Workspace::slotFocusTileTop()
     {
     focusTile( Tile::Top );
     }
 
-void Workspace::slotBottom()
+void Workspace::slotFocusTileBottom()
     {
     focusTile( Tile::Bottom );
     }
 
-void Workspace::slotMoveLeft()
+void Workspace::slotMoveTileLeft()
     {
     moveTile( Tile::Left );
     }
 
-void Workspace::slotMoveRight()
+void Workspace::slotMoveTileRight()
     {
     moveTile( Tile::Right );
     }
 
-void Workspace::slotMoveTop()
+void Workspace::slotMoveTileTop()
     {
     moveTile( Tile::Top );
     }
 
-void Workspace::slotMoveBottom()
+void Workspace::slotMoveTileBottom()
     {
     moveTile( Tile::Bottom );
     }

@@ -1158,7 +1158,7 @@ void Workspace::slotReconfigure()
           layout->reconfigureTiling();
         }
     // just so that we reset windows in the right manner, 'activate' the current active window
-    notifyWindowActivated( activeClient() );
+    notifyTilingWindowActivated( activeClient() );
     rootInfo->setSupported( NET::WM2FrameOverlap, mgr->factory()->supports( AbilityExtendIntoClientArea ) );
     }
 
@@ -1431,7 +1431,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             movingClient->setDesktop( new_desktop );
             if( tilingEnabled() )
                 {
-                notifyWindowDesktopChanged( movingClient, old_desktop );
+                notifyTilingWindowDesktopChanged( movingClient, old_desktop );
                 }
             }
 
@@ -1621,7 +1621,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     else
         raiseClient( c );
 
-    notifyWindowDesktopChanged( c, old_desktop );
+    notifyTilingWindowDesktopChanged( c, old_desktop );
 
     ClientList transients_stacking_order = ensureStackingOrder( c->transients() );
     for( ClientList::ConstIterator it = transients_stacking_order.constBegin();

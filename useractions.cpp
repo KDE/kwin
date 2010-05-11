@@ -705,7 +705,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
              || op == Options::VMaximizeOp
              || op == Options::RestoreOp ) )
         {
-        notifyWindowMaximized( c, op );
+        notifyTilingWindowMaximized( c, op );
         }
 
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp )

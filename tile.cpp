@@ -96,7 +96,7 @@ void Tile::floatTile()
     restorePreviousGeometry();
 
     commit();
-    client()->workspace()->notifyWindowActivated( client() );
+    client()->workspace()->notifyTilingWindowActivated( client() );
     // TODO: notify layout manager
     }
 

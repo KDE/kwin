@@ -896,7 +896,7 @@ void Client::minimize( bool avoid_animation )
         static_cast<EffectsHandlerImpl*>(effects)->windowMinimized( effectWindow());
 
     // when tiling, request a rearrangement
-    workspace()->notifyWindowMinimizeToggled( this );
+    workspace()->notifyTilingWindowMinimizeToggled( this );
 
     // Update states of all other windows in this group
     if( clientGroup() )
@@ -919,7 +919,7 @@ void Client::unminimize( bool avoid_animation )
         static_cast<EffectsHandlerImpl*>( effects )->windowUnminimized( effectWindow() );
 
     // when tiling, request a rearrangement
-    workspace()->notifyWindowMinimizeToggled( this );
+    workspace()->notifyTilingWindowMinimizeToggled( this );
 
     // Update states of all other windows in this group
     if( clientGroup() )

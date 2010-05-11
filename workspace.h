@@ -186,14 +186,14 @@ class Workspace : public QObject, public KDecorationDefines
         // various points in existing code so that
         // tiling can take any action if required.
         // They are defined in tiling.cpp
-        void notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
-        void notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
-        void notifyWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
-        void notifyWindowMoveDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
-        void notifyWindowDesktopChanged( Client *c, int old_desktop );
-        void notifyWindowActivated( Client *c );
-        void notifyWindowMinimizeToggled( Client *c );
-        void notifyWindowMaximized( Client *c, WindowOperation op );
+        void notifyTilingWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        void notifyTilingWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        void notifyTilingWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
+        void notifyTilingWindowMoveDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
+        void notifyTilingWindowDesktopChanged( Client *c, int old_desktop );
+        void notifyTilingWindowActivated( Client *c );
+        void notifyTilingWindowMinimizeToggled( Client *c );
+        void notifyTilingWindowMaximized( Client *c, WindowOperation op );
 
         Position supportedTilingResizeMode( Client *c, Position currentMode );
 
@@ -698,15 +698,15 @@ class Workspace : public QObject, public KDecorationDefines
         void slotPreviousTileLayout();
 
         // Changes the focused client
-        void slotLeft();
-        void slotRight();
-        void slotTop();
-        void slotBottom();
+        void slotFocusTileLeft();
+        void slotFocusTileRight();
+        void slotFocusTileTop();
+        void slotFocusTileBottom();
         // swaps active and adjacent client.
-        void slotMoveLeft();
-        void slotMoveRight();
-        void slotMoveTop();
-        void slotMoveBottom();
+        void slotMoveTileLeft();
+        void slotMoveTileRight();
+        void slotMoveTileTop();
+        void slotMoveTileBottom();
         void belowCursor();
         
         // NOTE: debug method
