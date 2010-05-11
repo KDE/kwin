@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tile.h"
 #include "tilinglayout.h"
 
+#include "kactivityinfo.h"
+
 #include <fixx11h.h>
 #include <QPushButton>
 #include <QSlider>
@@ -237,6 +239,7 @@ void Workspace::discardPopup()
     delete popup;
     popup = NULL; 
     desk_popup = NULL;
+    activity_popup = NULL;
     switch_to_tab_popup = NULL;
     add_tabs_popup = NULL;
     }
@@ -267,6 +270,17 @@ void Workspace::clientPopupAboutToShow()
     else
         {
         initDesktopPopup();
+        }
+    QStringList act = activityController_.availableActivities();
+    kDebug() << "activities:" << act.size();
+    if ( act.size() < 2 )
+        {
+        delete activity_popup;
+        activity_popup = 0;
+        }
+    else
+        {
+        initActivityPopup();
         }
 
     mResizeOpAction->setEnabled( active_popup_client->isResizable() );
@@ -456,6 +470,29 @@ void Workspace::initDesktopPopup()
     }
 
 /*!
+  Creates activity popup.
+  I'm going with checkable ones instead of "copy to" and "move to" menus; I *think* it's an easier way.
+  Oh, and an 'all' option too of course
+ */
+void Workspace::initActivityPopup()
+    {
+    if (activity_popup)
+        return;
+
+    activity_popup = new QMenu( popup );
+    activity_popup->setFont(KGlobalSettings::menuFont());
+    connect( activity_popup, SIGNAL( triggered(QAction*) ),
+             this, SLOT( slotToggleOnActivity(QAction*) ) );
+    connect( activity_popup, SIGNAL( aboutToShow() ),
+             this, SLOT( activityPopupAboutToShow() ) );
+
+    QAction *action = activity_popup->menuAction();
+    // set it as the first item
+    popup->insertAction( trans_popup ? trans_popup->menuAction() : mMoveOpAction, action);
+    action->setText( i18n("Ac&tivities") ); //FIXME is that a good string?
+    }
+
+/*!
   Adjusts the desktop popup to the current values and the location of
   the popup client.
  */
@@ -485,6 +522,37 @@ void Workspace::desktopPopupAboutToShow()
 
         if ( active_popup_client &&
              !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i )
+            action->setChecked( true );
+        }
+    }
+
+/*!
+  Adjusts the activity popup to the current values and the location of
+  the popup client.
+ */
+void Workspace::activityPopupAboutToShow()
+    {
+    if ( !activity_popup )
+        return;
+
+    activity_popup->clear();
+    QAction *action = activity_popup->addAction( i18n("&All Activities") );
+    action->setData( 0 );
+    action->setCheckable( true );
+
+    if ( active_popup_client && active_popup_client->isOnAllActivities() )
+        action->setChecked( true );
+    activity_popup->addSeparator();
+
+    foreach (const QString &activity, activityController_.availableActivities()) {
+        QString name = KActivityInfo::name(activity);
+        name.replace('&', "&&");
+        action = activity_popup->addAction( name );
+        action->setData( activity );
+        action->setCheckable( true );
+
+        if ( active_popup_client &&
+             !active_popup_client->isOnAllActivities() && active_popup_client->isOnActivity(activity) )
             action->setChecked( true );
         }
     }
@@ -1502,6 +1570,26 @@ void Workspace::slotSendToDesktop( QAction *action )
         }
 
     sendClientToDesktop( active_popup_client, desk, false );
+
+    }
+
+/*!
+  Toggles whether the popup client is on the \a activity
+
+  Internal slot for the window operation menu
+ */
+void Workspace::slotToggleOnActivity( QAction *action )
+    {
+      QString activity = action->data().toString();
+    if ( !active_popup_client )
+        return;
+    if ( activity.isEmpty() )
+        { // the 'on_all_activities' menu entry
+        active_popup_client->setOnAllActivities( !active_popup_client->isOnAllActivities());
+        return;
+        }
+
+    toggleClientOnActivity( active_popup_client, activity, false );
 
     }
 

@@ -1090,6 +1090,14 @@ void Client::updateVisibility()
             internalHide( Allowed );
         return;
         }
+    if( !isOnCurrentActivity())
+        {
+        if( compositing() && options->hiddenPreviews != HiddenPreviewsNever )
+            internalKeep( Allowed );
+        else
+            internalHide( Allowed );
+        return;
+        }
     bool belongs_to_desktop = false;
     for( ClientList::ConstIterator it = group()->members().constBegin();
         it != group()->members().constEnd();
@@ -1477,6 +1485,52 @@ void Client::setDesktop( int desktop )
     }
 
 /**
+ * Sets whether the client is on @p activity.
+ * If you remove it from its last activity, then it's on all activities.
+ *
+ * Note: If it was on all activities and you try to remove it from one, nothing will happen;
+ * I don't think that's an important enough use case to handle here.
+ */
+void Client::setOnActivity( const QString &activity, bool enable )
+    {
+    if( activityList.contains(activity) == enable ) //nothing to do
+        return;
+    KActivityConsumer c;
+    QStringList allActivities = c.availableActivities();
+    if( !allActivities.contains(activity) ) //bogus ID
+        return;
+    //check whether we should set it to all activities
+    QStringList newActivitiesList = activityList;
+    if (enable)
+        newActivitiesList.append(activity);
+    else
+        newActivitiesList.removeOne(activity);
+    if( newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty() )
+        {
+        setOnAllActivities(true);
+        return;
+        }
+    activityList = newActivitiesList;
+    /* FIXME I don't think I need the transients but what about the rest?
+    if(( was_desk == NET::OnAllDesktops ) != ( desktop == NET::OnAllDesktops ))
+        { // onAllDesktops changed
+        if( isShown( true ))
+            Notify::raise( isOnAllDesktops() ? Notify::OnAllDesktops : Notify::NotOnAllDesktops );
+        workspace()->updateOnAllDesktopsOfTransients( this );
+        }
+    if( decoration != NULL )
+        decoration->desktopChange();
+        */
+    workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
+    updateVisibility();
+    updateWindowRules();
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
+    }
+
+/**
  * Returns the virtual desktop within the workspace() the client window
  * is located in, 0 if it isn't located on any special desktop (not mapped yet),
  * or NET::OnAllDesktops. Do not use desktop() directly, use
@@ -1485,6 +1539,17 @@ void Client::setDesktop( int desktop )
 int Client::desktop() const
     {
     return desk;
+    }
+
+/**
+ * Returns the list of activities the client window is on.
+ * if it's on all activities, the list will be empty.
+ * Don't use this, use isOnActivity() and friends (from class Toplevel)
+ * FIXME do I need to consider if it's not mapped yet?
+ */
+QStringList Client::activities() const
+    {
+    return activityList;
     }
 
 void Client::setOnAllDesktops( bool b )
@@ -1497,6 +1562,33 @@ void Client::setOnAllDesktops( bool b )
     else
         setDesktop( workspace()->currentDesktop());
 
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
+    }
+
+/**
+ * if @p b is true, sets on all activities.
+ * if it's false, sets it to only be on the current activity
+ */
+void Client::setOnAllActivities( bool b )
+    {
+    if( b == isOnAllActivities() )
+        return;
+    if( b ) {
+        activityList.clear();
+        //FIXME update transients
+    } else {
+        KActivityConsumer c;
+        setOnActivity(c.currentActivity(), true);
+        //FIXME update transients
+        return;
+    }
+
+    //FIXME c&p'd from setOnActivity, I probably need more code and should probably factor it out
+    workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
+    updateVisibility();
+    updateWindowRules();
     // Update states of all other windows in this group
     if( clientGroup() )
         clientGroup()->updateStates( this );

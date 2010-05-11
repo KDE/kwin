@@ -45,6 +45,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kephal
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kworkspace
     )
 
 
@@ -129,7 +130,7 @@ qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Works
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} kephal kdecorations kwineffects ${X11_LIBRARIES})
+target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
 
 if(OPENGL_FOUND)
   add_subdirectory(opengltest)

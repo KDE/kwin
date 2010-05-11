@@ -400,7 +400,7 @@ void Workspace::handleTakeActivity( Client* c, Time /*timestamp*/, int flags )
  */
 void Workspace::clientHidden( Client* c )
     {
-    assert( !c->isShown( true ) || !c->isOnCurrentDesktop());
+    assert( !c->isShown( true ) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
     activateNextClient( c );
     }
 
@@ -431,7 +431,7 @@ bool Workspace::activateNextClient( Client* c )
                 {
                 Client* ci = focus_chain[ currentDesktop() ].at( i );
                 if( c == ci || !ci->isShown( false )
-                    || !ci->isOnCurrentDesktop())
+                    || !ci->isOnCurrentDesktop() || !ci->isOnCurrentActivity())
                     continue;
                 if( options->separateScreenFocus )
                     {
@@ -478,7 +478,7 @@ void Workspace::setCurrentScreen( int new_screen )
          --i )
         {
         Client* ci = focus_chain[ currentDesktop() ].at( i );
-        if( !ci->isShown( false ) || !ci->isOnCurrentDesktop())
+        if( !ci->isShown( false ) || !ci->isOnCurrentDesktop() || !ci->isOnCurrentActivity())
             continue;
         if( !ci->screen() == new_screen )
             continue;

@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <kmanagerselection.h>
 
+#include "kactivitycontroller.h"
+
 #include "plugins.h"
 #include "utils.h"
 #include "kdecoration.h"
@@ -312,7 +314,10 @@ class Workspace : public QObject, public KDecorationDefines
         QSize desktopGridSize_;
         int* desktopGrid_;
         int currentDesktop_;
+        QString activity_;
         bool desktopLayoutDynamicity_;
+
+        KActivityController activityController_;
 
         bool tilingEnabled_;
         // Each tilingLayout is for one virtual desktop.
@@ -373,6 +378,7 @@ class Workspace : public QObject, public KDecorationDefines
             bool only_normal = true ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
+        void toggleClientOnActivity( Client* c, const QString &activity, bool dont_activate );
         void windowToPreviousDesktop( Client* c );
         void windowToNextDesktop( Client* c );
         void sendClientToScreen( Client* c, int screen );
@@ -722,8 +728,10 @@ class Workspace : public QObject, public KDecorationDefines
         void slotAddToTabGroup( QAction* ); // Add client to a group
         void slotSwitchToTab( QAction* ); // Change the tab
         void desktopPopupAboutToShow();
+        void activityPopupAboutToShow();
         void clientPopupAboutToShow();
         void slotSendToDesktop( QAction* );
+        void slotToggleOnActivity( QAction* );
         void clientPopupActivated( QAction* );
         void configureWM();
         void desktopResized();
@@ -747,6 +755,8 @@ class Workspace : public QObject, public KDecorationDefines
         void resetCursorPosTime();
         void delayedCheckUnredirect();
 
+        void updateCurrentActivity(const QString &activity);
+
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
 
@@ -758,6 +768,7 @@ class Workspace : public QObject, public KDecorationDefines
         void initShortcuts();
         void readShortcuts();
         void initDesktopPopup();
+        void initActivityPopup();
         void discardPopup();
         void setupWindowShortcut( Client* c );
         void checkCursorPos();
@@ -930,6 +941,7 @@ class Workspace : public QObject, public KDecorationDefines
         QMenu* trans_popup;
         QActionGroup* trans_popup_group;
         QMenu* desk_popup;
+        QMenu* activity_popup;
         QMenu* add_tabs_popup; // Menu to add the group to other group
         QMenu* switch_to_tab_popup; // Menu to change tab
 

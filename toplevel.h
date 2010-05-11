@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdebug.h>
 
+#include "kactivityconsumer.h"
+
 #include "utils.h"
 #include "workspace.h"
 
@@ -90,9 +92,13 @@ class Toplevel
         bool isDNDIcon() const;
 
         virtual int desktop() const = 0;
+        virtual QStringList activities() const = 0;
         bool isOnDesktop( int d ) const;
+        bool isOnActivity( const QString &activity ) const;
         bool isOnCurrentDesktop() const;
+        bool isOnCurrentActivity() const;
         bool isOnAllDesktops() const;
+        bool isOnAllActivities() const;
 
         QByteArray windowRole() const;
         QByteArray sessionId();
@@ -386,14 +392,29 @@ inline bool Toplevel::isOnAllDesktops() const
     return desktop() == NET::OnAllDesktops;
     }
 
+inline bool Toplevel::isOnAllActivities() const
+    {
+    return activities().isEmpty();
+    }
+
 inline bool Toplevel::isOnDesktop( int d ) const
     {
     return desktop() == d || /*desk == 0 ||*/ isOnAllDesktops();
     }
 
+inline bool Toplevel::isOnActivity( const QString &activity ) const
+    {
+    return activities().isEmpty() || activities().contains(activity);
+    }
+
 inline bool Toplevel::isOnCurrentDesktop() const
     {
     return isOnDesktop( workspace()->currentDesktop());
+    }
+
+inline bool Toplevel::isOnCurrentActivity() const
+    {
+    return isOnActivity( KActivityConsumer().currentActivity());
     }
 
 inline QByteArray Toplevel::resourceName() const

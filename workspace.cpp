@@ -125,6 +125,7 @@ Workspace::Workspace( bool restore )
     , advanced_popup( 0 )
     , trans_popup( 0 )
     , desk_popup( 0 )
+    , activity_popup( 0 )
     , add_tabs_popup( 0 )
     , switch_to_tab_popup( 0 )
     , keys( 0 )
@@ -240,6 +241,8 @@ Workspace::Workspace( bool restore )
     connect( Kephal::Screens::self(), SIGNAL( screenRemoved(int) ), SLOT( desktopResized() ));
     connect( Kephal::Screens::self(), SIGNAL( screenResized(Kephal::Screen*, QSize, QSize) ), SLOT( desktopResized() ));
     connect( Kephal::Screens::self(), SIGNAL( screenMoved(Kephal::Screen*, QPoint, QPoint) ), SLOT( desktopResized() ));
+
+    connect( &activityController_, SIGNAL( currentActivityChanged(QString) ), SLOT( updateCurrentActivity(QString) ));
     }
 
 void Workspace::init()
@@ -1515,6 +1518,135 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     }
 
 /**
+ * Updates the current activity when it changes
+ * do *not* call this directly; it does not set the activity.
+ *
+ * Shows/Hides windows according to the stacking order
+ */
+void Workspace::updateCurrentActivity(const QString &new_activity)
+    {
+
+    //closeActivePopup();
+    ++block_focus;
+    // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
+    StackingUpdatesBlocker blocker( this );
+
+    if ( new_activity != activity_ )
+        {
+        ++block_showing_desktop; //FIXME should I be using that?
+        // Optimized Desktop switching: unmapping done from back to front
+        // mapping done from front to back => less exposure events
+        //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
+
+        ObscuringWindows obs_wins;
+
+        QString old_activity = activity_;
+        activity_ = new_activity;
+
+        for( ClientList::ConstIterator it = stacking_order.constBegin();
+            it != stacking_order.constEnd();
+            ++it )
+            if( !(*it)->isOnActivity( new_activity ) && (*it) != movingClient )
+                {
+                if( (*it)->isShown( true ) && (*it)->isOnActivity( old_activity ))
+                    obs_wins.create( *it );
+                (*it)->updateVisibility();
+                }
+
+        // Now propagate the change, after hiding, before showing
+        //rootInfo->setCurrentDesktop( currentDesktop() );
+
+        /* TODO someday enable dragging windows to other activities
+        if( movingClient && !movingClient->isOnDesktop( new_desktop ))
+            {
+            int old_desktop = movingClient->desktop();
+            movingClient->setDesktop( new_desktop );
+            if( tilingEnabled() )
+                {
+                notifyWindowDesktopChanged( movingClient, old_desktop );
+                }
+            }
+            */
+
+        for( int i = stacking_order.size() - 1; i >= 0 ; --i )
+            if( stacking_order.at( i )->isOnActivity( new_activity ))
+                stacking_order.at( i )->updateVisibility();
+
+        --block_showing_desktop;
+        //FIXME not sure if I should do this either
+        if( showingDesktop() ) // Do this only after desktop change to avoid flicker
+            resetShowingDesktop( false );
+        }
+
+    // Restore the focus on this desktop
+    --block_focus;
+    Client* c = 0;
+
+    //FIXME below here is a lot of focuschain stuff, probably all wrong now
+    if( options->focusPolicyIsReasonable() )
+        { // Search in focus chain
+        if( movingClient != NULL && active_client == movingClient &&
+            focus_chain[currentDesktop()].contains( active_client ) &&
+            active_client->isShown( true ) && active_client->isOnCurrentDesktop())
+            c = active_client; // The requestFocus below will fail, as the client is already active
+        if( !c )
+            {
+            for( int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i )
+                {
+                if( focus_chain[currentDesktop()].at( i )->isShown( false ) &&
+                    focus_chain[currentDesktop()].at( i )->isOnCurrentDesktop() )
+                    {
+                    c = focus_chain[currentDesktop()].at( i );
+                    break;
+                    }
+                }
+            }
+        }
+    // If "unreasonable focus policy" and active_client is on_all_desktops and
+    // under mouse (Hence == old_active_client), conserve focus.
+    // (Thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
+    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop() )
+        c = active_client;
+
+    if( c == NULL && !desktops.isEmpty() )
+        c = findDesktop( true, currentDesktop() );
+
+    if( c != active_client )
+        setActiveClient( NULL, Allowed );
+
+    if ( c )
+        requestFocus( c );
+    else if( !desktops.isEmpty() )
+        requestFocus( findDesktop( true, currentDesktop() ));
+    else
+        focusToNull();
+
+    updateCurrentTopMenu();
+
+    // Update focus chain:
+    //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
+    //   Output: chain = { 3, 1, 2, 4 }.
+    //kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
+    //    .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
+    for( int i = desktop_focus_chain.indexOf( currentDesktop() ); i > 0; i-- )
+        desktop_focus_chain[i] = desktop_focus_chain[i-1];
+    desktop_focus_chain[0] = currentDesktop();
+
+    //QString s = "desktop_focus_chain[] = { ";
+    //for( uint i = 0; i < desktop_focus_chain.size(); i++ )
+    //    s += QString::number( desktop_focus_chain[i] ) + ", ";
+    //kDebug( 1212 ) << s << "}\n";
+
+    // Not for the very first time, only if something changed and there are more than 1 desktops
+
+    //if( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
+    //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
+    if( compositing())
+        addRepaintFull();
+
+    }
+
+/**
  * Called only from D-Bus
  */
 void Workspace::nextDesktop()
@@ -1628,6 +1760,46 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
         it != transients_stacking_order.constEnd();
         ++it )
         sendClientToDesktop( *it, desk, dont_activate );
+    updateClientArea();
+    }
+
+/**
+ * Adds/removes client \a c to/from \a desk.
+ *
+ * Takes care of transients as well.
+ */
+void Workspace::toggleClientOnActivity( Client* c, const QString &activity, bool dont_activate )
+    {
+    //int old_desktop = c->desktop();
+    bool was_on_activity = c->isOnActivity(activity);
+    bool was_on_all = c->isOnAllActivities();
+    //note: all activities === no activities
+    bool enable = was_on_all || !was_on_activity;
+    c->setOnActivity( activity, enable );
+    if( c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all ) // No change
+        return;
+
+    if( c->isOnActivity( activityController_.currentActivity() ))
+        {
+        if( c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
+            !was_on_activity && // for stickyness changes 
+            //FIXME not sure if the line above refers to the correct activity
+            !dont_activate )
+            requestFocus( c );
+        else
+            restackClientUnderActive( c );
+        }
+    else
+        raiseClient( c );
+
+    //notifyWindowDesktopChanged( c, old_desktop );
+    //FIXME does tiling break?
+
+    ClientList transients_stacking_order = ensureStackingOrder( c->transients() );
+    for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
+        it != transients_stacking_order.constEnd();
+        ++it )
+        toggleClientOnActivity( *it, activity, dont_activate );
     updateClientArea();
     }
 

@@ -143,6 +143,10 @@ class Client
         void setDesktop( int );
         void setOnAllDesktops( bool set );
 
+        virtual QStringList activities() const;
+        void setOnActivity( const QString &activity, bool enable );
+        void setOnAllActivities( bool set );
+
         /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
         bool isShown( bool shaded_is_shown ) const;
         bool isHiddenInternal() const; // For compositing
@@ -506,6 +510,7 @@ class Client
         KDecoration* decoration;
         Bridge* bridge;
         int desk;
+        QStringList activityList;
         bool buttonDown;
         bool moveResizeMode;
         bool move_faked_activity;

@@ -39,6 +39,7 @@ class Unmanaged
         bool track( Window w );
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
         virtual int desktop() const;
+        virtual QStringList activities() const;
         virtual QPoint clientPos() const;
         virtual QSize clientSize() const;
         virtual QRect transparentRect() const;
