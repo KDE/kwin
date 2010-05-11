@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/taskbarthumbnail">
+  <file>vertex.glsl</file>
+  <file>fragment.glsl</file>
+</qresource>
+</RCC>

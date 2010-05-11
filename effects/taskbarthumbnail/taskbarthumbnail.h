@@ -23,12 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TASKBARTHUMBNAIL_H
 
 #include <kwineffects.h>
+#include <QObject>
+#include <QBasicTimer>
+#include <QVector>
+#include <QVector2D>
+#include <QVector4D>
 
 namespace KWin
 {
 
 class TaskbarThumbnailEffect
-    : public Effect
+    : public QObject, public Effect
     {
     public:
         TaskbarThumbnailEffect();
@@ -41,15 +46,28 @@ class TaskbarThumbnailEffect
         virtual void windowDeleted( EffectWindow* w );
         virtual void propertyNotify( EffectWindow* w, long atom );
     protected:
+        virtual void timerEvent(QTimerEvent*);
     private:
+        void updateOffscreenSurfaces();
+        QVector<QVector4D> createKernel(float delta);
+        QVector<QVector2D> createOffsets(int count, float width, Qt::Orientation direction);
         struct Data
             {
             Window window; // thumbnail of this window
             QRect rect;
             };
         long atom;
+        GLTexture *offscreenTex;
+        GLRenderTarget *offscreenTarget;
+        GLShader *shader;
         QMultiHash< EffectWindow*, Data > thumbnails;
         EffectWindowList damagedWindows;
+        QBasicTimer timer;
+        int uTexUnit;
+        int uOffsets;
+        int uKernel;
+        int uKernelSize;
+        bool alphaWindowsOnly;
     };
 
 } // namespace
