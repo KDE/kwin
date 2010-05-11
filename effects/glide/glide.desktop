@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Glide
+Icon=preferences-system-windows-effect-sheet
+Comment=Windows Glide Effect as they are open and closed
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Alexandre Pereira
+X-KDE-PluginInfo-Email=pereira.alex@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_glide
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=50
