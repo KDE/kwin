@@ -1783,7 +1783,10 @@ namespace Oxygen
         { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
         QString caption( itemValid ? clientGroupItems()[index].title() : Client::caption() );
-        renderTitleText( &painter, textRect, caption, titlebarTextColor( widget()->palette(), isActive() && itemActive ) );
+        renderTitleText(
+            &painter, textRect, caption,
+            titlebarTextColor( widget()->palette(), isActive() && itemActive ),
+            titlebarContrastColor( widget()->palette() ) );
 
         // floating frame
         helper().drawFloatFrame(
