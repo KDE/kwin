@@ -7,3 +7,4 @@ X-KDE-ParentComponents=kwin4_effect_glide
 X-KDE-PluginKeyword=glide
 
 Name=Glide
+Name[x-test]=xxGlidexx

@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=Glide
+Name[x-test]=xxGlidexx
 Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
+Comment[x-test]=xxWindows Glide Effect as they are open and closedxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
