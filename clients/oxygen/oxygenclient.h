@@ -33,6 +33,7 @@
 #include "oxygenconfiguration.h"
 #include "oxygendecohelper.h"
 #include "oxygenfactory.h"
+#include "oxygenshadowcache.h"
 #include "oxygentitleanimationdata.h"
 
 #include <kcommondecoration.h>
@@ -205,6 +206,18 @@ namespace Oxygen
         virtual void resizeEvent(QResizeEvent *e);
 
         protected:
+
+        //! return shadow cache key associated to this client
+        ShadowCache::Key key( void ) const
+        {
+            ShadowCache::Key key;
+            key.active = isActive() || isForcedActive();
+            key.useOxygenShadows = configuration().useOxygenShadows();
+            key.isShade = isShade();
+            key.hasTitleOutline = configuration().drawTitleOutline();
+            key.hasBorder = ( configuration().frameBorder() > Configuration::BorderNone );
+            return key;
+        }
 
         //! true when decoration is forced active
         void setForceActive( bool value )

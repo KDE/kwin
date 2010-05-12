@@ -38,7 +38,6 @@
 namespace Oxygen
 {
 
-    class Client;
     class ShadowCache
     {
         public:
@@ -119,12 +118,6 @@ namespace Oxygen
             return qMax( size, qreal(5.0) );
         }
 
-        //! get shadow matching client
-        TileSet* tileSet( const Client* );
-
-        //! get shadow matching client and opacity
-        TileSet* tileSet( const Client*, qreal );
-
         //! Key class to be used into QCache
         /*! class is entirely inline for optimization */
         class Key
@@ -141,9 +134,6 @@ namespace Oxygen
                 hasTitleOutline(false),
                 hasBorder( true )
             {}
-
-            //! constructor from client
-            Key( const Client* );
 
             //! constructor from int
             Key( int hash ):
@@ -180,15 +170,18 @@ namespace Oxygen
 
         };
 
-        //! complex pixmap (when needed)
-        QPixmap shadowPixmap( const Client*, bool active ) const;
+        //! get shadow matching client
+        TileSet* tileSet( const QColor&, const Key& );
+
+        //! get shadow matching client and opacity
+        TileSet* tileSet( const QColor&, Key, qreal );
 
         //! simple pixmap
-        QPixmap simpleShadowPixmap( const QColor& color, const Key& key ) const
-        { return simpleShadowPixmap( color, key, key.active ); }
+        QPixmap shadowPixmap( const QColor& color, const Key& key ) const
+        { return shadowPixmap( color, key, key.active ); }
 
         //! simple pixmap
-        QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
+        QPixmap shadowPixmap( const QColor&, const Key&, bool active ) const;
 
         protected:
 
@@ -242,7 +235,7 @@ namespace Oxygen
 
             //! value
             virtual qreal operator() ( qreal x ) const
-            { return amplitude_*std::exp( -square(x/width_) ); }
+            { return qMax( 0.0, amplitude_*(std::exp( -square(x/width_) -0.05 ) ) ); }
 
             private:
 

@@ -25,7 +25,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenshadowcache.h"
-#include "oxygenclient.h"
 #include "oxygenhelper.h"
 
 #include <cassert>
@@ -68,11 +67,8 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    TileSet* ShadowCache::tileSet( const Client* client )
+    TileSet* ShadowCache::tileSet( const QColor& color, const Key& key )
     {
-
-        // construct key
-        Key key( client );
 
         // check if tileset already in cache
         int hash( key.hash() );
@@ -80,21 +76,20 @@ namespace Oxygen
 
         // create tileset otherwise
         qreal size( shadowSize() );
-        TileSet* tileSet = new TileSet( shadowPixmap( client, key.active ), size, size, 1, 1);
+        TileSet* tileSet = new TileSet( shadowPixmap( color, key, key.active ), size, size, 1, 1);
         shadowCache_.insert( hash, tileSet );
         return tileSet;
 
     }
 
     //_______________________________________________________
-    TileSet* ShadowCache::tileSet( const Client* client, qreal opacity )
+    TileSet* ShadowCache::tileSet( const QColor& color, Key key, qreal opacity )
     {
 
         int index( opacity*maxIndex_ );
         assert( index <= maxIndex_ );
 
         // construct key
-        Key key( client );
         key.index = index;
 
         // check if tileset already in cache
@@ -109,7 +104,7 @@ namespace Oxygen
         QPainter p( &shadow );
         p.setRenderHint( QPainter::Antialiasing );
 
-        QPixmap inactiveShadow( shadowPixmap( client, false ) );
+        QPixmap inactiveShadow( shadowPixmap( color, key, false ) );
         {
             QPainter pp( &inactiveShadow );
             pp.setRenderHint( QPainter::Antialiasing );
@@ -117,7 +112,7 @@ namespace Oxygen
             pp.fillRect( inactiveShadow.rect(), QColor( 0, 0, 0, 255*(1.0-opacity ) ) );
         }
 
-        QPixmap activeShadow( shadowPixmap( client, true ) );
+        QPixmap activeShadow( shadowPixmap( color, key, true ) );
         {
             QPainter pp( &activeShadow );
             pp.setRenderHint( QPainter::Antialiasing );
@@ -135,20 +130,8 @@ namespace Oxygen
 
     }
 
-    //_________________________________________________________________
-    QPixmap ShadowCache::shadowPixmap(const Client* client, bool active ) const
-    {
-
-        // get window color
-        Key key( client );
-        QPalette palette( client->backgroundPalette( client->widget(), client->widget()->palette() ) );
-        QColor color( palette.color( client->widget()->backgroundRole() ) );
-        return simpleShadowPixmap( color, key, active );
-
-    }
-
     //_______________________________________________________
-    QPixmap ShadowCache::simpleShadowPixmap( const QColor& color, const Key& key, bool active ) const
+    QPixmap ShadowCache::shadowPixmap( const QColor& color, const Key& key, bool active ) const
     {
 
         // local reference to relevant shadow configuration
@@ -446,19 +429,5 @@ namespace Oxygen
         }
 
     }
-
-    //__________________________________________________________
-    ShadowCache::Key::Key( const Client* client):
-        index(0)
-     {
-
-        active = client->isActive() || client->isForcedActive();
-        useOxygenShadows = client->configuration().useOxygenShadows();
-        isShade = client->isShade();
-        hasTitleOutline = client->configuration().drawTitleOutline();
-        hasBorder = ( client->configuration().frameBorder() > Configuration::BorderNone );
-
-    }
-
 
 }
