@@ -367,6 +367,7 @@ void Workspace::init()
         }
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
+    updateCurrentActivity( activityController_.currentActivity() );
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
     initPositioning = new Placement( this );

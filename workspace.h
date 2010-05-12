@@ -336,6 +336,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setActiveScreenMouse( const QPoint& mousepos );
         QRect screenGeometry( int screen ) const;
         int screenNumber( const QPoint& pos ) const;
+        QString currentActivity() const { return activity_; }
 
         // Tab box
         Client* currentTabBoxClient() const;

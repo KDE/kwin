@@ -414,7 +414,7 @@ inline bool Toplevel::isOnCurrentDesktop() const
 
 inline bool Toplevel::isOnCurrentActivity() const
     {
-    return isOnActivity( KActivityConsumer().currentActivity());
+    return isOnActivity( Workspace::self()->currentActivity());
     }
 
 inline QByteArray Toplevel::resourceName() const
