@@ -297,7 +297,7 @@ namespace Oxygen
                     QRadialGradient rg = QRadialGradient( size+20.0*hoffset, size+20.0*voffset, gradientSize );
                     rg.setColorAt(1, Qt::transparent );
 
-                    int nPoints( (10*gradientSize)/fixedSize );
+                    int nPoints( (20*gradientSize)/fixedSize );
                     Gaussian f( 0.155, 0.445);
                     QColor c = shadowConfiguration.outerColor();
                     for( int i = 0; i < nPoints; i++ )
