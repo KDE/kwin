@@ -1569,21 +1569,24 @@ void Client::setOnAllDesktops( bool b )
     }
 
 /**
- * if @p b is true, sets on all activities.
+ * if @p on is true, sets on all activities.
  * if it's false, sets it to only be on the current activity
  */
-void Client::setOnAllActivities( bool b )
+void Client::setOnAllActivities( bool on )
     {
-    if( b == isOnAllActivities() )
+    if( on == isOnAllActivities() )
         return;
-    if( b ) {
+    if( on )
+        {
         activityList.clear();
         //FIXME update transients
-    } else {
+        }
+    else
+        {
         setOnActivity(Workspace::self()->currentActivity(), true);
         //FIXME update transients
         return;
-    }
+        }
 
     //FIXME c&p'd from setOnActivity, I probably need more code and should probably factor it out
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
