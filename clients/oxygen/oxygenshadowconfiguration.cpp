@@ -43,7 +43,7 @@ namespace Oxygen
         if( colorGroup == QPalette::Active )
         {
 
-            shadowSize_ = 29;
+            shadowSize_ = 40;
             horizontalOffset_ = 0;
             verticalOffset_ = 0.1;
 
@@ -55,7 +55,7 @@ namespace Oxygen
 
         } else {
 
-            shadowSize_ = 25;
+            shadowSize_ = 40;
             horizontalOffset_ = 0;
             verticalOffset_ = 0.2;
 
