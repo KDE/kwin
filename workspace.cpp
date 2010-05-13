@@ -1780,7 +1780,7 @@ void Workspace::toggleClientOnActivity( Client* c, const QString &activity, bool
     if( c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all ) // No change
         return;
 
-    if( c->isOnActivity( activityController_.currentActivity() ))
+    if( c->isOnCurrentActivity() )
         {
         if( c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
             !was_on_activity && // for stickyness changes 

@@ -1579,8 +1579,7 @@ void Client::setOnAllActivities( bool b )
         activityList.clear();
         //FIXME update transients
     } else {
-        KActivityConsumer c;
-        setOnActivity(c.currentActivity(), true);
+        setOnActivity(Workspace::self()->currentActivity(), true);
         //FIXME update transients
         return;
     }

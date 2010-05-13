@@ -51,7 +51,7 @@ include_directories(
 
 add_subdirectory( lib ) 
 add_subdirectory( killer )
-add_subdirectory( kcmkwin )
+#add_subdirectory( kcmkwin )
 add_subdirectory( clients )
 add_subdirectory( data )
 
