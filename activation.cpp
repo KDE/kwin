@@ -285,10 +285,17 @@ void Workspace::activateClient( Client* c, bool force )
         return;
         }
     raiseClient( c );
-    if (!c->isOnDesktop(currentDesktop()) )
+    if (!c->isOnCurrentDesktop() )
         {
         ++block_focus;
         setCurrentDesktop( c->desktop() );
+        --block_focus;
+        }
+    if (!c->isOnCurrentActivity() )
+        {
+        ++block_focus;
+        //DBUS!
+        activityController_.setCurrentActivity( c->activities().first() ); //first isn't necessarily best, but it's easiest
         --block_focus;
         }
     if( c->isMinimized())
@@ -764,7 +771,9 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
     bool session ) const
     {
     Time time = info->userTime();
-    kDebug( 1212 ) << "User timestamp, initial:" << time;
+    //kDebug( 1212 ) << "User timestamp, initial:" << time; 
+    //^^ this deadlocks kwin --replace sometimes.
+
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
     if( asn_data != NULL && time != 0 )
