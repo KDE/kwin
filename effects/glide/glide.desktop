@@ -1,8 +1,16 @@
 [Desktop Entry]
 Name=Glide
+Name[ia]=Glissar
+Name[pt]=Deslizar
+Name[sv]=Glid
+Name[uk]=Ковзання
 Name[x-test]=xxGlidexx
 Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
+Comment[ia]=Effectos de Glissar durante que illos es aperite e claudite
+Comment[pt]=Fazer as janelas deslizar ao serem abertas/fechadas
+Comment[sv]=Glideffekt för fönster när de öppnas och stängs
+Comment[uk]=Ефекти ковзання вікон під час відкриття та закриття
 Comment[x-test]=xxWindows Glide Effect as they are open and closedxx
 
 Type=Service
