@@ -537,7 +537,7 @@ void Workspace::activityPopupAboutToShow()
 
     activity_popup->clear();
     QAction *action = activity_popup->addAction( i18n("&All Activities") );
-    action->setData( 0 );
+    action->setData( QString() );
     action->setCheckable( true );
 
     if ( active_popup_client && active_popup_client->isOnAllActivities() )
