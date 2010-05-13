@@ -243,6 +243,7 @@ Workspace::Workspace( bool restore )
     connect( Kephal::Screens::self(), SIGNAL( screenMoved(Kephal::Screen*, QPoint, QPoint) ), SLOT( desktopResized() ));
 
     connect( &activityController_, SIGNAL( currentActivityChanged(QString) ), SLOT( updateCurrentActivity(QString) ));
+    connect( &activityController_, SIGNAL( activityRemoved(QString) ), SLOT( activityRemoved(QString) ));
     }
 
 void Workspace::init()
@@ -1645,6 +1646,18 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     if( compositing())
         addRepaintFull();
 
+    }
+
+/**
+ * updates clients when an activity is destroyed.
+ * this ensures that a client does not get 'lost' if the only activity it's on is removed.
+ */
+void Workspace::activityRemoved(const QString &activity)
+    {
+    foreach (Client *client, stacking_order)
+        {
+        client->setOnActivity(activity, false);
+        }
     }
 
 /**

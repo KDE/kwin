@@ -1495,14 +1495,15 @@ void Client::setOnActivity( const QString &activity, bool enable )
     {
     if( activityList.contains(activity) == enable ) //nothing to do
         return;
-    KActivityConsumer c;
-    QStringList allActivities = c.availableActivities();
-    if( !allActivities.contains(activity) ) //bogus ID
-        return;
     //check whether we should set it to all activities
     QStringList newActivitiesList = activityList;
+    QStringList allActivities = KActivityConsumer().availableActivities();
     if (enable)
+        {
+        if( !allActivities.contains(activity) ) //bogus ID
+            return;
         newActivitiesList.append(activity);
+        }
     else
         newActivitiesList.removeOne(activity);
     if( newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty() )

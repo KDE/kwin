@@ -756,7 +756,8 @@ class Workspace : public QObject, public KDecorationDefines
         void resetCursorPosTime();
         void delayedCheckUnredirect();
 
-        void updateCurrentActivity(const QString &activity);
+        void updateCurrentActivity(const QString &new_activity);
+        void activityRemoved(const QString &activity);
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
