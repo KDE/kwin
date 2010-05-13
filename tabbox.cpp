@@ -130,6 +130,7 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList( TabBoxClient* client, int de
         addClient = true;
     else
         addClient = current->isOnDesktop( desktop );
+    addClient = addClient && current->isOnCurrentActivity();
     addClient = addClient && current->wantsTabFocus() && !current->skipSwitcher();
     if ( addClient )
         { // don't add windows that have modal dialogs
