@@ -24,7 +24,7 @@
    <item>
     <widget class="QCheckBox" name="useCustomButtonPositionsCheckBox">
      <property name="whatsThis">
-      <string>The appropriate settings can be found in the &quot;Buttons&quot; Tab; please note that this option is not available on all styles yet.</string>
+      <string>Please note that this option is not available on all styles yet.</string>
      </property>
      <property name="text">
       <string>Use custom titlebar button &amp;positions</string>
