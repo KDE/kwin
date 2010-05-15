@@ -29,7 +29,7 @@
 
 namespace Oxygen
 {
-    
+
     //__________________________________________________
     Configuration::Configuration( void ):
         titleAlignment_( Qt::AlignHCenter ),
@@ -50,99 +50,99 @@ namespace Oxygen
         shadowMode_( OxygenShadows ),
         shadowCacheMode_( CacheVariable )
     {}
-    
+
     //__________________________________________________
     Configuration::Configuration( KConfigGroup group )
     {
-        
+
         // used to set default values when entries are not found in kconfig
         Configuration defaultConfiguration;
-        
+
         // title alignment
         setTitleAlignment( titleAlignment(
             group.readEntry( OxygenConfig::TITLE_ALIGNMENT,
             defaultConfiguration.titleAlignmentName( false ) ), false ) );
-        
+
         // button size
         setButtonSize( buttonSize(
             group.readEntry( OxygenConfig::BUTTON_SIZE,
             defaultConfiguration.buttonSizeName( false ) ), false ) );
-        
+
         // frame border
         setFrameBorder( frameBorder(
             group.readEntry( OxygenConfig::FRAME_BORDER,
             defaultConfiguration.frameBorderName( false ) ), false ) );
-        
+
         // blend color
         setBlendColor( blendColor(
             group.readEntry( OxygenConfig::BLEND_COLOR,
             defaultConfiguration.blendColorName( false ) ), false ) );
-        
+
         // size grip
         setSizeGripMode( sizeGripMode(
             group.readEntry( OxygenConfig::SIZE_GRIP_MODE,
             defaultConfiguration.sizeGripModeName( false ) ), false ) );
-        
+
         // draw separator
         setDrawSeparator( group.readEntry(
             OxygenConfig::DRAW_SEPARATOR,
             defaultConfiguration.drawSeparator() ) );
-        
+
         // title outline
         setDrawTitleOutline( group.readEntry(
             OxygenConfig::DRAW_TITLE_OUTLINE,
             defaultConfiguration.drawTitleOutline() ) );
-        
+
         // hide title bar
         setHideTitleBar( group.readEntry(
             OxygenConfig::HIDE_TITLEBAR,
             defaultConfiguration.hideTitleBar() ) );
-        
+
         // drop shadows
         setUseDropShadows( group.readEntry(
             OxygenConfig::USE_DROP_SHADOWS,
             defaultConfiguration.useDropShadows() ) );
-        
+
         // oxygen shadows
         setUseOxygenShadows( group.readEntry(
             OxygenConfig::USE_OXYGEN_SHADOWS,
             defaultConfiguration.useOxygenShadows() ) );
-        
+
         // animations
         setUseAnimations( group.readEntry(
             OxygenConfig::USE_ANIMATIONS,
             defaultConfiguration.useAnimations() ) );
-        
+
         // animations
         setAnimateTitleChange( group.readEntry(
             OxygenConfig::ANIMATE_TITLE_CHANGE,
             defaultConfiguration.animateTitleChange() ) );
-        
+
         // animations
         setAnimationsDuration( group.readEntry(
             OxygenConfig::ANIMATIONS_DURATION,
             defaultConfiguration.animationsDuration() ) );
-        
+
         // tabbing
         setTabsEnabled( group.readEntry(
             OxygenConfig::TABS_ENABLED,
             defaultConfiguration.tabsEnabled() ) );
-        
+
         // buttonSpacing
         setUseNarrowButtonSpacing( group.readEntry(
             OxygenConfig::NARROW_BUTTON_SPACING,
             defaultConfiguration.useNarrowButtonSpacing() ) );
-        
+
         // shadow  mode
         setShadowMode( shadowMode( group.readEntry(
             OxygenConfig::SHADOW_MODE, defaultConfiguration.shadowModeName( false ) ), false ) );
-        
+
         // shadow cache mode
         setShadowCacheMode( shadowCacheMode( group.readEntry(
             OxygenConfig::SHADOW_CACHE_MODE, defaultConfiguration.shadowCacheModeName( false ) ), false ) );
-        
+
     }
-        
+
     //__________________________________________________
     void Configuration::write( KConfigGroup& group ) const
     {
@@ -202,6 +202,7 @@ namespace Oxygen
             case ButtonSmall: out = translated ? i18n( "Small" ):"Small"; break;
             case ButtonDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
             case ButtonLarge: out = translated ? i18n( "Large" ):"Large"; break;
+            case ButtonVeryLarge: out = translated ? i18n( "Very Large" ):"Very Large"; break;
             case ButtonHuge: out = translated ? i18n( "Huge" ):"Huge"; break;
             default: return Configuration().buttonSizeName( translated );
         }
@@ -216,6 +217,7 @@ namespace Oxygen
         if( value == buttonSizeName( ButtonSmall, translated ) ) return ButtonSmall;
         else if( value == buttonSizeName( ButtonDefault, translated ) ) return ButtonDefault;
         else if( value == buttonSizeName( ButtonLarge, translated ) ) return ButtonLarge;
+        else if( value == buttonSizeName( ButtonVeryLarge, translated ) ) return ButtonVeryLarge;
         else if( value == buttonSizeName( ButtonHuge, translated ) ) return ButtonHuge;
         else return Configuration().buttonSize();
     }
@@ -227,7 +229,8 @@ namespace Oxygen
         {
             case ButtonSmall: return 13;
             case ButtonDefault: return 16;
-            case ButtonLarge: return 24;
+            case ButtonLarge: return 20;
+            case ButtonVeryLarge: return 24;
             case ButtonHuge: return 35;
             default: return Configuration().iconScale();
         }

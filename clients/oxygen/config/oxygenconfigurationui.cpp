@@ -72,6 +72,7 @@ namespace Oxygen
       << Configuration::buttonSizeName( Configuration::ButtonSmall, true )
       << Configuration::buttonSizeName( Configuration::ButtonDefault, true )
       << Configuration::buttonSizeName( Configuration::ButtonLarge, true )
+      << Configuration::buttonSizeName( Configuration::ButtonVeryLarge, true )
       << Configuration::buttonSizeName( Configuration::ButtonHuge, true )
       );
 
