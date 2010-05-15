@@ -178,7 +178,9 @@ class Scene::Window
             // Window will not be painted because it is minimized
             PAINT_DISABLED_BY_MINIMIZE     = 1 << 3,
             // Window will not be painted because it is not the active window in a client group
-            PAINT_DISABLED_BY_CLIENT_GROUP = 1 << 4
+            PAINT_DISABLED_BY_CLIENT_GROUP = 1 << 4,
+            // Window will not be painted because it's not on the current activity
+            PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
             };
         void enablePainting( int reason );
         void disablePainting( int reason );
