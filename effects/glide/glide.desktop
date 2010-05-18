@@ -2,6 +2,7 @@
 Name=Glide
 Name[ia]=Glissar
 Name[ja]=グライド
+Name[km]=សំកាំង
 Name[nl]=Schuiven
 Name[pt]=Deslizar
 Name[pt_BR]=Deslizar
@@ -12,6 +13,7 @@ Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
 Comment[ia]=Effectos de Glissar durante que illos es aperite e claudite
 Comment[ja]=ウィンドウを開いたり閉じるときにグライドさせます
+Comment[km]=បែបផែន​សំកាំង​វីនដូ​ ព្រោះថា​ពួកវា​ត្រូ​វបាន​បើក និង​បិទ
 Comment[nl]=Laat vensters schuiven als ze worden geopend of gesloten
 Comment[pt]=Fazer as janelas deslizar ao serem abertas/fechadas
 Comment[pt_BR]=Efeito que faz as janelas deslizarem ao serem abertas/fechadas
