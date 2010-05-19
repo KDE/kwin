@@ -146,6 +146,8 @@ class Client
         virtual QStringList activities() const;
         void setOnActivity( const QString &activity, bool enable );
         void setOnAllActivities( bool set );
+        void setOnActivities( QStringList newActivitiesList );
+        void updateActivities( bool includeTransients );
 
         /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
         bool isShown( bool shaded_is_shown ) const;

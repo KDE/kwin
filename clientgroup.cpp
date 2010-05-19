@@ -297,6 +297,8 @@ void ClientGroup::updateStates( Client* main, Client* only )
                 (*i)->setDesktop( main->desktop() );
             if( (*i)->isOnAllDesktops() != main->isOnAllDesktops() )
                 (*i)->setOnAllDesktops( main->isOnAllDesktops() );
+            if( (*i)->activities() != main->activities() )
+                (*i)->setOnActivities( main->activities() );
             if( (*i)->keepAbove() != main->keepAbove() )
                 (*i)->setKeepAbove( main->keepAbove() );
             if( (*i)->keepBelow() != main->keepBelow() )

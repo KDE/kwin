@@ -1497,31 +1497,44 @@ void Client::setOnActivity( const QString &activity, bool enable )
         return;
     //check whether we should set it to all activities
     QStringList newActivitiesList = activityList;
-    QStringList allActivities = KActivityConsumer().availableActivities();
     if (enable)
         {
+        QStringList allActivities = KActivityConsumer().availableActivities();
         if( !allActivities.contains(activity) ) //bogus ID
             return;
         newActivitiesList.append(activity);
         }
     else
         newActivitiesList.removeOne(activity);
+    setOnActivities( newActivitiesList );
+    }
+
+/**
+ * set exactly which activities this client is on
+ */
+void Client::setOnActivities( QStringList newActivitiesList )
+    {
+    QStringList allActivities = KActivityConsumer().availableActivities();
     if( newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty() )
         {
         setOnAllActivities(true);
         return;
         }
     activityList = newActivitiesList;
-    /* FIXME I don't think I need the transients but what about the rest?
-    if(( was_desk == NET::OnAllDesktops ) != ( desktop == NET::OnAllDesktops ))
-        { // onAllDesktops changed
-        if( isShown( true ))
-            Notify::raise( isOnAllDesktops() ? Notify::OnAllDesktops : Notify::NotOnAllDesktops );
-        workspace()->updateOnAllDesktopsOfTransients( this );
-        }
+    updateActivities( false );
+    }
+
+/**
+ * update after activities changed
+ */
+void Client::updateActivities( bool includeTransients )
+    {
+    /* FIXME do I need this?
     if( decoration != NULL )
         decoration->desktopChange();
         */
+    if( includeTransients )
+        workspace()->updateOnAllActivitiesOfTransients( this );
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
     updateVisibility();
     updateWindowRules();
@@ -1579,22 +1592,13 @@ void Client::setOnAllActivities( bool on )
     if( on )
         {
         activityList.clear();
-        workspace()->updateOnAllActivitiesOfTransients( this );
+        updateActivities( true );
         }
     else
         {
         setOnActivity(Workspace::self()->currentActivity(), true);
         workspace()->updateOnAllActivitiesOfTransients( this );
-        return;
         }
-
-    //FIXME c&p'd from setOnActivity, I probably need more code and should probably factor it out
-    workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
-    updateVisibility();
-    updateWindowRules();
-    // Update states of all other windows in this group
-    if( clientGroup() )
-        clientGroup()->updateStates( this );
     }
 
 /**
