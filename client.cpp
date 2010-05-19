@@ -1579,12 +1579,12 @@ void Client::setOnAllActivities( bool on )
     if( on )
         {
         activityList.clear();
-        //FIXME update transients
+        workspace()->updateOnAllActivitiesOfTransients( this );
         }
     else
         {
         setOnActivity(Workspace::self()->currentActivity(), true);
-        //FIXME update transients
+        workspace()->updateOnAllActivitiesOfTransients( this );
         return;
         }
 

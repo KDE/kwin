@@ -1778,7 +1778,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     }
 
 /**
- * Adds/removes client \a c to/from \a desk.
+ * Adds/removes client \a c to/from \a activity.
  *
  * Takes care of transients as well.
  */

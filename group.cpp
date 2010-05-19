@@ -433,6 +433,20 @@ void Workspace::updateOnAllDesktopsOfTransients( Client* c )
         }
     }
 
+/*!
+  Sets the client \a c's transient windows' on_all_activities property to \a on_all_desktops.
+ */
+void Workspace::updateOnAllActivitiesOfTransients( Client* c )
+    {
+    for( ClientList::ConstIterator it = c->transients().constBegin();
+         it != c->transients().constEnd();
+         ++it)
+        {
+        if( (*it)->isOnAllActivities() != c->isOnAllActivities())
+            (*it)->setOnAllActivities( c->isOnAllActivities());
+        }
+    }
+
 // A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
 void Workspace::checkTransients( Window w )
     {
