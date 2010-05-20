@@ -196,7 +196,7 @@ namespace Oxygen
         painter.setClipRect(this->rect().intersected( event->rect() ) );
         painter.setRenderHints(QPainter::Antialiasing);
 
-        QPalette palette = Button::palette();
+        QPalette palette = this->palette();
         if( isActive() ) palette.setCurrentColorGroup(QPalette::Active);
         else palette.setCurrentColorGroup(QPalette::Inactive);
         QColor color = palette.window().color();

@@ -321,7 +321,7 @@ namespace Oxygen
     void ClientGroupItemDataList::updateBoundingRects( bool alsoUpdate )
     {
 
-        qreal ratio( ClientGroupItemDataList::progress() );
+        qreal ratio( progress() );
         for( iterator iter = begin(); iter != end(); ++iter )
         {
 
