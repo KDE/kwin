@@ -405,7 +405,7 @@ namespace Oxygen
     //_________________________________________________________
     QRect Client::defaultTitleRect( bool active ) const
     {
-        QRect titleRect( Client::titleRect() );
+        QRect titleRect( this->titleRect() );
         titleRect.adjust( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
 
         if( active && configuration().drawTitleOutline() && isActive() )
@@ -464,7 +464,7 @@ namespace Oxygen
         itemData_.animate( AnimationNone );
 
         // maximum available space
-        QRect titleRect( Client::titleRect() );
+        QRect titleRect( this->titleRect() );
 
         // get tabs
         int items( clientGroupItems().count() );
@@ -585,7 +585,7 @@ namespace Oxygen
             int offset = layoutMetric( LM_OuterPaddingTop );
             int height = 64 - Configuration::ButtonDefault;
             if( !configuration().hideTitleBar() ) height += configuration().buttonSize();
-            const QWidget* window( isPreview() ? Client::widget() : widget->window() );
+            const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
 
         }
@@ -602,7 +602,7 @@ namespace Oxygen
         // get coordinates relative to the client area
         // this is annoying. One could use mapTo if this was taking const QWidget* and not
         // const QWidget* as argument.
-        const QWidget* window = (isPreview()) ? Client::widget() : widget->window();
+        const QWidget* window = (isPreview()) ? this->widget() : widget->window();
         const QWidget* w = widget;
         QPoint position( 0, 0 );
         while (  w != window && !w->isWindow() && w != w->parentWidget() )
@@ -618,7 +618,7 @@ namespace Oxygen
             painter->setClipRegion(clipRect,Qt::IntersectClip);
         }
 
-        QRect r = (isPreview()) ? Client::widget()->rect():window->rect();
+        QRect r = (isPreview()) ? this->widget()->rect():window->rect();
         qreal shadowSize( shadowCache().shadowSize() );
         r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
         r.adjust(0,0, 1, 1);
@@ -740,7 +740,7 @@ namespace Oxygen
     void Client::renderSeparator( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QColor& color ) const
     {
 
-        const QWidget* window = (isPreview()) ? Client::widget() : widget->window();
+        const QWidget* window = (isPreview()) ? this->widget() : widget->window();
 
         // get coordinates relative to the client area
         // this is annoying. One could use mapTo if this was taking const QWidget* and not
@@ -761,7 +761,7 @@ namespace Oxygen
             painter->setClipRegion(clipRect,Qt::IntersectClip);
         }
 
-        QRect r = (isPreview()) ? Client::widget()->rect():window->rect();
+        QRect r = (isPreview()) ? this->widget()->rect():window->rect();
         qreal shadowSize( shadowCache().shadowSize() );
         r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
 
@@ -949,10 +949,10 @@ namespace Oxygen
 
         // get current item caption and update text rect
         const QList< ClientGroupItem >& items( clientGroupItems() );
-        QString caption( itemCount == 1 ? Client::caption() : items[index].title() );
+        QString caption( itemCount == 1 ? this->caption() : items[index].title() );
 
         // always make sure that titleRect never conflicts with window buttons
-        QRect titleRect( Client::titleRect() );
+        QRect titleRect( this->titleRect() );
         if( titleRect.left() > textRect.left() ) { textRect.setLeft( titleRect.left() ); }
         if( titleRect.right() < textRect.right() ) { textRect.setRight( titleRect.right() ); }
 
@@ -1352,7 +1352,7 @@ namespace Oxygen
 
             TileSet *tileSet( 0 );
             QColor background( backgroundPalette( widget(), palette ).window().color() );
-            ShadowCache::Key key( Client::key() );
+            ShadowCache::Key key( this->key() );
             if( configuration().useOxygenShadows() && glowIsAnimated() && !isForcedActive() )
             {
 
@@ -1477,7 +1477,7 @@ namespace Oxygen
         } else if( buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
 
             QPoint point = event->pos();
-            int itemClicked( Client::itemClicked( point ) );
+            int itemClicked( this->itemClicked( point ) );
             displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
             mouseButton_ = Qt::NoButton;
             accepted = true; // displayClientMenu can possibly destroy the deco...
@@ -1498,7 +1498,7 @@ namespace Oxygen
             QPoint point = event->pos();
 
             int visibleItem = visibleClientGroupItem();
-            int itemClicked( Client::itemClicked( point ) );
+            int itemClicked( this->itemClicked( point ) );
             if( itemClicked >= 0 && visibleItem != itemClicked )
             {
                 setVisibleClientGroupItem( itemClicked );
@@ -1526,7 +1526,7 @@ namespace Oxygen
         {
 
             QPoint point = event->pos();
-            int itemClicked( Client::itemClicked( point ) );
+            int itemClicked( this->itemClicked( point ) );
             if( itemClicked < 0 ) return false;
 
             titleAnimationData_.data()->reset();
@@ -1535,7 +1535,7 @@ namespace Oxygen
             QMimeData *groupData = new QMimeData();
             groupData->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( itemClicked )).toAscii() );
             drag->setMimeData( groupData );
-            sourceItem_ = Client::itemClicked( dragPoint_ );
+            sourceItem_ = this->itemClicked( dragPoint_ );
 
             // get tab geometry
             QRect geometry;
@@ -1615,7 +1615,7 @@ namespace Oxygen
         } else if( itemData_.count() > 1 )  {
 
             QPoint position( event->pos() );
-            int itemClicked( Client::itemClicked( position, false ) );
+            int itemClicked( this->itemClicked( position, false ) );
             itemData_.animate( AnimationEnter|AnimationSameTarget, itemClicked );
 
         }
@@ -1663,7 +1663,7 @@ namespace Oxygen
             if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
 
             QPoint position( event->pos() );
-            int itemClicked( Client::itemClicked( position, false ) );
+            int itemClicked( this->itemClicked( position, false ) );
             itemData_.animate( AnimationMove|AnimationSameTarget, itemClicked );
 
         }
@@ -1685,8 +1685,8 @@ namespace Oxygen
         if( widget() == event->source() )
         {
 
-            int from = Client::itemClicked( dragPoint_ );
-            int itemClicked( Client::itemClicked( point, false ) );
+            int from = this->itemClicked( dragPoint_ );
+            int itemClicked( this->itemClicked( point, false ) );
 
             if( itemClicked > from )
             {
@@ -1702,7 +1702,7 @@ namespace Oxygen
         } else {
 
             setForceActive( true );
-            int itemClicked( Client::itemClicked( point, true ) );
+            int itemClicked( this->itemClicked( point, true ) );
             long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
             itemData_.setDirty( true );
             moveItemToClientGroup( source, itemClicked );
@@ -1784,7 +1784,7 @@ namespace Oxygen
         if( itemValid )
         { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
-        QString caption( itemValid ? clientGroupItems()[index].title() : Client::caption() );
+        QString caption( itemValid ? clientGroupItems()[index].title() : this->caption() );
         renderTitleText(
             &painter, textRect, caption,
             titlebarTextColor( widget()->palette(), isActive() && itemActive ),
