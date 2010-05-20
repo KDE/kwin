@@ -293,6 +293,10 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
         tex->unbind(); 
         shader->unbind(); 
+
+        // Rebind the shader used for drawing the window if one was set
+        if (data.shader)
+            data.shader->bind();
     }
 
     // Draw the window over the blurred area
