@@ -2,6 +2,7 @@
 Name=Glide
 Name[ia]=Glissar
 Name[ja]=グライド
+Name[kk]=Сырғанау
 Name[km]=សំកាំង
 Name[lt]=Sklendimas
 Name[nl]=Schuiven
@@ -15,6 +16,7 @@ Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
 Comment[ia]=Effectos de Glissar durante que illos es aperite e claudite
 Comment[ja]=ウィンドウを開いたり閉じるときにグライドさせます
+Comment[kk]=Терезелерді сырғанатып ашу-жабу эффекті
 Comment[km]=បែបផែន​សំកាំង​វីនដូ​ ព្រោះថា​ពួកវា​ត្រូ​វបាន​បើក និង​បិទ
 Comment[lt]=Langų sklendimo efektas juos atidarant ir uždarant
 Comment[nl]=Laat vensters schuiven als ze worden geopend of gesloten
