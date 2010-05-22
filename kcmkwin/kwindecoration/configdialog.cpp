@@ -30,13 +30,13 @@ namespace KWin
 
 static const char* const border_names[ KDecorationDefines::BordersCount ] =
     {
-    I18N_NOOP( "Tiny" ),
-    I18N_NOOP( "Normal" ),
-    I18N_NOOP( "Large" ),
-    I18N_NOOP( "Very Large" ),
-    I18N_NOOP( "Huge" ),
-    I18N_NOOP( "Very Huge" ),
-    I18N_NOOP( "Oversized" )
+    I18N_NOOP2( "@item:inlistbox Border size:", "Tiny" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Normal" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Large" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Very Large" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Huge" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Very Huge" ),
+    I18N_NOOP2( "@item:inlistbox Border size:", "Oversized" )
     };
 
 KWinAuroraeConfigForm::KWinAuroraeConfigForm( QWidget* parent )
@@ -100,7 +100,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog( QString deco, const QLis
             {
             KDecorationDefines::BorderSize currentSize =
                 static_cast<KDecorationDefines::BorderSize>( borderSize.toInt() );
-            m_ui->bordersCombo->addItem(i18n(border_names[currentSize]), borderSizeToIndex(currentSize, borderSizes) );
+            m_ui->bordersCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[currentSize]), borderSizeToIndex(currentSize, borderSizes) );
             }
         m_ui->bordersCombo->setCurrentIndex( borderSizeToIndex( size, borderSizes ) );
         }
