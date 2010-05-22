@@ -324,6 +324,8 @@ void DecorationModel::regeneratePreview( const QModelIndex& index, const QSize& 
             m_theme->loadTheme( data.auroraeName, conf );
             m_theme->setBorderSize( data.borderSize );
             m_theme->setButtonSize( data.buttonSize );
+            m_scene->setButtons( m_customButtons ? m_leftButtons : m_theme->defaultButtonsLeft(),
+                                 m_customButtons ? m_rightButtons : m_theme->defaultButtonsRight());
             int left, top, right, bottom;
             m_theme->borders( left, top, right, bottom, false );
             int padLeft, padRight, padTop, padBottom;
@@ -334,9 +336,8 @@ void DecorationModel::regeneratePreview( const QModelIndex& index, const QSize& 
                                    size.width() - xoffset - 20 + padLeft + padRight,
                                    size.height() - top - 20 + padLeft + padRight );
             m_scene->setActive( false, false );
-            m_scene->setCaption( i18n( "Inactive Window" ) );
-            m_scene->setButtons( m_customButtons ? m_leftButtons : m_theme->defaultButtonsLeft(),
-                                 m_customButtons ? m_rightButtons : m_theme->defaultButtonsRight());
+            m_scene->addTab( i18n( "Inactive Window" ) );
+            m_scene->updateLayout();
             QPainter painter( &pix );
             QRect rect = QRectF( QPointF( 10 + xoffset - padLeft, 10 - padTop ), m_scene->sceneRect().size() ).toRect();
             m_scene->render( &painter, QStyle::visualRect( QApplication::layoutDirection(), pix.rect(), rect ));
