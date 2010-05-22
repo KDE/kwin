@@ -200,11 +200,11 @@ namespace Oxygen
         QString out;
         switch( value )
         {
-            case ButtonSmall: out = translated ? i18n( "Small" ):"Small"; break;
-            case ButtonDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
-            case ButtonLarge: out = translated ? i18n( "Large" ):"Large"; break;
-            case ButtonVeryLarge: out = translated ? i18n( "Very Large" ):"Very Large"; break;
-            case ButtonHuge: out = translated ? i18n( "Huge" ):"Huge"; break;
+            case ButtonSmall: out = translated ? i18nc( "@item:inlistbox Button size:", "Small" ):"Small"; break;
+            case ButtonDefault: out = translated ? i18nc( "@item:inlistbox Button size:", "Normal" ):"Normal"; break;
+            case ButtonLarge: out = translated ? i18nc( "@item:inlistbox Button size:", "Large" ):"Large"; break;
+            case ButtonVeryLarge: out = translated ? i18nc( "@item:inlistbox Button size:", "Very Large" ):"Very Large"; break;
+            case ButtonHuge: out = translated ? i18nc( "@item:inlistbox Button size:", "Huge" ):"Huge"; break;
             default: return Configuration().buttonSizeName( translated );
         }
 
@@ -244,15 +244,15 @@ namespace Oxygen
         QString out;
         switch( value )
         {
-            case BorderNone: out = translated ? i18n( "No Border" ):"No Border"; break;
-            case BorderNoSide: out = translated ? i18n( "No Side Border" ):"No Side Border"; break;
-            case BorderTiny: out = translated ? i18n( "Tiny" ):"Tiny"; break;
-            case BorderDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
-            case BorderLarge: out = translated ? i18n( "Large" ):"Large"; break;
-            case BorderVeryLarge: out = translated ? i18n( "Very Large" ):"Very Large"; break;
-            case BorderHuge: out = translated ? i18n( "Huge" ):"Huge"; break;
-            case BorderVeryHuge: out = translated ? i18n( "Very Huge" ):"Very Huge"; break;
-            case BorderOversized: out = translated ? i18n( "Oversized" ):"Oversized"; break;
+            case BorderNone: out = translated ? i18nc( "@item:inlistbox Border size:", "No Border" ):"No Border"; break;
+            case BorderNoSide: out = translated ? i18nc( "@item:inlistbox Border size:", "No Side Border" ):"No Side Border"; break;
+            case BorderTiny: out = translated ? i18nc( "@item:inlistbox Border size:", "Tiny" ):"Tiny"; break;
+            case BorderDefault: out = translated ? i18nc( "@item:inlistbox Border size:", "Normal" ):"Normal"; break;
+            case BorderLarge: out = translated ? i18nc( "@item:inlistbox Border size:", "Large" ):"Large"; break;
+            case BorderVeryLarge: out = translated ? i18nc( "@item:inlistbox Border size:", "Very Large" ):"Very Large"; break;
+            case BorderHuge: out = translated ? i18nc( "@item:inlistbox Border size:", "Huge" ):"Huge"; break;
+            case BorderVeryHuge: out = translated ? i18nc( "@item:inlistbox Border size:", "Very Huge" ):"Very Huge"; break;
+            case BorderOversized: out = translated ? i18nc( "@item:inlistbox Border size:", "Oversized" ):"Oversized"; break;
             default: return Configuration().frameBorderName( translated );
         }
 
