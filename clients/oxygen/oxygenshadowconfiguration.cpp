@@ -1,5 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 // oxygenshadowconfiguration.cpp
+// shadow configuration
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>

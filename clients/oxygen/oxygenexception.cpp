@@ -1,5 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 // oxygenexception.cpp
+// window decoration exception
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>

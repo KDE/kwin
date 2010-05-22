@@ -1,5 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 // oxygensizegrip.cpp
+// bottom right size grip for borderless windows
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>

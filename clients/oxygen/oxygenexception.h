@@ -3,6 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 // oxygenexception.h
+// window decoration exception
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -32,24 +33,24 @@
 
 namespace OxygenConfig
 {
-    
+
     //! needed for exceptions
     static const QString TYPE = "Type";
     static const QString PATTERN = "Pattern";
     static const QString ENABLED = "Enabled";
     static const QString MASK = "Mask";
-    
+
 }
 
 namespace Oxygen
 {
-    
+
     //! oxygen exception
     class Exception: public Configuration
     {
-        
+
         public:
-        
+
         //! exception type
         enum Type {
             WindowTitle,
