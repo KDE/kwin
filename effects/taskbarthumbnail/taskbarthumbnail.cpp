@@ -288,7 +288,7 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
 
                     // Delete the offscreen surface after 5 seconds
                     timer.start( 5000, this );
-                    return;
+                    continue;
                     }
                 if ( data.shader )
                     {
