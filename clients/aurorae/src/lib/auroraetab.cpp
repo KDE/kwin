@@ -94,6 +94,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     const bool useTabs = (s->tabCount() > 1);
     const bool focused = s->isFocusedTab(m_index);
     const ThemeConfig &conf = m_theme->themeConfig();
+    const DecorationPosition decoPos = s->isShade() ? DecorationTop : m_theme->decorationPosition();
     if (useTabs) {
         painter->save();
         Plasma::FrameSvg *decoration = m_theme->decoration();
@@ -102,8 +103,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
             painter->setPen(color);
             QPointF point1 = rect().topRight();
             QPointF point2 = rect().bottomRight();
-            if (m_theme->decorationPosition() == DecorationLeft ||
-                m_theme->decorationPosition() == DecorationRight) {
+            if (decoPos == DecorationLeft || decoPos == DecorationRight) {
                 point1 = rect().topRight();
             point2 = rect().topLeft();
             }
@@ -144,8 +144,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     }
     qreal w = rect().width();
     qreal h = rect().height();
-    if (m_theme->themeConfig().decorationPosition() == DecorationLeft ||
-        m_theme->themeConfig().decorationPosition() == DecorationRight) {
+    if (decoPos == DecorationLeft || decoPos == DecorationRight) {
         h = rect().width();
         w = rect().height();
     }
@@ -159,10 +158,10 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
             haloRect.setWidth(w);
         }
         painter->save();
-        if (m_theme->themeConfig().decorationPosition() == DecorationLeft) {
+        if (decoPos == DecorationLeft) {
             painter->translate(rect().bottomLeft());
             painter->rotate(270);
-        } else if (m_theme->themeConfig().decorationPosition() == DecorationRight) {
+        } else if (decoPos == DecorationRight) {
             painter->translate(rect().topRight());
             painter->rotate(90);
         }
@@ -209,10 +208,10 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         p.fillRect(r, alphaGradient);
     }
     p.end();
-    if (m_theme->themeConfig().decorationPosition() == DecorationLeft) {
+    if (decoPos == DecorationLeft) {
         painter->translate(rect().bottomLeft());
         painter->rotate(270);
-    } else if (m_theme->themeConfig().decorationPosition() == DecorationRight) {
+    } else if (decoPos == DecorationRight) {
         painter->translate(rect().topRight());
         painter->rotate(90);
     }

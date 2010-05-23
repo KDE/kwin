@@ -332,8 +332,12 @@ void AuroraeScene::updateLayout()
     const int right = sceneRect().width() - m_rightButtons->preferredWidth() - config.paddingRight();
     const qreal titleHeight = qMax((qreal)config.titleHeight(),
                                    config.buttonHeight()*m_theme->buttonSizeFactor() + config.buttonMarginTop());
+    DecorationPosition decoPos = (DecorationPosition)config.decorationPosition();
+    if (isShade()) {
+        decoPos = DecorationTop;
+    }
     if (m_maximizeMode == KDecorationDefines::MaximizeFull) { // TODO: check option
-        switch ((DecorationPosition)config.decorationPosition()) {
+        switch (decoPos) {
         case DecorationTop: {
             const int top = genericTop + config.titleEdgeTopMaximized();
             m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeftMaximized(), top),
@@ -393,7 +397,7 @@ void AuroraeScene::updateLayout()
         }
         m_title->layout()->invalidate();
     } else {
-        switch ((DecorationPosition)config.decorationPosition()) {
+        switch (decoPos) {
         case DecorationTop: {
             const int top = genericTop + config.titleEdgeTop();
             m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeft(), top), m_leftButtons->size()));
@@ -733,6 +737,27 @@ void AuroraeScene::setShade(bool shade)
                 button->update();
             }
         }
+    }
+    if ((DecorationPosition)m_theme->themeConfig().decorationPosition() != DecorationTop) {
+        Qt::Orientation orientation = Qt::Horizontal;
+        switch ((DecorationPosition)m_theme->themeConfig().decorationPosition()) {
+            case DecorationLeft: // fall through
+            case DecorationRight:
+                orientation = Qt::Vertical;
+                break;
+            case DecorationTop: // fall through
+            case DecorationBottom: // fall through
+            default: // fall through
+                orientation = Qt::Horizontal;
+                break;
+        }
+        if (m_shade) {
+            orientation = Qt::Horizontal;
+        }
+        static_cast<QGraphicsLinearLayout *>(m_rightButtons->layout())->setOrientation(orientation);
+        static_cast<QGraphicsLinearLayout *>(m_leftButtons->layout())->setOrientation(orientation);
+        static_cast<QGraphicsLinearLayout *>(m_title->layout())->setOrientation(orientation);
+        updateLayout();
     }
 }
 
