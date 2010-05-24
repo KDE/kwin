@@ -228,7 +228,7 @@ qreal ClientItemDelegate::paintTextElement( QPainter* painter, const QStyleOptio
         m_frame->getMargins( left, top, right, bottom );
         width = option.rect.left() + option.rect.width() - x - right;
         }
-    text = QFontMetricsF( font ).elidedText( text, Qt::ElideRight, width );
+    text = QFontMetricsF( font ).elidedText( text, Qt::ElideMiddle, width );
     QRectF rect = QRectF( x, y, width, rowHeight );
     painter->drawText( rect, element.alignment() | Qt::TextSingleLine, text );
     painter->restore();
