@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QPainter>
 // KDE
+#include <kephal/screens.h>
 #include <KGlobalSettings>
 #include <KIconEffect>
 #include <KIconLoader>
@@ -58,7 +59,6 @@ void ClientItemDelegate::setConfig(const KWin::TabBox::ItemLayoutConfig& config)
 
 QSize ClientItemDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
     {
-    Q_UNUSED( option )
     if( !index.isValid() )
         return QSize( 0, 0 );
 
@@ -96,6 +96,18 @@ QSize ClientItemDelegate::sizeHint( const QStyleOptionViewItem& option, const QM
             if( element.type() == ItemLayoutConfigRowElement::ElementIcon && element.isRowSpan() )
                 height = qMax<qreal>( height, element.iconSize().height() );
             }
+        }
+    if (!option.rect.isValid())
+        {
+        // item may not be bigger than the screen geometry
+        const QRect screenRect = Kephal::ScreenUtils::screenGeometry( tabBox->activeScreen() );
+        width = qMin( width, qreal(screenRect.width()) );
+        height = qMin( height, qreal(screenRect.height()) );
+        }
+    else
+        {
+        width = qMin( width, qreal(option.rect.width()) );
+        height = qMin( height, qreal(option.rect.height()) );
         }
     return QSize( width + left + right, height + top + bottom );
     }
