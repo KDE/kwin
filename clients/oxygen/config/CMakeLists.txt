@@ -17,11 +17,11 @@ set(kwin_oxygen_config_PART_SRCS
   )
 
 kde4_add_ui_files(kwin_oxygen_config_PART_SRCS
-   oxygenconfigurationui.ui
-   oxygendetectwidget.ui
-   oxygenexceptiondialog.ui
-   oxygenexceptionlistwidget.ui
-   oxygenshadowconfigurationui.ui
+   ui/oxygenconfigurationui.ui
+   ui/oxygendetectwidget.ui
+   ui/oxygenexceptiondialog.ui
+   ui/oxygenexceptionlistwidget.ui
+   ui/oxygenshadowconfigurationui.ui
 )
 
 kde4_add_plugin(kwin_oxygen_config ${kwin_oxygen_config_PART_SRCS})
