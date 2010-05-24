@@ -37,10 +37,6 @@ namespace Oxygen
     QGroupBox( parent )
   {
     ui.setupUi( this );
-    ui.label->setBuddy( ui.shadowSize );
-    ui.label_2->setBuddy( ui.verticalOffset );
-    ui.label_3->setBuddy( ui.innerColor );
-    ui.label_4->setBuddy( ui.outerColor );
 
     // connections
     ui.outerColor->setEnabled( false );

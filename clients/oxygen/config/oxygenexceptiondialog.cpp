@@ -47,16 +47,12 @@ namespace Oxygen
         setMainWidget( local );
 
         // exception type
-        ui.label->setBuddy( ui.exceptionType );
         ui.exceptionType->insertItems( 0, QStringList()
             << Exception::typeName( Exception::WindowClassName, true )
             << Exception::typeName( Exception::WindowTitle, true )
             );
 
         connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT( selectWindowProperties() ) );
-
-        // regular expression
-        ui.label_2->setBuddy( ui.exceptionEditor );
 
         // border size
         ui.frameBorderComboBox->insertItems(0, QStringList()

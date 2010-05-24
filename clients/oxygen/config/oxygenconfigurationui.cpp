@@ -58,15 +58,11 @@ namespace Oxygen
       << Configuration::frameBorderName( Configuration::BorderOversized, true )
       );
 
-    ui.label->setBuddy( ui.frameBorder );
-
     ui.titleAlignment->insertItems(0, QStringList()
       << Configuration::titleAlignmentName( Qt::AlignLeft, true )
       << Configuration::titleAlignmentName( Qt::AlignHCenter, true )
       << Configuration::titleAlignmentName( Qt::AlignRight, true )
       );
-
-    ui.label_2->setBuddy( ui.titleAlignment );
 
     ui.buttonSize->insertItems(0, QStringList()
       << Configuration::buttonSizeName( Configuration::ButtonSmall, true )
@@ -76,15 +72,11 @@ namespace Oxygen
       << Configuration::buttonSizeName( Configuration::ButtonHuge, true )
       );
 
-    ui.label_3->setBuddy( ui.buttonSize );
-
     // advanced configuration
     ui.blendColor->insertItems(0, QStringList()
       << Configuration::blendColorName( Configuration::NoBlending, true )
       << Configuration::blendColorName( Configuration::RadialBlending, true )
       );
-
-    ui.label_4->setBuddy( ui.blendColor );
 
     // draw size grip
     ui.sizeGripMode->insertItems(0, QStringList()
@@ -92,22 +84,16 @@ namespace Oxygen
       << Configuration::sizeGripModeName( Configuration::SizeGripWhenNeeded, true )
       );
 
-    ui.label_5->setBuddy( ui.sizeGripMode );
-
     // shadows
     ui.shadowMode->insertItems(0, QStringList()
         << Configuration::shadowModeName( Configuration::OxygenShadows, true )
         << Configuration::shadowModeName( Configuration::KWinShadows, true )
         << Configuration::shadowModeName( Configuration::NoShadows, true ) );
 
-    ui.label_6->setBuddy( ui.shadowMode );
-
     ui.shadowCacheMode->insertItems(0, QStringList()
         << Configuration::shadowCacheModeName( Configuration::CacheDisabled, true )
         << Configuration::shadowCacheModeName( Configuration::CacheVariable, true )
         << Configuration::shadowCacheModeName( Configuration::CacheMaximum, true ) );
-
-    ui.shadowCacheModeLabel->setBuddy( ui.shadowCacheMode );
 
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
