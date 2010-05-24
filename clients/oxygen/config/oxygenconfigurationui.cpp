@@ -100,10 +100,14 @@ namespace Oxygen
         << Configuration::shadowModeName( Configuration::KWinShadows, true )
         << Configuration::shadowModeName( Configuration::NoShadows, true ) );
 
+    ui.label_6->setBuddy( ui.shadowMode );
+
     ui.shadowCacheMode->insertItems(0, QStringList()
         << Configuration::shadowCacheModeName( Configuration::CacheDisabled, true )
         << Configuration::shadowCacheModeName( Configuration::CacheVariable, true )
         << Configuration::shadowCacheModeName( Configuration::CacheMaximum, true ) );
+
+    ui.shadowCacheModeLabel->setBuddy( ui.shadowCacheMode );
 
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
