@@ -401,8 +401,9 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin();l != clients.constEnd();++l )
                 {
-                if ((*l)->isOnDesktop(c->desktop()) &&
-                   !(*l)->isMinimized()
+                if ((((*l)->isOnDesktop(c->desktop()) && !(*l)->isMinimized())
+                    || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(Workspace::currentDesktop())
+                    && !(*l)->isMinimized()))
                     && (!(*l)->clientGroup() || (*l) == (*l)->clientGroup()->visible())
                     && (*l) != c )
                     {
