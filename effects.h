@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 
 #include <QStack>
-#include <QMap>
+#include <QHash>
 
 
 class KService;
@@ -294,7 +294,7 @@ class EffectWindowImpl : public EffectWindow
     private:
         Toplevel* toplevel;
         Scene::Window* sw; // This one is used only during paint pass.
-        QMap<int, QVariant> dataMap;
+        QHash<int, QVariant> dataMap;
 };
 
 class EffectWindowGroupImpl
