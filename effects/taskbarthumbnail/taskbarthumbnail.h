@@ -67,7 +67,6 @@ class TaskbarThumbnailEffect
         int uOffsets;
         int uKernel;
         int uKernelSize;
-        bool alphaWindowsOnly;
     };
 
 } // namespace

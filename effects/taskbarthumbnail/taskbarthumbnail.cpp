@@ -47,14 +47,6 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     unsigned char dummy = 0;
     XChangeProperty( display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1 );
 
-    // With the NVIDIA driver the alpha values are set to 0 when drawing a window texture
-    // without an alpha channel on an FBO that has an alpha channel.
-    // This creates problems when the FBO is drawn on the backbuffer with blending enabled,
-    // so for now we only do high quality scaling with windows with alpha channels with
-    // the NVIDIA driver.
-    const QByteArray vendor = (const char *) glGetString( GL_VENDOR );
-    alphaWindowsOnly = vendor.startsWith("NVIDIA");
-
     if ( GLShader::fragmentShaderSupported() &&
          GLShader::vertexShaderSupported() &&
          GLRenderTarget::supported() )
@@ -193,13 +185,13 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
             if( thumbw == NULL )
                 continue;
             WindowPaintData thumbData( thumbw );
-            thumbData.opacity = data.opacity;
+            thumbData.opacity *= data.opacity;
             QRect r;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
             if( effects->compositingType() == KWin::OpenGLCompositing )
                 {
-                if ( shader && (!alphaWindowsOnly || thumbw->hasAlpha()) )
+                if ( shader )
                     {
                     int tx = thumb.rect.x() + w->x();
                     int ty = thumb.rect.y() + w->y();

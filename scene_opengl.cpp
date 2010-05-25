@@ -1838,6 +1838,16 @@ void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity,
             glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
             }
         }
+    else if( !alpha && opaque )
+        {
+        float constant[] = { 1.0, 1.0, 1.0, 1.0 };
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
+        }
     }
 
 void SceneOpenGL::Window::restoreStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
@@ -1893,9 +1903,9 @@ void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity,
             glDisable( tex->target());
             glActiveTexture(GL_TEXTURE0);
             }
-        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-        glColor4f( 0, 0, 0, 0 );
         }
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+    glColor4f( 0, 0, 0, 0 );
 
     glPopAttrib();  // ENABLE_BIT
     }
