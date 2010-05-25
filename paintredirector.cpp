@@ -47,8 +47,8 @@ QPixmap PaintRedirector::performPendingPaint()
     const QSize size = pending.boundingRect().size();
     if ( scratch.width() < size.width() || scratch.height() < size.height() )
         {
-        int w = qCeil( size.width() / 128. ) * 128;
-        int h = qCeil( size.height() / 128. ) * 128;
+        int w = ( size.width() + 128 ) & ~128;
+        int h = ( size.height() + 128 ) & ~128;
         scratch = QPixmap( qMax( scratch.width(), w ), qMax( scratch.height(), h ) );
         }
     scratch.fill( Qt::transparent );
