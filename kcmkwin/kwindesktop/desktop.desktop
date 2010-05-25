@@ -31,6 +31,7 @@ Name[sv]=Virtuella skrivbord
 Name[th]=พื้นที่ทำงานเสมือน
 Name[uk]=Віртуальні стільниці
 Name[x-test]=xxVirtual Desktopsxx
+Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=You can configure how many virtual desktops there are.
