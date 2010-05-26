@@ -41,7 +41,6 @@ namespace Oxygen
 
         // define buttons
         setButtons( Ok|Cancel );
-        showButtonSeparator( false );
         QWidget* local( new QWidget( this ) );
         ui.setupUi( local );
         setMainWidget( local );
