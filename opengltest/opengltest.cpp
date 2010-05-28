@@ -75,11 +75,19 @@ int main(int argc, char *argv[])
                                CWBackPixel | CWBorderPixel | CWColormap, &attr);
     glXMakeCurrent(dpy, win, ctx);
 
-    // Assume that glXCreatePixmap() works with DRI2 drivers, and the NVidia driver
+    // Assume that glXCreatePixmap() works with DRI2 drivers
     const GLubyte *renderer = glGetString(GL_RENDERER);
     if (strstr((const char *)renderer, "DRI2"))
         return 0;
 
+    // The Intel driver doesn't have DRI2 in the renderer string
+    if (strstr((const char *)renderer, "GEM"))
+        return 0;
+
+    if (strstr((const char *)renderer, "Gallium"))
+        return 0;
+
+    // Direct contexts also work with the NVidia driver
     const GLubyte *vendor = glGetString(GL_VENDOR);
     if (strstr((const char *)vendor, "NVIDIA"))
         return 0;
