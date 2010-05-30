@@ -123,7 +123,6 @@ static inline const KDecorationOptions* options()
 static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
 {
     pix->fill(g.background().color());
-    QPainter p(pix);
 
     if(QPixmap::defaultDepth() > 8){
         int i, destH, destS, destV, srcH, srcS, srcV;
@@ -150,6 +149,7 @@ static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
 
     }
     else{
+        QPainter p(pix);
         if(!lcDark1.mask()){
             lcDark1.setMask(lcDark1);
             lcDark2.setMask(lcDark2);
