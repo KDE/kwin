@@ -116,7 +116,7 @@ QMenu* Workspace::clientPopup()
         action->setIcon( KIcon( "preferences-system-windows-actions" ) );
         action->setData( Options::WindowRulesOp );
 
-        action = advanced_popup->addAction( i18n("&Special Application Settings...") );
+        action = advanced_popup->addAction( i18n("S&pecial Application Settings...") );
         action->setIcon( KIcon( "preferences-system-windows-actions" ) );
         action->setData( Options::ApplicationRulesOp );
 
