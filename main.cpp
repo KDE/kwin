@@ -40,6 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdefakes.h>
 #include <QtDBus/QtDBus>
 
+#include <QMessageBox>
+#include <QEvent>
+#include "scripttesting.h"
+#include "scripting/scripting.h"
+
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -53,6 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sm.h"
 #include "utils.h"
 #include "effects.h"
+#include <stdlib.h>
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -487,8 +493,11 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     args.add( "lock", ki18n( "Disable configuration options" ));
     args.add( "replace", ki18n( "Replace already-running ICCCM2.0-compliant window manager" ));
     args.add( "crashes <n>", ki18n( "Indicate that KWin has recently crashed n times" ));
+    args.add( "stest", ki18n( "Load the script testing dialog" ));
     KCmdLineArgs::addCmdLineOptions( args );
-
+    
+    ScriptTesting* stestWindow;
+    
     if( KDE_signal( SIGTERM, KWin::sighandler ) == SIG_IGN )
         KDE_signal( SIGTERM, SIG_IGN );
     if( KDE_signal( SIGINT, KWin::sighandler ) == SIG_IGN )
@@ -503,6 +512,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
     KGlobal::locale()->insertCatalog( "kwin_effects" );
+    KWin::Scripting scripting;
 
     // Announce when KWIN_DIRECT_GL is set for above HACK
     if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) == 0 )
@@ -518,8 +528,18 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     QDBusConnection::sessionBus().interface()->registerService(
         appname, QDBusConnectionInterface::DontQueueService );
+	
+    KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
+    
+    if(sargs->isSet("stest")) {
+	stestWindow = new ScriptTesting();
+	stestWindow->setEngine(&scripting);
+	stestWindow->runDefault();
+	//QEvent* showSTest = new QEvent(QEvent::Type(QEvent::User + 7));
+	//a.postEvent(stestWindow, showSTest, INT_MIN);
+    }
 
     return a.exec();
-    }
+}
 
 #include "main.moc"
