@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_glide
 X-KDE-PluginKeyword=glide
 
 Name=Glide
+Name[en_GB]=Glide
 Name[ia]=Glissar
 Name[id]=Glide
 Name[is]=Svífa

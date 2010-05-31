@@ -6928,6 +6928,7 @@ Name[x-test]=xxTiling Disabledxx
 Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
 Comment[en_GB]=Tiling mode has been disabled
+Comment[hr]=Popločavanje je onemogućeno
 Comment[ia]=Le mode de tegulas  ha essite dishabilitate
 Comment[id]=Tombol pengubinan telah dinonaktifkan
 Comment[ja]=タイリングモードが無効になりました
