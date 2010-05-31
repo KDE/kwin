@@ -110,11 +110,6 @@ set(kwin_KDEINIT_SRCS
    tiling.cpp
    tilinglayout.cpp
    tilinglayoutfactory.cpp
-   
-   #load the scripting related functions
-   scripttesting.cpp
-   scripting/scripting.cpp
-   scripting/workspace.cpp
 
    # tiling layouts
    # spiral
