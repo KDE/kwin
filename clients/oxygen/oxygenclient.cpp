@@ -272,7 +272,8 @@ namespace Oxygen
         if( configuration().frameBorder() == Configuration::BorderNone && !isShade() )
         {
 
-            return compositingActive() ?
+            if( configuration().hideTitleBar() ) return QRegion();
+            else return compositingActive() ?
                 helper().decoRoundedMask( frame, 1, 1, 1, 0 ):
                 helper().roundedMask( frame, 1, 1, 1, 0 );
 
