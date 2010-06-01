@@ -300,7 +300,18 @@ void DesktopChangeOSD::resize()
     setGeometry( rect );
     m_scene->setSceneRect( 0, 0, width, height );
     m_frame.resizeFrame( QSize( width, height ) );
-    setMask( m_frame.mask() );
+
+    if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled())
+        {
+        // blur background
+        Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame.mask());
+        Plasma::WindowEffects::overrideShadow(winId(), true);
+        }
+    else
+        {
+        // do not trim to mask with compositing enabled, otherwise shadows are cropped
+        setMask( m_frame.mask() );
+        }
 
     // resize item frame
     m_item_frame.setElementPrefix( "normal" );

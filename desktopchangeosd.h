@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGraphicsItem>
 #include <QTimer>
 #include <KDE/Plasma/FrameSvg>
+#include <KDE/Plasma/Theme>
+#include <KDE/Plasma/WindowEffects>
 #include <QWeakPointer>
 
 class QGraphicsScene;
