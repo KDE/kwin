@@ -12,7 +12,10 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
 Name=Window Rules
+Name[cs]=Pravidla oken
+Name[da]=Vinduesregler
 Name[en_GB]=Window Rules
+Name[et]=Akna reeglid
 Name[ia]=Regulas de Window
 Name[id]=Aturan Jendela
 Name[is]=Gluggahegðunarreglur

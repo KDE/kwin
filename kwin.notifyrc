@@ -2,6 +2,7 @@
 IconName=kwin
 Comment=KWin Window Manager
 Comment[cs]=Správce oken KWin
+Comment[da]=KWin vindueshåndtering
 Comment[de]=KWin-Fenstermanager
 Comment[el]=Διαχειριστής παραθύρων Kwin
 Comment[en_GB]=KWin Window Manager
@@ -6873,7 +6874,10 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[cs]=Dlaždicování zapnuto
+Name[da]=Fliseudlægning aktiveret
 Name[en_GB]=Tiling Enabled
+Name[et]=Paanimine on sisse lülitatud
 Name[ia]=tegulas Habilitate
 Name[id]=Pengubinan Diaktifkan
 Name[ja]=タイリングが有効
@@ -6890,7 +6894,9 @@ Name[uk]=Мозаїчне розташування увімкнено
 Name[x-test]=xxTiling Enabledxx
 Name[zh_TW]=鋪排已開啟
 Comment=Tiling mode has been enabled
+Comment[da]=Fliseudlægningstilstand er blevet aktiveret
 Comment[en_GB]=Tiling mode has been enabled
+Comment[et]=Paanimine on sisse lülitatud
 Comment[ia]=Le modo de tegula ha essite habilitate
 Comment[id]=Mode pengubinan telah diaktifkan
 Comment[ja]=タイリングモードが有効になりました
@@ -6910,7 +6916,10 @@ Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[cs]=Dlaždicování vypnuto
+Name[da]=Fliseudlægning deaktiveret
 Name[en_GB]=Tiling Disabled
+Name[et]=Paanimine on välja lülitatud
 Name[ia]=tegulas dishabilitate
 Name[id]=Pengubinan Dinonaktifkan
 Name[ja]=タイリングが無効
@@ -6927,7 +6936,9 @@ Name[uk]=Мозаїчне розташування вимкнено
 Name[x-test]=xxTiling Disabledxx
 Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
+Comment[da]=Fliseudlægningstilstand er blevet deaktiveret
 Comment[en_GB]=Tiling mode has been disabled
+Comment[et]=Paanimine on välja lülitatud
 Comment[hr]=Popločavanje je onemogućeno
 Comment[ia]=Le mode de tegulas  ha essite dishabilitate
 Comment[id]=Tombol pengubinan telah dinonaktifkan
@@ -6948,7 +6959,10 @@ Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[cs]=Rozložení dlaždic změněno
+Name[da]=Layout af fliseudlægning ændret
 Name[en_GB]=Tiling Layout Changed
+Name[et]=Paanimispaigutust muudeti
 Name[ia]=Layout a tegulas Cambiate
 Name[id]=Tata Letak Pengubinan Diubah
 Name[ja]=タイリング配列が変更
@@ -6965,7 +6979,10 @@ Name[uk]=Мозаїчне компонування змінено
 Name[x-test]=xxTiling Layout Changedxx
 Name[zh_TW]=鋪排佈局已變更
 Comment=Tiling Layout has been changed
+Comment[cs]=Rozložení dlaždic bylo změněno
+Comment[da]=Layout af fliseudlægning er blevet ændret
 Comment[en_GB]=Tiling Layout has been changed
+Comment[et]=Paanimispaigutust muudeti
 Comment[ia]=Le Layout a tegulas ha essite cambiate
 Comment[id]=Tata Letak Pengubinan telah diubah
 Comment[ja]=タイリング配列が変更されました

@@ -12,9 +12,12 @@ X-KDE-System-Settings-Parent-Category=desktop-appearance
 X-KDE-Weight=90
 
 Name=Window Decorations
+Name[cs]=Dekorace oken
+Name[da]=Vinduesdekorationer
 Name[de]=Fensterdekoration
 Name[en_GB]=Window Decorations
 Name[es]=Decoración de ventanas
+Name[et]=Akna dekoratsioonid
 Name[hr]=Prozorski ukrasi
 Name[ia]=Decorationes de fenestra
 Name[id]=Dekorasi Jendela
