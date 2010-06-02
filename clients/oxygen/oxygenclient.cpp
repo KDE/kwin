@@ -36,6 +36,7 @@
 
 #include <KLocale>
 #include <KColorUtils>
+#include <KDebug>
 
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
@@ -269,21 +270,22 @@ namespace Oxygen
             layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
             -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
 
+        QRegion mask;
         if( configuration().frameBorder() == Configuration::BorderNone && !isShade() )
         {
 
-            if( configuration().hideTitleBar() ) return QRegion();
-            else return compositingActive() ?
-                helper().decoRoundedMask( frame, 1, 1, 1, 0 ):
-                helper().roundedMask( frame, 1, 1, 1, 0 );
+            if( configuration().hideTitleBar() ) mask = QRegion();
+            else if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame, 1, 1, 1, 0 );
+            else mask = helper().roundedMask( frame, 1, 1, 1, 0 );
 
         } else {
 
-            return compositingActive() ?
-                helper().decoRoundedMask( frame ):
-                helper().roundedMask( frame );
+            if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame );
+            else mask = helper().roundedMask( frame );
 
         }
+
+        return mask;
 
     }
 
