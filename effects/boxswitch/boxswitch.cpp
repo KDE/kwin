@@ -967,9 +967,12 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         }
     else
         {
+        int mask = PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED;
+        if (!mAnimateSwitch)
+            mask |= PAINT_WINDOW_LANCZOS;
         effects->drawWindow( w,
-            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
-            windows[ w ]->thumbnail, data );
+                 mask,
+                windows[ w ]->thumbnail, data );
         }
     }
 

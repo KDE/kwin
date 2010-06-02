@@ -33,6 +33,7 @@ namespace KWin
 class Workspace;
 class Deleted;
 class EffectWindowImpl;
+class LanczosFilter;
 
 // The base class for compositing backends.
 class Scene
@@ -81,7 +82,9 @@ class Scene
             // Clear whole background as the very first step, without optimizing it
             PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
             // Temporary solution since (_OPAQUE | _TRANSLUCENT) is not working currently.
-            PAINT_DECORATION_ONLY = 1 << 7
+            PAINT_DECORATION_ONLY = 1 << 7,
+            // Window will be painted with a lanczos filter.
+            PAINT_WINDOW_LANCZOS = 1 << 8
             };
         // types of filtering available
         enum ImageFilterType { ImageFilterFast, ImageFilterGood };
@@ -140,6 +143,7 @@ class Scene
         Workspace* wspace;
         bool has_waitSync;
         bool selfCheckDone;
+        LanczosFilter* lanczos_filter;
     };
 
 // The base class for windows representations in composite backends

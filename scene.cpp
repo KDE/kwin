@@ -76,6 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "lanczosfilter.h"
 
 #include <kephal/screens.h>
 
@@ -92,11 +93,13 @@ Scene::Scene( Workspace* ws )
     : wspace( ws )
     , has_waitSync( false )
     , selfCheckDone( false )
+    , lanczos_filter( new LanczosFilter() )
     {
     }
     
 Scene::~Scene()
     {
+    delete lanczos_filter;
     }
 
 // returns mask and possibly modified region
@@ -321,7 +324,10 @@ void Scene::finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, Win
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
-    w->sceneWindow()->performPaint( mask, region, data );
+    if (mask & PAINT_WINDOW_LANCZOS )
+        lanczos_filter->performPaint( w, mask, region, data );
+    else
+        w->sceneWindow()->performPaint( mask, region, data );
     }
 
 QList< QPoint > Scene::selfCheckPoints() const

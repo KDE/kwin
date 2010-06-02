@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/resources">
+  <file>lanczos-vertex.glsl</file>
+  <file>lanczos-fragment.glsl</file>
+</qresource>
+</RCC>

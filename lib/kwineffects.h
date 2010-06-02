@@ -54,7 +54,6 @@ class QKeyEvent;
 namespace KWin
 {
 
-
 class EffectWindow;
 class EffectWindowGroup;
 class Effect;
@@ -294,7 +293,11 @@ class KWIN_EXPORT Effect
             /**
             * Temporary solution since (_OPAQUE | _TRANSLUCENT) is not working currently.
             **/
-            PAINT_DECORATION_ONLY = 1 << 7
+            PAINT_DECORATION_ONLY = 1 << 7,
+            /**
+             * Window will be painted with a lanczos filter.
+             **/
+            PAINT_WINDOW_LANCZOS = 1 << 8
         };
 
         /**

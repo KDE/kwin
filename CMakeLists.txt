@@ -101,6 +101,7 @@ set(kwin_KDEINIT_SRCS
    scene_basic.cpp
    scene_xrender.cpp
    scene_opengl.cpp
+   lanczosfilter.cpp
    deleted.cpp
    effects.cpp
    compositingprefs.cpp
@@ -126,7 +127,7 @@ set(kwin_KDEINIT_SRCS
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
-
+qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
