@@ -95,6 +95,8 @@ void DimScreenEffect::windowActivated( EffectWindow *w )
     check << "kdesu kdesu";
     check << "kdesudo kdesudo";
     check << "polkit-kde-manager polkit-kde-manager";
+    check << "polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1";
+    check << "pinentry pinentry";
     if( check.contains( w->windowClass() ) )
         {
         mActivated = true;
