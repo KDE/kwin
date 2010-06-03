@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 
 #include <kephal/screens.h>
+#include <KDE/KGlobalSettings>
 
 namespace KWin
 {
@@ -3006,7 +3007,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     if ( !moveResizeMode )
         {
         QPoint p( QPoint( x - padding_left, y - padding_top ) - moveOffset );
-        if (p.manhattanLength() >= 6)
+        if (p.manhattanLength() >= KGlobalSettings::dndEventDelay())
             {
             if( !startMoveResize())
                 {
