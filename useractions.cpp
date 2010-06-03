@@ -866,22 +866,28 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
         case Options::MoveClientInGroupLeftOp:
             {
-            int c_id = c->clientGroup()->indexOfClient( c );
-            int size = c->clientGroup()->clients().count();
-            if( c_id > 0 )
-                c->clientGroup()->setVisible( c_id - 1 );
-            else
-                c->clientGroup()->setVisible( size - 1 );
+            if( clientGroup() )
+                {
+                int c_id = c->clientGroup()->indexOfClient( c );
+                int size = c->clientGroup()->clients().count();
+                if( c_id > 0 )
+                    c->clientGroup()->setVisible( c_id - 1 );
+                else
+                    c->clientGroup()->setVisible( size - 1 );
+		}
             break;
             }
         case Options::MoveClientInGroupRightOp:
             {
-            int c_id = c->clientGroup()->indexOfClient( c );
-            int size = c->clientGroup()->clients().count();
-            if( c_id < size - 1 )
-                c->clientGroup()->setVisible( c_id + 1 );
-            else
-                c->clientGroup()->setVisible( 0 );
+            if( clientGroup() )
+                {
+                int c_id = c->clientGroup()->indexOfClient( c );
+                int size = c->clientGroup()->clients().count();
+                if( c_id < size - 1 )
+                    c->clientGroup()->setVisible( c_id + 1 );
+                else
+                    c->clientGroup()->setVisible( 0 );
+		}
             break;
             }
         case Options::CloseClientGroupOp:
