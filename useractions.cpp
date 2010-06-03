@@ -428,7 +428,7 @@ void Workspace::initAddToTabGroup()
 
 void Workspace::slotAddToTabGroup( QAction* action )
     {
-    if( !action->data().isValid() )
+    if( !action->data().isValid() || !active_popup_client->clientGroup() )
         return;
     moveItemToClientGroup( active_popup_client->clientGroup(),
         active_popup_client->clientGroup()->indexOfClient( active_popup_client ),
