@@ -2979,7 +2979,7 @@ void Client::startDelayedMoveResize()
     delayedMoveResizeTimer = new QTimer( this );
     connect( delayedMoveResizeTimer, SIGNAL( timeout()), this, SLOT( delayedMoveResize()));
     delayedMoveResizeTimer->setSingleShot( true );
-    delayedMoveResizeTimer->start( QApplication::doubleClickInterval());
+    delayedMoveResizeTimer->start( QApplication::startDragTime() );
     }
 
 void Client::stopDelayedMoveResize()
