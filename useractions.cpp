@@ -866,7 +866,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
         case Options::MoveClientInGroupLeftOp:
             {
-            if( clientGroup() )
+            if( c->clientGroup() )
                 {
                 int c_id = c->clientGroup()->indexOfClient( c );
                 int size = c->clientGroup()->clients().count();
@@ -879,7 +879,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             }
         case Options::MoveClientInGroupRightOp:
             {
-            if( clientGroup() )
+            if( c->clientGroup() )
                 {
                 int c_id = c->clientGroup()->indexOfClient( c );
                 int size = c->clientGroup()->clients().count();
