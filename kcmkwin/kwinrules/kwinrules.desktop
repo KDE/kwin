@@ -19,6 +19,7 @@ Name[et]=Akna reeglid
 Name[ia]=Regulas de Window
 Name[id]=Aturan Jendela
 Name[is]=Gluggahegðunarreglur
+Name[it]=Regole delle finestre
 Name[ja]=ウィンドウルール
 Name[kk]=Терезе тәртібі
 Name[km]=ក្បួន​បង្អួច
@@ -33,6 +34,7 @@ Name[sv]=Fönsterregler
 Name[th]=กฎต่าง ๆ ของหน้าต่าง
 Name[uk]=Правила вікон
 Name[x-test]=xxWindow Rulesxx
+Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Configure settings specifically for a window
