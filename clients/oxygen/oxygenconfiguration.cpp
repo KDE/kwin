@@ -35,7 +35,7 @@ namespace Oxygen
     Configuration::Configuration( void ):
         titleAlignment_( Qt::AlignHCenter ),
         buttonSize_( ButtonDefault ),
-        frameBorder_( BorderDefault ),
+        frameBorder_( BorderTiny ),
         blendColor_( RadialBlending ),
         sizeGripMode_( SizeGripWhenNeeded ),
         drawSeparator_( false ),
