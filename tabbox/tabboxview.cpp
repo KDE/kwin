@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kephal/screens.h>
 #include <Plasma/FrameSvg>
 #include <KDebug>
+#include <KDE/Plasma/Theme>
+#include <KDE/Plasma/WindowEffects>
 
 namespace KWin
 {
@@ -123,7 +125,17 @@ bool TabBoxView::event( QEvent* event )
 void TabBoxView::resizeEvent(QResizeEvent* event)
     {
     m_frame->resizeFrame( event->size() );
-    setMask( m_frame->mask() );
+    if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled())
+        {
+        // blur background
+        Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame->mask());
+        Plasma::WindowEffects::overrideShadow(winId(), true);
+        }
+    else
+        {
+        // do not trim to mask with compositing enabled, otherwise shadows are cropped
+        setMask( m_frame->mask() );
+        }
     QWidget::resizeEvent(event);
     }
 
