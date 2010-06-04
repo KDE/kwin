@@ -90,8 +90,8 @@ namespace Oxygen
         if( e->timerId() != animationLockTimer_.timerId() )
         { return QObject::timerEvent( e ); }
 
-        // stop veto
-        animationLockTimer_.stop();
+        // unlock
+        unlockAnimations();
 
         if( !isAnimated() )
         {

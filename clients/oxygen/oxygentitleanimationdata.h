@@ -95,7 +95,6 @@ namespace Oxygen
         //!@name animation
         //@{
 
-
         //! returns true if animations are locked
         bool isLocked( void ) const
         { return animationLockTimer_.isActive(); }
@@ -107,6 +106,10 @@ namespace Oxygen
         //! start lock animation timer
         void lockAnimations( void )
         { animationLockTimer_.start( lockTime_, this ); }
+
+        //! start lock animation timer
+        void unlockAnimations( void )
+        { animationLockTimer_.stop(); }
 
         //! start title transition animation
         void startAnimation( void )
