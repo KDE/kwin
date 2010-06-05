@@ -40,7 +40,8 @@ namespace Oxygen
 
     // connections
     ui.outerColor->setEnabled( false );
-    connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), ui.outerColor, SLOT( setEnabled( bool ) ) );
+    connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
+    connect( this, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
 
     connect( ui.shadowSize, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
     connect( ui.verticalOffset, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
