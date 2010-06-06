@@ -47,12 +47,6 @@
 namespace Oxygen
 {
 
-    //___________________________________________
-    void renderDot(QPainter *p, const QPointF &point, qreal diameter)
-    {
-        p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
-    }
-
     //_________________________________________________________
     QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
     {
@@ -1120,14 +1114,14 @@ namespace Oxygen
             {
 
                 // Draw right side 3-dots resize handles
-                qreal cenY = h / 2 + y + 0.5;
-                qreal posX = w + x - 2.5;
+                //qreal cenY = h / 2 + y + 0.5;
+                //qreal posX = w + x - 2.5;
+                qreal cenY = h / 2 + y ;
+                qreal posX = w + x - 3;
 
-                painter->setPen(Qt::NoPen);
-                painter->setBrush( color );
-                renderDot( painter, QPointF(posX, cenY - 3), 1.8);
-                renderDot( painter, QPointF(posX, cenY), 1.8);
-                renderDot( painter, QPointF(posX, cenY + 3), 1.8);
+                helper().renderDot( painter, QPointF(posX, cenY - 3), color);
+                helper().renderDot( painter, QPointF(posX, cenY), color);
+                helper().renderDot( painter, QPointF(posX, cenY + 3), color);
 
             }
 
@@ -1135,14 +1129,11 @@ namespace Oxygen
             if( isResizable() && !isShade() && !configuration().drawSizeGrip() )
             {
 
-                painter->setPen(Qt::NoPen);
-                painter->setBrush( color );
-
                 painter->save();
                 painter->translate(x + w-9, y + h-9);
-                renderDot( painter, QPointF(2.5, 6.5), 1.8);
-                renderDot( painter, QPointF(5.5, 5.5), 1.8);
-                renderDot( painter, QPointF(6.5, 2.5), 1.8);
+                helper().renderDot( painter, QPointF(2, 6), color);
+                helper().renderDot( painter, QPointF(5, 5), color);
+                helper().renderDot( painter, QPointF(6, 2), color);
                 painter->restore();
             }
 
@@ -1437,7 +1428,7 @@ namespace Oxygen
             renderFloatFrame( &painter, frame, palette );
 
             // resize handles
-            renderDots( &painter, frame, QColor(0, 0, 0, 66) );
+            renderDots( &painter, frame, backgroundColor( widget(), palette ) );
             painter.restore();
         }
 
