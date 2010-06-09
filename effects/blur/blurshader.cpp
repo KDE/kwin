@@ -260,7 +260,7 @@ void GLSLBlurShader::init()
     stream2 << "{\n";
     stream2 << "    vec4 sum = texture2D(texUnit, samplePos0) * kernel0;\n";
     for (int i = 1; i < size; i++)
-        stream2 << "    sum += texture2D(texUnit, samplePos" << i << ") * kernel"
+        stream2 << "    sum = sum + texture2D(texUnit, samplePos" << i << ") * kernel"
                 << (i > center ? size - i - 1 : i) << ";\n";
     stream2 << "    gl_FragColor = sum;\n";
     stream2 << "}\n";
