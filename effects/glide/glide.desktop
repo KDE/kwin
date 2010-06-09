@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Glide
 Name[ca]=Lliscament
+Name[ca@valencia]=Lliscament
 Name[da]=Glid
 Name[en_GB]=Glide
 Name[es]=Glide
@@ -27,6 +28,7 @@ Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
 Comment[ca]=Provoca un efecte de lliscament quan s'obren i es tanquen
+Comment[ca@valencia]=Provoca un efecte de lliscament quan s'obren i es tanquen
 Comment[da]=Glideeffekt til vinduer når de åbnes og lukkes
 Comment[en_GB]=Windows Glide Effect as they are open and closed
 Comment[es]=Efectos Glide cuando se abren y cierran ventanas
