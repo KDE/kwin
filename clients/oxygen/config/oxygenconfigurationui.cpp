@@ -137,8 +137,9 @@ namespace Oxygen
     expertMode_ = value;
     ui.animateTitleChange->setVisible( expertMode_ );
     ui.narrowButtonSpacing->setVisible( expertMode_ );
-    ui.shadowCacheModeLabel->setVisible( expertMode_ );
-    ui.shadowCacheMode->setVisible( expertMode_ );
+
+    // shadow mode
+    ui.shadowsExpertWidget->setVisible( expertMode_ );
 
     if( expertMode_ ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     else ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
