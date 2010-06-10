@@ -679,6 +679,8 @@ void PresentWindowsEffect::tabBoxAdded( int mode )
         setActive( true );
         if( m_activated )
             effects->refTabBox();
+        else
+            m_tabBoxEnabled = false;
         }
     }
 
