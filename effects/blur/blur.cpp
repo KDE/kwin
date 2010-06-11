@@ -227,8 +227,6 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     {
         const QRegion expanded = expand(shape) & screen;
         const QRect r = expanded.boundingRect();
-        const QPoint offset = -shape.boundingRect().topLeft() +
-                        (shape.boundingRect().topLeft() - r.topLeft());
 
         // Create a scratch texture and copy the area in the back buffer that we're
         // going to blur into it
@@ -242,20 +240,20 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
         // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
         effects->pushRenderTarget(target);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         shader->bind();
         shader->setDirection(Qt::Horizontal);
         shader->setPixelDistance(1.0 / r.width());
 
-        // Set up the texture matrix to normalize the coordinates
+        // Set up the texture matrix to transform from screen coordinates
+        // to texture coordinates.
         glMatrixMode(GL_TEXTURE);
         glPushMatrix();
         glLoadIdentity();
         glScalef(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-        glTranslatef(0, -scratch.height(), 0); 
+        glTranslatef(-r.x(), -scratch.height() - r.y(), 0); 
 
-        drawRegion(expanded.translated(-r.topLeft()));
+        drawRegion(expanded);
 
         effects->popRenderTarget();
         scratch.unbind();
@@ -281,7 +279,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         // to texture coordinates.
         glLoadIdentity();
         glScalef(1.0 / tex->width(), -1.0 / tex->height(), 1);
-        glTranslatef(offset.x(), -tex->height() + offset.y(), 0); 
+        glTranslatef(0, -tex->height(), 0); 
 
         drawRegion(shape);
 
