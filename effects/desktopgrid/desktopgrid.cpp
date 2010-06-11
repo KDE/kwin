@@ -436,9 +436,12 @@ void DesktopGridEffect::windowClosed( EffectWindow* w )
             }
         else
             {
-            WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
-            manager.unmanage(w);
-            m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
+            if( w->desktop() <= effects->numberOfDesktops() )
+                {
+                WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
+                manager.unmanage(w);
+                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
+                }
             }
         }
     for( QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
