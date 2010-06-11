@@ -127,6 +127,9 @@ set(kwin_KDEINIT_SRCS
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
+qt4_add_dbus_interface( kwin_KDEINIT_SRCS
+  ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/org.kde.KSMServerInterface.xml ksmserver_interface)
+
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})

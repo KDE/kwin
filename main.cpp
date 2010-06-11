@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <kdefakes.h>
 #include <QtDBus/QtDBus>
-
+#include <stdlib.h>
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -48,12 +48,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KComboBox>
 #include <QVBoxLayout>
 
+#include <ksmserver_interface.h>
+
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
 #include "effects.h"
-#include <stdlib.h>
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -500,7 +501,10 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     // HACK: this is needed to work around a Qt4.4.0RC1 bug (#157659)
     setenv( "QT_SLOW_TOPLEVEL_RESIZE", "1", true );
 
+    org::kde::KSMServerInterface ksmserver( "org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
+    ksmserver.suspendStartup( "kwin" );
     KWin::Application a;
+    ksmserver.resumeStartup( "kwin" );
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
     KGlobal::locale()->insertCatalog( "kwin_effects" );
