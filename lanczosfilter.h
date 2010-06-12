@@ -53,9 +53,11 @@ class LanczosFilter
         void updateOffscreenSurfaces();
         QVector<QVector4D> createKernel(float delta);
         QVector<QVector2D> createOffsets(int count, float width, Qt::Orientation direction);
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture *m_offscreenTex;
         GLRenderTarget *m_offscreenTarget;
         GLShader *m_shader;
+#endif
         QBasicTimer m_timer;
         bool m_inited;
         int m_uTexUnit;

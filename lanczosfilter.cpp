@@ -36,18 +36,22 @@ namespace KWin
 
 LanczosFilter::LanczosFilter( QObject* parent )
     : QObject( parent )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , m_offscreenTex( 0 )
     , m_offscreenTarget( 0 )
     , m_shader( 0 )
+#endif
     , m_inited( false)
     {
     }
 
 LanczosFilter::~LanczosFilter()
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_offscreenTarget;
     delete m_offscreenTex;
     delete m_shader;
+#endif
     }
 
 void LanczosFilter::init()
@@ -82,6 +86,7 @@ void LanczosFilter::init()
 
 void LanczosFilter::updateOffscreenSurfaces()
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     int w = displayWidth();
     int h = displayHeight();
     if ( !GLTexture::NPOTTextureSupported() )
@@ -101,6 +106,7 @@ void LanczosFilter::updateOffscreenSurfaces()
         m_offscreenTex->setWrapMode( GL_CLAMP_TO_EDGE );
         m_offscreenTarget = new GLRenderTarget( m_offscreenTex );
         }
+#endif
     }
 
 static float sinc( float x )
@@ -268,6 +274,7 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
 
 void LanczosFilter::timerEvent( QTimerEvent *event )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (event->timerId() == m_timer.timerId())
         {
         m_timer.stop();
@@ -277,6 +284,7 @@ void LanczosFilter::timerEvent( QTimerEvent *event )
         m_offscreenTarget = 0;
         m_offscreenTex = 0;
         }
+#endif
     }
 
 } // namespace
