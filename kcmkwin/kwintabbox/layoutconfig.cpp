@@ -20,13 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "layoutconfig.h"
 #include "ui_layoutconfig.h"
-#include "previewhandlerimpl.h"
 // tabbox
 #include "tabboxconfig.h"
-#include "tabboxhandler.h"
-#include "tabboxview.h"
-// Qt
-#include <QVBoxLayout>
 
 namespace KWin
 {
@@ -40,17 +35,14 @@ class LayoutConfigPrivate
     {
     public:
         LayoutConfigPrivate();
-        ~LayoutConfigPrivate() { delete previewTabbox; }
+        ~LayoutConfigPrivate() { }
 
     TabBoxConfig config;
     Ui::LayoutConfigForm ui;
-    PreviewHandlerImpl* previewTabbox;
     };
 
 LayoutConfigPrivate::LayoutConfigPrivate()
-    : previewTabbox( new PreviewHandlerImpl() )
     {
-    previewTabbox->setConfig( config );
     }
 
 /***************************************************
@@ -61,13 +53,6 @@ LayoutConfig::LayoutConfig(QWidget* parent)
     {
     d = new LayoutConfigPrivate;
     d->ui.setupUi( this );
-    QVBoxLayout* layout = new QVBoxLayout;
-    QWidget* tabBoxView = tabBox->tabBoxView();
-    tabBoxView->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
-    layout->addWidget( tabBoxView );
-    d->ui.previewWidget->setLayout( layout );
-    tabBox->createModel();
-    tabBox->setCurrentIndex( tabBox->first() );
 
     // init the item layout combo box
     d->ui.itemLayoutCombo->addItem( i18n("Informative") );
@@ -107,7 +92,6 @@ TabBoxConfig& LayoutConfig::config() const
 void LayoutConfig::setConfig( const KWin::TabBox::TabBoxConfig& config )
     {
     d->config = config;
-    tabBox->setConfig( config );
     d->ui.selectedItemBox->setChecked( config.selectedItemViewPosition() != TabBoxConfig::NonePosition );
 
     d->ui.layoutCombo->setCurrentIndex( config.layout() );
@@ -232,10 +216,6 @@ void LayoutConfig::changed()
         {
         d->config.setSelectedItemViewPosition( TabBoxConfig::NonePosition );
         }
-    // update the preview
-    tabBox->setConfig( d->config );
-    d->ui.previewWidget->layout()->invalidate();
-    d->ui.previewWidget->update();
     }
 
 } // namespace KWin
