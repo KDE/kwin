@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector2D>
 #include <QVector4D>
 
+#include <kwinconfig.h>
+
 namespace KWin
 {
 
