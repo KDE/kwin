@@ -214,9 +214,9 @@ QString TabBoxClientImpl::caption() const
     return m_client->caption();
     }
 
-QPixmap TabBoxClientImpl::icon() const
+QPixmap TabBoxClientImpl::icon( const QSize& size ) const
     {
-    return m_client->icon();
+    return m_client->icon( size );
     }
 
 WId TabBoxClientImpl::window() const

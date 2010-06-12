@@ -241,7 +241,7 @@ QPixmap Group::icon() const
     else if( leader_wid != None )
         {
         QPixmap ic;
-        Client::readIcons( leader_wid, &ic, NULL );
+        Client::readIcons( leader_wid, &ic, NULL, NULL, NULL );
         return ic;
         }
     return QPixmap();
@@ -254,7 +254,33 @@ QPixmap Group::miniIcon() const
     else if( leader_wid != None )
         {
         QPixmap ic;
-        Client::readIcons( leader_wid, NULL, &ic );
+        Client::readIcons( leader_wid, NULL, &ic, NULL, NULL );
+        return ic;
+        }
+    return QPixmap();
+    }
+
+QPixmap Group::bigIcon() const
+    {
+    if( leader_client != NULL )
+        return leader_client->bigIcon();
+    else if( leader_wid != None )
+        {
+        QPixmap ic;
+        Client::readIcons( leader_wid, NULL, NULL, &ic, NULL );
+        return ic;
+        }
+    return QPixmap();
+    }
+
+QPixmap Group::hugeIcon() const
+    {
+    if( leader_client != NULL )
+        return leader_client->hugeIcon();
+    else if( leader_wid != None )
+        {
+        QPixmap ic;
+        Client::readIcons( leader_wid, NULL, NULL, NULL, &ic );
         return ic;
         }
     return QPixmap();

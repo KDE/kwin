@@ -1878,7 +1878,7 @@ void Client::getMotifHints()
         updateDecoration( true ); // Check if noborder state has changed
     }
 
-void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )
+void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon )
     {
     // Get the icons, allow scaling
     if( icon != NULL )
@@ -1890,16 +1890,32 @@ void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )
         else
             *miniicon = QPixmap();
         }
+    if( bigicon != NULL )
+        {
+        if( icon == NULL || !icon->isNull() )
+            *bigicon = KWindowSystem::icon( win, 64, 64, false, KWindowSystem::NETWM | KWindowSystem::WMHints );
+        else
+            *bigicon = QPixmap();
+        }
+    if( hugeicon != NULL )
+        {
+        if( icon == NULL || !icon->isNull() )
+            *hugeicon = KWindowSystem::icon( win, 128, 128, false, KWindowSystem::NETWM | KWindowSystem::WMHints );
+        else
+            *hugeicon = QPixmap();
+        }
     }
 
 void Client::getIcons()
     {
     // First read icons from the window itself
-    readIcons( window(), &icon_pix, &miniicon_pix );
+    readIcons( window(), &icon_pix, &miniicon_pix, &bigicon_pix, &hugeicon_pix );
     if( icon_pix.isNull() )
         { // Then try window group
         icon_pix = group()->icon();
         miniicon_pix = group()->miniIcon();
+        bigicon_pix = group()->bigIcon();
+        hugeicon_pix = group()->hugeIcon();
         }
     if( icon_pix.isNull() && isTransient() )
         { // Then mainclients
@@ -1910,15 +1926,32 @@ void Client::getIcons()
             {
             icon_pix = (*it)->icon();
             miniicon_pix = (*it)->miniIcon();
+            bigicon_pix = (*it)->bigIcon();
+            hugeicon_pix = (*it)->hugeIcon();
             }
         }
     if( icon_pix.isNull())
         { // And if nothing else, load icon from classhint or xapp icon
         icon_pix = KWindowSystem::icon( window(), 32, 32, true, KWindowSystem::ClassHint | KWindowSystem::XApp );
         miniicon_pix = KWindowSystem::icon( window(), 16, 16, true, KWindowSystem::ClassHint | KWindowSystem::XApp );
+        bigicon_pix = KWindowSystem::icon( window(), 64, 64, false, KWindowSystem::ClassHint | KWindowSystem::XApp );
+        hugeicon_pix = KWindowSystem::icon( window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp );
         }
     if( isManaged() && decoration != NULL )
         decoration->iconChange();
+    }
+
+QPixmap Client::icon( const QSize& size ) const
+    {
+    const int iconSize = qMin( size.width(), size.height() );
+    if( iconSize <= 16 )
+        return miniIcon();
+    else if( iconSize <= 32 )
+        return icon();
+    if( iconSize <= 64 )
+        return bigIcon();
+    else
+        return hugeIcon();
     }
 
 void Client::getWindowProtocols()

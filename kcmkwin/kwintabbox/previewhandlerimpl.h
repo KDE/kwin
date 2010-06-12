@@ -38,7 +38,7 @@ class PreviewClientImpl :
 
         virtual QString caption() const;
         virtual int height() const;
-        virtual QPixmap icon() const;
+        virtual QPixmap icon( const QSize& size = QSize( 32, 32 ) ) const;
         virtual bool isMinimized() const;
         virtual int width() const;
         virtual WId window() const;

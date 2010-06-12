@@ -44,9 +44,9 @@ QString PreviewClientImpl::caption() const
     return info.visibleName();
     }
 
-QPixmap PreviewClientImpl::icon() const
+QPixmap PreviewClientImpl::icon( const QSize& size ) const
     {
-    return KWindowSystem::icon( m_id );
+    return KWindowSystem::icon( m_id, size.width(), size.height(), true );
     }
 
 bool PreviewClientImpl::isMinimized() const

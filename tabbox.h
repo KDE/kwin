@@ -65,7 +65,7 @@ class TabBoxClientImpl : public TabBoxClient
         virtual ~TabBoxClientImpl();
 
         virtual QString caption() const;
-        virtual QPixmap icon() const;
+        virtual QPixmap icon( const QSize& size = QSize( 32, 32 ) ) const;
         virtual WId window() const;
         virtual bool isMinimized() const;
         virtual int x() const;

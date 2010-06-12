@@ -172,7 +172,7 @@ void ClientItemDelegate::paint( QPainter* painter, const QStyleOptionViewItem& o
                     if( element.isRowSpan() )
                         iconY = option.rect.top() + option.rect.height() * 0.5 - element.iconSize().height() * 0.5;
                     QRectF iconRect = QRectF( iconX, iconY, element.iconSize().width(), element.iconSize().height() );
-                    QPixmap icon = client->icon();
+                    QPixmap icon = client->icon( element.iconSize().toSize() );
                     if( !icon.isNull() )
                         {
                         if( m_config.isHighlightSelectedIcons() && option.state & QStyle::State_Selected )
@@ -185,7 +185,20 @@ void ClientItemDelegate::paint( QPainter* painter, const QStyleOptionViewItem& o
                             KIconEffect *effect = KIconLoader::global()->iconEffect();
                             icon = effect->apply( icon, KIconLoader::Desktop, KIconLoader::DisabledState );
                             }
-                        QRectF sourceRect = QRectF( 0.0, 0.0, icon.width(), icon.height() );
+                        QRectF sourceRect = QRectF( QPointF( 0.0, 0.0 ), element.iconSize() );
+                        if( icon.width() > element.iconSize().width() )
+                            {
+                            // if icon is bigger than our region, scale it down
+                            sourceRect = QRectF( 0.0, 0.0, icon.width(), icon.height() );
+                            }
+                        else if ( icon.width() < element.iconSize().width() )
+                            {
+                            // don't scale - center in requested area
+                            sourceRect = QRectF( 0.0, 0.0, icon.width(), icon.height() );
+                            iconRect = QRectF( iconX + (element.iconSize().width()-icon.width())/2,
+                                               iconY + (element.iconSize().height()-icon.height())/2,
+                                               icon.width(), icon.height() );
+                            }
                         painter->drawPixmap( iconRect, icon, sourceRect );
                         }
                     x += element.width();

@@ -44,6 +44,8 @@ class Group
         const ClientList& members() const;
         QPixmap icon() const;
         QPixmap miniIcon() const;
+        QPixmap bigIcon() const;
+        QPixmap hugeIcon() const;
         void addMember( Client* member );
         void removeMember( Client* member );
         void gotLeader( Client* leader );
