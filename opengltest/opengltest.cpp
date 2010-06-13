@@ -37,11 +37,6 @@ int main(int argc, char *argv[])
     if (!glXQueryVersion(dpy, &major, &minor))
         return 1;
 
-    // glXCreatePixmap() is a GLX 1.3+ function.
-    // It is also provided by EXT_texture_from_pixmap, but only for indirect contexts.
-    if (major == 1 && minor < 3)
-        return 1;
-
     int attribs[] = {
         GLX_RGBA,
         GLX_RED_SIZE,    1,
@@ -62,7 +57,10 @@ int main(int argc, char *argv[])
     if (!xvi)
         return 1;
 
+    // Create a direct rendering context
     GLXContext ctx = glXCreateContext(dpy, xvi, NULL, True);
+    if (!glXIsDirect(dpy, ctx))
+        return 1;
 
     // Create a window using the visual.
     // We only need it to make the context current
@@ -73,9 +71,17 @@ int main(int argc, char *argv[])
     Window win = XCreateWindow(dpy, DefaultRootWindow(dpy), 0, 0, 1, 1, 0,
                                xvi->depth, InputOutput, xvi->visual,
                                CWBackPixel | CWBorderPixel | CWColormap, &attr);
-    glXMakeCurrent(dpy, win, ctx);
 
-    // Assume that glXCreatePixmap() works with DRI2 drivers
+    // Try to make the context current
+    if (!glXMakeCurrent(dpy, win, ctx))
+        return 1;
+
+    // glXCreatePixmap() is a GLX 1.3+ function, but it's also provided by EXT_texture_from_pixmap
+    const char *glxExtensions = glXQueryExtensionsString(dpy, DefaultScreen(dpy));
+    if ((major == 1 && minor < 3) && !strstr(glxExtensions, "GLX_EXT_texture_from_pixmap"))
+        return 1;
+
+    // Assume that direct rendering works with DRI2 drivers
     const GLubyte *renderer = glGetString(GL_RENDERER);
     if (strstr((const char *)renderer, "DRI2"))
         return 0;
