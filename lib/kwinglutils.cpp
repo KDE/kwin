@@ -971,6 +971,26 @@ bool GLRenderTarget::mSupported = false;
 void GLRenderTarget::initStatic()
     {
     mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
+    if( mSupported )
+        {
+        // some drivers claim to support the extension, but fail to return a complete FBO (see Bug 240956)
+        // generate a FBO and test if it is valid. If it isn't valid there's no need to claim that FBO's are supported
+        int w = displayWidth();
+        int h = displayHeight();
+        if ( !GLTexture::NPOTTextureSupported() )
+            {
+            w = nearestPowerOfTwo( w );
+            h = nearestPowerOfTwo( h );
+            }
+        GLTexture* tex = new GLTexture( w, h );
+        tex->setFilter( GL_LINEAR );
+        tex->setWrapMode( GL_CLAMP_TO_EDGE );
+        GLRenderTarget* target = new GLRenderTarget( tex );
+        if( !target->valid() )
+            mSupported = false;
+        delete target;
+        delete tex;
+        }
     }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)
