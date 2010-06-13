@@ -204,15 +204,18 @@ void CubeSlideEffect::prePaintWindow( EffectWindow* w,  WindowPrePaintData& data
         QRect rect = effects->clientArea( FullArea, effects->activeScreen(), painting_desktop );
         if( dontSlidePanels && w->isDock())
             {
+            w->setData( WindowForceBlurRole, QVariant( true ) );
             panels.insert( w );
             }
         if( !w->isManaged() )
             {
+            w->setData( WindowForceBlurRole, QVariant( true ) );
             stickyWindows.insert( w );
             }
         else if( dontSlideStickyWindows && !w->isDock() &&
             !w->isDesktop() && w->isOnAllDesktops())
             {
+            w->setData( WindowForceBlurRole, QVariant( true ) );
             stickyWindows.insert( w );
             }
         if( w->isOnDesktop( painting_desktop ) )
@@ -453,6 +456,12 @@ void CubeSlideEffect::postPaintScreen()
                 timeLine.setCurveShape( TimeLine::LinearCurve );
             if( slideRotations.empty() )
                 {
+                foreach( EffectWindow* w, panels )
+                    w->setData( WindowForceBlurRole, QVariant( false ) );
+                foreach( EffectWindow* w, stickyWindows )
+                    w->setData( WindowForceBlurRole, QVariant( false ) );
+                stickyWindows.clear();
+                panels.clear();
                 effects->setActiveFullScreenEffect( 0 );
                 }
             }

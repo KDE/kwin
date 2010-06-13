@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QPainter>
 #include <QtGui/QGraphicsLinearLayout>
 #include <Plasma/PushButton>
+#include <Plasma/WindowEffects>
 
 namespace KWin
 {
@@ -166,12 +167,19 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         it != m_desktopButtonsViews.end(); ++it )
         {
         if( !it.value() )
-            it.value() = effects->findWindow( it.key()->winId() );
+            {
+            EffectWindow *view = effects->findWindow( it.key()->winId() );
+            if( view )
+                {
+                view->setData( WindowForceBlurRole, QVariant( true ) );
+                it.value() = view;
+                }
+            }
         if( it.value() )
             {
             WindowPaintData d( it.value() );
             d.opacity *= timeline.value();
-            effects->drawWindow( it.value(), PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT,
+            effects->drawWindow( it.value(), PAINT_WINDOW_TRANSLUCENT,
                                  infiniteRegion(), d );
             }
         }
@@ -1544,6 +1552,7 @@ DesktopButtonsView::DesktopButtonsView( QWidget* parent )
     qreal width = form->size().width() + left + right;
     qreal height = form->size().height() + top + bottom;
     m_frame->resizeFrame( QSizeF( width, height ) );
+    Plasma::WindowEffects::enableBlurBehind( winId(), true, m_frame->mask() );
     form->setPos( left, top );
     scene->setSceneRect( QRectF( QPointF( 0, 0 ), QSizeF( width, height ) ) );
     setScene( scene );

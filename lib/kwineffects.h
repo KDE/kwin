@@ -192,7 +192,8 @@ enum DataRole
     WindowAddedGrabRole = 1,
     WindowClosedGrabRole,
     WindowMinimizedGrabRole,
-    WindowUnminimizedGrabRole
+    WindowUnminimizedGrabRole,
+    WindowForceBlurRole ///< For fullscreen effects to enforce blurring of windows
     };
 
 /**
