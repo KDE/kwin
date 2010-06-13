@@ -501,6 +501,10 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     // HACK: this is needed to work around a Qt4.4.0RC1 bug (#157659)
     setenv( "QT_SLOW_TOPLEVEL_RESIZE", "1", true );
 
+    // Disable the glib event loop integration, since it seems to be responsible
+    // for several bug reports about high CPU usage (bug #239963)
+    setenv( "QT_NO_GLIB", "1", true );
+
     org::kde::KSMServerInterface ksmserver( "org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup( "kwin" );
     KWin::Application a;
