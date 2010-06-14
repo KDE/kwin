@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <knotification.h>
 #include <klocale.h>
+#include <kwindowinfo.h>
+#include <kwindowsystem.h>
 #include "lib/kdecoration.h"
 
 
@@ -110,24 +112,16 @@ void Workspace::removeTile( Client *c )
 
 bool Workspace::tileable( Client *c )
     {
-      kDebug(1212) << c->caption();
+
+    kDebug(1212) << c->caption();
+    KWindowInfo info = KWindowSystem::windowInfo( c->window(), -1U, NET::WM2WindowClass );
+    kDebug(1212) << "WINDOW CLASS IS "<< info.windowClassClass();
+    if( info.windowClassClass() == "Plasma-desktop" )
+        {
+        return false;
+        }
     // TODO: if application specific settings
     // to ignore, put them here
-
-    // as suggested by Lucas Murray
-    // see Client::manage ( ~ line 270 of manage.cpp at time of writing )
-    // This is useful to ignore plasma widget placing.
-    // According to the ICCCM if an application
-    // or user requests a certain geometry
-    // respect it
-    long msize;
-    XSizeHints xSizeHint;
-    XGetWMNormalHints(display(), c->window(), &xSizeHint, &msize);
-    if( xSizeHint.flags & PPosition ||
-        xSizeHint.flags & USPosition ) {
-      kDebug(1212) << "Not tileable due to USPosition requirement";
-        return false;
-    }
 
     if( !c->isNormalWindow() )
         {
@@ -140,6 +134,7 @@ bool Workspace::tileable( Client *c )
         return false;
         }
 
+    kDebug() << "Tiling" << c;
     return true;
     }
 
