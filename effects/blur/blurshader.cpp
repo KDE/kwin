@@ -432,37 +432,36 @@ void ARBBlurShader::init()
 
     // The kernel values are hardcoded into the program 
     for (int i = 0; i <= center; i++)
-        stream << "PARAM kernel" << i << " = " << kernel[i] << ";\n";
+        stream << "PARAM kernel" << i << " = " << kernel[center + i] << ";\n";
 
     stream << "PARAM firstSample = program.local[0];\n"; // Distance from gl_TexCoord[0] to the next sample
     stream << "PARAM nextSample  = program.local[1];\n"; // Distance to the subsequent sample
 
-    stream << "TEMP coord;\n";   // The coordinate we'll be sampling
-    stream << "TEMP sample;\n";  // The sampled value
-    stream << "TEMP sum;\n";     // The sum of the weighted samples
+    // Temporary variables to hold coordinates and texture samples
+    for (int i = 0; i < size; i++)
+        stream << "TEMP temp" << i << ";\n";
 
-    // Start by sampling the center coordinate
-    stream << "TEX sample, fragment.texcoord[0], texture[0], 2D;\n";     // sample = texture2D(tex, gl_TexCoord[0])
-    stream << "MUL sum, sample, kernel" << center << ";\n";              // sum = sample * kernel[center]
-
-    for (int i = 1; i <= center; i++) {
-        if (i == 1)
-            stream << "SUB coord, fragment.texcoord[0], firstSample;\n"; // coord = gl_TexCoord[0] - firstSample
-        else
-            stream << "SUB coord, coord, nextSample;\n";                 // coord -= nextSample
-        stream << "TEX sample, coord, texture[0], 2D;\n";                // sample = texture2D(tex, coord)
-        stream << "MAD sum, sample, kernel" << center - i << ", sum;\n"; // sum += sample * kernel[center - i]
+    // Compute the texture coordinates
+    stream << "ADD temp1, fragment.texcoord[0], firstSample;\n"; // temp1 = gl_TexCoord[0] + firstSample
+    stream << "SUB temp2, fragment.texcoord[0], firstSample;\n"; // temp2 = gl_TexCoord[0] - firstSample
+    for (int i = 1, j = 3; i < center; i++, j += 2) {
+        stream << "ADD temp" << j + 0 << ", temp" << j - 2 << ", nextSample;\n";
+        stream << "SUB temp" << j + 1 << ", temp" << j - 1 << ", nextSample;\n";
     }
 
-    for (int i = 1; i <= center; i++) {
-        if (i == 1)
-            stream << "ADD coord, fragment.texcoord[0], firstSample;\n"; // coord = gl_TexCoord[0] + firstSample
-        else
-            stream << "ADD coord, coord, nextSample;\n";                 // coord += nextSample
-        stream << "TEX sample, coord, texture[0], 2D;\n";                // sample = texture2D(tex, coord)
-        stream << "MAD sum, sample, kernel" << center - i << ", sum;\n"; // sum += sample * kernel[center - i]
+    // Sample the texture coordinates
+    stream << "TEX temp0, fragment.texcoord[0], texture[0], 2D;\n";
+    for (int i = 1; i < size; i++)
+        stream << "TEX temp" << i << ", temp" << i << ", texture[0], 2D;\n";
+
+    // Multiply the samples with the kernel values and compute the sum 
+    stream << "MUL temp0, temp0, kernel0;\n";
+    for (int i = 0, j = 1; i < center; i++) {
+        stream << "MAD temp0, temp" << j++ << ", kernel" << i + 1 << ", temp0;\n";
+        stream << "MAD temp0, temp" << j++ << ", kernel" << i + 1 << ", temp0;\n";
     }
-    stream << "MOV result.color, sum;\n";                                // gl_FragColor = sum
+
+    stream << "MOV result.color, temp0;\n";  // gl_FragColor = temp0 
     stream << "END\n";
     stream.flush();
 
