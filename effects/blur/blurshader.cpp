@@ -39,7 +39,7 @@ BlurShader::~BlurShader()
 
 BlurShader *BlurShader::create()
 {
-    if (GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported())
+    if (GLSLBlurShader::supported())
         return new GLSLBlurShader();
 
     return new ARBBlurShader();
@@ -120,6 +120,34 @@ void GLSLBlurShader::reset()
     }
 
     setIsValid(false);
+}
+
+bool GLSLBlurShader::supported()
+{
+    if (!GLShader::fragmentShaderSupported() || !GLShader::vertexShaderSupported())
+        return false;
+
+    (void) glGetError(); // Clear the error state
+
+    // These are the minimum values the implementation is required to support
+    int value = 0;
+
+    glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
+    if (value < 32)
+        return false;
+
+    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &value);
+    if (value < 64)
+        return false;
+
+    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &value);
+    if (value < 512)
+        return false;
+
+    if (glGetError() != GL_NO_ERROR)
+        return false;
+
+    return true;
 }
 
 void GLSLBlurShader::setPixelDistance(float val)
@@ -310,6 +338,42 @@ void ARBBlurShader::reset()
     }
 
     setIsValid(false);
+}
+
+bool ARBBlurShader::supported()
+{
+    if (!hasGLExtension("GL_ARB_fragment_program"))
+        return false;
+
+    (void) glGetError(); // Clear the error state
+
+    // These are the minimum values the implementation is required to support
+    int value = 0;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_PARAMETERS_ARB, &value);
+    if (value < 24)
+        return false;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_TEMPORARIES_ARB, &value);
+    if (value < 16)
+        return false;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_INSTRUCTIONS_ARB, &value);
+    if (value < 72)
+        return false;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB, &value);
+    if (value < 24)
+        return false;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB, &value);
+    if (value < 4)
+        return false;
+
+    if (glGetError() != GL_NO_ERROR)
+        return false;
+
+    return true;
 }
 
 void ARBBlurShader::setPixelDistance(float val)

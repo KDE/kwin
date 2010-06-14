@@ -116,8 +116,7 @@ void BlurEffect::propertyNotify(EffectWindow *w, long atom)
 bool BlurEffect::supported()
 {
     return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
-           ((GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) ||
-            hasGLExtension("GL_ARB_fragment_program"));
+           (GLSLBlurShader::supported() || ARBBlurShader::supported());
 }
 
 QRect BlurEffect::expand(const QRect &rect) const

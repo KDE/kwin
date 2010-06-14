@@ -78,6 +78,8 @@ public:
     void bind();
     void unbind();
 
+    static bool supported();
+
 protected:
     void init();
     void reset();
@@ -107,6 +109,8 @@ public:
     void setPixelDistance(float val);
     void bind();
     void unbind();
+
+    static bool supported();
 
 protected:
     void init();
