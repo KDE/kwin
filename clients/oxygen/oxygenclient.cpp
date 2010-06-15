@@ -957,23 +957,28 @@ namespace Oxygen
         if( itemCount == 1 )
         {
 
-            if( itemData_.isAnimated() ) {
+            // no title outline if the window caption is empty
+            if( !caption.trimmed().isEmpty() )
+            {
+                if( itemData_.isAnimated() ) {
 
-                textRect = titleBoundingRect( painter->font(), textRect, caption );
-                renderTitleOutline( painter, item.boundingRect_, palette );
+                    textRect = titleBoundingRect( painter->font(), textRect, caption );
+                    renderTitleOutline( painter, item.boundingRect_, palette );
 
-            } else if( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() ) {
+                } else if( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() ) {
 
-                // adjust textRect
-                textRect = titleBoundingRect( painter->font(), textRect, caption );
+                    // adjust textRect
+                    textRect = titleBoundingRect( painter->font(), textRect, caption );
 
-                // adjusts boundingRect accordingly
-                QRect boundingRect( item.boundingRect_ );
-                boundingRect.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
-                boundingRect.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
+                    // adjusts boundingRect accordingly
+                    QRect boundingRect( item.boundingRect_ );
+                    boundingRect.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
+                    boundingRect.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
 
-                // render bounding rect around it with extra margins
-                renderTitleOutline( painter, boundingRect, palette );
+                    // render bounding rect around it with extra margins
+                    renderTitleOutline( painter, boundingRect, palette );
+
+                }
 
             }
 
