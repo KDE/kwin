@@ -235,7 +235,10 @@ void CompositingPrefs::detectDriverAndVersion()
         {
         mDriver = "intel";
         QStringList words = mGLRenderer.split(' ');
-        mVersion = Version( words[ words.count() - 2 ] );
+        if( QRegExp( "[:digit:]+" ).exactMatch( words[ words.count() - 2 ] ))
+            mVersion = Version( words[ words.count() - 2 ] );
+        else
+            mVersion = Version( words[ words.count() - 3 ] );
         }
     else if( mGLVendor == "NVIDIA Corporation" )
         {
