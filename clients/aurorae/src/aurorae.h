@@ -62,6 +62,7 @@ class AuroraeClient : public KDecorationUnstable
     Q_OBJECT
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
+    virtual ~AuroraeClient();
     virtual void activeChange();
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void captionChange();

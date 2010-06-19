@@ -134,7 +134,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     m_scene = new AuroraeScene(AuroraeFactory::instance()->theme(),
                                options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
                                options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight(),
-                               providesContextHelp(), this);
+                               providesContextHelp(), NULL);
     connect(m_scene, SIGNAL(closeWindow()), SLOT(closeWindow()));
     connect(m_scene, SIGNAL(maximize(Qt::MouseButtons)), SLOT(maximize(Qt::MouseButtons)));
     connect(m_scene, SIGNAL(showContextHelp()), SLOT(showContextHelp()));
@@ -162,6 +162,13 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(m_scene, SIGNAL(tabMovedToGroup(long int,int)), SLOT(tabMovedToGroup(long int,int)));
     connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChanged(bool)));
     connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChanged(bool)));
+}
+
+AuroraeClient::~AuroraeClient()
+{
+    m_view->setParent(NULL);
+    m_view->deleteLater();
+    m_scene->deleteLater();
 }
 
 void AuroraeClient::init()
