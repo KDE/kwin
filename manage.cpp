@@ -321,6 +321,8 @@ bool Client::manage( Window w, bool isMapped )
             const Client* similar = workspace()->findSimilarClient( this );
             if( similar && similar->clientGroup() && !similar->noBorder() )
                 {
+                geom = QRect( similar->pos() + similar->clientPos(), similar->clientSize() );
+                updateDecoration( false );
                 similar->clientGroup()->add( this, -1,
                     rules()->checkAutogroupInForeground( options->autogroupInForeground ));
                 // Don't move entire group
