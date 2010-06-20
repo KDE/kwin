@@ -981,7 +981,8 @@ void Client::setShade( ShadeMode mode )
     assert( decoration != NULL ); // noborder windows can't be shaded
     GeometryUpdatesBlocker blocker( this );
     // Decorations may turn off some borders when shaded
-    decoration->borders( border_left, border_right, border_top, border_bottom );
+    if( decoration )
+        decoration->borders( border_left, border_right, border_top, border_bottom );
 
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
@@ -1025,7 +1026,8 @@ void Client::setShade( ShadeMode mode )
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
-    decoration->shadeChange();
+    if( decoration )
+        decoration->shadeChange();
     updateWindowRules();
 
     // Update states of all other windows in this group
