@@ -1049,28 +1049,28 @@ static QString formatFramebufferStatus( GLenum status )
     {
     switch( status )
         {
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
             // An attachment is the wrong type / is invalid / has 0 width or height
             return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
             // There are no images attached to the framebuffer
             return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
         case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
             // Not all attached images have the same width and height
             return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
-        case GL_FRAMEBUFFER_UNSUPPORTED:
+        case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
             // A format or the combination of formats of the attachments is unsupported
             return "GL_FRAMEBUFFER_UNSUPPORTED";
         case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
             // The color attachments don't have the same format
             return "GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT";
-        case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+        case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT:
             // The attachments don't have the same number of samples
             return "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
-        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
             // The draw buffer is missing
             return "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
-        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
             // The read buffer is missing
             return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
         default:
