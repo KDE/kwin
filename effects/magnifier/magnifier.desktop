@@ -144,7 +144,7 @@ Comment[th]=แว่นขยายบางส่วนของหน้า�
 Comment[tr]=Farenin altındaki ekran bölümünü büyüt
 Comment[uk]=Збільшує частину екрана, що знаходиться поруч з вказівником
 Comment[x-test]=xxMagnify the section of the screen that is near the mouse cursorxx
-Comment[zh_CN]=放大鼠标指针下面的部分屏幕
+Comment[zh_CN]=放大鼠标指针附近的屏幕
 Comment[zh_TW]=將滑鼠游標附近的部份視窗放大
 
 Type=Service

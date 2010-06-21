@@ -73,7 +73,7 @@ Name[uk]=Показ вікон
 Name[vi]=Sắp xếp cửa sổ
 Name[wa]=Prezint purnea
 Name[x-test]=xxPresent Windowsxx
-Name[zh_CN]=窗口轮转
+Name[zh_CN]=展现窗口
 Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Zoom out until all opened windows can be displayed side-by-side
@@ -137,7 +137,7 @@ Comment[th]=ปรับย่อขนาดจนสามารถแสด�
 Comment[tr]=Tüm açık pencereler yan yana gösterilene kadar küçült
 Comment[uk]=Зменшує масштаб вікон так, щоб всі відкриті вікна можна було розташувати поряд
 Comment[x-test]=xxZoom out until all opened windows can be displayed side-by-sidexx
-Comment[zh_CN]=缩小所有打开的窗口，使其可以按次序显示
+Comment[zh_CN]=缩小所有打开的窗口，使其可以并列显示
 Comment[zh_TW]=縮放所有開啟的視窗，讓它們排排站
 
 Type=Service

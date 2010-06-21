@@ -122,7 +122,7 @@ Comment[uz@cyrillic]=Ойнага оид бўлган мосламаларни �
 Comment[vi]=Thiết lập cài đặt dành riêng cho cửa sổ
 Comment[wa]=Apontiaedjes specifikes po on purnea
 Comment[x-test]=xxConfigure settings specifically for a windowxx
-Comment[zh_CN]=配置一个窗口的设置
+Comment[zh_CN]=配置指定窗口的设置
 Comment[zh_TW]=設定特定視窗設定值
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules

@@ -121,7 +121,7 @@ Comment[tr]=Alt-tab pencere seçicideki pencereleri çevir
 Comment[uk]=Тасування вікон у стосі для перемикача вікон за alt+tab
 Comment[wa]=Fé glisser d' on purnea a l' ôte avou l' discandjeu d' purnea alt+tab
 Comment[x-test]=xxFlip through windows that are in a stack for the alt+tab window switcherxx
-Comment[zh_CN]=在 Alt+Tab 窗口切换器中让各窗口呈现堆栈翻转的效果
+Comment[zh_CN]=Alt+Tab 窗口切换时在堆栈中翻转各个窗口
 Comment[zh_TW]=在 alt+tab 視窗切換時翻轉在堆疊中的視窗
 
 Type=Service

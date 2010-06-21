@@ -135,7 +135,7 @@ Comment[tr]=Alt-tab pencere seçicide pencerelerin küçük resimlerini göster
 Comment[uk]=Показ мініатюр вікон у перемикачі вікон за alt+tab
 Comment[wa]=Håyner les prévoeyaedjes des punrneas dins discandjeu d' purnea alt+tab
 Comment[x-test]=xxDisplay thumbnails of windows in the alt+tab window switcherxx
-Comment[zh_CN]=在 Alt+Tab 窗口切换器中显示各窗口的缩略图
+Comment[zh_CN]=Alt+Tab 窗口切换时显示各窗口的缩略图
 Comment[zh_TW]=在 alt+tab 視窗切換時顯示縮圖
 
 Type=Service

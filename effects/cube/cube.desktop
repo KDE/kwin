@@ -142,7 +142,7 @@ Comment[tr]=Sanal masaüstlerini bir küpün yanı olarak göster
 Comment[uk]=Показувати всі віртуальні стільниці на поверхні куба
 Comment[wa]=Håyene tchaeke forveyou scribanne sos on costé d' on cube
 Comment[x-test]=xxDisplay each virtual desktop on a side of a cubexx
-Comment[zh_CN]=在一排立方体中显示各虚拟桌面
+Comment[zh_CN]=在立方体的各个面上显示虚拟桌面
 Comment[zh_TW]=將每個虛擬桌面顯示在立方體的某一邊
 
 Type=Service
