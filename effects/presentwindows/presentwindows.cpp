@@ -217,6 +217,13 @@ void PresentWindowsEffect::postPaintScreen()
             }
         m_windowData.clear();
 
+        foreach( EffectWindow *w, effects->stackingOrder() )
+            {
+            if( w->isDock() )
+                {
+                w->setData( WindowForceBlurRole, QVariant( false ) );
+                }
+            }
         effects->setActiveFullScreenEffect( NULL );
         }
 
@@ -1607,6 +1614,14 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             setHighlightedWindow( effects->currentTabBoxWindow() );
         else
             setHighlightedWindow( effects->activeWindow() );
+
+        foreach( EffectWindow *w, effects->stackingOrder() )
+            {
+            if( w->isDock() )
+                {
+                w->setData( WindowForceBlurRole, QVariant( true ) );
+                }
+            }
         }
     else
         {
