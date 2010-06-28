@@ -120,7 +120,6 @@ namespace Oxygen
     bool SizeGrip::eventFilter( QObject* object, QEvent* event )
     {
 
-        if( object != client().widget() ) return false;
         if ( event->type() == QEvent::Resize) updatePosition();
         return false;
 
