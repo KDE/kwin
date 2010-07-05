@@ -111,7 +111,7 @@ namespace Oxygen
         void paintEvent(QPaintEvent* );
 
         //! draw icon
-        void drawIcon(QPainter*, QPalette&, ButtonType& );
+        void drawIcon(QPainter*);
 
         //! color
         QColor buttonDetailColor(const QPalette& );
@@ -128,6 +128,27 @@ namespace Oxygen
 
         //! true if buttons hover are animated
         bool animateButtonHover( void ) const;
+
+        //!@name button properties
+        //@{
+
+        //! true if button if of menu type
+        bool isMenuButton( void ) const
+        { return type_ == ButtonMenu || type_ == ButtonItemMenu; }
+
+        //! true if button is of toggle type
+        bool isToggleButton( void ) const
+        { return type_ == ButtonSticky || type_ == ButtonAbove || type_ == ButtonBelow; }
+
+        //! true if button if of close type
+        bool isCloseButton( void ) const
+        { return type_ == ButtonClose || type_ == ButtonItemClose; }
+
+        //! true if button has decoration
+        bool hasDecoration( void ) const
+        { return !isMenuButton() && type_ != ButtonItemClose; }
+
+        //@}
 
         private:
 
