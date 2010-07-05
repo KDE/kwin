@@ -1,7 +1,7 @@
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
     kde4_add_plugin(kwin4_effect_${name} ${ARGN})
-    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES} kephal)
+    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} kephal)
     install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT)
 
@@ -25,6 +25,7 @@ SET(kwin4_effect_tests_sources
     howto.cpp
     test_input.cpp
     test_thumbnail.cpp
+    kicker/kicker.cpp
     )
 install( FILES
     demo_shakymove.desktop
@@ -34,6 +35,7 @@ install( FILES
     howto.desktop
     test_input.desktop
     test_thumbnail.desktop
+    kicker/kicker.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 if(OPENGL_FOUND)
