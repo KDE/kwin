@@ -60,6 +60,15 @@ void LanczosFilter::init()
         return;
     m_inited = true;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    // check the blacklist
+    KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
+    KConfigGroup blacklist = config->group( "Blacklist" ).group( "Lanczos" );
+    if( effects->checkDriverBlacklist( blacklist ) )
+        {
+        kDebug() << "Lanczos Filter disabled by driver blacklist";
+        return;
+        }
+
     if ( GLShader::fragmentShaderSupported() &&
          GLShader::vertexShaderSupported() &&
          GLRenderTarget::supported() )

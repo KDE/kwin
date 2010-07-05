@@ -115,8 +115,18 @@ void BlurEffect::propertyNotify(EffectWindow *w, long atom)
 
 bool BlurEffect::supported()
 {
-    return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
+    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
            (GLSLBlurShader::supported() || ARBBlurShader::supported());
+    if (supported) {
+        // check the blacklist
+        KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
+        KConfigGroup blacklist = config->group( "Blacklist" ).group( "Blur" );
+        if (effects->checkDriverBlacklist( blacklist )) {
+            kDebug() << "Blur effect disabled by driver blacklist";
+            supported = false;
+        }
+    }
+    return supported;
 }
 
 QRect BlurEffect::expand(const QRect &rect) const

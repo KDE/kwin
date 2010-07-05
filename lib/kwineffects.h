@@ -790,6 +790,16 @@ class KWIN_EXPORT EffectsHandler
                                       const QColor& bgcolor, const QFont& font = QFont(),
                                       const Qt::Alignment& alignment = Qt::AlignCenter );
 
+        /**
+         * Checks if the driver is on given blacklist.
+         * The format of the blacklist is driver identifier as key (e.g. Intel) with a list of
+         * concrete driver render strings as the values.
+         * This method is only used for OpenGL compositing. If not using OpenGL it will return false.
+         * @returns true if the driver is blacklisted, false otherwise
+         * @since 4.5
+         */
+        bool checkDriverBlacklist( const KConfigGroup& blacklist );
+
 
         /**
          * Sends message over DCOP to reload given effect.
