@@ -117,7 +117,7 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    bool SizeGrip::eventFilter( QObject* object, QEvent* event )
+    bool SizeGrip::eventFilter( QObject*, QEvent* event )
     {
 
         if ( event->type() == QEvent::Resize) updatePosition();
