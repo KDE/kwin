@@ -500,6 +500,8 @@ bool EffectsHandler::checkDriverBlacklist( const KConfigGroup& blacklist )
         {
         QString vendor   = QString((const char*)glGetString( GL_VENDOR ));
         QString renderer = QString((const char*)glGetString( GL_RENDERER ));
+        renderer.append( ":-:" );
+        renderer.append((const char*)glGetString( GL_VERSION ));
         foreach( const QString& key, blacklist.keyList() )
             {
             // the key is a word in the renderer string or vendor referrencing the vendor in case of mesa
