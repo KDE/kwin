@@ -53,6 +53,10 @@ void FadeDesktopEffect::prePaintScreen( ScreenPrePaintData &data, int time )
             {
             m_fading = false;
             m_timeline.setProgress( 0.0 );
+            foreach( EffectWindow* w, effects->stackingOrder() )
+                {
+                w->setData( WindowForceBlurRole, QVariant( false ) );
+                }
             effects->setActiveFullScreenEffect( NULL );
             }
         }
@@ -100,6 +104,10 @@ void FadeDesktopEffect::desktopChanged( int old )
     m_fading = true;
     m_timeline.setProgress( 0 );
     m_oldDesktop = old;
+    foreach( EffectWindow* w, effects->stackingOrder() )
+        {
+        w->setData( WindowForceBlurRole, QVariant( true ) );
+        }
 
     effects->addRepaintFull();
     }
