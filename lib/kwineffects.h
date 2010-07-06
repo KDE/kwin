@@ -169,7 +169,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 150
+#define KWIN_EFFECT_API_VERSION_MINOR 151
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -756,39 +756,6 @@ class KWIN_EXPORT EffectsHandler
          * @since 4.5
          */
         virtual bool decorationsHaveAlpha() const = 0;
-
-        /**
-         * @deprecated
-         * @see EffectFrame
-         * Paints given text onto screen, possibly in elided form
-         * @param text
-         * @param center center point of the painted text
-         * @param maxwidth if text is longer than this, is will be elided
-         * @param color color of the text, may contain alpha
-         * @param font font for the text
-         **/
-        bool paintText( const QString& text, const QPoint& center, int maxwidth,
-                        const QColor& color, const QFont& font = QFont() );
-        /**
-         * @deprecated
-         * @see EffectFrame
-         */
-        bool paintText( const QString& text, const QRect& rect, const QColor& color,
-                        const QFont& font = QFont(), const Qt::Alignment& alignment = Qt::AlignCenter );
-        /**
-         * @deprecated
-         * @see EffectFrame
-         */
-        bool paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
-                                      const QColor& color, const QColor& bgcolor,
-                                      const QFont& font = QFont() );
-        /**
-         * @deprecated
-         * @see EffectFrame
-         */
-        bool paintTextWithBackground( const QString& text, const QRect& rect, const QColor& color,
-                                      const QColor& bgcolor, const QFont& font = QFont(),
-                                      const Qt::Alignment& alignment = Qt::AlignCenter );
 
         /**
          * Checks if the driver is on given blacklist.
@@ -1805,27 +1772,6 @@ class KWIN_EXPORT EffectFrame : public QObject
  * Pointer to the global EffectsHandler object.
  **/
 extern KWIN_EXPORT EffectsHandler* effects;
-
-/***************************************************************
- EffectsHandler
-***************************************************************/
-
-inline
-bool EffectsHandler::paintText( const QString& text, const QPoint& center, int maxwidth,
-        const QColor& color, const QFont& font )
-{
-    return paintText( text, QRect( center.x() - maxwidth / 2, center.y() - 5000, maxwidth, 10000 ),
-        color, font, Qt::AlignCenter );
-}
-
-inline
-bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
-        const QColor& color, const QColor& bgcolor, const QFont& font )
-{
-    return paintTextWithBackground( text,
-        QRect( center.x() - maxwidth / 2, center.y() - 5000, maxwidth, 10000 ),
-        color, bgcolor, font, Qt::AlignCenter );
-}
 
 /***************************************************************
  WindowVertex
