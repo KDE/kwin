@@ -2,6 +2,7 @@
 name=Kicker Liveticker Demo Effect
 Icon=preferences-system-windows-effect-kicker
 Comment=Demonstration effect for using EffectFrames
+Comment[x-test]=xxDemonstration effect for using EffectFramesxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
