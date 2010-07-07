@@ -2,6 +2,8 @@
 name=Kicker Liveticker Demo Effect
 Icon=preferences-system-windows-effect-kicker
 Comment=Demonstration effect for using EffectFrames
+Comment[pt]=Efeito de demonstração da utilização das EffectFrames
+Comment[sv]=Demonstationseffekt för att använda effektramar-
 Comment[x-test]=xxDemonstration effect for using EffectFramesxx
 
 Type=Service
