@@ -7,6 +7,7 @@ Comment[pt]=Efeito de demonstração da utilização das EffectFrames
 Comment[pt_BR]=Efeito de demonstração do uso das EffectFrames
 Comment[sv]=Demonstationseffekt för att använda effektramar-
 Comment[x-test]=xxDemonstration effect for using EffectFramesxx
+Comment[zh_TW]=示範使用 EffectFrames 的效果
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
