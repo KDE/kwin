@@ -167,9 +167,8 @@ void Workspace::setupCompositing()
                 scene = NULL;
                 }
 
-            // Fall back to XRender
-            kDebug(1212) << "Falling back to XRender as OpenGL failed";
-            type = options->compositingMode = XRenderCompositing;
+            // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
+            break;
             }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

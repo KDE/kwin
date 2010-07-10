@@ -713,7 +713,7 @@ bool SceneOpenGL::selfCheckFinish()
             || img.pixel( 1, 1 ) != QColor( Qt::black ).rgb()
             || img.pixel( 2, 1 ) != QColor( Qt::white ).rgb())
             {
-            kError( 1212 ) << "OpenGL compositing self-check failed, falling back to XRender.";
+            kError( 1212 ) << "OpenGL compositing self-check failed, disabling compositing.";
             ok = false;
             break;
             }
