@@ -38,7 +38,7 @@ class Columns : public TilingLayout
     public:
         Columns( Workspace * );
         KDecorationDefines::Position resizeMode( Client *c, KDecorationDefines::Position currentMode ) const;
-        void clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        bool clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         
     private:
         void arrange( QRect wgeom );

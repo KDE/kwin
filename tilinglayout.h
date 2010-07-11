@@ -42,8 +42,9 @@ class TilingLayout
         /**
          * Reimplement this to decide how the client(s) should
          * be resized.
+         * Return true if an actual resize was attempted, false if not ( for whatever reason )
          */
-        virtual void clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        virtual bool clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void clientMoved( Client *c, const QRect &moveResizeGeom, const QRect &orig );
         void clientMinimizeToggled( Client *c );
 

@@ -66,20 +66,19 @@ void TilingLayout::clientMinimizeToggled( Client *c )
         arrange( layoutArea( t ) );
     }
 
-void TilingLayout::clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig )
+bool TilingLayout::clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig )
     {
     if( moveResizeGeom == orig )
-        return;
+        return true;
 
     Tile *t = findTile( c );
     if( !t || t->ignoreGeometry() )
         {
         c->setGeometry( moveResizeGeom );
-        return;
+        return true;
         }
 
-    t->setGeometry( moveResizeGeom );
-    commit();
+    return false;
     }
 
 // tries to swap the tile with the one in the new position right now
