@@ -87,6 +87,8 @@ void Columns::clientResized( Client *c, const QRect &moveResizeGeom, const QRect
     TilingLayout::clientResized( c, moveResizeGeom, orig );
 
     Tile *t = findTile( c );
+    if( t->ignoreGeometry() )
+        return;
 
     QList<Tile *> tiled( tiles() );
 
