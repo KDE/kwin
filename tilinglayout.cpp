@@ -36,6 +36,8 @@ TilingLayout::TilingLayout( Workspace *w )
 
 TilingLayout::~TilingLayout()
     {
+    qDeleteAll( m_tiles );
+    m_tiles.clear();
     }
 
 int TilingLayout::findTilePos( Client *c ) const
