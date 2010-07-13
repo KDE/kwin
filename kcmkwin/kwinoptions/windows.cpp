@@ -718,6 +718,10 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
 
 void KAdvancedConfig::setTilingOn( bool on ) {
     tilingOn->setChecked( on );
+    tilingLayoutLabel->setEnabled( on );
+    tilingLayoutCombo->setEnabled( on );
+    tilingRaiseLabel->setEnabled( on );
+    tilingRaiseCombo->setEnabled( on );
 }
 
 void KAdvancedConfig::setTilingLayout( int l ) {
