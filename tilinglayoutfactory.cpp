@@ -34,13 +34,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tilinglayouts/floating/floating.h"
 
 // w is the workspace pointer
-#define ADD_LAYOUT( lay ) \
+#define ADD_LAYOUT( lay, ctxt_name ) \
             case lay##Layout:\
             kDebug(1212) << #lay;\
             layout = new lay( w );\
             layout->setLayoutType( lay##Layout );\
-            Notify::raise( Notify::TilingLayoutChanged,                 \
-                           i18n( "Layout changed to %1", i18n(#lay) ) ); \
+            Notify::raise( Notify::TilingLayoutChanged, \
+                           i18n( "Layout changed to %1", i18nc( ctxt_name ) ) ); \
             break
 
 namespace KWin
@@ -58,9 +58,9 @@ TilingLayout* TilingLayoutFactory::createLayout( int type, Workspace *w )
             layout = createLayout( indexToLayoutIndex( options->tilingLayout ), w );
             break;
 
-        ADD_LAYOUT( Spiral );
-        ADD_LAYOUT( Columns );
-        ADD_LAYOUT( Floating );
+        ADD_LAYOUT( Spiral, I18N_NOOP2_NOSTRIP( "Spiral tiling layout", "Spiral" ) );
+        ADD_LAYOUT( Columns, I18N_NOOP2_NOSTRIP( "Two-column horizontal tiling layout", "Columns" ) );
+        ADD_LAYOUT( Floating, I18N_NOOP2_NOSTRIP( "Floating layout, windows aren't tiled at all", "Floating" ) );
 
         default:
             kDebug(1212) << "INVALID LAYOUT!";
