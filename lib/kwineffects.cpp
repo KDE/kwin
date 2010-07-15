@@ -393,8 +393,7 @@ bool EffectsHandler::checkDriverBlacklist( const KConfigGroup& blacklist )
         {
         QString vendor   = QString((const char*)glGetString( GL_VENDOR ));
         QString renderer = QString((const char*)glGetString( GL_RENDERER ));
-        renderer.append( ":-:" );
-        renderer.append((const char*)glGetString( GL_VERSION ));
+        QString version  = QString((const char*)glGetString( GL_VERSION ));
         foreach( const QString& key, blacklist.keyList() )
             {
             // the key is a word in the renderer string or vendor referrencing the vendor in case of mesa
@@ -403,9 +402,15 @@ bool EffectsHandler::checkDriverBlacklist( const KConfigGroup& blacklist )
                 {
                 // the value for current key contains a string list of driver versions which have to be blacklisted
                 QStringList versions = blacklist.readEntry< QStringList >( key, QStringList() );
-                foreach( const QString& version, versions )
+                foreach( const QString& entry, versions )
                     {
-                    if( version == renderer )
+                    QStringList parts = entry.split( ":-:" );
+                    if( parts.size() != 2 )
+                        {
+                        continue;
+                        }
+                    if( renderer.contains(parts[0], Qt::CaseInsensitive) &&
+                        version.contains(parts[1], Qt::CaseInsensitive) )
                         {
                         // the version matches the renderer string - this driver is blacklisted, return
                         return true;
