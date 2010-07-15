@@ -1,0 +1,3 @@
+Id=Blacklist-4.5
+File=kwinrc
+Script=kwin_blacklist.sh,sh
