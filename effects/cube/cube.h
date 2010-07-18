@@ -115,7 +115,7 @@ class CubeEffect
         float cubeOpacity;
         bool opacityDesktopOnly;
         bool displayDesktopName;
-        EffectFrame desktopNameFrame;
+        EffectFrame* desktopNameFrame;
         QFont desktopNameFont;
         bool reflection;
         bool rotating;

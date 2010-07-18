@@ -44,14 +44,14 @@ FlipSwitchEffect::FlipSwitchEffect()
     , m_stop( false )
     , m_animation( false )
     , m_hasKeyboardGrab( false )
-    , m_captionFrame( EffectFrame::Styled )
+    , m_captionFrame( effects->effectFrame( Styled ) )
     {
     reconfigure( ReconfigureAll );
 
     // Caption frame
     m_captionFont.setBold( true );
     m_captionFont.setPointSize( m_captionFont.pointSize() * 2 );
-    m_captionFrame.setFont( m_captionFont );
+    m_captionFrame->setFont( m_captionFont );
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = ( KAction* )actionCollection->addAction( "FlipSwitchCurrent" );
@@ -78,6 +78,7 @@ FlipSwitchEffect::~FlipSwitchEffect()
         {
         effects->unreserveElectricBorder( border );
         }
+    delete m_captionFrame;
     }
 
 bool FlipSwitchEffect::supported()
@@ -417,9 +418,9 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 transparency.fill( QColor( 255, 255, 255, alpha ));
                 iconPixmap.setAlphaChannel( transparency.alphaChannel() );
                 }
-            m_captionFrame.setText( m_selectedWindow->caption() );
-            m_captionFrame.setIcon( iconPixmap );
-            m_captionFrame.render( region, opacity );
+            m_captionFrame->setText( m_selectedWindow->caption() );
+            m_captionFrame->setIcon( iconPixmap );
+            m_captionFrame->render( region, opacity );
             }
         }
     }
@@ -452,7 +453,7 @@ void FlipSwitchEffect::postPaintScreen()
             {
             m_stop = false;
             m_active = false;
-            m_captionFrame.free();
+            m_captionFrame->free();
             effects->setActiveFullScreenEffect( 0 );
             effects->addRepaintFull();
             qDeleteAll( m_windows );
@@ -713,8 +714,8 @@ void FlipSwitchEffect::setActive( bool activate, FlipSwitchMode mode )
             m_screenArea.height() * 0.1f + m_screenArea.y() - QFontMetrics( m_captionFont ).height(),
             m_screenArea.width() * 0.5f,
             QFontMetrics( m_captionFont ).height() );
-        m_captionFrame.setGeometry( frameRect );
-        m_captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
+        m_captionFrame->setGeometry( frameRect );
+        m_captionFrame->setIconSize( QSize( frameRect.height(), frameRect.height() ));
         effects->addRepaintFull();
         }
     else

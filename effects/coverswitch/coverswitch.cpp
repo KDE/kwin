@@ -53,7 +53,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , scaleFactor( 0.0 )
     , direction( Left )
     , selected_window( 0 )
-    , captionFrame( EffectFrame::Styled )
+    , captionFrame( effects->effectFrame( Styled ) )
     , primaryTabBox( false )
     , secondaryTabBox( false )
     {
@@ -62,11 +62,12 @@ CoverSwitchEffect::CoverSwitchEffect()
     // Caption frame
     captionFont.setBold( true );
     captionFont.setPointSize( captionFont.pointSize() * 2 );
-    captionFrame.setFont( captionFont );
+    captionFrame->setFont( captionFont );
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
     {
+    delete captionFrame;
     }
 
 bool CoverSwitchEffect::supported()
@@ -327,7 +328,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 opacity = timeLine.value();
             else if( stop )
                 opacity = 1.0 - timeLine.value();
-            captionFrame.render( region, opacity );
+            captionFrame->render( region, opacity );
         }
 
         if( ( thumbnails && (!dynamicThumbnails || 
@@ -555,11 +556,11 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                         area.height() * 0.9f + area.y(),
                         area.width() * 0.5f,
                         QFontMetrics( captionFont ).height() );
-                    captionFrame.setGeometry( frameRect );
-                    captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
+                    captionFrame->setGeometry( frameRect );
+                    captionFrame->setIconSize( QSize( frameRect.height(), frameRect.height() ));
                     // And initial contents
-                    captionFrame.setText( selected_window->caption() );
-                    captionFrame.setIcon( selected_window->icon() );
+                    captionFrame->setText( selected_window->caption() );
+                    captionFrame->setIcon( selected_window->icon() );
                 }
 
                 effects->addRepaintFull();
@@ -657,8 +658,8 @@ void CoverSwitchEffect::tabBoxUpdated()
                     }
                 selected_window = effects->currentTabBoxWindow();
                 currentWindowList = effects->currentTabBoxWindowList();
-                captionFrame.setText( selected_window->caption() );
-                captionFrame.setIcon( selected_window->icon() );
+                captionFrame->setText( selected_window->caption() );
+                captionFrame->setIcon( selected_window->icon() );
                 }
             }
         effects->addRepaintFull();
@@ -1016,7 +1017,7 @@ void CoverSwitchEffect::abort()
     stop = false;
     stopRequested = false;
     effects->addRepaintFull();
-    captionFrame.free();
+    captionFrame->free();
     }
 
 void CoverSwitchEffect::windowClosed( EffectWindow* c )

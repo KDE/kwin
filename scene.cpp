@@ -532,4 +532,16 @@ WindowQuadList Scene::Window::makeQuads( WindowQuadType type, const QRegion& reg
     return ret;
     }
 
+//****************************************
+// Scene::EffectFrame
+//****************************************
+Scene::EffectFrame::EffectFrame(EffectFrameImpl* frame)
+    : m_effectFrame( frame )
+    {
+    }
+
+Scene::EffectFrame::~EffectFrame()
+    {
+    }
+
 } // namespace

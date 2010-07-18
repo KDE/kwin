@@ -52,6 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kxerrorhandler.h>
 
+#include <QtGui/QPainter>
+
 namespace KWin
 {
 
@@ -841,6 +843,137 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             XRenderChangePicture( display(), pic, CPRepeat, &attr );
             }
         }
+    }
+
+//****************************************
+// SceneXrender::EffectFrame
+//****************************************
+
+SceneXrender::EffectFrame::EffectFrame( EffectFrameImpl* frame )
+    : Scene::EffectFrame( frame )
+    {
+    m_picture = NULL;
+    m_textPicture = NULL;
+    }
+
+SceneXrender::EffectFrame::~EffectFrame()
+    {
+    delete m_picture;
+    delete m_textPicture;
+    }
+
+void SceneXrender::EffectFrame::free()
+    {
+    delete m_picture;
+    m_picture = NULL;
+    delete m_textPicture;
+    m_textPicture = NULL;
+    }
+
+void SceneXrender::EffectFrame::freeTextFrame()
+    {
+    delete m_textPicture;
+    m_textPicture = NULL;
+    }
+
+void SceneXrender::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
+    {
+    if( m_effectFrame->geometry().isEmpty() )
+        {
+        return; // Nothing to display
+        }
+
+    // Render the actual frame
+    if( m_effectFrame->style() == Unstyled )
+        xRenderRoundBox( effects->xrenderBufferPicture(), m_effectFrame->geometry().adjusted( -5, -5, 5, 5 ),
+            5, QColor( 0, 0, 0, int( opacity * frameOpacity * 255 )));
+    else if( m_effectFrame->style() == Styled )
+        {
+        if( !m_picture ) // Lazy creation
+            {
+            updatePicture();
+            }
+        qreal left, top, right, bottom;
+        m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        QRect geom = m_effectFrame->geometry().adjusted( -left, -top, right, bottom );
+        XRenderComposite( display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
+            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+        }
+
+    XRenderPicture fill = xRenderBlendPicture(opacity);
+
+    // Render icon
+    if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
+        {
+        QPoint topLeft( m_effectFrame->geometry().x(), m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2 );
+
+        XRenderPicture* icon = new XRenderPicture( m_effectFrame->icon() ); // TODO: Cache
+        QRect geom = QRect( topLeft, m_effectFrame->iconSize() );
+        XRenderComposite( display(), PictOpOver, *icon, fill, effects->xrenderBufferPicture(),
+            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+        delete icon;
+        }
+
+    // Render text
+    if( !m_effectFrame->text().isEmpty() )
+        {
+        if( !m_textPicture ) // Lazy creation
+            {
+            updateTextPicture();
+            }
+        XRenderComposite( display(), PictOpOver, *m_textPicture, fill, effects->xrenderBufferPicture(),
+            0, 0, 0, 0, m_effectFrame->geometry().x(), m_effectFrame->geometry().y(),
+                          m_effectFrame->geometry().width(), m_effectFrame->geometry().height() );
+        }
+    }
+
+void SceneXrender::EffectFrame::updatePicture()
+    {
+    delete m_picture;
+    if( m_effectFrame->style() == Styled )
+        m_picture = new XRenderPicture( m_effectFrame->frame().framePixmap() );
+    }
+
+void SceneXrender::EffectFrame::updateTextPicture()
+    { // Mostly copied from SceneOpenGL::EffectFrame::updateTextTexture() above
+    delete m_textPicture;
+
+    if( m_effectFrame->text().isEmpty() )
+        {
+        return;
+        }
+
+    // Determine position on texture to paint text
+    QRect rect( QPoint( 0, 0 ), m_effectFrame->geometry().size() );
+    if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
+        {
+        rect.setLeft( m_effectFrame->iconSize().width() );
+        }
+
+    // If static size elide text as required
+    QString text = m_effectFrame->text();
+    if( m_effectFrame->isStatic() )
+        {
+        QFontMetrics metrics( m_effectFrame->text() );
+        text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+        }
+
+    QPixmap pixmap( m_effectFrame->geometry().size() );
+    pixmap.fill( Qt::transparent );
+    QPainter p( &pixmap );
+    p.setFont( m_effectFrame->font() );
+    if( m_effectFrame->style() == Styled )
+        {
+        p.setPen( m_effectFrame->styledTextColor() );
+        }
+    else
+        {
+        // TODO: What about no frame? Custom color setting required
+        p.setPen( Qt::white );
+        }
+    p.drawText( rect, m_effectFrame->alignment(), text );
+    p.end();
+    m_textPicture = new XRenderPicture( pixmap );
     }
 
 } // namespace

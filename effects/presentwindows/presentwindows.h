@@ -208,7 +208,7 @@ class PresentWindowsEffect
         QList<GridSize> m_gridSizes;
 
         // Filter box
-        EffectFrame m_filterFrame;
+        EffectFrame* m_filterFrame;
         QString m_windowFilter;
 
         // Shortcut - needed to toggle the effect

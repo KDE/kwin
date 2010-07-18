@@ -41,7 +41,7 @@ KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
     , mMode( 0 )
-    , thumbnailFrame( EffectFrame::Styled )
+    , thumbnailFrame( effects->effectFrame( Styled ) )
     , selected_window( 0 )
     , painting_desktop( 0 )
     , animation( false )
@@ -56,8 +56,8 @@ BoxSwitchEffect::BoxSwitchEffect()
     {
     text_font.setBold( true );
     text_font.setPointSize( 12 );
-    thumbnailFrame.setFont( text_font );
-    thumbnailFrame.setAlignment( Qt::AlignBottom | Qt::AlignHCenter );
+    thumbnailFrame->setFont( text_font );
+    thumbnailFrame->setAlignment( Qt::AlignBottom | Qt::AlignHCenter );
 
     highlight_margin = 10;
     reconfigure( ReconfigureAll );
@@ -65,6 +65,7 @@ BoxSwitchEffect::BoxSwitchEffect()
 
 BoxSwitchEffect::~BoxSwitchEffect()
     {
+    delete thumbnailFrame;
     }
 
 void BoxSwitchEffect::reconfigure( ReconfigureFlags )
@@ -150,7 +151,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
             {
             if( !painting_desktop )
                 {
-                thumbnailFrame.render( region );
+                thumbnailFrame->render( region );
 
                 QHash< int, ItemInfo* >::const_iterator i;
                 for( i = desktops.constBegin(); i != desktops.constEnd(); ++i )
@@ -169,7 +170,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
 void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
     {
-    thumbnailFrame.render( region );
+    thumbnailFrame->render( region );
 
     if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
         {
@@ -438,7 +439,7 @@ void BoxSwitchEffect::tabBoxUpdated()
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             selected_desktop = effects->currentTabBoxDesktop();
             if( !mProxyActivated || mProxyShowText )
-                thumbnailFrame.setText( effects->desktopName( selected_desktop ));
+                thumbnailFrame->setText( effects->desktopName( selected_desktop ));
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             effects->addRepaint( text_area );
@@ -474,7 +475,7 @@ void BoxSwitchEffect::setActive()
         original_desktops = effects->currentTabBoxDesktopList();
         selected_desktop = effects->currentTabBoxDesktop();
         if( !mProxyActivated || mProxyShowText )
-            thumbnailFrame.setText( effects->desktopName( selected_desktop ));
+            thumbnailFrame->setText( effects->desktopName( selected_desktop ));
         }
     calculateFrameSize();
     calculateItemSizes();
@@ -530,7 +531,7 @@ void BoxSwitchEffect::setInactive()
         qDeleteAll( windows );
         desktops.clear();
         }
-    thumbnailFrame.free();
+    thumbnailFrame->free();
     effects->addRepaint( frame_area );
     frame_area = QRect();
     }
@@ -543,7 +544,7 @@ void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
         }
     selected_window = w;
     if( selected_window && ( !mProxyActivated || mProxyShowText ) )
-        thumbnailFrame.setText( selected_window->caption() );
+        thumbnailFrame->setText( selected_window->caption() );
     if( elevate_window && w )
         {
         effects->setElevatedWindow( selected_window, true );
@@ -612,7 +613,7 @@ void BoxSwitchEffect::calculateFrameSize()
     text_area.moveTo( frame_area.x(),
                       frame_area.y() + item_max_size.height() + separator_height);
 
-    thumbnailFrame.setGeometry( frame_area );
+    thumbnailFrame->setGeometry( frame_area );
     }
 
 void BoxSwitchEffect::calculateItemSizes()
@@ -698,7 +699,7 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = ordered_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
-                windows[ w ]->iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+                windows[ w ]->iconFrame = effects->effectFrame( Unstyled, false );
                 windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
                 windows[ w ]->iconFrame->setIcon( w->icon() );
 
@@ -736,7 +737,7 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = original_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
-                windows[ w ]->iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+                windows[ w ]->iconFrame = effects->effectFrame( Unstyled, false );
                 windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
                 windows[ w ]->iconFrame->setIcon( w->icon() );
 
@@ -1086,7 +1087,7 @@ void BoxSwitchEffect::activateFromProxy( int mode, bool animate, bool showText, 
         mProxyAnimateSwitch = animate;
         mProxyShowText = showText;
         mPositioningFactor = positioningFactor;
-        thumbnailFrame.setText(" ");
+        thumbnailFrame->setText(" ");
         if( ( mode == TabBoxWindowsMode ) || ( mode == TabBoxWindowsAlternativeMode ) )
             {
             if( effects->currentTabBoxWindowList().count() > 0 )

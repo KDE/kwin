@@ -1164,6 +1164,10 @@ void EffectsHandlerImpl::effectsChanged()
         }
     }
 
+EffectFrame* EffectsHandlerImpl::effectFrame( EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment ) const
+    {
+    return new EffectFrameImpl( style, staticSize, position, alignment );
+    }
 
 //****************************************
 // EffectWindowImpl
@@ -1630,6 +1634,227 @@ EffectWindowList EffectWindowGroupImpl::members() const
     foreach( Toplevel* c, group->members())
         ret.append( c->effectWindow());
     return ret;
+    }
+
+//****************************************
+// EffectFrameImpl
+//****************************************
+
+EffectFrameImpl::EffectFrameImpl( EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment )
+    : QObject ( 0 )
+    , EffectFrame()
+    , m_style( style )
+    , m_static( staticSize )
+    , m_point( position )
+    , m_alignment( alignment )
+    {
+    if( m_style == Styled )
+        {
+        m_frame.setImagePath( "widgets/background" );
+        m_frame.setCacheAllRenderedFrames( true );
+        connect( Plasma::Theme::defaultTheme(), SIGNAL( themeChanged() ), this, SLOT( plasmaThemeChanged() ));
+        }
+
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        m_sceneFrame = new SceneOpenGL::EffectFrame( this );
+        }
+    else if( effects->compositingType() == XRenderCompositing )
+        {
+        m_sceneFrame = new SceneXrender::EffectFrame( this );
+        }
+    else
+        {
+        // that should not happen and will definitely crash!
+        m_sceneFrame = NULL;
+        }
+    }
+
+EffectFrameImpl::~EffectFrameImpl()
+    {
+    delete m_sceneFrame;
+    }
+
+const QFont& EffectFrameImpl::font() const
+    {
+    return m_font;
+    }
+
+void EffectFrameImpl::setFont( const QFont& font )
+    {
+    if (m_font == font)
+        {
+        return;
+        }
+    m_font = font;
+    QRect oldGeom = m_geometry;
+    if( !m_text.isEmpty() )
+        {
+        autoResize();
+        }
+    if( oldGeom == m_geometry )
+        { // Wasn't updated in autoResize()
+        m_sceneFrame->freeTextFrame();
+        }
+    }
+
+void EffectFrameImpl::free()
+    {
+    m_sceneFrame->free();
+    }
+
+const QRect& EffectFrameImpl::geometry() const
+    {
+    return m_geometry;
+    }
+
+void EffectFrameImpl::setGeometry( const QRect& geometry, bool force )
+    {
+    QRect oldGeom = m_geometry;
+    m_geometry = geometry;
+    if( m_geometry == oldGeom && !force )
+        {
+        return;
+        }
+    effects->addRepaint( oldGeom );
+    effects->addRepaint( m_geometry );
+    if( m_geometry.size() == oldGeom.size() && !force )
+        {
+        return;
+        }
+
+    if( m_style == Styled )
+        {
+        qreal left, top, right, bottom;
+        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        m_frame.resizeFrame( m_geometry.adjusted( -left, -top, right, bottom ).size() );
+        }
+
+    free();
+    }
+
+const QPixmap& EffectFrameImpl::icon() const
+    {
+    return m_icon;
+    }
+
+void EffectFrameImpl::setIcon( const QPixmap& icon )
+    {
+    m_icon = icon;
+    if( m_iconSize.isEmpty() ) // Set a size if we don't already have one
+        {
+        setIconSize( m_icon.size() );
+        }
+    }
+
+const QSize& EffectFrameImpl::iconSize() const
+    {
+    return m_iconSize;
+    }
+
+void EffectFrameImpl::setIconSize( const QSize& size )
+    {
+    if( m_iconSize == size )
+        {
+        return;
+        }
+    m_iconSize = size;
+    autoResize();
+    }
+
+void EffectFrameImpl::plasmaThemeChanged()
+    {
+    free();
+    }
+
+void EffectFrameImpl::render( QRegion region, double opacity, double frameOpacity )
+    {
+    if( m_geometry.isEmpty() )
+        {
+        return; // Nothing to display
+        }
+
+    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
+
+    // TODO: pass through all effects
+    m_sceneFrame->render( region, opacity, frameOpacity );
+    }
+
+Qt::Alignment EffectFrameImpl::alignment() const
+    {
+    return m_alignment;
+    }
+
+void EffectFrameImpl::setAlignment( Qt::Alignment alignment )
+    {
+    m_alignment = alignment;
+    }
+
+void EffectFrameImpl::setPosition( const QPoint& point )
+    {
+    if( m_point == point )
+        {
+        return;
+        }
+    m_point = point;
+    autoResize();
+    }
+
+const QString& EffectFrameImpl::text() const
+    {
+    return m_text;
+    }
+
+void EffectFrameImpl::setText( const QString& text )
+    {
+    if( m_text == text )
+        {
+        return;
+        }
+    m_text = text;
+    QRect oldGeom = m_geometry;
+    autoResize();
+    if( oldGeom == m_geometry )
+        { // Wasn't updated in autoResize()
+        m_sceneFrame->freeTextFrame();
+        }
+    }
+
+void EffectFrameImpl::autoResize()
+    {
+    if( m_static )
+        return; // Not automatically resizing
+
+    QRect geometry;
+
+    // Set size
+    if( !m_text.isEmpty() )
+        {
+        QFontMetrics metrics( m_font );
+        geometry.setSize( metrics.size( 0, m_text ));
+        }
+    if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+        {
+        geometry.setLeft( -m_iconSize.width() );
+        if( m_iconSize.height() > geometry.height() )
+            geometry.setHeight( m_iconSize.height() );
+        }
+
+    // Set position
+    if( m_alignment & Qt::AlignLeft )
+        geometry.moveLeft( m_point.x() );
+    else if( m_alignment & Qt::AlignRight )
+        geometry.moveLeft( m_point.x() - geometry.width() );
+    else
+        geometry.moveLeft( m_point.x() - geometry.width() / 2 );
+    if( m_alignment & Qt::AlignTop )
+        geometry.moveTop( m_point.y() );
+    else if( m_alignment & Qt::AlignBottom )
+        geometry.moveTop( m_point.y() - geometry.height() );
+    else
+        geometry.moveTop( m_point.y() - geometry.height() / 2 );
+
+    setGeometry( geometry );
     }
 
 } // namespace

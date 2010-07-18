@@ -56,7 +56,7 @@ CubeEffect::CubeEffect()
     , cubeOpacity( 1.0 )
     , opacityDesktopOnly( true )
     , displayDesktopName( false )
-    , desktopNameFrame( EffectFrame::Styled )
+    , desktopNameFrame( effects->effectFrame( Styled ) )
     , reflection( true )
     , rotating( false )
     , desktopChangedWhileRotating( false )
@@ -95,7 +95,7 @@ CubeEffect::CubeEffect()
     {
     desktopNameFont.setBold( true );
     desktopNameFont.setPointSize( 14 );
-    desktopNameFrame.setFont( desktopNameFont );
+    desktopNameFrame->setFont( desktopNameFont );
 
     reconfigure( ReconfigureAll );
     }
@@ -249,6 +249,7 @@ CubeEffect::~CubeEffect()
     delete capTexture;
     delete cylinderShader;
     delete sphereShader;
+    delete desktopNameFrame;
     }
 
 bool CubeEffect::loadShader()
@@ -687,9 +688,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             QRect screenRect = effects->clientArea( ScreenArea, activeScreen, frontDesktop );
             QRect frameRect = QRect( screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
                 screenRect.width() * 0.34f, QFontMetrics( desktopNameFont ).height() );
-            desktopNameFrame.setGeometry( frameRect );
-            desktopNameFrame.setText( effects->desktopName( frontDesktop ) );
-            desktopNameFrame.render( region, opacity );
+            desktopNameFrame->setGeometry( frameRect );
+            desktopNameFrame->setText( effects->desktopName( frontDesktop ) );
+            desktopNameFrame->render( region, opacity );
             }
         }
     else
@@ -1179,7 +1180,7 @@ void CubeEffect::postPaintScreen()
 
                 // delete the GL lists
                 glDeleteLists( glList, 3 );
-                desktopNameFrame.free();
+                desktopNameFrame->free();
                 }
             effects->addRepaintFull();
             }

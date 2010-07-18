@@ -56,6 +56,7 @@ namespace KWin
 
 class EffectWindow;
 class EffectWindowGroup;
+class EffectFrame;
 class Effect;
 class WindowQuad;
 class GLRenderTarget;
@@ -169,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 151
+#define KWIN_EFFECT_API_VERSION_MINOR 152
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -194,6 +195,17 @@ enum DataRole
     WindowMinimizedGrabRole,
     WindowUnminimizedGrabRole,
     WindowForceBlurRole ///< For fullscreen effects to enforce blurring of windows
+    };
+
+/**
+ * Style types used by @ref EffectFrame.
+ * @since 4.6
+ */
+enum EffectFrameStyle
+    {
+        None, ///< Displays no frame around the contents.
+        Unstyled, ///< Displays a basic box around the contents.
+        Styled ///< Displays a Plasma-styled frame around the contents.
     };
 
 /**
@@ -768,6 +780,16 @@ class KWIN_EXPORT EffectsHandler
          */
         bool checkDriverBlacklist( const KConfigGroup& blacklist );
 
+        /**
+         * Creates a new frame object. If the frame does not have a static size
+         * then it will be located at @a position with @a alignment. A
+         * non-static frame will automatically adjust its size to fit the contents.
+         * @returns A new @ref EffectFrame. It is the responsibility of the caller to delete the
+         * EffectFrame.
+         * @since 4.6
+         */
+        virtual EffectFrame* effectFrame( EffectFrameStyle style, bool staticSize = true,
+                                          const QPoint& position = QPoint( -1, -1 ), Qt::Alignment alignment = Qt::AlignCenter ) const = 0;
 
         /**
          * Sends message over DCOP to reload given effect.
@@ -1662,110 +1684,49 @@ class KWIN_EXPORT WindowMotionManager
  * another that doesn't.
  * It is recommended to use this class whenever displaying text.
  */
-class KWIN_EXPORT EffectFrame : public QObject
+class KWIN_EXPORT EffectFrame
     {
-    Q_OBJECT
-
     public:
-        enum Style
-            {
-            None, ///< Displays no frame around the contents.
-            Unstyled, ///< Displays a basic box around the contents.
-            Styled ///< Displays a Plasma-styled frame around the contents.
-            };
-
-        /**
-         * Creates a new frame object. If the frame does not have a static size
-         * then it will be located at @a position with @a alignment. A
-         * non-static frame will automatically adjust its size to fit the
-         * contents.
-         */
-        explicit EffectFrame( Style style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
-            Qt::Alignment alignment = Qt::AlignCenter );
-        ~EffectFrame();
+        EffectFrame();
+        virtual ~EffectFrame();
 
         /**
          * Delete any existing textures to free up graphics memory. They will
          * be automatically recreated the next time they are required.
          */
-        void free();
+        virtual void free() = 0;
 
         /**
          * Render the frame.
          */
-        void render( QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0 );
+        virtual void render( QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0 ) = 0;
 
-        void setPosition( const QPoint& point );
+        virtual void setPosition( const QPoint& point ) = 0;
         /**
          * Set the text alignment for static frames and the position alignment
          * for non-static.
          */
-        inline void setAlignment( Qt::Alignment alignment )
-            { m_alignment = alignment; }; // Doesn't change geometry
-        void setGeometry( const QRect& geometry, bool force = false );
-        inline QRect geometry() const // Inner/contents geometry
-            { return m_geometry; };
+        virtual void setAlignment( Qt::Alignment alignment ) = 0;
+        virtual Qt::Alignment alignment() const = 0;
+        virtual void setGeometry( const QRect& geometry, bool force = false ) = 0;
+        virtual const QRect& geometry() const = 0;
 
-        void setText( const QString& text );
-        inline QString text() const
-            { return m_text; };
-        void setFont( const QFont& font );
-        inline QFont font() const
-            { return m_font; };
+        virtual void setText( const QString& text ) = 0;
+        virtual const QString& text() const = 0;
+        virtual void setFont( const QFont& font ) = 0;
+        virtual const QFont& font() const = 0;
         /**
          * Set the icon that will appear on the left-hand size of the frame.
          */
-        void setIcon( const QPixmap& icon );
-        inline QPixmap icon() const
-            { return m_icon; };
-        void setIconSize( const QSize& size );
-        inline QSize iconSize() const
-            { return m_iconSize; };
+        virtual void setIcon( const QPixmap& icon ) = 0;
+        virtual const QPixmap& icon() const = 0;
+        virtual void setIconSize( const QSize& size ) = 0;
+        virtual const QSize& iconSize() const = 0;
 
         /**
          * The foreground text color as specified by the default Plasma theme.
          */
         static QColor styledTextColor();
-
-        /**
-         * Clean up all static texture data. Called when compositing is being disabled.
-         * @internal
-         */
-        static void cleanup();
-
-    private Q_SLOTS:
-        void plasmaThemeChanged();
-
-    private:
-        Q_DISABLE_COPY( EffectFrame ) // As we need to use Qt slots we cannot copy this class
-
-        void autoResize(); // Auto-resize if not a static size
-        void updateTexture(); // Update OpenGL styled frame texture
-        void updateTextTexture(); // Update OpenGL text texture
-        void updatePicture(); // Update XRender styled frame picture
-        void updateTextPicture(); // Update XRender text picture
-
-        Style m_style;
-        Plasma::FrameSvg m_frame;
-        GLTexture* m_texture;
-        GLTexture* m_textTexture;
-        XRenderPicture* m_picture;
-        XRenderPicture* m_textPicture;
-
-        // Position
-        bool m_static;
-        QPoint m_point;
-        Qt::Alignment m_alignment;
-        QRect m_geometry;
-
-        // Contents
-        QString m_text;
-        QFont m_font;
-        QPixmap m_icon;
-        QSize m_iconSize;
-
-        static GLTexture* m_unstyledTexture;
-        static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };
 
 /**

@@ -144,6 +144,8 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual bool decorationsHaveAlpha() const;
 
+        virtual EffectFrame* effectFrame( EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment ) const;
+
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );
@@ -307,6 +309,68 @@ class EffectWindowGroupImpl
         Group* group;
     };
 
+class EffectFrameImpl
+    : public QObject, public EffectFrame
+    {
+    Q_OBJECT
+    public:
+        explicit EffectFrameImpl( EffectFrameStyle style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
+            Qt::Alignment alignment = Qt::AlignCenter );
+        virtual ~EffectFrameImpl();
+
+        virtual void free();
+        virtual void render( QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0 );
+        virtual Qt::Alignment alignment() const;
+        virtual void setAlignment( Qt::Alignment alignment );
+        virtual const QFont& font() const;
+        virtual void setFont( const QFont& font );
+        virtual const QRect& geometry() const;
+        virtual void setGeometry( const QRect& geometry, bool force = false );
+        virtual const QPixmap& icon() const;
+        virtual void setIcon( const QPixmap& icon );
+        virtual const QSize& iconSize() const;
+        virtual void setIconSize( const QSize& size );
+        virtual void setPosition( const QPoint& point );
+        virtual const QString& text() const;
+        virtual void setText( const QString& text );
+        EffectFrameStyle style() const
+            {
+            return m_style;
+            };
+        Plasma::FrameSvg& frame()
+            {
+            return m_frame;
+            }
+        bool isStatic() const
+            {
+            return m_static;
+            };
+
+    private Q_SLOTS:
+        void plasmaThemeChanged();
+
+    private:
+        Q_DISABLE_COPY( EffectFrameImpl ) // As we need to use Qt slots we cannot copy this class
+
+        void autoResize(); // Auto-resize if not a static size
+
+        EffectFrameStyle m_style;
+        Plasma::FrameSvg m_frame; // TODO: share between all EffectFrames
+
+        // Position
+        bool m_static;
+        QPoint m_point;
+        Qt::Alignment m_alignment;
+        QRect m_geometry;
+
+        // Contents
+        QString m_text;
+        QFont m_font;
+        QPixmap m_icon;
+        QSize m_iconSize;
+
+        Scene::EffectFrame* m_sceneFrame;
+    };
 
 inline
 QList<EffectWindow*> EffectsHandlerImpl::elevatedWindows() const

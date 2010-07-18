@@ -32,6 +32,7 @@ namespace KWin
 
 class Workspace;
 class Deleted;
+class EffectFrameImpl;
 class EffectWindowImpl;
 class LanczosFilter;
 
@@ -41,6 +42,7 @@ class Scene
     public:
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
+        class EffectFrame;
         class Window;
 
         // Returns true if the ctor failed to properly initialize.
@@ -210,6 +212,19 @@ class Scene::Window
         mutable bool shape_valid;
         mutable WindowQuadList* cached_quad_list;
         Q_DISABLE_COPY(Window)
+    };
+
+class Scene::EffectFrame
+    {
+    public:
+        EffectFrame( EffectFrameImpl* frame );
+        virtual ~EffectFrame();
+        virtual void render( QRegion region, double opacity, double frameOpacity ) = 0;
+        virtual void free() = 0;
+        virtual void freeTextFrame() = 0;
+
+    protected:
+        EffectFrameImpl* m_effectFrame;
     };
 
 extern Scene* scene;

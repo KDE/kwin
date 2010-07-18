@@ -233,7 +233,7 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
-    EffectFrame::cleanup();
+    SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }
 
@@ -1908,6 +1908,219 @@ void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity,
     glColor4f( 0, 0, 0, 0 );
 
     glPopAttrib();  // ENABLE_BIT
+    }
+
+//****************************************
+// SceneOpenGL::EffectFrame
+//****************************************
+
+GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
+
+SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
+    : Scene::EffectFrame( frame )
+    , m_texture( NULL )
+    , m_textTexture( NULL )
+    {
+    if( m_effectFrame->style() == Unstyled && !m_unstyledTexture )
+        {
+        updateUnstyledTexture();
+        }
+    }
+
+SceneOpenGL::EffectFrame::~EffectFrame()
+    {
+    delete m_texture;
+    delete m_textTexture;
+    }
+
+void SceneOpenGL::EffectFrame::free()
+    {
+    delete m_texture;
+    m_texture = NULL;
+    delete m_textTexture;
+    m_textTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::freeTextFrame()
+    {
+    delete m_textTexture;
+    m_textTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
+    {
+    if( m_effectFrame->geometry().isEmpty() )
+        return; // Nothing to display
+
+    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
+
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+    glPushMatrix();
+
+    // Render the actual frame
+    if( m_effectFrame->style() == Unstyled )
+        {
+        const QRect& area = m_effectFrame->geometry().adjusted( -5, -5, 5, 5 );
+        const int roundness = 5;
+        QVector<float> verts, texCoords;
+        verts.reserve( 80 );
+        texCoords.reserve( 80 );
+
+        // Center
+        addQuadVertices( verts, area.left() + roundness, area.top() + roundness,
+            area.right() - roundness, area.bottom() - roundness );
+        addQuadVertices( texCoords, 0.5, 0.5, 0.5, 0.5 );
+
+        // Left
+        addQuadVertices( verts, area.left(), area.top() + roundness,
+            area.left() + roundness, area.bottom() - roundness );
+        addQuadVertices( texCoords, 0.0, 0.5, 0.5, 0.5 );
+        // Top
+        addQuadVertices( verts, area.left() + roundness, area.top(),
+            area.right() - roundness, area.top() + roundness );
+        addQuadVertices( texCoords, 0.5, 0.0, 0.5, 0.5 );
+        // Right
+        addQuadVertices( verts, area.right() - roundness, area.top() + roundness,
+            area.right(), area.bottom() - roundness );
+        addQuadVertices( texCoords, 0.5, 0.5, 1.0, 0.5 );
+        // Bottom
+        addQuadVertices( verts, area.left() + roundness, area.bottom() - roundness,
+            area.right() - roundness, area.bottom() );
+        addQuadVertices( texCoords, 0.5, 0.5, 0.5, 1.0 );
+
+        // Top-left
+        addQuadVertices( verts, area.left(), area.top(),
+            area.left() + roundness, area.top() + roundness );
+        addQuadVertices( texCoords, 0.0, 0.0, 0.5, 0.5 );
+        // Top-right
+        addQuadVertices( verts, area.right() - roundness, area.top(),
+            area.right(), area.top() + roundness );
+        addQuadVertices( texCoords, 0.5, 0.0, 1.0, 0.5 );
+        // Bottom-left
+        addQuadVertices( verts, area.left(), area.bottom() - roundness,
+            area.left() + roundness, area.bottom() );
+        addQuadVertices( texCoords, 0.0, 0.5, 0.5, 1.0 );
+        // Bottom-right
+        addQuadVertices( verts, area.right() - roundness, area.bottom() - roundness,
+            area.right(), area.bottom() );
+        addQuadVertices( texCoords, 0.5, 0.5, 1.0, 1.0 );
+
+        glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
+
+        m_unstyledTexture->bind();
+        m_unstyledTexture->enableNormalizedTexCoords();
+        renderGLGeometry( verts.count() / 2, verts.data(), texCoords.data() );
+        m_unstyledTexture->disableNormalizedTexCoords();
+        m_unstyledTexture->unbind();
+        }
+    else if( m_effectFrame->style() == Styled )
+        {
+        if( !m_texture ) // Lazy creation
+            updateTexture();
+
+        glColor4f( 1.0, 1.0, 1.0, opacity * frameOpacity );
+
+        m_texture->bind();
+        qreal left, top, right, bottom;
+        m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ));
+        m_texture->unbind();
+        }
+
+    glColor4f( 1.0, 1.0, 1.0, opacity );
+
+    // Render icon
+    if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
+        {
+        QPoint topLeft( m_effectFrame->geometry().x(),
+                        m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2 );
+
+        GLTexture* icon = new GLTexture( m_effectFrame->icon() ); // TODO: Cache
+        icon->bind();
+        icon->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
+        icon->unbind();
+        delete icon;
+        }
+
+    // Render text
+    if( !m_effectFrame->text().isEmpty() )
+        {
+        if( !m_textTexture ) // Lazy creation
+            updateTextTexture();
+        m_textTexture->bind();
+        m_textTexture->render( region, m_effectFrame->geometry() );
+        m_textTexture->unbind();
+        }
+
+    glPopMatrix();
+    glPopAttrib();
+    }
+
+void SceneOpenGL::EffectFrame::updateTexture()
+    {
+    delete m_texture;
+    if( m_effectFrame->style() == Styled )
+        m_texture = new GLTexture( m_effectFrame->frame().framePixmap() );
+    }
+
+void SceneOpenGL::EffectFrame::updateTextTexture()
+    {
+    delete m_textTexture;
+
+    if( m_effectFrame->text().isEmpty() )
+        return;
+
+    // Determine position on texture to paint text
+    QRect rect( QPoint( 0, 0 ), m_effectFrame->geometry().size() );
+    if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
+        rect.setLeft( m_effectFrame->iconSize().width() );
+
+    // If static size elide text as required
+    QString text = m_effectFrame->text();
+    if( m_effectFrame->isStatic() )
+        {
+        QFontMetrics metrics( m_effectFrame->font() );
+        text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+        }
+
+    QImage image( m_effectFrame->geometry().size(), QImage::Format_ARGB32 );
+    image.fill( Qt::transparent );
+    QPainter p( &image );
+    p.setFont( m_effectFrame->font() );
+    if( m_effectFrame->style() == Styled )
+        p.setPen( m_effectFrame->styledTextColor() );
+    else // TODO: What about no frame? Custom color setting required
+        p.setPen( Qt::white );
+    p.drawText( rect, m_effectFrame->alignment(), text );
+    p.end();
+    m_textTexture = new GLTexture( image );
+    }
+
+void SceneOpenGL::EffectFrame::updateUnstyledTexture()
+    {
+    delete m_unstyledTexture;
+    // Based off circle() from kwinxrenderutils.cpp
+#define CS 8
+    QImage tmp( 2 * CS, 2 * CS, QImage::Format_ARGB32 );
+    tmp.fill( Qt::transparent );
+    QPainter p( &tmp );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( Qt::black );
+    p.drawEllipse( tmp.rect() );
+    p.end();
+#undef CS
+    m_unstyledTexture = new GLTexture( tmp );
+    }
+
+void SceneOpenGL::EffectFrame::cleanup()
+    {
+    delete m_unstyledTexture;
+    m_unstyledTexture = NULL;
     }
 
 } // namespace

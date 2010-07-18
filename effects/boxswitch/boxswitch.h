@@ -79,7 +79,7 @@ class BoxSwitchEffect
         Window mInput;
         int mMode;
 
-        EffectFrame thumbnailFrame;
+        EffectFrame* thumbnailFrame;
 
         QRect frame_area;
         int highlight_margin;

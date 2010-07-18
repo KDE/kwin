@@ -38,6 +38,7 @@ class SceneOpenGL
     : public Scene
     {
     public:
+        class EffectFrame;
         class Texture;
         class Window;
         SceneOpenGL( Workspace* ws );
@@ -163,6 +164,31 @@ class SceneOpenGL::Window
         Texture leftTexture;
         Texture rightTexture;
         Texture bottomTexture;
+    };
+
+class SceneOpenGL::EffectFrame
+    : public Scene::EffectFrame
+    {
+    public:
+        EffectFrame( EffectFrameImpl* frame );
+        virtual ~EffectFrame();
+
+        virtual void free();
+        virtual void freeTextFrame();
+
+        virtual void render(QRegion region, double opacity, double frameOpacity);
+
+        static void cleanup();
+
+    private:
+        void updateTexture();
+        void updateTextTexture();
+
+        GLTexture* m_texture;
+        GLTexture* m_textTexture;
+
+        static GLTexture* m_unstyledTexture;
+        static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };
 
 } // namespace

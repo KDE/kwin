@@ -53,7 +53,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_mode( ModeCurrentDesktop )
     , m_managerWindow( NULL )
     , m_highlightedWindow( NULL )
-    , m_filterFrame( EffectFrame::Styled, false )
+    , m_filterFrame( effects->effectFrame( Styled, false ) )
     {
     m_atomDesktop = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_DESKTOP", False );
     m_atomWindows = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_GROUP", False );
@@ -68,7 +68,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     QFont font;
     font.setPointSize( font.pointSize() * 2 );
     font.setBold( true );
-    m_filterFrame.setFont( font );
+    m_filterFrame->setFont( font );
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = ( KAction* )actionCollection->addAction( "Expose" );
@@ -106,6 +106,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
         {
         effects->unreserveElectricBorder( border );
         }
+    delete m_filterFrame;
     }
 
 void PresentWindowsEffect::reconfigure( ReconfigureFlags )
@@ -197,7 +198,7 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
 
     // Display the filter box
     if( !m_windowFilter.isEmpty() )
-        m_filterFrame.render( region );
+        m_filterFrame->render( region );
     }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -376,12 +377,12 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
     m_windowData[w].visible = isVisibleWindow( w );
     m_windowData[w].opacity = 0.0;
     m_windowData[w].highlight = 0.0;
-    m_windowData[w].textFrame = new EffectFrame( EffectFrame::Unstyled, false );
+    m_windowData[w].textFrame = effects->effectFrame( Unstyled, false );
     QFont font;
     font.setBold( true );
     font.setPointSize( 12 );
     m_windowData[w].textFrame->setFont( font );
-    m_windowData[w].iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+    m_windowData[w].iconFrame = effects->effectFrame( Unstyled, false );
     m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
     m_windowData[w].iconFrame->setIcon( w->icon() );
     if( isSelectableWindow( w ))
@@ -1549,12 +1550,12 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             if( w->isOnCurrentDesktop() && !w->isMinimized() )
                 m_windowData[w].opacity = 1.0;
             m_windowData[w].highlight = 1.0;
-            m_windowData[w].textFrame = new EffectFrame( EffectFrame::Unstyled, false );
+            m_windowData[w].textFrame = effects->effectFrame( Unstyled, false );
             QFont font;
             font.setBold( true );
             font.setPointSize( 12 );
             m_windowData[w].textFrame->setFont( font );
-            m_windowData[w].iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+            m_windowData[w].iconFrame = effects->effectFrame( Unstyled, false );
             m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
             m_windowData[w].iconFrame->setIcon( w->icon() );
             }
@@ -1642,7 +1643,7 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
         // Move all windows back to their original position
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             m_motionManager.moveWindow( w, w->geometry() );
-        m_filterFrame.free();
+        m_filterFrame->free();
         m_windowFilter.clear();
         m_selectedWindows.clear();
 
@@ -1670,8 +1671,8 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
 void PresentWindowsEffect::updateFilterFrame()
     {
     QRect area = effects->clientArea( ScreenArea, effects->activeScreen(), effects->currentDesktop() );
-    m_filterFrame.setPosition( QPoint( area.x() + area.width() / 2, area.y() + area.height() / 2 ));
-    m_filterFrame.setText( i18n( "Filter:\n%1", m_windowFilter ));
+    m_filterFrame->setPosition( QPoint( area.x() + area.width() / 2, area.y() + area.height() / 2 ));
+    m_filterFrame->setText( i18n( "Filter:\n%1", m_windowFilter ));
     }
 
 //-----------------------------------------------------------------------------

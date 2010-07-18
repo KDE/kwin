@@ -37,6 +37,7 @@ class SceneXrender
     : public Scene
     {
     public:
+        class EffectFrame;
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
         virtual bool initFailed() const;
@@ -90,6 +91,25 @@ class SceneXrender::Window
         double alpha_cached_opacity;
         QRegion transformed_shape;
         static QPixmap *temp_pixmap;
+    };
+
+class SceneXrender::EffectFrame
+    : public Scene::EffectFrame
+    {
+    public:
+        EffectFrame( EffectFrameImpl* frame );
+        virtual ~EffectFrame();
+
+        virtual void free();
+        virtual void freeTextFrame();
+        virtual void render( QRegion region, double opacity, double frameOpacity );
+
+    private:
+        void updatePicture();
+        void updateTextPicture();
+
+        XRenderPicture* m_picture;
+        XRenderPicture* m_textPicture;
     };
 
 inline

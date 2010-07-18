@@ -1188,7 +1188,7 @@ void DesktopGridEffect::setup()
         font.setPointSize( 12 );
         for( int i = 0; i < effects->numberOfDesktops(); i++ )
             {
-            EffectFrame* frame = new EffectFrame( EffectFrame::Unstyled, false );
+            EffectFrame* frame = effects->effectFrame( Unstyled, false );
             frame->setFont( font );
             frame->setText( effects->desktopName( i+1 ));
             frame->setAlignment( desktopNameAlignment );
@@ -1428,7 +1428,7 @@ void DesktopGridEffect::desktopsAdded( int old )
         font.setPointSize( 12 );
         for( int i = old; i < desktop; i++ )
             {
-            EffectFrame* frame = new EffectFrame( EffectFrame::Unstyled, false );
+            EffectFrame* frame = effects->effectFrame( Unstyled, false );
             frame->setFont( font );
             frame->setText( effects->desktopName( i+1 ));
             frame->setAlignment( desktopNameAlignment );

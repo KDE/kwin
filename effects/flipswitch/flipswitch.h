@@ -90,7 +90,7 @@ class FlipSwitchEffect
         bool m_hasKeyboardGrab;
         Window m_input;
         FlipSwitchMode m_mode;
-        EffectFrame m_captionFrame;
+        EffectFrame* m_captionFrame;
         QFont m_captionFont;
         EffectWindowList m_flipOrderedWindows;
         QHash< const EffectWindow*, ItemInfo* > m_windows;

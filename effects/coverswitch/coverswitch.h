@@ -93,7 +93,7 @@ class CoverSwitchEffect
         EffectWindowList currentWindowList;
         EffectWindowList referrencedWindows;
 
-        EffectFrame captionFrame;
+        EffectFrame* captionFrame;
         QFont captionFont;
 
         bool thumbnails;
