@@ -83,6 +83,7 @@ void initGL()
     GLTexture::initStatic();
     GLShader::initStatic();
     GLRenderTarget::initStatic();
+    GLVertexBuffer::initStatic();
     }
 
 bool hasGLVersion(int major, int minor, int release)
@@ -386,6 +387,7 @@ GLTexture::GLTexture( int width, int height )
 
 GLTexture::~GLTexture()
     {
+    delete m_vbo;
     discard();
     assert( mUnnormalizeActive == 0 );
     assert( mNormalizeActive == 0 );
@@ -401,6 +403,7 @@ void GLTexture::init()
     has_valid_mipmaps = false;
     mUnnormalizeActive = 0;
     mNormalizeActive = 0;
+    m_vbo = 0;
     }
 
 void GLTexture::initStatic()
@@ -499,23 +502,56 @@ void GLTexture::unbind()
 
 void GLTexture::render( QRegion region, const QRect& rect )
     {
-    const float verts[ 4 * 2 ] =
+    if( rect != m_cachedGeometry )
         {
-        rect.x(), rect.y(),
-        rect.x(), rect.y() + rect.height(),
-        rect.x() + rect.width(), rect.y() + rect.height(),
-        rect.x() + rect.width(), rect.y()
-        };
-    const float texcoords[ 4 * 2 ] =
+        m_cachedGeometry = rect;
+        if( !m_vbo && GLVertexBuffer::isSupported() )
+            {
+            m_vbo = new GLVertexBuffer( KWin::GLVertexBuffer::Static );
+            }
+        if( m_vbo )
+            {
+            const float verts[ 4 * 2 ] =
+                {
+                rect.x(), rect.y(),
+                rect.x(), rect.y() + rect.height(),
+                rect.x() + rect.width(), rect.y(),
+                rect.x() + rect.width(), rect.y() + rect.height()
+                };
+            const float texcoords[ 4 * 2 ] =
+                {
+                0.0f, 1.0f, // y needs to be swapped (normalized coords)
+                0.0f, 0.0f,
+                1.0f, 1.0f,
+                1.0f, 0.0f
+                };
+            m_vbo->setData( 4, 2, verts, texcoords );
+            }
+        }
+    if( m_vbo )
         {
-        0, 1, // y needs to be swapped (normalized coords)
-        0, 0,
-        1, 0,
-        1, 1
-        };
-    enableNormalizedTexCoords();
-    renderGLGeometry( region, 4, verts, texcoords );
-    disableNormalizedTexCoords();
+        m_vbo->render( GL_TRIANGLE_STRIP );
+        }
+    else
+        {
+        const float verts[ 4 * 2 ] =
+            {
+            rect.x(), rect.y(),
+            rect.x(), rect.y() + rect.height(),
+            rect.x() + rect.width(), rect.y() + rect.height(),
+            rect.x() + rect.width(), rect.y()
+            };
+        const float texcoords[ 4 * 2 ] =
+            {
+            0, 1, // y needs to be swapped (normalized coords)
+            0, 0,
+            1, 0,
+            1, 1
+            };
+        enableNormalizedTexCoords();
+        renderGLGeometry( region, 4, verts, texcoords );
+        disableNormalizedTexCoords();
+        }
     }
 
 void GLTexture::enableUnnormalizedTexCoords()
@@ -1136,6 +1172,122 @@ void GLRenderTarget::initFBO()
 
     mValid = true;
     }
+
+
+//*********************************
+// GLVertexBufferPrivate
+//*********************************
+class GLVertexBufferPrivate
+    {
+    public:
+        GLVertexBufferPrivate( GLVertexBuffer::UsageHint usageHint )
+            : hint( usageHint )
+            , numberVertices( 0 )
+            , dimension( 2 )
+            {
+            glGenBuffers( 2, buffers );
+            }
+        ~GLVertexBufferPrivate()
+            {
+            glDeleteBuffers( 2, buffers );
+            }
+        GLVertexBuffer::UsageHint hint;
+        GLuint buffers[2];
+        int numberVertices;
+        int dimension;
+        static bool supported;
+    };
+bool GLVertexBufferPrivate::supported = false;
+
+//*********************************
+// GLVertexBuffer
+//*********************************
+GLVertexBuffer::GLVertexBuffer( UsageHint hint )
+    : d( new GLVertexBufferPrivate( hint ) )
+    {
+    }
+
+GLVertexBuffer::~GLVertexBuffer()
+    {
+    delete d;
+    }
+
+void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices, const float* texcoords )
+    {
+    d->numberVertices = numberVertices;
+    d->dimension = dim;
+    GLenum hint;
+    switch( d->hint )
+        {
+        case Dynamic:
+            hint = GL_DYNAMIC_DRAW;
+            break;
+        case Static:
+            hint = GL_STATIC_DRAW;
+            break;
+        case Stream:
+            hint = GL_STREAM_DRAW;
+            break;
+        default:
+            // just to make the compiler happy
+            hint = GL_STREAM_DRAW;
+            break;
+        }
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
+    glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*d->dimension, vertices, hint );
+
+    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
+    glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    glDisableClientState( GL_VERTEX_ARRAY );
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
+
+void GLVertexBuffer::render( GLenum primitiveMode )
+    {
+    render( infiniteRegion(), primitiveMode );
+    }
+
+void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
+    {
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
+    glVertexPointer( d->dimension, GL_FLOAT, 0, 0 );
+
+    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
+    glTexCoordPointer( 2, GL_FLOAT, 0, 0 );
+
+    // Clip using scissoring
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+        !iterator.isDone();
+        iterator.next())
+        {
+        glDrawArrays( primitiveMode, 0, d->numberVertices );
+        }
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    glDisableClientState( GL_VERTEX_ARRAY );
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
+
+
+bool GLVertexBuffer::isSupported()
+    {
+    return GLVertexBufferPrivate::supported;
+    }
+
+void GLVertexBuffer::initStatic()
+    {
+    GLVertexBufferPrivate::supported = hasGLExtension( "GL_ARB_vertex_buffer_object" );
+    }
+
 
 } // namespace
 

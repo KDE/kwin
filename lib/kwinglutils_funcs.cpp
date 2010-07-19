@@ -109,6 +109,11 @@ glProgramStringARB_func glProgramStringARB;
 glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
 glDeleteProgramsARB_func glDeleteProgramsARB;
 glGetProgramivARB_func glGetProgramivARB;
+// vertex buffer objects
+glGenBuffers_func glGenBuffers;
+glDeleteBuffers_func glDeleteBuffers;
+glBindBuffer_func glBindBuffer;
+glBufferData_func glBufferData;
 
 
 static glXFuncPtr getProcAddress( const char* name )
@@ -259,6 +264,20 @@ void glResolveFunctions()
         GL_RESOLVE( glGetProgramivARB );
         }
     GL_RESOLVE_WITH_EXT( glBlendColor, glBlendColorARB );
+    if( hasGLExtension( "GL_ARB_vertex_buffer_object" ) )
+        {
+        GL_RESOLVE_WITH_EXT( glGenBuffers, glGenBuffersARB );
+        GL_RESOLVE_WITH_EXT( glDeleteBuffers, glDeleteBuffersARB );
+        GL_RESOLVE_WITH_EXT( glBindBuffer, glBindBufferARB );
+        GL_RESOLVE_WITH_EXT( glBufferData, glBufferDataARB );
+        }
+    else
+        {
+        glGenBuffers = NULL;
+        glDeleteBuffers = NULL;
+        glBindBuffer = NULL;
+        glBufferData = NULL;
+        }
     }
 
 } // namespace

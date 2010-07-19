@@ -314,6 +314,15 @@ extern KWIN_EXPORT glProgramStringARB_func glProgramStringARB;
 extern KWIN_EXPORT glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
 extern KWIN_EXPORT glDeleteProgramsARB_func glDeleteProgramsARB;
 extern KWIN_EXPORT glGetProgramivARB_func glGetProgramivARB;
+// vertex buffer objects
+typedef void (*glGenBuffers_func)(GLsizei, GLuint*);
+extern KWIN_EXPORT glGenBuffers_func glGenBuffers;
+typedef void (*glDeleteBuffers_func)(GLsizei n, const GLuint* );
+extern KWIN_EXPORT glDeleteBuffers_func glDeleteBuffers;
+typedef void (*glBindBuffer_func)(GLenum, GLuint);
+extern KWIN_EXPORT glBindBuffer_func glBindBuffer;
+typedef void (*glBufferData_func)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
+extern KWIN_EXPORT glBufferData_func glBufferData;
 
 } // namespace
 

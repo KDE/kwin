@@ -44,6 +44,8 @@ namespace KWin
 
 
 class GLTexture;
+class GLVertexBuffer;
+class GLVertexBufferPrivate;
 
 
 // Initializes GLX function pointers
@@ -198,6 +200,8 @@ class KWIN_EXPORT GLTexture
         void init();
         int mUnnormalizeActive; // 0 - no, otherwise refcount
         int mNormalizeActive; // 0 - no, otherwise refcount
+        GLVertexBuffer* m_vbo;
+        QRect m_cachedGeometry;
 
         static bool mNPOTTextureSupported;
         static bool mFramebufferObjectSupported;
@@ -292,6 +296,66 @@ class KWIN_EXPORT GLRenderTarget
         bool mValid;
 
         GLuint mFramebuffer;
+};
+
+/**
+ * @short Vertex Buffer Object
+ *
+ * This is a short helper class to use vertex buffer objects (VBO). A VBO can be used to buffer
+ * vertex data and to store them on graphics memory. It is the only allowed way to pass vertex
+ * data to the GPU in OpenGL ES 2 and OpenGL 3 with forward compatible mode.
+ *
+ * @author Martin Gräßlin <kde@martin-graesslin.com>
+ * @since 4.6
+ */
+class KWIN_EXPORT GLVertexBuffer
+{
+    public:
+        /**
+         * Enum to define how often the vertex data in the buffer object changes.
+         */
+        enum UsageHint
+            {
+            Dynamic, ///< frequent changes, but used several times for rendering
+            Static, ///< No changes to data
+            Stream ///< Data only used once for rendering, updated very frequently
+            };
+
+        GLVertexBuffer( UsageHint hint );
+        ~GLVertexBuffer();
+
+        /**
+         * Sets the vertex data.
+         * @param numberVertices The number of vertices in the arrays
+         * @param dim The dimension of the vertices: 2 for x/y, 3 for x/y/z
+         * @param vertices The vertices, size must equal @a numberVertices * @a dim
+         * @param texcoords The texture coordinates for each vertex.
+         * Size must equal 2 * @a numberVertices.
+         */
+        void setData( int numberVertices, int dim, const float* vertices, const float* texcoords);
+        /**
+         * Renders the vertex data in given @a primitiveMode.
+         * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed
+         * values for @a primitiveMode. Best is to use GL_TRIANGLES or similar to be future
+         * compatible.
+         */
+        void render( GLenum primitiveMode );
+        /**
+         * Same as above restricting painting to @a region.
+         */
+        void render( const QRegion& region, GLenum primitiveMode );
+
+        /**
+         * @internal
+         */
+        static void initStatic();
+        /**
+         * @returns true if vertex buffer objects are supported
+         */
+        static bool isSupported();
+
+    private:
+        GLVertexBufferPrivate* const d;
 };
 
 } // namespace
