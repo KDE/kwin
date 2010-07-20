@@ -530,7 +530,7 @@ void GLTexture::render( QRegion region, const QRect& rect )
         }
     if( m_vbo )
         {
-        m_vbo->render( GL_TRIANGLE_STRIP );
+        m_vbo->render( region, GL_TRIANGLE_STRIP );
         }
     else
         {
