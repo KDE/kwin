@@ -306,10 +306,14 @@ namespace Oxygen
         lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
         lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
-
         // draw ellipse.
         p.setBrush( lg );
         p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
+
+        // mask
+        p.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+        p.setBrush( Qt::black );
+        p.drawEllipse( QRectF( size-3, size-3, 6, 6 ) );
 
         p.end();
         return shadow;

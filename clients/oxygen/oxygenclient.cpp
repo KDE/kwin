@@ -1355,7 +1355,6 @@ namespace Oxygen
             if( configuration().useOxygenShadows() && glowIsAnimated() && !isForcedActive() )
             {
 
-                //tileSet = shadowCache().tileSet( this, glowIntensity() );
                 tileSet = shadowCache().tileSet( background, key, glowIntensity() );
 
             } else tileSet = shadowCache().tileSet( background, key );
@@ -1387,7 +1386,7 @@ namespace Oxygen
 
                 // disable bottom corners when border frame is too small and window is not shaded
                 if( configuration().frameBorder() == Configuration::BorderNone && !isShade() ) bottom = 0;
-                QRegion mask( helper().roundedRegion( frame, left, right, top, bottom ) );
+                QRegion mask( helper().roundedMask( frame, left, right, top, bottom ) );
 
                 // in no-border configuration, an extra pixel is added to the mask
                 // in order to get the corners color right in case of title highlighting.
