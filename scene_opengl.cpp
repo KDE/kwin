@@ -1920,6 +1920,7 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     : Scene::EffectFrame( frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
+    , m_iconTexture( NULL )
     {
     if( m_effectFrame->style() == Unstyled && !m_unstyledTexture )
         {
@@ -1931,6 +1932,7 @@ SceneOpenGL::EffectFrame::~EffectFrame()
     {
     delete m_texture;
     delete m_textTexture;
+    delete m_iconTexture;
     }
 
 void SceneOpenGL::EffectFrame::free()
@@ -1939,6 +1941,14 @@ void SceneOpenGL::EffectFrame::free()
     m_texture = NULL;
     delete m_textTexture;
     m_textTexture = NULL;
+    delete m_iconTexture;
+    m_iconTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::freeIconFrame()
+    {
+    delete m_iconTexture;
+    m_iconTexture = NULL;
     }
 
 void SceneOpenGL::EffectFrame::freeTextFrame()
@@ -2039,11 +2049,15 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         QPoint topLeft( m_effectFrame->geometry().x(),
                         m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2 );
 
-        GLTexture* icon = new GLTexture( m_effectFrame->icon() ); // TODO: Cache
-        icon->bind();
-        icon->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
-        icon->unbind();
-        delete icon;
+        if( !m_iconTexture ) // lazy creation
+            {
+            m_iconTexture = new Texture( m_effectFrame->icon().handle(),
+                                         m_effectFrame->icon().size(),
+                                         m_effectFrame->icon().depth() );
+            }
+        m_iconTexture->bind();
+        m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
+        m_iconTexture->unbind();
         }
 
     // Render text

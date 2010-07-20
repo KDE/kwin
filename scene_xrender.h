@@ -101,6 +101,7 @@ class SceneXrender::EffectFrame
         virtual ~EffectFrame();
 
         virtual void free();
+        virtual void freeIconFrame();
         virtual void freeTextFrame();
         virtual void render( QRegion region, double opacity, double frameOpacity );
 
@@ -110,6 +111,7 @@ class SceneXrender::EffectFrame
 
         XRenderPicture* m_picture;
         XRenderPicture* m_textPicture;
+        XRenderPicture* m_iconPicture;
     };
 
 inline

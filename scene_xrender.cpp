@@ -854,12 +854,14 @@ SceneXrender::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     {
     m_picture = NULL;
     m_textPicture = NULL;
+    m_iconPicture = NULL;
     }
 
 SceneXrender::EffectFrame::~EffectFrame()
     {
     delete m_picture;
     delete m_textPicture;
+    delete m_iconPicture;
     }
 
 void SceneXrender::EffectFrame::free()
@@ -868,6 +870,14 @@ void SceneXrender::EffectFrame::free()
     m_picture = NULL;
     delete m_textPicture;
     m_textPicture = NULL;
+    delete m_iconPicture;
+    m_iconPicture = NULL;
+    }
+
+void SceneXrender::EffectFrame::freeIconFrame()
+    {
+    delete m_iconPicture;
+    m_iconPicture = NULL;
     }
 
 void SceneXrender::EffectFrame::freeTextFrame()
@@ -907,11 +917,11 @@ void SceneXrender::EffectFrame::render( QRegion region, double opacity, double f
         {
         QPoint topLeft( m_effectFrame->geometry().x(), m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2 );
 
-        XRenderPicture* icon = new XRenderPicture( m_effectFrame->icon() ); // TODO: Cache
+        if( !m_iconPicture ) // lazy creation
+            m_iconPicture = new XRenderPicture( m_effectFrame->icon() );
         QRect geom = QRect( topLeft, m_effectFrame->iconSize() );
-        XRenderComposite( display(), PictOpOver, *icon, fill, effects->xrenderBufferPicture(),
+        XRenderComposite( display(), PictOpOver, *m_iconPicture, fill, effects->xrenderBufferPicture(),
             0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
-        delete icon;
         }
 
     // Render text

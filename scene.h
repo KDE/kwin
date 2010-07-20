@@ -221,6 +221,7 @@ class Scene::EffectFrame
         virtual ~EffectFrame();
         virtual void render( QRegion region, double opacity, double frameOpacity ) = 0;
         virtual void free() = 0;
+        virtual void freeIconFrame() = 0;
         virtual void freeTextFrame() = 0;
 
     protected:

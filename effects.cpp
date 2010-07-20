@@ -1745,6 +1745,7 @@ void EffectFrameImpl::setIcon( const QPixmap& icon )
         {
         setIconSize( m_icon.size() );
         }
+    m_sceneFrame->freeIconFrame();
     }
 
 const QSize& EffectFrameImpl::iconSize() const
@@ -1760,6 +1761,7 @@ void EffectFrameImpl::setIconSize( const QSize& size )
         }
     m_iconSize = size;
     autoResize();
+    m_sceneFrame->freeIconFrame();
     }
 
 void EffectFrameImpl::plasmaThemeChanged()

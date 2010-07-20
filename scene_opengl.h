@@ -174,6 +174,7 @@ class SceneOpenGL::EffectFrame
         virtual ~EffectFrame();
 
         virtual void free();
+        virtual void freeIconFrame();
         virtual void freeTextFrame();
 
         virtual void render(QRegion region, double opacity, double frameOpacity);
@@ -186,6 +187,7 @@ class SceneOpenGL::EffectFrame
 
         GLTexture* m_texture;
         GLTexture* m_textTexture;
+        GLTexture* m_iconTexture;
 
         static GLTexture* m_unstyledTexture;
         static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
