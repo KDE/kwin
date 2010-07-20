@@ -530,7 +530,9 @@ void GLTexture::render( QRegion region, const QRect& rect )
         }
     if( m_vbo )
         {
+        enableNormalizedTexCoords();
         m_vbo->render( region, GL_TRIANGLE_STRIP );
+        disableNormalizedTexCoords();
         }
     else
         {
