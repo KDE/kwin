@@ -520,19 +520,17 @@ void GLTexture::render( QRegion region, const QRect& rect )
                 };
             const float texcoords[ 4 * 2 ] =
                 {
-                0.0f, 1.0f, // y needs to be swapped (normalized coords)
-                0.0f, 0.0f,
-                1.0f, 1.0f,
-                1.0f, 0.0f
+                0.0f, y_inverted ? 0.0f : 1.0f, // y needs to be swapped (normalized coords)
+                0.0f, y_inverted ? 1.0f : 0.0f,
+                1.0f, y_inverted ? 0.0f : 1.0f,
+                1.0f, y_inverted ? 1.0f : 0.0f
                 };
             m_vbo->setData( 4, 2, verts, texcoords );
             }
         }
     if( m_vbo )
         {
-        enableNormalizedTexCoords();
         m_vbo->render( region, GL_TRIANGLE_STRIP );
-        disableNormalizedTexCoords();
         }
     else
         {
@@ -545,14 +543,12 @@ void GLTexture::render( QRegion region, const QRect& rect )
             };
         const float texcoords[ 4 * 2 ] =
             {
-            0, 1, // y needs to be swapped (normalized coords)
-            0, 0,
-            1, 0,
-            1, 1
+            0.0f, y_inverted ? 0.0f : 1.0f, // y needs to be swapped (normalized coords)
+            0.0f, y_inverted ? 1.0f : 0.0f,
+            1.0f, y_inverted ? 1.0f : 0.0f,
+            1.0f, y_inverted ? 0.0f : 1.0f
             };
-        enableNormalizedTexCoords();
         renderGLGeometry( region, 4, verts, texcoords );
-        disableNormalizedTexCoords();
         }
     }
 
