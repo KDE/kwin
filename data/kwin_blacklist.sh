@@ -4,7 +4,7 @@ done
 
 echo ""
 echo "[Blacklist][Lanczos]"
-echo "Intel=GM45 Express Chipset GEM 20100328:-:7.8.2,965GM GEM 20100328 2010Q1:-:7.8.2,965GM GEM 20091221 2009Q4:-:7.7.1"
+echo "Intel=GM45 Express Chipset GEM 20100328:-:7.8.2,965GM GEM 20100328 2010Q1:-:7.8.2,965GM GEM 20091221 2009Q4:-:7.7.1,Ironlake Mobile GEM 20100328:-:7.8.2"
 echo "Advanced Micro Devices=DRI R600:-:7.8.1,DRI R600:-:7.8.2"
 echo ""
 echo "[Blacklist][Blur]"
