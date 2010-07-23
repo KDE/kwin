@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 
 #include "boxswitch/boxswitch_config.h"
+#include "dashboard/dashboard_config.h"
 #include "desktopgrid/desktopgrid_config.h"
 #include "diminactive/diminactive_config.h"
 #include "magiclamp/magiclamp_config.h"
@@ -59,6 +60,7 @@ namespace KWin
 
 KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( boxswitch, BoxSwitchEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( dashboard, DashboardEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( desktopgrid, DesktopGridEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( diminactive, DimInactiveEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( magiclamp, MagicLampEffectConfig )

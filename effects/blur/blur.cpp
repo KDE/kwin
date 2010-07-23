@@ -25,12 +25,6 @@
 
 namespace KWin
 {
-
-enum {
-    BlurRegionRole = 0x1C50A74B 
-};
-
-
 KWIN_EFFECT(blur, BlurEffect)
 KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
 
@@ -97,9 +91,9 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         // Set the data to a dummy value.
         // This is needed to be able to distinguish between the value not
         // being set, and being set to an empty region.
-        w->setData(BlurRegionRole, 1);
+        w->setData(WindowBlurBehindRole, 1);
     } else
-        w->setData(BlurRegionRole, region);
+        w->setData(WindowBlurBehindRole, region);
 }
 
 void BlurEffect::windowAdded(EffectWindow *w)
@@ -152,7 +146,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
 {
     QRegion region;
 
-    const QVariant value = w->data(BlurRegionRole);
+    const QVariant value = w->data(WindowBlurBehindRole);
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
@@ -229,7 +223,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     bool valid = target->valid() && shader->isValid();
 
     QRegion shape;
-    const QVariant forceBlur = w->data( WindowForceBlurRole );
+    const QVariant forceBlur = w->data( WindowBlurBehindRole );
     if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool() ))
             && hasAlpha && !w->isDesktop() && !transformed)
         shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
