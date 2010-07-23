@@ -27,65 +27,65 @@
 #include <KLocale>
 namespace Oxygen
 {
-
-  //_______________________________________________
-  const QString ExceptionModel::column_titles_[ ExceptionModel::n_columns ] =
-  {
-    "",
-    i18n("Exception Type"),
-    i18n("Regular Expression")
-  };
-
-  //__________________________________________________________________
-  QVariant ExceptionModel::data( const QModelIndex& index, int role ) const
-  {
-
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
-
-    // retrieve associated file info
-    const Exception& exception( get(index) );
-
-    // return text associated to file and column
-    if( role == Qt::DisplayRole )
+    
+    //_______________________________________________
+    const QString ExceptionModel::_columnTitles[ ExceptionModel::nColumns ] =
     {
-
-      switch( index.column() )
-      {
-        case TYPE: return exception.typeName( true );
-        case REGEXP: return exception.regExp().pattern();
-        default: return QVariant();
-        break;
-      }
-
-    } else if( role == Qt::CheckStateRole &&  index.column() == ENABLED ) {
-
-      return exception.enabled() ? Qt::Checked : Qt::Unchecked;
-
-    } else if( role == Qt::ToolTipRole &&  index.column() == ENABLED ) {
-
-      return i18n("Enable/disable this exception");
-
+        "",
+        i18n("Exception Type"),
+        i18n("Regular Expression")
+    };
+    
+    //__________________________________________________________________
+    QVariant ExceptionModel::data( const QModelIndex& index, int role ) const
+    {
+        
+        // check index, role and column
+        if( !index.isValid() ) return QVariant();
+        
+        // retrieve associated file info
+        const Exception& exception( get(index) );
+        
+        // return text associated to file and column
+        if( role == Qt::DisplayRole )
+        {
+            
+            switch( index.column() )
+            {
+                case TYPE: return exception.typeName( true );
+                case REGEXP: return exception.regExp().pattern();
+                default: return QVariant();
+                break;
+            }
+            
+        } else if( role == Qt::CheckStateRole &&  index.column() == ENABLED ) {
+            
+            return exception.enabled() ? Qt::Checked : Qt::Unchecked;
+            
+        } else if( role == Qt::ToolTipRole &&  index.column() == ENABLED ) {
+            
+            return i18n("Enable/disable this exception");
+            
+        }
+        
+        
+        return QVariant();
     }
-
-
-    return QVariant();
-  }
-
-  //__________________________________________________________________
-  QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
-  {
-
-    if(
-      orientation == Qt::Horizontal &&
-      role == Qt::DisplayRole &&
-      section >= 0 &&
-      section < n_columns )
-    { return column_titles_[section]; }
-
-    // return empty
-    return QVariant();
-
-  }
-
+    
+    //__________________________________________________________________
+    QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
+    {
+        
+        if(
+            orientation == Qt::Horizontal &&
+            role == Qt::DisplayRole &&
+            section >= 0 &&
+            section < nColumns )
+        { return _columnTitles[section]; }
+        
+        // return empty
+        return QVariant();
+        
+    }
+    
 }

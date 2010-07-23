@@ -30,51 +30,51 @@
 
 namespace Oxygen
 {
-
-  //! qlistview for object counters
-  class ExceptionModel: public ListModel<Exception>
-  {
-
-    public:
-
-    //! number of columns
-    enum { n_columns = 3 };
-
-    //! column type enumeration
-    enum ColumnType {
-      ENABLED,
-      TYPE,
-      REGEXP
+    
+    //! qlistview for object counters
+    class ExceptionModel: public ListModel<Exception>
+    {
+        
+        public:
+        
+        //! number of columns
+        enum { nColumns = 3 };
+        
+        //! column type enumeration
+        enum ColumnType {
+            ENABLED,
+            TYPE,
+            REGEXP
+        };
+        
+        
+        //!@name methods reimplemented from base class
+        //@{
+        
+        // return data for a given index
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        
+        //! header data
+        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        
+        //! number of columns for a given index
+        virtual int columnCount(const QModelIndex& ) const
+        { return nColumns; }
+        
+        //@}
+        
+        protected:
+        
+        //! sort
+        virtual void privateSort( int, Qt::SortOrder )
+        {}
+        
+        private:
+        
+        //! column titles
+        static const QString _columnTitles[ nColumns ];
+        
     };
-
-
-    //!@name methods reimplemented from base class
-    //@{
-
-    // return data for a given index
-    virtual QVariant data(const QModelIndex &index, int role) const;
-
-    //! header data
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-    //! number of columns for a given index
-    virtual int columnCount(const QModelIndex& ) const
-    { return n_columns; }
-
-    //@}
-
-    protected:
-
-    //! sort
-    virtual void _sort( int, Qt::SortOrder )
-    {}
-
-    private:
-
-    //! column titles
-    static const QString column_titles_[ n_columns ];
-
-  };
-
+    
 }
 #endif

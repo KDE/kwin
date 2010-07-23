@@ -2,7 +2,6 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
 
 
 set(kwin_oxygen_config_PART_SRCS
-    oxygenitemmodel.cpp
     ../oxygenconfiguration.cpp
     ../oxygenshadowconfiguration.cpp
     ../oxygenexception.cpp
@@ -32,6 +31,7 @@ target_link_libraries(
     ${QT_QTGUI_LIBRARY}
     ${X11_X11_LIB}
     kdecorations
+    oxygenstyle
   )
 
 install(TARGETS kwin_oxygen_config  DESTINATION ${PLUGIN_INSTALL_DIR} )
