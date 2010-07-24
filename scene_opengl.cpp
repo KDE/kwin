@@ -1921,6 +1921,7 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
     , m_iconTexture( NULL )
+    , m_unstyledVBO( NULL )
     {
     if( m_effectFrame->style() == Unstyled && !m_unstyledTexture )
         {
@@ -1933,6 +1934,7 @@ SceneOpenGL::EffectFrame::~EffectFrame()
     delete m_texture;
     delete m_textTexture;
     delete m_iconTexture;
+    delete m_unstyledVBO;
     }
 
 void SceneOpenGL::EffectFrame::free()
@@ -1943,6 +1945,8 @@ void SceneOpenGL::EffectFrame::free()
     m_textTexture = NULL;
     delete m_iconTexture;
     m_iconTexture = NULL;
+    delete m_unstyledVBO;
+    m_unstyledVBO = NULL;
     }
 
 void SceneOpenGL::EffectFrame::freeIconFrame()
@@ -1974,57 +1978,114 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
     // Render the actual frame
     if( m_effectFrame->style() == Unstyled )
         {
-        const QRect& area = m_effectFrame->geometry().adjusted( -5, -5, 5, 5 );
-        const int roundness = 5;
-        QVector<float> verts, texCoords;
-        verts.reserve( 80 );
-        texCoords.reserve( 80 );
+        if( !m_unstyledVBO )
+            {
+            m_unstyledVBO = new GLVertexBuffer( GLVertexBuffer::Static );
+            const QRect& area = m_effectFrame->geometry().adjusted( -5, -5, 5, 5 );
+            const int roundness = 5;
+            QVector<float> verts, texCoords;
+            verts.reserve( 84 );
+            texCoords.reserve( 84 );
 
-        // Center
-        addQuadVertices( verts, area.left() + roundness, area.top() + roundness,
-            area.right() - roundness, area.bottom() - roundness );
-        addQuadVertices( texCoords, 0.5, 0.5, 0.5, 0.5 );
+            // top left
+            verts << area.left() << area.top();
+            texCoords << 0.0f << 0.0f;
+            verts << area.left() << area.top() + roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.left() + roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            verts << area.left() + roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.left() << area.top() + roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.left() + roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            // top
+            verts << area.left() + roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            verts << area.left() + roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() - roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            verts << area.left() + roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() - roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() - roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            // top right
+            verts << area.right() - roundness << area.top();
+            texCoords << 0.5f << 0.0f;
+            verts << area.right() - roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() << area.top();
+            texCoords << 1.0f << 0.0f;
+            verts << area.right() - roundness << area.top() + roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() << area.top() + roundness;
+            texCoords << 1.0f << 0.5f;
+            verts << area.right() << area.top();
+            texCoords << 1.0f << 0.0f;
+            // bottom left
+            verts << area.left() << area.bottom() - roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.left() << area.bottom();
+            texCoords << 0.0f << 1.0f;
+            verts << area.left() + roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.left() + roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.left() << area.bottom();
+            texCoords << 0.0f << 1.0f;
+            verts << area.left() + roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            // bottom
+            verts << area.left() + roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.left() + roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.right() - roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.left() + roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.right() - roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.right() - roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            // bottom right
+            verts << area.right() - roundness << area.bottom() - roundness;
+            texCoords << 0.5f << 0.5f;
+            verts << area.right() - roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.right() << area.bottom() - roundness;
+            texCoords << 1.0f << 0.5f;
+            verts << area.right() - roundness << area.bottom();
+            texCoords << 0.5f << 1.0f;
+            verts << area.right() << area.bottom();
+            texCoords << 1.0f << 1.0f;
+            verts << area.right() << area.bottom() - roundness;
+            texCoords << 1.0f << 0.5f;
+            // center
+            verts << area.left() << area.top() + roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.left() << area.bottom() - roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.right() << area.top() + roundness;
+            texCoords << 1.0f << 0.5f;
+            verts << area.left() << area.bottom() - roundness;
+            texCoords << 0.0f << 0.5f;
+            verts << area.right() << area.bottom() - roundness;
+            texCoords << 1.0f << 0.5f;
+            verts << area.right() << area.top() + roundness;
+            texCoords << 1.0f << 0.5f;
 
-        // Left
-        addQuadVertices( verts, area.left(), area.top() + roundness,
-            area.left() + roundness, area.bottom() - roundness );
-        addQuadVertices( texCoords, 0.0, 0.5, 0.5, 0.5 );
-        // Top
-        addQuadVertices( verts, area.left() + roundness, area.top(),
-            area.right() - roundness, area.top() + roundness );
-        addQuadVertices( texCoords, 0.5, 0.0, 0.5, 0.5 );
-        // Right
-        addQuadVertices( verts, area.right() - roundness, area.top() + roundness,
-            area.right(), area.bottom() - roundness );
-        addQuadVertices( texCoords, 0.5, 0.5, 1.0, 0.5 );
-        // Bottom
-        addQuadVertices( verts, area.left() + roundness, area.bottom() - roundness,
-            area.right() - roundness, area.bottom() );
-        addQuadVertices( texCoords, 0.5, 0.5, 0.5, 1.0 );
-
-        // Top-left
-        addQuadVertices( verts, area.left(), area.top(),
-            area.left() + roundness, area.top() + roundness );
-        addQuadVertices( texCoords, 0.0, 0.0, 0.5, 0.5 );
-        // Top-right
-        addQuadVertices( verts, area.right() - roundness, area.top(),
-            area.right(), area.top() + roundness );
-        addQuadVertices( texCoords, 0.5, 0.0, 1.0, 0.5 );
-        // Bottom-left
-        addQuadVertices( verts, area.left(), area.bottom() - roundness,
-            area.left() + roundness, area.bottom() );
-        addQuadVertices( texCoords, 0.0, 0.5, 0.5, 1.0 );
-        // Bottom-right
-        addQuadVertices( verts, area.right() - roundness, area.bottom() - roundness,
-            area.right(), area.bottom() );
-        addQuadVertices( texCoords, 0.5, 0.5, 1.0, 1.0 );
+            m_unstyledVBO->setData( verts.count() / 2, 2, verts.data(), texCoords.data() );
+            }
 
         glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
 
         m_unstyledTexture->bind();
-        m_unstyledTexture->enableNormalizedTexCoords();
-        renderGLGeometry( verts.count() / 2, verts.data(), texCoords.data() );
-        m_unstyledTexture->disableNormalizedTexCoords();
+        m_unstyledVBO->render( region, GL_TRIANGLES );
         m_unstyledTexture->unbind();
         }
     else if( m_effectFrame->style() == Styled )

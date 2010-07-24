@@ -1800,6 +1800,7 @@ void EffectFrameImpl::setPosition( const QPoint& point )
         }
     m_point = point;
     autoResize();
+    free();
     }
 
 const QString& EffectFrameImpl::text() const

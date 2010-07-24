@@ -188,6 +188,7 @@ class SceneOpenGL::EffectFrame
         GLTexture* m_texture;
         GLTexture* m_textTexture;
         GLTexture* m_iconTexture;
+        GLVertexBuffer* m_unstyledVBO;
 
         static GLTexture* m_unstyledTexture;
         static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
