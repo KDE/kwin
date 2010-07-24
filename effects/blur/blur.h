@@ -44,6 +44,7 @@ public:
     void propertyNotify(EffectWindow *w, long atom);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
 private:
     QRect expand(const QRect &rect) const;
@@ -51,6 +52,7 @@ private:
     QRegion blurRegion(const EffectWindow *w) const;
     void updateBlurRegion(EffectWindow *w) const;
     void drawRegion(const QRegion &region);
+    void doBlur(const QRegion &shape, const QRect &screen, const float opacity);
 
 private:
     BlurShader *shader;

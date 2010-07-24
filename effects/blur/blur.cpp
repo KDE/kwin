@@ -230,72 +230,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()))
     {
-        const QRegion expanded = expand(shape) & screen;
-        const QRect r = expanded.boundingRect();
-
-        // Create a scratch texture and copy the area in the back buffer that we're
-        // going to blur into it
-        GLTexture scratch(r.width(), r.height());
-        scratch.setFilter(GL_LINEAR);
-        scratch.setWrapMode(GL_CLAMP_TO_EDGE);
-        scratch.bind();
-
-        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), displayHeight() - r.y() - r.height(),
-                            r.width(), r.height());
-
-        // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
-        effects->pushRenderTarget(target);
-
-        shader->bind();
-        shader->setDirection(Qt::Horizontal);
-        shader->setPixelDistance(1.0 / r.width());
-
-        // Set up the texture matrix to transform from screen coordinates
-        // to texture coordinates.
-        glMatrixMode(GL_TEXTURE);
-        glPushMatrix();
-        glLoadIdentity();
-        glScalef(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-        glTranslatef(-r.x(), -scratch.height() - r.y(), 0); 
-
-        drawRegion(expanded);
-
-        effects->popRenderTarget();
-        scratch.unbind();
-        scratch.discard();
-
-        // Now draw the horizontally blurred area back to the backbuffer, while
-        // blurring it vertically and clipping it to the window shape.
-        tex->bind();
-
-        shader->setDirection(Qt::Vertical);
-        shader->setPixelDistance(1.0 / tex->height());
-
-        // Modulate the blurred texture with the window opacity if the window isn't opaque
-        const float opacity = data.opacity * data.contents_opacity;
-        if (opacity < 1.0) {
-            glPushAttrib(GL_COLOR_BUFFER_BIT);
-            glEnable(GL_BLEND);
-            glBlendColor(0, 0, 0, opacity);
-            glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-        }
-
-        // Set the up the texture matrix to transform from screen coordinates
-        // to texture coordinates.
-        glLoadIdentity();
-        glScalef(1.0 / tex->width(), -1.0 / tex->height(), 1);
-        glTranslatef(0, -tex->height(), 0); 
-
-        drawRegion(shape);
-
-        glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);
-
-        if (opacity < 1.0)
-            glPopAttrib();
-
-        tex->unbind(); 
-        shader->unbind(); 
+        doBlur(shape, screen, data.opacity * data.contents_opacity);
 
         // Rebind the shader used for drawing the window if one was set
         if (data.shader)
@@ -304,6 +239,86 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
     // Draw the window over the blurred area
     effects->drawWindow(w, mask, region, data);
+}
+
+void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity)
+{
+    const QRect screen(0, 0, displayWidth(), displayHeight());
+    bool valid = target->valid() && shader->isValid();
+    QRegion shape = frame->geometry().adjusted( -5, -5, 5, 5 ) & screen;
+    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect())) {
+        doBlur(shape, screen, opacity * frameOpacity);
+    }
+    effects->paintEffectFrame(frame, region, opacity, frameOpacity);
+}
+
+void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity)
+{
+    const QRegion expanded = expand(shape) & screen;
+    const QRect r = expanded.boundingRect();
+
+    // Create a scratch texture and copy the area in the back buffer that we're
+    // going to blur into it
+    GLTexture scratch(r.width(), r.height());
+    scratch.setFilter(GL_LINEAR);
+    scratch.setWrapMode(GL_CLAMP_TO_EDGE);
+    scratch.bind();
+
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), displayHeight() - r.y() - r.height(),
+                        r.width(), r.height());
+
+    // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
+    effects->pushRenderTarget(target);
+
+    shader->bind();
+    shader->setDirection(Qt::Horizontal);
+    shader->setPixelDistance(1.0 / r.width());
+
+    // Set up the texture matrix to transform from screen coordinates
+    // to texture coordinates.
+    glMatrixMode(GL_TEXTURE);
+    glPushMatrix();
+    glLoadIdentity();
+    glScalef(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
+    glTranslatef(-r.x(), -scratch.height() - r.y(), 0);
+
+    drawRegion(expanded);
+
+    effects->popRenderTarget();
+    scratch.unbind();
+    scratch.discard();
+
+    // Now draw the horizontally blurred area back to the backbuffer, while
+    // blurring it vertically and clipping it to the window shape.
+    tex->bind();
+
+    shader->setDirection(Qt::Vertical);
+    shader->setPixelDistance(1.0 / tex->height());
+
+    // Modulate the blurred texture with the window opacity if the window isn't opaque
+    if (opacity < 1.0) {
+        glPushAttrib(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendColor(0, 0, 0, opacity);
+        glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+    }
+
+    // Set the up the texture matrix to transform from screen coordinates
+    // to texture coordinates.
+    glLoadIdentity();
+    glScalef(1.0 / tex->width(), -1.0 / tex->height(), 1);
+    glTranslatef(0, -tex->height(), 0);
+
+    drawRegion(shape);
+
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+
+    if (opacity < 1.0)
+        glPopAttrib();
+
+    tex->unbind();
+    shader->unbind();
 }
 
 } // namespace KWin
