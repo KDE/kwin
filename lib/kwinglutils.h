@@ -86,23 +86,32 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * @param dim number of components per vertex coordinate in vertices array.
  * @param stride byte offset of consecutive elements in arrays. If 0, then
  *  arrays must be tighly packed. Stride must be a multiple of sizeof(float)!
+ * @deprecated  Use GLVertexBuffer
+ * @see GLVertexBuffer
  **/
 KWIN_EXPORT void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
 /**
  * Same as above, renders without specified region
+ * @deprecated  Use GLVertexBuffer
+ * @see GLVertexBuffer
  **/
 KWIN_EXPORT void renderGLGeometry( int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
 
-
+/**
+ * @deprecated Use GLVertexBuffer
+ * @see GLVertexBuffer
+ **/
 KWIN_EXPORT void renderGLGeometryImmediate( int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
 
-
+/**
+ * @deprecated Quads are not available in OpenGL ES
+ **/
 KWIN_EXPORT void addQuadVertices( QVector<float>& verts, float x1, float y1, float x2, float y2 );
 
 
@@ -305,6 +314,9 @@ class KWIN_EXPORT GLRenderTarget
  * vertex data and to store them on graphics memory. It is the only allowed way to pass vertex
  * data to the GPU in OpenGL ES 2 and OpenGL 3 with forward compatible mode.
  *
+ * If VBOs are not supported on the used OpenGL profile this class falls back to legacy
+ * rendering using client arrays. Therefore this class should always be used for rendering geometries.
+ *
  * @author Martin Gräßlin <kde@martin-graesslin.com>
  * @since 4.6
  */
@@ -350,6 +362,8 @@ class KWIN_EXPORT GLVertexBuffer
          */
         static void initStatic();
         /**
+         * Returns true if VBOs are supported, it is save to use this class even if VBOs are not
+         * supported.
          * @returns true if vertex buffer objects are supported
          */
         static bool isSupported();

@@ -505,51 +505,27 @@ void GLTexture::render( QRegion region, const QRect& rect )
     if( rect != m_cachedGeometry )
         {
         m_cachedGeometry = rect;
-        if( !m_vbo && GLVertexBuffer::isSupported() )
+        if( !m_vbo )
             {
             m_vbo = new GLVertexBuffer( KWin::GLVertexBuffer::Static );
             }
-        if( m_vbo )
-            {
-            const float verts[ 4 * 2 ] =
-                {
-                rect.x(), rect.y(),
-                rect.x(), rect.y() + rect.height(),
-                rect.x() + rect.width(), rect.y(),
-                rect.x() + rect.width(), rect.y() + rect.height()
-                };
-            const float texcoords[ 4 * 2 ] =
-                {
-                0.0f, y_inverted ? 0.0f : 1.0f, // y needs to be swapped (normalized coords)
-                0.0f, y_inverted ? 1.0f : 0.0f,
-                1.0f, y_inverted ? 0.0f : 1.0f,
-                1.0f, y_inverted ? 1.0f : 0.0f
-                };
-            m_vbo->setData( 4, 2, verts, texcoords );
-            }
-        }
-    if( m_vbo )
-        {
-        m_vbo->render( region, GL_TRIANGLE_STRIP );
-        }
-    else
-        {
         const float verts[ 4 * 2 ] =
             {
             rect.x(), rect.y(),
             rect.x(), rect.y() + rect.height(),
-            rect.x() + rect.width(), rect.y() + rect.height(),
-            rect.x() + rect.width(), rect.y()
+            rect.x() + rect.width(), rect.y(),
+            rect.x() + rect.width(), rect.y() + rect.height()
             };
         const float texcoords[ 4 * 2 ] =
             {
             0.0f, y_inverted ? 0.0f : 1.0f, // y needs to be swapped (normalized coords)
             0.0f, y_inverted ? 1.0f : 0.0f,
-            1.0f, y_inverted ? 1.0f : 0.0f,
-            1.0f, y_inverted ? 0.0f : 1.0f
+            1.0f, y_inverted ? 0.0f : 1.0f,
+            1.0f, y_inverted ? 1.0f : 0.0f
             };
-        renderGLGeometry( region, 4, verts, texcoords );
+        m_vbo->setData( 4, 2, verts, texcoords );
         }
+    m_vbo->render( region, GL_TRIANGLE_STRIP );
     }
 
 void GLTexture::enableUnnormalizedTexCoords()
@@ -1194,8 +1170,34 @@ class GLVertexBufferPrivate
         int numberVertices;
         int dimension;
         static bool supported;
+        QVector<float> legacyVertices;
+        QVector<float> legacyTexCoords;
+
+        void legacyPainting( QRegion region, GLenum primitiveMode );
     };
 bool GLVertexBufferPrivate::supported = false;
+
+void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode )
+    {
+    kDebug(1212) << "Legacy Painting";
+    // Enable arrays
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer( dimension, GL_FLOAT, 0, legacyVertices.constData() );
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    glTexCoordPointer( 2, GL_FLOAT, 0, legacyTexCoords.constData() );
+
+    // Clip using scissoring
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+        !iterator.isDone();
+        iterator.next())
+        {
+        glDrawArrays( primitiveMode, 0, numberVertices );
+        }
+
+    glDisableClientState( GL_VERTEX_ARRAY );
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
 
 //*********************************
 // GLVertexBuffer
@@ -1214,6 +1216,23 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     {
     d->numberVertices = numberVertices;
     d->dimension = dim;
+    if( !GLVertexBufferPrivate::supported )
+        {
+        // legacy data
+        d->legacyVertices.clear();
+        d->legacyVertices.reserve( numberVertices * dim );
+        for( int i=0; i<numberVertices*dim; ++i)
+            {
+            d->legacyVertices << vertices[i];
+            }
+        d->legacyTexCoords.clear();
+        d->legacyTexCoords.reserve( numberVertices * 2 );
+        for( int i=0; i<numberVertices*2; ++i)
+            {
+            d->legacyTexCoords << texcoords[i];
+            }
+        return;
+        }
     GLenum hint;
     switch( d->hint )
         {
@@ -1252,6 +1271,11 @@ void GLVertexBuffer::render( GLenum primitiveMode )
 
 void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
     {
+    if( !GLVertexBufferPrivate::supported )
+        {
+        d->legacyPainting( region, primitiveMode );
+        return;
+        }
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
