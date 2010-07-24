@@ -1179,7 +1179,6 @@ bool GLVertexBufferPrivate::supported = false;
 
 void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode )
     {
-    kDebug(1212) << "Legacy Painting";
     // Enable arrays
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( dimension, GL_FLOAT, 0, legacyVertices.constData() );
