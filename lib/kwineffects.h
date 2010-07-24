@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 153
+#define KWIN_EFFECT_API_VERSION_MINOR 154
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -393,6 +393,18 @@ class KWIN_EXPORT Effect
         virtual void postPaintWindow( EffectWindow* w );
 
         /**
+         * This method is called directly before painting an @ref EffectFrame.
+         * You can implement this method if you need to bind a shader or perform
+         * other operations before the frame is rendered.
+         * @param frame The EffectFrame which will be rendered
+         * @param region Region to restrict painting to
+         * @param opacity Opacity of text/icon
+         * @param frameOpacity Opacity of background
+         * @since 4.6
+         **/
+        virtual void paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
+
+        /**
          * Called on Transparent resizes.
          * return true if your effect substitutes the XOR rubberband
         */
@@ -573,6 +585,7 @@ class KWIN_EXPORT EffectsHandler
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time ) = 0;
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
         virtual void postPaintWindow( EffectWindow* w ) = 0;
+        virtual void paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity ) = 0;
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
         virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList ) = 0;
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
@@ -1723,6 +1736,15 @@ class KWIN_EXPORT EffectFrame
         virtual const QPixmap& icon() const = 0;
         virtual void setIconSize( const QSize& size ) = 0;
         virtual const QSize& iconSize() const = 0;
+
+        /**
+         * @param shader The GLShader for rendering.
+         **/
+        virtual void setShader( GLShader* shader ) = 0;
+        /**
+         * @returns The GLShader used for rendering or null if none.
+         **/
+        virtual GLShader* shader() const = 0;
 
         /**
          * The foreground text color as specified by the default Plasma theme.

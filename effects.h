@@ -46,6 +46,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
+        virtual void paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
 
         bool providesResizeEffect();
 
@@ -198,6 +199,7 @@ class EffectsHandlerImpl : public EffectsHandler
         QHash< long, int > registered_atoms;
         int next_window_quad_type;
         int mouse_poll_ref_count;
+        int current_paint_effectframe;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -345,6 +347,15 @@ class EffectFrameImpl
             {
             return m_static;
             };
+    void finalRender( QRegion region, double opacity, double frameOpacity ) const;
+    virtual void setShader( GLShader* shader )
+        {
+        m_shader = shader;
+        }
+    virtual GLShader* shader() const
+        {
+        return m_shader;
+        }
 
     private Q_SLOTS:
         void plasmaThemeChanged();
@@ -370,6 +381,7 @@ class EffectFrameImpl
         QSize m_iconSize;
 
         Scene::EffectFrame* m_sceneFrame;
+        GLShader* m_shader;
     };
 
 inline

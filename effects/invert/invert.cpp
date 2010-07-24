@@ -118,6 +118,19 @@ void InvertEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
         m_shader->unbind();
     }
 
+void InvertEffect::paintEffectFrame( KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity )
+    {
+    if( m_valid && m_allWindows )
+        {
+        frame->setShader( m_shader );
+        effects->paintEffectFrame( frame, region, opacity, frameOpacity );
+        }
+    else
+        {
+        effects->paintEffectFrame( frame, region, opacity, frameOpacity );
+        }
+    }
+
 void InvertEffect::windowClosed( EffectWindow* w )
     {
     m_windows.removeOne( w );

@@ -41,6 +41,7 @@ class InvertEffect
         ~InvertEffect();
 
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintEffectFrame( KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
         virtual void windowClosed( EffectWindow* w );
 
     public slots:

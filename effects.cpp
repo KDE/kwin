@@ -99,6 +99,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , fullscreen_effect( 0 )
     , next_window_quad_type( EFFECT_QUAD_TYPE_START )
     , mouse_poll_ref_count( 0 )
+    , current_paint_effectframe( 0 )
     {
     reconfigure();
     }
@@ -201,6 +202,20 @@ void EffectsHandlerImpl::paintWindow( EffectWindow* w, int mask, QRegion region,
         }
     else
         scene->finalPaintWindow( static_cast<EffectWindowImpl*>( w ), mask, region, data );
+    }
+
+void EffectsHandlerImpl::paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity )
+    {
+    if( current_paint_effectframe < loaded_effects.size())
+        {
+        loaded_effects[current_paint_effectframe++].second->paintEffectFrame( frame, region, opacity, frameOpacity );
+        --current_paint_effectframe;
+        }
+    else
+        {
+        const EffectFrameImpl* frameImpl = static_cast<const EffectFrameImpl*>( frame );
+        frameImpl->finalRender( region, opacity, frameOpacity );
+        }
     }
 
 void EffectsHandlerImpl::postPaintWindow( EffectWindow* w )
@@ -1647,6 +1662,7 @@ EffectFrameImpl::EffectFrameImpl( EffectFrameStyle style, bool staticSize, QPoin
     , m_static( staticSize )
     , m_point( position )
     , m_alignment( alignment )
+    , m_shader( NULL )
     {
     if( m_style == Styled )
         {
@@ -1775,10 +1791,14 @@ void EffectFrameImpl::render( QRegion region, double opacity, double frameOpacit
         {
         return; // Nothing to display
         }
+    m_shader = NULL;
+    effects->paintEffectFrame( this, region, opacity, frameOpacity );
+    }
 
+void EffectFrameImpl::finalRender( QRegion region, double opacity, double frameOpacity ) const
+    {
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
-    // TODO: pass through all effects
     m_sceneFrame->render( region, opacity, frameOpacity );
     }
 

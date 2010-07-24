@@ -1968,10 +1968,22 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
+    GLShader* shader = m_effectFrame->shader();
+    if( shader )
+        {
+        shader->bind();
+        shader->setUniform("saturation", 1.0f);
+        shader->setUniform("brightness", 1.0f);
+
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+        }
+
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+    if( !shader )
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
     glPushMatrix();
 
@@ -2082,7 +2094,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             m_unstyledVBO->setData( verts.count() / 2, 2, verts.data(), texCoords.data() );
             }
 
-        glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
+        if( shader )
+            shader->setUniform( "opacity", (float)(opacity * frameOpacity) );
+        else
+            glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
 
         m_unstyledTexture->bind();
         m_unstyledVBO->render( region, GL_TRIANGLES );
@@ -2093,7 +2108,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         if( !m_texture ) // Lazy creation
             updateTexture();
 
-        glColor4f( 1.0, 1.0, 1.0, opacity * frameOpacity );
+        if( shader )
+            shader->setUniform( "opacity", (float)(opacity * frameOpacity) );
+        else
+            glColor4f( 1.0, 1.0, 1.0, opacity * frameOpacity );
 
         m_texture->bind();
         qreal left, top, right, bottom;
@@ -2102,7 +2120,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_texture->unbind();
         }
 
-    glColor4f( 1.0, 1.0, 1.0, opacity );
+    if( shader )
+        shader->setUniform( "opacity", (float)opacity );
+    else
+        glColor4f( 1.0, 1.0, 1.0, opacity );
 
     // Render icon
     if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
@@ -2130,6 +2151,9 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_textTexture->render( region, m_effectFrame->geometry() );
         m_textTexture->unbind();
         }
+
+    if( shader )
+        shader->unbind();
 
     glPopMatrix();
     glPopAttrib();

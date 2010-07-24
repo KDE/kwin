@@ -247,6 +247,11 @@ void Effect::postPaintWindow( EffectWindow* w )
     effects->postPaintWindow( w );
     }
 
+void Effect::paintEffectFrame( KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity )
+    {
+    effects->paintEffectFrame( frame, region, opacity, frameOpacity );
+    }
+
 void Effect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     effects->drawWindow( w, mask, region, data );
