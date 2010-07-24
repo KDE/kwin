@@ -25,7 +25,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
 
     kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
     kde4_add_plugin( kcm_kwin4_effect_${name} ${kwin4_effect_src} )
-    target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal )
+    target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} kephal )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
 endmacro( KWIN4_ADD_EFFECT_CONFIG )
 
