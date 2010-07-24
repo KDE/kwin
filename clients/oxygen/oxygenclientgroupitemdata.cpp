@@ -283,7 +283,6 @@ namespace Oxygen
     {
 
         // move close buttons
-        // this should move to ClientGroupItemDataList
         if( alsoUpdate ) client_.widget()->setUpdatesEnabled( false );
         for( int index = 0; index < count(); index++ )
         {
@@ -312,7 +311,7 @@ namespace Oxygen
         if( alsoUpdate )
         {
             client_.widget()->setUpdatesEnabled( true );
-            client_.widget()->update();
+            client_.updateTitleRect();
         }
 
     }

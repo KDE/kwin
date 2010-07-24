@@ -124,7 +124,7 @@ namespace Oxygen
 
         // title animation data
         titleAnimationData_.data()->initialize();
-        connect( titleAnimationData_.data(), SIGNAL( pixmapsChanged() ), widget(), SLOT( update( void ) ) );
+        connect( titleAnimationData_.data(), SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
 
         // lists
         connect( itemData_.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
@@ -1695,8 +1695,8 @@ namespace Oxygen
 
             itemData_.setDirty( true );
             moveItemInClientGroup( from, itemClicked );
-            widget()->update();
-
+            updateTitleRect();
+            
         } else {
 
             setForceActive( true );

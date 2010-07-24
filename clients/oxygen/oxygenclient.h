@@ -204,6 +204,12 @@ namespace Oxygen
 
         //! resize event
         virtual void resizeEvent(QResizeEvent *e);
+        
+        public slots:
+        
+        //! triggers widget update in titleRect only
+        void updateTitleRect( void )
+        { widget()->update( titleRect() ); }
 
         protected:
 
@@ -365,7 +371,7 @@ namespace Oxygen
         //! clear force active flag
         void clearForceActive( void )
         { if( isActive() ) setForceActive( false ); }
-
+        
         //! title bounding rects
         /*! calculate and return title bounding rects in case of tabbed window */
         void updateItemBoundingRects( bool alsoUpdate = true );
