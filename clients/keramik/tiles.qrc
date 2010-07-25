@@ -1,0 +1,27 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>pics/border-left.png</file>
+    <file>pics/border-right.png</file>
+    <file>pics/bottom-center.png</file>
+    <file>pics/bottom-left.png</file>
+    <file>pics/bottom-right.png</file>
+    <file>pics/caption-large-center.png</file>
+    <file>pics/caption-large-left.png</file>
+    <file>pics/caption-large-right.png</file>
+    <file>pics/caption-small-center.png</file>
+    <file>pics/caption-small-left.png</file>
+    <file>pics/caption-small-right.png</file>
+    <file>pics/grabbar-center.png</file>
+    <file>pics/grabbar-left.png</file>
+    <file>pics/grabbar-right.png</file>
+    <file>pics/titlebar-center.png</file>
+    <file>pics/titlebar-left.png</file>
+    <file>pics/titlebar-right.png</file>
+    <file>pics/titlebutton-round-huge.png</file>
+    <file>pics/titlebutton-round-large.png</file>
+    <file>pics/titlebutton-round.png</file>
+    <file>pics/titlebutton-square-huge.png</file>
+    <file>pics/titlebutton-square-large.png</file>
+    <file>pics/titlebutton-square.png</file>
+</qresource>
+</RCC>
