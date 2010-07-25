@@ -72,6 +72,8 @@ Name[zh_CN]=部件板
 Name[zh_TW]=資訊看板
 Icon=preferences-system-windows-effect-dashboard
 Comment=Desaturate the desktop when displaying the Plasma dashboard
+Comment[pt]=Reduzir a saturação do ecrã ao mostrar o painel do Plasma
+Comment[uk]=Зменшення насиченості кольорів стільниці під час показу панелі приладів Плазми
 Comment[x-test]=xxDesaturate the desktop when displaying the Plasma dashboardxx
 
 Type=Service
