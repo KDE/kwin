@@ -2187,7 +2187,10 @@ void SceneOpenGL::EffectFrame::updateTexture()
     {
     delete m_texture;
     if( m_effectFrame->style() == Styled )
-        m_texture = new GLTexture( m_effectFrame->frame().framePixmap() );
+        {
+        QPixmap pixmap = m_effectFrame->frame().framePixmap();
+        m_texture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+        }
     }
 
 void SceneOpenGL::EffectFrame::updateTextTexture()
