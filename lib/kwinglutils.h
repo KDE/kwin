@@ -115,18 +115,6 @@ KWIN_EXPORT void renderGLGeometryImmediate( int count,
 KWIN_EXPORT void addQuadVertices( QVector<float>& verts, float x1, float y1, float x2, float y2 );
 
 
-/**
- * @deprecated
- * @see EffectFrame
- */
-KWIN_EXPORT void renderRoundBox( const QRect& area, float roundness = 10.0f, GLTexture* texture = 0 );
-/**
- * @deprecated
- * @see EffectFrame
- */
-KWIN_EXPORT void renderRoundBoxWithEdge( const QRect& area, float roundness = 10.0f );
-
-
 class KWIN_EXPORT GLTexture
     : public QSharedData
     {
