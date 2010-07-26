@@ -151,15 +151,13 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
             {
             if( !painting_desktop )
                 {
+                thumbnailFrame->setSelection( desktops[ selected_desktop ]->area );
                 thumbnailFrame->render( region );
 
                 QHash< int, ItemInfo* >::const_iterator i;
                 for( i = desktops.constBegin(); i != desktops.constEnd(); ++i )
                     {
                     painting_desktop = i.key();
-                    if( painting_desktop == selected_desktop )
-                        paintHighlight( desktops[ painting_desktop ]->area ); //effects->desktopName( painting_desktop )
-
                     paintDesktopThumbnail( painting_desktop );
                     }
                 painting_desktop = 0;
@@ -170,13 +168,16 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
 void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
     {
+    if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
+        thumbnailFrame->setSelection( highlight_area );
+    else
+        thumbnailFrame->setSelection( windows[ selected_window ]->area );
     thumbnailFrame->render( region );
 
     if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
         {
         // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
         PaintClipper::push( frame_area );
-        paintHighlight( highlight_area );
         QHash< EffectWindow*, ItemInfo* >::const_iterator i;
         for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
@@ -190,8 +191,6 @@ void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
         QHash< EffectWindow*, ItemInfo* >::const_iterator i;
         for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
-            if( i.key() == selected_window )
-                paintHighlight( i.value()->area );
             paintWindowThumbnail( i.key() );
             paintWindowIcon( i.key() );
             }
@@ -762,38 +761,6 @@ void BoxSwitchEffect::calculateItemSizes()
             desktops[ it ]->clickable = desktops[ it ]->area;
             }
         }
-    }
-
-void BoxSwitchEffect::paintHighlight( QRect area )
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing )
-        {
-        glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( color_highlight.redF(), color_highlight.greenF(), color_highlight.blueF(), color_highlight.alphaF());
-        renderRoundBox( area, 6 );
-        glPopAttrib();
-        }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing )
-        {
-        Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
-            area.width(), area.height(), 32 );
-        XRenderPicture pic( pixmap, 32 );
-        XFreePixmap( display(), pixmap );
-        XRenderColor col;
-        col.alpha = int( color_highlight.alphaF() * 0xffff );
-        col.red = int( color_highlight.redF() * color_highlight.alphaF() * 0xffff );
-        col.green = int( color_highlight.greenF() * color_highlight.alphaF() * 0xffff );
-        col.blue = int( color_highlight.blueF() * color_highlight.alphaF() * 0xffff );
-        XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
-            area.width(), area.height());
-        XRenderComposite( display(), color_highlight.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
-            pic, None, effects->xrenderBufferPicture(),
-            0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
-        }
-#endif
     }
 
 void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )

@@ -855,6 +855,7 @@ SceneXrender::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     m_picture = NULL;
     m_textPicture = NULL;
     m_iconPicture = NULL;
+    m_selectionPicture = NULL;
     }
 
 SceneXrender::EffectFrame::~EffectFrame()
@@ -862,6 +863,7 @@ SceneXrender::EffectFrame::~EffectFrame()
     delete m_picture;
     delete m_textPicture;
     delete m_iconPicture;
+    delete m_selectionPicture;
     }
 
 void SceneXrender::EffectFrame::free()
@@ -872,6 +874,8 @@ void SceneXrender::EffectFrame::free()
     m_textPicture = NULL;
     delete m_iconPicture;
     m_iconPicture = NULL;
+    delete m_selectionPicture;
+    m_selectionPicture = NULL;
     }
 
 void SceneXrender::EffectFrame::freeIconFrame()
@@ -884,6 +888,12 @@ void SceneXrender::EffectFrame::freeTextFrame()
     {
     delete m_textPicture;
     m_textPicture = NULL;
+    }
+
+void SceneXrender::EffectFrame::freeSelection()
+    {
+    delete m_selectionPicture;
+    m_selectionPicture = NULL;
     }
 
 void SceneXrender::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
@@ -908,6 +918,17 @@ void SceneXrender::EffectFrame::render( QRegion region, double opacity, double f
         QRect geom = m_effectFrame->geometry().adjusted( -left, -top, right, bottom );
         XRenderComposite( display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+
+        if( !m_effectFrame->selection().isNull() )
+            {
+            if( !m_selectionPicture ) // Lazy creation
+                {
+                m_selectionPicture = new XRenderPicture( m_effectFrame->selectionFrame().framePixmap() );
+                }
+            geom = m_effectFrame->selection();
+            XRenderComposite( display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
+                          0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+            }
         }
 
     XRenderPicture fill = xRenderBlendPicture(opacity);

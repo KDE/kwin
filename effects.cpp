@@ -1668,6 +1668,10 @@ EffectFrameImpl::EffectFrameImpl( EffectFrameStyle style, bool staticSize, QPoin
         {
         m_frame.setImagePath( "widgets/background" );
         m_frame.setCacheAllRenderedFrames( true );
+        m_selection.setImagePath( "widgets/viewitem" );
+        m_selection.setElementPrefix( "hover" );
+        m_selection.setCacheAllRenderedFrames( true );
+        m_selection.setEnabledBorders( Plasma::FrameSvg::AllBorders );
         connect( Plasma::Theme::defaultTheme(), SIGNAL( themeChanged() ), this, SLOT( plasmaThemeChanged() ));
         }
 
@@ -1841,6 +1845,21 @@ void EffectFrameImpl::setText( const QString& text )
         { // Wasn't updated in autoResize()
         m_sceneFrame->freeTextFrame();
         }
+    }
+
+void EffectFrameImpl::setSelection( const QRect& selection )
+    {
+    if( selection == m_selectionGeometry )
+        {
+        return;
+        }
+    m_selectionGeometry = selection;
+    if( m_selectionGeometry.size() != m_selection.frameSize().toSize() )
+        {
+        m_selection.resizeFrame( m_selectionGeometry.size() );
+        }
+    // TODO; optimize to only recreate when resizing
+    m_sceneFrame->freeSelection();
     }
 
 void EffectFrameImpl::autoResize()

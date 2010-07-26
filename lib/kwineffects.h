@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 154
+#define KWIN_EFFECT_API_VERSION_MINOR 155
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1736,6 +1736,14 @@ class KWIN_EXPORT EffectFrame
         virtual const QPixmap& icon() const = 0;
         virtual void setIconSize( const QSize& size ) = 0;
         virtual const QSize& iconSize() const = 0;
+
+        /**
+         * Sets the geometry of a selection.
+         * To remove the selection set a null rect.
+         * This is only available if the an styled EffectFrame is used.
+         * @param selection The geometry of the selection in screen coordinates.
+         **/
+        virtual void setSelection( const QRect& selection ) = 0;
 
         /**
          * @param shader The GLShader for rendering.

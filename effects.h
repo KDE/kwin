@@ -356,6 +356,15 @@ class EffectFrameImpl
         {
         return m_shader;
         }
+        virtual void setSelection( const QRect& selection );
+        const QRect& selection() const
+            {
+            return m_selectionGeometry;
+            }
+        Plasma::FrameSvg& selectionFrame()
+            {
+            return m_selection;
+            }
 
     private Q_SLOTS:
         void plasmaThemeChanged();
@@ -367,6 +376,7 @@ class EffectFrameImpl
 
         EffectFrameStyle m_style;
         Plasma::FrameSvg m_frame; // TODO: share between all EffectFrames
+        Plasma::FrameSvg m_selection;
 
         // Position
         bool m_static;
@@ -379,6 +389,7 @@ class EffectFrameImpl
         QFont m_font;
         QPixmap m_icon;
         QSize m_iconSize;
+        QRect m_selectionGeometry;
 
         Scene::EffectFrame* m_sceneFrame;
         GLShader* m_shader;

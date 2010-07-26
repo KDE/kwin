@@ -223,6 +223,7 @@ class Scene::EffectFrame
         virtual void free() = 0;
         virtual void freeIconFrame() = 0;
         virtual void freeTextFrame() = 0;
+        virtual void freeSelection() = 0;
 
     protected:
         EffectFrameImpl* m_effectFrame;

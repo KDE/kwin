@@ -1921,6 +1921,7 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
     , m_iconTexture( NULL )
+    , m_selectionTexture( NULL )
     , m_unstyledVBO( NULL )
     {
     if( m_effectFrame->style() == Unstyled && !m_unstyledTexture )
@@ -1934,6 +1935,7 @@ SceneOpenGL::EffectFrame::~EffectFrame()
     delete m_texture;
     delete m_textTexture;
     delete m_iconTexture;
+    delete m_selectionTexture;
     delete m_unstyledVBO;
     }
 
@@ -1945,6 +1947,8 @@ void SceneOpenGL::EffectFrame::free()
     m_textTexture = NULL;
     delete m_iconTexture;
     m_iconTexture = NULL;
+    delete m_selectionTexture;
+    m_selectionTexture = NULL;
     delete m_unstyledVBO;
     m_unstyledVBO = NULL;
     }
@@ -1959,6 +1963,12 @@ void SceneOpenGL::EffectFrame::freeTextFrame()
     {
     delete m_textTexture;
     m_textTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::freeSelection()
+    {
+    delete m_selectionTexture;
+    m_selectionTexture = NULL;
     }
 
 void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
@@ -2118,6 +2128,20 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
         m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ));
         m_texture->unbind();
+
+        if( !m_effectFrame->selection().isNull() )
+            {
+            if( !m_selectionTexture ) // Lazy creation
+                {
+                QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
+                m_selectionTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+                }
+            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+            m_selectionTexture->bind();
+            m_selectionTexture->render( region, m_effectFrame->selection() );
+            m_selectionTexture->unbind();
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            }
         }
 
     if( shader )

@@ -70,7 +70,6 @@ class BoxSwitchEffect
         void calculateItemSizes();
         void setSelectedWindow( EffectWindow* w );
 
-        void paintHighlight( QRect area );
         void paintWindowThumbnail( EffectWindow* w );
         void paintDesktopThumbnail( int iDesktop );
         void paintWindowIcon( EffectWindow* w );

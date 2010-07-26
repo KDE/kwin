@@ -176,6 +176,7 @@ class SceneOpenGL::EffectFrame
         virtual void free();
         virtual void freeIconFrame();
         virtual void freeTextFrame();
+        virtual void freeSelection();
 
         virtual void render(QRegion region, double opacity, double frameOpacity);
 
@@ -188,6 +189,7 @@ class SceneOpenGL::EffectFrame
         GLTexture* m_texture;
         GLTexture* m_textTexture;
         GLTexture* m_iconTexture;
+        GLTexture* m_selectionTexture;
         GLVertexBuffer* m_unstyledVBO;
 
         static GLTexture* m_unstyledTexture;
