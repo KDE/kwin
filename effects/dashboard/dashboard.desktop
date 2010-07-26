@@ -72,7 +72,14 @@ Name[zh_CN]=部件板
 Name[zh_TW]=資訊看板
 Icon=preferences-system-windows-effect-dashboard
 Comment=Desaturate the desktop when displaying the Plasma dashboard
+Comment[de]=Die Arbeitsfläche grau färben, wenn das Plasma-Dashboard angezeigt wird.
+Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun dat Plasma-Klockpaneel daalsetten
 Comment[pt]=Reduzir a saturação do ecrã ao mostrar o painel do Plasma
+Comment[pt_BR]=Reduz a saturação da área de trabalho ao mostrar o painel do Plasma
+Comment[sr]=Посивљује површ при појави инструмент-табле Плазме
+Comment[sr@ijekavian]=Посивљује површ при појави инструмент-табле Плазме
+Comment[sr@ijekavianlatin]=Posivljuje površ pri pojavi instrument-table Plasme
+Comment[sr@latin]=Posivljuje površ pri pojavi instrument-table Plasme
 Comment[uk]=Зменшення насиченості кольорів стільниці під час показу панелі приладів Плазми
 Comment[x-test]=xxDesaturate the desktop when displaying the Plasma dashboardxx
 
