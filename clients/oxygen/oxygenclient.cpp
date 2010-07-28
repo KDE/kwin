@@ -260,7 +260,7 @@ namespace Oxygen
     {
 
         if( isMaximized() ) { return widget()->rect(); }
-        QRect frame( widget()->rect().adjusted(
+        const QRect frame( widget()->rect().adjusted(
             layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
             -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
 
@@ -287,10 +287,10 @@ namespace Oxygen
     int Client::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
     {
 
-        bool maximized( isMaximized() );
-        bool narrowSpacing( configuration().useNarrowButtonSpacing() );
-        int frameBorder( configuration().frameBorder() );
-        int buttonSize( configuration().hideTitleBar() ? 0 : configuration().buttonSize() );
+        const bool maximized( isMaximized() );
+        const bool narrowSpacing( configuration().useNarrowButtonSpacing() );
+        const int frameBorder( configuration().frameBorder() );
+        const int buttonSize( configuration().hideTitleBar() ? 0 : configuration().buttonSize() );
 
         switch (lm)
         {
@@ -408,7 +408,7 @@ namespace Oxygen
         if( active && configuration().drawTitleOutline() && isActive() )
         {
 
-            QRect textRect( titleBoundingRect( options()->font( true, false),  titleRect, caption() ) );
+            const QRect textRect( titleBoundingRect( options()->font( true, false),  titleRect, caption() ) );
             titleRect.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
             titleRect.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
 
@@ -461,10 +461,10 @@ namespace Oxygen
         itemData_.animate( AnimationNone );
 
         // maximum available space
-        QRect titleRect( this->titleRect() );
+        const QRect titleRect( this->titleRect() );
 
         // get tabs
-        int items( clientGroupItems().count() );
+        const int items( clientGroupItems().count() );
 
         // make sure item data have the correct number of items
         while( itemData_.count() < items ) itemData_.push_back( ClientGroupItemData() );
@@ -490,7 +490,7 @@ namespace Oxygen
         } else {
 
             int left( titleRect.left() );
-            int width( titleRect.width()/items );
+            const int width( titleRect.width()/items );
             for( int index = 0; index < itemData_.count(); index++ )
             {
 
@@ -558,10 +558,10 @@ namespace Oxygen
         } else {
 
             // todo: reimplement cache
-            QColor ab = palette.color(QPalette::Active, QPalette::Window);
-            QColor af = palette.color(QPalette::Active, QPalette::WindowText);
-            QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
-            QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
+            const QColor ab = palette.color(QPalette::Active, QPalette::Window);
+            const QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+            const QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+            const QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
             return reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
 
         }
@@ -579,9 +579,11 @@ namespace Oxygen
 
         } else {
 
-            int offset = layoutMetric( LM_OuterPaddingTop );
+            const int offset = layoutMetric( LM_OuterPaddingTop );
+
             int height = 64 - Configuration::ButtonDefault;
             if( !configuration().hideTitleBar() ) height += configuration().buttonSize();
+
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
 
@@ -613,7 +615,8 @@ namespace Oxygen
         }
 
         QRect r = (isPreview()) ? this->widget()->rect():window->rect();
-        qreal shadowSize( shadowCache().shadowSize() );
+
+        const qreal shadowSize( shadowCache().shadowSize() );
         r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
         r.adjust(0,0, 1, 1);
 
@@ -621,14 +624,14 @@ namespace Oxygen
         QColor color( palette.window().color() );
 
         // title height
-        int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
+        const int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
         // make titlebar background darker for tabbed, non-outline window
         if( ( clientGroupItems().count() >= 2 || itemData_.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
         {
 
-            QPoint topLeft( r.topLeft()-position );
-            QRect rect( topLeft, QSize( r.width(), titleHeight ) );
+            const QPoint topLeft( r.topLeft()-position );
+            const QRect rect( topLeft, QSize( r.width(), titleHeight ) );
 
             QLinearGradient lg( rect.topLeft(), rect.bottomLeft() );
             lg.setColorAt( 0, helper().alphaColor( Qt::black, 0.05 ) );
@@ -641,10 +644,10 @@ namespace Oxygen
 
         // horizontal line
         {
-            int shadowSize = 7;
-            int height = shadowSize-3;
+            const int shadowSize = 7;
+            const int height = shadowSize-3;
 
-            QPoint topLeft( r.topLeft()+QPoint(0,titleHeight-height)-position );
+            const QPoint topLeft( r.topLeft()+QPoint(0,titleHeight-height)-position );
             QRect rect( topLeft, QSize( r.width(), height ) );
 
             // adjustements to cope with shadow size and outline border.
@@ -665,32 +668,32 @@ namespace Oxygen
             QRect frame;
 
             // bottom line
-            int leftOffset = qMin( layoutMetric( LM_BorderLeft ), int(HFRAMESIZE) );
-            int rightOffset = qMin( layoutMetric( LM_BorderRight ), int(HFRAMESIZE) );
+            const int leftOffset = qMin( layoutMetric( LM_BorderLeft ), int(HFRAMESIZE) );
+            const int rightOffset = qMin( layoutMetric( LM_BorderRight ), int(HFRAMESIZE) );
             if( configuration().frameBorder() > Configuration::BorderNone )
             {
 
-                int height = qMax( 0, layoutMetric( LM_BorderBottom ) - HFRAMESIZE );
-                int width = r.width() - leftOffset - rightOffset - 1;
+                const int height = qMax( 0, layoutMetric( LM_BorderBottom ) - HFRAMESIZE );
+                const int width = r.width() - leftOffset - rightOffset - 1;
 
-                QRect rect( r.bottomLeft()-position + QPoint( leftOffset, -layoutMetric( LM_BorderBottom ) ), QSize( width, height ) );
+                const QRect rect( r.bottomLeft()-position + QPoint( leftOffset, -layoutMetric( LM_BorderBottom ) ), QSize( width, height ) );
                 if( height > 0 ) { mask += rect; frame |= rect; }
 
-                QColor shadow( helper().calcDarkColor( color ) );
+                const QColor shadow( helper().calcDarkColor( color ) );
                 painter->setPen( shadow );
                 painter->drawLine( rect.bottomLeft()+QPoint(0,1), rect.bottomRight()+QPoint(0,1) );
 
             }
 
             // left and right
-            int topOffset = titleHeight;
-            int bottomOffset = qMin( layoutMetric( LM_BorderBottom ), int(HFRAMESIZE) );
-            int height = r.height() - topOffset - bottomOffset - 1;
+            const int topOffset = titleHeight;
+            const int bottomOffset = qMin( layoutMetric( LM_BorderBottom ), int(HFRAMESIZE) );
+            const int height = r.height() - topOffset - bottomOffset - 1;
 
             if( configuration().frameBorder() >= Configuration::BorderTiny )
             {
 
-                QColor shadow( helper().calcLightColor( color ) );
+                const QColor shadow( helper().calcLightColor( color ) );
                 painter->setPen( shadow );
 
                 // left
@@ -711,7 +714,7 @@ namespace Oxygen
             // in preview mode also adds center square
             if( isPreview() )
             {
-                QRect rect( r.topLeft()-position + QPoint( layoutMetric( LM_BorderLeft ), topOffset ), QSize(r.width()-layoutMetric( LM_BorderLeft )-layoutMetric( LM_BorderRight ),height) );
+                const QRect rect( r.topLeft()-position + QPoint( layoutMetric( LM_BorderLeft ), topOffset ), QSize(r.width()-layoutMetric( LM_BorderLeft )-layoutMetric( LM_BorderRight ),height) );
                 mask += rect; frame |= rect;
             }
 
@@ -778,8 +781,8 @@ namespace Oxygen
         // center (for active windows only)
         {
             painter->save();
-            int offset = 1;
-            int voffset = 1;
+            const int offset = 1;
+            const int voffset = 1;
             QRect adjustedRect( rect.adjusted( offset, voffset, -offset, 1 ) );
 
             // prepare painter mask
@@ -793,10 +796,10 @@ namespace Oxygen
         }
 
         // shadow
-        int shadowSize = 7;
-        int offset = -3;
-        int voffset = 5-shadowSize;
-        QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
+        const int shadowSize = 7;
+        const int offset = -3;
+        const int voffset = 5-shadowSize;
+        const QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
         helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
 
     }
@@ -873,8 +876,8 @@ namespace Oxygen
     void Client::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color, const QColor& contrast, bool elide ) const
     {
 
-        Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
-        QString local( elide ? QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
+        const Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
+        const QString local( elide ? QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
 
         // translate title down in case of maximized window
         if( isMaximized() ) painter->translate( 0, 2 );
@@ -905,8 +908,8 @@ namespace Oxygen
 
         QPainter painter( &out );
         painter.setFont( options()->font(isActive(), false) );
-        Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
-        QString local( elide ? QFontMetrics( painter.font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
+        const Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
+        const QString local( elide ? QFontMetrics( painter.font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
 
         painter.setPen( color );
         painter.drawText( out.rect(), alignment, local );
@@ -922,7 +925,7 @@ namespace Oxygen
         const ClientGroupItemData& item( itemData_[index] );
 
         // see if tag is active
-        int itemCount( itemData_.count() );
+        const int itemCount( itemData_.count() );
 
         //
         if( !item.boundingRect_.isValid() ) return;
@@ -939,11 +942,11 @@ namespace Oxygen
         { textRect.adjust( 0, 0, - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
 
         // check if current item is active
-        bool active( index == visibleClientGroupItem() );
+        const bool active( index == visibleClientGroupItem() );
 
         // get current item caption and update text rect
         const QList< ClientGroupItem >& items( clientGroupItems() );
-        QString caption( itemCount == 1 ? this->caption() : items[index].title() );
+        const QString caption( itemCount == 1 ? this->caption() : items[index].title() );
 
         // always make sure that titleRect never conflicts with window buttons
         QRect titleRect( this->titleRect() );
@@ -1019,12 +1022,12 @@ namespace Oxygen
 
             // separators
             // draw Left separator
-            QColor color( backgroundPalette( widget(), palette ).window().color() );
-            bool isFirstItem(  index == 0 || (index == 1 && !itemData_[0].boundingRect_.isValid() ) );
+            const QColor color( backgroundPalette( widget(), palette ).window().color() );
+            const bool isFirstItem(  index == 0 || (index == 1 && !itemData_[0].boundingRect_.isValid() ) );
             if( !active && ( ( isFirstItem && buttonsLeftWidth() > 0 ) || itemData_.isTarget( index ) ) )
             {
 
-                QRect local( item.boundingRect_.topLeft()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
+                const QRect local( item.boundingRect_.topLeft()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
                 helper().drawSeparator( painter, local, color, Qt::Vertical);
 
             }
@@ -1036,7 +1039,7 @@ namespace Oxygen
                 !( index+1 == visibleClientGroupItem() && itemData_[index+1].boundingRect_.isValid() ) ) ) )
             {
 
-                QRect local( item.boundingRect_.topRight()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
+                const QRect local( item.boundingRect_.topRight()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
                 helper().drawSeparator( painter, local, color, Qt::Vertical);
 
             }
@@ -1051,7 +1054,7 @@ namespace Oxygen
         if( itemData_.targetRect().isNull() || itemData_.isAnimationRunning() ) return;
 
         p->save();
-        QColor color = palette.color(QPalette::Highlight);
+        const QColor color = palette.color(QPalette::Highlight);
         p->setPen(KColorUtils::mix(color, palette.color(QPalette::Active, QPalette::WindowText)));
         p->setBrush( helper().alphaColor( color, 0.5 ) );
         p->drawRect( itemData_.targetRect().adjusted( 4, 2, -4, -2 ) );
@@ -1079,7 +1082,7 @@ namespace Oxygen
             } else {
 
                 // for small borders, use a frame that matches the titlebar only
-                QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
+                const QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
                 helper().drawFloatFrame(
                     painter, local, backgroundColor( widget(), palette ),
                     false, isActive() && configuration().useOxygenShadows(),
@@ -1116,10 +1119,8 @@ namespace Oxygen
             {
 
                 // Draw right side 3-dots resize handles
-                //qreal cenY = h / 2 + y + 0.5;
-                //qreal posX = w + x - 2.5;
-                qreal cenY = h / 2 + y ;
-                qreal posX = w + x - 3;
+                const qreal cenY = h / 2 + y ;
+                const qreal posX = w + x - 3;
 
                 helper().renderDot( painter, QPointF(posX, cenY - 3), color);
                 helper().renderDot( painter, QPointF(posX, cenY), color);
@@ -1202,15 +1203,15 @@ namespace Oxygen
             if( glowIsAnimated() && !isForcedActive() )
             {
 
-                QColor inactiveColor( backgroundColor( widget, palette, false ) );
-                QColor activeColor( backgroundColor( widget, palette, true ) );
-                QColor mixed( KColorUtils::mix( inactiveColor, activeColor, glowIntensity() ) );
+                const QColor inactiveColor( backgroundColor( widget, palette, false ) );
+                const QColor activeColor( backgroundColor( widget, palette, true ) );
+                const QColor mixed( KColorUtils::mix( inactiveColor, activeColor, glowIntensity() ) );
                 palette.setColor( widget->window()->backgroundRole(), mixed );
                 palette.setColor( QPalette::Button, mixed );
 
             } else if( isActive() || isForcedActive() ) {
 
-                QColor color =  options()->color( KDecorationDefines::ColorTitleBar, true );
+                const QColor color =  options()->color( KDecorationDefines::ColorTitleBar, true );
                 palette.setColor( widget->window()->backgroundRole(), color );
                 palette.setColor( QPalette::Button, color );
 
@@ -1376,9 +1377,9 @@ namespace Oxygen
             } else {
 
                 // multipliers
-                int left = 1;
-                int right = 1;
-                int top = 1;
+                const int left = 1;
+                const int right = 1;
+                const int top = 1;
                 int bottom = 1;
 
                 // disable bottom corners when border frame is too small and window is not shaded
@@ -1442,7 +1443,7 @@ namespace Oxygen
             painter.setFont( options()->font(isActive(), false) );
 
             // draw ClientGroupItems
-            int itemCount( itemData_.count() );
+            const int itemCount( itemData_.count() );
             for( int i = 0; i < itemCount; i++ ) renderItem( &painter, i, palette );
 
             // draw target rect
@@ -1460,7 +1461,7 @@ namespace Oxygen
     bool Client::mousePressEvent( QMouseEvent* event )
     {
 
-        QPoint point = event->pos();
+        const QPoint point = event->pos();
         if( itemClicked( point ) < 0 ) return false;
         dragPoint_ = point;
 
@@ -1492,10 +1493,10 @@ namespace Oxygen
             buttonToWindowOperation( mouseButton_ ) != OperationsOp )
         {
 
-            QPoint point = event->pos();
+            const QPoint point = event->pos();
 
-            int visibleItem = visibleClientGroupItem();
-            int itemClicked( this->itemClicked( point ) );
+            const int visibleItem = visibleClientGroupItem();
+            const int itemClicked( this->itemClicked( point ) );
             if( itemClicked >= 0 && visibleItem != itemClicked )
             {
                 setVisibleClientGroupItem( itemClicked );
@@ -1522,8 +1523,8 @@ namespace Oxygen
         if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
         {
 
-            QPoint point = event->pos();
-            int itemClicked( this->itemClicked( point ) );
+            const QPoint point = event->pos();
+            const int itemClicked( this->itemClicked( point ) );
             if( itemClicked < 0 ) return false;
 
             titleAnimationData_.data()->reset();
@@ -1535,8 +1536,7 @@ namespace Oxygen
             sourceItem_ = this->itemClicked( dragPoint_ );
 
             // get tab geometry
-            QRect geometry;
-            geometry = itemData_[itemClicked].boundingRect_;
+            QRect geometry( itemData_[itemClicked].boundingRect_ );
 
             // remove space used for buttons
             if( itemData_.count() > 1  )
@@ -1606,13 +1606,13 @@ namespace Oxygen
         if( event->source() != widget() )
         {
 
-            QPoint position( event->pos() );
+            const QPoint position( event->pos() );
             itemData_.animate( AnimationEnter, itemClicked( position, true ) );
 
         } else if( itemData_.count() > 1 )  {
 
-            QPoint position( event->pos() );
-            int itemClicked( this->itemClicked( position, false ) );
+            const QPoint position( event->pos() );
+            const int itemClicked( this->itemClicked( position, false ) );
             itemData_.animate( AnimationEnter|AnimationSameTarget, itemClicked );
 
         }
@@ -1633,7 +1633,6 @@ namespace Oxygen
 
         } else if( itemData_.isAnimated() ) {
 
-
             itemData_.animate( AnimationLeave );
 
         }
@@ -1652,15 +1651,15 @@ namespace Oxygen
         if( event->source() != widget() )
         {
 
-            QPoint position( event->pos() );
+            const QPoint position( event->pos() );
             itemData_.animate( AnimationMove, itemClicked( position, true ) );
 
         } else if( itemData_.count() > 1 )  {
 
             if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
 
-            QPoint position( event->pos() );
-            int itemClicked( this->itemClicked( position, false ) );
+            const QPoint position( event->pos() );
+            const int itemClicked( this->itemClicked( position, false ) );
             itemData_.animate( AnimationMove|AnimationSameTarget, itemClicked );
 
         }
@@ -1673,7 +1672,7 @@ namespace Oxygen
     bool Client::dropEvent( QDropEvent* event )
     {
 
-        QPoint point = event->pos();
+        const QPoint point = event->pos();
         itemData_.animate( AnimationNone );
 
         const QMimeData *groupData = event->mimeData();
@@ -1682,7 +1681,7 @@ namespace Oxygen
         if( widget() == event->source() )
         {
 
-            int from = this->itemClicked( dragPoint_ );
+            const int from = this->itemClicked( dragPoint_ );
             int itemClicked( this->itemClicked( point, false ) );
 
             if( itemClicked > from )
@@ -1699,8 +1698,8 @@ namespace Oxygen
         } else {
 
             setForceActive( true );
-            int itemClicked( this->itemClicked( point, true ) );
-            long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
+            const int itemClicked( this->itemClicked( point, true ) );
+            const long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
             itemData_.setDirty( true );
             moveItemToClientGroup( source, itemClicked );
 
@@ -1749,7 +1748,7 @@ namespace Oxygen
     //________________________________________________________________
     QPixmap Client::itemDragPixmap( int index, const QRect& geometry )
     {
-        bool itemValid( index >= 0 && index < clientGroupItems().count() );
+        const bool itemValid( index >= 0 && index < clientGroupItems().count() );
 
         QPixmap pixmap( geometry.size() );
         QPainter painter( &pixmap );
@@ -1761,7 +1760,7 @@ namespace Oxygen
         renderWindowBackground( &painter, geometry, widget(), widget()->palette() );
 
         // darken background if item is inactive
-        bool itemActive = !( itemValid && index != visibleClientGroupItem() );
+        const bool itemActive = !( itemValid && index != visibleClientGroupItem() );
         if( !itemActive )
         {
 
@@ -1781,7 +1780,7 @@ namespace Oxygen
         if( itemValid )
         { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
-        QString caption( itemValid ? clientGroupItems()[index].title() : this->caption() );
+        const QString caption( itemValid ? clientGroupItems()[index].title() : this->caption() );
         renderTitleText(
             &painter, textRect, caption,
             titlebarTextColor( widget()->palette(), isActive() && itemActive ),
