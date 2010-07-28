@@ -204,12 +204,13 @@ namespace Oxygen
 
         //! resize event
         virtual void resizeEvent(QResizeEvent *e);
-        
+
         public slots:
-        
+
         //! triggers widget update in titleRect only
+        /*! one needs to add the title top margin to avoid some clipping glitches */
         void updateTitleRect( void )
-        { widget()->update( titleRect() ); }
+        { widget()->update( titleRect().adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 ) ); }
 
         protected:
 
@@ -327,6 +328,15 @@ namespace Oxygen
                 !isPreview();
         }
 
+        //! true if some title outline is rendered
+        bool hasTitleOutline( void ) const
+        {
+            return
+                clientGroupItems().count() >= 2 ||
+                itemData_.isAnimated() ||
+                ( isActive() && configuration().drawTitleOutline() );
+        }
+
         //! calculate mask
         QRegion calcMask( void ) const;
 
@@ -371,7 +381,7 @@ namespace Oxygen
         //! clear force active flag
         void clearForceActive( void )
         { if( isActive() ) setForceActive( false ); }
-        
+
         //! title bounding rects
         /*! calculate and return title bounding rects in case of tabbed window */
         void updateItemBoundingRects( bool alsoUpdate = true );
