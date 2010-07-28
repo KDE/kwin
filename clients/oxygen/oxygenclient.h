@@ -210,7 +210,7 @@ namespace Oxygen
         //! triggers widget update in titleRect only
         /*! one needs to add the title top margin to avoid some clipping glitches */
         void updateTitleRect( void )
-        { widget()->update( titleRect().adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 ) ); }
+        { widget()->update( titleRect().adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 1 ) ); }
 
         protected:
 
