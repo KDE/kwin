@@ -1083,11 +1083,17 @@ class GLVertexBufferPrivate
             , numberVertices( 0 )
             , dimension( 2 )
             {
-            glGenBuffers( 2, buffers );
+            if( GLVertexBufferPrivate::supported )
+                {
+                glGenBuffers( 2, buffers );
+                }
             }
         ~GLVertexBufferPrivate()
             {
-            glDeleteBuffers( 2, buffers );
+            if( GLVertexBufferPrivate::supported )
+                {
+                glDeleteBuffers( 2, buffers );
+                }
             }
         GLVertexBuffer::UsageHint hint;
         GLuint buffers[2];
