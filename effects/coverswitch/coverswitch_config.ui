@@ -158,7 +158,7 @@
             <string comment="Duration of rotation">Default</string>
            </property>
            <property name="maximum">
-            <number>5000</number>
+            <number>9999</number>
            </property>
            <property name="singleStep">
             <number>10</number>

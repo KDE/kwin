@@ -41,7 +41,7 @@
          <string> px</string>
         </property>
         <property name="maximum" >
-         <number>500</number>
+         <number>9999</number>
         </property>
         <property name="singleStep" >
          <number>10</number>
@@ -73,7 +73,7 @@
          <string> px</string>
         </property>
         <property name="maximum" >
-         <number>500</number>
+         <number>9999</number>
         </property>
         <property name="singleStep" >
          <number>10</number>
