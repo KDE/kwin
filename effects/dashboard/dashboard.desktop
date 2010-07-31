@@ -73,6 +73,7 @@ Name[zh_TW]=資訊看板
 Icon=preferences-system-windows-effect-dashboard
 Comment=Desaturate the desktop when displaying the Plasma dashboard
 Comment[de]=Die Arbeitsfläche grau färben, wenn das Plasma-Dashboard angezeigt wird.
+Comment[en_GB]=Desaturate the desktop when displaying the Plasma dashboard
 Comment[ia]=Il de-satura le scriptorio quando il monstra le dashboard de Plasma
 Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun dat Plasma-Klockpaneel daalsetten
 Comment[pt]=Reduzir a saturação do ecrã ao mostrar o painel do Plasma
