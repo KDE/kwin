@@ -53,6 +53,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->spinHeight, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
