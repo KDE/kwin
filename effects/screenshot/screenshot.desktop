@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=Screenshot
+Name[x-test]=xxScreenshotxx
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
+Comment[x-test]=xxSaves screenshot of active window into the home directoryxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
