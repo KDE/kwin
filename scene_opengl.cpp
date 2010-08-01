@@ -762,7 +762,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     if( !selfCheckDone )
         {
         if( !selfCheckFinish())
-            QTimer::singleShot( 0, Workspace::self(), SLOT( fallbackToXRenderCompositing()));
+            QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
         selfCheckDone = true;
         }
     // do cleanup
