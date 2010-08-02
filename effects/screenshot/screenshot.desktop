@@ -1,8 +1,12 @@
 [Desktop Entry]
 Name=Screenshot
+Name[sv]=Skärmbild
+Name[uk]=Знімок вікна
 Name[x-test]=xxScreenshotxx
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
+Comment[sv]=Sparar en skärmbild av det aktiva fönstret i hemkatalogen
+Comment[uk]=Зберігає знімок активного вікна до домашнього каталогу
 Comment[x-test]=xxSaves screenshot of active window into the home directoryxx
 
 Type=Service
