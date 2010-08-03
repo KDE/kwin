@@ -48,7 +48,7 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 void SlidingPopupsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !mAppearingWindows.isEmpty() || !mDisappearingWindows.isEmpty() )
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
     effects->prePaintScreen( data, time );
     }
 

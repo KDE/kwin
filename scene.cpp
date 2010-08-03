@@ -173,7 +173,8 @@ void Scene::idle()
 // the function that'll be eventually called by paintScreen() above
 void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ))
+    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS
+            | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS ))
         paintGenericScreen( mask, data );
     else
         paintSimpleScreen( mask, region );
@@ -222,6 +223,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     // perhaps the two enums should be separated
     assert(( orig_mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
         | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS
+        | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS
         | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
     QHash< Window*, Phase2Data > phase2data;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
