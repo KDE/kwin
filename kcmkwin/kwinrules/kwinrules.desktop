@@ -12,6 +12,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
 Name=Window Rules
+Name[ar]=قواعد النافذة
 Name[ca]=Regles de les finestres
 Name[ca@valencia]=Regles de les finestres
 Name[cs]=Pravidla oken

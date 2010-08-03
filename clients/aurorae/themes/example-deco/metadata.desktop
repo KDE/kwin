@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example
+Name[ar]=مثال
 Name[bg]=Пример
 Name[ca]=Exemple
 Name[ca@valencia]=Exemple
@@ -61,6 +62,7 @@ Name[x-test]=xxExamplexx
 Name[zh_CN]=实例
 Name[zh_TW]=範例
 Comment=An example theme based on the Air desktop theme.
+Comment[ar]=مثال على سمة تعتمد على سمة سطح مكتب الهواء
 Comment[ca]=Un tema d'exemple basat en el tema d'escriptori Air.
 Comment[ca@valencia]=Un tema d'exemple basat en el tema d'escriptori Air.
 Comment[cs]=Ukázkový motiv založený na motivu pracovní plochy Air.

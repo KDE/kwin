@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Cube Gears
+Name[ar]=ترويسات المكعب
 Name[ca]=Engranatges cúbics
 Name[ca@valencia]=Engranatges cúbics
 Name[cs]=Soukolí kostky
@@ -57,6 +58,7 @@ Name[zh_CN]=立方齿轮
 Name[zh_TW]=立方體內的齒輪
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
+Comment[ar]=تعرض ترويسات داخل المكعب
 Comment[ca]=Visualitza els engranatges dins d'un cub
 Comment[ca@valencia]=Visualitza els engranatges dins d'un cub
 Comment[cs]=Zobrazit soukolí uvnitř kostky

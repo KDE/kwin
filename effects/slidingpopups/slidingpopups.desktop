@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[ar]=إنزلاق النوافذ المنبثقة
 Name[ca]=Missatges emergents desplaçant-se
 Name[ca@valencia]=Missatges emergents desplaçant-se
 Name[da]=Glidende pop-op'er
@@ -54,6 +55,7 @@ Name[zh_TW]=滑動彈出視窗
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[ar]=تأثير الإنزلاق لنوافذ بلازما المنبثقة
 Comment[ca]=Animació de desplaçament pels missatges emergents del Plasma
 Comment[ca@valencia]=Animació de desplaçament pels missatges emergents del Plasma
 Comment[da]=Glidende animation til Plasma-pop-op'er

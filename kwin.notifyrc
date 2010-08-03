@@ -1,6 +1,7 @@
 [Global]
 IconName=kwin
 Comment=KWin Window Manager
+Comment[ar]=مدير النوافذ ك.ون
 Comment[ca]=Gestor de finestres KWin
 Comment[ca@valencia]=Gestor de finestres KWin
 Comment[cs]=Správce oken KWin
@@ -6889,6 +6890,7 @@ Action=Popup
 
 [Event/tilingenabled]
 Name=Tiling Enabled
+Name[ar]=رصف النوافذ ممكن
 Name[ca]=Mosaic habilitat
 Name[ca@valencia]=Mosaic habilitat
 Name[cs]=Dlaždicování zapnuto
@@ -6924,6 +6926,7 @@ Name[x-test]=xxTiling Enabledxx
 Name[zh_CN]=平铺已启用
 Name[zh_TW]=鋪排已開啟
 Comment=Tiling mode has been enabled
+Comment[ar]=مكن نمط رصف النوافذ
 Comment[ca]=S'ha habilitat el mode de mosaic
 Comment[ca@valencia]=S'ha habilitat el mode de mosaic
 Comment[da]=Fliseudlægningstilstand er blevet aktiveret
@@ -6961,6 +6964,7 @@ Action=Popup
 
 [Event/tilingdisabled]
 Name=Tiling Disabled
+Name[ar]=رصف النوافذ معطل
 Name[ca]=Mosaic deshabilitat
 Name[ca@valencia]=Mosaic deshabilitat
 Name[cs]=Dlaždicování vypnuto
@@ -6996,6 +7000,7 @@ Name[x-test]=xxTiling Disabledxx
 Name[zh_CN]=平铺已禁用
 Name[zh_TW]=鋪排已關閉
 Comment=Tiling mode has been disabled
+Comment[ar]=عطل نمط رصف النوافذ
 Comment[ca]=S'ha deshabilitat el mode de mosaic
 Comment[ca@valencia]=S'ha deshabilitat el mode de mosaic
 Comment[da]=Fliseudlægningstilstand er blevet deaktiveret
@@ -7034,6 +7039,7 @@ Action=Popup
 
 [Event/tilinglayoutchanged]
 Name=Tiling Layout Changed
+Name[ar]=غير مخطط رصف النوافذ
 Name[ca]=Canvi de la disposició del mosaic
 Name[ca@valencia]=Canvi de la disposició del mosaic
 Name[cs]=Rozložení dlaždic změněno
@@ -7069,6 +7075,7 @@ Name[x-test]=xxTiling Layout Changedxx
 Name[zh_CN]=平铺布局已更改
 Name[zh_TW]=鋪排佈局已變更
 Comment=Tiling Layout has been changed
+Comment[ar]=غير تخطيط رصف النوافذ
 Comment[ca]=Ha canviat la disposició del mosaic
 Comment[ca@valencia]=Ha canviat la disposició del mosaic
 Comment[cs]=Rozložení dlaždic bylo změněno
