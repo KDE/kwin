@@ -493,7 +493,7 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
 
 void WobblyWindowsEffect::windowAdded(EffectWindow* w)
 {
-    if (m_openEffectEnabled)
+    if (m_openEffectEnabled && w->data( WindowAddedGrabRole ).value<void*>() != this)
     {
         if(windows.contains(w))
         {
@@ -529,7 +529,7 @@ void WobblyWindowsEffect::windowClosed(EffectWindow* w)
                 effects->addRepaintFull();
         }
     }
-    else if (m_closeEffectEnabled)
+    else if (m_closeEffectEnabled  && w->data( WindowAddedGrabRole ).value<void*>() != this)
     {
         WindowWobblyInfos new_wwi;
         initWobblyInfo(new_wwi, w->geometry());
