@@ -2,6 +2,7 @@
 Name=Screenshot
 Name[ia]=Instantanee de schermo
 Name[pt]=Captura do Ecrã
+Name[pt_BR]=Captura de tela
 Name[sv]=Skärmbild
 Name[uk]=Знімок вікна
 Name[x-test]=xxScreenshotxx
@@ -9,6 +10,7 @@ Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
 Comment[ia]=Il salva instantanee de schermo del fenestra active in le directorio domo
 Comment[pt]=Captura uma imagem da janela activa para a pasta pessoal
+Comment[pt_BR]=Captura uma imagem da janela ativa para a pasta do usuário
 Comment[sv]=Sparar en skärmbild av det aktiva fönstret i hemkatalogen
 Comment[uk]=Зберігає знімок активного вікна до домашнього каталогу
 Comment[x-test]=xxSaves screenshot of active window into the home directoryxx
