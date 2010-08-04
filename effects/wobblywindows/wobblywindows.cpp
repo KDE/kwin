@@ -299,11 +299,10 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     // Could we just set a subset of the screen to be repainted ?
     if (windows.count() != 0)
     {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    }
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
 
-    // this set the QRect invalid.
-    m_updateRegion.setWidth(0);
+        m_updateRegion = QRegion();
+    }
 
     effects->prePaintScreen(data, time);
 }
@@ -341,6 +340,10 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         WindowWobblyInfos& wwi = windows[w];
         int tx = w->geometry().x();
         int ty = w->geometry().y();
+        double left = 0.0;
+        double top = 0.0;
+        double right = w->width();
+        double bottom = w->height();
         for (int i = 0; i < data.quads.count(); ++i)
         {
             for(int j = 0; j < 4; ++j)
@@ -350,7 +353,13 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
                 Pair newPos = computeBezierPoint(wwi, oldPos);
                 v.move(newPos.x - tx, newPos.y - ty);
             }
+            left   = qMin(left,   data.quads[i].left());
+            top    = qMin(top,    data.quads[i].top());
+            right  = qMax(right,  data.quads[i].right());
+            bottom = qMax(bottom, data.quads[i].bottom());
         }
+        m_updateRegion = m_updateRegion.united(QRect(w->x() + left, w->y() + top,
+            right - left, bottom-top));
     }
 
     // Call the next effect.
@@ -1098,9 +1107,6 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
     heightRingLinearMean(&wwi.velocity, wwi);
 
-    Pair topLeftCorner = {-10000.0, -10000.0};
-    Pair bottomRightCorner = {10000.0, 10000.0};
-
     // compute the new pos of each vertex.
     for (unsigned int i = 0; i < wwi.count; ++i)
     {
@@ -1114,23 +1120,6 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
         pos.x += vel.x*time*m_move_factor;
         pos.y += vel.y*time*m_move_factor;
-
-        if (pos.x < topLeftCorner.x)
-        {
-            topLeftCorner.x = pos.x;
-        }
-        if (pos.x > bottomRightCorner.x)
-        {
-            bottomRightCorner.x = pos.x;
-        }
-        if (pos.y < topLeftCorner.y)
-        {
-            topLeftCorner.y = pos.y;
-        }
-        if (pos.y > bottomRightCorner.y)
-        {
-            bottomRightCorner.y = pos.y;
-        }
 
         vel_sum += fabs(vel.x) + fabs(vel.y);
 
@@ -1186,17 +1175,6 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         if( windows.isEmpty() )
             effects->addRepaintFull();
         return false;
-    }
-
-    QRect windowRect(topLeftCorner.x, topLeftCorner.y,
-        bottomRightCorner.x - topLeftCorner.x, bottomRightCorner.y - topLeftCorner.y);
-    if (m_updateRegion.isValid())
-    {
-        m_updateRegion = m_updateRegion.united(windowRect);
-    }
-    else
-    {
-        m_updateRegion = windowRect;
     }
 
     return true;

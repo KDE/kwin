@@ -99,7 +99,7 @@ class WobblyWindowsEffect : public Effect
 
         QHash< const EffectWindow*,  WindowWobblyInfos > windows;
 
-        QRect m_updateRegion;
+        QRegion m_updateRegion;
 
         qreal m_stiffness;
         qreal m_drag;
