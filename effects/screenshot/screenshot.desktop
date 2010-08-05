@@ -1,6 +1,9 @@
 [Desktop Entry]
 Name=Screenshot
+Name[en_GB]=Screenshot
 Name[ia]=Instantanee de schermo
+Name[lt]=Nuotrauka
+Name[nds]=Schirmfoto
 Name[pt]=Captura do Ecrã
 Name[pt_BR]=Captura de tela
 Name[sv]=Skärmbild
@@ -8,7 +11,9 @@ Name[uk]=Знімок вікна
 Name[x-test]=xxScreenshotxx
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
+Comment[en_GB]=Saves screenshot of active window into the home directory
 Comment[ia]=Il salva instantanee de schermo del fenestra active in le directorio domo
+Comment[lt]=Įrašo aktyvaus lango nuotrauką namų kataloge
 Comment[pt]=Captura uma imagem da janela activa para a pasta pessoal
 Comment[pt_BR]=Captura uma imagem da janela ativa para a pasta do usuário
 Comment[sv]=Sparar en skärmbild av det aktiva fönstret i hemkatalogen
