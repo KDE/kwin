@@ -223,7 +223,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     bool valid = target->valid() && shader->isValid();
 
     QRegion shape;
-    const QVariant forceBlur = w->data( WindowForceBlurBehindRole );
+    const QVariant forceBlur = w->data( WindowForceBlurRole );
     if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool() ))
             && hasAlpha && !w->isDesktop() && !transformed)
         shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
