@@ -98,7 +98,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="desktopSwitchCombo">
+       <widget class="KComboBox" name="desktopSwitchCombo">
         <item>
          <property name="text">
           <string comment="Switch desktop on edge">Disabled</string>
@@ -212,6 +212,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
   <customwidget>
    <class>KIntSpinBox</class>
    <extends>QSpinBox</extends>

@@ -116,7 +116,7 @@
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QComboBox" name="windowSwitchingCombo">
+              <widget class="KComboBox" name="windowSwitchingCombo">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -139,7 +139,7 @@
               </widget>
              </item>
              <item row="5" column="1">
-              <widget class="QComboBox" name="desktopSwitchingCombo">
+              <widget class="KComboBox" name="desktopSwitchingCombo">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -165,7 +165,7 @@
               </spacer>
              </item>
              <item row="6" column="1">
-              <widget class="QComboBox" name="animationSpeedCombo">
+              <widget class="KComboBox" name="animationSpeedCombo">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -341,7 +341,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="compositingType">
+        <widget class="KComboBox" name="compositingType">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>1</horstretch>
@@ -380,7 +380,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="windowThumbnails">
+        <widget class="KComboBox" name="windowThumbnails">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>1</horstretch>
@@ -441,7 +441,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="glMode">
+           <widget class="KComboBox" name="glMode">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>1</horstretch>
@@ -485,7 +485,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="glTextureFilter">
+           <widget class="KComboBox" name="glTextureFilter">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>1</horstretch>
@@ -568,6 +568,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
   <customwidget>
    <class>KTitleWidget</class>
    <extends>QWidget</extends>
