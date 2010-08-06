@@ -1008,7 +1008,7 @@ static QString formatFramebufferStatus( GLenum status )
             // The read buffer is missing
             return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
         default:
-            return "Unknown (0x" + QString::number(status, 16) + ")";
+            return "Unknown (0x" + QString::number(status, 16) + ')';
         }
     }
 
