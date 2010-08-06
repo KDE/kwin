@@ -184,7 +184,7 @@ class Workspace : public QObject, public KDecorationDefines
         // this rearranges the tiles.
         void updateAllTiles();
 
-        // The notification funtions are called from 
+        // The notification functions are called from 
         // various points in existing code so that
         // tiling can take any action if required.
         // They are defined in tiling.cpp
