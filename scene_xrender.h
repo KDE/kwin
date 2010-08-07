@@ -104,6 +104,8 @@ class SceneXrender::EffectFrame
         virtual void freeIconFrame();
         virtual void freeTextFrame();
         virtual void freeSelection();
+        virtual void crossFadeIcon();
+        virtual void crossFadeText();
         virtual void render( QRegion region, double opacity, double frameOpacity );
 
     private:

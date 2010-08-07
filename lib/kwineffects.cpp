@@ -1292,14 +1292,59 @@ EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStacking
     }
 
 /***************************************************************
+ EffectFramePrivate
+***************************************************************/
+class EffectFramePrivate
+    {
+    public:
+        EffectFramePrivate();
+        ~EffectFramePrivate();
+
+        bool crossFading;
+        qreal crossFadeProgress;
+    };
+
+EffectFramePrivate::EffectFramePrivate()
+    : crossFading( false )
+    , crossFadeProgress( 1.0 )
+    {
+    }
+
+EffectFramePrivate::~EffectFramePrivate()
+    {
+    }
+
+/***************************************************************
  EffectFrame
 ***************************************************************/
 EffectFrame::EffectFrame()
+    : d( new EffectFramePrivate )
     {
     }
 
 EffectFrame::~EffectFrame()
     {
+    delete d;
+    }
+
+qreal EffectFrame::crossFadeProgress() const
+    {
+    return d->crossFadeProgress;
+    }
+
+void EffectFrame::setCrossFadeProgress( qreal progress )
+    {
+    d->crossFadeProgress = progress;
+    }
+
+bool EffectFrame::isCrossFade() const
+    {
+    return d->crossFading;
+    }
+
+void EffectFrame::enableCrossFade( bool enable )
+    {
+    d->crossFading = enable;
     }
 
 QColor EffectFrame::styledTextColor()

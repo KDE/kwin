@@ -1920,7 +1920,9 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     : Scene::EffectFrame( frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
+    , m_oldTextTexture( NULL )
     , m_iconTexture( NULL )
+    , m_oldIconTexture( NULL )
     , m_selectionTexture( NULL )
     , m_unstyledVBO( NULL )
     {
@@ -1934,7 +1936,9 @@ SceneOpenGL::EffectFrame::~EffectFrame()
     {
     delete m_texture;
     delete m_textTexture;
+    delete m_oldTextTexture;
     delete m_iconTexture;
+    delete m_oldIconTexture;
     delete m_selectionTexture;
     delete m_unstyledVBO;
     }
@@ -1951,6 +1955,10 @@ void SceneOpenGL::EffectFrame::free()
     m_selectionTexture = NULL;
     delete m_unstyledVBO;
     m_unstyledVBO = NULL;
+    delete m_oldIconTexture;
+    m_oldIconTexture = NULL;
+    delete m_oldTextTexture;
+    m_oldTextTexture = NULL;
     }
 
 void SceneOpenGL::EffectFrame::freeIconFrame()
@@ -1969,6 +1977,20 @@ void SceneOpenGL::EffectFrame::freeSelection()
     {
     delete m_selectionTexture;
     m_selectionTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::crossFadeIcon()
+    {
+    delete m_oldIconTexture;
+    m_oldIconTexture = m_iconTexture;
+    m_iconTexture = NULL;
+    }
+
+void SceneOpenGL::EffectFrame::crossFadeText()
+    {
+    delete m_oldTextTexture;
+    m_oldTextTexture = m_textTexture;
+    m_textTexture = NULL;
     }
 
 void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
@@ -2144,16 +2166,34 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             }
         }
 
-    if( shader )
-        shader->setUniform( "opacity", (float)opacity );
-    else
-        glColor4f( 1.0, 1.0, 1.0, opacity );
-
     // Render icon
     if( !m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty() )
         {
         QPoint topLeft( m_effectFrame->geometry().x(),
                         m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2 );
+
+        if( m_effectFrame->isCrossFade() && m_oldIconTexture )
+            {
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity * (1.0f - (float)m_effectFrame->crossFadeProgress()) );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()) );
+
+            m_oldIconTexture->bind();
+            m_oldIconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
+            m_oldIconTexture->unbind();
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress() );
+            }
+        else
+            {
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity );
+            }
 
         if( !m_iconTexture ) // lazy creation
             {
@@ -2169,6 +2209,28 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
     // Render text
     if( !m_effectFrame->text().isEmpty() )
         {
+        if( m_effectFrame->isCrossFade() && m_oldTextTexture )
+            {
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity * (1.0f - (float)m_effectFrame->crossFadeProgress()) );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()) );
+
+            m_oldTextTexture->bind();
+            m_oldTextTexture->render( region, m_effectFrame->geometry() );
+            m_oldTextTexture->unbind();
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress() );
+            }
+        else
+            {
+            if( shader )
+                shader->setUniform( "opacity", (float)opacity );
+            else
+                glColor4f( 1.0, 1.0, 1.0, opacity );
+            }
         if( !m_textTexture ) // Lazy creation
             updateTextTexture();
         m_textTexture->bind();

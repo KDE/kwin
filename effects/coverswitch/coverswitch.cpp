@@ -63,6 +63,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setBold( true );
     captionFont.setPointSize( captionFont.pointSize() * 2 );
     captionFrame->setFont( captionFont );
+    captionFrame->enableCrossFade( true );
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -328,6 +329,8 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 opacity = timeLine.value();
             else if( stop )
                 opacity = 1.0 - timeLine.value();
+            if( animation )
+                captionFrame->setCrossFadeProgress( timeLine.value() );
             captionFrame->render( region, opacity );
         }
 

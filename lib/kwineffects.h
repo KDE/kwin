@@ -57,6 +57,7 @@ namespace KWin
 class EffectWindow;
 class EffectWindowGroup;
 class EffectFrame;
+class EffectFramePrivate;
 class Effect;
 class WindowQuad;
 class GLRenderTarget;
@@ -1767,6 +1768,47 @@ class KWIN_EXPORT EffectFrame
          * The foreground text color as specified by the default Plasma theme.
          */
         static QColor styledTextColor();
+
+        /**
+         * If @p enable is @c true cross fading between icons and text is enabled
+         * By default disabled. Use setCrossFadeProgress to cross fade.
+         * Cross Fading is currently only available if OpenGL is used.
+         * @param enable @c true enables cross fading, @c false disables it again
+         * @see isCrossFade
+         * @see setCrossFadeProgress
+         * @since 4.6
+         **/
+        void enableCrossFade( bool enable );
+        /**
+         * @returns @c true if cross fading is enabled, @c false otherwise
+         * @see enableCrossFade
+         * @since 4.6
+         **/
+        bool isCrossFade() const;
+        /**
+         * Sets the current progress for cross fading the last used icon/text
+         * with current icon/text to @p progress.
+         * A value of 0.0 means completely old icon/text, a value of 1.0 means
+         * completely current icon/text.
+         * Default value is 1.0. You have to enable cross fade before using it.
+         * Cross Fading is currently only available if OpenGL is used.
+         * @see enableCrossFade
+         * @see isCrossFade
+         * @see crossFadeProgress
+         * @since 4.6
+         **/
+        void setCrossFadeProgress( qreal progress );
+        /**
+         * @returns The current progress for cross fading
+         * @see setCrossFadeProgress
+         * @see enableCrossFade
+         * @see isCrossFade
+         * @since 4.6
+         **/
+        qreal crossFadeProgress() const;
+
+    private:
+        EffectFramePrivate* const d;
     };
 
 /**

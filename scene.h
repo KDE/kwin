@@ -226,6 +226,8 @@ class Scene::EffectFrame
         virtual void freeIconFrame() = 0;
         virtual void freeTextFrame() = 0;
         virtual void freeSelection() = 0;
+        virtual void crossFadeIcon() = 0;
+        virtual void crossFadeText() = 0;
 
     protected:
         EffectFrameImpl* m_effectFrame;

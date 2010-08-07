@@ -896,6 +896,16 @@ void SceneXrender::EffectFrame::freeSelection()
     m_selectionPicture = NULL;
     }
 
+void SceneXrender::EffectFrame::crossFadeIcon()
+    {
+    // TODO: implement me
+    }
+
+void SceneXrender::EffectFrame::crossFadeText()
+    {
+    // TODO: implement me
+    }
+
 void SceneXrender::EffectFrame::render( QRegion region, double opacity, double frameOpacity )
     {
     if( m_effectFrame->geometry().isEmpty() )

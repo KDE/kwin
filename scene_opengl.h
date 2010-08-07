@@ -180,6 +180,9 @@ class SceneOpenGL::EffectFrame
 
         virtual void render(QRegion region, double opacity, double frameOpacity);
 
+        virtual void crossFadeIcon();
+        virtual void crossFadeText();
+
         static void cleanup();
 
     private:
@@ -188,7 +191,9 @@ class SceneOpenGL::EffectFrame
 
         GLTexture* m_texture;
         GLTexture* m_textTexture;
+        GLTexture* m_oldTextTexture;
         GLTexture* m_iconTexture;
+        GLTexture* m_oldIconTexture;
         GLTexture* m_selectionTexture;
         GLVertexBuffer* m_unstyledVBO;
 

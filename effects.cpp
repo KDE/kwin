@@ -1761,6 +1761,10 @@ const QPixmap& EffectFrameImpl::icon() const
 void EffectFrameImpl::setIcon( const QPixmap& icon )
     {
     m_icon = icon;
+    if( isCrossFade() )
+        {
+        m_sceneFrame->crossFadeIcon();
+        }
     if( m_iconSize.isEmpty() ) // Set a size if we don't already have one
         {
         setIconSize( m_icon.size() );
@@ -1837,6 +1841,10 @@ void EffectFrameImpl::setText( const QString& text )
     if( m_text == text )
         {
         return;
+        }
+    if( isCrossFade() )
+        {
+        m_sceneFrame->crossFadeText();
         }
     m_text = text;
     QRect oldGeom = m_geometry;
