@@ -408,19 +408,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         if( m_windowTitle )
             {
             // Render the caption frame
-            double opacity = 1.0;
-            opacity = m_startStopTimeLine.value();
-            QPixmap iconPixmap = m_selectedWindow->icon();
-            if( m_start || m_stop )
-                {
-                int alpha = 255.0f * m_startStopTimeLine.value();
-                QPixmap transparency = iconPixmap.copy( iconPixmap.rect() );
-                transparency.fill( QColor( 255, 255, 255, alpha ));
-                iconPixmap.setAlphaChannel( transparency.alphaChannel() );
-                }
-            m_captionFrame->setText( m_selectedWindow->caption() );
-            m_captionFrame->setIcon( iconPixmap );
-            m_captionFrame->render( region, opacity );
+            m_captionFrame->render( region, m_startStopTimeLine.value() );
             }
         }
     }
@@ -613,6 +601,8 @@ void FlipSwitchEffect::tabBoxUpdated()
                         }
                     }
                 m_selectedWindow = effects->currentTabBoxWindow();
+                m_captionFrame->setText( m_selectedWindow->caption() );
+                m_captionFrame->setIcon( m_selectedWindow->icon() );
                 }
             }
         effects->addRepaintFull();
@@ -716,6 +706,8 @@ void FlipSwitchEffect::setActive( bool activate, FlipSwitchMode mode )
             QFontMetrics( m_captionFont ).height() );
         m_captionFrame->setGeometry( frameRect );
         m_captionFrame->setIconSize( QSize( frameRect.height(), frameRect.height() ));
+        m_captionFrame->setText( m_selectedWindow->caption() );
+        m_captionFrame->setIcon( m_selectedWindow->icon() );
         effects->addRepaintFull();
         }
     else
@@ -980,6 +972,8 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
                     }
                 if( found )
                     {
+                    m_captionFrame->setText( m_selectedWindow->caption() );
+                    m_captionFrame->setIcon( m_selectedWindow->icon() );
                     scheduleAnimation( DirectionForward );
                     }
                 break;
@@ -1013,6 +1007,8 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
                     }
                 if( found )
                     {
+                    m_captionFrame->setText( m_selectedWindow->caption() );
+                    m_captionFrame->setIcon( m_selectedWindow->icon() );
                     scheduleAnimation( DirectionBackward );
                     }
                 break;
