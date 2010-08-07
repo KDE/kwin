@@ -145,7 +145,7 @@ void SlidingPopupsEffect::windowAdded( EffectWindow* w )
     propertyNotify( w, mAtom );
     if( w->isOnCurrentDesktop() && mWindowsData.contains( w ) )
         {
-        mAppearingWindows[ w ].setDuration( animationTime( mFadeInTime ) );
+        mAppearingWindows[ w ].setDuration( mWindowsData[ w ].fadeInDuration );
         mAppearingWindows[ w ].setProgress( 0.0 );
         mAppearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
 
@@ -163,7 +163,7 @@ void SlidingPopupsEffect::windowClosed( EffectWindow* w )
         {
         w->refWindow();
         mAppearingWindows.remove( w );
-        mDisappearingWindows[ w ].setDuration( animationTime( mFadeOutTime ));
+        mDisappearingWindows[ w ].setDuration( mWindowsData[ w ].fadeOutDuration );
         mDisappearingWindows[ w ].setProgress( 0.0 );
         mDisappearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
 
@@ -196,6 +196,19 @@ void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
     Data animData;
     animData.start = d[ 0 ];
     animData.from = (Position)d[ 1 ];
+    if( data.length() >= (int)(sizeof( long ) * 3) )
+        {
+        animData.fadeInDuration = d[2];
+        if( data.length() >= (int)(sizeof( long ) * 4) )
+            animData.fadeOutDuration = d[3];
+        else
+            animData.fadeOutDuration = d[2];
+        }
+    else
+        {
+        animData.fadeInDuration = animationTime( mFadeInTime );
+        animData.fadeOutDuration = animationTime( mFadeOutTime );
+        }
     mWindowsData[ w ] = animData;
     }
 } // namespace

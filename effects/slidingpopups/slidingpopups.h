@@ -55,6 +55,8 @@ class SlidingPopupsEffect
             int start; //point in screen coordinates where the window starts
                        //to animate, from decides if this point is an x or an y
             Position from;
+            int fadeInDuration;
+            int fadeOutDuration;
             };
         long mAtom;
         QHash< const EffectWindow*, TimeLine > mAppearingWindows;
