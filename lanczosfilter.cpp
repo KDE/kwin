@@ -184,19 +184,33 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             init();
         if ( m_shader )
             {
-            int tx = data.xTranslate + w->x();
-            int ty = data.yTranslate + w->y();
-            int tw = w->width()*data.xScale;
-            int th = w->height()*data.yScale;
+            double left = 0;
+            double top = 0;
+            double right = w->width();
+            double bottom = w->height();
+            foreach( const WindowQuad& quad, data.quads )
+                {
+                // we need this loop to include the decoration padding
+                left   = qMin(left, quad.left());
+                top    = qMin(top, quad.top());
+                right  = qMax(right, quad.right());
+                bottom = qMax(bottom, quad.bottom());
+                }
+            double width = right - left;
+            double height = bottom - top;
+            int tx = data.xTranslate + w->x() + left*data.xScale;
+            int ty = data.yTranslate + w->y() + top*data.yScale;
+            int tw = width*data.xScale;
+            int th = height*data.yScale;
 
-            int sw = w->width();
-            int sh = w->height();
+            int sw = width;
+            int sh = height;
 
             WindowPaintData thumbData = data;
             thumbData.xScale = 1.0;
             thumbData.yScale = 1.0;
-            thumbData.xTranslate = -w->x();
-            thumbData.yTranslate = -w->y();
+            thumbData.xTranslate = -w->x() - left;
+            thumbData.yTranslate = -w->y() - top;
 
             // Bind the offscreen FBO and draw the window on it unscaled
             updateOffscreenSurfaces();
