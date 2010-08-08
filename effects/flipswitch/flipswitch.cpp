@@ -52,6 +52,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_captionFont.setBold( true );
     m_captionFont.setPointSize( m_captionFont.pointSize() * 2 );
     m_captionFrame->setFont( m_captionFont );
+    m_captionFrame->enableCrossFade( true );
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = ( KAction* )actionCollection->addAction( "FlipSwitchCurrent" );
@@ -408,6 +409,10 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         if( m_windowTitle )
             {
             // Render the caption frame
+            if( m_animation )
+                {
+                m_captionFrame->setCrossFadeProgress( m_timeLine.value() );
+                }
             m_captionFrame->render( region, m_startStopTimeLine.value() );
             }
         }
