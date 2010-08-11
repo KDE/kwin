@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2010 Sebastian Sauer <sebsauer@kdab.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,17 +24,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 
+#include "ui_zoom_config.h"
+
 class KShortcutsEditor;
 
 namespace KWin
 {
+
+class ZoomEffectConfigForm : public QWidget, public Ui::ZoomEffectConfigForm
+    {
+    Q_OBJECT
+    public:
+        explicit ZoomEffectConfigForm(QWidget* parent = 0);
+    };
 
 class ZoomEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
         explicit ZoomEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~ZoomEffectConfig();
+        virtual ~ZoomEffectConfig();
 
     public slots:
         virtual void save();
@@ -41,7 +51,8 @@ class ZoomEffectConfig : public KCModule
         virtual void defaults();
 
     private:
-        KShortcutsEditor* mShortcutEditor;
+        ZoomEffectConfigForm* m_ui;
+        enum MouseTracking { MouseCentred = 0, MouseProportional = 1, MouseDisabled = 2 };
     };
 
 } // namespace
