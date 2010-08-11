@@ -43,6 +43,8 @@ class DashboardEffect : public KWin::Effect
         virtual void reconfigure( ReconfigureFlags );
         virtual void unpropagate();
         virtual void windowActivated( EffectWindow *w );
+	virtual void windowAdded( EffectWindow* c );
+        virtual void windowClosed( EffectWindow* c );
     private:
         bool blur;
         bool isDashboard( EffectWindow* w );

@@ -133,4 +133,30 @@ void DashboardEffect::windowActivated( EffectWindow *w )
         }
    }
 
+void DashboardEffect::windowAdded( EffectWindow* w )                                   
+    {                                                                                      
+    propertyNotify( w, atom );        
+
+                                                    
+    if( isDashboard( w ) )                            
+        {                                                                                  
+        // Tell other windowAdded() effects to ignore this window                          
+        w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+	w->addRepaintFull();                                                               
+        }   
+    }       
+                                                                                           
+void DashboardEffect::windowClosed( EffectWindow* w )                                  
+    {   
+    propertyNotify( w, atom );        
+
+                                                    
+    if( isDashboard( w ) )                            
+        {      
+        // Tell other windowClosed() effects to ignore this window                          
+        w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+	w->addRepaintFull();                                                               
+        }   
+    }
+
 } // namespace
