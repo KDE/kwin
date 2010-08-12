@@ -185,7 +185,7 @@ TabBoxClient* TabBoxHandlerImpl::desktopClient() const
     {
     foreach( const Client* client, Workspace::self()->stackingOrder() )
         {
-        if( client->isDesktop() )
+        if( client->isDesktop() && client->isOnCurrentDesktop() )
             {
             return client->tabBoxClient();
             }
