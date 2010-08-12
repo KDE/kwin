@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class GLRenderTarget;
-class GLTexture;
 
 class DashboardEffect : public KWin::Effect
     {
