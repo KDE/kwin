@@ -165,6 +165,7 @@ bool Client::manage( Window w, bool isMapped )
             {
             ClientList mainclients = mainClients();
             bool on_current = false;
+            bool on_all = false;
             Client* maincl = NULL;
             // This is slightly duplicated from Placement::placeOnMainWindow()
             for( ClientList::ConstIterator it = mainclients.constBegin();
@@ -176,8 +177,12 @@ bool Client::manage( Window w, bool isMapped )
                 maincl = *it;
                 if( (*it)->isOnCurrentDesktop() )
                     on_current = true;
+                if( (*it)->isOnAllDesktops() )
+                    on_all = true;
                 }
-            if( on_current )
+            if( on_all )
+                desk = NET::OnAllDesktops;
+            else if( on_current )
                 desk = workspace()->currentDesktop();
             else if( maincl != NULL )
                 desk = maincl->desktop();
