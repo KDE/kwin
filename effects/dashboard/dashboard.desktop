@@ -77,6 +77,7 @@ Comment[en_GB]=Desaturate the desktop when displaying the Plasma dashboard
 Comment[es]=Desatura el escritorio cuando se muestra el tablero de Plasma
 Comment[ia]=Il de-satura le scriptorio quando il monstra le pannello de instrumentos de Plasma
 Comment[lt]=Panaikina darbastalio spalvų sodrumą kai rodomas plasma valdymo skydelis
+Comment[nb]=Blek ut skrivebordet når Plasma kontrollpult vises
 Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun dat Plasma-Klockpaneel daalsetten
 Comment[nn]=Ton ut skrivebordet ved vising av Plasma-kontrollpulten
 Comment[pt]=Reduzir a saturação do ecrã ao mostrar o painel do Plasma
@@ -88,6 +89,7 @@ Comment[sr@latin]=Posivljuje površ pri pojavi instrument-table Plasme
 Comment[sv]=Försvaga skrivbordet när Plasmas instrumentpanel visas
 Comment[uk]=Зменшення насиченості кольорів стільниці під час показу панелі приладів Плазми
 Comment[x-test]=xxDesaturate the desktop when displaying the Plasma dashboardxx
+Comment[zh_TW]=顯示 Plasma 資訊看板時將桌面淡化
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
