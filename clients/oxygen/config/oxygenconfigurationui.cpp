@@ -138,6 +138,10 @@ namespace Oxygen
     ui.animateTitleChange->setVisible( expertMode_ );
     ui.narrowButtonSpacing->setVisible( expertMode_ );
 
+    // size grip mode
+    ui.sizeGripModeLabel->setVisible( expertMode_ );
+    ui.sizeGripMode->setVisible( expertMode_ );
+
     // shadow mode
     ui.shadowsExpertWidget->setVisible( expertMode_ );
 
