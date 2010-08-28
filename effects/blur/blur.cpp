@@ -218,7 +218,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     const QRect screen(0, 0, displayWidth(), displayHeight());
     bool scaled = !qFuzzyCompare(data.xScale, 1.0) && !qFuzzyCompare(data.yScale, 1.0);
     bool translated = data.xTranslate || data.yTranslate;
-    bool transformed = scaled || translated;
+    bool transformed = scaled || translated || mask & PAINT_WINDOW_TRANSFORMED;
     bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha());
     bool valid = target->valid() && shader->isValid();
 
