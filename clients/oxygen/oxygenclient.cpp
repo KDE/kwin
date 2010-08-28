@@ -1119,12 +1119,12 @@ namespace Oxygen
             {
 
                 // Draw right side 3-dots resize handles
-                const qreal cenY = h / 2 + y ;
-                const qreal posX = w + x - 3;
+                const int cenY = (h / 2 + y) ;
+                const int posX = (w + x - 3);
 
-                helper().renderDot( painter, QPointF(posX, cenY - 3), color);
-                helper().renderDot( painter, QPointF(posX, cenY), color);
-                helper().renderDot( painter, QPointF(posX, cenY + 3), color);
+                helper().renderDot( painter, QPoint(posX, cenY - 3), color);
+                helper().renderDot( painter, QPoint(posX, cenY), color);
+                helper().renderDot( painter, QPoint(posX, cenY + 3), color);
 
             }
 
@@ -1134,9 +1134,9 @@ namespace Oxygen
 
                 painter->save();
                 painter->translate(x + w-9, y + h-9);
-                helper().renderDot( painter, QPointF(2, 6), color);
-                helper().renderDot( painter, QPointF(5, 5), color);
-                helper().renderDot( painter, QPointF(6, 2), color);
+                helper().renderDot( painter, QPoint(2, 6), color);
+                helper().renderDot( painter, QPoint(5, 5), color);
+                helper().renderDot( painter, QPoint(6, 2), color);
                 painter->restore();
             }
 
