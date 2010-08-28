@@ -1250,6 +1250,11 @@ void DesktopGridEffect::setupGrid()
         case LayoutPager:
             orientation = Qt::Horizontal;
             gridSize = effects->desktopGridSize();
+            // sanity check: pager may report incorrect size in case of one desktop
+            if( numDesktops == 1 )
+                {
+                gridSize = QSize( 1, 1 );
+                }
             break;
         case LayoutAutomatic:
             y = sqrt( float( numDesktops ) ) + 0.5;
