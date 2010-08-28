@@ -73,7 +73,6 @@ namespace Oxygen
 
         // setup connections
         connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( update( void ) ) );
-        connect( glowAnimation().data(), SIGNAL( finished( void ) ), SLOT( update( void ) ) );
         reset(0);
 
     }

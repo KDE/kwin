@@ -55,7 +55,6 @@ namespace Oxygen
 
         // setup connections
         connect( animation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( updateBoundingRects( void ) ) );
-        connect( animation().data(), SIGNAL( finished( void ) ), SLOT( updateBoundingRects( void ) ) );
 
     }
 
