@@ -66,6 +66,12 @@ namespace Oxygen
     bool Factory::reset(unsigned long changed)
     {
 
+        if( changed & SettingColors )
+        {
+            shadowCache().invalidateCaches();
+            helper().invalidateCaches();
+        }
+
         // read in the configuration
         setInitialized( false );
         bool configuration_changed = readConfig();
@@ -74,11 +80,13 @@ namespace Oxygen
         if( configuration_changed || (changed & (SettingDecoration | SettingButtons | SettingBorder)) )
         {
 
+            // returning true triggers all decorations to be re-created
             return true;
 
         } else {
 
-            if( changed & SettingColors ) shadowCache().invalidateCaches();
+            // no need to re-create the decorations
+            // trigger repaint only
             resetDecorations(changed);
             return false;
 
@@ -112,6 +120,7 @@ namespace Oxygen
         // initialize shadow cache
         switch( defaultConfiguration().shadowCacheMode() )
         {
+
             case Configuration::CacheDisabled:
             {
                 shadowCache_.setEnabled( false );
@@ -156,6 +165,7 @@ namespace Oxygen
         if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
         {
             shadowCache().setShadowConfiguration( activeShadowConfiguration );
+            shadowCache().invalidateCaches();
             changed = true;
         }
 
@@ -165,17 +175,11 @@ namespace Oxygen
         if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
         {
             shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
+            shadowCache().invalidateCaches();
             changed = true;
         }
 
-        if( changed )
-        {
-
-            shadowCache().invalidateCaches();
-            helper().invalidateCaches();
-            return true;
-
-        } else return false;
+        return changed;
 
     }
 
