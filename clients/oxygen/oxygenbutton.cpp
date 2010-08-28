@@ -72,7 +72,6 @@ namespace Oxygen
         glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
 
         // setup connections
-        connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( update( void ) ) );
         reset(0);
 
     }

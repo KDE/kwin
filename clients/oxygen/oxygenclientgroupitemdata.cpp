@@ -53,9 +53,6 @@ namespace Oxygen
         animation().data()->setTargetObject( this );
         animation().data()->setPropertyName( "progress" );
 
-        // setup connections
-        connect( animation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( updateBoundingRects( void ) ) );
-
     }
 
     //________________________________________________________________

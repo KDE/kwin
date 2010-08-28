@@ -168,14 +168,18 @@ namespace Oxygen
         { return animation_; }
 
         void setProgress( qreal value )
-        { progress_ = value; }
+        {
+            if( progress_ == value ) return;
+            progress_ = value;
+            updateBoundingRects();
+        }
 
         qreal progress( void ) const
         { return progress_; }
 
         //@}
 
-        protected slots:
+        protected:
 
         //! update bounding rects
         void updateBoundingRects( bool alsoUpdate = true );

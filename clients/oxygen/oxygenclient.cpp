@@ -116,8 +116,6 @@ namespace Oxygen
         glowAnimation().data()->setTargetObject( this );
         glowAnimation().data()->setPropertyName( "glowIntensity" );
         glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
-
-        connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), widget(), SLOT( update( void ) ) );
         connect( glowAnimation().data(), SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
 
 

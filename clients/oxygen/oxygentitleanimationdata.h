@@ -134,7 +134,11 @@ namespace Oxygen
         { return opacity_; }
 
         void setOpacity( qreal value )
-        { opacity_ = value; }
+        {
+            if( opacity_ == value ) return;
+            opacity_ = value;
+            updatePixmaps();
+        }
 
         //@}
 
@@ -154,12 +158,10 @@ namespace Oxygen
 
         void pixmapsChanged( void );
 
-        protected slots:
+        protected:
 
         //! update pixmaps
         virtual void updatePixmaps( void );
-
-        protected:
 
         //! timer event
         void timerEvent( QTimerEvent* );

@@ -51,7 +51,6 @@ namespace Oxygen
         Q_OBJECT
 
         //! declare glow intensity property
-        //!Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
         Q_PROPERTY( qreal glowIntensity READ glowIntensityUnbiased WRITE setGlowIntensity )
 
         public:
@@ -123,7 +122,11 @@ namespace Oxygen
         { return glowAnimation_; }
 
         void setGlowIntensity( qreal value )
-        { glowIntensity_ = value; }
+        {
+            if( glowIntensity_ == value ) return;
+            glowIntensity_ = value;
+            widget()->update();
+        }
 
         //! unbiased glow intensity
         qreal glowIntensityUnbiased( void ) const
