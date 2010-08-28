@@ -820,6 +820,12 @@ void AuroraeScene::addTab(const QString &caption)
     static_cast<QGraphicsLinearLayout*>(m_title->layout())->addItem(tab);
     tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_title->layout()->invalidate();
+    // have to call active changed on each tab to update shadow effect
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            tab->activeChanged();
+        }
+    }
 }
 
 void AuroraeScene::addTabs(const QStringList &captions)
@@ -841,8 +847,14 @@ void AuroraeScene::removeLastTab()
                 removeItem(tab);
                 --m_tabCount;
                 m_title->layout()->invalidate();
-                return;
+                break;
             }
+        }
+    }
+    // have to call active changed on each tab to update shadow effect
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            tab->activeChanged();
         }
     }
 }

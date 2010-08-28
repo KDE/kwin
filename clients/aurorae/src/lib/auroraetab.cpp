@@ -57,11 +57,22 @@ AuroraeTab::~AuroraeTab()
 
 void AuroraeTab::activeChanged()
 {
+    if (scene() == NULL) {
+        return;
+    }
     const ThemeConfig &config = m_theme->themeConfig();
     if (!config.useTextShadow()) {
         return;
     }
-    const bool active = static_cast<AuroraeScene*>(scene())->isActive();
+    AuroraeScene *s = static_cast<AuroraeScene*>(scene());
+    if (s->tabCount() > 1) {
+        // graphics effect seems to be not side effect free and drops scheduled updates
+        // rendering tabs unreadable, therefore disabled.
+        m_effect->setEnabled(false);
+    } else {
+        m_effect->setEnabled(true);
+    }
+    const bool active = s->isActive();
     m_effect->setXOffset(config.textShadowOffsetX());
     m_effect->setYOffset(config.textShadowOffsetY());
     m_effect->setColor(active ? config.activeTextShadowColor() : config.inactiveTextShadowColor());
