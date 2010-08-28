@@ -586,7 +586,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             }
         if( d != highlightedDesktop ) // Highlight desktop
             {
-            if ( (me->buttons() & Qt::LeftButton) && !wasWindowMove )
+            if ( (me->buttons() & Qt::LeftButton) && !wasWindowMove && d <= effects->numberOfDesktops() )
                 {
                 EffectWindowList windows = effects->stackingOrder();
                 EffectWindowList stack;
