@@ -749,6 +749,8 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
     if( timeline.value() != 1 ) // Block user input during animations
         return;
+    if( windowMove != NULL )
+        return;
     if( e->type() == QEvent::KeyPress )
         {
         // check for global shortcuts
