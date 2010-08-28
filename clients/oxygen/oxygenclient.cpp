@@ -47,31 +47,6 @@
 namespace Oxygen
 {
 
-    //_________________________________________________________
-    QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
-    {
-        double s = KColorUtils::contrastRatio(c0, c1);
-        if (s < t)
-            return c1;
-
-        double l = 0.0, h = 1.0;
-        double x = s, a;
-        QColor r = c1;
-        for (int maxiter = 16; maxiter; --maxiter)
-        {
-
-            a = 0.5 * (l + h);
-            r = KColorUtils::mix(c0, c1, a);
-            x = KColorUtils::contrastRatio(c0, r);
-
-            if (fabs(x - t) < 0.01) break;
-            if (x > t) h = a;
-            else l = a;
-        }
-
-        return r;
-    }
-
     //___________________________________________
     Client::Client(KDecorationBridge *b, Factory *f):
         KCommonDecorationUnstable(b, f),
@@ -399,9 +374,8 @@ namespace Oxygen
     //_________________________________________________________
     QRect Client::defaultTitleRect( bool active ) const
     {
-        QRect titleRect( this->titleRect() );
-        titleRect.adjust( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
 
+        QRect titleRect( this->titleRect().adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 ) );
         if( active && configuration().drawTitleOutline() && isActive() )
         {
 
@@ -425,7 +399,7 @@ namespace Oxygen
     {
 
         // get title bounding rect
-        QRect boundingRect = QFontMetrics( font ).boundingRect( rect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
+        QRect boundingRect( QFontMetrics( font ).boundingRect( rect, configuration().titleAlignment() | Qt::AlignVCenter, caption ) );
 
         // adjust to make sure bounding rect
         // 1/ has same vertical alignment as original titleRect
@@ -535,7 +509,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    QColor Client::titlebarTextColor(const QPalette &palette)
+    QColor Client::titlebarTextColor(const QPalette &palette) const
     {
         if( glowIsAnimated() ) return KColorUtils::mix(
             titlebarTextColor( palette, false ),
@@ -545,34 +519,13 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    QColor Client::titlebarTextColor(const QPalette &palette, bool active)
-    {
-
-        if( active ){
-
-            return palette.color(QPalette::Active, QPalette::WindowText);
-
-        } else {
-
-            // todo: reimplement cache
-            const QColor ab = palette.color(QPalette::Active, QPalette::Window);
-            const QColor af = palette.color(QPalette::Active, QPalette::WindowText);
-            const QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
-            const QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
-            return reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
-
-        }
-
-    }
-
-    //_________________________________________________________
     void Client::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
     {
 
         if( configuration().blendColor() == Configuration::NoBlending )
         {
 
-            painter->fillRect( rect, palette.color( widget->window()->backgroundRole() ) );
+            painter->fillRect( rect, palette.color( QPalette::Window ) );
 
         } else {
 
@@ -778,9 +731,7 @@ namespace Oxygen
         // center (for active windows only)
         {
             painter->save();
-            const int offset = 1;
-            const int voffset = 1;
-            QRect adjustedRect( rect.adjusted( offset, voffset, -offset, 1 ) );
+            QRect adjustedRect( rect.adjusted( 1, 1, -1, 1 ) );
 
             // prepare painter mask
             QRegion mask( adjustedRect.adjusted( 1, 0, -1, 0 ) );
@@ -793,9 +744,9 @@ namespace Oxygen
         }
 
         // shadow
-        const int shadowSize = 7;
-        const int offset = -3;
-        const int voffset = 5-shadowSize;
+        const int shadowSize( 7 );
+        const int offset( -3 );
+        const int voffset( 5-shadowSize );
         const QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
         helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
 
@@ -1203,13 +1154,13 @@ namespace Oxygen
                 const QColor inactiveColor( backgroundColor( widget, palette, false ) );
                 const QColor activeColor( backgroundColor( widget, palette, true ) );
                 const QColor mixed( KColorUtils::mix( inactiveColor, activeColor, glowIntensity() ) );
-                palette.setColor( widget->window()->backgroundRole(), mixed );
+                palette.setColor( QPalette::Window, mixed );
                 palette.setColor( QPalette::Button, mixed );
 
             } else if( isActive() || isForcedActive() ) {
 
                 const QColor color =  options()->color( KDecorationDefines::ColorTitleBar, true );
-                palette.setColor( widget->window()->backgroundRole(), color );
+                palette.setColor( QPalette::Window, color );
                 palette.setColor( QPalette::Button, color );
 
             }
@@ -1221,12 +1172,12 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    QColor Client::backgroundColor( const QWidget* widget, QPalette palette, bool active ) const
+    QColor Client::backgroundColor( const QWidget*, QPalette palette, bool active ) const
     {
 
         return ( configuration().drawTitleOutline() && active ) ?
             options()->color( KDecorationDefines::ColorTitleBar, true ):
-            palette.color( widget->window()->backgroundRole() );
+            palette.color( QPalette::Window );
 
     }
 

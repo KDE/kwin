@@ -21,13 +21,27 @@
 #include "oxygendecohelper.h"
 
 #include <QtGui/QPainter>
+#include <KColorUtils>
+#include <cmath>
 
 namespace Oxygen
 {
+
     //______________________________________________________________________________
     DecoHelper::DecoHelper(const QByteArray &componentName):
         Helper(componentName)
-        {}
+    {}
+
+    //______________________________________________________________________________
+    void DecoHelper::invalidateCaches( void )
+    {
+        // base class call
+        Helper::invalidateCaches();
+
+        // local caches
+        m_titleBarTextColorCache.clear();
+
+    }
 
     //______________________________________________________________________________
     QPixmap DecoHelper::windecoButton(const QColor &color, bool pressed, int size)
@@ -158,4 +172,52 @@ namespace Oxygen
 
         return mask;
     }
+
+    //______________________________________________________________________________
+    const QColor& DecoHelper::inactiveTitleBarTextColor( const QPalette& palette )
+    {
+
+        const quint32 key( palette.color(QPalette::Active, QPalette::Window).rgba() );
+        QColor* out( m_titleBarTextColorCache.object( key ) );
+        if( !out )
+        {
+
+            // todo: reimplement cache
+            const QColor ab = palette.color(QPalette::Active, QPalette::Window);
+            const QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+            const QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+            const QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
+            out = new QColor( reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4)))) );
+            m_titleBarTextColorCache.insert( key, out );
+        }
+
+        return *out;
+    }
+
+    //_________________________________________________________
+    QColor DecoHelper::reduceContrast(const QColor &c0, const QColor &c1, double t) const
+    {
+        const double s( KColorUtils::contrastRatio(c0, c1) );
+        if (s < t) return c1;
+
+        double l(0);
+        double h(1.0);
+        double x(s);
+        double a;
+        QColor r( c1 );
+        for (int maxiter = 16; maxiter; --maxiter)
+        {
+
+            a = 0.5 * (l + h);
+            r = KColorUtils::mix(c0, c1, a);
+            x = KColorUtils::contrastRatio(c0, r);
+
+            if (fabs(x - t) < 0.01) break;
+            if (x > t) h = a;
+            else l = a;
+        }
+
+        return r;
+    }
+
 }

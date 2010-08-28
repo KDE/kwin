@@ -344,10 +344,15 @@ namespace Oxygen
         QRegion calcMask( void ) const;
 
         //! text color
-        QColor titlebarTextColor(const QPalette&);
+        QColor titlebarTextColor(const QPalette&) const;
 
         //! text color
-        QColor titlebarTextColor(const QPalette&, bool active);
+        QColor titlebarTextColor(const QPalette& palette, bool active) const
+        {
+            return active ?
+                palette.color(QPalette::Active, QPalette::WindowText):
+                helper().inactiveTitleBarTextColor( palette );
+        }
 
         //! text color
         QColor titlebarContrastColor(const QPalette& palette ) const
@@ -435,17 +440,6 @@ namespace Oxygen
         QBasicTimer dragStartTimer_;
 
     };
-
-    //!@name utility functions
-    //@{
-
-    // dot
-    void renderDot(QPainter*, const QPointF&, qreal );
-
-    // contrast
-    QColor reduceContrast(const QColor&, const QColor&, double t);
-
-    //@}
 
 } // namespace Oxygen
 

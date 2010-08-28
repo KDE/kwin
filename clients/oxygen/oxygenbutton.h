@@ -118,10 +118,15 @@ namespace Oxygen
         void drawIcon(QPainter*);
 
         //! color
-        QColor buttonDetailColor(const QPalette& );
+        QColor buttonDetailColor(const QPalette& ) const;
 
         //! color
-        QColor buttonDetailColor(const QPalette&, bool active );
+        QColor buttonDetailColor(const QPalette& palette, bool active ) const
+        {
+            return active ?
+                palette.color(QPalette::Active, QPalette::WindowText):
+                helper_.inactiveTitleBarTextColor( palette );
+        }
 
         //! true if animation is in progress
         bool isAnimated( void ) const
