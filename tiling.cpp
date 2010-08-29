@@ -175,7 +175,6 @@ void Workspace::notifyTilingWindowMove( Client *c, const QRect &moveResizeGeom, 
     {
     if( tilingLayouts.value( c->desktop() ) == NULL )
         {
-        c->setGeometry( moveResizeGeom );
         return;
         }
     tilingLayouts[ c->desktop() ]->clientMoved( c, moveResizeGeom, orig );
