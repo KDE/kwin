@@ -182,7 +182,9 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
         {
         if (!m_inited)
             init();
-        if ( m_shader )
+        const QRect screenRect = Workspace::self()->clientArea( ScreenArea, w->screen(), w->desktop() );
+        // window geometry may not be bigger than screen geometry to fit into the FBO
+        if ( m_shader && w->width() <= screenRect.width() && w->height() <= screenRect.height() )
             {
             double left = 0;
             double top = 0;
@@ -198,6 +200,15 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
                 }
             double width = right - left;
             double height = bottom - top;
+            if( width > screenRect.width() || height > screenRect.height() )
+                {
+                // window with padding does not fit into the framebuffer
+                // so cut of the shadow
+                left = 0;
+                top = 0;
+                width = w->width();
+                height = w->height();
+                }
             int tx = data.xTranslate + w->x() + left*data.xScale;
             int ty = data.yTranslate + w->y() + top*data.yScale;
             int tw = width*data.xScale;
