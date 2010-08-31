@@ -406,7 +406,7 @@ namespace Oxygen
         Animation* glowAnimation_;
 
         //! title animation data
-        TitleAnimationData::Pointer titleAnimationData_;
+        TitleAnimationData* titleAnimationData_;
 
         //! glow intensity
         qreal glowIntensity_;

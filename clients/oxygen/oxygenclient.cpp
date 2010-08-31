@@ -95,8 +95,8 @@ namespace Oxygen
 
 
         // title animation data
-        titleAnimationData_.data()->initialize();
-        connect( titleAnimationData_.data(), SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
+        titleAnimationData_->initialize();
+        connect( titleAnimationData_, SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
 
         // lists
         connect( itemData_.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
@@ -139,12 +139,12 @@ namespace Oxygen
 
         // animations duration
         glowAnimation_->setDuration( configuration_.animationsDuration() );
-        titleAnimationData_.data()->setDuration( configuration_.animationsDuration() );
+        titleAnimationData_->setDuration( configuration_.animationsDuration() );
         itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
         itemData_.setAnimationsEnabled( useAnimations() );
 
         // reset title transitions
-        titleAnimationData_.data()->reset();
+        titleAnimationData_->reset();
 
         // should also update animations for buttons
         resetButtons();
@@ -756,35 +756,35 @@ namespace Oxygen
     void Client::renderTitleText( QPainter* painter, const QRect& rect, const QColor& color, const QColor& contrast ) const
     {
 
-        if( !titleAnimationData_.data()->isValid() )
+        if( !titleAnimationData_->isValid() )
         {
             // contrast pixmap
-            titleAnimationData_.data()->reset(
+            titleAnimationData_->reset(
                 rect,
                 renderTitleText( rect, caption(), color ),
                 renderTitleText( rect, caption(), contrast ) );
         }
 
-        if( titleAnimationData_.data()->isDirty() )
+        if( titleAnimationData_->isDirty() )
         {
 
             // clear dirty flags
-            titleAnimationData_.data()->setDirty( false );
+            titleAnimationData_->setDirty( false );
 
             // finish current animation if running
-            if( titleAnimationData_.data()->isAnimated() )
-            { titleAnimationData_.data()->finishAnimation(); }
+            if( titleAnimationData_->isAnimated() )
+            { titleAnimationData_->finishAnimation(); }
 
-            if( !titleAnimationData_.data()->isLocked() )
+            if( !titleAnimationData_->isLocked() )
             {
 
                 // set pixmaps
-                titleAnimationData_.data()->setPixmaps(
+                titleAnimationData_->setPixmaps(
                     rect,
                     renderTitleText( rect, caption(), color ),
                     renderTitleText( rect, caption(), contrast ) );
 
-                titleAnimationData_.data()->startAnimation();
+                titleAnimationData_->startAnimation();
                 renderTitleText( painter, rect, color, contrast );
 
             } else if( !caption().isEmpty() ) {
@@ -796,19 +796,19 @@ namespace Oxygen
             // lock animations (this must be done whether or not
             // animation was actually started, in order to extend locking
             // every time title get changed too rapidly
-            titleAnimationData_.data()->lockAnimations();
+            titleAnimationData_->lockAnimations();
 
-        } else if( titleAnimationData_.data()->isAnimated() ) {
+        } else if( titleAnimationData_->isAnimated() ) {
 
             if( isMaximized() ) painter->translate( 0, 2 );
-            if( !titleAnimationData_.data()->contrastPixmap().isNull() )
+            if( !titleAnimationData_->contrastPixmap().isNull() )
             {
                 painter->translate( 0, 1 );
-                painter->drawPixmap( rect.topLeft(), titleAnimationData_.data()->contrastPixmap() );
+                painter->drawPixmap( rect.topLeft(), titleAnimationData_->contrastPixmap() );
                 painter->translate( 0, -1 );
             }
 
-            painter->drawPixmap( rect.topLeft(), titleAnimationData_.data()->pixmap() );
+            painter->drawPixmap( rect.topLeft(), titleAnimationData_->pixmap() );
 
             if( isMaximized() ) painter->translate( 0, -2 );
 
@@ -1138,7 +1138,7 @@ namespace Oxygen
         KCommonDecorationUnstable::captionChange();
         itemData_.setDirty( true );
         if( animateTitleChange() )
-        { titleAnimationData_.data()->setDirty( true ); }
+        { titleAnimationData_->setDirty( true ); }
 
     }
 
@@ -1480,7 +1480,7 @@ namespace Oxygen
             const int itemClicked( this->itemClicked( point ) );
             if( itemClicked < 0 ) return false;
 
-            titleAnimationData_.data()->reset();
+            titleAnimationData_->reset();
 
             QDrag *drag = new QDrag( widget() );
             QMimeData *groupData = new QMimeData();
@@ -1658,7 +1658,7 @@ namespace Oxygen
 
         }
 
-        titleAnimationData_.data()->reset();
+        titleAnimationData_->reset();
         return true;
 
     }
