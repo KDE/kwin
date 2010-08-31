@@ -84,7 +84,7 @@ namespace Oxygen
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
-        { return glowAnimation_.data()->isRunning(); }
+        { return glowAnimation_->isRunning(); }
 
         //! true when decoration is forced active
         bool isForcedActive( void ) const
@@ -118,9 +118,6 @@ namespace Oxygen
         //!@name glow animation
         //@{
 
-        virtual const Animation::Pointer& glowAnimation( void ) const
-        { return glowAnimation_; }
-
         void setGlowIntensity( qreal value )
         {
             if( glowIntensity_ == value ) return;
@@ -139,7 +136,7 @@ namespace Oxygen
         //! true (biased) intensity
         /*! this is needed to have glow go from either 0.2->1 or 0.8->0 depending on the animation direction */
         qreal glowIntensity( void ) const
-        { return glowAnimation().data()->direction() == Animation::Forward ? glowIntensity_ : glowIntensity_-glowBias(); }
+        { return glowAnimation_->direction() == Animation::Forward ? glowIntensity_ : glowIntensity_-glowBias(); }
 
         //@}
 
@@ -406,7 +403,7 @@ namespace Oxygen
         Configuration configuration_;
 
         //! glow animation
-        Animation::Pointer glowAnimation_;
+        Animation* glowAnimation_;
 
         //! title animation data
         TitleAnimationData::Pointer titleAnimationData_;

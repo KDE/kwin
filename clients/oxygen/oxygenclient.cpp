@@ -86,12 +86,12 @@ namespace Oxygen
         widget()->setAcceptDrops( true );
 
         // setup glow animation
-        glowAnimation().data()->setStartValue( glowBias() );
-        glowAnimation().data()->setEndValue( 1.0 );
-        glowAnimation().data()->setTargetObject( this );
-        glowAnimation().data()->setPropertyName( "glowIntensity" );
-        glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
-        connect( glowAnimation().data(), SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
+        glowAnimation_->setStartValue( glowBias() );
+        glowAnimation_->setEndValue( 1.0 );
+        glowAnimation_->setTargetObject( this );
+        glowAnimation_->setPropertyName( "glowIntensity" );
+        glowAnimation_->setEasingCurve( QEasingCurve::InOutQuad );
+        connect( glowAnimation_, SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
 
 
         // title animation data
@@ -138,7 +138,7 @@ namespace Oxygen
         configuration_ = factory_->configuration( *this );
 
         // animations duration
-        glowAnimation().data()->setDuration( configuration_.animationsDuration() );
+        glowAnimation_->setDuration( configuration_.animationsDuration() );
         titleAnimationData_.data()->setDuration( configuration_.animationsDuration() );
         itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
         itemData_.setAnimationsEnabled( useAnimations() );
@@ -1102,8 +1102,8 @@ namespace Oxygen
         // reset animation
         if( animateActiveChange() )
         {
-            glowAnimation().data()->setDirection( isActive() ? Animation::Forward : Animation::Backward );
-            if(!glowIsAnimated()) { glowAnimation().data()->start(); }
+            glowAnimation_->setDirection( isActive() ? Animation::Forward : Animation::Backward );
+            if(!glowIsAnimated()) { glowAnimation_->start(); }
         }
 
         // update size grip so that it gets the right color

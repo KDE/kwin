@@ -94,15 +94,6 @@ namespace Oxygen
 
         protected:
 
-        //!@name glow animation
-        //@{
-
-        //! return animation object
-        Animation* glowAnimation() const
-        { return glowAnimation_; }
-
-        //@}
-
         //! press event
         void mousePressEvent(QMouseEvent* );
 
@@ -134,7 +125,7 @@ namespace Oxygen
 
         //! true if animation is in progress
         bool isAnimated( void ) const
-        { return glowAnimation()->isRunning(); }
+        { return glowAnimation_->isRunning(); }
 
         //! true if button is active
         bool isActive( void ) const;
