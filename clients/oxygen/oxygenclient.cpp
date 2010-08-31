@@ -268,7 +268,6 @@ namespace Oxygen
         {
             case LM_BorderLeft:
             case LM_BorderRight:
-            case LM_BorderBottom:
             {
                 int border( 0 );
                 if( respectWindowState && maximized )
@@ -276,7 +275,11 @@ namespace Oxygen
 
                     border = 0;
 
-                }  else if( lm == LM_BorderBottom && frameBorder >= Configuration::BorderNoSide ) {
+                } else if( lm == LM_BorderBottom && isShade() ) {
+
+                    border = 0;
+
+                } else if( lm == LM_BorderBottom && frameBorder >= Configuration::BorderNoSide ) {
 
                     // for tiny border, the convention is to have a larger bottom area in order to
                     // make resizing easier
@@ -1403,7 +1406,7 @@ namespace Oxygen
             renderTargetRect( &painter, widget()->palette() );
 
             // separator
-            if( itemCount == 1 && !itemData_.isAnimated() && drawSeparator() )
+            if( itemCount == 1 && !itemData_.isAnimated() && drawSeparator())
             { renderSeparator(&painter, frame, widget(), color ); }
 
         }
