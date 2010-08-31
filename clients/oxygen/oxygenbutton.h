@@ -80,11 +80,6 @@ namespace Oxygen
 
         //!@name glow animation
         //@{
-
-        //! return animation object
-        virtual const Animation::Pointer& glowAnimation() const
-        { return glowAnimation_; }
-
         void setGlowIntensity( qreal value )
         {
             if( glowIntensity_ == value ) return;
@@ -98,6 +93,15 @@ namespace Oxygen
         //@}
 
         protected:
+
+        //!@name glow animation
+        //@{
+
+        //! return animation object
+        Animation* glowAnimation() const
+        { return glowAnimation_; }
+
+        //@}
 
         //! press event
         void mousePressEvent(QMouseEvent* );
@@ -130,7 +134,7 @@ namespace Oxygen
 
         //! true if animation is in progress
         bool isAnimated( void ) const
-        { return glowAnimation().data()->isRunning(); }
+        { return glowAnimation()->isRunning(); }
 
         //! true if button is active
         bool isActive( void ) const;
@@ -177,7 +181,8 @@ namespace Oxygen
         bool forceInactive_;
 
         //! glow animation
-        Animation::Pointer glowAnimation_;
+        //Animation::Pointer glowAnimation_;
+        Animation* glowAnimation_;
 
         //! glow intensity
         qreal glowIntensity_;

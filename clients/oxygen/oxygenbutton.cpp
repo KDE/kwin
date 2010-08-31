@@ -65,11 +65,11 @@ namespace Oxygen
         setToolTip(tip);
 
         // setup animation
-        glowAnimation().data()->setStartValue( 0 );
-        glowAnimation().data()->setEndValue( 1.0 );
-        glowAnimation().data()->setTargetObject( this );
-        glowAnimation().data()->setPropertyName( "glowIntensity" );
-        glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
+        glowAnimation()->setStartValue( 0 );
+        glowAnimation()->setEndValue( 1.0 );
+        glowAnimation()->setTargetObject( this );
+        glowAnimation()->setPropertyName( "glowIntensity" );
+        glowAnimation()->setEasingCurve( QEasingCurve::InOutQuad );
 
         // setup connections
         reset(0);
@@ -107,7 +107,7 @@ namespace Oxygen
 
     //___________________________________________________
     void Button::reset( unsigned long )
-    { glowAnimation().data()->setDuration( client_.configuration().animationsDuration() ); }
+    { glowAnimation()->setDuration( client_.configuration().animationsDuration() ); }
 
 
     //___________________________________________________
@@ -119,8 +119,8 @@ namespace Oxygen
         if( animateButtonHover() )
         {
 
-            glowAnimation().data()->setDirection( Animation::Forward );
-            if( !isAnimated() ) glowAnimation().data()->start();
+            glowAnimation()->setDirection( Animation::Forward );
+            if( !isAnimated() ) glowAnimation()->start();
 
         } else update();
 
@@ -134,8 +134,8 @@ namespace Oxygen
 
         if( status_ == Oxygen::Hovered && animateButtonHover() )
         {
-            glowAnimation().data()->setDirection( Animation::Backward );
-            if( !isAnimated() ) glowAnimation().data()->start();
+            glowAnimation()->setDirection( Animation::Backward );
+            if( !isAnimated() ) glowAnimation()->start();
         }
 
         status_ = Oxygen::Normal;
