@@ -53,7 +53,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , scaleFactor( 0.0 )
     , direction( Left )
     , selected_window( 0 )
-    , captionFrame( effects->effectFrame( Styled ) )
+    , captionFrame( effects->effectFrame( EffectFrameStyled ) )
     , primaryTabBox( false )
     , secondaryTabBox( false )
     {

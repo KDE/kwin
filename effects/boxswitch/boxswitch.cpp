@@ -41,7 +41,7 @@ KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
     , mMode( 0 )
-    , thumbnailFrame( effects->effectFrame( Styled ) )
+    , thumbnailFrame( effects->effectFrame( EffectFrameStyled ) )
     , selected_window( 0 )
     , painting_desktop( 0 )
     , animation( false )
@@ -698,7 +698,7 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = ordered_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
-                windows[ w ]->iconFrame = effects->effectFrame( Unstyled, false );
+                windows[ w ]->iconFrame = effects->effectFrame( EffectFrameUnstyled, false );
                 windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
                 windows[ w ]->iconFrame->setIcon( w->icon() );
 
@@ -736,7 +736,7 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = original_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
-                windows[ w ]->iconFrame = effects->effectFrame( Unstyled, false );
+                windows[ w ]->iconFrame = effects->effectFrame( EffectFrameUnstyled, false );
                 windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
                 windows[ w ]->iconFrame->setIcon( w->icon() );
 

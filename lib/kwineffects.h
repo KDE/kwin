@@ -205,9 +205,9 @@ enum DataRole
  */
 enum EffectFrameStyle
     {
-        None, ///< Displays no frame around the contents.
-        Unstyled, ///< Displays a basic box around the contents.
-        Styled ///< Displays a Plasma-styled frame around the contents.
+    EffectFrameNone, ///< Displays no frame around the contents.
+    EffectFrameUnstyled, ///< Displays a basic box around the contents.
+    EffectFrameStyled ///< Displays a Plasma-styled frame around the contents.
     };
 
 /**

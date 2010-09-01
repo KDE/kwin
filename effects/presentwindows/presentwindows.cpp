@@ -53,7 +53,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_mode( ModeCurrentDesktop )
     , m_managerWindow( NULL )
     , m_highlightedWindow( NULL )
-    , m_filterFrame( effects->effectFrame( Styled, false ) )
+    , m_filterFrame( effects->effectFrame( EffectFrameStyled, false ) )
     {
     m_atomDesktop = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_DESKTOP", False );
     m_atomWindows = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_GROUP", False );
@@ -377,12 +377,12 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
     m_windowData[w].visible = isVisibleWindow( w );
     m_windowData[w].opacity = 0.0;
     m_windowData[w].highlight = 0.0;
-    m_windowData[w].textFrame = effects->effectFrame( Unstyled, false );
+    m_windowData[w].textFrame = effects->effectFrame( EffectFrameUnstyled, false );
     QFont font;
     font.setBold( true );
     font.setPointSize( 12 );
     m_windowData[w].textFrame->setFont( font );
-    m_windowData[w].iconFrame = effects->effectFrame( Unstyled, false );
+    m_windowData[w].iconFrame = effects->effectFrame( EffectFrameUnstyled, false );
     m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
     m_windowData[w].iconFrame->setIcon( w->icon() );
     if( isSelectableWindow( w ))
@@ -1550,12 +1550,12 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             if( w->isOnCurrentDesktop() && !w->isMinimized() )
                 m_windowData[w].opacity = 1.0;
             m_windowData[w].highlight = 1.0;
-            m_windowData[w].textFrame = effects->effectFrame( Unstyled, false );
+            m_windowData[w].textFrame = effects->effectFrame( EffectFrameUnstyled, false );
             QFont font;
             font.setBold( true );
             font.setPointSize( 12 );
             m_windowData[w].textFrame->setFont( font );
-            m_windowData[w].iconFrame = effects->effectFrame( Unstyled, false );
+            m_windowData[w].iconFrame = effects->effectFrame( EffectFrameUnstyled, false );
             m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
             m_windowData[w].iconFrame->setIcon( w->icon() );
             }

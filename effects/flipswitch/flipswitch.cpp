@@ -44,7 +44,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     , m_stop( false )
     , m_animation( false )
     , m_hasKeyboardGrab( false )
-    , m_captionFrame( effects->effectFrame( Styled ) )
+    , m_captionFrame( effects->effectFrame( EffectFrameStyled ) )
     {
     reconfigure( ReconfigureAll );
 

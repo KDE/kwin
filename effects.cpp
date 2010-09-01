@@ -1664,7 +1664,7 @@ EffectFrameImpl::EffectFrameImpl( EffectFrameStyle style, bool staticSize, QPoin
     , m_alignment( alignment )
     , m_shader( NULL )
     {
-    if( m_style == Styled )
+    if( m_style == EffectFrameStyled )
         {
         m_frame.setImagePath( "widgets/background" );
         m_frame.setCacheAllRenderedFrames( true );
@@ -1743,7 +1743,7 @@ void EffectFrameImpl::setGeometry( const QRect& geometry, bool force )
         return;
         }
 
-    if( m_style == Styled )
+    if( m_style == EffectFrameStyled )
         {
         qreal left, top, right, bottom;
         m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry

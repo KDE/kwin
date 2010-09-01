@@ -914,10 +914,10 @@ void SceneXrender::EffectFrame::render( QRegion region, double opacity, double f
         }
 
     // Render the actual frame
-    if( m_effectFrame->style() == Unstyled )
+    if( m_effectFrame->style() == EffectFrameUnstyled )
         xRenderRoundBox( effects->xrenderBufferPicture(), m_effectFrame->geometry().adjusted( -5, -5, 5, 5 ),
             5, QColor( 0, 0, 0, int( opacity * frameOpacity * 255 )));
-    else if( m_effectFrame->style() == Styled )
+    else if( m_effectFrame->style() == EffectFrameStyled )
         {
         if( !m_picture ) // Lazy creation
             {
@@ -971,7 +971,7 @@ void SceneXrender::EffectFrame::render( QRegion region, double opacity, double f
 void SceneXrender::EffectFrame::updatePicture()
     {
     delete m_picture;
-    if( m_effectFrame->style() == Styled )
+    if( m_effectFrame->style() == EffectFrameStyled )
         m_picture = new XRenderPicture( m_effectFrame->frame().framePixmap() );
     }
 
@@ -1003,7 +1003,7 @@ void SceneXrender::EffectFrame::updateTextPicture()
     pixmap.fill( Qt::transparent );
     QPainter p( &pixmap );
     p.setFont( m_effectFrame->font() );
-    if( m_effectFrame->style() == Styled )
+    if( m_effectFrame->style() == EffectFrameStyled )
         {
         p.setPen( m_effectFrame->styledTextColor() );
         }

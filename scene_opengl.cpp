@@ -1926,7 +1926,7 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     , m_selectionTexture( NULL )
     , m_unstyledVBO( NULL )
     {
-    if( m_effectFrame->style() == Unstyled && !m_unstyledTexture )
+    if( m_effectFrame->style() == EffectFrameUnstyled && !m_unstyledTexture )
         {
         updateUnstyledTexture();
         }
@@ -2020,7 +2020,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
     glPushMatrix();
 
     // Render the actual frame
-    if( m_effectFrame->style() == Unstyled )
+    if( m_effectFrame->style() == EffectFrameUnstyled )
         {
         if( !m_unstyledVBO )
             {
@@ -2135,7 +2135,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_unstyledVBO->render( region, GL_TRIANGLES );
         m_unstyledTexture->unbind();
         }
-    else if( m_effectFrame->style() == Styled )
+    else if( m_effectFrame->style() == EffectFrameStyled )
         {
         if( !m_texture ) // Lazy creation
             updateTexture();
@@ -2248,7 +2248,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 void SceneOpenGL::EffectFrame::updateTexture()
     {
     delete m_texture;
-    if( m_effectFrame->style() == Styled )
+    if( m_effectFrame->style() == EffectFrameStyled )
         {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
         m_texture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
@@ -2279,7 +2279,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
     image.fill( Qt::transparent );
     QPainter p( &image );
     p.setFont( m_effectFrame->font() );
-    if( m_effectFrame->style() == Styled )
+    if( m_effectFrame->style() == EffectFrameStyled )
         p.setPen( m_effectFrame->styledTextColor() );
     else // TODO: What about no frame? Custom color setting required
         p.setPen( Qt::white );
