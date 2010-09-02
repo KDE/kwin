@@ -72,7 +72,7 @@ namespace Oxygen
 
         // check if tileset already in cache
         int hash( key.hash() );
-        if( shadowCache_.contains(hash) ) return shadowCache_.object(hash);
+        if( enabled_ && shadowCache_.contains(hash) ) return shadowCache_.object(hash);
 
         // create tileset otherwise
         qreal size( shadowSize() );
@@ -94,7 +94,7 @@ namespace Oxygen
 
         // check if tileset already in cache
         int hash( key.hash() );
-        if( animatedShadowCache_.contains(hash) ) return animatedShadowCache_.object(hash);
+        if( enabled_ && animatedShadowCache_.contains(hash) ) return animatedShadowCache_.object(hash);
 
         // create shadow and tileset otherwise
         qreal size( shadowSize() );
