@@ -30,6 +30,8 @@ class FallApartEffect
     : public Effect
     {
     public:
+        FallApartEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
@@ -39,7 +41,7 @@ class FallApartEffect
     private:
         QHash< const EffectWindow*, double > windows;
         bool isRealWindow ( EffectWindow* w );
-
+        int blockSize;
     };
 
 } // namespace

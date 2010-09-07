@@ -28,6 +28,17 @@ namespace KWin
 
 KWIN_EFFECT( fallapart, FallApartEffect )
 
+FallApartEffect::FallApartEffect()
+    {
+    reconfigure( ReconfigureAll );
+    }
+
+void FallApartEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig( "FallApart" );
+    blockSize = qBound( 1, conf.readEntry( "BlockSize", 40 ), 100000 );
+    }
+
 void FallApartEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
@@ -45,7 +56,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             // Request the window to be divided into cells
-            data.quads = data.quads.makeGrid( 40 );
+            data.quads = data.quads.makeGrid( blockSize );
             }
         else
             {
