@@ -67,10 +67,7 @@ namespace Oxygen
     {
 
         if( changed & SettingColors )
-        {
-            shadowCache().invalidateCaches();
-            helper().invalidateCaches();
-        }
+        { shadowCache().invalidateCaches(); }
 
         // read in the configuration
         setInitialized( false );
@@ -105,6 +102,7 @@ namespace Oxygen
         this is needed to properly handle
         color contrast settings changed
         */
+        helper().invalidateCaches();
         helper().reloadConfig();
 
         // create a config object
