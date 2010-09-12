@@ -152,8 +152,6 @@ void TilingLayout::removeTileNoArrange( Tile * t )
         return;
     preRemoveTile( t );
     m_tiles.removeOne( t );
-    delete t;
-    t = NULL;
     }
 
 const QRect TilingLayout::layoutArea( Tile *t ) const
