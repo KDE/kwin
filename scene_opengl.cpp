@@ -2275,9 +2275,9 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
         }
 
-    QImage image( m_effectFrame->geometry().size(), QImage::Format_ARGB32 );
-    image.fill( Qt::transparent );
-    QPainter p( &image );
+    QPixmap pixmap( m_effectFrame->geometry().size() );
+    pixmap.fill( Qt::transparent );
+    QPainter p( &pixmap );
     p.setFont( m_effectFrame->font() );
     if( m_effectFrame->style() == EffectFrameStyled )
         p.setPen( m_effectFrame->styledTextColor() );
@@ -2285,7 +2285,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         p.setPen( Qt::white );
     p.drawText( rect, m_effectFrame->alignment(), text );
     p.end();
-    m_textTexture = new GLTexture( image );
+    m_textTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
     }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
@@ -2293,16 +2293,16 @@ void SceneOpenGL::EffectFrame::updateUnstyledTexture()
     delete m_unstyledTexture;
     // Based off circle() from kwinxrenderutils.cpp
 #define CS 8
-    QImage tmp( 2 * CS, 2 * CS, QImage::Format_ARGB32 );
-    tmp.fill( Qt::transparent );
-    QPainter p( &tmp );
+    QPixmap pixmap( 2 * CS, 2 * CS );
+    pixmap.fill( Qt::transparent );
+    QPainter p( &pixmap );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
     p.setBrush( Qt::black );
-    p.drawEllipse( tmp.rect() );
+    p.drawEllipse( pixmap.rect() );
     p.end();
 #undef CS
-    m_unstyledTexture = new GLTexture( tmp );
+    m_unstyledTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
     }
 
 void SceneOpenGL::EffectFrame::cleanup()
