@@ -45,7 +45,16 @@ bool Workspace::tilingEnabled() const
 void Workspace::setTilingEnabled( bool tiling )
     {
     if( tilingEnabled() == tiling ) return;
+
     tilingEnabled_ = tiling;
+
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config( _config, "Windows" );
+    config.writeEntry("TilingOn", tilingEnabled_);
+    config.sync();
+    options->tilingOn = tilingEnabled_;
+    options->tilingLayout = static_cast<TilingLayoutFactory::Layouts>(config.readEntry( "TilingDefaultLayout", 0 ));
+    options->tilingRaisePolicy = config.readEntry( "TilingRaisePolicy", 0 );
 
     if( tilingEnabled_ )
         {
