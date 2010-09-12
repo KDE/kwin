@@ -32,22 +32,22 @@
 namespace Oxygen
 {
 
-  //_________________________________________________________
-  ShadowConfigurationUi::ShadowConfigurationUi( QWidget* parent ):
-    QGroupBox( parent )
-  {
-    ui.setupUi( this );
+    //_________________________________________________________
+    ShadowConfigurationUi::ShadowConfigurationUi( QWidget* parent ):
+        QGroupBox( parent )
+    {
+        ui.setupUi( this );
 
-    // connections
-    ui.outerColor->setEnabled( false );
-    connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
-    connect( this, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
+        // connections
+        ui.outerColor->setEnabled( false );
+        connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
+        connect( this, SIGNAL( toggled( bool ) ), SLOT( enableOuterColor() ) );
 
-    connect( ui.shadowSize, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
-    connect( ui.verticalOffset, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
-    connect( ui.innerColor, SIGNAL( changed( const QColor& ) ), SIGNAL( changed() ) );
-    connect( ui.outerColor, SIGNAL( changed( const QColor& ) ), SIGNAL( changed() ) );
-    connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
-  }
+        connect( ui.shadowSize, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
+        connect( ui.verticalOffset, SIGNAL( valueChanged( int ) ), SIGNAL( changed() ) );
+        connect( ui.innerColor, SIGNAL( changed( const QColor& ) ), SIGNAL( changed() ) );
+        connect( ui.outerColor, SIGNAL( changed( const QColor& ) ), SIGNAL( changed() ) );
+        connect( ui.useOuterColor, SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
+    }
 
 }

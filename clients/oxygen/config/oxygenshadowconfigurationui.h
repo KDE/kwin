@@ -31,30 +31,30 @@
 namespace Oxygen
 {
 
-  //_____________________________________________
-  class ShadowConfigurationUi: public QGroupBox
-  {
+    //_____________________________________________
+    class ShadowConfigurationUi: public QGroupBox
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
+        public:
 
-    //! constructor
-    ShadowConfigurationUi( QWidget* );
-    Ui_ShadowConfiguraionUI ui;
+        //! constructor
+        ShadowConfigurationUi( QWidget* );
+        Ui_ShadowConfiguraionUI ui;
 
-    signals:
+        signals:
 
-    //! emmitted when configuration is changed
-    void changed( void );
+        //! emmitted when configuration is changed
+        void changed( void );
 
-    protected slots:
+        protected slots:
 
-    //! update enable state of outer color chooser
-    void enableOuterColor( void )
-    { ui.outerColor->setEnabled( isChecked() && ui.useOuterColor->isChecked() ); }
+        //! update enable state of outer color chooser
+        void enableOuterColor( void )
+        { ui.outerColor->setEnabled( isChecked() && ui.useOuterColor->isChecked() ); }
 
-  };
+    };
 
 }
 
