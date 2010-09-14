@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <QObject>
+#include <QImage>
 
 namespace KWin
 {
@@ -30,7 +31,13 @@ namespace KWin
 class ScreenShotEffect : public QObject, public Effect
     {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Screenshot")
     public:
+        enum ScreenShotType
+            {
+            INCLUDE_DECORATION = 1 << 0,
+            INCLUDE_CURSOR = 1 << 1
+            };
         ScreenShotEffect();
         virtual ~ScreenShotEffect();
         virtual void postPaintScreen();
@@ -38,10 +45,16 @@ class ScreenShotEffect : public QObject, public Effect
         static bool supported();
         static void convertFromGLImage(QImage &img, int w, int h);
     public Q_SLOTS:
-        void screenshot();
+        Q_SCRIPTABLE void screenshotWindowUnderCursor( int mask = 0 );
+
+    Q_SIGNALS:
+        Q_SCRIPTABLE void screenshotCreated( qulonglong handle );
 
     private:
+        void grabPointerImage( QImage& snapshot, int offsetx, int offsety );
         EffectWindow *m_scheduledScreenshot;
+        ScreenShotType m_type;
+        QPixmap m_lastScreenshot;
     };
 
 } // namespace

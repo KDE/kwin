@@ -20,9 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screenshot.h"
 #include <kwinglutils.h>
-#include <QDir>
-#include <KDE/KAction>
-#include <KDE/KActionCollection>
+#include <KDE/KDebug>
+#include <QtDBus/QDBusConnection>
+#include <QtCore/QVarLengthArray>
+#include <QtGui/QPainter>
+
+#include <X11/extensions/Xfixes.h>
+#include <QX11Info>
 
 namespace KWin
 {
@@ -38,15 +42,14 @@ bool ScreenShotEffect::supported()
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot( 0 )
     {
-    KActionCollection* actionCollection = new KActionCollection( this );
-    KAction* cubeAction = static_cast< KAction* >( actionCollection->addAction( "Screenshot Effect" ));
-    cubeAction->setText( i18n("Save screenshot of active window" ));
-    cubeAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
-    connect( cubeAction, SIGNAL(triggered(bool)), SLOT(screenshot()) );
+    QDBusConnection::sessionBus().registerObject( "/Screenshot", this, QDBusConnection::ExportScriptableContents );
+    QDBusConnection::sessionBus().registerService( "org.kde.kwin.Screenshot" );
     }
 
 ScreenShotEffect::~ScreenShotEffect()
     {
+    QDBusConnection::sessionBus().unregisterObject( "/Screenshot" );
+    QDBusConnection::sessionBus().unregisterService( "org.kde.kwin.Screenshot" );
     }
 void ScreenShotEffect::postPaintScreen()
     {
@@ -71,13 +74,36 @@ void ScreenShotEffect::postPaintScreen()
             double top = 0;
             double right = m_scheduledScreenshot->width();
             double bottom = m_scheduledScreenshot->height();
-            foreach( const WindowQuad& quad, d.quads )
+            if( m_scheduledScreenshot->hasDecoration() && m_type & INCLUDE_DECORATION )
                 {
-                // we need this loop to include the decoration padding
-                left   = qMin(left, quad.left());
-                top    = qMin(top, quad.top());
-                right  = qMax(right, quad.right());
-                bottom = qMax(bottom, quad.bottom());
+                foreach( const WindowQuad& quad, d.quads )
+                    {
+                    // we need this loop to include the decoration padding
+                    left   = qMin(left, quad.left());
+                    top    = qMin(top, quad.top());
+                    right  = qMax(right, quad.right());
+                    bottom = qMax(bottom, quad.bottom());
+                    }
+                }
+            else if( m_scheduledScreenshot->hasDecoration() )
+                {
+                WindowQuadList newQuads;
+                left = m_scheduledScreenshot->width();
+                top = m_scheduledScreenshot->height();
+                right = 0;
+                bottom = 0;
+                foreach( const WindowQuad& quad, d.quads )
+                    {
+                    if( quad.type() == WindowQuadContents )
+                        {
+                        newQuads << quad;
+                        left   = qMin(left, quad.left());
+                        top    = qMin(top, quad.top());
+                        right  = qMax(right, quad.right());
+                        bottom = qMax(bottom, quad.bottom());
+                        }
+                    }
+                    d.quads = newQuads;
                 }
             int width = right - left;
             int height = bottom - top;
@@ -103,17 +129,12 @@ void ScreenShotEffect::postPaintScreen()
             tex->unbind();
             delete tex;
             ScreenShotEffect::convertFromGLImage( img, width, height );
-
-            // save screenshot in home directory
-            QString filePart( QDir::homePath() + '/' + m_scheduledScreenshot->caption() );
-            QString file( filePart + ".png" );
-            int counter = 1;
-            while( QFile::exists( file ) )
+            if( m_type & INCLUDE_CURSOR )
                 {
-                file = QString( filePart + '_' + QString::number( counter ) + ".png" );
-                counter++;
+                grabPointerImage( img, m_scheduledScreenshot->x() + left, m_scheduledScreenshot->y() + top );
                 }
-            img.save( file );
+            m_lastScreenshot = QPixmap::fromImage( img );
+            emit screenshotCreated( m_lastScreenshot.handle() );
             }
         delete offscreenTexture;
         delete target;
@@ -121,12 +142,45 @@ void ScreenShotEffect::postPaintScreen()
         }
     }
 
-void ScreenShotEffect::screenshot()
+void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
     {
-    EffectWindow* w = effects->activeWindow();
-    m_scheduledScreenshot = w;
-    w->addRepaintFull();
+    m_type = (ScreenShotType)mask;
+    const QPoint cursor = effects->cursorPos();
+    foreach( EffectWindow* w, effects->stackingOrder() )
+        {
+        if( w->geometry().contains( cursor ) && w->isOnCurrentDesktop() && !w->isMinimized() )
+            {
+            m_scheduledScreenshot = w;
+            }
+        }
+    if( m_scheduledScreenshot )
+        {
+        m_scheduledScreenshot->addRepaintFull();
+        }
     }
+
+void ScreenShotEffect::grabPointerImage( QImage& snapshot, int offsetx, int offsety )
+// Uses the X11_EXTENSIONS_XFIXES_H extension to grab the pointer image, and overlays it onto the snapshot.
+{
+    XFixesCursorImage *xcursorimg = XFixesGetCursorImage( QX11Info::display() );
+    if ( !xcursorimg )
+      return;
+
+    //Annoyingly, xfixes specifies the data to be 32bit, but places it in an unsigned long *
+    //which can be 64 bit.  So we need to iterate over a 64bit structure to put it in a 32bit
+    //structure.
+    QVarLengthArray< quint32 > pixels( xcursorimg->width * xcursorimg->height );
+    for (int i = 0; i < xcursorimg->width * xcursorimg->height; ++i)
+        pixels[i] = xcursorimg->pixels[i] & 0xffffffff;
+
+    QImage qcursorimg((uchar *) pixels.data(), xcursorimg->width, xcursorimg->height,
+                       QImage::Format_ARGB32_Premultiplied);
+
+    QPainter painter(&snapshot);
+    painter.drawImage(QPointF(xcursorimg->x - xcursorimg->xhot - offsetx, xcursorimg->y - xcursorimg ->yhot - offsety), qcursorimg);
+
+    XFree(xcursorimg);
+}
 
 void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 {
