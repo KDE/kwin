@@ -85,6 +85,8 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * Note that texture coordinates must match texture type (normalized/unnormalized
  * for GL_TEXTURE_2D/GL_TEXTURE_ARB).
  *
+ * For OpenGL ES each quad is split into two triangles.
+ *
  * @param count number of vertices to use.
  * @param dim number of components per vertex coordinate in vertices array.
  * @param stride byte offset of consecutive elements in arrays. If 0, then
@@ -105,6 +107,8 @@ KWIN_EXPORT void renderGLGeometry( int count,
     int dim = 2, int stride = 0 );
 
 /**
+ * In OpenGL ES this method is a no-op.
+ * 
  * @deprecated Use GLVertexBuffer
  * @see GLVertexBuffer
  **/

@@ -153,6 +153,92 @@ void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
+#ifdef KWIN_HAVE_OPENGLES
+    int triangleCount = count * 6;
+    float* triangleVertices = new float[ dim * triangleCount ];
+    float* triangleTexCoords = NULL;
+    float* triangleColors = NULL;
+    if( texture != NULL )
+        {
+        triangleTexCoords = new float[ 2 * triangleCount ];
+        }
+    if( color != NULL )
+        {
+        triangleColors = new float[ 4 * triangleCount ];
+        }
+    for( int i=0; i<count; ++i )
+        {
+        for( int j=0; j<dim; ++j )
+            {
+            triangleVertices[i*6*dim+j] = vertices[i*4*j*dim];
+            triangleVertices[i*6*dim+j+1*dim] = vertices[i*4*dim+j+1*dim];
+            triangleVertices[i*6*dim+j+2*dim] = vertices[i*4*dim+j+3*dim];
+            triangleVertices[i*6*dim+j+3*dim] = vertices[i*4*dim+j+3*dim];
+            triangleVertices[i*6*dim+j+4*dim] = vertices[i*4*dim+j+1*dim];
+            triangleVertices[i*6*dim+j+5*dim] = vertices[i*4*dim+j+2*dim];
+            }
+        if( texture != NULL )
+            {
+            for( int j=0; j<2; ++j )
+                {
+                triangleTexCoords[i*6*2+0*2+j] = texture[i*4*2+j];
+                triangleTexCoords[i*6*2+1*2+j] = texture[i*4*2+1*2+j];
+                triangleTexCoords[i*6*2+2*2+j] = texture[i*4*2+3*2+j];
+                triangleTexCoords[i*6*2+3*2+j] = texture[i*4*2+3*2+j];
+                triangleTexCoords[i*6*2+4*2+j] = texture[i*4*2+1*2+j];
+                triangleTexCoords[i*6*2+5*2+j] = texture[i*4*2+2*2+j];
+                }
+            }
+        if( color != NULL )
+            {
+            for( int j=0; j<4; ++j )
+                {
+                triangleColors[i*6*4+0*2+j] = color[i*4*4+j];
+                triangleColors[i*6*4+1*2+j] = color[i*4*4+1*4+j];
+                triangleColors[i*6*4+2*2+j] = color[i*4*4+3*4+j];
+                triangleColors[i*6*4+3*2+j] = color[i*4*4+3*4+j];
+                triangleColors[i*6*4+4*2+j] = color[i*4*4+1*4+j];
+                triangleColors[i*6*4+5*2+j] = color[i*4*4+2*4+j];
+                }
+            }
+        }
+
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer( dim, GL_FLOAT, stride, triangleVertices );
+    if( texture != NULL )
+        {
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        glTexCoordPointer( 2, GL_FLOAT, stride, triangleTexCoords );
+        }
+    if( color != NULL )
+        {
+        glEnableClientState( GL_COLOR_ARRAY );
+        glColorPointer( 4, GL_FLOAT, stride, triangleColors );
+        }
+
+    // Clip using scissoring
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+        !iterator.isDone();
+        iterator.next())
+        {
+        glDrawArrays( GL_TRIANGLES, 0, triangleCount );
+        }
+
+    if( texture != NULL )
+        {
+        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+        }
+    if( color != NULL )
+        {
+        glDisableClientState( GL_COLOR_ARRAY );
+        }
+    glDisableClientState( GL_VERTEX_ARRAY );
+
+    delete triangleVertices;
+    delete triangleTexCoords;
+    delete triangleColors;
+#else
     // Using arrays only makes sense if we have larger number of vertices.
     //  Otherwise overhead of enabling/disabling them is too big.
     bool use_arrays = (count > 5);
@@ -203,11 +289,21 @@ void renderGLGeometry( const QRegion& region, int count,
         glPopClientAttrib();
         glPopAttrib();
         }
+#endif
     }
 
 void renderGLGeometryImmediate( int count, const float* vertices, const float* texture, const float* color,
       int dim, int stride )
 {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED( count )
+    Q_UNUSED( vertices )
+    Q_UNUSED( texture )
+    Q_UNUSED( color )
+    Q_UNUSED( dim )
+    Q_UNUSED( stride )
+    // TODO: OpenGL ES should use a VBO
+#else
     // Find out correct glVertex*fv function according to dim parameter.
     void ( *glVertexFunc )( const float* ) = glVertex2fv;
     if( dim == 3 )
@@ -260,6 +356,7 @@ void renderGLGeometryImmediate( int count, const float* vertices, const float* t
             glVertexFunc( vertices + i*vsize );
         }
     glEnd();
+#endif
 }
 
 void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2)
