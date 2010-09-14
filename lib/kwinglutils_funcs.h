@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_OPENGL
 
+#ifndef KWIN_HAVE_OPENGLES
+
 // gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
 // so hide possible global functions
 #define glXQueryDrawable kwinhide_glXQueryDrawable
@@ -344,6 +346,10 @@ typedef void (*glVertexAttribPointer_func)(GLuint, GLint, GLenum, GLboolean, GLs
 extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 
 } // namespace
+
+#else
+#include <GLES/gl.h>
+#endif
 
 #endif
 
