@@ -15,6 +15,13 @@ if( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
 
+# KWIN_HAVE_OPENGLES_COMPOSITING - whether OpenGL ES-based compositing support is available
+if( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND )
+    set( KWIN_HAVE_OPENGL_COMPOSITING 1)
+    set( KWIN_HAVE_OPENGLES_COMPOSITING 1 )
+    message("Comiling KWin for mobile.")
+endif( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND )
+
 # safety
 if( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
     # ok
@@ -25,10 +32,15 @@ endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
 macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "X11 Compositing support"  "http://www.x.org/" FALSE "" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support")
 
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
+macro_bool_to_01( OPENGLES_FOUND KWIN_HAVE_OPENGLES )
 
 if(OPENGL_FOUND)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
+
+if(OPENGLES_FOUND)
+  include_directories(${OPENGLES_INCLUDE_DIR})
+endif(OPENGLES_FOUND)
 
 # for things that are also used by kwin libraries
 configure_file(lib/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib/kwinconfig.h )
