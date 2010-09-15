@@ -3299,7 +3299,6 @@ void Client::performMoveResize()
         sendSyncRequest();
         }
 #endif
-    sync_resize_pending = false;
     if( transparent )
         {
         if( !haveResizeEffect )

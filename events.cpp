@@ -1698,6 +1698,7 @@ void Client::syncEvent( XSyncAlarmNotifyEvent* e )
             sync_timeout = NULL;
             if( sync_resize_pending )
                 performMoveResize();
+            sync_resize_pending = false;
             }
         }
     }
