@@ -22,6 +22,8 @@
 
 #include <QtGui/QPainter>
 #include <KColorUtils>
+#include <KDebug>
+
 #include <cmath>
 
 namespace Oxygen
@@ -29,7 +31,9 @@ namespace Oxygen
 
     //______________________________________________________________________________
     DecoHelper::DecoHelper(const QByteArray &componentName):
-        Helper(componentName)
+        Helper(componentName),
+        m_debugArea( KDebug::registerArea( "Oxygen (decoration)" ) )
+
     {}
 
     //______________________________________________________________________________
@@ -49,7 +53,7 @@ namespace Oxygen
         quint64 key = (quint64(color.rgba()) << 32) | (size << 1) | (int)pressed;
         QPixmap *pixmap = m_windecoButtonCache.object(key);
 
-        if (!pixmap)
+        if( !pixmap )
         {
             pixmap = new QPixmap(size, size);
             pixmap->fill(Qt::transparent);
@@ -57,7 +61,7 @@ namespace Oxygen
             QColor light  = calcLightColor(color);
             QColor dark   = calcDarkColor(color);
 
-            QPainter p(pixmap);
+            QPainter p( pixmap );
             p.setRenderHints(QPainter::Antialiasing);
             p.setPen(Qt::NoPen);
             qreal u = size/18.0;
@@ -92,7 +96,7 @@ namespace Oxygen
                 p.end();
             }
 
-            m_windecoButtonCache.insert(key, pixmap);
+            m_windecoButtonCache.insert( key, pixmap );
         }
 
         return *pixmap;
@@ -104,7 +108,7 @@ namespace Oxygen
         quint64 key = (quint64(color.rgba()) << 32) | size;
         QPixmap *pixmap = m_windecoButtonGlowCache.object(key);
 
-        if (!pixmap)
+        if( !pixmap )
         {
             pixmap = new QPixmap(size, size);
             pixmap->fill(Qt::transparent);
@@ -152,7 +156,7 @@ namespace Oxygen
                 p.drawRect( r );
             }
 
-            m_windecoButtonGlowCache.insert(key, pixmap);
+            m_windecoButtonGlowCache.insert( key, pixmap );
 
         }
 
@@ -198,7 +202,7 @@ namespace Oxygen
     QColor DecoHelper::reduceContrast(const QColor &c0, const QColor &c1, double t) const
     {
         const double s( KColorUtils::contrastRatio(c0, c1) );
-        if (s < t) return c1;
+        if( s < t ) return c1;
 
         double l(0);
         double h(1.0);
@@ -212,7 +216,7 @@ namespace Oxygen
             r = KColorUtils::mix(c0, c1, a);
             x = KColorUtils::contrastRatio(c0, r);
 
-            if (fabs(x - t) < 0.01) break;
+            if ( std::abs(x - t) < 0.01) break;
             if (x > t) h = a;
             else l = a;
         }

@@ -27,6 +27,7 @@
 /*! contains utility functions used at multiple places in oxygen style */
 namespace Oxygen
 {
+
     class DecoHelper : public Helper
     {
 
@@ -38,6 +39,10 @@ namespace Oxygen
         //! destructor
         virtual ~DecoHelper()
         {}
+
+        //! dynamically allocated debug area
+        int debugArea( void ) const
+        { return m_debugArea; }
 
         //! reset all caches
         virtual void invalidateCaches();
@@ -61,6 +66,9 @@ namespace Oxygen
         QColor reduceContrast(const QColor&, const QColor&, double) const;
 
         private:
+
+        //! dynamically allocated debug area
+        int m_debugArea;
 
         //! titleBar text color cache
         ColorCache m_titleBarTextColorCache;
