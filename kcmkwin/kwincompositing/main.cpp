@@ -119,6 +119,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
     connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.unredirectFullscreen , SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -443,6 +444,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     else // shown, or default
         ui.windowThumbnails->setCurrentIndex( 1 );
     ui.disableChecks->setChecked( config.readEntry( "DisableChecks", false ));
+    ui.unredirectFullscreen->setChecked( config.readEntry( "UnredirectFullscreen", true ));
 
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
@@ -607,6 +609,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender");
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
     config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
+    config.writeEntry( "UnredirectFullscreen", ui.unredirectFullscreen->isChecked() );
 
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
     config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
@@ -752,6 +755,7 @@ void KWinCompositingConfig::defaults()
     ui.compositingType->setCurrentIndex( 0 );
     ui.windowThumbnails->setCurrentIndex( 1 );
     ui.disableChecks->setChecked( false );
+    ui.unredirectFullscreen->setChecked( true );
     ui.glMode->setCurrentIndex( 0 );
     ui.glTextureFilter->setCurrentIndex( 1 );
     ui.glDirect->setChecked( mDefaultPrefs.enableDirectRendering() );

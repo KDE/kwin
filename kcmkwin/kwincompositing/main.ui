@@ -404,7 +404,7 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="3" column="0" colspan="2">
         <widget class="QCheckBox" name="disableChecks">
          <property name="whatsThis">
           <string>Enabling this option allows compositing to be activated even if some of the internal checks fail. Doing so may make the whole desktop unusable and its use is not recommened. Use only if KWin refuses to activate compositing on a system that should be capable of compositing.
@@ -415,7 +415,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="2">
+       <item row="4" column="0" colspan="2">
         <widget class="QGroupBox" name="glGroup">
          <property name="title">
           <string>OpenGL Options</string>
@@ -532,7 +532,7 @@
          </layout>
         </widget>
        </item>
-       <item row="4" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
         <widget class="QGroupBox" name="xrenderGroup">
          <property name="title">
           <string>XRender Options</string>
@@ -548,7 +548,7 @@
          </layout>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
+       <item row="6" column="0" colspan="2">
         <spacer name="verticalSpacer_6">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -561,6 +561,16 @@
          </property>
         </spacer>
        </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QCheckBox" name="unredirectFullscreen">
+         <property name="toolTip">
+          <string>Improves performance of fullscreen applications like games and video players. This option can cause flickering when another window is opened above the fullscreen window.</string>
+         </property>
+         <property name="text">
+          <string>Suspend desktop effects for fullscreen windows</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -569,14 +579,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KTitleWidget</class>
    <extends>QWidget</extends>
    <header>ktitlewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KPluginSelector</class>
