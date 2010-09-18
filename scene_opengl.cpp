@@ -141,6 +141,12 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         return; // error
     // Initialize OpenGL
     initGL();
+    if( QString((const char*)glGetString( GL_RENDERER )) == "Software Rasterizer" )
+        {
+        kError( 1212 ) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
+        QTimer::singleShot( 0, Workspace::self(), SLOT( fallbackToXRenderCompositing()));
+        return;
+        }
     if( !hasGLExtension( "GL_ARB_texture_non_power_of_two" )
         && !hasGLExtension( "GL_ARB_texture_rectangle" ))
         {
