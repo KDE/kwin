@@ -667,7 +667,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
 		"between the available item list and the titlebar preview. Similarly, "
 		"drag items within the titlebar preview to re-position them.") );
 	m_buttonSource = new ButtonSource(this);
-    m_buttonSource->setObjectName("button_source");
+    m_buttonSource->setObjectName( QLatin1String("button_source" ));
 
 	layout->addWidget(label);
 	layout->addWidget(m_dropSite);

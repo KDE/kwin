@@ -80,7 +80,7 @@ void KDecoration::createMainWidget( Qt::WFlags flags )
     {
     // FRAME check flags?
     QWidget *w = new QWidget( initialParentWidget(), initialWFlags() | flags );
-    w->setObjectName("decoration widget");
+    w->setObjectName( QLatin1String("decoration widget" ));
     w->setAttribute( Qt::WA_PaintOnScreen );
     if ( options()->showTooltips() )
         w->setAttribute( Qt::WA_AlwaysShowToolTips );

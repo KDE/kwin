@@ -77,27 +77,27 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
   layout->addWidget(tab);
 
   mFocus = new KFocusConfig(false, mConfig, componentData(), this);
-  mFocus->setObjectName("KWin Focus Config");
+  mFocus->setObjectName( QLatin1String("KWin Focus Config" ));
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
-  mTitleBarActions->setObjectName("KWin TitleBar Actions");
+  mTitleBarActions->setObjectName( QLatin1String("KWin TitleBar Actions" ));
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
-  mWindowActions->setObjectName("KWin Window Actions");
+  mWindowActions->setObjectName( QLatin1String("KWin Window Actions" ));
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mMoving = new KMovingConfig(false, mConfig, componentData(), this);
-  mMoving->setObjectName("KWin Moving");
+  mMoving->setObjectName( QLatin1String("KWin Moving" ));
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mAdvanced = new KAdvancedConfig(false, mConfig, componentData(), this);
-  mAdvanced->setObjectName("KWin Advanced");
+  mAdvanced->setObjectName( QLatin1String("KWin Advanced" ));
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
@@ -190,12 +190,12 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
   layout->addWidget(tab);
 
   mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
-  mTitleBarActions->setObjectName("KWin TitleBar Actions");
+  mTitleBarActions->setObjectName( QLatin1String("KWin TitleBar Actions" ));
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
-  mWindowActions->setObjectName("KWin Window Actions");
+  mWindowActions->setObjectName( QLatin1String("KWin Window Actions" ));
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 }

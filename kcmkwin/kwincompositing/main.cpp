@@ -56,7 +56,7 @@ ConfirmDialog::ConfirmDialog() :
                      i18n("Confirm Desktop Effects Change"), KTimerDialog::Ok|KTimerDialog::Cancel,
                      KTimerDialog::Cancel)
     {
-    setObjectName( "mainKTimerDialog" );
+    setObjectName( QLatin1String( "mainKTimerDialog" ) );
     setButtonGuiItem( KDialog::Ok, KGuiItem( i18n( "&Accept Configuration" ), "dialog-ok" ));
     setButtonGuiItem( KDialog::Cancel, KGuiItem( i18n( "&Return to Previous Configuration" ), "dialog-cancel" ));
 
