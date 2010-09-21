@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "group.h"
 
+#include "scripting/workspaceproxy.h"
+
 namespace KWin
 {
 
@@ -43,6 +45,14 @@ namespace KWin
 bool Client::manage( Window w, bool isMapped )
     {
     StackingUpdatesBlocker stacking_blocker( workspace() );
+    
+    //Scripting call. Does not use a signal/slot mechanism
+    //as ensuring connections was a bit difficult between
+    //so many clients and the workspace
+    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
+    if(ws_wrap != 0) {
+	ws_wrap->sl_clientManaging(this);
+    }
 
     grabXServer();
 

@@ -765,6 +765,15 @@ class Workspace : public QObject, public KDecorationDefines
 
     Q_SIGNALS:
         Q_SCRIPTABLE void compositingToggled( bool active );
+    
+    //Signals required for the scripting interface
+    signals:
+        void desktopPresenceChanged(KWin::Client*, int);
+	void currentDesktopChanged(int);
+	void clientAdded(KWin::Client*);
+	void clientRemoved(KWin::Client*);
+	void clientActivated(KWin::Client*);
+	void groupAdded(KWin::Group*);
 
     private:
         void init();
@@ -1177,6 +1186,7 @@ inline Client* Workspace::mostRecentlyActivatedClient() const
 
 inline void Workspace::addGroup( Group* group, allowed_t )
     {
+    emit groupAdded(group);
     groups.append( group );
     }
 

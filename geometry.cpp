@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 
+#include "scripting/workspaceproxy.h"
+
 #include <kapplication.h>
 #include <kglobal.h>
 #include <kwindowsystem.h>
@@ -1947,7 +1949,7 @@ bool Client::isMaximizable() const
 /*!
   Reimplemented to inform the client about the new window position.
  */
-void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
+void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force, bool emitJs )
     {
     // this code is also duplicated in Client::plainResize()
     // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
@@ -1959,7 +1961,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     // This gets more complicated in the case the code does only something like
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
     // Such code is wrong and should be changed to handle the case when the window is shaded,
-    // for example using Client::clientSize().
+    // for example using Client::clientSize()
+    
     if( shade_geometry_change )
         ; // nothing
     else if( isShade())
@@ -2046,9 +2049,15 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     // Update states of all other windows in this group
     if( clientGroup() )
         clientGroup()->updateStates( this );
+    
+    if(emitJs == true)
+        {
+        emit s_clientMoved();
+        }
+    
     }
 
-void Client::plainResize( int w, int h, ForceGeometry_t force )
+void Client::plainResize( int w, int h, ForceGeometry_t force, bool emitJs )
     {
     // this code is also duplicated in Client::setGeometry(), and it's also commented there
     if( shade_geometry_change )
@@ -2102,6 +2111,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
         }
     updateShape();
+    
+    if(emitJs == true) {
+        emit s_clientMoved();
+    }
+    
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
@@ -2204,6 +2218,16 @@ void Client::maximize( MaximizeMode m )
  */
 void Client::setMaximize( bool vertically, bool horizontally )
     {
+    //Scripting call. Does not use a signal/slot mechanism
+    //as ensuring connections was a bit difficult between
+    //so many clients and the workspace
+    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
+    if(ws_wrap != 0) {
+        ws_wrap->sl_clientMaximizeSet(this, QPair<bool, bool>(vertically, horizontally));
+    }
+    
+    emit maximizeSet(QPair<bool, bool>(vertically, horizontally));
+    
     // changeMaximize() flips the state, so change from set->flip
     changeMaximize(
         max_mode & MaximizeVertical ? !vertically : vertically,
@@ -2551,6 +2575,13 @@ void Client::setFullScreen( bool set, bool user )
         }
     updateWindowRules();
     workspace()->checkUnredirect();
+    
+    SWrapper::WorkspaceProxy* ws_object = SWrapper::WorkspaceProxy::instance();
+    if(ws_object != 0) {
+	ws_object->sl_clientFullScreenSet(this, set, user);
+    }
+    
+    emit s_fullScreenSet(set, user);
     }
 
 

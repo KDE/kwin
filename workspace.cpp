@@ -59,6 +59,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "tilinglayout.h"
 
+#include "scripting/scripting.h"
+
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
@@ -68,6 +70,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kauthorized.h>
 #include <ktoolinvocation.h>
 #include <kglobalsettings.h>
+#include <kwindowsystem.h>
+#include <kwindowinfo.h>
 
 #include <kephal/screens.h>
 
@@ -594,6 +598,19 @@ Unmanaged* Workspace::createUnmanaged( Window w )
 void Workspace::addClient( Client* c, allowed_t )
     {
     Group* grp = findGroup( c->window() );
+    
+    KWindowInfo info = KWindowSystem::windowInfo(c->window(), -1U, NET::WM2WindowClass);
+    
+    /*
+    if(info.windowClassName() == QString("krunner")) {
+	SWrapper::Workspace* ws_object = KWin::Scripting::workspace();
+	if(ws_object != 0) {
+	    ws_object->sl_killWindowCalled(c);
+	}
+    }*/
+    
+    emit clientAdded(c);
+    
     if( grp != NULL )
         grp->gotLeader( c );
 
@@ -645,6 +662,8 @@ void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
  */
 void Workspace::removeClient( Client* c, allowed_t )
     {
+    emit clientRemoved(c);
+    
     if (c == active_popup_client)
         closeActivePopup();
 
@@ -1515,7 +1534,8 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
     if( compositing())
         addRepaintFull();
-
+    
+    emit currentDesktopChanged(old_desktop);
     return true;
     }
 
@@ -1754,6 +1774,8 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     if( c->desktop() != desk ) // No change or desktop forced
         return;
     desk = c->desktop(); // Client did range checking
+    
+    emit desktopPresenceChanged(c, old_desktop);
 
     if( c->isOnDesktop( currentDesktop() ))
         {

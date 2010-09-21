@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 
+#include "scripting/client.h"
+
 #include <fixx11h.h>
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>
@@ -226,6 +228,12 @@ void Workspace::setActiveClient( Client* c, allowed_t )
     {
     if ( active_client == c )
         return;
+    
+    if(c != 0) {
+	emit clientActivated(c);
+	c->sl_activated();
+    }
+    
     if( active_popup && active_popup_client != c && set_active_client_recursion == 0 ) 
         closeActivePopup();
     StackingUpdatesBlocker blocker( this );

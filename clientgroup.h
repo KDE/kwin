@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_CLIENTGROUP_H
 #define KWIN_CLIENTGROUP_H
 
+#include <QObject>
+
 #include "kdecoration.h"
 #include "utils.h"
 
@@ -41,12 +43,15 @@ class Client;
  * copies of the same client. A client MUST NOT be in two groups at the same
  * time. All decorated clients SHOULD be in a group, even if it's a group of
  * one client.
+ * 
+ * rohanp: Had to convert this object to a QObject to make it easier for adding
+ * scripting interface to ClientGroup.
  *
  * If a group contains multiple clients then only one will ever be mapped at
  * any given time.
  */
-class ClientGroup
-    {
+class ClientGroup : public QObject {
+    Q_OBJECT
     public:
         /**
          * Creates a new group containing \p c.

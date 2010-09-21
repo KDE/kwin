@@ -35,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 
+#include <QScriptValue>
+#include "scripting/client.h"
+
 #include "utils.h"
 #include "options.h"
 #include "workspace.h"
@@ -52,6 +55,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QProcess;
 class QTimer;
 class KStartupInfoData;
+
+namespace SWrapper {
+class Client;
+}
+
+typedef QPair<SWrapper::Client*, QScriptValue> ClientResolution;
 
 namespace KWin
 {
@@ -105,6 +114,13 @@ class Client
          */
         bool isSpecialWindow() const;
         bool hasNETSupport() const;
+	
+        /**
+          * This is a public object with no wrappers or anything to keep it fast,
+          * so in essence, direct access is allowed. Please be very careful while
+          * using this object
+          */
+	QHash<QScriptEngine*, ClientResolution>* scriptCache;
 
         QSize minSize() const;
         QSize maxSize() const;
@@ -225,13 +241,13 @@ class Client
 
         void updateShape();
 
-        void setGeometry( int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet );
-        void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet );
+        void setGeometry( int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true );
+        void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true );
         void move( int x, int y, ForceGeometry_t force = NormalGeometrySet );
         void move( const QPoint& p, ForceGeometry_t force = NormalGeometrySet );
         /// plainResize() simply resizes
-        void plainResize( int w, int h, ForceGeometry_t force = NormalGeometrySet );
-        void plainResize( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
+        void plainResize( int w, int h, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true );
+        void plainResize( const QSize& s, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true );
         /// resizeWithChecks() resizes according to gravity, and checks workarea position
         void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
@@ -440,7 +456,25 @@ class Client
         void syncTimeout();
         void delayedSetShortcut();
         void repaintDecorationPending();
-
+    
+    //Signals for the scripting interface
+    //Signals make an excellent way for communcation
+    //in between objects as compared to simple function
+    //calls
+    signals:
+	void s_clientMoved();
+	void clientManaging(KWin::Client*);
+	void s_minimized();
+	void s_unminimized();
+	void maximizeSet(QPair<bool, bool>);
+	void s_activated();
+	void s_fullScreenSet(bool, bool);
+    
+    // To make workspace-client calls, a few slots are also
+    // required
+    public slots:
+	void sl_activated();
+	
     private:
         void exportMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
         bool isManaged() const; ///< Returns false if this client is not yet managed
@@ -656,6 +690,7 @@ class Client
         ElectricMaximizingMode electricMode;
 
         friend bool performTransiencyCheck();
+	friend class SWrapper::Client;
     };
 
 /**
@@ -896,9 +931,9 @@ inline QRect Client::visibleRect() const
    return geometry().adjusted( -padding_left, -padding_top, padding_right, padding_bottom );
    }
 
-inline void Client::setGeometry( const QRect& r, ForceGeometry_t force )
+inline void Client::setGeometry( const QRect& r, ForceGeometry_t force, bool emitJs )
     {
-    setGeometry( r.x(), r.y(), r.width(), r.height(), force );
+    setGeometry( r.x(), r.y(), r.width(), r.height(), force, emitJs );
     }
 
 inline void Client::move( const QPoint& p, ForceGeometry_t force )
@@ -906,9 +941,9 @@ inline void Client::move( const QPoint& p, ForceGeometry_t force )
     move( p.x(), p.y(), force );
     }
 
-inline void Client::plainResize( const QSize& s, ForceGeometry_t force )
+inline void Client::plainResize( const QSize& s, ForceGeometry_t force, bool emitJs )
     {
-    plainResize( s.width(), s.height(), force );
+    plainResize( s.width(), s.height(), force, emitJs );
     }
 
 inline void Client::resizeWithChecks( const QSize& s, ForceGeometry_t force )

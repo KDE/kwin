@@ -40,6 +40,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdefakes.h>
 #include <QtDBus/QtDBus>
 #include <stdlib.h>
+#include <QMessageBox>
+#include <QEvent>
+#include "scripting/scripting.h"
+
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -489,8 +493,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     args.add( "lock", ki18n( "Disable configuration options" ));
     args.add( "replace", ki18n( "Replace already-running ICCCM2.0-compliant window manager" ));
     args.add( "crashes <n>", ki18n( "Indicate that KWin has recently crashed n times" ));
+    args.add( "noscript", ki18n( "Load the script testing dialog" ));
     KCmdLineArgs::addCmdLineOptions( args );
-    
+
     if( KDE_signal( SIGTERM, KWin::sighandler ) == SIG_IGN )
         KDE_signal( SIGTERM, SIG_IGN );
     if( KDE_signal( SIGINT, KWin::sighandler ) == SIG_IGN )
@@ -508,6 +513,8 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     org::kde::KSMServerInterface ksmserver( "org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup( "kwin" );
     KWin::Application a;
+    KWin::Scripting scripting;
+    
     ksmserver.resumeStartup( "kwin" );
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
@@ -527,6 +534,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     QDBusConnection::sessionBus().interface()->registerService(
         appname, QDBusConnectionInterface::DontQueueService );
+
+    KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
+    scripting.start();
 
     return a.exec();
 }

@@ -33,6 +33,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <signal.h>
 
+#include "scripting/client.h"
+#include "scripting/scripting.h"
+#include "scripting/workspaceproxy.h"
+
 #include "bridge.h"
 #include "group.h"
 #include "workspace.h"
@@ -125,6 +129,8 @@ Client::Client( Workspace* ws )
     , paintRedirector( 0 )
     , electricMaximizing( false )
     { // TODO: Do all as initialization
+    
+    scriptCache = new QHash<QScriptEngine*, ClientResolution>();
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
@@ -172,6 +178,9 @@ Client::Client( Workspace* ws )
     maxmode_restore = MaximizeRestore;
 
     cmap = None;
+    
+    //Client to workspace connections require that each
+    //client constructed be connected to the workspace wrapper
 
     // TabBoxClient
     m_tabBoxClient = new TabBox::TabBoxClientImpl();
@@ -191,6 +200,7 @@ Client::Client( Workspace* ws )
  */
 Client::~Client()
     {
+    //SWrapper::Client::clientRelease(this);
 #ifdef HAVE_XSYNC
     if( sync_alarm != None )
         XSyncDestroyAlarm( display(), sync_alarm );
@@ -204,6 +214,7 @@ Client::~Client()
     assert( !check_active_modal );
     delete bridge;
     delete m_tabBoxClient;
+    delete scriptCache;
     }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly
@@ -211,7 +222,7 @@ void Client::deleteClient( Client* c, allowed_t )
     {
     delete c;
     }
-
+    
 /**
  * Releases the window. The client has done its job and the window is still existing.
  */
@@ -882,6 +893,16 @@ void Client::minimize( bool avoid_animation )
     {
     if( !isMinimizable() || isMinimized() )
         return;
+    
+    //Scripting call. Does not use a signal/slot mechanism
+    //as ensuring connections was a bit difficult between
+    //so many clients and the workspace
+    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
+    if(ws_wrap != 0) {
+        ws_wrap->sl_clientMinimized(this);
+    }
+    
+    emit s_minimized();
 
     Notify::raise( Notify::Minimize );
 
@@ -907,6 +928,13 @@ void Client::unminimize( bool avoid_animation )
     {
     if( !isMinimized())
         return;
+    
+    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
+    if(ws_wrap != 0) {
+        ws_wrap->sl_clientUnminimized(this);
+    }
+    
+    emit s_unminimized();
 
     Notify::raise( Notify::UnMinimize );
     minimized = false;
@@ -1641,7 +1669,7 @@ void Client::takeFocus( allowed_t )
     {
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
-    static Client* previous_client;
+//     static Client* previous_client;
 
     //if( previous_focus_timestamp == xTime() && previous_client != this )
     //    {
@@ -1849,6 +1877,10 @@ void Client::getWMHints()
     updateUrgency();
     updateAllowedActions(); // Group affects isMinimizable()
     }
+
+void Client::sl_activated() {
+    emit s_activated();
+}
 
 void Client::getMotifHints()
     {
