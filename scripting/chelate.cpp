@@ -291,6 +291,7 @@ QScriptValue KWin::Chelate::chelationEquivGen(QScriptContext* ctx, QScriptEngine
     
 QScriptValue KWin::Chelate::chelationCheck(QScriptContext* ctx, QScriptEngine* eng)
    {
+   Q_UNUSED(eng)
    QScriptValue key = ((ctx->callee()).data()).property("key");
    
    if(!key.isUndefined())
@@ -299,6 +300,8 @@ QScriptValue KWin::Chelate::chelationCheck(QScriptContext* ctx, QScriptEngine* e
        QScriptValue callBase = scCentral.property(key.toString());
        return (callBase.isFunction())?((callBase.call(scCentral)).toBool()):(callBase.toBool());
        }
+       
+   return eng->toScriptValue<bool>(0);
    }
     
 QScriptValue KWin::Chelate::chelationCheckGen(QScriptContext* ctx, QScriptEngine* eng)
