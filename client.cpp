@@ -1669,7 +1669,7 @@ void Client::takeFocus( allowed_t )
     {
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
-//     static Client* previous_client;
+    static Client* previous_client;
 
     //if( previous_focus_timestamp == xTime() && previous_client != this )
     //    {
