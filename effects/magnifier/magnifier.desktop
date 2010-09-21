@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Magnifier
 Name[af]=Vergroter
-Name[ar]=مكبّر
+Name[ar]=المكبّر
 Name[be]=Павелічальная лупа
 Name[be@latin]=Lupa
 Name[bg]=Увеличител
@@ -82,7 +82,7 @@ Name[zh_CN]=放大镜
 Name[zh_TW]=放大鏡
 Icon=preferences-system-windows-effect-magnifier
 Comment=Magnify the section of the screen that is near the mouse cursor
-Comment[ar]=تكبر الجزء من الشاشة الذي يوجد بالقرب من مؤشر الفأرة
+Comment[ar]=يكبر الجزء من الشاشة الذي يوجد بالقرب من مؤشر الفأرة
 Comment[be@latin]=Pavialičvaje častku ekrana pad kursoram myšy.
 Comment[bg]=Увеличава частта от екрана, която е под мишката
 Comment[ca]=Amplia la secció de la pantalla que està prop del cursor del ratolí

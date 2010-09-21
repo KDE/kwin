@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Swivel Tabs
-Name[ar]=الألسنة دائرة
+Name[ar]=ألسنة دوّارة
 Name[ca]=Pestanyes giratòries
 Name[ca@valencia]=Pestanyes giratòries
 Name[da]=Hvirvlende faneblade
@@ -50,7 +50,7 @@ Name[zh_CN]=转动分页
 Name[zh_TW]=轉動分頁
 Icon=preferences-system-windows-effect-swiveltabs
 Comment=Make the windows turn when switching tabs
-Comment[ar]=تلف النوافذ عند التبديل الألسنة
+Comment[ar]=دوّر النوافذ عند تبديل الألسنة
 Comment[ca]=Fa que les finestres girin en canviar entre pestanyes
 Comment[ca@valencia]=Fa que les finestres girin en canviar entre pestanyes
 Comment[da]=Få vinduerne til at dreje ved skift af faneblade

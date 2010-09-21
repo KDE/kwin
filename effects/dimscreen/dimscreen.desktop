@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Dim Screen for Administrator Mode
 Name[af]=Verdof vir Administrateurmodus
-Name[ar]=تعتم الشاشة لنمط المدير
+Name[ar]=يعتم الشاشة لنمط المدير
 Name[bg]=Помътняване на екрана в администраторски режим
 Name[ca]=Enfosqueix la pantalla pel mode administrador
 Name[ca@valencia]=Enfosqueix la pantalla pel mode administrador
@@ -68,7 +68,7 @@ Name[zh_CN]=进入管理员模式时暗淡屏幕
 Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Darkens the entire screen when requesting root privileges
-Comment[ar]=تعتم كامل الشاشة عند طلب صلاحيات الجذر
+Comment[ar]=يعتم كامل الشاشة عند طلب صلاحيات الجذر
 Comment[bg]=Екранът потъмнява при необходимост от администраторски права 
 Comment[ca]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
 Comment[ca@valencia]=Enfosqueix tota la pantalla en demanar privilegis d'administrador

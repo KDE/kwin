@@ -66,7 +66,6 @@ Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Flip through windows that are in a stack for the alt+tab window switcher
-Comment[ar]=تقلب النوافذ التي في القائمة لمبدل النوافذ alt+tab 
 Comment[ca]=Roda a través de les finestres que estan en una pila en el commutador de finestres alt+tab
 Comment[ca@valencia]=Roda a través de les finestres que estan en una pila en el commutador de finestres alt+tab
 Comment[cs]=Zobrazuje během přepínání pomocí Alt-tab okna za sebou jako v kartotéces

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Slide Tabs
-Name[ar]=الألسنة المنزلقة
+Name[ar]=ألسنة منزلقة
 Name[ca]=Pestanyes desplaçant-se
 Name[ca@valencia]=Pestanyes desplaçant-se
 Name[da]=Glidende faneblade
@@ -56,7 +56,7 @@ Icon=preferences-system-windows-effect-slidetabs
 
 Type=Service
 Comment=Slide windows when switching or grouping tabs.
-Comment[ar]=تنقل النوافذ بشكل منزلق عند تبديل أو جمع الألسنة
+Comment[ar]=أزْلِق النوافذ عند تبديل أو تجميع الألسنة
 Comment[ca]=Desplaça les finestres quan es canviïn o s'agrupin pestanyes.
 Comment[ca@valencia]=Desplaça les finestres quan es canvien o s'agrupen pestanyes.
 Comment[da]=Glidende vinduer ved skift eller gruppering af faneblade.

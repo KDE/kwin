@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Slide
-Name[ar]=النقل
+Name[ar]=أزْلِق
 Name[bg]=Приплъзване
 Name[ca]=Diapositiva
 Name[ca@valencia]=Diapositiva
@@ -67,7 +67,7 @@ Name[zh_CN]=滑行
 Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows across the screen when switching virtual desktops
-Comment[ar]=تنقل النوافذ عبر الشاشة عند التبديل بين الأسطح الافتراضية
+Comment[ar]=يُزلق النوافذ عبر الشاشة عند التبديل بين الأسطح الافتراضية
 Comment[bg]=Приплъзване на прозорците при превключване на плотовете
 Comment[ca]=Desplaça les finestres per la pantalla en canviar els escriptoris virtuals
 Comment[ca@valencia]=Desplaça les finestres per la pantalla en canviar els escriptoris virtuals

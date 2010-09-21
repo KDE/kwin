@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Translucency
 Name[af]=Deursigtigheid
-Name[ar]=شبه شفاف
+Name[ar]=شبه الشفافية
 Name[be]=Празрыстасць
 Name[be@latin]=Prazrystaść
 Name[bg]=Прозрачност
@@ -80,7 +80,7 @@ Name[zh_CN]=半透明
 Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-translucency
 Comment=Make windows translucent under different conditions
-Comment[ar]=تجعل النوافذ شبه شفافة في شروط مختلفة
+Comment[ar]=يجعل النوافذ شبه شفافة في شروط مختلفة
 Comment[be@latin]=Robić vokny prazrystymi dla peŭnych umovaŭ
 Comment[bg]=Прозрачност на прозорците при определени условия
 Comment[ca]=Torna translúcides les finestres en diverses condicions

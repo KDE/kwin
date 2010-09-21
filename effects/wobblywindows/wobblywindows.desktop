@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Wobbly Windows
 Name[af]=Wobbly Windows
-Name[ar]=نوافذ متقلبة
+Name[ar]=نوافذ متذبذبة
 Name[be@latin]=Skryŭleńnie akon
 Name[bg]=Желирани прозорци
 Name[ca]=Finestres sacsejades
@@ -70,7 +70,7 @@ Name[x-test]=xxWobbly Windowsxx
 Name[zh_CN]=摆动窗口
 Name[zh_TW]=不穩定的 Windows
 Comment=Deform windows while they are moving
-Comment[ar]=غير شكل النوافذ عند تحركها
+Comment[ar]=شوه شكل النوافذ عند تحركها
 Comment[be@latin]=Skryŭlaje vokny padčas pierasoŭvańnia.
 Comment[bg]=Прозорците изглеждат като желирани при местене
 Comment[ca]=Deforma les finestres quan es mouen

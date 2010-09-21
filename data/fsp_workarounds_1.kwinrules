@@ -1,6 +1,6 @@
 [1]
 Description=(Default) Disable focus stealing prevention for XV
-Description[ar]=(مبدئي) عطّل تكبير XV للمحافظة على موارد الجهاز 
+Description[ar]=(مبدئي) عطِّل منع سرقة التركيز لـXV
 Description[be@latin]=(Zmoŭčana) Vyklučy abaronu ad zachopu fokusu dla prahramy „XV”
 Description[bg]=(По подразбиране) Изключване открадването на фокуса за XV
 Description[ca]=(Per omissió) Desactiva la prevenció de robatori del focus a l'XV

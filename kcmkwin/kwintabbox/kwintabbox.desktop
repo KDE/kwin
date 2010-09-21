@@ -11,7 +11,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Task Switcher
-Name[ar]=مبدل المهام
+Name[ar]=مبدّل المهام
 Name[ca]=Commutador de tasques
 Name[ca@valencia]=Commutador de tasques
 Name[cs]=Přepínač úloh
@@ -56,7 +56,7 @@ Name[x-test]=xxTask Switcherxx
 Name[zh_CN]=任务切换器
 Name[zh_TW]=工作切換器
 Comment=Configure the behavior for navigating through windows.
-Comment[ar]=يضبط سلوك التنقل بين النوافذ.
+Comment[ar]=اضبط سلوك التنقل بين النوافذ
 Comment[ca]=Configura el comportament per navegar per les finestres.
 Comment[ca@valencia]=Configura el comportament per navegar per les finestres.
 Comment[cs]=Nastavení chování pro navigaci okny.
