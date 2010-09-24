@@ -1858,7 +1858,9 @@ void Client::setClientShown( bool shown )
         //updateAllowedActions();
         if( options->inactiveTabsSkipTaskbar )
             setSkipTaskbar( true, false ); // TODO: Causes reshuffle of the taskbar
-        workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
+        // Don't move tabs to the end of the list when another tab get's activated
+        if( !clientGroup() || clientGroup()->visible() == this )
+            workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
         addWorkspaceRepaint( visibleRect() );
         }
     }
