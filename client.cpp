@@ -1523,13 +1523,12 @@ void Client::setDesktop( int desktop )
  */
 void Client::setOnActivity( const QString &activity, bool enable )
     {
-    if( activityList.contains(activity) == enable ) //nothing to do
+    QStringList newActivitiesList = activities();
+    if( newActivitiesList.contains(activity) == enable ) //nothing to do
         return;
-    //check whether we should set it to all activities
-    QStringList newActivitiesList = activityList;
     if (enable)
         {
-        QStringList allActivities = KActivityConsumer().availableActivities();
+        QStringList allActivities = workspace()->activityList();
         if( !allActivities.contains(activity) ) //bogus ID
             return;
         newActivitiesList.append(activity);
@@ -1544,13 +1543,19 @@ void Client::setOnActivity( const QString &activity, bool enable )
  */
 void Client::setOnActivities( QStringList newActivitiesList )
     {
-    QStringList allActivities = KActivityConsumer().availableActivities();
+    QStringList allActivities = workspace()->activityList();
     if( newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty() )
         {
         setOnAllActivities(true);
         return;
         }
+
+    QByteArray joined = newActivitiesList.join(",").toAscii();
+    char *data = joined.data();
     activityList = newActivitiesList;
+    XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
+        PropModeReplace, (unsigned char *)data, joined.size());
+
     updateActivities( false );
     }
 
@@ -1589,7 +1594,6 @@ int Client::desktop() const
  * Returns the list of activities the client window is on.
  * if it's on all activities, the list will be empty.
  * Don't use this, use isOnActivity() and friends (from class Toplevel)
- * FIXME do I need to consider if it's not mapped yet?
  */
 QStringList Client::activities() const
     {
@@ -1622,6 +1626,7 @@ void Client::setOnAllActivities( bool on )
     if( on )
         {
         activityList.clear();
+        XDeleteProperty( display(), window(), atoms->activities );
         updateActivities( true );
         }
     else
@@ -2214,6 +2219,35 @@ QPixmap* kwin_get_menu_pix_hack()
     if( p.isNull() )
         p = SmallIcon( "bx2" );
     return &p;
+    }
+
+void Client::checkActivities()
+    {
+    QStringList newActivitiesList;
+    QByteArray prop = getStringProperty(window(), atoms->activities);
+    if ( ! prop.isEmpty() )
+        newActivitiesList = QString(prop).split(',');
+
+    if (newActivitiesList == activityList)
+        return; //expected change, it's ok.
+
+    //otherwise, somebody else changed it. we need to validate before reacting
+    QStringList allActivities = workspace()->activityList();
+    if (allActivities.isEmpty())
+        {
+        kDebug() << "no activities!?!?";
+        //don't touch anything, there's probably something bad going on and we don't wanna make it worse
+        return;
+        }
+    for ( int i = 0; i < newActivitiesList.size(); ++i )
+        {
+        if ( ! allActivities.contains( newActivitiesList.at(i) ) )
+            {
+            kDebug() << "invalid:" << newActivitiesList.at(i);
+            newActivitiesList.removeAt( i-- );
+            }
+        }
+    setOnActivities( newActivitiesList );
     }
 
 } // namespace

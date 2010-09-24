@@ -248,6 +248,7 @@ Workspace::Workspace( bool restore )
 
     connect( &activityController_, SIGNAL( currentActivityChanged(QString) ), SLOT( updateCurrentActivity(QString) ));
     connect( &activityController_, SIGNAL( activityRemoved(QString) ), SLOT( activityRemoved(QString) ));
+    connect( &activityController_, SIGNAL( activityAdded(QString) ), SLOT( activityAdded(QString) ));
     }
 
 void Workspace::init()
@@ -372,6 +373,7 @@ void Workspace::init()
         }
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
+    allActivities_ = activityController_.availableActivities();
     updateCurrentActivity( activityController_.currentActivity() );
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
@@ -1674,10 +1676,16 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
  */
 void Workspace::activityRemoved(const QString &activity)
     {
+    allActivities_.removeOne(activity);
     foreach (Client *client, stacking_order)
         {
         client->setOnActivity(activity, false);
         }
+    }
+
+void Workspace::activityAdded(const QString &activity)
+    {
+    allActivities_ << activity;
     }
 
 /**

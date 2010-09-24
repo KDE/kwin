@@ -34,6 +34,7 @@ class Atoms
         Atoms();
 
         Atom kwin_running;
+        Atom activities;
 
         Atom wm_protocols;
         Atom wm_delete_window;

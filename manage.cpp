@@ -159,6 +159,8 @@ bool Client::manage( Window w, bool isMapped )
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
     noborder = rules()->checkNoBorder( noborder, !isMapped );
 
+    checkActivities();
+
     // Initial desktop placement
     if( session )
         {
@@ -171,6 +173,7 @@ bool Client::manage( Window w, bool isMapped )
         // If this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
+        //FIXME do the same for activities too
         if( isTransient() )
             {
             ClientList mainclients = mainClients();

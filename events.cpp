@@ -942,6 +942,8 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
                 getMotifHints();
             else if( e->atom == atoms->net_wm_sync_request_counter )
                 getSyncCounter();
+            else if( e->atom == atoms->activities )
+                checkActivities();
             break;
         }
     }

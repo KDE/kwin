@@ -38,6 +38,9 @@ Atoms::Atoms()
     atoms[n] = &kwin_running;
     names[n++] = (char *) "KWIN_RUNNING";
 
+    atoms[n] = &activities;
+    names[n++] = (char *) "_KDE_NET_WM_ACTIVITIES";
+
     atoms[n] = &wm_protocols;
     names[n++] = (char *) "WM_PROTOCOLS";
 

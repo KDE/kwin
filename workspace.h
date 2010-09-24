@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QMenu;
 class QActionGroup;
+class QStringList;
 class KConfig;
 class KActionCollection;
 class KStartupInfo;
@@ -315,6 +316,7 @@ class Workspace : public QObject, public KDecorationDefines
         int* desktopGrid_;
         int currentDesktop_;
         QString activity_;
+        QStringList allActivities_;
         bool desktopLayoutDynamicity_;
 
         KActivityController activityController_;
@@ -337,6 +339,7 @@ class Workspace : public QObject, public KDecorationDefines
         QRect screenGeometry( int screen ) const;
         int screenNumber( const QPoint& pos ) const;
         QString currentActivity() const { return activity_; }
+        QStringList activityList() const { return allActivities_; }
 
         // Tab box
         Client* currentTabBoxClient() const;
@@ -759,6 +762,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void updateCurrentActivity(const QString &new_activity);
         void activityRemoved(const QString &activity);
+        void activityAdded(const QString &activity);
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );

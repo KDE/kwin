@@ -690,7 +690,9 @@ class Client
         ElectricMaximizingMode electricMode;
 
         friend bool performTransiencyCheck();
-	friend class SWrapper::Client;
+        friend class SWrapper::Client;
+
+        void checkActivities();
     };
 
 /**
