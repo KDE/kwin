@@ -44,12 +44,16 @@ BlurEffect::BlurEffect()
     net_wm_blur_region = XInternAtom(display(), "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
     effects->registerPropertyType(net_wm_blur_region, true);
 
+    reconfigure(ReconfigureAll);
+
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
-    XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
-                    32, PropModeReplace, 0, 0);
-
-    reconfigure(ReconfigureAll);
+    if (shader->isValid() && target->valid()) {
+        XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
+                        32, PropModeReplace, 0, 0);
+    } else {
+        XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
+    }
 }
 
 BlurEffect::~BlurEffect()
@@ -69,6 +73,9 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     KConfigGroup cg = EffectsHandler::effectConfig("Blur");
     int radius = qBound(2, cg.readEntry("BlurRadius", 12), 14);
     shader->setRadius(radius);
+
+    if (!shader->isValid())
+        XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
 }
 
 void BlurEffect::updateBlurRegion(EffectWindow *w) const
@@ -110,7 +117,16 @@ void BlurEffect::propertyNotify(EffectWindow *w, long atom)
 bool BlurEffect::supported()
 {
     bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
-           (GLSLBlurShader::supported() || ARBBlurShader::supported());
+            (GLSLBlurShader::supported() || ARBBlurShader::supported());
+
+    if (supported) {
+        int maxTexSize;
+        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
+
+        if (displayWidth() > maxTexSize || displayHeight() > maxTexSize)
+            supported = false;
+    }
+
     if (supported) {
         // check the blacklist
         KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
