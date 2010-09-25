@@ -84,6 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "unmanaged.h"
 #include "deleted.h"
+#include "effects.h"
 #include <QX11Info>
 
 namespace KWin
@@ -705,7 +706,11 @@ void Workspace::blockStackingUpdates( bool block )
         }
     else // !block
         if( --block_stacking_updates == 0 )
+            {
             updateStackingOrder( blocked_propagating_new_clients );
+            if( effects )
+                static_cast<EffectsHandlerImpl*>( effects )->checkInputWindowStacking();
+            }
     }
 
 // Ensure list is in stacking order
