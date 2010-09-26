@@ -8,7 +8,7 @@ Exec=kcmshell4 desktop
 X-KDE-Library=kcm_kwindesktop
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=window-behaviour
+X-KDE-System-Settings-Parent-Category=workspace-behavior
 X-KDE-Weight=60
 
 Name=Virtual Desktops
