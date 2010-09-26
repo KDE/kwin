@@ -173,7 +173,6 @@ bool Client::manage( Window w, bool isMapped )
         // If this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
-        //FIXME do the same for activities too
         if( isTransient() )
             {
             ClientList mainclients = mainClients();
@@ -199,6 +198,9 @@ bool Client::manage( Window w, bool isMapped )
                 desk = workspace()->currentDesktop();
             else if( maincl != NULL )
                 desk = maincl->desktop();
+
+            if ( maincl )
+                setOnActivities(maincl->activities());
             }
         if( info->desktop() )
             desk = info->desktop(); // Window had the initial desktop property, force it
