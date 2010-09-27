@@ -321,11 +321,11 @@
   </method>
   
   <method name="setKeepAbove">
-   <param name="keepabove">The 'Keep Above others' parameter to be applied to the client</param>
+   <param name="keepabove" type="boolean">The 'Keep Above others' parameter to be applied to the client</param>
    <desc>Sets the 'Keep Above others' parameter value or unsets it according to keepabove.</desc>
   </method>
   
-  <method name="setKeepBelow">
+  <method name="setKeepBelow" type="boolean">
    <param name="keepbelow">The 'Keep Below others' parameter to be applied to the client</param>
    <desc>Sets the 'Keep Below others' parameter value or unsets it according to keepbelow.</desc>
   </method>
