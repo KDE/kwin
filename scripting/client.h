@@ -164,6 +164,10 @@ class Client : public Toplevel
         static QScriptValue setMaximize(QScriptContext*, QScriptEngine*);
         static QScriptValue maximize(QScriptContext*, QScriptEngine*);
         static QScriptValue desktop(QScriptContext*, QScriptEngine*);
+        static QScriptValue keepAbove(QScriptContext*, QScriptEngine*);
+        static QScriptValue keepBelow(QScriptContext*, QScriptEngine*);
+        static QScriptValue setKeepAbove(QScriptContext*, QScriptEngine*);
+        static QScriptValue setKeepBelow(QScriptContext*, QScriptEngine*);
 
         static QScriptValue isShade(QScriptContext*, QScriptEngine*);
         static QScriptValue isShadeable(QScriptContext*, QScriptEngine*);

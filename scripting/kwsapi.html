@@ -391,77 +391,122 @@
       <ul>
        <li>client.isShade()</li>
       </ul>
-      <p class="desc">Returns (true) of the client is shaded, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client is shaded, (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isShadeable[ret: boolean] </h4>
       <ul>
        <li>client.isShadeable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client is shadeable (can be shaded), (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client is shadeable (can be shaded), (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isMinimized[ret: boolean] </h4>
       <ul>
        <li>client.isMinimized()</li>
       </ul>
-      <p class="desc">Returns (true) of the client is minimized, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client is minimized, (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isMinimizable[ret: boolean] </h4>
       <ul>
        <li>client.isMinimizable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be minimized, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be minimized, (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isMaximizable[ret: boolean] </h4>
       <ul>
        <li>client.isMaximizable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be mazimized, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be mazimized, (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isResizable[ret: boolean] </h4>
       <ul>
        <li>client.isResizable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be resized (changable size), (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be resized (changable size), (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isMovable[ret: boolean] </h4>
       <ul>
        <li>client.isMovable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be moved (non-fixed location), (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be moved (non-fixed location), (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isMovableAcrossScreens[ret: boolean] </h4>
       <ul>
        <li>client.isMovableAcrossScreens()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be moved across screens (only valid in a multiple monitor setup), (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be moved across screens (only valid in a multiple monitor setup), (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isCloseable[ret: boolean] </h4>
       <ul>
        <li>client.isCloseable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be closed by user action (or any other action other than the system or the application itself), (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be closed by user action (or any other action other than the system or the application itself), (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isFullScreen[ret: boolean] </h4>
       <ul>
        <li>client.isFullScreen()</li>
       </ul>
-      <p class="desc">Returns (true) of the client is in fullscreen mode, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client is in fullscreen mode, (false) otherwise.</p>
      </div>
      <div class="method">
       <h4>client.isFullScreenable[ret: boolean] </h4>
       <ul>
        <li>client.isFullScreenable()</li>
       </ul>
-      <p class="desc">Returns (true) of the client can be set to fullscreen mode, (false) otherwise.</p>
+      <p class="desc">Returns (true) if the client can be set to fullscreen mode, (false) otherwise.</p>
+     </div>
+     <div class="method">
+      <h4>client.isNormal[ret: boolean] </h4>
+      <ul>
+       <li>client.isNormal()</li>
+      </ul>
+      <p class="desc">Returns (true) if the window is 'normal', (false) otherwise. A normal window is a window which has a border, can be moved by the user, can be closed, etc.</p>
+     </div>
+     <div class="method">
+      <h4>client.keepAbove[ret: boolean] </h4>
+      <ul>
+       <li>client.keepAbove()</li>
+      </ul>
+      <p class="desc">Returns (true) if 'Keep Above Others' has been set on the client, (false) otherwise.</p>
+     </div>
+     <div class="method">
+      <h4>client.keepBelow[ret: boolean] </h4>
+      <ul>
+       <li>client.keepBelow()</li>
+      </ul>
+      <p class="desc">Returns (true) if 'Keep Below Others' has been set on the client, (false) otherwise.</p>
+     </div>
+     <div class="method">
+      <h4>client.setKeepAbove</h4>
+      <ul>
+       <li>client.setKeepAbove(keepabove {})</li>
+      </ul>
+      <p class="desc">Sets the 'Keep Above others' parameter value or unsets it according to keepabove.</p>
+       <p class="footdocs">setKeepAbove(keepabove {})<br />
+        <ul>
+         <li><strong>keepabove {}</strong>: The 'Keep Above others' parameter to be applied to the client</li>
+        </ul>
+       </p>
+     </div>
+     <div class="method">
+      <h4>client.setKeepBelow</h4>
+      <ul>
+       <li>client.setKeepBelow(keepbelow {})</li>
+      </ul>
+      <p class="desc">Sets the 'Keep Below others' parameter value or unsets it according to keepbelow.</p>
+       <p class="footdocs">setKeepBelow(keepbelow {})<br />
+        <ul>
+         <li><strong>keepbelow {}</strong>: The 'Keep Below others' parameter to be applied to the client</li>
+        </ul>
+       </p>
      </div>
      <div class="method">
       <h4>client.clientGroup[ret: clientgroup] </h4>

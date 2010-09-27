@@ -160,6 +160,8 @@ SWrapper::ClientResolution SWrapper::Client::newWrapper(KWin::Client* client, QS
     BOOLATTACHCLIENT(isMovable)
     BOOLATTACHCLIENT(isMovableAcrossScreens)
     BOOLATTACHCLIENT(isCloseable)
+    BOOLATTACHCLIENT(keepAbove)
+    BOOLATTACHCLIENT(keepBelow)
 
     func = eng->newFunction(unminimize, 0);
     value.setProperty("unminimize", func, QScriptValue::Undeletable);
@@ -223,6 +225,40 @@ BOOLEXPORTCLIENT(isResizable)
 BOOLEXPORTCLIENT(isMovable)
 BOOLEXPORTCLIENT(isMovableAcrossScreens)
 BOOLEXPORTCLIENT(isCloseable)
+BOOLEXPORTCLIENT(keepAbove)
+BOOLEXPORTCLIENT(keepBelow)
+
+QScriptValue SWrapper::Client::setKeepAbove(QScriptContext* ctx, QScriptEngine* eng)
+    {
+    KWin::Client* central = eng->fromScriptValue<KWin::Client*>(ctx->thisObject());
+    QScriptValue setValue = ctx->argument(0);
+    
+    if((central == 0) || (setValue.isUndefined()))
+        {
+        return eng->toScriptValue<bool>(0);
+        }
+    else
+        {
+        central->setKeepAbove(eng->fromScriptValue<bool>(setValue));
+        return eng->toScriptValue<bool>(1);
+        }
+    }
+    
+QScriptValue SWrapper::Client::setKeepBelow(QScriptContext* ctx, QScriptEngine* eng)
+    {
+    KWin::Client* central = eng->fromScriptValue<KWin::Client*>(ctx->thisObject());
+    QScriptValue setValue = ctx->argument(0);
+    
+    if((central == 0) || (setValue.isUndefined()))
+        {
+        return eng->toScriptValue<bool>(0);
+        }
+    else
+        {
+        central->setKeepBelow(eng->fromScriptValue<bool>(setValue));
+        return eng->toScriptValue<bool>(1);
+        }
+    }
 
 QScriptValue SWrapper::Client::isNormal(QScriptContext* ctx, QScriptEngine* eng)
     {

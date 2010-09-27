@@ -252,57 +252,82 @@
   
   <method name="isShade">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client is shaded, (false) otherwise.</desc>
+   <desc>Returns (true) if the client is shaded, (false) otherwise.</desc>
   </method>
 
   <method name="isShadeable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client is shadeable (can be shaded), (false) otherwise.</desc>
+   <desc>Returns (true) if the client is shadeable (can be shaded), (false) otherwise.</desc>
   </method>
 
   <method name="isMinimized">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client is minimized, (false) otherwise.</desc>
+   <desc>Returns (true) if the client is minimized, (false) otherwise.</desc>
   </method>
 
   <method name="isMinimizable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be minimized, (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be minimized, (false) otherwise.</desc>
   </method>
 
   <method name="isMaximizable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be mazimized, (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be mazimized, (false) otherwise.</desc>
   </method>
 
   <method name="isResizable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be resized (changable size), (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be resized (changable size), (false) otherwise.</desc>
   </method>
 
   <method name="isMovable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be moved (non-fixed location), (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be moved (non-fixed location), (false) otherwise.</desc>
   </method>
 
   <method name="isMovableAcrossScreens">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be moved across screens (only valid in a multiple monitor setup), (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be moved across screens (only valid in a multiple monitor setup), (false) otherwise.</desc>
   </method>
 
   <method name="isCloseable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be closed by user action (or any other action other than the system or the application itself), (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be closed by user action (or any other action other than the system or the application itself), (false) otherwise.</desc>
   </method>
 
   <method name="isFullScreen">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client is in fullscreen mode, (false) otherwise.</desc>
+   <desc>Returns (true) if the client is in fullscreen mode, (false) otherwise.</desc>
   </method>
 
   <method name="isFullScreenable">
    <return type="boolean"></return>
-   <desc>Returns (true) of the client can be set to fullscreen mode, (false) otherwise.</desc>
+   <desc>Returns (true) if the client can be set to fullscreen mode, (false) otherwise.</desc>
+  </method>
+  
+  <method name="isNormal">
+   <return type="boolean"></return>
+   <desc>Returns (true) if the window is 'normal', (false) otherwise. A normal window is a window which has a border, can be moved by the user, can be closed, etc.</desc>
+  </method>
+  
+  <method name="keepAbove">
+   <return type="boolean"></return>
+   <desc>Returns (true) if 'Keep Above Others' has been set on the client, (false) otherwise.</desc>
+  </method>
+  
+  <method name="keepBelow">
+   <return type="boolean"></return>
+   <desc>Returns (true) if 'Keep Below Others' has been set on the client, (false) otherwise.</desc>
+  </method>
+  
+  <method name="setKeepAbove">
+   <param name="keepabove">The 'Keep Above others' parameter to be applied to the client</param>
+   <desc>Sets the 'Keep Above others' parameter value or unsets it according to keepabove.</desc>
+  </method>
+  
+  <method name="setKeepBelow">
+   <param name="keepbelow">The 'Keep Below others' parameter to be applied to the client</param>
+   <desc>Sets the 'Keep Below others' parameter value or unsets it according to keepbelow.</desc>
   </method>
   
   <method name="clientGroup">
