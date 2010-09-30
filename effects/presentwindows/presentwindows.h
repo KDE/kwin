@@ -26,9 +26,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <kshortcut.h>
+#include <QtGui/QGraphicsView>
+
+namespace Plasma
+{
+class PushButton;
+}
 
 namespace KWin
 {
+
+class CloseWindowView : public QGraphicsView
+    {
+    Q_OBJECT
+    public:
+        CloseWindowView( QWidget* parent = 0 );
+        void windowInputMouseEvent( QMouseEvent* e );
+        virtual void drawBackground( QPainter* painter, const QRectF& rect );
+
+    Q_SIGNALS:
+        void close();
+
+    private:
+        Plasma::PushButton* m_closeButton;
+        Plasma::FrameSvg* m_frame;
+    };
 
 /**
  * Expose-like effect which shows all windows on current desktop side-by-side,
@@ -132,6 +154,9 @@ class PresentWindowsEffect
         void globalShortcutChangedAll( const QKeySequence& seq );
         void globalShortcutChangedClass( const QKeySequence& seq );
 
+    private slots:
+        void closeWindow();
+
     protected:
         // Window rearranging
         void rearrangeWindows();
@@ -164,6 +189,7 @@ class PresentWindowsEffect
         void setHighlightedWindow( EffectWindow *w );
         EffectWindow* relativeWindow( EffectWindow *w, int xdiff, int ydiff, bool wrap ) const;
         EffectWindow* findFirstWindow() const;
+        void updateCloseWindow();
 
         // Helper functions for mouse actions
         void mouseActionWindow( WindowMouseAction& action );
@@ -230,6 +256,9 @@ class PresentWindowsEffect
         DesktopMouseAction m_leftButtonDesktop;
         DesktopMouseAction m_middleButtonDesktop;
         DesktopMouseAction m_rightButtonDesktop;
+
+        CloseWindowView* m_closeView;
+        EffectWindow* m_closeWindow;
     };
 
 } // namespace
