@@ -405,6 +405,7 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
         m_windowData[w].visible = true;
         m_windowData[w].highlight = 1.0;
         m_closeWindow = w;
+        w->setData( WindowForceBlurRole, QVariant( true ) );
         }
     }
 
