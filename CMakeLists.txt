@@ -189,7 +189,7 @@ set( kwinnvidiahack_LIB_SRCS
 kde4_add_library(kwinnvidiahack SHARED ${kwinnvidiahack_LIB_SRCS})
 
 set_target_properties(kwinnvidiahack PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}  )
-install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 ########### install files ###############
 
