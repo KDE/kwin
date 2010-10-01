@@ -492,7 +492,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
             break;
             }
         }
-    if( m_motionManager.transformedGeometry( m_highlightedWindow ).contains( me->pos() ) )
+    if( m_highlightedWindow && m_motionManager.transformedGeometry( m_highlightedWindow ).contains( me->pos() ) )
         updateCloseWindow();
     else
         m_closeView->hide();
