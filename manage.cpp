@@ -167,6 +167,7 @@ bool Client::manage( Window w, bool isMapped )
         desk = session->desktop;
         if( session->onAllDesktops )
             desk = NET::OnAllDesktops;
+        setOnActivities(session->activities);
         }
     else
         {

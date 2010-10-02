@@ -145,6 +145,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
                     // KConfig doesn't support long so we need to live with less precision on 64-bit systems
                     static_cast<int>( reinterpret_cast<long>( c->clientGroup() )) : 0;
             cg.writeEntry( QString("clientGroup")+n, group );
+            cg.writeEntry( QString("activities")+n, c->activities() );
             }
         }
     if( phase == SMSavePhase0 )
@@ -217,6 +218,7 @@ void Workspace::loadSessionInfo()
         info->stackingOrder = cg.readEntry( QString("stackingOrder")+n, -1 );
         info->clientGroup = cg.readEntry( QString("clientGroup")+n, 0 );
         info->clientGroupClient = NULL;
+        info->activities = cg.readEntry( QString("activities")+n, QStringList() );
         }
     }
 
