@@ -161,6 +161,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->addItem(i18nc("@item:inlistbox behavior on double click", "Minimize"));
   combo->addItem(i18n("Shade"));
   combo->addItem(i18n("Lower"));
+  combo->addItem(i18nc("@item:inlistbox behavior on double click", "Close"));
   combo->addItem(i18nc("@item:inlistbox behavior on double click", "On All Desktops"));
   combo->addItem(i18n("Nothing"));
   combo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
@@ -417,6 +418,7 @@ const char* const tbl_TiDbl[] = {
     "Minimize",
     "Shade",
     "Lower",
+    "Close",
     "OnAllDesktops",
     "Nothing",
     "" };
