@@ -991,7 +991,8 @@ SceneOpenGL::Texture::~Texture()
 
 void SceneOpenGL::Texture::init()
     {
-    bound_glxpixmap = None;
+    damaged = true;
+    glxpixmap = None;
     }
 
 void SceneOpenGL::Texture::createTexture()
@@ -1008,20 +1009,19 @@ void SceneOpenGL::Texture::discard()
 
 void SceneOpenGL::Texture::release()
     {
-    if( tfp_mode && bound_glxpixmap != None )
+    if( tfp_mode && glxpixmap != None )
         {
-        if( !options->glStrictBinding )
-            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
-        glXDestroyPixmap( display(), bound_glxpixmap );
-        bound_glxpixmap = None;
+        glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
+        glXDestroyPixmap( display(), glxpixmap );
+        glxpixmap = None;
         }
     }
 
 void SceneOpenGL::Texture::findTarget()
     {
     unsigned int new_target = 0;
-    if( tfp_mode && glXQueryDrawable && bound_glxpixmap != None )
-        glXQueryDrawable( display(), bound_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
+    if( tfp_mode && glXQueryDrawable && glxpixmap != None )
+        glXQueryDrawable( display(), glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
     // Hack for XGL - this should not be a fallback for glXQueryDrawable() but instead the case
     // when glXQueryDrawable is not available. However this call fails with XGL, unless KWin
     // is compiled statically with the libGL that Compiz is built against (without which neither
@@ -1098,9 +1098,13 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         { // tfp mode, simply bind the pixmap to texture
         if( mTexture == None )
             createTexture();
-        // when the pixmap is bound to the texture, they share the same data, so the texture
-        // updates automatically - no need to do anything in such case
-        if( bound_glxpixmap != None )
+        // The GLX pixmap references the contents of the original pixmap, so it doesn't
+        // need to be recreated when the contents change.
+        // The texture may or may not use the same storage depending on the EXT_tfp
+        // implementation. When options->glStrictBinding is true, the texture uses
+        // a different storage and needs to be updated with a call to
+        // glXBindTexImageEXT() when the contents of the pixmap has changed.
+        if( glxpixmap != None )
             glBindTexture( mTarget, mTexture );
         else
             {
@@ -1110,9 +1114,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
                 GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
                 None
                 };
-            // the GLXPixmap will reference the X pixmap, so it will be freed automatically
-            // when no longer needed
-            bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
+            glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
 #ifdef CHECK_GL_ERROR
             checkGLError( "TextureLoadTFP1" );
 #endif
@@ -1124,8 +1126,11 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             checkGLError( "TextureLoadTFP2" );
 #endif
             if( !options->glStrictBinding )
-                glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+                glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
             }
+        if( options->glStrictBinding )
+            // Mark the texture as damaged so it will be updated on the next call to bind()
+            damaged = true;
         }
     else if( shm_mode )
         { // copy pixmap contents to a texture via shared memory
@@ -1263,10 +1268,17 @@ void SceneOpenGL::Texture::bind()
     {
     glEnable( mTarget );
     glBindTexture( mTarget, mTexture );
-    if( tfp_mode && options->glStrictBinding )
+    if( tfp_mode )
         {
-        assert( bound_glxpixmap != None );
-        glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+        if ( options->glStrictBinding && damaged )
+            {
+            // Update the texture with the new pixmap contents
+            assert( glxpixmap != None );
+            glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
+            glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+            setDirty(); // Mipmaps have to be regenerated after updating the texture 
+            }
+        damaged = false;
         }
     enableFilter();
     if( hasGLVersion( 1, 4, 0 ))
@@ -1281,12 +1293,6 @@ void SceneOpenGL::Texture::unbind()
     if( hasGLVersion( 1, 4, 0 ))
         {
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f );
-        }
-    if( tfp_mode && options->glStrictBinding )
-        {
-        assert( bound_glxpixmap != None );
-        glBindTexture( mTarget, mTexture );
-        glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
         }
     GLTexture::unbind();
     }

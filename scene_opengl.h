@@ -124,7 +124,8 @@ class SceneOpenGL::Texture
     private:
         void init();
 
-        GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+        GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+        bool damaged;
     };
 
 class SceneOpenGL::Window
