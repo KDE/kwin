@@ -93,7 +93,7 @@
       <item row="5" column="0">
        <widget class="QCheckBox" name="separatorCheckBox">
         <property name="text">
-         <string>Draw separator between title bar and window contents: </string>
+         <string>Separator display:</string>
         </property>
        </widget>
       </item>
@@ -134,7 +134,23 @@
        <widget class="KComboBox" name="titleOutlineComboBox"/>
       </item>
       <item row="5" column="2">
-       <widget class="KComboBox" name="separatorComboBox"/>
+       <widget class="KComboBox" name="separatorComboBox">
+        <item>
+         <property name="text">
+          <string>Never Draw Separator</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Draw Separator When Window is Active</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Always Draw Separator</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </widget>

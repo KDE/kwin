@@ -93,11 +93,20 @@ namespace Oxygen
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
         {
-            return
-                ( glowIsAnimated() || isActive() ) &&
-                configuration().drawSeparator() &&
-                !configuration().hideTitleBar() &&
-                !configuration().drawTitleOutline();
+            if( configuration().drawTitleOutline() ) return false;
+            switch( configuration().separatorMode() )
+            {
+                case Configuration::SeparatorAlways:
+                return true;
+
+                case Configuration::SeparatorActive:
+                return ( glowIsAnimated() || isActive() );
+
+                default:
+                case Configuration::SeparatorNever:
+                return false;
+            }
+
         }
 
         //@}

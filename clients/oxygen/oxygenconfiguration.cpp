@@ -38,7 +38,7 @@ namespace Oxygen
         frameBorder_( BorderTiny ),
         blendColor_( RadialBlending ),
         sizeGripMode_( SizeGripWhenNeeded ),
-        drawSeparator_( false ),
+        separatorMode_( SeparatorNever ),
         drawTitleOutline_( false ),
         hideTitleBar_( false ),
         useDropShadows_( true ),
@@ -84,10 +84,17 @@ namespace Oxygen
             group.readEntry( OxygenConfig::SIZE_GRIP_MODE,
             defaultConfiguration.sizeGripModeName( false ) ), false ) );
 
-        // draw separator
-        setDrawSeparator( group.readEntry(
-            OxygenConfig::DRAW_SEPARATOR,
-            defaultConfiguration.drawSeparator() ) );
+        // separator mode
+        if( !group.readEntry( OxygenConfig::DRAW_SEPARATOR, defaultConfiguration.separatorMode() == SeparatorNever ) )
+        {
+
+            setSeparatorMode( SeparatorNever );
+
+        } else if( group.readEntry( OxygenConfig::SEPARATOR_ACTIVE_ONLY, defaultConfiguration.separatorMode() == SeparatorActive ) ) {
+
+            setSeparatorMode( SeparatorActive );
+
+        } else setSeparatorMode( SeparatorAlways );
 
         // title outline
         setDrawTitleOutline( group.readEntry(
@@ -154,7 +161,9 @@ namespace Oxygen
         group.writeEntry( OxygenConfig::FRAME_BORDER, frameBorderName( false ) );
         group.writeEntry( OxygenConfig::SIZE_GRIP_MODE, sizeGripModeName( false ) );
 
-        group.writeEntry( OxygenConfig::DRAW_SEPARATOR, drawSeparator() );
+        group.writeEntry( OxygenConfig::DRAW_SEPARATOR, separatorMode() != SeparatorNever );
+        group.writeEntry( OxygenConfig::SEPARATOR_ACTIVE_ONLY, separatorMode() == SeparatorActive );
+
         group.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
         group.writeEntry( OxygenConfig::HIDE_TITLEBAR, hideTitleBar() );
         group.writeEntry( OxygenConfig::USE_DROP_SHADOWS, useDropShadows() );
@@ -331,7 +340,7 @@ namespace Oxygen
             frameBorder() == other.frameBorder() &&
             blendColor() == other.blendColor() &&
             sizeGripMode() == other.sizeGripMode() &&
-            drawSeparator() == other.drawSeparator() &&
+            separatorMode() == other.separatorMode() &&
             drawTitleOutline() == other.drawTitleOutline() &&
             hideTitleBar() == other.hideTitleBar() &&
             useDropShadows() == other.useDropShadows() &&

@@ -102,7 +102,7 @@ namespace Oxygen
     connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SLOT(shadowModeChanged(int)) );
     connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.shadowCacheMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
-    connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.drawSeparator, SLOT( setDisabled( bool ) ) );
+    connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.separatorMode, SLOT( setDisabled( bool ) ) );
 
     connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
     connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
@@ -120,7 +120,7 @@ namespace Oxygen
     connect( ui.useAnimations, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.animateTitleChange, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
-    connect( ui.drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 

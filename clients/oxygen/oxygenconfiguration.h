@@ -35,6 +35,7 @@ namespace OxygenConfig
     static const QString TITLE_ALIGNMENT = "TitleAlignment";
     static const QString BUTTON_SIZE = "ButtonSize";
     static const QString DRAW_SEPARATOR = "DrawSeparator";
+    static const QString SEPARATOR_ACTIVE_ONLY = "SeparatorActiveOnly";
     static const QString DRAW_TITLE_OUTLINE = "DrawTitleOutline";
     static const QString FRAME_BORDER = "FrameBorder";
     static const QString BLEND_COLOR = "BlendColor";
@@ -102,15 +103,28 @@ namespace Oxygen
 
         //! shadow cache mode
         enum ShadowCacheMode {
-            // no shadow cache
+            //! no shadow cache
             CacheDisabled,
 
-            // shadow cache depends
-            // on animation duration
+            //! shadow cache depends on animation duration
             CacheVariable,
 
-            // shadow cache has maximum size
+            //! shadow cache has maximum size
             CacheMaximum
+        };
+
+        //! decide when separator is to be drawn
+        enum SeparatorMode {
+
+            //! never
+            SeparatorNever,
+
+            //! active window only
+            SeparatorActive,
+
+            //! always
+            SeparatorAlways
+
         };
 
         //! default constructor
@@ -275,12 +289,12 @@ namespace Oxygen
         //@}
 
         //! separator
-        virtual bool drawSeparator( void ) const
-        { return drawSeparator_; }
+        virtual SeparatorMode separatorMode( void ) const
+        { return separatorMode_; }
 
         //! separator
-        virtual void setDrawSeparator( bool value )
-        { drawSeparator_ = value; }
+        virtual void setSeparatorMode( SeparatorMode value )
+        { separatorMode_ = value; }
 
         //! title outline
         virtual bool drawTitleOutline( void ) const
@@ -364,7 +378,7 @@ namespace Oxygen
         SizeGripMode sizeGripMode_;
 
         //! separator
-        bool drawSeparator_;
+        SeparatorMode separatorMode_;
 
         //! active window title outline
         bool drawTitleOutline_;

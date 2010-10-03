@@ -93,7 +93,6 @@ namespace Oxygen
         connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT( setEnabled( bool ) ) );
 
         // separator
-        ui.separatorComboBox->insertItems(0, QStringList() << i18nc( "draw separator", "Enabled" ) << i18nc( "draw separator", "Disabled" ) );
         ui.separatorComboBox->setEnabled( false );
         checkboxes_.insert( std::make_pair( Exception::DrawSeparator, ui.separatorCheckBox ) );
         connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT( setEnabled( bool ) ) );
@@ -113,7 +112,7 @@ namespace Oxygen
         ui.frameBorderComboBox->setCurrentIndex( ui.frameBorderComboBox->findText( exception.frameBorderName( true ) ) );
         ui.blendColorComboBox->setCurrentIndex( ui.blendColorComboBox->findText( exception.blendColorName( true ) ) );
         ui.sizeGripComboBox->setCurrentIndex( ui.sizeGripComboBox->findText( exception.sizeGripModeName( true ) ) );
-        ui.separatorComboBox->setCurrentIndex( ui.separatorComboBox->findText( exception.drawSeparator() ? i18nc( "draw separator", "Enabled" ) : i18nc( "draw separator", "Disabled" ) ) );
+        ui.separatorComboBox->setCurrentIndex( exception.separatorMode() );
         ui.titleOutlineComboBox->setCurrentIndex( ui.titleOutlineComboBox->findText( exception.drawTitleOutline() ? i18nc( "outline window title", "Enabled" ) : i18nc( "outline window title", "Disabled" ) ) );
         ui.hideTitleBar->setChecked( exception.hideTitleBar() );
 
@@ -134,7 +133,14 @@ namespace Oxygen
         exception.setSizeGripMode( Exception::sizeGripMode( ui.sizeGripComboBox->currentText(), true ) );
 
         // flags
-        exception.setDrawSeparator( ui.separatorComboBox->currentText() == i18nc( "draw separator", "Enabled" ) );
+        switch( ui.separatorComboBox->currentIndex() )
+        {
+            default:
+            case 0: exception.setSeparatorMode( Configuration::SeparatorNever ); break;
+            case 1: exception.setSeparatorMode( Configuration::SeparatorActive ); break;
+            case 2: exception.setSeparatorMode( Configuration::SeparatorAlways ); break;
+        }
+
         exception.setDrawTitleOutline( ui.titleOutlineComboBox->currentText() == i18nc( "outline window title", "Enabled" ) );
         exception.setHideTitleBar( ui.hideTitleBar->isChecked() );
 
