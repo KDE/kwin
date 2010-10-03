@@ -85,7 +85,7 @@ namespace Oxygen
             defaultConfiguration.sizeGripModeName( false ) ), false ) );
 
         // separator mode
-        if( !group.readEntry( OxygenConfig::DRAW_SEPARATOR, defaultConfiguration.separatorMode() == SeparatorNever ) )
+        if( !group.readEntry( OxygenConfig::DRAW_SEPARATOR, defaultConfiguration.separatorMode() != SeparatorNever ) )
         {
 
             setSeparatorMode( SeparatorNever );
