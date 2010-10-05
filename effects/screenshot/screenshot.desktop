@@ -2,6 +2,7 @@
 Name=Screenshot
 Name[en_GB]=Screenshot
 Name[es]=Captura de pantalla
+Name[et]=Ekraanipilt
 Name[eu]=Pantaila-argazkia
 Name[hr]=Uslikan ekran
 Name[ia]=Instantanee de schermo
@@ -26,6 +27,7 @@ Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
 Comment[en_GB]=Saves screenshot of active window into the home directory
 Comment[es]=Guarda una captura de la ventana activa en la carpeta personal
+Comment[et]=Aktiivse akna ekraanipildi salvestamine kodukataloogi
 Comment[eu]=Leiho aktiboaren pantaila argazkia etxeko karpetan gordetzen du
 Comment[ia]=Il salva instantanee de schermo del fenestra active in le directorio domo
 Comment[ja]=アクティブウィンドウのスクリーンショットをホームディレクトリに保存する
