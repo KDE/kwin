@@ -233,6 +233,8 @@ QList< ClientGroupItem > Bridge::clientGroupItems() const
 
 long Bridge::itemId( int index )
     {
+    if( !c->clientGroup() )
+        return 0;
     const ClientList list = c->clientGroup()->clients();
     return reinterpret_cast<long>( list.at( index ));
     }
@@ -246,12 +248,14 @@ int Bridge::visibleClientGroupItem()
 
 void Bridge::setVisibleClientGroupItem( int index )
     {
-    c->clientGroup()->setVisible( index );
+    if( c->clientGroup() )
+        c->clientGroup()->setVisible( index );
     }
 
 void Bridge::moveItemInClientGroup( int index, int before )
     {
-    c->clientGroup()->move( index, before );
+    if( c->clientGroup() )
+        c->clientGroup()->move( index, before );
     }
 
 void Bridge::moveItemToClientGroup( long itemId, int before )
@@ -262,17 +266,21 @@ void Bridge::moveItemToClientGroup( long itemId, int before )
         kWarning(1212) << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******";
         return;
         }
-    c->workspace()->moveItemToClientGroup( item->clientGroup(), item->clientGroup()->indexOfClient( item ),
+    if( item->clientGroup() )
+        c->workspace()->moveItemToClientGroup( item->clientGroup(), item->clientGroup()->indexOfClient( item ),
         c->clientGroup(), before );
     }
 
 void Bridge::removeFromClientGroup( int index, const QRect& newGeom )
     {
-    c->clientGroup()->remove( index, newGeom );
+    if( c->clientGroup() )
+        c->clientGroup()->remove( index, newGeom );
     }
 
 void Bridge::closeClientGroupItem( int index )
     {
+    if( !c->clientGroup() )
+        return;
     const ClientList list = c->clientGroup()->clients();
     if( index >= 0 || index <= list.count() )
         list.at( index )->closeWindow();
@@ -280,12 +288,14 @@ void Bridge::closeClientGroupItem( int index )
 
 void Bridge::closeAllInClientGroup()
     {
-    c->clientGroup()->closeAll();
+    if( c->clientGroup() )
+        c->clientGroup()->closeAll();
     }
 
 void Bridge::displayClientMenu( int index, const QPoint& pos )
     {
-    c->clientGroup()->displayClientMenu( index, pos );
+    if( c->clientGroup() )
+        c->clientGroup()->displayClientMenu( index, pos );
     }
 
 KDecoration::WindowOperation Bridge::buttonToWindowOperation( Qt::MouseButtons button )
