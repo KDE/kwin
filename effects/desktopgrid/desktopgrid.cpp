@@ -640,7 +640,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             EffectWindow* w = isDesktop ? NULL : windowAt( me->pos());
             if ( w != NULL )
                 isDesktop = w->isDesktop();
-            if( w != NULL && ( w->isMovable() || w->isMovableAcrossScreens() || isUsingPresentWindows() ))
+            if( w != NULL && !w->isDesktop() && ( w->isMovable() || w->isMovableAcrossScreens() || isUsingPresentWindows() ))
                 { // Prepare it for moving
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
