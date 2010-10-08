@@ -532,6 +532,7 @@ bool SceneOpenGL::initDrawableConfigs()
         rgba = 0;
         fbcdrawableinfo[ i ].fbconfig = NULL;
         fbcdrawableinfo[ i ].bind_texture_format = 0;
+        fbcdrawableinfo[ i ].texture_targets = 0;
         fbcdrawableinfo[ i ].y_inverted = 0;
         fbcdrawableinfo[ i ].mipmap = 0;
         for( int j = 0; j < cnt; j++ )
@@ -616,6 +617,12 @@ bool SceneOpenGL::initDrawableConfigs()
             stencil = stencil_value;
             depth = depth_value;
             mipmap = mipmap_value;
+            if ( tfp_mode )
+                {
+                glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                      GLX_BIND_TO_TEXTURE_TARGETS_EXT, &value );
+                fbcdrawableinfo[ i ].texture_targets = value;
+                }
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_Y_INVERTED_EXT, &value );
             fbcdrawableinfo[ i ].y_inverted = value;
@@ -1112,8 +1119,20 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
                 {
                 GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
                 GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
-                None
+                None, None, None
                 };
+            if ( ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT ) &&
+                 ( GLTexture::NPOTTextureSupported() ||
+                   ( isPowerOfTwo(size.width()) && isPowerOfTwo(size.height()) )))
+                {
+                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+                attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
+                }
+            else if ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT )
+                {
+                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+                attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
+                }
             glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
 #ifdef CHECK_GL_ERROR
             checkGLError( "TextureLoadTFP1" );

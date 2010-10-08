@@ -74,6 +74,7 @@ class SceneOpenGL
             public:
                 GLXFBConfig fbconfig;
                 int bind_texture_format;
+                int texture_targets;
                 int y_inverted;
                 int mipmap;
             };
