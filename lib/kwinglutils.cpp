@@ -37,10 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
 
-#ifndef GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT
-#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x8D56
-#endif
-
 namespace KWin
 {
 // Variables

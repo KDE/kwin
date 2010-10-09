@@ -64,6 +64,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef glXGetVideoSync
 #undef glXWaitVideoSync
 
+#ifndef GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT
+#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x8D56
+#endif
+
 #include <fixx11h.h>
 
 namespace KWin
