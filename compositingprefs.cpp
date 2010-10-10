@@ -268,6 +268,12 @@ void CompositingPrefs::detectDriverAndVersion()
         if (!mVersion.startsWith("20"))
             mVersion = Version( mGLRenderer.split(' ')[ 5 ] );
         }
+    else if( mGLVendor == "nouveau" )
+        {
+        mDriver = "nouveau";
+        // use Gallium version number as the version - second part of renderer
+        mVersion = Version( mGLRenderer.split(' ')[ 1 ] );
+        }
     else if( mGLRenderer == "Software Rasterizer" )
         {
         mDriver = "software";
