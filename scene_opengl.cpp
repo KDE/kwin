@@ -1946,11 +1946,13 @@ void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity,
 //****************************************
 
 GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
+QPixmap* SceneOpenGL::EffectFrame::m_unstyledPixmap = NULL;
 
 SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     : Scene::EffectFrame( frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
+    , m_textPixmap( NULL )
     , m_oldTextTexture( NULL )
     , m_iconTexture( NULL )
     , m_oldIconTexture( NULL )
@@ -1967,6 +1969,7 @@ SceneOpenGL::EffectFrame::~EffectFrame()
     {
     delete m_texture;
     delete m_textTexture;
+    delete m_textPixmap;
     delete m_oldTextTexture;
     delete m_iconTexture;
     delete m_oldIconTexture;
@@ -1980,6 +1983,8 @@ void SceneOpenGL::EffectFrame::free()
     m_texture = NULL;
     delete m_textTexture;
     m_textTexture = NULL;
+    delete m_textPixmap;
+    m_textPixmap = NULL;
     delete m_iconTexture;
     m_iconTexture = NULL;
     delete m_selectionTexture;
@@ -2002,6 +2007,8 @@ void SceneOpenGL::EffectFrame::freeTextFrame()
     {
     delete m_textTexture;
     m_textTexture = NULL;
+    delete m_textPixmap;
+    m_textPixmap = NULL;
     }
 
 void SceneOpenGL::EffectFrame::freeSelection()
@@ -2289,6 +2296,7 @@ void SceneOpenGL::EffectFrame::updateTexture()
 void SceneOpenGL::EffectFrame::updateTextTexture()
     {
     delete m_textTexture;
+    delete m_textPixmap;
 
     if( m_effectFrame->text().isEmpty() )
         return;
@@ -2306,9 +2314,9 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
         }
 
-    QPixmap pixmap( m_effectFrame->geometry().size() );
-    pixmap.fill( Qt::transparent );
-    QPainter p( &pixmap );
+    m_textPixmap = new QPixmap( m_effectFrame->geometry().size() );
+    m_textPixmap->fill( Qt::transparent );
+    QPainter p( m_textPixmap );
     p.setFont( m_effectFrame->font() );
     if( m_effectFrame->style() == EffectFrameStyled )
         p.setPen( m_effectFrame->styledTextColor() );
@@ -2316,30 +2324,33 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         p.setPen( Qt::white );
     p.drawText( rect, m_effectFrame->alignment(), text );
     p.end();
-    m_textTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+    m_textTexture = new Texture( m_textPixmap->handle(), m_textPixmap->size(), m_textPixmap->depth() );
     }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
     {
     delete m_unstyledTexture;
+    delete m_unstyledPixmap;
     // Based off circle() from kwinxrenderutils.cpp
 #define CS 8
-    QPixmap pixmap( 2 * CS, 2 * CS );
-    pixmap.fill( Qt::transparent );
-    QPainter p( &pixmap );
+    m_unstyledPixmap = new QPixmap( 2 * CS, 2 * CS );
+    m_unstyledPixmap->fill( Qt::transparent );
+    QPainter p( m_unstyledPixmap );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
     p.setBrush( Qt::black );
-    p.drawEllipse( pixmap.rect() );
+    p.drawEllipse( m_unstyledPixmap->rect() );
     p.end();
 #undef CS
-    m_unstyledTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+    m_unstyledTexture = new Texture( m_unstyledPixmap->handle(), m_unstyledPixmap->size(), m_unstyledPixmap->depth() );
     }
 
 void SceneOpenGL::EffectFrame::cleanup()
     {
     delete m_unstyledTexture;
     m_unstyledTexture = NULL;
+    delete m_unstyledPixmap;
+    m_unstyledPixmap = NULL;
     }
 
 } // namespace

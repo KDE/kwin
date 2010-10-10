@@ -194,12 +194,14 @@ class SceneOpenGL::EffectFrame
         GLTexture* m_texture;
         GLTexture* m_textTexture;
         GLTexture* m_oldTextTexture;
+        QPixmap* m_textPixmap; // need to keep the pixmap around to workaround some driver problems
         GLTexture* m_iconTexture;
         GLTexture* m_oldIconTexture;
         GLTexture* m_selectionTexture;
         GLVertexBuffer* m_unstyledVBO;
 
         static GLTexture* m_unstyledTexture;
+        static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
         static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };
 
