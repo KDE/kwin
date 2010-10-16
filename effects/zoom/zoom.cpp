@@ -486,6 +486,8 @@ void ZoomEffect::moveMouseToCenter()
 void ZoomEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons,
     Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
+    if( zoom == 1.0 )
+        return;
     cursorPoint = pos;
     if( pos != old )
         {
@@ -496,6 +498,8 @@ void ZoomEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseBu
 
 void ZoomEffect::focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight)
     {
+    if( zoom == 1.0 )
+        return;
     focusPoint = (px >= 0 && py >= 0) ? QPoint(px, py) : QPoint( rx + qMax(0, (qMin(displayWidth(), rwidth)/2)-60), ry + qMax(0, (qMin(displayHeight(), rheight)/2)-60) );
     if( enableFocusTracking )
         {
