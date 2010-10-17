@@ -180,6 +180,18 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
         }
     return ret;
     }
+    
+void TabBoxHandlerImpl::raiseClient( TabBoxClient* c ) const
+    {
+    Workspace::self()->raiseClient( static_cast<TabBoxClientImpl*>(c)->client() );
+    }
+
+void TabBoxHandlerImpl::restack( TabBoxClient *c, TabBoxClient *under )
+{
+    Workspace::self()->restack( static_cast<TabBoxClientImpl*>(c)->client(),
+                                static_cast<TabBoxClientImpl*>(under)->client() );
+}
+
 
 TabBoxClient* TabBoxHandlerImpl::desktopClient() const
     {
@@ -480,7 +492,7 @@ void TabBox::show()
 /*!
   Notify effects that the tab box is being hidden.
 */
-void TabBox::hide()
+void TabBox::hide(bool abort)
     {
     delayedShowTimer.stop();
     if( m_isShown )
@@ -493,7 +505,7 @@ void TabBox::hide()
     if( isDisplayed())
         kDebug( 1212 ) << "Tab box was not properly closed by an effect";
     m_index = QModelIndex();
-    m_tabBox->hide();
+    m_tabBox->hide( abort );
     QApplication::syncX();
     XEvent otherEvent;
     while (XCheckTypedEvent (display(), EnterNotify, &otherEvent ) )
@@ -1096,7 +1108,7 @@ void Workspace::tabBoxKeyPress( int keyQt )
         if ( ((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape)
             && !(forward || backward) )
             { // if Escape is part of the shortcut, don't cancel
-            closeTabBox();
+            closeTabBox( true );
             }
         else if( !(forward || backward) )
             {
@@ -1118,10 +1130,10 @@ void Workspace::unrefTabBox()
         tab_box->unrefDisplay();
     }
 
-void Workspace::closeTabBox()
+void Workspace::closeTabBox( bool abort )
     {
     removeTabBoxGrab();
-    tab_box->hide();
+    tab_box->hide( abort );
     modalActionsSwitch( true );
     tab_grab = false;
     control_grab = false;
