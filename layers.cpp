@@ -457,21 +457,14 @@ void Workspace::lowerClientRequest( Client* c, NET::RequestSource src, Time /*ti
         lowerClientWithinApplication( c );
     }
 
-void Workspace::restackClientUnderActive( Client* c )
-    {
-    if( c->isTopMenu())
-        return;
-    if( !active_client || active_client == c )
-        {
-        raiseClient( c );
-        return;
-        }
 
-    assert( unconstrained_stacking_order.contains( active_client ));
-    if( Client::belongToSameApplication( active_client, c ))
+void Workspace::restack( Client* c, Client* under )
+    {
+    assert( unconstrained_stacking_order.contains( under ));
+    if( Client::belongToSameApplication( under, c ))
         { // put it below the active window if it's the same app
         unconstrained_stacking_order.removeAll( c );
-        unconstrained_stacking_order.insert( unconstrained_stacking_order.indexOf( active_client ), c );
+        unconstrained_stacking_order.insert( unconstrained_stacking_order.indexOf( under ), c );
         }
     else
         { // put in the stacking order below _all_ windows belonging to the active application
@@ -479,7 +472,7 @@ void Workspace::restackClientUnderActive( Client* c )
              it != unconstrained_stacking_order.end();
              ++it )
             { // TODO ignore topmenus?
-            if( Client::belongToSameApplication( active_client, *it ))
+            if( Client::belongToSameApplication( under, *it ))
                 {
                 if( *it != c )
                     {
@@ -495,12 +488,12 @@ void Workspace::restackClientUnderActive( Client* c )
          desktop <= numberOfDesktops();
          ++desktop )
         { // do for every virtual desktop to handle the case of onalldesktop windows
-        if( c->wantsTabFocus() && c->isOnDesktop( desktop ) && focus_chain[ desktop ].contains( active_client ))
+        if( c->wantsTabFocus() && c->isOnDesktop( desktop ) && focus_chain[ desktop ].contains( under ))
             {
-            if( Client::belongToSameApplication( active_client, c ))
+            if( Client::belongToSameApplication( under, c ))
                 { // put it after the active window if it's the same app
                 focus_chain[ desktop ].removeAll( c );
-                focus_chain[ desktop ].insert( focus_chain[ desktop ].indexOf( active_client ), c );
+                focus_chain[ desktop ].insert( focus_chain[ desktop ].indexOf( under ), c );
                 }
             else
                 { // put it in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
@@ -509,7 +502,7 @@ void Workspace::restackClientUnderActive( Client* c )
                      i >= 0;
                      --i )
                     {
-                    if( Client::belongToSameApplication( active_client, focus_chain[ desktop ].at( i )))
+                    if( Client::belongToSameApplication( under, focus_chain[ desktop ].at( i )))
                         {
                         focus_chain[ desktop ].insert( i, c );
                         break;
@@ -519,12 +512,12 @@ void Workspace::restackClientUnderActive( Client* c )
             }
         }
     // the same for global_focus_chain
-    if( c->wantsTabFocus() && global_focus_chain.contains( active_client ))
+    if( c->wantsTabFocus() && global_focus_chain.contains( under ))
         {
-        if( Client::belongToSameApplication( active_client, c ))
+        if( Client::belongToSameApplication( under, c ))
             {
             global_focus_chain.removeAll( c );
-            global_focus_chain.insert( global_focus_chain.indexOf( active_client ), c );
+            global_focus_chain.insert( global_focus_chain.indexOf( under ), c );
             }
         else
             {
@@ -533,7 +526,7 @@ void Workspace::restackClientUnderActive( Client* c )
                   i >= 0;
                   --i )
                 {
-                if( Client::belongToSameApplication( active_client, global_focus_chain.at( i ) ))
+                if( Client::belongToSameApplication( under, global_focus_chain.at( i ) ))
                     {
                     global_focus_chain.insert( i, c );
                     break;
@@ -544,6 +537,18 @@ void Workspace::restackClientUnderActive( Client* c )
     updateStackingOrder();
     }
 
+void Workspace::restackClientUnderActive( Client* c )
+    {
+    if( c->isTopMenu())
+        return;
+    if( !active_client || active_client == c )
+        {
+        raiseClient( c );
+        return;
+        }
+    restack( c, active_client );
+    }
+    
 void Workspace::restoreSessionStackingOrder( Client* c )
     {
     if( c->sessionStackingOrder() < 0 )

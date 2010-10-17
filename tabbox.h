@@ -54,6 +54,8 @@ class TabBoxHandlerImpl : public TabBoxHandler
         virtual int nextDesktopFocusChain( int desktop ) const;
         virtual int numberOfDesktops() const;
         virtual TabBoxClientList stackingOrder() const;
+        virtual void raiseClient( TabBoxClient *client ) const;
+        virtual void restack( TabBoxClient *c, TabBoxClient *under );
         virtual TabBoxClient* clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const;
         virtual TabBoxClient* desktopClient() const;
     };
@@ -102,7 +104,7 @@ class TabBox : public QObject
         void nextPrev( bool next = true);
 
         void delayedShow();
-        void hide();
+        void hide( bool abort = false );
 
         void refDisplay();
         void unrefDisplay();

@@ -136,6 +136,18 @@ class TabBoxHandler : public QObject
         * @return The next desktop in the current focus chain.
         */
         virtual int nextDesktopFocusChain( int desktop ) const = 0;
+        
+        /**
+        * Raise a client (w/o activating it)
+        */
+        virtual void raiseClient( TabBoxClient* c ) const = 0;
+
+        /**
+         * @param c The client to be restacked
+         * @param under The client the other one will be placed below
+         */
+        virtual void restack( TabBoxClient *c, TabBoxClient *under ) = 0;
+        
         /**
         * @return The current stacking order of TabBoxClients
         */
@@ -191,7 +203,7 @@ class TabBoxHandler : public QObject
         * Removes the outline if active.
         * @see show
         */
-        void hide();
+        void hide( bool abort = false );
 
         /**
         * Sets the current model index in the view and updates

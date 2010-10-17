@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDebug>
 #include <KStandardDirs>
+#include <KWindowSystem>
 
 namespace KWin
 {
@@ -48,7 +49,7 @@ namespace TabBox
 class TabBoxHandlerPrivate
     {
     public:
-        TabBoxHandlerPrivate();
+        TabBoxHandlerPrivate( TabBoxHandler *q );
 
         ~TabBoxHandlerPrivate();
 
@@ -67,12 +68,13 @@ class TabBoxHandlerPrivate
         /**
         * Ends window highlighting
         */
-        void endHighlightWindows();
+        void endHighlightWindows( bool abort = false );
 
         ClientModel* clientModel() const;
         DesktopModel* desktopModel() const;
         void parseConfig( const QString& fileName );
 
+        TabBoxHandler *q; // public pointer
         // members
         TabBoxConfig config;
         TabBoxView* view;
@@ -87,11 +89,15 @@ class TabBoxHandlerPrivate
         */
         bool isShown;
         QMap< QString, ItemLayoutConfig > tabBoxLayouts;
+        TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
     };
 
-TabBoxHandlerPrivate::TabBoxHandlerPrivate()
+TabBoxHandlerPrivate::TabBoxHandlerPrivate( TabBoxHandler *q )
     {
+    this->q = q;
     isShown = false;
+    lastRaisedClient = 0;
+    lastRaisedClientSucc = 0;
     config = TabBoxConfig();
     view = new TabBoxView();
     XSetWindowAttributes attr;
@@ -230,11 +236,45 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     {
     if( !isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox )
         return;
-    QVector< WId > data( 2 );
+
     Display *dpy = QX11Info::display();
-    const WId wId = view->winId();
-    data[ 0 ] = wId;
-    data[ 1 ] = view->clientModel()->data( index, ClientModel::WIdRole ).toULongLong();
+    TabBoxClient *currentClient = q->client( index );
+
+    if( !KWindowSystem::compositingActive() )
+        {
+        if( lastRaisedClient )
+            {
+            if ( lastRaisedClientSucc )
+                q->restack( lastRaisedClient, lastRaisedClientSucc );
+                // TODO lastRaisedClient->setMinimized( lastRaisedClientWasMinimized );
+            }
+        
+        lastRaisedClient = currentClient;
+        if( lastRaisedClient )
+            {
+            // TODO if ( (lastRaisedClientWasMinimized = lastRaisedClient->isMinimized()) )
+            //         lastRaisedClient->setMinimized( false );
+            TabBoxClientList order = q->stackingOrder();
+            int succIdx = order.indexOf( lastRaisedClient ) + 1; // this is likely related to the index parameter?!
+            lastRaisedClientSucc = ( succIdx < order.count() ) ? order.at( succIdx ) : 0;
+            q->raiseClient( lastRaisedClient );
+            }
+        }
+
+    WId wId;
+    QVector< WId > data;
+    if ( config.isShowTabBox() )
+    {
+        wId = view->winId();
+        data.resize(2);
+        data[ 1 ] = wId;
+    }
+    else
+    {
+        wId = QX11Info::appRootWindow();
+        data.resize(1);
+    }
+    data[ 0 ] = currentClient ? currentClient->window() : 0L;
     if( config.isShowOutline() )
         {
         data.resize( 6 );
@@ -248,12 +288,16 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
                     reinterpret_cast<unsigned char *>(data.data()), data.size());
     }
 
-void TabBoxHandlerPrivate::endHighlightWindows()
+void TabBoxHandlerPrivate::endHighlightWindows( bool abort )
     {
+    if ( abort && lastRaisedClient && lastRaisedClientSucc )
+        q->restack( lastRaisedClient, lastRaisedClientSucc );
+    lastRaisedClient = 0;
+    lastRaisedClientSucc = 0;
     // highlight windows
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
-    XDeleteProperty( dpy, view->winId(), atom );
+    XDeleteProperty( dpy, config.isShowTabBox() ? view->winId() : QX11Info::appRootWindow(), atom );
     }
 
 /***********************************************************
@@ -411,7 +455,7 @@ TabBoxHandler::TabBoxHandler()
     : QObject()
     {
     KWin::TabBox::tabBox = this;
-    d = new TabBoxHandlerPrivate;
+    d = new TabBoxHandlerPrivate( this );
     }
 
 TabBoxHandler::~TabBoxHandler()
@@ -448,6 +492,8 @@ void TabBoxHandler::setConfig( const TabBoxConfig& config )
 void TabBoxHandler::show()
     {
     d->isShown = true;
+    d->lastRaisedClient = 0;
+    d->lastRaisedClientSucc = 0;
     // show the outline
     if( d->config.isShowOutline() )
         {
@@ -457,19 +503,19 @@ void TabBoxHandler::show()
         {
         d->view->show();
         d->view->updateGeometry();
-        if( d->config.isHighlightWindows() )
-            {
-            d->updateHighlightWindows();
-            }
+        }
+    if( d->config.isHighlightWindows() )
+        {
+        d->updateHighlightWindows();
         }
     }
 
-void TabBoxHandler::hide()
+void TabBoxHandler::hide( bool abort )
     {
     d->isShown = false;
     if( d->config.isHighlightWindows() )
         {
-        d->endHighlightWindows();
+        d->endHighlightWindows( abort );
         }
     if( d->config.isShowOutline() )
         {
@@ -577,7 +623,7 @@ void TabBoxHandler::setCurrentIndex( const QModelIndex& index )
             {
             d->updateOutline();
             }
-        if( d->config.isShowTabBox() && d->config.isHighlightWindows() )
+        if( d->config.isHighlightWindows() )
             {
             d->updateHighlightWindows();
             }

@@ -129,10 +129,12 @@ void HighlightWindowEffect::windowDeleted( EffectWindow* w )
 
 void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
     {
-    if( !w || a != m_atom )
+    if( a != m_atom )
         return; // Not our atom
 
-    QByteArray byteData = w->readProperty( m_atom, m_atom, 32 );
+    // if the window is null, the property was set on the root window - see events.cpp
+    QByteArray byteData = w ? w->readProperty( m_atom, m_atom, 32 ) :
+                              effects->readRootProperty( m_atom, m_atom, 32 );
     if( byteData.length() < 1 )
         { // Property was removed, clearing highlight
         finishHighlighting();
@@ -174,7 +176,8 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
         return;
         }
     prepareHighlighting();
-    m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
+    if( w )
+        m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
 
     /* TODO: Finish thumbnails of offscreen windows, not sure if it's worth it though
     if( !m_highlightedWindow->isOnCurrentDesktop() )

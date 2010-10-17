@@ -158,6 +158,7 @@ class Workspace : public QObject, public KDecorationDefines
         void raiseClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void lowerClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void restackClientUnderActive( Client* );
+        void restack( Client *c, Client *under );
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client* );
         void restoreSessionStackingOrder( Client* c );
@@ -358,7 +359,7 @@ class Workspace : public QObject, public KDecorationDefines
         int previousDesktopStatic( int iDesktop ) const;
         void refTabBox();
         void unrefTabBox();
-        void closeTabBox();
+        void closeTabBox( bool abort = false );
 
         // Tabbing
         void addClientGroup( ClientGroup* group );
