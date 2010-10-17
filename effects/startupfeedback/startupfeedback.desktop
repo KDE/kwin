@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Startup Feedback
+Name[x-test]=xxStartup Feedbackxx
 Comment=Helper effect for startup feedback
+Comment[x-test]=xxHelper effect for startup feedbackxx
 Icon=preferences-system-windows-effect-startupfeedback
 
 Type=Service
