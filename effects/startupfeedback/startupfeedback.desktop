@@ -1,7 +1,13 @@
 [Desktop Entry]
 Name=Startup Feedback
+Name[pt]=Reacção ao Arranque
+Name[sv]=Gensvar vid programstart
+Name[uk]=Повідомлення під час запуску
 Name[x-test]=xxStartup Feedbackxx
 Comment=Helper effect for startup feedback
+Comment[pt]=Efeito auxiliar de reacção ao arranque
+Comment[sv]=Hjälpeffekt för gensvar vid programstart
+Comment[uk]=Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску
 Comment[x-test]=xxHelper effect for startup feedbackxx
 Icon=preferences-system-windows-effect-startupfeedback
 
