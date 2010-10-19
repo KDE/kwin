@@ -57,7 +57,7 @@ namespace Oxygen
 
             //! constructor
             explicit Button(Client &parent,
-            const QString &tip=NULL,
+            const QString &tip=QString(),
             ButtonType type=ButtonHelp );
 
         //! destructor
