@@ -464,6 +464,20 @@ void DesktopGridEffect::windowClosed( EffectWindow* w )
     effects->addRepaintFull();
     }
 
+void DesktopGridEffect::windowDeleted( EffectWindow* w )
+    {
+    for( QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
+         it != m_desktopButtonsViews.end(); ++it )
+        {
+        if( it.value() && it.value() == w )
+            {
+            it.key()->deleteLater();
+            m_desktopButtonsViews.erase( it );
+            break;
+            }
+        }
+    }
+
 void DesktopGridEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
     {
     Q_UNUSED( old )
@@ -1325,14 +1339,15 @@ void DesktopGridEffect::finish()
             }
         m_proxy = 0;
         }
-    while( !m_desktopButtonsViews.isEmpty() )
+    
+    QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
+    while (i != m_desktopButtonsViews.end())
         {
-        DesktopButtonsView* view = m_desktopButtonsViews.begin().key();
-        m_desktopButtonsViews[ view ]->unrefWindow();
-        m_desktopButtonsViews[ view ] = 0;
-        m_desktopButtonsViews.remove( view );
-        delete view;
-        view = 0;
+        if( *i && (*i)->isDeleted() )
+            (*i)->unrefWindow();
+        DesktopButtonsView *view = i.key();
+        i = m_desktopButtonsViews.erase(i);
+        view->deleteLater();
         }
     }
 
