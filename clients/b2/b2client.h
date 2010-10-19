@@ -51,7 +51,7 @@ class B2Client;
 class B2Button : public QAbstractButton
 {
 public:
-    explicit B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = Qt::LeftButton);
+    explicit B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=QString(), const int realizeBtns = Qt::LeftButton);
     ~B2Button() {}
 
     void setBg(const QColor &c){bg = c;}
