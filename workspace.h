@@ -318,6 +318,7 @@ class Workspace : public QObject, public KDecorationDefines
         int currentDesktop_;
         QString activity_;
         QStringList allActivities_;
+        QStringList openActivities_;
         bool desktopLayoutDynamicity_;
 
         KActivityController activityController_;
@@ -420,6 +421,8 @@ class Workspace : public QObject, public KDecorationDefines
         void performWindowOperation( Client* c, WindowOperation op );
 
         void storeSession( KConfig* config, SMSavePhase phase );
+        void storeClient( KConfigGroup &cg, int num, Client *c );
+        void storeSubSession( const QString &name, QSet<QByteArray> sessionIds );
 
         SessionInfo* takeSessionInfo( Client* );
         WindowRules findWindowRules( const Client*, bool );
@@ -446,6 +449,8 @@ class Workspace : public QObject, public KDecorationDefines
         void toggleTiling();
         void nextTileLayout();
         void previousTileLayout();
+        void storeActivity( const QString &id );
+        void loadActivity( const QString &id );
 
         void setCurrentScreen( int new_screen );
 
@@ -875,6 +880,9 @@ class Workspace : public QObject, public KDecorationDefines
         Client* active_popup_client;
 
         void loadSessionInfo();
+        void addSessionInfo( KConfigGroup &cg );
+        void loadSubSessionInfo( const QString &name );
+
         void loadWindowRules();
         void editWindowRules( Client* c, bool whole_app );
 

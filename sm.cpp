@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
+#include <QDBusInterface>
 #include <QSocketNotifier>
 #include <QSessionManager>
 #include <kdebug.h>
@@ -106,47 +107,8 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
         count++;
         if( c->isActive())
             active_client = count;
-        QString n = QString::number(count);
         if( phase == SMSavePhase2 || phase == SMSavePhase2Full )
-            {
-            cg.writeEntry( QString("sessionId")+n, sessionId.constData() );
-            cg.writeEntry( QString("windowRole")+n, c->windowRole().constData() );
-            cg.writeEntry( QString("wmCommand")+n, wmCommand.constData() );
-            cg.writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).constData() );
-            cg.writeEntry( QString("resourceName")+n, c->resourceName().constData() );
-            cg.writeEntry( QString("resourceClass")+n, c->resourceClass().constData() );
-            cg.writeEntry( QString("geometry")+n, QRect( c->calculateGravitation(true), c->clientSize() ) ); // FRAME
-            cg.writeEntry( QString("restore")+n, c->geometryRestore() );
-            cg.writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
-            cg.writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
-            cg.writeEntry( QString("fullscreen")+n, (int) c->fullScreenMode() );
-            cg.writeEntry( QString("desktop")+n, c->desktop() );
-    	    // the config entry is called "iconified" for back. comp. reasons
-            // (kconf_update script for updating session files would be too complicated)
-            cg.writeEntry( QString("iconified")+n, c->isMinimized() );
-            cg.writeEntry( QString("opacity")+n, c->opacity() );
-            // the config entry is called "sticky" for back. comp. reasons
-            cg.writeEntry( QString("sticky")+n, c->isOnAllDesktops() );
-            cg.writeEntry( QString("shaded")+n, c->isShade() );
-            // the config entry is called "staysOnTop" for back. comp. reasons
-            cg.writeEntry( QString("staysOnTop")+n, c->keepAbove() );
-            cg.writeEntry( QString("keepBelow")+n, c->keepBelow() );
-            cg.writeEntry( QString("skipTaskbar")+n, c->skipTaskbar( true ) );
-            cg.writeEntry( QString("skipPager")+n, c->skipPager() );
-            cg.writeEntry( QString("skipSwitcher")+n, c->skipSwitcher() );
-            // not really just set by user, but name kept for back. comp. reasons
-            cg.writeEntry( QString("userNoBorder")+n, c->noBorder() );
-            cg.writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
-            cg.writeEntry( QString("shortcut")+n, c->shortcut().toString());
-            cg.writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
-            int group = 0;
-            if( c->clientGroup() )
-                group = c->clientGroup()->clients().count() > 1 ?
-                    // KConfig doesn't support long so we need to live with less precision on 64-bit systems
-                    static_cast<int>( reinterpret_cast<long>( c->clientGroup() )) : 0;
-            cg.writeEntry( QString("clientGroup")+n, group );
-            cg.writeEntry( QString("activities")+n, c->activities() );
-            }
+            storeClient(cg, count, c);
         }
     if( phase == SMSavePhase0 )
         {
@@ -170,6 +132,140 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
         }
     }
 
+void Workspace::storeClient( KConfigGroup &cg, int num, Client *c )
+    {
+    QString n = QString::number(num);
+    cg.writeEntry( QString("sessionId")+n, c->sessionId().constData() );
+    cg.writeEntry( QString("windowRole")+n, c->windowRole().constData() );
+    cg.writeEntry( QString("wmCommand")+n, c->wmCommand().constData() );
+    cg.writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).constData() );
+    cg.writeEntry( QString("resourceName")+n, c->resourceName().constData() );
+    cg.writeEntry( QString("resourceClass")+n, c->resourceClass().constData() );
+    cg.writeEntry( QString("geometry")+n, QRect( c->calculateGravitation(true), c->clientSize() ) ); // FRAME
+    cg.writeEntry( QString("restore")+n, c->geometryRestore() );
+    cg.writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
+    cg.writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
+    cg.writeEntry( QString("fullscreen")+n, (int) c->fullScreenMode() );
+    cg.writeEntry( QString("desktop")+n, c->desktop() );
+    // the config entry is called "iconified" for back. comp. reasons
+    // (kconf_update script for updating session files would be too complicated)
+    cg.writeEntry( QString("iconified")+n, c->isMinimized() );
+    cg.writeEntry( QString("opacity")+n, c->opacity() );
+    // the config entry is called "sticky" for back. comp. reasons
+    cg.writeEntry( QString("sticky")+n, c->isOnAllDesktops() );
+    cg.writeEntry( QString("shaded")+n, c->isShade() );
+    // the config entry is called "staysOnTop" for back. comp. reasons
+    cg.writeEntry( QString("staysOnTop")+n, c->keepAbove() );
+    cg.writeEntry( QString("keepBelow")+n, c->keepBelow() );
+    cg.writeEntry( QString("skipTaskbar")+n, c->skipTaskbar( true ) );
+    cg.writeEntry( QString("skipPager")+n, c->skipPager() );
+    cg.writeEntry( QString("skipSwitcher")+n, c->skipSwitcher() );
+    // not really just set by user, but name kept for back. comp. reasons
+    cg.writeEntry( QString("userNoBorder")+n, c->noBorder() );
+    cg.writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
+    cg.writeEntry( QString("shortcut")+n, c->shortcut().toString());
+    cg.writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
+    int group = 0;
+    if( c->clientGroup() )
+        group = c->clientGroup()->clients().count() > 1 ?
+        // KConfig doesn't support long so we need to live with less precision on 64-bit systems
+        static_cast<int>( reinterpret_cast<long>( c->clientGroup() )) : 0;
+    cg.writeEntry( QString("clientGroup")+n, group );
+    cg.writeEntry( QString("activities")+n, c->activities() );
+    }
+
+void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
+    {
+    //TODO clear it first
+    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + name);
+    int count =  0;
+    int active_client = -1;
+    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) 
+        {
+        Client* c = (*it);
+        QByteArray sessionId = c->sessionId();
+        QByteArray wmCommand = c->wmCommand();
+        if ( sessionId.isEmpty() )
+        // remember also applications that are not XSMP capable
+        // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
+            if ( wmCommand.isEmpty() )
+                continue;
+        if (!sessionIds.contains(sessionId))
+            continue;
+
+        kDebug() << "storing" << sessionId;
+        count++;
+        if( c->isActive())
+            active_client = count;
+        storeClient(cg, count, c);
+        }
+    cg.writeEntry( "count", count );
+    cg.writeEntry( "active", active_client );
+    //cg.writeEntry( "desktop", currentDesktop());
+    }
+
+void Workspace::storeActivity(const QString &id)
+    {
+    //TODO check if it's already closed
+    QSet<QByteArray> saveSessionIds;
+    QSet<QByteArray> dontCloseSessionIds;
+    kDebug() << id;
+    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) 
+        {
+        Client* c = (*it);
+        QByteArray sessionId = c->sessionId();
+        if ( sessionId.isEmpty() )
+            continue; //TODO support old wm_command apps too?
+
+        kDebug() << sessionId;
+
+        //if it's on the activity that's closing, it needs saving
+        //but if a process is on some other open activity, I don't wanna close it yet
+        //this is, of course, complicated by a process having many windows.
+        if (c->isOnAllActivities())
+            {
+            dontCloseSessionIds << sessionId;
+            continue;
+            }
+        QStringList activities = c->activities();
+        foreach (const QString &activityId, activities)
+            {
+            if (activityId == id)
+                saveSessionIds << sessionId;
+            else if (openActivities_.contains(activityId))
+                dontCloseSessionIds << sessionId;
+            }
+        }
+
+    storeSubSession(id, saveSessionIds);
+
+    QStringList saveAndClose;
+    QStringList saveOnly;
+    foreach (const QByteArray &sessionId, saveSessionIds)
+        {
+        if (dontCloseSessionIds.contains(sessionId))
+            saveOnly << sessionId;
+        else
+            saveAndClose << sessionId;
+        }
+
+    kDebug() << "saveActivity" << id << saveAndClose << saveOnly;
+
+    openActivities_.removeOne(id); //FIXME it's not closed until ksmserver says it's closed
+
+    //pass off to ksmserver
+    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
+    if (ksmserver.isValid())
+        {
+        QDBusMessage reply = ksmserver.call("saveSubSession", id, saveAndClose, saveOnly);
+        if (reply.type() == QDBusMessage::ErrorMessage)
+            kDebug() << "dbus error:" << reply.errorMessage();
+        else
+            kDebug() << "dbus succeeded";
+        }
+    else
+        kDebug() << "couldn't get ksmserver interface";
+    }
 
 /*!
   Loads the session information from the config file.
@@ -183,6 +279,11 @@ void Workspace::loadSessionInfo()
 
     setTilingEnabled( cg.readEntry( "tiling", false ) );
 
+    addSessionInfo(cg);
+    }
+
+void Workspace::addSessionInfo(KConfigGroup &cg)
+    {
     int count =  cg.readEntry( "count",0 );
     int active_client = cg.readEntry( "active",0 );
     for ( int i = 1; i <= count; i++ ) 
@@ -220,6 +321,35 @@ void Workspace::loadSessionInfo()
         info->clientGroupClient = NULL;
         info->activities = cg.readEntry( QString("activities")+n, QStringList() );
         }
+    }
+
+void Workspace::loadSubSessionInfo(const QString &name)
+    {
+    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + name);
+    addSessionInfo(cg);
+    }
+
+void Workspace::loadActivity(const QString &id)
+    {
+    if (!allActivities_.contains(id))
+        return; //bogus id
+    if (openActivities_.contains(id))
+        return; //already open
+
+    openActivities_ << id;
+    loadSubSessionInfo(id);
+
+    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
+    if (ksmserver.isValid())
+        {
+        QDBusMessage reply = ksmserver.call("restoreSubSession", id);
+        if (reply.type() == QDBusMessage::ErrorMessage)
+            kDebug() << "dbus error:" << reply.errorMessage();
+        else
+            kDebug() << "dbus succeeded";
+        }
+    else
+        kDebug() << "couldn't get ksmserver interface";
     }
 
 /*!
