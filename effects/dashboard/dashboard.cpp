@@ -26,6 +26,8 @@ KWIN_EFFECT(dashboard, DashboardEffect)
 
 DashboardEffect::DashboardEffect()
     : transformWindow( false )
+    , activateAnimation( false )
+    , deactivateAnimation( false )
 {
     // propagate that the effect is loaded
     propagate();
@@ -63,19 +65,38 @@ void DashboardEffect::reconfigure( ReconfigureFlags )
 
     brightness = config.readEntry("Brightness", "50");
     saturation = config.readEntry("Saturation", "50");
+    duration = config.readEntry("Duration", "500");
+
     blur = config.readEntry("Blur", false);
+
+    timeline.setDuration( animationTime( duration.toInt() ) );
     }
 
 void DashboardEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( transformWindow && ( w != window ) && w->isManaged() )
         {
+        brightnessDelta = (1 - (brightness.toDouble() / 100));
+        saturationDelta = (1 - (saturation.toDouble() / 100));
+
         // dashboard active, transform other windows
-        data.brightness = brightness.toDouble() / 100;
-        data.saturation = saturation.toDouble() / 100;
+        data.brightness *= (1 - (brightnessDelta * timeline.value()));
+        data.saturation *= (1 - (saturationDelta * timeline.value()));
         }
 
     effects->paintWindow( w, mask, region, data );
+    }
+
+void DashboardEffect::prePaintScreen( ScreenPrePaintData& data, int time )
+    {
+    if( transformWindow )
+        {
+        if( activateAnimation )
+            timeline.addTime( time );
+        if( deactivateAnimation )
+            timeline.removeTime( time );
+        }
+    effects->prePaintScreen(data, time);
     }
 
 void DashboardEffect::postPaintScreen()
@@ -86,6 +107,25 @@ void DashboardEffect::postPaintScreen()
             {
             retransformWindow = false;
             transformWindow = false;
+            effects->addRepaintFull();
+            }
+
+        if( activateAnimation )
+            {
+            if( timeline.value() == 1.0 )
+                activateAnimation = false;
+
+            effects->addRepaintFull();
+            }
+
+        if( deactivateAnimation )
+            {
+            if( timeline.value() == 0.0 )
+                {
+                deactivateAnimation = false;
+                transformWindow = false;
+                }
+
             effects->addRepaintFull();
             }
         }
@@ -142,6 +182,11 @@ void DashboardEffect::windowAdded( EffectWindow* w )
         {                                                                                  
         // Tell other windowAdded() effects to ignore this window                          
         w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+
+        activateAnimation = true;
+        deactivateAnimation = false;
+        timeline.setProgress( 0.0 );
+
 	w->addRepaintFull();                                                               
         }   
     }       

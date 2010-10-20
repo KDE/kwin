@@ -36,6 +36,7 @@ class DashboardEffect : public KWin::Effect
         DashboardEffect();
         ~DashboardEffect();
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void postPaintScreen();
         virtual void propagate();
         virtual void reconfigure( ReconfigureFlags );
@@ -48,9 +49,15 @@ class DashboardEffect : public KWin::Effect
         bool isDashboard( EffectWindow* w );
         bool transformWindow;
         bool retransformWindow;
+        bool activateAnimation;
+        bool deactivateAnimation;
+        TimeLine timeline;
         long atom;
         QString brightness;
+        double brightnessDelta;
         QString saturation;
+        double saturationDelta;
+        QString duration;
         EffectWindow* window;
     };
 

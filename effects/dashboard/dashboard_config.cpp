@@ -32,6 +32,7 @@ DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList
 
     connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
     connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
+    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
     connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(valueChanged(int)));
 
     load();
@@ -52,6 +53,9 @@ void DashboardEffectConfig::load()
     QString saturation = config.readEntry("Saturation", "5");
     ui.saturation->setValue(saturation.toInt());
 
+    QString duration = config.readEntry("Duration", "500");
+    ui.duration->setValue(duration.toInt());
+
     bool blur = config.readEntry("Blur", false);
     ui.blur->setChecked(blur);
 
@@ -66,6 +70,7 @@ void DashboardEffectConfig::save()
 
     config.writeEntry("Brightness", ui.brightness->value());
     config.writeEntry("Saturation", ui.saturation->value());
+    config.writeEntry("Duration", ui.duration->value());
     config.writeEntry("Blur", ui.blur->isChecked());
 
     config.sync();
