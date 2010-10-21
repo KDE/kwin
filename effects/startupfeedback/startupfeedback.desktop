@@ -6,6 +6,7 @@ Name[pt]=Reacção ao Arranque
 Name[sv]=Gensvar vid programstart
 Name[uk]=Повідомлення під час запуску
 Name[x-test]=xxStartup Feedbackxx
+Name[zh_TW]=程式啟動回饋
 Comment=Helper effect for startup feedback
 Comment[et]=Käivitamise tagasiside abiefekt
 Comment[ia]=Effecto de adjutante pro retorno de lanceamento
@@ -13,6 +14,7 @@ Comment[pt]=Efeito auxiliar de reacção ao arranque
 Comment[sv]=Hjälpeffekt för gensvar vid programstart
 Comment[uk]=Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску
 Comment[x-test]=xxHelper effect for startup feedbackxx
+Comment[zh_TW]=啟動回饋效果
 Icon=preferences-system-windows-effect-startupfeedback
 
 Type=Service
