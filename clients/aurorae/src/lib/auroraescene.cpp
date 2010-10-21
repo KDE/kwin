@@ -34,12 +34,13 @@
 // KDE
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/PaintUtils>
+#include <KDE/Plasma/ToolTipManager>
 
 namespace Aurorae {
 
 AuroraeScene::AuroraeScene(Aurorae::AuroraeTheme* theme, const QString& leftButtons,
                            const QString& rightButtons, bool contextHelp, QObject* parent)
-    : QGraphicsScene(parent)
+    : Plasma::Corona(parent)
     , m_theme(theme)
     , m_leftButtons(0)
     , m_rightButtons(0)
@@ -786,13 +787,7 @@ void AuroraeScene::setButtons(const QString &left, const QString &right)
 
 void AuroraeScene::setCaption(const QString &caption, int index)
 {
-    foreach (QGraphicsItem *item, items()) {
-        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
-            if (tab->index() == index) {
-                tab->setCaption(caption);
-            }
-        }
-    }
+    setTabData(AuroraeTabData(caption), index);
 }
 
 void AuroraeScene::setCaptions(const QStringList &captions)
@@ -806,9 +801,38 @@ void AuroraeScene::setCaptions(const QStringList &captions)
     }
 }
 
+void AuroraeScene::setTabData(const AuroraeTabData &data, int index)
+{
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            if (tab->index() == index) {
+                tab->setCaption(data.caption());
+            }
+        }
+    }
+}
+
+void AuroraeScene::setAllTabData(const QList< AuroraeTabData >& data)
+{
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
+            if (tab->index() < data.size()) {
+                const AuroraeTabData &datum = data[tab->index()];
+                tab->setCaption(datum.caption());
+                tab->setIcon(datum.icon());
+            }
+        }
+    }
+}
+
 void AuroraeScene::addTab(const QString &caption)
 {
-    AuroraeTab *tab = new AuroraeTab(m_theme, caption, m_tabCount);
+    addTab(AuroraeTabData(caption));
+}
+
+void AuroraeScene::addTab(const Aurorae::AuroraeTabData &data)
+{
+    AuroraeTab *tab = new AuroraeTab(m_theme, data.caption(), m_tabCount);
     ++m_tabCount;
     connect(this, SIGNAL(activeChanged()), tab, SLOT(activeChanged()));
     connect(tab, SIGNAL(mouseButtonPress(QGraphicsSceneMouseEvent*,int)),
@@ -824,6 +848,9 @@ void AuroraeScene::addTab(const QString &caption)
     foreach (QGraphicsItem *item, items()) {
         if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
             tab->activeChanged();
+            if (m_tabCount > 1) {
+                Plasma::ToolTipManager::self()->registerWidget(tab);
+            }
         }
     }
 }
@@ -832,6 +859,13 @@ void AuroraeScene::addTabs(const QStringList &captions)
 {
     foreach (const QString &caption, captions) {
         addTab(caption);
+    }
+}
+
+void AuroraeScene::addTabs(const QList< AuroraeTabData > &data)
+{
+    foreach (const AuroraeTabData &datum, data) {
+        addTab(datum);
     }
 }
 
@@ -855,6 +889,9 @@ void AuroraeScene::removeLastTab()
     foreach (QGraphicsItem *item, items()) {
         if (AuroraeTab *tab = dynamic_cast<AuroraeTab*>(item)) {
             tab->activeChanged();
+            if (m_tabCount == 1) {
+                Plasma::ToolTipManager::self()->unregisterWidget(tab);
+            }
         }
     }
 }
@@ -1053,6 +1090,55 @@ const QString& AuroraeScene::leftButtons() const
 const QString &AuroraeScene::rightButtons() const
 {
     return m_rightButtonOrder;
+}
+
+/*************************************************
+ * AuroraeTabData
+ ************************************************/
+AuroraeTabData::AuroraeTabData()
+{
+}
+
+AuroraeTabData::AuroraeTabData(const QString& caption)
+    : m_caption(caption)
+{
+}
+
+AuroraeTabData::AuroraeTabData(const QString &caption, const QIcon &icon, WId wId)
+    : m_caption(caption)
+    , m_icon(icon)
+    , m_wId(wId)
+{
+}
+
+QString AuroraeTabData::caption() const
+{
+    return m_caption;
+}
+
+QIcon AuroraeTabData::icon() const
+{
+    return m_icon;
+}
+
+void AuroraeTabData::setCaption(const QString &caption)
+{
+    m_caption = caption;
+}
+
+void AuroraeTabData::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
+}
+
+void AuroraeTabData::setWId(WId wid)
+{
+    m_wId = wid;
+}
+
+WId AuroraeTabData::wId() const
+{
+    return m_wId;
 }
 
 } // namespace

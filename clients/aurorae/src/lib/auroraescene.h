@@ -22,7 +22,7 @@
 #define AURORAE_AURORAESCENE_H
 // #include "libaurorae_export.h"
 
-#include <QtGui/QGraphicsScene>
+#include <Plasma/Corona>
 #include <kdecoration.h>
 
 class QGraphicsLayout;
@@ -33,7 +33,26 @@ class QPropertyAnimation;
 namespace Aurorae {
 class AuroraeTheme;
 
-class /*LIBAURORAE_EXPORT*/ AuroraeScene : public QGraphicsScene
+class AuroraeTabData
+{
+public:
+    AuroraeTabData();
+    AuroraeTabData(const QString &caption);
+    AuroraeTabData(const QString &caption, const QIcon &icon, WId wid = 0);
+    QString caption() const;
+    void setCaption(const QString &caption);
+    QIcon icon() const;
+    void setIcon(const QIcon &icon);
+    WId wId() const;
+    void setWId(WId wid);
+
+private:
+    QString m_caption;
+    QIcon m_icon;
+    WId m_wId;
+};
+
+class /*LIBAURORAE_EXPORT*/ AuroraeScene : public Plasma::Corona
 {
     Q_OBJECT
     Q_PROPERTY(qreal animation READ animationProgress WRITE setAnimationProgress)
@@ -78,13 +97,36 @@ public:
     */
     void setCaptions(const QStringList &captions);
     /**
+     * Updates the tab data for the decoration with given index.
+     * @param data The new AuroraeTabData
+     * @param index The index of the tab
+     * @since 4.6
+     */
+    void setTabData(const AuroraeTabData &data, int index = 0);
+    /**
+     * Updates the tab data for all tabs
+     * @param data The new AuroraeTabData
+     * @since 4.6
+     */
+    void setAllTabData(const QList<AuroraeTabData> &data);
+    /**
     * Adds a tab with given caption to the end of the tab list.
     */
     void addTab(const QString &caption);
     /**
+     * Adds a tab with given tab data to the end of the tab list.
+     * @since 4.6
+     */
+    void addTab(const AuroraeTabData &data);
+    /**
     * Adds a tab for each of the given captions to the end of the tab list.
     */
     void addTabs(const QStringList &captions);
+    /**
+     * Adds a tab for each of the given AuroraeTabData to the end of the tab list.
+     * @since 4.6
+     */
+    void addTabs(const QList<AuroraeTabData> &data);
     /**
     * Removes the last tab from the list, if there are at least two tabs.
     */

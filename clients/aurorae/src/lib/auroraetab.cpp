@@ -30,6 +30,7 @@
 #include <KDE/KGlobalSettings>
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/PaintUtils>
+#include <KDE/Plasma/ToolTipManager>
 
 namespace Aurorae
 {
@@ -48,6 +49,7 @@ AuroraeTab::AuroraeTab(AuroraeTheme* theme, const QString& caption, int index)
     if (m_theme->themeConfig().useTextShadow()) {
         setGraphicsEffect(m_effect);
     }
+    setAcceptHoverEvents(true);
     connect(m_theme, SIGNAL(buttonSizesChanged()), SLOT(buttonSizesChanged()));
 }
 
@@ -86,6 +88,11 @@ void AuroraeTab::setCaption(const QString& caption)
     m_caption = caption;
     updateGeometry();
     update();
+}
+
+void AuroraeTab::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
 }
 
 void AuroraeTab::setIndex(int index)
@@ -295,6 +302,16 @@ void AuroraeTab::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             emit tabRemoved(m_index);
         }
     }
+}
+
+void AuroraeTab::toolTipAboutToShow()
+{
+    Plasma::ToolTipContent data;
+    data.setMainText(m_caption);
+    if (!m_icon.isNull()) {
+        data.setImage(m_icon);
+    }
+    Plasma::ToolTipManager::self()->setContent(this, data);
 }
 
 } // namespace

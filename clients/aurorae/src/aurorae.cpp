@@ -425,11 +425,11 @@ void AuroraeClient::checkTabs(bool force)
     while (m_scene->tabCount() > clientGroupItems().count()) {
         m_scene->removeLastTab();
     }
-    QStringList captions;
+    QList<AuroraeTabData> data;
     foreach (const ClientGroupItem &item, clientGroupItems()) {
-        captions << item.title();
+        data << AuroraeTabData(item.title(), item.icon());
     }
-    m_scene->setCaptions(captions);
+    m_scene->setAllTabData(data);
     m_scene->setFocusedTab(visibleClientGroupItem());
 }
 

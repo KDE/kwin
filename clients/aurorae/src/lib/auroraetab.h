@@ -22,6 +22,7 @@
 #define AURORAE_AURORAETAB_H
 
 #include <QtGui/QGraphicsWidget>
+#include <QtGui/QIcon>
 
 class QGraphicsDropShadowEffect;
 namespace Aurorae {
@@ -35,6 +36,7 @@ public:
     virtual ~AuroraeTab();
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     void setCaption(const QString &caption);
+    void setIcon(const QIcon &icon);
     void setIndex(int index);
     int index() const {
         return m_index;
@@ -49,6 +51,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void activeChanged();
+    void toolTipAboutToShow();
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -69,6 +72,8 @@ private:
     long int m_uid;
     bool m_dragAllowed;
     bool m_clickInProgress;
+    QIcon m_icon;
+    WId m_winId;
 };
 
 }
