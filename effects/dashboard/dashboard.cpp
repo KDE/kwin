@@ -84,6 +84,19 @@ void DashboardEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         data.saturation *= (1 - (saturationDelta * timeline.value()));
         }
 
+    else if( transformWindow && ( w == window ) && w->isManaged() )
+        {
+        // transform dashboard        
+        if ((timeline.value() * 2) <= 1)
+            {
+            data.opacity *= timeline.value() * 2;
+            }
+        else
+            {
+            data.opacity *= 1;
+            }
+        }
+
     effects->paintWindow( w, mask, region, data );
     }
 
