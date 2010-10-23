@@ -38,14 +38,14 @@ class Workspace : public QObject
     {
         Q_OBJECT
         //Don't add WRITE for now. Access considerations
-        Q_PROPERTY( int currentDesktop READ currentDesktop );
+        Q_PROPERTY( int currentDesktop READ currentDesktop )
 
     private:
         static KWin::Workspace* centralObject;
         static SWrapper::Client* clientHolder;
         QScriptEngine* centralEngine;
 
-        Q_DISABLE_COPY(Workspace);
+        Q_DISABLE_COPY(Workspace)
 
     public slots:
         void sl_desktopPresenceChanged(KWin::Client*, int);
