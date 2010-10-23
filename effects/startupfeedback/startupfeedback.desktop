@@ -2,6 +2,8 @@
 Name=Startup Feedback
 Name[et]=Käivitamise tagasiside
 Name[ia]=Retorno de Lanceamento
+Name[nl]=Terugkoppeling van opstarten
+Name[pa]=ਸ਼ੁਰੂਆਤੀ ਫੀਡਬੈਕ
 Name[pt]=Reacção ao Arranque
 Name[sv]=Gensvar vid programstart
 Name[uk]=Повідомлення під час запуску
@@ -10,6 +12,7 @@ Name[zh_TW]=程式啟動回饋
 Comment=Helper effect for startup feedback
 Comment[et]=Käivitamise tagasiside abiefekt
 Comment[ia]=Effecto de adjutante pro retorno de lanceamento
+Comment[nl]=Effect van hulp bij terugkoppeling van opstarten
 Comment[pt]=Efeito auxiliar de reacção ao arranque
 Comment[sv]=Hjälpeffekt för gensvar vid programstart
 Comment[uk]=Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску
