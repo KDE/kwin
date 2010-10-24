@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Screenshot
+Name[ca]=Captura de pantalla
 Name[de]=Bildschirmfoto
 Name[en_GB]=Screenshot
 Name[es]=Captura de pantalla
@@ -27,6 +28,7 @@ Name[x-test]=xxScreenshotxx
 Name[zh_TW]=螢幕快照
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
+Comment[ca]=Desa una captura de pantalla de la finestra activa en el directori personal
 Comment[de]=Speichert ein Bildschirmfoto des aktiven Fensters im Persönlichen Ordner
 Comment[en_GB]=Saves screenshot of active window into the home directory
 Comment[es]=Guarda una captura de la ventana activa en la carpeta personal
