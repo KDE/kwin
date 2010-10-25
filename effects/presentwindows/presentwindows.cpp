@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include <assert.h>
 #include <limits.h>
+#include <QTimer>
 
 namespace KWin
 {
@@ -472,13 +473,15 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
         if( !m_closeView->isVisible() )
             {
             updateCloseWindow();
+            }
+        if( m_closeView->isVisible() )
+            {
+            const QPoint widgetPos = m_closeView->mapFromGlobal( me->pos() );
+            const QPointF scenePos = m_closeView->mapToScene( widgetPos );
+            QMouseEvent event( me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers() );
+            m_closeView->windowInputMouseEvent( &event );
             return;
             }
-        const QPoint widgetPos = m_closeView->mapFromGlobal( me->pos() );
-        const QPointF scenePos = m_closeView->mapToScene( widgetPos );
-        QMouseEvent event( me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers() );
-        m_closeView->windowInputMouseEvent( &event );
-        return;
         }
     // Which window are we hovering over? Always trigger as we don't always get move events before clicking
     // We cannot use m_motionManager.windowAtPoint() as the window might not be visible
@@ -1792,7 +1795,7 @@ void PresentWindowsEffect::updateCloseWindow()
     m_closeView->setGeometry( rect.x() + rect.width() - m_closeView->sceneRect().width(), rect.y(),
                                 m_closeView->sceneRect().width(), m_closeView->sceneRect().height() );
     if( rect.contains( effects->cursorPos() ) )
-        m_closeView->show();
+        m_closeView->delayedShow();
     else
         m_closeView->hide();
     }
@@ -2007,6 +2010,7 @@ void PresentWindowsEffect::globalShortcutChangedClass( const QKeySequence& seq )
 ************************************************/
 CloseWindowView::CloseWindowView( QWidget* parent )
     : QGraphicsView(parent)
+    , m_delayedShowTimer( new QTimer( this ))
     {
     setWindowFlags( Qt::X11BypassWindowManagerHint );
     setAttribute( Qt::WA_TranslucentBackground );
@@ -2045,10 +2049,17 @@ CloseWindowView::CloseWindowView( QWidget* parent )
     form->setPos( left, top );
     scene->setSceneRect( QRectF( QPointF( 0, 0 ), QSizeF( width, height ) ) );
     setScene( scene );
+
+    // setup the timer
+    m_delayedShowTimer->setSingleShot( true );
+    m_delayedShowTimer->setInterval( 500 );
+    connect( m_delayedShowTimer, SIGNAL(timeout()), SLOT(show()));
     }
 
 void CloseWindowView::windowInputMouseEvent( QMouseEvent* e )
     {
+    if( m_delayedShowTimer->isActive() )
+        return;
     if( e->type() == QEvent::MouseMove )
         {
         mouseMoveEvent( e );
@@ -2073,6 +2084,20 @@ void CloseWindowView::drawBackground( QPainter* painter, const QRectF& rect )
     painter->setRenderHint( QPainter::Antialiasing );
     m_frame->paintFrame( painter );
     }
+
+void CloseWindowView::hide()
+    {
+    m_delayedShowTimer->stop();
+    QWidget::hide();
+    }
+
+void CloseWindowView::delayedShow()
+    {
+    if( isVisible() || m_delayedShowTimer->isActive() )
+        return;
+    m_delayedShowTimer->start();
+    }
+
 
 } // namespace
 

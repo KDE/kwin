@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kshortcut.h>
 #include <QtGui/QGraphicsView>
 
+class QTimer;
 namespace Plasma
 {
 class PushButton;
@@ -44,12 +45,16 @@ class CloseWindowView : public QGraphicsView
         void windowInputMouseEvent( QMouseEvent* e );
         virtual void drawBackground( QPainter* painter, const QRectF& rect );
 
+        void delayedShow();
+        void hide();
+
     Q_SIGNALS:
         void close();
 
     private:
         Plasma::PushButton* m_closeButton;
         Plasma::FrameSvg* m_frame;
+        QTimer* m_delayedShowTimer;
     };
 
 /**
