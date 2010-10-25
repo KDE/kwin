@@ -1577,6 +1577,7 @@ DesktopButtonsView::DesktopButtonsView( QWidget* parent )
     qreal height = form->size().height() + top + bottom;
     m_frame->resizeFrame( QSizeF( width, height ) );
     Plasma::WindowEffects::enableBlurBehind( winId(), true, m_frame->mask() );
+    Plasma::WindowEffects::overrideShadow( winId(), true );
     form->setPos( left, top );
     scene->setSceneRect( QRectF( QPointF( 0, 0 ), QSizeF( width, height ) ) );
     setScene( scene );
