@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Startup Feedback
 Name[ca]=Reacció en iniciar
+Name[es]=Notificación de inicio
 Name[et]=Käivitamise tagasiside
 Name[ia]=Retorno de Lanceamento
 Name[nds]=Startmellen
@@ -13,6 +14,7 @@ Name[x-test]=xxStartup Feedbackxx
 Name[zh_TW]=程式啟動回饋
 Comment=Helper effect for startup feedback
 Comment[ca]=Efecte auxiliar de reacció en iniciar
+Comment[es]=Efecto de notificación de inicio
 Comment[et]=Käivitamise tagasiside abiefekt
 Comment[ia]=Effecto de adjutante pro retorno de lanceamento
 Comment[nds]=Hölpsche Startmellen
