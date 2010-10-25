@@ -27,7 +27,8 @@ void main()
     if(any(greaterThan(dist, rend-rstart)))
         discard;//alpha = 0.0;
 
-    vec4 transformedtexcoord = vec4(rstart + dist, vec2(1.0)) * gl_TextureMatrix[0];
+    vec2 const_1 = vec2(1.0); // Needed to work around a bug in the GLSL compiler in mesa 7.9
+    vec4 transformedtexcoord = vec4(rstart + dist, const_1) * gl_TextureMatrix[0];
     vec3 tex = texture2D(winTexture, transformedtexcoord.xy).rgb;
 #if 0
     // ATM we ignore custom opacity values because Fade effect fades out the
