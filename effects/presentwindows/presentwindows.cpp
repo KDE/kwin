@@ -420,9 +420,12 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
     w->refWindow();
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
-    rearrangeWindows();
     if( m_closeWindow == w )
+        {
         m_closeWindow = 0;
+        return; // don't rearrange
+        }
+    rearrangeWindows();
     }
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
@@ -1731,6 +1734,8 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
     if( !w->visibleInClientGroup() )
         return false;
     if( w->isSkipSwitcher() )
+        return false;
+    if( w == effects->findWindow( m_closeView->winId() ) )
         return false;
     switch( m_mode )
         {
