@@ -197,6 +197,7 @@ class Client
         bool noBorder() const;
         void setNoBorder( bool set );
         bool userCanSetNoBorder() const;
+        void checkNoBorder();
 
         bool skipTaskbar( bool from_outside = false ) const;
         void setSkipTaskbar( bool set, bool from_outside );

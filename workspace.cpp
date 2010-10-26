@@ -1094,6 +1094,8 @@ void Workspace::slotReconfigure()
     if( options->electricBorders() == Options::ElectricAlways )
         reserveElectricBorderSwitching( false );
 
+    bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
+
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
 
@@ -1175,6 +1177,20 @@ void Workspace::slotReconfigure()
         (*it)->setupWindowRules( true );
         (*it)->applyWindowRules();
         discardUsedWindowRules( *it, false );
+        }
+
+    if( borderlessMaximizedWindows != options->borderlessMaximizedWindows() &&
+            !options->borderlessMaximizedWindows() )
+        {
+        // in case borderless maximized windows option changed and new option
+        // is to have borders, we need to unset the borders for all maximized windows
+        for( ClientList::Iterator it = clients.begin();
+            it != clients.end();
+        ++it )
+            {
+            if( (*it)->maximizeMode() == MaximizeFull )
+                (*it)->checkNoBorder();
+            }
         }
 
     setTilingEnabled( options->tilingOn );

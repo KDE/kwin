@@ -727,6 +727,11 @@ void Client::setNoBorder( bool set )
     updateWindowRules();
     }
 
+void Client::checkNoBorder()
+    {
+    setNoBorder( app_noborder );
+    }
+
 void Client::updateShape()
     {
     if( shape() )
