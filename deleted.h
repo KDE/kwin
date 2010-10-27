@@ -50,7 +50,7 @@ class Deleted
         virtual void addRepaintFull(); // in composite.cpp
         QRect decorationRect() const;
     protected:
-        virtual void debug( kdbgstream& stream ) const;
+        virtual void debug( QDebug& stream ) const;
         virtual bool shouldUnredirect() const;
     private:
         Deleted( Workspace *ws ); // use create()

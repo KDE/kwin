@@ -57,7 +57,7 @@ Toplevel::~Toplevel()
     delete info;
     }
 
-kdbgstream& operator<<( kdbgstream& stream, const Toplevel* cl )
+QDebug& operator<<( QDebug& stream, const Toplevel* cl )
     {
     if( cl == NULL )
         return stream << "\'NULL\'";
@@ -65,7 +65,7 @@ kdbgstream& operator<<( kdbgstream& stream, const Toplevel* cl )
     return stream;
     }
 
-kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& list )
+QDebug& operator<<( QDebug& stream, const ToplevelList& list )
     {
     stream << "LIST:(";
     bool first = true;
@@ -82,7 +82,7 @@ kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& list )
     return stream;
     }
 
-kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& list )
+QDebug& operator<<( QDebug& stream, const ConstToplevelList& list )
     {
     stream << "LIST:(";
     bool first = true;

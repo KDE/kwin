@@ -152,10 +152,10 @@ class Toplevel
         void getWmClientMachine();
         void getResourceClass();
         void getWindowRole();
-        virtual void debug( kdbgstream& stream ) const = 0;
+        virtual void debug( QDebug& stream ) const = 0;
         void copyToDeleted( Toplevel* c );
         void disownDataPassedToDeleted();
-        friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
+        friend QDebug& operator<<( QDebug& stream, const Toplevel* );
         void deleteEffectWindow();
         virtual bool shouldUnredirect() const = 0;
         QRect geom;
@@ -442,9 +442,9 @@ inline bool Toplevel::unredirected() const
     return unredirect;
     }
 
-kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
-kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& );
-kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& );
+QDebug& operator<<( QDebug& stream, const Toplevel* );
+QDebug& operator<<( QDebug& stream, const ToplevelList& );
+QDebug& operator<<( QDebug& stream, const ConstToplevelList& );
 
 KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Toplevel, Window, cl->window() == value );
 KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value );

@@ -718,7 +718,7 @@ void Rules::discardUsed( bool withdrawn )
 
 #endif
 
-kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
+QDebug& operator<<( QDebug& stream, const Rules* r )
     {
     return stream << "[" << r->description << ":" << r->wmclass << "]" ;
     }

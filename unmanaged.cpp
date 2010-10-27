@@ -132,7 +132,7 @@ QRect Unmanaged::transparentRect() const
     return QRect(clientPos(), clientSize());
     }
 
-void Unmanaged::debug( kdbgstream& stream ) const
+void Unmanaged::debug( QDebug& stream ) const
     {
     stream << "\'ID:" << window() << "\'";
     }

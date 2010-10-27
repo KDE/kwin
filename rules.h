@@ -268,7 +268,7 @@ class Rules
         SetRule shortcutrule;
         bool disableglobalshortcuts;
         ForceRule disableglobalshortcutsrule;
-        friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
+        friend QDebug& operator<<( QDebug& stream, const Rules* );
     };
 
 #ifndef KCMRULES
@@ -329,7 +329,7 @@ void WindowRules::remove( Rules* rule )
 
 #endif
 
-kdbgstream& operator<<( kdbgstream& stream, const Rules* );
+QDebug& operator<<( QDebug& stream, const Rules* );
 
 } // namespace
 

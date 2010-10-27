@@ -44,7 +44,7 @@ class Unmanaged
         virtual QSize clientSize() const;
         virtual QRect transparentRect() const;
     protected:
-        virtual void debug( kdbgstream& stream ) const;
+        virtual void debug( QDebug& stream ) const;
         virtual bool shouldUnredirect() const;
     private:
         virtual ~Unmanaged(); // use release()

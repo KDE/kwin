@@ -2214,7 +2214,7 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
-void Client::debug( kdbgstream& stream ) const
+void Client::debug( QDebug& stream ) const
     {
     stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";

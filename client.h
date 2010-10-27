@@ -447,7 +447,7 @@ class Client
             bool ignoreMenu = false );
 
     protected:
-        virtual void debug( kdbgstream& stream ) const;
+        virtual void debug( QDebug& stream ) const;
         virtual bool shouldUnredirect() const;
 
     private slots:

@@ -68,7 +68,7 @@ struct RegionDebug
    XserverRegion rr;   
    };   
 
-kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
+QDebug& operator<<( QDebug& stream, RegionDebug r )
     {       
     if( r.rr == None )
         return stream << "EMPTY";

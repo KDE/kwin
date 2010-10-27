@@ -127,7 +127,7 @@ QSize Deleted::clientSize() const
     return contentsRect.size();
     }
 
-void Deleted::debug( kdbgstream& stream ) const
+void Deleted::debug( QDebug& stream ) const
     {
     stream << "\'ID:" << window() << "\' (deleted)";
     }
