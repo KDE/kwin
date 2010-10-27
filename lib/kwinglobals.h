@@ -76,14 +76,22 @@ enum ElectricMaximizingMode
 {
     ElectricMaximizeMode,
     ElectricLeftMode,
-    ElectricRightMode
+    ElectricRightMode,
+    ElectricTopLeftMode,
+    ElectricTopRightMode,
+    ElectricBottomLeftMode,
+    ElectricBottomRightMode
 };
 
 enum QuickTileMode
 {
     QuickTileNone,
     QuickTileLeft,
-    QuickTileRight
+    QuickTileRight,
+    QuickTileTopLeft,
+    QuickTileTopRight,
+    QuickTileBottomLeft,
+    QuickTileBottomRight
 };
 
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.

@@ -1451,16 +1451,52 @@ void Client::checkQuickTilingMaximizationZones( int xroot, int yroot )
         if( screen->geom().contains( QPoint( xroot, yroot )))
             {
             if( options->electricBorderTiling() &&
-                xroot <= screen->geom().x() + 20 )
+                xroot <= screen->geom().x() + 20 &&
+                yroot > screen->geom().y() + screen->geom().height()/4 &&
+                yroot < screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
                 {
                 setElectricBorderMode( ElectricLeftMode );
                 setElectricBorderMaximizing( true );
                 return;
                 }
             else if( options->electricBorderTiling() &&
-                xroot >= screen->geom().x() + screen->geom().width() - 20 )
+                xroot <= screen->geom().x() + 20 &&
+                yroot <= screen->geom().y() + screen->geom().height()/4 )
+                {
+                setElectricBorderMode( ElectricTopLeftMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            else if( options->electricBorderTiling() &&
+                xroot <= screen->geom().x() + 20 &&
+                yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
+                {
+                setElectricBorderMode( ElectricBottomLeftMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            else if( options->electricBorderTiling() &&
+                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                yroot > screen->geom().y() + screen->geom().height()/4 &&
+                yroot < screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
                 {
                 setElectricBorderMode( ElectricRightMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            else if( options->electricBorderTiling() &&
+                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                yroot <= screen->geom().y() + screen->geom().height()/4 )
+                {
+                setElectricBorderMode( ElectricTopRightMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            else if( options->electricBorderTiling() &&
+                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
+                {
+                setElectricBorderMode( ElectricBottomRightMode );
                 setElectricBorderMaximizing( true );
                 return;
                 }

@@ -2889,6 +2889,22 @@ void Client::finishMoveResize( bool cancel )
                 setQuickTileMode( QuickTileRight );
                 workspace()->restoreElectricBorderSize( ElectricRight );
                 break;
+            case ElectricTopLeftMode:
+                setQuickTileMode( QuickTileTopLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
+                break;
+            case ElectricTopRightMode:
+                setQuickTileMode( QuickTileTopRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
+                break;
+            case ElectricBottomLeftMode:
+                setQuickTileMode( QuickTileBottomLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
+                break;
+            case ElectricBottomRightMode:
+                setQuickTileMode( QuickTileBottomRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
+                break;
             }
         electricMaximizing = false;
         workspace()->hideElectricBorderWindowOutline();
@@ -2910,6 +2926,22 @@ void Client::finishMoveResize( bool cancel )
                 break;
             case ElectricRightMode:
                 setQuickTileMode( QuickTileRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
+                break;
+            case ElectricTopLeftMode:
+                setQuickTileMode( QuickTileTopLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
+                break;
+            case ElectricTopRightMode:
+                setQuickTileMode( QuickTileTopRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
+                break;
+            case ElectricBottomLeftMode:
+                setQuickTileMode( QuickTileBottomLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
+                break;
+            case ElectricBottomRightMode:
+                setQuickTileMode( QuickTileBottomRight );
                 workspace()->restoreElectricBorderSize( ElectricRight );
                 break;
             }
@@ -3408,6 +3440,30 @@ QRect Client::electricBorderMaximizeGeometry()
             ret = QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() );
             break;
             }
+        case ElectricTopLeftMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), workspace()->currentDesktop() );
+            ret = QRect( max.x(), max.y(), max.width()/2, max.height()/2 );
+            break;
+            }
+        case ElectricTopRightMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), workspace()->currentDesktop() );
+            ret =  QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height()/2 );
+            break;
+            }
+        case ElectricBottomLeftMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), workspace()->currentDesktop() );
+            ret = QRect( max.x(), max.y() + max.height()/2, max.width()/2, max.height()/2 );
+            break;
+            }
+        case ElectricBottomRightMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), workspace()->currentDesktop() );
+            ret = QRect( max.x() + max.width()/2, max.y() + max.height()/2, max.width()/2, max.height()/2 );
+            break;
+            }
         }
     return ret;
     }
@@ -3432,17 +3488,45 @@ void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
         quick_tile_mode = QuickTileNone;
 
         // Do the actual tile.
-        if( mode == QuickTileLeft )
+        switch( mode )
             {
-            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
-            setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+            case QuickTileLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            case QuickTileRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            case QuickTileTopLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileTopRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileBottomLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y() + max.height()/2, max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileBottomRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y() + max.height()/2, max.width()/2, max.height()/2 ) );
+                break;
+                }
             }
-        else
-            {
-            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
-            setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
-            }
-
         // Store the mode change
         quick_tile_mode = mode;
 
@@ -3514,17 +3598,45 @@ void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
         quick_tile_mode = QuickTileNone;
 
         // Do the actual tile.
-        if( mode == QuickTileLeft )
+        switch( mode )
             {
-            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
-            setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+            case QuickTileLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            case QuickTileRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            case QuickTileTopLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileTopRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileBottomLeft:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x(), max.y() + max.height()/2, max.width()/2, max.height()/2 ) );
+                break;
+                }
+            case QuickTileBottomRight:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y() + max.height()/2, max.width()/2, max.height()/2 ) );
+                break;
+                }
             }
-        else
-            {
-            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
-            setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
-            }
-
         // Store the mode change
         quick_tile_mode = mode;
         }
