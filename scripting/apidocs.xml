@@ -5,6 +5,12 @@
    <desc>Emitted when the user switches from a virtual desktop to another.</desc>
   </event>
   
+  <event name="clientSetKeepAbove" siganl="clientSetKeepAbove" wslot="sl_clientSetKeepAbove" wsignal="clientSetKeepAbove">
+   <param name="setabove_client" type="client">The Client whose 'Keep Above' property was set or cleared.</param>
+   <param name="set" type="boolean">Specifies if the property was set or cleared</param>
+   <desc>Emitted whenever a client's 'Keep Above' property is changed. setabove_client holds the client object of the client whose property was modified and the parameter 'set' is '1' if the 'Keep Above' was set, or '0' otherwise.</desc>
+  </event>
+  
   <method name="getAllClients">
    <return type="Array(client)"></return>
    <param name="desktop_no" type="integer">The desktop number belonging to which the clients are to be fetched.</param>
@@ -143,6 +149,11 @@
   
   <event name="clientMoved" signal="clientMoved" wslot="sl_clientMoved" wsignal="clientMoved">
    <desc>Emitted whenever the client is moved or it's geometry changed. This includes when a client is resized.</desc>
+  </event>
+  
+  <event name="onSetKeepAbove" signal="s_setKeepAbove" wslot="DIRECT_CONNECTION" wsignal="onSetKeepAbove">
+   <param name="set" type="boolean">Specifies whether the 'Keep Above' property was set or cleared.</param>
+   <desc>Emitted whenever the client's 'Keep Above' property is set or cleared. 'set' is 1 if the client was set to 'Keep Above', 0 otherwise. Equivalent to workspace.clientSetKeepAbove, but for a specific client. Use wherever possible instead of workspace.clientSetKeepAbove to improve performance.</desc>
   </event>
   
   <method name="close">

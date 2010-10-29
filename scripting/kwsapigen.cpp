@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     Q_UNUSED(argv)
 
     QDomDocument doc;
-    QFile loc("/home/kde-devel/kde/src/KDE/kdebase/workspace/kwin/scripting/apidocs.xml");
+    QFile loc(*(argv+1));
     QDomElement root;
     QVector<Class> classList;
 

@@ -68,6 +68,7 @@ class WorkspaceProxy : public QObject
         void sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
         void sl_killWindowCalled(KWin::Client*);
         void sl_clientFullScreenSet(KWin::Client*, bool, bool);
+        void sl_clientSetKeepAbove(KWin::Client*, bool);
 
     signals:
         void clientManaging(KWin::Client*);
@@ -76,6 +77,7 @@ class WorkspaceProxy : public QObject
         void clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
         void killWindowCalled(KWin::Client*);
         void clientFullScreenSet(KWin::Client*, bool, bool);
+        void clientSetKeepAbove(KWin::Client*, bool);
     };
 
 };

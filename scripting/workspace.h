@@ -60,6 +60,7 @@ class Workspace : public QObject
         void sl_clientActivated(KWin::Client*);
         void sl_groupAdded(KWin::Group*);
         void sl_clientFullScreenSet(KWin::Client*, bool, bool);
+        void sl_clientSetKeepAbove(KWin::Client*, bool);
 
     signals:
         void desktopPresenceChanged(QScriptValue, QScriptValue);
@@ -74,6 +75,7 @@ class Workspace : public QObject
         void killWindowCalled(QScriptValue);
         void clientActivated(QScriptValue);
         void clientFullScreenSet(QScriptValue, QScriptValue, QScriptValue);
+        void clientSetKeepAbove(QScriptValue, QScriptValue);
 
     public:
         Workspace(QObject* parent = 0);

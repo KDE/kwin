@@ -37,5 +37,6 @@ PROXYPASS1(clientMinimized, KWin::Client*)
 PROXYPASS1(clientUnminimized, KWin::Client*)
 PROXYPASS1(killWindowCalled, KWin::Client*)
 PROXYPASS2(clientMaximizeSet, KWin::Client*, DualBool)
+PROXYPASS2(clientSetKeepAbove, KWin::Client*, bool)
 
 PROXYPASS3(clientFullScreenSet, KWin::Client*, bool, bool)

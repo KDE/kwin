@@ -81,6 +81,10 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
         QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*, bool, bool)),
                          this, SLOT(sl_clientFullScreenSet(KWin::Client*, bool, bool))
                         );
+                        
+        QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*, bool)),
+                         this, SLOT(sl_clientSetKeepAbove(KWin::Client*, bool))
+                        );
 
 
         }
@@ -124,6 +128,20 @@ void SWrapper::Workspace::sl_clientFullScreenSet(KWin::Client* client, bool set,
                                  centralEngine->toScriptValue<bool>(set),
                                  centralEngine->toScriptValue<bool>(user)
                                 );
+        }
+    }
+    
+void SWrapper::Workspace::sl_clientSetKeepAbove(KWin::Client* client, bool set)
+    {
+    if(centralEngine == 0)
+        {
+        return;
+        }
+    else
+        {
+        emit clientSetKeepAbove(centralEngine->toScriptValue<KWin::Client*>(client),
+                                centralEngine->toScriptValue<bool>(set)
+                               );
         }
     }
 

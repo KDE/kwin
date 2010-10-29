@@ -30,6 +30,7 @@ SWrapper::Client::Client(KWin::Client* client) :
         QObject::connect(client, SIGNAL(s_minimized()), this, SIGNAL(minimized()));
         QObject::connect(client, SIGNAL(s_activated()), this, SIGNAL(gotFocus()));
         QObject::connect(client, SIGNAL(s_fullScreenSet(bool, bool)), this, SIGNAL(fullScreenSet(bool, bool)));
+        QObject::connect(client, SIGNAL(s_setKeepAbove(bool)), this, SIGNAL(onSetKeepAbove(bool)));
         QObject::connect(client, SIGNAL(s_unminimized()), this, SIGNAL(unminimized()));
         QObject::connect(this, SIGNAL(unminimized()), this, SIGNAL(restored()));
         }
@@ -150,6 +151,8 @@ SWrapper::ClientResolution SWrapper::Client::newWrapper(KWin::Client* client, QS
     value.setProperty("maximize", eng->newFunction(maximize, 0), QScriptValue::Undeletable);
     value.setProperty("setMaximize", eng->newFunction(setMaximize, 2), QScriptValue::Undeletable);
     value.setProperty("desktop", eng->newFunction(desktop, 0), QScriptValue::Undeletable);
+    value.setProperty("setKeepAbove", eng->newFunction(setKeepAbove, 0), QScriptValue::Undeletable);
+    value.setProperty("setKeepBelow", eng->newFunction(setKeepBelow, 0), QScriptValue::Undeletable);
 
     BOOLATTACHCLIENT(isShade)
     BOOLATTACHCLIENT(isShadeable)

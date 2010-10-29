@@ -113,6 +113,7 @@ class Client : public Toplevel
         void fullScreenSet(bool, bool);
         void unminimized();
         void restored();
+        void onSetKeepAbove(bool);
 
     public:
         Client(KWin::Client*);
