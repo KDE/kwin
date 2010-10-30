@@ -58,6 +58,7 @@ Name[zh_CN]=任务切换器
 Name[zh_TW]=工作切換器
 Comment=Configure the behavior for navigating through windows
 Comment[ia]=Configurar le comportamento pro navigar intra fenestras
+Comment[nl]=Het gedrag voor het door vensters wandelen configureren
 Comment[pt]=Configurar o comportamento de navegação pelas janelas
 Comment[pt_BR]=Configura o comportamento da navegação pelas janelas
 Comment[sv]=Anpassa beteendet för att navigera i fönster
