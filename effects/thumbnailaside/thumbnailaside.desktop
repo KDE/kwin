@@ -2,6 +2,7 @@
 Name=Thumbnail Aside
 Name[af]=Duimnael langsaan
 Name[ar]=مصغرات على الجانب
+Name[ast]=Miniatures llaterales
 Name[be@latin]=Padhlady akon
 Name[bg]=Странични умалени копия
 Name[ca]=Miniatures de costat
@@ -76,6 +77,7 @@ Name[zh_TW]=縮圖在旁邊
 Icon=preferences-system-windows-effect-thumbnailaside
 Comment=Display window thumbnails on the edge of the screen
 Comment[ar]=تعرض مصغرات النوافذ على حافة الشاشة
+Comment[ast]=Amuesa les miniatures de la ventana nel berbesu de la pantalla
 Comment[be@latin]=Pakazvaje padhlady akon na krai ekrana.
 Comment[bg]=Показване на умалени копия в края на екрана
 Comment[ca]=Mostra les miniatures de les finestres a la vora de la pantalla

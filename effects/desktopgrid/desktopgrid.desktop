@@ -2,6 +2,7 @@
 Name=Desktop Grid
 Name[af]=Werkskerm rooster
 Name[ar]=شبكة سطح المكتب
+Name[ast]=Rexella del escritoriu
 Name[be]=Сетка на працоўны стол
 Name[be@latin]=Rabočaja sietka
 Name[bg]=Мрежест работен плот
@@ -78,6 +79,7 @@ Name[zh_TW]=桌面格
 Icon=preferences-system-windows-effect-desktop-grid
 Comment=Zoom out so all desktops are displayed side-by-side in a grid
 Comment[ar]=صغر أسطح المكاتب الافتراضية واعرضها جنب لجنب في شبكة
+Comment[ast]=Alloña de forma que tolos escritorios s'amuesen ún al llau del otru nuna rexella
 Comment[bg]=Работните плотове се показват един до друг в мрежа
 Comment[ca]=Redueix tots els escriptoris per a visualitzar-los un al costat de l'altre en una graella
 Comment[ca@valencia]=Redueix tots els escriptoris per a visualitzar-los un al costat de l'altre en una graella

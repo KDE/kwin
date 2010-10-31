@@ -13,6 +13,7 @@ X-KDE-Weight=65
 
 Name=Screen Edges
 Name[ar]=حواف الشاشة
+Name[ast]=Berbesos de pantalla
 Name[bg]=Краища на екрана
 Name[ca]=Vores de la pantalla
 Name[ca@valencia]=Vores de la pantalla
@@ -77,6 +78,7 @@ Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
 Comment[ar]=اضبط حواف الشاشة النشطة
+Comment[ast]=Configurar berbesos de pantalla activos
 Comment[bg]=Настройване на активните краища на екрана
 Comment[ca]=Configura les vores de pantalla actives
 Comment[ca@valencia]=Configura les vores de pantalla actives

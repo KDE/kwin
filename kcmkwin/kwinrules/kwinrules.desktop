@@ -13,6 +13,7 @@ X-KDE-Weight=120
 
 Name=Window Rules
 Name[ar]=قواعد النوافذ
+Name[ast]=Regles de la ventana
 Name[ca]=Regles de les finestres
 Name[ca@valencia]=Regles de les finestres
 Name[cs]=Pravidla oken
@@ -62,6 +63,7 @@ Name[zh_TW]=視窗規則
 Comment=Configure settings specifically for a window
 Comment[af]=Stel spesifieke venster instellings op
 Comment[ar]=اضبط الإعدادات الخاصة بنافذة معينة
+Comment[ast]=Configurar preferencies específicamente pa una ventana
 Comment[be]=Настаўленні для кожнага вакна асабіста
 Comment[be@latin]=Nałady dla peŭnaha akna
 Comment[bg]=Потребителски настройки на прозорците

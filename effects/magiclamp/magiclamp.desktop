@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Magic Lamp
 Name[ar]=المصباح السحري
+Name[ast]=Llámpara máxica
 Name[be@latin]=Mahičnaja lampa
 Name[bg]=Вълшебна лампа
 Name[ca]=Làmpada màgica
@@ -70,6 +71,7 @@ Name[zh_TW]=魔法燈
 Icon=preferences-system-windows-effect-magic-lamp
 Comment=Simulate a magic lamp when minimizing windows
 Comment[ar]=يحاكي المصباح السحري عند تصغير النوافذ
+Comment[ast]=Simula una llámpara máxica na minimización de ventanes
 Comment[be@latin]=Minimalizuje vokny ŭ mahičnuju lampu.
 Comment[bg]=Симулация на вълшебна лампа при минимизация на прозорците
 Comment[ca]=Simula una làmpada màgica en minimitzar les finestres

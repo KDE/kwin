@@ -2,6 +2,7 @@
 Name=Dialog Parent
 Name[af]=Voorafgaande dialoog
 Name[ar]=مولدة الحوار
+Name[ast]=Padre de la ventana
 Name[be]=Бацькоўскае акно
 Name[bg]=Основен прозорец
 Name[ca]=Diàleg principal
@@ -75,6 +76,7 @@ Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens the parent window of the currently active dialog
 Comment[ar]=تعتم النافذة المولدة للحوار النشط حالياً
+Comment[ast]=Oscurez la ventana madre de los diálogos activos
 Comment[bg]=Потъмнение на главния от активните прозорци
 Comment[ca]=Enfosqueix la finestra principal del diàleg actual actiu
 Comment[ca@valencia]=Enfosqueix la finestra principal del diàleg actual actiu

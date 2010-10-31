@@ -2,6 +2,7 @@
 Name=Taskbar Thumbnails
 Name[af]=Taakbalk duimnaels
 Name[ar]=مصغّرات شريط المهام
+Name[ast]=Miniatures de la barra de xeres
 Name[be@latin]=Padhlady dla paneli zadańniaŭ
 Name[bg]=Умаления копия на задачите
 Name[bn_IN]=টাস্ক-বার থাম্‌বনেইল
@@ -74,6 +75,7 @@ Name[zh_TW]=工作列縮圖
 Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Display window thumbnails when hovering over taskbar entries
 Comment[ar]=يظهر مصغرات النوافذ عند المرور على شريط المهام
+Comment[ast]=Amuesa miniatures de la ventana cuando'l cursor ta na barra de xeres
 Comment[be@latin]=Pakazvaje padhlady akon, kali kursor nad adpaviednym zadańniem u paneli.
 Comment[bg]=Показване на умалени копия, когато курсора е върху лентата с инструменти
 Comment[ca]=Mostra les miniatures de les finestres quan el cursor està sobre les entrades de la barra de tasques

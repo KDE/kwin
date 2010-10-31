@@ -2,6 +2,7 @@
 Name=Shadow
 Name[af]=Skaduwee
 Name[ar]=ظل
+Name[ast]=Solombra
 Name[be]=Цень
 Name[be@latin]=Cień
 Name[bg]=Сянка
@@ -84,6 +85,7 @@ Name[zh_TW]=陰影
 Icon=preferences-system-windows-effect-shadow
 Comment=Draw shadows under windows
 Comment[ar]=يضيف ظلاً تحت النوافذ
+Comment[ast]=Amiesta una solombra embaxo les ventanes
 Comment[be@latin]=Maluj cień pad voknami.
 Comment[bg]=Добавяне на сянка под прозорците
 Comment[ca]=Afegeix ombres a sota de les finestres

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Sheet
 Name[ar]=ورقة
+Name[ast]=Fueya
 Name[bg]=Листове
 Name[ca]=Full
 Name[ca@valencia]=Full
@@ -65,6 +66,7 @@ Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
 Comment[ar]=اجعل حوارات الشكلية تطير للداخل والخارج عند إظهاراها وإخفائها
+Comment[ast]=Fai que los diálogos apaezan suavemente o s'esvanezan al amosalos o anubrilos
 Comment[bg]=Отлистване при показване/скриване на прозорците
 Comment[ca]=Fa que els diàlegs modals entrin o surtin volant quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que els diàlegs modals entren o isquen volant quan es mostren o s'oculten

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Glide
 Name[ar]=الطيران
+Name[ast]=Glide
 Name[ca]=Lliscament
 Name[ca@valencia]=Lliscament
 Name[da]=Svæv
@@ -44,6 +45,7 @@ Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
 Comment[ar]=تأثير الطيران للنوافذ عند فتحها أو غلقها
+Comment[ast]=Efeutos Glide cuando s'abren y zarren ventanes
 Comment[ca]=Provoca un efecte de lliscament quan s'obren i es tanquen
 Comment[ca@valencia]=Provoca un efecte de lliscament quan s'obren i es tanquen
 Comment[da]=Svæveeffekt til vinduer når de åbnes og lukkes

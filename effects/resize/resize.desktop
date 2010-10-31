@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Resize Window
 Name[ar]=غير حجم النافذة
+Name[ast]=Redimensionar ventana
 Name[ca]=Redimensionament de les finestres
 Name[ca@valencia]=Redimensionament de les finestres
 Name[cs]=Změnit velikost okna
@@ -62,6 +63,7 @@ Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
 Comment[ar]=تأثير لإظهار شكل النافذة الأصلي أثناء تغيير حجمها
+Comment[ast]=Efeutu pa dibuxar la xeometría al camudar el tamañu d'una ventana
 Comment[ca]=Efecte de geometria de contorn en redimensionar una finestra
 Comment[ca@valencia]=Efecte de geometria de contorn en redimensionar una finestra
 Comment[cs]=Efekt pro obtažení geometrie při změně velikosti okna

@@ -2,6 +2,7 @@
 Name=Video Record
 Name[af]=Video-opneem
 Name[ar]=تسجيل الفيديو
+Name[ast]=Grabación de videu
 Name[be]=Відэазапіс
 Name[be@latin]=Videazapis
 Name[bg]=Запис на видео
@@ -80,6 +81,7 @@ Name[zh_TW]=影像錄影
 Icon=preferences-system-windows-effect-video-record
 Comment=Record a video of your desktop
 Comment[ar]=تسجل فيديو لسطح مكتبك
+Comment[ast]=Permítite grabar videos d'escritoriu
 Comment[be@latin]=Zapisvaje videa z rabočaha stała.
 Comment[bg]=Запис на видео върху работния плот
 Comment[bn_IN]=ডেস্কটপের ভিডিও রেকর্ড করুন

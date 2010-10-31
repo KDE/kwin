@@ -2,6 +2,7 @@
 Name=Logout
 Name[af]=Afteken
 Name[ar]=اخرج
+Name[ast]=Zarrar la sesión
 Name[be]=Выйсці
 Name[be@latin]=Vychad
 Name[bg]=Изход
@@ -84,6 +85,7 @@ Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Desaturate the desktop when displaying the logout dialog
 Comment[ar]=إلغاء تشبع ألوان سطح المكتب عند ظهور حوار الخروج
+Comment[ast]=Desatura l'escritoriu cuando se fina la sesión
 Comment[bg]=Избледняване на работния плот при показване на прозореца за изход
 Comment[ca]=Reducció de la saturació de l'escriptori en mostrar el diàleg de sortida
 Comment[ca@valencia]=Reducció de la saturació de l'escriptori en mostrar el diàleg d'eixida

@@ -13,6 +13,7 @@ X-KDE-Weight=90
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
+Name[ast]=Decoración de ventanes
 Name[ca]=Decoració de les finestres
 Name[ca@valencia]=Decoració de les finestres
 Name[cs]=Dekorace oken
@@ -61,6 +62,7 @@ Name[zh_TW]=視窗裝飾
 Comment=Configure the look and feel of window titles
 Comment[af]=Stel die lyk-en-gevoel van venstertitels
 Comment[ar]=اضبط المظهر والسمِة لعناوين النوافذ
+Comment[ast]=Configuración del aspeutu y comportamientu de los títulos de les ventanes
 Comment[be]=Настаўленні вонкавага выгляду загалоўкаў вокнаў
 Comment[be@latin]=Nałady vyhladu zahałoŭkaŭ akon
 Comment[bg]=Настройване външния вид на прозорците

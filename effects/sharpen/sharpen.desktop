@@ -2,6 +2,7 @@
 Name=Sharpen
 Name[af]=Verskerp
 Name[ar]=اشحذ
+Name[ast]=Agudizáu
 Name[bg]=Отчетливост
 Name[ca]=Aguditza
 Name[ca@valencia]=Aguditza
@@ -76,6 +77,7 @@ Name[zh_CN]=锐化
 Name[zh_TW]=讓輪廓更分明
 Comment=Make the entire desktop look sharper
 Comment[ar]=يعطي كامل سطح المكتب شكلا حادا
+Comment[ast]=Agudizal 'escritoriu
 Comment[bg]=Прави работния плот по-отчетлив
 Comment[ca]=Fa que tot l'escriptori sembli més definit
 Comment[ca@valencia]=Fa que tot l'escriptori parega més definit

@@ -2,6 +2,7 @@
 Name=Fall Apart
 Name[af]=Val uitmekaar
 Name[ar]=انهيار
+Name[ast]=Esmenuzar
 Name[bg]=Разпадане
 Name[ca]=Trencament
 Name[ca@valencia]=Trencament
@@ -75,6 +76,7 @@ Icon=preferences-system-windows-effect-fallapart
 Comment=Closed windows fall into pieces
 Comment[af]=Toegemaakte venster val in stukke uitmekaar
 Comment[ar]=النوافذ المغلقة تنهار وتتساقط قطعاً
+Comment[ast]=Les ventanes zarraes caen en trozos
 Comment[bg]=Затваряните прзорци се разпадат на парчета
 Comment[ca]=Les finestres tancades es trenquen en peces
 Comment[ca@valencia]=Les finestres tancades es trenquen en peces

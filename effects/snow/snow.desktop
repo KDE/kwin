@@ -3,6 +3,7 @@
 Name=Snow
 Name[af]=Sneeu
 Name[ar]=الثلج
+Name[ast]=Ñeve
 Name[be@latin]=Śnieh
 Name[bg]=Сняг
 Name[bn]=বরফ
@@ -79,6 +80,7 @@ Name[zh_CN]=雪飘
 Name[zh_TW]=下雪
 Comment=Simulate snow falling over the desktop
 Comment[ar]=يحاكي سقوط الثلج على سطح المكتب
+Comment[ast]=Simula una nevada nel escritoriu
 Comment[be@latin]=Uklučaje śniehapad na rabočym stale.
 Comment[bg]=Сняг върху работния плот
 Comment[bn_IN]=ডেস্কটপে তুষারপাত প্রদর্শন করা হবে

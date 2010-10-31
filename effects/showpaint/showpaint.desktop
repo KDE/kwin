@@ -2,6 +2,7 @@
 Name=Show Paint
 Name[af]=Wys inkleur
 Name[ar]=أظهر الطلاء
+Name[ast]=Amuesa pintura
 Name[bg]=Показване на боята
 Name[bn_IN]=Paint প্রদর্শন করা হবে
 Name[ca]=Mostra el pintat
@@ -75,6 +76,7 @@ Name[zh_TW]=顯示繪製
 Icon=preferences-system-windows-effect-paint-show
 Comment=Highlight areas of the desktop that have been recently updated
 Comment[ar]=يُبرز المناطق التي تم تحديثها مؤخرا في سطح المكتب
+Comment[ast]=Resalta árees del escritoriu que foron anovaes fai poco
 Comment[bg]=Открояване на частите от екрана, които са били променени скоро
 Comment[ca]=Ressalta les àrees de l'escriptori que s'han actualitzat darrerament
 Comment[ca@valencia]=Ressalta les àrees de l'escriptori que s'han actualitzat darrerament
