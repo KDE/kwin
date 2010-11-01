@@ -271,7 +271,7 @@ void Workspace::clientPopupAboutToShow()
         {
         initDesktopPopup();
         }
-    QStringList act = activityController_.availableActivities();
+    QStringList act = openActivityList();
     kDebug() << "activities:" << act.size();
     if ( act.size() < 2 )
         {
@@ -544,15 +544,16 @@ void Workspace::activityPopupAboutToShow()
         action->setChecked( true );
     activity_popup->addSeparator();
 
-    foreach (const QString &activity, activityController_.availableActivities()) {
-        QString name = KActivityInfo::name(activity);
+    foreach (const QString &id, openActivityList()) {
+        KActivityInfo activity(id);
+        QString name = activity.name();
         name.replace('&', "&&");
-        action = activity_popup->addAction( name );
-        action->setData( activity );
+        action = activity_popup->addAction( KIcon(activity.icon()), name );
+        action->setData( id );
         action->setCheckable( true );
 
         if ( active_popup_client &&
-             !active_popup_client->isOnAllActivities() && active_popup_client->isOnActivity(activity) )
+             !active_popup_client->isOnAllActivities() && active_popup_client->isOnActivity(id) )
             action->setChecked( true );
         }
     }
