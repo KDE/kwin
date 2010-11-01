@@ -196,7 +196,8 @@ enum DataRole
     WindowMinimizedGrabRole,
     WindowUnminimizedGrabRole,
     WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
-    WindowBlurBehindRole ///< For single windows to blur behind
+    WindowBlurBehindRole, ///< For single windows to blur behind
+    LanczosCacheRole
     };
 
 /**

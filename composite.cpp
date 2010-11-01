@@ -864,6 +864,18 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     damage_region += r;
     repaints_region += r;
     static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), r );
+    // discard lanczos texture
+    if( effect_window )
+        {
+        QVariant cachedTextureVariant = effect_window->data( LanczosCacheRole );
+        if( cachedTextureVariant.isValid() )
+            {
+            GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+            delete cachedTexture;
+            cachedTexture = 0;
+            effect_window->setData( LanczosCacheRole, QVariant() );
+            }
+        }
     workspace()->checkCompositeTimer();
     }
 
@@ -874,6 +886,18 @@ void Toplevel::addDamageFull()
     damage_region = rect();
     repaints_region = rect();
     static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), rect());
+    // discard lanczos texture
+    if( effect_window )
+        {
+        QVariant cachedTextureVariant = effect_window->data( LanczosCacheRole );
+        if( cachedTextureVariant.isValid() )
+            {
+            GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+            delete cachedTexture;
+            cachedTexture = 0;
+            effect_window->setData( LanczosCacheRole, QVariant() );
+            }
+        }
     workspace()->checkCompositeTimer();
     }
 

@@ -56,6 +56,8 @@ class LanczosFilter
         void createKernel(float delta, int *kernelSize);
         void createOffsets(int count, float width, Qt::Orientation direction);
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        void prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
+        void restoreRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
         GLTexture *m_offscreenTex;
         GLRenderTarget *m_offscreenTarget;
         GLShader *m_shader;

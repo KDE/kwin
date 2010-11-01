@@ -212,15 +212,40 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             int ty = data.yTranslate + w->y() + top*data.yScale;
             int tw = width*data.xScale;
             int th = height*data.yScale;
+            const QRect textureRect(tx, ty, tw, th);
 
             int sw = width;
             int sh = height;
+            GLTexture *cachedTexture = static_cast< GLTexture*>(w->data( LanczosCacheRole ).value<void*>());
+            if( cachedTexture )
+                {
+                if( cachedTexture->width() == tw && cachedTexture->height() == th )
+                    {
+                    cachedTexture->bind();
+                    prepareRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
+                    cachedTexture->render( textureRect, textureRect );
+                    restoreRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
+                    cachedTexture->unbind();
+                    m_timer.start( 5000, this );
+                    return;
+                    }
+                else
+                    {
+                    // offscreen texture not matching - delete
+                    delete cachedTexture;
+                    cachedTexture = 0;
+                    w->setData( LanczosCacheRole, QVariant() );
+                    }
+                }
 
             WindowPaintData thumbData = data;
             thumbData.xScale = 1.0;
             thumbData.yScale = 1.0;
             thumbData.xTranslate = -w->x() - left;
             thumbData.yTranslate = -w->y() - top;
+            thumbData.brightness = 1.0;
+            thumbData.opacity = 1.0;
+            thumbData.saturation = 1.0;
 
             // Bind the offscreen FBO and draw the window on it unscaled
             updateOffscreenSurfaces();
@@ -262,8 +287,13 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             tex.unbind();
             tex.discard();
 
-            // Unbind the FBO
-            effects->popRenderTarget();
+            // create scratch texture for second rendering pass
+            GLTexture tex2( tw, sh );
+            tex2.setFilter( GL_LINEAR );
+            tex2.setWrapMode( GL_CLAMP_TO_EDGE );
+            tex2.bind();
+
+            glCopyTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - sh, tw, sh );
 
             // Set up the shader for vertical scaling
             float dy = sh / float(th);
@@ -273,27 +303,34 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
             glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
 
-            float sx2 = tw / float(m_offscreenTex->width());
-            float sy2 = 1 - (sh / float(m_offscreenTex->height()));
-
             // Now draw the horizontally scaled window in the FBO at the right
             // coordinates on the screen, while scaling it vertically and blending it.
-            m_offscreenTex->bind();
-
-            glPushAttrib( GL_COLOR_BUFFER_BIT );
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+            glClear( GL_COLOR_BUFFER_BIT );
 
             glBegin( GL_QUADS );
-            glTexCoord2f( 0,    sy2 ); glVertex2i( tx,       ty );      // Top left
-            glTexCoord2f( sx2,  sy2 ); glVertex2i( tx + tw,  ty );      // Top right
-            glTexCoord2f( sx2,  1 );   glVertex2i( tx + tw,  ty + th ); // Bottom right
-            glTexCoord2f( 0,    1 );   glVertex2i( tx,       ty + th ); // Bottom left
+            glTexCoord2f( 0, 0 ); glVertex2i(  0,  0 );      // Top left
+            glTexCoord2f( 1, 0 ); glVertex2i( tw,  0 );      // Top right
+            glTexCoord2f( 1, 1 ); glVertex2i( tw, th ); // Bottom right
+            glTexCoord2f( 0, 1 ); glVertex2i(  0, th ); // Bottom left
             glEnd();
 
-            glPopAttrib();
-            m_offscreenTex->unbind();
+            tex2.unbind();
+            tex2.discard();
             m_shader->unbind();
+
+            // create cache texture
+            GLTexture *cache = new GLTexture( tw, th );
+
+            cache->setFilter( GL_LINEAR );
+            cache->setWrapMode( GL_CLAMP_TO_EDGE );
+            cache->bind();
+            glCopyTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th );
+            effects->popRenderTarget();
+            prepareRenderStates( cache, data.opacity, data.brightness, data.saturation );
+            cache->render( textureRect, textureRect );
+            restoreRenderStates( cache, data.opacity, data.brightness, data.saturation );
+            cache->unbind();
+            w->setData( LanczosCacheRole, QVariant::fromValue( static_cast<void*>( cache )));
 
             // Delete the offscreen surface after 5 seconds
             m_timer.start( 5000, this );
@@ -315,7 +352,163 @@ void LanczosFilter::timerEvent( QTimerEvent *event )
         delete m_offscreenTex;
         m_offscreenTarget = 0;
         m_offscreenTex = 0;
+        foreach( EffectWindow* w, effects->stackingOrder() )
+            {
+            QVariant cachedTextureVariant = w->data( LanczosCacheRole );
+            if( cachedTextureVariant.isValid() )
+                {
+                GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+                delete cachedTexture;
+                cachedTexture = 0;
+                w->setData( LanczosCacheRole, QVariant() );
+                }
+            }
         }
+#endif
+    }
+
+void LanczosFilter::prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    const bool alpha = true;
+    // setup blending of transparent windows
+    glPushAttrib( GL_ENABLE_BIT );
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    if( saturation != 1.0 && tex->saturationSupported())
+        {
+        // First we need to get the color from [0; 1] range to [0.5; 1] range
+        glActiveTexture( GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant );
+        tex->bind();
+
+        // Then we take dot product of the result of previous pass and
+        //  saturation_constant. This gives us completely unsaturated
+        //  (greyscale) image
+        // Note that both operands have to be in range [0.5; 1] since opengl
+        //  automatically substracts 0.5 from them
+        glActiveTexture( GL_TEXTURE1 );
+        float saturation_constant[] = { 0.5 + 0.5*0.30, 0.5 + 0.5*0.59, 0.5 + 0.5*0.11, saturation };
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        tex->bind();
+
+        // Finally we need to interpolate between the original image and the
+        //  greyscale image to get wanted level of saturation
+        glActiveTexture( GL_TEXTURE2 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        // Also replace alpha by primary color's alpha here
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+        // And make primary color contain the wanted opacity
+        glColor4f( opacity, opacity, opacity, opacity );
+        tex->bind();
+
+        if( alpha || brightness != 1.0f )
+            {
+            glActiveTexture( GL_TEXTURE3 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+            // The color has to be multiplied by both opacity and brightness
+            float opacityByBrightness = opacity * brightness;
+            glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
+            if( alpha )
+                {
+                // Multiply original texture's alpha by our opacity
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA );
+                }
+            else
+                {
+                // Alpha will be taken from previous stage
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+                }
+            tex->bind();
+            }
+
+        glActiveTexture(GL_TEXTURE0 );
+        }
+    else if( opacity != 1.0 || brightness != 1.0 )
+        {
+        // the window is additionally configured to have its opacity adjusted,
+        // do it
+        float opacityByBrightness = opacity * brightness;
+        if( alpha)
+            {
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+            glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness,
+                opacity);
+            }
+        else
+            {
+            // Multiply color by brightness and replace alpha by opacity
+            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity };
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
+            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
+            }
+        }
+#endif
+    }
+
+void LanczosFilter::restoreRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0f )
+        {
+        if( saturation != 1.0 && tex->saturationSupported())
+            {
+            glActiveTexture(GL_TEXTURE3);
+            glDisable( tex->target());
+            glActiveTexture(GL_TEXTURE2);
+            glDisable( tex->target());
+            glActiveTexture(GL_TEXTURE1);
+            glDisable( tex->target());
+            glActiveTexture(GL_TEXTURE0);
+            }
+        }
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+    glColor4f( 0, 0, 0, 0 );
+
+    glPopAttrib();  // ENABLE_BIT
 #endif
     }
 

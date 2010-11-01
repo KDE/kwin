@@ -1196,6 +1196,12 @@ EffectWindowImpl::EffectWindowImpl() : EffectWindow()
 
 EffectWindowImpl::~EffectWindowImpl()
     {
+    QVariant cachedTextureVariant = data( LanczosCacheRole );
+    if( cachedTextureVariant.isValid() )
+        {
+        GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+        delete cachedTexture;
+        }
     }
 
 bool EffectWindowImpl::isPaintingEnabled()
