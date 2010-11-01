@@ -318,7 +318,6 @@ class Workspace : public QObject, public KDecorationDefines
         int currentDesktop_;
         QString activity_;
         QStringList allActivities_;
-        QStringList openActivities_;
         bool desktopLayoutDynamicity_;
 
         KActivityController activityController_;
@@ -342,6 +341,7 @@ class Workspace : public QObject, public KDecorationDefines
         int screenNumber( const QPoint& pos ) const;
         QString currentActivity() const { return activity_; }
         QStringList activityList() const { return allActivities_; }
+        QStringList openActivityList() const { return activityController_.listActivities(KActivityInfo::Running); }
 
         // Tab box
         Client* currentTabBoxClient() const;

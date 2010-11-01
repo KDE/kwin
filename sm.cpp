@@ -206,7 +206,8 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
 
 void Workspace::storeActivity(const QString &id)
     {
-    //TODO check if it's already closed
+    QStringList openActivities = openActivityList(); //FIXME please don't deadlock
+
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
     kDebug() << id;
@@ -232,7 +233,7 @@ void Workspace::storeActivity(const QString &id)
             {
             if (activityId == id)
                 saveSessionIds << sessionId;
-            else if (openActivities_.contains(activityId))
+            else if (openActivities.contains(activityId))
                 dontCloseSessionIds << sessionId;
             }
         }
@@ -250,8 +251,6 @@ void Workspace::storeActivity(const QString &id)
         }
 
     kDebug() << "saveActivity" << id << saveAndClose << saveOnly;
-
-    openActivities_.removeOne(id); //FIXME it's not closed until ksmserver says it's closed
 
     //pass off to ksmserver
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
@@ -333,10 +332,7 @@ void Workspace::loadActivity(const QString &id)
     {
     if (!allActivities_.contains(id))
         return; //bogus id
-    if (openActivities_.contains(id))
-        return; //already open
 
-    openActivities_ << id;
     loadSubSessionInfo(id);
 
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
