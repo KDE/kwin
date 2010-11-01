@@ -844,7 +844,8 @@ PaintClipper::Iterator::Iterator()
     if( clip() && effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_SCISSOR_BIT );
-        glEnable( GL_SCISSOR_TEST );
+        if( !effects->isRenderTargetBound() )
+            glEnable( GL_SCISSOR_TEST );
         data->rects = paintArea().rects();
         data->index = -1;
         next(); // move to the first one
@@ -892,7 +893,7 @@ void PaintClipper::Iterator::next()
     {
     data->index++;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( clip() && effects->compositingType() == OpenGLCompositing && data->index < data->rects.count())
+    if( clip() && effects->compositingType() == OpenGLCompositing && !effects->isRenderTargetBound() && data->index < data->rects.count())
         {
         const QRect& r = data->rects[ data->index ];
         // Scissor rect has to be given in OpenGL coords

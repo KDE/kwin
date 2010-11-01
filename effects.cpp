@@ -784,6 +784,15 @@ GLRenderTarget* EffectsHandlerImpl::popRenderTarget()
 #endif
 }
 
+bool EffectsHandlerImpl::isRenderTargetBound()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    return !render_targets.isEmpty();
+#else
+    return false;
+#endif
+    }
+
 void EffectsHandlerImpl::addRepaintFull()
     {
     Workspace::self()->addRepaintFull();

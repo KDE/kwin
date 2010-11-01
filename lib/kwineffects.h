@@ -171,7 +171,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 155
+#define KWIN_EFFECT_API_VERSION_MINOR 156
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -757,6 +757,7 @@ class KWIN_EXPORT EffectsHandler
 
         virtual void pushRenderTarget(GLRenderTarget* target) = 0;
         virtual GLRenderTarget* popRenderTarget() = 0;
+        virtual bool isRenderTargetBound() = 0;
 
         /**
          * Schedules the entire workspace to be repainted next time.

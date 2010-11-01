@@ -110,6 +110,7 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual void pushRenderTarget(GLRenderTarget* target);
         virtual GLRenderTarget* popRenderTarget();
+        virtual bool isRenderTargetBound();
 
         virtual void addRepaintFull();
         virtual void addRepaint( const QRect& r );

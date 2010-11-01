@@ -174,10 +174,20 @@ void renderGLGeometry( const QRegion& region, int count,
         }
 
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-         !iterator.isDone();
-         iterator.next())
+    if( !effects->isRenderTargetBound() )
+        {
+        PaintClipper pc( region );
+        for( PaintClipper::Iterator iterator;
+            !iterator.isDone();
+            iterator.next())
+            {
+            if( use_arrays )
+                glDrawArrays( GL_QUADS, 0, count );
+            else
+                renderGLGeometryImmediate( count, vertices, texture, color, dim, stride );
+            }
+        }
+    else
         {
         if( use_arrays )
             glDrawArrays( GL_QUADS, 0, count );
