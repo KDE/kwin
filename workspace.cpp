@@ -1697,6 +1697,9 @@ void Workspace::activityRemoved(const QString &activity)
         {
         client->setOnActivity(activity, false);
         }
+    //toss out any session data for it
+    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + activity);
+    cg.deleteGroup();
     }
 
 void Workspace::activityAdded(const QString &activity)
