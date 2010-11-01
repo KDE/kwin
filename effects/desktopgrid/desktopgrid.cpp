@@ -194,7 +194,7 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         d.yScale *= (float)geo.height()/(float)windowMove->height();
         d.xTranslate += qRound( geo.left() - windowMove->x() );
         d.yTranslate += qRound( geo.top() - windowMove->y() );
-        effects->drawWindow( windowMove, PAINT_WINDOW_TRANSFORMED, infiniteRegion(), d );
+        effects->drawWindow( windowMove, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS, infiniteRegion(), d );
         }
 
     if( desktopNameAlignment )
@@ -326,6 +326,8 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                         screenQuads.append( quad );
                     transformedGeo = manager.transformedGeometry( w );
                     quadsAdded = true;
+                    if( !manager.areWindowsMoving() )
+                        mask |= PAINT_WINDOW_LANCZOS;
                     }
                 else if( w->screen() != screen )
                     quadsAdded = true; // we don't want parts of overlapping windows on the other screen
@@ -381,6 +383,12 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             else
                 {
                 PaintClipper pc( effects->clientArea( ScreenArea, screen, 0 ));
+                if( w->isDesktop() && timeline.value() == 1.0 )
+                    {
+                    // desktop windows are not in a motion manager and can always be rendered with
+                    // lanczos sampling except for animations
+                    mask |= PAINT_WINDOW_LANCZOS;
+                    }
                 effects->paintWindow( w, mask, region, d );
                 }
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
