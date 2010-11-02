@@ -32,8 +32,9 @@ namespace KWin
 KWIN_EFFECT( glide, GlideEffect )
 KWIN_EFFECT_SUPPORTED( glide, GlideEffect::supported() )
 
+static const int IsGlideWindow = 0x22A982D4;
+
 GlideEffect::GlideEffect()
-    : windowCount( 0 )
     {
     reconfigure( ReconfigureAll );
     }
@@ -53,111 +54,115 @@ void GlideEffect::reconfigure( ReconfigureFlags )
 
 void GlideEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if( windowCount > 0 )
+    if( !windows.isEmpty() )
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen( data, time );
     }
 
 void GlideEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( windows.contains( w ) && ( windows[ w ].added || windows[ w ].closed ) )
+    InfoHash::iterator info = windows.find( w );
+    if( info != windows.end() )
         {
-        if( windows[ w ].added )
-            windows[ w ].timeLine->addTime( time );
-        if( windows[ w ].closed )
+        data.setTransformed();
+        if( info->added )
+            info->timeLine.addTime( time );
+        else if( info->closed )
             {
-            windows[ w ].timeLine->removeTime( time );
-            if( windows[ w ].deleted )
-                {
+            info->timeLine.removeTime( time );
+            if( info->deleted )
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
-                }
             }
         }
+    
     effects->prePaintWindow( w, data, time );
-    if( windows.contains( w ) && !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
-        { // if the window isn't to be painted, then let's make sure
-          // to track its progress
-        if( windows[ w ].added || windows[ w ].closed )
-            { // but only if the total change is less than the
-              // maximum possible change
-            w->addRepaintFull();
-            }
-        }
+    
+    // if the window isn't to be painted, then let's make sure
+    // to track its progress
+    if( info != windows.end() && !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
+        w->addRepaintFull();
     }
 
 void GlideEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w ) )
+    InfoHash::const_iterator info = windows.find( w );
+    if( info != windows.constEnd() )
         {
+        const double progress = info->timeLine.value();
         RotationData rot;
         rot.axis = RotationData::XAxis;
-        rot.angle = angle * ( 1 - windows[ w ].timeLine->value() );
+        rot.angle = angle * ( 1 - progress );
         data.rotation = &rot;
-        data.opacity *= windows[ w ].timeLine->value();
-        if( effect == GlideInOut )
+        data.opacity *= progress;
+        switch ( effect )
             {
-            if( windows[ w ].added )
-                glideIn( w, data );
-            if( windows[ w ].closed )
-                glideOut( w, data );
+            default:
+            case GlideInOut:
+                if( info->added )
+                    glideIn( w, data );
+                else if( info->closed )
+                    glideOut( w, data );
+                break;
+            case GlideOutIn:
+                if( info->added )
+                    glideOut( w, data );
+                if( info->closed )
+                    glideIn( w, data );
+                break;
+            case GlideIn: glideIn( w, data ); break;
+            case GlideOut: glideOut( w, data ); break;
             }
-         if( effect == GlideOutIn )
-            {
-            if( windows[ w ].added )
-                glideOut( w, data );
-            if( windows[ w ].closed )
-                glideIn( w, data );
-            }
-        if( effect == GlideIn )
-                glideIn( w, data );
-        if( effect == GlideOut )
-                glideOut( w, data );
-        effects->paintWindow( w, PAINT_WINDOW_TRANSFORMED, region, data );
         }
-    else
-        effects->paintWindow( w, mask, region, data );
+    effects->paintWindow( w, mask, region, data );
     }
 
 void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data )
     {
-    data.xScale *= windows[ w ].timeLine->value();
-    data.yScale *= windows[ w ].timeLine->value();
-    data.zScale *= windows[ w ].timeLine->value();
-    data.xTranslate += int( w->width() / 2 * ( 1 - windows[ w ].timeLine->value() ) );
-    data.yTranslate += int( w->height() / 2 * ( 1 - windows[ w ].timeLine->value() ) );
+    InfoHash::const_iterator info = windows.find( w );
+    if ( info == windows.constEnd() )
+        return;
+    const double progress = info->timeLine.value();
+    data.xScale *= progress;
+    data.yScale *= progress;
+    data.zScale *= progress;
+    data.xTranslate += int( w->width() / 2 * ( 1 - progress ) );
+    data.yTranslate += int( w->height() / 2 * ( 1 - progress ) );
     }
 
 void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data )
     {
-    data.xScale *= ( 2 - windows[ w ].timeLine->value() );
-    data.yScale *= ( 2 - windows[ w ].timeLine->value() );
-    data.zScale *= ( 2 - windows[ w ].timeLine->value() );
-    data.xTranslate -= int( w->width() / 2 * ( 1 - windows[ w ].timeLine->value() ) );
-    data.yTranslate -= int( w->height() / 2 * ( 1 - windows[ w ].timeLine->value() ) );
+    InfoHash::const_iterator info = windows.find( w );
+    if ( info == windows.constEnd() )
+        return;
+    const double progress = info->timeLine.value();
+    data.xScale *= ( 2 - progress );
+    data.yScale *= ( 2 - progress );
+    data.zScale *= ( 2 - progress );
+    data.xTranslate -= int( w->width() / 2 * ( 1 - progress ) );
+    data.yTranslate -= int( w->height() / 2 * ( 1 - progress ) );
     }
 
 void GlideEffect::postPaintWindow( EffectWindow* w )
     {
-    if( windows.contains( w ) )
+    InfoHash::iterator info = windows.find( w );
+    if( info != windows.end() )
         {
-        if( windows[ w ].added && windows[ w ].timeLine->value() == 1.0 )
+        if( info->added && info->timeLine.value() == 1.0 )
             {
-            windows[ w ].added = false;
-            windowCount--;
+            windows.remove( w );
             effects->addRepaintFull();
             }
-        if( windows[ w ].closed && windows[ w ].timeLine->value() == 0.0 )
+        else if( info->closed && info->timeLine.value() == 0.0 )
             {
-            windows[ w ].closed = false;
-            if( windows[ w ].deleted )
+            info->closed = false;
+            if( info->deleted )
                 {
                 windows.remove( w );
                 w->unrefWindow();
                 }
-            windowCount--;
             effects->addRepaintFull();
             }
-        if( windows[ w ].added || windows[ w ].closed )
+        if( info->added || info->closed )
             w->addRepaintFull();
         }
     effects->postPaintWindow( w );
@@ -167,45 +172,58 @@ void GlideEffect::windowAdded( EffectWindow* w )
     {
     if( !isGlideWindow( w ) )
         return;
-
+    w->setData( IsGlideWindow, true );
+    const void *addGrab = w->data( WindowAddedGrabRole ).value<void*>();
+    if ( addGrab && addGrab != this )
+        return;
     w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
-    windows[ w ] = WindowInfo();
-    windows[ w ].added = true;
-    windows[ w ].closed = false;
-    windows[ w ].deleted = false;
-    windows[ w ].timeLine->setDuration( duration );
-    windows[ w ].timeLine->setCurveShape( TimeLine::EaseOutCurve );
-    windowCount++;
+    
+    InfoHash::iterator it = windows.find( w );
+    WindowInfo *info = ( it == windows.end() ) ? &windows[w] : &it.value();
+    info->added = true;
+    info->closed = false;
+    info->deleted = false;
+    info->timeLine.setDuration( duration );
+    info->timeLine.setCurveShape( TimeLine::EaseOutCurve );
     w->addRepaintFull();
     }
 
 void GlideEffect::windowClosed( EffectWindow* w )
     {
-    if( !windows.contains( w ) )
+    if ( !isGlideWindow( w ) )
         return;
-    w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
-    windows[ w ].added = false;
-    windows[ w ].closed = true;
-    windows[ w ].deleted = true;
-    windows[ w ].timeLine->setDuration( duration );
-    windows[ w ].timeLine->setCurveShape( TimeLine::EaseInCurve );
-    windowCount++;
+    const void *closeGrab = w->data( WindowClosedGrabRole ).value<void*>();
+    if ( closeGrab && closeGrab != this )
+        return;
     w->refWindow();
+    w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+    
+    InfoHash::iterator it = windows.find( w );
+    WindowInfo *info = ( it == windows.end() ) ? &windows[w] : &it.value();
+    info->added = false;
+    info->closed = true;
+    info->deleted = true;
+    info->timeLine.setDuration( duration );
+    info->timeLine.setCurveShape( TimeLine::EaseInCurve );
+    info->timeLine.setProgress( 1.0 );
     w->addRepaintFull();
     }
 
 void GlideEffect::windowDeleted( EffectWindow* w )
     {
-    //delete windows[ w ].timeLine;
-    windows[ w ].timeLine = NULL;
     windows.remove( w );
     }
 
 bool GlideEffect::isGlideWindow( EffectWindow* w )
     {
-    const void* e = w->data( WindowAddedGrabRole ).value<void*>();
-    // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
-    if ( w->isPopupMenu() || w->isSpecialWindow() || w->isUtility() || ( e && e != this ))
+    if ( effects->activeFullScreenEffect() )
+        return false;
+    if ( w->data( IsGlideWindow ).toBool() )
+        return true;
+    if ( w->hasDecoration() )
+        return true;
+    if ( !w->isManaged() || w->isMenu() ||  w->isNotification() || w->isDesktop() || 
+         w->isDock() ||  w->isSplash() || w->isTopMenu() || w->isToolbar() )
         return false;
     return true;
     }

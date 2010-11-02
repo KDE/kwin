@@ -45,14 +45,14 @@ class GlideEffect
 
         static bool supported();
     private:
+        class WindowInfo;
+        typedef QMap< const EffectWindow*, WindowInfo > InfoHash;
         void glideIn( EffectWindow* w, WindowPaintData& data );
         void glideOut( EffectWindow* w, WindowPaintData& data );
-        class WindowInfo;
         bool isGlideWindow( EffectWindow* w );
-        QHash< const EffectWindow*, WindowInfo > windows;
+        InfoHash windows;
         float duration;
         int angle;
-        int windowCount;
         enum EffectStyle
         {
             GlideIn = 0,
@@ -69,18 +69,14 @@ class GlideEffect::WindowInfo
         WindowInfo()
             : deleted( false )
             , added( false )
-            , closed( false )
-            {
-            timeLine = new TimeLine();
-            }
+            , closed( false ) { }
         ~WindowInfo()
         {
-            timeLine = NULL;
         } 
         bool deleted;
         bool added;
         bool closed;
-        TimeLine* timeLine;
+        TimeLine timeLine;
     };
 
 } // namespace
