@@ -45,10 +45,10 @@ class SheetEffect
         static bool supported();
     private:
         class WindowInfo;
+        typedef QMap< const EffectWindow*, WindowInfo > InfoMap;
         bool isSheetWindow( EffectWindow* w );
-        QHash< const EffectWindow*, WindowInfo > windows;
+        InfoMap windows;
         float duration;
-        int windowCount;
         int screenTime;
     };
 
@@ -61,12 +61,11 @@ class SheetEffect::WindowInfo
             , closed( false )
             , parentY( 0 )
             {
-            timeLine = new TimeLine();
             }
         bool deleted;
         bool added;
         bool closed;
-        TimeLine* timeLine;
+        TimeLine timeLine;
         int parentY;
     };
 
