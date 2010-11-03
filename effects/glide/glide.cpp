@@ -85,7 +85,7 @@ void GlideEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
 
 void GlideEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    InfoHash::const_iterator info = windows.find( w );
+    InfoHash::const_iterator info = windows.constFind( w );
     if( info != windows.constEnd() )
         {
         const double progress = info->timeLine.value();
@@ -118,7 +118,7 @@ void GlideEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
 
 void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data )
     {
-    InfoHash::const_iterator info = windows.find( w );
+    InfoHash::const_iterator info = windows.constFind( w );
     if ( info == windows.constEnd() )
         return;
     const double progress = info->timeLine.value();
@@ -131,7 +131,7 @@ void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data )
 
 void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data )
     {
-    InfoHash::const_iterator info = windows.find( w );
+    InfoHash::const_iterator info = windows.constFind( w );
     if ( info == windows.constEnd() )
         return;
     const double progress = info->timeLine.value();

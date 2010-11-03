@@ -85,7 +85,7 @@ void SheetEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
 
 void SheetEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    InfoMap::const_iterator info = windows.find( w );
+    InfoMap::const_iterator info = windows.constFind( w );
     if( info != windows.constEnd() )
         {
         const double progress = info->timeLine.value();
