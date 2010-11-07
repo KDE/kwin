@@ -28,7 +28,7 @@ DashboardEffect::DashboardEffect()
     : transformWindow( false )
     , activateAnimation( false )
     , deactivateAnimation( false )
-{
+    {
     // propagate that the effect is loaded
     propagate();
 
@@ -86,7 +86,7 @@ void DashboardEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 
     else if( transformWindow && ( w == window ) && w->isManaged() )
         {
-        // transform dashboard        
+        // transform dashboard
         if ((timeline.value() * 2) <= 1)
             {
             data.opacity *= timeline.value() * 2;
@@ -186,35 +186,33 @@ void DashboardEffect::windowActivated( EffectWindow *w )
         }
    }
 
-void DashboardEffect::windowAdded( EffectWindow* w )                                   
-    {                                                                                      
-    propertyNotify( w, atom );        
+void DashboardEffect::windowAdded( EffectWindow* w )
+    {
+    propertyNotify( w, atom );
 
-                                                    
-    if( isDashboard( w ) )                            
-        {                                                                                  
-        // Tell other windowAdded() effects to ignore this window                          
+    if( isDashboard( w ) )
+        {
+        // Tell other windowAdded() effects to ignore this window
         w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
 
         activateAnimation = true;
         deactivateAnimation = false;
         timeline.setProgress( 0.0 );
 
-	w->addRepaintFull();                                                               
-        }   
-    }       
-                                                                                           
-void DashboardEffect::windowClosed( EffectWindow* w )                                  
-    {   
-    propertyNotify( w, atom );        
+        w->addRepaintFull();
+        }
+    }
 
-                                                    
-    if( isDashboard( w ) )                            
-        {      
-        // Tell other windowClosed() effects to ignore this window                          
+void DashboardEffect::windowClosed( EffectWindow* w )
+    {
+    propertyNotify( w, atom );
+
+    if( isDashboard( w ) )
+        {
+        // Tell other windowClosed() effects to ignore this window
         w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
-	w->addRepaintFull();                                                               
-        }   
+        w->addRepaintFull();
+        }
     }
 
 } // namespace
