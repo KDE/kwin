@@ -332,6 +332,7 @@ bool Client::manage( Window w, bool isMapped )
             foreach( ClientGroup* group, workspace()->clientGroups )
                 if( geom == QRect( group->visible()->pos(), group->visible()->clientSize() ) &&
                     desk == group->visible()->desktop() &&
+                    activities() == group->visible()->activities() &&
                     group->visible()->maximizeMode() != MaximizeFull )
                     {
                     group->add( this, -1, true );
