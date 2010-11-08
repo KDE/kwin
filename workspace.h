@@ -449,8 +449,8 @@ class Workspace : public QObject, public KDecorationDefines
         void toggleTiling();
         void nextTileLayout();
         void previousTileLayout();
-        void storeActivity( const QString &id );
-        void loadActivity( const QString &id );
+        void stopActivity( const QString &id );
+        void startActivity( const QString &id );
 
         void setCurrentScreen( int new_screen );
 
@@ -769,6 +769,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateCurrentActivity(const QString &new_activity);
         void activityRemoved(const QString &activity);
         void activityAdded(const QString &activity);
+        void reallyStopActivity( const QString &id ); //dbus deadlocks suck
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );

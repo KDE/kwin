@@ -73,10 +73,10 @@
     <method name="nextTileLayout"/>
     <method name="previousTileLayout"/>
     <method name="dumpTiles"/>
-    <method name="storeActivity">
+    <method name="stopActivity">
       <arg type="s" direction="in"/>
     </method>
-    <method name="loadActivity">
+    <method name="startActivity">
       <arg type="s" direction="in"/>
     </method>
   </interface>

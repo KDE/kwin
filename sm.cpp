@@ -204,9 +204,15 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     //cg.writeEntry( "desktop", currentDesktop());
     }
 
-void Workspace::storeActivity(const QString &id)
+void Workspace::stopActivity(const QString &id)
     {
-    QStringList openActivities = openActivityList(); //FIXME please don't deadlock
+        //ugly hack to avoid dbus deadlocks
+        QMetaObject::invokeMethod(this, "reallyStopActivity", Qt::QueuedConnection, Q_ARG(QString, id));
+    }
+
+void Workspace::reallyStopActivity(const QString &id)
+    {
+    QStringList openActivities = openActivityList();
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
@@ -328,7 +334,7 @@ void Workspace::loadSubSessionInfo(const QString &name)
     addSessionInfo(cg);
     }
 
-void Workspace::loadActivity(const QString &id)
+void Workspace::startActivity(const QString &id)
     {
     if (!allActivities_.contains(id))
         return; //bogus id
