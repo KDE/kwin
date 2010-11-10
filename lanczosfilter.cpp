@@ -370,7 +370,7 @@ void LanczosFilter::timerEvent( QTimerEvent *event )
 void LanczosFilter::prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    const bool alpha = true;
+    const bool alpha = false; // true; WORKAROUND - "true" causes issues with at least nvidia chips and translucent windows "overbrightning"
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     glEnable( GL_BLEND );
