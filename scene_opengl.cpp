@@ -190,6 +190,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kError( 1212 ) << "OpenGL compositing setup failed";
         return; // error
         }
+// selfcheck is broken (see Bug 253357)
+#if 0
     // Do self-check immediatelly during compositing setup only when it's not KWin startup
     // at the same time (in other words, only when activating compositing using the kcm).
     // Currently selfcheck causes bad flicker (due to X mapping the overlay window
@@ -200,6 +202,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             return;
         selfCheckDone = true;
         }
+#endif
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
@@ -766,18 +769,23 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if( wspace->overlayWindow()) // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
+// selfcheck is broken (see Bug 253357)
+#if 0
     if( !selfCheckDone )
         {
         selfCheckSetup();
         damage |= selfCheckRegion();
         }
+#endif
     flushBuffer( mask, damage );
+#if 0
     if( !selfCheckDone )
         {
         if( !selfCheckFinish())
             QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
         selfCheckDone = true;
         }
+#endif
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );
