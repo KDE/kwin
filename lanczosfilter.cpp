@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2010 by Fredrik Höglund <fredrik@kde.org>
+Copyright (C) 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@ LanczosFilter::LanczosFilter( QObject* parent )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , m_offscreenTex( 0 )
     , m_offscreenTarget( 0 )
-    , m_shader( 0 )
+    , m_shader( new LanczosShader( this ) )
 #endif
     , m_inited( false)
     {
@@ -50,7 +51,6 @@ LanczosFilter::~LanczosFilter()
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_offscreenTarget;
     delete m_offscreenTex;
-    delete m_shader;
 #endif
     }
 
@@ -69,24 +69,10 @@ void LanczosFilter::init()
         return;
         }
 
-    if ( GLShader::fragmentShaderSupported() &&
-         GLShader::vertexShaderSupported() &&
-         GLRenderTarget::supported() )
+    if( !m_shader->init() )
         {
-        m_shader = new GLShader(":/resources/lanczos-vertex.glsl", ":/resources/lanczos-fragment.glsl");
-        if (m_shader->isValid())
-            {
-            m_shader->bind();
-            m_uTexUnit    = m_shader->uniformLocation("texUnit");
-            m_uKernel     = m_shader->uniformLocation("kernel");
-            m_uOffsets    = m_shader->uniformLocation("offsets");
-            m_shader->unbind();
-            }
-        else
-            {
-            kDebug(1212) << "Shader is not valid";
-            m_shader = 0;
-            }
+        delete m_shader;
+        m_shader = 0;
         }
 #endif
     }
@@ -133,7 +119,8 @@ static float lanczos( float x, float a )
     return sinc( x ) * sinc( x / a );
     }
 
-void LanczosFilter::createKernel( float delta, int *size )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+void LanczosShader::createKernel( float delta, int *size )
     {
     const float a = 2.0;
 
@@ -164,7 +151,7 @@ void LanczosFilter::createKernel( float delta, int *size )
     *size = kernelSize;
     }
 
-void LanczosFilter::createOffsets( int count, float width, Qt::Orientation direction )
+void LanczosShader::createOffsets( int count, float width, Qt::Orientation direction )
     {
     memset(m_offsets, 0, 25 * sizeof(QVector2D));
     for ( int i = 0; i < count; i++ ) {
@@ -172,6 +159,7 @@ void LanczosFilter::createOffsets( int count, float width, Qt::Orientation direc
                 QVector2D( i / width, 0 ) : QVector2D( 0, i / width );
     }
     }
+#endif
 
 void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
@@ -222,6 +210,7 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
                 if( cachedTexture->width() == tw && cachedTexture->height() == th )
                     {
                     cachedTexture->bind();
+                    data.opacity *= 0.99;
                     prepareRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
                     cachedTexture->render( textureRect, textureRect );
                     restoreRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
@@ -265,13 +254,11 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             // Set up the shader for horizontal scaling
             float dx = sw / float(tw);
             int kernelSize;
-            createKernel( dx, &kernelSize );
-            createOffsets( kernelSize, sw, Qt::Horizontal );
+            m_shader->createKernel( dx, &kernelSize );
+            m_shader->createOffsets( kernelSize, sw, Qt::Horizontal );
 
             m_shader->bind();
-            glUniform1i( m_uTexUnit, 0 );
-            glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
-            glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
+            m_shader->setUniforms();
 
             // Draw the window back into the FBO, this time scaled horizontally
             glClear( GL_COLOR_BUFFER_BIT );
@@ -297,11 +284,9 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
 
             // Set up the shader for vertical scaling
             float dy = sh / float(th);
-            createKernel( dy, &kernelSize );
-            createOffsets( kernelSize, m_offscreenTex->height(), Qt::Vertical );
-
-            glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
-            glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
+            m_shader->createKernel( dy, &kernelSize );
+            m_shader->createOffsets( kernelSize, m_offscreenTex->height(), Qt::Vertical );
+            m_shader->setUniforms();
 
             // Now draw the horizontally scaled window in the FBO at the right
             // coordinates on the screen, while scaling it vertically and blending it.
@@ -511,6 +496,144 @@ void LanczosFilter::restoreRenderStates( GLTexture* tex, double opacity, double 
     glPopAttrib();  // ENABLE_BIT
 #endif
     }
+
+/************************************************
+* LanczosShader
+************************************************/
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+LanczosShader::LanczosShader( QObject* parent )
+    : QObject( parent )
+    , m_shader( 0 )
+    , m_arbProgram( 0 )
+    {
+    }
+
+LanczosShader::~LanczosShader()
+    {
+    delete m_shader;
+    if( m_arbProgram )
+        {
+        glDeleteProgramsARB(1, &m_arbProgram);
+        m_arbProgram = 0;
+        }
+    }
+
+void LanczosShader::bind()
+    {
+    if( m_shader )
+        m_shader->bind();
+    else
+        {
+        glEnable(GL_FRAGMENT_PROGRAM_ARB);
+        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
+        }
+    }
+
+void LanczosShader::unbind()
+    {
+    if( m_shader )
+        m_shader->unbind();
+    else
+        {
+        int boundObject;
+        glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
+        if( boundObject == m_arbProgram )
+            {
+            glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
+            glDisable(GL_FRAGMENT_PROGRAM_ARB);
+            }
+        }
+    }
+
+void LanczosShader::setUniforms()
+    {
+    if( m_shader )
+        {
+        glUniform1i( m_uTexUnit, 0 );
+        glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
+        glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
+        }
+    else
+        {
+        for( int i=0; i<25; ++i )
+            {
+            glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i, m_offsets[i].x(), m_offsets[i].y(), 0, 0 );
+            }
+        for( int i=0; i<25; ++i )
+            {
+            glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i+25, m_kernel[i].x(), m_kernel[i].y(), m_kernel[i].z(), m_kernel[i].w() );
+            }
+        }
+    }
+
+bool LanczosShader::init()
+    {
+    if ( GLShader::fragmentShaderSupported() &&
+         GLShader::vertexShaderSupported() &&
+         GLRenderTarget::supported() )
+        {
+        m_shader = new GLShader(":/resources/lanczos-vertex.glsl", ":/resources/lanczos-fragment.glsl");
+        if (m_shader->isValid())
+            {
+            m_shader->bind();
+            m_uTexUnit    = m_shader->uniformLocation("texUnit");
+            m_uKernel     = m_shader->uniformLocation("kernel");
+            m_uOffsets    = m_shader->uniformLocation("offsets");
+            m_shader->unbind();
+            return true;
+            }
+        else
+            {
+            kDebug(1212) << "Shader is not valid";
+            m_shader = 0;
+            // try ARB shader
+            }
+        }
+
+    // try to create an ARB Shader
+    if( !hasGLExtension("GL_ARB_fragment_program") )
+        return false;
+
+    QByteArray text;
+    QTextStream stream(&text);
+
+    stream << "!!ARBfp1.0\n";
+    stream << "TEMP coord;\n"; // temporary variable to store texcoord
+    stream << "TEMP color;\n"; // temporary variable to store fetched texture colors
+    stream << "TEMP sum;\n"; // variable to render the final result
+    stream << "TEX sum, fragment.texcoord, texture[0], 2D;\n"; // sum = texture2D(texUnit, gl_TexCoord[0].st)
+    stream << "MUL sum, sum, program.local[25];\n"; // sum = sum * kernel[0]
+    for( int i=1; i<25; ++i )
+        {
+        stream << "ADD coord, fragment.texcoord, program.local[" << i << "];\n"; // coord = gl_TexCoord[0] + offset[i]
+        stream << "TEX color, coord, texture[0], 2D;\n"; // color = texture2D(texUnit, coord)
+        stream << "MAD sum, color, program.local[" << (25+i) << "], sum;\n"; // sum += color * kernel[i]
+        stream << "SUB coord, fragment.texcoord, program.local[" << i << "];\n"; // coord = gl_TexCoord[0] - offset[i]
+        stream << "TEX color, coord, texture[0], 2D;\n"; // color = texture2D(texUnit, coord)
+        stream << "MAD sum, color, program.local[" << (25+i) << "], sum;\n"; // sum += color * kernel[i]
+        }
+    stream << "MOV result.color, sum;\n";  // gl_FragColor = sum
+    stream << "END\n";
+    stream.flush();
+
+    glEnable(GL_FRAGMENT_PROGRAM_ARB);
+    glGenProgramsARB(1, &m_arbProgram);
+    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
+    glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, text.length(), text.constData());
+
+    if( glGetError() )
+        {
+        const char *error = (const char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
+        kError() << "Failed to compile fragment program:" << error;
+        return false;
+        }
+
+    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
+    glDisable(GL_FRAGMENT_PROGRAM_ARB);
+    kDebug( 1212 ) << "ARB Shader compiled, id: " << m_arbProgram;
+    return true;
+    }
+#endif
 
 } // namespace
 

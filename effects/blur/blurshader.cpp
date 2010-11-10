@@ -401,8 +401,13 @@ void ARBBlurShader::bind()
 
 void ARBBlurShader::unbind()
 {
-    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
-    glDisable(GL_FRAGMENT_PROGRAM_ARB);
+    int boundObject;
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
+    if( boundObject == program )
+        {
+        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
+        glDisable(GL_FRAGMENT_PROGRAM_ARB);
+        }
 }
 
 int ARBBlurShader::maxKernelSize() const

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2010 by Fredrik Höglund <fredrik@kde.org>
+Copyright (C) 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,6 +38,7 @@ class WindowPaintData;
 class GLTexture;
 class GLRenderTarget;
 class GLShader;
+class LanczosShader;
 
 class LanczosFilter
     : public QObject
@@ -53,23 +55,44 @@ class LanczosFilter
     private:
         void init();
         void updateOffscreenSurfaces();
-        void createKernel(float delta, int *kernelSize);
-        void createOffsets(int count, float width, Qt::Orientation direction);
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         void prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
         void restoreRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
         GLTexture *m_offscreenTex;
         GLRenderTarget *m_offscreenTarget;
-        GLShader *m_shader;
+        LanczosShader *m_shader;
 #endif
         QBasicTimer m_timer;
-        QVector2D m_offsets[25];
-        QVector4D m_kernel[25];
         bool m_inited;
+};
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+class LanczosShader
+    : public QObject
+{
+    Q_OBJECT
+
+    public:
+        explicit LanczosShader( QObject* parent = 0 );
+        virtual ~LanczosShader();
+        bool init();
+        void bind();
+        void unbind();
+        void setUniforms();
+
+        void createKernel(float delta, int *kernelSize);
+        void createOffsets(int count, float width, Qt::Orientation direction);
+
+    private:
+        GLShader *m_shader;
         int m_uTexUnit;
         int m_uOffsets;
         int m_uKernel;
+        QVector2D m_offsets[25];
+        QVector4D m_kernel[25];
+        uint m_arbProgram; // TODO: GLuint
 };
+#endif
 
 } // namespace
 
