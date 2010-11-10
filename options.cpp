@@ -291,7 +291,7 @@ ElectricBorderAction Options::electricBorderAction( const QString& name )
     if( lowerName == "dashboard" ) return ElectricActionDashboard;
     else if( lowerName == "showdesktop" ) return ElectricActionShowDesktop;
     else if( lowerName == "lockscreen" ) return ElectricActionLockScreen;
-    else if( lowerName == "preventscreenlocking" ) return ElectricActionLockScreen;
+    else if( lowerName == "preventscreenlocking" ) return ElectricActionPreventScreenLocking;
     return ElectricActionNone;
     }
 
