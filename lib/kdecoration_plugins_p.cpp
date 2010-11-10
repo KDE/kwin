@@ -29,7 +29,7 @@ DEALINGS IN THE SOFTWARE.
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <klibloader.h>
+#include <klibrary.h>
 #include <kconfiggroup.h>
 #include <assert.h>
 
@@ -116,14 +116,16 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     KLibrary *oldLibrary = library;
     KDecorationFactory* oldFactory = fact;
 
-    QString path = KLibLoader::findLibrary(nameStr);
+    KLibrary libToFind(nameStr);
+    QString path = libToFind.fileName();
 	kDebug(1212) << "kwin : path " << path << " for " << nameStr;
 
     // If the plugin was not found, try to find the default
     if (path.isEmpty())
         {
         nameStr = defaultPlugin;
-        path = KLibLoader::findLibrary(nameStr);
+        KLibrary libToFind(nameStr);
+        path = libToFind.fileName();
         }
 
     // If no library was found, exit kwin with an error message
@@ -148,7 +150,8 @@ trydefaultlib:
         nameStr = defaultPlugin;
 	if ( pluginStr == nameStr )
 	    return true;
-        path = KLibLoader::findLibrary(nameStr);
+        KLibrary libToFind(nameStr);
+        path = libToFind.fileName();
 	if (!path.isEmpty())
             library = new KLibrary(path);
         }
