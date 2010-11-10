@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
+#include <QDebug>
 #include <QEasingCurve>
 #include <QPropertyAnimation>
 #include <QHash>
