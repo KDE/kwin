@@ -404,12 +404,15 @@ Group* Workspace::findClientLeaderGroup( const Client* c ) const
 void Workspace::updateMinimizedOfTransients( Client* c )
     {
     // if mainwindow is minimized or shaded, minimize transients too
-    if ( c->isMinimized() || c->isShade() )
+    if ( c->isMinimized() )
         {
         for( ClientList::ConstIterator it = c->transients().constBegin();
              it != c->transients().constEnd();
              ++it )
             {
+            if ((*it)->isModal())
+                continue; // there's no reason to hide modal dialogs with the main client
+                          // but to keep them to eg. watch progress or whatever
             if( !(*it)->isMinimized()
                  && !(*it)->isTopMenu() ) // topmenus are not minimized, they're hidden
                 {

@@ -1058,7 +1058,6 @@ void Client::setShade( ShadeMode mode )
     discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
-    workspace()->updateMinimizedOfTransients( this );
     if( decoration )
         decoration->shadeChange();
     updateWindowRules();
@@ -1499,6 +1498,7 @@ void Client::setDesktop( int desktop )
     desktop = qMin( workspace()->numberOfDesktops(), rules()->checkDesktop( desktop ));
     if( desk == desktop )
         return;
+
     int was_desk = desk;
     desk = desktop;
     info->setDesktop( desktop );
@@ -1510,6 +1510,21 @@ void Client::setDesktop( int desktop )
         }
     if( decoration != NULL )
         decoration->desktopChange();
+
+    ClientList transients_stacking_order = workspace()->ensureStackingOrder( transients() );
+    for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
+        it != transients_stacking_order.constEnd();
+        ++it )
+        (*it)->setDesktop( desktop );
+
+    if( isModal()) // if a modal dialog is moved, move the mainwindow with it as otherwise
+                      // the (just moved) modal dialog will confusingly return to the mainwindow with
+                      // the next desktop change
+        {
+        foreach( Client* c2, mainClients())
+            c2->setDesktop( desktop );
+        }
+
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
     updateVisibility();
     updateWindowRules();
