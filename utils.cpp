@@ -30,13 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 
 #ifndef KCMRULES
-
+#include <QLabel>
+#include <QVBoxLayout>
 #include <kxerrorhandler.h>
 #include <assert.h>
 #include <kdebug.h>
 #include <kglobalaccel.h>
+#include <klocale.h>
 #include <kshortcut.h>
 #include <kkeyserver.h>
+#include <KPushButton>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
@@ -438,9 +441,13 @@ bool isLocalMachine( const QByteArray& host )
 
 #ifndef KCMRULES
 ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
-    : widget( new KKeySequenceWidget( this ))
-     ,_shortcut(cut)
+    : _shortcut(cut)
     {
+    QWidget *vBoxContainer = new QWidget( this );
+    vBoxContainer->setLayout( new QVBoxLayout( vBoxContainer ) );
+    vBoxContainer->layout()->addWidget( widget = new KKeySequenceWidget( vBoxContainer ) );
+    vBoxContainer->layout()->addWidget( warning = new QLabel( vBoxContainer ) );
+    warning->hide();
     widget->setKeySequence( cut );
 
     // To not check for conflicting shortcuts. The widget would use a message
@@ -454,7 +461,8 @@ ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
         widget, SIGNAL(keySequenceChanged(const QKeySequence&)),
         SLOT(keySequenceChanged(const QKeySequence&)));
 
-    setMainWidget( widget );
+    setMainWidget( vBoxContainer );
+    widget->setFocus();
 
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
@@ -492,13 +500,31 @@ void ShortcutDialog::done( int r )
 
 void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
     {
+    activateWindow(); // where is the kbd focus lost? cause of popup state?
+    if (_shortcut == seq)
+        return; // don't try to update the same
+
     // Check if the key sequence is used currently
+    QString sc = seq.toString();
+    // NOTICE - seq.toString() & the entries in "conflicting" randomly get invalidated after the next call (if no sc has been set & conflicting isn't empty?!)
     QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::getGlobalShortcutsByKey(seq);
-    if (!conflicting.isEmpty()) {
-        kDebug(1212) << "TODO: Display conflicting shortcuts to user";
-        // TODO: Inform the user somehow instead of just ignoring his wish
+    if (!conflicting.isEmpty()) 
+        {
+        const KGlobalShortcutInfo &conflict = conflicting.at(0);
+        warning->setText(i18nc("'%1' is a keyboard shortcut like 'ctrl+w'",
+                               "<b>%1</b> is already in use", sc));
+        warning->setToolTip(i18nc("keyboard shortcut '%1' is used by action '%2' in application '%3'",
+                                  "<b>%1</b> is used by %2 in %3", sc, conflict.friendlyName(), conflict.componentFriendlyName()));
+        warning->show();
         widget->setKeySequence(shortcut());
         }
+    else if (seq != _shortcut)
+        {
+        warning->hide();
+        if ( KPushButton *ok = button( KDialog::Ok ) )
+            ok->setFocus();
+        }
+    
     _shortcut = seq;
     }
 

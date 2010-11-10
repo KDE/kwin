@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
+class QLabel;
+
 #include <config-workspace.h>
 #include <config-X11.h>
 #include <config-kwin.h>
@@ -364,6 +366,7 @@ class ShortcutDialog
     private:
         KKeySequenceWidget* widget;
         QKeySequence _shortcut;
+        QLabel *warning;
     };
 
 #endif //KCMRULES
