@@ -146,6 +146,8 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual bool decorationsHaveAlpha() const;
 
+        virtual bool decorationSupportsBlurBehind() const;
+
         virtual EffectFrame* effectFrame( EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment ) const;
 
         // internal (used by kwin core or compositing code)

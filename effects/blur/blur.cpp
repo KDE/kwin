@@ -167,7 +167,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            if (w->hasDecoration()) {
+            if (w->hasDecoration() && effects->decorationSupportsBlurBehind()) {
                 region = w->shape();
                 region -= w->decorationInnerRect();
                 region |= appRegion.translated(w->contentsRect().topLeft()) &
@@ -179,7 +179,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
             // for the whole window.
             region = w->shape();
         }
-    } else if (w->hasDecoration()) {
+    } else if (w->hasDecoration() && effects->decorationSupportsBlurBehind()) {
         // If the client hasn't specified a blur region, we'll only enable
         // the effect behind the decoration.
         region = w->shape();
@@ -236,7 +236,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     bool scaled = !qFuzzyCompare(data.xScale, 1.0) && !qFuzzyCompare(data.yScale, 1.0);
     bool translated = data.xTranslate || data.yTranslate;
     bool transformed = scaled || translated || mask & PAINT_WINDOW_TRANSFORMED;
-    bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha());
+    bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha() && effects->decorationSupportsBlurBehind());
     bool valid = target->valid() && shader->isValid();
 
     QRegion shape;

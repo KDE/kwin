@@ -266,6 +266,11 @@ bool EffectsHandlerImpl::decorationsHaveAlpha() const
     return Workspace::self()->decorationHasAlpha();
     }
 
+bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
+    {
+    return Workspace::self()->decorationSupportsBlurBehind();
+    }
+
 // start another painting pass
 void EffectsHandlerImpl::startPaint()
     {

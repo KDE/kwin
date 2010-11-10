@@ -171,7 +171,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 156
+#define KWIN_EFFECT_API_VERSION_MINOR 157
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -794,6 +794,12 @@ class KWIN_EXPORT EffectsHandler
          * @since 4.5
          */
         virtual bool decorationsHaveAlpha() const = 0;
+
+        /**
+         * Returns @a true if the window decorations support blurring behind the decoration, and @a false otherwise
+         * @since 4.6
+         */
+        virtual bool decorationSupportsBlurBehind() const = 0;
 
         /**
          * Checks if the driver is on given blacklist.

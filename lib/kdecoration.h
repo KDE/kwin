@@ -200,6 +200,8 @@ public:
                                         ///  @since 4.3
         AbilityExtendIntoClientArea = 3002, ///< The decoration respects transparentRect()
                                             ///  @since 4.4
+        AbilityUsesBlurBehind = 3003, ///< The decoration wants the background to be blurred, when the blur plugin is enabled.
+                                     /// @since 4.6
         // Tabbing
         AbilityClientGrouping = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types

@@ -103,6 +103,8 @@ bool AuroraeFactory::supports(Ability ability) const
         return true; // TODO: correct value from theme
     case AbilityClientGrouping:
         return true;
+    case AbilityUsesBlurBehind:
+        return true;
     default:
         return false;
     }
