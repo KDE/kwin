@@ -32,7 +32,7 @@ class ResizeEffect
     public:
         ResizeEffect();
         ~ResizeEffect();
-        virtual inline bool isResizeEffect() { return true; }
+        virtual inline bool provides( Effect::Feature ef ) { return ef == Effect::Resize; }
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );

@@ -2695,7 +2695,7 @@ void Client::clearbound()
 
 void Client::doDrawbound( const QRect& geom, bool clear )
     {
-    if( effects && static_cast<EffectsHandlerImpl*>(effects)->providesResizeEffect() )
+    if( effects && static_cast<EffectsHandlerImpl*>(effects)->provides( Effect::Resize ) )
         return; // done by effect
     if( decoration != NULL && decoration->drawbound( geom, clear ) )
         return; // done by decoration
@@ -2727,7 +2727,9 @@ void Client::positionGeometryTip()
     {
     assert( isMove() || isResize());
     // Position and Size display
-    if (options->showGeometryTip())
+    if ( effects && static_cast<EffectsHandlerImpl*>(effects)->provides( Effect::GeometryTip ) )
+        return; // some effect paints this for us
+    if ( options->showGeometryTip() )
         {
         if( !geometryTip )
             { // save under is not necessary with opaque, and seem to make things slower
@@ -3348,7 +3350,7 @@ void Client::performMoveResize()
     bool transparent = false;
     if( isResize() )
         {
-        haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->providesResizeEffect();
+        haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides( Effect::Resize );
         transparent = haveResizeEffect || rules()->checkMoveResizeMode( options->resizeMode) != Options::Opaque;
         }
     else if ( isMove())

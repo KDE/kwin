@@ -48,7 +48,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void postPaintWindow( EffectWindow* w );
         virtual void paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
 
-        bool providesResizeEffect();
+        bool provides( Effect::Feature ef );
 
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 

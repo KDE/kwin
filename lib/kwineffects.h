@@ -325,6 +325,11 @@ class KWIN_EXPORT Effect
             PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9
         };
 
+        enum Feature
+        {
+            Nothing = 0, Resize, GeometryTip
+        };
+
         /**
          * Constructs new Effect object.
          **/
@@ -419,7 +424,7 @@ class KWIN_EXPORT Effect
          * Called on Transparent resizes.
          * return true if your effect substitutes the XOR rubberband
         */
-        virtual bool isResizeEffect() { return false; }
+        virtual bool provides( Feature );
 
         /**
          * Can be called to draw multiple copies (e.g. thumbnails) of a window.

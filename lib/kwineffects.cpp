@@ -251,6 +251,11 @@ void Effect::paintEffectFrame( KWin::EffectFrame* frame, QRegion region, double 
     {
     effects->paintEffectFrame( frame, region, opacity, frameOpacity );
     }
+    
+bool Effect::provides( Feature ) 
+    { 
+    return false; 
+    }
 
 void Effect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {

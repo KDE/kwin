@@ -228,10 +228,10 @@ void EffectsHandlerImpl::postPaintWindow( EffectWindow* w )
     // no special final code
     }
 
-bool EffectsHandlerImpl::providesResizeEffect()
+bool EffectsHandlerImpl::provides( Effect::Feature ef )
     {
     for( int i = 0; i < loaded_effects.size(); ++i )
-        if( loaded_effects.at(i).second->isResizeEffect() )
+        if( loaded_effects.at(i).second->provides( ef ) )
             return true;
     return false;
     }

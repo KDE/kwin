@@ -81,6 +81,7 @@ include( slideback/CMakeLists.txt )
 include( slidingpopups/CMakeLists.txt )
 include( taskbarthumbnail/CMakeLists.txt )
 include( thumbnailaside/CMakeLists.txt )
+include( windowgeometry/CMakeLists.txt )
 include( zoom/CMakeLists.txt )
 
 # OpenGL-specific effects

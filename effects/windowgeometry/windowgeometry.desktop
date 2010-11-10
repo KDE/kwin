@@ -1,0 +1,28 @@
+[Desktop Entry]
+# Name of the effect
+Name=WindowGeometry
+Comment=Display window geometries on move/resize
+Icon=preferences-system-windows-effect-windowgeometry
+
+# This is KWin effect
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+# Author and email of the author
+X-KDE-PluginInfo-Author=Thomas Lübking
+X-KDE-PluginInfo-Email=thomas.luebking@web.de
+# Internal name of the effect
+X-KDE-PluginInfo-Name=kwin4_effect_windowgeometry
+# Category of the effect, for config dialog
+X-KDE-PluginInfo-Category=Appearance
+# Version and license
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+# If the effect depends on any other effect(s) to be active, then internal
+#  names of those effects can be given here
+X-KDE-PluginInfo-Depends=
+# Whether this effect should be enabled by default
+X-KDE-PluginInfo-EnabledByDefault=false
+# The plugin (library) which contains the effect. One library may contain more effects.
+X-KDE-Library=kwin4_effect_builtins
+# The order in which this effect is loaded.  Lower numbers are loaded first.
+X-KDE-Ordering=90
