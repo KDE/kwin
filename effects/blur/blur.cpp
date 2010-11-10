@@ -22,6 +22,7 @@
 
 #include <X11/Xatom.h>
 
+#include <KDebug>
 
 namespace KWin
 {
