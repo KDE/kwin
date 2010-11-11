@@ -75,6 +75,9 @@ class KWinCompositingConfig : public KCModule
         void configChanged(bool reinitCompositing);
         void initEffectSelector();
         void setupCompositingState( bool active, bool enabled = true );
+    
+    private slots:
+        void toogleSmoothScaleUi( int compositingType );
 
     private:
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;

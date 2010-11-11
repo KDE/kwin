@@ -40,7 +40,7 @@ LanczosFilter::LanczosFilter( QObject* parent )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , m_offscreenTex( 0 )
     , m_offscreenTarget( 0 )
-    , m_shader( new LanczosShader( this ) )
+    , m_shader( 0 )
 #endif
     , m_inited( false)
     {
@@ -60,8 +60,13 @@ void LanczosFilter::init()
         return;
     m_inited = true;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    // check the blacklist
+
     KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
+
+    if ( config->group( "Compositing" ).readEntry( "GLTextureFilter", 2 ) != 2 )
+        return; // disabled by config
+
+    // check the blacklist
     KConfigGroup blacklist = config->group( "Blacklist" ).group( "Lanczos" );
     if( effects->checkDriverBlacklist( blacklist ) )
         {
@@ -69,6 +74,7 @@ void LanczosFilter::init()
         return;
         }
 
+    m_shader = new LanczosShader( this );
     if( !m_shader->init() )
         {
         delete m_shader;

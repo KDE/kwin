@@ -117,14 +117,16 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(toogleSmoothScaleUi(int)));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
     connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.unredirectFullscreen , SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.glScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.xrScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(ui.xrenderSmoothScale, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.compositingStateButton, SIGNAL(clicked(bool)), kwinInterface, SLOT(toggleCompositing()));
     connect(kwinInterface, SIGNAL(compositingToggled(bool)), this, SLOT(setupCompositingState(bool)));
 
@@ -415,6 +417,13 @@ void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
     ui.compositingStateButton->setEnabled( enabled );
     }
 
+void KWinCompositingConfig::toogleSmoothScaleUi( int compositingType )
+{
+    ui.glScaleFilter->setVisible( compositingType == OPENGL_INDEX );
+    ui.xrScaleFilter->setVisible( compositingType == XRENDER_INDEX );
+    ui.scaleMethodLabel->setBuddy( compositingType == XRENDER_INDEX ? ui.xrScaleFilter : ui.glScaleFilter );
+}
+
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
     {
     KService::List services = KServiceTypeTrader::self()->query(
@@ -446,13 +455,15 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.disableChecks->setChecked( config.readEntry( "DisableChecks", false ));
     ui.unredirectFullscreen->setChecked( config.readEntry( "UnredirectFullscreen", true ));
 
+    ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
+    ui.glScaleFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 2));
+    
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
-    ui.glTextureFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 1));
     ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering()));
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
 
-    ui.xrenderSmoothScale->setChecked(config.readEntry("XRenderSmoothScale", false));
+    toogleSmoothScaleUi( ui.compositingType->currentIndex() );
     }
 
 void KWinCompositingConfig::load()
@@ -603,7 +614,8 @@ bool KWinCompositingConfig::saveAdvancedTab()
         advancedChanged = true;
         }
     else if( config.readEntry("HiddenPreviews", 5) != hps[ ui.windowThumbnails->currentIndex() ]
-        || config.readEntry("XRenderSmoothScale", false ) != ui.xrenderSmoothScale->isChecked() )
+        || (int)config.readEntry("XRenderSmoothScale", false ) != ui.xrScaleFilter->currentIndex() 
+        || config.readEntry("GLTextureFilter", 2 ) != ui.glScaleFilter->currentIndex())
         advancedChanged = true;
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender");
@@ -611,12 +623,13 @@ bool KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
     config.writeEntry( "UnredirectFullscreen", ui.unredirectFullscreen->isChecked() );
 
+    config.writeEntry("XRenderSmoothScale", ui.xrScaleFilter->currentIndex() == 1);
+    config.writeEntry("GLTextureFilter", ui.glScaleFilter->currentIndex());
+
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
-    config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
     config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
 
-    config.writeEntry("XRenderSmoothScale", ui.xrenderSmoothScale->isChecked());
 
     return advancedChanged;
     }
@@ -756,11 +769,11 @@ void KWinCompositingConfig::defaults()
     ui.windowThumbnails->setCurrentIndex( 1 );
     ui.disableChecks->setChecked( false );
     ui.unredirectFullscreen->setChecked( true );
+    ui.xrScaleFilter->setCurrentIndex( 0 );
+    ui.glScaleFilter->setCurrentIndex( 2 );
     ui.glMode->setCurrentIndex( 0 );
-    ui.glTextureFilter->setCurrentIndex( 1 );
     ui.glDirect->setChecked( mDefaultPrefs.enableDirectRendering() );
     ui.glVSync->setChecked( mDefaultPrefs.enableVSync() );
-    ui.xrenderSmoothScale->setChecked( false );
     }
 
 QString KWinCompositingConfig::quickHelp() const

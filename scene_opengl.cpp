@@ -1427,18 +1427,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     else
         filter = ImageFilterFast;
     if( filter == ImageFilterGood )
-        {
-        // avoid unneeded mipmap generation by only using trilinear
-        // filtering when it actually makes a difference, that is with
-        // minification or changed vertices
-        if( options->glSmoothScale == 2
-            && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
-            {
-            texture.setFilter( GL_LINEAR_MIPMAP_LINEAR );
-            }
-        else
-            texture.setFilter( GL_LINEAR );
-        }
+        texture.setFilter( GL_LINEAR );
     else
         texture.setFilter( GL_NEAREST );
     // do required transformations
@@ -1604,18 +1593,7 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
     else
         return;
     if( filter == ImageFilterGood )
-        {
-        // avoid unneeded mipmap generation by only using trilinear
-        // filtering when it actually makes a difference, that is with
-        // minification or changed vertices
-        if( options->glSmoothScale == 2
-            && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
-            {
-            decorationTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
-            }
-        else
-            decorationTexture->setFilter( GL_LINEAR );
-        }
+        decorationTexture->setFilter( GL_LINEAR );
     else
         decorationTexture->setFilter( GL_NEAREST );
     decorationTexture->setWrapMode( GL_CLAMP_TO_EDGE );
