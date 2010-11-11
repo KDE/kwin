@@ -210,6 +210,7 @@ class PresentWindowsEffect
         int m_layoutMode;
         bool m_showCaptions;
         bool m_showIcons;
+        bool m_doNotCloseWindows;
         bool m_tabBoxAllowed;
         bool m_tabBoxAlternativeAllowed;
         int m_accuracy;

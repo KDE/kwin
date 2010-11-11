@@ -148,6 +148,7 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_layoutMode = conf.readEntry( "LayoutMode", int( LayoutNatural ));
     m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
     m_showIcons = conf.readEntry( "DrawWindowIcons", true );
+    m_doNotCloseWindows = !conf.readEntry( "AllowClosingWindows", true );
     m_tabBoxAllowed = conf.readEntry( "TabBox", false );
     m_tabBoxAlternativeAllowed = conf.readEntry( "TabBoxAlternative", false );
     m_ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
@@ -1784,6 +1785,8 @@ void PresentWindowsEffect::setHighlightedWindow( EffectWindow *w )
 
 void PresentWindowsEffect::updateCloseWindow()
     {
+    if ( m_doNotCloseWindows )
+        return;
     if( m_closeView->isVisible() )
         return;
     if( !m_highlightedWindow )

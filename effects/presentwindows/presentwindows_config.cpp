@@ -73,7 +73,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayTitleBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayIconBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->switchingBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->allowClosing, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->ignoreMinimizedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->showPanelBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->accuracySlider, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
@@ -110,8 +110,8 @@ void PresentWindowsEffectConfig::load()
     bool displayIcon = conf.readEntry( "DrawWindowIcons", true );
     m_ui->displayIconBox->setChecked( displayIcon );
 
-    bool switching = conf.readEntry( "TabBox", false );
-    m_ui->switchingBox->setChecked( switching );
+    bool allowClosing = conf.readEntry( "AllowClosingWindows", true );
+    m_ui->allowClosing->setChecked( allowClosing );
 
     bool ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
     m_ui->ignoreMinimizedBox->setChecked( ignoreMinimized );
@@ -153,7 +153,7 @@ void PresentWindowsEffectConfig::save()
 
     conf.writeEntry( "DrawWindowCaptions", m_ui->displayTitleBox->isChecked() );
     conf.writeEntry( "DrawWindowIcons", m_ui->displayIconBox->isChecked() );
-    conf.writeEntry( "TabBox", m_ui->switchingBox->isChecked() );
+    conf.writeEntry( "AllowClosingWindows", m_ui->allowClosing->isChecked() );
     conf.writeEntry( "IgnoreMinimized", m_ui->ignoreMinimizedBox->isChecked() );
     conf.writeEntry( "ShowPanel", m_ui->showPanelBox->isChecked() );
 
@@ -189,7 +189,7 @@ void PresentWindowsEffectConfig::defaults()
     m_ui->layoutCombo->setCurrentIndex( int( PresentWindowsEffect::LayoutNatural ));
     m_ui->displayTitleBox->setChecked( true );
     m_ui->displayIconBox->setChecked( true );
-    m_ui->switchingBox->setChecked( false );
+    m_ui->allowClosing->setChecked( true );
     m_ui->ignoreMinimizedBox->setChecked( false );
     m_ui->showPanelBox->setChecked( false );
     m_ui->accuracySlider->setSliderPosition( 1 );

@@ -416,13 +416,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QCheckBox" name="switchingBox">
-        <property name="text">
-         <string>Use for window &amp;switching</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="0" colspan="2">
        <widget class="QCheckBox" name="ignoreMinimizedBox">
         <property name="text">
@@ -462,6 +455,13 @@
         </item>
        </widget>
       </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="allowClosing">
+        <property name="text">
+         <string>Provide buttons to close the windows</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -469,22 +469,22 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
    <header location="global">kwineffects.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>layoutCombo</tabstop>
   <tabstop>displayTitleBox</tabstop>
   <tabstop>displayIconBox</tabstop>
-  <tabstop>switchingBox</tabstop>
+  <tabstop>allowClosing</tabstop>
   <tabstop>ignoreMinimizedBox</tabstop>
   <tabstop>accuracySlider</tabstop>
   <tabstop>fillGapsBox</tabstop>
