@@ -48,7 +48,7 @@ extern "C"
 
 namespace Oxygen
 {
-    
+
     //_______________________________________________________________________
     Config::Config( KConfig*, QWidget* parent ):
         QObject( parent )
@@ -117,14 +117,14 @@ namespace Oxygen
 
         else if( userInterface_->ui.separatorMode->currentIndex() != configuration.separatorMode() ) modified = true;
         else if( userInterface_->ui.titleOutline->isChecked() !=  configuration.drawTitleOutline() ) modified = true;
-        else if( userInterface_->shadowConfigurations[0]->isChecked() !=  configuration.useOxygenShadows() ) modified = true;
-        else if( userInterface_->shadowConfigurations[1]->isChecked() !=  configuration.useDropShadows() ) modified = true;
         else if( userInterface_->ui.tabsEnabled->isChecked() !=  configuration.tabsEnabled() ) modified = true;
         else if( userInterface_->ui.useAnimations->isChecked() !=  configuration.useAnimations() ) modified = true;
         else if( userInterface_->ui.animateTitleChange->isChecked() !=  configuration.animateTitleChange() ) modified = true;
         else if( userInterface_->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
 
         // shadow configurations
+        else if( userInterface_->shadowConfigurations[0]->isChecked() !=  configuration.useOxygenShadows() ) modified = true;
+        else if( userInterface_->shadowConfigurations[1]->isChecked() !=  configuration.useDropShadows() ) modified = true;
         else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ), *userInterface_->shadowConfigurations[0] ) ) modified = true;
         else if( shadowConfigurationChanged( ShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ), *userInterface_->shadowConfigurations[1] ) ) modified = true;
 
