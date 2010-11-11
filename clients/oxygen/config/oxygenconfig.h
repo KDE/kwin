@@ -99,9 +99,6 @@ namespace Oxygen {
     //! returns true if exception list is changed
     bool exceptionListChanged( void ) const;
 
-    //! expert mode
-    bool expertMode_;
-
     //! user interface
     ConfigurationUi *userInterface_;
 
