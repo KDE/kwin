@@ -207,6 +207,12 @@ bool Client::manage( Window w, bool isMapped )
             desk = info->desktop(); // Window had the initial desktop property, force it
         if( desktop() == 0 && asn_valid && asn_data.desktop() != 0 )
             desk = asn_data.desktop();
+        if (!isMapped &&  isNormalWindow() && isOnAllActivities()) {
+            //a new, regular window, when we're not recovering from a crash,
+            //and it hasn't got an activity. let's try giving it the current one.
+            //TODO: decide whether to keep this before the 4.6 release
+            setOnActivity(Workspace::self()->currentActivity(), true);
+        }
         }
     if( desk == 0 ) // Assume window wants to be visible on the current desktop
         desk = workspace()->currentDesktop();
