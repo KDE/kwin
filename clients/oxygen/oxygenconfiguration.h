@@ -55,6 +55,10 @@ namespace OxygenConfig
 namespace Oxygen
 {
 
+    // forward declaration
+    class Exception;
+
+    //! stores all configuration options needed for decoration appearance
     class Configuration
     {
 
@@ -139,6 +143,9 @@ namespace Oxygen
 
         //! equal to operator
         bool operator == ( const Configuration& ) const;
+
+        //! propagate all features found in exception mask to this configuration
+        void readException( const Exception& );
 
         //! write to kconfig group
         virtual void write( KConfigGroup& ) const;

@@ -25,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenconfiguration.h"
+#include "oxygenexception.h"
 
 #include <KLocale>
 
@@ -148,6 +149,19 @@ namespace Oxygen
         // shadow cache mode
         setShadowCacheMode( shadowCacheMode( group.readEntry(
             OxygenConfig::SHADOW_CACHE_MODE, defaultConfiguration.shadowCacheModeName( false ) ), false ) );
+
+    }
+
+    //__________________________________________________
+    void Configuration::readException( const Exception& exception )
+    {
+        // propagate all features found in mask to the output configuration
+        if( exception.mask() & Exception::FrameBorder ) setFrameBorder( exception.frameBorder() );
+        if( exception.mask() & Exception::BlendColor ) setBlendColor( exception.blendColor() );
+        if( exception.mask() & Exception::DrawSeparator ) setSeparatorMode( exception.separatorMode() );
+        if( exception.mask() & Exception::TitleOutline ) setDrawTitleOutline( exception.drawTitleOutline() );
+        if( exception.mask() & Exception::SizeGripMode ) setSizeGripMode( exception.sizeGripMode() );
+        setHideTitleBar( exception.hideTitleBar() );
 
     }
 

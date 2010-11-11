@@ -274,14 +274,7 @@ namespace Oxygen
             if( iter->regExp().indexIn( value ) < 0 ) continue;
 
             Configuration configuration( defaultConfiguration() );
-
-            // propagate all features found in mask to the output configuration
-            if( iter->mask() & Exception::FrameBorder ) configuration.setFrameBorder( iter->frameBorder() );
-            if( iter->mask() & Exception::BlendColor ) configuration.setBlendColor( iter->blendColor() );
-            if( iter->mask() & Exception::DrawSeparator ) configuration.setSeparatorMode( iter->separatorMode() );
-            if( iter->mask() & Exception::TitleOutline ) configuration.setDrawTitleOutline( iter->drawTitleOutline() );
-            if( iter->mask() & Exception::SizeGripMode ) configuration.setSizeGripMode( iter->sizeGripMode() );
-            configuration.setHideTitleBar( iter->hideTitleBar() );
+            configuration.readException( *iter );
             return configuration;
 
         }
