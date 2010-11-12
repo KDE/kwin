@@ -28,6 +28,7 @@ Name[tg]=Сурати экран
 Name[tr]=Ekran Görüntüsü
 Name[uk]=Знімок вікна
 Name[x-test]=xxScreenshotxx
+Name[zh_CN]=屏幕截图
 Name[zh_TW]=螢幕快照
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory

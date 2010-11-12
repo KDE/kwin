@@ -7,3 +7,9 @@ X-KDE-ParentComponents=kwin4_effect_windowgeometry
 X-KDE-PluginKeyword=windowgeometry
 
 Name=WindowGeometry
+Name[ia]=WindowGeometry
+Name[pt]=Geometria da Janela
+Name[sv]=Fönstergeometri
+Name[uk]=Розміри вікна
+Name[x-test]=xxWindowGeometryxx
+Name[zh_TW]=視窗位置

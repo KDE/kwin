@@ -1,7 +1,19 @@
 [Desktop Entry]
 # Name of the effect
 Name=WindowGeometry
+Name[ia]=WindowGeometry
+Name[pt]=Geometria da Janela
+Name[sv]=Fönstergeometri
+Name[uk]=Розміри вікна
+Name[x-test]=xxWindowGeometryxx
+Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
+Comment[ia]=Monstrar geometrias de fenestra quando on move/redimensiona
+Comment[pt]=Mostrar as dimensões da janela ao mover/dimensionar
+Comment[sv]=Visa fönstergeometri vid förflyttning och storleksändring
+Comment[uk]=Показ розмірів вікон при пересуванні або зміні розмірів
+Comment[x-test]=xxDisplay window geometries on move/resizexx
+Comment[zh_TW]=移動/調整大小時顯示視窗位置
 Icon=preferences-system-windows-effect-windowgeometry
 
 # This is KWin effect
