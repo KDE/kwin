@@ -34,6 +34,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwineffects.cpp
     kwinglutils.cpp
     kwinglutils_funcs.cpp
+    kwinglplatform.cpp
     kwinshadereffect.cpp
     kwinxrenderutils.cpp
     )
