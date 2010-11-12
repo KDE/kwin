@@ -84,6 +84,9 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
 
+    // For future use
+    (void) I18N_NOOP( "Use GLSL shaders" );
+
 #define OPENGL_INDEX 0
 #define XRENDER_INDEX 1
 #ifndef KWIN_HAVE_OPENGL_COMPOSITING
