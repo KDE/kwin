@@ -3,6 +3,7 @@
 Name=WindowGeometry
 Name[ia]=WindowGeometry
 Name[pt]=Geometria da Janela
+Name[pt_BR]=Geometria da Janela
 Name[sv]=Fönstergeometri
 Name[uk]=Розміри вікна
 Name[x-test]=xxWindowGeometryxx
@@ -10,6 +11,7 @@ Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
 Comment[ia]=Monstrar geometrias de fenestra quando on move/redimensiona
 Comment[pt]=Mostrar as dimensões da janela ao mover/dimensionar
+Comment[pt_BR]=Mostra as dimensões da janela ao mover/redimensionar
 Comment[sv]=Visa fönstergeometri vid förflyttning och storleksändring
 Comment[uk]=Показ розмірів вікон при пересуванні або зміні розмірів
 Comment[x-test]=xxDisplay window geometries on move/resizexx

@@ -9,6 +9,7 @@ X-KDE-PluginKeyword=windowgeometry
 Name=WindowGeometry
 Name[ia]=WindowGeometry
 Name[pt]=Geometria da Janela
+Name[pt_BR]=Geometria da Janela
 Name[sv]=Fönstergeometri
 Name[uk]=Розміри вікна
 Name[x-test]=xxWindowGeometryxx
