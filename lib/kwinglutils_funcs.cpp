@@ -94,6 +94,9 @@ glGetProgramInfoLog_func glGetProgramInfoLog;
 glGetProgramiv_func glGetProgramiv;
 glGetShaderiv_func glGetShaderiv;
 glUniform1f_func glUniform1f;
+glUniform2f_func glUniform2f;
+glUniform3f_func glUniform3f;
+glUniform4f_func glUniform4f;
 glUniform1i_func glUniform1i;
 glUniform1fv_func glUniform1fv;
 glUniform2fv_func glUniform2fv;
@@ -103,6 +106,7 @@ glValidateProgram_func glValidateProgram;
 glGetUniformLocation_func glGetUniformLocation;
 glVertexAttrib1f_func glVertexAttrib1f;
 glGetAttribLocation_func glGetAttribLocation;
+glBindAttribLocation_func glBindAttribLocation;
 glGenProgramsARB_func glGenProgramsARB;
 glBindProgramARB_func glBindProgramARB;
 glProgramStringARB_func glProgramStringARB;
@@ -114,6 +118,9 @@ glGenBuffers_func glGenBuffers;
 glDeleteBuffers_func glDeleteBuffers;
 glBindBuffer_func glBindBuffer;
 glBufferData_func glBufferData;
+glEnableVertexAttribArray_func glEnableVertexAttribArray;
+glDisableVertexAttribArray_func glDisableVertexAttribArray;
+glVertexAttribPointer_func glVertexAttribPointer;
 
 
 static glXFuncPtr getProcAddress( const char* name )
@@ -244,6 +251,9 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glGetProgramiv, glGetObjectParameterivARB );
         GL_RESOLVE_WITH_EXT( glGetShaderiv, glGetObjectParameterivARB );
         GL_RESOLVE_WITH_EXT( glUniform1f, glUniform1fARB );
+        GL_RESOLVE_WITH_EXT( glUniform2f, glUniform2fARB );
+        GL_RESOLVE_WITH_EXT( glUniform3f, glUniform3fARB );
+        GL_RESOLVE_WITH_EXT( glUniform4f, glUniform4fARB );
         GL_RESOLVE_WITH_EXT( glUniform1i, glUniform1iARB );
         GL_RESOLVE_WITH_EXT( glUniform1fv, glUniform1fvARB );
         GL_RESOLVE_WITH_EXT( glUniform2fv, glUniform2fvARB );
@@ -253,6 +263,7 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glGetUniformLocation, glGetUniformLocationARB );
         GL_RESOLVE_WITH_EXT( glVertexAttrib1f, glVertexAttrib1fARB );
         GL_RESOLVE_WITH_EXT( glGetAttribLocation, glGetAttribLocationARB );
+        GL_RESOLVE_WITH_EXT( glBindAttribLocation, glBindAttribLocationARB );
         }
     if( hasGLExtension( "GL_ARB_fragment_program" ) && hasGLExtension( "GL_ARB_vertex_program" ))
         {
@@ -270,6 +281,9 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glDeleteBuffers, glDeleteBuffersARB );
         GL_RESOLVE_WITH_EXT( glBindBuffer, glBindBufferARB );
         GL_RESOLVE_WITH_EXT( glBufferData, glBufferDataARB );
+        GL_RESOLVE_WITH_EXT( glEnableVertexAttribArray, glEnableVertexAttribArrayARB );
+        GL_RESOLVE_WITH_EXT( glDisableVertexAttribArray, glDisableVertexAttribArrayARB );
+        GL_RESOLVE_WITH_EXT( glVertexAttribPointer, glVertexAttribPointerARB );
         }
     else
         {

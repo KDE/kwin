@@ -51,6 +51,7 @@ class SceneOpenGL
         virtual void windowAdded( Toplevel* );
         virtual void windowClosed( Toplevel*, Deleted* );
         virtual void windowDeleted( Deleted* );
+        GLShader* sceneShader() const;
     protected:
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintBackground( QRegion region );
@@ -96,6 +97,7 @@ class SceneOpenGL
 #endif
         bool init_ok;
         bool selfCheckDone;
+        GLShader* m_sceneShader;
     };
 
 class SceneOpenGL::Texture
@@ -150,7 +152,7 @@ class SceneOpenGL::Window
             DecorationBottom
             };
         void paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco );
-        void makeDecorationArrays( float** vertices, float** texcoords, const WindowQuadList& quads, const QRect& rect  ) const;
+        void makeDecorationArrays( const WindowQuadList& quads, const QRect& rect  ) const;
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
         void prepareStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
         void prepareRenderStates( TextureType type, double opacity, double brightness, double saturation );
@@ -165,6 +167,8 @@ class SceneOpenGL::Window
         Texture leftTexture;
         Texture rightTexture;
         Texture bottomTexture;
+        GLVertexBuffer* vertexBuffer;
+        static GLVertexBuffer* decorationVertices;
     };
 
 class SceneOpenGL::EffectFrame

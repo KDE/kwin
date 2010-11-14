@@ -69,6 +69,9 @@ Sources and other compositing managers:
 
 #include <kxerrorhandler.h>
 
+// TODO: use <>
+#include "lib/kwinglplatform.h"
+
 #include "utils.h"
 #include "client.h"
 #include "deleted.h"
@@ -87,6 +90,8 @@ Sources and other compositing managers:
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
+#include <QVector2D>
+#include <QVector4D>
 
 namespace KWin
 {
@@ -120,6 +125,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
     , selfCheckDone( false )
+    , m_sceneShader( NULL )
     {
     if( !Extensions::glxAvailable())
         {
@@ -171,6 +177,30 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             }
         else
             qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync( &sync );
+        }
+
+    // scene shader setup
+    GLPlatform::instance()->detect();
+    if( GLPlatform::instance()->supports( GLSL ) )
+        {
+        m_sceneShader = new GLShader( ":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl" );
+        if( m_sceneShader->isValid() )
+            {
+            m_sceneShader->bind();
+            m_sceneShader->setUniform( "sample", 0 );
+            m_sceneShader->setUniform( "displaySize", QVector2D(displayWidth(), displayHeight()));
+            m_sceneShader->setUniform( "debug", 1 );
+            m_sceneShader->bindAttributeLocation( 0, "vertex" );
+            m_sceneShader->bindAttributeLocation( 1, "texCoord" );
+            m_sceneShader->unbind();
+            kDebug(1212) << "Scene Shader is valid";
+            }
+        else
+            {
+            delete m_sceneShader;
+            m_sceneShader = NULL;
+            kDebug(1212) << "Scene Shader is not valid";
+            }
         }
 
     // OpenGL scene setup
@@ -248,6 +278,7 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
+    delete m_sceneShader;
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }
@@ -991,6 +1022,11 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 #endif
     }
 
+GLShader* SceneOpenGL::sceneShader() const
+    {
+    return m_sceneShader;
+    }
+
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
@@ -1333,6 +1369,7 @@ void SceneOpenGL::Texture::unbind()
 //****************************************
 // SceneOpenGL::Window
 //****************************************
+GLVertexBuffer* SceneOpenGL::Window::decorationVertices = NULL;
 
 SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
@@ -1341,12 +1378,14 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , leftTexture()
     , rightTexture()
     , bottomTexture()
+    , vertexBuffer( NULL )
     {
     }
 
 SceneOpenGL::Window::~Window()
     {
     discardTexture();
+    delete vertexBuffer;
     }
 
 // Bind the window pixmap to an OpenGL texture.
@@ -1440,35 +1479,47 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     int x = toplevel->x();
     int y = toplevel->y();
     double z = 0.0;
+    bool sceneShader = false;
+    if( !data.shader && !( mask & PAINT_WINDOW_TRANSFORMED ) && !( mask & PAINT_SCREEN_TRANSFORMED )  )
+        {
+        // set the shader for uniform initialising in paint decoration
+        data.shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
+        sceneShader = true;
+        data.shader->bind();
+        data.shader->setUniform("geometry", QVector4D(x, y, toplevel->width(), toplevel->height()));
+        }
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
         x += data.xTranslate;
         y += data.yTranslate;
         z += data.zTranslate;
         }
-    glTranslatef( x, y, z );
-    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1 ))
-        glScalef( data.xScale, data.yScale, data.zScale );
-    if(( mask & PAINT_WINDOW_TRANSFORMED ) && data.rotation )
+    if( !sceneShader )
         {
-        glTranslatef( data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint );
-        float xAxis = 0.0;
-        float yAxis = 0.0;
-        float zAxis = 0.0;
-        switch( data.rotation->axis )
+        glTranslatef( x, y, z );
+        if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1 ))
+            glScalef( data.xScale, data.yScale, data.zScale );
+        if(( mask & PAINT_WINDOW_TRANSFORMED ) && data.rotation )
             {
-            case RotationData::XAxis:
-                xAxis = 1.0;
-                break;
-            case RotationData::YAxis:
-                yAxis = 1.0;
-                break;
-            case RotationData::ZAxis:
-                zAxis = 1.0;
-                break;
+            glTranslatef( data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint );
+            float xAxis = 0.0;
+            float yAxis = 0.0;
+            float zAxis = 0.0;
+            switch( data.rotation->axis )
+                {
+                case RotationData::XAxis:
+                    xAxis = 1.0;
+                    break;
+                case RotationData::YAxis:
+                    yAxis = 1.0;
+                    break;
+                case RotationData::ZAxis:
+                    zAxis = 1.0;
+                    break;
+                }
+            glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
+            glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
             }
-        glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
-        glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
         }
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
@@ -1536,6 +1587,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
                     continue;
                     }
                 }
+
+            if( !SceneOpenGL::Window::decorationVertices )
+                SceneOpenGL::Window::decorationVertices = new GLVertexBuffer( GLVertexBuffer::Stream );
+            SceneOpenGL::Window::decorationVertices->setUseShader( sceneShader );
             paintDecoration( top, DecorationTop, region, topRect, data, topList, updateDeco );
             paintDecoration( left, DecorationLeft, region, leftRect, data, leftList, updateDeco );
             paintDecoration( right, DecorationRight, region, rightRect, data, rightList, updateDeco );
@@ -1550,12 +1605,20 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     if ( !(mask & PAINT_DECORATION_ONLY) )
         {
         prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        if( !vertexBuffer )
+            vertexBuffer = new GLVertexBuffer( GLVertexBuffer::Stream );
+        vertexBuffer->setUseShader( sceneShader );
         renderQuads( mask, region, data.quads.select( WindowQuadContents ));
         restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         }
 
     texture.disableUnnormalizedTexCoords();
     texture.unbind();
+    if( sceneShader )
+        {
+        data.shader->unbind();
+        data.shader = NULL;
+        }
 
     glPopMatrix();
     }
@@ -1604,60 +1667,56 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         decorationTexture->setFilter( GL_NEAREST );
     decorationTexture->setWrapMode( GL_CLAMP_TO_EDGE );
     decorationTexture->bind();
-    decorationTexture->enableUnnormalizedTexCoords();
 
     prepareStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
-    float* vertices;
-    float* texcoords;
-    makeDecorationArrays( &vertices, &texcoords, quads, rect );
+    makeDecorationArrays( quads, rect );
     if( data.shader )
         {
-        int texw = decoration->width();
-        int texh = decoration->height();
-        if( !GLTexture::NPOTTextureSupported() )
-            {
-            kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
-            texw = nearestPowerOfTwo(texw);
-            texh = nearestPowerOfTwo(texh);
-            }
-        data.shader->setUniform("textureWidth", (float)texw);
-        data.shader->setUniform("textureHeight", (float)texh);
+        data.shader->setUniform("textureWidth", 1.0f);
+        data.shader->setUniform("textureHeight", 1.0f);
         }
-    renderGLGeometry( region, quads.count() * 4,
-            vertices, texcoords, NULL, 2, 0 );
-    delete[] vertices;
-    delete[] texcoords;
+    SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
     restoreStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
-    decorationTexture->disableUnnormalizedTexCoords();
     decorationTexture->unbind();
     }
 
-void SceneOpenGL::Window::makeDecorationArrays( float** vertices, float** texcoords, const WindowQuadList& quads, const QRect& rect ) const
+void SceneOpenGL::Window::makeDecorationArrays( const WindowQuadList& quads, const QRect& rect ) const
     {
-    *vertices = new float[ quads.count() * 4 * 2 ];
-    *texcoords = new float[ quads.count() * 4 * 2 ];
-    float* vpos = *vertices;
-    float* tpos = *texcoords;
+    QVector<float> vertices;
+    QVector<float> texcoords;
+    vertices.reserve( quads.count() * 6 * 2 );
+    texcoords.reserve( quads.count() * 6 * 2 );
+    float width = rect.width();
+    float height = rect.height();
     foreach( const WindowQuad& quad, quads )
         {
-        *vpos++ = quad[ 0 ].x();
-        *vpos++ = quad[ 0 ].y();
-        *vpos++ = quad[ 1 ].x();
-        *vpos++ = quad[ 1 ].y();
-        *vpos++ = quad[ 2 ].x();
-        *vpos++ = quad[ 2 ].y();
-        *vpos++ = quad[ 3 ].x();
-        *vpos++ = quad[ 3 ].y();
+        vertices << quad[ 1 ].x();
+        vertices << quad[ 1 ].y();
+        vertices << quad[ 0 ].x();
+        vertices << quad[ 0 ].y();
+        vertices << quad[ 3 ].x();
+        vertices << quad[ 3 ].y();
+        vertices << quad[ 3 ].x();
+        vertices << quad[ 3 ].y();
+        vertices << quad[ 2 ].x();
+        vertices << quad[ 2 ].y();
+        vertices << quad[ 1 ].x();
+        vertices << quad[ 1 ].y();
 
-        *tpos++ = quad.originalLeft()-rect.x();
-        *tpos++ = quad.originalTop()-rect.y();
-        *tpos++ = quad.originalRight()-rect.x();
-        *tpos++ = quad.originalTop()-rect.y();
-        *tpos++ = quad.originalRight()-rect.x();
-        *tpos++ = quad.originalBottom()-rect.y();
-        *tpos++ = quad.originalLeft()-rect.x();
-        *tpos++ = quad.originalBottom()-rect.y();
+        texcoords << (float)(quad.originalRight()-rect.x())/width;
+        texcoords << (float)(quad.originalTop()-rect.y())/height;
+        texcoords << (float)(quad.originalLeft()-rect.x())/width;
+        texcoords << (float)(quad.originalTop()-rect.y())/height;
+        texcoords << (float)(quad.originalLeft()-rect.x())/width;
+        texcoords << (float)(quad.originalBottom()-rect.y())/height;
+        texcoords << (float)(quad.originalLeft()-rect.x())/width;
+        texcoords << (float)(quad.originalBottom()-rect.y())/height;
+        texcoords << (float)(quad.originalRight()-rect.x())/width;
+        texcoords << (float)(quad.originalBottom()-rect.y())/height;
+        texcoords << (float)(quad.originalRight()-rect.x())/width;
+        texcoords << (float)(quad.originalTop()-rect.y())/height;
         }
+    SceneOpenGL::Window::decorationVertices->setData( quads.count() * 6, 2, vertices.data(), texcoords.data() );
     }
 
 void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQuadList& quads )
@@ -1668,8 +1727,8 @@ void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQ
     float* vertices;
     float* texcoords;
     quads.makeArrays( &vertices, &texcoords );
-    renderGLGeometry( region, quads.count() * 4,
-            vertices, texcoords, NULL, 2, 0 );
+    vertexBuffer->setData( quads.count() * 6, 2, vertices, texcoords );
+    vertexBuffer->render( region, GL_TRIANGLES );
     delete[] vertices;
     delete[] texcoords;
     }
@@ -1708,9 +1767,13 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
     float texw = shader->textureWidth();
     if( texw >= 0.0f )
         shader->setUniform("textureWidth", texw);
+    else
+        shader->setUniform("textureWidth", (float)toplevel->width());
     float texh = shader->textureHeight();
     if( texh >= 0.0f )
         shader->setUniform("textureHeight", texh);
+    else
+        shader->setUniform("textureHeight", (float)toplevel->height());
     }
 
 void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity, double brightness, double saturation )
@@ -2036,9 +2099,18 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
     GLShader* shader = m_effectFrame->shader();
+    bool sceneShader = false;
+    if( !shader )
+        {
+        shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
+        sceneShader = true;
+        kDebug(1212) << "using scene shader";
+        }
     if( shader )
         {
         shader->bind();
+        if( sceneShader )
+            shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
         shader->setUniform("saturation", 1.0f);
         shader->setUniform("brightness", 1.0f);
 
@@ -2171,10 +2243,22 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
-        glTranslatef( pt.x(), pt.y(), 0.0f );
+        if (sceneShader) {
+            // TODO: move geometry
+        } else {
+#ifndef KWIN_HAVE_OPENGLES
+            glTranslatef( pt.x(), pt.y(), 0.0f );
+#endif
+        }
+        m_unstyledVBO->setUseShader( sceneShader );
         m_unstyledVBO->render( region, GL_TRIANGLES );
-        glTranslatef( -pt.x(), -pt.y(), 0.0f );
+#ifndef KWIN_HAVE_OPENGLES
+        if (!sceneShader) {
+            glTranslatef( -pt.x(), -pt.y(), 0.0f );
+        }
+#endif
         m_unstyledTexture->unbind();
+        checkGLError("unstyled texture");
         }
     else if( m_effectFrame->style() == EffectFrameStyled )
         {
@@ -2189,7 +2273,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
-        m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ));
+        m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ), sceneShader );
         m_texture->unbind();
 
         if( !m_effectFrame->selection().isNull() )
@@ -2201,7 +2285,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
                 }
             glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
             m_selectionTexture->bind();
-            m_selectionTexture->render( region, m_effectFrame->selection() );
+            m_selectionTexture->render( region, m_effectFrame->selection(), sceneShader );
             m_selectionTexture->unbind();
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             }
@@ -2243,7 +2327,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
                                          m_effectFrame->icon().depth() );
             }
         m_iconTexture->bind();
-        m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
+        m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ), sceneShader );
         m_iconTexture->unbind();
         }
 
@@ -2258,7 +2342,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
                 glColor4f( 1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()) );
 
             m_oldTextTexture->bind();
-            m_oldTextTexture->render( region, m_effectFrame->geometry() );
+            m_oldTextTexture->render( region, m_effectFrame->geometry(), sceneShader );
             m_oldTextTexture->unbind();
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
@@ -2275,7 +2359,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         if( !m_textTexture ) // Lazy creation
             updateTextTexture();
         m_textTexture->bind();
-        m_textTexture->render( region, m_effectFrame->geometry() );
+        m_textTexture->render( region, m_effectFrame->geometry(), sceneShader  );
         m_textTexture->unbind();
         }
 

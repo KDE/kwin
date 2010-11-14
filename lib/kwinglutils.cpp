@@ -31,6 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QHash>
 #include <QFile>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
 
 
 #define DEBUG_GLRENDERTARGET 0
@@ -434,6 +437,11 @@ void GLTexture::unbind()
 
 void GLTexture::render( QRegion region, const QRect& rect )
     {
+    render( region, rect, false );
+    }
+
+void GLTexture::render( QRegion region, const QRect& rect, bool useShader )
+    {
     if( rect.size() != m_cachedSize )
         {
         m_cachedSize = rect.size();
@@ -459,9 +467,20 @@ void GLTexture::render( QRegion region, const QRect& rect )
             };
         m_vbo->setData( 4, 2, verts, texcoords );
         }
-    glTranslatef( rect.x(), rect.y(), 0.0f );
+    if (useShader) {
+        // TODO: set shader translation.
+    } else {
+#ifndef KWIN_HAVE_OPENGLES
+        glTranslatef( rect.x(), rect.y(), 0.0f );
+#endif
+    }
+    m_vbo->setUseShader( useShader );
     m_vbo->render( region, GL_TRIANGLE_STRIP );
-    glTranslatef( -rect.x(), -rect.y(), 0.0f );
+    if (!useShader) {
+#ifndef KWIN_HAVE_OPENGLES
+        glTranslatef( -rect.x(), -rect.y(), 0.0f );
+#endif
+    }
     }
 
 void GLTexture::enableUnnormalizedTexCoords()
@@ -874,6 +893,36 @@ bool GLShader::setUniform(const char* name, int value)
     return (location >= 0);
     }
 
+bool GLShader::setUniform(const char* name, const QVector2D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform2f(location, value.x(), value.y());
+        }
+    return (location >= 0);
+    }
+
+bool GLShader::setUniform(const char* name, const QVector3D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform3f(location, value.x(), value.y(), value.z());
+        }
+    return (location >= 0);
+    }
+
+bool GLShader::setUniform(const char* name, const QVector4D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+        }
+    return (location >= 0);
+    }
+
 int GLShader::attributeLocation(const char* name)
     {
     int location = glGetAttribLocation(mProgram, name);
@@ -910,6 +959,10 @@ float GLShader::textureWidth()
     return mTextureWidth;
     }
 
+void GLShader::bindAttributeLocation(int index, const char* name)
+    {
+    glBindAttribLocation(mProgram, index, name);
+    }
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::mSupported = false;
@@ -1074,6 +1127,7 @@ class GLVertexBufferPrivate
             : hint( usageHint )
             , numberVertices( 0 )
             , dimension( 2 )
+            , useShader( false )
             {
             if( GLVertexBufferPrivate::supported )
                 {
@@ -1091,11 +1145,13 @@ class GLVertexBufferPrivate
         GLuint buffers[2];
         int numberVertices;
         int dimension;
+        bool useShader;
         static bool supported;
         QVector<float> legacyVertices;
         QVector<float> legacyTexCoords;
 
         void legacyPainting( QRegion region, GLenum primitiveMode );
+        void corePainting( const QRegion& region, GLenum primitiveMode );
     };
 bool GLVertexBufferPrivate::supported = false;
 
@@ -1118,6 +1174,33 @@ void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode
 
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
+
+void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiveMode )
+    {
+    glEnableVertexAttribArray( 0 );
+    glEnableVertexAttribArray( 1 );
+
+
+    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
+    glVertexAttribPointer( 0, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
+    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    // Clip using scissoring
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+        !iterator.isDone();
+        iterator.next())
+        {
+        glDrawArrays( primitiveMode, 0, numberVertices );
+        }
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    glDisableVertexAttribArray( 1 );
+    glDisableVertexAttribArray( 2 );
     }
 
 //*********************************
@@ -1171,8 +1254,6 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
             hint = GL_STREAM_DRAW;
             break;
         }
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
     glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*d->dimension, vertices, hint );
 
@@ -1180,9 +1261,6 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    glDisableClientState( GL_VERTEX_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     }
 
 void GLVertexBuffer::render( GLenum primitiveMode )
@@ -1195,6 +1273,11 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
     if( !GLVertexBufferPrivate::supported )
         {
         d->legacyPainting( region, primitiveMode );
+        return;
+        }
+    if( d->useShader )
+        {
+        d->corePainting( region, primitiveMode );
         return;
         }
     glEnableClientState( GL_VERTEX_ARRAY );
@@ -1220,6 +1303,15 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     }
 
+void GLVertexBuffer::setUseShader( bool use )
+    {
+    d->useShader = use;
+    }
+
+bool GLVertexBuffer::isUseShader() const
+    {
+    return d->useShader;
+    }
 
 bool GLVertexBuffer::isSupported()
     {
