@@ -2,6 +2,7 @@
 # Name of the effect
 Name=WindowGeometry
 Name[ia]=WindowGeometry
+Name[nl]=VensterGeometry
 Name[pt]=Geometria da Janela
 Name[pt_BR]=Geometria da Janela
 Name[sv]=Fönstergeometri
@@ -10,6 +11,7 @@ Name[x-test]=xxWindowGeometryxx
 Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
 Comment[ia]=Monstrar geometrias de fenestra quando on move/redimensiona
+Comment[nl]=Vensterafmetingen tonen bij verplaatsen/herschalen
 Comment[pt]=Mostrar as dimensões da janela ao mover/dimensionar
 Comment[pt_BR]=Mostra as dimensões da janela ao mover/redimensionar
 Comment[sv]=Visa fönstergeometri vid förflyttning och storleksändring
