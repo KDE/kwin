@@ -211,6 +211,10 @@ bool Client::manage( Window w, bool isMapped )
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
             //TODO: decide whether to keep this before the 4.6 release
+            //TODO: if we are keeping it (at least as an option), replace noborder checking
+            //with a public API for setting windows to be on all activities.
+            //something like KWindowSystem::setOnAllActivities or
+            //KActivityConsumer::setOnAllActivities
             setOnActivity(Workspace::self()->currentActivity(), true);
         }
         }
