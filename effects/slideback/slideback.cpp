@@ -34,6 +34,11 @@ SlideBackEffect::SlideBackEffect()
     disabled = false;
     unminimizedWindow = NULL;
     }
+    
+static inline bool windowsShareDesktop( EffectWindow *w1, EffectWindow *w2 )
+    {
+    return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
+    }
 
 void SlideBackEffect::windowActivated( EffectWindow* w )
     {
@@ -86,7 +91,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
             }
         else
             {
-            if( isWindowUsable( tmp ) && ( tmp->isOnDesktop( w->desktop() ) || w->isOnAllDesktops() ) )
+            if( isWindowUsable( tmp ) && windowsShareDesktop( tmp, w ) )
                 {
                 // Do we have to move it?
                 if( intersects( w, tmp->geometry() ) )
@@ -209,11 +214,11 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
            - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
         foreach( EffectWindow *tmp, oldStackingOrder )
             {
-            if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) )
+            if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) && windowsShareDesktop( tmp, w ) )
                 {
-                kDebug() << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
-                PaintClipper::push( region.subtracted( tmp->geometry() ) );
-                clippedRegions.prepend( region.subtracted( tmp->geometry() ) );
+                kDebug( 1212 ) << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
+                clippedRegions << region.subtracted( tmp->geometry() );
+                PaintClipper::push( clippedRegions.last() );
 //                region = region.subtracted( tmp->geometry() );
                 }
             }
@@ -225,14 +230,9 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
         motionManager.apply( w, data );
         }
     effects->paintWindow( w, mask, region, data );
-    if( !clippedRegions.isEmpty() )
-        {
-        foreach( const QRegion &region, clippedRegions )
-            {
-            PaintClipper::pop( region );
-	    }
-        clippedRegions.clear();
-	}
+    for ( int i = clippedRegions.count() - 1; i > -1; --i )
+        PaintClipper::pop( clippedRegions.at(i) );
+    clippedRegions.clear();
     }
 
 void SlideBackEffect::postPaintWindow( EffectWindow* w )
