@@ -364,6 +364,8 @@ void GLPlatform::detect()
                      m_extensions.contains("GL_ARB_vertex_shader") &&
                      m_glslVersion >= kVersionNumber(1, 0);
 
+    m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+
     m_chipset = "Unknown";
 
 
@@ -493,7 +495,17 @@ void GLPlatform::detect()
         if (m_chipClass < R300)
             m_supportsGLSL = false;
 
-        m_limitedGLSL = m_supportsGLSL && m_chipClass < R600;
+        m_limitedGLSL = false;
+        m_limitedNPOT = false;
+
+        if (m_chipClass < R600) {
+            if (driver() == Driver_Catalyst)
+                m_textureNPOT = m_limitedNPOT = false; // Software fallback
+            else if (driver() == Driver_R300G)
+                m_limitedNPOT = m_textureNPOT;
+
+            m_limitedGLSL = m_supportsGLSL;
+        }
 
         if (driver() == Driver_R600G ||
             (driver() == Driver_R600C && m_renderer.contains("DRI2")))
@@ -509,6 +521,7 @@ void GLPlatform::detect()
         if (m_driver == Driver_NVidia)
             m_looseBinding = true;
 
+        m_limitedNPOT = m_textureNPOT && m_chipClass < NV40;
         m_limitedGLSL = m_supportsGLSL && m_chipClass < G80;
     } 
 
@@ -531,6 +544,12 @@ bool GLPlatform::supports(GLFeature feature) const
 
     case LimitedGLSL:
         return m_limitedGLSL;
+
+    case TextureNPOT:
+        return m_textureNPOT;
+
+    case LimitedNPOT:
+        return m_limitedNPOT;
 
     default:
         return false;

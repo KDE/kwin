@@ -65,6 +65,23 @@ enum GLFeature {
      * - Max 4 texture indirections
      */
     LimitedGLSL,
+
+    /**
+     * Set when the driver supports GL_ARB_texture_non_power_of_two.
+     */
+    TextureNPOT,
+
+    /**
+     * If set, the driver supports GL_ARB_texture_non_power_of_two with the
+     * GL_ARB_texture_rectangle limitations.
+     *
+     * This means no support for mipmap filters, and that only the following
+     * wrap modes are supported: 
+     * - GL_CLAMP
+     * - GL_CLAMP_TO_EDGE
+     * - GL_CLAMP_TO_BORDER
+     */
+    LimitedNPOT
 };
 
 enum Driver {
@@ -234,6 +251,8 @@ private:
     bool m_directRendering:1;
     bool m_supportsGLSL:1;
     bool m_limitedGLSL:1;
+    bool m_textureNPOT:1;
+    bool m_limitedNPOT:1;
     static GLPlatform *s_platform;
 };
 
