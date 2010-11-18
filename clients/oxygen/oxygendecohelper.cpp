@@ -50,16 +50,16 @@ namespace Oxygen
     //______________________________________________________________________________
     QPixmap DecoHelper::windecoButton(const QColor &color, bool pressed, int size)
     {
-        quint64 key = (quint64(color.rgba()) << 32) | (size << 1) | (int)pressed;
-        QPixmap *pixmap = m_windecoButtonCache.object(key);
+        const quint64 key( (quint64(color.rgba()) << 32) | (size << 1) | (int)pressed );
+        QPixmap *pixmap( m_windecoButtonCache.object(key) );
 
         if( !pixmap )
         {
             pixmap = new QPixmap(size, size);
             pixmap->fill(Qt::transparent);
 
-            QColor light  = calcLightColor(color);
-            QColor dark   = calcDarkColor(color);
+            const QColor light( calcLightColor(color) );
+            const QColor dark( calcDarkColor(color) );
 
             QPainter p( pixmap );
             p.setRenderHints(QPainter::Antialiasing);
@@ -79,19 +79,20 @@ namespace Oxygen
                     lg.setColorAt( 1, dark );
                 }
 
-                QRectF r( u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
+                const QRectF r( u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
                 p.setBrush( lg );
                 p.drawEllipse( r );
             }
 
             {
                 // outline circle
-                qreal penWidth = 0.7;
+                const qreal penWidth( 0.7 );
                 QLinearGradient lg( 0, u*1.665, 0, u*(2.0*12.33+1.665) );
                 lg.setColorAt( 0, light );
                 lg.setColorAt( 1, dark );
-                QRectF r( u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
+                const QRectF r( u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
                 p.setPen( QPen( lg, penWidth*u ) );
+                p.setBrush( Qt::NoBrush );
                 p.drawEllipse( r );
                 p.end();
             }
@@ -105,8 +106,8 @@ namespace Oxygen
     //_______________________________________________________________________
     QPixmap DecoHelper::windecoButtonGlow(const QColor &color, int size)
     {
-        quint64 key = (quint64(color.rgba()) << 32) | size;
-        QPixmap *pixmap = m_windecoButtonGlowCache.object(key);
+        const quint64 key( (quint64(color.rgba()) << 32) | size );
+        QPixmap *pixmap( m_windecoButtonGlowCache.object(key) );
 
         if( !pixmap )
         {
@@ -114,8 +115,8 @@ namespace Oxygen
             pixmap->fill(Qt::transparent);
 
             // right now the same color is used for the two shadows
-            QColor light = color;
-            QColor dark = color;
+            const QColor& light( color );
+            const QColor& dark( color );
 
             QPainter p(pixmap);
             p.setRenderHints(QPainter::Antialiasing);
@@ -129,8 +130,8 @@ namespace Oxygen
                 QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
 
                 int nPoints = 5;
-                qreal x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
-                qreal values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
+                const qreal x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
+                const qreal values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
                 QColor c = dark;
                 for( int i = 0; i<nPoints; i++ )
                 { c.setAlpha( values[i] ); rg.setColorAt( x[i], c ); }
@@ -145,8 +146,8 @@ namespace Oxygen
                 QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
 
                 static int nPoints = 6;
-                qreal x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
-                qreal values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
+                const qreal x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
+                const qreal values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
                 QColor c = light;
                 for( int i = 0; i<nPoints; i++ )
                 { c.setAlpha( values[i] ); rg.setColorAt( x[i], c ); }
