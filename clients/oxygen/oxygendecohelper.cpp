@@ -129,7 +129,7 @@ namespace Oxygen
                 // outer shadow
                 QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
 
-                int nPoints = 5;
+                static const int nPoints(5);
                 const qreal x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
                 const qreal values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
                 QColor c = dark;
@@ -145,7 +145,7 @@ namespace Oxygen
                 // inner shadow
                 QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
 
-                static int nPoints = 6;
+                static const int nPoints(6);
                 const qreal x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
                 const qreal values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
                 QColor c = light;
