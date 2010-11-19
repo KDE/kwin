@@ -1697,7 +1697,9 @@ EffectFrameImpl::EffectFrameImpl( EffectFrameStyle style, bool staticSize, QPoin
 
     if( effects->compositingType() == OpenGLCompositing )
         {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         m_sceneFrame = new SceneOpenGL::EffectFrame( this );
+#endif
         }
     else if( effects->compositingType() == XRenderCompositing )
         {
