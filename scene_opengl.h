@@ -98,6 +98,7 @@ class SceneOpenGL
         bool init_ok;
         bool selfCheckDone;
         GLShader* m_sceneShader;
+        bool debug;
     };
 
 class SceneOpenGL::Texture

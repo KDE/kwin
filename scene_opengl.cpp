@@ -179,6 +179,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync( &sync );
         }
 
+    debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
+
     // scene shader setup
     GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
@@ -189,7 +191,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             m_sceneShader->bind();
             m_sceneShader->setUniform( "sample", 0 );
             m_sceneShader->setUniform( "displaySize", QVector2D(displayWidth(), displayHeight()));
-            m_sceneShader->setUniform( "debug", 1 );
+            m_sceneShader->setUniform( "debug", debug ? 1 : 0 );
             m_sceneShader->bindAttributeLocation( 0, "vertex" );
             m_sceneShader->bindAttributeLocation( 1, "texCoord" );
             m_sceneShader->unbind();
@@ -1598,22 +1600,27 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             }
         }
 
-    texture.bind();
-    texture.enableUnnormalizedTexCoords();
-
     // paint the content
     if ( !(mask & PAINT_DECORATION_ONLY) )
         {
-        prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         if( !vertexBuffer )
             vertexBuffer = new GLVertexBuffer( GLVertexBuffer::Stream );
         vertexBuffer->setUseShader( sceneShader );
+        texture.bind();
+        texture.enableUnnormalizedTexCoords();
+        prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         renderQuads( mask, region, data.quads.select( WindowQuadContents ));
         restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        texture.disableUnnormalizedTexCoords();
+        texture.unbind();
+        if( static_cast<SceneOpenGL*>(scene)->debug )
+            {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            }
         }
 
-    texture.disableUnnormalizedTexCoords();
-    texture.unbind();
     if( sceneShader )
         {
         data.shader->unbind();
@@ -1678,6 +1685,12 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
     SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
     restoreStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
     decorationTexture->unbind();
+    if( static_cast<SceneOpenGL*>(scene)->debug )
+        {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        }
     }
 
 void SceneOpenGL::Window::makeDecorationArrays( const WindowQuadList& quads, const QRect& rect ) const
