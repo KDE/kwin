@@ -73,15 +73,20 @@ class SceneOpenGL
         class FBConfigInfo
             {
             public:
+#ifndef KWIN_HAVE_OPENGLES
                 GLXFBConfig fbconfig;
+#endif
                 int bind_texture_format;
                 int texture_targets;
                 int y_inverted;
                 int mipmap;
             };
+#ifndef KWIN_HAVE_OPENGLES
         Drawable buffer;
         GLXFBConfig fbcbuffer;
+#endif
         static bool db;
+#ifndef KWIN_HAVE_OPENGLES
         static GLXFBConfig fbcbuffer_db;
         static GLXFBConfig fbcbuffer_nondb;
         static FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
@@ -89,6 +94,7 @@ class SceneOpenGL
         static GLXContext ctxbuffer;
         static GLXContext ctxdrawable;
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
+#endif
         static bool tfp_mode;
         static bool shm_mode;
         QHash< Toplevel*, Window* > windows;
@@ -128,7 +134,9 @@ class SceneOpenGL::Texture
     private:
         void init();
 
+#ifndef KWIN_HAVE_OPENGLES
         GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+#endif
     };
 
 class SceneOpenGL::Window

@@ -102,6 +102,7 @@ extern int currentRefreshRate();
 // SceneOpenGL
 //****************************************
 
+#ifndef KWIN_HAVE_OPENGLES
 // the configs used for the destination
 GLXFBConfig SceneOpenGL::fbcbuffer_db;
 GLXFBConfig SceneOpenGL::fbcbuffer_nondb;
@@ -113,6 +114,7 @@ GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
 GLXDrawable SceneOpenGL::glxbuffer = None;
 GLXDrawable SceneOpenGL::last_pixmap = None;
+#endif
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::shm_mode;
@@ -127,6 +129,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     , selfCheckDone( false )
     , m_sceneShader( NULL )
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( !Extensions::glxAvailable())
         {
         kDebug( 1212 ) << "No glx extensions available";
@@ -178,6 +181,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         else
             qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync( &sync );
         }
+#endif
 
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
 
@@ -205,6 +209,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             }
         }
 
+#ifndef KWIN_HAVE_OPENGLES
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -243,6 +248,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
 #endif
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
+#endif
     init_ok = true;
     }
 
@@ -257,6 +263,7 @@ SceneOpenGL::~SceneOpenGL()
     foreach( Window* w, windows )
         delete w;
     // do cleanup after initBuffer()
+#ifndef KWIN_HAVE_OPENGLES
     glXMakeCurrent( display(), None, NULL );
     glXDestroyContext( display(), ctxbuffer );
     if( wspace->overlayWindow())
@@ -280,6 +287,7 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
+#endif
     delete m_sceneShader;
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
@@ -316,9 +324,13 @@ bool SceneOpenGL::selectMode()
 
 bool SceneOpenGL::initTfp()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     if( glXBindTexImageEXT == NULL || glXReleaseTexImageEXT == NULL )
         return false;
     return true;
+#endif
     }
 
 bool SceneOpenGL::initShm()
@@ -375,6 +387,9 @@ void SceneOpenGL::cleanupShm()
 
 bool SceneOpenGL::initRenderingContext()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     bool direct_rendering = options->glDirect;
     if( !tfp_mode && !shm_mode )
         direct_rendering = false; // fallback doesn't seem to work with direct rendering
@@ -414,11 +429,15 @@ bool SceneOpenGL::initRenderingContext()
             direct_rendering ? GL_TRUE : GL_FALSE );
         }
     return true;
+#endif
     }
 
 // create destination buffer
 bool SceneOpenGL::initBuffer()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     if( !initBufferConfigs())
         return false;
     if( fbcbuffer_db != NULL && wspace->createOverlay())
@@ -461,11 +480,15 @@ bool SceneOpenGL::initBuffer()
     kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 );
     XFree( visinfo_buffer );
     return true;
+#endif
     }
 
 // choose the best configs for the destination buffer
 bool SceneOpenGL::initBufferConfigs()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     int cnt;
     GLXFBConfig *fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display() ), &cnt );
     fbcbuffer_db = NULL;
@@ -555,11 +578,15 @@ bool SceneOpenGL::initBufferConfigs()
         kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 );
         }
     return true;
+#endif
     }
 
 // make a list of the best configs for windows by depth
 bool SceneOpenGL::initDrawableConfigs()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     int cnt;
     GLXFBConfig *fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display() ), &cnt );
 
@@ -684,6 +711,7 @@ bool SceneOpenGL::initDrawableConfigs()
         return false;
         }
     return true;
+#endif
     }
 
 // Test if compositing actually _really_ works, by creating a texture from a testing
@@ -709,6 +737,7 @@ bool SceneOpenGL::selfCheck()
 
 void SceneOpenGL::selfCheckSetup()
     {
+#ifndef KWIN_HAVE_OPENGLES
     KXErrorHandler err;
     QImage img( selfCheckWidth(), selfCheckHeight(), QImage::Format_RGB32 );
     img.setPixel( 0, 0, QColor( Qt::red ).rgb());
@@ -744,10 +773,14 @@ void SceneOpenGL::selfCheckSetup()
         XDestroyWindow( display(), window );
         }
     err.error( true ); // just sync and discard
+#endif
     }
 
 bool SceneOpenGL::selfCheckFinish()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    return true;
+#else
     glXWaitGL();
     KXErrorHandler err;
     bool ok = true;
@@ -783,12 +816,26 @@ bool SceneOpenGL::selfCheckFinish()
         return true;
         }
     return ok;
+#endif
     }
 
 // the entry function for painting
 void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
     QTime t = QTime::currentTime();
+#ifdef KWIN_HAVE_OPENGLES
+    foreach( Toplevel* c, toplevels )
+        {
+        assert( windows.contains( c ));
+        stacking_order.append( windows[ c ] );
+        }
+    int mask = 0;
+    paintScreen( &mask, &damage ); // call generic implementation
+    flushBuffer( mask, damage );
+    // do cleanup
+    stacking_order.clear();
+    checkGLError( "PostPaint" );
+#else
     foreach( Toplevel* c, toplevels )
         {
         assert( windows.contains( c ));
@@ -830,11 +877,13 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );
+#endif
     }
 
 // wait for vblank signal before painting
 void SceneOpenGL::waitSync()
     { // NOTE that vsync has no effect with indirect rendering
+#ifndef KWIN_HAVE_OPENGLES
     if( waitSyncAvailable())
         {
         uint sync;
@@ -842,11 +891,14 @@ void SceneOpenGL::waitSync()
         glXGetVideoSync( &sync );
         glXWaitVideoSync( 2, ( sync + 1 ) % 2, &sync );
         }
+#endif
     }
 
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
+    // TODO: write EGL variant
+#ifndef KWIN_HAVE_OPENGLES
     if( db )
         {
         if( mask & PAINT_SCREEN_REGION )
@@ -906,12 +958,14 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
             XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
         XFlush( display());
         }
+#endif
     }
 
 void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
     {
     if( mask & PAINT_SCREEN_TRANSFORMED )
         { // apply screen transformations
+#ifndef KWIN_HAVE_OPENGLES
         glPushMatrix();
         glTranslatef( data.xTranslate, data.yTranslate, data.zTranslate );
         if( data.rotation )
@@ -937,14 +991,21 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
             glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
             }
         glScalef( data.xScale, data.yScale, data.zScale );
+#endif
         }
     Scene::paintGenericScreen( mask, data );
     if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+#ifndef KWIN_HAVE_OPENGLES
         glPopMatrix();
+#endif
+        }
     }
 
 void SceneOpenGL::paintBackground( QRegion region )
     {
+// TODO: write for EGL
+#ifndef KWIN_HAVE_OPENGLES
     PaintClipper pc( region );
     if( !PaintClipper::clip())
         {
@@ -971,6 +1032,7 @@ void SceneOpenGL::paintBackground( QRegion region )
         glEnd();
         }
     glPopAttrib();
+#endif
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
@@ -1051,7 +1113,9 @@ SceneOpenGL::Texture::~Texture()
 
 void SceneOpenGL::Texture::init()
     {
+#ifndef KWIN_HAVE_OPENGLES
     glxpixmap = None;
+#endif
     }
 
 void SceneOpenGL::Texture::createTexture()
@@ -1066,6 +1130,8 @@ void SceneOpenGL::Texture::discard()
     GLTexture::discard();
     }
 
+// TODO: write for EGL
+#ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::Texture::release()
     {
     if( tfp_mode && glxpixmap != None )
@@ -1076,7 +1142,10 @@ void SceneOpenGL::Texture::release()
         glxpixmap = None;
         }
     }
+#endif
 
+// TODO: write for EGL
+#ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::Texture::findTarget()
     {
     unsigned int new_target = 0;
@@ -1110,6 +1179,7 @@ void SceneOpenGL::Texture::findTarget()
             abort();
         }
     }
+#endif
 
 QRegion SceneOpenGL::Texture::optimizeBindDamage( const QRegion& reg, int limit )
     {
@@ -1127,6 +1197,8 @@ QRegion SceneOpenGL::Texture::optimizeBindDamage( const QRegion& reg, int limit 
     return reg;
     }
 
+// TODO: write EGL variant
+#ifndef KWIN_HAVE_OPENGLES
 bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     int depth, QRegion region )
     {
@@ -1310,6 +1382,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
 #endif
     return true;
     }
+#endif
 
 bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     int depth )
@@ -1339,21 +1412,26 @@ void SceneOpenGL::Texture::bind()
     glBindTexture( mTarget, mTexture );
     if( tfp_mode && options->glStrictBinding )
         {
+#ifndef KWIN_HAVE_OPENGLES
         assert( glxpixmap != None );
         glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
         glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
-        setDirty(); // Mipmaps have to be regenerated after updating the texture 
+        setDirty(); // Mipmaps have to be regenerated after updating the texture
+#endif
         }
     enableFilter();
+#ifndef KWIN_HAVE_OPENGLES
     if( hasGLVersion( 1, 4, 0 ))
         {
         // Lod bias makes the trilinear-filtered texture look a bit sharper
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f );
         }
+#endif
     }
 
 void SceneOpenGL::Texture::unbind()
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( hasGLVersion( 1, 4, 0 ))
         {
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f );
@@ -1365,6 +1443,7 @@ void SceneOpenGL::Texture::unbind()
         glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
         }
 
+#endif
     GLTexture::unbind();
     }
 
@@ -1460,7 +1539,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         return;
     if( !bindTexture())
         return;
-    glPushMatrix();
     // set texture filter
     if( options->glSmoothScale != 0 ) // default to yes
         {
@@ -1498,6 +1576,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     if( !sceneShader )
         {
+#ifndef KWIN_HAVE_OPENGLES
+        glPushMatrix();
         glTranslatef( x, y, z );
         if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1 ))
             glScalef( data.xScale, data.yScale, data.zScale );
@@ -1522,6 +1602,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
             glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
             }
+#endif
         }
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
@@ -1613,12 +1694,14 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         texture.disableUnnormalizedTexCoords();
         texture.unbind();
+#ifndef KWIN_HAVE_OPENGLES
         if( static_cast<SceneOpenGL*>(scene)->debug )
             {
             glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
             renderQuads( mask, region, data.quads.select( WindowQuadContents ));
             glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
             }
+#endif
         }
 
     if( sceneShader )
@@ -1626,8 +1709,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         data.shader->unbind();
         data.shader = NULL;
         }
-
-    glPopMatrix();
+#ifndef KWIN_HAVE_OPENGLES
+    else
+        glPopMatrix();
+#endif
     }
 
 void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco )
@@ -1685,12 +1770,14 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
     SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
     restoreStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
     decorationTexture->unbind();
+#ifndef KWIN_HAVE_OPENGLES
     if( static_cast<SceneOpenGL*>(scene)->debug )
         {
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         }
+#endif
     }
 
 void SceneOpenGL::Window::makeDecorationArrays( const WindowQuadList& quads, const QRect& rect ) const
@@ -1757,7 +1844,9 @@ void SceneOpenGL::Window::prepareStates( TextureType type, double opacity, doubl
 void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
     // setup blending of transparent windows
+#ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_ENABLE_BIT );
+#endif
     bool opaque = isOpaque() && opacity == 1.0;
     bool alpha = toplevel->hasAlpha() || type != Content;
     if( type != Content )
@@ -1791,6 +1880,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
 
 void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
+#ifndef KWIN_HAVE_OPENGLES
     Texture* tex;
     bool alpha = false;
     bool opaque = true;
@@ -1952,6 +2042,7 @@ void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity,
         glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
         glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
         }
+#endif
     }
 
 void SceneOpenGL::Window::restoreStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
@@ -1964,16 +2055,24 @@ void SceneOpenGL::Window::restoreStates( TextureType type, double opacity, doubl
 
 void SceneOpenGL::Window::restoreShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
-    Q_UNUSED( type );
-    Q_UNUSED( opacity );
     Q_UNUSED( brightness );
     Q_UNUSED( saturation );
     Q_UNUSED( shader );
+    bool opaque = isOpaque() && opacity == 1.0;
+    if( type != Content )
+        opaque = false;
+    if( !opaque )
+        {
+        glDisable( GL_BLEND );
+        }
+#ifndef KWIN_HAVE_OPENGLES
     glPopAttrib();  // ENABLE_BIT
+#endif
     }
 
 void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
+#ifndef KWIN_HAVE_OPENGLES
     Texture* tex;
     switch( type )
         {
@@ -2012,6 +2111,7 @@ void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity,
     glColor4f( 0, 0, 0, 0 );
 
     glPopAttrib();  // ENABLE_BIT
+#endif
     }
 
 //****************************************
@@ -2131,13 +2231,18 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         shader->setUniform("textureHeight", 1.0f);
         }
 
+#ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+#endif
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+#ifndef KWIN_HAVE_OPENGLES
     if( !shader )
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
+    // TODO: drop the push matrix
     glPushMatrix();
+#endif
 
     // Render the actual frame
     if( m_effectFrame->style() == EffectFrameUnstyled )
@@ -2251,8 +2356,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
         if( shader )
             shader->setUniform( "opacity", (float)(opacity * frameOpacity) );
+#ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
+#endif
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
@@ -2280,9 +2387,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
         if( shader )
             shader->setUniform( "opacity", (float)(opacity * frameOpacity) );
+#ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f( 1.0, 1.0, 1.0, opacity * frameOpacity );
-
+#endif
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
@@ -2314,23 +2422,29 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             {
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (1.0f - (float)m_effectFrame->crossFadeProgress()) );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()) );
+#endif
 
             m_oldIconTexture->bind();
             m_oldIconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ));
             m_oldIconTexture->unbind();
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress() );
+#endif
             }
         else
             {
             if( shader )
                 shader->setUniform( "opacity", (float)opacity );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity );
+#endif
             }
 
         if( !m_iconTexture ) // lazy creation
@@ -2351,23 +2465,29 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             {
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (1.0f - (float)m_effectFrame->crossFadeProgress()) );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()) );
+#endif
 
             m_oldTextTexture->bind();
             m_oldTextTexture->render( region, m_effectFrame->geometry(), sceneShader );
             m_oldTextTexture->unbind();
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress() );
+#endif
             }
         else
             {
             if( shader )
                 shader->setUniform( "opacity", (float)opacity );
+#ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f( 1.0, 1.0, 1.0, opacity );
+#endif
             }
         if( !m_textTexture ) // Lazy creation
             updateTextTexture();
@@ -2378,9 +2498,11 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
     if( shader )
         shader->unbind();
-
+    glDisable( GL_BLEND );
+#ifndef KWIN_HAVE_OPENGLES
     glPopMatrix();
     glPopAttrib();
+#endif
     }
 
 void SceneOpenGL::EffectFrame::updateTexture()
