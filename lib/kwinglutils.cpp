@@ -1076,13 +1076,13 @@ static QString formatFramebufferStatus( GLenum status )
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
             // There are no images attached to the framebuffer
             return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-        case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-            // Not all attached images have the same width and height
-            return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
         case GL_FRAMEBUFFER_UNSUPPORTED:
             // A format or the combination of formats of the attachments is unsupported
             return "GL_FRAMEBUFFER_UNSUPPORTED";
 #ifndef KWIN_HAVE_OPENGLES
+        case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+            // Not all attached images have the same width and height
+            return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
         case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
             // The color attachments don't have the same format
             return "GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT";
