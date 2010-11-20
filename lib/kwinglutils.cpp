@@ -1040,7 +1040,7 @@ bool GLRenderTarget::enable()
         return false;
         }
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     mTexture->setDirty();
 
     return true;
@@ -1054,7 +1054,7 @@ bool GLRenderTarget::disable()
         return false;
         }
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     mTexture->setDirty();
 
     return true;
@@ -1064,18 +1064,19 @@ static QString formatFramebufferStatus( GLenum status )
     {
     switch( status )
         {
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
             // An attachment is the wrong type / is invalid / has 0 width or height
             return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
             // There are no images attached to the framebuffer
             return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-        case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
             // Not all attached images have the same width and height
             return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
-        case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+        case GL_FRAMEBUFFER_UNSUPPORTED:
             // A format or the combination of formats of the attachments is unsupported
             return "GL_FRAMEBUFFER_UNSUPPORTED";
+#ifndef KWIN_HAVE_OPENGLES
         case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
             // The color attachments don't have the same format
             return "GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT";
@@ -1088,6 +1089,7 @@ static QString formatFramebufferStatus( GLenum status )
         case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
             // The read buffer is missing
             return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+#endif
         default:
             return "Unknown (0x" + QString::number(status, 16) + ')';
         }
@@ -1111,7 +1113,7 @@ void GLRenderTarget::initFBO()
         }
 #endif
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
 #if DEBUG_GLRENDERTARGET
     if( (err = glGetError()) != GL_NO_ERROR )
@@ -1122,24 +1124,24 @@ void GLRenderTarget::initFBO()
         }
 #endif
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            mTexture->target(), mTexture->texture(), 0);
 
 #if DEBUG_GLRENDERTARGET
     if( (err = glGetError()) != GL_NO_ERROR )
         {
         kError(1212) << "glFramebufferTexture2D failed: " << formatGLError( err );
-        glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
         }
 #endif
 
-    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
+    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
+    if( status != GL_FRAMEBUFFER_COMPLETE )
         { // We have an incomplete framebuffer, consider it invalid
         if (status == 0)
             kError(1212) << "glCheckFramebufferStatus failed: " << formatGLError( glGetError() );
