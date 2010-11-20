@@ -376,6 +376,7 @@ bool GLTexture::load( const QImage& image, GLenum target )
         return false;
     QImage img = image;
     mTarget = target;
+#ifndef KWIN_HAVE_OPENGLES
     if( mTarget != GL_TEXTURE_RECTANGLE_ARB )
         {
         if( !NPOTTextureSupported()
@@ -390,10 +391,13 @@ bool GLTexture::load( const QImage& image, GLenum target )
         }
     else
         {
+#endif
         mScale.setWidth( 1.0 );
         mScale.setHeight( 1.0 );
         can_use_mipmaps = false;
+#ifndef KWIN_HAVE_OPENGLES
         }
+#endif
     setFilter( GL_LINEAR );
     mSize = img.size();
     y_inverted = false;
