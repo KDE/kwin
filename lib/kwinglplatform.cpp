@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ios>
 
 #ifdef KWIN_HAVE_OPENGL
+#ifndef KWIN_HAVE_OPENGLES
 
 namespace KWin
 {
@@ -832,5 +833,6 @@ bool GLPlatform::isIntel() const
 
 } // namespace KWin
 
+#endif // KWIN_HAVE_OPENGLES
 #endif // KWIN_HAVE_OPENGL
 
