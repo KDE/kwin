@@ -186,8 +186,12 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
 
     // scene shader setup
+#ifdef KWIN_HAVE_OPENGLES
+    if( true )
+#else
     GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
+#endif
         {
         m_sceneShader = new GLShader( ":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl" );
         if( m_sceneShader->isValid() )
@@ -1131,9 +1135,9 @@ void SceneOpenGL::Texture::discard()
     }
 
 // TODO: write for EGL
-#ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::Texture::release()
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( tfp_mode && glxpixmap != None )
         {
         if ( !options->glStrictBinding )
@@ -1141,8 +1145,8 @@ void SceneOpenGL::Texture::release()
         glXDestroyPixmap( display(), glxpixmap );
         glxpixmap = None;
         }
-    }
 #endif
+    }
 
 // TODO: write for EGL
 #ifndef KWIN_HAVE_OPENGLES
@@ -1198,7 +1202,13 @@ QRegion SceneOpenGL::Texture::optimizeBindDamage( const QRegion& reg, int limit 
     }
 
 // TODO: write EGL variant
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
+    int depth, QRegion region )
+    {
+    return false;
+    }
+#else
 bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     int depth, QRegion region )
     {
