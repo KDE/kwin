@@ -57,6 +57,7 @@ int glTextureUnitsCount;
 // Functions
 void initGLX()
     {
+#ifndef KWIN_HAVE_OPENGLES
     // Get GLX version
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
@@ -66,6 +67,7 @@ void initGLX()
         display(), DefaultScreen( display()))).split(' ');
 
     glxResolveFunctions();
+#endif
     }
 
 void initGL()
@@ -79,7 +81,9 @@ void initGL()
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
+#ifndef KWIN_HAVE_OPENGLES
     glResolveFunctions();
+#endif
 
     GLTexture::initStatic();
     GLShader::initStatic();
@@ -110,8 +114,10 @@ static QString formatGLError( GLenum err )
         case GL_INVALID_ENUM:      return "GL_INVALID_ENUM";
         case GL_INVALID_VALUE:     return "GL_INVALID_VALUE";
         case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
+#ifndef KWIN_HAVE_OPENGLES
         case GL_STACK_OVERFLOW:    return "GL_STACK_OVERFLOW";
         case GL_STACK_UNDERFLOW:   return "GL_STACK_UNDERFLOW";
+#endif
         case GL_OUT_OF_MEMORY:     return "GL_OUT_OF_MEMORY";
         default: return QString( "0x" ) + QString::number( err, 16 );
         }
