@@ -319,7 +319,13 @@ GLTexture::GLTexture( int width, int height )
 
         glGenTextures( 1, &mTexture );
         bind();
+#ifdef KWIN_HAVE_OPENGLES
+        // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
+        // see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+        glTexImage2D( mTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#else
         glTexImage2D( mTarget, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+#endif
         unbind();
         }
     }
@@ -398,8 +404,14 @@ bool GLTexture::load( const QImage& image, GLenum target )
     if( isNull())
         glGenTextures( 1, &mTexture );
     bind();
+#ifdef KWIN_HAVE_OPENGLES
+    // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
+    // see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+    glTexImage2D( mTarget, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+#else
     glTexImage2D( mTarget, 0, GL_RGBA8, img.width(), img.height(), 0,
         GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+#endif
     unbind();
     return true;
     }
@@ -652,6 +664,7 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
     const uint *p = (const uint*) img.scanLine(img.height() - 1);
     uint *q = (uint*) dst.scanLine(0);
 
+#ifndef KWIN_HAVE_OPENGLES
     if (texture_format == GL_BGRA) {
         if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
             // mirror + swizzle
@@ -676,6 +689,7 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
             }
         }
     } else {
+#endif
         if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
             for (int i=0; i < height; ++i) {
                 const uint *end = p + width;
@@ -697,13 +711,19 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
                 p -= 2 * width;
             }
         }
+#ifndef KWIN_HAVE_OPENGLES
     }
+#endif
 }
 
 QImage GLTexture::convertToGLFormat( const QImage& img ) const
     { // Copied from Qt's QGLWidget::convertToGLFormat()
     QImage res(img.size(), QImage::Format_ARGB32);
+#ifdef KWIN_HAVE_OPENGLES
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_RGBA);
+#else
     convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_BGRA);
+#endif
     return res;
     }
 
