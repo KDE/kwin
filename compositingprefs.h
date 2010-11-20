@@ -67,8 +67,10 @@ private:
     bool mStrictBinding;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     GLXContext mGLContext;
     Window mGLWindow;
+#endif
 #endif
 };
 

@@ -119,6 +119,7 @@ void CompositingPrefs::detect()
         }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     // HACK: This is needed for AIGLX
     if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
         {
@@ -161,11 +162,13 @@ void CompositingPrefs::detect()
         glXMakeCurrent( display(), olddrawable, oldcontext );
     deleteGLXContext();
 #endif
+#endif
     }
 
 bool CompositingPrefs::initGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     mGLContext = NULL;
     KXErrorHandler handler;
     // Most of this code has been taken from glxinfo.c
@@ -210,6 +213,9 @@ bool CompositingPrefs::initGLXContext()
 
     return glXMakeCurrent( display(), mGLWindow, mGLContext ) && !handler.error( true );
 #else
+    return false;
+#endif
+#else
    return false;
 #endif
 }
@@ -217,10 +223,12 @@ bool CompositingPrefs::initGLXContext()
 void CompositingPrefs::deleteGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if( mGLContext == NULL )
         return;
     glXDestroyContext( display(), mGLContext );
     XDestroyWindow( display(), mGLWindow );
+#endif
 #endif
 }
 
