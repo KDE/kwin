@@ -38,9 +38,11 @@ namespace KWin
 LanczosFilter::LanczosFilter( QObject* parent )
     : QObject( parent )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     , m_offscreenTex( 0 )
     , m_offscreenTarget( 0 )
     , m_shader( 0 )
+#endif
 #endif
     , m_inited( false)
     {
@@ -49,8 +51,10 @@ LanczosFilter::LanczosFilter( QObject* parent )
 LanczosFilter::~LanczosFilter()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     delete m_offscreenTarget;
     delete m_offscreenTex;
+#endif
 #endif
     }
 
@@ -60,6 +64,7 @@ void LanczosFilter::init()
         return;
     m_inited = true;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
 
     KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
 
@@ -80,6 +85,7 @@ void LanczosFilter::init()
         delete m_shader;
         m_shader = 0;
         }
+#endif
 #endif
     }
 
@@ -126,6 +132,7 @@ static float lanczos( float x, float a )
     }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
 void LanczosShader::createKernel( float delta, int *size )
     {
     const float a = 2.0;
@@ -165,6 +172,7 @@ void LanczosShader::createOffsets( int count, float width, Qt::Orientation direc
                 QVector2D( i / width, 0 ) : QVector2D( 0, i / width );
     }
     }
+#endif
 #endif
 
 void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
