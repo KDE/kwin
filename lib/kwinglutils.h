@@ -85,7 +85,7 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * Note that texture coordinates must match texture type (normalized/unnormalized
  * for GL_TEXTURE_2D/GL_TEXTURE_ARB).
  *
- * For OpenGL ES each quad is split into two triangles.
+ * In OpenGL ES this method is a no-op.
  *
  * @param count number of vertices to use.
  * @param dim number of components per vertex coordinate in vertices array.
@@ -163,10 +163,16 @@ class KWIN_EXPORT GLTexture
          * types. This can be done only for one texture at a time, repeated
          * calls for the same texture are allowed though, requiring the same
          * amount of calls to disableUnnormalizedTexCoords().
+         *
+         * In OpenGL ES this method is a no-op. In core profile a shader should be used
+         * @deprecated
          */
         void enableUnnormalizedTexCoords();
         /**
          * Disables transformation set up using enableUnnormalizedTexCoords().
+         *
+         * In OpenGL ES this method is a no-op. In core profile a shader should be used
+         * @deprecated
          */
         void disableUnnormalizedTexCoords();
         /**
@@ -176,10 +182,16 @@ class KWIN_EXPORT GLTexture
          * types. This can be done only for one texture at a time, repeated
          * calls for the same texture are allowed though, requiring the same
          * amount of calls to disableNormalizedTexCoords().
+         *
+         * In OpenGL ES this method is a no-op. In core profile a shader should be used
+         * @deprecated
          */
         void enableNormalizedTexCoords();
         /**
          * Disables transformation set up using enableNormalizedTexCoords().
+         *
+         * In OpenGL ES this method is a no-op. In core profile a shader should be used
+         * @deprecated
          */
         void disableNormalizedTexCoords();
 
