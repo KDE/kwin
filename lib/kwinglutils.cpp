@@ -1362,7 +1362,11 @@ bool GLVertexBuffer::isSupported()
 
 void GLVertexBuffer::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    GLVertexBufferPrivate::supported = true;
+#else
     GLVertexBufferPrivate::supported = hasGLExtension( "GL_ARB_vertex_buffer_object" );
+#endif
     }
 
 
