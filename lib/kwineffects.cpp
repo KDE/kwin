@@ -866,7 +866,9 @@ PaintClipper::Iterator::Iterator()
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( clip() && effects->compositingType() == OpenGLCompositing )
         {
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_SCISSOR_BIT );
+#endif
         if( !effects->isRenderTargetBound() )
             glEnable( GL_SCISSOR_TEST );
         data->rects = paintArea().rects();
@@ -888,7 +890,13 @@ PaintClipper::Iterator::~Iterator()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( clip() && effects->compositingType() == OpenGLCompositing )
+        {
+        if( !effects->isRenderTargetBound() )
+            glDisable( GL_SCISSOR_TEST );
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
+        }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( clip() && effects->compositingType() == XRenderCompositing )
