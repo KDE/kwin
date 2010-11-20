@@ -1320,6 +1320,7 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
         d->corePainting( region, primitiveMode );
         return;
         }
+#ifndef KWIN_HAVE_OPENGLES
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
@@ -1341,6 +1342,7 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
 
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+#endif
     }
 
 void GLVertexBuffer::setUseShader( bool use )
