@@ -35,6 +35,10 @@ namespace KWin
 class GLTexture;
 class GLRenderTarget;
 class GLShader;
+/**
+ * Unsupported in OpenGL ES
+ * @deprecated Use a normal Shader
+ */
 class KWIN_EXPORT ShaderEffect : public Effect
 {
     public:

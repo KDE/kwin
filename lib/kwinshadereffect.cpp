@@ -56,6 +56,9 @@ bool ShaderEffect::loadData(const QString& shadername)
 #ifndef KWIN_HAVE_OPENGL_COMPOSITING
     return false;
 #else
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     // If NPOT textures are not supported, use nearest power-of-two sized
     //  texture. It wastes memory, but it's possible to support systems without
     //  NPOT textures that way
@@ -97,6 +100,7 @@ bool ShaderEffect::loadData(const QString& shadername)
 
     return true;
 #endif
+#endif
 }
 
 bool ShaderEffect::supported()
@@ -104,9 +108,13 @@ bool ShaderEffect::supported()
 #ifndef KWIN_HAVE_OPENGL_COMPOSITING
     return false;
 #else
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     return GLRenderTarget::supported() &&
             GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
+#endif
 #endif
 }
 
@@ -131,12 +139,14 @@ void ShaderEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 {
     mTime += time / 1000.0f;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if( mValid && mEnabled )
     {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(mRenderTarget);
     }
+#endif
 #endif
 
     effects->prePaintScreen(data, time);
@@ -148,6 +158,7 @@ void ShaderEffect::postPaintScreen()
     effects->postPaintScreen();
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if( mValid && mEnabled )
     {
         // Disable render texture
@@ -173,6 +184,7 @@ void ShaderEffect::postPaintScreen()
         mShader->unbind();
         mTexture->unbind();
     }
+#endif
 #endif
 }
 
