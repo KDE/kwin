@@ -55,6 +55,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+extern int currentRefreshRate();
+    
 // ****************************************
 // WinInfo
 // ****************************************
@@ -510,18 +512,16 @@ bool Workspace::workspaceEvent( XEvent * e )
                 {
 #ifdef HAVE_XRANDR
                 XRRUpdateConfiguration( e );
+#endif
                 if( compositing() )
                     {
                     // desktopResized() should take care of when the size or
                     // shape of the desktop has changed, but we also want to
                     // catch refresh rate changes
-                    XRRScreenConfiguration *config = XRRGetScreenInfo( display(), rootWindow() );
-                    bool changed = ( xrrRefreshRate != XRRConfigCurrentRate( config ));
-                    XRRFreeScreenConfigInfo( config );
-                    if( changed )
+                    if( xrrRefreshRate != currentRefreshRate() )
                         compositeResetTimer.start( 0 );
                     }
-#endif
+
                 }
             else if( e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable())
                 {

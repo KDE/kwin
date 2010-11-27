@@ -77,6 +77,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+extern int currentRefreshRate();
+
 //****************************************
 // Workspace
 //****************************************
@@ -195,30 +197,7 @@ void Workspace::setupCompositing()
         delete cm_selection;
         return;
         }
-    int rate = 0;
-    if( options->refreshRate > 0 )
-        { // use manually configured refresh rate
-        rate = options->refreshRate;
-        }
-#ifdef HAVE_XRANDR
-    else
-        { // autoconfigure refresh rate based on XRandR info
-        if( Extensions::randrAvailable() )
-            {
-            XRRScreenConfiguration *config = XRRGetScreenInfo( display(), rootWindow() );
-            rate = xrrRefreshRate = XRRConfigCurrentRate( config );
-            XRRFreeScreenConfigInfo( config );
-            }
-        }
-#endif
-    // 0Hz or less is invalid, so we fallback to a default rate
-    if( rate <= 0 )
-        rate = 50;
-    // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
-    // however, additional throttling prevents very high rates from taking place anyway
-    else if( rate > 1000 )
-        rate = 1000;
-    kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
+    int rate = xrrRefreshRate = KWin::currentRefreshRate();
     compositeRate = 1000 / rate;
     lastCompositePaint.start();
     // fake a previous paint, so that the next starts right now

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QPalette>
 #include <QPixmap>
+#include <QProcess>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kglobal.h>
@@ -37,12 +38,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kephal/screens.h>
 
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
+
+
 #endif
 
 namespace KWin
 {
 
 #ifndef KCMRULES
+
+static bool rrNvidia = false;
+int currentRefreshRate()
+    {
+    int rate = -1;
+    if( options->refreshRate > 0 ) // use manually configured refresh rate
+        rate = options->refreshRate;
+    else if ( rrNvidia )
+        {
+        QProcess nvidia_settings;
+        nvidia_settings.start( "nvidia-settings", QStringList() << "-t" << "-q" << "RefreshRate", QIODevice::ReadOnly );
+        nvidia_settings.waitForFinished();
+        if ( nvidia_settings.exitStatus() == QProcess::NormalExit )
+            {
+            QString reply = QString::fromLocal8Bit( nvidia_settings.readAllStandardOutput() );
+            bool ok;
+            rate = reply.split(' ').first().split(',').first().toUInt( &ok );
+            if ( !ok )
+                rate = -1;
+            }
+        }
+#ifdef HAVE_XRANDR
+    else if( Extensions::randrAvailable() )
+        {
+        XRRScreenConfiguration *config = XRRGetScreenInfo( display(), rootWindow() );
+        rate = XRRConfigCurrentRate( config );
+        XRRFreeScreenConfigInfo( config );
+        }
+#endif    
+        
+    // 0Hz or less is invalid, so we fallback to a default rate
+    if( rate <= 0 )
+        rate = 50;
+    // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
+    // however, additional throttling prevents very high rates from taking place anyway
+    else if( rate > 1000 )
+        rate = 1000;
+    kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
+    return rate;
+    }
 
 Options::Options()
     : electric_borders( 0 )
@@ -248,6 +294,7 @@ void Options::reloadCompositingSettings()
     // Compositing settings
     CompositingPrefs prefs;
     prefs.detect();
+    rrNvidia = prefs.driver() == "nvidia";
     useCompositing = config.readEntry( "Enabled" , prefs.recommendCompositing());
 
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
