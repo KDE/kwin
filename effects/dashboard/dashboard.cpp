@@ -121,6 +121,7 @@ void DashboardEffect::postPaintScreen()
             retransformWindow = false;
             transformWindow = false;
             effects->addRepaintFull();
+            effects->setActiveFullScreenEffect( 0 );
             }
 
         if( activateAnimation )
@@ -137,6 +138,7 @@ void DashboardEffect::postPaintScreen()
                 {
                 deactivateAnimation = false;
                 transformWindow = false;
+                effects->setActiveFullScreenEffect( 0 );
                 }
 
             effects->addRepaintFull();
@@ -166,6 +168,7 @@ void DashboardEffect::windowActivated( EffectWindow *w )
     // apply effect on dashboard activation
     if( isDashboard( w ) )
         {
+        effects->setActiveFullScreenEffect( this );
         transformWindow = true;
         window = w;
 
