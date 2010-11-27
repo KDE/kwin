@@ -2,6 +2,7 @@
 Name=Startup Feedback
 Name[ast]=Notificación d'aniciu
 Name[ca]=Reacció en iniciar
+Name[da]=Opstartsfeedback
 Name[en_GB]=Startup Feedback
 Name[es]=Notificación de inicio
 Name[et]=Käivitamise tagasiside
@@ -25,6 +26,7 @@ Name[zh_TW]=程式啟動回饋
 Comment=Helper effect for startup feedback
 Comment[ast]=Efeutu de notificación d'aniciu
 Comment[ca]=Efecte auxiliar de reacció en iniciar
+Comment[da]=Hjælpeeffekt til opstartsfeedback
 Comment[en_GB]=Helper effect for startup feedback
 Comment[es]=Efecto de notificación de inicio
 Comment[et]=Käivitamise tagasiside abiefekt

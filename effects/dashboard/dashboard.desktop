@@ -75,6 +75,7 @@ Icon=preferences-system-windows-effect-dashboard
 Comment=Desaturate the desktop when displaying the Plasma dashboard
 Comment[ast]=Desatura l'escritoriu cuando s'amuesa'l tableru de Plasma
 Comment[ca]=Reducció de la saturació de l'escriptori en mostrar el tauler del Plasma
+Comment[da]=Afmæt farverne på skrivebordet når Plasma instrumentbrættet vises
 Comment[de]=Die Arbeitsfläche grau färben, wenn das Plasma-Dashboard angezeigt wird.
 Comment[el]=Αποχρωματισμός της επιφάνειας εργασίας κατά την εμφάνιση του πίνακα πλάσματος
 Comment[en_GB]=Desaturate the desktop when displaying the Plasma dashboard
