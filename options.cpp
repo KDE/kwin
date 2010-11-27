@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
+#include <klocale.h>
 
 #include <QDesktopWidget>
 
@@ -65,7 +66,7 @@ int currentRefreshRate()
             {
             QString reply = QString::fromLocal8Bit( nvidia_settings.readAllStandardOutput() );
             bool ok;
-            rate = reply.split(' ').first().split(',').first().toUInt( &ok );
+            rate = reply.split(' ').first().split(KGlobal::locale()->decimalSymbol()).first().toUInt( &ok );
             if ( !ok )
                 rate = -1;
             }
