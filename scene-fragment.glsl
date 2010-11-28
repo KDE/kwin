@@ -1,3 +1,6 @@
+#ifdef GL_ES
+precision highp float;
+#endif
 uniform sampler2D sample;
 uniform float textureWidth;
 uniform float textureHeight;
@@ -6,9 +9,9 @@ uniform float brightness;
 uniform float saturation;
 uniform int debug;
 
-varying in vec2 varyingTexCoords;
+varying vec2 varyingTexCoords;
 
-varying out vec4 color;
+//varying vec4 color;
 
 // Converts pixel coordinates to texture coordinates
 vec2 pix2tex( vec2 pix )
@@ -25,9 +28,9 @@ void main() {
     }
     tex.rgb = tex.rgb * opacity * brightness;
     tex.a = tex.a * opacity;
-    if (debug != 0) {
+    /*if (debug != 0) {
         tex.g += 0.5;
-    }
+    }*/
         
-    color = tex;
+    gl_FragColor = tex;
 }

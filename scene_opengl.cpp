@@ -368,12 +368,14 @@ SceneOpenGL::Window::~Window()
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( texture.texture() != None && toplevel->damage().isEmpty())
         {
         // texture doesn't need updating, just bind it
         glBindTexture( texture.target(), texture.texture());
         return true;
         }
+#endif
     // Get the pixmap with the window contents
     Pixmap pix = toplevel->windowPixmap();
     if( pix == None )
@@ -1113,7 +1115,6 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         {
         shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
         sceneShader = true;
-        kDebug(1212) << "using scene shader";
         }
     if( shader )
         {
@@ -1274,7 +1275,6 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         }
 #endif
         m_unstyledTexture->unbind();
-        checkGLError("unstyled texture");
         }
     else if( m_effectFrame->style() == EffectFrameStyled )
         {

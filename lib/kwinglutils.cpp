@@ -438,7 +438,25 @@ bool GLTexture::load( const QPixmap& pixmap, GLenum target )
     {
     if( pixmap.isNull())
         return false;
+#ifdef KWIN_HAVE_OPENGLES
+    if( isNull() )
+        glGenTextures( 1, &mTexture );
+    mTarget = target;
+    bind();
+    const EGLint attribs[] = {
+        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
+        EGL_NONE
+    };
+    EGLDisplay dpy = eglGetCurrentDisplay();
+    EGLImageKHR image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+                            (EGLClientBuffer)pixmap.handle(), attribs);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
+    eglDestroyImageKHR(dpy, image);
+    unbind();
+    return true;
+#else
     return load( pixmap.toImage(), target );
+#endif
     }
 
 bool GLTexture::load( const QString& fileName )
@@ -1020,6 +1038,7 @@ float GLShader::textureWidth()
 void GLShader::bindAttributeLocation(int index, const char* name)
     {
     glBindAttribLocation(mProgram, index, name);
+    // TODO: relink the shader
     }
 
 /***  GLRenderTarget  ***/
@@ -1247,26 +1266,32 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
     glEnableVertexAttribArray( 0 );
     glEnableVertexAttribArray( 1 );
 
+    // TODO: have this information available somewhere useable
+    GLint currentProgram;
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
+    GLint vertexAttrib = glGetAttribLocation( currentProgram, "vertex" );
+    GLint texAttrib = glGetAttribLocation( currentProgram, "texCoord" );
 
     glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
-    glVertexAttribPointer( 0, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( vertexAttrib, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
 
     glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
 
+    // TODO: reenable paint clipper
     // Clip using scissoring
-    PaintClipper pc( region );
+    /*PaintClipper pc( region );
     for( PaintClipper::Iterator iterator;
         !iterator.isDone();
         iterator.next())
-        {
+        {*/
         glDrawArrays( primitiveMode, 0, numberVertices );
-        }
+        //}
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
     glDisableVertexAttribArray( 1 );
-    glDisableVertexAttribArray( 2 );
+    glDisableVertexAttribArray( 0 );
     }
 
 //*********************************
