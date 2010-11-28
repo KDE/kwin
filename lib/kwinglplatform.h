@@ -145,6 +145,11 @@ public:
     void detect();
 
     /**
+     * Prints the results of the detection code.
+     */
+    void printResults() const;
+
+    /**
      * Returns a pointer to the GLPlatform instance.
      */
     static GLPlatform *instance();

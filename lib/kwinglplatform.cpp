@@ -29,6 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <sys/utsname.h>
 
+#include <iostream>
+#include <iomanip>
+
 #ifdef KWIN_HAVE_OPENGL
 
 namespace KWin
@@ -299,6 +302,103 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
     return UnknownIntel;
 }
 
+static QString versionToString(qint64 version)
+{
+    int major = (version >> 32);
+    int minor = (version >> 16) & 0xffff;
+    int patch = version & 0xffff;
+
+    QString string = QString::number(major) + QChar('.') + QString::number(minor);
+    if (patch != 0)
+        string += QChar('.') + QString::number(patch);
+
+    return string;
+}
+
+static QString driverToString(Driver driver)
+{
+    switch (driver) {
+    case Driver_R100:
+        return "Radeon";
+    case Driver_R200:
+        return "R200";
+    case Driver_R300C:
+        return "R300C";
+    case Driver_R300G:
+        return "R300G";
+    case Driver_R600C:
+        return "R600C";
+    case Driver_R600G:
+        return "R600G";
+    case Driver_Nouveau:
+        return "Nouveau";
+    case Driver_Intel:
+        return "Intel";
+    case Driver_NVidia:
+        return "NVIDIA";
+    case Driver_Catalyst:
+        return "Catalyst";
+    case Driver_Swrast:
+        return "Software rasterizer";
+    case Driver_Softpipe:
+        return "softpipe";
+    case Driver_Llvmpipe:
+        return "LLVMpipe";
+
+    default:
+        return "Unknown";
+    }
+}
+
+static QString chipClassToString(ChipClass chipClass)
+{
+    switch (chipClass) {
+    case R100:
+        return "R100";
+    case R200:
+        return "R200";
+    case R300:
+        return "R300";
+    case R400:
+        return "R400";
+    case R500:
+        return "R500";
+    case R600:
+        return "R600";
+    case R700:
+        return "R700";
+    case Evergreen:
+        return "EVERGREEN";
+    case NorthernIslands:
+        return "NI";
+
+    case NV10:
+        return "NV10";
+    case NV20:
+        return "NV20";
+    case NV30:
+        return "NV30";
+    case NV40:
+        return "NV40/G70";
+    case G80:
+        return "G80/G90";
+    case GF100:
+        return "GF100";
+
+    case I8XX:
+        return "i830/i835";
+    case I915:
+        return "i915/i945";
+    case I965:
+        return "i965";
+    case SandyBridge:
+        return "SandyBridge";
+
+    default:
+        return "Unknown";
+    }
+}
+
 
 
 // -------
@@ -531,6 +631,51 @@ void GLPlatform::detect()
 
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
     }
+}
+
+static void print(const QString &label, const QString &setting)
+{
+    std::cout << std::setw(40) << std::left
+        << qPrintable(label) << qPrintable(setting) << std::endl;
+}
+
+void GLPlatform::printResults() const
+{
+    print("OpenGL vendor string:",   m_vendor);
+    print("OpenGL renderer string:", m_renderer);
+    print("OpenGL version string:",  m_version);
+
+    if (m_supportsGLSL)
+        print("OpenGL shading language version string:", m_glsl_version);
+
+    print("Driver:", driverToString(m_driver));
+    if (!isMesaDriver())
+        print("Driver version:", versionToString(m_driverVersion));
+
+    print("GPU class:", chipClassToString(m_chipClass));
+    
+    print("OpenGL version:", versionToString(m_glVersion));
+    print("GLSL version:", versionToString(m_glslVersion));
+
+    if (isMesaDriver())
+        print("Mesa version:", versionToString(mesaVersion()));
+    //if (galliumVersion() > 0)
+    //    print("Gallium version:", versionToString(m_galliumVersion));
+    if (serverVersion() > 0)
+        print("X server version:", versionToString(m_serverVersion));
+    if (kernelVersion() > 0)
+        print("Linux kernel version:", versionToString(m_kernelVersion));
+
+    print("Direct rendering:", m_directRendering ? "yes" : "no");
+    print("Requires strict binding:", !m_looseBinding ? "yes" : "no");
+    print("GLSL shaders:", m_supportsGLSL ? "yes" : "no");
+
+    if (m_supportsGLSL)
+        print("Limited GLSL support:", m_limitedGLSL ? "yes" : "no");
+
+    print("Texture NPOT support:", m_textureNPOT ? "yes" : "no");
+    if (m_textureNPOT)
+        print("Limited NPOT support:", m_limitedNPOT ? "yes" : "no");
 }
 
 bool GLPlatform::supports(GLFeature feature) const
