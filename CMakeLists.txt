@@ -160,7 +160,7 @@ kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} ${QT_QTSCRIPT_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
 
-if(OPENGL_FOUND)
+if(OPENGL_FOUND AND NOT OPENGLES_FOUND)
   add_subdirectory(opengltest)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
@@ -170,7 +170,12 @@ if(OPENGL_FOUND)
   endif(DL_LIBRARY)
   # must be after opengl, to be initialized first by the linker
   target_link_libraries(kdeinit_kwin kwinnvidiahack)
-endif(OPENGL_FOUND)
+endif(OPENGL_FOUND AND NOT OPENGLES_FOUND)
+
+if(OPENGLES_FOUND)
+  add_subdirectory(opengltest)
+  target_link_libraries(kdeinit_kwin ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
+endif(OPENGLES_FOUND)
 
 if (X11_Xrandr_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
