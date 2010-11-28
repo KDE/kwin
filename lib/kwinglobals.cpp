@@ -149,9 +149,11 @@ void Extensions::init()
 #endif
     has_glx = false;
 #ifdef HAVE_OPENGL
+#ifndef KWIN_HAVE_OPENGLES
     has_glx = glXQueryExtension( display(), &event_base, &error_base );
     if( has_glx )
         addData( "GLX" );
+#endif
 #endif
 #ifdef HAVE_XSYNC
     if( XSyncQueryExtension( display(), &sync_event_base, &error_base ))

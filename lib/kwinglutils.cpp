@@ -75,8 +75,10 @@ void initGL()
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
+#ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(),
                                     glversioninfo.count() > 2 ? glversioninfo[2].toInt() : 0);
+#endif
     // Get list of supported OpenGL extensions
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
@@ -359,11 +361,17 @@ void GLTexture::init()
 
 void GLTexture::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    mNPOTTextureSupported = true;
+    mFramebufferObjectSupported = true;
+    mSaturationSupported = true;
+#else
     mNPOTTextureSupported = hasGLExtension( "GL_ARB_texture_non_power_of_two" );
     mFramebufferObjectSupported = hasGLExtension( "GL_EXT_framebuffer_object" );
     mSaturationSupported = ((hasGLExtension("GL_ARB_texture_env_crossbar")
         && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
         && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
+#endif
     }
 
 bool GLTexture::isNull() const
@@ -385,6 +393,7 @@ bool GLTexture::load( const QImage& image, GLenum target )
 #ifndef KWIN_HAVE_OPENGLES
     if( mTarget != GL_TEXTURE_RECTANGLE_ARB )
         {
+#endif
         if( !NPOTTextureSupported()
             && ( !isPowerOfTwo( image.width()) || !isPowerOfTwo( image.height())))
             { // non-rectangular target requires POT texture
@@ -394,14 +403,13 @@ bool GLTexture::load( const QImage& image, GLenum target )
         mScale.setWidth( 1.0 / img.width());
         mScale.setHeight( 1.0 / img.height());
         can_use_mipmaps = true;
+#ifndef KWIN_HAVE_OPENGLES
         }
     else
         {
-#endif
         mScale.setWidth( 1.0 );
         mScale.setHeight( 1.0 );
         can_use_mipmaps = false;
-#ifndef KWIN_HAVE_OPENGLES
         }
 #endif
     setFilter( GL_LINEAR );
@@ -450,7 +458,9 @@ void GLTexture::discard()
 
 void GLTexture::bind()
     {
+#ifndef KWIN_HAVE_OPENGLES
     glEnable( mTarget );
+#endif
     glBindTexture( mTarget, mTexture );
     enableFilter();
     }
@@ -458,7 +468,9 @@ void GLTexture::bind()
 void GLTexture::unbind()
     {
     glBindTexture( mTarget, 0 );
+#ifndef KWIN_HAVE_OPENGLES
     glDisable( mTarget );
+#endif
     }
 
 void GLTexture::render( QRegion region, const QRect& rect )
@@ -746,10 +758,14 @@ bool GLShader::mVertexShaderSupported = false;
 
 void GLShader::initStatic()
 {
+#ifdef KWIN_HAVE_OPENGLES
+    mFragmentShaderSupported = mVertexShaderSupported = true;
+#else
     mFragmentShaderSupported = mVertexShaderSupported =
             hasGLExtension("GL_ARB_shader_objects") && hasGLExtension("GL_ARB_shading_language_100");
     mVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
     mFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
+#endif
 }
 
 
@@ -1011,7 +1027,11 @@ bool GLRenderTarget::mSupported = false;
 
 void GLRenderTarget::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    mSupported = true;
+#else
     mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
+#endif
     }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)

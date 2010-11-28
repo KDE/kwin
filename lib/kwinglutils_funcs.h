@@ -348,7 +348,13 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 } // namespace
 
 #else
+#define EGL_EGLEXT_PROTOTYPES
+#define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <fixx11h.h>
 #endif
 
 #endif
