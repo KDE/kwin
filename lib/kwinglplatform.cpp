@@ -426,7 +426,6 @@ void GLPlatform::detect()
     m_vendor       = (const char*)glGetString(GL_VENDOR);
     m_renderer     = (const char*)glGetString(GL_RENDERER);
     m_version      = (const char*)glGetString(GL_VERSION);
-    m_glsl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
     const QByteArray extensions = (const char*)glGetString(GL_EXTENSIONS);
     m_extensions = QSet<QByteArray>::fromList(extensions.split(' '));
@@ -445,13 +444,6 @@ void GLPlatform::detect()
         m_mesaVersion = parseVersionString(version);
     }
 
-    // Parse the GLSL version
-    const QList<QByteArray> glslVersionTokens = m_glsl_version.split(' ');
-    if (glslVersionTokens.count() > 0) {
-        const QByteArray version = glslVersionTokens.at(0);
-        m_glslVersion = parseVersionString(version);
-    }
-
     GLXContext ctx = glXGetCurrentContext();
     m_directRendering = glXIsDirect(display(), ctx);
 
@@ -461,10 +453,22 @@ void GLPlatform::detect()
     m_supportsGLSL = m_extensions.contains("GL_ARB_shading_language_100") &&
                      m_extensions.contains("GL_ARB_shader_objects") &&
                      m_extensions.contains("GL_ARB_fragment_shader") &&
-                     m_extensions.contains("GL_ARB_vertex_shader") &&
-                     m_glslVersion >= kVersionNumber(1, 0);
+                     m_extensions.contains("GL_ARB_vertex_shader");
 
     m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+
+    m_glslVersion = 0;
+    m_glsl_version = QByteArray();
+
+    if (m_supportsGLSL) {
+        // Parse the GLSL version
+        m_glsl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+        const QList<QByteArray> glslVersionTokens = m_glsl_version.split(' ');
+        if (glslVersionTokens.count() > 0) {
+            const QByteArray version = glslVersionTokens.at(0);
+            m_glslVersion = parseVersionString(version);
+        }
+    }
 
     m_chipset = "Unknown";
 
