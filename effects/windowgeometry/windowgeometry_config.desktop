@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_windowgeometry
 X-KDE-PluginKeyword=windowgeometry
 
 Name=WindowGeometry
+Name[ca]=WindowGeometry
 Name[da]=Vinduesgeometri
 Name[et]=Akna geomeetria
 Name[hi]=विंडोज्यामिति

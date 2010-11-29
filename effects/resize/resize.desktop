@@ -64,6 +64,7 @@ Name[zh_CN]=缩放窗口
 Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Resizes windows with a fast texture scale instead of updating contents
+Comment[ca]=Redimensiona les finestres amb un escalat de textura ràpid enlloc d'actualitzar els continguts
 Comment[da]=Ændrer størrelse på vinduer med en hurtig teksturskalering i stedet for at opdatere indholdet
 Comment[et]=Akende suuruse muutmine kiire tekstuuri skaleerimisega sisu uuendamise asemel
 Comment[ia]=Redimensiona fenestras con un rapide scala de textura in vice de actualisar contentos

@@ -1,6 +1,7 @@
 [Desktop Entry]
 # Name of the effect
 Name=WindowGeometry
+Name[ca]=WindowGeometry
 Name[da]=Vinduesgeometri
 Name[et]=Akna geomeetria
 Name[hi]=विंडोज्यामिति
@@ -19,6 +20,7 @@ Name[uk]=Розміри вікна
 Name[x-test]=xxWindowGeometryxx
 Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
+Comment[ca]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[da]=Vis vinduesgeometrier ved flytning og ændring af størrelse
 Comment[et]=Akende geomeetria kuvamine liigutamisel või suuruse muutmisel
 Comment[ia]=Monstra geometrias de fenestra quando on move/redimensiona
