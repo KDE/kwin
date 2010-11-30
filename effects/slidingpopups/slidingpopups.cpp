@@ -190,7 +190,13 @@ void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
     QByteArray data = w->readProperty( mAtom, mAtom, 32 );
 
     if( data.length() < 1 )
+        {
+        // Property was removed, thus also remove the effect for window
+        mAppearingWindows.remove( w );
+        mDisappearingWindows.remove( w );
+        mWindowsData.remove( w );
         return;
+        }
 
     long* d = reinterpret_cast< long* >( data.data());
     Data animData;
