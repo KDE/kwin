@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "compositingprefs.h"
+#include "lib/kwinglplatform.h"
 
 #include <kephal/screens.h>
 
@@ -51,13 +52,12 @@ namespace KWin
 
 #ifndef KCMRULES
 
-static bool rrNvidia = false;
 int currentRefreshRate()
     {
     int rate = -1;
     if( options->refreshRate > 0 ) // use manually configured refresh rate
         rate = options->refreshRate;
-    else if ( rrNvidia )
+    else if ( GLPlatform::instance()->driver() == Driver_NVidia )
         {
         QProcess nvidia_settings;
         nvidia_settings.start( "nvidia-settings", QStringList() << "-t" << "-q" << "RefreshRate", QIODevice::ReadOnly );
@@ -295,7 +295,7 @@ void Options::reloadCompositingSettings()
     // Compositing settings
     CompositingPrefs prefs;
     prefs.detect();
-    rrNvidia = prefs.driver() == "nvidia";
+
     useCompositing = config.readEntry( "Enabled" , prefs.recommendCompositing());
 
     QString compositingBackend = config.readEntry("Backend", "OpenGL");

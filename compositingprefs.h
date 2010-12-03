@@ -37,20 +37,6 @@ public:
     CompositingPrefs();
     ~CompositingPrefs();
 
-    class Version : public QStringList
-    {
-    public:
-        Version() : QStringList()  {}
-        Version( const QString& str );
-
-        int compare( const Version& v ) const;
-
-        bool operator<( const Version& v ) const  { return ( compare( v ) == -1 ); }
-        bool operator<=( const Version& v ) const  { return ( compare( v ) != 1 ); }
-        bool operator>( const Version& v ) const  { return ( compare( v ) == 1 ); }
-        bool operator>=( const Version& v ) const  { return ( compare( v ) != -1 ); }
-    };
-
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
     bool recommendCompositing() const;
@@ -60,15 +46,11 @@ public:
 
     void detect();
 
-    QString driver() const  { return mDriver; }
-    Version version() const  { return mVersion; }
     bool xgl() const { return mXgl; }
-
 
 protected:
 
     void detectDriverAndVersion();
-    void parseMesaVersion( const QString &version, int *major, int *minor );
     void applyDriverSpecificOptions();
     static bool detectXgl();
 
@@ -77,11 +59,6 @@ protected:
 
 
 private:
-    QString mGLVendor;
-    QString mGLRenderer;
-    QString mGLVersion;
-    QString mDriver;
-    Version mVersion;
     bool mXgl;
 
     bool mRecommendCompositing;

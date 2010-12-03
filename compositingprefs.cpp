@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingprefs.h"
 
 #include "kwinglobals.h"
+#include "kwinglplatform.h"
 
 #include <kdebug.h>
 #include <kxerrorhandler.h>
@@ -226,72 +227,14 @@ void CompositingPrefs::deleteGLXContext()
 void CompositingPrefs::detectDriverAndVersion()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    mGLVendor = QString((const char*)glGetString( GL_VENDOR ));
-    mGLRenderer = QString((const char*)glGetString( GL_RENDERER ));
-    mGLVersion = QString((const char*)glGetString( GL_VERSION ));
+    GLPlatform *gl = GLPlatform::instance();
+    gl->detect();
+    gl->printResults();
+
     mXgl = detectXgl();
 
-    if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" )) // krazy:exclude=strings
-        {
-        mDriver = "intel";
-        QStringList words = mGLRenderer.split(' ');
-        if( QRegExp( "[:digit:]+" ).exactMatch( words[ words.count() - 2 ] ))
-            mVersion = Version( words[ words.count() - 2 ] );
-        else
-            mVersion = Version( words[ words.count() - 3 ] );
-        }
-    else if( mGLVendor == "NVIDIA Corporation" )
-        {
-        mDriver = "nvidia";
-        QStringList words = mGLVersion.split(' ');
-        mVersion = Version( words[ words.count() - 1 ] );
-        }
-    else if( mGLVendor == "ATI Technologies Inc." )
-        {
-        mDriver = "fglrx";
-        // Ati changed the version string.
-        // The GL version is either in the first or second part
-        QStringList versionParts = mGLVersion.split(' ');
-        if( versionParts.first().count(".") == 2 || versionParts.count() == 1 )
-            mVersion = Version( versionParts.first() );
-        else
-            {
-            // version in second part is encapsulated in ()
-            mVersion = Version( versionParts[1].mid( 1, versionParts[1].length() -2 ) );
-            }
-        }
-    else if( mGLRenderer.startsWith( "Mesa DRI R" )) // krazy:exclude=strings
-        {
-        mDriver = "radeon";
-        mVersion = Version( mGLRenderer.split(' ')[ 3 ] );
-        // Check that the version string is changed, and try the fifth element if it does
-        if (!mVersion.startsWith("20"))
-            mVersion = Version( mGLRenderer.split(' ')[ 5 ] );
-        }
-    else if( mGLVendor == "nouveau" )
-        {
-        mDriver = "nouveau";
-        // use Gallium version number as the version - second part of renderer
-        mVersion = Version( mGLRenderer.split(' ')[ 1 ] );
-        }
-    else if( mGLRenderer == "Software Rasterizer" )
-        {
-        mDriver = "software";
-        QStringList words = mGLVersion.split(' ');
-        mVersion = Version( words[ words.count() - 1 ] );
-        }
-    else
-        {
-        mDriver = "unknown";
-        }
-
-    // Always output as it's VERY useful
-    kWarning( 1212 ) << "GL vendor is" << mGLVendor;
-    kWarning( 1212 ) << "GL renderer is" << mGLRenderer;
-    kWarning( 1212 ) << "GL version is" << mGLVersion;
     if( mXgl )
         kWarning( 1212 ) << "Using XGL";
-    kWarning( 1212 ) << "Detected driver" << mDriver << ", version" << mVersion.join(".");
 #endif
     }
 
@@ -301,83 +244,16 @@ void CompositingPrefs::applyDriverSpecificOptions()
     // Always recommend
     mRecommendCompositing = true;
 
-    // Known driver specific options
-    if( mXgl )
-        {
-        mStrictBinding = false;
-        }
-    else if( mDriver == "intel" )
-        {
+    GLPlatform *gl = GLPlatform::instance();
+    mStrictBinding = !gl->supports( LooseBinding );
+    if ( gl->driver() == Driver_Intel )
         mEnableVSync = false;
-        }
-    else if( mDriver == "nvidia" )
-        {
-        mStrictBinding = false;
-        }
-    //else if( mDriver == "fglrx" )
-    //    {
-    //    }
-    //else if( mDriver == "radeon" )
-    //    {
-    //    }
-    //else if( mDriver == "software" )
-    //    {
-    //    }
     }
 
 
 bool CompositingPrefs::detectXgl()
     { // Xgl apparently uses only this specific X version
     return VendorRelease(display()) == 70000001;
-    }
-
-CompositingPrefs::Version::Version( const QString& str ) :
-        QStringList()
-    {
-    QRegExp numrx( "(\\d+)|(\\D+)" );
-    int pos = 0;
-    while(( pos = numrx.indexIn( str, pos )) != -1 )
-        {
-        pos += numrx.matchedLength();
-
-        QString part = numrx.cap();
-        if( part == "." )
-            continue;
-
-        append( part );
-        }
-    }
-
-int CompositingPrefs::Version::compare( const Version& v ) const
-    {
-    for( int i = 0; i < qMin( count(), v.count() ); i++ )
-        {
-        if( at( i )[ 0 ].isDigit() )
-            {
-            // This part of version string is numeric - compare numbers
-            int num = at( i ).toInt();
-            int vnum = v.at( i ).toInt();
-            if( num > vnum )
-                return 1;
-            else if( num < vnum )
-                return -1;
-            }
-        else
-            {
-            // This part is string
-            if( at( i ) > v.at( i ))
-                return 1;
-            else if( at( i ) < v.at( i ))
-                return -1;
-            }
-        }
-
-    if( count() > v.count() )
-        return 1;
-    else if( count() < v.count() )
-        return -1;
-    else
-        return 0;
     }
 
 } // namespace
