@@ -732,7 +732,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             {
             QRect& r = rects[ i ];
             r = QRect( int( r.x() * xscale ), int( r.y() * yscale ),
-                int( r.width() * xscale ), int( r.height() * xscale ));
+                int( r.width() * xscale ), int( r.height() * yscale ));
             }
         transformed_shape.setRects( rects.constData(), rects.count());
         }
