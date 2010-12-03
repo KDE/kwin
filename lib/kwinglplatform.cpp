@@ -232,7 +232,7 @@ static ChipClass detectRadeonClass(const QString &chipset)
 
 static ChipClass detectNVidiaClass(const QString &chipset)
 {
-    const QString name = extract(chipset, "\\bNV[0-9,A-C]{2,2}\\b"); // NV followed by two hexadecimal digits
+    QString name = extract(chipset, "\\bNV[0-9,A-F]{2}\\b"); // NV followed by two hexadecimal digits
     if (!name.isEmpty())
     {
         const int id = chipset.mid(2, -1).toInt(0, 16); // Strip the 'NV' from the id
@@ -263,6 +263,58 @@ static ChipClass detectNVidiaClass(const QString &chipset)
             return UnknownNVidia;
        }
     }
+
+    if (chipset.contains("GeForce2") || chipset.contains("GeForce 256"))
+        return NV10;
+
+    if (chipset.contains("GeForce3"))
+        return NV20;
+
+    if (chipset.contains("GeForce4")) {
+        if (chipset.contains("MX 420")  ||
+            chipset.contains("MX 440")  || // including MX 440SE
+            chipset.contains("MX 460")  ||
+            chipset.contains("MX 4000") ||
+            chipset.contains("PCX 4300"))
+            return NV10;
+
+        return NV20;
+    }
+
+    // GeForce 5,6,7,8,9
+    name = extract(chipset, "GeForce (FX |PCX |Go )?\\d{4}(M|\\b)").trimmed();
+    if (!name.isEmpty()) {
+        if (!name[name.length() - 1].isDigit())
+            name.chop(1);
+
+        const int id = name.right(4).toInt();
+        if (id < 6000)
+            return NV30;
+
+        if (id >= 6000 && id < 8000)
+            return NV40;
+
+        if (id >= 8000)
+            return G80;
+
+        return UnknownNVidia;
+    }
+
+    // GeForce 100/200/300/400/500
+    name = extract(chipset, "GeForce (G |GT |GTX |GTS )?\\d{3}(M|\\b)").trimmed();
+    if (!name.isEmpty()) {
+        if (!name[name.length() - 1].isDigit())
+            name.chop(1);
+
+        const int id = name.right(3).toInt();
+        if (id >= 100 && id < 600) {
+            if (id >= 400)
+                return GF100;
+
+            return G80;
+        }
+        return UnknownNVidia;
+    } 
 
     return UnknownNVidia;
 }
@@ -584,7 +636,7 @@ void GLPlatform::detect()
     }
 
     else if (m_vendor == "NVIDIA Corporation") {
-        m_chipClass = UnknownNVidia;
+        m_chipClass = detectNVidiaClass(m_renderer);
         m_driver = Driver_NVidia;
     
         int index = versionTokens.indexOf("NVIDIA");
@@ -592,8 +644,6 @@ void GLPlatform::detect()
             m_driverVersion = parseVersionString(versionTokens.at(index + 1));
         else
             m_driverVersion = 0;
-
-        // TODO detect the chip class
     }
 
 
