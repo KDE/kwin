@@ -7,6 +7,7 @@ set(kcm_kwincompositing_PART_SRCS
     ktimerdialog.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/compositingprefs.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib/kwinglobals.cpp
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib/kwinglplatform.cpp
     )
 kde4_add_ui_files(kcm_kwincompositing_PART_SRCS main.ui)
 set(kwin_xml ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/org.kde.KWin.xml)

@@ -6,6 +6,7 @@ set(
     monitor.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/compositingprefs.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib/kwinglobals.cpp
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib/kwinglplatform.cpp
     )
 kde4_add_ui_files( kcm_kwinscreenedges_PART_SRCS main.ui )
 kde4_add_plugin( kcm_kwinscreenedges ${kcm_kwinscreenedges_PART_SRCS} )
