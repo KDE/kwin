@@ -163,27 +163,32 @@ static ChipClass detectRadeonClass(const QString &chipset)
         chipset.contains("REDWOOD")   ||
         chipset.contains("JUNIPER")   ||
         chipset.contains("CYPRESS")   ||
+        chipset.contains("PALM")      ||
         chipset.contains("HEMLOCK"))
         return Evergreen;
 
-    int index = chipset.indexOf(QRegExp("HD [0-9]{4,4}")); // HD followed by a space and 4 digits
-    if (index != -1) {
-        switch (chipset[index + 3].digitValue()) {
-        case 6: // HD 6xxx
-            return NorthernIslands;
-        case 5: // HD 5xxx
+    QString name = extract(chipset, "HD [0-9]{4}"); // HD followed by a space and 4 digits
+    if (!name.isEmpty()) {
+        const int id = name.right(4).toInt();
+        if (id == 6250 || id == 6310)  // Palm
             return Evergreen;
-        case 4: // HD 4xxx
-            return R700;
-        case 3: // HD 3xxx
-        case 2: // HD 2xxx
+
+        if (id >= 6000 && id < 7000)
+            return NorthernIslands;    // HD 6xxx
+
+        if (id >= 5000 && id < 6000)
+            return Evergreen;          // HD 5xxx
+
+        if (id >= 4000 && id < 5000)
+            return R700;               // HD 4xxx
+
+        if (id >= 2000 && id < 4000)   // HD 2xxx/3xxx
             return R600;
-        default:
-            return UnknownRadeon;
-        }
+
+        return UnknownRadeon;
     }
 
-    QString name = extract(chipset, "X[0-9]{3,4}"); // X followed by 3-4 digits
+    name = extract(chipset, "X[0-9]{3,4}"); // X followed by 3-4 digits
     if (!name.isEmpty()) {
         const int id = name.mid(1, -1).toInt();
 
@@ -202,7 +207,7 @@ static ChipClass detectRadeonClass(const QString &chipset)
         return UnknownRadeon;
     }
 
-    name = extract(chipset, "\\b[0-9]{4,4}\\b"); // A group of 4 digits
+    name = extract(chipset, "\\b[0-9]{4}\\b"); // A group of 4 digits
     if (!name.isEmpty()) {
         const int id = name.toInt();
 
@@ -544,6 +549,7 @@ void GLPlatform::detect()
                   m_renderer.contains("JUNIPER") ||
                   m_renderer.contains("CYPRESS") ||
                   m_renderer.contains("HEMLOCK") ||
+                  m_renderer.contains("PALM")    ||
                   m_renderer.contains("EVERGREEN")))
         {
             m_chipClass = detectRadeonClass(m_chipset);
