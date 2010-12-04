@@ -100,7 +100,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
         {
-        setupSceneShader();
+        setupSceneShaders();
         }
 
     // OpenGL scene setup
