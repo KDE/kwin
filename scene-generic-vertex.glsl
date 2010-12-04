@@ -3,6 +3,7 @@ precision highp float;
 #endif
 uniform mat4 projection;
 uniform mat4 modelview;
+uniform mat4 screenTransformation;
 uniform mat4 windowTransformation;
 
 // passed in vertex - only x and y are used
@@ -15,5 +16,5 @@ varying vec2 varyingTexCoords;
 
 void main() {
     varyingTexCoords = texCoord;
-    gl_Position = vertex*(windowTransformation*modelview)*projection;
+    gl_Position = vertex*(windowTransformation*screenTransformation*modelview)*projection;
 }

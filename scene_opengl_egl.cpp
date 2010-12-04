@@ -208,11 +208,41 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     XFlush( display());
     }
 
-void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
-    {
-    // TODO: setup shader for transformed geometry
-    Scene::paintGenericScreen( mask, data );
+void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
+{
+    if (mask & PAINT_SCREEN_TRANSFORMED) {
+        // apply screen transformations
+        QMatrix4x4 screenTransformation;
+        screenTransformation.translate(data.xTranslate, data.yTranslate, data.zTranslate);
+        if (data.rotation) {
+            screenTransformation.translate(data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint);
+            // translate to rotation point, rotate, translate back
+            qreal xAxis = 0.0;
+            qreal yAxis = 0.0;
+            qreal zAxis = 0.0;
+            switch (data.rotation->axis) {
+                case RotationData::XAxis:
+                    xAxis = 1.0;
+                    break;
+                case RotationData::YAxis:
+                    yAxis = 1.0;
+                    break;
+                case RotationData::ZAxis:
+                    zAxis = 1.0;
+                    break;
+            }
+            screenTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
+            screenTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
+        }
+        screenTransformation.scale(data.xScale, data.yScale, data.zScale);
+        m_genericSceneShader->bind();
+        m_genericSceneShader->setUniform("screenTransformation", screenTransformation);
+    } else if ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) || (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS)) {
+        m_genericSceneShader->bind();
+        m_genericSceneShader->setUniform("screenTransformation", QMatrix4x4());
     }
+    Scene::paintGenericScreen(mask, data);
+}
 
 void SceneOpenGL::paintBackground( QRegion region )
     {
