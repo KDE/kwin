@@ -78,17 +78,17 @@ include( taskbarthumbnail/CMakeLists.txt )
 include( thumbnailaside/CMakeLists.txt )
 include( windowgeometry/CMakeLists.txt )
 
-if( NOT KWIN_HAVE_OPENGLES )
+if( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 include( resize/CMakeLists.txt )
 include( logout/CMakeLists.txt )
 include( shadow/CMakeLists.txt )
 include( showfps/CMakeLists.txt )
 include( showpaint/CMakeLists.txt )
 include( zoom/CMakeLists.txt )
-endif( NOT KWIN_HAVE_OPENGLES )
+endif( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 # OpenGL-specific effects
-if( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES )
+if( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
     include( blur/CMakeLists.txt )
     include( coverswitch/CMakeLists.txt )
     include( cube/CMakeLists.txt )
@@ -107,7 +107,7 @@ if( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES )
     include( startupfeedback/CMakeLists.txt )
     include( trackmouse/CMakeLists.txt )
     include( wobblywindows/CMakeLists.txt )
-endif( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES )
+endif( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 ###############################################################################
 

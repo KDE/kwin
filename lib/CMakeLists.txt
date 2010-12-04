@@ -46,7 +46,7 @@ set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 
 install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-if(OPENGL_FOUND AND NOT OPENGLES_FOUND)
+if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
   target_link_libraries(kwineffects ${OPENGL_gl_LIBRARY})
   target_link_libraries(kwineffects LINK_INTERFACE_LIBRARIES ${OPENGL_gl_LIBRARY})
 # -ldl used by OpenGL code
@@ -55,7 +55,7 @@ if(OPENGL_FOUND AND NOT OPENGLES_FOUND)
     target_link_libraries(kwineffects ${DL_LIBRARY})
   endif(DL_LIBRARY)
   include_directories(${OPENGL_INCLUDE_DIR})
-endif(OPENGL_FOUND AND NOT OPENGLES_FOUND)
+endif(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
 if(OPENGLES_FOUND)
   target_link_libraries(kwineffects ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
   target_link_libraries(kwineffects LINK_INTERFACE_LIBRARIES ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
