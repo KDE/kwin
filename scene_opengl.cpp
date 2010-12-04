@@ -92,6 +92,7 @@ Sources and other compositing managers:
 #include <qpainter.h>
 #include <QVector2D>
 #include <QVector4D>
+#include <QMatrix4x4>
 
 namespace KWin
 {
@@ -114,6 +115,59 @@ XShmSegmentInfo SceneOpenGL::shm;
 #else
 #include "scene_opengl_glx.cpp"
 #endif
+
+
+bool SceneOpenGL::setupSceneShaders()
+{
+    m_sceneShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
+    if (m_sceneShader->isValid()) {
+        m_sceneShader->bind();
+        m_sceneShader->setUniform("sample", 0);
+        m_sceneShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+        m_sceneShader->setUniform("debug", debug ? 1 : 0);
+        m_sceneShader->unbind();
+        kDebug(1212) << "Scene Shader is valid";
+    }
+    else {
+        delete m_sceneShader;
+        m_sceneShader = NULL;
+        kDebug(1212) << "Scene Shader is not valid";
+        return false;
+    }
+    m_genericSceneShader = new GLShader( ":/resources/scene-generic-vertex.glsl", ":/resources/scene-fragment.glsl" );
+    if (m_genericSceneShader->isValid()) {
+        m_genericSceneShader->bind();
+        m_genericSceneShader->setUniform("sample", 0);
+        m_genericSceneShader->setUniform("debug", debug ? 1 : 0);
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        m_genericSceneShader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        m_genericSceneShader->setUniform("modelview", modelview);
+        m_genericSceneShader->unbind();
+        kDebug(1212) << "Generic Scene Shader is valid";
+    }
+    else {
+        delete m_genericSceneShader;
+        m_genericSceneShader = NULL;
+        delete m_sceneShader;
+        m_sceneShader = NULL;
+        kDebug(1212) << "Generic Scene Shader is not valid";
+        return false;
+    }
+    return true;
+}
 
 bool SceneOpenGL::initFailed() const
     {
@@ -458,20 +512,51 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     int y = toplevel->y();
     double z = 0.0;
     bool sceneShader = false;
-    if( !data.shader && !( mask & PAINT_WINDOW_TRANSFORMED ) && !( mask & PAINT_SCREEN_TRANSFORMED )  )
-        {
+    if (!data.shader) {
         // set the shader for uniform initialising in paint decoration
-        data.shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
-        sceneShader = true;
-        data.shader->bind();
-        data.shader->setUniform("geometry", QVector4D(x, y, toplevel->width(), toplevel->height()));
+        if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
+            data.shader = static_cast<SceneOpenGL*>(scene)->m_genericSceneShader;
+            data.shader->bind();
+        } else {
+            data.shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
+            data.shader->bind();
+            data.shader->setUniform("geometry", QVector4D(x, y, toplevel->width(), toplevel->height()));
         }
-    if( mask & PAINT_WINDOW_TRANSFORMED )
-        {
+        sceneShader = true;
+    }
+    if (mask & PAINT_WINDOW_TRANSFORMED) {
         x += data.xTranslate;
         y += data.yTranslate;
         z += data.zTranslate;
+        QMatrix4x4 windowTransformation;
+        windowTransformation.translate(x, y, z);
+        if ((mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1)) {
+            windowTransformation.scale(data.xScale, data.yScale, data.zScale);
         }
+        if ((mask & PAINT_WINDOW_TRANSFORMED) && data.rotation) {
+            windowTransformation.translate(data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint);
+            qreal xAxis = 0.0;
+            qreal yAxis = 0.0;
+            qreal zAxis = 0.0;
+            switch( data.rotation->axis )
+                {
+                case RotationData::XAxis:
+                    xAxis = 1.0;
+                    break;
+                case RotationData::YAxis:
+                    yAxis = 1.0;
+                    break;
+                case RotationData::ZAxis:
+                    zAxis = 1.0;
+                    break;
+                }
+            windowTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
+            windowTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
+        }
+        if (sceneShader) {
+            data.shader->setUniform("windowTransformation", windowTransformation);
+        }
+    }
     if( !sceneShader )
         {
 #ifndef KWIN_HAVE_OPENGLES

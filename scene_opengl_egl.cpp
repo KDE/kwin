@@ -32,30 +32,18 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     , init_ok( false )
     , selfCheckDone( true )
     , m_sceneShader( NULL )
+    , m_genericSceneShader( NULL )
     {
     if( !initRenderingContext() )
         return;
 
     initGL();
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
-
-    m_sceneShader = new GLShader( ":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl" );
-    if( m_sceneShader->isValid() )
-        {
-        m_sceneShader->bind();
-        m_sceneShader->setUniform( "sample", 0 );
-        m_sceneShader->setUniform( "displaySize", QVector2D(displayWidth(), displayHeight()));
-        m_sceneShader->setUniform( "debug", debug ? 1 : 0 );
-        m_sceneShader->unbind();
-        kDebug(1212) << "Scene Shader is valid";
-        }
-    else
-        {
-        delete m_sceneShader;
-        m_sceneShader = NULL;
-        kDebug(1212) << "Scene Shader is not valid";
+    if (!setupSceneShaders()) {
+        kError( 1212 ) << "Shaders not valid, ES compositing not possible";
         return;
-        }
+    }
+
 
     if( checkGLError( "Init" ))
         {

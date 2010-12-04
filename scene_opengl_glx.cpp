@@ -40,6 +40,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     , init_ok( false )
     , selfCheckDone( false )
     , m_sceneShader( NULL )
+    , m_genericSceneShader( NULL )
     {
     if( !Extensions::glxAvailable())
         {
@@ -99,24 +100,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
         {
-        m_sceneShader = new GLShader( ":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl" );
-        if( m_sceneShader->isValid() )
-            {
-            m_sceneShader->bind();
-            m_sceneShader->setUniform( "sample", 0 );
-            m_sceneShader->setUniform( "displaySize", QVector2D(displayWidth(), displayHeight()));
-            m_sceneShader->setUniform( "debug", debug ? 1 : 0 );
-            m_sceneShader->bindAttributeLocation( 0, "vertex" );
-            m_sceneShader->bindAttributeLocation( 1, "texCoord" );
-            m_sceneShader->unbind();
-            kDebug(1212) << "Scene Shader is valid";
-            }
-        else
-            {
-            delete m_sceneShader;
-            m_sceneShader = NULL;
-            kDebug(1212) << "Scene Shader is not valid";
-            }
+        setupSceneShader();
         }
 
     // OpenGL scene setup

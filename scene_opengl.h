@@ -69,6 +69,7 @@ class SceneOpenGL
         bool selfCheck();
         void selfCheckSetup();
         bool selfCheckFinish();
+        bool setupSceneShaders();
         GC gcroot;
         class FBConfigInfo
             {
@@ -104,6 +105,7 @@ class SceneOpenGL
         bool init_ok;
         bool selfCheckDone;
         GLShader* m_sceneShader;
+        GLShader* m_genericSceneShader;
         bool debug;
     };
 

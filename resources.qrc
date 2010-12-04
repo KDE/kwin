@@ -4,5 +4,6 @@
   <file>lanczos-fragment.glsl</file>
   <file>scene-vertex.glsl</file>
   <file>scene-fragment.glsl</file>
+  <file>scene-generic-vertex.glsl</file>
 </qresource>
 </RCC>
