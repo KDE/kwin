@@ -434,19 +434,21 @@ void GLTexture::unbind()
 
 void GLTexture::render( QRegion region, const QRect& rect )
     {
-    if( rect != m_cachedGeometry )
+    if( rect.size() != m_cachedSize )
         {
-        m_cachedGeometry = rect;
+        m_cachedSize = rect.size();
+        QRect r(rect);
+        r.moveTo(0,0);
         if( !m_vbo )
             {
             m_vbo = new GLVertexBuffer( KWin::GLVertexBuffer::Static );
             }
         const float verts[ 4 * 2 ] =
-            {
-            rect.x(), rect.y(),
-            rect.x(), rect.y() + rect.height(),
-            rect.x() + rect.width(), rect.y(),
-            rect.x() + rect.width(), rect.y() + rect.height()
+            {   // NOTICE: r.x/y could be replaced by "0", but that would make it unreadable...
+            r.x(), r.y(),
+            r.x(), r.y() + rect.height(),
+            r.x() + rect.width(), r.y(),
+            r.x() + rect.width(), r.y() + rect.height()
             };
         const float texcoords[ 4 * 2 ] =
             {
@@ -457,7 +459,9 @@ void GLTexture::render( QRegion region, const QRect& rect )
             };
         m_vbo->setData( 4, 2, verts, texcoords );
         }
+    glTranslatef( rect.x(), rect.y(), 0.0f );
     m_vbo->render( region, GL_TRIANGLE_STRIP );
+    glTranslatef( -rect.x(), -rect.y(), 0.0f );
     }
 
 void GLTexture::enableUnnormalizedTexCoords()

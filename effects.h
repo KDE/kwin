@@ -374,7 +374,7 @@ class EffectFrameImpl
 
     private:
         Q_DISABLE_COPY( EffectFrameImpl ) // As we need to use Qt slots we cannot copy this class
-
+        void align( QRect &geometry ); // positions geometry around m_point respecting m_alignment
         void autoResize(); // Auto-resize if not a static size
 
         EffectFrameStyle m_style;

@@ -1837,20 +1837,38 @@ Qt::Alignment EffectFrameImpl::alignment() const
     return m_alignment;
     }
 
+
+void
+EffectFrameImpl::align( QRect &geometry )
+{
+    if( m_alignment & Qt::AlignLeft )
+        geometry.moveLeft( m_point.x() );
+    else if( m_alignment & Qt::AlignRight )
+        geometry.moveLeft( m_point.x() - geometry.width() );
+    else
+        geometry.moveLeft( m_point.x() - geometry.width() / 2 );
+    if( m_alignment & Qt::AlignTop )
+        geometry.moveTop( m_point.y() );
+    else if( m_alignment & Qt::AlignBottom )
+        geometry.moveTop( m_point.y() - geometry.height() );
+    else
+        geometry.moveTop( m_point.y() - geometry.height() / 2 );
+}
+
+
 void EffectFrameImpl::setAlignment( Qt::Alignment alignment )
     {
     m_alignment = alignment;
+    align( m_geometry );
+    setGeometry( m_geometry );
     }
 
 void EffectFrameImpl::setPosition( const QPoint& point )
     {
-    if( m_point == point )
-        {
-        return;
-        }
     m_point = point;
-    autoResize();
-    free();
+    QRect geometry = m_geometry; // this is important, setGeometry need call repaint for old & new geometry
+    align( geometry );
+    setGeometry( geometry );
     }
 
 const QString& EffectFrameImpl::text() const
@@ -1898,7 +1916,6 @@ void EffectFrameImpl::autoResize()
         return; // Not automatically resizing
 
     QRect geometry;
-
     // Set size
     if( !m_text.isEmpty() )
         {
@@ -1912,20 +1929,7 @@ void EffectFrameImpl::autoResize()
             geometry.setHeight( m_iconSize.height() );
         }
 
-    // Set position
-    if( m_alignment & Qt::AlignLeft )
-        geometry.moveLeft( m_point.x() );
-    else if( m_alignment & Qt::AlignRight )
-        geometry.moveLeft( m_point.x() - geometry.width() );
-    else
-        geometry.moveLeft( m_point.x() - geometry.width() / 2 );
-    if( m_alignment & Qt::AlignTop )
-        geometry.moveTop( m_point.y() );
-    else if( m_alignment & Qt::AlignBottom )
-        geometry.moveTop( m_point.y() - geometry.height() );
-    else
-        geometry.moveTop( m_point.y() - geometry.height() / 2 );
-
+    align( geometry );
     setGeometry( geometry );
     }
 

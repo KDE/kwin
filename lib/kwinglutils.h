@@ -198,7 +198,7 @@ class KWIN_EXPORT GLTexture
         int mUnnormalizeActive; // 0 - no, otherwise refcount
         int mNormalizeActive; // 0 - no, otherwise refcount
         GLVertexBuffer* m_vbo;
-        QRect m_cachedGeometry;
+        QSize m_cachedSize;
 
         static bool mNPOTTextureSupported;
         static bool mFramebufferObjectSupported;

@@ -2049,7 +2049,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         if( !m_unstyledVBO )
             {
             m_unstyledVBO = new GLVertexBuffer( GLVertexBuffer::Static );
-            const QRect& area = m_effectFrame->geometry().adjusted( -5, -5, 5, 5 );
+            QRect area = m_effectFrame->geometry();
+            area.moveTo(0,0);
+            area.adjust( -5, -5, 5, 5 );
+            
             const int roundness = 5;
             QVector<float> verts, texCoords;
             verts.reserve( 84 );
@@ -2156,7 +2159,10 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
 
         m_unstyledTexture->bind();
+        const QPoint pt = m_effectFrame->geometry().topLeft();
+        glTranslatef( pt.x(), pt.y(), 0.0f );
         m_unstyledVBO->render( region, GL_TRIANGLES );
+        glTranslatef( -pt.x(), -pt.y(), 0.0f );
         m_unstyledTexture->unbind();
         }
     else if( m_effectFrame->style() == EffectFrameStyled )
