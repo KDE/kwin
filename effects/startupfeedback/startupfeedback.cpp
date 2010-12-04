@@ -290,8 +290,9 @@ void StartupFeedbackEffect::start( const QString& icon )
     {
     if( m_type == NoFeedback )
         return;
+    if ( !m_active )
+        effects->startMousePolling();
     m_active = true;
-    effects->startMousePolling();
     QPixmap iconPixmap = KIconLoader::global()->loadIcon( icon, KIconLoader::Small, 0,
                                                            KIconLoader::DefaultState, QStringList(), 0, true ); // return null pixmap if not found
     if( iconPixmap.isNull() )
@@ -302,8 +303,9 @@ void StartupFeedbackEffect::start( const QString& icon )
 
 void StartupFeedbackEffect::stop()
     {
+    if ( m_active )
+        effects->stopMousePolling();
     m_active = false;
-    effects->stopMousePolling();
     switch( m_type )
         {
     case BouncingFeedback:
