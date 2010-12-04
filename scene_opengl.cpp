@@ -1016,7 +1016,7 @@ void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity,
 // SceneOpenGL::EffectFrame
 //****************************************
 
-GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
+SceneOpenGL::Texture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
 QPixmap* SceneOpenGL::EffectFrame::m_unstyledPixmap = NULL;
 
 SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
@@ -1299,6 +1299,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
                 {
                 QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
                 m_selectionTexture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+                m_selectionTexture->setYInverted(true);
                 }
             glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
             m_selectionTexture->bind();
@@ -1348,6 +1349,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             m_iconTexture = new Texture( m_effectFrame->icon().handle(),
                                          m_effectFrame->icon().size(),
                                          m_effectFrame->icon().depth() );
+            m_iconTexture->setYInverted(true);
             }
         m_iconTexture->bind();
         m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ), sceneShader );
@@ -1408,6 +1410,7 @@ void SceneOpenGL::EffectFrame::updateTexture()
         {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
         m_texture = new Texture( pixmap.handle(), pixmap.size(), pixmap.depth() );
+        m_texture->setYInverted(true);
         }
     }
 
@@ -1443,6 +1446,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
     p.drawText( rect, m_effectFrame->alignment(), text );
     p.end();
     m_textTexture = new Texture( m_textPixmap->handle(), m_textPixmap->size(), m_textPixmap->depth() );
+    m_textTexture->setYInverted(true);
     }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
@@ -1461,6 +1465,7 @@ void SceneOpenGL::EffectFrame::updateUnstyledTexture()
     p.end();
 #undef CS
     m_unstyledTexture = new Texture( m_unstyledPixmap->handle(), m_unstyledPixmap->size(), m_unstyledPixmap->depth() );
+    m_unstyledTexture->setYInverted(true);
     }
 
 void SceneOpenGL::EffectFrame::cleanup()

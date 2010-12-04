@@ -125,6 +125,9 @@ class SceneOpenGL::Texture
         virtual void release(); // undo the tfp_mode binding
         virtual void bind();
         virtual void unbind();
+        void setYInverted(bool inverted) {
+            y_inverted = inverted;
+        }
 
     protected:
         void findTarget();
@@ -203,16 +206,16 @@ class SceneOpenGL::EffectFrame
         void updateTexture();
         void updateTextTexture();
 
-        GLTexture* m_texture;
-        GLTexture* m_textTexture;
-        GLTexture* m_oldTextTexture;
+        Texture* m_texture;
+        Texture* m_textTexture;
+        Texture* m_oldTextTexture;
         QPixmap* m_textPixmap; // need to keep the pixmap around to workaround some driver problems
-        GLTexture* m_iconTexture;
-        GLTexture* m_oldIconTexture;
-        GLTexture* m_selectionTexture;
+        Texture* m_iconTexture;
+        Texture* m_oldIconTexture;
+        Texture* m_selectionTexture;
         GLVertexBuffer* m_unstyledVBO;
 
-        static GLTexture* m_unstyledTexture;
+        static Texture* m_unstyledTexture;
         static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
         static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };
