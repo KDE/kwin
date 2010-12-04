@@ -173,7 +173,6 @@ if(OPENGL_FOUND AND NOT OPENGLES_FOUND)
 endif(OPENGL_FOUND AND NOT OPENGLES_FOUND)
 
 if(OPENGLES_FOUND)
-  add_subdirectory(opengltest)
   target_link_libraries(kdeinit_kwin ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
 endif(OPENGLES_FOUND)
 

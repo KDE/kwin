@@ -235,6 +235,7 @@ void CompositingPrefs::deleteGLXContext()
 void CompositingPrefs::detectDriverAndVersion()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     GLPlatform *gl = GLPlatform::instance();
     gl->detect();
     gl->printResults();
@@ -243,6 +244,7 @@ void CompositingPrefs::detectDriverAndVersion()
 
     if( mXgl )
         kWarning( 1212 ) << "Using XGL";
+#endif
 #endif
     }
 
