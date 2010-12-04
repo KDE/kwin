@@ -229,8 +229,8 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
 void SceneOpenGL::paintBackground( QRegion region )
     {
     // TODO: implement me
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(0, 0, 0, 1);
+    //glClear(GL_COLOR_BUFFER_BIT);
     }
 
 //****************************************

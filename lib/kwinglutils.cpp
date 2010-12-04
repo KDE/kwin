@@ -1298,13 +1298,13 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
 
     // TODO: reenable paint clipper
     // Clip using scissoring
-    /*PaintClipper pc( region );
+    PaintClipper pc( region );
     for( PaintClipper::Iterator iterator;
         !iterator.isDone();
         iterator.next())
-        {*/
+        {
         glDrawArrays( primitiveMode, 0, numberVertices );
-        //}
+        }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
