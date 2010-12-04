@@ -52,6 +52,9 @@ class SceneOpenGL
         virtual void windowClosed( Toplevel*, Deleted* );
         virtual void windowDeleted( Deleted* );
         GLShader* sceneShader() const;
+        bool hasSceneShader() const {
+            return m_sceneShader != NULL && m_genericSceneShader != NULL;
+        }
     protected:
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintBackground( QRegion region );

@@ -512,7 +512,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     int y = toplevel->y();
     double z = 0.0;
     bool sceneShader = false;
-    if (!data.shader) {
+    if (!data.shader && static_cast<SceneOpenGL*>(scene)->hasSceneShader()) {
         // set the shader for uniform initialising in paint decoration
         if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
             data.shader = static_cast<SceneOpenGL*>(scene)->m_genericSceneShader;
@@ -1196,7 +1196,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
     GLShader* shader = m_effectFrame->shader();
     bool sceneShader = false;
-    if( !shader )
+    if( !shader && static_cast<SceneOpenGL*>(scene)->hasSceneShader() )
         {
         shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
         sceneShader = true;
