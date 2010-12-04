@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QVector2D;
 class QVector3D;
 class QVector4D;
+class QMatrix4x4;
 
 template< class K, class V > class QHash;
 
@@ -252,6 +253,7 @@ class KWIN_EXPORT GLShader
         bool setUniform(const char* name, const QVector2D& value);
         bool setUniform(const char* name, const QVector3D& value);
         bool setUniform(const char* name, const QVector4D& value);
+        bool setUniform(const char* name, const QMatrix4x4& value);
         int attributeLocation(const char* name);
         bool setAttribute(const char* name, float value);
         /**

@@ -103,6 +103,7 @@ glUniform1fv_func glUniform1fv;
 glUniform2fv_func glUniform2fv;
 glUniform3fv_func glUniform3fv;
 glUniform4fv_func glUniform4fv;
+glUniformMatrix4fv_func glUniformMatrix4fv;
 glValidateProgram_func glValidateProgram;
 glGetUniformLocation_func glGetUniformLocation;
 glVertexAttrib1f_func glVertexAttrib1f;
@@ -260,6 +261,7 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glUniform2fv, glUniform2fvARB );
         GL_RESOLVE_WITH_EXT( glUniform3fv, glUniform3fvARB );
         GL_RESOLVE_WITH_EXT( glUniform4fv, glUniform4fvARB );
+        GL_RESOLVE_WITH_EXT( glUniformMatrix4fv, glUniformMatrix4fvARB );
         GL_RESOLVE_WITH_EXT( glValidateProgram, glValidateProgramARB );
         GL_RESOLVE_WITH_EXT( glGetUniformLocation, glGetUniformLocationARB );
         GL_RESOLVE_WITH_EXT( glVertexAttrib1f, glVertexAttrib1fARB );

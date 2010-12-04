@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
+#include <QMatrix4x4>
 
 
 #define DEBUG_GLRENDERTARGET 0
@@ -998,6 +999,23 @@ bool GLShader::setUniform(const char* name, const QVector4D& value)
         }
     return (location >= 0);
     }
+
+bool GLShader::setUniform(const char* name, const QMatrix4x4& value)
+{
+    const int location = uniformLocation(name);
+    if (location >= 0) {
+        GLfloat m[16];
+        const qreal *data = value.constData();
+        // i is column, j is row for m
+        for (int i = 0; i < 4; ++i) {
+            for (int j=0; j < 4; ++j) {
+                m[i*4+j] = data[j*4+i];
+            }
+        }
+        glUniformMatrix4fv(location, 1, GL_FALSE, m);
+    }
+    return (location >= 0);
+}
 
 int GLShader::attributeLocation(const char* name)
     {
