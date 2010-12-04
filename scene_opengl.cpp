@@ -1006,7 +1006,6 @@ SceneOpenGL::Texture::~Texture()
 
 void SceneOpenGL::Texture::init()
     {
-    damaged = true;
     glxpixmap = None;
     }
 
@@ -1026,7 +1025,8 @@ void SceneOpenGL::Texture::release()
     {
     if( tfp_mode && glxpixmap != None )
         {
-        glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
+        if ( !options->glStrictBinding )
+            glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
         glXDestroyPixmap( display(), glxpixmap );
         glxpixmap = None;
         }
@@ -1155,9 +1155,6 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             if( !options->glStrictBinding )
                 glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
             }
-        if( options->glStrictBinding )
-            // Mark the texture as damaged so it will be updated on the next call to bind()
-            damaged = true;
         }
     else if( shm_mode )
         { // copy pixmap contents to a texture via shared memory
@@ -1295,17 +1292,12 @@ void SceneOpenGL::Texture::bind()
     {
     glEnable( mTarget );
     glBindTexture( mTarget, mTexture );
-    if( tfp_mode )
+    if( tfp_mode && options->glStrictBinding )
         {
-        if ( options->glStrictBinding && damaged )
-            {
-            // Update the texture with the new pixmap contents
-            assert( glxpixmap != None );
-            glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
-            glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
-            setDirty(); // Mipmaps have to be regenerated after updating the texture 
-            }
-        damaged = false;
+        assert( glxpixmap != None );
+        glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
+        glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+        setDirty(); // Mipmaps have to be regenerated after updating the texture 
         }
     enableFilter();
     if( hasGLVersion( 1, 4, 0 ))
@@ -1321,6 +1313,13 @@ void SceneOpenGL::Texture::unbind()
         {
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f );
         }
+    if( tfp_mode && options->glStrictBinding )
+        {
+        assert( glxpixmap != None );
+        glBindTexture( mTarget, mTexture );
+        glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
+        }
+
     GLTexture::unbind();
     }
 
