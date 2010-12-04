@@ -67,9 +67,9 @@ add_subdirectory( kcmkwin )
 add_subdirectory( clients )
 add_subdirectory( data )
 
-if( KWIN_HAVE_COMPOSITING AND NOT OPENGLES_FOUND )
+if( KWIN_HAVE_COMPOSITING )
 add_subdirectory( effects )
-endif( KWIN_HAVE_COMPOSITING AND NOT OPENGLES_FOUND )
+endif( KWIN_HAVE_COMPOSITING )
 
 ########### next target ###############
 

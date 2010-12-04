@@ -29,13 +29,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magiclamp/magiclamp_config.h"
 #include "translucency/translucency_config.h"
 #include "presentwindows/presentwindows_config.h"
+#include "thumbnailaside/thumbnailaside_config.h"
+
+#ifndef KWIN_HAVE_OPENGLES
 #include "resize/resize_config.h"
 #include "shadow/shadow_config.h"
 #include "showfps/showfps_config.h"
-#include "thumbnailaside/thumbnailaside_config.h"
 #include "zoom/zoom_config.h"
+#endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
 #include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
@@ -50,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "snow/snow_config.h"
 #include "trackmouse/trackmouse_config.h"
 #include "wobblywindows/wobblywindows_config.h"
+#endif KWIN_HAVE_OPENGLES
 #endif
 
 #include <kwineffects.h>
@@ -67,13 +72,16 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( magiclamp, MagicLampEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( translucency, TranslucencyEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( presentwindows, PresentWindowsEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( resize, ResizeEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( thumbnailaside, ThumbnailAsideEffectConfig )
+#ifndef KWIN_HAVE_OPENGLES
     KWIN_EFFECT_CONFIG_SINGLE( shadow, ShadowEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( showfps, ShowFpsEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( thumbnailaside, ThumbnailAsideEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( resize, ResizeEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( zoom, ZoomEffectConfig )
+#endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
@@ -88,6 +96,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
+#endif KWIN_HAVE_OPENGLES
 #endif
     )
 
