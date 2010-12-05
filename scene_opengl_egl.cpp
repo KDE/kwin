@@ -296,6 +296,9 @@ void SceneOpenGL::Texture::findTarget()
 bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     int depth, QRegion region )
     {
+    Q_UNUSED(size)
+    Q_UNUSED(depth)
+    Q_UNUSED(region)
     if( mTexture == None )
         {
         createTexture();
