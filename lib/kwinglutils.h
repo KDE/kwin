@@ -58,6 +58,8 @@ void KWIN_EXPORT initGLX();
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
 void KWIN_EXPORT initGL();
+// Initializes EGL function pointers
+void KWIN_EXPORT initEGL();
 
 
 // Number of supported texture units
@@ -66,6 +68,7 @@ extern KWIN_EXPORT int glTextureUnitsCount;
 
 bool KWIN_EXPORT hasGLVersion(int major, int minor, int release = 0);
 bool KWIN_EXPORT hasGLXVersion(int major, int minor, int release = 0);
+bool KWIN_EXPORT hasEGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
 bool KWIN_EXPORT hasGLExtension(const QString& extension);
 

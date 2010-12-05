@@ -48,9 +48,12 @@ namespace KWin
 static int glVersion;
 // GLX version, use MAKE_GL_VERSION() macro for comparing with a specific version
 static int glXVersion;
-// List of all supported GL and GLX extensions
+// EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
+static int eglVersion;
+// List of all supported GL, EGL and GLX extensions
 static QStringList glExtensions;
 static QStringList glxExtensions;
+static QStringList eglExtension;
 
 int glTextureUnitsCount;
 
@@ -70,6 +73,17 @@ void initGLX()
     glxResolveFunctions();
 #endif
     }
+
+void initEGL()
+{
+#ifdef KWIN_HAVE_OPENGLES
+    EGLDisplay dpy = eglGetCurrentDisplay();
+    int major, minor;
+    eglInitialize(dpy, &major, &minor);
+    eglVersion = MAKE_GL_VERSION(major, minor, 0);
+    eglExtension = QString((const char*)eglQueryString(dpy, EGL_EXTENSIONS)).split(' ');
+#endif
+}
 
 void initGL()
     {
@@ -104,9 +118,14 @@ bool hasGLXVersion(int major, int minor, int release)
     return glXVersion >= MAKE_GL_VERSION(major, minor, release);
     }
 
+bool hasEGLVersion(int major, int minor, int release)
+{
+    return eglVersion >= MAKE_GL_VERSION(major, minor, release);
+}
+
 bool hasGLExtension(const QString& extension)
     {
-    return glExtensions.contains(extension) || glxExtensions.contains(extension);
+    return glExtensions.contains(extension) || glxExtensions.contains(extension) || eglExtension.contains(extension);
     }
 
 static QString formatGLError( GLenum err )

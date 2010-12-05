@@ -38,7 +38,16 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !initRenderingContext() )
         return;
 
+    initEGL();
+    if (!hasGLExtension("EGL_KHR_image_pixmap")) {
+        kError(1212) << "Required extension EGL_KHR_image_pixmap not found, disabling compositing";
+        return;
+    }
     initGL();
+    if (!hasGLExtension("GL_OES_EGL_image")) {
+        kError(1212) << "Required extension GL_OES_EGL_image not found, disabling compositing";
+        return;
+    }
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
     if (!setupSceneShaders()) {
         kError( 1212 ) << "Shaders not valid, ES compositing not possible";
