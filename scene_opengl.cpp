@@ -1680,13 +1680,18 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     bool opaque = isOpaque() && opacity == 1.0;
+    bool alpha = toplevel->hasAlpha() || type != Content;
     if( type != Content )
         opaque = false;
-    if( !opaque )
-        {
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    if (!opaque) {
+        glEnable(GL_BLEND);
+        if (alpha) {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
+    }
     shader->setUniform("opacity", (float)opacity);
     shader->setUniform("saturation", (float)saturation);
     shader->setUniform("brightness", (float)brightness);
