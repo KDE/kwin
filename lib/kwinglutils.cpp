@@ -525,7 +525,10 @@ void GLTexture::render( QRegion region, const QRect& rect, bool useShader )
         m_vbo->setData( 4, 2, verts, texcoords );
         }
     if (useShader) {
-        // TODO: set shader translation.
+        GLint currentProgram;
+        glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
+        GLint location = glGetUniformLocation(currentProgram, "geometry");
+        glUniform4f(location, rect.x(), rect.y(), 0.0f, 0.0f);
     } else {
 #ifndef KWIN_HAVE_OPENGLES
         glTranslatef( rect.x(), rect.y(), 0.0f );

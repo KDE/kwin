@@ -1362,7 +1362,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
         if (sceneShader) {
-            // TODO: move geometry
+            shader->setUniform("geometry", QVector4D(pt.x(), pt.y(), 0.0f, 0.0f));
         } else {
 #ifndef KWIN_HAVE_OPENGLES
             glTranslatef( pt.x(), pt.y(), 0.0f );
