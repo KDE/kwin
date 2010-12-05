@@ -255,6 +255,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
     // Always recommend
     mRecommendCompositing = true;
 
+#ifndef KWIN_HAVE_OPENGLES
     GLPlatform *gl = GLPlatform::instance();
     mStrictBinding = !gl->supports( LooseBinding );
     if ( gl->driver() == Driver_Intel )

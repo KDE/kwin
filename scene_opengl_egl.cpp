@@ -279,7 +279,6 @@ void SceneOpenGL::paintBackground(QRegion region)
 
 void SceneOpenGL::Texture::init()
     {
-    damaged = true;
     findTarget();
     }
 
