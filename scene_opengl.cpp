@@ -166,6 +166,22 @@ bool SceneOpenGL::setupSceneShaders()
         kDebug(1212) << "Generic Scene Shader is not valid";
         return false;
     }
+    m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
+    if (m_colorShader->isValid()) {
+        m_colorShader->bind();
+        m_colorShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+        m_colorShader->unbind();
+        kDebug(1212) << "Color Shader is valid";
+    } else {
+        delete m_genericSceneShader;
+        m_genericSceneShader = NULL;
+        delete m_sceneShader;
+        m_sceneShader = NULL;
+        delete m_colorShader;
+        m_colorShader = NULL;
+        kDebug(1212) << "Color Scene Shader is not valid";
+        return false;
+    }
     return true;
 }
 

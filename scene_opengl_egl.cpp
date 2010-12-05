@@ -33,6 +33,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     , selfCheckDone( true )
     , m_sceneShader( NULL )
     , m_genericSceneShader( NULL )
+    , m_colorShader( NULL )
     {
     if( !initRenderingContext() )
         return;

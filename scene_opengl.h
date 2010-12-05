@@ -53,7 +53,7 @@ class SceneOpenGL
         virtual void windowDeleted( Deleted* );
         GLShader* sceneShader() const;
         bool hasSceneShader() const {
-            return m_sceneShader != NULL && m_genericSceneShader != NULL;
+            return m_sceneShader != NULL && m_genericSceneShader != NULL && m_colorShader != NULL;
         }
     protected:
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
@@ -109,6 +109,7 @@ class SceneOpenGL
         bool selfCheckDone;
         GLShader* m_sceneShader;
         GLShader* m_genericSceneShader;
+        GLShader* m_colorShader;
         bool debug;
     };
 

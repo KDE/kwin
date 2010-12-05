@@ -41,6 +41,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     , selfCheckDone( false )
     , m_sceneShader( NULL )
     , m_genericSceneShader( NULL )
+    , m_colorShader( NULL )
     {
     if( !Extensions::glxAvailable())
         {

@@ -1229,6 +1229,8 @@ class GLVertexBufferPrivate
             , numberVertices( 0 )
             , dimension( 2 )
             , useShader( false )
+            , useColor( false )
+            , color( 0, 0, 0, 255 )
             {
             if( GLVertexBufferPrivate::supported )
                 {
@@ -1250,6 +1252,8 @@ class GLVertexBufferPrivate
         static bool supported;
         QVector<float> legacyVertices;
         QVector<float> legacyTexCoords;
+        bool useColor;
+        QColor color;
 
         void legacyPainting( QRegion region, GLenum primitiveMode );
         void corePainting( const QRegion& region, GLenum primitiveMode );
@@ -1262,8 +1266,14 @@ void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode
     // Enable arrays
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( dimension, GL_FLOAT, 0, legacyVertices.constData() );
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer( 2, GL_FLOAT, 0, legacyTexCoords.constData() );
+    if (!legacyTexCoords.isEmpty()) {
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        glTexCoordPointer( 2, GL_FLOAT, 0, legacyTexCoords.constData() );
+    }
+
+    if (useColor) {
+        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    }
 
     // Clip using scissoring
     PaintClipper pc( region );
@@ -1275,7 +1285,9 @@ void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode
         }
 
     glDisableClientState( GL_VERTEX_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    if (!legacyTexCoords.isEmpty()) {
+        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
 #endif
     }
 
@@ -1295,6 +1307,13 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
 
     glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
     glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    if (useColor) {
+        GLint colorLocation = glGetUniformLocation(currentProgram, "geometryColor");
+        if (colorLocation != 0) {
+            glUniform4f(currentProgram, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        }
+    }
 
     // TODO: reenable paint clipper
     // Clip using scissoring
@@ -1339,11 +1358,12 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
             d->legacyVertices << vertices[i];
             }
         d->legacyTexCoords.clear();
-        d->legacyTexCoords.reserve( numberVertices * 2 );
-        for( int i=0; i<numberVertices*2; ++i)
-            {
-            d->legacyTexCoords << texcoords[i];
+        if (texcoords != NULL) {
+            d->legacyTexCoords.reserve( numberVertices * 2 );
+            for (int i=0; i<numberVertices*2; ++i) {
+                d->legacyTexCoords << texcoords[i];
             }
+        }
         return;
         }
     GLenum hint;
@@ -1366,8 +1386,10 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
     glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*d->dimension, vertices, hint );
 
-    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
+    if (texcoords != NULL) {
+        glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
+        glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
+    }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     }
@@ -1397,6 +1419,10 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
 
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
     glTexCoordPointer( 2, GL_FLOAT, 0, 0 );
+
+    if (d->useColor) {
+        glColor4f(d->color.redF(), d->color.greenF(), d->color.blueF(), d->color.alphaF());
+    }
 
     // Clip using scissoring
     PaintClipper pc( region );
@@ -1428,6 +1454,22 @@ bool GLVertexBuffer::isSupported()
     {
     return GLVertexBufferPrivate::supported;
     }
+
+bool GLVertexBuffer::isUseColor() const
+{
+    return d->useColor;
+}
+
+void GLVertexBuffer::setUseColor(bool enable)
+{
+    d->useColor = enable;
+}
+
+void GLVertexBuffer::setColor(const QColor& color, bool enable)
+{
+    d->useColor = enable;
+    d->color = color;
+}
 
 void GLVertexBuffer::initStatic()
     {
