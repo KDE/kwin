@@ -299,5 +299,36 @@ void glResolveFunctions()
 
 } // namespace
 
+#else
+namespace KWin
+{
+
+// EGL
+eglCreateImageKHR_func eglCreateImageKHR;
+eglDestroyImageKHR_func eglDestroyImageKHR;
+// GLES
+glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+
+void eglResolveFunctions()
+{
+    if (hasGLExtension("EGL_KHR_image_pixmap")) {
+        eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
+        eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
+    } else {
+        eglCreateImageKHR = NULL;
+        eglDestroyImageKHR = NULL;
+    }
+}
+
+void glResolveFunctions()
+{
+    if (hasGLExtension("GL_OES_EGL_image")) {
+        glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+    } else {
+        glEGLImageTargetTexture2DOES = NULL;
+    }
+}
+
+} // namespace
 #endif
 #endif

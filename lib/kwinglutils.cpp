@@ -82,6 +82,8 @@ void initEGL()
     eglInitialize(dpy, &major, &minor);
     eglVersion = MAKE_GL_VERSION(major, minor, 0);
     eglExtension = QString((const char*)eglQueryString(dpy, EGL_EXTENSIONS)).split(' ');
+
+    eglResolveFunctions();
 #endif
 }
 
@@ -98,9 +100,7 @@ void initGL()
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
-#ifndef KWIN_HAVE_OPENGLES
     glResolveFunctions();
-#endif
 
     GLTexture::initStatic();
     GLShader::initStatic();

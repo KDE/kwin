@@ -357,6 +357,24 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <fixx11h.h>
+
+namespace KWin
+{
+
+void KWIN_EXPORT eglResolveFunctions();
+void KWIN_EXPORT glResolveFunctions();
+// EGL
+typedef EGLImageKHR (*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
+typedef EGLBoolean (*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
+extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
+extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
+
+// GLES
+typedef GLvoid (*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
+extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+
+} // namespace
+
 #endif
 
 #endif
