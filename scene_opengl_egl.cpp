@@ -245,12 +245,33 @@ void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
     Scene::paintGenericScreen(mask, data);
 }
 
-void SceneOpenGL::paintBackground( QRegion region )
-    {
-    // TODO: implement me
-    //glClearColor(0, 0, 0, 1);
-    //glClear(GL_COLOR_BUFFER_BIT);
+void SceneOpenGL::paintBackground(QRegion region)
+{
+    PaintClipper pc(region);
+    if (!PaintClipper::clip()) {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        return;
     }
+    if (pc.clip() && pc.paintArea().isEmpty())
+        return; // no background to paint
+    QVector<float> verts;
+    for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+        QRect r = iterator.boundingRect();
+        verts << r.x() + r.width() << r.y();
+        verts << r.x() << r.y();
+        verts << r.x() << r.y() + r.height();
+        verts << r.x() << r.y() + r.height();
+        verts << r.x() + r.width() << r.y() + r.height();
+        verts << r.x() + r.width() << r.y();
+    }
+    GLVertexBuffer vbo(GLVertexBuffer::Static);
+    vbo.setUseColor(true);
+    vbo.setUseShader(true);
+    vbo.setData(verts.count() / 2, 2, verts.data(), NULL);
+    m_colorShader->bind();
+    vbo.render(GL_TRIANGLES);
+}
 
 //****************************************
 // SceneOpenGL::Texture
