@@ -1252,6 +1252,7 @@ class GLVertexBufferPrivate
             , dimension( 2 )
             , useShader( false )
             , useColor( false )
+            , useTexCoords( true )
             , color( 0, 0, 0, 255 )
             {
             if( GLVertexBufferPrivate::supported )
@@ -1275,6 +1276,7 @@ class GLVertexBufferPrivate
         QVector<float> legacyVertices;
         QVector<float> legacyTexCoords;
         bool useColor;
+        bool useTexCoords;
         QColor color;
 
         void legacyPainting( QRegion region, GLenum primitiveMode );
@@ -1316,7 +1318,9 @@ void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode
 void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiveMode )
     {
     glEnableVertexAttribArray( 0 );
-    glEnableVertexAttribArray( 1 );
+    if (useTexCoords) {
+        glEnableVertexAttribArray( 1 );
+    }
 
     // TODO: have this information available somewhere useable
     GLint currentProgram;
@@ -1324,17 +1328,19 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
     GLint vertexAttrib = glGetAttribLocation( currentProgram, "vertex" );
     GLint texAttrib = glGetAttribLocation( currentProgram, "texCoord" );
 
-    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
-    glVertexAttribPointer( vertexAttrib, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
-
-    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
-    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
-
     if (useColor) {
         GLint colorLocation = glGetUniformLocation(currentProgram, "geometryColor");
         if (colorLocation != 0) {
-            glUniform4f(currentProgram, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+            glUniform4f(colorLocation, color.redF(), color.greenF(), color.blueF(), color.alphaF());
         }
+    }
+
+    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
+    glVertexAttribPointer( vertexAttrib, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    if (texAttrib != -1 && useTexCoords) {
+        glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
+        glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
     }
 
     // TODO: reenable paint clipper
@@ -1349,7 +1355,9 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-    glDisableVertexAttribArray( 1 );
+    if (useTexCoords) {
+        glDisableVertexAttribArray( 1 );
+    }
     glDisableVertexAttribArray( 0 );
     }
 
@@ -1370,6 +1378,7 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     {
     d->numberVertices = numberVertices;
     d->dimension = dim;
+    d->useTexCoords = (texcoords != NULL);
     if( !GLVertexBufferPrivate::supported )
         {
         // legacy data
@@ -1380,7 +1389,7 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
             d->legacyVertices << vertices[i];
             }
         d->legacyTexCoords.clear();
-        if (texcoords != NULL) {
+        if (d->useTexCoords) {
             d->legacyTexCoords.reserve( numberVertices * 2 );
             for (int i=0; i<numberVertices*2; ++i) {
                 d->legacyTexCoords << texcoords[i];
@@ -1408,7 +1417,7 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
     glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*d->dimension, vertices, hint );
 
-    if (texcoords != NULL) {
+    if (d->useTexCoords) {
         glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
         glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
     }
