@@ -25,12 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class GLShader;
+class GLVertexBuffer;
 
 class ShowPaintEffect
     : public Effect
     {
     public:
         ShowPaintEffect();
+        ~ShowPaintEffect();
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
     private:
@@ -38,6 +41,11 @@ class ShowPaintEffect
         void paintXrender();
         QRegion painted; // what's painted in one pass
         int color_index;
+        bool useShader;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        GLVertexBuffer *vbo;
+        GLShader *colorShader;
+#endif
     };
 
 } // namespace
