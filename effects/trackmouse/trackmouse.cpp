@@ -22,8 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "trackmouse.h"
 
 #include <QTime>
+#include <QVector2D>
+#include <QVector4D>
 
 #include <kwinconfig.h>
+#include <kwinglutils.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -33,9 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
-#endif
 
 #include <kdebug.h>
 
@@ -51,12 +51,35 @@ TrackMouseEffect::TrackMouseEffect()
     : active( false )
     , angle( 0 )
     , texture( NULL )
+    , useShader( false )
+    , shader( NULL )
     {
     mousePolling = false;
     actionCollection = new KActionCollection( this );
     action = static_cast< KAction* >( actionCollection->addAction( "TrackMouse" ));
     action->setText( i18n( "Track mouse" ) );
     action->setGlobalShortcut( KShortcut() );
+
+    // TODO: use GLPlatform
+    if (GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) {
+        shader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
+        if (shader->isValid()) {
+            shader->bind();
+            shader->setUniform("sample", 0);
+            shader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+            shader->setUniform("debug", 0);
+            shader->setUniform("textureWidth", 1.0f);
+            shader->setUniform("textureHeight", 1.0f);
+            shader->setUniform("opacity", 1.0f);
+            shader->setUniform("brightness", 1.0f);
+            shader->setUniform("saturation", 1.0f);
+            shader->unbind();
+            useShader = true;
+            kDebug(1212) << "Track mouse shader is valid";
+        } else {
+            kDebug(1212) << "Track mouse shader is not valid";
+        }
+    }
     connect( action, SIGNAL( triggered( bool ) ), this, SLOT( toggle() ) );
     reconfigure( ReconfigureAll );
     }
@@ -66,6 +89,7 @@ TrackMouseEffect::~TrackMouseEffect()
     if( mousePolling )
         effects->stopMousePolling();
     delete texture;
+    delete shader;
     }
 
 void TrackMouseEffect::reconfigure( ReconfigureFlags )
@@ -115,7 +139,12 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( texture )
         {
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
+        if (useShader) {
+            shader->bind();
+        }
         texture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -124,10 +153,16 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
              ++i )
             {
             QRect r = starRect( i );
-            texture->render( region, r );
+            texture->render( region, r, useShader );
             }
         texture->unbind();
+        glDisable(GL_BLEND);
+        if (useShader) {
+            shader->unbind();
+        }
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
         }
 #endif
     }
