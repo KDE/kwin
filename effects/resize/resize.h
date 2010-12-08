@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class GLShader;
+class GLVertexBuffer;
 
 class ResizeEffect
     : public Effect
@@ -46,6 +48,11 @@ class ResizeEffect
         int m_features;
         EffectWindow* m_resizeWindow;
         QRect m_currentGeometry, m_originalGeometry;
+        bool m_useShader;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        GLVertexBuffer *m_vbo;
+        GLShader *m_colorShader;
+#endif
     };
 
 }
