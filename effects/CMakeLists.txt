@@ -79,12 +79,12 @@ include( slidingpopups/CMakeLists.txt )
 include( taskbarthumbnail/CMakeLists.txt )
 include( thumbnailaside/CMakeLists.txt )
 include( windowgeometry/CMakeLists.txt )
+include( zoom/CMakeLists.txt )
 
 if( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 include( logout/CMakeLists.txt )
 include( shadow/CMakeLists.txt )
 include( showfps/CMakeLists.txt )
-include( zoom/CMakeLists.txt )
 endif( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 # OpenGL-specific effects
