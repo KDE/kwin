@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 //#include "kwinxrenderutils.h"
+#include <QVector2D>
+#include <QVector4D>
 
 namespace KWin
 {
@@ -32,9 +34,35 @@ KWIN_EFFECT_SUPPORTED( snaphelper, SnapHelperEffect::supported() )
 SnapHelperEffect::SnapHelperEffect()
     : m_active( false )
     , m_window( NULL )
+    , m_useShader( false )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    , m_vbo( 0 )
+    , m_colorShader( 0 )
+#endif
     {
     m_timeline.setCurveShape( TimeLine::LinearCurve );
     reconfigure( ReconfigureAll );
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if (effects->compositingType() == OpenGLCompositing) {
+        m_vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
+        m_vbo->setUseColor(true);
+        // TODO: use GLPlatform
+        if (GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) {
+            m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
+            if (m_colorShader->isValid()) {
+                m_colorShader->bind();
+                m_colorShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+                m_colorShader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+                m_colorShader->unbind();
+                m_vbo->setUseShader(true);
+                m_useShader = true;
+                kDebug(1212) << "Show Paint Shader is valid";
+            } else {
+                kDebug(1212) << "Show Paint Shader not valid";
+            }
+        }
+    }
+#endif
 
     /*if( effects->compositingType() == XRenderCompositing )
         {
@@ -49,6 +77,10 @@ SnapHelperEffect::~SnapHelperEffect()
     {
     //if( effects->compositingType() == XRenderCompositing )
     //    XFreeGC( display(), m_gc );
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_vbo;
+    delete m_colorShader;
+#endif
     }
 
 void SnapHelperEffect::reconfigure( ReconfigureFlags )
@@ -80,42 +112,59 @@ void SnapHelperEffect::postPaintScreen()
         { // Display the guide
         if( effects->compositingType() == OpenGLCompositing )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
+            if (m_useShader) {
+                m_colorShader->bind();
+            }
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-            glColor4f( 0.5, 0.5, 0.5, m_timeline.value() * 0.5 );
-            glLineWidth( 4.0 ); 
-            glBegin( GL_LINES );
-                for( int i = 0; i < effects->numScreens(); i++ )
-                    {
-                    const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
-                    int midX = rect.x() + rect.width() / 2;
-                    int midY = rect.y() + rect.height() / 2 ;
-                    int halfWidth = m_window->width() / 2;
-                    int halfHeight = m_window->height() / 2;
+            QColor color;
+            color.setRedF(0.5);
+            color.setGreenF(0.5);
+            color.setBlueF(0.5);
+            color.setAlphaF(m_timeline.value() * 0.5);
+            m_vbo->setColor(color);
+            glLineWidth( 4.0 );
+            QVector<float> verts;
+            verts.reserve(effects->numScreens()*24);
+            for (int i = 0; i < effects->numScreens(); i++) {
+                const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
+                int midX = rect.x() + rect.width() / 2;
+                int midY = rect.y() + rect.height() / 2 ;
+                int halfWidth = m_window->width() / 2;
+                int halfHeight = m_window->height() / 2;
 
-                    // Center lines
-                    glVertex2f( rect.x() + rect.width() / 2, rect.y() );
-                    glVertex2f( rect.x() + rect.width() / 2, rect.y() + rect.height() );
-                    glVertex2f( rect.x(), rect.y() + rect.height() / 2 );
-                    glVertex2f( rect.x() + rect.width(), rect.y() + rect.height() / 2 );
+                // Center lines
+                verts << rect.x() + rect.width() / 2 << rect.y();
+                verts << rect.x() + rect.width() / 2 << rect.y() + rect.height();
+                verts << rect.x() << rect.y() + rect.height() / 2;
+                verts << rect.x() + rect.width() << rect.y() + rect.height() / 2;
 
-                    // Window outline
-                    // The +/- 2 is to prevent line overlap
-                    glVertex2f( midX - halfWidth + 2, midY - halfHeight );
-                    glVertex2f( midX + halfWidth + 2, midY - halfHeight );
-                    glVertex2f( midX + halfWidth, midY - halfHeight + 2 );
-                    glVertex2f( midX + halfWidth, midY + halfHeight + 2 );
-                    glVertex2f( midX + halfWidth - 2, midY + halfHeight );
-                    glVertex2f( midX - halfWidth - 2, midY + halfHeight );
-                    glVertex2f( midX - halfWidth, midY + halfHeight - 2 );
-                    glVertex2f( midX - halfWidth, midY - halfHeight - 2 );
-                    }
-            glEnd();
+                // Window outline
+                // The +/- 2 is to prevent line overlap
+                verts << midX - halfWidth + 2 << midY - halfHeight;
+                verts << midX + halfWidth + 2 << midY - halfHeight;
+                verts << midX + halfWidth << midY - halfHeight + 2;
+                verts << midX + halfWidth << midY + halfHeight + 2;
+                verts << midX + halfWidth - 2 << midY + halfHeight;
+                verts << midX - halfWidth - 2 << midY + halfHeight;
+                verts << midX - halfWidth << midY + halfHeight - 2;
+                verts << midX - halfWidth << midY - halfHeight - 2;
+            }
+            m_vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+            m_vbo->render(GL_LINES);
+            if (m_useShader) {
+                m_colorShader->unbind();
+            }
 
             glDisable( GL_BLEND );
+            glLineWidth( 1.0 );
+#ifndef KWIN_HAVE_OPENGLES
             glPopAttrib();
+#endif
             }
         /*if( effects->compositingType() == XRenderCompositing )
             { // TODO
