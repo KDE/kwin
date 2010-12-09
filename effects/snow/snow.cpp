@@ -276,6 +276,7 @@ void SnowEffect::toggle()
         if( mUseShader )
             {
             delete mShader;
+            mShader = NULL;
             mInited = false;
             mUseShader = true;
             }
