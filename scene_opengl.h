@@ -177,8 +177,6 @@ class SceneOpenGL::Window
         Texture leftTexture;
         Texture rightTexture;
         Texture bottomTexture;
-        GLVertexBuffer* vertexBuffer;
-        static GLVertexBuffer* decorationVertices;
     };
 
 class SceneOpenGL::EffectFrame

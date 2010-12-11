@@ -342,7 +342,6 @@ bool SceneOpenGL::Texture::load( const QPixmap& pixmap, GLenum target )
 //****************************************
 // SceneOpenGL::Window
 //****************************************
-GLVertexBuffer* SceneOpenGL::Window::decorationVertices = NULL;
 
 SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
@@ -351,14 +350,12 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , leftTexture()
     , rightTexture()
     , bottomTexture()
-    , vertexBuffer( NULL )
     {
     }
 
 SceneOpenGL::Window::~Window()
     {
     discardTexture();
-    delete vertexBuffer;
     }
 
 // Bind the window pixmap to an OpenGL texture.
@@ -531,6 +528,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
 
     WindowQuadList decoration = data.quads.select( WindowQuadDecoration );
 
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseShader(sceneShader);
 
     // decorations
     Client *client = dynamic_cast<Client*>(toplevel);
@@ -594,9 +594,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
                     }
                 }
 
-            if( !SceneOpenGL::Window::decorationVertices )
-                SceneOpenGL::Window::decorationVertices = new GLVertexBuffer( GLVertexBuffer::Stream );
-            SceneOpenGL::Window::decorationVertices->setUseShader( sceneShader );
             paintDecoration( top, DecorationTop, region, topRect, data, topList, updateDeco );
             paintDecoration( left, DecorationLeft, region, leftRect, data, leftList, updateDeco );
             paintDecoration( right, DecorationRight, region, rightRect, data, rightList, updateDeco );
@@ -607,9 +604,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     // paint the content
     if ( !(mask & PAINT_DECORATION_ONLY) )
         {
-        if( !vertexBuffer )
-            vertexBuffer = new GLVertexBuffer( GLVertexBuffer::Stream );
-        vertexBuffer->setUseShader( sceneShader );
         texture.bind();
         texture.enableUnnormalizedTexCoords();
         prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
@@ -690,14 +684,14 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         data.shader->setUniform("textureWidth", 1.0f);
         data.shader->setUniform("textureHeight", 1.0f);
         }
-    SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
+    GLVertexBuffer::streamingBuffer()->render( region, GL_TRIANGLES );
     restoreStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
     decorationTexture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if( static_cast<SceneOpenGL*>(scene)->debug )
         {
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-        SceneOpenGL::Window::decorationVertices->render( region, GL_TRIANGLES );
+        GLVertexBuffer::streamingBuffer()->render( region, GL_TRIANGLES );
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         }
 #endif
@@ -739,7 +733,7 @@ void SceneOpenGL::Window::makeDecorationArrays( const WindowQuadList& quads, con
         texcoords << (float)(quad.originalRight()-rect.x())/width;
         texcoords << (float)(quad.originalTop()-rect.y())/height;
         }
-    SceneOpenGL::Window::decorationVertices->setData( quads.count() * 6, 2, vertices.data(), texcoords.data() );
+    GLVertexBuffer::streamingBuffer()->setData( quads.count() * 6, 2, vertices.data(), texcoords.data() );
     }
 
 void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQuadList& quads )
@@ -750,8 +744,8 @@ void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQ
     float* vertices;
     float* texcoords;
     quads.makeArrays( &vertices, &texcoords );
-    vertexBuffer->setData( quads.count() * 6, 2, vertices, texcoords );
-    vertexBuffer->render( region, GL_TRIANGLES );
+    GLVertexBuffer::streamingBuffer()->setData( quads.count() * 6, 2, vertices, texcoords );
+    GLVertexBuffer::streamingBuffer()->render( region, GL_TRIANGLES );
     delete[] vertices;
     delete[] texcoords;
     }
