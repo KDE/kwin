@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class GLVertexBuffer;
 
 class ShowPaintEffect
     : public Effect
@@ -40,9 +39,6 @@ class ShowPaintEffect
         void paintXrender();
         QRegion painted; // what's painted in one pass
         int color_index;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        GLVertexBuffer *vbo;
-#endif
     };
 
 } // namespace

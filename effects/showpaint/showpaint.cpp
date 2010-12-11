@@ -45,26 +45,11 @@ static QColor colors[] = { Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta,
 
 ShowPaintEffect::ShowPaintEffect()
     : color_index( 0 )
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    , vbo( 0 )
-#endif
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (effects->compositingType() == OpenGLCompositing) {
-        vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
-        vbo->setUseColor(true);
-        if (ShaderManager::instance()->isValid()) {
-            vbo->setUseShader(true);
-        }
-    }
-#endif
     }
 
 ShowPaintEffect::~ShowPaintEffect()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete vbo;
-#endif
 }
 
 void ShowPaintEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -95,8 +80,12 @@ void ShowPaintEffect::paintGL()
 #ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
     if (ShaderManager::instance()->isValid()) {
         ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+        vbo->setUseShader(true);
     }
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
