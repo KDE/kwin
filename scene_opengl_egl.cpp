@@ -275,12 +275,13 @@ void SceneOpenGL::paintBackground(QRegion region)
         verts << r.x() + r.width() << r.y() + r.height();
         verts << r.x() + r.width() << r.y();
     }
-    GLVertexBuffer vbo(GLVertexBuffer::Static);
-    vbo.setUseColor(true);
-    vbo.setUseShader(true);
-    vbo.setData(verts.count() / 2, 2, verts.data(), NULL);
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
+    vbo->setUseShader(true);
+    vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
     ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-    vbo.render(GL_TRIANGLES);
+    vbo->render(GL_TRIANGLES);
     ShaderManager::instance()->popShader();
 }
 
