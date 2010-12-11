@@ -38,27 +38,12 @@ KWIN_EFFECT( resize, ResizeEffect )
 ResizeEffect::ResizeEffect()
     : m_active( false )
     , m_resizeWindow( 0 )
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    , m_vbo( 0 )
-#endif
     {
     reconfigure( ReconfigureAll );
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (effects->compositingType() == OpenGLCompositing) {
-        m_vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
-        m_vbo->setUseColor(true);
-        if (ShaderManager::instance()->isValid()) {
-            m_vbo->setUseShader(true);
-        }
-    }
-#endif
     }
 
 ResizeEffect::~ResizeEffect()
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete m_vbo;
-#endif
     }
 
 void ResizeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -104,13 +89,17 @@ void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
 #ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setUseColor(true);
                 if (ShaderManager::instance()->isValid()) {
                     ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+                    vbo->setUseShader(true);
                 }
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
                 color.setAlphaF(alpha);
-                m_vbo->setColor(color);
+                vbo->setColor(color);
                 QVector<float> verts;
                 verts.reserve(paintRegion.rects().count()*12);
                 foreach( const QRect &r, paintRegion.rects() ) {
@@ -121,8 +110,8 @@ void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                     verts << r.x() + r.width() << r.y() + r.height();
                     verts << r.x() + r.width() << r.y();
                 }
-                m_vbo->setData(verts.count()/2, 2, verts.data(), NULL);
-                m_vbo->render(GL_TRIANGLES);
+                vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+                vbo->render(GL_TRIANGLES);
                 if (ShaderManager::instance()->isValid()) {
                     ShaderManager::instance()->popShader();
                 }
