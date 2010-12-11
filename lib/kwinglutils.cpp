@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector4D>
 #include <QMatrix4x4>
 
+#include <math.h>
 
 #define DEBUG_GLRENDERTARGET 0
 
@@ -1080,6 +1081,221 @@ void GLShader::bindAttributeLocation(int index, const char* name)
     glBindAttribLocation(mProgram, index, name);
     // TODO: relink the shader
     }
+
+//****************************************
+// ShaderManager
+//****************************************
+ShaderManager *ShaderManager::s_shaderManager = NULL;
+
+ShaderManager *ShaderManager::instance()
+{
+    if (!s_shaderManager) {
+        s_shaderManager = new ShaderManager();
+    }
+    return s_shaderManager;
+}
+
+void ShaderManager::cleanup()
+{
+    delete s_shaderManager;
+}
+
+ShaderManager::ShaderManager()
+    : m_orthoShader(NULL)
+    , m_genericShader(NULL)
+    , m_colorShader(NULL)
+    , m_inited(false)
+    , m_valid(false)
+{
+    initShaders();
+    m_inited = true;
+}
+
+ShaderManager::~ShaderManager()
+{
+    while (!m_boundShaders.isEmpty()) {
+        popShader();
+    }
+    delete m_orthoShader;
+    delete m_genericShader;
+    delete m_colorShader;
+}
+
+GLShader *ShaderManager::getBoundShader() const
+{
+    if (m_boundShaders.isEmpty()) {
+        return NULL;
+    } else {
+        return m_boundShaders.top();
+    }
+}
+
+bool ShaderManager::isShaderBound() const
+{
+    return !m_boundShaders.isEmpty();
+}
+
+bool ShaderManager::isValid() const
+{
+    return m_valid;
+}
+
+GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
+{
+    if (m_inited && !m_valid) {
+        return NULL;
+    }
+    GLShader *shader;
+    switch (type) {
+    case SimpleShader:
+        shader = m_orthoShader;
+        break;
+    case GenericShader:
+        shader = m_genericShader;
+        break;
+    case ColorShader:
+        shader = m_colorShader;
+        break;
+    default:
+        return NULL;
+    }
+
+    pushShader(shader);
+    if (reset) {
+        resetShader(type);
+    }
+
+    return shader;
+}
+
+void ShaderManager::pushShader(GLShader *shader)
+{
+    // only bind shader if it is not already bound
+    if (shader != getBoundShader()) {
+        shader->bind();
+    }
+    m_boundShaders.push(shader);
+}
+
+void ShaderManager::popShader()
+{
+    if (m_boundShaders.isEmpty()) {
+        return;
+    }
+    GLShader *shader = m_boundShaders.pop();
+    if (m_boundShaders.isEmpty()) {
+        // no more shader bound - unbind
+        shader->unbind();
+    } else if (shader != m_boundShaders.top()) {
+        // only rebind if a different shader is on top of stack
+        m_boundShaders.top()->bind();
+    }
+}
+
+void ShaderManager::initShaders()
+{
+    m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
+    if (m_orthoShader->isValid()) {
+        pushShader(SimpleShader, true);
+        popShader();
+        kDebug(1212) << "Ortho Shader is valid";
+    }
+    else {
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        kDebug(1212) << "Orho Shader is not valid";
+        return;
+    }
+    m_genericShader = new GLShader( ":/resources/scene-generic-vertex.glsl", ":/resources/scene-fragment.glsl" );
+    if (m_genericShader->isValid()) {
+        pushShader(GenericShader, true);
+        popShader();
+        kDebug(1212) << "Generic Shader is valid";
+    }
+    else {
+        delete m_genericShader;
+        m_genericShader = NULL;
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        kDebug(1212) << "Generic Shader is not valid";
+        return;
+    }
+    m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
+    if (m_colorShader->isValid()) {
+        pushShader(ColorShader, true);
+        popShader();
+        kDebug(1212) << "Color Shader is valid";
+    } else {
+        delete m_genericShader;
+        m_genericShader = NULL;
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        delete m_colorShader;
+        m_colorShader = NULL;
+        kDebug(1212) << "Color Scene Shader is not valid";
+        return;
+    }
+    m_valid = true;
+}
+
+void ShaderManager::resetShader(ShaderType type)
+{
+    // resetShader is either called from init or from push, we know that a built-in shader is bound
+    GLShader *shader = getBoundShader();
+    switch (type) {
+    case SimpleShader:
+        shader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+        // TODO: has to become offset
+        shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+        shader->setUniform("debug", 0);
+        shader->setUniform("sample", 0);
+        // TODO: has to become textureSize
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+        // TODO: has to become colorManiuplation
+        shader->setUniform("opacity", 1.0f);
+        shader->setUniform("brightness", 1.0f);
+        shader->setUniform("saturation", 1.0f);
+        break;
+    case GenericShader: {
+        shader->setUniform("debug", 0);
+        shader->setUniform("sample", 0);
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        shader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        shader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        shader->setUniform("screenTransformation", identity);
+        shader->setUniform("windowTransformation", identity);
+        // TODO: has to become textureSize
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+        // TODO: has to become colorManiuplation
+        shader->setUniform("opacity", 1.0f);
+        shader->setUniform("brightness", 1.0f);
+        shader->setUniform("saturation", 1.0f);
+        break;
+    }
+    case ColorShader:
+        shader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
+        // TODO: has to become offset
+        shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+        shader->setUniform("geometryColor", QVector4D(0, 0, 0, 1));
+        break;
+    }
+}
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::mSupported = false;

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QImage>
 #include <QtCore/QSize>
 #include <QtCore/QSharedData>
+#include <QtCore/QStack>
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -292,6 +293,121 @@ class KWIN_EXPORT GLShader
         float mTextureWidth;
         float mTextureHeight;
     };
+
+/**
+ * @short Manager for Shaders.
+ *
+ * This class provides some built-in shaders to be used by both compositing scene and effects.
+ * The ShaderManager provides methods to bind a built-in or a custom shader and keeps track of
+ * the shaders which have been bound. When a shader is unbound the previously bound shader
+ * will be rebound.
+ *
+ * @author Martin Gräßlin <kde@martin-graesslin.com>
+ * @since 4.7
+ **/
+class KWIN_EXPORT ShaderManager
+{
+    public:
+        /**
+         * Identifiers for built-in shaders available for effects and scene
+         **/
+        enum ShaderType {
+            /**
+             * An orthographic projection shader able to render textured geometries.
+             * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
+             * and defaults to @c (0/0). Expects a @c vec2 uniform @c textureSize to calculate
+             * normalized texture coordinates. Defaults to @c (1.0/1.0). And expects a @c vec3
+             * uniform @c colorManiuplation, with @c x being opacity, @c y being brightness and
+             * @c z being saturation. All three values default to @c 1.0.
+             * The sampler uniform is @c sample and defaults to @c 0.
+             * The shader uses two vertex attributes @c vertex and @c texCoord.
+             **/
+            SimpleShader,
+            /**
+             * A generic shader able to render transformed, textured geometries.
+             * This shader is mostly needed by the scene and not of much interest for effects.
+             * Effects can influence this shader through @link ScreenPaintData and @link WindowPaintData.
+             * The shader expects four @c mat4 uniforms @c projection, @c modelview,
+             * @c screenTransformation and @c windowTransformation. The fragment shader expect the
+             * same uniforms as the SimpleShader and the same vertex attributes are used.
+             **/
+            GenericShader,
+            /**
+             * An orthographic shader to render simple colored geometries without texturing.
+             * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
+             * and defaults to @c (0/0). The fragment shader expects a single @c vec4 uniform
+             * @c geometryColor, which defaults to fully opaque black.
+             * The Shader uses one vertex attribute @c vertex.
+             **/
+            ColorShader
+        };
+
+        /**
+         * @return The currently bound shader or @c null if no shader is bound.
+         **/
+        GLShader *getBoundShader() const;
+
+        /**
+         * @return @c true if a shader is bound, @c false otherwise
+         **/
+        bool isShaderBound() const;
+        /**
+         * @return @c true if the built-in shaders are valid, @c false otherwise
+         **/
+        bool isValid() const;
+
+        /**
+         * Binds the shader of specified @p type.
+         * To unbind the shader use @link popShader. A previous bound shader will be rebound.
+         * @param type The built-in shader to bind
+         * @param reset Whether all uniforms should be reset to their default values
+         * @return The bound shader or @c NULL if shaders are not valid
+         * @see popShader
+         **/
+        GLShader *pushShader(ShaderType type, bool reset = false);
+        /**
+         * Binds the @p shader.
+         * To unbind the shader use @link popShader. A previous bound shader will be rebound.
+         * To bind a built-in shader use the more specific method.
+         * @param shader The shader to be bound
+         * @see popShader
+         **/
+        void pushShader(GLShader *shader);
+
+        /**
+         * Unbinds the currently bound shader and rebinds a previous stored shader.
+         * If there is no previous shader, no shader will be rebound.
+         * It is not safe to call this method if there is no bound shader.
+         * @see pushShader
+         * @see getBoundShader
+         **/
+        void popShader();
+
+        /**
+         * @return a pointer to the ShaderManager instance
+         **/
+        static ShaderManager *instance();
+
+        /**
+         * @internal
+         **/
+        static void cleanup();
+
+    private:
+        ShaderManager();
+        ~ShaderManager();
+
+        void initShaders();
+        void resetShader(ShaderType type);
+
+        QStack<GLShader*> m_boundShaders;
+        GLShader *m_orthoShader;
+        GLShader *m_genericShader;
+        GLShader *m_colorShader;
+        bool m_inited;
+        bool m_valid;
+        static ShaderManager *s_shaderManager;
+};
 
 /**
  * @short Render target object
