@@ -1040,6 +1040,15 @@ bool GLShader::setUniform(const char* name, const QMatrix4x4& value)
     return (location >= 0);
 }
 
+bool GLShader::setUniform(const char* name, const QColor& color)
+{
+    const int location = uniformLocation(name);
+    if (location >= 0) {
+        glUniform4f(location, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    }
+    return (location >= 0);
+}
+
 int GLShader::attributeLocation(const char* name)
     {
     int location = glGetAttribLocation(mProgram, name);

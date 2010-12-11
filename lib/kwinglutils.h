@@ -258,6 +258,7 @@ class KWIN_EXPORT GLShader
         bool setUniform(const char* name, const QVector3D& value);
         bool setUniform(const char* name, const QVector4D& value);
         bool setUniform(const char* name, const QMatrix4x4& value);
+        bool setUniform(const char* name, const QColor& color);
         int attributeLocation(const char* name);
         bool setAttribute(const char* name, float value);
         /**
