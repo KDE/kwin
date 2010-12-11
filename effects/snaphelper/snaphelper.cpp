@@ -32,21 +32,9 @@ KWIN_EFFECT_SUPPORTED( snaphelper, SnapHelperEffect::supported() )
 SnapHelperEffect::SnapHelperEffect()
     : m_active( false )
     , m_window( NULL )
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    , m_vbo( 0 )
-#endif
     {
     m_timeline.setCurveShape( TimeLine::LinearCurve );
     reconfigure( ReconfigureAll );
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (effects->compositingType() == OpenGLCompositing) {
-        m_vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
-        m_vbo->setUseColor(true);
-        if (ShaderManager::instance()->isValid()) {
-            m_vbo->setUseShader(true);
-        }
-    }
-#endif
 
     /*if( effects->compositingType() == XRenderCompositing )
         {
@@ -61,9 +49,6 @@ SnapHelperEffect::~SnapHelperEffect()
     {
     //if( effects->compositingType() == XRenderCompositing )
     //    XFreeGC( display(), m_gc );
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete m_vbo;
-#endif
     }
 
 void SnapHelperEffect::reconfigure( ReconfigureFlags )
@@ -98,8 +83,12 @@ void SnapHelperEffect::postPaintScreen()
 #ifndef KWIN_HAVE_OPENGLES
             glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
+            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+            vbo->reset();
+            vbo->setUseColor(true);
             if (ShaderManager::instance()->isValid()) {
                 ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+                vbo->setUseShader(true);
             }
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -109,7 +98,7 @@ void SnapHelperEffect::postPaintScreen()
             color.setGreenF(0.5);
             color.setBlueF(0.5);
             color.setAlphaF(m_timeline.value() * 0.5);
-            m_vbo->setColor(color);
+            vbo->setColor(color);
             glLineWidth( 4.0 );
             QVector<float> verts;
             verts.reserve(effects->numScreens()*24);
@@ -137,8 +126,8 @@ void SnapHelperEffect::postPaintScreen()
                 verts << midX - halfWidth << midY + halfHeight - 2;
                 verts << midX - halfWidth << midY - halfHeight - 2;
             }
-            m_vbo->setData(verts.count()/2, 2, verts.data(), NULL);
-            m_vbo->render(GL_LINES);
+            vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+            vbo->render(GL_LINES);
             if (ShaderManager::instance()->isValid()) {
                 ShaderManager::instance()->popShader();
             }
