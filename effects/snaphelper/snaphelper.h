@@ -49,10 +49,8 @@ class SnapHelperEffect
         EffectWindow* m_window;
         TimeLine m_timeline;
         //GC m_gc;
-        bool m_useShader;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLVertexBuffer *m_vbo;
-        GLShader *m_colorShader;
 #endif
     };
 

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class GLShader;
 class GLVertexBuffer;
 
 class ShowPaintEffect
@@ -41,10 +40,8 @@ class ShowPaintEffect
         void paintXrender();
         QRegion painted; // what's painted in one pass
         int color_index;
-        bool useShader;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLVertexBuffer *vbo;
-        GLShader *colorShader;
 #endif
     };
 

@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 //#include "kwinxrenderutils.h"
-#include <QVector2D>
-#include <QVector4D>
 
 namespace KWin
 {
@@ -34,10 +32,8 @@ KWIN_EFFECT_SUPPORTED( snaphelper, SnapHelperEffect::supported() )
 SnapHelperEffect::SnapHelperEffect()
     : m_active( false )
     , m_window( NULL )
-    , m_useShader( false )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , m_vbo( 0 )
-    , m_colorShader( 0 )
 #endif
     {
     m_timeline.setCurveShape( TimeLine::LinearCurve );
@@ -46,20 +42,8 @@ SnapHelperEffect::SnapHelperEffect()
     if (effects->compositingType() == OpenGLCompositing) {
         m_vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
         m_vbo->setUseColor(true);
-        // TODO: use GLPlatform
-        if (GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) {
-            m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
-            if (m_colorShader->isValid()) {
-                m_colorShader->bind();
-                m_colorShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-                m_colorShader->setUniform("geometry", QVector4D(0, 0, 0, 0));
-                m_colorShader->unbind();
-                m_vbo->setUseShader(true);
-                m_useShader = true;
-                kDebug(1212) << "Show Paint Shader is valid";
-            } else {
-                kDebug(1212) << "Show Paint Shader not valid";
-            }
+        if (ShaderManager::instance()->isValid()) {
+            m_vbo->setUseShader(true);
         }
     }
 #endif
@@ -79,7 +63,6 @@ SnapHelperEffect::~SnapHelperEffect()
     //    XFreeGC( display(), m_gc );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_vbo;
-    delete m_colorShader;
 #endif
     }
 
@@ -115,8 +98,8 @@ void SnapHelperEffect::postPaintScreen()
 #ifndef KWIN_HAVE_OPENGLES
             glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
-            if (m_useShader) {
-                m_colorShader->bind();
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
             }
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -156,8 +139,8 @@ void SnapHelperEffect::postPaintScreen()
             }
             m_vbo->setData(verts.count()/2, 2, verts.data(), NULL);
             m_vbo->render(GL_LINES);
-            if (m_useShader) {
-                m_colorShader->unbind();
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->popShader();
             }
 
             glDisable( GL_BLEND );

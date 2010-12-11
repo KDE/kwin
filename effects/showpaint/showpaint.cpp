@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include <qcolor.h>
-#include <QVector2D>
-#include <QVector4D>
 
 namespace KWin
 {
@@ -47,30 +45,16 @@ static QColor colors[] = { Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta,
 
 ShowPaintEffect::ShowPaintEffect()
     : color_index( 0 )
-    , useShader( false )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , vbo( 0 )
-    , colorShader( 0 )
 #endif
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (effects->compositingType() == OpenGLCompositing) {
         vbo = new GLVertexBuffer(GLVertexBuffer::Stream);
         vbo->setUseColor(true);
-        // TODO: use GLPlatform
-        if (GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) {
-            colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
-            if (colorShader->isValid()) {
-                colorShader->bind();
-                colorShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-                colorShader->setUniform("geometry", QVector4D(0, 0, 0, 0));
-                colorShader->unbind();
-                vbo->setUseShader(true);
-                useShader = true;
-                kDebug(1212) << "Show Paint Shader is valid";
-            } else {
-                kDebug(1212) << "Show Paint Shader not valid";
-            }
+        if (ShaderManager::instance()->isValid()) {
+            vbo->setUseShader(true);
         }
     }
 #endif
@@ -80,7 +64,6 @@ ShowPaintEffect::~ShowPaintEffect()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete vbo;
-    delete colorShader;
 #endif
 }
 
@@ -112,8 +95,8 @@ void ShowPaintEffect::paintGL()
 #ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
-    if (useShader) {
-        colorShader->bind();
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
     }
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -132,8 +115,8 @@ void ShowPaintEffect::paintGL()
     }
     vbo->setData(verts.count()/2, 2, verts.data(), NULL);
     vbo->render(GL_TRIANGLES);
-    if (useShader) {
-        colorShader->unbind();
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->popShader();
     }
     glDisable( GL_BLEND );
 #ifndef KWIN_HAVE_OPENGLES

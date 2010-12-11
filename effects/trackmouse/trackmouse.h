@@ -28,7 +28,6 @@ class KAction;
 
 namespace KWin
 {
-class GLShader;
 class GLTexture;
 
 class TrackMouseEffect
@@ -57,8 +56,6 @@ class TrackMouseEffect
         KActionCollection* actionCollection;
         KAction* action;
         Qt::KeyboardModifiers modifier;
-        bool useShader;
-        GLShader* shader;
     };
 
 } // namespace
