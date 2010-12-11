@@ -1547,17 +1547,12 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
         glEnableVertexAttribArray( 1 );
     }
 
-    // TODO: have this information available somewhere useable
-    GLint currentProgram;
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
-    GLint vertexAttrib = glGetAttribLocation( currentProgram, "vertex" );
-    GLint texAttrib = glGetAttribLocation( currentProgram, "texCoord" );
+    GLShader *shader = ShaderManager::instance()->getBoundShader();
+    GLint vertexAttrib = shader->attributeLocation("vertex");
+    GLint texAttrib = shader->attributeLocation("texCoord" );
 
     if (useColor) {
-        GLint colorLocation = glGetUniformLocation(currentProgram, "geometryColor");
-        if (colorLocation != 0) {
-            glUniform4f(colorLocation, color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        }
+        shader->setUniform("geometryColor", color);
     }
 
     glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
