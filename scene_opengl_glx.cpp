@@ -39,9 +39,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
     , selfCheckDone( false )
-    , m_sceneShader( NULL )
-    , m_genericSceneShader( NULL )
-    , m_colorShader( NULL )
     {
     if( !Extensions::glxAvailable())
         {
@@ -101,7 +98,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
         {
-        setupSceneShaders();
+        if (!ShaderManager::instance()->isValid()) {
+            kDebug(1212) << "No Scene Shaders available";
+        }
         }
 
     // OpenGL scene setup
@@ -179,7 +178,6 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
-    delete m_sceneShader;
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }

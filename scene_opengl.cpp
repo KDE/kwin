@@ -116,75 +116,6 @@ XShmSegmentInfo SceneOpenGL::shm;
 #include "scene_opengl_glx.cpp"
 #endif
 
-
-bool SceneOpenGL::setupSceneShaders()
-{
-    m_sceneShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
-    if (m_sceneShader->isValid()) {
-        m_sceneShader->bind();
-        m_sceneShader->setUniform("sample", 0);
-        m_sceneShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-        m_sceneShader->setUniform("debug", debug ? 1 : 0);
-        m_sceneShader->unbind();
-        kDebug(1212) << "Scene Shader is valid";
-    }
-    else {
-        delete m_sceneShader;
-        m_sceneShader = NULL;
-        kDebug(1212) << "Scene Shader is not valid";
-        return false;
-    }
-    m_genericSceneShader = new GLShader( ":/resources/scene-generic-vertex.glsl", ":/resources/scene-fragment.glsl" );
-    if (m_genericSceneShader->isValid()) {
-        m_genericSceneShader->bind();
-        m_genericSceneShader->setUniform("sample", 0);
-        m_genericSceneShader->setUniform("debug", debug ? 1 : 0);
-        QMatrix4x4 projection;
-        float fovy = 60.0f;
-        float aspect = 1.0f;
-        float zNear = 0.1f;
-        float zFar = 100.0f;
-        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-        float ymin = -ymax;
-        float xmin =  ymin * aspect;
-        float xmax = ymax * aspect;
-        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        m_genericSceneShader->setUniform("projection", projection);
-        QMatrix4x4 modelview;
-        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
-        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
-        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
-        m_genericSceneShader->setUniform("modelview", modelview);
-        m_genericSceneShader->unbind();
-        kDebug(1212) << "Generic Scene Shader is valid";
-    }
-    else {
-        delete m_genericSceneShader;
-        m_genericSceneShader = NULL;
-        delete m_sceneShader;
-        m_sceneShader = NULL;
-        kDebug(1212) << "Generic Scene Shader is not valid";
-        return false;
-    }
-    m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
-    if (m_colorShader->isValid()) {
-        m_colorShader->bind();
-        m_colorShader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-        m_colorShader->unbind();
-        kDebug(1212) << "Color Shader is valid";
-    } else {
-        delete m_genericSceneShader;
-        m_genericSceneShader = NULL;
-        delete m_sceneShader;
-        m_sceneShader = NULL;
-        delete m_colorShader;
-        m_colorShader = NULL;
-        kDebug(1212) << "Color Scene Shader is not valid";
-        return false;
-    }
-    return true;
-}
-
 bool SceneOpenGL::initFailed() const
     {
     return !init_ok;
@@ -336,11 +267,6 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
     Window* w = windows[ c ];
     w->discardTexture();
 #endif
-    }
-
-GLShader* SceneOpenGL::sceneShader() const
-    {
-    return m_sceneShader;
     }
 
 //****************************************
@@ -528,14 +454,12 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     int y = toplevel->y();
     double z = 0.0;
     bool sceneShader = false;
-    if (!data.shader && static_cast<SceneOpenGL*>(scene)->hasSceneShader()) {
+    if (!data.shader && ShaderManager::instance()->isValid()) {
         // set the shader for uniform initialising in paint decoration
         if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
-            data.shader = static_cast<SceneOpenGL*>(scene)->m_genericSceneShader;
-            data.shader->bind();
+            data.shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
         } else {
-            data.shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
-            data.shader->bind();
+            data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
             data.shader->setUniform("geometry", QVector4D(x, y, toplevel->width(), toplevel->height()));
         }
         sceneShader = true;
@@ -705,7 +629,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
 
     if( sceneShader )
         {
-        data.shader->unbind();
+        ShaderManager::instance()->popShader();
         data.shader = NULL;
         }
 #ifndef KWIN_HAVE_OPENGLES
@@ -1212,14 +1136,16 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 
     GLShader* shader = m_effectFrame->shader();
     bool sceneShader = false;
-    if( !shader && static_cast<SceneOpenGL*>(scene)->hasSceneShader() )
+    if( !shader && ShaderManager::instance()->isValid() )
         {
-        shader = static_cast<SceneOpenGL*>(scene)->m_sceneShader;
+        shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         sceneShader = true;
         }
     if( shader )
         {
-        shader->bind();
+        if (shader != ShaderManager::instance()->getBoundShader()) {
+            ShaderManager::instance()->pushShader(shader);
+        }
         if( sceneShader )
             shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
         shader->setUniform("saturation", 1.0f);
@@ -1495,8 +1421,9 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_textTexture->unbind();
         }
 
-    if( shader )
-        shader->unbind();
+    if (shader) {
+        ShaderManager::instance()->popShader();
+    }
     glDisable( GL_BLEND );
 #ifndef KWIN_HAVE_OPENGLES
     glPopMatrix();

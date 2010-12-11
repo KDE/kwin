@@ -51,10 +51,6 @@ class SceneOpenGL
         virtual void windowAdded( Toplevel* );
         virtual void windowClosed( Toplevel*, Deleted* );
         virtual void windowDeleted( Deleted* );
-        GLShader* sceneShader() const;
-        bool hasSceneShader() const {
-            return m_sceneShader != NULL && m_genericSceneShader != NULL && m_colorShader != NULL;
-        }
     protected:
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintBackground( QRegion region );
@@ -72,7 +68,6 @@ class SceneOpenGL
         bool selfCheck();
         void selfCheckSetup();
         bool selfCheckFinish();
-        bool setupSceneShaders();
         GC gcroot;
         class FBConfigInfo
             {
@@ -107,9 +102,6 @@ class SceneOpenGL
 #endif
         bool init_ok;
         bool selfCheckDone;
-        GLShader* m_sceneShader;
-        GLShader* m_genericSceneShader;
-        GLShader* m_colorShader;
         bool debug;
     };
 

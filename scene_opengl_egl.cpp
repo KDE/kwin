@@ -31,9 +31,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
     , selfCheckDone( true )
-    , m_sceneShader( NULL )
-    , m_genericSceneShader( NULL )
-    , m_colorShader( NULL )
     {
     if( !initRenderingContext() )
         return;
@@ -49,11 +46,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         return;
     }
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
-    if (!setupSceneShaders()) {
+    if (!ShaderManager::instance()->isValid()) {
         kError( 1212 ) << "Shaders not valid, ES compositing not possible";
         return;
     }
-
+    ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
 
     if( checkGLError( "Init" ))
         {
@@ -73,7 +70,6 @@ SceneOpenGL::~SceneOpenGL()
     eglDestroySurface( dpy, surface );
     eglTerminate( dpy );
     eglReleaseThread();
-    delete m_sceneShader;
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }
@@ -245,13 +241,18 @@ void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
             screenTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
         }
         screenTransformation.scale(data.xScale, data.yScale, data.zScale);
-        m_genericSceneShader->bind();
-        m_genericSceneShader->setUniform("screenTransformation", screenTransformation);
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+        shader->setUniform("screenTransformation", screenTransformation);
     } else if ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) || (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS)) {
-        m_genericSceneShader->bind();
-        m_genericSceneShader->setUniform("screenTransformation", QMatrix4x4());
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+        shader->setUniform("screenTransformation", QMatrix4x4());
     }
     Scene::paintGenericScreen(mask, data);
+    if ((mask & PAINT_SCREEN_TRANSFORMED) ||
+        (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) ||
+        (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS)) {
+        ShaderManager::instance()->popShader();
+    }
 }
 
 void SceneOpenGL::paintBackground(QRegion region)
@@ -278,8 +279,9 @@ void SceneOpenGL::paintBackground(QRegion region)
     vbo.setUseColor(true);
     vbo.setUseShader(true);
     vbo.setData(verts.count() / 2, 2, verts.data(), NULL);
-    m_colorShader->bind();
+    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
     vbo.render(GL_TRIANGLES);
+    ShaderManager::instance()->popShader();
 }
 
 //****************************************
