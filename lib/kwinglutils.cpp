@@ -1498,6 +1498,7 @@ class GLVertexBufferPrivate
         int dimension;
         bool useShader;
         static bool supported;
+        static GLVertexBuffer *streamingBuffer;
         QVector<float> legacyVertices;
         QVector<float> legacyTexCoords;
         bool useColor;
@@ -1508,6 +1509,7 @@ class GLVertexBufferPrivate
         void corePainting( const QRegion& region, GLenum primitiveMode );
     };
 bool GLVertexBufferPrivate::supported = false;
+GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 
 void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode )
     {
@@ -1721,6 +1723,16 @@ void GLVertexBuffer::setColor(const QColor& color, bool enable)
     d->color = color;
 }
 
+void GLVertexBuffer::reset()
+{
+    d->useColor       = false;
+    d->color          = QColor(0, 0, 0, 255);
+    d->numberVertices = 0;
+    d->dimension      = 2;
+    d->useShader      = false;
+    d->useTexCoords   = true;
+}
+
 void GLVertexBuffer::initStatic()
     {
 #ifdef KWIN_HAVE_OPENGLES
@@ -1728,8 +1740,13 @@ void GLVertexBuffer::initStatic()
 #else
     GLVertexBufferPrivate::supported = hasGLExtension( "GL_ARB_vertex_buffer_object" );
 #endif
+    GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
     }
 
+GLVertexBuffer *GLVertexBuffer::streamingBuffer()
+{
+    return GLVertexBufferPrivate::streamingBuffer;
+}
 
 } // namespace
 

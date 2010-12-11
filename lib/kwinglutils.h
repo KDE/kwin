@@ -62,7 +62,6 @@ void KWIN_EXPORT initGL();
 // Initializes EGL function pointers
 void KWIN_EXPORT initEGL();
 
-
 // Number of supported texture units
 extern KWIN_EXPORT int glTextureUnitsCount;
 
@@ -553,6 +552,13 @@ class KWIN_EXPORT GLVertexBuffer
         void setUseColor(bool enable);
 
         /**
+         * Resets the instance to default values.
+         * Useful for shared buffers.
+         * @since 4.7
+         **/
+        void reset();
+
+        /**
          * @internal
          */
         static void initStatic();
@@ -562,6 +568,12 @@ class KWIN_EXPORT GLVertexBuffer
          * @returns true if vertex buffer objects are supported
          */
         static bool isSupported();
+
+        /**
+         * @return A shared VBO for streaming data
+         * @since 4.7
+         **/
+        static GLVertexBuffer *streamingBuffer();
 
     private:
         GLVertexBufferPrivate* const d;
