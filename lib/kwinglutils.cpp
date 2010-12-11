@@ -1563,7 +1563,6 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
         glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
     }
 
-    // TODO: reenable paint clipper
     // Clip using scissoring
     PaintClipper pc( region );
     for( PaintClipper::Iterator iterator;
