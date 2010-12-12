@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#include <GL/gl.h>
+#include <kwinglutils.h>
 #include "../boxswitch/boxswitch_proxy.h"
 
 namespace KWin
@@ -129,6 +129,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         {
         if( effects->numScreens() > 1 )
             {
+#ifndef KWIN_HAVE_OPENGLES
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
             glMatrixMode( GL_PROJECTION );
@@ -180,6 +181,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glMatrixMode( GL_MODELVIEW );
             glPushMatrix();
             glTranslatef( xTranslate, yTranslate, 0.0 );
+#endif
             }
     
         QList< EffectWindow* > tempList = currentWindowList;
@@ -246,6 +248,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
         if( reflection )
             {
+#ifndef KWIN_HAVE_OPENGLES
             // restrict painting the reflections to the current screen
             QRegion clip = QRegion( area );
             PaintClipper::push( clip );
@@ -309,16 +312,19 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
             glPopMatrix();
             glDisable( GL_BLEND );
+#endif
             }
         paintScene( frontWindow, leftWindows, rightWindows );
 
         if( effects->numScreens() > 1 )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glPopMatrix();
             // revert change of projection matrix
             glMatrixMode( GL_PROJECTION );
             glPopMatrix();
             glMatrixMode( GL_MODELVIEW );
+#endif
             }
 
         // Render the caption frame
@@ -764,6 +770,7 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, bool reflectedWindow,
 
     if( reflectedWindow )
         {
+#ifndef KWIN_HAVE_OPENGLES
         glPushMatrix();
         glScalef( 1.0, -1.0, 1.0 );
         data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
@@ -771,6 +778,7 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, bool reflectedWindow,
             PAINT_WINDOW_TRANSFORMED,
             infiniteRegion(), data );
         glPopMatrix();
+#endif
         }
     else
         {
