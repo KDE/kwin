@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ios>
 
 #ifdef KWIN_HAVE_OPENGL
-#ifndef KWIN_HAVE_OPENGLES
 
 namespace KWin
 {
@@ -503,11 +502,13 @@ void GLPlatform::detect()
         m_mesaVersion = parseVersionString(version);
     }
 
+#ifdef KWIN_HAVE_OPENGLES
+    m_directRendering = true;
+    m_supportsGLSL = true;
+    m_textureNPOT = true;
+#else
     GLXContext ctx = glXGetCurrentContext();
     m_directRendering = glXIsDirect(display(), ctx);
-
-    m_serverVersion = getXServerVersion();
-    m_kernelVersion = getKernelVersion();
 
     m_supportsGLSL = m_extensions.contains("GL_ARB_shading_language_100") &&
                      m_extensions.contains("GL_ARB_shader_objects") &&
@@ -515,6 +516,10 @@ void GLPlatform::detect()
                      m_extensions.contains("GL_ARB_vertex_shader");
 
     m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+#endif
+
+    m_serverVersion = getXServerVersion();
+    m_kernelVersion = getKernelVersion();
 
     m_glslVersion = 0;
     m_glsl_version = QByteArray();
@@ -833,6 +838,5 @@ bool GLPlatform::isIntel() const
 
 } // namespace KWin
 
-#endif // KWIN_HAVE_OPENGLES
 #endif // KWIN_HAVE_OPENGL
 
