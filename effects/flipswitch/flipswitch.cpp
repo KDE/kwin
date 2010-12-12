@@ -236,6 +236,8 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         // TODO: move to kwinglutils
         if( effects->numScreens() > 1 )
             {
+            // TODO: GLES variant
+#ifndef KWIN_HAVE_OPENGLES
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop() );
             glMatrixMode( GL_PROJECTION );
@@ -287,6 +289,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             glMatrixMode( GL_MODELVIEW );
             glPushMatrix();
             glTranslatef( xTranslate, yTranslate, 0.0 );
+#endif
             }
 
         int winMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
@@ -399,11 +402,13 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 
         if( effects->numScreens() > 1 )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glPopMatrix();
             // revert change of projection matrix
             glMatrixMode( GL_PROJECTION );
             glPopMatrix();
             glMatrixMode( GL_MODELVIEW );
+#endif
             }
 
         if( m_windowTitle )
