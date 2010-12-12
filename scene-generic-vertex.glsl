@@ -1,6 +1,3 @@
-#ifdef GL_ES
-precision highp float;
-#endif
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform mat4 screenTransformation;

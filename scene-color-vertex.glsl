@@ -1,6 +1,3 @@
-#ifdef GL_ES
-precision highp float;
-#endif
 // size of the complete display in pixels, x==width, y==height
 uniform vec2 displaySize;
 // geometry of the window/texture to be rendered: x, y, width, height in display geometry
