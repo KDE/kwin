@@ -280,7 +280,8 @@ void SceneOpenGL::paintBackground(QRegion region)
     vbo->setUseColor(true);
     vbo->setUseShader(true);
     vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
-    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    shader->setUniform("offset", QVector2D(0, 0));
     vbo->render(GL_TRIANGLES);
     ShaderManager::instance()->popShader();
 }

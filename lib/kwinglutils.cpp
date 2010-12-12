@@ -545,10 +545,7 @@ void GLTexture::render( QRegion region, const QRect& rect, bool useShader )
         m_vbo->setData( 4, 2, verts, texcoords );
         }
     if (useShader) {
-        GLint currentProgram;
-        glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
-        GLint location = glGetUniformLocation(currentProgram, "geometry");
-        glUniform4f(location, rect.x(), rect.y(), 0.0f, 0.0f);
+        ShaderManager::instance()->getBoundShader()->setUniform("offset", QVector2D(rect.x(), rect.y()));
     } else {
 #ifndef KWIN_HAVE_OPENGLES
         glTranslatef( rect.x(), rect.y(), 0.0f );
@@ -1260,10 +1257,11 @@ void ShaderManager::resetShader(ShaderType type)
     // resetShader is either called from init or from push, we know that a built-in shader is bound
     GLShader *shader = getBoundShader();
     switch (type) {
-    case SimpleShader:
-        shader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-        // TODO: has to become offset
-        shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+    case SimpleShader: {
+        QMatrix4x4 projection;
+        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        shader->setUniform("projection", projection);
+        shader->setUniform("offset", QVector2D(0, 0));
         shader->setUniform("debug", 0);
         shader->setUniform("sample", 0);
         // TODO: has to become textureSize
@@ -1274,6 +1272,7 @@ void ShaderManager::resetShader(ShaderType type)
         shader->setUniform("brightness", 1.0f);
         shader->setUniform("saturation", 1.0f);
         break;
+    }
     case GenericShader: {
         shader->setUniform("debug", 0);
         shader->setUniform("sample", 0);
@@ -1305,12 +1304,14 @@ void ShaderManager::resetShader(ShaderType type)
         shader->setUniform("saturation", 1.0f);
         break;
     }
-    case ColorShader:
-        shader->setUniform("displaySize", QVector2D(displayWidth(), displayHeight()));
-        // TODO: has to become offset
-        shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+    case ColorShader: {
+        QMatrix4x4 projection;
+        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        shader->setUniform("projection", projection);
+        shader->setUniform("offset", QVector2D(0, 0));
         shader->setUniform("geometryColor", QVector4D(0, 0, 0, 1));
         break;
+    }
     }
 }
 

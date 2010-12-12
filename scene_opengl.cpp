@@ -457,7 +457,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
         } else {
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-            data.shader->setUniform("geometry", QVector4D(x, y, toplevel->width(), toplevel->height()));
+            data.shader->setUniform("offset", QVector2D(x, y));
         }
         sceneShader = true;
     }
@@ -1141,7 +1141,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             ShaderManager::instance()->pushShader(shader);
         }
         if( sceneShader )
-            shader->setUniform("geometry", QVector4D(0, 0, 0, 0));
+            shader->setUniform("offset", QVector2D(0, 0));
         shader->setUniform("saturation", 1.0f);
         shader->setUniform("brightness", 1.0f);
 
@@ -1282,7 +1282,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
         if (sceneShader) {
-            shader->setUniform("geometry", QVector4D(pt.x(), pt.y(), 0.0f, 0.0f));
+            shader->setUniform("geometry", QVector2D(pt.x(), pt.y()));
         } else {
 #ifndef KWIN_HAVE_OPENGLES
             glTranslatef( pt.x(), pt.y(), 0.0f );
