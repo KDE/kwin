@@ -115,7 +115,7 @@ QScriptValue chelationRegex(QScriptContext*, QScriptEngine*);
 QScriptValue lazyLogicGenerate(QScriptContext*, QScriptEngine*);
 QScriptValue lazyLogic(QScriptContext*, QScriptEngine*);
 
-};
-};
+}
+}
 
 #endif

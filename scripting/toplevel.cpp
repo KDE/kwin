@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "toplevel.h"
 
-Q_DECLARE_METATYPE(SWrapper::Toplevel*);
+Q_DECLARE_METATYPE(SWrapper::Toplevel*)
 
 SWrapper::Toplevel::Toplevel(KWin::Toplevel* tlevel)
     : QObject(tlevel)

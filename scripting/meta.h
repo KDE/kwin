@@ -36,8 +36,8 @@ namespace KWin
 namespace Chelate
 {
 QScriptValue lazyLogicGenerate(QScriptContext*, QScriptEngine*);
-};
-};
+}
+}
 
 Q_DECLARE_METATYPE(KClientRef)
 Q_DECLARE_METATYPE(QPoint)

@@ -80,6 +80,6 @@ class WorkspaceProxy : public QObject
         void clientSetKeepAbove(KWin::Client*, bool);
     };
 
-};
+}
 
 #endif

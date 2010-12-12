@@ -98,7 +98,7 @@ enum Driver {
     Driver_Swrast,
     Driver_Softpipe,
     Driver_Llvmpipe,
-    Driver_Unknown,
+    Driver_Unknown
 };
 
 enum ChipClass {

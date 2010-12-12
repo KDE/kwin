@@ -92,6 +92,6 @@ class Workspace : public QObject
         static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
     };
 
-};
+}
 
 #endif
