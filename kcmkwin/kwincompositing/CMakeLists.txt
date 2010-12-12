@@ -18,14 +18,17 @@ target_link_libraries(kcm_kwincompositing ${KDE4_KCMUTILS_LIBS} ${KDE4_KDEUI_LIB
 install(TARGETS kcm_kwincompositing  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 # CompositingPrefs uses OpenGL
-if(OPENGL_FOUND)
+if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
   target_link_libraries(kcm_kwincompositing ${OPENGL_gl_LIBRARY})
-# -ldl used by OpenGL code
+  # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
     target_link_libraries(kcm_kwincompositing ${DL_LIBRARY})
   endif(DL_LIBRARY)
-endif(OPENGL_FOUND)
+endif(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
+if(KWIN_HAVE_OPENGLES_COMPOSITING)
+  target_link_libraries(kcm_kwincompositing ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
+endif(KWIN_HAVE_OPENGLES_COMPOSITING)
 if (X11_Xrender_FOUND)
   target_link_libraries(kcm_kwincompositing ${X11_Xrender_LIB})
 endif (X11_Xrender_FOUND)
