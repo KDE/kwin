@@ -516,6 +516,12 @@ void FlipSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, W
         if( w->isDesktop() )
             {
             // desktop is painted in normal way
+            if( m_windows.contains( w ) )
+                {
+                m_windows[ w ]->opacity = data.opacity;
+                m_windows[ w ]->brightness = data.brightness;
+                m_windows[ w ]->saturation = data.saturation;
+                }
             effects->paintWindow( w, mask, region, data );
             return;
             }
@@ -811,8 +817,11 @@ bool FlipSwitchEffect::borderActivated(ElectricBorder border)
 
 bool FlipSwitchEffect::isSelectableWindow( EffectWindow* w ) const
     {
-    if( w->isSpecialWindow() || w->isUtility() )
+    // desktop windows might be included
+    if( (w->isSpecialWindow() && !w->isDesktop()) || w->isUtility() )
         return false;
+    if( w->isDesktop() )
+        return (m_mode == TabboxMode && effects->currentTabBoxWindowList().contains( w ));
     if( w->isDeleted() )
         return false;
     if( !w->acceptsFocus() )
