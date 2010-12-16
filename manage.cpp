@@ -556,7 +556,6 @@ bool Client::manage( Window w, bool isMapped )
                 /*
                  * If we get a new window during session saving, we assume it's some 'save file?' dialog
                  * which the user really needs to see (to know why logout's stalled).
-                 * We also assume it'll be destroyed when it's done - we never unset this flag.
                  *
                  * Given the current session management protocol, I can't see a nicer way of doing this.
                  * Someday I'd like to see a protocol that tells the windowmanager who's doing SessionInteract.
