@@ -207,7 +207,7 @@ bool Client::manage( Window w, bool isMapped )
             desk = info->desktop(); // Window had the initial desktop property, force it
         if( desktop() == 0 && asn_valid && asn_data.desktop() != 0 )
             desk = asn_data.desktop();
-        if (!isMapped && !noborder && isNormalWindow() && isOnAllActivities()) {
+        if (!isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
             //TODO: decide whether to keep this before the 4.6 release
@@ -551,10 +551,33 @@ bool Client::manage( Window w, bool isMapped )
         else
             allow = workspace()->allowClientActivation( this, userTime(), false );
 
-        // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
-        // also force if activation is allowed
-        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving() ))
-            workspace()->setCurrentDesktop( desktop() );
+        if (!(isMapped || session)) {
+            if (workspace()->sessionSaving()) {
+                /*
+                 * If we get a new window during session saving, we assume it's some 'save file?' dialog
+                 * which the user really needs to see (to know why logout's stalled).
+                 * We also assume it'll be destroyed when it's done - we never unset this flag.
+                 *
+                 * Given the current session management protocol, I can't see a nicer way of doing this.
+                 * Someday I'd like to see a protocol that tells the windowmanager who's doing SessionInteract.
+                 */
+                needsSessionInteract = true;
+                //show the parent too
+                ClientList mainclients = mainClients();
+                for( ClientList::ConstIterator it = mainclients.constBegin();
+                    it != mainclients.constEnd(); ++it ) {
+                    (*it)->setSessionInteract(true);
+                }
+            } else if (allow) {
+                // also force if activation is allowed
+                if( !isOnCurrentDesktop() ) {
+                    workspace()->setCurrentDesktop( desktop() );
+                }
+                /*if (!isOnCurrentActivity()) {
+                    workspace()->setCurrentActivity( activities().first() );
+                } FIXME no such method*/
+            }
+        }
 
         bool belongs_to_desktop = false;
         for( ClientList::ConstIterator it = group()->members().constBegin();

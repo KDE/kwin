@@ -400,6 +400,9 @@ class Client
 
         TabBox::TabBoxClientImpl* tabBoxClient() const { return m_tabBoxClient; }
 
+        //sets whether the client should be treated as a SessionInteract window
+        void setSessionInteract(bool needed);
+
     private slots:
         void autoRaise();
         void shadeHover();
@@ -694,6 +697,9 @@ class Client
         friend class SWrapper::Client;
 
         void checkActivities();
+        bool activitiesDefined; //whether the x property was actually set
+
+        bool needsSessionInteract;
     };
 
 /**

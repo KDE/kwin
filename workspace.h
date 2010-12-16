@@ -1246,11 +1246,6 @@ inline void Workspace::sessionSaveStarted()
     session_saving = true;
     }
 
-inline void Workspace::sessionSaveDone()
-    {
-    session_saving = false;
-    }
-
 inline bool Workspace::sessionSaving() const
     {
     return session_saving;

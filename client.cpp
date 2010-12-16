@@ -128,6 +128,8 @@ Client::Client( Workspace* ws )
     , demandAttentionKNotifyTimer( NULL )
     , paintRedirector( 0 )
     , electricMaximizing( false )
+    , activitiesDefined( false )
+    , needsSessionInteract(false)
     { // TODO: Do all as initialization
     
     scriptCache = new QHash<QScriptEngine*, ClientResolution>();
@@ -1606,9 +1608,12 @@ void Client::updateActivities( bool includeTransients )
  * isOnDesktop() instead.
  */
 int Client::desktop() const
-    {
-    return desk;
+{
+    if (needsSessionInteract) {
+        return NET::OnAllDesktops;
     }
+    return desk;
+}
 
 /**
  * Returns the list of activities the client window is on.
@@ -1617,6 +1622,9 @@ int Client::desktop() const
  */
 QStringList Client::activities() const
     {
+    if (needsSessionInteract) {
+        return QStringList();
+    }
     return activityList;
     }
 
@@ -1646,7 +1654,8 @@ void Client::setOnAllActivities( bool on )
     if( on )
         {
         activityList.clear();
-        XDeleteProperty( display(), window(), atoms->activities );
+        XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
+                        PropModeReplace, (const unsigned char *)"ALL", 3);
         updateActivities( true );
         }
     else
@@ -2247,9 +2256,25 @@ void Client::checkActivities()
     {
     QStringList newActivitiesList;
     QByteArray prop = getStringProperty(window(), atoms->activities);
-    if ( ! prop.isEmpty() )
-        newActivitiesList = QString(prop).split(',');
+    activitiesDefined = !prop.isEmpty();
+    if (prop == "ALL") {
+        //copied from setOnAllActivities to avoid a redundant XChangeProperty.
+        if (!activityList.isEmpty()) {
+            activityList.clear();
+            updateActivities( true );
+        }
+        return;
+    }
+    if (prop.isEmpty()) {
+        //note: this makes it *act* like it's on all activities but doesn't set the property to 'ALL'
+        if (!activityList.isEmpty()) {
+            activityList.clear();
+            updateActivities( true );
+        }
+        return;
+    }
 
+    newActivitiesList = QString(prop).split(',');
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.
 
@@ -2271,6 +2296,11 @@ void Client::checkActivities()
         }
     setOnActivities( newActivitiesList );
     }
+
+void Client::setSessionInteract(bool needed)
+{
+    needsSessionInteract = needed;
+}
 
 } // namespace
 
