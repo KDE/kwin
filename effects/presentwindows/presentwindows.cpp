@@ -1741,10 +1741,15 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         return false;
     if( w == effects->findWindow( m_closeView->winId() ) )
         return false;
+    if( m_tabBoxEnabled )
+        return true;
+    if ( m_ignoreMinimized && w->isMinimized() )
+        return false;
     switch( m_mode )
         {
+        default:
         case ModeAllDesktops:
-            break;
+            return true;
         case ModeCurrentDesktop:
             return w->isOnCurrentDesktop();
         case ModeSelectedDesktop:
@@ -1754,9 +1759,6 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         case ModeWindowClass:
             return m_class == w->windowClass();
         }
-    if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
-        return false;
-    return true;
     }
 
 bool PresentWindowsEffect::isVisibleWindow( EffectWindow *w )
