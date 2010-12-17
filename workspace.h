@@ -450,8 +450,8 @@ class Workspace : public QObject, public KDecorationDefines
         void toggleTiling();
         void nextTileLayout();
         void previousTileLayout();
-        void stopActivity( const QString &id );
-        void startActivity( const QString &id );
+        bool stopActivity( const QString &id );
+        bool startActivity( const QString &id );
 
         void setCurrentScreen( int new_screen );
 

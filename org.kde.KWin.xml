@@ -75,9 +75,11 @@
     <method name="dumpTiles"/>
     <method name="stopActivity">
       <arg type="s" direction="in"/>
+      <arg type="b" direction="out"/>
     </method>
     <method name="startActivity">
       <arg type="s" direction="in"/>
+      <arg type="b" direction="out"/>
     </method>
   </interface>
 </node>

@@ -205,11 +205,17 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     //cg.writeEntry( "desktop", currentDesktop());
     }
 
-void Workspace::stopActivity(const QString &id)
-    {
-        //ugly hack to avoid dbus deadlocks
-        QMetaObject::invokeMethod(this, "reallyStopActivity", Qt::QueuedConnection, Q_ARG(QString, id));
+bool Workspace::stopActivity(const QString &id)
+{
+    if (sessionSaving()) {
+        return false; //ksmserver doesn't queue requests (yet)
+        //FIXME what about session *loading*?
     }
+    //ugly hack to avoid dbus deadlocks
+    QMetaObject::invokeMethod(this, "reallyStopActivity", Qt::QueuedConnection, Q_ARG(QString, id));
+    //then lie and assume it worked.
+    return true;
+}
 
 void Workspace::reallyStopActivity(const QString &id)
     {
@@ -335,25 +341,30 @@ void Workspace::loadSubSessionInfo(const QString &name)
     addSessionInfo(cg);
     }
 
-void Workspace::startActivity(const QString &id)
-    {
-    if (!allActivities_.contains(id))
-        return; //bogus id
+bool Workspace::startActivity(const QString &id)
+{
+    if (sessionSaving()) {
+        return false; //ksmserver doesn't queue requests (yet)
+    }
+    if (!allActivities_.contains(id)) {
+        return false; //bogus id
+    }
 
     loadSubSessionInfo(id);
 
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
-    if (ksmserver.isValid())
-        {
+    if (ksmserver.isValid()) {
         QDBusMessage reply = ksmserver.call("restoreSubSession", id);
-        if (reply.type() == QDBusMessage::ErrorMessage)
+        if (reply.type() == QDBusMessage::ErrorMessage) {
             kDebug() << "dbus error:" << reply.errorMessage();
-        else
-            kDebug() << "dbus succeeded";
+            return false;
         }
-    else
+    } else {
         kDebug() << "couldn't get ksmserver interface";
+        return false;
     }
+    return true;
+}
 
 /*!
   Returns a SessionInfo for client \a c. The returned session
