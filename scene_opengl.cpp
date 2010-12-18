@@ -461,7 +461,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
         sceneShader = true;
     }
-    if (mask & PAINT_WINDOW_TRANSFORMED) {
+    if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
         x += data.xTranslate;
         y += data.yTranslate;
         z += data.zTranslate;
