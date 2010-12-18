@@ -269,6 +269,11 @@ class KWIN_EXPORT GLShader
          * @since 4.7
          */
         void bindAttributeLocation(int index, const char* name);
+        /**
+         * @return The value of the uniform as a matrix
+         * @since 4.7
+         **/
+        QMatrix4x4 getUniformMatrix4x4(const char* name);
 
         void setTextureWidth( float width );
         void setTextureHeight( float height );

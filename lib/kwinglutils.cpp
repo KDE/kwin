@@ -1096,6 +1096,23 @@ void GLShader::bindAttributeLocation(int index, const char* name)
     // TODO: relink the shader
     }
 
+QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
+{
+    int location = uniformLocation(name);
+    if (location >= 0) {
+        GLfloat m[16];
+        glGetUniformfv(mProgram, location, m);
+        QMatrix4x4 matrix(m[0], m[1],  m[2], m[3],
+                          m[4], m[5],  m[6], m[7],
+                          m[8], m[9], m[10], m[11],
+                          m[12], m[13], m[14], m[15]);
+        matrix.optimize();
+        return matrix;
+    } else {
+        return QMatrix4x4();
+    }
+}
+
 //****************************************
 // ShaderManager
 //****************************************
