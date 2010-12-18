@@ -365,6 +365,7 @@ class Options : public KDecorationOptions
         // XRender
         bool xrenderSmoothScale;
 
+        uint maxFpsInterval;
         // Settings that should be auto-detected
         uint refreshRate;
         bool glDirect;

@@ -774,6 +774,7 @@ class Workspace : public QObject, public KDecorationDefines
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
+        void timerEvent( QTimerEvent *te );
 
     Q_SIGNALS:
         Q_SCRIPTABLE void compositingToggled( bool active );
@@ -1058,11 +1059,10 @@ class Workspace : public QObject, public KDecorationDefines
 
         KSelectionOwner* cm_selection;
         bool compositingSuspended;
-        QTimer compositeTimer;
-        QTime lastCompositePaint;
+        int compositeTimer;
         QTime nextPaintReference;
         QTimer mousePollingTimer;
-        int compositeRate;
+        uint vBlankInterval;
         int xrrRefreshRate; // used only for compositing
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
@@ -1348,7 +1348,7 @@ inline bool Workspace::hasClient( const Client* c )
 
 inline void Workspace::checkCompositeTimer()
     {
-    if( !compositeTimer.isActive() )
+    if( !compositeTimer )
         setCompositeTimer();
     }
 

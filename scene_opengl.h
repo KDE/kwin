@@ -90,6 +90,8 @@ class SceneOpenGL
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
         static bool tfp_mode;
         static bool shm_mode;
+        static uint vBlankInterval, estimatedRenderTime;
+        static QTime lastVBlank;
         QHash< Toplevel*, Window* > windows;
 #ifdef HAVE_XSHM
         static XShmSegmentInfo shm;

@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 
 #include <QMenu>
+#include <QTimerEvent>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
@@ -197,12 +198,9 @@ void Workspace::setupCompositing()
         delete cm_selection;
         return;
         }
-    int rate = xrrRefreshRate = KWin::currentRefreshRate();
-    compositeRate = 1000 / rate;
-    lastCompositePaint.start();
-    // fake a previous paint, so that the next starts right now
-    nextPaintReference = QTime::currentTime().addMSecs( -compositeRate );
-    compositeTimer.setSingleShot( true );
+    xrrRefreshRate = KWin::currentRefreshRate();
+    // invalidate timer -> bounds delay to 0 and the update happens instantly
+    nextPaintReference = QTime::currentTime().addMSecs( -1000 );
     checkCompositeTimer();
     composite_paint_times.clear();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
@@ -253,7 +251,9 @@ void Workspace::finishCompositing()
     effects = NULL;
     delete scene;
     scene = NULL;
-    compositeTimer.stop();
+    if (compositeTimer)
+        killTimer(compositeTimer);
+    compositeTimer = 0;
     mousePollingTimer.stop();
     repaints_region = QRegion();
     for( ClientList::ConstIterator it = clients.constBegin();
@@ -370,24 +370,27 @@ void Workspace::addRepaintFull()
     checkCompositeTimer();
     }
 
+void Workspace::timerEvent( QTimerEvent *te )
+{
+    if ( te->timerId() == compositeTimer )
+    {
+        killTimer( compositeTimer );
+        compositeTimer = 0;
+        performCompositing();
+    }
+    else
+        QObject::timerEvent( te );
+}
+
 void Workspace::performCompositing()
     {
 #ifdef KWIN_HAVE_COMPOSITING
-    // The event loop apparently tries to fire a QTimer as often as possible, even
-    // at the expense of not processing many X events. This means that the composite
-    // repaints can seriously impact performance of everything else, therefore throttle
-    // them - leave at least 1msec time after one repaint is finished and next one
-    // is started.
-    if( lastCompositePaint.elapsed() < 1 )
-        {
-        compositeTimer.start( 1 );
-        return;
-        }
-    if( !scene->waitSyncAvailable())
-        nextPaintReference = QTime::currentTime();
     if((( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         || !overlay_visible )) // nothing is visible anyway
         {
+        // invalidate timer, we're idle, thus have already waited maxFps don't want to
+        // wait more when we woke up
+        nextPaintReference = QTime::currentTime().addMSecs( -1000 );
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
@@ -395,6 +398,8 @@ void Workspace::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
         }
+    // we paint now, how much time ever it takes, we wanna show up in maxfps from now
+    nextPaintReference = QTime::currentTime();
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
     foreach( EffectWindow* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
@@ -403,19 +408,16 @@ void Workspace::performCompositing()
         windows.removeAll( t );
         windows.append( t );
         }
+#if 0
     // skip windows that are not yet ready for being painted
     ToplevelList tmp = windows;
     windows.clear();
-#if 0
     // There is a bug somewhere that prevents this from working properly (#160393), but additionally
     // this cannot be used so carelessly - needs protections against broken clients, the window
     // should not get focus before it's displayed, handle unredirected windows properly and so on.
     foreach( Toplevel* c, tmp )
         if( c->readyForPainting())
             windows.append( c );
-#else
-    foreach( Toplevel* c, tmp )
-        windows.append( c );
 #endif
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
@@ -423,7 +425,7 @@ void Workspace::performCompositing()
           // TODO I think effects->transformWindowDamage() doesn't need to be called here,
           // pre-paint will extend painted window areas as necessary.
         repaints_region |= c->repaints().translated( c->pos());
-        repaints_region |= c->decorationPendingRegion();        
+        repaints_region |= c->decorationPendingRegion();
         c->resetRepaints( c->decorationRect());
         }
     QRegion repaints = repaints_region;
@@ -431,23 +433,12 @@ void Workspace::performCompositing()
     repaints_region = QRegion();
     QTime t = QTime::currentTime();
     scene->paint( repaints, windows );
-    if( scene->waitSyncAvailable())
-        {
-        // If vsync is used, schedule the next repaint slightly in advance of the next sync,
-        // so that there is still time for the drawing to take place. We have just synced, and
-        // nextPaintReference is time from which multiples of compositeRate should be added,
-        // so set it 10ms back (meaning next paint will be in 'compositeRate - 10').
-        // However, make sure the reserve is smaller than the composite rate.
-        int reserve = compositeRate <= 10 ? compositeRate - 1 : 10;
-        nextPaintReference = QTime::currentTime().addMSecs( -reserve );
-        }
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // checkCompositeTime() would restart it again somewhen later, called from functions that
     // would again add something pending.
     checkCompositeTimer();
     checkCompositePaintTime( t.elapsed());
-    lastCompositePaint.start();
 #endif
     }
 
@@ -477,9 +468,11 @@ void Workspace::setCompositeTimer()
     {
     if( !compositing()) // should not really happen, but there may be e.g. some damage events still pending
         return;
-    // The last paint set nextPaintReference as a reference time to which multiples of compositeRate
     // should be added for the next paint. qBound() for protection; system time can change without notice.
-    compositeTimer.start( qBound( 0, nextPaintReference.msecsTo( QTime::currentTime() ), 250 ) % compositeRate );
+    if ( compositeTimer )
+        killTimer( compositeTimer );
+    int delay = options->maxFpsInterval - (qBound( 0, nextPaintReference.msecsTo( QTime::currentTime() ), 250 ) % options->maxFpsInterval);
+    compositeTimer = startTimer( delay );
     }
 
 void Workspace::startMousePolling()
@@ -567,7 +560,9 @@ void Workspace::checkCompositePaintTime( int msec )
                 "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
                 "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects).", shortcut );
         Notify::raise( Notify::CompositingSlow, message );
-        compositeTimer.start( 1000 ); // so that it doesn't trigger sooner than suspendCompositing()
+        if ( compositeTimer )
+            killTimer( compositeTimer );
+        compositeTimer = startTimer( 1000 ); // so that it doesn't trigger sooner than suspendCompositing()
         }
     }
 

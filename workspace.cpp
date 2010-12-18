@@ -151,7 +151,8 @@ Workspace::Workspace( bool restore )
     , forced_global_mouse_grab( false )
     , cm_selection( NULL )
     , compositingSuspended( false )
-    , compositeRate( 0 )
+    , compositeTimer( 0 )
+    , vBlankInterval( 0 )
     , xrrRefreshRate( 0 )
     , overlay( None )
     , overlay_visible( true )
@@ -384,7 +385,6 @@ void Workspace::init()
 
     connect( &reconfigureTimer, SIGNAL( timeout() ), this, SLOT( slotReconfigure() ));
     connect( &updateToolWindowsTimer, SIGNAL( timeout() ), this, SLOT( slotUpdateToolWindows() ));
-    connect( &compositeTimer, SIGNAL( timeout() ), SLOT( performCompositing() ));
     connect( &mousePollingTimer, SIGNAL( timeout() ), SLOT( performMousePoll() ));
 
     connect( KGlobalSettings::self(), SIGNAL( appearanceChanged() ), this, SLOT( reconfigure() ));

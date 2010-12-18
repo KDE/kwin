@@ -66,9 +66,11 @@ int currentRefreshRate()
             {
             QString reply = QString::fromLocal8Bit( nvidia_settings.readAllStandardOutput() );
             bool ok;
-            rate = reply.split(' ').first().split(KGlobal::locale()->decimalSymbol()).first().toUInt( &ok );
+            const float frate = reply.split(' ').first().toFloat( &ok );
             if ( !ok )
                 rate = -1;
+            else
+                rate = qRound(frate);
             }
         }
 #ifdef HAVE_XRANDR
@@ -247,6 +249,7 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
     config=KConfigGroup(_config,"Compositing");
+    maxFpsInterval = qRound(1000.0/config.readEntry( "MaxFPS", 35 ));
     refreshRate = config.readEntry( "RefreshRate", 0 );
 
     // Read button tooltip animation effect from kdeglobals
