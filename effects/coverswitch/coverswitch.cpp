@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QMatrix4x4>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>
@@ -248,14 +249,15 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
         if( reflection )
             {
-#ifndef KWIN_HAVE_OPENGLES
             // restrict painting the reflections to the current screen
             QRegion clip = QRegion( area );
             PaintClipper::push( clip );
             // no reflections during start and stop animation
-            if( !start && !stop )
+            // except when using a shader
+            if( (!start && !stop) || ShaderManager::instance()->isValid() )
                 paintScene( frontWindow, leftWindows, rightWindows, true );
             PaintClipper::pop( clip );
+#ifndef KWIN_HAVE_OPENGLES
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
             glPolygonMode( GL_FRONT, GL_FILL );
@@ -770,15 +772,34 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, bool reflectedWindow,
 
     if( reflectedWindow )
         {
+        if (ShaderManager::instance()->isValid()) {
+            GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+            QMatrix4x4 origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+            QMatrix4x4 reflectionMatrix;
+            reflectionMatrix.scale(1.0, -1.0, 1.0);
+            shader->setUniform("screenTransformation", origMatrix*reflectionMatrix);
+            data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
+            if (start) {
+                data.opacity *= timeLine.value();
+            } else if (stop) {
+                data.opacity *= 1.0 - timeLine.value();
+            }
+            effects->paintWindow( w,
+                PAINT_WINDOW_TRANSFORMED,
+                infiniteRegion(), data );
+            shader->setUniform("screenTransformation", origMatrix);
+            ShaderManager::instance()->popShader();
+        } else {
 #ifndef KWIN_HAVE_OPENGLES
-        glPushMatrix();
-        glScalef( 1.0, -1.0, 1.0 );
-        data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
-        effects->paintWindow( w,
-            PAINT_WINDOW_TRANSFORMED,
-            infiniteRegion(), data );
-        glPopMatrix();
+            glPushMatrix();
+            glScalef( 1.0, -1.0, 1.0 );
+            data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
+            effects->paintWindow( w,
+                PAINT_WINDOW_TRANSFORMED,
+                infiniteRegion(), data );
+            glPopMatrix();
 #endif
+        }
         }
     else
         {
