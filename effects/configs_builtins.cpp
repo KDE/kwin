@@ -39,11 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include "cube/cube_config.h"
+#include "cube/cubeslide_config.h"
 #ifndef KWIN_HAVE_OPENGLES
 #include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
-#include "cube/cube_config.h"
-#include "cube/cubeslide_config.h"
 #include "flipswitch/flipswitch_config.h"
 #include "glide/glide_config.h"
 #include "invert/invert_config.h"
@@ -81,11 +81,11 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
 #endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
 #ifndef KWIN_HAVE_OPENGLES
     KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( flipswitch, FlipSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( glide, GlideEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )

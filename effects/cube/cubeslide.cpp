@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#include <GL/gl.h>
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -81,18 +81,27 @@ void CubeSlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     {
     if( !slideRotations.empty() )
         {
+#ifdef KWIN_HAVE_OPENGLES
+        glEnable( GL_CULL_FACE );
+        glCullFace( GL_FRONT );
+        paintSlideCube( mask, region, data );
+        glCullFace( GL_BACK );
+        paintSlideCube( mask, region, data );
+        glDisable( GL_CULL_FACE );
+#else
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_CULL_FACE );
-        glCullFace( GL_BACK );
+        glCullFace( GL_FRONT );
         glPushMatrix();
         paintSlideCube( mask, region, data );
         glPopMatrix();
-        glCullFace( GL_FRONT );
+        glCullFace( GL_BACK );
         glPushMatrix();
         paintSlideCube( mask, region, data );
         glPopMatrix();
         glDisable( GL_CULL_FACE );
         glPopAttrib();
+#endif
         if( dontSlidePanels )
             {
             foreach( EffectWindow* w, panels )

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
+#include <QMatrix4x4>
 #include "cube_inside.h"
 #include "cube_proxy.h"
 
@@ -167,6 +168,8 @@ class CubeEffect
         bool capListCreated;
         bool recompileList;
         GLuint glList;
+        QMatrix4x4 m_rotationMatrix;
+        QMatrix4x4 m_reflectionMatrix;
 
         // Shortcuts - needed to toggle the effect
         KShortcut cubeShortcut;
