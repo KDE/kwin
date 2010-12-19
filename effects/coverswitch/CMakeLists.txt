@@ -11,6 +11,11 @@ install( FILES
     coverswitch/coverswitch.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
+install( FILES
+    coverswitch/coverswitch-reflection.glsl
+    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+
+
 #######################################
 # Config
 

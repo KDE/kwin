@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kapplication.h>
 #include <kcolorscheme.h>
 #include <kconfiggroup.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
 
 #include <kwinglutils.h>
 
@@ -65,11 +67,15 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setPointSize( captionFont.pointSize() * 2 );
     captionFrame->setFont( captionFont );
     captionFrame->enableCrossFade( true );
+
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
+    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
     {
     delete captionFrame;
+    delete m_reflectionShader;
     }
 
 bool CoverSwitchEffect::supported()
@@ -257,33 +263,28 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             if( (!start && !stop) || ShaderManager::instance()->isValid() )
                 paintScene( frontWindow, leftWindows, rightWindows, true );
             PaintClipper::pop( clip );
-#ifndef KWIN_HAVE_OPENGLES
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
+#ifndef KWIN_HAVE_OPENGLES
             glPolygonMode( GL_FRONT, GL_FILL );
-            glPushMatrix();
+#endif
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float reflectionScaleFactor = 100000 * tan( 60.0 * M_PI / 360.0f )/area.width();
-            if( effects->numScreens() > 1 && area.x() != fullRect.x() )
-                {
-                // have to change the reflection area in horizontal layout and right screen
-                glTranslatef( -area.x(), 0.0, 0.0 );
-                }
-            glTranslatef( area.x() + area.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
                 -area.width()*0.5f, area.height(), 0.0,
                 area.width()*0.5f, area.height(), 0.0,
                 (float)area.width()*reflectionScaleFactor, area.height(), -5000,
                 -(float)area.width()*reflectionScaleFactor, area.height(), -5000 };
             // foreground
-            if( start )
+            if (start) {
                 mirrorColor[0][3] = timeLine.value();
-            else if( stop )
+            } else if (stop) {
                 mirrorColor[0][3] = 1.0 - timeLine.value();
-            glColor4fv( mirrorColor[0] );
-            mirrorColor[0][3] = 1.0;
+            } else {
+                mirrorColor[0][3] = 1.0;
+            }
 
             int y = 0;
             // have to adjust the y values to fit OpenGL
@@ -302,19 +303,67 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             // use scissor to restrict painting of the reflection plane to current screen
             glScissor( area.x(), y, area.width(), area.height() );
             glEnable( GL_SCISSOR_TEST );
-            glBegin( GL_POLYGON );
-            glVertex3f( vertices[0], vertices[1], vertices[2] );
-            glVertex3f( vertices[3], vertices[4], vertices[5] );
-            // rearground
-            glColor4fv( mirrorColor[1] );
-            glVertex3f( vertices[6], vertices[7], vertices[8] );
-            glVertex3f( vertices[9], vertices[10], vertices[11] );
-            glEnd();
-            glDisable( GL_SCISSOR_TEST );
 
-            glPopMatrix();
-            glDisable( GL_BLEND );
+            ShaderManager *shaderManager = ShaderManager::instance();
+            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+                shaderManager->pushShader(m_reflectionShader);
+                QMatrix4x4 windowTransformation;
+                if (effects->numScreens() > 1 && area.x() != fullRect.x()) {
+                    // have to change the reflection area in horizontal layout and right screen
+                    windowTransformation.translate(-area.x(), 0.0, 0.0);
+                }
+                windowTransformation.translate(area.x() + area.width()*0.5f, 0.0, 0.0);
+                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform("u_frontColor", QVector4D(mirrorColor[0][0], mirrorColor[0][1], mirrorColor[0][2], mirrorColor[0][3]));
+                m_reflectionShader->setUniform("u_backColor", QVector4D(mirrorColor[1][0], mirrorColor[1][1], mirrorColor[1][2], mirrorColor[1][3]));
+                // TODO: make this one properly
+                QVector<float> verts;
+                QVector<float> texcoords;
+                verts.reserve(18);
+                texcoords.reserve(12);
+                texcoords << 1.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[9] << vertices[10] << vertices[11];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[3] << vertices[4] << vertices[5];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setUseShader(true);
+                vbo->setData(6, 3, verts.data(), texcoords.data());
+                vbo->render(GL_TRIANGLES);
+
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glPushMatrix();
+                if( effects->numScreens() > 1 && area.x() != fullRect.x() )
+                    {
+                    // have to change the reflection area in horizontal layout and right screen
+                    glTranslatef( -area.x(), 0.0, 0.0 );
+                    }
+                glTranslatef( area.x() + area.width()*0.5f, 0.0, 0.0 );
+                glColor4fv( mirrorColor[0] );
+                glBegin( GL_POLYGON );
+                glVertex3f( vertices[0], vertices[1], vertices[2] );
+                glVertex3f( vertices[3], vertices[4], vertices[5] );
+                // rearground
+                glColor4fv( mirrorColor[1] );
+                glVertex3f( vertices[6], vertices[7], vertices[8] );
+                glVertex3f( vertices[9], vertices[10], vertices[11] );
+                glEnd();
+
+                glPopMatrix();
 #endif
+            }
+            glDisable( GL_SCISSOR_TEST );
+            glDisable( GL_BLEND );
             }
         paintScene( frontWindow, leftWindows, rightWindows );
 

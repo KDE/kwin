@@ -102,6 +102,8 @@ class CoverSwitchEffect
 
         bool primaryTabBox;
         bool secondaryTabBox;
+
+        GLShader *m_reflectionShader;
     };
 
 } // namespace
