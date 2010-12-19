@@ -170,7 +170,7 @@ void LanczosShader::createOffsets( int count, float width, Qt::Orientation direc
 void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == KWin::OpenGLCompositing &&
+    if( effects->compositingType() == KWin::OpenGLCompositing && data.opacity == 1.0 &&
         KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects )
         {
         if (!m_inited)
@@ -216,7 +216,6 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
                 if( cachedTexture->width() == tw && cachedTexture->height() == th )
                     {
                     cachedTexture->bind();
-                    data.opacity *= 0.99;
                     prepareRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
                     cachedTexture->render( textureRect, textureRect );
                     restoreRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
@@ -361,7 +360,7 @@ void LanczosFilter::timerEvent( QTimerEvent *event )
 void LanczosFilter::prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    const bool alpha = false; // true; WORKAROUND - "true" causes issues with at least nvidia chips and translucent windows "overbrightning"
+    const bool alpha = true;
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     glEnable( GL_BLEND );
