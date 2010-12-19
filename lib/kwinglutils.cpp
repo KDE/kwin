@@ -1223,6 +1223,29 @@ void ShaderManager::popShader()
     }
 }
 
+GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
+{
+    QString vertexShader;
+    switch (vertex) {
+    case SimpleShader:
+        vertexShader = ":/resources/scene-vertex.glsl";
+        break;
+    case GenericShader:
+        vertexShader = ":/resources/scene-generic-vertex.glsl";
+        break;
+    case ColorShader:
+        vertexShader = ":/resources/scene-color-vertex.glsl";
+        break;
+    }
+    GLShader *shader = new GLShader(vertexShader, fragmentFile);
+    if (shader->isValid()) {
+        pushShader(shader);
+        resetShader(vertex);
+        popShader();
+    }
+    return shader;
+}
+
 void ShaderManager::initShaders()
 {
     m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");

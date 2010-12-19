@@ -389,6 +389,14 @@ class KWIN_EXPORT ShaderManager
         void popShader();
 
         /**
+         * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
+         * @param vertex The generic vertex shader
+         * @param fragmentFile The path to the source code of the fragment shader
+         * @return The created shader
+         **/
+        GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
+
+        /**
          * @return a pointer to the ShaderManager instance
          **/
         static ShaderManager *instance();
