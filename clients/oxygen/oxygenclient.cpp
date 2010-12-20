@@ -240,7 +240,7 @@ namespace Oxygen
         if( configuration().frameBorder() == Configuration::BorderNone && !isShade() )
         {
 
-            if( configuration().hideTitleBar() ) mask = QRegion();
+            if( hideTitleBar() ) mask = QRegion();
             else if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame, 1, 1, 1, 0 );
             else mask = helper().roundedMask( frame, 1, 1, 1, 0 );
 
@@ -262,7 +262,7 @@ namespace Oxygen
         const bool maximized( isMaximized() );
         const bool narrowSpacing( configuration().useNarrowButtonSpacing() );
         const int frameBorder( configuration().frameBorder() );
-        const int buttonSize( configuration().hideTitleBar() ? 0 : configuration().buttonSize() );
+        const int buttonSize( hideTitleBar() ? 0 : configuration().buttonSize() );
 
         switch (lm)
         {
@@ -302,7 +302,7 @@ namespace Oxygen
             case LM_TitleEdgeTop:
             {
                 int border = 0;
-                if( frameBorder == Configuration::BorderNone && configuration().hideTitleBar() )
+                if( frameBorder == Configuration::BorderNone && hideTitleBar() )
                 {
 
                     border = 0;
@@ -532,7 +532,7 @@ namespace Oxygen
             const int offset = layoutMetric( LM_OuterPaddingTop );
 
             int height = 64 - Configuration::ButtonDefault;
-            if( !configuration().hideTitleBar() ) height += configuration().buttonSize();
+            if( !hideTitleBar() ) height += configuration().buttonSize();
 
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
@@ -1389,7 +1389,7 @@ namespace Oxygen
             painter.restore();
         }
 
-        if( !configuration().hideTitleBar() )
+        if( !hideTitleBar() )
         {
 
             // title bounding rect
@@ -1469,7 +1469,7 @@ namespace Oxygen
     {
 
         // check button and distance to drag point
-        if( configuration().hideTitleBar() || mouseButton_ == Qt::NoButton  || ( event->pos() - dragPoint_ ).manhattanLength() <= QApplication::startDragDistance() )
+        if( hideTitleBar() || mouseButton_ == Qt::NoButton  || ( event->pos() - dragPoint_ ).manhattanLength() <= QApplication::startDragDistance() )
         { return false; }
 
         bool accepted( false );
@@ -1552,7 +1552,7 @@ namespace Oxygen
     {
 
         // check if drag enter is allowed
-        if( !event->mimeData()->hasFormat( clientGroupItemDragMimeType() ) || configuration().hideTitleBar() ) return false;
+        if( !event->mimeData()->hasFormat( clientGroupItemDragMimeType() ) || hideTitleBar() ) return false;
 
         //
         event->acceptProposedAction();

@@ -38,6 +38,7 @@
 
 #include <kcommondecoration.h>
 #include <QtCore/QBasicTimer>
+#include <QtCore/QTextStream>
 #include <QtCore/QTimerEvent>
 
 
@@ -107,6 +108,15 @@ namespace Oxygen
                 return false;
             }
 
+        }
+
+        //! true if titlebar is hidden
+        bool hideTitleBar( void ) const
+        {
+            return
+                configuration().hideTitleBar() &&
+                !isShade() &&
+                clientGroupItems().count() == 1;
         }
 
         //@}
@@ -333,7 +343,7 @@ namespace Oxygen
                 useAnimations() &&
                 configuration().animateTitleChange() &&
                 !configuration().drawTitleOutline() &&
-                !configuration().hideTitleBar() &&
+                !hideTitleBar() &&
                 !isPreview();
         }
 

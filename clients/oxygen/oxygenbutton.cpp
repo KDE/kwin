@@ -170,7 +170,7 @@ namespace Oxygen
     void Button::paintEvent(QPaintEvent *event)
     {
 
-        if( client_.configuration().hideTitleBar() ) return;
+        if( client_.hideTitleBar() ) return;
 
         QPainter painter(this);
         painter.setClipRect(this->rect().intersected( event->rect() ) );
