@@ -155,7 +155,8 @@ void StartupFeedbackEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         default:
             break; // nothing
             }
-        data.paint.unite( feedbackRect() );
+        m_currentGeometry = feedbackRect();
+        data.paint.unite( m_currentGeometry );
         }
     effects->prePaintScreen( data, time );
     }
@@ -200,8 +201,7 @@ void StartupFeedbackEffect::paintScreen( int mask, QRegion region, ScreenPaintDa
             glActiveTexture( GL_TEXTURE0 );
             glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
             }
-        const QRect rect = feedbackRect();
-        texture->render( region, rect );
+        texture->render( region, m_currentGeometry );
         if( m_type == BlinkingFeedback )
             {
             // resture states
@@ -226,7 +226,7 @@ void StartupFeedbackEffect::postPaintScreen()
         case BouncingFeedback: // fall through
         case BlinkingFeedback:
             // repaint the icon
-            effects->addRepaint( feedbackRect() );
+            effects->addRepaint( m_currentGeometry );
             break;
         case PassiveFeedback: // fall through
         default:
@@ -248,7 +248,7 @@ void StartupFeedbackEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos
     Q_UNUSED( oldmodifiers )
     if( m_active )
         {
-        effects->addRepaint( feedbackRect() );
+        effects->addRepaint( m_currentGeometry );
         }
     }
 

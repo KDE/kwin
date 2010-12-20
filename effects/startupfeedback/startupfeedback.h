@@ -74,6 +74,7 @@ class StartupFeedbackEffect
         GLTexture* m_bouncingTextures[5];
         GLTexture* m_texture; // for passive and blinking
         FeedbackType m_type;
+        QRect m_currentGeometry;
     };
 } // namespace
 
