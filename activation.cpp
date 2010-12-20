@@ -419,6 +419,13 @@ void Workspace::clientHidden( Client* c )
     activateNextClient( c );
     }
 
+static inline bool isUsableFocusCandidate( Client *c, Client *prev, bool respectScreen )
+    {
+    return c != prev &&
+           c->isShown( false ) && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
+           ( !respectScreen || c->isOnScreen( prev ? prev->screen() : Workspace::self()->activeScreen() ) );
+    }
+
 // deactivates 'c' and activates next client
 bool Workspace::activateNextClient( Client* c )
     {
@@ -437,34 +444,31 @@ bool Workspace::activateNextClient( Client* c )
         {
         if ( options->focusPolicyIsReasonable())
             { // search the focus_chain for a client to transfer focus to,
-              // first try to transfer focus to the first suitable window in the group
             Client* get_focus = NULL;
-            const ClientList windows = ( c != NULL ? c->group()->members() : ClientList());
-	    for ( int i = focus_chain[ currentDesktop() ].size() - 1;
-                  i >= 0;
-                  --i )
+
+            // first try to pass the focus to the (former) active clients leader
+            if ( c  && ( get_focus = c->transientFor() ) &&
+                 isUsableFocusCandidate( get_focus, c, options->separateScreenFocus ))
                 {
-                Client* ci = focus_chain[ currentDesktop() ].at( i );
-                if( c == ci || !ci->isShown( false )
-                    || !ci->isOnCurrentDesktop() || !ci->isOnCurrentActivity())
-                    continue;
-                if( options->separateScreenFocus )
-                    {
-                    if( c != NULL && !ci->isOnScreen( c->screen()))
-                        continue;
-                    if( c == NULL && !ci->isOnScreen( activeScreen()))
-                        continue;
-                    }
-                if( windows.contains( ci ))
-                    {
-                    get_focus = ci;
-                    break;
-                    }
-                if( get_focus == NULL )
-                    get_focus = ci;
+                raiseClient( get_focus ); // also raise - we don't know where it came from
                 }
-            if( get_focus == NULL )
+            else // nope, ask the focus chain for the next candidate
+                {
+                get_focus = NULL; // reset
+                for ( int i = focus_chain[ currentDesktop() ].size() - 1; i >= 0; --i )
+                    {
+                    Client* ci = focus_chain[ currentDesktop() ].at( i );
+                    if ( isUsableFocusCandidate( ci, c, options->separateScreenFocus ))
+                        {
+                        get_focus = ci;
+                        break; // we're done
+                        }
+                    }
+                }
+
+            if( get_focus == NULL ) // last chance: focus the desktop
                 get_focus = findDesktop( true, currentDesktop());
+
             if( get_focus != NULL )
                 requestFocus( get_focus );
             else
