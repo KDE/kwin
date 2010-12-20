@@ -1496,12 +1496,9 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
         w += xSizeHint.base_width;
         h += xSizeHint.base_height;
         }
-    if( !rules()->checkStrictGeometry( false ))
-        {
-        // disobey increments and aspect when maximized
-        if( maximizeMode() & MaximizeHorizontal )
+    if( !rules()->checkStrictGeometry( true ))
+        {   // disobey increments and aspect by explicit rule
             w = w1;
-        if( maximizeMode() & MaximizeVertical )
             h = h1;
         }
 
@@ -1698,6 +1695,9 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
 
 void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool )
     {
+    if ( maximizeMode() == MaximizeFull) // bugs #158974, #252314
+        return; // "maximized" is a user setting -> we do not allow the client to resize itself away from this & against the user wish
+
     if( gravity == 0 ) // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
     if( value_mask & ( CWX | CWY ))
@@ -1729,8 +1729,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         new_pos = rules()->checkPosition( new_pos );
 
         // TODO what to do with maximized windows?
-        if ( maximizeMode() != MaximizeFull
-            || ns != size())
+        if ( ns != size())
             {
             QRect orig_geometry = geometry();
             GeometryUpdatesBlocker blocker( this );
