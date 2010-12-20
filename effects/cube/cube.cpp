@@ -97,6 +97,9 @@ CubeEffect::CubeEffect()
     desktopNameFont.setPointSize( 14 );
     desktopNameFrame->setFont( desktopNameFont );
 
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/cube-reflection.glsl");
+    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+
     reconfigure( ReconfigureAll );
     }
 
@@ -252,6 +255,7 @@ CubeEffect::~CubeEffect()
     delete cylinderShader;
     delete sphereShader;
     delete desktopNameFrame;
+    delete m_reflectionShader;
     }
 
 bool CubeEffect::loadShader()
@@ -551,12 +555,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
             glDisable( GL_CLIP_PLANE0 );
+            glPopMatrix();
 #endif
 
-#ifndef KWIN_HAVE_OPENGLES
-            glPopMatrix();
-            glPushMatrix();
-            glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
                 -rect.width()*0.5f, rect.height(), 0.0,
                 rect.width()*0.5f, rect.height(), 0.0,
@@ -568,18 +569,57 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 alpha = 0.3 + 0.4 * timeLine.value();
             if( stop )
                 alpha = 0.3 + 0.4 * ( 1.0 - timeLine.value() );
-            glColor4f( 0.0, 0.0, 0.0, alpha );
-            glBegin( GL_POLYGON );
-            glVertex3f( vertices[0], vertices[1], vertices[2] );
-            glVertex3f( vertices[3], vertices[4], vertices[5] );
-            // rearground
-            alpha = -1.0;
-            glColor4f( 0.0, 0.0, 0.0, alpha );
-            glVertex3f( vertices[6], vertices[7], vertices[8] );
-            glVertex3f( vertices[9], vertices[10], vertices[11] );
-            glEnd();
-            glPopMatrix();
+            ShaderManager *shaderManager = ShaderManager::instance();
+            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+                // ensure blending is enabled - no attribute stack
+                glEnable( GL_BLEND );
+                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+                shaderManager->pushShader(m_reflectionShader);
+                QMatrix4x4 windowTransformation;
+                windowTransformation.translate(rect.x() + rect.width()*0.5f, 0.0, 0.0);
+                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform("u_alpha", alpha);
+                QVector<float> verts;
+                QVector<float> texcoords;
+                verts.reserve(18);
+                texcoords.reserve(12);
+                texcoords << 0.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[9] << vertices[10] << vertices[11];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[3] << vertices[4] << vertices[5];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setUseShader(true);
+                vbo->setData(6, 3, verts.data(), texcoords.data());
+                vbo->render(GL_TRIANGLES);
+
+                shaderManager->popShader();
+                glDisable( GL_BLEND );
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glColor4f( 0.0, 0.0, 0.0, alpha );
+                glPushMatrix();
+                glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
+                glBegin( GL_POLYGON );
+                glVertex3f( vertices[0], vertices[1], vertices[2] );
+                glVertex3f( vertices[3], vertices[4], vertices[5] );
+                // rearground
+                alpha = -1.0;
+                glColor4f( 0.0, 0.0, 0.0, alpha );
+                glVertex3f( vertices[6], vertices[7], vertices[8] );
+                glVertex3f( vertices[9], vertices[10], vertices[11] );
+                glEnd();
+                glPopMatrix();
 #endif
+            }
             PaintClipper::pop( QRegion( rect ));
             }
         glEnable( GL_CULL_FACE );

@@ -16,6 +16,7 @@ install( FILES
 
 # Data files
 install( FILES
+    cube/data/cube-reflection.glsl
     cube/data/cubecap.png
     cube/data/cylinder.frag
     cube/data/cylinder.vert

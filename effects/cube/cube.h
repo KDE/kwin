@@ -156,6 +156,7 @@ class CubeEffect
         bool useShaders;
         GLShader* cylinderShader;
         GLShader* sphereShader;
+        GLShader* m_reflectionShader;
         float capDeformationFactor;
         bool useZOrdering;
         float zOrderingFactor;
