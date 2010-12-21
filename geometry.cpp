@@ -1695,6 +1695,7 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
 
 void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool )
     {
+    qDebug() << maximizeMode() << MaximizeFull;
     if ( maximizeMode() == MaximizeFull) // bugs #158974, #252314
         return; // "maximized" is a user setting -> we do not allow the client to resize itself away from this & against the user wish
 
@@ -1728,27 +1729,23 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         QSize ns = sizeForClientSize( QSize( nw, nh ) ); // enforces size if needed
         new_pos = rules()->checkPosition( new_pos );
 
-        // TODO what to do with maximized windows?
-        if ( ns != size())
-            {
-            QRect orig_geometry = geometry();
-            GeometryUpdatesBlocker blocker( this );
-            move( new_pos );
-            plainResize( ns );
-            setGeometry( QRect( calculateGravitation( false, gravity ), size()));
-            updateFullScreenHack( QRect( new_pos, QSize( nw, nh )));
-            QRect area = workspace()->clientArea( WorkArea, this );
-            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
-                && area.contains( orig_geometry ))
-                keepInArea( area );
+        QRect orig_geometry = geometry();
+        GeometryUpdatesBlocker blocker( this );
+        move( new_pos );
+        plainResize( ns );
+        setGeometry( QRect( calculateGravitation( false, gravity ), size()));
+        updateFullScreenHack( QRect( new_pos, QSize( nw, nh )));
+        QRect area = workspace()->clientArea( WorkArea, this );
+        if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
+            && area.contains( orig_geometry ))
+            keepInArea( area );
 
-            // this is part of the kicker-xinerama-hack... it should be
-            // safe to remove when kicker gets proper ExtendedStrut support;
-            // see Workspace::updateClientArea() and
-            // Client::adjustedClientArea()
-            if (hasStrut ())
-                workspace() -> updateClientArea ();
-            }
+        // this is part of the kicker-xinerama-hack... it should be
+        // safe to remove when kicker gets proper ExtendedStrut support;
+        // see Workspace::updateClientArea() and
+        // Client::adjustedClientArea()
+        if (hasStrut ())
+            workspace() -> updateClientArea ();
         }
 
     if ( value_mask & (CWWidth | CWHeight )
