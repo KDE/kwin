@@ -141,60 +141,26 @@ namespace Oxygen
     void Config::save( KConfigGroup& )
     {
 
+        // create configuration from UI
+        Configuration configuration;
+        configuration.setTitleAlignment( Configuration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ) );
+        configuration.setButtonSize( Configuration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ) );
+        configuration.setBlendColor( Configuration::blendColor( userInterface_->ui.blendColor->currentText(), true ) );
+        configuration.setFrameBorder( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ) );
+        configuration.setSizeGripMode( Configuration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ) );
+        configuration.setSeparatorMode( (Oxygen::Configuration::SeparatorMode) userInterface_->ui.separatorMode->currentIndex() );
+        configuration.setDrawTitleOutline( userInterface_->ui.titleOutline->isChecked() );
+        configuration.setUseDropShadows( userInterface_->shadowConfigurations[1]->isChecked() );
+        configuration.setUseOxygenShadows( userInterface_->shadowConfigurations[0]->isChecked() );
+        configuration.setTabsEnabled( userInterface_->ui.tabsEnabled->isChecked() );
+        configuration.setUseAnimations( userInterface_->ui.useAnimations->isChecked() );
+        configuration.setAnimateTitleChange( userInterface_->ui.animateTitleChange->isChecked() );
+        configuration.setUseNarrowButtonSpacing( userInterface_->ui.narrowButtonSpacing->isChecked() );
+
         // save standard configuration
         KConfigGroup configurationGroup( configuration_, "Windeco");
-
-        // when writing text entries, on needs to make sure that strings written
-        // to the configuration file are *not* translated using current locale
-        configurationGroup.writeEntry(
-            OxygenConfig::TITLE_ALIGNMENT,
-            Configuration::titleAlignmentName( Configuration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ), false ) );
-
-        configurationGroup.writeEntry(
-            OxygenConfig::BUTTON_SIZE,
-            Configuration::buttonSizeName( Configuration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ), false ) );
-
-        configurationGroup.writeEntry(
-            OxygenConfig::BLEND_COLOR,
-            Configuration::blendColorName( Configuration::blendColor( userInterface_->ui.blendColor->currentText(), true ), false ) );
-
-        configurationGroup.writeEntry(
-            OxygenConfig::FRAME_BORDER,
-            Configuration::frameBorderName( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ), false ) );
-
-        configurationGroup.writeEntry(
-            OxygenConfig::SIZE_GRIP_MODE,
-            Configuration::sizeGripModeName( Configuration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ), false ) );
-
-        configurationGroup.writeEntry(
-            OxygenConfig::SHADOW_CACHE_MODE,
-            Configuration::shadowCacheModeName( Configuration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ), false ) );
-
-        switch( userInterface_->ui.separatorMode->currentIndex() )
-        {
-            default:
-            case 0:
-            configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, false );
-            break;
-
-            case 1:
-            configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, true );
-            configurationGroup.writeEntry( OxygenConfig::SEPARATOR_ACTIVE_ONLY, true );
-            break;
-
-            case 2:
-            configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, true );
-            configurationGroup.writeEntry( OxygenConfig::SEPARATOR_ACTIVE_ONLY, false );
-            break;
-        }
-
-        configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::USE_DROP_SHADOWS, userInterface_->shadowConfigurations[1]->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->shadowConfigurations[0]->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::TABS_ENABLED, userInterface_->ui.tabsEnabled->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::USE_ANIMATIONS, userInterface_->ui.useAnimations->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::ANIMATE_TITLE_CHANGE, userInterface_->ui.animateTitleChange->isChecked() );
-        configurationGroup.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, userInterface_->ui.narrowButtonSpacing->isChecked() );
+        configurationGroup.deleteGroup();
+        configuration.write( configurationGroup );
 
         // write exceptions
         userInterface_->ui.exceptions->exceptions().write( *configuration_ );
