@@ -76,6 +76,7 @@ namespace Oxygen
     ui.blendColor->insertItems(0, QStringList()
       << Configuration::blendColorName( Configuration::NoBlending, true )
       << Configuration::blendColorName( Configuration::RadialBlending, true )
+      << Configuration::blendColorName( Configuration::BlendFromStyle, true )
       );
 
     // draw size grip

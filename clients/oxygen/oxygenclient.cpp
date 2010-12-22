@@ -522,7 +522,11 @@ namespace Oxygen
     void Client::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
     {
 
-        if( configuration().blendColor() == Configuration::NoBlending )
+        if(
+            configuration().blendColor() == Configuration::NoBlending ||
+            ( configuration().blendColor() == Configuration::BlendFromStyle &&
+            !helper().hasBackgroundGradient( windowId() )
+            ) )
         {
 
             painter->fillRect( rect, palette.color( QPalette::Window ) );

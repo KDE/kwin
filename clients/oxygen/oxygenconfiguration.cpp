@@ -37,7 +37,7 @@ namespace Oxygen
         titleAlignment_( Qt::AlignHCenter ),
         buttonSize_( ButtonDefault ),
         frameBorder_( BorderTiny ),
-        blendColor_( RadialBlending ),
+        blendColor_( BlendFromStyle ),
         sizeGripMode_( SizeGripWhenNeeded ),
         separatorMode_( SeparatorNever ),
         drawTitleOutline_( false ),
@@ -306,6 +306,7 @@ namespace Oxygen
         {
             case NoBlending: out = translated ? i18n( "Solid Color" ):"Solid Color"; break;
             case RadialBlending: out = translated ? i18n( "Radial Gradient" ):"Radial Gradient"; break;
+            case BlendFromStyle: out = translated ? i18n( "Follow Style Hint" ):"Follow Style Hint"; break;
             default: return Configuration().blendColorName( translated );
         }
 
@@ -318,6 +319,7 @@ namespace Oxygen
     {
         if( value == blendColorName( NoBlending, translated ) ) return NoBlending;
         else if( value == blendColorName( RadialBlending, translated ) ) return RadialBlending;
+        else if( value == blendColorName( BlendFromStyle, translated ) ) return BlendFromStyle;
         else return Configuration().blendColor();
     }
 

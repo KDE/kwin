@@ -72,7 +72,9 @@ namespace Oxygen
         // blend color
         ui.blendColorComboBox->insertItems(0, QStringList()
             << Exception::blendColorName( Exception::NoBlending, true )
-            << Exception::blendColorName( Exception::RadialBlending, true ) );
+            << Exception::blendColorName( Exception::RadialBlending, true )
+            << Exception::blendColorName( Exception::BlendFromStyle, true )
+            );
         ui.blendColorComboBox->setEnabled( false );
         checkboxes_.insert( std::make_pair( Exception::BlendColor, ui.blendColorCheckBox ) );
         connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT( setEnabled( bool ) ) );
