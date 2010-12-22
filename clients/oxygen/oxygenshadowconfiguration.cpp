@@ -92,12 +92,13 @@ namespace Oxygen
     //_________________________________________________________
     void ShadowConfiguration::write( KConfigGroup& group ) const
     {
-        group.writeEntry( OxygenConfig::SHADOW_SIZE, shadowSize() );
-        group.writeEntry( OxygenConfig::SHADOW_HOFFSET, horizontalOffset() );
-        group.writeEntry( OxygenConfig::SHADOW_VOFFSET, verticalOffset() );
-        group.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, innerColor().name() );
-        group.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, outerColor().name() );
-        group.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, useOuterColor() );
+        ShadowConfiguration defaultConfiguration( colorGroup_ );
+        if( shadowSize() != defaultConfiguration.shadowSize() ) group.writeEntry( OxygenConfig::SHADOW_SIZE, shadowSize() );
+        if( horizontalOffset() != defaultConfiguration.horizontalOffset() ) group.writeEntry( OxygenConfig::SHADOW_HOFFSET, horizontalOffset() );
+        if( verticalOffset() != defaultConfiguration.verticalOffset() ) group.writeEntry( OxygenConfig::SHADOW_VOFFSET, verticalOffset() );
+        if( innerColor() != defaultConfiguration.innerColor() ) group.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, innerColor().name() );
+        if( outerColor() != defaultConfiguration.outerColor() ) group.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, outerColor().name() );
+        if( useOuterColor() != defaultConfiguration.useOuterColor() ) group.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, useOuterColor() );
     }
 
     //_________________________________________________________
