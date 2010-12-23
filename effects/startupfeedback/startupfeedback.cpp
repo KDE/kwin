@@ -201,7 +201,7 @@ void StartupFeedbackEffect::paintScreen( int mask, QRegion region, ScreenPaintDa
             glActiveTexture( GL_TEXTURE0 );
             glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
             }
-        texture->render( region, m_currentGeometry );
+        texture->render( m_currentGeometry, m_currentGeometry );
         if( m_type == BlinkingFeedback )
             {
             // resture states
@@ -249,6 +249,7 @@ void StartupFeedbackEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos
     if( m_active )
         {
         effects->addRepaint( m_currentGeometry );
+        effects->addRepaint( feedbackRect() );
         }
     }
 
