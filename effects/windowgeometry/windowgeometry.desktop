@@ -3,6 +3,7 @@
 Name=WindowGeometry
 Name[ca]=WindowGeometry
 Name[da]=Vinduesgeometri
+Name[de]=Fenstergeometrie
 Name[en_GB]=WindowGeometry
 Name[et]=Akna geomeetria
 Name[hi]=विंडोज्यामिति
@@ -29,6 +30,7 @@ Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
 Comment[ca]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[da]=Vis vinduesgeometrier ved flytning og ændring af størrelse
+Comment[de]=Fenstergeometrie bei Verschieben/Größenänderung anzeigen
 Comment[en_GB]=Display window geometries on move/resize
 Comment[es]=Muestra la geometría de la ventana al mover/redimensionar
 Comment[et]=Akende geomeetria kuvamine liigutamisel või suuruse muutmisel
