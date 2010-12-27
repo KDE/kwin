@@ -241,6 +241,7 @@ void CompositingPrefs::detectDriverAndVersion()
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // Always recommend
     mRecommendCompositing = true;
 
@@ -248,6 +249,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
     mStrictBinding = !gl->supports( LooseBinding );
     if ( gl->driver() == Driver_Intel )
         mEnableVSync = false;
+#endif
     }
 
 
