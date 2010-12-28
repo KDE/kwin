@@ -33,6 +33,7 @@ namespace OxygenConfig
 {
 
     static const QString TITLE_ALIGNMENT = "TitleAlignment";
+    static const QString CENTER_TITLE_ON_FULL_WIDTH = "CenterTitleOnFullWidth";
     static const QString BUTTON_SIZE = "ButtonSize";
     static const QString DRAW_SEPARATOR = "DrawSeparator";
     static const QString SEPARATOR_ACTIVE_ONLY = "SeparatorActiveOnly";
@@ -154,20 +155,26 @@ namespace Oxygen
         //!@name title alignment
         //@{
 
-        static QString titleAlignmentName( Qt::Alignment, bool translated );
+        static QString titleAlignmentName( Qt::Alignment, bool translated, bool fullWidth = false );
         static Qt::Alignment titleAlignment( QString, bool translated );
 
         virtual Qt::Alignment titleAlignment() const
         { return titleAlignment_; }
 
         virtual QString titleAlignmentName( bool translated ) const
-        { return titleAlignmentName( titleAlignment(), translated ); }
+        { return titleAlignmentName( titleAlignment(), translated, centerTitleOnFullWidth() ); }
 
         virtual void setTitleAlignment( Qt::Alignment value )
         { titleAlignment_ = value; }
 
         virtual void setTitleAlignment( QString value, bool translated )
         { titleAlignment_ = titleAlignment( value, translated ); }
+
+        virtual bool centerTitleOnFullWidth( void ) const
+        { return centerTitleOnFullWidth_; }
+
+        virtual void setCenterTitleOnFullWidth( bool value )
+        { centerTitleOnFullWidth_ = value; }
 
         //@}
 
@@ -372,6 +379,9 @@ namespace Oxygen
 
         //! title alignment
         Qt::Alignment titleAlignment_;
+
+        //! full width alignment (makes sense only for Center alignment
+        bool centerTitleOnFullWidth_;
 
         //! button size
         ButtonSize buttonSize_;

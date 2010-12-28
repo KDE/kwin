@@ -60,7 +60,8 @@ namespace Oxygen
 
     ui.titleAlignment->insertItems(0, QStringList()
       << Configuration::titleAlignmentName( Qt::AlignLeft, true )
-      << Configuration::titleAlignmentName( Qt::AlignHCenter, true )
+      << Configuration::titleAlignmentName( Qt::AlignHCenter, true, false )
+      << Configuration::titleAlignmentName( Qt::AlignHCenter, true, true )
       << Configuration::titleAlignmentName( Qt::AlignRight, true )
       );
 

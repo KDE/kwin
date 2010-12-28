@@ -144,6 +144,7 @@ namespace Oxygen
         // create configuration from UI
         Configuration configuration;
         configuration.setTitleAlignment( Configuration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ) );
+        configuration.setCenterTitleOnFullWidth( userInterface_->ui.titleAlignment->currentText() == Configuration::titleAlignmentName( Qt::AlignHCenter, true, true ) );
         configuration.setButtonSize( Configuration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ) );
         configuration.setBlendColor( Configuration::blendColor( userInterface_->ui.blendColor->currentText(), true ) );
         configuration.setFrameBorder( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ) );
