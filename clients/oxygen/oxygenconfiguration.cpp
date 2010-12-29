@@ -36,7 +36,7 @@ namespace Oxygen
     //__________________________________________________
     Configuration::Configuration( void ):
         titleAlignment_( Qt::AlignHCenter ),
-        centerTitleOnFullWidth_( false ),
+        centerTitleOnFullWidth_( true ),
         buttonSize_( ButtonDefault ),
         frameBorder_( BorderTiny ),
         blendColor_( BlendFromStyle ),
@@ -370,6 +370,7 @@ namespace Oxygen
 
         return
             titleAlignment() == other.titleAlignment() &&
+            centerTitleOnFullWidth() == other.centerTitleOnFullWidth() &&
             buttonSize() == other.buttonSize() &&
             frameBorder() == other.frameBorder() &&
             blendColor() == other.blendColor() &&
