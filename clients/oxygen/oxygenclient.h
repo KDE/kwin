@@ -410,6 +410,9 @@ namespace Oxygen
         /*! calculate and return title bounding rects in case of tabbed window */
         void updateItemBoundingRects( bool alsoUpdate = true );
 
+        //! bound one rect to another
+        void boundRectTo( QRect&, const QRect& ) const;
+
         private:
 
         //! factory

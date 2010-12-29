@@ -418,22 +418,43 @@ namespace Oxygen
         boundingRect.setBottom( rect.bottom() );
 
         // check bounding rect against input rect
-        boundingRect.setLeft( qMax( rect.left(), boundingRect.left() ) );
-        boundingRect.setRight( qMin( rect.right(), boundingRect.right() ) );
+        boundRectTo( boundingRect, rect );
 
         if( configuration().centerTitleOnFullWidth() )
         {
+
             /*
             check bounding rect against max available space, for buttons
             this is not needed if centerTitleOnFullWidth flag is set to false,
             because it was already done before calling titleBoundingRect
             */
-            boundingRect.setLeft( qMax( titleRect().left(), boundingRect.left() ) );
-            boundingRect.setRight( qMin( titleRect().right(), boundingRect.right() ) );
+            boundRectTo( boundingRect, titleRect() );
+
         }
 
         return boundingRect;
 
+    }
+
+    //_________________________________________________________
+    void Client::boundRectTo( QRect& rect, const QRect& bound ) const
+    {
+
+        if( bound.left() > rect.left() )
+        {
+            rect.moveLeft( bound.left() );
+            if( bound.right() < rect.right() )
+            { rect.setRight( bound.right() ); }
+
+        } else if( bound.right() < rect.right() ) {
+
+            rect.moveRight( bound.right() );
+            if( bound.left() > rect.left() )
+            { rect.setLeft( bound.left() ); }
+
+        }
+
+        return;
     }
 
     //_________________________________________________________
@@ -922,12 +943,7 @@ namespace Oxygen
         const QString caption( itemCount == 1 ? this->caption() : items[index].title() );
 
         if( !configuration().centerTitleOnFullWidth() )
-        {
-            // always make sure that titleRect never conflicts with window buttons
-            QRect titleRect( this->titleRect() );
-            if( titleRect.left() > textRect.left() ) { textRect.setLeft( titleRect.left() ); }
-            if( titleRect.right() < textRect.right() ) { textRect.setRight( titleRect.right() ); }
-        }
+        { boundRectTo( textRect, titleRect() ); }
 
         // adjust textRect
         textRect = titleBoundingRect( painter->font(), textRect, caption );
