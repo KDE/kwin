@@ -78,22 +78,7 @@ namespace Oxygen
 
     //______________________________________________________________
     ExceptionList ExceptionList::defaultList( void )
-    {
-
-        ExceptionList out;
-
-        // default exception that covers most commonly used gtk based applications
-        Exception exception;
-        exception.setType( Exception::WindowClassName );
-        exception.regExp().setPattern( "(Firefox)|(Thunderbird)|(Gimp)" );
-        exception.setBlendColor( Exception::NoBlending );
-        exception.setMask( Exception::BlendColor );
-        exception.setEnabled( true );
-
-        out.push_back( exception );
-        return out;
-
-    }
+    { return ExceptionList(); }
 
     //_______________________________________________________________________
     QString ExceptionList::exceptionGroupName( int index )
