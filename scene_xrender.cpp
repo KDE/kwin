@@ -271,6 +271,7 @@ bool SceneXrender::selfCheckFinish()
 // the entry point for painting
 void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     {
+    QTime t = QTime::currentTime();
     foreach( Toplevel* c, toplevels )
         {
         assert( windows.contains( c ));
@@ -285,6 +286,7 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         selfCheckSetup();
         damage |= selfCheckRegion();
         }
+    lastRenderTime = t.elapsed();
     flushBuffer( mask, damage );
     if( !selfCheckDone )
         {

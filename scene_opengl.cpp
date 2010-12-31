@@ -111,9 +111,6 @@ GLXDrawable SceneOpenGL::last_pixmap = None;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::shm_mode;
-uint SceneOpenGL::vBlankInterval;
-uint SceneOpenGL::estimatedRenderTime = 0xfffffff; // Looooong - to ensure we wait on the first frame
-QTime SceneOpenGL::lastVBlank;
 #ifdef HAVE_XSHM
 XShmSegmentInfo SceneOpenGL::shm;
 #endif
@@ -129,8 +126,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kDebug( 1212 ) << "No glx extensions available";
         return; // error
         }
-    vBlankInterval = (1000<<10) / KWin::currentRefreshRate();
-    lastVBlank = QTime::currentTime();
     initGLX();
     // check for FBConfig support
     if( !hasGLExtension( "GLX_SGIX_fbconfig" ) || !glXGetFBConfigAttrib || !glXGetFBConfigs ||
@@ -171,7 +166,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             {
             if( glXWaitVideoSync( 1, 0, &sync ) == 0 )
                 has_waitSync = true;
+            else
+                qWarning() << "NO VSYNC! glXWaitVideoSync(1,0,&uint) isn't 0 but" << glXWaitVideoSync( 1, 0, &sync );
             }
+        else
+            qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync( &sync );
         }
 
     // OpenGL scene setup
@@ -756,6 +755,7 @@ bool SceneOpenGL::selfCheckFinish()
 // the entry function for painting
 void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
+    QTime t = QTime::currentTime();
     foreach( Toplevel* c, toplevels )
         {
         assert( windows.contains( c ));
@@ -784,6 +784,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
         damage |= selfCheckRegion();
         }
 #endif
+    lastRenderTime = t.elapsed();
     flushBuffer( mask, damage );
 #if 0
     if( !selfCheckDone )
@@ -803,30 +804,21 @@ void SceneOpenGL::waitSync()
     { // NOTE that vsync has no effect with indirect rendering
     if( waitSyncAvailable())
         {
-        // hackalert - we abuse "sync" as "remaining time before next estimated vblank"
-        // reason: we do not "just wait" for the next vsync if we estimate that we can paint the
-        // entire frame before this event, what could effectively mean "usleep(10000)", as it used to
-        uint sync = ((lastVBlank.msecsTo( QTime::currentTime() )<<10) % vBlankInterval);
-        if ( sync < (estimatedRenderTime+1)<<10 )
-            {
-            glFlush();
-            glXGetVideoSync( &sync );
-            glXWaitVideoSync( 2, ( sync + 1 ) % 2, &sync );
-            lastVBlank = QTime::currentTime();
-            }
+        uint sync;
+        glFlush();
+        glXGetVideoSync( &sync );
+        glXWaitVideoSync( 2, ( sync + 1 ) % 2, &sync );
         }
     }
 
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
-    QTime t;
     if( db )
         {
         if( mask & PAINT_SCREEN_REGION )
             {
             waitSync();
-            t = QTime::currentTime();
             if( glXCopySubBuffer )
                 {
                 foreach( const QRect &r, damage.rects())
@@ -864,28 +856,22 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
         else
             {
             waitSync();
-            t = QTime::currentTime();
             glXSwapBuffers( display(), glxbuffer );
             }
         glXWaitGL();
         XFlush( display());
-        estimatedRenderTime = t.elapsed();
         }
     else
         {
-        t = QTime::currentTime();
         glFlush();
         glXWaitGL();
-        estimatedRenderTime = t.elapsed();
         waitSync();
-        t = QTime::currentTime();
         if( mask & PAINT_SCREEN_REGION )
             foreach( const QRect &r, damage.rects())
                 XCopyArea( display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
         else
             XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
         XFlush( display());
-        estimatedRenderTime += t.elapsed();
         }
     }
 

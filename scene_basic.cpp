@@ -44,6 +44,7 @@ SceneBasic::~SceneBasic()
     
 void SceneBasic::paint( QRegion, ToplevelList windows )
     {
+    QTime t = QTime::currentTime();
     Pixmap composite_pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), DefaultDepth( display(), DefaultScreen( display())));
     XGCValues val;
     val.foreground = WhitePixel( display(), DefaultScreen( display()));
@@ -64,6 +65,7 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
                 qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
             }
         }
+    lastRenderTime = t.elapsed();
     XCopyArea( display(), composite_pixmap, rootWindow(), gc, 0, 0, displayWidth(), displayHeight(), 0, 0 );
     XFreeGC( display(), gc );
     XFreePixmap( display(), composite_pixmap );
