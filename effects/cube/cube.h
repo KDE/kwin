@@ -93,7 +93,7 @@ class CubeEffect
             };
         void toggle( CubeMode newMode = Cube );
         void paintCube( int mask, QRegion region, ScreenPaintData& data );
-        void paintCap();
+        void paintCap(bool frontFirst, float zOffset);
         void paintCubeCap();
         void paintCylinderCap();
         void paintSphereCap();
@@ -157,6 +157,7 @@ class CubeEffect
         GLShader* cylinderShader;
         GLShader* sphereShader;
         GLShader* m_reflectionShader;
+        GLShader* m_capShader;
         float capDeformationFactor;
         bool useZOrdering;
         float zOrderingFactor;
@@ -171,6 +172,7 @@ class CubeEffect
         GLuint glList;
         QMatrix4x4 m_rotationMatrix;
         QMatrix4x4 m_reflectionMatrix;
+        GLVertexBuffer *m_cubeCapBuffer;
 
         // Shortcuts - needed to toggle the effect
         KShortcut cubeShortcut;
