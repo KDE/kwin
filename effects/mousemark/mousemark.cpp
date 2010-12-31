@@ -87,7 +87,6 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     vbo->setColor(color);
     if (ShaderManager::instance()->isValid()) {
         ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-        vbo->setUseShader(true);
     }
     QVector<float> verts;
     foreach (const Mark& mark, marks) {

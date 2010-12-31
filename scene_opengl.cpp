@@ -530,7 +530,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setUseShader(sceneShader);
 
     // decorations
     Client *client = dynamic_cast<Client*>(toplevel);
@@ -1288,7 +1287,6 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             glTranslatef( pt.x(), pt.y(), 0.0f );
 #endif
         }
-        m_unstyledVBO->setUseShader( sceneShader );
         m_unstyledVBO->render( region, GL_TRIANGLES );
 #ifndef KWIN_HAVE_OPENGLES
         if (!sceneShader) {
@@ -1311,7 +1309,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
-        m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ), sceneShader );
+        m_texture->render( region, m_effectFrame->geometry().adjusted( -left, -top, right, bottom ) );
         m_texture->unbind();
 
         if( !m_effectFrame->selection().isNull() )
@@ -1324,7 +1322,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
                 }
             glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
             m_selectionTexture->bind();
-            m_selectionTexture->render( region, m_effectFrame->selection(), sceneShader );
+            m_selectionTexture->render( region, m_effectFrame->selection() );
             m_selectionTexture->unbind();
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             }
@@ -1373,7 +1371,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             m_iconTexture->setYInverted(true);
             }
         m_iconTexture->bind();
-        m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ), sceneShader );
+        m_iconTexture->render( region, QRect( topLeft, m_effectFrame->iconSize() ) );
         m_iconTexture->unbind();
         }
 
@@ -1390,7 +1388,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
 #endif
 
             m_oldTextTexture->bind();
-            m_oldTextTexture->render( region, m_effectFrame->geometry(), sceneShader );
+            m_oldTextTexture->render( region, m_effectFrame->geometry() );
             m_oldTextTexture->unbind();
             if( shader )
                 shader->setUniform( "opacity", (float)opacity * (float)m_effectFrame->crossFadeProgress() );
@@ -1411,7 +1409,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         if( !m_textTexture ) // Lazy creation
             updateTextTexture();
         m_textTexture->bind();
-        m_textTexture->render( region, m_effectFrame->geometry(), sceneShader  );
+        m_textTexture->render( region, m_effectFrame->geometry()  );
         m_textTexture->unbind();
         }
 

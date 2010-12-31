@@ -335,7 +335,6 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 verts << vertices[6] << vertices[7] << vertices[8];
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
-                vbo->setUseShader(true);
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
 

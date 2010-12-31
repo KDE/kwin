@@ -278,7 +278,6 @@ void SceneOpenGL::paintBackground(QRegion region)
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
-    vbo->setUseShader(true);
     vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
     shader->setUniform("offset", QVector2D(0, 0));

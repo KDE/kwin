@@ -150,17 +150,6 @@ class KWIN_EXPORT GLTexture
         virtual void unbind();
         void render( QRegion region, const QRect& rect );
         /**
-         * Same as above, but allows to specify if the geometry of the texture
-         * should be passed for a core profile shader. The shader needs to be
-         * bound before. The default is to perform legacy rendering.
-         * @param useShader If @c true core profile compatible rendering is used.
-         * If a bound shader is not core profile compatible @c false should be used.
-         * @see render
-         * @see GLVertexBuffer::setUseShader
-         * @since 4.7
-         */
-        void render( QRegion region, const QRect& rect, bool useShader );
-        /**
          * Set up texture transformation matrix to automatically map unnormalized
          * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
          * to OpenGL coordinates. Automatically adjusts for different texture
@@ -520,22 +509,6 @@ class KWIN_EXPORT GLVertexBuffer
          * Same as above restricting painting to @a region.
          */
         void render( const QRegion& region, GLenum primitiveMode );
-        /**
-         * Use methods from core profile to perform rendering. A core compatible shader has
-         * to be bound while rendering.
-         * If the shader emulates fixed functionality rendering (e.g. uses gl_Vertex) using core
-         * rendering should be disabled.
-         * The default rendering path does not use core profile rendering.
-         * @param use enable/disable use of core profile rendering.
-         * @since 4.7
-         **/
-        void setUseShader( bool use );
-        /**
-         * @returns @c true if core profile methods are used for rendering, @c false otherwise.
-         * @see setUseShader
-         * @since 4.7
-         **/
-        bool isUseShader() const;
         /**
          * Sets the color the geometry will be rendered with.
          * For legacy rendering glColor is used before rendering the geometry.

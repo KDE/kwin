@@ -514,11 +514,6 @@ void GLTexture::unbind()
 
 void GLTexture::render( QRegion region, const QRect& rect )
     {
-    render( region, rect, false );
-    }
-
-void GLTexture::render( QRegion region, const QRect& rect, bool useShader )
-    {
     if( rect.size() != m_cachedSize )
         {
         m_cachedSize = rect.size();
@@ -544,16 +539,18 @@ void GLTexture::render( QRegion region, const QRect& rect, bool useShader )
             };
         m_vbo->setData( 4, 2, verts, texcoords );
         }
-    if (useShader) {
-        ShaderManager::instance()->getBoundShader()->setUniform("offset", QVector2D(rect.x(), rect.y()));
+    if (ShaderManager::instance()->isShaderBound()) {
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
+        shader->setUniform("offset", QVector2D(rect.x(), rect.y()));
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
     } else {
 #ifndef KWIN_HAVE_OPENGLES
         glTranslatef( rect.x(), rect.y(), 0.0f );
 #endif
     }
-    m_vbo->setUseShader( useShader );
     m_vbo->render( region, GL_TRIANGLE_STRIP );
-    if (!useShader) {
+    if (!ShaderManager::instance()->isShaderBound()) {
 #ifndef KWIN_HAVE_OPENGLES
         glTranslatef( -rect.x(), -rect.y(), 0.0f );
 #endif
@@ -1524,7 +1521,6 @@ class GLVertexBufferPrivate
             : hint( usageHint )
             , numberVertices( 0 )
             , dimension( 2 )
-            , useShader( false )
             , useColor( false )
             , useTexCoords( true )
             , color( 0, 0, 0, 255 )
@@ -1545,7 +1541,6 @@ class GLVertexBufferPrivate
         GLuint buffers[2];
         int numberVertices;
         int dimension;
-        bool useShader;
         static bool supported;
         static GLVertexBuffer *streamingBuffer;
         QVector<float> legacyVertices;
@@ -1707,7 +1702,7 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
         d->legacyPainting( region, primitiveMode );
         return;
         }
-    if( d->useShader )
+    if( ShaderManager::instance()->isShaderBound() )
         {
         d->corePainting( region, primitiveMode );
         return;
@@ -1741,16 +1736,6 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
 #endif
     }
 
-void GLVertexBuffer::setUseShader( bool use )
-    {
-    d->useShader = use;
-    }
-
-bool GLVertexBuffer::isUseShader() const
-    {
-    return d->useShader;
-    }
-
 bool GLVertexBuffer::isSupported()
     {
     return GLVertexBufferPrivate::supported;
@@ -1778,7 +1763,6 @@ void GLVertexBuffer::reset()
     d->color          = QColor(0, 0, 0, 255);
     d->numberVertices = 0;
     d->dimension      = 2;
-    d->useShader      = false;
     d->useTexCoords   = true;
 }
 

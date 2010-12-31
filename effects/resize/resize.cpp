@@ -94,7 +94,6 @@ void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                 vbo->setUseColor(true);
                 if (ShaderManager::instance()->isValid()) {
                     ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-                    vbo->setUseShader(true);
                 }
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );

@@ -130,7 +130,7 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
              ++i )
             {
             QRect r = starRect( i );
-            texture->render( region, r, useShader );
+            texture->render( region, r );
             }
         texture->unbind();
         glDisable(GL_BLEND);

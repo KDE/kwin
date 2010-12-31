@@ -550,7 +550,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 verts << vertices[6] << vertices[7] << vertices[8];
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
-                vbo->setUseShader(true);
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
 
@@ -1123,9 +1122,6 @@ void CubeEffect::paintCubeCap()
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
     m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
-    if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
-        m_cubeCapBuffer->setUseShader(true);
-    }
     }
 
 void CubeEffect::paintCylinderCap()
