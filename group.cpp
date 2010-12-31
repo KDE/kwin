@@ -682,6 +682,7 @@ void Client::setTransient( Window new_transient_for_id )
         if( isTopMenu())
             workspace()->updateCurrentTopMenu();
         workspace()->updateClientLayer( this );
+        workspace()->resetUpdateToolWindowsTimer();
         }
     }
 

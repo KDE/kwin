@@ -161,6 +161,7 @@ class Workspace : public QObject, public KDecorationDefines
         void restack( Client *c, Client *under );
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client* );
+        void resetUpdateToolWindowsTimer();
         void restoreSessionStackingOrder( Client* c );
         void updateStackingOrder( bool propagate_new_clients = false );
         void forceRestacking();

@@ -1023,7 +1023,13 @@ void Workspace::updateToolWindows( bool also_hide )
         }
     else // setActiveClient() is after called with NULL client, quickly followed
          // by setting a new client, which would result in flickering
-        updateToolWindowsTimer.start( 50 );
+        resetUpdateToolWindowsTimer();
+    }
+
+
+void Workspace::resetUpdateToolWindowsTimer()
+    {
+    updateToolWindowsTimer.start( 200 );
     }
 
 void Workspace::slotUpdateToolWindows()
