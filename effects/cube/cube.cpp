@@ -900,7 +900,13 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
         capShader = true;
         ShaderManager::instance()->pushShader(m_capShader);
-        m_capShader->setUniform("u_opacity", cubeOpacity);
+        float opacity = cubeOpacity;
+        if (start) {
+            opacity *= timeLine.value();
+        } else if (stop) {
+            opacity *= (1.0 - timeLine.value());
+        }
+        m_capShader->setUniform("u_opacity", opacity);
         m_capShader->setUniform("u_mirror", 1);
         if (reflectionPainting) {
             m_capShader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix);
