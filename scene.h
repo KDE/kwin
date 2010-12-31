@@ -92,6 +92,7 @@ class Scene
             };
         // types of filtering available
         enum ImageFilterType { ImageFilterFast, ImageFilterGood };
+        inline uint estimatedRenderTime() { return lastRenderTime; }
         // there's nothing to paint (adjust time_diff later)
         void idle();
         bool waitSyncAvailable() { return has_waitSync; }
@@ -143,6 +144,7 @@ class Scene
         QRegion painted_region;
         // time since last repaint
         int time_diff;
+        uint lastRenderTime;
         QTime last_time;
         Workspace* wspace;
         bool has_waitSync;

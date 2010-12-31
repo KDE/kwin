@@ -1062,7 +1062,7 @@ class Workspace : public QObject, public KDecorationDefines
         int compositeTimer;
         QTime nextPaintReference;
         QTimer mousePollingTimer;
-        uint vBlankInterval;
+        uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
         int xrrRefreshRate; // used only for compositing
         QRegion repaints_region;
         Window overlay; // XComposite overlay window

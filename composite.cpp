@@ -199,8 +199,17 @@ void Workspace::setupCompositing()
         return;
         }
     xrrRefreshRate = KWin::currentRefreshRate();
-    // invalidate timer -> bounds delay to 0 and the update happens instantly
-    nextPaintReference = QTime::currentTime().addMSecs( -1000 );
+    fpsInterval = (options->maxFpsInterval<<10);
+    if ( scene->waitSyncAvailable() ) // if we do vsync, set the fps to the next multiple of the vblank rate
+        {
+        vBlankInterval = (1000<<10)/xrrRefreshRate;
+        fpsInterval -= (fpsInterval % vBlankInterval);
+        fpsInterval = qMax(fpsInterval, vBlankInterval);
+        }
+    else
+        vBlankInterval = 1<<10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
+    vBlankPadding = 3; // vblank rounding errors... :-(
+    nextPaintReference = QTime::currentTime();
     checkCompositeTimer();
     composite_paint_times.clear();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
@@ -388,9 +397,7 @@ void Workspace::performCompositing()
     if((( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         || !overlay_visible )) // nothing is visible anyway
         {
-        // invalidate timer, we're idle, thus have already waited maxFps don't want to
-        // wait more when we woke up
-        nextPaintReference = QTime::currentTime().addMSecs( -1000 );
+        vBlankPadding += 3;
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
@@ -398,8 +405,6 @@ void Workspace::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
         }
-    // we paint now, how much time ever it takes, we wanna show up in maxfps from now
-    nextPaintReference = QTime::currentTime();
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
     foreach( EffectWindow* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
@@ -432,7 +437,18 @@ void Workspace::performCompositing()
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
     QTime t = QTime::currentTime();
-    scene->paint( repaints, windows );
+    if ( scene->waitSyncAvailable() )
+    {   // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
+        scene->paint( repaints, windows );
+        nextPaintReference = QTime::currentTime();
+    }
+    else
+    {   // no vsyc -> inversion: reset the timer, then paint the scene, this way we can provide a constant framerate
+        nextPaintReference = QTime::currentTime();
+        scene->paint( repaints, windows );
+    }
+    // reset the roundin error corrective... :-(
+    vBlankPadding = 3;
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // checkCompositeTime() would restart it again somewhen later, called from functions that
@@ -468,11 +484,25 @@ void Workspace::setCompositeTimer()
     {
     if( !compositing()) // should not really happen, but there may be e.g. some damage events still pending
         return;
-    // should be added for the next paint. qBound() for protection; system time can change without notice.
+    
     if ( compositeTimer )
         killTimer( compositeTimer );
-    int delay = options->maxFpsInterval - (qBound( 0, nextPaintReference.msecsTo( QTime::currentTime() ), 250 ) % options->maxFpsInterval);
-    compositeTimer = startTimer( delay );
+
+    // interval - "time since last paint completion" - "time we need to paint"
+    uint passed = nextPaintReference.msecsTo( QTime::currentTime() ) << 10;
+    uint delay = fpsInterval;
+    if ( scene->waitSyncAvailable() )
+        {
+        if ( passed > fpsInterval )
+            {
+            delay = vBlankInterval;
+            passed %= vBlankInterval;
+            }
+        delay -= ( (passed + ((scene->estimatedRenderTime() + vBlankPadding)<<10) ) % vBlankInterval );
+        }
+    else
+        delay = qBound( 0, int(delay - passed), 250<<10 );
+    compositeTimer = startTimer( delay>>10 );
     }
 
 void Workspace::startMousePolling()

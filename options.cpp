@@ -251,7 +251,7 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
     config=KConfigGroup(_config,"Compositing");
-    maxFpsInterval = qRound(1000.0/config.readEntry( "MaxFPS", 35 ));
+    maxFpsInterval = qRound(1000.0/config.readEntry( "MaxFPS", 60 ));
     refreshRate = config.readEntry( "RefreshRate", 0 );
 
     // Read button tooltip animation effect from kdeglobals
