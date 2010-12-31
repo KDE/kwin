@@ -901,6 +901,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         capShader = true;
         ShaderManager::instance()->pushShader(m_capShader);
         m_capShader->setUniform("u_opacity", cubeOpacity);
+        m_capShader->setUniform("u_mirror", 1);
         if (reflectionPainting) {
             m_capShader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix);
         } else {
@@ -970,6 +971,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     capMatrix.translate(0.0, -rect.height(), 0.0);
     if (capShader) {
         m_capShader->setUniform("windowTransformation", capMatrix);
+        m_capShader->setUniform("u_mirror", 0);
     } else {
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_TEXTURE );
