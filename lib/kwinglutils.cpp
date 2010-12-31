@@ -1087,12 +1087,6 @@ float GLShader::textureWidth()
     return mTextureWidth;
     }
 
-void GLShader::bindAttributeLocation(int index, const char* name)
-    {
-    glBindAttribLocation(mProgram, index, name);
-    // TODO: relink the shader
-    }
-
 QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
 {
     int location = uniformLocation(name);

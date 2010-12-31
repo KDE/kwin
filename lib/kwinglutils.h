@@ -250,15 +250,6 @@ class KWIN_EXPORT GLShader
         int attributeLocation(const char* name);
         bool setAttribute(const char* name, float value);
         /**
-         * Binds an attribute location for this shader.
-         * The rendering pipeline assumes vertices to be bound to index 0
-         * and texcoords to index 1.
-         * @param index the index of the location to be bound
-         * @param name the name of the attribute
-         * @since 4.7
-         */
-        void bindAttributeLocation(int index, const char* name);
-        /**
          * @return The value of the uniform as a matrix
          * @since 4.7
          **/
