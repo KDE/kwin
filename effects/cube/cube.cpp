@@ -88,10 +88,10 @@ CubeEffect::CubeEffect()
     , zOrderingFactor( 0.0f )
     , mAddedHeightCoeff1( 0.0f )
     , mAddedHeightCoeff2( 0.0f )
-    , m_cubeCapBuffer( NULL )
     , capListCreated( false )
     , recompileList( true )
     , glList( 0 )
+    , m_cubeCapBuffer( NULL )
     , m_proxy( this )
     {
     desktopNameFont.setBold( true );
@@ -467,17 +467,17 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #endif
 
             // call the inside cube effects
+#ifndef KWIN_HAVE_OPENGLES
             foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
                 {
-#ifndef KWIN_HAVE_OPENGLES
                 glPushMatrix();
                 glCallList( glList );
                 glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
                 glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
                 inside->paint();
                 glPopMatrix();
-#endif
                 }
+#endif
 
             glCullFace( GL_FRONT );
             if( mode == Cylinder )
@@ -610,17 +610,17 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 
         // call the inside cube effects
+#ifndef KWIN_HAVE_OPENGLES
         foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
             {
-#ifndef KWIN_HAVE_OPENGLES
             glPushMatrix();
             glCallList( glList );
             glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
             glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
             inside->paint();
             glPopMatrix();
-#endif
             }
+#endif
 
         glCullFace( GL_BACK );
         if( mode == Cylinder )

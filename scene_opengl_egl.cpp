@@ -199,6 +199,7 @@ void SceneOpenGL::waitSync()
 
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
+    Q_UNUSED(damage)
     glFlush();
     if( mask & PAINT_SCREEN_REGION )
         {

@@ -182,7 +182,15 @@ void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
+    Q_UNUSED(count)
+    Q_UNUSED(vertices)
+    Q_UNUSED(texture)
+    Q_UNUSED(color)
+    Q_UNUSED(dim)
+    Q_UNUSED(stride)
+#else
     // Using arrays only makes sense if we have larger number of vertices.
     //  Otherwise overhead of enabling/disabling them is too big.
     bool use_arrays = (count > 5);
@@ -239,7 +247,14 @@ void renderGLGeometry( const QRegion& region, int count,
 void renderGLGeometryImmediate( int count, const float* vertices, const float* texture, const float* color,
       int dim, int stride )
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(count)
+    Q_UNUSED(vertices)
+    Q_UNUSED(texture)
+    Q_UNUSED(color)
+    Q_UNUSED(dim)
+    Q_UNUSED(stride)
+#else
     // Find out correct glVertex*fv function according to dim parameter.
     void ( *glVertexFunc )( const float* ) = glVertex2fv;
     if( dim == 3 )
@@ -712,7 +727,11 @@ void GLTexture::enableFilter()
     }
 
 static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum texture_format)
-    { // Copied from Qt
+    {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(texture_format)
+#endif
+    // Copied from Qt
     Q_ASSERT(dst.size() == img.size());
     Q_ASSERT(dst.depth() == 32);
     Q_ASSERT(img.depth() == 32);
@@ -1551,7 +1570,10 @@ GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 
 void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode )
     {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
+    Q_UNUSED(primitiveMode)
+#else
     // Enable arrays
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( dimension, GL_FLOAT, 0, legacyVertices.constData() );

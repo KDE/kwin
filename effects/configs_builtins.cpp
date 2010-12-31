@@ -54,7 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magnifier/magnifier_config.h"
 #include "sharpen/sharpen_config.h"
 #include "snow/snow_config.h"
-#endif KWIN_HAVE_OPENGLES
+#endif
 #endif
 
 #include <kwineffects.h>
@@ -96,7 +96,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( magnifier, MagnifierEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
-#endif KWIN_HAVE_OPENGLES
+#endif
 #endif
     )
 

@@ -796,7 +796,12 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
 
 void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(type)
+    Q_UNUSED(opacity)
+    Q_UNUSED(brightness)
+    Q_UNUSED(saturation)
+#else
     Texture* tex;
     bool alpha = false;
     bool opaque = true;
@@ -988,7 +993,12 @@ void SceneOpenGL::Window::restoreShaderRenderStates( TextureType type, double op
 
 void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(type)
+    Q_UNUSED(opacity)
+    Q_UNUSED(brightness)
+    Q_UNUSED(saturation)
+#else
     Texture* tex;
     switch( type )
         {
@@ -1041,8 +1051,8 @@ SceneOpenGL::EffectFrame::EffectFrame( EffectFrameImpl* frame )
     : Scene::EffectFrame( frame )
     , m_texture( NULL )
     , m_textTexture( NULL )
-    , m_textPixmap( NULL )
     , m_oldTextTexture( NULL )
+    , m_textPixmap( NULL )
     , m_iconTexture( NULL )
     , m_oldIconTexture( NULL )
     , m_selectionTexture( NULL )
