@@ -367,6 +367,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
     mStrictBinding = !gl->supports( LooseBinding );
     if ( gl->driver() == Driver_Intel )
         mEnableVSync = false;
+#endif
     }
 
 
