@@ -95,7 +95,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
 
     // scene shader setup
-    GLPlatform::instance()->detect();
     if( GLPlatform::instance()->supports( GLSL ) )
         {
         if (!ShaderManager::instance()->isValid()) {
@@ -898,7 +897,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             }
         if( options->glStrictBinding )
             // Mark the texture as damaged so it will be updated on the next call to bind()
-            damaged = true;
+            glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     else if( shm_mode )
         { // copy pixmap contents to a texture via shared memory

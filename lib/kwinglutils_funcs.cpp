@@ -103,6 +103,7 @@ glUniform1fv_func glUniform1fv;
 glUniform2fv_func glUniform2fv;
 glUniform3fv_func glUniform3fv;
 glUniform4fv_func glUniform4fv;
+glGetUniformfv_func glGetUniformfv;
 glUniformMatrix4fv_func glUniformMatrix4fv;
 glValidateProgram_func glValidateProgram;
 glGetUniformLocation_func glGetUniformLocation;
@@ -267,6 +268,7 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glVertexAttrib1f, glVertexAttrib1fARB );
         GL_RESOLVE_WITH_EXT( glGetAttribLocation, glGetAttribLocationARB );
         GL_RESOLVE_WITH_EXT( glBindAttribLocation, glBindAttribLocationARB );
+        GL_RESOLVE_WITH_EXT( glGetUniformfv, glGetUniformfvARB );
         }
     if( hasGLExtension( "GL_ARB_fragment_program" ) && hasGLExtension( "GL_ARB_vertex_program" ))
         {
