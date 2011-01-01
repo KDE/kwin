@@ -373,17 +373,11 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             {
             // restrict painting the reflections to the current screen
             PaintClipper::push( QRegion( rect ));
-#ifndef KWIN_HAVE_OPENGLES
-            glPushMatrix();
-#endif
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float scaleFactor = 1000000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             m_reflectionMatrix.setToIdentity();
             m_reflectionMatrix.scale(1.0, -1.0, 1.0);
-#ifndef KWIN_HAVE_OPENGLES
-            glScalef( 1.0, -1.0, 1.0 );
-#endif
 
             // TODO reflection is not correct when mixing manual (mouse) rotating with rotation by cursor keys
             // there's also a small bug when zooming
@@ -392,18 +386,12 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             if( manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1 )
                 {
                 m_reflectionMatrix.translate(0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
-#ifndef KWIN_HAVE_OPENGLES
-                glTranslatef( 0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
-#endif
                 }
             else
                 {
                 m_reflectionMatrix.translate(0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
-#ifndef KWIN_HAVE_OPENGLES
-                glTranslatef( 0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
-#endif
                 }
-
+            pushMatrix(m_reflectionMatrix);
 
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
@@ -454,8 +442,8 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
             glDisable( GL_CLIP_PLANE0 );
-            glPopMatrix();
 #endif
+            popMatrix();
 
             float vertices[] = {
                 -rect.width()*0.5f, rect.height(), 0.0,
