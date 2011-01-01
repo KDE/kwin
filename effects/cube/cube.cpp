@@ -522,11 +522,11 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 alpha = 0.3 + 0.4 * timeLine.value();
             if( stop )
                 alpha = 0.3 + 0.4 * ( 1.0 - timeLine.value() );
+            glEnable( GL_BLEND );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             ShaderManager *shaderManager = ShaderManager::instance();
             if (shaderManager->isValid() && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
-                glEnable( GL_BLEND );
-                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
                 shaderManager->pushShader(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
                 windowTransformation.translate(rect.x() + rect.width()*0.5f, 0.0, 0.0);
@@ -554,7 +554,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 vbo->render(GL_TRIANGLES);
 
                 shaderManager->popShader();
-                glDisable( GL_BLEND );
             } else {
 #ifndef KWIN_HAVE_OPENGLES
                 glColor4f( 0.0, 0.0, 0.0, alpha );
@@ -572,6 +571,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glPopMatrix();
 #endif
             }
+            glDisable( GL_BLEND );
             PaintClipper::pop( QRegion( rect ));
             }
         glEnable( GL_CULL_FACE );
