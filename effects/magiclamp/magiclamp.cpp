@@ -369,6 +369,8 @@ void MagicLampEffect::windowDeleted( EffectWindow* w )
 
 void MagicLampEffect::windowMinimized( EffectWindow* w )
     {
+    if ( effects->activeFullScreenEffect() )
+        return;
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
     mTimeLineWindows[w].setDuration( mAnimationDuration );
     mTimeLineWindows[w].setProgress(0.0f);
@@ -376,6 +378,8 @@ void MagicLampEffect::windowMinimized( EffectWindow* w )
 
 void MagicLampEffect::windowUnminimized( EffectWindow* w )
     {
+    if ( effects->activeFullScreenEffect() )
+        return;
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
     mTimeLineWindows[w].setDuration( mAnimationDuration );
     mTimeLineWindows[w].setProgress(1.0f);
