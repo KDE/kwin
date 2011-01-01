@@ -99,6 +99,8 @@ CubeEffect::CubeEffect()
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     const QString capshader = KGlobal::dirs()->findResource("data", "kwin/cube-cap.glsl");
     m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
+    m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
+    m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
 
     reconfigure( ReconfigureAll );
     }
@@ -819,11 +821,8 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_TEXTURE );
 #endif
-        QMatrix4x4 textureMirrorMatrix;
-        textureMirrorMatrix.scale(1.0, -1.0, 1.0);
-        textureMirrorMatrix.translate(0.0, -1.0, 0.0);
         pushMatrix();
-        loadMatrix(textureMirrorMatrix);
+        loadMatrix(m_textureMirrorMatrix);
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_MODELVIEW );
 

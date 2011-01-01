@@ -167,6 +167,7 @@ class CubeEffect
 
         QMatrix4x4 m_rotationMatrix;
         QMatrix4x4 m_reflectionMatrix;
+        QMatrix4x4 m_textureMirrorMatrix;
         GLVertexBuffer *m_cubeCapBuffer;
 
         // Shortcuts - needed to toggle the effect
