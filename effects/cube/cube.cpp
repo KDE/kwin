@@ -1712,7 +1712,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             paint = paint.subtracted( QRegion( w->geometry()));
             // in case of free area in multiscreen setup fill it with cap color
-#ifndef KWIN_HAVE_OPENGLES
             if( !paint.isEmpty() )
                 {
                 if( mode == Cylinder )
@@ -1726,11 +1725,12 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     sphereShader->setUniform( "xCoord", 0.0f );
                     sphereShader->setUniform( "yCoord", 0.0f );
                     }
-                glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
+#ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-                glBegin( GL_QUADS );
+                QVector<float> verts;
                 float quadSize = 0.0f;
                 int leftDesktop = frontDesktop -1;
                 int rightDesktop = frontDesktop + 1;
@@ -1750,21 +1750,27 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                         {
                         for( int j=0; j<=(paintRect.width()/quadSize); j++ )
                             {
-                            glVertex2f( paintRect.x()+j*quadSize, paintRect.y()+i*quadSize );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
-                                paintRect.y()+i*quadSize );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
-                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
-                            glVertex2f( paintRect.x()+j*quadSize,
-                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
+                            verts << paintRect.x()+j*quadSize << paintRect.y()+i*quadSize;
+                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
                             }
                         }
                     }
-                glEnd();
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                QColor color = capColor;
+                capColor.setAlphaF(cubeOpacity);
+                vbo->setColor(color);
+                vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+                vbo->render(GL_TRIANGLES);
                 glDisable( GL_BLEND );
+#ifndef KWIN_HAVE_OPENGLES
                 glPopAttrib();
-                }
 #endif
+                }
             }
 #ifndef KWIN_HAVE_OPENGLES
         glPopMatrix();
