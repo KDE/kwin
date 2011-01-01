@@ -917,25 +917,17 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
             capTexture->bind();
         }
     } else {
-#ifndef KWIN_HAVE_OPENGLES
-        // TODO: required transformations - should use the capMatrix and rotationMatrix
-        glPushMatrix();
-        glCallList( glList );
-        glTranslatef( rect.width()/2, 0.0, zOffset );
-        glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-        glTranslatef( 0.0, rect.height(), 0.0 );
-        if( mode == Sphere )
-            {
-            glPushMatrix();
-            glScalef( 1.0, -1.0, 1.0 );
-            }
+        pushMatrix(m_rotationMatrix*capMatrix);
 
-        // TODO: mirroring should depend on the current rendering mode
+#ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_TEXTURE );
-        glPushMatrix();
-        glLoadIdentity();
-        glScalef( 1.0f, -1.0f, 1.0f );
-        glTranslatef( 0.0f, -1.0f, 0.0f );
+#endif
+        QMatrix4x4 textureMirrorMatrix;
+        textureMirrorMatrix.scale(1.0, -1.0, 1.0);
+        textureMirrorMatrix.translate(0.0, -1.0, 0.0);
+        pushMatrix();
+        loadMatrix(textureMirrorMatrix);
+#ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_MODELVIEW );
 
         glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
@@ -980,13 +972,11 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     } else {
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode( GL_TEXTURE );
-        glPopMatrix();
+        popMatrix();
         glMatrixMode( GL_MODELVIEW );
-
-        if( mode == Sphere )
-            glPopMatrix();
-        glTranslatef( 0.0, -rect.height(), 0.0 );
 #endif
+        popMatrix();
+        pushMatrix(m_rotationMatrix*capMatrix);
     }
     glCullFace(secondCull);
     m_cubeCapBuffer->render(GL_TRIANGLES);
@@ -998,18 +988,18 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
             capTexture->unbind();
         }
     } else {
-#ifndef KWIN_HAVE_OPENGLES
-        glPopMatrix();
+        popMatrix();
         if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glActiveTexture( GL_TEXTURE1 );
             glDisable( capTexture->target() );
             glActiveTexture( GL_TEXTURE0 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
             glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
             capTexture->unbind();
-            }
 #endif
+            }
     }
     }
 
