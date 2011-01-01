@@ -122,7 +122,7 @@ void WindowGeometry::windowUserMovedResized( EffectWindow* w, bool first, bool l
 static inline QString number(int n)
     {
     if ( n >= 0 )
-        return  "+" + QString::number(n);
+        return  '+' + QString::number(n);
     return QString::number(n); // "-" is auto-applied
     }
     
