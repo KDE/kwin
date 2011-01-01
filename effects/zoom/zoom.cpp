@@ -342,9 +342,9 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
     if( zoom != 1.0 && mousePointer != MousePointerHide )
         {
-        // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hidding the
+        // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
         // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
-        // mouse-cursor up and to re-position those mouse-cursor to match to the choosen zoom-level.
+        // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( texture )
             {

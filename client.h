@@ -462,7 +462,7 @@ class Client
         void repaintDecorationPending();
     
     //Signals for the scripting interface
-    //Signals make an excellent way for communcation
+    //Signals make an excellent way for communication
     //in between objects as compared to simple function
     //calls
     signals:

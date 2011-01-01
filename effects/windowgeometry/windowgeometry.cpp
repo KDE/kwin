@@ -157,7 +157,7 @@ void WindowGeometry::windowMoveResizeGeometryUpdate( EffectWindow* w, const QRec
             // dogslow QString::arg() system here?
             myMeasure[1]->setText( myResizeString.arg( r.width() ).arg( r.height() ).arg( number(dx) ).arg( number(dy) ) );
             
-            // calc width for bottomright element, superflous otherwise
+            // calc width for bottomright element, superfluous otherwise
             dx = r.right() - r2.right();
             dy = r.bottom() - r2.bottom();
             }
