@@ -152,6 +152,14 @@ KWIN_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
  **/
 KWIN_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
 /**
+ * Replaces the current matrix on GL stack with @p matrix.
+ * In GLES this method is a no-op. This method should be preferred over glLoadMatrix
+ * as it also handles GLES.
+ * @param matrix The new matrix to replace the existing one on the GL stack.
+ * @since 4.7
+ **/
+KWIN_EXPORT void loadMatrix(const QMatrix4x4 &matrix);
+/**
  * Pops the current matrix from the GL matrix stack.
  * In GLES this method is a noop. This method should be preferred over glPopMatrix
  * as it also handles GLES.

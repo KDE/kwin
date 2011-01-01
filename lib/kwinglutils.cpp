@@ -351,6 +351,22 @@ void multiplyMatrix(const QMatrix4x4 &matrix)
 #endif
 }
 
+void loadMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    GLfloat m[16];
+    const qreal *data = matrix.constData();
+    for (int i = 0; i < 4; ++i) {
+        for (int j=0; j < 4; ++j) {
+            m[i*4+j] = data[i*4+j];
+        }
+    }
+    glLoadMatrixf(m);
+#endif
+}
+
 void popMatrix()
 {
 #ifndef KWIN_HAVE_OPENGLES
