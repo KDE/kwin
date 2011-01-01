@@ -125,6 +125,40 @@ KWIN_EXPORT void renderGLGeometryImmediate( int count,
  **/
 KWIN_EXPORT void addQuadVertices( QVector<float>& verts, float x1, float y1, float x2, float y2 );
 
+/**
+ * Push a new matrix on the GL matrix stack.
+ * In GLES this method is a noop. This method should be preferred over glPushMatrix
+ * as it also handles GLES.
+ * @since 4.7
+ **/
+KWIN_EXPORT void pushMatrix();
+/**
+ * Multiplies current matrix on GL stack with @p matrix and pushes the result on the matrix stack.
+ * This method is the same as pushMatrix followed by multiplyMatrix.
+ * In GLES this method is a noop. This method should be preferred over glPushMatrix
+ * as it also handles GLES.
+ * @param matrix The matrix the current matrix on the stack should be multiplied with.
+ * @see pushMatrix
+ * @see multiplyMatrix
+ * @since 4.7
+ **/
+KWIN_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
+/**
+ * Multiplies the current matrix on GL stack with @p matrix.
+ * In GLES this method is a noop. This method should be preferred over glMultMatrix
+ * as it also handles GLES.
+ * @param matrix The matrix the current matrix on the stack should be multiplied with.
+ * @since 4.7
+ **/
+KWIN_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
+/**
+ * Pops the current matrix from the GL matrix stack.
+ * In GLES this method is a noop. This method should be preferred over glPopMatrix
+ * as it also handles GLES.
+ * @since 4.7
+ **/
+KWIN_EXPORT void popMatrix();
+
 
 class KWIN_EXPORT GLTexture
     : public QSharedData

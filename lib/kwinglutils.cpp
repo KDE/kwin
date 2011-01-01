@@ -318,6 +318,46 @@ void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float 
     verts << x2 << y1;
 }
 
+void pushMatrix()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glPushMatrix();
+#endif
+}
+
+void pushMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    glPushMatrix();
+    multiplyMatrix(matrix);
+#endif
+}
+
+void multiplyMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    GLfloat m[16];
+    const qreal *data = matrix.constData();
+    for (int i = 0; i < 4; ++i) {
+        for (int j=0; j < 4; ++j) {
+            m[i*4+j] = data[i*4+j];
+        }
+    }
+    glMultMatrixf(m);
+#endif
+}
+
+void popMatrix()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glPopMatrix();
+#endif
+}
+
 //****************************************
 // GLTexture
 //****************************************
