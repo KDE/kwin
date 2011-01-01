@@ -461,12 +461,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
         sceneShader = true;
     }
+    QMatrix4x4 windowTransformation;
+    windowTransformation.translate(x, y);
     if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
-        x += data.xTranslate;
-        y += data.yTranslate;
-        z += data.zTranslate;
-        QMatrix4x4 windowTransformation;
-        windowTransformation.translate(x, y, z);
+        windowTransformation.translate(data.xTranslate, data.yTranslate, data.zTranslate);
         if ((mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1)) {
             windowTransformation.scale(data.xScale, data.yScale, data.zScale);
         }
@@ -496,33 +494,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     }
     if( !sceneShader )
         {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushMatrix();
-        glTranslatef( x, y, z );
-        if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1 ))
-            glScalef( data.xScale, data.yScale, data.zScale );
-        if(( mask & PAINT_WINDOW_TRANSFORMED ) && data.rotation )
-            {
-            glTranslatef( data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint );
-            float xAxis = 0.0;
-            float yAxis = 0.0;
-            float zAxis = 0.0;
-            switch( data.rotation->axis )
-                {
-                case RotationData::XAxis:
-                    xAxis = 1.0;
-                    break;
-                case RotationData::YAxis:
-                    yAxis = 1.0;
-                    break;
-                case RotationData::ZAxis:
-                    zAxis = 1.0;
-                    break;
-                }
-            glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
-            glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
-            }
-#endif
+        pushMatrix(windowTransformation);
         }
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
@@ -625,10 +597,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         ShaderManager::instance()->popShader();
         data.shader = NULL;
         }
-#ifndef KWIN_HAVE_OPENGLES
-    else
-        glPopMatrix();
-#endif
+    else {
+        popMatrix();
+    }
     }
 
 void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco )
