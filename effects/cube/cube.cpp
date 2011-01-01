@@ -1433,9 +1433,9 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         int next_desktop = painting_desktop +1;
         if( next_desktop > effects->numberOfDesktops() )
             next_desktop = 1;
-#ifndef KWIN_HAVE_OPENGLES
-        glPushMatrix();
-#endif
+        if (!shader) {
+            pushMatrix();
+        }
         if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
             QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
@@ -1448,20 +1448,22 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
-#ifdef KWIN_HAVE_OPENGLES
-            data.xTranslate = -rect.width();
-#else
-            RotationData rot = RotationData();
-            rot.axis = RotationData::YAxis;
-            rot.xRotationPoint = rect.width() - w->x();
-            rot.angle = 360.0f / effects->numberOfDesktops();
-            data.rotation = &rot;
-            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-            glTranslatef( rect.width()/2, 0.0, -point );
-            glRotatef( -360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( -rect.width()/2, 0.0, point );
-#endif
+            if (shader) {
+                data.xTranslate = -rect.width();
+            } else {
+                RotationData rot = RotationData();
+                rot.axis = RotationData::YAxis;
+                rot.xRotationPoint = rect.width() - w->x();
+                rot.angle = 360.0f / effects->numberOfDesktops();
+                data.rotation = &rot;
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                QMatrix4x4 matrix;
+                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.rotate(-360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+                matrix.translate(-rect.width()/2, 0.0, point);
+                multiplyMatrix(matrix);
+            }
             }
         if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
@@ -1475,20 +1477,22 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
-#ifdef KWIN_HAVE_OPENGLES
-            data.xTranslate = rect.width();
-#else
-            RotationData rot = RotationData();
-            rot.axis = RotationData::YAxis;
-            rot.xRotationPoint = -w->x();
-            rot.angle = -360.0f / effects->numberOfDesktops();
-            data.rotation = &rot;
-            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-            glTranslatef( rect.width()/2, 0.0, -point );
-            glRotatef( 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( -rect.width()/2, 0.0, point );
-#endif
+            if (shader) {
+                data.xTranslate = rect.width();
+            } else {
+                RotationData rot = RotationData();
+                rot.axis = RotationData::YAxis;
+                rot.xRotationPoint = -w->x();
+                rot.angle = -360.0f / effects->numberOfDesktops();
+                data.rotation = &rot;
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                QMatrix4x4 matrix;
+                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.rotate(360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+                matrix.translate(-rect.width()/2, 0.0, point);
+                multiplyMatrix(matrix);
+            }
             }
         QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
 
@@ -1654,9 +1658,9 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 #endif
                 }
             }
-#ifndef KWIN_HAVE_OPENGLES
-        glPopMatrix();
-#endif
+        if (!shader) {
+            popMatrix();
+        }
         if( mode == Cylinder )
             cylinderShader->unbind();
         if( mode == Sphere )
