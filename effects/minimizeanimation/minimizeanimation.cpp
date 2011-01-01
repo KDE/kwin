@@ -121,6 +121,8 @@ void MinimizeAnimationEffect::windowDeleted( EffectWindow* w )
 
 void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
     {
+    if ( effects->activeFullScreenEffect() )
+        return;
     TimeLine &timeline = mTimeLineWindows[w];
     timeline.setCurveShape(TimeLine::EaseInCurve);
     timeline.setDuration( animationTime( 250 ));
@@ -129,6 +131,8 @@ void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
 
 void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
     {
+    if ( effects->activeFullScreenEffect() )
+        return;
     TimeLine &timeline = mTimeLineWindows[w];
     timeline.setCurveShape(TimeLine::EaseOutCurve);
     timeline.setDuration( animationTime( 250 ));
