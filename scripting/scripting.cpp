@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <kstandarddirs.h>
 #include "scripting.h"
+#include <kstandarddirs.h>
 
 KWin::Scripting::Scripting()
     {
@@ -32,7 +32,7 @@ void KWin::Scripting::start()
     QStringList scriptFilters;
     QString sDirectory = KStandardDirs::locateLocal("data", "kwin/scripts/");
     
-    if(sDirectory == "") {
+    if(sDirectory.isEmpty()) {
         // Abort scripting setup. No location found to locate scripts
         return;
     }

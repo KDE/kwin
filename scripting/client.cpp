@@ -487,7 +487,7 @@ QScriptValue SWrapper::Client::getWindowInfo(QScriptContext* ctx, QScriptEngine*
         }
     else
         {
-        // For now atleast, just get all propeties. Tweaking will be taken care
+        // For now at least, just get all properties. Tweaking will be taken care
         // of later. TODO
         KWindowInfo info = KWindowSystem::windowInfo(central->window(), -1U, -1U);
         return SWrapper::WindowInfo::generate(info, eng, central);

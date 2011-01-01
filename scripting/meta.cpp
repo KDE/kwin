@@ -192,7 +192,7 @@ QScriptValue KWin::MetaScripting::getConfigValue(QScriptContext* ctx, QScriptEng
     QHash<QString, QVariant> scriptConfig = (((ctx->thisObject()).data()).toVariant()).toHash();
 
     /*
-     * Handle config.get() seperately. Compute and return immediately.
+     * Handle config.get() separately. Compute and return immediately.
      **/
     if(num == 0)
         {
@@ -310,4 +310,3 @@ QScriptValue KWin::MetaScripting::getLazyLogicFunction(QScriptEngine* eng, const
     base.setData(data);
     return base;
     }
-    

@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef __KWIN_SCRIPTING_WORKSPACEPROXY_H_
-#define __KWIN_SCRIPTING_WORKSPACEPROXY_H_
+#ifndef KWIN_SCRIPTING_WORKSPACEPROXY_H
+#define KWIN_SCRIPTING_WORKSPACEPROXY_H
 
 #include <QObject>
 #include <QScriptValue>

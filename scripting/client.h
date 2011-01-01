@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef __KWIN__SCRIPTING_CLIENT_H
-#define __KWIN__SCRIPTING_CLIENT_H
+#ifndef KWIN_SCRIPTING_CLIENT_H
+#define KWIN_SCRIPTING_CLIENT_H
 
 #include <QDebug>
 #include "./../workspace.h"

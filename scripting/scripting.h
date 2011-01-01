@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef __KWIN__SCRIPTING_H_
-#define __KWIN__SCRIPTING_H_
+#ifndef KWIN_SCRIPTING_H
+#define KWIN_SCRIPTING_H
 
 #include <QScriptClass>
 #include <QScriptEngine>
@@ -77,7 +77,7 @@ class Scripting : public QScriptEngine
         QVector<KWin::Script*> scripts;
         SWrapper::WorkspaceProxy proxy;
 
-        // Preferrably call ONLY at loadtime
+        // Preferably call ONLY at load time
         void runScripts();
 
         // NOTE: Runtime script running is not yet tested.
