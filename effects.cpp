@@ -1037,7 +1037,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     assert( current_build_quads == 0 );
     assert( current_transform == 0 );
 
-    if( !name.startsWith("kwin4_effect_") )
+    if( !name.startsWith(QLatin1String("kwin4_effect_")) )
         kWarning( 1212 ) << "Effect names usually have kwin4_effect_ prefix" ;
 
     // Make sure a single effect won't be loaded multiple times
