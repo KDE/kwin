@@ -54,7 +54,6 @@ class CubeEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
-        virtual void windowAdded( EffectWindow* );
 
         // proxy functions
         virtual void* proxy();
@@ -166,10 +165,6 @@ class CubeEffect
         float mAddedHeightCoeff1;
         float mAddedHeightCoeff2;
 
-        // GL lists
-        bool capListCreated;
-        bool recompileList;
-        GLuint glList;
         QMatrix4x4 m_rotationMatrix;
         QMatrix4x4 m_reflectionMatrix;
         GLVertexBuffer *m_cubeCapBuffer;

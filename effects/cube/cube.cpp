@@ -88,9 +88,6 @@ CubeEffect::CubeEffect()
     , zOrderingFactor( 0.0f )
     , mAddedHeightCoeff1( 0.0f )
     , mAddedHeightCoeff2( 0.0f )
-    , capListCreated( false )
-    , recompileList( true )
-    , glList( 0 )
     , m_cubeCapBuffer( NULL )
     , m_proxy( this )
     {
@@ -325,12 +322,12 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         if( rotating || start || stop )
             {
             timeLine.addTime( time );
-            recompileList = true;
+            rotateCube();
             }
         if( verticalRotating )
             {
             verticalTimeLine.addTime( time );
-            recompileList = true;
+            rotateCube();
             }
         }
     effects->prePaintScreen( data, time );
@@ -340,32 +337,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( activated )
         {
-        if( recompileList )
-            {
-            recompileList = false;
-#ifdef KWIN_HAVE_OPENGLES
-            rotateCube();
-#else
-            glPushMatrix();
-            glNewList( glList, GL_COMPILE );
-            rotateCube();
-            glEndList();
-            glPopMatrix();
-#endif
-            }
-
-        // compile List for cube
-        if( useList )
-            {
-#ifndef KWIN_HAVE_OPENGLES
-            glNewList( glList + 1, GL_COMPILE );
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            glEndList();
-#endif
-            }
-
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
         // background
@@ -450,32 +421,19 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 cylinderShader->setUniform( "front", 1.0f );
                 cylinderShader->unbind();
                 }
-#ifdef KWIN_HAVE_OPENGLES
-            paintCube( mask, region, data );
-#else
-            glPushMatrix();
-            glCallList( glList );
-            if( useList )
-                glCallList( glList + 1 );
-            else
-                {
-                glPushMatrix();
-                paintCube( mask, region, data );
-                glPopMatrix();
-                }
-            glPopMatrix();
-#endif
+            pushMatrix(m_rotationMatrix);
+            paintCube(mask, region, data);
+            popMatrix();
 
             // call the inside cube effects
 #ifndef KWIN_HAVE_OPENGLES
             foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
                 {
-                glPushMatrix();
-                glCallList( glList );
+                pushMatrix(m_rotationMatrix);
                 glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
                 glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
                 inside->paint();
-                glPopMatrix();
+                popMatrix();
                 }
 #endif
 
@@ -486,21 +444,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 cylinderShader->setUniform( "front", -1.0f );
                 cylinderShader->unbind();
                 }
-#ifdef KWIN_HAVE_OPENGLES
-            paintCube( mask, region, data );
-#else
-            glPushMatrix();
-            glCallList( glList );
-            if( useList )
-                glCallList( glList + 1 );
-            else
-                {
-                glPushMatrix();
-                paintCube( mask, region, data );
-                glPopMatrix();
-                }
-            glPopMatrix();
-#endif
+            pushMatrix(m_rotationMatrix);
+            paintCube(mask, region, data);
+            popMatrix();
 
             paintCap(false, -point-zTranslate);
             glDisable( GL_CULL_FACE );
@@ -592,33 +538,20 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             sphereShader->setUniform( "front", -1.0f );
             sphereShader->unbind();
             }
-#ifdef KWIN_HAVE_OPENGLES
-        paintCube( mask, region, data );
-#else
-        glPushMatrix();
-        glCallList( glList );
-        if( useList )
-            glCallList( glList + 1 );
-        else
-            {
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            }
-        glPopMatrix();
-#endif
+        pushMatrix(m_rotationMatrix);
+        paintCube(mask, region, data);
+        popMatrix();
 
 
         // call the inside cube effects
 #ifndef KWIN_HAVE_OPENGLES
         foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
             {
-            glPushMatrix();
-            glCallList( glList );
+            pushMatrix(m_rotationMatrix);
             glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
             glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
             inside->paint();
-            glPopMatrix();
+            popMatrix();
             }
 #endif
 
@@ -635,23 +568,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             sphereShader->setUniform( "front", 1.0f );
             sphereShader->unbind();
             }
-#ifdef KWIN_HAVE_OPENGLES
-        paintCube( mask, region, data );
-#else
-        glPushMatrix();
-        glCallList( glList );
-        if( useList )
-            glCallList( glList + 1 );
-        else
-            {
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            }
-        glPopMatrix();
-        // we painted once without glList, now it's safe to paint using lists
-        useList = true;
-#endif
+        pushMatrix(m_rotationMatrix);
+        paintCube(mask, region, data);
+        popMatrix();
 
         // cap
         paintCap(true, -point-zTranslate);
@@ -758,11 +677,6 @@ void CubeEffect::rotateCube()
         m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
         m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
         m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
-#ifndef KWIN_HAVE_OPENGLES
-        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-        glRotatef( angle, 1.0, 0.0, 0.0 );
-        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
-#endif
         }
     if( rotating || (manualAngle != 0.0) )
         {
@@ -816,11 +730,6 @@ void CubeEffect::rotateCube()
         m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
         m_rotationMatrix.rotate(rotationAngle, 0.0, 1.0, 0.0);
         m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
-#ifndef KWIN_HAVE_OPENGLES
-        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-        glRotatef( rotationAngle, 0.0, 1.0, 0.0 );
-        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
-#endif
         }
     }
 
@@ -1259,10 +1168,6 @@ void CubeEffect::postPaintScreen()
 
                 effects->setActiveFullScreenEffect( 0 );
 
-#ifndef KWIN_HAVE_OPENGLES
-                // delete the GL lists
-                glDeleteLists( glList, 3 );
-#endif
                 delete m_cubeCapBuffer;
                 m_cubeCapBuffer = NULL;
                 desktopNameFrame->free();
@@ -2062,11 +1967,11 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
             case Qt::Key_Plus:
                 zoom -= 10.0;
                 zoom = qMax( -zPosition, zoom );
-                recompileList = true;
+                rotateCube();
                 break;
             case Qt::Key_Minus:
                 zoom += 10.0f;
-                recompileList = true;
+                rotateCube();
                 break;
             default:
                 break;
@@ -2176,13 +2081,7 @@ void CubeEffect::setActive( bool active )
             mAddedHeightCoeff1 = sqrt( float( rect.height() ) * float( rect.height() ) + temporaryCoeff * temporaryCoeff );
             mAddedHeightCoeff2 = sqrt( float( rect.height() ) * float( rect.height() ) + float( rect.width() ) * float( rect.width() ) + temporaryCoeff * temporaryCoeff );
             }
-#ifndef KWIN_HAVE_OPENGLES
-        // create the needed GL lists
-        glList = glGenLists(3);
-#endif
-        capListCreated = false;
-        recompileList = true;
-        useList = false;
+        m_rotationMatrix.setToIdentity();
         effects->addRepaintFull();
         }
     else
@@ -2246,7 +2145,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
             }
         if( repaint )
             {
-            recompileList = true;
+            rotateCube();
             effects->addRepaintFull();
             }
         }
@@ -2353,14 +2252,6 @@ void CubeEffect::tabBoxClosed()
         tabBoxMode = false;
         setActive( false );
         }
-    }
-
-void CubeEffect::windowAdded( EffectWindow* )
-    {
-    // when there is a new window we have to paint it once without using GL List
-    // to prevent that the window is black
-    if( activated )
-        useList = false;
     }
 
 void CubeEffect::cubeShortcutChanged( const QKeySequence& seq )
