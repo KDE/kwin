@@ -255,7 +255,7 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             effects->pushRenderTarget( m_offscreenTarget );
 
             glClear( GL_COLOR_BUFFER_BIT );
-            w->sceneWindow()->performPaint( mask, QRegion(0, 0, sw, sh), thumbData );
+            w->sceneWindow()->performPaint( mask, infiniteRegion(), thumbData );
 
             // Create a scratch texture and copy the rendered window into it
             GLTexture tex( sw, sh );
