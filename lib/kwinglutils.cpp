@@ -1643,13 +1643,14 @@ void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode
     }
 
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-        !iterator.isDone();
-        iterator.next())
-        {
-        glDrawArrays( primitiveMode, 0, numberVertices );
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, numberVertices);
         }
+    } else {
+        glDrawArrays(primitiveMode, 0, numberVertices);
+    }
 
     glDisableClientState( GL_VERTEX_ARRAY );
     if (!legacyTexCoords.isEmpty()) {
@@ -1682,13 +1683,14 @@ void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiv
     }
 
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-        !iterator.isDone();
-        iterator.next())
-        {
-        glDrawArrays( primitiveMode, 0, numberVertices );
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, numberVertices);
         }
+    } else {
+        glDrawArrays(primitiveMode, 0, numberVertices);
+    }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
@@ -1793,13 +1795,14 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
     }
 
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-        !iterator.isDone();
-        iterator.next())
-        {
-        glDrawArrays( primitiveMode, 0, d->numberVertices );
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, d->numberVertices);
         }
+    } else {
+        glDrawArrays(primitiveMode, 0, d->numberVertices);
+    }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
