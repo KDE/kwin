@@ -218,6 +218,92 @@ bool SceneOpenGL::selfCheck()
     return ok;
     }
 
+void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
+{
+    const bool useShader = ShaderManager::instance()->isValid();
+    if (mask & PAINT_SCREEN_TRANSFORMED) {
+        // apply screen transformations
+        QMatrix4x4 screenTransformation;
+        screenTransformation.translate(data.xTranslate, data.yTranslate, data.zTranslate);
+        if (data.rotation) {
+            screenTransformation.translate(data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint);
+            // translate to rotation point, rotate, translate back
+            qreal xAxis = 0.0;
+            qreal yAxis = 0.0;
+            qreal zAxis = 0.0;
+            switch (data.rotation->axis) {
+                case RotationData::XAxis:
+                    xAxis = 1.0;
+                    break;
+                case RotationData::YAxis:
+                    yAxis = 1.0;
+                    break;
+                case RotationData::ZAxis:
+                    zAxis = 1.0;
+                    break;
+            }
+            screenTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
+            screenTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
+        }
+        screenTransformation.scale(data.xScale, data.yScale, data.zScale);
+        if (useShader) {
+            GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+            shader->setUniform("screenTransformation", screenTransformation);
+        } else {
+            pushMatrix(screenTransformation);
+        }
+    } else if (useShader && ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) || (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS))) {
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+        shader->setUniform("screenTransformation", QMatrix4x4());
+    }
+    Scene::paintGenericScreen(mask, data);
+    if (mask & PAINT_SCREEN_TRANSFORMED) {
+        if (useShader) {
+            ShaderManager::instance()->popShader();
+        } else {
+            popMatrix();
+        }
+    } else if (useShader && ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) ||
+            (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS))) {
+        ShaderManager::instance()->popShader();
+    }
+}
+
+void SceneOpenGL::paintBackground(QRegion region)
+{
+    PaintClipper pc(region);
+    if (!PaintClipper::clip()) {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        return;
+    }
+    if (pc.clip() && pc.paintArea().isEmpty())
+        return; // no background to paint
+    QVector<float> verts;
+    for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+        QRect r = iterator.boundingRect();
+        verts << r.x() + r.width() << r.y();
+        verts << r.x() << r.y();
+        verts << r.x() << r.y() + r.height();
+        verts << r.x() << r.y() + r.height();
+        verts << r.x() + r.width() << r.y() + r.height();
+        verts << r.x() + r.width() << r.y();
+    }
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
+    vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
+    const bool useShader = ShaderManager::instance()->isValid();
+    if (useShader) {
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+        shader->setUniform("offset", QVector2D(0, 0));
+    }
+    vbo->render(GL_TRIANGLES);
+    if (useShader) {
+        ShaderManager::instance()->popShader();
+    }
+}
+
 void SceneOpenGL::windowAdded( Toplevel* c )
     {
     assert( !windows.contains( c ));
