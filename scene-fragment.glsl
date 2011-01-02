@@ -5,6 +5,7 @@ uniform float opacity;
 uniform float brightness;
 uniform float saturation;
 uniform int debug;
+uniform int u_forceAlpha;
 
 varying vec2 varyingTexCoords;
 
@@ -25,6 +26,9 @@ void main() {
     }
     tex.rgb = tex.rgb * opacity * brightness;
     tex.a = tex.a * opacity;
+    if (u_forceAlpha > 0) {
+        tex.a = 1.0;
+    }
     /*if (debug != 0) {
         tex.g += 0.5;
     }*/

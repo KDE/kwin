@@ -346,6 +346,9 @@ class KWIN_EXPORT ShaderManager
              * normalized texture coordinates. Defaults to @c (1.0/1.0). And expects a @c vec3
              * uniform @c colorManiuplation, with @c x being opacity, @c y being brightness and
              * @c z being saturation. All three values default to @c 1.0.
+             * The fragment shader takes a uniform @c u_forceAlpha to force the alpha component
+             * to @c 1.0 if it is set to a value not @c 0. This uniform is useful when rendering
+             * a RGB-only window and the alpha channel is required in a later step.
              * The sampler uniform is @c sample and defaults to @c 0.
              * The shader uses two vertex attributes @c vertex and @c texCoord.
              **/

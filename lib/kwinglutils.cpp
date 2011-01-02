@@ -1377,6 +1377,7 @@ void ShaderManager::resetShader(ShaderType type)
         shader->setUniform("opacity", 1.0f);
         shader->setUniform("brightness", 1.0f);
         shader->setUniform("saturation", 1.0f);
+        shader->setUniform("u_forceAlpha", 0);
         break;
     }
     case GenericShader: {
@@ -1408,6 +1409,7 @@ void ShaderManager::resetShader(ShaderType type)
         shader->setUniform("opacity", 1.0f);
         shader->setUniform("brightness", 1.0f);
         shader->setUniform("saturation", 1.0f);
+        shader->setUniform("u_forceAlpha", 0);
         break;
     }
     case ColorShader: {

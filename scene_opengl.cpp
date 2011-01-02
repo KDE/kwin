@@ -836,6 +836,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
     shader->setUniform("opacity", (float)opacity);
     shader->setUniform("saturation", (float)saturation);
     shader->setUniform("brightness", (float)brightness);
+    shader->setUniform("u_forceAlpha", opaque ? 1 : 0);
 
     // setting texture width and heiht stored in shader
     // only set if it is set by an effect that is not negative
@@ -1043,6 +1044,7 @@ void SceneOpenGL::Window::restoreShaderRenderStates( TextureType type, double op
         {
         glDisable( GL_BLEND );
         }
+    ShaderManager::instance()->getBoundShader()->setUniform("u_forceAlpha", 0);
 #ifndef KWIN_HAVE_OPENGLES
     glPopAttrib();  // ENABLE_BIT
 #endif
@@ -1210,6 +1212,7 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
             shader->setUniform("offset", QVector2D(0, 0));
         shader->setUniform("saturation", 1.0f);
         shader->setUniform("brightness", 1.0f);
+        shader->setUniform("u_forceAlpha", 0);
 
         shader->setUniform("textureWidth", 1.0f);
         shader->setUniform("textureHeight", 1.0f);
