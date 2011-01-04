@@ -2,6 +2,7 @@
 # Name of the effect
 Name=WindowGeometry
 Name[ca]=WindowGeometry
+Name[ca@valencia]=WindowGeometry
 Name[da]=Vinduesgeometri
 Name[de]=Fenstergeometrie
 Name[el]=Γεωμετρία παραθύρου
@@ -33,6 +34,7 @@ Name[x-test]=xxWindowGeometryxx
 Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
 Comment[ca]=Visualitza la geometria de les finestres en moure/redimensionar
+Comment[ca@valencia]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[da]=Vis vinduesgeometrier ved flytning og ændring af størrelse
 Comment[de]=Fenstergeometrie bei Verschieben/Größenänderung anzeigen
 Comment[el]=Εμφανίζει την γεωμετρία του παραθύρου κατά την μετακίνηση/αλλαγή μεγέθους
