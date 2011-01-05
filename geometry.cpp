@@ -1695,7 +1695,6 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
 
 void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool )
     {
-    qDebug() << maximizeMode() << MaximizeFull;
     if ( maximizeMode() == MaximizeFull) // bugs #158974, #252314
         return; // "maximized" is a user setting -> we do not allow the client to resize itself away from this & against the user wish
 
