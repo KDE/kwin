@@ -1,33 +1,25 @@
-uniform sampler2D sceneTex;
-uniform float textureWidth;
-uniform float textureHeight;
-uniform float cursorX;
-uniform float cursorY;
-uniform float zoom;
-uniform float radius;
+uniform sampler2D sample;
+uniform vec2 u_cursor;
+uniform float u_zoom;
+uniform float u_radius;
+uniform vec2 u_textureSize;
+
+varying vec2 varyingTexCoords;
 
 #define PI 3.14159
 
-// Converts pixel coordinates to texture coordinates
-vec2 pix2tex(vec2 pix)
-{
-    return vec2(pix.x / textureWidth, 1.0 - pix.y / textureHeight);
-}
-
 void main()
 {
-    vec2 texcoord = gl_TexCoord[0].xy;
-
-    float dx = cursorX - texcoord.x;
-    float dy = cursorY - texcoord.y;
-    float dist = sqrt(dx*dx + dy*dy);
-    if(dist < radius)
-    {
-        float disp = sin(dist / radius * PI) * (zoom - 1.0) * 20.0;
-        texcoord.x += dx / dist * disp;
-        texcoord.y += dy / dist * disp;
+    vec2 d = u_cursor - varyingTexCoords;
+    float dist = sqrt(d.x*d.x + d.y*d.y);
+    vec2 texcoord = varyingTexCoords;
+    if (dist < u_radius) {
+        float disp = sin(dist / u_radius * PI) * (u_zoom - 1.0) * 20.0;
+        texcoord += d / dist * disp;
     }
 
-    gl_FragColor = texture2D(sceneTex, pix2tex(texcoord));
+    texcoord = texcoord/u_textureSize;
+    texcoord.t = 1.0 - texcoord.t;
+    gl_FragColor = texture2D(sample, texcoord);
 }
 
