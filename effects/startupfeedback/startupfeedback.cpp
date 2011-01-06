@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QSize>
 #include <QtGui/QPainter>
 // KDE
+#include <KDE/KGlobal>
 #include <KDE/KIconLoader>
+#include <KDE/KStandardDirs>
 #include <KDE/KStartupInfo>
 #include <KDE/KSelectionOwner>
 // KWin
@@ -81,6 +83,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_progress( 0 )
     , m_texture( 0 )
     , m_type( BouncingFeedback )
+    , m_blinkingShader( 0 )
     {
     for( int i=0; i<5; ++i )
         {
@@ -104,6 +107,7 @@ StartupFeedbackEffect::~StartupFeedbackEffect()
         delete m_bouncingTextures[i];
         }
     delete m_texture;
+    delete m_blinkingShader;
     }
 
 bool StartupFeedbackEffect::supported()
@@ -126,8 +130,20 @@ void StartupFeedbackEffect::reconfigure( Effect::ReconfigureFlags flags )
         m_type = NoFeedback;
     else if( busyBouncing )
         m_type = BouncingFeedback;
-    else if( busyBlinking )
+    else if (busyBlinking) {
         m_type = BlinkingFeedback;
+        if (ShaderManager::instance()->isValid()) {
+            delete m_blinkingShader;
+            m_blinkingShader = 0;
+            const QString shader = KGlobal::dirs()->findResource("data", "kwin/blinking-startup-fragment.glsl");
+            m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
+            if (m_blinkingShader->isValid()) {
+                kDebug(1212) << "Blinking Shader is valid";
+            } else {
+                kDebug(1212) << "Blinking Shader is not valid";                
+            }
+        }
+    }
     else
         m_type = PassiveFeedback;
     if( m_active )
@@ -179,41 +195,61 @@ void StartupFeedbackEffect::paintScreen( int mask, QRegion region, ScreenPaintDa
         default:
             return; // safety
             }
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         texture->bind();
-        if( m_type == BlinkingFeedback )
-            {
-            // texture transformation
+        bool useShader = false;
+        if (m_type == BlinkingFeedback) {
             const QColor& blinkingColor = BLINKING_COLORS[ FRAME_TO_BLINKING_COLOR[ m_frame ]];
-            float color[4] = { blinkingColor.redF(), blinkingColor.greenF(), blinkingColor.blueF(), 1.0f };
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL );
-            glColor4fv( color );
-            glActiveTexture( GL_TEXTURE1 );
-            texture->bind();
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
-            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color );
-            glActiveTexture( GL_TEXTURE0 );
-            glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
+            if (m_blinkingShader && m_blinkingShader->isValid()) {
+                useShader = true;
+                ShaderManager::instance()->pushShader(m_blinkingShader);
+                m_blinkingShader->setUniform("u_color", blinkingColor);
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                // texture transformation
+                float color[4] = { blinkingColor.redF(), blinkingColor.greenF(), blinkingColor.blueF(), 1.0f };
+                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL );
+                glColor4fv( color );
+                glActiveTexture( GL_TEXTURE1 );
+                texture->bind();
+                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
+                glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color );
+                glActiveTexture( GL_TEXTURE0 );
+                glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
+#endif
             }
+        } else if (ShaderManager::instance()->isValid()) {
+            useShader = true;
+            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+        }
         texture->render( m_currentGeometry, m_currentGeometry );
-        if( m_type == BlinkingFeedback )
+        if (useShader) {
+            ShaderManager::instance()->popShader();
+        }
+        if( m_type == BlinkingFeedback && !useShader )
             {
+#ifndef KWIN_HAVE_OPENGLES
             // resture states
             glActiveTexture( GL_TEXTURE1 );
             texture->unbind();
             glActiveTexture( GL_TEXTURE0 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
             glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+#endif
             }
         texture->unbind();
         glDisable( GL_BLEND );
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
         }
     }
 
