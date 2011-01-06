@@ -592,21 +592,23 @@ void GLTexture::render( QRegion region, const QRect& rect )
             };
         m_vbo->setData( 4, 2, verts, texcoords );
         }
+    QMatrix4x4 translation;
+    translation.translate(rect.x(), rect.y());
     if (ShaderManager::instance()->isShaderBound()) {
         GLShader *shader = ShaderManager::instance()->getBoundShader();
         shader->setUniform("offset", QVector2D(rect.x(), rect.y()));
+        shader->setUniform("windowTransformation", translation);
         shader->setUniform("textureWidth", 1.0f);
         shader->setUniform("textureHeight", 1.0f);
     } else {
-#ifndef KWIN_HAVE_OPENGLES
-        glTranslatef( rect.x(), rect.y(), 0.0f );
-#endif
+        pushMatrix(translation);
     }
     m_vbo->render( region, GL_TRIANGLE_STRIP );
-    if (!ShaderManager::instance()->isShaderBound()) {
-#ifndef KWIN_HAVE_OPENGLES
-        glTranslatef( -rect.x(), -rect.y(), 0.0f );
-#endif
+    if (ShaderManager::instance()->isShaderBound()) {
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
+        shader->setUniform("windowTransformation", QMatrix4x4());
+    } else {
+        popMatrix();
     }
     }
 

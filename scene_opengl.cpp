@@ -574,7 +574,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             windowTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
             windowTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
         }
-        if (sceneShader) {
+        if (data.shader) {
             data.shader->setUniform("windowTransformation", windowTransformation);
         }
     }
@@ -1202,12 +1202,12 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         {
         shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         sceneShader = true;
-        }
+    } else if (shader) {
+        ShaderManager::instance()->pushShader(shader);
+    }
+
     if( shader )
         {
-        if (shader != ShaderManager::instance()->getBoundShader()) {
-            ShaderManager::instance()->pushShader(shader);
-        }
         if( sceneShader )
             shader->setUniform("offset", QVector2D(0, 0));
         shader->setUniform("saturation", 1.0f);
@@ -1353,16 +1353,22 @@ void SceneOpenGL::EffectFrame::render( QRegion region, double opacity, double fr
         if (sceneShader) {
             shader->setUniform("offset", QVector2D(pt.x(), pt.y()));
         } else {
-#ifndef KWIN_HAVE_OPENGLES
-            glTranslatef( pt.x(), pt.y(), 0.0f );
-#endif
+            QMatrix4x4 translation;
+            translation.translate(pt.x(), pt.y());
+            if (shader) {
+                shader->setUniform("windowTransformation", translation);
+            } else {
+                pushMatrix(translation);
+            }
         }
         m_unstyledVBO->render( region, GL_TRIANGLES );
-#ifndef KWIN_HAVE_OPENGLES
         if (!sceneShader) {
-            glTranslatef( -pt.x(), -pt.y(), 0.0f );
+            if (shader) {
+                shader->setUniform("windowTranslation", QMatrix4x4());
+            } else {
+                popMatrix();
+            }
         }
-#endif
         m_unstyledTexture->unbind();
         }
     else if( m_effectFrame->style() == EffectFrameStyled )
