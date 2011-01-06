@@ -530,25 +530,7 @@ bool GLTexture::load( const QPixmap& pixmap, GLenum target )
     {
     if( pixmap.isNull())
         return false;
-#ifdef KWIN_HAVE_OPENGLES
-    if( isNull() )
-        glGenTextures( 1, &mTexture );
-    mTarget = target;
-    bind();
-    const EGLint attribs[] = {
-        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
-        EGL_NONE
-    };
-    EGLDisplay dpy = eglGetCurrentDisplay();
-    EGLImageKHR image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                            (EGLClientBuffer)pixmap.handle(), attribs);
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
-    eglDestroyImageKHR(dpy, image);
-    unbind();
-    return true;
-#else
     return load( pixmap.toImage(), target );
-#endif
     }
 
 bool GLTexture::load( const QString& fileName )
