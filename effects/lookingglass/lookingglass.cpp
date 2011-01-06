@@ -218,7 +218,6 @@ void LookingGlassEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(m_fbo);
-        checkGLError("push Render Target");
     }
 
     effects->prePaintScreen( data, time );
@@ -240,24 +239,18 @@ void LookingGlassEffect::postPaintScreen()
     effects->postPaintScreen();
     if (m_valid && m_enabled) {
         // Disable render texture
-        checkGLError("Before Pop Render Target");
         GLRenderTarget* target = effects->popRenderTarget();
-        checkGLError("Pop Render Target");
         assert( target == m_fbo );
         Q_UNUSED( target );
         m_texture->bind();
-        checkGLError("Bind Texture");
 
         // Use the shader
         ShaderManager::instance()->pushShader(m_shader);
         m_shader->setUniform("u_zoom", (float)zoom);
         m_shader->setUniform("u_radius", (float)radius);
-        checkGLError("Bind Shader");
         m_shader->setUniform("u_cursor", QVector2D(cursorPos().x(), cursorPos().y()));
         m_vbo->render(GL_TRIANGLES);
-        checkGLError("Render VBO");
         ShaderManager::instance()->popShader();
-        checkGLError("Pop Shader");
         m_texture->unbind();
     }
 }
