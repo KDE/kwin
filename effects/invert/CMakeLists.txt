@@ -14,7 +14,6 @@ install( FILES
 # Data files
 install( FILES
     invert/data/invert.frag
-    invert/data/invert.vert
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
 
 #######################################

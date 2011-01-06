@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cube/cubeslide_config.h"
 #include "flipswitch/flipswitch_config.h"
 #include "glide/glide_config.h"
+#include "invert/invert_config.h"
 #include "lookingglass/lookingglass_config.h"
 #include "magnifier/magnifier_config.h"
 #include "mousemark/mousemark_config.h"
@@ -51,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wobblywindows/wobblywindows_config.h"
 #ifndef KWIN_HAVE_OPENGLES
 #include "blur/blur_config.h"
-#include "invert/invert_config.h"
 #include "sharpen/sharpen_config.h"
 #include "snow/snow_config.h"
 #endif
@@ -86,6 +86,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( flipswitch, FlipSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( glide, GlideEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( lookingglass, LookingGlassEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( magnifier, MagnifierEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( mousemark, MouseMarkEffectConfig )
@@ -93,7 +94,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
 #ifndef KWIN_HAVE_OPENGLES
     KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
 #endif
