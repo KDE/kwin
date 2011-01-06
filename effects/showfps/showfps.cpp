@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 #include <QPainter>
+#include <QVector2D>
 
 namespace KWin
 {
@@ -184,38 +185,58 @@ void ShowFpsEffect::paintGL( int fps )
     {
     int x = this->x;
     int y = this->y;
+#ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     // TODO painting first the background white and then the contents
     // means that the contents also blend with the background, I guess
-    glColor4f( 1, 1, 1, alpha ); // white
-    glBegin( GL_QUADS );
-    glVertex2i( x, y );
-    glVertex2i( x + 2*NUM_PAINTS + FPS_WIDTH, y );
-    glVertex2i( x + 2*NUM_PAINTS + FPS_WIDTH, y + MAX_TIME );
-    glVertex2i( x, y + MAX_TIME );
-    glEnd();
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    }
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    QColor color(255, 255, 255);
+    color.setAlphaF(alpha);
+    vbo->setColor(color);
+    QVector<float> verts;
+    verts.reserve(12);
+    verts << x + 2*NUM_PAINTS + FPS_WIDTH << y;
+    verts << x << y;
+    verts << x << y + MAX_TIME;
+    verts << x << y + MAX_TIME;
+    verts << x + 2*NUM_PAINTS + FPS_WIDTH << y + MAX_TIME;
+    verts << x + 2*NUM_PAINTS + FPS_WIDTH << y;
+    vbo->setData(6, 2, verts.constData(), NULL);
+    vbo->render(GL_TRIANGLES);
     y += MAX_TIME; // paint up from the bottom
-    glBegin( GL_QUADS );
-    glColor4f( 0, 0, 1, alpha ); // blue
-    glVertex2i( x, y );
-    glVertex2i( x + FPS_WIDTH, y );
-    glVertex2i( x + FPS_WIDTH, y - fps );
-    glVertex2i( x, y - fps );
-    glEnd();
+    color.setRed(0);
+    color.setGreen(0);
+    vbo->setColor(color);
+    verts.clear();
+    verts << x + FPS_WIDTH << y - fps;
+    verts << x << y - fps;
+    verts << x << y;
+    verts << x << y;
+    verts << x + FPS_WIDTH << y;
+    verts << x + FPS_WIDTH << y - fps;
+    vbo->setData(6, 2, verts.constData(), NULL);
+    vbo->render(GL_TRIANGLES);
 
 
-    glColor4f( 0, 0, 0, alpha ); // black
-    glBegin( GL_LINES );
+    color.setBlue(0);
+    vbo->setColor(color);
+    QVector<float> vertices;
     for( int i = 10;
          i < MAX_TIME;
          i += 10 )
     {
-        glVertex2i( x, y - i );
-        glVertex2i( x + FPS_WIDTH, y - i );
+        vertices << x << y - i;
+        vertices << x + FPS_WIDTH << y - i;
     }
-    glEnd();
+    vbo->setData(vertices.size()/2, 2, vertices.constData(), NULL);
+    vbo->render(GL_LINES);
     x += FPS_WIDTH;
 
     // Paint FPS graph
@@ -224,12 +245,18 @@ void ShowFpsEffect::paintGL( int fps )
 
     // Paint amount of rendered pixels graph
     paintDrawSizeGraph( x, y );
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->popShader();
+    }
     
     // Paint FPS numerical value
     paintFPSText(fps);
 
     // Paint paint sizes
+    glDisable(GL_BLEND);
+#ifndef KWIN_HAVE_OPENGLES
     glPopAttrib();
+#endif
     }
 #endif
 
@@ -328,34 +355,50 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing)
         {
-        glColor4f( 0, 0, 0, alpha ); // black
-        glBegin( GL_LINES );
+        QColor color(0, 0, 0);
+        color.setAlphaF(alpha);
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->reset();
+        vbo->setColor(color);
+        QVector<float> verts;
         // First draw the lines
         foreach( int h, lines)
             {
-            glVertex2i( x, y - h );
-            glVertex2i( x + values.count(), y - h );
+            verts << x << y - h;
+            verts << x + values.count() << y - h;
             }
+        vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+        vbo->render(GL_LINES);
         // Then the graph values
-        glColor4f( 0.5, 0.5, 0.5, alpha );
-        for( int i = 0; i < values.count(); i++ )
-            {
+        int lastValue = 0;
+        verts.clear();
+        for (int i = 0; i < values.count(); i++) {
             int value = values[ i ];
-            if( colorize )
-                {
-                if( value <= 10 )
-                    glColor4f( 0, 1, 0, alpha ); // green
-                else if( value <= 20 )
-                    glColor4f( 1, 1, 0, alpha ); // yellow
-                else if( value <= 50 )
-                    glColor4f( 1, 0, 0, alpha ); // red
-                else
-                    glColor4f( 0, 0, 0, alpha ); // black
+            if (colorize && value != lastValue) {
+                if (!verts.isEmpty()) {
+                    vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+                    vbo->render(GL_LINES);
                 }
-            glVertex2i( x + values.count() - i, y );
-            glVertex2i( x + values.count() - i, y - value );
+                verts.clear();
+                if (value <= 10) {
+                    color = QColor(0, 255, 0);
+                } else if (value <= 20) {
+                    color= QColor(255, 255, 0);
+                } else if( value <= 50 ) {
+                    color = QColor(255, 0, 0);
+                } else {
+                    color = QColor(0, 0, 0);
+                }
+                vbo->setColor(color);
             }
-        glEnd();
+            verts << x + values.count() - i << y;
+            verts << x + values.count() - i << y - value;
+            lastValue = value;
+        }
+        if (!verts.isEmpty()) {
+            vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+            vbo->render(GL_LINES);
+        }
         }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -443,7 +486,14 @@ void ShowFpsEffect::paintFPSText(int fps)
         delete fpsText;
     fpsText = new GLTexture(im);
     fpsText->bind();
+    if (ShaderManager::instance()->isValid()) {
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+        shader->setUniform("offset", QVector2D(0, 0));
+    }
     fpsText->render(QRegion(fpsTextRect), fpsTextRect);
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->popShader();
+    }
     fpsText->unbind();
     effects->addRepaint(fpsTextRect);
 #endif
