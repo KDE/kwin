@@ -112,22 +112,14 @@ void ScreenShotEffect::postPaintScreen()
             // render window into offscreen texture
             int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
             effects->pushRenderTarget( target );
+            glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear( GL_COLOR_BUFFER_BIT );
+            glClearColor(0.0, 0.0, 0.0, 1.0);
             effects->drawWindow( m_scheduledScreenshot, mask, QRegion( 0, 0, width, height ), d );
-            // Create a scratch texture and copy the rendered window into it
-            GLTexture* tex = new GLTexture( width, height );
-            tex->setFilter( GL_LINEAR );
-            tex->setWrapMode( GL_CLAMP_TO_EDGE );
-            tex->bind();
-
-            glCopyTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 0, offscreenTexture->height() - height, width, height );
-            effects->popRenderTarget();
-            // copy content from GL texture into image
+            // copy content from framebuffer into image
             QImage img( QSize( width, height ), QImage::Format_ARGB32 );
-            tex->bind();
-            glGetTexImage( GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits() );
-            tex->unbind();
-            delete tex;
+            glReadPixels(0, offscreenTexture->height() - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            effects->popRenderTarget();
             ScreenShotEffect::convertFromGLImage( img, width, height );
             if( m_type & INCLUDE_CURSOR )
                 {
