@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
 #include "cube/cubeslide_config.h"
@@ -51,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "trackmouse/trackmouse_config.h"
 #include "wobblywindows/wobblywindows_config.h"
 #ifndef KWIN_HAVE_OPENGLES
-#include "blur/blur_config.h"
 #include "sharpen/sharpen_config.h"
 #include "snow/snow_config.h"
 #endif
@@ -81,6 +81,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
 #endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
@@ -93,7 +94,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
 #ifndef KWIN_HAVE_OPENGLES
-    KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
 #endif
