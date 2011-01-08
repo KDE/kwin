@@ -863,6 +863,13 @@ void GLShader::initStatic()
 #endif
 }
 
+GLShader::GLShader()
+    : mValid(false)
+    , mProgram(0)
+    , mTextureWidth(-1.0f)
+    , mTextureHeight(-1.0f)
+{
+}
 
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
@@ -1293,6 +1300,13 @@ GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fr
         resetShader(vertex);
         popShader();
     }
+    return shader;
+}
+
+GLShader *ShaderManager::loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource)
+{
+    GLShader *shader = new GLShader();
+    shader->load(vertexSource, fragmentSource);
     return shader;
 }
 

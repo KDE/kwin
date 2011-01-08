@@ -308,6 +308,7 @@ class KWIN_EXPORT GLShader
 
 
     protected:
+        GLShader();
         bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
         bool load(const QString& vertexsource, const QString& fragmentsource);
 
@@ -319,6 +320,7 @@ class KWIN_EXPORT GLShader
         static bool mVertexShaderSupported;
         float mTextureWidth;
         float mTextureHeight;
+        friend class ShaderManager;
     };
 
 /**
@@ -420,6 +422,14 @@ class KWIN_EXPORT ShaderManager
          * @return The created shader
          **/
         GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
+        /**
+         * Creates a GLShader with the specified sources.
+         * The difference to GLShader is that it does not need to be loaded from files.
+         * @param vertexSource The source code of the vertex shader
+         * @param fragmentSource The source code of the fragment shader.
+         * @return The created shader
+         **/
+        GLShader *loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource);
 
         /**
          * @return a pointer to the ShaderManager instance
