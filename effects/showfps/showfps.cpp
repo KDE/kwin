@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksharedconfig.h>
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
+#include <kwinglutils.h>
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
