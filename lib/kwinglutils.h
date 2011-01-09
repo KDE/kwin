@@ -423,6 +423,13 @@ class KWIN_EXPORT ShaderManager
          **/
         GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
         /**
+         * Creates a GLShader with a built-in fragment shader and a custom vertex shader.
+         * @param fragment The generic fragment shader
+         * @param vertexFile The path to the source code of the vertex shader
+         * @return The created shader
+         **/
+        GLShader *loadVertexShader(ShaderType fragment, const QString &vertexFile);
+        /**
          * Creates a GLShader with the specified sources.
          * The difference to GLShader is that it does not need to be loaded from files.
          * @param vertexSource The source code of the vertex shader

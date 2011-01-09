@@ -1303,6 +1303,28 @@ GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fr
     return shader;
 }
 
+GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &vertexFile)
+{
+    QString fragmentShader;
+    switch (fragment) {
+    // Simple and Generic Shader use same fragment Shader
+    case SimpleShader:
+    case GenericShader:
+        fragmentShader = ":/resources/scene-fragment.glsl";
+        break;
+    case ColorShader:
+        fragmentShader = ":/resources/scene-color-fragment.glsl";
+        break;
+    }
+    GLShader *shader = new GLShader(vertexFile, fragmentShader);
+    if (shader->isValid()) {
+        pushShader(shader);
+        resetShader(fragment);
+        popShader();
+    }
+    return shader;
+}
+
 GLShader *ShaderManager::loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource)
 {
     GLShader *shader = new GLShader();
