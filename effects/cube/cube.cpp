@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QVector2D>
 
 #include <math.h>
 
@@ -283,6 +284,8 @@ bool CubeEffect::loadShader()
         return false;
         }
 
+    ShaderManager *shaderManager = ShaderManager::instance();
+    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     cylinderShader = new GLShader(cylinderVertexshader, fragmentshader);
     if( !cylinderShader->isValid() )
         {
@@ -291,13 +294,33 @@ bool CubeEffect::loadShader()
         }
     else
         {
-        cylinderShader->bind();
-        cylinderShader->setUniform( "winTexture", 0 );
+        shaderManager->pushShader(cylinderShader);
+        cylinderShader->setUniform( "sample", 0 );
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        cylinderShader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        cylinderShader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        cylinderShader->setUniform("screenTransformation", identity);
+        cylinderShader->setUniform("windowTransformation", identity);
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        cylinderShader->setUniform( "width", (float)rect.width() );
-        cylinderShader->unbind();
+        cylinderShader->setUniform( "width", (float)rect.width()*0.5f );
+        shaderManager->popShader();
         }
-    sphereShader = new GLShader( sphereVertexshader, fragmentshader );
+    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
+    sphereShader = new GLShader(sphereVertexshader, fragmentshader);
     if( !sphereShader->isValid() )
         {
         kError(1212) << "The sphere shader failed to load!" << endl;
@@ -305,12 +328,33 @@ bool CubeEffect::loadShader()
         }
     else
         {
-        sphereShader->bind();
-        sphereShader->setUniform( "winTexture", 0 );
+        shaderManager->pushShader(sphereShader);
+        sphereShader->setUniform( "sample", 0 );
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        sphereShader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        sphereShader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        sphereShader->setUniform("screenTransformation", identity);
+        sphereShader->setUniform("windowTransformation", identity);
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        sphereShader->setUniform( "width", (float)rect.width() );
-        sphereShader->setUniform( "height", (float)rect.height() );
-        sphereShader->unbind();
+        sphereShader->setUniform( "width", (float)rect.width()*0.5f );
+        sphereShader->setUniform( "height", (float)rect.height()*0.5f );
+        sphereShader->setUniform( "u_offset", QVector2D(0, 0));
+        shaderManager->popShader();
+        checkGLError("Loading Sphere Shader");
         }
     return true;
     }
@@ -405,12 +449,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
             // cube
             glCullFace( GL_BACK );
-            if( mode == Cylinder )
-                {
-                cylinderShader->bind();
-                cylinderShader->setUniform( "front", 1.0f );
-                cylinderShader->unbind();
-                }
             pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
             popMatrix();
@@ -428,12 +466,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #endif
 
             glCullFace( GL_FRONT );
-            if( mode == Cylinder )
-                {
-                cylinderShader->bind();
-                cylinderShader->setUniform( "front", -1.0f );
-                cylinderShader->unbind();
-                }
             pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
             popMatrix();
@@ -516,18 +548,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
         // cube
         glCullFace( GL_FRONT );
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "front", -1.0f );
-            cylinderShader->unbind();
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "front", -1.0f );
-            sphereShader->unbind();
-            }
         pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
         popMatrix();
@@ -546,18 +566,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #endif
 
         glCullFace( GL_BACK );
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "front", 1.0f );
-            cylinderShader->unbind();
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "front", 1.0f );
-            sphereShader->unbind();
-            }
         pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
         popMatrix();
@@ -1012,7 +1020,6 @@ void CubeEffect::paintCubeCap()
 
 void CubeEffect::paintCylinderCap()
     {
-#ifndef KWIN_HAVE_OPENGLES
     QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
 
@@ -1021,32 +1028,46 @@ void CubeEffect::paintCylinderCap()
     float segment = radius/30.0f;
 
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
+    QVector<float> verts;
+    QVector<float> texCoords;
     for( int i=1; i<=30; i++ )
         {
-        glBegin( GL_TRIANGLE_STRIP );
         int steps =  72;
         for( int j=0; j<=steps; j++ )
             {
-            float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
-            float x1 = segment*(i-1) * sin( azimuthAngle );
-            float x2 = segment*i * sin( azimuthAngle );
-            float z1 = segment*(i-1) * cos( azimuthAngle );
-            float z2 = segment*i * cos( azimuthAngle );
-            if( texture )
-                glTexCoord2f( (radius+x1)/(radius*2.0f), 1.0f - (z1+radius)/(radius*2.0f) );
-            glVertex3f( x1, 0.0, z1 );
-            if( texture )
-                glTexCoord2f( (radius+x2)/(radius*2.0f), 1.0f - (z2+radius)/(radius*2.0f) );
-            glVertex3f( x2, 0.0, z2 );
+            const float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
+            const float azimuthAngle2 = ((j+1)*(360.0f/steps))*M_PI/180.0f;
+            const float x1 = segment*(i-1) * sin( azimuthAngle );
+            const float x2 = segment*i * sin( azimuthAngle );
+            const float x3 = segment*(i-1) * sin( azimuthAngle2 );
+            const float x4 = segment*i * sin( azimuthAngle2 );
+            const float z1 = segment*(i-1) * cos( azimuthAngle );
+            const float z2 = segment*i * cos( azimuthAngle );
+            const float z3 = segment*(i-1) * cos( azimuthAngle2 );
+            const float z4 = segment*i * cos( azimuthAngle2 );
+            if  (texture) {
+                texCoords << (radius+x1)/(radius*2.0f) << 1.0f - (z1+radius)/(radius*2.0f);
+                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
+                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
+                texCoords << (radius+x4)/(radius*2.0f) << 1.0f - (z4+radius)/(radius*2.0f);
+                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
+                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
             }
-        glEnd();
+            verts << x1 << 0.0 << z1;
+            verts << x2 << 0.0 << z2;
+            verts << x3 << 0.0 << z3;
+            verts << x4 << 0.0 << z4;
+            verts << x3 << 0.0 << z3;
+            verts << x2 << 0.0 << z2;
+            }
         }
-#endif
+    delete m_cubeCapBuffer;
+    m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
+    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
     }
 
 void CubeEffect::paintSphereCap()
     {
-#ifndef KWIN_HAVE_OPENGLES
     QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
@@ -1054,44 +1075,45 @@ void CubeEffect::paintSphereCap()
     float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;
     angle /= 30;
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
-    glPushMatrix();
-    glTranslatef( 0.0, -rect.height()*0.5, 0.0 );
-    glBegin( GL_QUADS );
+    QVector<float> verts;
+    QVector<float> texCoords;
     for( int i=0; i<30; i++ )
         {
         float topAngle = angle*i*M_PI/180.0;
         float bottomAngle = angle*(i+1)*M_PI/180.0;
-        float yTop = rect.height() - radius * cos( topAngle );
+        float yTop = rect.height()*0.5 - radius * cos( topAngle );
         yTop -= (yTop-rect.height()*0.5)*capDeformationFactor;
-        float yBottom = rect.height() -radius * cos( bottomAngle );
+        float yBottom = rect.height()*0.5 -radius * cos( bottomAngle );
         yBottom -= (yBottom-rect.height()*0.5)*capDeformationFactor;
         for( int j=0; j<36; j++ )
             {
-            float x = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
-            float z = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yTop, z );
-            x = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
-            z = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yBottom, z );
-            x = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            z = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yBottom, z );
-            x = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            z = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yTop, z );
+            const float x1 = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
+            const float z1 = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            const float x2 = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
+            const float z2 = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            const float x3 = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float z3 = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float x4 = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float z4 = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            if (texture) {
+                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
+                texCoords << x1/(rect.width())+0.5 << 0.5 - z1/zTexture * 0.5;
+                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
+                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
+                texCoords << x3/(rect.width())+0.5 << 0.5 - z3/zTexture * 0.5;
+                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
+            }
+            verts << x4 << yTop    << z4;
+            verts << x1 << yTop    << z1;
+            verts << x2 << yBottom << z2;
+            verts << x2 << yBottom << z2;
+            verts << x3 << yBottom << z3;
+            verts << x4 << yTop    << z4;
             }
         }
-    glEnd();
-    glPopMatrix();
-#endif
+    delete m_cubeCapBuffer;
+    m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
+    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
     }
 
 void CubeEffect::postPaintScreen()
@@ -1350,52 +1372,11 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
 
 void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+    ShaderManager *shaderManager = ShaderManager::instance();
+    GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
     QMatrix4x4 origMatrix;
     if( activated && cube_painting )
         {
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "xCoord", (float)w->x() );
-            cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
-            cylinderShader->setUniform( "useTexture", 1.0f );
-            float factor = 0.0f;
-            if( start )
-                factor = 1.0f - timeLine.value();
-            if( stop )
-                factor = timeLine.value();
-            cylinderShader->setUniform( "timeLine", factor );
-            data.shader = cylinderShader;
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "xCoord", (float)w->x() );
-            sphereShader->setUniform( "yCoord", (float)w->y() );
-            sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
-            sphereShader->setUniform( "useTexture", 1.0f );
-            float factor = 0.0f;
-            if( start )
-                factor = 1.0f - timeLine.value();
-            if( stop )
-                factor = timeLine.value();
-            sphereShader->setUniform( "timeLine", factor );
-            data.shader = sphereShader;
-            }
-        if( data.shader )
-            {
-            int texw = w->width();
-            int texh = w->height();
-            if( !GLTexture::NPOTTextureSupported() )
-                {
-                kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
-                texw = nearestPowerOfTwo(texw);
-                texh = nearestPowerOfTwo(texh);
-                }
-            data.shader->setTextureWidth( texw );
-            data.shader->setTextureHeight( texh );
-            }
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
         if( start )
@@ -1572,6 +1553,30 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             }
         if (shader) {
             origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+            if (mode == Cylinder) {
+                shaderManager->pushShader(cylinderShader);
+                cylinderShader->setUniform( "xCoord", (float)w->x() );
+                cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                float factor = 0.0f;
+                if( start )
+                    factor = 1.0f - timeLine.value();
+                if( stop )
+                    factor = timeLine.value();
+                cylinderShader->setUniform( "timeLine", factor );
+                data.shader = cylinderShader;
+            }
+            if (mode == Sphere) {
+                shaderManager->pushShader(sphereShader);
+                sphereShader->setUniform( "u_offset", QVector2D(w->x(), w->y()));
+                sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                float factor = 0.0f;
+                if( start )
+                    factor = 1.0f - timeLine.value();
+                if( stop )
+                    factor = timeLine.value();
+                sphereShader->setUniform( "timeLine", factor );
+                data.shader = sphereShader;
+            }
             if (reflectionPainting) {
                 shader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix*origMatrix);
             } else {
@@ -1583,8 +1588,12 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
     if( activated && cube_painting )
         {
         if (shader) {
-            shader->setUniform("screenTransformation", origMatrix);
-            ShaderManager::instance()->popShader();
+            if (mode == Cylinder || mode == Sphere) {
+                shaderManager->popShader();
+            } else {
+                shader->setUniform("screenTransformation", origMatrix);
+            }
+            shaderManager->popShader();
         }
         if( w->isDesktop() && effects->numScreens() > 1 && paintCaps )
             {
@@ -1600,17 +1609,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             // in case of free area in multiscreen setup fill it with cap color
             if( !paint.isEmpty() )
                 {
-                if( mode == Cylinder )
-                    {
-                    cylinderShader->setUniform( "useTexture", -1.0f );
-                    cylinderShader->setUniform( "xCoord", 0.0f );
-                    }
-                if( mode == Sphere )
-                    {
-                    sphereShader->setUniform( "useTexture", -1.0f );
-                    sphereShader->setUniform( "xCoord", 0.0f );
-                    sphereShader->setUniform( "yCoord", 0.0f );
-                    }
 #ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
 #endif
@@ -1649,6 +1647,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 vbo->reset();
                 QColor color = capColor;
                 capColor.setAlphaF(cubeOpacity);
+                // TODO: use sphere and cylinder shaders
                 vbo->setColor(color);
                 vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
                 vbo->render(GL_TRIANGLES);
@@ -1661,10 +1660,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if (!shader) {
             popMatrix();
         }
-        if( mode == Cylinder )
-            cylinderShader->unbind();
-        if( mode == Sphere )
-            sphereShader->unbind();
         }
     }
 
