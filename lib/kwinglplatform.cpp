@@ -581,7 +581,8 @@ void GLPlatform::detect()
         // Sample renderer string: Gallium 0.4 on AMD RV740 
         const QList<QByteArray> tokens = m_renderer.split(' ');
         m_galliumVersion = parseVersionString(tokens.at(1));
-        m_chipset = tokens.at(3) == "AMD" ? tokens.at(4) : tokens.at(3);
+        m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ?
+                tokens.at(4) : tokens.at(3);
 
         // R300G
         if (m_vendor == "X.Org R300 Project") {
