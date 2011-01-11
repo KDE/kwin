@@ -755,14 +755,8 @@ void GLPlatform::printResults() const
 
     print("Direct rendering:", m_directRendering ? "yes" : "no");
     print("Requires strict binding:", !m_looseBinding ? "yes" : "no");
-    print("GLSL shaders:", m_supportsGLSL ? "yes" : "no");
-
-    if (m_supportsGLSL)
-        print("Limited GLSL support:", m_limitedGLSL ? "yes" : "no");
-
-    print("Texture NPOT support:", m_textureNPOT ? "yes" : "no");
-    if (m_textureNPOT)
-        print("Limited NPOT support:", m_limitedNPOT ? "yes" : "no");
+    print("GLSL shaders:", m_supportsGLSL ? (m_limitedGLSL ? "limited" : "yes") : "no");
+    print("Texture NPOT support:", m_textureNPOT ? (m_limitedNPOT ? "limited" : "yes") : "no");
 }
 
 bool GLPlatform::supports(GLFeature feature) const
