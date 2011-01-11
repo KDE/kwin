@@ -716,6 +716,10 @@ void GLPlatform::detect()
 
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
     }
+
+    // Loose binding is broken with Gallium drivers in Mesa 7.10
+    if (isGalliumDriver() && mesaVersion() >= kVersionNumber(7, 10))
+        m_looseBinding = false;
 }
 
 static void print(const QString &label, const QString &setting)
@@ -833,6 +837,11 @@ ChipClass GLPlatform::chipClass() const
 bool GLPlatform::isMesaDriver() const
 {
     return mesaVersion() > 0;
+}
+
+bool GLPlatform::isGalliumDriver() const
+{
+    return galliumVersion() > 0;
 }
 
 bool GLPlatform::isRadeon() const
