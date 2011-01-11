@@ -122,13 +122,22 @@ static ChipClass detectRadeonClass(const QString &chipset)
 
     if (chipset.contains("R300")  ||
         chipset.contains("R350")  ||
+        chipset.contains("R360")  ||
         chipset.contains("RV350") ||
+        chipset.contains("RV370") ||
         chipset.contains("RV380"))
         return R300;
 
     if (chipset.contains("R420")  ||
+        chipset.contains("R423")  ||
+        chipset.contains("R430")  ||
+        chipset.contains("R480")  ||
+        chipset.contains("R481")  ||
         chipset.contains("RV410") ||
         chipset.contains("RS400") ||
+        chipset.contains("RC410") ||
+        chipset.contains("RS480") ||
+        chipset.contains("RS482") ||
         chipset.contains("RS600") ||
         chipset.contains("RS690") ||
         chipset.contains("RS740"))
@@ -167,6 +176,11 @@ static ChipClass detectRadeonClass(const QString &chipset)
         chipset.contains("PALM")      ||
         chipset.contains("HEMLOCK"))
         return Evergreen;
+
+    if (chipset.contains("BARTS") ||
+        chipset.contains("TURKS") ||
+        chipset.contains("CAICOS"))
+        return NorthernIslands;
 
     QString name = extract(chipset, "HD [0-9]{4}"); // HD followed by a space and 4 digits
     if (!name.isEmpty()) {
@@ -592,19 +606,22 @@ void GLPlatform::detect()
 
         // R600G
         else if (m_vendor == "X.Org" &&
-                 (m_renderer.contains("R6")      ||
-                  m_renderer.contains("R7")      ||
-                  m_renderer.contains("RV6")     ||
-                  m_renderer.contains("RV7")     ||
-                  m_renderer.contains("RS780")   ||
-                  m_renderer.contains("RS880")   ||
-                  m_renderer.contains("CEDAR")   ||
-                  m_renderer.contains("REDWOOD") ||
-                  m_renderer.contains("JUNIPER") ||
-                  m_renderer.contains("CYPRESS") ||
-                  m_renderer.contains("HEMLOCK") ||
-                  m_renderer.contains("PALM")    ||
-                  m_renderer.contains("EVERGREEN")))
+                 (m_renderer.contains("R6")        ||
+                  m_renderer.contains("R7")        ||
+                  m_renderer.contains("RV6")       ||
+                  m_renderer.contains("RV7")       ||
+                  m_renderer.contains("RS780")     ||
+                  m_renderer.contains("RS880")     ||
+                  m_renderer.contains("CEDAR")     ||
+                  m_renderer.contains("REDWOOD")   ||
+                  m_renderer.contains("JUNIPER")   ||
+                  m_renderer.contains("CYPRESS")   ||
+                  m_renderer.contains("HEMLOCK")   ||
+                  m_renderer.contains("PALM")      ||
+                  m_renderer.contains("EVERGREEN") ||
+                  m_renderer.contains("BARTS")     ||
+                  m_renderer.contains("TURKS")     ||
+                  m_renderer.contains("CAICOS")))
         {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
