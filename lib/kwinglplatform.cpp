@@ -740,7 +740,9 @@ void GLPlatform::printResults() const
     print("GPU class:", chipClassToString(m_chipClass));
     
     print("OpenGL version:", versionToString(m_glVersion));
-    print("GLSL version:", versionToString(m_glslVersion));
+
+    if (m_supportsGLSL)
+        print("GLSL version:", versionToString(m_glslVersion));
 
     if (isMesaDriver())
         print("Mesa version:", versionToString(mesaVersion()));
