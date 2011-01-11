@@ -219,6 +219,11 @@ public:
     bool isMesaDriver() const;
 
     /**
+     * Returns true if the driver is a Gallium driver, and false otherwise.
+     */
+    bool isGalliumDriver() const;
+
+    /**
      * Returns true if the GPU is a Radeon GPU, and false otherwise.
      */
     bool isRadeon() const;
