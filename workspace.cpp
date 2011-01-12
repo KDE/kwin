@@ -1459,7 +1459,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         for( ClientList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it )
-            if( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient )
+            if( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient && (*it)->isOnCurrentActivity() )
                 {
                 if( (*it)->isShown( true ) && (*it)->isOnDesktop( old_desktop ))
                     obs_wins.create( *it );
@@ -1483,7 +1483,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             }
 
         for( int i = stacking_order.size() - 1; i >= 0 ; --i )
-            if( stacking_order.at( i )->isOnDesktop( new_desktop ))
+            if( stacking_order.at( i )->isOnDesktop( new_desktop ) && stacking_order.at( i )->isOnCurrentActivity())
                 stacking_order.at( i )->updateVisibility();
 
         --block_showing_desktop;
@@ -1506,7 +1506,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             for( int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i )
                 {
                 if( focus_chain[currentDesktop()].at( i )->isShown( false ) &&
-                    focus_chain[currentDesktop()].at( i )->isOnCurrentDesktop() )
+                    focus_chain[currentDesktop()].at( i )->isOnCurrentActivity() )
                     {
                     c = focus_chain[currentDesktop()].at( i );
                     break;
@@ -1591,7 +1591,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         for( ClientList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it )
-            if( !(*it)->isOnActivity( new_activity ) && (*it) != movingClient )
+            if( !(*it)->isOnActivity( new_activity ) && (*it) != movingClient && (*it)->isOnCurrentDesktop())
                 {
                 if( (*it)->isShown( true ) && (*it)->isOnActivity( old_activity ))
                     obs_wins.create( *it );
@@ -1639,7 +1639,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
             for( int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i )
                 {
                 if( focus_chain[currentDesktop()].at( i )->isShown( false ) &&
-                    focus_chain[currentDesktop()].at( i )->isOnCurrentDesktop() )
+                    focus_chain[currentDesktop()].at( i )->isOnCurrentActivity() )
                     {
                     c = focus_chain[currentDesktop()].at( i );
                     break;
@@ -1650,7 +1650,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // If "unreasonable focus policy" and active_client is on_all_desktops and
     // under mouse (Hence == old_active_client), conserve focus.
     // (Thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop() )
+    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop() && active_client->isOnCurrentActivity() )
         c = active_client;
 
     if( c == NULL && !desktops.isEmpty() )
@@ -2933,7 +2933,7 @@ void Workspace::setShowingDesktop( bool showing )
         for( ClientList::ConstIterator it = cls.constBegin();
             it != cls.constEnd();
             ++it )
-            if( (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow() )
+            if( (*it)->isOnCurrentActivity() && (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow() )
                 showing_desktop_clients.prepend( *it ); // Topmost first to reduce flicker
         for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
             it != showing_desktop_clients.constEnd();

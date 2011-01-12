@@ -977,7 +977,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
          --i )
         {
         Client* it = stacking_order.at( i );
-        if ( it->isOnCurrentDesktop() && !it->isSpecialWindow()
+        if ( it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
             && it->isShown( false ) && it->wantsTabFocus()
             && !it->keepAbove() && !it->keepBelow())
             {
@@ -1010,7 +1010,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
             }
         } while (nc && nc != c &&
             (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
-             nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() ) );
+             nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() || !nc->isOnCurrentActivity() ) );
     if (nc)
         {
         if (c && c != nc)
