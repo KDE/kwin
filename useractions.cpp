@@ -1619,7 +1619,7 @@ void Workspace::switchWindow( Direction direction )
     for( QList<Client *>::Iterator i = clist.begin(); i != clist.end(); ++i )
         {
         if( (*i)->wantsTabFocus() && *i != c &&
-            (*i)->desktop() == d && ! (*i)->isMinimized() )
+            (*i)->desktop() == d && ! (*i)->isMinimized() && (*i)->isOnCurrentActivity() )
             {
             // Centre of the other window
             QPoint other( (*i)->pos().x() + (*i)->geometry().width() / 2,

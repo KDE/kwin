@@ -263,7 +263,7 @@ Client* Workspace::topClientOnDesktop( int desktop, int screen, bool unconstrain
          i >= 0;
          --i )
         {
-        if( list.at( i )->isOnDesktop( desktop ) && list.at( i )->isShown( false ))
+        if( list.at( i )->isOnDesktop( desktop ) && list.at( i )->isShown( false ) && list.at(i)->isOnCurrentActivity())
             {
             if( screen != -1 && list.at( i )->screen() != screen )
                 continue;
