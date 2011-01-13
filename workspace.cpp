@@ -79,6 +79,7 @@ namespace KWin
 {
 
 extern int screen_number;
+static const int KWIN_MAX_NUMBER_DESKTOPS = 20;
 
 Workspace* Workspace::_self = 0;
 
@@ -1729,7 +1730,9 @@ void Workspace::previousDesktop()
  */
 void Workspace::setNumberOfDesktops( int n )
     {
-    if( n == numberOfDesktops() )
+    if ( n > KWIN_MAX_NUMBER_DESKTOPS )
+        n = KWIN_MAX_NUMBER_DESKTOPS;
+    if( n < 1 || n == numberOfDesktops() )
         return;
     int old_number_of_desktops = numberOfDesktops();
     desktopCount_ = n;
