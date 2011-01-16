@@ -113,6 +113,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     const bool focused = s->isFocusedTab(m_index);
     const ThemeConfig &conf = m_theme->themeConfig();
     const DecorationPosition decoPos = s->isShade() ? DecorationTop : m_theme->decorationPosition();
+    painter->setFont(s->font(active));
     if (useTabs) {
         painter->save();
         Plasma::FrameSvg *decoration = m_theme->decoration();
@@ -202,6 +203,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         }
     }
     p.setPen(color);
+    p.setFont(s->font(active));
     p.drawText(pix.rect(), align | conf.verticalAlignment() | Qt::TextSingleLine, m_caption);
     if (textRect.width() > w) {
         // Fade out effect

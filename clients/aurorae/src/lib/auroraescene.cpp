@@ -1092,6 +1092,20 @@ const QString &AuroraeScene::rightButtons() const
     return m_rightButtonOrder;
 }
 
+const QFont &AuroraeScene::font(bool active) const
+{
+    return active ? m_activeFont : m_inactiveFont;
+}
+
+void AuroraeScene::setFont(const QFont &font, bool active)
+{
+    if (active) {
+        m_activeFont = font;
+    } else {
+        m_inactiveFont = font;
+    }
+}
+
 /*************************************************
  * AuroraeTabData
  ************************************************/

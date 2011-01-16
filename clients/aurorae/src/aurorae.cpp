@@ -203,6 +203,8 @@ void AuroraeClient::init()
     m_scene->setShade(isShade());
     m_scene->setKeepAbove(keepAbove());
     m_scene->setKeepBelow(keepBelow());
+    m_scene->setFont(KDecoration::options()->font(true), true);
+    m_scene->setFont(KDecoration::options()->font(false), false);
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
 }
 
@@ -320,6 +322,10 @@ void AuroraeClient::reset(long unsigned int changed)
     if (changed & SettingButtons) {
         m_scene->setButtons(options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
                             options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight());
+    }
+    if (changed & SettingFont) {
+        m_scene->setFont(KDecoration::options()->font(true), true);
+        m_scene->setFont(KDecoration::options()->font(false), false);
     }
     KDecoration::reset(changed);
 }
