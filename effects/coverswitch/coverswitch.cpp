@@ -134,14 +134,13 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
     if( mActivated || stop || stopRequested )
         {
+        QMatrix4x4 origProjection;
+        QMatrix4x4 origModelview;
+        ShaderManager *shaderManager = ShaderManager::instance();
         if( effects->numScreens() > 1 )
             {
-#ifndef KWIN_HAVE_OPENGLES
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-            glMatrixMode( GL_PROJECTION );
-            glPushMatrix();
-            glLoadIdentity();
             float fovy = 60.0f;
             float aspect = 1.0f;
             float zNear = 0.1f;
@@ -184,11 +183,26 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 ymaxFactor = ((float)fullRect.height()-(float)area.height()*0.5f)/((float)fullRect.height()*0.5f);
                 yTranslate = (float)fullRect.height()*0.5f-(float)area.height()*0.5f;
                 }
-            glFrustum( xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar );
-            glMatrixMode( GL_MODELVIEW );
-            glPushMatrix();
-            glTranslatef( xTranslate, yTranslate, 0.0 );
+            QMatrix4x4 projection;
+            projection.frustum(xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar);
+            QMatrix4x4 modelview;
+            modelview.translate(xTranslate, yTranslate, 0.0);
+            if (shaderManager->isShaderBound()) {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                origProjection = shader->getUniformMatrix4x4("projection");
+                origModelview = shader->getUniformMatrix4x4("modelview");
+                shader->setUniform("projection", projection);
+                shader->setUniform("modelview", origModelview*modelview);
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glMatrixMode(GL_PROJECTION);
+                pushMatrix();
+                loadMatrix(projection);
+                glMatrixMode(GL_MODELVIEW);
+                pushMatrix(modelview);
 #endif
+            }
             }
     
         QList< EffectWindow* > tempList = currentWindowList;
@@ -304,14 +318,9 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glScissor( area.x(), y, area.width(), area.height() );
             glEnable( GL_SCISSOR_TEST );
 
-            ShaderManager *shaderManager = ShaderManager::instance();
             if (shaderManager->isValid() && m_reflectionShader->isValid()) {
                 shaderManager->pushShader(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
-                if (effects->numScreens() > 1 && area.x() != fullRect.x()) {
-                    // have to change the reflection area in horizontal layout and right screen
-                    windowTransformation.translate(-area.x(), 0.0, 0.0);
-                }
                 windowTransformation.translate(area.x() + area.width()*0.5f, 0.0, 0.0);
                 m_reflectionShader->setUniform("windowTransformation", windowTransformation);
                 m_reflectionShader->setUniform("u_frontColor", QVector4D(mirrorColor[0][0], mirrorColor[0][1], mirrorColor[0][2], mirrorColor[0][3]));
@@ -368,13 +377,20 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
         if( effects->numScreens() > 1 )
             {
+            if (shaderManager->isShaderBound())  {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                shader->setUniform("projection", origProjection);
+                shader->setUniform("modelview", origModelview);
+                shaderManager->popShader();
+            } else {
 #ifndef KWIN_HAVE_OPENGLES
-            glPopMatrix();
-            // revert change of projection matrix
-            glMatrixMode( GL_PROJECTION );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
+                popMatrix();
+                // revert change of projection matrix
+                glMatrixMode(GL_PROJECTION);
+                popMatrix();
+                glMatrixMode(GL_MODELVIEW);
 #endif
+            }
             }
 
         // Render the caption frame
