@@ -148,6 +148,19 @@ public:
     void setUniqueTabDragId(int index, long int id);
     const QString &leftButtons() const;
     const QString &rightButtons() const;
+    /**
+     * @param active Whether the active or inactive title font should be returned
+     * @return the (in)active title font.
+     * @since 4.6
+     **/ 
+    const QFont &font(bool active) const;
+    /**
+     * Sets a new title font.
+     * @param font The new font
+     * @param active Whether the active or inactive title font should be set
+     * @since 4.6
+     **/
+    void setFont(const QFont &font, bool active);
 
 Q_SIGNALS:
     void menuClicked();
@@ -211,6 +224,8 @@ private:
     bool m_contextHelp;
     int m_tabCount;
     int m_focusedTab;
+    QFont m_activeFont;
+    QFont m_inactiveFont;
 };
 
 } // namespace
