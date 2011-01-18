@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     #include <kwinglutils.h>
+    #include <kwinglplatform.h>
 #endif
 
 #include <kwineffects.h>
@@ -73,6 +74,11 @@ void LanczosFilter::init()
         kDebug() << "Lanczos Filter disabled by driver blacklist";
         return;
         }
+
+    // The lanczos filter is reported to be broken with the Intel driver and Mesa 7.10
+    GLPlatform *gl = GLPlatform::instance();
+    if ( gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(7, 10) )
+        return;
 
     m_shader = new LanczosShader( this );
     if( !m_shader->init() )
