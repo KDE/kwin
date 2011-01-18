@@ -138,7 +138,7 @@ void LanczosShader::createKernel( float delta, int *size )
 
     // The two outermost samples always fall at points where the lanczos
     // function returns 0, so we'll skip them.
-    const int sampleCount = qBound( 3, qCeil(delta * a) * 2 + 1 - 2, 49 );
+    const int sampleCount = qBound( 3, qCeil(delta * a) * 2 + 1 - 2, 29 );
     const int center = sampleCount / 2;
     const int kernelSize = center + 1;
     const float factor = 1.0 / delta;
@@ -152,7 +152,7 @@ void LanczosShader::createKernel( float delta, int *size )
         values[i] = val;
     }
 
-    memset(m_kernel, 0, 25 * sizeof(QVector4D));
+    memset(m_kernel, 0, 16 * sizeof(QVector4D));
 
     // Normalize the kernel
     for ( int i = 0; i < kernelSize; i++ ) {
@@ -165,7 +165,7 @@ void LanczosShader::createKernel( float delta, int *size )
 
 void LanczosShader::createOffsets( int count, float width, Qt::Orientation direction )
     {
-    memset(m_offsets, 0, 25 * sizeof(QVector2D));
+    memset(m_offsets, 0, 16 * sizeof(QVector2D));
     for ( int i = 0; i < count; i++ ) {
         m_offsets[i] = ( direction == Qt::Horizontal ) ?
                 QVector2D( i / width, 0 ) : QVector2D( 0, i / width );
@@ -561,27 +561,29 @@ void LanczosShader::setUniforms()
     if( m_shader )
         {
         glUniform1i( m_uTexUnit, 0 );
-        glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
-        glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
+        glUniform2fv( m_uOffsets, 16, (const GLfloat*)m_offsets );
+        glUniform4fv( m_uKernel, 16, (const GLfloat*)m_kernel );
         }
     else
         {
-        for( int i=0; i<25; ++i )
+        for( int i=0; i<16; ++i )
             {
             glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i, m_offsets[i].x(), m_offsets[i].y(), 0, 0 );
             }
-        for( int i=0; i<25; ++i )
+        for( int i=0; i<16; ++i )
             {
-            glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i+25, m_kernel[i].x(), m_kernel[i].y(), m_kernel[i].z(), m_kernel[i].w() );
+            glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i+16, m_kernel[i].x(), m_kernel[i].y(), m_kernel[i].z(), m_kernel[i].w() );
             }
         }
     }
 
 bool LanczosShader::init()
     {
+    GLPlatform *gl = GLPlatform::instance();
     if ( GLShader::fragmentShaderSupported() &&
          GLShader::vertexShaderSupported() &&
-         GLRenderTarget::supported() )
+         GLRenderTarget::supported() &&
+         !(gl->isRadeon() && gl->chipClass() < R600))
         {
         m_shader = new GLShader(":/resources/lanczos-vertex.glsl", ":/resources/lanczos-fragment.glsl");
         if (m_shader->isValid())
@@ -608,22 +610,35 @@ bool LanczosShader::init()
     QByteArray text;
     QTextStream stream(&text);
 
+    // Note: This program uses 31 temporaries, 61 ALU instructions, 31 texture
+    //       fetches, 3 texture indirections and 93 instructions.
+    //       The R300 limitations are 32, 64, 32, 4 and 96 respectively.
     stream << "!!ARBfp1.0\n";
-    stream << "TEMP coord;\n"; // temporary variable to store texcoord
-    stream << "TEMP color;\n"; // temporary variable to store fetched texture colors
-    stream << "TEMP sum;\n"; // variable to render the final result
-    stream << "TEX sum, fragment.texcoord, texture[0], 2D;\n"; // sum = texture2D(texUnit, gl_TexCoord[0].st)
-    stream << "MUL sum, sum, program.local[25];\n"; // sum = sum * kernel[0]
-    for( int i=1; i<25; ++i )
-        {
-        stream << "ADD coord, fragment.texcoord, program.local[" << i << "];\n"; // coord = gl_TexCoord[0] + offset[i]
-        stream << "TEX color, coord, texture[0], 2D;\n"; // color = texture2D(texUnit, coord)
-        stream << "MAD sum, color, program.local[" << (25+i) << "], sum;\n"; // sum += color * kernel[i]
-        stream << "SUB coord, fragment.texcoord, program.local[" << i << "];\n"; // coord = gl_TexCoord[0] - offset[i]
-        stream << "TEX color, coord, texture[0], 2D;\n"; // color = texture2D(texUnit, coord)
-        stream << "MAD sum, color, program.local[" << (25+i) << "], sum;\n"; // sum += color * kernel[i]
-        }
-    stream << "MOV result.color, sum;\n";  // gl_FragColor = sum
+    stream << "TEMP sum;\n";
+
+    // Declare 30 temporaries for holding texcoords and TEX results
+    for (int i = 0; i < 30; i++)
+        stream << "TEMP temp" << i << ";\n";
+
+    // Compute the texture coordinates
+    for (int i = 0, j = 0; i < 30 / 2; i++) {
+        stream << "ADD temp" << j++ << ", fragment.texcoord, program.local[" << i+1 << "];\n";
+        stream << "SUB temp" << j++ << ", fragment.texcoord, program.local[" << i+1 << "];\n";
+    }
+
+    // Sample the texture coordinates
+    stream << "TEX sum, fragment.texcoord, texture[0], 2D;\n";
+    for (int i = 0; i < 30; i++)
+        stream << "TEX temp" << i << ", temp" << i << ", texture[0], 2D;\n";
+
+    // Process the results
+    stream << "MUL sum, sum, program.local[16];\n"; // sum = sum * kernel[0]
+    for (int i = 0, j = 0; i < 30 / 2; i++) {
+        stream << "MAD sum, temp" << j++ << ", program.local[" << (17+i) << "], sum;\n";
+        stream << "MAD sum, temp" << j++ << ", program.local[" << (17+i) << "], sum;\n";
+    }
+
+    stream << "MOV result.color, sum;\n";
     stream << "END\n";
     stream.flush();
 

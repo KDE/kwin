@@ -90,8 +90,8 @@ class LanczosShader
         int m_uTexUnit;
         int m_uOffsets;
         int m_uKernel;
-        QVector2D m_offsets[25];
-        QVector4D m_kernel[25];
+        QVector2D m_offsets[16];
+        QVector4D m_kernel[16];
         uint m_arbProgram; // TODO: GLuint
 };
 #endif
