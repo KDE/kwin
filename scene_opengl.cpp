@@ -66,6 +66,7 @@ Sources and other compositing managers:
 */
 
 #include "scene_opengl.h"
+#include "kwinglplatform.h"
 
 #include <kxerrorhandler.h>
 

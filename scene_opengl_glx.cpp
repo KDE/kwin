@@ -764,17 +764,22 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
             None, None, None
             };
-        if ( ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT ) &&
-                ( GLTexture::NPOTTextureSupported() ||
-                ( isPowerOfTwo(size.width()) && isPowerOfTwo(size.height()) )))
+        // Specifying the texture target explicitly is reported to cause a performance
+        // regression with R300G (see bug #256654).
+        if ( GLPlatform::instance()->driver() != Driver_R300G )
             {
-            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-            attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
-            }
-        else if ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT )
-            {
-            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-            attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
+            if ( ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT ) &&
+                    ( GLTexture::NPOTTextureSupported() ||
+                    ( isPowerOfTwo(size.width()) && isPowerOfTwo(size.height()) )))
+                {
+                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+                attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
+                }
+            else if ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT )
+                {
+                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+                attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
+                }
             }
         glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
 #ifdef CHECK_GL_ERROR
