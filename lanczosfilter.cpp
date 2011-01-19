@@ -708,6 +708,10 @@ bool LanczosShader::init()
         {
         const char *error = (const char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
         kError() << "Failed to compile fragment program:" << error;
+        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
+        glDeleteProgramsARB(1, &m_arbProgram);
+        glDisable(GL_FRAGMENT_PROGRAM_ARB);
+        m_arbProgram = 0;
         return false;
         }
 
