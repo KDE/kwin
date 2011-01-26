@@ -78,6 +78,7 @@ namespace Oxygen
         qreal size( shadowSize() );
         TileSet* tileSet = new TileSet( shadowPixmap( color, key, key.active ), size, size, 1, 1);
         shadowCache_.insert( hash, tileSet );
+
         return tileSet;
 
     }
@@ -299,16 +300,19 @@ namespace Oxygen
 
         }
 
-        // draw the corner of the window - actually all 4 corners as one circle
-        // this is all fixedSize. Does not scale with shadow size
-        QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-        lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
-        lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
-        lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
+        if( key.drawCorners )
+        {
+            // draw the corner of the window - actually all 4 corners as one circle
+            // this is all fixedSize. Does not scale with shadow size
+            QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+            lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
+            lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
+            lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
-        // draw ellipse.
-        p.setBrush( lg );
-        p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
+            // draw ellipse.
+            p.setBrush( lg );
+            p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
+        }
 
         // mask
         p.setCompositionMode(QPainter::CompositionMode_DestinationOut);

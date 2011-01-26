@@ -132,17 +132,19 @@ namespace Oxygen
                 useOxygenShadows(false),
                 isShade(false),
                 hasTitleOutline(false),
-                hasBorder( true )
+                hasBorder( true ),
+                drawCorners( true )
             {}
 
             //! constructor from int
             Key( int hash ):
-                index( hash>>5 ),
-                active( (hash>>4)&1 ),
-                useOxygenShadows( (hash>>3)&1 ),
-                isShade( (hash>>2)&1 ),
-                hasTitleOutline( (hash>>1)&1 ),
-                hasBorder( hash&1 )
+                index( hash>>6 ),
+                active( (hash>>5)&1 ),
+                useOxygenShadows( (hash>>4)&1 ),
+                isShade( (hash>>3)&1 ),
+                hasTitleOutline( (hash>>2)&1 ),
+                hasBorder( (hash>>1)&1 ),
+                drawCorners( hash&1 )
             {}
 
             //! hash function
@@ -152,12 +154,13 @@ namespace Oxygen
                 // note this can be optimized because not all of the flag configurations are actually relevant
                 // allocate 3 empty bits for flags
                 return
-                    ( index << 5 ) |
-                    ( active << 4 ) |
-                    (useOxygenShadows << 3 ) |
-                    (isShade<<2) |
-                    (hasTitleOutline<<1) |
-                    (hasBorder<<0);
+                    ( index << 6 ) |
+                    ( active << 5 ) |
+                    (useOxygenShadows << 4 ) |
+                    (isShade<<3) |
+                    (hasTitleOutline<<2) |
+                    (hasBorder<<1) |
+                    (drawCorners);
 
             }
 
@@ -167,6 +170,7 @@ namespace Oxygen
             bool isShade;
             bool hasTitleOutline;
             bool hasBorder;
+            bool drawCorners;
 
         };
 
