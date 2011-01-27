@@ -67,7 +67,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    TileSet* ShadowCache::tileSet( const QColor& color, const Key& key )
+    TileSet* ShadowCache::tileSet( const Key& key )
     {
 
         // check if tileset already in cache
@@ -76,7 +76,7 @@ namespace Oxygen
 
         // create tileset otherwise
         qreal size( shadowSize() );
-        TileSet* tileSet = new TileSet( shadowPixmap( color, key, key.active ), size, size, 1, 1);
+        TileSet* tileSet = new TileSet( shadowPixmap( key, key.active ), size, size, 1, 1);
         shadowCache_.insert( hash, tileSet );
 
         return tileSet;
@@ -84,7 +84,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    TileSet* ShadowCache::tileSet( const QColor& color, Key key, qreal opacity )
+    TileSet* ShadowCache::tileSet( Key key, qreal opacity )
     {
 
         int index( opacity*maxIndex_ );
@@ -105,7 +105,7 @@ namespace Oxygen
         QPainter p( &shadow );
         p.setRenderHint( QPainter::Antialiasing );
 
-        QPixmap inactiveShadow( shadowPixmap( color, key, false ) );
+        QPixmap inactiveShadow( shadowPixmap( key, false ) );
         {
             QPainter pp( &inactiveShadow );
             pp.setRenderHint( QPainter::Antialiasing );
@@ -113,7 +113,7 @@ namespace Oxygen
             pp.fillRect( inactiveShadow.rect(), QColor( 0, 0, 0, 255*(1.0-opacity ) ) );
         }
 
-        QPixmap activeShadow( shadowPixmap( color, key, true ) );
+        QPixmap activeShadow( shadowPixmap( key, true ) );
         {
             QPainter pp( &activeShadow );
             pp.setRenderHint( QPainter::Antialiasing );
@@ -132,7 +132,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    QPixmap ShadowCache::shadowPixmap( const QColor& color, const Key& key, bool active ) const
+    QPixmap ShadowCache::shadowPixmap( const Key& key, bool active ) const
     {
 
         // local reference to relevant shadow configuration
@@ -298,20 +298,6 @@ namespace Oxygen
 
             }
 
-        }
-
-        if( key.drawCorners )
-        {
-            // draw the corner of the window - actually all 4 corners as one circle
-            // this is all fixedSize. Does not scale with shadow size
-            QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-            lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
-            lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
-            lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
-
-            // draw ellipse.
-            p.setBrush( lg );
-            p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
         }
 
         // mask

@@ -1044,12 +1044,27 @@ namespace Oxygen
     {
         if( itemData_.targetRect().isNull() || itemData_.isAnimationRunning() ) return;
 
-        p->save();
         const QColor color = palette.color(QPalette::Highlight);
         p->setPen(KColorUtils::mix(color, palette.color(QPalette::Active, QPalette::WindowText)));
         p->setBrush( helper().alphaColor( color, 0.5 ) );
-        p->drawRect( itemData_.targetRect().adjusted( 4, 2, -4, -2 ) );
-        p->restore();
+        p->drawRect( QRectF(itemData_.targetRect()).adjusted( 4.5, 2.5, -4.5, -2.5 ) );
+
+    }
+
+    //_______________________________________________________________________
+    void Client::renderCorners( QPainter* painter, const QRect& frame, const QPalette& palette ) const
+    {
+
+        const QColor color( backgroundColor( widget(), palette ) );
+
+        QLinearGradient lg = QLinearGradient(0, -0.5, 0, qreal( frame.height() )+0.5);
+        lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
+        lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
+        lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
+
+        painter->setPen( QPen( lg, 1 ) );
+        painter->setBrush( Qt::NoBrush );
+        painter->drawRoundedRect( QRectF( frame ).adjusted( 0.5, 0.5, -0.5, -0.5 ), 3.5,  3.5 );
 
     }
 
@@ -1326,6 +1341,7 @@ namespace Oxygen
 
         // painter
         QPainter painter(widget());
+        painter.setRenderHint(QPainter::Antialiasing);
         painter.setClipRegion( event->region() );
 
         // define frame
@@ -1339,17 +1355,15 @@ namespace Oxygen
         {
 
             TileSet *tileSet( 0 );
-            ShadowCache::Key key( this->key() );
+            const ShadowCache::Key key( this->key() );
             if( configuration().useOxygenShadows() && glowIsAnimated() && !isForcedActive() )
             {
 
-                QColor background( backgroundPalette( widget(), palette ).window().color() );
-                tileSet = shadowCache().tileSet( background, key, glowIntensity() );
+                tileSet = shadowCache().tileSet( key, glowIntensity() );
 
             } else {
 
-                QColor background( backgroundColor( widget(), palette ) );
-                tileSet = shadowCache().tileSet( background, key );
+                tileSet = shadowCache().tileSet( key );
 
             }
 
@@ -1382,19 +1396,10 @@ namespace Oxygen
                 if( configuration().frameBorder() == Configuration::BorderNone && !isShade() ) bottom = 0;
                 QRegion mask( helper().roundedMask( frame, left, right, top, bottom ) );
 
-                // in no-border configuration, an extra pixel is added to the mask
-                // in order to get the corners color right in case of title highlighting.
-                if( configuration().frameBorder() == Configuration::BorderNone )
-                {
-                    int x, y, w, h;
-                    frame.getRect(&x, &y, &w, &h);
-                    mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom));
-                }
-
+                renderCorners( &painter, frame, palette );
                 painter.setClipRegion( mask, Qt::IntersectClip );
 
             }
-
 
         }
 
@@ -1419,18 +1424,11 @@ namespace Oxygen
             frame.adjust(-1,-1, 1, 1);
         }
 
-        // adjust frame if there are shadows
-        {
-            painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
+        // float frame
+        renderFloatFrame( &painter, frame, palette );
 
-            // float frame
-            renderFloatFrame( &painter, frame, palette );
-
-            // resize handles
-            renderDots( &painter, frame, backgroundColor( widget(), palette ) );
-            painter.restore();
-        }
+        // resize handles
+        renderDots( &painter, frame, backgroundColor( widget(), palette ) );
 
         if( !hideTitleBar() )
         {

@@ -240,7 +240,6 @@ namespace Oxygen
             key.active = isActive() || isForcedActive();
             key.useOxygenShadows = configuration().useOxygenShadows();
             key.isShade = isShade();
-            key.hasTitleOutline = configuration().drawTitleOutline();
             key.hasBorder = ( configuration().frameBorder() > Configuration::BorderNone );
             return key;
         }
@@ -313,6 +312,9 @@ namespace Oxygen
 
         //! tabbing target rect
         virtual void renderTargetRect( QPainter*, const QPalette& );
+
+        //! render corners
+        virtual void renderCorners( QPainter*, const QRect&, const QPalette& ) const;
 
         //! render float frame
         virtual void renderFloatFrame( QPainter*, const QRect&, const QPalette& ) const;
