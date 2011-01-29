@@ -27,13 +27,12 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygendecohelper.h"
 #include "oxygenshadowconfiguration.h"
+#include "oxygendecohelper.h"
 
 #include <cmath>
 #include <QtCore/QCache>
 #include <QtGui/QRadialGradient>
-
 
 namespace Oxygen
 {
@@ -43,7 +42,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        ShadowCache( DecoHelper& helper );
+        ShadowCache( DecoHelper& );
 
         //! destructor
         virtual ~ShadowCache( void )
@@ -240,11 +239,11 @@ namespace Oxygen
 
         };
 
-        private:
-
         //! draw gradient into rect
         /*! a separate method is used in order to properly account for corners */
         void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
+
+        private:
 
         //! helper
         DecoHelper& helper_;

@@ -25,7 +25,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenshadowcache.h"
-#include "oxygenhelper.h"
 
 #include <cassert>
 #include <cmath>
@@ -70,13 +69,13 @@ namespace Oxygen
     TileSet* ShadowCache::tileSet( const Key& key )
     {
 
-        // check if tileset already in cache
+        // check if tileSet already in cache
         int hash( key.hash() );
         if( enabled_ && shadowCache_.contains(hash) ) return shadowCache_.object(hash);
 
-        // create tileset otherwise
+        // create tileSet otherwise
         qreal size( shadowSize() );
-        TileSet* tileSet = new TileSet( shadowPixmap( key, key.active ), size, size, 1, 1);
+        TileSet* tileSet = new TileSet( shadowPixmap( key, key.active ), size, size, size, size, size, size, 1, 1);
         shadowCache_.insert( hash, tileSet );
 
         return tileSet;
@@ -93,7 +92,7 @@ namespace Oxygen
         // construct key
         key.index = index;
 
-        // check if tileset already in cache
+        // check if tileSet already in cache
         int hash( key.hash() );
         if( enabled_ && animatedShadowCache_.contains(hash) ) return animatedShadowCache_.object(hash);
 
