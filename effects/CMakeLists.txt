@@ -84,7 +84,6 @@ include( zoom/CMakeLists.txt )
 
 if( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 include( logout/CMakeLists.txt )
-include( shadow/CMakeLists.txt )
 endif( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 # OpenGL-specific effects
