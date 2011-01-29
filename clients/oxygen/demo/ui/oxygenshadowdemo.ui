@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ShadowDemo</class>
+ <widget class="QWidget" name="ShadowDemo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>492</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,1">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Inactive Windows</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Active Windows</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="Oxygen::ShadowDemoWidget" name="inactiveRoundWidget" native="true"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="Oxygen::ShadowDemoWidget" name="activeRoundWidget" native="true"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="Oxygen::ShadowDemoWidget" name="inactiveSquareWidget" native="true"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="Oxygen::ShadowDemoWidget" name="activeSquareWidget" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Oxygen::ShadowDemoWidget</class>
+   <extends>QWidget</extends>
+   <header>oxygenshadowdemowidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
