@@ -106,9 +106,6 @@ if( KWIN_HAVE_OPENGL_COMPOSITING )
     include( trackmouse/CMakeLists.txt )
     include( wobblywindows/CMakeLists.txt )
 endif( KWIN_HAVE_OPENGL_COMPOSITING )
-if( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
-    include( snow/CMakeLists.txt )
-endif( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 ###############################################################################
 
