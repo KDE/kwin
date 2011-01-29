@@ -52,6 +52,9 @@ namespace Oxygen
 
         protected slots:
 
+        //! reparse configuration
+        void reparseConfiguration( void );
+
         //! save
         void save( void );
 

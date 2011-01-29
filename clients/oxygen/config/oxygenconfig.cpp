@@ -33,6 +33,9 @@
 #include "../oxygenconfiguration.h"
 #include "../oxygenshadowconfiguration.h"
 
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
+
 #include <KAboutData>
 #include <KAboutApplicationDialog>
 #include <KConfigGroup>
@@ -174,6 +177,9 @@ namespace Oxygen
 
         // sync configuration
         configuration_->sync();
+
+        QDBusMessage message( QDBusMessage::createSignal("/OxygenWindeco",  "org.kde.Oxygen.Style", "reparseConfiguration") );
+        QDBusConnection::sessionBus().send(message);
 
     }
 

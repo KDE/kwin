@@ -30,6 +30,8 @@
 #include "oxygenhelper.h"
 
 #include <QtGui/QDialogButtonBox>
+#include <QtDBus/QDBusConnection>
+
 #include <KPushButton>
 #include <KFileDialog>
 
@@ -54,43 +56,13 @@ namespace Oxygen
         ui.setupUi( mainWidget );
         setMainWidget( mainWidget );
 
-        // read shadow configurations
-        KConfig config( "oxygenrc" );
-        _cache.setEnabled( true );
-        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Inactive, KConfigGroup( &config, "InactiveShadow") ) );
-        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Active, KConfigGroup( &config, "ActiveShadow") ) );
-
-        // pass tileSets to UI
-        ShadowCache::Key key;
-        key.active = false;
-        key.hasBorder = true;
-        key.useOxygenShadows = true;
         ui.inactiveRoundWidget->setHelper( _helper );
-        ui.inactiveRoundWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.inactiveRoundWidget->setShadowSize( _cache.shadowSize() );
-
-        key.active = false;
-        key.hasBorder = false;
-        key.useOxygenShadows = true;
         ui.inactiveSquareWidget->setHelper( _helper );
-        ui.inactiveSquareWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.inactiveSquareWidget->setShadowSize( _cache.shadowSize() );
-        ui.inactiveSquareWidget->setSquare( true );
-
-        key.active = true;
-        key.hasBorder = true;
-        key.useOxygenShadows = true;
         ui.activeRoundWidget->setHelper( _helper );
-        ui.activeRoundWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.activeRoundWidget->setShadowSize( _cache.shadowSize() );
-
-        key.active = true;
-        key.hasBorder = false;
-        key.useOxygenShadows = true;
         ui.activeSquareWidget->setHelper( _helper );
-        ui.activeSquareWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.activeSquareWidget->setShadowSize( _cache.shadowSize() );
-        ui.activeSquareWidget->setSquare( true );
+
+        // reparse configuration
+        reparseConfiguration();
 
         // customize button box
         QList<QDialogButtonBox*> children( findChildren<QDialogButtonBox*>() );
@@ -109,8 +81,57 @@ namespace Oxygen
 
         }
 
-        // save
+        // connections
         connect( button( KDialog::Apply ), SIGNAL( clicked() ), SLOT( save() ) );
+
+        // use DBus connection to update on oxygen configuration change
+        QDBusConnection dbus = QDBusConnection::sessionBus();
+        dbus.connect( QString(), "/OxygenWindeco", "org.kde.Oxygen.Style", "reparseConfiguration", this, SLOT( reparseConfiguration( void ) ) );
+
+    }
+
+
+    //_________________________________________________________
+    void ShadowDemoDialog::reparseConfiguration( void )
+    {
+
+        // read shadow configurations
+        KConfig config( "oxygenrc" );
+        _cache.invalidateCaches();
+        _cache.setEnabled( true );
+        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Inactive, KConfigGroup( &config, "InactiveShadow") ) );
+        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Active, KConfigGroup( &config, "ActiveShadow") ) );
+
+        //QTextStream( stdout ) << "ShadowDemoDialog::reparseConfiguration - shadowSize: " << _cache.shadowSize() << endl;
+
+        // pass tileSets to UI
+        ShadowCache::Key key;
+        key.active = false;
+        key.hasBorder = true;
+        key.useOxygenShadows = true;
+        ui.inactiveRoundWidget->setTileSet( *_cache.tileSet( key ) );
+        ui.inactiveRoundWidget->setShadowSize( _cache.shadowSize() );
+
+        key.active = false;
+        key.hasBorder = false;
+        key.useOxygenShadows = true;
+        ui.inactiveSquareWidget->setTileSet( *_cache.tileSet( key ) );
+        ui.inactiveSquareWidget->setShadowSize( _cache.shadowSize() );
+        ui.inactiveSquareWidget->setSquare( true );
+
+        key.active = true;
+        key.hasBorder = true;
+        key.useOxygenShadows = true;
+        ui.activeRoundWidget->setTileSet( *_cache.tileSet( key ) );
+        ui.activeRoundWidget->setShadowSize( _cache.shadowSize() );
+
+        key.active = true;
+        key.hasBorder = false;
+        key.useOxygenShadows = true;
+        ui.activeSquareWidget->setTileSet( *_cache.tileSet( key ) );
+        ui.activeSquareWidget->setShadowSize( _cache.shadowSize() );
+        ui.activeSquareWidget->setSquare( true );
+
     }
 
     //_________________________________________________________
