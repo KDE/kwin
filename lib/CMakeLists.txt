@@ -35,7 +35,6 @@ set(kwin_EFFECTSLIB_SRCS
     kwinglutils.cpp
     kwinglutils_funcs.cpp
     kwinglplatform.cpp
-    kwinshadereffect.cpp
     kwinxrenderutils.cpp
     )
 
@@ -83,7 +82,6 @@ install( FILES
     kwineffects.h
     kwinglutils.h
     kwinglutils_funcs.h
-    kwinshadereffect.h
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
