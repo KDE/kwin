@@ -52,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "trackmouse/trackmouse_config.h"
 #include "wobblywindows/wobblywindows_config.h"
 #ifndef KWIN_HAVE_OPENGLES
-#include "sharpen/sharpen_config.h"
 #include "snow/snow_config.h"
 #endif
 #endif
@@ -94,7 +93,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
 #ifndef KWIN_HAVE_OPENGLES
-    KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
 #endif
 #endif
