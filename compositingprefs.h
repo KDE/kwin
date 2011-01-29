@@ -46,13 +46,10 @@ public:
 
     void detect();
 
-    bool xgl() const { return mXgl; }
-
 protected:
 
     void detectDriverAndVersion();
     void applyDriverSpecificOptions();
-    static bool detectXgl();
 
     bool initGLXContext();
     void deleteGLXContext();
@@ -61,8 +58,6 @@ protected:
 
 
 private:
-    bool mXgl;
-
     bool mRecommendCompositing;
     bool mEnableVSync;
     bool mEnableDirectRendering;
