@@ -1,3 +1,4 @@
+include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
 include_directories( ${KDE4_KDEUI_INCLUDES} )
 
 
