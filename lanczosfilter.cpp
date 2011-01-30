@@ -633,11 +633,11 @@ bool LanczosShader::init()
         m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");
         if (m_shader->isValid())
             {
-            m_shader->bind();
+            ShaderManager::instance()->pushShader(m_shader);
             m_uTexUnit    = m_shader->uniformLocation("texUnit");
             m_uKernel     = m_shader->uniformLocation("kernel");
             m_uOffsets    = m_shader->uniformLocation("offsets");
-            m_shader->unbind();
+            ShaderManager::instance()->popShader();
             return true;
             }
         else
