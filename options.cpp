@@ -130,11 +130,6 @@ unsigned long Options::updateSettings()
     else if ( val == "FocusStrictlyUnderMouse" )
         focusPolicy = FocusStrictlyUnderMouse;
 
-    val = config.readEntry ("AltTabStyle", "KDE");
-    altTabStyle = KDE; // what a default :-)
-    if ( val == "CDE" )
-        altTabStyle = CDE;
-
     separateScreenFocus = config.readEntry( "SeparateScreenFocus", false );
     activeMouseScreen = config.readEntry( "ActiveMouseScreen", focusPolicy != ClickToFocus );
 

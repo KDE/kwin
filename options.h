@@ -132,26 +132,6 @@ class Options : public KDecorationOptions
          */
         int tilingRaisePolicy;
 
-        /**
-           Different Alt-Tab-Styles:
-           <ul>
-
-           <li> KDE - the recommended KDE style. Alt-Tab opens a nice icon
-           box that makes it easy to select the window you want to tab
-           to. The order automatically adjusts to the most recently used
-           windows. Note that KDE style does not work with the
-           FocusUnderMouse and FocusStrictlyUnderMouse focus
-           policies. Choose ClickToFocus or FocusFollowsMouse instead.
-
-           <li> CDE - the old-fashion CDE style. Alt-Tab cycles between
-           the windows in static order. The current window gets raised,
-           the previous window gets lowered.
-
-           </ul>
-         */
-        enum AltTabStyle { KDE, CDE };
-        AltTabStyle altTabStyle;
-
         // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
         bool separateScreenFocus;
         // whether active Xinerama screen is the one with mouse (or with the active window)
