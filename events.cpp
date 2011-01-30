@@ -56,167 +56,161 @@ namespace KWin
 {
 
 extern int currentRefreshRate();
-    
+
 // ****************************************
 // WinInfo
 // ****************************************
 
-WinInfo::WinInfo( Client * c, Display * display, Window window,
-    Window rwin, const unsigned long pr[], int pr_size )
-    : NETWinInfo2( display, window, rwin, pr, pr_size, NET::WindowManager ), m_client( c )
-    {
-    }
+WinInfo::WinInfo(Client * c, Display * display, Window window,
+                 Window rwin, const unsigned long pr[], int pr_size)
+    : NETWinInfo2(display, window, rwin, pr, pr_size, NET::WindowManager), m_client(c)
+{
+}
 
 void WinInfo::changeDesktop(int desktop)
-    {
-    m_client->workspace()->sendClientToDesktop( m_client, desktop, true );
-    }
+{
+    m_client->workspace()->sendClientToDesktop(m_client, desktop, true);
+}
 
-void WinInfo::changeFullscreenMonitors( NETFullscreenMonitors topology )
-    {
-    m_client->updateFullscreenMonitors( topology );
-    }
+void WinInfo::changeFullscreenMonitors(NETFullscreenMonitors topology)
+{
+    m_client->updateFullscreenMonitors(topology);
+}
 
-void WinInfo::changeState( unsigned long state, unsigned long mask )
-    {
+void WinInfo::changeState(unsigned long state, unsigned long mask)
+{
     mask &= ~NET::Sticky; // KWin doesn't support large desktops, ignore
     mask &= ~NET::Hidden; // clients are not allowed to change this directly
     state &= mask; // for safety, clear all other bits
 
-    if(( mask & NET::FullScreen ) != 0 && ( state & NET::FullScreen ) == 0 )
-        m_client->setFullScreen( false, false );
-    if ( (mask & NET::Max) == NET::Max )
-        m_client->setMaximize( state & NET::MaxVert, state & NET::MaxHoriz );
-    else if ( mask & NET::MaxVert )
-        m_client->setMaximize( state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal );
-    else if ( mask & NET::MaxHoriz )
-        m_client->setMaximize( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz );
+    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) == 0)
+        m_client->setFullScreen(false, false);
+    if ((mask & NET::Max) == NET::Max)
+        m_client->setMaximize(state & NET::MaxVert, state & NET::MaxHoriz);
+    else if (mask & NET::MaxVert)
+        m_client->setMaximize(state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal);
+    else if (mask & NET::MaxHoriz)
+        m_client->setMaximize(m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz);
 
-    if ( mask & NET::Shaded )
-        m_client->setShade( state & NET::Shaded ? ShadeNormal : ShadeNone );
-    if ( mask & NET::KeepAbove)
-        m_client->setKeepAbove( (state & NET::KeepAbove) != 0 );
-    if ( mask & NET::KeepBelow)
-        m_client->setKeepBelow( (state & NET::KeepBelow) != 0 );
-    if( mask & NET::SkipTaskbar )
-        m_client->setSkipTaskbar( ( state & NET::SkipTaskbar ) != 0, true );
-    if( mask & NET::SkipPager )
-        m_client->setSkipPager( ( state & NET::SkipPager ) != 0 );
-    if( mask & NET::DemandsAttention )
-        m_client->demandAttention(( state & NET::DemandsAttention ) != 0 );
-    if( mask & NET::Modal )
-        m_client->setModal( ( state & NET::Modal ) != 0 );
+    if (mask & NET::Shaded)
+        m_client->setShade(state & NET::Shaded ? ShadeNormal : ShadeNone);
+    if (mask & NET::KeepAbove)
+        m_client->setKeepAbove((state & NET::KeepAbove) != 0);
+    if (mask & NET::KeepBelow)
+        m_client->setKeepBelow((state & NET::KeepBelow) != 0);
+    if (mask & NET::SkipTaskbar)
+        m_client->setSkipTaskbar((state & NET::SkipTaskbar) != 0, true);
+    if (mask & NET::SkipPager)
+        m_client->setSkipPager((state & NET::SkipPager) != 0);
+    if (mask & NET::DemandsAttention)
+        m_client->demandAttention((state & NET::DemandsAttention) != 0);
+    if (mask & NET::Modal)
+        m_client->setModal((state & NET::Modal) != 0);
     // unsetting fullscreen first, setting it last (because e.g. maximize works only for !isFullScreen() )
-    if(( mask & NET::FullScreen ) != 0 && ( state & NET::FullScreen ) != 0 )
-        m_client->setFullScreen( true, false );
-    }
+    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) != 0)
+        m_client->setFullScreen(true, false);
+}
 
 void WinInfo::disable()
-    {
+{
     m_client = NULL; // only used when the object is passed to Deleted
-    }
+}
 
 // ****************************************
 // RootInfo
 // ****************************************
 
-RootInfo::RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr )
-    : NETRootInfo( dpy, w, name, pr, pr_num, scr )
-    {
+RootInfo::RootInfo(Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr)
+    : NETRootInfo(dpy, w, name, pr, pr_num, scr)
+{
     workspace = ws;
-    }
+}
 
 void RootInfo::changeNumberOfDesktops(int n)
-    {
-    workspace->setNumberOfDesktops( n );
-    }
+{
+    workspace->setNumberOfDesktops(n);
+}
 
 void RootInfo::changeCurrentDesktop(int d)
-    {
-    workspace->setCurrentDesktop( d );
-    }
+{
+    workspace->setCurrentDesktop(d);
+}
 
-void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timestamp, Window active_window )
-    {
-    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        {
-        if( timestamp == CurrentTime )
+void RootInfo::changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window)
+{
+    if (Client* c = workspace->findClient(WindowMatchPredicate(w))) {
+        if (timestamp == CurrentTime)
             timestamp = c->userTime();
-        if( src != NET::FromApplication && src != FromTool )
+        if (src != NET::FromApplication && src != FromTool)
             src = NET::FromTool;
-        if( src == NET::FromTool )
-            workspace->activateClient( c, true ); // force
-        else // NET::FromApplication
-            {
+        if (src == NET::FromTool)
+            workspace->activateClient(c, true);   // force
+        else { // NET::FromApplication
             Client* c2;
-            if( workspace->allowClientActivation( c, timestamp, false, true ))
-                workspace->activateClient( c );
+            if (workspace->allowClientActivation(c, timestamp, false, true))
+                workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
-            else if( active_window != None
-                && ( c2 = workspace->findClient( WindowMatchPredicate( active_window ))) != NULL
-                && workspace->allowClientActivation( c2,
-                    timestampCompare( timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true ))
-                {
-                workspace->activateClient( c );
-                }
-            else
+            else if (active_window != None
+                    && (c2 = workspace->findClient(WindowMatchPredicate(active_window))) != NULL
+                    && workspace->allowClientActivation(c2,
+                            timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
+                workspace->activateClient(c);
+            } else
                 c->demandAttention();
-            }
         }
     }
+}
 
-void RootInfo::restackWindow( Window w, RequestSource src, Window above, int detail, Time timestamp )
-    {
-    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        {
-        if( timestamp == CurrentTime )
+void RootInfo::restackWindow(Window w, RequestSource src, Window above, int detail, Time timestamp)
+{
+    if (Client* c = workspace->findClient(WindowMatchPredicate(w))) {
+        if (timestamp == CurrentTime)
             timestamp = c->userTime();
-        if( src != NET::FromApplication && src != FromTool )
+        if (src != NET::FromApplication && src != FromTool)
             src = NET::FromTool;
-        c->restackWindow( above, detail, src, timestamp, true );
-        }
+        c->restackWindow(above, detail, src, timestamp, true);
     }
+}
 
-void RootInfo::gotTakeActivity( Window w, Time timestamp, long flags )
-    {
-    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        workspace->handleTakeActivity( c, timestamp, flags );
-    }
+void RootInfo::gotTakeActivity(Window w, Time timestamp, long flags)
+{
+    if (Client* c = workspace->findClient(WindowMatchPredicate(w)))
+        workspace->handleTakeActivity(c, timestamp, flags);
+}
 
 void RootInfo::closeWindow(Window w)
-    {
-    Client* c = workspace->findClient( WindowMatchPredicate( w ));
-    if ( c )
+{
+    Client* c = workspace->findClient(WindowMatchPredicate(w));
+    if (c)
         c->closeWindow();
-    }
+}
 
 void RootInfo::moveResize(Window w, int x_root, int y_root, unsigned long direction)
-    {
-    Client* c = workspace->findClient( WindowMatchPredicate( w ));
-    if ( c )
-        {
+{
+    Client* c = workspace->findClient(WindowMatchPredicate(w));
+    if (c) {
         updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
-        c->NETMoveResize( x_root, y_root, (Direction)direction);
-        }
+        c->NETMoveResize(x_root, y_root, (Direction)direction);
     }
+}
 
-void RootInfo::moveResizeWindow(Window w, int flags, int x, int y, int width, int height )
-    {
-    Client* c = workspace->findClient( WindowMatchPredicate( w ));
-    if ( c )
-        c->NETMoveResizeWindow( flags, x, y, width, height );
-    }
+void RootInfo::moveResizeWindow(Window w, int flags, int x, int y, int width, int height)
+{
+    Client* c = workspace->findClient(WindowMatchPredicate(w));
+    if (c)
+        c->NETMoveResizeWindow(flags, x, y, width, height);
+}
 
-void RootInfo::gotPing( Window w, Time timestamp )
-    {
-    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        c->gotPing( timestamp );
-    }
+void RootInfo::gotPing(Window w, Time timestamp)
+{
+    if (Client* c = workspace->findClient(WindowMatchPredicate(w)))
+        c->gotPing(timestamp);
+}
 
-void RootInfo::changeShowingDesktop( bool showing )
-    {
-    workspace->setShowingDesktop( showing );
-    }
+void RootInfo::changeShowingDesktop(bool showing)
+{
+    workspace->setShowingDesktop(showing);
+}
 
 // ****************************************
 // Workspace
@@ -225,157 +219,130 @@ void RootInfo::changeShowingDesktop( bool showing )
 /*!
   Handles workspace specific XEvents
  */
-bool Workspace::workspaceEvent( XEvent * e )
-    {
-    if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) 
-        {
+bool Workspace::workspaceEvent(XEvent * e)
+{
+    if (mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease)) {
         mouse_emulation = false;
         ungrabXKeyboard();
-        }
-    if( effects && static_cast< EffectsHandlerImpl* >( effects )->hasKeyboardGrab()
-        && ( e->type == KeyPress || e->type == KeyRelease ))
+    }
+    if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
+            && (e->type == KeyPress || e->type == KeyRelease))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
-    if( e->type == PropertyNotify || e->type == ClientMessage )
-        {
+    if (e->type == PropertyNotify || e->type == ClientMessage) {
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
-        rootInfo->event( e, dirty, NETRootInfo::PROPERTIES_SIZE );
-        if( dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames )
+        rootInfo->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
+        if (dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames)
             saveDesktopSettings();
-        if( dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout )
+        if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)
             updateDesktopLayout();
-        }
+    }
 
     // events that should be handled before Clients can get them
-    switch (e->type) 
-        {
-        case ButtonPress:
-        case ButtonRelease:
-            was_user_interaction = true;
+    switch(e->type) {
+    case ButtonPress:
+    case ButtonRelease:
+        was_user_interaction = true;
         // fallthrough
-        case MotionNotify:
-            if ( tab_grab || control_grab )
-                {
-                tab_box->handleMouseEvent( e );
-                return true;
-                }
-            if( effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent( e ))
-                return true;
-            break;
-        case KeyPress:
-            {
-            was_user_interaction = true;
-            int keyQt;
-            KKeyServer::xEventToQt(e, &keyQt);
+    case MotionNotify:
+        if (tab_grab || control_grab) {
+            tab_box->handleMouseEvent(e);
+            return true;
+        }
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
+            return true;
+        break;
+    case KeyPress: {
+        was_user_interaction = true;
+        int keyQt;
+        KKeyServer::xEventToQt(e, &keyQt);
 //            kDebug(125) << "Workspace::keyPress( " << keyQt << " )";
-            if (movingClient)
-                {
-                movingClient->keyPressEvent(keyQt);
-                return true;
-                }
-            if( tab_grab || control_grab )
-                {
-                tabBoxKeyPress( keyQt );
-                return true;
-                }
-            break;
-            }
-        case KeyRelease:
-            was_user_interaction = true;
-            if( tab_grab || control_grab )
-                {
-                tabBoxKeyRelease( e->xkey );
-                return true;
-                }
-            break;
-        case ConfigureNotify:
-            if( e->xconfigure.event == rootWindow())
-                x_stacking_dirty = true;
-            break;
-        };
+        if (movingClient) {
+            movingClient->keyPressEvent(keyQt);
+            return true;
+        }
+        if (tab_grab || control_grab) {
+            tabBoxKeyPress(keyQt);
+            return true;
+        }
+        break;
+    }
+    case KeyRelease:
+        was_user_interaction = true;
+        if (tab_grab || control_grab) {
+            tabBoxKeyRelease(e->xkey);
+            return true;
+        }
+        break;
+    case ConfigureNotify:
+        if (e->xconfigure.event == rootWindow())
+            x_stacking_dirty = true;
+        break;
+    };
 
-    if( Client* c = findClient( WindowMatchPredicate( e->xany.window )))
-        {
-        if( c->windowEvent( e ))
+    if (Client* c = findClient(WindowMatchPredicate(e->xany.window))) {
+        if (c->windowEvent(e))
             return true;
-        }
-    else if( Client* c = findClient( WrapperIdMatchPredicate( e->xany.window )))
-        {
-        if( c->windowEvent( e ))
+    } else if (Client* c = findClient(WrapperIdMatchPredicate(e->xany.window))) {
+        if (c->windowEvent(e))
             return true;
-        }
-    else if( Client* c = findClient( FrameIdMatchPredicate( e->xany.window )))
-        {
-        if( c->windowEvent( e ))
+    } else if (Client* c = findClient(FrameIdMatchPredicate(e->xany.window))) {
+        if (c->windowEvent(e))
             return true;
-        }
-    else if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( e->xany.window )))
-        {
-        if( c->windowEvent( e ))
+    } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xany.window))) {
+        if (c->windowEvent(e))
             return true;
-        }
-    else
-        {
-        Window special = findSpecialEventWindow( e );
-        if( special != None )
-            if( Client* c = findClient( WindowMatchPredicate( special )))
-                {
-                if( c->windowEvent( e ))
+    } else {
+        Window special = findSpecialEventWindow(e);
+        if (special != None)
+            if (Client* c = findClient(WindowMatchPredicate(special))) {
+                if (c->windowEvent(e))
                     return true;
-                }
+            }
 
         // We want to pass root window property events to effects
-        if( e->type == PropertyNotify && e->xany.window == rootWindow() && effects )
-            {
+        if (e->type == PropertyNotify && e->xany.window == rootWindow() && effects) {
             XPropertyEvent* re = &e->xproperty;
-            static_cast< EffectsHandlerImpl* >( effects )->propertyNotify( NULL, re->atom );
-            }
+            static_cast< EffectsHandlerImpl* >(effects)->propertyNotify(NULL, re->atom);
         }
-    if( movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
-        && ( e->type == MotionNotify || e->type == ButtonPress || e->type == ButtonRelease ))
-        {
-        if( movingClient->windowEvent( e ))
+    }
+    if (movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
+            && (e->type == MotionNotify || e->type == ButtonPress || e->type == ButtonRelease)) {
+        if (movingClient->windowEvent(e))
             return true;
-        }
+    }
 
-    switch (e->type) 
-        {
-        case CreateNotify:
-            if ( e->xcreatewindow.parent == rootWindow() &&
-                 !QWidget::find( e->xcreatewindow.window) &&
-                 !e->xcreatewindow.override_redirect )
-            {
-        // see comments for allowClientActivation()
+    switch(e->type) {
+    case CreateNotify:
+        if (e->xcreatewindow.parent == rootWindow() &&
+                !QWidget::find(e->xcreatewindow.window) &&
+                !e->xcreatewindow.override_redirect) {
+            // see comments for allowClientActivation()
             Time t = xTime();
             XChangeProperty(display(), e->xcreatewindow.window,
                             atoms->kde_net_wm_user_creation_time, XA_CARDINAL,
                             32, PropModeReplace, (unsigned char *)&t, 1);
-            }
+        }
         break;
 
-    case UnmapNotify:
-            {
-            return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
-            }
-        case ReparentNotify:
-            {
+    case UnmapNotify: {
+        return (e->xunmap.event != e->xunmap.window);   // hide wm typical event from Qt
+    }
+    case ReparentNotify: {
         //do not confuse Qt with these events. After all, _we_ are the
         //window manager who does the reparenting.
-            return true;
-            }
-        case DestroyNotify:
-            {
-            return false;
-            }
-        case MapRequest:
-            {
-            updateXTime();
+        return true;
+    }
+    case DestroyNotify: {
+        return false;
+    }
+    case MapRequest: {
+        updateXTime();
 
-            // e->xmaprequest.window is different from e->xany.window
-            // TODO this shouldn't be necessary now
-            Client* c = findClient( WindowMatchPredicate( e->xmaprequest.window ));
-            if ( !c ) 
-                {
+        // e->xmaprequest.window is different from e->xany.window
+        // TODO this shouldn't be necessary now
+        Client* c = findClient(WindowMatchPredicate(e->xmaprequest.window));
+        if (!c) {
 // don't check for the parent being the root window, this breaks when some app unmaps
 // a window, changes something and immediately maps it back, without giving KWin
 // a chance to reparent it back to root
@@ -384,206 +351,188 @@ bool Workspace::workspaceEvent( XEvent * e )
 // Note: Now the save-set support in Client::mapRequestEvent() actually requires that
 // this code doesn't check the parent to be root.
 //            if ( e->xmaprequest.parent == root ) {
-                c = createClient( e->xmaprequest.window, false );
-                if( c == NULL ) // refused to manage, simply map it (most probably override redirect)
-                    XMapRaised( display(), e->xmaprequest.window );
-                return true;
-                }
-            if( c )
-                {
-                c->windowEvent( e );
-                updateFocusChains( c, FocusChainUpdate );
-                return true;
-                }
-            break;
-            }
-        case MapNotify:
-            {
-            if( e->xmap.override_redirect )
-                {
-                Unmanaged* c = findUnmanaged( WindowMatchPredicate( e->xmap.window ));
-                if( c == NULL )
-                    c = createUnmanaged( e->xmap.window );
-                if( c )
-                    return c->windowEvent( e );
-                }
-            return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
-            }
-
-        case EnterNotify:
-            {
-            if ( QWhatsThis::inWhatsThisMode() )
-                {
-                QWidget* w = QWidget::find( e->xcrossing.window );
-                if ( w )
-                    QWhatsThis::leaveWhatsThisMode();
-                }
-            if( electricBorderEvent(e))
-                return true;
-            break;
-            }
-        case LeaveNotify:
-            {
-            if ( !QWhatsThis::inWhatsThisMode() )
-                break;
-            // TODO is this cliente ever found, given that client events are searched above?
-            Client* c = findClient( FrameIdMatchPredicate( e->xcrossing.window ));
-            if ( c && e->xcrossing.detail != NotifyInferior )
-                QWhatsThis::leaveWhatsThisMode();
-            break;
-            }
-        case ConfigureRequest:
-            {
-            if ( e->xconfigurerequest.parent == rootWindow()) 
-                {
-                XWindowChanges wc;
-                wc.border_width = e->xconfigurerequest.border_width;
-                wc.x = e->xconfigurerequest.x;
-                wc.y = e->xconfigurerequest.y;
-                wc.width = e->xconfigurerequest.width;
-                wc.height = e->xconfigurerequest.height;
-                wc.sibling = None;
-                wc.stack_mode = Above;
-                unsigned int value_mask = e->xconfigurerequest.value_mask
-                    & ( CWX | CWY | CWWidth | CWHeight | CWBorderWidth );
-                XConfigureWindow( display(), e->xconfigurerequest.window, value_mask, &wc );
-                return true;
-                }
-            break;
-            }
-        case KeyPress:
-            if ( mouse_emulation )
-                return keyPressMouseEmulation( e->xkey );
-            break;
-        case KeyRelease:
-            if ( mouse_emulation )
-                return false;
-            break;
-        case FocusIn:
-            if( e->xfocus.window == rootWindow()
-                && ( e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot ))
-                {
-                updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
-                Window focus;
-                int revert;
-                XGetInputFocus( display(), &focus, &revert );
-                if( focus == None || focus == PointerRoot )
-                    {
-                    //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
-                    Client *c = mostRecentlyActivatedClient();
-                    if( c != NULL )
-                        requestFocus( c, true );
-                    else if( activateNextClient( NULL ))
-                        ; // ok, activated
-                    else
-                        focusToNull();
-                    }
-                }
-            // fall through
-        case FocusOut:
-            return true; // always eat these, they would tell Qt that KWin is the active app
-        case ClientMessage:
-            if( electricBorderEvent( e ))
-                return true;
-            break;
-        case Expose:
-            if( compositing()
-                && ( e->xexpose.window == rootWindow()  // root window needs repainting
-                    || (overlay != None && e->xexpose.window == overlay) )) // overlay needs repainting
-                {
-                addRepaint( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
-                }
-            break;
-        case VisibilityNotify:
-            if( compositing() && overlay != None && e->xvisibility.window == overlay )
-                {
-                bool was_visible = overlay_visible;
-                overlay_visible = ( e->xvisibility.state != VisibilityFullyObscured );
-                if( !was_visible && overlay_visible )
-                    { // hack for #154825
-                    addRepaintFull();
-                    QTimer::singleShot( 2000, this, SLOT( addRepaintFull()));
-                    }
-                checkCompositeTimer();
-                }
-            break;
-        default:
-            if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )
-                {
-#ifdef HAVE_XRANDR
-                XRRUpdateConfiguration( e );
-#endif
-                if( compositing() )
-                    {
-                    // desktopResized() should take care of when the size or
-                    // shape of the desktop has changed, but we also want to
-                    // catch refresh rate changes
-                    if( xrrRefreshRate != currentRefreshRate() )
-                        compositeResetTimer.start( 0 );
-                    }
-
-                }
-            else if( e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable())
-                {
-#ifdef HAVE_XSYNC
-                foreach( Client* c, clients )
-                    c->syncEvent( reinterpret_cast< XSyncAlarmNotifyEvent* >( e ));
-                foreach( Client* c, desktops )
-                    c->syncEvent( reinterpret_cast< XSyncAlarmNotifyEvent* >( e ));
-#endif
-                }
-            break;
+            c = createClient(e->xmaprequest.window, false);
+            if (c == NULL)   // refused to manage, simply map it (most probably override redirect)
+                XMapRaised(display(), e->xmaprequest.window);
+            return true;
         }
-    return false;
+        if (c) {
+            c->windowEvent(e);
+            updateFocusChains(c, FocusChainUpdate);
+            return true;
+        }
+        break;
     }
+    case MapNotify: {
+        if (e->xmap.override_redirect) {
+            Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xmap.window));
+            if (c == NULL)
+                c = createUnmanaged(e->xmap.window);
+            if (c)
+                return c->windowEvent(e);
+        }
+        return (e->xmap.event != e->xmap.window);   // hide wm typical event from Qt
+    }
+
+    case EnterNotify: {
+        if (QWhatsThis::inWhatsThisMode()) {
+            QWidget* w = QWidget::find(e->xcrossing.window);
+            if (w)
+                QWhatsThis::leaveWhatsThisMode();
+        }
+        if (electricBorderEvent(e))
+            return true;
+        break;
+    }
+    case LeaveNotify: {
+        if (!QWhatsThis::inWhatsThisMode())
+            break;
+        // TODO is this cliente ever found, given that client events are searched above?
+        Client* c = findClient(FrameIdMatchPredicate(e->xcrossing.window));
+        if (c && e->xcrossing.detail != NotifyInferior)
+            QWhatsThis::leaveWhatsThisMode();
+        break;
+    }
+    case ConfigureRequest: {
+        if (e->xconfigurerequest.parent == rootWindow()) {
+            XWindowChanges wc;
+            wc.border_width = e->xconfigurerequest.border_width;
+            wc.x = e->xconfigurerequest.x;
+            wc.y = e->xconfigurerequest.y;
+            wc.width = e->xconfigurerequest.width;
+            wc.height = e->xconfigurerequest.height;
+            wc.sibling = None;
+            wc.stack_mode = Above;
+            unsigned int value_mask = e->xconfigurerequest.value_mask
+                                      & (CWX | CWY | CWWidth | CWHeight | CWBorderWidth);
+            XConfigureWindow(display(), e->xconfigurerequest.window, value_mask, &wc);
+            return true;
+        }
+        break;
+    }
+    case KeyPress:
+        if (mouse_emulation)
+            return keyPressMouseEmulation(e->xkey);
+        break;
+    case KeyRelease:
+        if (mouse_emulation)
+            return false;
+        break;
+    case FocusIn:
+        if (e->xfocus.window == rootWindow()
+                && (e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot)) {
+            updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
+            Window focus;
+            int revert;
+            XGetInputFocus(display(), &focus, &revert);
+            if (focus == None || focus == PointerRoot) {
+                //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
+                Client *c = mostRecentlyActivatedClient();
+                if (c != NULL)
+                    requestFocus(c, true);
+                else if (activateNextClient(NULL))
+                    ; // ok, activated
+                else
+                    focusToNull();
+            }
+        }
+        // fall through
+    case FocusOut:
+        return true; // always eat these, they would tell Qt that KWin is the active app
+    case ClientMessage:
+        if (electricBorderEvent(e))
+            return true;
+        break;
+    case Expose:
+        if (compositing()
+                && (e->xexpose.window == rootWindow()   // root window needs repainting
+                    || (overlay != None && e->xexpose.window == overlay))) { // overlay needs repainting
+            addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+        }
+        break;
+    case VisibilityNotify:
+        if (compositing() && overlay != None && e->xvisibility.window == overlay) {
+            bool was_visible = overlay_visible;
+            overlay_visible = (e->xvisibility.state != VisibilityFullyObscured);
+            if (!was_visible && overlay_visible) {
+                // hack for #154825
+                addRepaintFull();
+                QTimer::singleShot(2000, this, SLOT(addRepaintFull()));
+            }
+            checkCompositeTimer();
+        }
+        break;
+    default:
+        if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
+#ifdef HAVE_XRANDR
+            XRRUpdateConfiguration(e);
+#endif
+            if (compositing()) {
+                // desktopResized() should take care of when the size or
+                // shape of the desktop has changed, but we also want to
+                // catch refresh rate changes
+                if (xrrRefreshRate != currentRefreshRate())
+                    compositeResetTimer.start(0);
+            }
+
+        } else if (e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable()) {
+#ifdef HAVE_XSYNC
+            foreach (Client * c, clients)
+            c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
+            foreach (Client * c, desktops)
+            c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
+#endif
+        }
+        break;
+    }
+    return false;
+}
 
 // Used only to filter events that need to be processed by Qt first
 // (e.g. keyboard input to be composed), otherwise events are
 // handle by the XEvent filter above
-bool Workspace::workspaceEvent( QEvent* e )
-    {
-    if(( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease || e->type() == QEvent::ShortcutOverride )
-        && effects && static_cast< EffectsHandlerImpl* >( effects )->hasKeyboardGrab())
-        {
-        static_cast< EffectsHandlerImpl* >( effects )->grabbedKeyboardEvent( static_cast< QKeyEvent* >( e ));
+bool Workspace::workspaceEvent(QEvent* e)
+{
+    if ((e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease || e->type() == QEvent::ShortcutOverride)
+            && effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
+        static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(static_cast< QKeyEvent* >(e));
         return true;
-        }
-    return false;
     }
+    return false;
+}
 
 // Some events don't have the actual window which caused the event
 // as e->xany.window (e.g. ConfigureRequest), but as some other
 // field in the XEvent structure.
-Window Workspace::findSpecialEventWindow( XEvent* e )
-    {
-    switch( e->type )
-        {
-        case CreateNotify:
-            return e->xcreatewindow.window;
-        case DestroyNotify:
-            return e->xdestroywindow.window;
-        case UnmapNotify:
-            return e->xunmap.window;
-        case MapNotify:
-            return e->xmap.window;
-        case MapRequest:
-            return e->xmaprequest.window;
-        case ReparentNotify:
-            return e->xreparent.window;
-        case ConfigureNotify:
-            return e->xconfigure.window;
-        case GravityNotify:
-            return e->xgravity.window;
-        case ConfigureRequest:
-            return e->xconfigurerequest.window;
-        case CirculateNotify:
-            return e->xcirculate.window;
-        case CirculateRequest:
-            return e->xcirculaterequest.window;
-        default:
-            return None;
-        };
-    }
+Window Workspace::findSpecialEventWindow(XEvent* e)
+{
+    switch(e->type) {
+    case CreateNotify:
+        return e->xcreatewindow.window;
+    case DestroyNotify:
+        return e->xdestroywindow.window;
+    case UnmapNotify:
+        return e->xunmap.window;
+    case MapNotify:
+        return e->xmap.window;
+    case MapRequest:
+        return e->xmaprequest.window;
+    case ReparentNotify:
+        return e->xreparent.window;
+    case ConfigureNotify:
+        return e->xconfigure.window;
+    case GravityNotify:
+        return e->xgravity.window;
+    case ConfigureRequest:
+        return e->xconfigurerequest.window;
+    case CirculateNotify:
+        return e->xcirculate.window;
+    case CirculateRequest:
+        return e->xcirculaterequest.window;
+    default:
+        return None;
+    };
+}
 
 // ****************************************
 // Client
@@ -592,172 +541,158 @@ Window Workspace::findSpecialEventWindow( XEvent* e )
 /*!
   General handler for XEvents concerning the client window
  */
-bool Client::windowEvent( XEvent* e )
-    {
-    if( e->xany.window == window()) // avoid doing stuff on frame or wrapper
-        {
+bool Client::windowEvent(XEvent* e)
+{
+    if (e->xany.window == window()) { // avoid doing stuff on frame or wrapper
         unsigned long dirty[ 2 ];
         double old_opacity = opacity();
-        info->event( e, dirty, 2 ); // pass through the NET stuff
+        info->event(e, dirty, 2);   // pass through the NET stuff
 
-        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMName ) != 0 )
+        if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMName) != 0)
             fetchName();
-        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMIconName ) != 0 )
+        if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIconName) != 0)
             fetchIconicName();
-        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut ) != 0
-            || ( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut ) != 0 )
-            {
-            if( isTopMenu())  // the fallback mode of KMenuBar may alter the strut
+        if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut) != 0
+                || (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut) != 0) {
+            if (isTopMenu())   // the fallback mode of KMenuBar may alter the strut
                 checkWorkspacePosition();  // restore it
             workspace()->updateClientArea();
-            }
-        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0 )
+        }
+        if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
             getIcons();
         // Note there's a difference between userTime() and info->userTime()
         // info->userTime() is the value of the property, userTime() also includes
         // updates of the time done by KWin (ButtonPress on windowrapper etc.).
-        if(( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2UserTime ) != 0 )
-            {
+        if ((dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2UserTime) != 0) {
             workspace()->setWasUserInteraction();
-            updateUserTime( info->userTime());
-            }
-        if(( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId ) != 0 )
+            updateUserTime(info->userTime());
+        }
+        if ((dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
             startupIdChanged();
-        if( dirty[ WinInfo::PROTOCOLS ] & NET::WMIconGeometry )
-            {
-            if( demandAttentionKNotifyTimer != NULL )
+        if (dirty[ WinInfo::PROTOCOLS ] & NET::WMIconGeometry) {
+            if (demandAttentionKNotifyTimer != NULL)
                 demandAttentionKNotify();
-            }
-        if( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
-            {
-            if( compositing())
-                {
+        }
+        if (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
+            if (compositing()) {
                 addRepaintFull();
-                scene->windowOpacityChanged( this );
-                if( effects )
-                    static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged( effectWindow(), old_opacity );
-                }
-            else
-                { // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo2 i( display(), frameId(), rootWindow(), 0 );
-                i.setOpacity( info->opacity());
-                }
+                scene->windowOpacityChanged(this);
+                if (effects)
+                    static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
+            } else {
+                // forward to the frame if there's possibly another compositing manager running
+                NETWinInfo2 i(display(), frameId(), rootWindow(), 0);
+                i.setOpacity(info->opacity());
             }
-        if( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2FrameOverlap )
-            {
+        }
+        if (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2FrameOverlap) {
             // ### Inform the decoration
+        }
+    }
+
+    switch(e->type) {
+    case UnmapNotify:
+        unmapNotifyEvent(&e->xunmap);
+        break;
+    case DestroyNotify:
+        destroyNotifyEvent(&e->xdestroywindow);
+        break;
+    case MapRequest:
+        // this one may pass the event to workspace
+        return mapRequestEvent(&e->xmaprequest);
+    case ConfigureRequest:
+        configureRequestEvent(&e->xconfigurerequest);
+        break;
+    case PropertyNotify:
+        propertyNotifyEvent(&e->xproperty);
+        break;
+    case KeyPress:
+        updateUserTime();
+        workspace()->setWasUserInteraction();
+        break;
+    case ButtonPress:
+        updateUserTime();
+        workspace()->setWasUserInteraction();
+        buttonPressEvent(e->xbutton.window, e->xbutton.button, e->xbutton.state,
+                         e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root);
+        break;
+    case KeyRelease:
+        // don't update user time on releases
+        // e.g. if the user presses Alt+F2, the Alt release
+        // would appear as user input to the currently active window
+        break;
+    case ButtonRelease:
+        // don't update user time on releases
+        // e.g. if the user presses Alt+F2, the Alt release
+        // would appear as user input to the currently active window
+        buttonReleaseEvent(e->xbutton.window, e->xbutton.button, e->xbutton.state,
+                           e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root);
+        break;
+    case MotionNotify:
+        motionNotifyEvent(e->xmotion.window, e->xmotion.state,
+                          e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root);
+        workspace()->updateFocusMousePosition(QPoint(e->xmotion.x_root, e->xmotion.y_root));
+        break;
+    case EnterNotify:
+        enterNotifyEvent(&e->xcrossing);
+        // MotionNotify is guaranteed to be generated only if the mouse
+        // move start and ends in the window; for cases when it only
+        // starts or only ends there, Enter/LeaveNotify are generated.
+        // Fake a MotionEvent in such cases to make handle of mouse
+        // events simpler (Qt does that too).
+        motionNotifyEvent(e->xcrossing.window, e->xcrossing.state,
+                          e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root);
+        workspace()->updateFocusMousePosition(QPoint(e->xcrossing.x_root, e->xcrossing.y_root));
+        break;
+    case LeaveNotify:
+        motionNotifyEvent(e->xcrossing.window, e->xcrossing.state,
+                          e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root);
+        leaveNotifyEvent(&e->xcrossing);
+        // not here, it'd break following enter notify handling
+        // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
+        break;
+    case FocusIn:
+        focusInEvent(&e->xfocus);
+        break;
+    case FocusOut:
+        focusOutEvent(&e->xfocus);
+        break;
+    case ReparentNotify:
+        break;
+    case ClientMessage:
+        clientMessageEvent(&e->xclient);
+        break;
+    case ColormapChangeMask:
+        if (e->xany.window == window()) {
+            cmap = e->xcolormap.colormap;
+            if (isActive())
+                workspace()->updateColormap();
+        }
+        break;
+    default:
+        if (e->xany.window == window()) {
+            if (e->type == Extensions::shapeNotifyEvent()) {
+                detectShape(window());  // workaround for #19644
+                updateShape();
             }
         }
-
-    switch (e->type) 
-        {
-        case UnmapNotify:
-            unmapNotifyEvent( &e->xunmap );
-            break;
-        case DestroyNotify:
-            destroyNotifyEvent( &e->xdestroywindow );
-            break;
-        case MapRequest:
-            // this one may pass the event to workspace
-            return mapRequestEvent( &e->xmaprequest );
-        case ConfigureRequest:
-            configureRequestEvent( &e->xconfigurerequest );
-            break;
-        case PropertyNotify:
-            propertyNotifyEvent( &e->xproperty );
-            break;
-        case KeyPress:
-            updateUserTime();
-            workspace()->setWasUserInteraction();
-            break;
-        case ButtonPress:
-            updateUserTime();
-            workspace()->setWasUserInteraction();
-            buttonPressEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
-                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
-            break;
-        case KeyRelease:
-    // don't update user time on releases
-    // e.g. if the user presses Alt+F2, the Alt release
-    // would appear as user input to the currently active window
-            break;
-        case ButtonRelease:
-    // don't update user time on releases
-    // e.g. if the user presses Alt+F2, the Alt release
-    // would appear as user input to the currently active window
-            buttonReleaseEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
-                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
-            break;
-        case MotionNotify:
-            motionNotifyEvent( e->xmotion.window, e->xmotion.state,
-                e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root );
-            workspace()->updateFocusMousePosition( QPoint( e->xmotion.x_root, e->xmotion.y_root ));
-            break;
-        case EnterNotify:
-            enterNotifyEvent( &e->xcrossing );
-            // MotionNotify is guaranteed to be generated only if the mouse
-            // move start and ends in the window; for cases when it only
-            // starts or only ends there, Enter/LeaveNotify are generated.
-            // Fake a MotionEvent in such cases to make handle of mouse
-            // events simpler (Qt does that too).
-            motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
-                e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
-            workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
-            break;
-        case LeaveNotify:
-            motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
-                e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
-            leaveNotifyEvent( &e->xcrossing );
-            // not here, it'd break following enter notify handling
-            // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
-            break;
-        case FocusIn:
-            focusInEvent( &e->xfocus );
-            break;
-        case FocusOut:
-            focusOutEvent( &e->xfocus );
-            break;
-        case ReparentNotify:
-            break;
-        case ClientMessage:
-            clientMessageEvent( &e->xclient );
-            break;
-        case ColormapChangeMask:
-            if( e->xany.window == window())
-                {
-                cmap = e->xcolormap.colormap;
-                if ( isActive() )
-                    workspace()->updateColormap();
-                }
-            break;
-        default:
-            if( e->xany.window == window())
-                {
-                if( e->type == Extensions::shapeNotifyEvent() )
-                    {
-                    detectShape( window()); // workaround for #19644
-                    updateShape();
-                    }
-                }
-            if( e->xany.window == frameId())
-                {
+        if (e->xany.window == frameId()) {
 #ifdef HAVE_XDAMAGE
-                if( e->type == Extensions::damageNotifyEvent())
-                    damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+            if (e->type == Extensions::damageNotifyEvent())
+                damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
 #endif
-                }
-            break;
         }
-    return true; // eat all events
+        break;
     }
+    return true; // eat all events
+}
 
 /*!
   Handles map requests of the client window
  */
-bool Client::mapRequestEvent( XMapRequestEvent* e )
-    {
-    if( e->window != window())
-        {
+bool Client::mapRequestEvent(XMapRequestEvent* e)
+{
+    if (e->window != window()) {
         // Special support for the save-set feature, which is a bit broken.
         // If there's a window from one client embedded in another one,
         // e.g. using XEMBED, and the embedder suddenly loses its X connection,
@@ -770,132 +705,125 @@ bool Client::mapRequestEvent( XMapRequestEvent* e )
         // always maps. Returning true here means that Workspace::workspaceEvent()
         // will handle this MapRequest and manage this window (i.e. act as if
         // it was reparented to root window).
-        if( e->parent == wrapperId())
+        if (e->parent == wrapperId())
             return false;
         return true; // no messing with frame etc.
-        }
-    if( isTopMenu() && workspace()->managingTopMenus())
+    }
+    if (isTopMenu() && workspace()->managingTopMenus())
         return true; // kwin controls these
     // also copied in clientMessage()
-    if( isMinimized())
+    if (isMinimized())
         unminimize();
-    if( isShade())
-        setShade( ShadeNone );
-    if( !isOnCurrentDesktop())
-        {
-        if( workspace()->allowClientActivation( this ))
-            workspace()->activateClient( this );
+    if (isShade())
+        setShade(ShadeNone);
+    if (!isOnCurrentDesktop()) {
+        if (workspace()->allowClientActivation(this))
+            workspace()->activateClient(this);
         else
             demandAttention();
-        }
-    return true;
     }
+    return true;
+}
 
 /*!
   Handles unmap notify events of the client window
  */
-void Client::unmapNotifyEvent( XUnmapEvent* e )
-    {
-    if( e->window != window())
+void Client::unmapNotifyEvent(XUnmapEvent* e)
+{
+    if (e->window != window())
         return;
-    if( e->event != wrapperId())
-        { // most probably event from root window when initially reparenting
+    if (e->event != wrapperId()) {
+        // most probably event from root window when initially reparenting
         bool ignore = true;
-        if( e->event == rootWindow() && e->send_event )
+        if (e->event == rootWindow() && e->send_event)
             ignore = false; // XWithdrawWindow()
-        if( ignore )
+        if (ignore)
             return;
-        }
-    releaseWindow();
     }
+    releaseWindow();
+}
 
-void Client::destroyNotifyEvent( XDestroyWindowEvent* e )
-    {
-    if( e->window != window())
+void Client::destroyNotifyEvent(XDestroyWindowEvent* e)
+{
+    if (e->window != window())
         return;
     destroyClient();
-    }
-    
-    
+}
+
+
 /*!
    Handles client messages for the client window
 */
-void Client::clientMessageEvent( XClientMessageEvent* e )
-    {
-    if( e->window != window())
+void Client::clientMessageEvent(XClientMessageEvent* e)
+{
+    if (e->window != window())
         return; // ignore frame/wrapper
     // WM_STATE
-    if ( e->message_type == atoms->kde_wm_change_state )
-        {
-        if( isTopMenu() && workspace()->managingTopMenus())
+    if (e->message_type == atoms->kde_wm_change_state) {
+        if (isTopMenu() && workspace()->managingTopMenus())
             return; // kwin controls these
-        bool avoid_animation = ( e->data.l[ 1 ] );
-        if( e->data.l[ 0 ] == IconicState )
+        bool avoid_animation = (e->data.l[ 1 ]);
+        if (e->data.l[ 0 ] == IconicState)
             minimize();
-        else if( e->data.l[ 0 ] == NormalState )
-            { // copied from mapRequest()
-            if( isMinimized())
-                unminimize( avoid_animation );
-            if( isShade())
-                setShade( ShadeNone );
-            if( !isOnCurrentDesktop())
-                {
-                if( workspace()->allowClientActivation( this ))
-                    workspace()->activateClient( this );
+        else if (e->data.l[ 0 ] == NormalState) {
+            // copied from mapRequest()
+            if (isMinimized())
+                unminimize(avoid_animation);
+            if (isShade())
+                setShade(ShadeNone);
+            if (!isOnCurrentDesktop()) {
+                if (workspace()->allowClientActivation(this))
+                    workspace()->activateClient(this);
                 else
                     demandAttention();
-                }
             }
         }
-    else if ( e->message_type == atoms->wm_change_state)
-        {
-        if( isTopMenu() && workspace()->managingTopMenus())
+    } else if (e->message_type == atoms->wm_change_state) {
+        if (isTopMenu() && workspace()->managingTopMenus())
             return; // kwin controls these
-        if ( e->data.l[0] == IconicState )
+        if (e->data.l[0] == IconicState)
             minimize();
         return;
-        }
     }
+}
 
 
 /*!
   Handles configure  requests of the client window
  */
-void Client::configureRequestEvent( XConfigureRequestEvent* e )
-    {
-    if( e->window != window())
+void Client::configureRequestEvent(XConfigureRequestEvent* e)
+{
+    if (e->window != window())
         return; // ignore frame/wrapper
-    if ( isResize() || isMove())
+    if (isResize() || isMove())
         return; // we have better things to do right now
 
-    if( fullscreen_mode == FullScreenNormal ) // refuse resizing of fullscreen windows
-        { // but allow resizing fullscreen hacks in order to let them cancel fullscreen mode
+    if (fullscreen_mode == FullScreenNormal) { // refuse resizing of fullscreen windows
+        // but allow resizing fullscreen hacks in order to let them cancel fullscreen mode
         sendSyntheticConfigureNotify();
         return;
-        }
-    if( isSplash() // no manipulations with splashscreens either
-        || isTopMenu()) // topmenus neither
-        {
+    }
+    if (isSplash()  // no manipulations with splashscreens either
+            || isTopMenu()) { // topmenus neither
         sendSyntheticConfigureNotify();
         return;
-        }
+    }
 
-    if ( e->value_mask & CWBorderWidth ) 
-        {
+    if (e->value_mask & CWBorderWidth) {
         // first, get rid of a window border
         XWindowChanges wc;
         unsigned int value_mask = 0;
 
         wc.border_width = 0;
         value_mask = CWBorderWidth;
-        XConfigureWindow( display(), window(), value_mask, & wc );
-        }
+        XConfigureWindow(display(), window(), value_mask, & wc);
+    }
 
-    if( e->value_mask & ( CWX | CWY | CWHeight | CWWidth ))
-        configureRequest( e->value_mask, e->x, e->y, e->width, e->height, 0, false );
+    if (e->value_mask & (CWX | CWY | CWHeight | CWWidth))
+        configureRequest(e->value_mask, e->x, e->y, e->width, e->height, 0, false);
 
-    if ( e->value_mask & CWStackMode )
-        restackWindow( e->above, e->detail, NET::FromApplication, userTime(), false );
+    if (e->value_mask & CWStackMode)
+        restackWindow(e->above, e->detail, NET::FromApplication, userTime(), false);
 
     // Sending a synthetic configure notify always is fine, even in cases where
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move
@@ -906,114 +834,106 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
 
     // SELI TODO accept configure requests for isDesktop windows (because kdesktop
     // may get XRANDR resize event before kwin), but check it's still at the bottom?
-    }
+}
 
 
 /*!
   Handles property changes of the client window
  */
-void Client::propertyNotifyEvent( XPropertyEvent* e )
-    {
-    Toplevel::propertyNotifyEvent( e );
-    if( e->window != window())
+void Client::propertyNotifyEvent(XPropertyEvent* e)
+{
+    Toplevel::propertyNotifyEvent(e);
+    if (e->window != window())
         return; // ignore frame/wrapper
-    switch ( e->atom ) 
-        {
-        case XA_WM_NORMAL_HINTS:
-            getWmNormalHints();
-            break;
-        case XA_WM_NAME:
-            fetchName();
-            break;
-        case XA_WM_ICON_NAME:
-            fetchIconicName();
-            break;
-        case XA_WM_TRANSIENT_FOR:
-            readTransient();
-            break;
-        case XA_WM_HINTS:
-            getWMHints();
-            getIcons(); // because KWin::icon() uses WMHints as fallback
-            break;
-        default:
-            if ( e->atom == atoms->wm_protocols )
-                getWindowProtocols();
-            else if( e->atom == atoms->motif_wm_hints )
-                getMotifHints();
-            else if( e->atom == atoms->net_wm_sync_request_counter )
-                getSyncCounter();
-            else if( e->atom == atoms->activities )
-                checkActivities();
-            break;
-        }
+    switch(e->atom) {
+    case XA_WM_NORMAL_HINTS:
+        getWmNormalHints();
+        break;
+    case XA_WM_NAME:
+        fetchName();
+        break;
+    case XA_WM_ICON_NAME:
+        fetchIconicName();
+        break;
+    case XA_WM_TRANSIENT_FOR:
+        readTransient();
+        break;
+    case XA_WM_HINTS:
+        getWMHints();
+        getIcons(); // because KWin::icon() uses WMHints as fallback
+        break;
+    default:
+        if (e->atom == atoms->wm_protocols)
+            getWindowProtocols();
+        else if (e->atom == atoms->motif_wm_hints)
+            getMotifHints();
+        else if (e->atom == atoms->net_wm_sync_request_counter)
+            getSyncCounter();
+        else if (e->atom == atoms->activities)
+            checkActivities();
+        break;
     }
+}
 
 
-void Client::enterNotifyEvent( XCrossingEvent* e )
-    {
-    if( e->window != frameId())
+void Client::enterNotifyEvent(XCrossingEvent* e)
+{
+    if (e->window != frameId())
         return; // care only about entering the whole frame
-    if( e->mode == NotifyNormal ||
-         ( !options->focusPolicyIsReasonable() &&
-             e->mode == NotifyUngrab ) ) 
-        {
+    if (e->mode == NotifyNormal ||
+            (!options->focusPolicyIsReasonable() &&
+             e->mode == NotifyUngrab)) {
 
-        if ( options->shadeHover )
-            {
+        if (options->shadeHover) {
             cancelShadeHoverTimer();
-            if (isShade())
-              {
-              shadeHoverTimer = new QTimer( this );
-              connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
-              shadeHoverTimer->setSingleShot( true );
-              shadeHoverTimer->start( options->shadeHoverInterval );
-              }
+            if (isShade()) {
+                shadeHoverTimer = new QTimer(this);
+                connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeHover()));
+                shadeHoverTimer->setSingleShot(true);
+                shadeHoverTimer->start(options->shadeHoverInterval);
             }
+        }
 
-        if ( options->focusPolicy == Options::ClickToFocus )
+        if (options->focusPolicy == Options::ClickToFocus)
             return;
 
-        if ( options->autoRaise && !isDesktop() &&
-             !isDock() && !isTopMenu() && workspace()->focusChangeEnabled() &&
-             workspace()->topClientOnDesktop( workspace()->currentDesktop(),
-                 options->separateScreenFocus ? screen() : -1 ) != this ) 
-            {
+        if (options->autoRaise && !isDesktop() &&
+                !isDock() && !isTopMenu() && workspace()->focusChangeEnabled() &&
+                workspace()->topClientOnDesktop(workspace()->currentDesktop(),
+                                                options->separateScreenFocus ? screen() : -1) != this) {
             delete autoRaiseTimer;
-            autoRaiseTimer = new QTimer( this );
-            connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
-            autoRaiseTimer->setSingleShot( true );
-            autoRaiseTimer->start( options->autoRaiseInterval );
-            }
+            autoRaiseTimer = new QTimer(this);
+            connect(autoRaiseTimer, SIGNAL(timeout()), this, SLOT(autoRaise()));
+            autoRaiseTimer->setSingleShot(true);
+            autoRaiseTimer->start(options->autoRaiseInterval);
+        }
 
-        QPoint currentPos( e->x_root, e->y_root );
-        if ( options->focusPolicy != Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
+        QPoint currentPos(e->x_root, e->y_root);
+        if (options->focusPolicy != Options::FocusStrictlyUnderMouse && (isDesktop() || isDock() || isTopMenu()))
             return;
         // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
         // change came because of window changes (e.g. closing a window) - #92290
-        if( options->focusPolicy != Options::FocusFollowsMouse
-            || currentPos != workspace()->focusMousePosition())
-            {
-            if ( options->delayFocus )
-                workspace()->requestDelayFocus( this );
+        if (options->focusPolicy != Options::FocusFollowsMouse
+                || currentPos != workspace()->focusMousePosition()) {
+            if (options->delayFocus)
+                workspace()->requestDelayFocus(this);
             else
-                workspace()->requestFocus( this );
-            }
-        return;
+                workspace()->requestFocus(this);
         }
+        return;
     }
+}
 
-void Client::leaveNotifyEvent( XCrossingEvent* e )
-    {
-    if( e->window != frameId())
+void Client::leaveNotifyEvent(XCrossingEvent* e)
+{
+    if (e->window != frameId())
         return; // care only about leaving the whole frame
-    if ( e->mode == NotifyNormal ) 
-        {
-        if ( !buttonDown ) 
-            {
+    if (e->mode == NotifyNormal) {
+        if (!buttonDown) {
             mode = PositionCenter;
             updateCursor();
-            }
-        bool lostMouse = !rect().contains( QPoint( e->x, e->y ) );
+        }
+        bool lostMouse = !rect().contains(QPoint(e->x, e->y));
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
         // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
         // comes after leaving the rect) - so lets check if the pointer is really outside the window
@@ -1021,69 +941,64 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         // TODO this still sucks if a window appears above this one - it should lose the mouse
         // if this window is another client, but not if it's a popup ... maybe after KDE3.1 :(
         // (repeat after me 'AARGHL!')
-        if ( !lostMouse && e->detail != NotifyInferior ) 
-            {
+        if (!lostMouse && e->detail != NotifyInferior) {
             int d1, d2, d3, d4;
             unsigned int d5;
             Window w, child;
-            if( XQueryPointer( display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
-                || child == None )
+            if (XQueryPointer(display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5) == False
+                    || child == None)
                 lostMouse = true; // really lost the mouse
-            }
-        if ( lostMouse ) 
-            {
+        }
+        if (lostMouse) {
             cancelAutoRaise();
             workspace()->cancelDelayFocus();
             cancelShadeHoverTimer();
-            if ( shade_mode == ShadeHover && !moveResizeMode && !buttonDown )
-              {
-              shadeHoverTimer = new QTimer( this );
-              connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeUnhover() ));
-              shadeHoverTimer->setSingleShot( true );
-              shadeHoverTimer->start( options->shadeHoverInterval );
-              }
+            if (shade_mode == ShadeHover && !moveResizeMode && !buttonDown) {
+                shadeHoverTimer = new QTimer(this);
+                connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeUnhover()));
+                shadeHoverTimer->setSingleShot(true);
+                shadeHoverTimer->start(options->shadeHoverInterval);
             }
-        if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
-            if ( isActive() && lostMouse )
-                workspace()->requestFocus( 0 ) ;
-        return;
         }
+        if (options->focusPolicy == Options::FocusStrictlyUnderMouse)
+            if (isActive() && lostMouse)
+                workspace()->requestFocus(0) ;
+        return;
     }
+}
 
 #define XCapL KKeyServer::modXLock()
 #define XNumL KKeyServer::modXNumLock()
 #define XScrL KKeyServer::modXScrollLock()
-void Client::grabButton( int modifier )
-    {
-    unsigned int mods[ 8 ] = 
-        {
+void Client::grabButton(int modifier)
+{
+    unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
         XScrL | XNumL, XScrL | XNumL | XCapL
-        };
-    for( int i = 0;
-         i < 8;
-         ++i )
-        XGrabButton( display(), AnyButton,
-            modifier | mods[ i ],
-            wrapperId(), false, ButtonPressMask,
-            GrabModeSync, GrabModeAsync, None, None );
-    }
+    };
+    for (int i = 0;
+            i < 8;
+            ++i)
+        XGrabButton(display(), AnyButton,
+                    modifier | mods[ i ],
+                    wrapperId(), false, ButtonPressMask,
+                    GrabModeSync, GrabModeAsync, None, None);
+}
 
-void Client::ungrabButton( int modifier )
-    {
-    unsigned int mods[ 8 ] = 
-        {
+void Client::ungrabButton(int modifier)
+{
+    unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
         XScrL | XNumL, XScrL | XNumL | XCapL
-        };
-    for( int i = 0;
-         i < 8;
-         ++i )
-        XUngrabButton( display(), AnyButton,
-            modifier | mods[ i ], wrapperId());
-    }
+    };
+    for (int i = 0;
+            i < 8;
+            ++i)
+        XUngrabButton(display(), AnyButton,
+                      modifier | mods[ i ], wrapperId());
+}
 #undef XCapL
 #undef XNumL
 #undef XScrL
@@ -1095,89 +1010,80 @@ void Client::ungrabButton( int modifier )
   (Motif, AWT, Tk, ...)
  */
 void Client::updateMouseGrab()
-    {
-    if( workspace()->globalShortcutsDisabled())
-        {
-        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
+{
+    if (workspace()->globalShortcutsDisabled()) {
+        XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
         // keep grab for the simple click without modifiers if needed (see below)
-        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), -1, true, false ) == this;
-        if( !( !options->clickRaise || not_obscured ))
-            grabButton( None );
+        bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
+        if (!(!options->clickRaise || not_obscured))
+            grabButton(None);
         return;
-        }
-    if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
-        {
+    }
+    if (isActive() && !workspace()->forcedGlobalMouseGrab()) { // see Workspace::establishTabBoxGrab()
         // first grab all modifier combinations
-        XGrabButton( display(), AnyButton, AnyModifier, wrapperId(), false,
-            ButtonPressMask,
-            GrabModeSync, GrabModeAsync,
-            None, None );
+        XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
+                    ButtonPressMask,
+                    GrabModeSync, GrabModeAsync,
+                    None, None);
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
         // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), -1, true, false ) == this;
-        if( !options->clickRaise || not_obscured )
-            ungrabButton( None );
+        bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
+        if (!options->clickRaise || not_obscured)
+            ungrabButton(None);
         else
-            grabButton( None );
-        ungrabButton( ShiftMask );
-        ungrabButton( ControlMask );
-        ungrabButton( ControlMask | ShiftMask );
-        }
-    else
-        {
-        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
+            grabButton(None);
+        ungrabButton(ShiftMask);
+        ungrabButton(ControlMask);
+        ungrabButton(ControlMask | ShiftMask);
+    } else {
+        XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
         // simply grab all modifier combinations
         XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
-            ButtonPressMask,
-            GrabModeSync, GrabModeAsync,
-            None, None );
-        }
+                    ButtonPressMask,
+                    GrabModeSync, GrabModeAsync,
+                    None, None);
     }
+}
 
 // Qt propagates mouse events up the widget hierachy, which means events
 // for the decoration window cannot be (easily) intercepted as X11 events
-bool Client::eventFilter( QObject* o, QEvent* e )
-    {
-    if( decoration == NULL
-        || o != decoration->widget())
+bool Client::eventFilter(QObject* o, QEvent* e)
+{
+    if (decoration == NULL
+            || o != decoration->widget())
         return false;
-    if( e->type() == QEvent::MouseButtonPress )
-        {
-        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return buttonPressEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->buttons(), ev->modifiers() ),
-            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
-        }
-    if( e->type() == QEvent::MouseButtonRelease )
-        {
-        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return buttonReleaseEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->buttons(), ev->modifiers() ),
-            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
-        }
-    if( e->type() == QEvent::MouseMove ) // FRAME i fake z enter/leave?
-        {
-        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return motionNotifyEvent( decorationId(), qtToX11State( ev->buttons(), ev->modifiers() ),
-            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
-        }
-    if( e->type() == QEvent::Wheel )
-        {
-        QWheelEvent* ev = static_cast< QWheelEvent* >( e );
-        bool r = buttonPressEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->buttons(), ev->modifiers() ),
-            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
-        r = r || buttonReleaseEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->buttons(), ev->modifiers() ),
-            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+    if (e->type() == QEvent::MouseButtonPress) {
+        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
+        return buttonPressEvent(decorationId(), qtToX11Button(ev->button()), qtToX11State(ev->buttons(), ev->modifiers()),
+                                ev->x(), ev->y(), ev->globalX(), ev->globalY());
+    }
+    if (e->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
+        return buttonReleaseEvent(decorationId(), qtToX11Button(ev->button()), qtToX11State(ev->buttons(), ev->modifiers()),
+                                  ev->x(), ev->y(), ev->globalX(), ev->globalY());
+    }
+    if (e->type() == QEvent::MouseMove) { // FRAME i fake z enter/leave?
+        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
+        return motionNotifyEvent(decorationId(), qtToX11State(ev->buttons(), ev->modifiers()),
+                                 ev->x(), ev->y(), ev->globalX(), ev->globalY());
+    }
+    if (e->type() == QEvent::Wheel) {
+        QWheelEvent* ev = static_cast< QWheelEvent* >(e);
+        bool r = buttonPressEvent(decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State(ev->buttons(), ev->modifiers()),
+                                  ev->x(), ev->y(), ev->globalX(), ev->globalY());
+        r = r || buttonReleaseEvent(decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State(ev->buttons(), ev->modifiers()),
+                                    ev->x(), ev->y(), ev->globalX(), ev->globalY());
         return r;
-        }
-    if( e->type() == QEvent::Resize )
-        {
-        QResizeEvent* ev = static_cast< QResizeEvent* >( e );
+    }
+    if (e->type() == QEvent::Resize) {
+        QResizeEvent* ev = static_cast< QResizeEvent* >(e);
         // Filter out resize events that inform about size different than frame size.
         // This will ensure that decoration->width() etc. and decoration->widget()->width() will be in sync.
         // These events only seem to be delayed events from initial resizing before show() was called
         // on the decoration widget.
-        if( ev->size() != (size() + QSize( padding_left + padding_right, padding_top + padding_bottom ) ) )
+        if (ev->size() != (size() + QSize(padding_left + padding_right, padding_top + padding_bottom)))
             return true;
         // HACK: Avoid decoration redraw delays. On resize Qt sets WA_WStateConfigPending
         // which delays all painting until a matching ConfigureNotify event comes.
@@ -1185,229 +1091,212 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         // to wait for that event, the geometry is known.
         // Note that if Qt in the future changes how this flag is handled and what it
         // triggers then this may potentionally break things. See mainly QETWidget::translateConfigEvent().
-        decoration->widget()->setAttribute( Qt::WA_WState_ConfigPending, false );
+        decoration->widget()->setAttribute(Qt::WA_WState_ConfigPending, false);
         decoration->widget()->update();
         return false;
-        }
-    return false;
     }
+    return false;
+}
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root )
-    {
-    if (buttonDown)
-        {
-        if( w == wrapperId())
-            XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
+bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int x_root, int y_root)
+{
+    if (buttonDown) {
+        if (w == wrapperId())
+            XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
         return true;
-        }
+    }
 
-    if( w == wrapperId() || w == frameId() || w == decorationId())
-        { // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
+    if (w == wrapperId() || w == frameId() || w == decorationId()) {
+        // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime();
         workspace()->setWasUserInteraction();
         uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-            KKeyServer::modXMeta() :
-            KKeyServer::modXAlt();
-        bool bModKeyHeld = keyModX != 0 && ( state & KKeyServer::accelModMaskX()) == keyModX;
+                       KKeyServer::modXMeta() :
+                       KKeyServer::modXAlt();
+        bool bModKeyHeld = keyModX != 0 && (state & KKeyServer::accelModMaskX()) == keyModX;
 
-        if( isSplash()
-            && button == Button1 && !bModKeyHeld )
-            { // hide splashwindow if the user clicks on it
-            hideClient( true );
-            if( w == wrapperId())
-                    XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
+        if (isSplash()
+                && button == Button1 && !bModKeyHeld) {
+            // hide splashwindow if the user clicks on it
+            hideClient(true);
+            if (w == wrapperId())
+                XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
             return true;
-            }
+        }
 
         Options::MouseCommand com = Options::MouseNothing;
         bool was_action = false;
         bool perform_handled = false;
-        if ( bModKeyHeld )
-            {
+        if (bModKeyHeld) {
             was_action = true;
-            switch (button) 
-                {
+            switch(button) {
+            case Button1:
+                com = options->commandAll1();
+                break;
+            case Button2:
+                com = options->commandAll2();
+                break;
+            case Button3:
+                com = options->commandAll3();
+                break;
+            case Button4:
+            case Button5:
+                com = options->operationWindowMouseWheel(button == Button4 ? 120 : -120);
+                break;
+            }
+        } else {
+            // inactive inner window
+            if (!isActive() && w == wrapperId() && button < 6) {
+                was_action = true;
+                perform_handled = true;
+                switch(button) {
                 case Button1:
-                    com = options->commandAll1();
+                    com = options->commandWindow1();
                     break;
                 case Button2:
-                    com = options->commandAll2();
+                    com = options->commandWindow2();
                     break;
                 case Button3:
-                    com = options->commandAll3();
+                    com = options->commandWindow3();
                     break;
                 case Button4:
                 case Button5:
-                    com = options->operationWindowMouseWheel( button == Button4 ? 120 : -120 );
+                    com = options->commandWindowWheel();
                     break;
                 }
             }
-        else
-            { // inactive inner window
-            if( !isActive() && w == wrapperId() && button < 6 )
-                {
-                was_action = true;
-                perform_handled = true;
-                switch (button) 
-                    {
-                    case Button1:
-                        com = options->commandWindow1();
-                        break;
-                    case Button2:
-                        com = options->commandWindow2();
-                        break;
-                    case Button3:
-                        com = options->commandWindow3();
-                        break;
-                    case Button4:
-                    case Button5:
-                        com = options->commandWindowWheel();
-                        break;
-                    }
-             }
             // active inner window
-            if( isActive() && w == wrapperId()
-                && options->clickRaise && button < 4 ) // exclude wheel
-                {
+            if (isActive() && w == wrapperId()
+                    && options->clickRaise && button < 4) { // exclude wheel
                 com = Options::MouseActivateRaiseAndPassClick;
                 was_action = true;
                 perform_handled = true;
-                }
             }
-        if( was_action )
-            {
-            bool replay = performMouseCommand( com, QPoint( x_root, y_root), perform_handled );
+        }
+        if (was_action) {
+            bool replay = performMouseCommand(com, QPoint(x_root, y_root), perform_handled);
 
-            if ( isSpecialWindow())
+            if (isSpecialWindow())
                 replay = true;
 
-            if( w == wrapperId()) // these can come only from a grab
-                XAllowEvents(display(), replay? ReplayPointer : SyncPointer, CurrentTime ); //xTime());
+            if (w == wrapperId())  // these can come only from a grab
+                XAllowEvents(display(), replay ? ReplayPointer : SyncPointer, CurrentTime); //xTime());
             return true;
-            }
         }
+    }
 
-    if( w == wrapperId()) // these can come only from a grab
-        {
-        XAllowEvents(display(), ReplayPointer, CurrentTime ); //xTime());
+    if (w == wrapperId()) { // these can come only from a grab
+        XAllowEvents(display(), ReplayPointer, CurrentTime);  //xTime());
         return true;
-        }
-    if( w == decorationId())
-        {
-        if( dynamic_cast<KDecorationUnstable*>( decoration ))
+    }
+    if (w == decorationId()) {
+        if (dynamic_cast<KDecorationUnstable*>(decoration))
             // New API processes core events FIRST and only passes unused ones to the decoration
-            return processDecorationButtonPress( button, state, x, y, x_root, y_root, true );
+            return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
         else
             return false; // Don't eat old API decoration events
-        }
-    if( w == frameId())
-        processDecorationButtonPress( button, state, x, y, x_root, y_root );
-    return true;
     }
+    if (w == frameId())
+        processDecorationButtonPress(button, state, x, y, x_root, y_root);
+    return true;
+}
 
 
 // this function processes button press events only after decoration decides not to handle them,
 // unlike buttonPressEvent(), which (when the window is decoration) filters events before decoration gets them
-bool Client::processDecorationButtonPress( int button, int /*state*/, int x, int y, int x_root, int y_root,
-        bool ignoreMenu )
-    {
+bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int y, int x_root, int y_root,
+        bool ignoreMenu)
+{
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
-    if ( !wantsInput() ) // we cannot be active, use it anyway
+    if (!wantsInput())    // we cannot be active, use it anyway
         active = true;
 
-    if ( button == Button1 )
+    if (button == Button1)
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if ( button == Button2 )
+    else if (button == Button2)
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    else if ( button == Button3 )
+    else if (button == Button3)
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-    if( button == Button1
-        && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
-        && com != Options::MouseMinimize  // mouse release event
-        && com != Options::MouseClientGroupDrag )
-        {
-        mode = mousePosition( QPoint( x, y ));
+    if (button == Button1
+            && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
+            && com != Options::MouseMinimize  // mouse release event
+            && com != Options::MouseClientGroupDrag) {
+        mode = mousePosition(QPoint(x, y));
         buttonDown = true;
-        moveOffset = QPoint( x - padding_left, y - padding_top );
+        moveOffset = QPoint(x - padding_left, y - padding_top);
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         startDelayedMoveResize();
         updateCursor();
-        }
+    }
     // In the new API the decoration may process the menu action to display an inactive tab's menu.
     // If the event is unhandled then the core will create one for the active window in the group.
-    if( !ignoreMenu || com != Options::MouseOperationsMenu )
-        performMouseCommand( com, QPoint( x_root, y_root ));
+    if (!ignoreMenu || com != Options::MouseOperationsMenu)
+        performMouseCommand(com, QPoint(x_root, y_root));
     return !( // Return events that should be passed to the decoration in the new API
-        com == Options::MouseRaise ||
-        com == Options::MouseOperationsMenu ||
-        com == Options::MouseActivateAndRaise ||
-        com == Options::MouseActivate ||
-        com == Options::MouseActivateRaiseAndPassClick ||
-        com == Options::MouseActivateAndPassClick ||
-        com == Options::MouseClientGroupDrag ||
-        com == Options::MouseNothing );
-    }
+               com == Options::MouseRaise ||
+               com == Options::MouseOperationsMenu ||
+               com == Options::MouseActivateAndRaise ||
+               com == Options::MouseActivate ||
+               com == Options::MouseActivateRaiseAndPassClick ||
+               com == Options::MouseActivateAndPassClick ||
+               com == Options::MouseClientGroupDrag ||
+               com == Options::MouseNothing);
+}
 
 // called from decoration
-void Client::processMousePressEvent( QMouseEvent* e )
-    {
-    if( e->type() != QEvent::MouseButtonPress )
-        {
+void Client::processMousePressEvent(QMouseEvent* e)
+{
+    if (e->type() != QEvent::MouseButtonPress) {
         kWarning(1212) << "processMousePressEvent()" ;
         return;
-        }
-    int button;
-    switch( e->button())
-        {
-        case Qt::LeftButton:
-            button = Button1;
-          break;
-        case Qt::MidButton:
-            button = Button2;
-          break;
-        case Qt::RightButton:
-            button = Button3;
-          break;
-        default:
-            return;
-        }
-    processDecorationButtonPress( button, e->buttons(), e->x(), e->y(), e->globalX(), e->globalY());
     }
+    int button;
+    switch(e->button()) {
+    case Qt::LeftButton:
+        button = Button1;
+        break;
+    case Qt::MidButton:
+        button = Button2;
+        break;
+    case Qt::RightButton:
+        button = Button3;
+        break;
+    default:
+        return;
+    }
+    processDecorationButtonPress(button, e->buttons(), e->x(), e->y(), e->globalX(), e->globalY());
+}
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int y, int x_root, int y_root )
-    {
-    if( w == decorationId() && !buttonDown)
+bool Client::buttonReleaseEvent(Window w, int /*button*/, int state, int x, int y, int x_root, int y_root)
+{
+    if (w == decorationId() && !buttonDown)
         return false;
-    if( w == wrapperId())
-        {
-        XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
+    if (w == wrapperId()) {
+        XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
         return true;
-        }
-    if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
+    }
+    if (w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
         return true;
     x = this->x(); // translate from grab window to local coords
     y = this->y();
-    if ( (state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 )
-        {
+    if ((state & (Button1Mask & Button2Mask & Button3Mask)) == 0) {
         buttonDown = false;
         stopDelayedMoveResize();
-        if ( moveResizeMode ) 
-            {
-            finishMoveResize( false );
+        if (moveResizeMode) {
+            finishMoveResize(false);
             // mouse position is still relative to old Client position, adjust it
-            QPoint mousepos( x_root - x + padding_left, y_root - y + padding_top );
-            mode = mousePosition( mousepos );
-            }
-        else if( workspace()->decorationSupportsClientGrouping() )
+            QPoint mousepos(x_root - x + padding_left, y_root - y + padding_top);
+            mode = mousePosition(mousepos);
+        } else if (workspace()->decorationSupportsClientGrouping())
             return false;
         updateCursor();
-        }
-    return true;
     }
+    return true;
+}
 
 static bool was_motion = false;
 static Time next_motion_time = CurrentTime;
@@ -1418,156 +1307,135 @@ static Time next_motion_time = CurrentTime;
 // will be faked from it, so there's no need to check other events).
 // This helps avoiding being overloaded by being flooded from many events
 // from the XServer.
-static Bool motion_predicate( Display*, XEvent* ev, XPointer )
+static Bool motion_predicate(Display*, XEvent* ev, XPointer)
 {
-    if( ev->type == MotionNotify )
-        {
-	was_motion = true;
+    if (ev->type == MotionNotify) {
+        was_motion = true;
         next_motion_time = ev->xmotion.time;  // for setting time
-        }
+    }
     return False;
 }
 
 static bool waitingMotionEvent()
-    {
+{
 // The queue doesn't need to be checked until the X timestamp
 // of processes events reaches the timestamp of the last suitable
 // MotionNotify event in the queue.
-    if( next_motion_time != CurrentTime
-        && timestampCompare( xTime(), next_motion_time ) < 0 )
+    if (next_motion_time != CurrentTime
+            && timestampCompare(xTime(), next_motion_time) < 0)
         return true;
     was_motion = false;
-    XSync( display(), False ); // this helps to discard more MotionNotify events
+    XSync(display(), False);   // this helps to discard more MotionNotify events
     XEvent dummy;
-    XCheckIfEvent( display(), &dummy, motion_predicate, NULL );
+    XCheckIfEvent(display(), &dummy, motion_predicate, NULL);
     return was_motion;
-    }
+}
 
 // Checks if the mouse cursor is near the edge of the screen and if so activates quick tiling or maximization
-void Client::checkQuickTilingMaximizationZones( int xroot, int yroot )
-    {
-    foreach( Kephal::Screen* screen, Kephal::Screens::self()->screens() )
-        {
-        if( screen->geom().contains( QPoint( xroot, yroot )))
-            {
-            if( options->electricBorderTiling() &&
-                xroot <= screen->geom().x() + 20 &&
-                yroot > screen->geom().y() + screen->geom().height()/4 &&
-                yroot < screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricLeftMode );
-                setElectricBorderMaximizing( true );
+void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
+{
+    foreach (Kephal::Screen * screen, Kephal::Screens::self()->screens()) {
+        if (screen->geom().contains(QPoint(xroot, yroot))) {
+            if (options->electricBorderTiling() &&
+                    xroot <= screen->geom().x() + 20 &&
+                    yroot > screen->geom().y() + screen->geom().height() / 4 &&
+                    yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricLeftMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderTiling() &&
-                xroot <= screen->geom().x() + 20 &&
-                yroot <= screen->geom().y() + screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricTopLeftMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderTiling() &&
+                      xroot <= screen->geom().x() + 20 &&
+                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricTopLeftMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderTiling() &&
-                xroot <= screen->geom().x() + 20 &&
-                yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricBottomLeftMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderTiling() &&
+                      xroot <= screen->geom().x() + 20 &&
+                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricBottomLeftMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderTiling() &&
-                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                yroot > screen->geom().y() + screen->geom().height()/4 &&
-                yroot < screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricRightMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderTiling() &&
+                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                      yroot > screen->geom().y() + screen->geom().height() / 4 &&
+                      yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricRightMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderTiling() &&
-                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                yroot <= screen->geom().y() + screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricTopRightMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderTiling() &&
+                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricTopRightMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderTiling() &&
-                xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height()/4 )
-                {
-                setElectricBorderMode( ElectricBottomRightMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderTiling() &&
+                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
+                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
+                setElectricBorderMode(ElectricBottomRightMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
-            else if( options->electricBorderMaximize() &&
-                yroot <= screen->geom().y() + 5 && isMaximizable() )
-                {
-                setElectricBorderMode( ElectricMaximizeMode );
-                setElectricBorderMaximizing( true );
+            } else if (options->electricBorderMaximize() &&
+                      yroot <= screen->geom().y() + 5 && isMaximizable()) {
+                setElectricBorderMode(ElectricMaximizeMode);
+                setElectricBorderMaximizing(true);
                 return;
-                }
             }
         }
-    setElectricBorderMaximizing( false );
     }
+    setElectricBorderMaximizing(false);
+}
 
 // return value matters only when filtering events before decoration gets them
-bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_root, int y_root )
-    {
-    if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
+bool Client::motionNotifyEvent(Window w, int /*state*/, int x, int y, int x_root, int y_root)
+{
+    if (w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
-    if ( !buttonDown ) 
-        {
-        QPoint mousePos( x, y );
-        if( w == frameId() ) 
-            mousePos += QPoint( padding_left, padding_top );
-        Position newmode = mousePosition( mousePos );
-        if( newmode != mode )
-            {
+    if (!buttonDown) {
+        QPoint mousePos(x, y);
+        if (w == frameId())
+            mousePos += QPoint(padding_left, padding_top);
+        Position newmode = mousePosition(mousePos);
+        if (newmode != mode) {
             mode = newmode;
             updateCursor();
-            }
+        }
         // reset the timestamp for the optimization, otherwise with long passivity
         // the option in waitingMotionEvent() may be always true
         next_motion_time = CurrentTime;
         return false;
-        }
-    if( w == moveResizeGrabWindow())
-        {
+    }
+    if (w == moveResizeGrabWindow()) {
         x = this->x(); // translate from grab window to local coords
         y = this->y();
-        }
-    if( !waitingMotionEvent() )
-        {
-        handleMoveResize( x, y, x_root, y_root );
-        if( isMove() && isResizable() )
-            checkQuickTilingMaximizationZones( x_root, y_root );
-        }
-    return true;
     }
-    
-void Client::focusInEvent( XFocusInEvent* e )
-    {
-    if( e->window != window())
+    if (!waitingMotionEvent()) {
+        handleMoveResize(x, y, x_root, y_root);
+        if (isMove() && isResizable())
+            checkQuickTilingMaximizationZones(x_root, y_root);
+    }
+    return true;
+}
+
+void Client::focusInEvent(XFocusInEvent* e)
+{
+    if (e->window != window())
         return; // only window gets focus
-    if ( e->mode == NotifyUngrab )
+    if (e->mode == NotifyUngrab)
         return; // we don't care
-    if ( e->detail == NotifyPointer )
+    if (e->detail == NotifyPointer)
         return;  // we don't care
-    if( !isShown( false ) || !isOnCurrentDesktop()) // we unmapped it, but it got focus meanwhile ->
+    if (!isShown(false) || !isOnCurrentDesktop())    // we unmapped it, but it got focus meanwhile ->
         return;            // activateNextClient() already transferred focus elsewhere
     // check if this client is in should_get_focus list or if activation is allowed
-    bool activate =  workspace()->allowClientActivation( this, -1U, true );
-    workspace()->gotFocusIn( this ); // remove from should_get_focus list
-    if( activate )
-        setActive( true );
-    else
-        {
+    bool activate =  workspace()->allowClientActivation(this, -1U, true);
+    workspace()->gotFocusIn(this);   // remove from should_get_focus list
+    if (activate)
+        setActive(true);
+    else {
         workspace()->restoreFocus();
         demandAttention();
-        }
     }
+}
 
 // When a client loses focus, FocusOut events are usually immediatelly
 // followed by FocusIn events for another client that gains the focus
@@ -1585,69 +1453,65 @@ void Client::focusInEvent( XFocusInEvent* e )
 // previously active client.
 static bool follows_focusin = false;
 static bool follows_focusin_failed = false;
-static Bool predicate_follows_focusin( Display*, XEvent* e, XPointer arg )
-    {
-    if( follows_focusin || follows_focusin_failed )
+static Bool predicate_follows_focusin(Display*, XEvent* e, XPointer arg)
+{
+    if (follows_focusin || follows_focusin_failed)
         return False;
-    Client* c = ( Client* ) arg;
-    if( e->type == FocusIn && c->workspace()->findClient( WindowMatchPredicate( e->xfocus.window )))
-        { // found FocusIn
+    Client* c = (Client*) arg;
+    if (e->type == FocusIn && c->workspace()->findClient(WindowMatchPredicate(e->xfocus.window))) {
+        // found FocusIn
         follows_focusin = true;
         return False;
-        }
+    }
     // events that may be in the queue before the FocusIn event that's being
     // searched for
-    if( e->type == FocusIn || e->type == FocusOut || e->type == KeymapNotify )
+    if (e->type == FocusIn || e->type == FocusOut || e->type == KeymapNotify)
         return False;
     follows_focusin_failed = true; // a different event - stop search
     return False;
-    }
+}
 
-static bool check_follows_focusin( Client* c )
-    {
+static bool check_follows_focusin(Client* c)
+{
     follows_focusin = follows_focusin_failed = false;
     XEvent dummy;
     // XCheckIfEvent() is used to make the search non-blocking, the predicate
     // always returns False, so nothing is removed from the events queue.
     // XPeekIfEvent() would block.
-    XCheckIfEvent( display(), &dummy, predicate_follows_focusin, (XPointer)c );
+    XCheckIfEvent(display(), &dummy, predicate_follows_focusin, (XPointer)c);
     return follows_focusin;
-    }
+}
 
 
-void Client::focusOutEvent( XFocusOutEvent* e )
-    {
-    if( e->window != window())
+void Client::focusOutEvent(XFocusOutEvent* e)
+{
+    if (e->window != window())
         return; // only window gets focus
-    if ( e->mode == NotifyGrab )
+    if (e->mode == NotifyGrab)
         return; // we don't care
-    if ( isShade() )
+    if (isShade())
         return; // here neither
-    if ( e->detail != NotifyNonlinear
-        && e->detail != NotifyNonlinearVirtual )
+    if (e->detail != NotifyNonlinear
+            && e->detail != NotifyNonlinearVirtual)
         // SELI check all this
         return; // hack for motif apps like netscape
-    if ( QApplication::activePopupWidget() )
+    if (QApplication::activePopupWidget())
         return;
-    if( !check_follows_focusin( this ))
-        setActive( false );
-    }
+    if (!check_follows_focusin(this))
+        setActive(false);
+}
 
 // performs _NET_WM_MOVERESIZE
-void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
-    {
-    if( direction == NET::Move )
-        performMouseCommand( Options::MouseMove, QPoint( x_root, y_root ));
-    else if( moveResizeMode && direction == NET::MoveResizeCancel)
-    {
-        finishMoveResize( true );
+void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
+{
+    if (direction == NET::Move)
+        performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
+    else if (moveResizeMode && direction == NET::MoveResizeCancel) {
+        finishMoveResize(true);
         buttonDown = false;
         updateCursor();
-    }
-    else if( direction >= NET::TopLeft && direction <= NET::Left ) 
-        {
-        static const Position convert[] =
-            {
+    } else if (direction >= NET::TopLeft && direction <= NET::Left) {
+        static const Position convert[] = {
             PositionTopLeft,
             PositionTop,
             PositionTopRight,
@@ -1656,211 +1520,199 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
             PositionBottom,
             PositionBottomLeft,
             PositionLeft
-            };
-        if(!isResizable() || isShade())
+        };
+        if (!isResizable() || isShade())
             return;
-        if( moveResizeMode )
-            finishMoveResize( false );
+        if (moveResizeMode)
+            finishMoveResize(false);
         buttonDown = true;
-        moveOffset = QPoint( x_root - x(), y_root - y()); // map from global
+        moveOffset = QPoint(x_root - x(), y_root - y());  // map from global
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         mode = convert[ direction ];
-        if( !startMoveResize())
+        if (!startMoveResize())
             buttonDown = false;
         updateCursor();
-        }
-    else if( direction == NET::KeyboardMove )
-        { // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        QCursor::setPos( geometry().center() );
-        performMouseCommand( Options::MouseUnrestrictedMove, geometry().center());
-        }
-    else if( direction == NET::KeyboardSize )
-        { // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        QCursor::setPos( geometry().bottomRight());
-        performMouseCommand( Options::MouseUnrestrictedResize, geometry().bottomRight());
-        }
+    } else if (direction == NET::KeyboardMove) {
+        // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
+        QCursor::setPos(geometry().center());
+        performMouseCommand(Options::MouseUnrestrictedMove, geometry().center());
+    } else if (direction == NET::KeyboardSize) {
+        // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
+        QCursor::setPos(geometry().bottomRight());
+        performMouseCommand(Options::MouseUnrestrictedResize, geometry().bottomRight());
     }
+}
 
-void Client::keyPressEvent( uint key_code )
-    {
+void Client::keyPressEvent(uint key_code)
+{
     updateUserTime();
-    if ( !isMove() && !isResize() )
+    if (!isMove() && !isResize())
         return;
     bool is_control = key_code & Qt::CTRL;
     bool is_alt = key_code & Qt::ALT;
     key_code = key_code & ~Qt::KeyboardModifierMask;
-    int delta = is_control?1:is_alt?32:8;
+    int delta = is_control ? 1 : is_alt ? 32 : 8;
     QPoint pos = cursorPos();
-    switch ( key_code ) 
-        {
+    switch(key_code) {
     case Qt::Key_Left:
-            pos.rx() -= delta;
-            break;
+        pos.rx() -= delta;
+        break;
     case Qt::Key_Right:
-            pos.rx() += delta;
-            break;
+        pos.rx() += delta;
+        break;
     case Qt::Key_Up:
-            pos.ry() -= delta;
-            break;
+        pos.ry() -= delta;
+        break;
     case Qt::Key_Down:
-            pos.ry() += delta;
-            break;
+        pos.ry() += delta;
+        break;
     case Qt::Key_Space:
     case Qt::Key_Return:
     case Qt::Key_Enter:
-            finishMoveResize( false );
-            buttonDown = false;
-            updateCursor();
-            break;
+        finishMoveResize(false);
+        buttonDown = false;
+        updateCursor();
+        break;
     case Qt::Key_Escape:
-            finishMoveResize( true );
-            buttonDown = false;
-            updateCursor();
-            break;
-        default:
-            return;
-        }
-    QCursor::setPos( pos );
+        finishMoveResize(true);
+        buttonDown = false;
+        updateCursor();
+        break;
+    default:
+        return;
     }
+    QCursor::setPos(pos);
+}
 
 #ifdef HAVE_XSYNC
-void Client::syncEvent( XSyncAlarmNotifyEvent* e )
-    {
-    if( e->alarm == sync_alarm && XSyncValueEqual( e->counter_value, sync_counter_value ))
-        {
+void Client::syncEvent(XSyncAlarmNotifyEvent* e)
+{
+    if (e->alarm == sync_alarm && XSyncValueEqual(e->counter_value, sync_counter_value)) {
         ready_for_painting = true;
-        if( isResize())
-            {
+        if (isResize()) {
             delete sync_timeout;
             sync_timeout = NULL;
-            if( sync_resize_pending )
+            if (sync_resize_pending)
                 performMoveResize();
             sync_resize_pending = false;
-            }
         }
     }
+}
 #endif
 
 // ****************************************
 // Unmanaged
 // ****************************************
 
-bool Unmanaged::windowEvent( XEvent* e )
-    {
+bool Unmanaged::windowEvent(XEvent* e)
+{
     double old_opacity = opacity();
     unsigned long dirty[ 2 ];
-    info->event( e, dirty, 2 ); // pass through the NET stuff
-    if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
-        {
-        if( compositing())
-            {
+    info->event(e, dirty, 2);   // pass through the NET stuff
+    if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
+        if (compositing()) {
             addRepaintFull();
-            scene->windowOpacityChanged( this );
-            if( effects )
-                static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged( effectWindow(), old_opacity );
-            }
+            scene->windowOpacityChanged(this);
+            if (effects)
+                static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
         }
-    switch (e->type) 
-        {
-        case UnmapNotify:
-            unmapNotifyEvent( &e->xunmap );
-            break;
-        case MapNotify:
-            mapNotifyEvent( &e->xmap );
-            break;
-        case ConfigureNotify:
-            configureNotifyEvent( &e->xconfigure );
-            break;
-        case PropertyNotify:
-            propertyNotifyEvent( &e->xproperty );
-            break;
-        default:
-            {
-            if( e->type == Extensions::shapeNotifyEvent() )
-                {
-                detectShape( window());
-                addRepaintFull();
-                addWorkspaceRepaint( geometry()); // in case shape change removes part of this window
-                if( scene != NULL )
-                    scene->windowGeometryShapeChanged( this );
-                if( effects != NULL )
-                    static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
-                }
+    }
+    switch(e->type) {
+    case UnmapNotify:
+        unmapNotifyEvent(&e->xunmap);
+        break;
+    case MapNotify:
+        mapNotifyEvent(&e->xmap);
+        break;
+    case ConfigureNotify:
+        configureNotifyEvent(&e->xconfigure);
+        break;
+    case PropertyNotify:
+        propertyNotifyEvent(&e->xproperty);
+        break;
+    default: {
+        if (e->type == Extensions::shapeNotifyEvent()) {
+            detectShape(window());
+            addRepaintFull();
+            addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
+            if (scene != NULL)
+                scene->windowGeometryShapeChanged(this);
+            if (effects != NULL)
+                static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+        }
 #ifdef HAVE_XDAMAGE
-            if( e->type == Extensions::damageNotifyEvent())
-                damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+        if (e->type == Extensions::damageNotifyEvent())
+            damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
 #endif
-            break;
-            }
-        }
+        break;
+    }
+    }
     return false; // don't eat events, even our own unmanaged widgets are tracked
-    }
+}
 
-void Unmanaged::mapNotifyEvent( XMapEvent* )
-    {
-    }
+void Unmanaged::mapNotifyEvent(XMapEvent*)
+{
+}
 
-void Unmanaged::unmapNotifyEvent( XUnmapEvent* )
-    {
+void Unmanaged::unmapNotifyEvent(XUnmapEvent*)
+{
     release();
-    }
+}
 
-void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
-    {
-    if( effects )
+void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
+{
+    if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
-    QRect newgeom( e->x, e->y, e->width, e->height );
-    if( newgeom != geom )
-        {
-        addWorkspaceRepaint( geometry()); // damage old area
+    QRect newgeom(e->x, e->y, e->width, e->height);
+    if (newgeom != geom) {
+        addWorkspaceRepaint(geometry());  // damage old area
         QRect old = geom;
         geom = newgeom;
         addRepaintFull();
-        if( old.size() != geom.size())
+        if (old.size() != geom.size())
             discardWindowPixmap();
-        if( scene != NULL )
-            scene->windowGeometryShapeChanged( this );
-        if( effects != NULL )
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), old );
-        }
+        if (scene != NULL)
+            scene->windowGeometryShapeChanged(this);
+        if (effects != NULL)
+            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), old);
     }
+}
 
 // ****************************************
 // Toplevel
 // ****************************************
 
-void Toplevel::propertyNotifyEvent( XPropertyEvent* e )
-    {
-    if( e->window != window())
+void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
+{
+    if (e->window != window())
         return; // ignore frame/wrapper
-    switch ( e->atom ) 
-        {
-        default:
-            if (e->atom == atoms->wm_client_leader )
-                getWmClientLeader();
-            else if( e->atom == atoms->wm_window_role )
-                getWindowRole();
-            break;
-        }
-    if( effects )
-        static_cast< EffectsHandlerImpl* >( effects )->propertyNotify( effectWindow(), e->atom );
+    switch(e->atom) {
+    default:
+        if (e->atom == atoms->wm_client_leader)
+            getWmClientLeader();
+        else if (e->atom == atoms->wm_window_role)
+            getWindowRole();
+        break;
     }
+    if (effects)
+        static_cast< EffectsHandlerImpl* >(effects)->propertyNotify(effectWindow(), e->atom);
+}
 
 // ****************************************
 // Group
 // ****************************************
 
-bool Group::groupEvent( XEvent* e )
-    {
+bool Group::groupEvent(XEvent* e)
+{
     unsigned long dirty[ 2 ];
-    leader_info->event( e, dirty, 2 ); // pass through the NET stuff
-    if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0 )
+    leader_info->event(e, dirty, 2);   // pass through the NET stuff
+    if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
         getIcons();
-    if(( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId ) != 0 )
+    if ((dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
         startupIdChanged();
     return false;
-    }
+}
 
 
 } // namespace

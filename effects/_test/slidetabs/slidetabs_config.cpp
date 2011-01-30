@@ -32,63 +32,63 @@ namespace KWin
 
 KWIN_EFFECT_CONFIG_FACTORY
 
-SlideTabsEffectConfigForm::SlideTabsEffectConfigForm( QWidget* parent ) : QWidget( parent )
-    {
-    setupUi( this );
-    }
+SlideTabsEffectConfigForm::SlideTabsEffectConfigForm(QWidget* parent) : QWidget(parent)
+{
+    setupUi(this);
+}
 
 SlideTabsEffectConfig::SlideTabsEffectConfig(QWidget* parent, const QVariantList& args)
-    : KCModule( EffectFactory::componentData(), parent, args )
-    {
-    m_ui = new SlideTabsEffectConfigForm( this );
+    : KCModule(EffectFactory::componentData(), parent, args)
+{
+    m_ui = new SlideTabsEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget( m_ui );
+    layout->addWidget(m_ui);
 
-    connect( m_ui->grouping, SIGNAL( toggled( bool )), this, SLOT( changed() ) );
-    connect( m_ui->switching, SIGNAL( toggled( bool )), this, SLOT( changed() ) );
-    connect( m_ui->duration, SIGNAL( valueChanged( int ) ), this, SLOT( changed() ) );
+    connect(m_ui->grouping, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_ui->switching, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_ui->duration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     load();
-    }
+}
 
 void SlideTabsEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "SlideTabs" );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("SlideTabs");
 
-    conf.writeEntry( "SlideGrouping", m_ui->grouping->isChecked() );
-    conf.writeEntry( "SlideSwitching", m_ui->switching->isChecked() );
-    conf.writeEntry( "SlideDuration", m_ui->duration->value() );
+    conf.writeEntry("SlideGrouping", m_ui->grouping->isChecked());
+    conf.writeEntry("SlideSwitching", m_ui->switching->isChecked());
+    conf.writeEntry("SlideDuration", m_ui->duration->value());
 
     conf.sync();
 
     KCModule::save();
-    emit changed( false );
-    EffectsHandler::sendReloadMessage( "slidetabs" );
-    }
+    emit changed(false);
+    EffectsHandler::sendReloadMessage("slidetabs");
+}
 
 void SlideTabsEffectConfig::load()
-    {
+{
     KCModule::load();
-    KConfigGroup conf = EffectsHandler::effectConfig( "SlideTabs" );
+    KConfigGroup conf = EffectsHandler::effectConfig("SlideTabs");
 
-    bool switching = conf.readEntry( "SlideSwitching", true );
-    bool grouping = conf.readEntry( "SlideGrouping", true );
-    int duration = conf.readEntry("SlideDuration", 500 );
-    m_ui->switching->setChecked( switching );
-    m_ui->grouping->setChecked( grouping );
-    m_ui->duration->setValue( duration );
-    emit changed( false );
-    }
+    bool switching = conf.readEntry("SlideSwitching", true);
+    bool grouping = conf.readEntry("SlideGrouping", true);
+    int duration = conf.readEntry("SlideDuration", 500);
+    m_ui->switching->setChecked(switching);
+    m_ui->grouping->setChecked(grouping);
+    m_ui->duration->setValue(duration);
+    emit changed(false);
+}
 
 void SlideTabsEffectConfig::defaults()
-    {
-    m_ui->grouping->setChecked( true );
-    m_ui->switching->setChecked( true );
-    m_ui->duration->setValue( 500 );
-    emit changed( true );
-    }
+{
+    m_ui->grouping->setChecked(true);
+    m_ui->switching->setChecked(true);
+    m_ui->duration->setValue(500);
+    emit changed(true);
+}
 
 }
 

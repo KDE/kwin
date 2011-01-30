@@ -37,406 +37,399 @@ namespace KWin
 
 class EffectsHandlerImpl : public EffectsHandler
 {
-    public:
-        EffectsHandlerImpl(CompositingType type);
-        virtual ~EffectsHandlerImpl();
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        virtual void paintEffectFrame( EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
+public:
+    EffectsHandlerImpl(CompositingType type);
+    virtual ~EffectsHandlerImpl();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
+    virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
 
-        bool provides( Effect::Feature ef );
+    bool provides(Effect::Feature ef);
 
-        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
-        virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList );
+    virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
 
-        virtual void activateWindow( EffectWindow* c );
-        virtual EffectWindow* activeWindow() const;
-        virtual void moveWindow( EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0 );
-        virtual void windowToDesktop( EffectWindow* w, int desktop );
-        virtual void windowToScreen( EffectWindow* w, int screen );
-        virtual void setShowingDesktop( bool showing );
+    virtual void activateWindow(EffectWindow* c);
+    virtual EffectWindow* activeWindow() const;
+    virtual void moveWindow(EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0);
+    virtual void windowToDesktop(EffectWindow* w, int desktop);
+    virtual void windowToScreen(EffectWindow* w, int screen);
+    virtual void setShowingDesktop(bool showing);
 
-        virtual int currentDesktop() const;
-        virtual int numberOfDesktops() const;
-        virtual void setCurrentDesktop( int desktop );
-        virtual void setNumberOfDesktops( int desktops );
-        virtual QSize desktopGridSize() const;
-        virtual int desktopGridWidth() const;
-        virtual int desktopGridHeight() const;
-        virtual int workspaceWidth() const;
-        virtual int workspaceHeight() const;
-        virtual int desktopAtCoords( QPoint coords ) const;
-        virtual QPoint desktopGridCoords( int id ) const;
-        virtual QPoint desktopCoords( int id ) const;
-        virtual int desktopAbove( int desktop = 0, bool wrap = true ) const;
-        virtual int desktopToRight( int desktop = 0, bool wrap = true ) const;
-        virtual int desktopBelow( int desktop = 0, bool wrap = true ) const;
-        virtual int desktopToLeft( int desktop = 0, bool wrap = true ) const;
-        virtual bool isDesktopLayoutDynamic() const;
-        virtual int addDesktop( QPoint coords );
-        virtual void deleteDesktop( int id );
-        virtual QString desktopName( int desktop ) const;
-        virtual bool optionRollOverDesktops() const;
+    virtual int currentDesktop() const;
+    virtual int numberOfDesktops() const;
+    virtual void setCurrentDesktop(int desktop);
+    virtual void setNumberOfDesktops(int desktops);
+    virtual QSize desktopGridSize() const;
+    virtual int desktopGridWidth() const;
+    virtual int desktopGridHeight() const;
+    virtual int workspaceWidth() const;
+    virtual int workspaceHeight() const;
+    virtual int desktopAtCoords(QPoint coords) const;
+    virtual QPoint desktopGridCoords(int id) const;
+    virtual QPoint desktopCoords(int id) const;
+    virtual int desktopAbove(int desktop = 0, bool wrap = true) const;
+    virtual int desktopToRight(int desktop = 0, bool wrap = true) const;
+    virtual int desktopBelow(int desktop = 0, bool wrap = true) const;
+    virtual int desktopToLeft(int desktop = 0, bool wrap = true) const;
+    virtual bool isDesktopLayoutDynamic() const;
+    virtual int addDesktop(QPoint coords);
+    virtual void deleteDesktop(int id);
+    virtual QString desktopName(int desktop) const;
+    virtual bool optionRollOverDesktops() const;
 
-        virtual int displayWidth() const;
-        virtual int displayHeight() const;
-        virtual QPoint cursorPos() const;
-        virtual bool grabKeyboard( Effect* effect );
-        virtual void ungrabKeyboard();
-        virtual void* getProxy( QString name );
-        virtual void startMousePolling();
-        virtual void stopMousePolling();
-        virtual EffectWindow* findWindow( WId id ) const;
-        virtual EffectWindowList stackingOrder() const;
-        virtual void setElevatedWindow( EffectWindow* w, bool set );
+    virtual int displayWidth() const;
+    virtual int displayHeight() const;
+    virtual QPoint cursorPos() const;
+    virtual bool grabKeyboard(Effect* effect);
+    virtual void ungrabKeyboard();
+    virtual void* getProxy(QString name);
+    virtual void startMousePolling();
+    virtual void stopMousePolling();
+    virtual EffectWindow* findWindow(WId id) const;
+    virtual EffectWindowList stackingOrder() const;
+    virtual void setElevatedWindow(EffectWindow* w, bool set);
 
-        virtual void setTabBoxWindow(EffectWindow*);
-        virtual void setTabBoxDesktop(int);
-        virtual EffectWindowList currentTabBoxWindowList() const;
-        virtual void refTabBox();
-        virtual void unrefTabBox();
-        virtual void closeTabBox();
-        virtual QList< int > currentTabBoxDesktopList() const;
-        virtual int currentTabBoxDesktop() const;
-        virtual EffectWindow* currentTabBoxWindow() const;
+    virtual void setTabBoxWindow(EffectWindow*);
+    virtual void setTabBoxDesktop(int);
+    virtual EffectWindowList currentTabBoxWindowList() const;
+    virtual void refTabBox();
+    virtual void unrefTabBox();
+    virtual void closeTabBox();
+    virtual QList< int > currentTabBoxDesktopList() const;
+    virtual int currentTabBoxDesktop() const;
+    virtual EffectWindow* currentTabBoxWindow() const;
 
-        virtual void setActiveFullScreenEffect( Effect* e );
-        virtual Effect* activeFullScreenEffect() const;
+    virtual void setActiveFullScreenEffect(Effect* e);
+    virtual Effect* activeFullScreenEffect() const;
 
-        virtual void pushRenderTarget(GLRenderTarget* target);
-        virtual GLRenderTarget* popRenderTarget();
-        virtual bool isRenderTargetBound();
+    virtual void pushRenderTarget(GLRenderTarget* target);
+    virtual GLRenderTarget* popRenderTarget();
+    virtual bool isRenderTargetBound();
 
-        virtual void addRepaintFull();
-        virtual void addRepaint( const QRect& r );
-        virtual void addRepaint( const QRegion& r );
-        virtual void addRepaint( int x, int y, int w, int h );
-        virtual int activeScreen() const;
-        virtual int numScreens() const;
-        virtual int screenNumber( const QPoint& pos ) const;
-        virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const;
-        virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const;
-        virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
-        virtual double animationTimeFactor() const;
-        virtual WindowQuadType newWindowQuadType();
+    virtual void addRepaintFull();
+    virtual void addRepaint(const QRect& r);
+    virtual void addRepaint(const QRegion& r);
+    virtual void addRepaint(int x, int y, int w, int h);
+    virtual int activeScreen() const;
+    virtual int numScreens() const;
+    virtual int screenNumber(const QPoint& pos) const;
+    virtual QRect clientArea(clientAreaOption, int screen, int desktop) const;
+    virtual QRect clientArea(clientAreaOption, const EffectWindow* c) const;
+    virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
+    virtual double animationTimeFactor() const;
+    virtual WindowQuadType newWindowQuadType();
 
-        virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
-        using EffectsHandler::createInputWindow;
-        virtual void destroyInputWindow( Window w );
-        virtual bool checkInputWindowEvent( XEvent* e );
-        virtual void checkInputWindowStacking();
+    virtual Window createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor);
+    using EffectsHandler::createInputWindow;
+    virtual void destroyInputWindow(Window w);
+    virtual bool checkInputWindowEvent(XEvent* e);
+    virtual void checkInputWindowStacking();
 
-        virtual void checkElectricBorder(const QPoint &pos, Time time);
-        virtual void reserveElectricBorder( ElectricBorder border );
-        virtual void unreserveElectricBorder( ElectricBorder border );
-        virtual void reserveElectricBorderSwitching( bool reserve );
+    virtual void checkElectricBorder(const QPoint &pos, Time time);
+    virtual void reserveElectricBorder(ElectricBorder border);
+    virtual void unreserveElectricBorder(ElectricBorder border);
+    virtual void reserveElectricBorderSwitching(bool reserve);
 
-        virtual unsigned long xrenderBufferPicture();
-        virtual void reconfigure();
-        virtual void registerPropertyType( long atom, bool reg );
-        virtual QByteArray readRootProperty( long atom, long type, int format ) const;
-        virtual void deleteRootProperty( long atom ) const;
+    virtual unsigned long xrenderBufferPicture();
+    virtual void reconfigure();
+    virtual void registerPropertyType(long atom, bool reg);
+    virtual QByteArray readRootProperty(long atom, long type, int format) const;
+    virtual void deleteRootProperty(long atom) const;
 
-        virtual bool hasDecorationShadows() const;
+    virtual bool hasDecorationShadows() const;
 
-        virtual bool decorationsHaveAlpha() const;
+    virtual bool decorationsHaveAlpha() const;
 
-        virtual bool decorationSupportsBlurBehind() const;
+    virtual bool decorationSupportsBlurBehind() const;
 
-        virtual EffectFrame* effectFrame( EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment ) const;
+    virtual EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const;
 
-        // internal (used by kwin core or compositing code)
-        void startPaint();
-        void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        void windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry );
-        void windowOpacityChanged( EffectWindow* c, double old_opacity );
-        void windowAdded( EffectWindow* c );
-        void windowClosed( EffectWindow* c );
-        void windowDeleted( EffectWindow* c );
-        void windowActivated( EffectWindow* c );
-        void windowMinimized( EffectWindow* c );
-        void windowUnminimized( EffectWindow* c );
-        void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
-        void clientGroupItemAdded( EffectWindow* from, EffectWindow* to );
-        void clientGroupItemRemoved( EffectWindow* c, EffectWindow* group );
-        void desktopChanged( int old );
-        void windowDamaged( EffectWindow* w, const QRect& r );
-        void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        void tabBoxAdded( int mode );
-        void tabBoxClosed();
-        void tabBoxUpdated();
-        void tabBoxKeyEvent( QKeyEvent* event );
-        bool borderActivated( ElectricBorder border );
-        void mouseChanged( const QPoint& pos, const QPoint& oldpos,
-            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
-        void grabbedKeyboardEvent( QKeyEvent* e );
-        bool hasKeyboardGrab() const;
-        void propertyNotify( EffectWindow* c, long atom );
-        void numberDesktopsChanged( int old );
+    // internal (used by kwin core or compositing code)
+    void startPaint();
+    void windowUserMovedResized(EffectWindow* c, bool first, bool last);
+    void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
+    void windowOpacityChanged(EffectWindow* c, double old_opacity);
+    void windowAdded(EffectWindow* c);
+    void windowClosed(EffectWindow* c);
+    void windowDeleted(EffectWindow* c);
+    void windowActivated(EffectWindow* c);
+    void windowMinimized(EffectWindow* c);
+    void windowUnminimized(EffectWindow* c);
+    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
+    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
+    void desktopChanged(int old);
+    void windowDamaged(EffectWindow* w, const QRect& r);
+    void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
+    void tabBoxAdded(int mode);
+    void tabBoxClosed();
+    void tabBoxUpdated();
+    void tabBoxKeyEvent(QKeyEvent* event);
+    bool borderActivated(ElectricBorder border);
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void grabbedKeyboardEvent(QKeyEvent* e);
+    bool hasKeyboardGrab() const;
+    void propertyNotify(EffectWindow* c, long atom);
+    void numberDesktopsChanged(int old);
 
-        bool loadEffect( const QString& name );
-        void toggleEffect( const QString& name );
-        void unloadEffect( const QString& name );
-        void reconfigureEffect( const QString& name );
-        bool isEffectLoaded( const QString& name );
-        QStringList loadedEffects() const;
-        QStringList listOfEffects() const;
+    bool loadEffect(const QString& name);
+    void toggleEffect(const QString& name);
+    void unloadEffect(const QString& name);
+    void reconfigureEffect(const QString& name);
+    bool isEffectLoaded(const QString& name);
+    QStringList loadedEffects() const;
+    QStringList listOfEffects() const;
 
-        QList<EffectWindow*> elevatedWindows() const;
+    QList<EffectWindow*> elevatedWindows() const;
 
-    protected:
-        KLibrary* findEffectLibrary( KService* service );
-        void effectsChanged();
+protected:
+    KLibrary* findEffectLibrary(KService* service);
+    void effectsChanged();
 
-        Effect* keyboard_grab_effect;
-        QStack<GLRenderTarget*> render_targets;
-        Effect* fullscreen_effect;
-        QList<EffectWindow*> elevated_windows;
-        QMultiMap< int, EffectPair > effect_order;
-        QHash< long, int > registered_atoms;
-        int next_window_quad_type;
-        int mouse_poll_ref_count;
-        int current_paint_effectframe;
+    Effect* keyboard_grab_effect;
+    QStack<GLRenderTarget*> render_targets;
+    Effect* fullscreen_effect;
+    QList<EffectWindow*> elevated_windows;
+    QMultiMap< int, EffectPair > effect_order;
+    QHash< long, int > registered_atoms;
+    int next_window_quad_type;
+    int mouse_poll_ref_count;
+    int current_paint_effectframe;
 };
 
 class EffectWindowImpl : public EffectWindow
 {
-    public:
-        EffectWindowImpl();
-        virtual ~EffectWindowImpl();
+public:
+    EffectWindowImpl();
+    virtual ~EffectWindowImpl();
 
-        virtual void enablePainting( int reason );
-        virtual void disablePainting( int reason );
-        virtual bool isPaintingEnabled();
-        virtual void addRepaint( const QRect& r );
-        virtual void addRepaint( int x, int y, int w, int h );
-        virtual void addRepaintFull();
+    virtual void enablePainting(int reason);
+    virtual void disablePainting(int reason);
+    virtual bool isPaintingEnabled();
+    virtual void addRepaint(const QRect& r);
+    virtual void addRepaint(int x, int y, int w, int h);
+    virtual void addRepaintFull();
 
-        virtual void refWindow();
-        virtual void unrefWindow();
-        virtual bool isDeleted() const;
+    virtual void refWindow();
+    virtual void unrefWindow();
+    virtual bool isDeleted() const;
 
-        virtual bool isOnAllDesktops() const;
-        virtual int desktop() const; // prefer isOnXXX()
-        virtual bool isMinimized() const;
-        virtual double opacity() const;
-        virtual bool hasAlpha() const;
-        virtual QString caption() const;
-        virtual QPixmap icon() const;
-        virtual QString windowClass() const;
-        virtual QString windowRole() const;
-        virtual const EffectWindowGroup* group() const;
+    virtual bool isOnAllDesktops() const;
+    virtual int desktop() const; // prefer isOnXXX()
+    virtual bool isMinimized() const;
+    virtual double opacity() const;
+    virtual bool hasAlpha() const;
+    virtual QString caption() const;
+    virtual QPixmap icon() const;
+    virtual QString windowClass() const;
+    virtual QString windowRole() const;
+    virtual const EffectWindowGroup* group() const;
 
-        virtual int x() const;
-        virtual int y() const;
-        virtual int width() const;
-        virtual int height() const;
-        virtual QRect geometry() const;
-        virtual QRegion shape() const;
-        virtual int screen() const;
-        virtual bool hasOwnShape() const;
-        virtual QPoint pos() const;
-        virtual QSize size() const;
-        virtual QRect rect() const;
-        virtual bool isMovable() const;
-        virtual bool isMovableAcrossScreens() const;
-        virtual bool isUserMove() const;
-        virtual bool isUserResize() const;
-        virtual QRect iconGeometry() const;
-        virtual QRect contentsRect() const;
-        virtual QRect decorationInnerRect() const;
-        virtual QByteArray readProperty( long atom, long type, int format ) const;
-        virtual void deleteProperty( long atom ) const;
+    virtual int x() const;
+    virtual int y() const;
+    virtual int width() const;
+    virtual int height() const;
+    virtual QRect geometry() const;
+    virtual QRegion shape() const;
+    virtual int screen() const;
+    virtual bool hasOwnShape() const;
+    virtual QPoint pos() const;
+    virtual QSize size() const;
+    virtual QRect rect() const;
+    virtual bool isMovable() const;
+    virtual bool isMovableAcrossScreens() const;
+    virtual bool isUserMove() const;
+    virtual bool isUserResize() const;
+    virtual QRect iconGeometry() const;
+    virtual QRect contentsRect() const;
+    virtual QRect decorationInnerRect() const;
+    virtual QByteArray readProperty(long atom, long type, int format) const;
+    virtual void deleteProperty(long atom) const;
 
-        virtual bool isDesktop() const;
-        virtual bool isDock() const;
-        virtual bool isToolbar() const;
-        virtual bool isTopMenu() const;
-        virtual bool isMenu() const;
-        virtual bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
-        virtual bool isSpecialWindow() const;
-        virtual bool isDialog() const;
-        virtual bool isSplash() const;
-        virtual bool isUtility() const;
-        virtual bool isDropdownMenu() const;
-        virtual bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
-        virtual bool isTooltip() const;
-        virtual bool isNotification() const;
-        virtual bool isComboBox() const;
-        virtual bool isDNDIcon() const;
-        virtual bool isManaged() const; // managed or override-redirect
-        virtual bool acceptsFocus() const;
-        virtual bool keepAbove() const;
+    virtual bool isDesktop() const;
+    virtual bool isDock() const;
+    virtual bool isToolbar() const;
+    virtual bool isTopMenu() const;
+    virtual bool isMenu() const;
+    virtual bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+    virtual bool isSpecialWindow() const;
+    virtual bool isDialog() const;
+    virtual bool isSplash() const;
+    virtual bool isUtility() const;
+    virtual bool isDropdownMenu() const;
+    virtual bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
+    virtual bool isTooltip() const;
+    virtual bool isNotification() const;
+    virtual bool isComboBox() const;
+    virtual bool isDNDIcon() const;
+    virtual bool isManaged() const; // managed or override-redirect
+    virtual bool acceptsFocus() const;
+    virtual bool keepAbove() const;
 
-        virtual bool isModal() const;
-        virtual EffectWindow* findModal();
-        virtual EffectWindowList mainWindows() const;
+    virtual bool isModal() const;
+    virtual EffectWindow* findModal();
+    virtual EffectWindowList mainWindows() const;
 
-        virtual bool isSkipSwitcher() const;
+    virtual bool isSkipSwitcher() const;
 
-        virtual WindowQuadList buildQuads( bool force = false ) const;
+    virtual WindowQuadList buildQuads(bool force = false) const;
 
-        virtual void minimize() const;
-        virtual void unminimize() const;
-        virtual void closeWindow() const;
+    virtual void minimize() const;
+    virtual void unminimize() const;
+    virtual void closeWindow() const;
 
-        virtual bool visibleInClientGroup() const;
+    virtual bool visibleInClientGroup() const;
 
-        const Toplevel* window() const;
-        Toplevel* window();
+    const Toplevel* window() const;
+    Toplevel* window();
 
-        void setWindow( Toplevel* w ); // internal
-        void setSceneWindow( Scene::Window* w ); // internal
-        const Scene::Window* sceneWindow() const; // internal
-        Scene::Window* sceneWindow(); // internal
+    void setWindow(Toplevel* w);   // internal
+    void setSceneWindow(Scene::Window* w);   // internal
+    const Scene::Window* sceneWindow() const; // internal
+    Scene::Window* sceneWindow(); // internal
 
-        void setData( int role, const QVariant &data );
-        QVariant data( int role ) const;
-    private:
-        Toplevel* toplevel;
-        Scene::Window* sw; // This one is used only during paint pass.
-        QHash<int, QVariant> dataMap;
+    void setData(int role, const QVariant &data);
+    QVariant data(int role) const;
+private:
+    Toplevel* toplevel;
+    Scene::Window* sw; // This one is used only during paint pass.
+    QHash<int, QVariant> dataMap;
 };
 
 class EffectWindowGroupImpl
     : public EffectWindowGroup
-    {
-    public:
-        EffectWindowGroupImpl( Group* g );
-        virtual EffectWindowList members() const;
-    private:
-        Group* group;
-    };
+{
+public:
+    EffectWindowGroupImpl(Group* g);
+    virtual EffectWindowList members() const;
+private:
+    Group* group;
+};
 
 class EffectFrameImpl
     : public QObject, public EffectFrame
-    {
+{
     Q_OBJECT
-    public:
-        explicit EffectFrameImpl( EffectFrameStyle style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
-            Qt::Alignment alignment = Qt::AlignCenter );
-        virtual ~EffectFrameImpl();
+public:
+    explicit EffectFrameImpl(EffectFrameStyle style, bool staticSize = true, QPoint position = QPoint(-1, -1),
+                             Qt::Alignment alignment = Qt::AlignCenter);
+    virtual ~EffectFrameImpl();
 
-        virtual void free();
-        virtual void render( QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0 );
-        virtual Qt::Alignment alignment() const;
-        virtual void setAlignment( Qt::Alignment alignment );
-        virtual const QFont& font() const;
-        virtual void setFont( const QFont& font );
-        virtual const QRect& geometry() const;
-        virtual void setGeometry( const QRect& geometry, bool force = false );
-        virtual const QPixmap& icon() const;
-        virtual void setIcon( const QPixmap& icon );
-        virtual const QSize& iconSize() const;
-        virtual void setIconSize( const QSize& size );
-        virtual void setPosition( const QPoint& point );
-        virtual const QString& text() const;
-        virtual void setText( const QString& text );
-        EffectFrameStyle style() const
-            {
-            return m_style;
-            };
-        Plasma::FrameSvg& frame()
-            {
-            return m_frame;
-            }
-        bool isStatic() const
-            {
-            return m_static;
-            };
-        void finalRender( QRegion region, double opacity, double frameOpacity ) const;
-        virtual void setShader( GLShader* shader )
-            {
-            m_shader = shader;
-            }
-        virtual GLShader* shader() const
-            {
-            return m_shader;
-            }
-        virtual void setSelection( const QRect& selection );
-        const QRect& selection() const
-            {
-            return m_selectionGeometry;
-            }
-        Plasma::FrameSvg& selectionFrame()
-            {
-            return m_selection;
-            }
-
-    private Q_SLOTS:
-        void plasmaThemeChanged();
-
-    private:
-        Q_DISABLE_COPY( EffectFrameImpl ) // As we need to use Qt slots we cannot copy this class
-        void align( QRect &geometry ); // positions geometry around m_point respecting m_alignment
-        void autoResize(); // Auto-resize if not a static size
-
-        EffectFrameStyle m_style;
-        Plasma::FrameSvg m_frame; // TODO: share between all EffectFrames
-        Plasma::FrameSvg m_selection;
-
-        // Position
-        bool m_static;
-        QPoint m_point;
-        Qt::Alignment m_alignment;
-        QRect m_geometry;
-
-        // Contents
-        QString m_text;
-        QFont m_font;
-        QPixmap m_icon;
-        QSize m_iconSize;
-        QRect m_selectionGeometry;
-
-        Scene::EffectFrame* m_sceneFrame;
-        GLShader* m_shader;
+    virtual void free();
+    virtual void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
+    virtual Qt::Alignment alignment() const;
+    virtual void setAlignment(Qt::Alignment alignment);
+    virtual const QFont& font() const;
+    virtual void setFont(const QFont& font);
+    virtual const QRect& geometry() const;
+    virtual void setGeometry(const QRect& geometry, bool force = false);
+    virtual const QPixmap& icon() const;
+    virtual void setIcon(const QPixmap& icon);
+    virtual const QSize& iconSize() const;
+    virtual void setIconSize(const QSize& size);
+    virtual void setPosition(const QPoint& point);
+    virtual const QString& text() const;
+    virtual void setText(const QString& text);
+    EffectFrameStyle style() const {
+        return m_style;
     };
+    Plasma::FrameSvg& frame() {
+        return m_frame;
+    }
+    bool isStatic() const {
+        return m_static;
+    };
+    void finalRender(QRegion region, double opacity, double frameOpacity) const;
+    virtual void setShader(GLShader* shader) {
+        m_shader = shader;
+    }
+    virtual GLShader* shader() const {
+        return m_shader;
+    }
+    virtual void setSelection(const QRect& selection);
+    const QRect& selection() const {
+        return m_selectionGeometry;
+    }
+    Plasma::FrameSvg& selectionFrame() {
+        return m_selection;
+    }
+
+private Q_SLOTS:
+    void plasmaThemeChanged();
+
+private:
+    Q_DISABLE_COPY(EffectFrameImpl)   // As we need to use Qt slots we cannot copy this class
+    void align(QRect &geometry);   // positions geometry around m_point respecting m_alignment
+    void autoResize(); // Auto-resize if not a static size
+
+    EffectFrameStyle m_style;
+    Plasma::FrameSvg m_frame; // TODO: share between all EffectFrames
+    Plasma::FrameSvg m_selection;
+
+    // Position
+    bool m_static;
+    QPoint m_point;
+    Qt::Alignment m_alignment;
+    QRect m_geometry;
+
+    // Contents
+    QString m_text;
+    QFont m_font;
+    QPixmap m_icon;
+    QSize m_iconSize;
+    QRect m_selectionGeometry;
+
+    Scene::EffectFrame* m_sceneFrame;
+    GLShader* m_shader;
+};
 
 inline
 QList<EffectWindow*> EffectsHandlerImpl::elevatedWindows() const
-    {
+{
     return elevated_windows;
-    }
+}
 
 
 inline
-EffectWindowGroupImpl::EffectWindowGroupImpl( Group* g )
-    : group( g )
-    {
-    }
+EffectWindowGroupImpl::EffectWindowGroupImpl(Group* g)
+    : group(g)
+{
+}
 
-EffectWindow* effectWindow( Toplevel* w );
-EffectWindow* effectWindow( Scene::Window* w );
+EffectWindow* effectWindow(Toplevel* w);
+EffectWindow* effectWindow(Scene::Window* w);
 
 inline
 const Scene::Window* EffectWindowImpl::sceneWindow() const
-    {
+{
     return sw;
-    }
+}
 
 inline
 Scene::Window* EffectWindowImpl::sceneWindow()
-    {
+{
     return sw;
-    }
+}
 
 inline
 const Toplevel* EffectWindowImpl::window() const
-    {
+{
     return toplevel;
-    }
+}
 
 inline
 Toplevel* EffectWindowImpl::window()
-    {
+{
     return toplevel;
-    }
+}
 
 
 } // namespace

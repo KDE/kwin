@@ -24,18 +24,18 @@ namespace KWin
 
 class TestThumbnailEffect
     : public Effect
-    {
-    public:
-        TestThumbnailEffect();
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void windowActivated( EffectWindow* w );
-        virtual void windowDamaged( EffectWindow* w, const QRect& damage );
-        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void windowClosed( EffectWindow* w );
-    private:
-        QRect thumbnailRect() const;
-        EffectWindow* active_window;
-    };
+{
+public:
+    TestThumbnailEffect();
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void windowActivated(EffectWindow* w);
+    virtual void windowDamaged(EffectWindow* w, const QRect& damage);
+    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
+    virtual void windowClosed(EffectWindow* w);
+private:
+    QRect thumbnailRect() const;
+    EffectWindow* active_window;
+};
 
 } // namespace
 

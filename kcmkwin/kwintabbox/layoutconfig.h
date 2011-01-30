@@ -32,22 +32,22 @@ class TabBoxConfig;
 class LayoutConfigPrivate;
 
 class LayoutConfig : public QWidget
-    {
+{
     Q_OBJECT
 
-    public:
-        LayoutConfig( QWidget* parent = NULL );
-        ~LayoutConfig();
+public:
+    LayoutConfig(QWidget* parent = NULL);
+    ~LayoutConfig();
 
-        void setConfig( const TabBoxConfig& config );
-        TabBoxConfig& config() const;
+    void setConfig(const TabBoxConfig& config);
+    TabBoxConfig& config() const;
 
-    private slots:
-        void changed();
+private slots:
+    void changed();
 
-    private:
-        LayoutConfigPrivate* d;
-    };
+private:
+    LayoutConfigPrivate* d;
+};
 
 } // namespace TabBox
 } // namespace KWin

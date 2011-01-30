@@ -38,47 +38,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( showpaint, ShowPaintEffect )
+KWIN_EFFECT(showpaint, ShowPaintEffect)
 
 static QColor colors[] = { Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta,
-    Qt::yellow, Qt::gray };
+                           Qt::yellow, Qt::gray
+                         };
 
 ShowPaintEffect::ShowPaintEffect()
-    : color_index( 0 )
-    {
-    }
+    : color_index(0)
+{
+}
 
 ShowPaintEffect::~ShowPaintEffect()
 {
 }
 
-void ShowPaintEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
+void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
     painted = QRegion();
-    effects->paintScreen( mask, region, data );
+    effects->paintScreen(mask, region, data);
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing)
+    if (effects->compositingType() == OpenGLCompositing)
         paintGL();
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing)
+    if (effects->compositingType() == XRenderCompositing)
         paintXrender();
 #endif
-    if( ++color_index == sizeof( colors ) / sizeof( colors[ 0 ] ))
+    if (++color_index == sizeof(colors) / sizeof(colors[ 0 ]))
         color_index = 0;
-    }
+}
 
-void ShowPaintEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+void ShowPaintEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     painted |= region;
-    effects->paintWindow( w, mask, region, data );
-    }
+    effects->paintWindow(w, mask, region, data);
+}
 
 void ShowPaintEffect::paintGL()
-    {
+{
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
@@ -86,14 +87,14 @@ void ShowPaintEffect::paintGL()
     if (ShaderManager::instance()->isValid()) {
         ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
     }
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     QColor color = colors[ color_index ];
     color.setAlphaF(0.2);
     vbo->setColor(color);
     QVector<float> verts;
-    verts.reserve(painted.rects().count()*12);
-    foreach (const QRect &r, painted.rects()) {
+    verts.reserve(painted.rects().count() * 12);
+    foreach (const QRect & r, painted.rects()) {
         verts << r.x() + r.width() << r.y();
         verts << r.x() << r.y();
         verts << r.x() << r.y() + r.height();
@@ -101,32 +102,32 @@ void ShowPaintEffect::paintGL()
         verts << r.x() + r.width() << r.y() + r.height();
         verts << r.x() + r.width() << r.y();
     }
-    vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+    vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
     vbo->render(GL_TRIANGLES);
     if (ShaderManager::instance()->isValid()) {
         ShaderManager::instance()->popShader();
     }
-    glDisable( GL_BLEND );
+    glDisable(GL_BLEND);
 #ifndef KWIN_HAVE_OPENGLES
     glPopAttrib();
 #endif
 #endif
-    }
+}
 
 void ShowPaintEffect::paintXrender()
-    {
+{
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderColor col;
     float alpha = 0.2;
     const QColor& color = colors[ color_index ];
-    col.alpha = int( alpha * 0xffff );
-    col.red = int( alpha * 0xffff * color.red() / 255 );
-    col.green = int( alpha * 0xffff * color.green() / 255 );
-    col.blue= int( alpha * 0xffff * color.blue() / 255 );
-    foreach( const QRect &r, painted.rects())
-        XRenderFillRectangle( display(), PictOpOver, effects->xrenderBufferPicture(),
-            &col, r.x(), r.y(), r.width(), r.height());
+    col.alpha = int(alpha * 0xffff);
+    col.red = int(alpha * 0xffff * color.red() / 255);
+    col.green = int(alpha * 0xffff * color.green() / 255);
+    col.blue = int(alpha * 0xffff * color.blue() / 255);
+    foreach (const QRect & r, painted.rects())
+    XRenderFillRectangle(display(), PictOpOver, effects->xrenderBufferPicture(),
+                         &col, r.x(), r.y(), r.width(), r.height());
 #endif
-    }
+}
 
 } // namespace

@@ -40,82 +40,78 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( trackmouse, TrackMouseEffect )
+KWIN_EFFECT(trackmouse, TrackMouseEffect)
 
 const int STARS = 5;
 const int DIST = 50;
 
 TrackMouseEffect::TrackMouseEffect()
-    : active( false )
-    , angle( 0 )
-    , texture( NULL )
-    {
+    : active(false)
+    , angle(0)
+    , texture(NULL)
+{
     mousePolling = false;
-    actionCollection = new KActionCollection( this );
-    action = static_cast< KAction* >( actionCollection->addAction( "TrackMouse" ));
-    action->setText( i18n( "Track mouse" ) );
-    action->setGlobalShortcut( KShortcut() );
+    actionCollection = new KActionCollection(this);
+    action = static_cast< KAction* >(actionCollection->addAction("TrackMouse"));
+    action->setText(i18n("Track mouse"));
+    action->setGlobalShortcut(KShortcut());
 
-    connect( action, SIGNAL( triggered( bool ) ), this, SLOT( toggle() ) );
-    reconfigure( ReconfigureAll );
-    }
+    connect(action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    reconfigure(ReconfigureAll);
+}
 
 TrackMouseEffect::~TrackMouseEffect()
-    {
-    if( mousePolling )
+{
+    if (mousePolling)
         effects->stopMousePolling();
     delete texture;
-    }
+}
 
-void TrackMouseEffect::reconfigure( ReconfigureFlags )
-    {
-    KConfigGroup conf = effects->effectConfig( "TrackMouse" );
-    bool shift = conf.readEntry( "Shift", false );
-    bool alt = conf.readEntry( "Alt", false );
-    bool control = conf.readEntry( "Control", true );
-    bool meta = conf.readEntry( "Meta", true );
+void TrackMouseEffect::reconfigure(ReconfigureFlags)
+{
+    KConfigGroup conf = effects->effectConfig("TrackMouse");
+    bool shift = conf.readEntry("Shift", false);
+    bool alt = conf.readEntry("Alt", false);
+    bool control = conf.readEntry("Control", true);
+    bool meta = conf.readEntry("Meta", true);
     modifier = 0;
-    if( meta )
+    if (meta)
         modifier |= Qt::MetaModifier;
-    if( control )
+    if (control)
         modifier |= Qt::ControlModifier;
-    if( alt )
+    if (alt)
         modifier |= Qt::AltModifier;
-    if( shift )
+    if (shift)
         modifier |= Qt::ShiftModifier;
-    if( modifier != 0 && action != NULL )
-        {
-        if( !mousePolling )
+    if (modifier != 0 && action != NULL) {
+        if (!mousePolling)
             effects->startMousePolling();
         mousePolling = true;
-        }
-    else if( action != NULL )
-        {
-        if( mousePolling )
+    } else if (action != NULL) {
+        if (mousePolling)
             effects->stopMousePolling();
         mousePolling = false;
-        }
     }
+}
 
-void TrackMouseEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( active ) {
+void TrackMouseEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (active) {
         QTime t = QTime::currentTime();
         angle = ((t.second() % 4) * 90.0) + (t.msec() / 1000.0 * 90.0);
     }
-    effects->prePaintScreen( data, time );
-    }
+    effects->prePaintScreen(data, time);
+}
 
-void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    effects->paintScreen( mask, region, data ); // paint normal screen
-    if( !active )
+void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    effects->paintScreen(mask, region, data);   // paint normal screen
+    if (!active)
         return;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( texture )
-        {
+    if (texture) {
 #ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif
         bool useShader = false;
         if (ShaderManager::instance()->isValid()) {
@@ -123,15 +119,14 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         }
         texture->bind();
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        for( int i = 0;
-             i < STARS;
-             ++i )
-            {
-            QRect r = starRect( i );
-            texture->render( region, r );
-            }
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        for (int i = 0;
+                i < STARS;
+                ++i) {
+            QRect r = starRect(i);
+            texture->render(region, r);
+        }
         texture->unbind();
         glDisable(GL_BLEND);
         if (ShaderManager::instance()->isValid()) {
@@ -140,85 +135,78 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 #ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
 #endif
-        }
-#endif
     }
+#endif
+}
 
 void TrackMouseEffect::postPaintScreen()
-    {
-    if( active )
-        {
-        for( int i = 0;
-             i < STARS;
-             ++i )
-            effects->addRepaint( starRect( i ));
-        }
-    effects->postPaintScreen();
+{
+    if (active) {
+        for (int i = 0;
+                i < STARS;
+                ++i)
+            effects->addRepaint(starRect(i));
     }
+    effects->postPaintScreen();
+}
 
 void TrackMouseEffect::toggle()
-    {
-    if( mousePolling )
+{
+    if (mousePolling)
         return;
-    if( !active )
-        {
-        if( texture == NULL )
+    if (!active) {
+        if (texture == NULL)
             loadTexture();
-        if( texture == NULL )
+        if (texture == NULL)
             return;
         active = true;
         angle = 0;
-        }
-    else
+    } else
         active = false;
-    for( int i = 0; i < STARS; ++i )
-        effects->addRepaint( starRect( i ));
-    }
+    for (int i = 0; i < STARS; ++i)
+        effects->addRepaint(starRect(i));
+}
 
-void TrackMouseEffect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons,
-    Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
-    {
-    if( modifier != 0 && modifiers == modifier )
-        {
-        if( !active )
-            {
-            if( texture == NULL )
+void TrackMouseEffect::mouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
+                                    Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
+{
+    if (modifier != 0 && modifiers == modifier) {
+        if (!active) {
+            if (texture == NULL)
                 loadTexture();
-            if( texture == NULL )
+            if (texture == NULL)
                 return;
             active = true;
             angle = 0;
-            }
-        for( int i = 0; i < STARS; ++i )
-            effects->addRepaint( starRect( i ));
         }
-    else if( active )
-        {
-        for( int i = 0; i < STARS; ++i )
-            effects->addRepaint( starRect( i ));
+        for (int i = 0; i < STARS; ++i)
+            effects->addRepaint(starRect(i));
+    } else if (active) {
+        for (int i = 0; i < STARS; ++i)
+            effects->addRepaint(starRect(i));
         active = false;
-        }
     }
+}
 
-QRect TrackMouseEffect::starRect( int num ) const
-    {
+QRect TrackMouseEffect::starRect(int num) const
+{
     int a = angle + 360 / STARS * num;
-    int x = cursorPos().x() + int( DIST * cos( a * ( 2 * M_PI / 360 )));
-    int y = cursorPos().y() + int( DIST * sin( a * ( 2 * M_PI / 360 )));
-    return QRect( QPoint( x - textureSize.width() / 2,
-        y - textureSize.height() / 2 ), textureSize );
-    }
+    int x = cursorPos().x() + int(DIST * cos(a * (2 * M_PI / 360)));
+    int y = cursorPos().y() + int(DIST * sin(a * (2 * M_PI / 360)));
+    return QRect(QPoint(x - textureSize.width() / 2,
+                        y - textureSize.height() / 2), textureSize);
+}
 
 void TrackMouseEffect::loadTexture()
-    {
+{
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    QString file = KGlobal::dirs()->findResource( "appdata", "trackmouse.png" );
-    if( file.isEmpty())
+    QString file = KGlobal::dirs()->findResource("appdata", "trackmouse.png");
+    if (file.isEmpty())
         return;
-    QImage im( file );
-    texture = new GLTexture( im );
+    QImage im(file);
+    texture = new GLTexture(im);
     textureSize = im.size();
 #endif
-    }
+}
 
 } // namespace

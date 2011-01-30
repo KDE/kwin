@@ -30,22 +30,22 @@ class BoxSwitchEffect;
 
 class BoxSwitchEffectProxy
 {
-    public:
-        BoxSwitchEffectProxy( BoxSwitchEffect* effect );
-        ~BoxSwitchEffectProxy();
+public:
+    BoxSwitchEffectProxy(BoxSwitchEffect* effect);
+    ~BoxSwitchEffectProxy();
 
-        /**
-        * Activates the BoxSwitch Effect. It will get deactivated in tabBoxClosed()
-        * @param mode The TabBoxMode for which it should be activated.
-        * @param animate switch will be animated
-        * @param showText the caption of the window will be shown
-        * @param positioningFactor where to put the frame: 0.0 == top, 1.0 == bottom
-        */
-        void activate( int mode, bool animate, bool showText, float positioningFactor );
-        void paintWindowsBox( const QRegion& region);
+    /**
+    * Activates the BoxSwitch Effect. It will get deactivated in tabBoxClosed()
+    * @param mode The TabBoxMode for which it should be activated.
+    * @param animate switch will be animated
+    * @param showText the caption of the window will be shown
+    * @param positioningFactor where to put the frame: 0.0 == top, 1.0 == bottom
+    */
+    void activate(int mode, bool animate, bool showText, float positioningFactor);
+    void paintWindowsBox(const QRegion& region);
 
-    private:
-        BoxSwitchEffect* m_effect;
+private:
+    BoxSwitchEffect* m_effect;
 };
 
 } // namespace

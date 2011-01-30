@@ -30,24 +30,24 @@ namespace KWin
 
 class VideoRecordEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        VideoRecordEffect();
-        virtual ~VideoRecordEffect();
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-    private slots:
-        void toggleRecording();
-    private:
-        void startRecording();
-        void stopRecording();
-        void autoincFilename(QString & url);
-        captury_config_t config;
-        captury_t* client;
-        QRect area;
-        QRegion capture_region;
-    };
+public:
+    VideoRecordEffect();
+    virtual ~VideoRecordEffect();
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+private slots:
+    void toggleRecording();
+private:
+    void startRecording();
+    void stopRecording();
+    void autoincFilename(QString & url);
+    captury_config_t config;
+    captury_t* client;
+    QRect area;
+    QRegion capture_region;
+};
 
 } // namespace
 

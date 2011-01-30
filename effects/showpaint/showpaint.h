@@ -28,18 +28,18 @@ namespace KWin
 
 class ShowPaintEffect
     : public Effect
-    {
-    public:
-        ShowPaintEffect();
-        ~ShowPaintEffect();
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-    private:
-        void paintGL();
-        void paintXrender();
-        QRegion painted; // what's painted in one pass
-        int color_index;
-    };
+{
+public:
+    ShowPaintEffect();
+    ~ShowPaintEffect();
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+private:
+    void paintGL();
+    void paintXrender();
+    QRegion painted; // what's painted in one pass
+    int color_index;
+};
 
 } // namespace
 

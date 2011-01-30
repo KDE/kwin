@@ -31,36 +31,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( demo_liquid, LiquidEffect )
-KWIN_EFFECT_SUPPORTED( demo_liquid, LiquidEffect::supported() )
+KWIN_EFFECT(demo_liquid, LiquidEffect)
+KWIN_EFFECT_SUPPORTED(demo_liquid, LiquidEffect::supported())
 
 
 LiquidEffect::LiquidEffect() : Effect()
-    {
+{
     mTexture = 0;
     mRenderTarget = 0;
     mShader = 0;
 
     mTime = 0.0f;
     mValid = loadData();
-    }
+}
 LiquidEffect::~LiquidEffect()
-    {
+{
     delete mTexture;
     delete mRenderTarget;
     delete mShader;
-    }
+}
 
 bool LiquidEffect::loadData()
-    {
+{
     // If NPOT textures are not supported, use nearest power-of-two sized
     //  texture. It wastes memory, but it's possible to support systems without
     //  NPOT textures that way
     int texw = displayWidth();
     int texh = displayHeight();
-    if( !GLTexture::NPOTTextureSupported() )
-    {
-        kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
+    if (!GLTexture::NPOTTextureSupported()) {
+        kWarning(1212) << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
         texh = nearestPowerOfTwo(texh);
     }
@@ -70,19 +69,17 @@ bool LiquidEffect::loadData()
     mTexture->setWrapMode(GL_CLAMP);
 
     mRenderTarget = new GLRenderTarget(mTexture);
-    if( !mRenderTarget->valid() )
+    if (!mRenderTarget->valid())
         return false;
 
     QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/liquid.frag");
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/liquid.vert");
-    if(fragmentshader.isEmpty() || vertexshader.isEmpty())
-    {
+    if (fragmentshader.isEmpty() || vertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;
     }
     mShader = new GLShader(vertexshader, fragmentshader);
-    if(!mShader->isValid())
-    {
+    if (!mShader->isValid()) {
         kError(1212) << "The shader failed to load!" << endl;
         return false;
     }
@@ -93,38 +90,36 @@ bool LiquidEffect::loadData()
     mShader->unbind();
 
     return true;
-    }
+}
 
 bool LiquidEffect::supported()
-    {
+{
     return GLRenderTarget::supported() &&
-            GLShader::fragmentShaderSupported() &&
-            (effects->compositingType() == OpenGLCompositing);
-    }
+           GLShader::fragmentShaderSupported() &&
+           (effects->compositingType() == OpenGLCompositing);
+}
 
 
-void LiquidEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void LiquidEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
     mTime += time / 1000.0f;
-    if(mValid)
-        {
+    if (mValid) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(mRenderTarget);
-        }
-
-    effects->prePaintScreen(data, time);
     }
 
+    effects->prePaintScreen(data, time);
+}
+
 void LiquidEffect::postPaintScreen()
-    {
+{
     // Call the next effect.
     effects->postPaintScreen();
 
-    if(mValid)
-        {
+    if (mValid) {
         // Disable render texture
-        assert( effects->popRenderTarget() == mRenderTarget );
+        assert(effects->popRenderTarget() == mRenderTarget);
         mTexture->bind();
 
         // Use the shader
@@ -133,10 +128,10 @@ void LiquidEffect::postPaintScreen()
 
         // Render fullscreen quad with screen contents
         glBegin(GL_QUADS);
-            glVertex2f(0.0, displayHeight());
-            glVertex2f(displayWidth(), displayHeight());
-            glVertex2f(displayWidth(), 0.0);
-            glVertex2f(0.0, 0.0);
+        glVertex2f(0.0, displayHeight());
+        glVertex2f(displayWidth(), displayHeight());
+        glVertex2f(displayWidth(), 0.0);
+        glVertex2f(0.0, 0.0);
         glEnd();
 
         mShader->unbind();
@@ -144,9 +139,9 @@ void LiquidEffect::postPaintScreen()
 
         // Make sure the animation continues
         effects->addRepaintFull();
-        }
-
     }
+
+}
 
 
 } // namespace

@@ -20,20 +20,20 @@ namespace KWin
 
 class ShiftWorkspaceUpEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        ShiftWorkspaceUpEffect();
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-    private slots:
-        void tick();
-    private:
-        QTimer timer;
-        bool up;
-        int diff;
-    };
+public:
+    ShiftWorkspaceUpEffect();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+private slots:
+    void tick();
+private:
+    QTimer timer;
+    bool up;
+    int diff;
+};
 
 } // namespace
 

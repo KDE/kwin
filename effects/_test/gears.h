@@ -33,28 +33,28 @@ namespace KWin
 
 class GearsEffect : public CubeInsideEffect
 {
-    public:
-        GearsEffect();
-        ~GearsEffect();
+public:
+    GearsEffect();
+    ~GearsEffect();
 
-        virtual void paint();
-        virtual void setActive( bool active );
-        virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-        virtual void postPaintScreen();
+    virtual void paint();
+    virtual void setActive(bool active);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
 
-        static bool supported();
-    private:
-        void gear( float inner_radius, float outer_radius, float width, int teeth, float tooth_depth );
-        void paintGears();
-        void initGears();
-        void endGears();
+    static bool supported();
+private:
+    void gear(float inner_radius, float outer_radius, float width, int teeth, float tooth_depth);
+    void paintGears();
+    void initGears();
+    void endGears();
 
-        bool m_active;
-        GLuint m_gear1;
-        GLuint m_gear2;
-        GLuint m_gear3;
-        float m_contentRotation;
-        float m_angle;
+    bool m_active;
+    GLuint m_gear1;
+    GLuint m_gear2;
+    GLuint m_gear3;
+    float m_contentRotation;
+    float m_angle;
 };
 
 } //namespace

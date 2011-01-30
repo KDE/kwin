@@ -29,45 +29,44 @@ namespace KWin
 
 class SheetEffect
     : public Effect
-    {
-    public:
-        SheetEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
+{
+public:
+    SheetEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
 
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
+    virtual void windowAdded(EffectWindow* c);
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowDeleted(EffectWindow* c);
 
-        static bool supported();
-    private:
-        class WindowInfo;
-        typedef QMap< const EffectWindow*, WindowInfo > InfoMap;
-        bool isSheetWindow( EffectWindow* w );
-        InfoMap windows;
-        float duration;
-        int screenTime;
-    };
+    static bool supported();
+private:
+    class WindowInfo;
+    typedef QMap< const EffectWindow*, WindowInfo > InfoMap;
+    bool isSheetWindow(EffectWindow* w);
+    InfoMap windows;
+    float duration;
+    int screenTime;
+};
 
 class SheetEffect::WindowInfo
-    {
-    public:
-        WindowInfo()
-            : deleted( false )
-            , added( false )
-            , closed( false )
-            , parentY( 0 )
-            {
-            }
-        bool deleted;
-        bool added;
-        bool closed;
-        TimeLine timeLine;
-        int parentY;
-    };
+{
+public:
+    WindowInfo()
+        : deleted(false)
+        , added(false)
+        , closed(false)
+        , parentY(0) {
+    }
+    bool deleted;
+    bool added;
+    bool closed;
+    TimeLine timeLine;
+    int parentY;
+};
 
 } // namespace
 

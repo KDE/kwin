@@ -28,19 +28,19 @@ namespace KWin
 
 class ScaleInEffect
     : public Effect
-    {
-    public:
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        // TODO react also on virtual desktop changes
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-    private:
-        bool isScaleWindow ( EffectWindow* w );
-        QHash< const EffectWindow*, TimeLine > mTimeLineWindows;
-    };
+{
+public:
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
+    // TODO react also on virtual desktop changes
+    virtual void windowAdded(EffectWindow* c);
+    virtual void windowClosed(EffectWindow* c);
+private:
+    bool isScaleWindow(EffectWindow* w);
+    QHash< const EffectWindow*, TimeLine > mTimeLineWindows;
+};
 
 } // namespace
 

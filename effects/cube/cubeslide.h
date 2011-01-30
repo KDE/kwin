@@ -30,48 +30,47 @@ namespace KWin
 {
 class CubeSlideEffect
     : public Effect
-    {
-    public:
-        CubeSlideEffect();
-        ~CubeSlideEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void desktopChanged( int old );
-        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+{
+public:
+    CubeSlideEffect();
+    ~CubeSlideEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void desktopChanged(int old);
+    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
 
-        static bool supported();
-    private:
-        enum RotationDirection
-            {
-            Left,
-            Right,
-            Upwards,
-            Downwards
-            };
-        void paintSlideCube( int mask, QRegion region, ScreenPaintData& data );
-        void windowMovingChanged( float progress, RotationDirection direction );
-        bool cube_painting;
-        int front_desktop;
-        int painting_desktop;
-        int other_desktop;
-        bool firstDesktop;
-        TimeLine timeLine;
-        QQueue<RotationDirection> slideRotations;
-        QSet<EffectWindow*> panels;
-        QSet<EffectWindow*> stickyWindows;
-        bool dontSlidePanels;
-        bool dontSlideStickyWindows;
-        bool usePagerLayout;
-        int rotationDuration;
-        bool useWindowMoving;
-        bool windowMoving;
-        bool desktopChangedWhileMoving;
-        double progressRestriction;
+    static bool supported();
+private:
+    enum RotationDirection {
+        Left,
+        Right,
+        Upwards,
+        Downwards
     };
+    void paintSlideCube(int mask, QRegion region, ScreenPaintData& data);
+    void windowMovingChanged(float progress, RotationDirection direction);
+    bool cube_painting;
+    int front_desktop;
+    int painting_desktop;
+    int other_desktop;
+    bool firstDesktop;
+    TimeLine timeLine;
+    QQueue<RotationDirection> slideRotations;
+    QSet<EffectWindow*> panels;
+    QSet<EffectWindow*> stickyWindows;
+    bool dontSlidePanels;
+    bool dontSlideStickyWindows;
+    bool usePagerLayout;
+    int rotationDuration;
+    bool useWindowMoving;
+    bool windowMoving;
+    bool desktopChangedWhileMoving;
+    double progressRestriction;
+};
 }
 
 #endif

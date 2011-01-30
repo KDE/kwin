@@ -25,41 +25,41 @@ namespace KWin
 KWIN_EFFECT(dashboard, DashboardEffect)
 
 DashboardEffect::DashboardEffect()
-    : transformWindow( false )
-    , activateAnimation( false )
-    , deactivateAnimation( false )
-    {
+    : transformWindow(false)
+    , activateAnimation(false)
+    , deactivateAnimation(false)
+{
     // propagate that the effect is loaded
     propagate();
 
     // read settings
     reconfigure(ReconfigureAll);
-    }
+}
 
 DashboardEffect::~DashboardEffect()
-    {
+{
     unpropagate();
-    }
+}
 
 void DashboardEffect::propagate()
-    {
+{
     // TODO: better namespacing for atoms
-    atom = XInternAtom( display(), "_WM_EFFECT_KDE_DASHBOARD", false );
-    effects->registerPropertyType( atom, true );
+    atom = XInternAtom(display(), "_WM_EFFECT_KDE_DASHBOARD", false);
+    effects->registerPropertyType(atom, true);
 
     // TODO: maybe not the best way to propagate the loaded effect
     unsigned char dummy = 0;
-    XChangeProperty( display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1 );
-    }
+    XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
+}
 
 void DashboardEffect::unpropagate()
-    {
+{
     effects->registerPropertyType(atom, false);
     XDeleteProperty(display(), rootWindow(), atom);
-    }
+}
 
-void DashboardEffect::reconfigure( ReconfigureFlags )
-    {
+void DashboardEffect::reconfigure(ReconfigureFlags)
+{
     // read settings again
     KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
 
@@ -69,153 +69,132 @@ void DashboardEffect::reconfigure( ReconfigureFlags )
 
     blur = config.readEntry("Blur", false);
 
-    timeline.setDuration( animationTime( duration.toInt() ) );
-    }
+    timeline.setDuration(animationTime(duration.toInt()));
+}
 
-void DashboardEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( transformWindow && ( w != window ) && w->isManaged() && !isDashboard( w ) )
-        {
+void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (transformWindow && (w != window) && w->isManaged() && !isDashboard(w)) {
         brightnessDelta = (1 - (brightness.toDouble() / 100));
         saturationDelta = (1 - (saturation.toDouble() / 100));
 
         // dashboard active, transform other windows
         data.brightness *= (1 - (brightnessDelta * timeline.value()));
         data.saturation *= (1 - (saturationDelta * timeline.value()));
-        }
+    }
 
-    else if( transformWindow && ( w == window ) && w->isManaged() )
-        {
+    else if (transformWindow && (w == window) && w->isManaged()) {
         // transform dashboard
-        if ((timeline.value() * 2) <= 1)
-            {
+        if ((timeline.value() * 2) <= 1) {
             data.opacity *= timeline.value() * 2;
-            }
-        else
-            {
+        } else {
             data.opacity *= 1;
-            }
         }
-
-    effects->paintWindow( w, mask, region, data );
     }
 
-void DashboardEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( transformWindow )
-        {
-        if( activateAnimation )
-            timeline.addTime( time );
-        if( deactivateAnimation )
-            timeline.removeTime( time );
-        }
+    effects->paintWindow(w, mask, region, data);
+}
+
+void DashboardEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (transformWindow) {
+        if (activateAnimation)
+            timeline.addTime(time);
+        if (deactivateAnimation)
+            timeline.removeTime(time);
+    }
     effects->prePaintScreen(data, time);
-    }
+}
 
 void DashboardEffect::postPaintScreen()
-    {
-    if( transformWindow )
-        {
-        if( retransformWindow )
-            {
+{
+    if (transformWindow) {
+        if (retransformWindow) {
             retransformWindow = false;
             transformWindow = false;
             effects->addRepaintFull();
-            effects->setActiveFullScreenEffect( 0 );
-            }
+            effects->setActiveFullScreenEffect(0);
+        }
 
-        if( activateAnimation )
-            {
-            if( timeline.value() == 1.0 )
+        if (activateAnimation) {
+            if (timeline.value() == 1.0)
                 activateAnimation = false;
 
             effects->addRepaintFull();
-            }
+        }
 
-        if( deactivateAnimation )
-            {
-            if( timeline.value() == 0.0 )
-                {
+        if (deactivateAnimation) {
+            if (timeline.value() == 0.0) {
                 deactivateAnimation = false;
                 transformWindow = false;
-                effects->setActiveFullScreenEffect( 0 );
-                }
+                effects->setActiveFullScreenEffect(0);
+            }
 
             effects->addRepaintFull();
-            }
         }
+    }
 
     effects->postPaintScreen();
-    }
+}
 
-bool DashboardEffect::isDashboard ( EffectWindow *w )
-    {
-    if( w->windowClass() == "dashboard dashboard")
-        {
+bool DashboardEffect::isDashboard(EffectWindow *w)
+{
+    if (w->windowClass() == "dashboard dashboard") {
         return true;
-        }
-    else
-        {
+    } else {
         return false;
-        }
     }
+}
 
-void DashboardEffect::windowActivated( EffectWindow *w )
-    {
-    if( !w )
+void DashboardEffect::windowActivated(EffectWindow *w)
+{
+    if (!w)
         return;
 
     // apply effect on dashboard activation
-    if( isDashboard( w ) )
-        {
-        effects->setActiveFullScreenEffect( this );
+    if (isDashboard(w)) {
+        effects->setActiveFullScreenEffect(this);
         transformWindow = true;
         window = w;
 
-        if ( blur )
-            {
-            w->setData( WindowBlurBehindRole, w->geometry() );
-            }
+        if (blur) {
+            w->setData(WindowBlurBehindRole, w->geometry());
+        }
 
         effects->addRepaintFull();
-        }
-    else
-        {
-        if( transformWindow)
-            {
+    } else {
+        if (transformWindow) {
             retransformWindow = true;
             effects->addRepaintFull();
-            }
         }
-   }
+    }
+}
 
-void DashboardEffect::windowAdded( EffectWindow* w )
-    {
-    propertyNotify( w, atom );
+void DashboardEffect::windowAdded(EffectWindow* w)
+{
+    propertyNotify(w, atom);
 
-    if( isDashboard( w ) )
-        {
+    if (isDashboard(w)) {
         // Tell other windowAdded() effects to ignore this window
-        w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+        w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
 
         activateAnimation = true;
         deactivateAnimation = false;
-        timeline.setProgress( 0.0 );
+        timeline.setProgress(0.0);
 
         w->addRepaintFull();
-        }
     }
+}
 
-void DashboardEffect::windowClosed( EffectWindow* w )
-    {
-    propertyNotify( w, atom );
+void DashboardEffect::windowClosed(EffectWindow* w)
+{
+    propertyNotify(w, atom);
 
-    if( isDashboard( w ) )
-        {
+    if (isDashboard(w)) {
         // Tell other windowClosed() effects to ignore this window
-        w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
+        w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->addRepaintFull();
-        }
     }
+}
 
 } // namespace

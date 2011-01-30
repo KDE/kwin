@@ -32,191 +32,164 @@ namespace TabBox
 * LayoutConfigPrivate
 ***************************************************/
 class LayoutConfigPrivate
-    {
-    public:
-        LayoutConfigPrivate();
-        ~LayoutConfigPrivate() { }
+{
+public:
+    LayoutConfigPrivate();
+    ~LayoutConfigPrivate() { }
 
     TabBoxConfig config;
     Ui::LayoutConfigForm ui;
-    };
+};
 
 LayoutConfigPrivate::LayoutConfigPrivate()
-    {
-    }
+{
+}
 
 /***************************************************
 * LayoutConfig
 ***************************************************/
 LayoutConfig::LayoutConfig(QWidget* parent)
     : QWidget(parent)
-    {
+{
     d = new LayoutConfigPrivate;
-    d->ui.setupUi( this );
+    d->ui.setupUi(this);
 
     // init the item layout combo box
-    d->ui.itemLayoutCombo->addItem( i18n("Informative") );
-    d->ui.itemLayoutCombo->addItem( i18n("Compact") );
-    d->ui.itemLayoutCombo->addItem( i18n("Small Icons") );
-    d->ui.itemLayoutCombo->addItem( i18n("Large Icons") );
-    d->ui.itemLayoutCombo->addItem( i18n("Text Only") );
+    d->ui.itemLayoutCombo->addItem(i18n("Informative"));
+    d->ui.itemLayoutCombo->addItem(i18n("Compact"));
+    d->ui.itemLayoutCombo->addItem(i18n("Small Icons"));
+    d->ui.itemLayoutCombo->addItem(i18n("Large Icons"));
+    d->ui.itemLayoutCombo->addItem(i18n("Text Only"));
     // TODO: user defined layouts
 
     // init the selected item layout combo box
-    d->ui.selectedItemLayoutCombo->addItem( i18n("Informative") );
-    d->ui.selectedItemLayoutCombo->addItem( i18n("Compact") );
-    d->ui.selectedItemLayoutCombo->addItem( i18n("Small Icons") );
-    d->ui.selectedItemLayoutCombo->addItem( i18n("Large Icons") );
-    d->ui.selectedItemLayoutCombo->addItem( i18n("Text Only") );
+    d->ui.selectedItemLayoutCombo->addItem(i18n("Informative"));
+    d->ui.selectedItemLayoutCombo->addItem(i18n("Compact"));
+    d->ui.selectedItemLayoutCombo->addItem(i18n("Small Icons"));
+    d->ui.selectedItemLayoutCombo->addItem(i18n("Large Icons"));
+    d->ui.selectedItemLayoutCombo->addItem(i18n("Text Only"));
 
-    connect( d->ui.minWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.minHeightSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.itemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.layoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.selectedItemCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.selectedItemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()) );
-    connect( d->ui.selectedItemBox, SIGNAL(clicked(bool)), this, SLOT(changed()) );
+    connect(d->ui.minWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(d->ui.minHeightSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(d->ui.itemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(d->ui.layoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(d->ui.selectedItemCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(d->ui.selectedItemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(d->ui.selectedItemBox, SIGNAL(clicked(bool)), this, SLOT(changed()));
 
-    }
+}
 
 LayoutConfig::~LayoutConfig()
-    {
+{
     delete d;
-    }
+}
 
 TabBoxConfig& LayoutConfig::config() const
-    {
+{
     return d->config;
-    }
+}
 
-void LayoutConfig::setConfig( const KWin::TabBox::TabBoxConfig& config )
-    {
+void LayoutConfig::setConfig(const KWin::TabBox::TabBoxConfig& config)
+{
     d->config = config;
-    d->ui.selectedItemBox->setChecked( config.selectedItemViewPosition() != TabBoxConfig::NonePosition );
+    d->ui.selectedItemBox->setChecked(config.selectedItemViewPosition() != TabBoxConfig::NonePosition);
 
-    d->ui.layoutCombo->setCurrentIndex( config.layout() );
-    d->ui.selectedItemCombo->setCurrentIndex( config.selectedItemViewPosition() - 1 );
+    d->ui.layoutCombo->setCurrentIndex(config.layout());
+    d->ui.selectedItemCombo->setCurrentIndex(config.selectedItemViewPosition() - 1);
 
-    d->ui.minWidthSpinBox->setValue( config.minWidth() );
-    d->ui.minHeightSpinBox->setValue( config.minHeight() );
+    d->ui.minWidthSpinBox->setValue(config.minWidth());
+    d->ui.minHeightSpinBox->setValue(config.minHeight());
 
     // item layouts
-    if( config.layoutName().compare( "Default", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.itemLayoutCombo->setCurrentIndex( 0 );
-        }
-    else if( config.layoutName().compare( "Compact", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.itemLayoutCombo->setCurrentIndex( 1 );
-        }
-    else if( config.layoutName().compare( "Small Icons", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.itemLayoutCombo->setCurrentIndex( 2 );
-        }
-    else if( config.layoutName().compare( "Big Icons", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.itemLayoutCombo->setCurrentIndex( 3 );
-        }
-    else if( config.layoutName().compare( "Text", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.itemLayoutCombo->setCurrentIndex( 4 );
-        }
-    else
-        {
+    if (config.layoutName().compare("Default", Qt::CaseInsensitive) == 0) {
+        d->ui.itemLayoutCombo->setCurrentIndex(0);
+    } else if (config.layoutName().compare("Compact", Qt::CaseInsensitive) == 0) {
+        d->ui.itemLayoutCombo->setCurrentIndex(1);
+    } else if (config.layoutName().compare("Small Icons", Qt::CaseInsensitive) == 0) {
+        d->ui.itemLayoutCombo->setCurrentIndex(2);
+    } else if (config.layoutName().compare("Big Icons", Qt::CaseInsensitive) == 0) {
+        d->ui.itemLayoutCombo->setCurrentIndex(3);
+    } else if (config.layoutName().compare("Text", Qt::CaseInsensitive) == 0) {
+        d->ui.itemLayoutCombo->setCurrentIndex(4);
+    } else {
         // TODO: user defined layouts
-        }
-
-    if( config.selectedItemLayoutName().compare( "Default", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex( 0 );
-        }
-    else if( config.selectedItemLayoutName().compare( "Compact", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex( 1 );
-        }
-    else if( config.selectedItemLayoutName().compare( "Small Icons", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex( 2 );
-        }
-    else if( config.selectedItemLayoutName().compare( "Big Icons", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex( 3 );
-        }
-    else if( config.selectedItemLayoutName().compare( "Text", Qt::CaseInsensitive ) == 0 )
-        {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex( 4 );
-        }
-    else
-        {
-        // TODO: user defined layouts
-        }
-
     }
 
+    if (config.selectedItemLayoutName().compare("Default", Qt::CaseInsensitive) == 0) {
+        d->ui.selectedItemLayoutCombo->setCurrentIndex(0);
+    } else if (config.selectedItemLayoutName().compare("Compact", Qt::CaseInsensitive) == 0) {
+        d->ui.selectedItemLayoutCombo->setCurrentIndex(1);
+    } else if (config.selectedItemLayoutName().compare("Small Icons", Qt::CaseInsensitive) == 0) {
+        d->ui.selectedItemLayoutCombo->setCurrentIndex(2);
+    } else if (config.selectedItemLayoutName().compare("Big Icons", Qt::CaseInsensitive) == 0) {
+        d->ui.selectedItemLayoutCombo->setCurrentIndex(3);
+    } else if (config.selectedItemLayoutName().compare("Text", Qt::CaseInsensitive) == 0) {
+        d->ui.selectedItemLayoutCombo->setCurrentIndex(4);
+    } else {
+        // TODO: user defined layouts
+    }
+
+}
+
 void LayoutConfig::changed()
-    {
+{
     // it's actually overkill but we just sync all options
-    d->config.setMinWidth( d->ui.minWidthSpinBox->value() );
-    d->config.setMinHeight( d->ui.minHeightSpinBox->value() );
-    d->config.setLayout( TabBoxConfig::LayoutMode( d->ui.layoutCombo->currentIndex() ) );
+    d->config.setMinWidth(d->ui.minWidthSpinBox->value());
+    d->config.setMinHeight(d->ui.minHeightSpinBox->value());
+    d->config.setLayout(TabBoxConfig::LayoutMode(d->ui.layoutCombo->currentIndex()));
 
     QString layout;
-    switch( d->ui.itemLayoutCombo->currentIndex() )
-        {
+    switch(d->ui.itemLayoutCombo->currentIndex()) {
+    case 0:
+        layout = "Default";
+        break;
+    case 1:
+        layout = "Compact";
+        break;
+    case 2:
+        layout = "Small Icons";
+        break;
+    case 3:
+        layout = "Big Icons";
+        break;
+    case 4:
+        layout = "Text";
+        break;
+    default:
+        // TODO: user defined layouts
+        break;
+    }
+    d->config.setLayoutName(layout);
+
+    if (d->ui.selectedItemBox->isChecked()) {
+        d->config.setSelectedItemViewPosition(TabBoxConfig::SelectedItemViewPosition(
+                d->ui.selectedItemCombo->currentIndex() + 1));
+        QString selectedLayout;
+        switch(d->ui.selectedItemLayoutCombo->currentIndex()) {
         case 0:
-            layout = "Default";
+            selectedLayout = "Default";
             break;
         case 1:
-            layout = "Compact";
+            selectedLayout = "Compact";
             break;
         case 2:
-            layout = "Small Icons";
+            selectedLayout = "Small Icons";
             break;
         case 3:
-            layout = "Big Icons";
+            selectedLayout = "Big Icons";
             break;
         case 4:
-            layout = "Text";
+            selectedLayout = "Text";
             break;
         default:
             // TODO: user defined layouts
             break;
         }
-    d->config.setLayoutName( layout );
-
-    if( d->ui.selectedItemBox->isChecked() )
-        {
-        d->config.setSelectedItemViewPosition( TabBoxConfig::SelectedItemViewPosition(
-                                                d->ui.selectedItemCombo->currentIndex() + 1) );
-        QString selectedLayout;
-        switch( d->ui.selectedItemLayoutCombo->currentIndex() )
-            {
-            case 0:
-                selectedLayout = "Default";
-                break;
-            case 1:
-                selectedLayout = "Compact";
-                break;
-            case 2:
-                selectedLayout = "Small Icons";
-                break;
-            case 3:
-                selectedLayout = "Big Icons";
-                break;
-            case 4:
-                selectedLayout = "Text";
-                break;
-            default:
-                // TODO: user defined layouts
-                break;
-            }
-        d->config.setSelectedItemLayoutName( selectedLayout );
-        }
-    else
-        {
-        d->config.setSelectedItemViewPosition( TabBoxConfig::NonePosition );
-        }
+        d->config.setSelectedItemLayoutName(selectedLayout);
+    } else {
+        d->config.setSelectedItemViewPosition(TabBoxConfig::NonePosition);
     }
+}
 
 } // namespace KWin
 } // namespace TabBox

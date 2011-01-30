@@ -33,25 +33,25 @@ namespace KWin
 class MouseMarkEffectConfigForm : public QWidget, public Ui::MouseMarkEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit MouseMarkEffectConfigForm(QWidget* parent);
+public:
+    explicit MouseMarkEffectConfigForm(QWidget* parent);
 };
 
 class MouseMarkEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit MouseMarkEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        virtual ~MouseMarkEffectConfig();
+public:
+    explicit MouseMarkEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~MouseMarkEffectConfig();
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        MouseMarkEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    MouseMarkEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

@@ -56,33 +56,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
-    KWIN_EFFECT_CONFIG_SINGLE( boxswitch, BoxSwitchEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( dashboard, DashboardEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( desktopgrid, DesktopGridEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( diminactive, DimInactiveEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( magiclamp, MagicLampEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( presentwindows, PresentWindowsEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( resize, ResizeEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( showfps, ShowFpsEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( translucency, TranslucencyEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( thumbnailaside, ThumbnailAsideEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( zoom, ZoomEffectConfig )
+KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
+                            KWIN_EFFECT_CONFIG_SINGLE(boxswitch, BoxSwitchEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(dashboard, DashboardEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(desktopgrid, DesktopGridEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(diminactive, DimInactiveEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(magiclamp, MagicLampEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(presentwindows, PresentWindowsEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(resize, ResizeEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(showfps, ShowFpsEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(translucency, TranslucencyEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(thumbnailaside, ThumbnailAsideEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(zoom, ZoomEffectConfig)
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( flipswitch, FlipSwitchEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( glide, GlideEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( lookingglass, LookingGlassEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( magnifier, MagnifierEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( mousemark, MouseMarkEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
+                            KWIN_EFFECT_CONFIG_SINGLE(blur, BlurEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(coverswitch, CoverSwitchEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(cube, CubeEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(cubeslide, CubeSlideEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(flipswitch, FlipSwitchEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(glide, GlideEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(invert, InvertEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(lookingglass, LookingGlassEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(magnifier, MagnifierEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(mousemark, MouseMarkEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(trackmouse, TrackMouseEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(wobblywindows, WobblyWindowsEffectConfig)
 #endif
-    )
+                           )
 
 } // namespace

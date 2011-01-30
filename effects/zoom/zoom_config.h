@@ -31,28 +31,28 @@ namespace KWin
 {
 
 class ZoomEffectConfigForm : public QWidget, public Ui::ZoomEffectConfigForm
-    {
+{
     Q_OBJECT
-    public:
-        explicit ZoomEffectConfigForm(QWidget* parent = 0);
-    };
+public:
+    explicit ZoomEffectConfigForm(QWidget* parent = 0);
+};
 
 class ZoomEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit ZoomEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        virtual ~ZoomEffectConfig();
+public:
+    explicit ZoomEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~ZoomEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        ZoomEffectConfigForm* m_ui;
-        enum MouseTracking { MouseCentred = 0, MouseProportional = 1, MouseDisabled = 2 };
-    };
+private:
+    ZoomEffectConfigForm* m_ui;
+    enum MouseTracking { MouseCentred = 0, MouseProportional = 1, MouseDisabled = 2 };
+};
 
 } // namespace
 

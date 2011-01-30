@@ -27,18 +27,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class KillWindow 
-    {
-    public:
+class KillWindow
+{
+public:
 
-        KillWindow( Workspace* ws );
-        ~KillWindow();
+    KillWindow(Workspace* ws);
+    ~KillWindow();
 
-        void start();
+    void start();
 
-    private:
-        Workspace* workspace;
-    };
+private:
+    Workspace* workspace;
+};
 
 } // namespace
 

@@ -41,34 +41,34 @@ namespace Chelate
   * A class used to store data about each chelate rule.
   */
 class ChelateProxy
-    {
-    private:
-        QStringList on;
-        QScriptValueList connectors;
-        QScriptValue filter;
-        QScriptValue action;
+{
+private:
+    QStringList on;
+    QScriptValueList connectors;
+    QScriptValue filter;
+    QScriptValue action;
 
-        int id;
-        QScriptEngine* engine;
+    int id;
+    QScriptEngine* engine;
 
-    public:
-        void setAction(QScriptValue);
-        void setFilter(QScriptValue);
-        void setEventStrings(QStringList);
-        void setConnectors(QScriptValueList);
-        void setEngine(QScriptEngine*);
-        void setId(int);
+public:
+    void setAction(QScriptValue);
+    void setFilter(QScriptValue);
+    void setEventStrings(QStringList);
+    void setConnectors(QScriptValueList);
+    void setEngine(QScriptEngine*);
+    void setId(int);
 
-        QScriptValue getAction();
-        QScriptValue getFilter();
+    QScriptValue getAction();
+    QScriptValue getFilter();
 
-        static QList<ChelateProxy*> chMap;
+    static QList<ChelateProxy*> chMap;
 
-        void processAll();
-        void process(int);
+    void processAll();
+    void process(int);
 
-        ChelateProxy();
-    };
+    ChelateProxy();
+};
 
 QScriptValue scanner(QScriptContext*, QScriptEngine*);
 QScriptValue rule(QScriptContext*, QScriptEngine*);

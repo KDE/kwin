@@ -28,37 +28,35 @@ namespace KWin
 
 const int margin = 5;
 
-DecorationDelegate::DecorationDelegate( QObject* parent )
-    : QStyledItemDelegate( parent )
-    {
-    }
+DecorationDelegate::DecorationDelegate(QObject* parent)
+    : QStyledItemDelegate(parent)
+{
+}
 
 DecorationDelegate::~DecorationDelegate()
-    {
-    }
+{
+}
 
-void DecorationDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
-    {
+void DecorationDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
     // highlight selected item
-    QApplication::style()->drawControl( QStyle::CE_ItemViewItem, &option, painter );
+    QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &option, painter);
 
-    QPixmap pixmap = index.model()->data( index, DecorationModel::PixmapRole ).value<QPixmap>();
+    QPixmap pixmap = index.model()->data(index, DecorationModel::PixmapRole).value<QPixmap>();
 
-    const QSize previewArea = option.rect.size() - QSize( 2*margin, 2*margin );
-    if( pixmap.isNull() || pixmap.size() != previewArea )
-        {
-        emit regeneratePreview( static_cast< const QSortFilterProxyModel* >( index.model() )->mapToSource( index ),
-                                previewArea );
-        }
-    else
-        painter->drawPixmap( option.rect.topLeft() + QPoint( margin, margin ), pixmap );
-    }
+    const QSize previewArea = option.rect.size() - QSize(2 * margin, 2 * margin);
+    if (pixmap.isNull() || pixmap.size() != previewArea) {
+        emit regeneratePreview(static_cast< const QSortFilterProxyModel* >(index.model())->mapToSource(index),
+                               previewArea);
+    } else
+        painter->drawPixmap(option.rect.topLeft() + QPoint(margin, margin), pixmap);
+}
 
-QSize DecorationDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
-    {
-    Q_UNUSED( option )
-    Q_UNUSED( index )
-    return QSize( 450, 150 );
-    }
+QSize DecorationDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    Q_UNUSED(option)
+    Q_UNUSED(index)
+    return QSize(450, 150);
+}
 
 } // namespace KWin

@@ -40,103 +40,102 @@ namespace KWin
 
 class BoxSwitchEffect
     : public Effect
-    {
-    public:
-        BoxSwitchEffect();
-        ~BoxSwitchEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+{
+public:
+    BoxSwitchEffect();
+    ~BoxSwitchEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
-        virtual void windowInputMouseEvent( Window w, QEvent* e );
-        virtual void windowDamaged( EffectWindow* w, const QRect& damage );
-        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void tabBoxAdded( int mode );
-        virtual void tabBoxClosed();
-        virtual void tabBoxUpdated();
-        virtual void windowClosed( EffectWindow* w );
-        virtual void* proxy();
-        void activateFromProxy( int mode, bool animate, bool showText, float positioningFactor );
-        void paintWindowsBox( const QRegion& region );
-    private:
-        class ItemInfo;
-        void setActive();
-        void setInactive();
-        void moveResizeInputWindow( int x, int y, int width, int height );
-        void calculateFrameSize();
-        void calculateItemSizes();
-        void setSelectedWindow( EffectWindow* w );
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowDamaged(EffectWindow* w, const QRect& damage);
+    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
+    virtual void tabBoxAdded(int mode);
+    virtual void tabBoxClosed();
+    virtual void tabBoxUpdated();
+    virtual void windowClosed(EffectWindow* w);
+    virtual void* proxy();
+    void activateFromProxy(int mode, bool animate, bool showText, float positioningFactor);
+    void paintWindowsBox(const QRegion& region);
+private:
+    class ItemInfo;
+    void setActive();
+    void setInactive();
+    void moveResizeInputWindow(int x, int y, int width, int height);
+    void calculateFrameSize();
+    void calculateItemSizes();
+    void setSelectedWindow(EffectWindow* w);
 
-        void paintWindowThumbnail( EffectWindow* w );
-        void paintDesktopThumbnail( int iDesktop );
-        void paintWindowIcon( EffectWindow* w );
+    void paintWindowThumbnail(EffectWindow* w);
+    void paintDesktopThumbnail(int iDesktop);
+    void paintWindowIcon(EffectWindow* w);
 
-        bool mActivated;
-        Window mInput;
-        int mMode;
+    bool mActivated;
+    Window mInput;
+    int mMode;
 
-        EffectFrame* thumbnailFrame;
+    EffectFrame* thumbnailFrame;
 
-        QRect frame_area;
-        int highlight_margin;
-        QSize item_max_size; // maximum item display size (including highlight)
-        QRect text_area;
-        QFont text_font;
-        QColor color_frame;
-        QColor color_highlight;
+    QRect frame_area;
+    int highlight_margin;
+    QSize item_max_size; // maximum item display size (including highlight)
+    QRect text_area;
+    QFont text_font;
+    QColor color_frame;
+    QColor color_highlight;
 
-        float bg_opacity;
-        bool elevate_window;
+    float bg_opacity;
+    bool elevate_window;
 
-        QHash< EffectWindow*, ItemInfo* > windows;
-        EffectWindowList original_windows;
-        EffectWindowList referrencedWindows;
-        EffectWindow* selected_window;
-        QHash< int, ItemInfo* > desktops;
-        QList< int > original_desktops;
-        int selected_desktop;
+    QHash< EffectWindow*, ItemInfo* > windows;
+    EffectWindowList original_windows;
+    EffectWindowList referrencedWindows;
+    EffectWindow* selected_window;
+    QHash< int, ItemInfo* > desktops;
+    QList< int > original_desktops;
+    int selected_desktop;
 
-        int painting_desktop;
+    int painting_desktop;
 
-        bool mAnimateSwitch;
-        TimeLine activeTimeLine;
-        TimeLine timeLine;
-        bool animation;
-        QRect highlight_area;
-        bool highlight_is_set;
-        enum Direction
-            {
-            Left,
-            Right
-            };
-        Direction direction;
-        QQueue<Direction> scheduled_directions;
-        EffectWindow* edge_window;
-        EffectWindow* right_window;
-
-        bool primaryTabBox;
-        bool secondaryTabBox;
-
-        BoxSwitchEffectProxy mProxy;
-        bool mProxyActivated;
-        bool mProxyAnimateSwitch;
-        bool mProxyShowText;
-        float mPositioningFactor;
+    bool mAnimateSwitch;
+    TimeLine activeTimeLine;
+    TimeLine timeLine;
+    bool animation;
+    QRect highlight_area;
+    bool highlight_is_set;
+    enum Direction {
+        Left,
+        Right
     };
+    Direction direction;
+    QQueue<Direction> scheduled_directions;
+    EffectWindow* edge_window;
+    EffectWindow* right_window;
+
+    bool primaryTabBox;
+    bool secondaryTabBox;
+
+    BoxSwitchEffectProxy mProxy;
+    bool mProxyActivated;
+    bool mProxyAnimateSwitch;
+    bool mProxyShowText;
+    float mPositioningFactor;
+};
 
 class BoxSwitchEffect::ItemInfo
-    {
-    public:
-        ItemInfo();
-        ~ItemInfo();
-        QRect area; // maximal painting area, including any frames/highlights/etc.
-        QRegion clickable;
-        QRect thumbnail;
-        EffectFrame* iconFrame;
-    };
+{
+public:
+    ItemInfo();
+    ~ItemInfo();
+    QRect area; // maximal painting area, including any frames/highlights/etc.
+    QRegion clickable;
+    QRect thumbnail;
+    EffectFrame* iconFrame;
+};
 
 } // namespace
 

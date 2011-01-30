@@ -51,33 +51,33 @@ namespace KWin
  * @author Martin Gräßlin
  */
 class KickerEffect : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        KickerEffect();
-        ~KickerEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+public:
+    KickerEffect();
+    ~KickerEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
 
-    private Q_SLOTS:
-        void slotLoadFinished(bool ok);
-        void timeout();
-        void goalTimeout();
+private Q_SLOTS:
+    void slotLoadFinished(bool ok);
+    void timeout();
+    void goalTimeout();
 
-    private:
-        void generateGoalImage();
-        QWebPage *m_page;
-        QTimer *m_timer;
-        QTimer *m_goalTimer;
-        QSize m_size;
-        QList<EffectFrame*> m_frames;
-        QList<EffectFrame*> m_goalFrames;
-        bool m_goalActive;
-        QString m_score;
-        TimeLine m_timeLine;
-        bool m_ascending;
-    };
+private:
+    void generateGoalImage();
+    QWebPage *m_page;
+    QTimer *m_timer;
+    QTimer *m_goalTimer;
+    QSize m_size;
+    QList<EffectFrame*> m_frames;
+    QList<EffectFrame*> m_goalFrames;
+    bool m_goalActive;
+    QString m_score;
+    TimeLine m_timeLine;
+    bool m_ascending;
+};
 
 }
 

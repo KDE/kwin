@@ -30,48 +30,48 @@ namespace SWrapper
 {
 
 class ClientGroup : public QObject
-    {
-        Q_OBJECT
+{
+    Q_OBJECT
 
-    private:
-        KWin::ClientGroup* centralObject;
-        bool invalid;
+private:
+    KWin::ClientGroup* centralObject;
+    bool invalid;
 
-    public:
-        ClientGroup(KWin::ClientGroup*);
-        ClientGroup(KWin::Client*);
+public:
+    ClientGroup(KWin::ClientGroup*);
+    ClientGroup(KWin::Client*);
 
-        KWin::ClientGroup* getCentralObject();
+    KWin::ClientGroup* getCentralObject();
 
-        /**
-          * A lot of functions for the KWin::ClientGroup* object.
-          * Mostly self-explanatory, works exactly like their C++
-          * analogues.
-          */
-        static QScriptValue add(QScriptContext*, QScriptEngine*);
-        static QScriptValue remove(QScriptContext*, QScriptEngine*);
-        static QScriptValue clients(QScriptContext*, QScriptEngine*);
-        static QScriptValue setVisible(QScriptContext*, QScriptEngine*);
-        static QScriptValue contains(QScriptContext*, QScriptEngine*);
-        static QScriptValue indexOf(QScriptContext*, QScriptEngine*);
+    /**
+      * A lot of functions for the KWin::ClientGroup* object.
+      * Mostly self-explanatory, works exactly like their C++
+      * analogues.
+      */
+    static QScriptValue add(QScriptContext*, QScriptEngine*);
+    static QScriptValue remove(QScriptContext*, QScriptEngine*);
+    static QScriptValue clients(QScriptContext*, QScriptEngine*);
+    static QScriptValue setVisible(QScriptContext*, QScriptEngine*);
+    static QScriptValue contains(QScriptContext*, QScriptEngine*);
+    static QScriptValue indexOf(QScriptContext*, QScriptEngine*);
 
-        /** This is one weird function. It can be called like:
-          * move(client, client) OR move(client, index) OR move(index, client)
-          * move(index, index)
-          * NOTE: other than move(client, client), all other calls are mapped to
-          * move(index, index) using indexof(client)
-          */
-        static QScriptValue move(QScriptContext*, QScriptEngine*);
-        static QScriptValue removeAll(QScriptContext*, QScriptEngine*);
-        static QScriptValue closeAll(QScriptContext*, QScriptEngine*);
-        static QScriptValue minSize(QScriptContext*, QScriptEngine*);
-        static QScriptValue maxSize(QScriptContext*, QScriptEngine*);
-        static QScriptValue visible(QScriptContext*, QScriptEngine*);
+    /** This is one weird function. It can be called like:
+      * move(client, client) OR move(client, index) OR move(index, client)
+      * move(index, index)
+      * NOTE: other than move(client, client), all other calls are mapped to
+      * move(index, index) using indexof(client)
+      */
+    static QScriptValue move(QScriptContext*, QScriptEngine*);
+    static QScriptValue removeAll(QScriptContext*, QScriptEngine*);
+    static QScriptValue closeAll(QScriptContext*, QScriptEngine*);
+    static QScriptValue minSize(QScriptContext*, QScriptEngine*);
+    static QScriptValue maxSize(QScriptContext*, QScriptEngine*);
+    static QScriptValue visible(QScriptContext*, QScriptEngine*);
 
-        static QScriptValue construct(QScriptContext*, QScriptEngine*);
-        static QScriptValue generate(QScriptEngine*, SWrapper::ClientGroup*);
-        static QScriptValue publishClientGroupClass(QScriptEngine*);
-    };
+    static QScriptValue construct(QScriptContext*, QScriptEngine*);
+    static QScriptValue generate(QScriptEngine*, SWrapper::ClientGroup*);
+    static QScriptValue publishClientGroupClass(QScriptEngine*);
+};
 
 }
 #endif

@@ -45,62 +45,60 @@ namespace KWin
   * that will run this script
   */
 class Script
-    {
-    public:
-        QScriptEngine* engine;
-        QFile scriptFile;
-        QString configFile;
-        SWrapper::Workspace* workspace;
+{
+public:
+    QScriptEngine* engine;
+    QFile scriptFile;
+    QString configFile;
+    SWrapper::Workspace* workspace;
 
-        Script(QScriptEngine* _engine, QString scriptName, QDir dir) :
-            engine(_engine)
-            {
-            scriptFile.setFileName(dir.filePath(scriptName));
-            configFile = (QFileInfo(scriptFile).completeBaseName() + QString(".kwscfg"));
-            }
+    Script(QScriptEngine* _engine, QString scriptName, QDir dir) :
+        engine(_engine) {
+        scriptFile.setFileName(dir.filePath(scriptName));
+        configFile = (QFileInfo(scriptFile).completeBaseName() + QString(".kwscfg"));
+    }
 
-        ~Script()
-            {
-            delete engine;
-            }
-    };
+    ~Script() {
+        delete engine;
+    }
+};
 
 /**
   * The heart of KWin::Scripting. Infinite power lies beyond
   */
 class Scripting : public QScriptEngine
-    {
-        Q_OBJECT
-    private:
-        QStringList scriptList;
-        QDir scriptsDir;
-        QVector<KWin::Script*> scripts;
-        SWrapper::WorkspaceProxy proxy;
+{
+    Q_OBJECT
+private:
+    QStringList scriptList;
+    QDir scriptsDir;
+    QVector<KWin::Script*> scripts;
+    SWrapper::WorkspaceProxy proxy;
 
-        // Preferably call ONLY at load time
-        void runScripts();
+    // Preferably call ONLY at load time
+    void runScripts();
 
-        // NOTE: Runtime script running is not yet tested.
-        // Proceed with caution.
-        // An interface to run scripts at runtime
-        void runScript(KWin::Script*);
+    // NOTE: Runtime script running is not yet tested.
+    // Proceed with caution.
+    // An interface to run scripts at runtime
+    void runScript(KWin::Script*);
 
-    public slots:
-        /**
-          * A nice clean way to handle exceptions in scripting.
-          * TODO: Log to file, show from notifier..
-          */
-        void sigException(const QScriptValue&);
+public slots:
+    /**
+      * A nice clean way to handle exceptions in scripting.
+      * TODO: Log to file, show from notifier..
+      */
+    void sigException(const QScriptValue&);
 
-    public:
-        Scripting();
-        /**
-          * Start running scripts. This was essential to have KWin::Scripting
-          * be initialized on stack and also have the option to disable scripting.
-          */
-        void start();
-        ~Scripting();
-    };
+public:
+    Scripting();
+    /**
+      * Start running scripts. This was essential to have KWin::Scripting
+      * be initialized on stack and also have the option to disable scripting.
+      */
+    void start();
+    ~Scripting();
+};
 
 }
 #endif

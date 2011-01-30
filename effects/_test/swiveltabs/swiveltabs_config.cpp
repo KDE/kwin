@@ -29,63 +29,63 @@ namespace KWin
 
 KWIN_EFFECT_CONFIG_FACTORY
 
-SwivelTabsEffectConfigForm::SwivelTabsEffectConfigForm( QWidget* parent ) : QWidget( parent )
-    {
-    setupUi( this );
-    }
+SwivelTabsEffectConfigForm::SwivelTabsEffectConfigForm(QWidget* parent) : QWidget(parent)
+{
+    setupUi(this);
+}
 
 SwivelTabsEffectConfig::SwivelTabsEffectConfig(QWidget* parent, const QVariantList& args)
-    : KCModule( EffectFactory::componentData(), parent, args )
-    {
-    m_ui = new SwivelTabsEffectConfigForm( this );
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    layout->addWidget( m_ui );
-    connect( m_ui->vertical, SIGNAL( toggled( bool )), this, SLOT( changed() ) );
-    connect( m_ui->horizontal, SIGNAL( toggled( bool )), this, SLOT( changed() ) );
-    connect( m_ui->duration, SIGNAL( valueChanged( int ) ), this, SLOT( changed() ) );
+    : KCModule(EffectFactory::componentData(), parent, args)
+{
+    m_ui = new SwivelTabsEffectConfigForm(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->addWidget(m_ui);
+    connect(m_ui->vertical, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_ui->horizontal, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_ui->duration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     load();
-    }
+}
 
 SwivelTabsEffectConfig::~SwivelTabsEffectConfig()
-    {
+{
     delete m_ui;
-    }
+}
 
 void SwivelTabsEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "SwivelTabs" );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("SwivelTabs");
 
-    conf.writeEntry( "SwivelVertical", m_ui->vertical->isChecked() );
-    conf.writeEntry( "SwivelHorizontal", m_ui->horizontal->isChecked() );
-    conf.writeEntry( "SwivelDuration", m_ui->duration->value() );
+    conf.writeEntry("SwivelVertical", m_ui->vertical->isChecked());
+    conf.writeEntry("SwivelHorizontal", m_ui->horizontal->isChecked());
+    conf.writeEntry("SwivelDuration", m_ui->duration->value());
 
     conf.sync();
 
     KCModule::save();
-    emit changed( false );
-    EffectsHandler::sendReloadMessage( "swiveltabs" );
-    }
+    emit changed(false);
+    EffectsHandler::sendReloadMessage("swiveltabs");
+}
 
 void SwivelTabsEffectConfig::load()
-    {
+{
     KCModule::load();
-    KConfigGroup conf = EffectsHandler::effectConfig( "SwivelTabs" );
+    KConfigGroup conf = EffectsHandler::effectConfig("SwivelTabs");
 
-    bool vertical = conf.readEntry( "SwivelVertical", true );
-    bool horizontal = conf.readEntry( "SwivelHorizontal", true );
-    int duration = conf.readEntry("SwivelDuration", 500 );
-    m_ui->vertical->setChecked( vertical );
-    m_ui->horizontal->setChecked( horizontal );
-    m_ui->duration->setValue( duration );
-    emit changed( false );
-    }
+    bool vertical = conf.readEntry("SwivelVertical", true);
+    bool horizontal = conf.readEntry("SwivelHorizontal", true);
+    int duration = conf.readEntry("SwivelDuration", 500);
+    m_ui->vertical->setChecked(vertical);
+    m_ui->horizontal->setChecked(horizontal);
+    m_ui->duration->setValue(duration);
+    emit changed(false);
+}
 
 void SwivelTabsEffectConfig::defaults()
-    {
-    m_ui->vertical->setChecked( true );
-    m_ui->horizontal->setChecked( true );
-    m_ui->duration->setValue( 500 );
-    emit changed( true );
-    }
+{
+    m_ui->vertical->setChecked(true);
+    m_ui->horizontal->setChecked(true);
+    m_ui->duration->setValue(500);
+    emit changed(true);
+}
 
 }

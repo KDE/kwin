@@ -15,63 +15,61 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( drunken, DrunkenEffect )
+KWIN_EFFECT(drunken, DrunkenEffect)
 
-void DrunkenEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( !windows.isEmpty())
+void DrunkenEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (!windows.isEmpty())
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen( data, time );
-    }
+    effects->prePaintScreen(data, time);
+}
 
-void DrunkenEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
-    if( windows.contains( w ))
-        {
+void DrunkenEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    if (windows.contains(w)) {
         windows[ w ] += time / 1000.;
-        if( windows[ w ] < 1 )
+        if (windows[ w ] < 1)
             data.setTransformed();
         else
-            windows.remove( w );
-        }
-    effects->prePaintWindow( w, data, time );
+            windows.remove(w);
     }
+    effects->prePaintWindow(w, data, time);
+}
 
-void DrunkenEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( !windows.contains( w ))
-        {
-        effects->paintWindow( w, mask, region, data );
+void DrunkenEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (!windows.contains(w)) {
+        effects->paintWindow(w, mask, region, data);
         return;
-        }
+    }
     WindowPaintData d1 = data;
     // 4 cycles, decreasing amplitude
-    int diff = int( sin( windows[ w ] * 8 * M_PI ) * ( 1 - windows[ w ] ) * 10 );
+    int diff = int(sin(windows[ w ] * 8 * M_PI) * (1 - windows[ w ]) * 10);
     d1.xTranslate -= diff;
     d1.opacity *= 0.5;
-    effects->paintWindow( w, mask, region, d1 );
+    effects->paintWindow(w, mask, region, d1);
     WindowPaintData d2 = data;
     d2.xTranslate += diff;
     d2.opacity *= 0.5;
-    effects->paintWindow( w, mask, region, d2 );
-    }
+    effects->paintWindow(w, mask, region, d2);
+}
 
-void DrunkenEffect::postPaintWindow( EffectWindow* w )
-    {
-    if( windows.contains( w ))
+void DrunkenEffect::postPaintWindow(EffectWindow* w)
+{
+    if (windows.contains(w))
         w->addRepaintFull();
-    effects->postPaintWindow( w );
-    }
+    effects->postPaintWindow(w);
+}
 
-void DrunkenEffect::windowAdded( EffectWindow* w )
-    {
+void DrunkenEffect::windowAdded(EffectWindow* w)
+{
     windows[ w ] = 0;
     w->addRepaintFull();
-    }
+}
 
-void DrunkenEffect::windowClosed( EffectWindow* w )
-    {
-    windows.remove( w );
-    }
+void DrunkenEffect::windowClosed(EffectWindow* w)
+{
+    windows.remove(w);
+}
 
 } // namespace

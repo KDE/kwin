@@ -27,12 +27,12 @@ namespace KWin
 
 class CubeInsideEffect : public Effect
 {
-    public:
-        CubeInsideEffect() {}
-        virtual ~CubeInsideEffect() {}
+public:
+    CubeInsideEffect() {}
+    virtual ~CubeInsideEffect() {}
 
-        virtual void paint() = 0;
-        virtual void setActive( bool active ) = 0;
+    virtual void paint() = 0;
+    virtual void setActive(bool active) = 0;
 };
 
 } // namespace

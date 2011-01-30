@@ -33,28 +33,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KillWindow::KillWindow( Workspace* ws )
-    : workspace( ws )
-    {
-    }
+KillWindow::KillWindow(Workspace* ws)
+    : workspace(ws)
+{
+}
 
 KillWindow::~KillWindow()
-    {
-    }
+{
+}
 
-void KillWindow::start() 
-    {
+void KillWindow::start()
+{
     static Cursor kill_cursor = 0;
     if (!kill_cursor)
         kill_cursor = XCreateFontCursor(display(), XC_pirate);
 
     if (XGrabPointer(display(), rootWindow(), False,
-                     ButtonPressMask | ButtonReleaseMask |
-                     PointerMotionMask |
-                     EnterWindowMask | LeaveWindowMask,
-                     GrabModeAsync, GrabModeAsync, None,
-                     kill_cursor, CurrentTime) == GrabSuccess) 
-        {
+                    ButtonPressMask | ButtonReleaseMask |
+                    PointerMotionMask |
+                    EnterWindowMask | LeaveWindowMask,
+                    GrabModeAsync, GrabModeAsync, None,
+                    kill_cursor, CurrentTime) == GrabSuccess) {
         grabXKeyboard();
 
         XEvent ev;
@@ -64,13 +63,11 @@ void KillWindow::start()
 
         grabXServer();
 
-        while (!return_pressed && !escape_pressed && !button_released) 
-            {
+        while (!return_pressed && !escape_pressed && !button_released) {
             XMaskEvent(display(), KeyPressMask | ButtonPressMask |
                        ButtonReleaseMask | PointerMotionMask, &ev);
 
-            if (ev.type == KeyPress)    
-                {
+            if (ev.type == KeyPress) {
                 int kc = XKeycodeToKeysym(display(), ev.xkey.keycode, 0);
                 int mx = 0;
                 int my = 0;
@@ -80,42 +77,38 @@ void KillWindow::start()
                 if (kc == XK_Right) mx = 10;
                 if (kc == XK_Up)    my = -10;
                 if (kc == XK_Down)  my = 10;
-                if (ev.xkey.state & ControlMask) 
-                    {
+                if (ev.xkey.state & ControlMask) {
                     mx /= 10;
                     my /= 10;
-                    }
-                QCursor::setPos(cursorPos()+QPoint(mx, my));
                 }
+                QCursor::setPos(cursorPos() + QPoint(mx, my));
+            }
 
-            if (ev.type == ButtonRelease) 
-                {
+            if (ev.type == ButtonRelease) {
                 button_released = (ev.xbutton.button == Button1);
-                if ( ev.xbutton.button == Button3 ) 
-                    {
+                if (ev.xbutton.button == Button3) {
                     escape_pressed = true;
                     break;
-                    }
-                if( ev.xbutton.button == Button1 || ev.xbutton.button == Button2 )
-                    workspace->killWindowId(ev.xbutton.subwindow);
                 }
-            continue;
+                if (ev.xbutton.button == Button1 || ev.xbutton.button == Button2)
+                    workspace->killWindowId(ev.xbutton.subwindow);
             }
-        if (return_pressed) 
-            {
+            continue;
+        }
+        if (return_pressed) {
             Window root, child;
             int dummy1, dummy2, dummy3, dummy4;
             unsigned int dummy5;
-            if( XQueryPointer( display(), rootWindow(), &root, &child,
-                &dummy1, &dummy2, &dummy3, &dummy4, &dummy5 ) == true
-                && child != None )
-                workspace->killWindowId( child );
-            }
+            if (XQueryPointer(display(), rootWindow(), &root, &child,
+                             &dummy1, &dummy2, &dummy3, &dummy4, &dummy5) == true
+                    && child != None)
+                workspace->killWindowId(child);
+        }
 
         ungrabXServer();
         ungrabXKeyboard();
         XUngrabPointer(display(), CurrentTime);
-        }
     }
+}
 
 } // namespace

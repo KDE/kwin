@@ -32,33 +32,33 @@ class KWinDecorationButtonsConfigForm : public QWidget, public Ui::KWinDecoratio
 {
     Q_OBJECT
 
-    public:
-        explicit KWinDecorationButtonsConfigForm( QWidget* parent );
+public:
+    explicit KWinDecorationButtonsConfigForm(QWidget* parent);
 };
 
 class KWinDecorationButtonsConfigDialog : public KDialog
 {
     Q_OBJECT
-    public:
-        KWinDecorationButtonsConfigDialog( bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent = 0, Qt::WFlags flags = 0 );
-        ~KWinDecorationButtonsConfigDialog();
+public:
+    KWinDecorationButtonsConfigDialog(bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent = 0, Qt::WFlags flags = 0);
+    ~KWinDecorationButtonsConfigDialog();
 
-        bool customPositions() const;
-        bool showTooltips() const;
-        QString buttonsLeft() const;
-        QString buttonsRight() const;
+    bool customPositions() const;
+    bool showTooltips() const;
+    QString buttonsLeft() const;
+    QString buttonsRight() const;
 
-    private slots:
-        void changed();
-        void slotDefaultClicked();
-        void slotResetClicked();
+private slots:
+    void changed();
+    void slotDefaultClicked();
+    void slotResetClicked();
 
-    private:
-        KWinDecorationButtonsConfigForm* m_ui;
-        bool m_customPositions;
-        bool m_showTooltip;
-        QString m_buttonsLeft;
-        QString m_buttonsRight;
+private:
+    KWinDecorationButtonsConfigForm* m_ui;
+    bool m_customPositions;
+    bool m_showTooltip;
+    QString m_buttonsLeft;
+    QString m_buttonsRight;
 };
 
 } // namespace KWin

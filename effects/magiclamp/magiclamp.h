@@ -28,36 +28,35 @@ namespace KWin
 
 class MagicLampEffect
     : public Effect
-    {
-    public:
-        MagicLampEffect();
+{
+public:
+    MagicLampEffect();
 
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintScreen();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintScreen();
 
-        virtual void windowDeleted( EffectWindow* c );
-        virtual void windowMinimized( EffectWindow* c );
-        virtual void windowUnminimized( EffectWindow* c );
+    virtual void windowDeleted(EffectWindow* c);
+    virtual void windowMinimized(EffectWindow* c);
+    virtual void windowUnminimized(EffectWindow* c);
 
-        static bool supported();
+    static bool supported();
 
-    private:
-        QHash< EffectWindow*, TimeLine > mTimeLineWindows;
-        int mActiveAnimations;
-        int mAnimationDuration;
-        int mShadowOffset[4];
+private:
+    QHash< EffectWindow*, TimeLine > mTimeLineWindows;
+    int mActiveAnimations;
+    int mAnimationDuration;
+    int mShadowOffset[4];
 
-        enum IconPosition
-            {
-            Top,
-            Bottom,
-            Left,
-            Right
-            };
+    enum IconPosition {
+        Top,
+        Bottom,
+        Left,
+        Right
     };
+};
 
 } // namespace
 

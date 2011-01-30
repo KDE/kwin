@@ -23,14 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 SWrapper::WorkspaceProxy* SWrapper::WorkspaceProxy::_instance = 0;
 
 SWrapper::WorkspaceProxy::WorkspaceProxy()
-    {
+{
     _instance = this;
-    }
+}
 
 SWrapper::WorkspaceProxy* SWrapper::WorkspaceProxy::instance()
-    {
+{
     return _instance;
-    }
+}
 
 PROXYPASS1(clientManaging, KWin::Client*)
 PROXYPASS1(clientMinimized, KWin::Client*)

@@ -29,13 +29,13 @@ namespace KWin
 
 class PluginMgr
     : public KDecorationPlugins
-    {
-    public:
-        PluginMgr();
-        virtual bool provides( Requirement );
-    protected:
-        virtual void error( const QString& error_msg );
-    };
+{
+public:
+    PluginMgr();
+    virtual bool provides(Requirement);
+protected:
+    virtual void error(const QString& error_msg);
+};
 
 } // namespace
 

@@ -25,23 +25,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-CubeEffectProxy::CubeEffectProxy( CubeEffect* effect )
-    : m_effect( effect )
-    {
-    }
+CubeEffectProxy::CubeEffectProxy(CubeEffect* effect)
+    : m_effect(effect)
+{
+}
 
 CubeEffectProxy::~CubeEffectProxy()
-    {
-    }
+{
+}
 
-void CubeEffectProxy::registerCubeInsideEffect( CubeInsideEffect* effect )
-    {
-    m_effect->registerCubeInsideEffect( effect );
-    }
+void CubeEffectProxy::registerCubeInsideEffect(CubeInsideEffect* effect)
+{
+    m_effect->registerCubeInsideEffect(effect);
+}
 
-void CubeEffectProxy::unregisterCubeInsideEffect( CubeInsideEffect* effect )
-    {
-    m_effect->unregisterCubeInsideEffect( effect );
-    }
+void CubeEffectProxy::unregisterCubeInsideEffect(CubeInsideEffect* effect)
+{
+    m_effect->unregisterCubeInsideEffect(effect);
+}
 
 } // namespace

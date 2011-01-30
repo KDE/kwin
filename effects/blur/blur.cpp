@@ -119,7 +119,7 @@ void BlurEffect::propertyNotify(EffectWindow *w, long atom)
 bool BlurEffect::supported()
 {
     bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
-            (GLSLBlurShader::supported() || ARBBlurShader::supported());
+                     (GLSLBlurShader::supported() || ARBBlurShader::supported());
 
     if (supported) {
         int maxTexSize;
@@ -131,9 +131,9 @@ bool BlurEffect::supported()
 
     if (supported) {
         // check the blacklist
-        KSharedConfigPtr config = KSharedConfig::openConfig( "kwinrc" );
-        KConfigGroup blacklist = config->group( "Blacklist" ).group( "Blur" );
-        if (effects->checkDriverBlacklist( blacklist )) {
+        KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
+        KConfigGroup blacklist = config->group("Blacklist").group("Blur");
+        if (effects->checkDriverBlacklist(blacklist)) {
             kDebug() << "Blur effect disabled by driver blacklist";
             supported = false;
         }
@@ -152,8 +152,8 @@ QRegion BlurEffect::expand(const QRegion &region) const
     QRegion expanded;
 
     if (region.rectCount() < 20) {
-        foreach (const QRect &rect, region.rects())
-            expanded += expand(rect);
+        foreach (const QRect & rect, region.rects())
+        expanded += expand(rect);
     } else
         expanded += expand(region.boundingRect());
 
@@ -172,7 +172,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
                 region = w->shape();
                 region -= w->decorationInnerRect();
                 region |= appRegion.translated(w->contentsRect().topLeft()) &
-                                        w->contentsRect();
+                          w->contentsRect();
             } else
                 region = appRegion & w->contentsRect();
         } else {
@@ -197,7 +197,7 @@ void BlurEffect::drawRegion(const QRegion &region)
         vertices.resize(vertexCount);
 
     int i = 0;
-    foreach (const QRect &r, region.rects()) {
+    foreach (const QRect & r, region.rects()) {
         vertices[i++] = QVector2D(r.x() + r.width(), r.y());
         vertices[i++] = QVector2D(r.x(),             r.y());
         vertices[i++] = QVector2D(r.x(),             r.y() + r.height());
@@ -230,13 +230,12 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     bool valid = target->valid() && shader->isValid();
 
     QRegion shape;
-    const QVariant forceBlur = w->data( WindowForceBlurRole );
-    if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool() ))
+    const QVariant forceBlur = w->data(WindowForceBlurRole);
+    if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool()))
             && hasAlpha && !w->isDesktop() && !transformed)
         shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
 
-    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()))
-    {
+    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect())) {
         doBlur(shape, screen, data.opacity * data.contents_opacity);
     }
 
@@ -248,7 +247,7 @@ void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opa
 {
     const QRect screen(0, 0, displayWidth(), displayHeight());
     bool valid = target->valid() && shader->isValid();
-    QRegion shape = frame->geometry().adjusted( -5, -5, 5, 5 ) & screen;
+    QRegion shape = frame->geometry().adjusted(-5, -5, 5, 5) & screen;
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect())) {
         doBlur(shape, screen, opacity * frameOpacity);
     }

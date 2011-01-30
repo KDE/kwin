@@ -33,26 +33,26 @@ namespace KWin
 class PresentWindowsEffectConfigForm : public QWidget, public Ui::PresentWindowsEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit PresentWindowsEffectConfigForm(QWidget* parent);
+public:
+    explicit PresentWindowsEffectConfigForm(QWidget* parent);
 };
 
 class PresentWindowsEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~PresentWindowsEffectConfig();
+public:
+    explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~PresentWindowsEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        PresentWindowsEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    PresentWindowsEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

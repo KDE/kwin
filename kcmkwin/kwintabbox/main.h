@@ -32,7 +32,8 @@ class KActionCollection;
 
 namespace KWin
 {
-namespace TabBox {
+namespace TabBox
+{
 
 class LayoutConfig;
 }
@@ -40,59 +41,59 @@ class LayoutConfig;
 
 
 class KWinTabBoxConfigForm : public QWidget, public Ui::KWinTabBoxConfigForm
-    {
+{
     Q_OBJECT
 
-    public:
-        explicit KWinTabBoxConfigForm( QWidget* parent );
-    };
+public:
+    explicit KWinTabBoxConfigForm(QWidget* parent);
+};
 
 class KWinTabBoxConfig : public KCModule
-    {
+{
     Q_OBJECT
 
-    public:
-        explicit KWinTabBoxConfig( QWidget* parent, const QVariantList& args );
-        ~KWinTabBoxConfig();
+public:
+    explicit KWinTabBoxConfig(QWidget* parent, const QVariantList& args);
+    ~KWinTabBoxConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private slots:
-        void slotEffectSelectionChanged( int index );
-        void slotAboutEffectClicked();
-        void slotConfigureEffectClicked();
-        void slotConfigureLayoutClicked();
-        void slotLayoutChanged();
-        void slotEffectSelectionChangedAlternative( int index );
-        void slotAboutEffectClickedAlternative();
-        void slotConfigureEffectClickedAlternative();
-        void slotConfigureLayoutClickedAlternative();
-        void slotLayoutChangedAlternative();
+private slots:
+    void slotEffectSelectionChanged(int index);
+    void slotAboutEffectClicked();
+    void slotConfigureEffectClicked();
+    void slotConfigureLayoutClicked();
+    void slotLayoutChanged();
+    void slotEffectSelectionChangedAlternative(int index);
+    void slotAboutEffectClickedAlternative();
+    void slotConfigureEffectClickedAlternative();
+    void slotConfigureLayoutClickedAlternative();
+    void slotLayoutChangedAlternative();
 
-    private:
-        void updateUiFromConfig( KWinTabBoxConfigForm* ui, const TabBox::TabBoxConfig& config );
-        void updateConfigFromUi( const KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config );
-        void loadConfig( const KConfigGroup& config, KWin::TabBox::TabBoxConfig& tabBoxConfig );
-        void saveConfig( KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig );
-        void effectSelectionChanged( KWinTabBoxConfigForm* ui, int index );
-        void aboutEffectClicked( KWinTabBoxConfigForm* ui );
-        void configureEffectClicked( KWinTabBoxConfigForm* ui );
+private:
+    void updateUiFromConfig(KWinTabBoxConfigForm* ui, const TabBox::TabBoxConfig& config);
+    void updateConfigFromUi(const KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config);
+    void loadConfig(const KConfigGroup& config, KWin::TabBox::TabBoxConfig& tabBoxConfig);
+    void saveConfig(KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig);
+    void effectSelectionChanged(KWinTabBoxConfigForm* ui, int index);
+    void aboutEffectClicked(KWinTabBoxConfigForm* ui);
+    void configureEffectClicked(KWinTabBoxConfigForm* ui);
 
-    private:
-        KWinTabBoxConfigForm* m_primaryTabBoxUi;
-        KWinTabBoxConfigForm* m_alternativeTabBoxUi;
-        KSharedConfigPtr m_config;
-        KActionCollection* m_actionCollection;
-        KShortcutsEditor* m_editor;
-        TabBox::TabBoxConfig m_tabBoxConfig;
-        TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
-        TabBox::LayoutConfig* m_configForm;
+private:
+    KWinTabBoxConfigForm* m_primaryTabBoxUi;
+    KWinTabBoxConfigForm* m_alternativeTabBoxUi;
+    KSharedConfigPtr m_config;
+    KActionCollection* m_actionCollection;
+    KShortcutsEditor* m_editor;
+    TabBox::TabBoxConfig m_tabBoxConfig;
+    TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
+    TabBox::LayoutConfig* m_configForm;
 
-        bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
-    };
+    bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
+};
 
 } // namespace
 

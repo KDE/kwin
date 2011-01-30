@@ -37,95 +37,95 @@
 
 #include "ktimerdialog.moc"
 
-KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
-                 const QString &caption,
-                 int buttonMask, ButtonCode defaultButton,
-                 bool separator,
-                 const KGuiItem &user1,
-                 const KGuiItem &user2,
-                 const KGuiItem &user3 )
-    : KDialog( parent )
+KTimerDialog::KTimerDialog(int msec, TimerStyle style, QWidget *parent,
+                           const QString &caption,
+                           int buttonMask, ButtonCode defaultButton,
+                           bool separator,
+                           const KGuiItem &user1,
+                           const KGuiItem &user2,
+                           const KGuiItem &user3)
+    : KDialog(parent)
 {
-    setCaption( caption );
-    setButtons( (ButtonCodes)buttonMask );
-    setDefaultButton( defaultButton );
-    setButtonFocus( defaultButton ); // setDefaultButton() doesn't do this
-    showButtonSeparator( separator );
-    setButtonGuiItem( User1, user1 );
-    setButtonGuiItem( User2, user2 );
-    setButtonGuiItem( User3, user3 );
+    setCaption(caption);
+    setButtons((ButtonCodes)buttonMask);
+    setDefaultButton(defaultButton);
+    setButtonFocus(defaultButton);   // setDefaultButton() doesn't do this
+    showButtonSeparator(separator);
+    setButtonGuiItem(User1, user1);
+    setButtonGuiItem(User2, user2);
+    setButtonGuiItem(User3, user3);
 
-    totalTimer = new QTimer( this );
-    totalTimer->setSingleShot( true );
-    updateTimer = new QTimer( this );
-    updateTimer->setSingleShot( false );
+    totalTimer = new QTimer(this);
+    totalTimer->setSingleShot(true);
+    updateTimer = new QTimer(this);
+    updateTimer->setSingleShot(false);
     msecTotal = msecRemaining = msec;
     updateInterval = 1000;
     tStyle = style;
-    KWindowSystem::setIcons( winId(), DesktopIcon("randr"), SmallIcon("randr") );
+    KWindowSystem::setIcons(winId(), DesktopIcon("randr"), SmallIcon("randr"));
     // default to canceling the dialog on timeout
-    if ( buttonMask & Cancel )
+    if (buttonMask & Cancel)
         buttonOnTimeout = Cancel;
 
-    connect( totalTimer, SIGNAL( timeout() ), SLOT( slotInternalTimeout() ) );
-    connect( updateTimer, SIGNAL( timeout() ), SLOT( slotUpdateTime() ) );
+    connect(totalTimer, SIGNAL(timeout()), SLOT(slotInternalTimeout()));
+    connect(updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTime()));
 
     // create the widgets
-    mainWidget = new KVBox( this );
-    timerWidget = new KHBox( mainWidget );
+    mainWidget = new KVBox(this);
+    timerWidget = new KHBox(mainWidget);
     timerWidget->setSpacing(-1);
-    timerLabel = new QLabel( timerWidget );
-    timerProgress = new QProgressBar( timerWidget );
-    timerProgress->setRange( 0, msecTotal );
-    timerProgress->setTextVisible( false );
+    timerLabel = new QLabel(timerWidget);
+    timerProgress = new QProgressBar(timerWidget);
+    timerProgress->setRange(0, msecTotal);
+    timerProgress->setTextVisible(false);
 
-    KDialog::setMainWidget( mainWidget );
+    KDialog::setMainWidget(mainWidget);
 
-    slotUpdateTime( false );
+    slotUpdateTime(false);
 }
 
 KTimerDialog::~KTimerDialog()
 {
 }
 
-void KTimerDialog::setVisible( bool visible )
+void KTimerDialog::setVisible(bool visible)
 {
-    KDialog::setVisible( visible );
-  
-    if ( visible ) {
-        totalTimer->start( msecTotal );
-        updateTimer->start( updateInterval );
+    KDialog::setVisible(visible);
+
+    if (visible) {
+        totalTimer->start(msecTotal);
+        updateTimer->start(updateInterval);
     }
 }
 
 int KTimerDialog::exec()
 {
-    totalTimer->start( msecTotal );
-    updateTimer->start( updateInterval );
+    totalTimer->start(msecTotal);
+    updateTimer->start(updateInterval);
     return KDialog::exec();
 }
 
-void KTimerDialog::setMainWidget( QWidget *widget )
+void KTimerDialog::setMainWidget(QWidget *widget)
 {
     // yuck, here goes.
-    KVBox *newWidget = new KVBox( this );
+    KVBox *newWidget = new KVBox(this);
     newWidget->setSpacing(-1);
 
-    if ( widget->parentWidget() != mainWidget ) {
-        widget->setParent( newWidget);
-    } 
-    timerWidget->setParent( newWidget);
+    if (widget->parentWidget() != mainWidget) {
+        widget->setParent(newWidget);
+    }
+    timerWidget->setParent(newWidget);
 
     delete mainWidget;
     mainWidget = newWidget;
-    KDialog::setMainWidget( mainWidget );
+    KDialog::setMainWidget(mainWidget);
 }
 
-void KTimerDialog::setRefreshInterval( int msec )
+void KTimerDialog::setRefreshInterval(int msec)
 {
     updateInterval = msec;
-    if ( updateTimer->isActive() )
-        updateTimer->start( updateInterval );
+    if (updateTimer->isActive())
+        updateTimer->start(updateInterval);
 }
 
 int KTimerDialog::timeoutButton() const
@@ -133,7 +133,7 @@ int KTimerDialog::timeoutButton() const
     return buttonOnTimeout;
 }
 
-void KTimerDialog::setTimeoutButton( const ButtonCode newButton )
+void KTimerDialog::setTimeoutButton(const ButtonCode newButton)
 {
     buttonOnTimeout = newButton;
 }
@@ -143,32 +143,32 @@ int KTimerDialog::timerStyle() const
     return tStyle;
 }
 
-void KTimerDialog::setTimerStyle( const TimerStyle newStyle )
+void KTimerDialog::setTimerStyle(const TimerStyle newStyle)
 {
     tStyle = newStyle;
 }
 
-void KTimerDialog::slotUpdateTime( bool update )
+void KTimerDialog::slotUpdateTime(bool update)
 {
-    if ( update )
-        switch ( tStyle ) {
-            case CountDown:
-                msecRemaining -= updateInterval;
-                break;
-            case CountUp:
-                msecRemaining += updateInterval;
-                break;
-            case Manual:
-                break;
+    if (update)
+        switch(tStyle) {
+        case CountDown:
+            msecRemaining -= updateInterval;
+            break;
+        case CountUp:
+            msecRemaining += updateInterval;
+            break;
+        case Manual:
+            break;
         }
 
-    timerProgress->setValue( msecRemaining );
+    timerProgress->setValue(msecRemaining);
 
-    timerLabel->setText( i18np("1 second remaining:","%1 seconds remaining:",msecRemaining/1000) );
+    timerLabel->setText(i18np("1 second remaining:", "%1 seconds remaining:", msecRemaining / 1000));
 }
 
 void KTimerDialog::slotInternalTimeout()
 {
     emit timerTimeout();
-    slotButtonClicked( buttonOnTimeout );
+    slotButtonClicked(buttonOnTimeout);
 }

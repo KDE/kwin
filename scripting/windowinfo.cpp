@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SWrapper::WindowInfo::WindowInfo(const KWindowInfo info, QScriptEngine* eng, QObject* parent) :
     QObject(parent)
-    {
+{
     this->infoClass = info;
     centralEngine = eng;
-    }
+}
 
 MAP_GET(valid, bool)
 MAP_GET(state, int)
@@ -36,7 +36,7 @@ MAP_GET2(windowClassName, QString)
 MAP_GET2(windowRole, QString)
 
 QScriptValue SWrapper::WindowInfo::generate(const KWindowInfo info, QScriptEngine* eng, KWin::Client* client)
-    {
+{
     SWrapper::WindowInfo* winInfo = new SWrapper::WindowInfo(info, eng, static_cast<QObject*>(client));
 
     QScriptValue temp = eng->newQObject(winInfo,
@@ -47,4 +47,4 @@ QScriptValue SWrapper::WindowInfo::generate(const KWindowInfo info, QScriptEngin
     KWin::MetaScripting::RefWrapping::embed<SWrapper::WindowInfo*>(temp, winInfo);
 
     return temp;
-    }
+}

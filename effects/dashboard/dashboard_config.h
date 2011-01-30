@@ -39,7 +39,7 @@ public:
     void defaults();
 
 private:
-    bool isBlurEffectAvailable ();
+    bool isBlurEffectAvailable();
     long net_wm_dashboard;
     ::Ui::DashboardEffectConfig ui;
 

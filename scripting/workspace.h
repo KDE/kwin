@@ -35,62 +35,62 @@ namespace SWrapper
 {
 
 class Workspace : public QObject
-    {
-        Q_OBJECT
-        //Don't add WRITE for now. Access considerations
-        Q_PROPERTY( int currentDesktop READ currentDesktop )
+{
+    Q_OBJECT
+    //Don't add WRITE for now. Access considerations
+    Q_PROPERTY(int currentDesktop READ currentDesktop)
 
-    private:
-        static KWin::Workspace* centralObject;
-        static SWrapper::Client* clientHolder;
-        QScriptEngine* centralEngine;
+private:
+    static KWin::Workspace* centralObject;
+    static SWrapper::Client* clientHolder;
+    QScriptEngine* centralEngine;
 
-        Q_DISABLE_COPY(Workspace)
+    Q_DISABLE_COPY(Workspace)
 
-    public slots:
-        void sl_desktopPresenceChanged(KWin::Client*, int);
-        void sl_currentDesktopChanged(int);
-        void sl_clientAdded(KWin::Client*);
-        void sl_clientRemoved(KWin::Client*);
-        void sl_clientManaging(KWin::Client*);
-        void sl_clientMinimized(KWin::Client*);
-        void sl_clientUnminimized(KWin::Client*);
-        void sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
-        void sl_killWindowCalled(KWin::Client*);
-        void sl_clientActivated(KWin::Client*);
-        void sl_groupAdded(KWin::Group*);
-        void sl_clientFullScreenSet(KWin::Client*, bool, bool);
-        void sl_clientSetKeepAbove(KWin::Client*, bool);
+public slots:
+    void sl_desktopPresenceChanged(KWin::Client*, int);
+    void sl_currentDesktopChanged(int);
+    void sl_clientAdded(KWin::Client*);
+    void sl_clientRemoved(KWin::Client*);
+    void sl_clientManaging(KWin::Client*);
+    void sl_clientMinimized(KWin::Client*);
+    void sl_clientUnminimized(KWin::Client*);
+    void sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
+    void sl_killWindowCalled(KWin::Client*);
+    void sl_clientActivated(KWin::Client*);
+    void sl_groupAdded(KWin::Group*);
+    void sl_clientFullScreenSet(KWin::Client*, bool, bool);
+    void sl_clientSetKeepAbove(KWin::Client*, bool);
 
-    signals:
-        void desktopPresenceChanged(QScriptValue, QScriptValue);
-        void currentDesktopChanged(QScriptValue);
-        void clientAdded(QScriptValue);
-        void clientRemoved(QScriptValue);
-        void clientManaging(QScriptValue);
-        void clientMinimized(QScriptValue);
-        void clientUnminimized(QScriptValue);
-        void clientRestored(QScriptValue);
-        void clientMaximizeSet(QScriptValue, QScriptValue);
-        void killWindowCalled(QScriptValue);
-        void clientActivated(QScriptValue);
-        void clientFullScreenSet(QScriptValue, QScriptValue, QScriptValue);
-        void clientSetKeepAbove(QScriptValue, QScriptValue);
+signals:
+    void desktopPresenceChanged(QScriptValue, QScriptValue);
+    void currentDesktopChanged(QScriptValue);
+    void clientAdded(QScriptValue);
+    void clientRemoved(QScriptValue);
+    void clientManaging(QScriptValue);
+    void clientMinimized(QScriptValue);
+    void clientUnminimized(QScriptValue);
+    void clientRestored(QScriptValue);
+    void clientMaximizeSet(QScriptValue, QScriptValue);
+    void killWindowCalled(QScriptValue);
+    void clientActivated(QScriptValue);
+    void clientFullScreenSet(QScriptValue, QScriptValue, QScriptValue);
+    void clientSetKeepAbove(QScriptValue, QScriptValue);
 
-    public:
-        Workspace(QObject* parent = 0);
-        int currentDesktop() const;
-        void attach(QScriptEngine*);
+public:
+    Workspace(QObject* parent = 0);
+    int currentDesktop() const;
+    void attach(QScriptEngine*);
 
-        static QScriptValue getAllClients(QScriptContext*, QScriptEngine*);
+    static QScriptValue getAllClients(QScriptContext*, QScriptEngine*);
 
-        static bool initialize(KWin::Workspace*);
-        static QScriptValue setCurrentDesktop(QScriptContext*, QScriptEngine*);
-        static QScriptValue dimensions(QScriptContext*, QScriptEngine*);
-        static QScriptValue desktopGridSize(QScriptContext*, QScriptEngine*);
-        static QScriptValue activeClient(QScriptContext*, QScriptEngine*);
-        static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
-    };
+    static bool initialize(KWin::Workspace*);
+    static QScriptValue setCurrentDesktop(QScriptContext*, QScriptEngine*);
+    static QScriptValue dimensions(QScriptContext*, QScriptEngine*);
+    static QScriptValue desktopGridSize(QScriptContext*, QScriptEngine*);
+    static QScriptValue activeClient(QScriptContext*, QScriptEngine*);
+    static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
+};
 
 }
 

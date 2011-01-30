@@ -26,10 +26,10 @@ namespace TabBox
 {
 
 ItemLayoutConfigRowElement::ItemLayoutConfigRowElement()
-    {
+{
     // initialize attributes with reasonable default values
     m_type = ElementEmpty;
-    m_iconSize = QSize( 16, 16 );
+    m_iconSize = QSize(16, 16);
     m_alignment = Qt::AlignCenter;
     m_stretch = false;
     m_smallTextSize = false;
@@ -38,57 +38,57 @@ ItemLayoutConfigRowElement::ItemLayoutConfigRowElement()
     m_italicMinimized = true;
     m_rowSpan = false;
     m_width = 0.0;
-    }
+}
 
 ItemLayoutConfigRowElement::~ItemLayoutConfigRowElement()
-    {
-    }
+{
+}
 
 ItemLayoutConfigRow::ItemLayoutConfigRow()
-    {
-    }
+{
+}
 
 ItemLayoutConfigRow::~ItemLayoutConfigRow()
-    {
-    }
+{
+}
 
-void ItemLayoutConfigRow::addElement( ItemLayoutConfigRowElement element )
-    {
-    m_elements.append( element );
-    }
+void ItemLayoutConfigRow::addElement(ItemLayoutConfigRowElement element)
+{
+    m_elements.append(element);
+}
 
-ItemLayoutConfigRowElement ItemLayoutConfigRow::element( int index ) const
-    {
+ItemLayoutConfigRowElement ItemLayoutConfigRow::element(int index) const
+{
     return m_elements[ index ];
-    }
+}
 
 int ItemLayoutConfigRow::count() const
-    {
+{
     return m_elements.count();
-    }
+}
 
 ItemLayoutConfig::ItemLayoutConfig()
-    {
-    }
+{
+}
 
 ItemLayoutConfig::~ItemLayoutConfig()
-    {
-    }
+{
+}
 
-void ItemLayoutConfig::addRow( ItemLayoutConfigRow row )
-    {
-    m_rows.append( row );
-    }
+void ItemLayoutConfig::addRow(ItemLayoutConfigRow row)
+{
+    m_rows.append(row);
+}
 
 int ItemLayoutConfig::count() const
-    {
+{
     return m_rows.count();
-    }
+}
 
-ItemLayoutConfigRow ItemLayoutConfig::row( int index ) const
-    {
+ItemLayoutConfigRow ItemLayoutConfig::row(int index) const
+{
     return m_rows[ index ];
-    }
+}
 
 } //namespace TabBox
 } //namespace KWin

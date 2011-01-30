@@ -68,7 +68,7 @@ void BlurShader::setDirection(Qt::Orientation direction)
 float BlurShader::gaussian(float x, float sigma) const
 {
     return (1.0 / std::sqrt(2.0 * M_PI) * sigma)
-            * std::exp(-((x * x) / (2.0 * sigma * sigma)));
+           * std::exp(-((x * x) / (2.0 * sigma * sigma)));
 }
 
 QVector<float> BlurShader::gaussianKernel() const
@@ -380,11 +380,10 @@ void ARBBlurShader::unbind()
 #ifndef KWIN_HAVE_OPENGLES
     int boundObject;
     glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
-    if( boundObject == program )
-        {
+    if (boundObject == program) {
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
         glDisable(GL_FRAGMENT_PROGRAM_ARB);
-        }
+    }
 #endif
 }
 
@@ -418,7 +417,7 @@ void ARBBlurShader::init()
 
     stream << "!!ARBfp1.0\n";
 
-    // The kernel values are hardcoded into the program 
+    // The kernel values are hardcoded into the program
     for (int i = 0; i <= center; i++)
         stream << "PARAM kernel" << i << " = " << kernel[center + i] << ";\n";
 
@@ -442,14 +441,14 @@ void ARBBlurShader::init()
     for (int i = 1; i < size; i++)
         stream << "TEX temp" << i << ", temp" << i << ", texture[0], 2D;\n";
 
-    // Multiply the samples with the kernel values and compute the sum 
+    // Multiply the samples with the kernel values and compute the sum
     stream << "MUL temp0, temp0, kernel0;\n";
     for (int i = 0, j = 1; i < center; i++) {
         stream << "MAD temp0, temp" << j++ << ", kernel" << i + 1 << ", temp0;\n";
         stream << "MAD temp0, temp" << j++ << ", kernel" << i + 1 << ", temp0;\n";
     }
 
-    stream << "MOV result.color, temp0;\n";  // gl_FragColor = temp0 
+    stream << "MOV result.color, temp0;\n";  // gl_FragColor = temp0
     stream << "END\n";
     stream.flush();
 

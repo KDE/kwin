@@ -36,89 +36,84 @@ namespace KWin
 {
 
 CompositingPrefs::CompositingPrefs()
-    : mRecommendCompositing( false )
-    , mEnableVSync( true )
-    , mEnableDirectRendering( true )
-    , mStrictBinding( true )
-    {
-    }
+    : mRecommendCompositing(false)
+    , mEnableVSync(true)
+    , mEnableDirectRendering(true)
+    , mStrictBinding(true)
+{
+}
 
 CompositingPrefs::~CompositingPrefs()
-    {
-    }
+{
+}
 
 bool CompositingPrefs::recommendCompositing() const
-    {
+{
     return mRecommendCompositing;
-    }
+}
 
 bool CompositingPrefs::compositingPossible()
-    {
+{
 #ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
-    if( !Extensions::compositeAvailable())
-        {
-        kDebug( 1212 ) << "No composite extension available";
+    if (!Extensions::compositeAvailable()) {
+        kDebug(1212) << "No composite extension available";
         return false;
-        }
-    if( !Extensions::damageAvailable())
-        {
-        kDebug( 1212 ) << "No damage extension available";
+    }
+    if (!Extensions::damageAvailable()) {
+        kDebug(1212) << "No damage extension available";
         return false;
-        }
+    }
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( Extensions::glxAvailable())
+    if (Extensions::glxAvailable())
         return true;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( Extensions::renderAvailable() && Extensions::fixesAvailable())
+    if (Extensions::renderAvailable() && Extensions::fixesAvailable())
         return true;
 #endif
 #ifdef KWIN_HAVE_OPENGLES
     return true;
 #endif
-    kDebug( 1212 ) << "No OpenGL or XRender/XFixes support";
+    kDebug(1212) << "No OpenGL or XRender/XFixes support";
     return false;
 #else
     return false;
 #endif
-    }
+}
 
 QString CompositingPrefs::compositingNotPossibleReason()
-    {
+{
 #ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
-    if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
-        {
+    if (!Extensions::compositeAvailable() || !Extensions::damageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
-        }
+    }
 #if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if( !Extensions::glxAvailable())
-        return i18n( "GLX/OpenGL are not available and only OpenGL support is compiled." );
+    if (!Extensions::glxAvailable())
+        return i18n("GLX/OpenGL are not available and only OpenGL support is compiled.");
 #elif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if( !( Extensions::renderAvailable() && Extensions::fixesAvailable()))
-        return i18n( "XRender/XFixes extensions are not available and only XRender support"
-            " is compiled." );
+    if (!(Extensions::renderAvailable() && Extensions::fixesAvailable()))
+        return i18n("XRender/XFixes extensions are not available and only XRender support"
+                    " is compiled.");
 #else
-    if( !( Extensions::glxAvailable()
-            || ( Extensions::renderAvailable() && Extensions::fixesAvailable())))
-        {
-        return i18n( "GLX/OpenGL and XRender/XFixes are not available." );
-        }
+    if (!(Extensions::glxAvailable()
+            || (Extensions::renderAvailable() && Extensions::fixesAvailable()))) {
+        return i18n("GLX/OpenGL and XRender/XFixes are not available.");
+    }
 #endif
     return QString();
 #else
     return i18n("Compositing was disabled at compile time.\n"
-            "It is likely Xorg development headers were not installed.");
+                "It is likely Xorg development headers were not installed.");
 #endif
-    }
+}
 
 void CompositingPrefs::detect()
-    {
-    if( !compositingPossible())
-        {
+{
+    if (!compositingPossible()) {
         return;
-        }
+    }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifdef KWIN_HAVE_OPENGLES
@@ -144,8 +139,7 @@ void CompositingPrefs::detect()
     }
 #else
     // HACK: This is needed for AIGLX
-    if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
-        {
+    if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") != 0) {
         // Start an external helper program that initializes GLX and returns
         // 0 if we can use direct rendering, and 1 otherwise.
         // The reason we have to use an external program is that after GLX
@@ -153,40 +147,38 @@ void CompositingPrefs::detect()
         // environment variable.
         // Direct rendering is preferred, since not all OpenGL extensions are
         // available with indirect rendering.
-        const QString opengl_test = KStandardDirs::findExe( "kwin_opengl_test" );
-        if ( QProcess::execute( opengl_test ) != 0 )
-            setenv( "LIBGL_ALWAYS_INDIRECT", "1", true );
-        }
-    if( !Extensions::glxAvailable())
-        {
-        kDebug( 1212 ) << "No GLX available";
+        const QString opengl_test = KStandardDirs::findExe("kwin_opengl_test");
+        if (QProcess::execute(opengl_test) != 0)
+            setenv("LIBGL_ALWAYS_INDIRECT", "1", true);
+    }
+    if (!Extensions::glxAvailable()) {
+        kDebug(1212) << "No GLX available";
         return;
-        }
+    }
     int glxmajor, glxminor;
-    glXQueryVersion( display(), &glxmajor, &glxminor );
-    kDebug( 1212 ) << "glx version is " << glxmajor << "." << glxminor;
-    bool hasglx13 = ( glxmajor > 1 || ( glxmajor == 1 && glxminor >= 3 ));
+    glXQueryVersion(display(), &glxmajor, &glxminor);
+    kDebug(1212) << "glx version is " << glxmajor << "." << glxminor;
+    bool hasglx13 = (glxmajor > 1 || (glxmajor == 1 && glxminor >= 3));
 
     // remember and later restore active context
     GLXContext oldcontext = glXGetCurrentContext();
     GLXDrawable olddrawable = glXGetCurrentDrawable();
     GLXDrawable oldreaddrawable = None;
-    if( hasglx13 )
+    if (hasglx13)
         oldreaddrawable = glXGetCurrentReadDrawable();
 
-    if( initGLXContext() )
-        {
+    if (initGLXContext()) {
         detectDriverAndVersion();
         applyDriverSpecificOptions();
-        }
-    if( hasglx13 )
-        glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
+    }
+    if (hasglx13)
+        glXMakeContextCurrent(display(), olddrawable, oldreaddrawable, oldcontext);
     else
-        glXMakeCurrent( display(), olddrawable, oldcontext );
+        glXMakeCurrent(display(), olddrawable, oldcontext);
     deleteGLXContext();
 #endif
 #endif
-    }
+}
 
 bool CompositingPrefs::initGLXContext()
 {
@@ -202,44 +194,41 @@ bool CompositingPrefs::initGLXContext()
     attribs << GLX_BLUE_SIZE << 1;
     attribs << None;
 
-    XVisualInfo* visinfo = glXChooseVisual( display(), DefaultScreen( display()), attribs.data() );
-    if( !visinfo )
-        {
+    XVisualInfo* visinfo = glXChooseVisual(display(), DefaultScreen(display()), attribs.data());
+    if (!visinfo) {
         attribs.last() = GLX_DOUBLEBUFFER;
         attribs << None;
-        visinfo = glXChooseVisual( display(), DefaultScreen( display()), attribs.data() );
-        if (!visinfo)
-            {
-            kDebug( 1212 ) << "Error: couldn't find RGB GLX visual";
+        visinfo = glXChooseVisual(display(), DefaultScreen(display()), attribs.data());
+        if (!visinfo) {
+            kDebug(1212) << "Error: couldn't find RGB GLX visual";
             return false;
-            }
         }
+    }
 
-    mGLContext = glXCreateContext( display(), visinfo, NULL, True );
-    if ( !mGLContext )
-    {
-        kDebug( 1212 ) << "glXCreateContext failed";
-        XDestroyWindow( display(), mGLWindow );
+    mGLContext = glXCreateContext(display(), visinfo, NULL, True);
+    if (!mGLContext) {
+        kDebug(1212) << "glXCreateContext failed";
+        XDestroyWindow(display(), mGLWindow);
         return false;
     }
 
     XSetWindowAttributes attr;
     attr.background_pixel = 0;
     attr.border_pixel = 0;
-    attr.colormap = XCreateColormap( display(), rootWindow(), visinfo->visual, AllocNone );
+    attr.colormap = XCreateColormap(display(), rootWindow(), visinfo->visual, AllocNone);
     attr.event_mask = StructureNotifyMask | ExposureMask;
     unsigned long mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
     int width = 100, height = 100;
-    mGLWindow = XCreateWindow( display(), rootWindow(), 0, 0, width, height,
-                       0, visinfo->depth, InputOutput,
-                       visinfo->visual, mask, &attr );
+    mGLWindow = XCreateWindow(display(), rootWindow(), 0, 0, width, height,
+                              0, visinfo->depth, InputOutput,
+                              visinfo->visual, mask, &attr);
 
-    return glXMakeCurrent( display(), mGLWindow, mGLContext ) && !handler.error( true );
+    return glXMakeCurrent(display(), mGLWindow, mGLContext) && !handler.error(true);
 #else
     return false;
 #endif
 #else
-   return false;
+    return false;
 #endif
 }
 
@@ -247,10 +236,10 @@ void CompositingPrefs::deleteGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
-    if( mGLContext == NULL )
+    if (mGLContext == NULL)
         return;
-    glXDestroyContext( display(), mGLContext );
-    XDestroyWindow( display(), mGLWindow );
+    glXDestroyContext(display(), mGLContext);
+    XDestroyWindow(display(), mGLWindow);
 #endif
 #endif
 }
@@ -258,14 +247,14 @@ void CompositingPrefs::deleteGLXContext()
 bool CompositingPrefs::initEGLContext()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    mEGLDisplay = eglGetDisplay( display() );
+    mEGLDisplay = eglGetDisplay(display());
     if (mEGLDisplay == EGL_NO_DISPLAY) {
         return false;
     }
-    if (eglInitialize( mEGLDisplay, 0, 0 ) == EGL_FALSE) {
+    if (eglInitialize(mEGLDisplay, 0, 0) == EGL_FALSE) {
         return false;
     }
-    eglBindAPI( EGL_OPENGL_ES_API );
+    eglBindAPI(EGL_OPENGL_ES_API);
 
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
@@ -297,26 +286,26 @@ bool CompositingPrefs::initEGLContext()
     XSetWindowAttributes attr;
     attr.background_pixel = 0;
     attr.border_pixel = 0;
-    attr.colormap = XCreateColormap( display(), rootWindow(), (Visual*)QX11Info::appVisual(), AllocNone );
+    attr.colormap = XCreateColormap(display(), rootWindow(), (Visual*)QX11Info::appVisual(), AllocNone);
     attr.event_mask = StructureNotifyMask | ExposureMask;
     unsigned long mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
     int width = 100, height = 100;
-    mGLWindow = XCreateWindow( display(), rootWindow(), 0, 0, width, height,
-                       0, QX11Info::appDepth(), InputOutput,
-                       (Visual*)QX11Info::appVisual(), mask, &attr );
+    mGLWindow = XCreateWindow(display(), rootWindow(), 0, 0, width, height,
+                              0, QX11Info::appDepth(), InputOutput,
+                              (Visual*)QX11Info::appVisual(), mask, &attr);
 
-    mEGLSurface = eglCreateWindowSurface( mEGLDisplay, config, mGLWindow, 0 );
+    mEGLSurface = eglCreateWindowSurface(mEGLDisplay, config, mGLWindow, 0);
 
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
     };
 
-    mEGLContext = eglCreateContext( mEGLDisplay, config, EGL_NO_CONTEXT, context_attribs );
+    mEGLContext = eglCreateContext(mEGLDisplay, config, EGL_NO_CONTEXT, context_attribs);
     if (mEGLContext == EGL_NO_CONTEXT) {
         return false;
     }
-    if (eglMakeCurrent( mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext ) == EGL_FALSE) {
+    if (eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext) == EGL_FALSE) {
         return false;
     }
     EGLint error = eglGetError();
@@ -337,32 +326,32 @@ void CompositingPrefs::deleteEGLContext()
     eglDestroySurface(mEGLDisplay, mEGLSurface);
     eglTerminate(mEGLDisplay);
     eglReleaseThread();
-    XDestroyWindow( display(), mGLWindow );
+    XDestroyWindow(display(), mGLWindow);
 #endif
 }
 
 void CompositingPrefs::detectDriverAndVersion()
-    {
+{
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     GLPlatform *gl = GLPlatform::instance();
     gl->detect();
     gl->printResults();
 #endif
-    }
+}
 
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
-    {
+{
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // Always recommend
     mRecommendCompositing = true;
 
     GLPlatform *gl = GLPlatform::instance();
-    mStrictBinding = !gl->supports( LooseBinding );
-    if ( gl->driver() == Driver_Intel )
+    mStrictBinding = !gl->supports(LooseBinding);
+    if (gl->driver() == Driver_Intel)
         mEnableVSync = false;
 #endif
-    }
+}
 
 } // namespace
 

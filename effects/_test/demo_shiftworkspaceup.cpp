@@ -13,46 +13,46 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( demo_shiftworkspaceup, ShiftWorkspaceUpEffect )
+KWIN_EFFECT(demo_shiftworkspaceup, ShiftWorkspaceUpEffect)
 
 ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
-    : up( false )
-    , diff( 0 )
-    {
-    connect( &timer, SIGNAL( timeout()), SLOT( tick()));
-    timer.start( 2000 );
-    }
+    : up(false)
+    , diff(0)
+{
+    connect(&timer, SIGNAL(timeout()), SLOT(tick()));
+    timer.start(2000);
+}
 
-void ShiftWorkspaceUpEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( up && diff < 1000 )
-        diff = qBound( 0, diff + time, 1000 ); // KDE3: note this differs from KCLAMP
-    if( !up && diff > 0 )
-        diff = qBound( 0, diff - time, 1000 );
-    if( diff != 0 )
+void ShiftWorkspaceUpEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (up && diff < 1000)
+        diff = qBound(0, diff + time, 1000);   // KDE3: note this differs from KCLAMP
+    if (!up && diff > 0)
+        diff = qBound(0, diff - time, 1000);
+    if (diff != 0)
         data.mask |= PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( data, time );
-    }
+    effects->prePaintScreen(data, time);
+}
 
-void ShiftWorkspaceUpEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    if( diff != 0 )
+void ShiftWorkspaceUpEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    if (diff != 0)
         data.yTranslate -= diff / 100;
-    effects->paintScreen( mask, region, data );
-    }
+    effects->paintScreen(mask, region, data);
+}
 
 void ShiftWorkspaceUpEffect::postPaintScreen()
-    {
-    if( up ? diff < 1000 : diff > 0 )
+{
+    if (up ? diff < 1000 : diff > 0)
         effects->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
-    }
+}
 
 void ShiftWorkspaceUpEffect::tick()
-    {
+{
     up = !up;
     effects->addRepaintFull();
-    }
+}
 
 } // namespace
 

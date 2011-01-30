@@ -33,30 +33,30 @@ namespace KWin
 class DesktopGridEffectConfigForm : public QWidget, public Ui::DesktopGridEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit DesktopGridEffectConfigForm(QWidget* parent);
+public:
+    explicit DesktopGridEffectConfigForm(QWidget* parent);
 };
 
 class DesktopGridEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit DesktopGridEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~DesktopGridEffectConfig();
+public:
+    explicit DesktopGridEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~DesktopGridEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private slots:
-        void layoutSelectionChanged();
+private slots:
+    void layoutSelectionChanged();
 
-    private:
-        DesktopGridEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-        QList<Qt::Alignment> m_alignmentItems;
-    };
+private:
+    DesktopGridEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+    QList<Qt::Alignment> m_alignmentItems;
+};
 
 } // namespace
 

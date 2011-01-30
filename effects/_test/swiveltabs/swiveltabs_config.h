@@ -28,25 +28,25 @@ namespace KWin
 {
 
 class SwivelTabsEffectConfigForm : public QWidget, public Ui::SwivelTabsEffectConfigForm
-    {
+{
     Q_OBJECT
-    public:
-        explicit SwivelTabsEffectConfigForm( QWidget* parent );
-    };
+public:
+    explicit SwivelTabsEffectConfigForm(QWidget* parent);
+};
 
 class SwivelTabsEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit SwivelTabsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~SwivelTabsEffectConfig();
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
-    private:
-        SwivelTabsEffectConfigForm *m_ui;
-    };
+public:
+    explicit SwivelTabsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~SwivelTabsEffectConfig();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
+private:
+    SwivelTabsEffectConfigForm *m_ui;
+};
 
 }
 

@@ -36,44 +36,44 @@ class Tile;
  * change the position of FirstLayout and LastLayout
  */
 class TilingLayoutFactory
-    {
-    public:
-        /** When adding your own layout, edit this
-         * Remember to suffix an L for now
-         */
-        enum Layouts {
-            FirstLayout, // special, do not modify/move
-            DefaultLayout,
+{
+public:
+    /** When adding your own layout, edit this
+     * Remember to suffix an L for now
+     */
+    enum Layouts {
+        FirstLayout, // special, do not modify/move
+        DefaultLayout,
 
-            /* Actual layouts */
-            SpiralLayout,
-            ColumnsLayout,
-            FloatingLayout,
-            /* Put your layout above this line ^^^ */
+        /* Actual layouts */
+        SpiralLayout,
+        ColumnsLayout,
+        FloatingLayout,
+        /* Put your layout above this line ^^^ */
 
-            LastLayout // special, do not modify/move
-        };
-
-        static TilingLayout* createLayout( int type, Workspace * );
-        static TilingLayout* nextLayout( TilingLayout *curr );
-        static TilingLayout* previousLayout( TilingLayout *curr );
-
-        static int indexToLayoutIndex( int index );
-
-    private:
-        static TilingLayout* cycleLayout( TilingLayout *curr, bool next );
-
+        LastLayout // special, do not modify/move
     };
 
-inline TilingLayout* TilingLayoutFactory::nextLayout( TilingLayout *curr )
-    {
-    return cycleLayout( curr, true );
-    }
+    static TilingLayout* createLayout(int type, Workspace *);
+    static TilingLayout* nextLayout(TilingLayout *curr);
+    static TilingLayout* previousLayout(TilingLayout *curr);
 
-inline TilingLayout* TilingLayoutFactory::previousLayout( TilingLayout *curr )
-    {
-    return cycleLayout( curr, false );
-    }
+    static int indexToLayoutIndex(int index);
+
+private:
+    static TilingLayout* cycleLayout(TilingLayout *curr, bool next);
+
+};
+
+inline TilingLayout* TilingLayoutFactory::nextLayout(TilingLayout *curr)
+{
+    return cycleLayout(curr, true);
+}
+
+inline TilingLayout* TilingLayoutFactory::previousLayout(TilingLayout *curr)
+{
+    return cycleLayout(curr, false);
+}
 } // end namespace
 
 #endif

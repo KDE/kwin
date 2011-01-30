@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 //
 // This header file is internal. I mean it.
-// 
+//
 
 #include "kdecoration.h"
 #include <QtGui/QWidget>
@@ -35,25 +35,25 @@ DEALINGS IN THE SOFTWARE.
 class KConfig;
 
 class KDecorationOptionsPrivate : public KDecorationDefines
-    {
-    public:
-        KDecorationOptionsPrivate();
-        ~KDecorationOptionsPrivate();
-        unsigned long updateSettings( KConfig* ); // shared implementation
-        BorderSize findPreferredBorderSize( BorderSize size, QList< BorderSize > ) const; // shared implementation
+{
+public:
+    KDecorationOptionsPrivate();
+    ~KDecorationOptionsPrivate();
+    unsigned long updateSettings(KConfig*);   // shared implementation
+    BorderSize findPreferredBorderSize(BorderSize size, QList< BorderSize >) const;   // shared implementation
 
-        QColor colors[NUM_COLORS*2];
-        QPalette *pal[NUM_COLORS*2];
-        QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
-        QString title_buttons_left;
-        QString title_buttons_right;
-        bool custom_button_positions;
-        bool show_tooltips;
-        BorderSize border_size, cached_border_size;
-        bool move_resize_maximized_windows;
-        WindowOperation opMaxButtonRightClick;
-        WindowOperation opMaxButtonMiddleClick;
-        WindowOperation opMaxButtonLeftClick;
-    };
+    QColor colors[NUM_COLORS*2];
+    QPalette *pal[NUM_COLORS*2];
+    QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
+    QString title_buttons_left;
+    QString title_buttons_right;
+    bool custom_button_positions;
+    bool show_tooltips;
+    BorderSize border_size, cached_border_size;
+    bool move_resize_maximized_windows;
+    WindowOperation opMaxButtonRightClick;
+    WindowOperation opMaxButtonMiddleClick;
+    WindowOperation opMaxButtonLeftClick;
+};
 
 #endif

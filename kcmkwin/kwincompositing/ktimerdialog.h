@@ -36,7 +36,7 @@ class QLabel;
  * of time, and reports the time remaining to the user.
  *
  * The timer is capable of counting up or down, for any number of milliseconds.
- * 
+ *
  * The button which is activated upon timeout can be specified, as can the
  * update interval for the dialog box.
  *
@@ -47,9 +47,9 @@ class QLabel;
  */
 class KTimerDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * @li @p CountDown - The timer counts downwards from the seconds given.
@@ -57,8 +57,7 @@ class KTimerDialog : public KDialog
      * @li @p Manual - The timer is not invoked; the caller must update the
      * progress.
      */
-    enum TimerStyle
-    {
+    enum TimerStyle {
         CountDown,
         CountUp,
         Manual
@@ -70,13 +69,13 @@ class KTimerDialog : public KDialog
      *
      * For the rest of the arguments, See @see KDialog .
      */
-    explicit KTimerDialog( int msec, TimerStyle style=CountDown, QWidget *parent=0,
-                           const QString &caption=QString(),
-                           int buttonMask=Ok|Apply|Cancel, ButtonCode defaultButton=Ok,
-                           bool separator=false,
-                           const KGuiItem &user1=KGuiItem(),
-                           const KGuiItem &user2=KGuiItem(),
-                           const KGuiItem &user3=KGuiItem() );
+    explicit KTimerDialog(int msec, TimerStyle style = CountDown, QWidget *parent = 0,
+                          const QString &caption = QString(),
+                          int buttonMask = Ok | Apply | Cancel, ButtonCode defaultButton = Ok,
+                          bool separator = false,
+                          const KGuiItem &user1 = KGuiItem(),
+                          const KGuiItem &user2 = KGuiItem(),
+                          const KGuiItem &user3 = KGuiItem());
 
     /**
      * Destructor.
@@ -86,12 +85,12 @@ class KTimerDialog : public KDialog
     /**
      * Execute the dialog modelessly - see @see QDialog .
      */
-    virtual void setVisible( bool visible );
+    virtual void setVisible(bool visible);
 
     /**
      * Set the refresh interval for the timer progress. Defaults to one second.
      */
-    void setRefreshInterval( int msec );
+    void setRefreshInterval(int msec);
 
     /**
      * Retrieves the @ref ButtonCode which will be activated once the timer
@@ -103,7 +102,7 @@ class KTimerDialog : public KDialog
      * Sets the @ref ButtonCode to determine which button will be activated
      * once the timer times out. @see timeoutButton
      */
-    void setTimeoutButton( ButtonCode newButton );
+    void setTimeoutButton(ButtonCode newButton);
 
     /**
      * Retrieves the current @ref TimerStyle. @see setTimerStyle
@@ -113,38 +112,38 @@ class KTimerDialog : public KDialog
     /**
      * Sets the @ref TimerStyle. @see timerStyle
      */
-    void setTimerStyle( TimerStyle newStyle );
+    void setTimerStyle(TimerStyle newStyle);
 
     /**
      * Overridden function which is used to set the main widget of the dialog.
      * @see KDialog::setMainWidget.
      */
-    void setMainWidget( QWidget *widget );
+    void setMainWidget(QWidget *widget);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Signal which is emitted once the timer has timed out.
      */
     void timerTimeout();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Execute the dialog modally - see @see QDialog .
      */
     int exec();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     /**
      * Updates the dialog with the current progress levels.
      */
-    void slotUpdateTime( bool update = true );
+    void slotUpdateTime(bool update = true);
 
     /**
      * The internal
      */
     void slotInternalTimeout();
 
-  private:
+private:
     /**
      * Prepares the layout that manages the widgets of the dialog
      */

@@ -32,10 +32,10 @@ DEALINGS IN THE SOFTWARE.
 #include <QProcess>
 #include <signal.h>
 
-int main( int argc, char* argv[] )
-    {
-    KCmdLineArgs::init( argc, argv, "kwin_killer_helper", "kwin", ki18n( "KWin" ), "1.0" ,
-	ki18n( "KWin helper utility" ));
+int main(int argc, char* argv[])
+{
+    KCmdLineArgs::init(argc, argv, "kwin_killer_helper", "kwin", ki18n("KWin"), "1.0" ,
+                       ki18n("KWin helper utility"));
 
     KCmdLineOptions options;
     options.add("pid <pid>", ki18n("PID of the application to terminate"));
@@ -44,43 +44,39 @@ int main( int argc, char* argv[] )
     options.add("applicationname <name>", ki18n("Name of the application to be terminated"));
     options.add("wid <id>", ki18n("ID of resource belonging to the application"));
     options.add("timestamp <time>", ki18n("Time of user action causing termination"));
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
-    KApplication::setWindowIcon( KIcon( "kwin" ) );
+    KApplication::setWindowIcon(KIcon("kwin"));
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    QString hostname = args->getOption( "hostname" );
+    QString hostname = args->getOption("hostname");
     bool pid_ok = false;
-    pid_t pid = QString( args->getOption( "pid" ) ).toULong( &pid_ok );
-    QString caption = args->getOption( "windowname" );
-    QString appname = args->getOption( "applicationname" );
+    pid_t pid = QString(args->getOption("pid")).toULong(&pid_ok);
+    QString caption = args->getOption("windowname");
+    QString appname = args->getOption("applicationname");
     bool id_ok = false;
-    Window id = QString( args->getOption( "wid" ) ).toULong( &id_ok );
+    Window id = QString(args->getOption("wid")).toULong(&id_ok);
     bool time_ok = false;
-    Time timestamp =QString( args->getOption( "timestamp" ) ).toULong( &time_ok );
+    Time timestamp = QString(args->getOption("timestamp")).toULong(&time_ok);
     args->clear();
-    if( !pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
-	|| hostname.isEmpty() || caption.isEmpty() || appname.isEmpty())
-        {
-	KCmdLineArgs::usageError( i18n( "This helper utility is not supposed to be called directly." ));
-	return 1;
-        }
-    QString question = i18n(
-	"<p>The window \"<b>%2</b>\" is not responding. "
-	"It belongs to the application <b>%1</b> (Process ID = %3, hostname = %4).</p>"
-	"<p>Do you wish to terminate the application process <em>including <b>all</b> of its child windows</em>?<br />"
-        "<b>Any unsaved data will be lost.</b></p>" ,
-	  appname, caption, QString::number( pid ), QString( hostname ) );
-    app.updateUserTimestamp( timestamp );
-    if( KMessageBox::warningContinueCancelWId( id, question, QString(), KGuiItem(i18n("&Terminate Application %1", appname), "edit-bomb") ) == KMessageBox::Continue )
-        {    
-	if( hostname != "localhost" )
-            {
-		  QStringList lst;
-		  lst << hostname << "kill" << QString::number( pid );
-		  QProcess::startDetached("xon",lst);
-	    }
-	else
-	    ::kill( pid, SIGKILL );
-	XKillClient( QX11Info::display(), id );
-        }
+    if (!pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
+            || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
+        KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
+        return 1;
     }
+    QString question = i18n(
+                           "<p>The window \"<b>%2</b>\" is not responding. "
+                           "It belongs to the application <b>%1</b> (Process ID = %3, hostname = %4).</p>"
+                           "<p>Do you wish to terminate the application process <em>including <b>all</b> of its child windows</em>?<br />"
+                           "<b>Any unsaved data will be lost.</b></p>" ,
+                           appname, caption, QString::number(pid), QString(hostname));
+    app.updateUserTimestamp(timestamp);
+    if (KMessageBox::warningContinueCancelWId(id, question, QString(), KGuiItem(i18n("&Terminate Application %1", appname), "edit-bomb")) == KMessageBox::Continue) {
+        if (hostname != "localhost") {
+            QStringList lst;
+            lst << hostname << "kill" << QString::number(pid);
+            QProcess::startDetached("xon", lst);
+        } else
+            ::kill(pid, SIGKILL);
+        XKillClient(QX11Info::display(), id);
+    }
+}

@@ -40,47 +40,47 @@ namespace KWin
 
 #define NULL_POINT (QPoint( -1, -1 )) // null point is (0,0), which is valid :-/
 
-KWIN_EFFECT( mousemark, MouseMarkEffect )
+KWIN_EFFECT(mousemark, MouseMarkEffect)
 
 MouseMarkEffect::MouseMarkEffect()
-    {
-    KActionCollection* actionCollection = new KActionCollection( this );
-    KAction* a = static_cast< KAction* >( actionCollection->addAction( "ClearMouseMarks" ));
-    a->setText( i18n( "Clear All Mouse Marks" ));
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
-    connect( a, SIGNAL( triggered( bool )), this, SLOT( clear()));
-    a = static_cast< KAction* >( actionCollection->addAction( "ClearLastMouseMark" ));
-    a->setText( i18n( "Clear Last Mouse Mark" ));
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
-    connect( a, SIGNAL( triggered( bool )), this, SLOT( clearLast()));
-    reconfigure( ReconfigureAll );
+{
+    KActionCollection* actionCollection = new KActionCollection(this);
+    KAction* a = static_cast< KAction* >(actionCollection->addAction("ClearMouseMarks"));
+    a->setText(i18n("Clear All Mouse Marks"));
+    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F11));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(clear()));
+    a = static_cast< KAction* >(actionCollection->addAction("ClearLastMouseMark"));
+    a->setText(i18n("Clear Last Mouse Mark"));
+    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));
+    reconfigure(ReconfigureAll);
     arrow_start = NULL_POINT;
     effects->startMousePolling(); // We require it to detect activation as well
-    }
+}
 
 MouseMarkEffect::~MouseMarkEffect()
-    {
+{
     effects->stopMousePolling();
-    }
+}
 
-void MouseMarkEffect::reconfigure( ReconfigureFlags )
-    {
+void MouseMarkEffect::reconfigure(ReconfigureFlags)
+{
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
-    width = conf.readEntry( "LineWidth", 3 );
-    color = conf.readEntry( "Color", QColor( Qt::red ));
+    width = conf.readEntry("LineWidth", 3);
+    color = conf.readEntry("Color", QColor(Qt::red));
     color.setAlphaF(1.0);
-    }
+}
 
-void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    effects->paintScreen( mask, region, data ); // paint normal screen
-    if( marks.isEmpty() && drawing.isEmpty())
+void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    effects->paintScreen(mask, region, data);   // paint normal screen
+    if (marks.isEmpty() && drawing.isEmpty())
         return;
 #ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib( GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT );
-    glEnable( GL_LINE_SMOOTH );
+    glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT);
+    glEnable(GL_LINE_SMOOTH);
 #endif
-    glLineWidth( width );
+    glLineWidth(width);
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
@@ -89,112 +89,101 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
         ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
     }
     QVector<float> verts;
-    foreach (const Mark& mark, marks) {
+    foreach (const Mark & mark, marks) {
         verts.clear();
-        verts.reserve(mark.size()*2);
-        foreach (const QPoint& p, mark) {
+        verts.reserve(mark.size() * 2);
+        foreach (const QPoint & p, mark) {
             verts << p.x() << p.y();
         }
-        vbo->setData(verts.size()/2, 2, verts.data(), NULL);
+        vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
         vbo->render(GL_LINE_STRIP);
     }
     if (!drawing.isEmpty()) {
         verts.clear();
-        verts.reserve(drawing.size()*2);
-        foreach (const QPoint& p, drawing) {
+        verts.reserve(drawing.size() * 2);
+        foreach (const QPoint & p, drawing) {
             verts << p.x() << p.y();
         }
-        vbo->setData(verts.size()/2, 2, verts.data(), NULL);
+        vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
         vbo->render(GL_LINE_STRIP);
     }
     if (ShaderManager::instance()->isValid()) {
         ShaderManager::instance()->popShader();
     }
-    glLineWidth( 1.0 );
+    glLineWidth(1.0);
 #ifndef KWIN_HAVE_OPENGLES
-    glDisable( GL_LINE_SMOOTH );
+    glDisable(GL_LINE_SMOOTH);
     glPopAttrib();
 #endif
-    }
+}
 
-void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,
-    Qt::MouseButtons, Qt::MouseButtons,
-    Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
-    {
-    if( modifiers == ( Qt::META | Qt::SHIFT | Qt::CTRL )) // start/finish arrow
-        {
-        if( arrow_start != NULL_POINT )
-            {
-            marks.append( createArrow( arrow_start, pos ));
+void MouseMarkEffect::mouseChanged(const QPoint& pos, const QPoint&,
+                                   Qt::MouseButtons, Qt::MouseButtons,
+                                   Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
+{
+    if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) {  // start/finish arrow
+        if (arrow_start != NULL_POINT) {
+            marks.append(createArrow(arrow_start, pos));
             arrow_start = NULL_POINT;
             effects->addRepaintFull();
             return;
-            }
-        else
+        } else
             arrow_start = pos;
-        }
-    if( arrow_start != NULL_POINT )
+    }
+    if (arrow_start != NULL_POINT)
         return;
     // TODO the shortcuts now trigger this right before they're activated
-    if( modifiers == ( Qt::META | Qt::SHIFT )) // activated
-        {
-        if( drawing.isEmpty())
-            drawing.append( pos );
-        if( drawing.last() == pos )
+    if (modifiers == (Qt::META | Qt::SHIFT)) {  // activated
+        if (drawing.isEmpty())
+            drawing.append(pos);
+        if (drawing.last() == pos)
             return;
         QPoint pos2 = drawing.last();
-        drawing.append( pos );
-        QRect repaint = QRect( qMin( pos.x(), pos2.x()), qMin( pos.y(), pos2.y()),
-                               qMax( pos.x(), pos2.x()), qMax( pos.y(), pos2.y()));
-        repaint.adjust( -width, -width, width, width );
-        effects->addRepaint( repaint );
-        }
-    else if( !drawing.isEmpty())
-        {
-        marks.append( drawing );
+        drawing.append(pos);
+        QRect repaint = QRect(qMin(pos.x(), pos2.x()), qMin(pos.y(), pos2.y()),
+                              qMax(pos.x(), pos2.x()), qMax(pos.y(), pos2.y()));
+        repaint.adjust(-width, -width, width, width);
+        effects->addRepaint(repaint);
+    } else if (!drawing.isEmpty()) {
+        marks.append(drawing);
         drawing.clear();
-        }
     }
+}
 
 void MouseMarkEffect::clear()
-    {
+{
     drawing.clear();
     marks.clear();
     effects->addRepaintFull();
-    }
+}
 
 void MouseMarkEffect::clearLast()
-    {
-    if( arrow_start != NULL_POINT )
-        {
+{
+    if (arrow_start != NULL_POINT) {
         arrow_start = NULL_POINT;
-        }
-    else if( !drawing.isEmpty())
-        {
+    } else if (!drawing.isEmpty()) {
         drawing.clear();
         effects->addRepaintFull();
-        }
-    else if( !marks.isEmpty())
-        {
+    } else if (!marks.isEmpty()) {
         marks.pop_back();
         effects->addRepaintFull();
-        }
     }
+}
 
-MouseMarkEffect::Mark MouseMarkEffect::createArrow( QPoint arrow_start, QPoint arrow_end )
-    {
+MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint arrow_end)
+{
     Mark ret;
-    double angle = atan2( (double) (arrow_end.y() - arrow_start.y()), (double) (arrow_end.x() - arrow_start.x()));
-    ret += arrow_start + QPoint( 50 * cos( angle + M_PI / 6 ),
-        50 * sin( angle + M_PI / 6 )); // right one
+    double angle = atan2((double)(arrow_end.y() - arrow_start.y()), (double)(arrow_end.x() - arrow_start.x()));
+    ret += arrow_start + QPoint(50 * cos(angle + M_PI / 6),
+                                50 * sin(angle + M_PI / 6));   // right one
     ret += arrow_start;
     ret += arrow_end;
     ret += arrow_start; // it's connected lines, so go back with the middle one
-    ret += arrow_start + QPoint( 50 * cos( angle - M_PI / 6 ),
-        50 * sin( angle - M_PI / 6 )); // left one
+    ret += arrow_start + QPoint(50 * cos(angle - M_PI / 6),
+                                50 * sin(angle - M_PI / 6));   // left one
     return ret;
-    }
-    
+}
+
 } // namespace
 
 #include "mousemark.moc"

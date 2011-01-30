@@ -35,27 +35,27 @@ class KWinDesktopConfig;
 class DesktopNamesWidget : public QWidget
 {
     Q_OBJECT
-    public:
-        DesktopNamesWidget( QWidget *parent );
-        ~DesktopNamesWidget();
-        QString name( int desktop );
-        void setName( int desktop, QString desktopName );
-        void setDefaultName( int desktop );
-        void setMaxDesktops( int maxDesktops );
-        void setDesktopConfig( KWinDesktopConfig *desktopConfig );
+public:
+    DesktopNamesWidget(QWidget *parent);
+    ~DesktopNamesWidget();
+    QString name(int desktop);
+    void setName(int desktop, QString desktopName);
+    void setDefaultName(int desktop);
+    void setMaxDesktops(int maxDesktops);
+    void setDesktopConfig(KWinDesktopConfig *desktopConfig);
 
-    signals:
-        void changed();
+signals:
+    void changed();
 
-    public slots:
-        void numberChanged( int number );
+public slots:
+    void numberChanged(int number);
 
-    private:
-        QList< QLabel* > m_nameLabels;
-        QList< KLineEdit* > m_nameInputs;
-        QGridLayout* m_namesLayout;
-        int m_maxDesktops;
-        KWinDesktopConfig *m_desktopConfig;
+private:
+    QList< QLabel* > m_nameLabels;
+    QList< KLineEdit* > m_nameInputs;
+    QGridLayout* m_namesLayout;
+    int m_maxDesktops;
+    KWinDesktopConfig *m_desktopConfig;
 };
 
 } // namespace

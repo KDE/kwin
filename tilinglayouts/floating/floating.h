@@ -31,29 +31,29 @@ namespace KWin
 {
 class Workspace;
 class Floating : public TilingLayout
-    {
-    public:
-        Floating( Workspace * );
-        ~Floating();
-        
-    private:
-        void arrange( QRect wgeom );
-        void postAddTile( Tile *t );
-        void preRemoveTile( Tile *t );
+{
+public:
+    Floating(Workspace *);
+    ~Floating();
 
-        Tile::Direction m_dir;
-        Tile *m_split;
+private:
+    void arrange(QRect wgeom);
+    void postAddTile(Tile *t);
+    void preRemoveTile(Tile *t);
 
-        /* 
-         * Tiles are added to was_floating if they
-         * were floating before being added to this layout
-         *
-         * When the layout is changed, was_floating is
-         * referred to, to restore the final state of the
-         * Tile
-         */
-        QSet<Tile *> was_floating;
-    };
+    Tile::Direction m_dir;
+    Tile *m_split;
+
+    /*
+     * Tiles are added to was_floating if they
+     * were floating before being added to this layout
+     *
+     * When the layout is changed, was_floating is
+     * referred to, to restore the final state of the
+     * Tile
+     */
+    QSet<Tile *> was_floating;
+};
 } // end namespace
 
 #endif

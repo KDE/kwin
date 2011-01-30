@@ -26,62 +26,61 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( snaphelper, SnapHelperEffect )
-KWIN_EFFECT_SUPPORTED( snaphelper, SnapHelperEffect::supported() )
+KWIN_EFFECT(snaphelper, SnapHelperEffect)
+KWIN_EFFECT_SUPPORTED(snaphelper, SnapHelperEffect::supported())
 
 SnapHelperEffect::SnapHelperEffect()
-    : m_active( false )
-    , m_window( NULL )
-    {
-    m_timeline.setCurveShape( TimeLine::LinearCurve );
-    reconfigure( ReconfigureAll );
+    : m_active(false)
+    , m_window(NULL)
+{
+    m_timeline.setCurveShape(TimeLine::LinearCurve);
+    reconfigure(ReconfigureAll);
 
-    /*if( effects->compositingType() == XRenderCompositing )
+    /*if ( effects->compositingType() == XRenderCompositing )
         {
         XGCValues gcattr;
         // TODO: Foreground color
         gcattr.line_width = 4;
         m_gc = XCreateGC( display(), rootWindow(), GCLineWidth, &gcattr );
         }*/
-    }
+}
 
 SnapHelperEffect::~SnapHelperEffect()
-    {
-    //if( effects->compositingType() == XRenderCompositing )
+{
+    //if ( effects->compositingType() == XRenderCompositing )
     //    XFreeGC( display(), m_gc );
-    }
+}
 
-void SnapHelperEffect::reconfigure( ReconfigureFlags )
-    {
-    m_timeline.setDuration( animationTime( 250 ));
-    }
+void SnapHelperEffect::reconfigure(ReconfigureFlags)
+{
+    m_timeline.setDuration(animationTime(250));
+}
 
 bool SnapHelperEffect::supported()
-    {
+{
     return effects->compositingType() == OpenGLCompositing;
-    }
+}
 
-void SnapHelperEffect::prePaintScreen( ScreenPrePaintData &data, int time )
-    {
+void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+{
     double oldValue = m_timeline.value();
-    if( m_active )
-        m_timeline.addTime( time );
+    if (m_active)
+        m_timeline.addTime(time);
     else
-        m_timeline.removeTime( time );
-    if( oldValue != m_timeline.value() )
+        m_timeline.removeTime(time);
+    if (oldValue != m_timeline.value())
         effects->addRepaintFull();
-    effects->prePaintScreen( data, time );
-    }
+    effects->prePaintScreen(data, time);
+}
 
 void SnapHelperEffect::postPaintScreen()
-    {
+{
     effects->postPaintScreen();
-    if( m_timeline.value() != 0.0 )
-        { // Display the guide
-        if( effects->compositingType() == OpenGLCompositing )
-            {
+    if (m_timeline.value() != 0.0) {
+        // Display the guide
+        if (effects->compositingType() == OpenGLCompositing) {
 #ifndef KWIN_HAVE_OPENGLES
-            glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
@@ -89,8 +88,8 @@ void SnapHelperEffect::postPaintScreen()
             if (ShaderManager::instance()->isValid()) {
                 ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
             }
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             QColor color;
             color.setRedF(0.5);
@@ -98,11 +97,11 @@ void SnapHelperEffect::postPaintScreen()
             color.setBlueF(0.5);
             color.setAlphaF(m_timeline.value() * 0.5);
             vbo->setColor(color);
-            glLineWidth( 4.0 );
+            glLineWidth(4.0);
             QVector<float> verts;
-            verts.reserve(effects->numScreens()*24);
+            verts.reserve(effects->numScreens() * 24);
             for (int i = 0; i < effects->numScreens(); i++) {
-                const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
+                const QRect& rect = effects->clientArea(ScreenArea, i, 0);
                 int midX = rect.x() + rect.width() / 2;
                 int midY = rect.y() + rect.height() / 2 ;
                 int halfWidth = m_window->width() / 2;
@@ -125,21 +124,21 @@ void SnapHelperEffect::postPaintScreen()
                 verts << midX - halfWidth << midY + halfHeight - 2;
                 verts << midX - halfWidth << midY - halfHeight - 2;
             }
-            vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+            vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
             vbo->render(GL_LINES);
             if (ShaderManager::instance()->isValid()) {
                 ShaderManager::instance()->popShader();
             }
 
-            glDisable( GL_BLEND );
-            glLineWidth( 1.0 );
+            glDisable(GL_BLEND);
+            glLineWidth(1.0);
 #ifndef KWIN_HAVE_OPENGLES
             glPopAttrib();
 #endif
-            }
-        /*if( effects->compositingType() == XRenderCompositing )
+        }
+        /*if ( effects->compositingType() == XRenderCompositing )
             { // TODO
-            for( int i = 0; i < effects->numScreens(); i++ )
+            for ( int i = 0; i < effects->numScreens(); i++ )
                 {
                 const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
                 int midX = rect.x() + rect.width() / 2;
@@ -181,34 +180,29 @@ void SnapHelperEffect::postPaintScreen()
                 XDrawSegments( display(), effects->xrenderBufferPicture(), m_gc, segments, 6 );
                 }
             }*/
-        }
-    else if( m_window )
-        {
-        if( m_window->isDeleted() )
+    } else if (m_window) {
+        if (m_window->isDeleted())
             m_window->unrefWindow();
         m_window = NULL;
-        }
     }
+}
 
-void SnapHelperEffect::windowClosed( EffectWindow* w )
-    {
-    if( m_window == w )
-        {
+void SnapHelperEffect::windowClosed(EffectWindow* w)
+{
+    if (m_window == w) {
         m_window->refWindow();
         m_active = false;
-        }
     }
+}
 
-void SnapHelperEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
-    {
-    if( first && !last && w->isMovable() )
-        {
+void SnapHelperEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+{
+    if (first && !last && w->isMovable()) {
         m_active = true;
         m_window = w;
         effects->addRepaintFull();
-        }
-    else if( last )
+    } else if (last)
         m_active = false;
-    }
+}
 
 } // namespace

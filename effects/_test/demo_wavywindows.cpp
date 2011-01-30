@@ -26,16 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( demo_wavywindows, WavyWindowsEffect )
+KWIN_EFFECT(demo_wavywindows, WavyWindowsEffect)
 
 WavyWindowsEffect::WavyWindowsEffect()
-    {
+{
     mTimeElapsed = 0.0f;
-    }
+}
 
 
-void WavyWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void WavyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
     // Adjust elapsed time
     mTimeElapsed += (time / 1000.0f);
     // We need to mark the screen windows as transformed. Otherwise the whole
@@ -43,55 +43,53 @@ void WavyWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
-    }
+}
 
-void WavyWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
+void WavyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
     // This window will be transformed by the effect
     data.setTransformed();
     // Check if OpenGL compositing is used
     // Request the window to be divided into cells which are at most 30x30
     //  pixels big
-    data.quads = data.quads.makeGrid( 30 );
+    data.quads = data.quads.makeGrid(30);
 
-    effects->prePaintWindow( w, data, time );
-    }
+    effects->prePaintWindow(w, data, time);
+}
 
-void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+void WavyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     // Make sure we have OpenGL compositing and the window is vidible and not a
     //  special window
-// TODO    if( w->isVisible() && !w->isSpecialWindow() )
-    if( !w->isSpecialWindow() )
-        {
+// TODO    if ( w->isVisible() && !w->isSpecialWindow() )
+    if (!w->isSpecialWindow()) {
         // We have OpenGL compositing and the window has been subdivided
         //  because of our request (in pre-paint pass)
         // Transform all the vertices to create wavy effect
-        for( int i = 0;
-             i < data.quads.count();
-             ++i )
-            for( int j = 0;
-                 j < 4;
-                 ++j )
-                {
+        for (int i = 0;
+                i < data.quads.count();
+                ++i)
+            for (int j = 0;
+                    j < 4;
+                    ++j) {
                 WindowVertex& v = data.quads[ i ][ j ];
-                v.move( v.x() + sin(mTimeElapsed + v.originalY() / 60 + 0.5f) * 10,
-                    v.y() + sin(mTimeElapsed + v.originalX() / 80) * 10 );
+                v.move(v.x() + sin(mTimeElapsed + v.originalY() / 60 + 0.5f) * 10,
+                       v.y() + sin(mTimeElapsed + v.originalX() / 80) * 10);
             }
-        }
-
-    // Call the next effect.
-    effects->paintWindow( w, mask, region, data );
     }
 
+    // Call the next effect.
+    effects->paintWindow(w, mask, region, data);
+}
+
 void WavyWindowsEffect::postPaintScreen()
-    {
+{
     // Repaint the workspace so that everything would be repainted next time
     effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();
-    }
+}
 
 } // namespace
 

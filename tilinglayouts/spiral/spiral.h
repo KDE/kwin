@@ -32,18 +32,18 @@ class Tile;
 class Client;
 
 class Spiral : public TilingLayout
-    {
-    public:
-        Spiral( Workspace * );
-        ~Spiral();
-        
-        void addTile( Tile *t );
-        void removeTile( Tile *t );
-        
-    private:
-        void arrange( QRect wgeom );
+{
+public:
+    Spiral(Workspace *);
+    ~Spiral();
 
-    };
+    void addTile(Tile *t);
+    void removeTile(Tile *t);
+
+private:
+    void arrange(QRect wgeom);
+
+};
 } // end namespace
 
 #endif

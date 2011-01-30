@@ -32,23 +32,23 @@ namespace KWin
 class MagicLampEffectConfigForm : public QWidget, public Ui::MagicLampEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit MagicLampEffectConfigForm(QWidget* parent);
+public:
+    explicit MagicLampEffectConfigForm(QWidget* parent);
 };
 
 class MagicLampEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit MagicLampEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+public:
+    explicit MagicLampEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
-    private:
-        MagicLampEffectConfigForm* m_ui;
-    };
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
+private:
+    MagicLampEffectConfigForm* m_ui;
+};
 
 } // namespace
 

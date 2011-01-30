@@ -40,117 +40,123 @@ namespace TabBox
 class TabBoxConfig;
 
 class TabBoxHandlerImpl : public TabBoxHandler
-    {
-    public:
-        TabBoxHandlerImpl();
-        virtual ~TabBoxHandlerImpl();
+{
+public:
+    TabBoxHandlerImpl();
+    virtual ~TabBoxHandlerImpl();
 
-        virtual int activeScreen() const;
-        virtual TabBoxClient* activeClient() const;
-        virtual int currentDesktop() const;
-        virtual QString desktopName( TabBoxClient* client ) const;
-        virtual QString desktopName( int desktop ) const;
-        virtual TabBoxClient* nextClientFocusChain( TabBoxClient* client ) const;
-        virtual int nextDesktopFocusChain( int desktop ) const;
-        virtual int numberOfDesktops() const;
-        virtual TabBoxClientList stackingOrder() const;
-        virtual void raiseClient( TabBoxClient *client ) const;
-        virtual void restack( TabBoxClient *c, TabBoxClient *under );
-        virtual TabBoxClient* clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const;
-        virtual TabBoxClient* desktopClient() const;
-    };
+    virtual int activeScreen() const;
+    virtual TabBoxClient* activeClient() const;
+    virtual int currentDesktop() const;
+    virtual QString desktopName(TabBoxClient* client) const;
+    virtual QString desktopName(int desktop) const;
+    virtual TabBoxClient* nextClientFocusChain(TabBoxClient* client) const;
+    virtual int nextDesktopFocusChain(int desktop) const;
+    virtual int numberOfDesktops() const;
+    virtual TabBoxClientList stackingOrder() const;
+    virtual void raiseClient(TabBoxClient *client) const;
+    virtual void restack(TabBoxClient *c, TabBoxClient *under);
+    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const;
+    virtual TabBoxClient* desktopClient() const;
+};
 
 class TabBoxClientImpl : public TabBoxClient
-    {
-    public:
-        TabBoxClientImpl();
-        virtual ~TabBoxClientImpl();
+{
+public:
+    TabBoxClientImpl();
+    virtual ~TabBoxClientImpl();
 
-        virtual QString caption() const;
-        virtual QPixmap icon( const QSize& size = QSize( 32, 32 ) ) const;
-        virtual WId window() const;
-        virtual bool isMinimized() const;
-        virtual int x() const;
-        virtual int y() const;
-        virtual int width() const;
-        virtual int height() const;
+    virtual QString caption() const;
+    virtual QPixmap icon(const QSize& size = QSize(32, 32)) const;
+    virtual WId window() const;
+    virtual bool isMinimized() const;
+    virtual int x() const;
+    virtual int y() const;
+    virtual int width() const;
+    virtual int height() const;
 
-        Client* client() const { return m_client; }
-        void setClient( Client* client ) { m_client = client; }
+    Client* client() const {
+        return m_client;
+    }
+    void setClient(Client* client) {
+        m_client = client;
+    }
 
-    private:
-        Client* m_client;
-    };
+private:
+    Client* m_client;
+};
 
 class TabBox : public QObject
-    {
+{
     Q_OBJECT
-    public:
-        TabBox( Workspace *ws );
-        ~TabBox();
+public:
+    TabBox(Workspace *ws);
+    ~TabBox();
 
-        Client* currentClient();
-        ClientList currentClientList();
-        int currentDesktop();
-        QList< int > currentDesktopList();
+    Client* currentClient();
+    ClientList currentClientList();
+    int currentDesktop();
+    QList< int > currentDesktopList();
 
-        void setCurrentClient( Client* newClient );
-        void setCurrentDesktop( int newDesktop );
+    void setCurrentClient(Client* newClient);
+    void setCurrentDesktop(int newDesktop);
 
-        void setMode( TabBoxMode mode );
-        TabBoxMode mode() const { return m_tabBoxMode; }
+    void setMode(TabBoxMode mode);
+    TabBoxMode mode() const {
+        return m_tabBoxMode;
+    }
 
-        void reset( bool partial_reset = false );
-        void nextPrev( bool next = true);
+    void reset(bool partial_reset = false);
+    void nextPrev(bool next = true);
 
-        void delayedShow();
-        void hide( bool abort = false );
+    void delayedShow();
+    void hide(bool abort = false);
 
-        void refDisplay();
-        void unrefDisplay();
-        bool isDisplayed() const;
+    void refDisplay();
+    void unrefDisplay();
+    bool isDisplayed() const;
 
-        void handleMouseEvent( XEvent* );
-        void grabbedKeyEvent( QKeyEvent* event );
+    void handleMouseEvent(XEvent*);
+    void grabbedKeyEvent(QKeyEvent* event);
 
-        Workspace* workspace() const;
+    Workspace* workspace() const;
 
-        void reconfigure();
+    void reconfigure();
 
-    public slots:
-        void show();
+public slots:
+    void show();
 
-    private:
-        void setCurrentIndex( QModelIndex index, bool notifyEffects = true );
-        void loadConfig( const KConfigGroup& config, TabBoxConfig& tabBoxConfig );
+private:
+    void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
+    void loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig);
 
-    private:
-        Workspace* wspace;
-        TabBoxMode m_tabBoxMode;
-        QModelIndex m_index;
-        TabBoxHandlerImpl* m_tabBox;
-        bool m_delayShow;
-        int m_delayShowTime;
+private:
+    Workspace* wspace;
+    TabBoxMode m_tabBoxMode;
+    QModelIndex m_index;
+    TabBoxHandlerImpl* m_tabBox;
+    bool m_delayShow;
+    int m_delayShowTime;
 
-        QTimer delayedShowTimer;
-        int display_refcount;
+    QTimer delayedShowTimer;
+    int display_refcount;
 
-        TabBoxConfig m_defaultConfig;
-        TabBoxConfig m_alternativeConfig;
-        TabBoxConfig m_desktopConfig;
-        TabBoxConfig m_desktopListConfig;
-        // false if an effect has referenced the tabbox
-        // true if tabbox is active (independent on showTabbox setting)
-        bool m_isShown;
-    };
+    TabBoxConfig m_defaultConfig;
+    TabBoxConfig m_alternativeConfig;
+    TabBoxConfig m_desktopConfig;
+    TabBoxConfig m_desktopListConfig;
+    // false if an effect has referenced the tabbox
+    // true if tabbox is active (independent on showTabbox setting)
+    bool m_isShown;
+};
 
 /*!
   Returns the tab box' workspace
  */
 inline Workspace* TabBox::workspace() const
-    {
+{
     return wspace;
-    }
+}
 
 /*!
   Increase the reference count, preventing the default tabbox from showing.
@@ -158,9 +164,9 @@ inline Workspace* TabBox::workspace() const
   \sa unrefDisplay(), isDisplayed()
  */
 inline void TabBox::refDisplay()
-    {
+{
     ++display_refcount;
-    }
+}
 
 /*!
   Returns whether the tab box is being displayed, either natively or by an
@@ -169,9 +175,9 @@ inline void TabBox::refDisplay()
   \sa refDisplay(), unrefDisplay()
  */
 inline bool TabBox::isDisplayed() const
-    {
+{
     return display_refcount > 0;
-    }
+}
 
 } // namespace TabBox
 

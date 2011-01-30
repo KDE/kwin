@@ -38,12 +38,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new MouseMarkEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -55,31 +55,31 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->comboColors, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    KAction* a = static_cast< KAction* >( m_actionCollection->addAction( "ClearMouseMarks" ));
-    a->setText( i18n( "Clear Mouse Marks" ));
+    KAction* a = static_cast< KAction* >(m_actionCollection->addAction("ClearMouseMarks"));
+    a->setText(i18n("Clear Mouse Marks"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
+    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F11));
 
-    a = static_cast< KAction* >( m_actionCollection->addAction( "ClearLastMouseMark" ));
-    a->setText( i18n( "Clear Last Mouse Mark" ));
+    a = static_cast< KAction* >(m_actionCollection->addAction("ClearLastMouseMark"));
+    a->setText(i18n("Clear Last Mouse Mark"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
+    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
 
     m_ui->editor->addCollection(m_actionCollection);
 
     load();
-    }
+}
 
 MouseMarkEffectConfig::~MouseMarkEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    }
+}
 
 void MouseMarkEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
@@ -91,10 +91,10 @@ void MouseMarkEffectConfig::load()
     m_ui->comboColors->setColor(color);
 
     emit changed(false);
-    }
+}
 
 void MouseMarkEffectConfig::save()
-    {
+{
     kDebug(1212) << "Saving config of MouseMark" ;
     //KCModule::save();
 
@@ -109,15 +109,15 @@ void MouseMarkEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "mousemark" );
-    }
+    EffectsHandler::sendReloadMessage("mousemark");
+}
 
 void MouseMarkEffectConfig::defaults()
-    {
+{
     m_ui->spinWidth->setValue(3);
     m_ui->comboColors->setColor(Qt::red);
     emit changed(true);
-    }
+}
 
 
 } // namespace

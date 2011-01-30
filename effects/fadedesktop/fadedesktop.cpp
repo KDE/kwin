@@ -25,92 +25,86 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( fadedesktop, FadeDesktopEffect )
+KWIN_EFFECT(fadedesktop, FadeDesktopEffect)
 
 FadeDesktopEffect::FadeDesktopEffect()
-    : m_fading( false )
-    {
-    m_timeline.setCurveShape( TimeLine::LinearCurve );
-    reconfigure( ReconfigureAll );
-    }
+    : m_fading(false)
+{
+    m_timeline.setCurveShape(TimeLine::LinearCurve);
+    reconfigure(ReconfigureAll);
+}
 
-void FadeDesktopEffect::reconfigure( ReconfigureFlags )
-    {
-    m_timeline.setDuration( animationTime( 250 ));
-    }
+void FadeDesktopEffect::reconfigure(ReconfigureFlags)
+{
+    m_timeline.setDuration(animationTime(250));
+}
 
-void FadeDesktopEffect::prePaintScreen( ScreenPrePaintData &data, int time )
-    {
-    if( m_fading )
-        {
-        m_timeline.addTime( time );
+void FadeDesktopEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+{
+    if (m_fading) {
+        m_timeline.addTime(time);
 
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if( m_timeline.value() != 1.0 )
+        if (m_timeline.value() != 1.0)
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        else
-            {
+        else {
             m_fading = false;
-            m_timeline.setProgress( 0.0 );
-            foreach( EffectWindow* w, effects->stackingOrder() )
-                {
-                w->setData( WindowForceBlurRole, QVariant( false ) );
-                }
-            effects->setActiveFullScreenEffect( NULL );
+            m_timeline.setProgress(0.0);
+            foreach (EffectWindow * w, effects->stackingOrder()) {
+                w->setData(WindowForceBlurRole, QVariant(false));
             }
+            effects->setActiveFullScreenEffect(NULL);
         }
-    effects->prePaintScreen( data, time );
     }
+    effects->prePaintScreen(data, time);
+}
 
 void FadeDesktopEffect::postPaintScreen()
-    {
-    if( m_fading )
+{
+    if (m_fading)
         effects->addRepaintFull();
     effects->postPaintScreen();
-    }
+}
 
-void FadeDesktopEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time )
-    {
-    if( m_fading )
-        {
-        if( w->isOnDesktop( m_oldDesktop ))
-            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+void FadeDesktopEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+{
+    if (m_fading) {
+        if (w->isOnDesktop(m_oldDesktop))
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         data.setTranslucent();
-        }
-    effects->prePaintWindow( w, data, time );
     }
+    effects->prePaintWindow(w, data, time);
+}
 
-void FadeDesktopEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
-    {
-    if( m_fading && !( w->isOnCurrentDesktop() && w->isOnDesktop( m_oldDesktop )))
-        {
-        if( w->isOnDesktop( m_oldDesktop ))
+void FadeDesktopEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (m_fading && !(w->isOnCurrentDesktop() && w->isOnDesktop(m_oldDesktop))) {
+        if (w->isOnDesktop(m_oldDesktop))
             data.opacity *= 1 - m_timeline.value();
         else
             data.opacity *= m_timeline.value();
-        }
-    effects->paintWindow( w, mask, region, data );
     }
+    effects->paintWindow(w, mask, region, data);
+}
 
-void FadeDesktopEffect::desktopChanged( int old )
-    {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+void FadeDesktopEffect::desktopChanged(int old)
+{
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
-    
+
     // TODO: Fix glitches when fading while a previous fade is still happening
 
-    effects->setActiveFullScreenEffect( this );
+    effects->setActiveFullScreenEffect(this);
     m_fading = true;
-    m_timeline.setProgress( 0 );
+    m_timeline.setProgress(0);
     m_oldDesktop = old;
-    foreach( EffectWindow* w, effects->stackingOrder() )
-        {
-        w->setData( WindowForceBlurRole, QVariant( true ) );
-        }
+    foreach (EffectWindow * w, effects->stackingOrder()) {
+        w->setData(WindowForceBlurRole, QVariant(true));
+    }
 
     effects->addRepaintFull();
-    }
+}
 
 } // namespace
 

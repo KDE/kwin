@@ -30,18 +30,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Tile::Tile( Client *c, const QRect& area)
+Tile::Tile(Client *c, const QRect& area)
     : m_client(c),
       m_floating(false)
-    {
+{
     setGeometry(area);
-    if( c )
-        {
+    if (c) {
         m_prevGeom = c->geometry();
-        }
-    if( c && !c->isResizable() )
-        floatTile();
     }
+    if (c && !c->isResizable())
+        floatTile();
+}
 
 /*
  * NOTE: Why isn't left/right/parent copied?
@@ -49,44 +48,44 @@ Tile::Tile( Client *c, const QRect& area)
  * Also it doesn't make sense in the areas where copy is actually going to be used.
  * Since we will be getting a new parent and children.
  */
-Tile::Tile( const Tile& orig )
-    : m_client( orig.client() ),
-      m_prevGeom( orig.m_prevGeom ),
-      m_floating( orig.floating() )
-    {
-    setGeometry( orig.geometry() );
-    }
+Tile::Tile(const Tile& orig)
+    : m_client(orig.client()),
+      m_prevGeom(orig.m_prevGeom),
+      m_floating(orig.floating())
+{
+    setGeometry(orig.geometry());
+}
 
 Tile::~Tile()
-    {
+{
     restorePreviousGeometry();
 
     m_client = NULL;
-    }
+}
 
 void Tile::commit()
-    {
-            m_client->setGeometry(geometry(), ForceGeometrySet);
-        }
+{
+    m_client->setGeometry(geometry(), ForceGeometrySet);
+}
 
 void Tile::setGeometry(int x, int y, int w, int h)
-    {
+{
     QRect old = m_geom;
-    m_geom.setTopLeft( QPoint(x, y) );
-    m_geom.setWidth( w );
-    m_geom.setHeight( h );
+    m_geom.setTopLeft(QPoint(x, y));
+    m_geom.setWidth(w);
+    m_geom.setHeight(h);
 
-    if( old == m_geom )
+    if (old == m_geom)
         return;
 
-    if( floating() )
+    if (floating())
         m_prevGeom = m_geom;
 
-    }
+}
 
 void Tile::floatTile()
-    {
-    if( floating() ) return;
+{
+    if (floating()) return;
 
     // note, order of setting m_floating to true
     // then calling restore is important
@@ -96,57 +95,54 @@ void Tile::floatTile()
     restorePreviousGeometry();
 
     commit();
-    client()->workspace()->notifyTilingWindowActivated( client() );
+    client()->workspace()->notifyTilingWindowActivated(client());
     // TODO: notify layout manager
-    }
+}
 
 void Tile::unfloatTile()
-    {
-    if( !floating() ) return;
+{
+    if (!floating()) return;
 
     m_floating = false;
     m_prevGeom = m_client->geometry();
 
-    setGeometry( m_client->workspace()->clientArea( PlacementArea, m_client ) );
+    setGeometry(m_client->workspace()->clientArea(PlacementArea, m_client));
     commit();
     // TODO: notify layout manager
 
-    }
+}
 
 void Tile::restorePreviousGeometry()
-    {
+{
     // why this check?
     // sometimes we remove a Tile, but don't want to remove the children
     // so the children are set to NULL. In this case leaf() will return
     // true but m_client will still be null
-    if( !m_client ) return;
-    if( m_prevGeom.isNull() )
-        {
-        QRect area = m_client->workspace()->clientArea( PlacementArea, m_client );
-        m_client->workspace()->place( m_client, area );
-        }
-    else
-        {
-        m_client->setGeometry( m_prevGeom, ForceGeometrySet );
-        }
-    setGeometry( m_client->geometry() );
+    if (!m_client) return;
+    if (m_prevGeom.isNull()) {
+        QRect area = m_client->workspace()->clientArea(PlacementArea, m_client);
+        m_client->workspace()->place(m_client, area);
+    } else {
+        m_client->setGeometry(m_prevGeom, ForceGeometrySet);
     }
+    setGeometry(m_client->geometry());
+}
 
 bool Tile::minimized() const
-    {
+{
     return m_client->isMinimized();
-    }
+}
 
 void Tile::focus()
-    {
-    m_client->workspace()->activateClient( m_client, true );
-    }
+{
+    m_client->workspace()->activateClient(m_client, true);
+}
 
-void Tile::dumpTile(const QString& indent ) const
-    {
+void Tile::dumpTile(const QString& indent) const
+{
     kDebug(1212) << indent << m_client
-                  << ( floating() ? "floating" : "not floating" )
-                  << ( ignoreGeometry() ? "ignored" : "tiled" ) 
-                  << m_geom ;
-    }
+                 << (floating() ? "floating" : "not floating")
+                 << (ignoreGeometry() ? "ignored" : "tiled")
+                 << m_geom ;
+}
 }

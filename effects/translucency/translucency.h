@@ -28,36 +28,36 @@ namespace KWin
 
 class TranslucencyEffect
     : public Effect
-    {
-    public:
-        TranslucencyEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowActivated( EffectWindow* w );
-    private:
-        bool isInactive( const EffectWindow *w ) const;
-        bool individualmenuconfig;
+{
+public:
+    TranslucencyEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowActivated(EffectWindow* w);
+private:
+    bool isInactive(const EffectWindow *w) const;
+    bool individualmenuconfig;
 
-        double decoration;
-        double moveresize;
-        double dialogs;
-        double inactive;
-        double comboboxpopups;
-        double menus;
-        double dropdownmenus;
-        double popupmenus;
-        double tornoffmenus;
+    double decoration;
+    double moveresize;
+    double dialogs;
+    double inactive;
+    double comboboxpopups;
+    double menus;
+    double dropdownmenus;
+    double popupmenus;
+    double tornoffmenus;
 
-        EffectWindow* fadeout;
-        EffectWindow* current;
-        EffectWindow* previous;
-        EffectWindow* active;
+    EffectWindow* fadeout;
+    EffectWindow* current;
+    EffectWindow* previous;
+    EffectWindow* active;
 
-        TimeLine moveresize_timeline;
-        TimeLine activeinactive_timeline;
-    };
+    TimeLine moveresize_timeline;
+    TimeLine activeinactive_timeline;
+};
 
 } // namespace
 

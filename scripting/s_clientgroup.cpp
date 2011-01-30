@@ -23,45 +23,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Q_DECLARE_METATYPE(SWrapper::ClientGroup*)
 
 SWrapper::ClientGroup::ClientGroup(KWin::ClientGroup* group)
-    {
+{
     centralObject = group;
 
-    if(group == 0)
-        {
+    if (group == 0) {
         invalid = true;
-        }
-    else
-        {
+    } else {
         setParent(group);
         invalid = false;
-        }
     }
+}
 
 SWrapper::ClientGroup::ClientGroup(KWin::Client* client)
-    {
-    if(client == 0)
-        {
+{
+    if (client == 0) {
         invalid = true;
         centralObject = 0;
         return;
-        }
+    }
 
     KWin::ClientGroup* cGrp = client->clientGroup();
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         cGrp = new KWin::ClientGroup(client);
-        }
+    }
 
     centralObject = cGrp;
     setParent(cGrp);
     invalid = false;
-    }
+}
 
 KWin::ClientGroup* SWrapper::ClientGroup::getCentralObject()
-    {
+{
     return centralObject;
-    }
+}
 
 /*
  * This was just to check how bindings were working..
@@ -71,8 +66,8 @@ QScriptValue SWrapper::ClientGroup::toString(QScriptContext* ctx, QScriptEngine*
     SWrapper::ClientGroup* self = qscriptvalue_cast<SWrapper::ClientGroup*>(ctx->thisObject());
     qDebug()<<"Generic object at ["<<(void*)self<<"]";
 
-    if(self != 0) {
-	qDebug()<<"    Wrapping: ["<<(void*)(self->centralObject)<<"] (i: "<<self->invalid<<")";
+    if (self != 0) {
+    qDebug()<<"    Wrapping: ["<<(void*)(self->centralObject)<<"] (i: "<<self->invalid<<")";
     }
 
     return QScriptValue(eng, QString("."));
@@ -80,109 +75,86 @@ QScriptValue SWrapper::ClientGroup::toString(QScriptContext* ctx, QScriptEngine*
 */
 
 QScriptValue SWrapper::ClientGroup::add(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if((client == 0) || (cGrp == 0))
-        {
+    if ((client == 0) || (cGrp == 0)) {
         return QScriptValue(eng, (bool)0);
-        }
-    else
-        {
-        int before = (ctx->argument(1)).isUndefined()?(-1):((ctx->argument(0)).toNumber());
-        bool becomeVisible = (ctx->argument(2)).isUndefined()?(false):((ctx->argument(0)).toBool());
+    } else {
+        int before = (ctx->argument(1)).isUndefined() ? (-1) : ((ctx->argument(0)).toNumber());
+        bool becomeVisible = (ctx->argument(2)).isUndefined() ? (false) : ((ctx->argument(0)).toBool());
 
-        if(client->clientGroup())
-            {
+        if (client->clientGroup()) {
             (client->clientGroup())->remove(client);
-            }
+        }
 
         cGrp->add(client, before, becomeVisible);
         return QScriptValue(eng, (bool)1);
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::remove(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
     QScriptValue arg = ctx->argument(0);
     QRect geom = eng->fromScriptValue<QRect>(ctx->argument(1));
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return eng->toScriptValue<bool>(0);
-        }
+    }
 
-    if(arg.isNumber())
-        {
+    if (arg.isNumber()) {
         cGrp->remove(arg.toNumber(), geom, false);
         return eng->toScriptValue<bool>(1);
-        }
-    else
-        {
+    } else {
         KWin::Client* client = qscriptvalue_cast<KWin::Client*>(arg);
 
-        if(client == 0)
-            {
+        if (client == 0) {
             return eng->toScriptValue<bool>(0);
-            }
-        else
-            {
+        } else {
             cGrp->remove(client, geom, false);
             return eng->toScriptValue<bool>(1);
-            }
         }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::contains(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
 
-        if(client == 0)
-            {
+        if (client == 0) {
             return QScriptValue();
-            }
-        else
-            {
+        } else {
             return eng->toScriptValue<bool>(cGrp->contains(client));
-            }
         }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::indexOf(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
 
-        if(client == 0)
-            {
+        if (client == 0) {
             return QScriptValue();
-            }
-        else
-            {
+        } else {
             return eng->toScriptValue<int>(cGrp->indexOfClient(client));
-            }
         }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::move(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
     // This is one weird function. It can be called like:
@@ -197,143 +169,107 @@ QScriptValue SWrapper::ClientGroup::move(QScriptContext* ctx, QScriptEngine* eng
     KWin::Client* cl1 = qscriptvalue_cast<KWin::Client*>(arg1);
     KWin::Client* cl2 = qscriptvalue_cast<KWin::Client*>(arg2);
 
-    if(cl1 != 0)
-        {
-        if(cl2 == 0)
-            {
-            if(!(arg2.isNumber()))
-                {
+    if (cl1 != 0) {
+        if (cl2 == 0) {
+            if (!(arg2.isNumber())) {
                 return eng->toScriptValue<bool>(0);
-                }
-            else
-                {
+            } else {
                 cGrp->move(cGrp->indexOfClient(cl1), (int)arg2.toNumber());
                 return eng->toScriptValue<bool>(1);
-                }
             }
-        else
-            {
+        } else {
             cGrp->move(cl1, cl2);
             return eng->toScriptValue<bool>(1);
-            }
         }
-    else
-        {
-        if(!(arg1.isNumber()))
-            {
+    } else {
+        if (!(arg1.isNumber())) {
             return eng->toScriptValue<bool>(0);
-            }
-        else
-            {
-            if(cl2 != 0)
-                {
+        } else {
+            if (cl2 != 0) {
                 cGrp->move((int)arg1.toNumber(), cGrp->indexOfClient(cl2));
                 return eng->toScriptValue<bool>(1);
-                }
-            else
-                {
-                if(!arg2.isNumber())
-                    {
+            } else {
+                if (!arg2.isNumber()) {
                     return eng->toScriptValue<bool>(0);
-                    }
-                else
-                    {
+                } else {
                     cGrp->move((int)arg1.toNumber(), (int)arg2.toNumber());
                     return eng->toScriptValue<bool>(0);
-                    }
                 }
             }
         }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::removeAll(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return eng->toScriptValue<bool>(0);
-        }
-    else
-        {
+    } else {
         cGrp->removeAll();
         return eng->toScriptValue<bool>(1);
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::closeAll(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return eng->toScriptValue<bool>(0);
-        }
-    else
-        {
+    } else {
         cGrp->closeAll();
         return eng->toScriptValue<bool>(1);
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::minSize(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         return eng->toScriptValue<QSize>(cGrp->minSize());
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::maxSize(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         return eng->toScriptValue<QSize>(cGrp->maxSize());
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::clients(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         return eng->toScriptValue<KClientList>(cGrp->clients());
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::visible(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
-    if(cGrp == 0)
-        {
+    if (cGrp == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         return eng->toScriptValue<KWin::Client*>(cGrp->visible());
-        }
     }
+}
 
 QScriptValue SWrapper::ClientGroup::generate(QScriptEngine* eng, SWrapper::ClientGroup* cGroup)
-    {
+{
     QScriptValue temp = eng->newQObject(cGroup, QScriptEngine::AutoOwnership);
 
     temp.setProperty("add", eng->newFunction(add, 3), QScriptValue::Undeletable);
@@ -348,19 +284,19 @@ QScriptValue SWrapper::ClientGroup::generate(QScriptEngine* eng, SWrapper::Clien
     temp.setProperty("maxSize", eng->newFunction(maxSize, 0), QScriptValue::Undeletable);
     temp.setProperty("visible", eng->newFunction(visible, 0), QScriptValue::Undeletable);
     return temp;
-    }
+}
 
 QScriptValue SWrapper::ClientGroup::construct(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     return generate(eng, new SWrapper::ClientGroup(
                         qscriptvalue_cast<KClientRef>(ctx->argument(0))
                     ));
-    }
+}
 
 QScriptValue SWrapper::ClientGroup::publishClientGroupClass(QScriptEngine* eng)
-    {
+{
     QScriptValue proto = generate(eng, new SWrapper::ClientGroup((KWin::ClientGroup*)0));
     eng->setDefaultPrototype(qMetaTypeId<SWrapper::ClientGroup*>(), proto);
 
     return eng->newFunction(construct, proto);
-    }
+}

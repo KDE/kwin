@@ -43,184 +43,185 @@ class Client;
  * copies of the same client. A client MUST NOT be in two groups at the same
  * time. All decorated clients SHOULD be in a group, even if it's a group of
  * one client.
- * 
+ *
  * rohanp: Had to convert this object to a QObject to make it easier for adding
  * scripting interface to ClientGroup.
  *
  * If a group contains multiple clients then only one will ever be mapped at
  * any given time.
  */
-class ClientGroup : public QObject {
+class ClientGroup : public QObject
+{
     Q_OBJECT
-    public:
-        /**
-         * Creates a new group containing \p c.
-         */
-        ClientGroup( Client* c );
-        ~ClientGroup();
+public:
+    /**
+     * Creates a new group containing \p c.
+     */
+    ClientGroup(Client* c);
+    ~ClientGroup();
 
-        /**
-         * Adds \p c to the group before \p before in the list. If \p becomeVisible is \i true then
-         * the added client will become also the visible client.
-         */
-        void add( Client* c, int before = -1, bool becomeVisible = false );
-        /**
-         * Remove the client at index \p index from the group. If \p newGeom is set then the client
-         * will move and resize to the specified geometry, otherwise it will stay where the group
-         * is located. If \p toNullGroup is not true then the client will be added to a new group
-         * of its own.
-         */
-        void remove( int index, const QRect& newGeom = QRect(), bool toNullGroup = false );
-        /**
-         * Remove \p c from the group. If \p newGeom is set then the client will move and resize to
-         * the specified geometry, otherwise it will stay where the group is located. If
-         * \p toNullGroup is not true then the client will be added to a new group of its own.
-         */
-        void remove( Client* c, const QRect& newGeom = QRect(), bool toNullGroup = false );
-        /**
-         * Remove all clients from this group. Results in all clients except the first being moved
-           to a group of their own.
-         */
-        void removeAll();
-        /**
-         * Close all clients in this group.
-         */
-        void closeAll();
-        /**
-         * Move the client at index \p index to the position before the client at index \p before
-         * in the list.
-         */
-        void move( int index, int before );
-        /**
-         * Move \p c to the position before \p before in the list.
-         */
-        void move( Client* c, Client* before );
-        /**
-         * Display the right-click client menu belonging to the client at index \p index at the
-         * global coordinates specified by \p pos.
-         */
-        void displayClientMenu( int index, const QPoint& pos );
-        /**
-         * Display the right-click client menu belonging to \p c at the global coordinates
-         * specified by \p pos.
-         */
-        void displayClientMenu( Client* c, const QPoint& pos );
+    /**
+     * Adds \p c to the group before \p before in the list. If \p becomeVisible is \i true then
+     * the added client will become also the visible client.
+     */
+    void add(Client* c, int before = -1, bool becomeVisible = false);
+    /**
+     * Remove the client at index \p index from the group. If \p newGeom is set then the client
+     * will move and resize to the specified geometry, otherwise it will stay where the group
+     * is located. If \p toNullGroup is not true then the client will be added to a new group
+     * of its own.
+     */
+    void remove(int index, const QRect& newGeom = QRect(), bool toNullGroup = false);
+    /**
+     * Remove \p c from the group. If \p newGeom is set then the client will move and resize to
+     * the specified geometry, otherwise it will stay where the group is located. If
+     * \p toNullGroup is not true then the client will be added to a new group of its own.
+     */
+    void remove(Client* c, const QRect& newGeom = QRect(), bool toNullGroup = false);
+    /**
+     * Remove all clients from this group. Results in all clients except the first being moved
+       to a group of their own.
+     */
+    void removeAll();
+    /**
+     * Close all clients in this group.
+     */
+    void closeAll();
+    /**
+     * Move the client at index \p index to the position before the client at index \p before
+     * in the list.
+     */
+    void move(int index, int before);
+    /**
+     * Move \p c to the position before \p before in the list.
+     */
+    void move(Client* c, Client* before);
+    /**
+     * Display the right-click client menu belonging to the client at index \p index at the
+     * global coordinates specified by \p pos.
+     */
+    void displayClientMenu(int index, const QPoint& pos);
+    /**
+     * Display the right-click client menu belonging to \p c at the global coordinates
+     * specified by \p pos.
+     */
+    void displayClientMenu(Client* c, const QPoint& pos);
 
-        /**
-         * Returns the list index of \p c.
-         */
-        int indexOfClient( Client* c );
-        /**
-         * Returns the list index of the currently visible client in the group.
-         */
-        int indexOfVisibleClient();
-        /**
-         * Returns whether or not this group contains \p c.
-         */
-        bool contains( Client* c );
-        /**
-         * Returns whether or not this group contains the active client.
-         */
-        bool containsActiveClient();
+    /**
+     * Returns the list index of \p c.
+     */
+    int indexOfClient(Client* c);
+    /**
+     * Returns the list index of the currently visible client in the group.
+     */
+    int indexOfVisibleClient();
+    /**
+     * Returns whether or not this group contains \p c.
+     */
+    bool contains(Client* c);
+    /**
+     * Returns whether or not this group contains the active client.
+     */
+    bool containsActiveClient();
 
-        /**
-         * Returns the list of all the clients contained in this group in their current order.
-         */
-        ClientList clients() const;
-        /**
-         * Returns a list of the captions and icons of all the clients contained in this group
-         * in their current order.
-         */
-        QList< ClientGroupItem > items() const;
+    /**
+     * Returns the list of all the clients contained in this group in their current order.
+     */
+    ClientList clients() const;
+    /**
+     * Returns a list of the captions and icons of all the clients contained in this group
+     * in their current order.
+     */
+    QList< ClientGroupItem > items() const;
 
-        /**
-         * Returns the currently visible client.
-         */
-        Client* visible();
-        /**
-         * Makes the client at index \p index the visible one in the group.
-         */
-        void setVisible( int index );
-        /**
-         * Makes \p c the visible client in the group.
-         */
-        void setVisible( Client* c );
+    /**
+     * Returns the currently visible client.
+     */
+    Client* visible();
+    /**
+     * Makes the client at index \p index the visible one in the group.
+     */
+    void setVisible(int index);
+    /**
+     * Makes \p c the visible client in the group.
+     */
+    void setVisible(Client* c);
 
-        /**
-         * Returns combined minimum size of all clients in the group.
-         */
-        QSize minSize() const;
-        /**
-         * Returns combined maximum size of all clients in the group.
-         */
-        QSize maxSize() const;
+    /**
+     * Returns combined minimum size of all clients in the group.
+     */
+    QSize minSize() const;
+    /**
+     * Returns combined maximum size of all clients in the group.
+     */
+    QSize maxSize() const;
 
-        /**
-         * Ensures that all the clients in the group have identical geometries and states using
-         * \p main as the primary client to copy the settings off. If \p only is set then only
-         * that client is updated to match \p main.
-         */
-        void updateStates( Client* main, Client* only = NULL );
+    /**
+     * Ensures that all the clients in the group have identical geometries and states using
+     * \p main as the primary client to copy the settings off. If \p only is set then only
+     * that client is updated to match \p main.
+     */
+    void updateStates(Client* main, Client* only = NULL);
 
-    private:
-        /**
-         * Regenerate the list of client captions and icons.
-         */
-        void updateItems();
-        /**
-         * Determine the combined minimum and maximum sizes of all clients in the group.
-         */
-        void updateMinMaxSize();
+private:
+    /**
+     * Regenerate the list of client captions and icons.
+     */
+    void updateItems();
+    /**
+     * Determine the combined minimum and maximum sizes of all clients in the group.
+     */
+    void updateMinMaxSize();
 
-        ClientList clients_;
-        QList< ClientGroupItem > items_;
-        int visible_;
+    ClientList clients_;
+    QList< ClientGroupItem > items_;
+    int visible_;
 
-        QSize minSize_;
-        QSize maxSize_;
+    QSize minSize_;
+    QSize maxSize_;
 
-        friend class Client;
-    };
+    friend class Client;
+};
 
-inline int ClientGroup::indexOfClient( Client* c )
-    {
-    return clients_.indexOf( c );
-    }
+inline int ClientGroup::indexOfClient(Client* c)
+{
+    return clients_.indexOf(c);
+}
 
 inline int ClientGroup::indexOfVisibleClient()
-    {
+{
     return visible_;
-    }
+}
 
-inline bool ClientGroup::contains( Client* c )
-    {
-    return clients_.contains( c );
-    }
+inline bool ClientGroup::contains(Client* c)
+{
+    return clients_.contains(c);
+}
 
 inline ClientList ClientGroup::clients() const
-    {
+{
     return clients_;
-    }
+}
 
 inline QList< ClientGroupItem > ClientGroup::items() const
-    {
+{
     return items_;
-    }
+}
 
 inline Client* ClientGroup::visible()
-    {
+{
     return clients_[visible_];
-    }
+}
 
 inline QSize ClientGroup::minSize() const
-    {
+{
     return minSize_;
-    }
+}
 
 inline QSize ClientGroup::maxSize() const
-    {
+{
     return maxSize_;
-    }
+}
 
 }
 

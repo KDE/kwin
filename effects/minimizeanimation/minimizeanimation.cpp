@@ -23,121 +23,115 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( minimizeanimation, MinimizeAnimationEffect )
+KWIN_EFFECT(minimizeanimation, MinimizeAnimationEffect)
 
 MinimizeAnimationEffect::MinimizeAnimationEffect()
-    {
+{
     mActiveAnimations = 0;
-    }
+}
 
 
-void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
 
     QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
     bool erase = false;
-    while( entry != mTimeLineWindows.end() )
-        {
+    while (entry != mTimeLineWindows.end()) {
         TimeLine &timeline = entry.value();
-        if( entry.key()->isMinimized() )
-            {
+        if (entry.key()->isMinimized()) {
             timeline.addTime(time);
             erase = (timeline.progress() >= 1.0f);
-            }
-        else
-            {
+        } else {
             timeline.removeTime(time);
             erase = (timeline.progress() <= 0.0f);
-            }
-        if( erase )
-            entry = mTimeLineWindows.erase( entry );
+        }
+        if (erase)
+            entry = mTimeLineWindows.erase(entry);
         else
             ++entry;
-        }
+    }
 
     mActiveAnimations = mTimeLineWindows.count();
-    if( mActiveAnimations > 0 )
+    if (mActiveAnimations > 0)
         // We need to mark the screen windows as transformed. Otherwise the
         //  whole screen won't be repainted, resulting in artefacts
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
-    }
+}
 
-void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
+void MinimizeAnimationEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
     // Schedule window for transformation if the animation is still in
     //  progress
-    if( mTimeLineWindows.contains( w ) )
-        {
+    if (mTimeLineWindows.contains(w)) {
         // We'll transform this window
         data.setTransformed();
-        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-        }
-
-    effects->prePaintWindow( w, data, time );
+        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
     }
 
-void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+    effects->prePaintWindow(w, data, time);
+}
+
+void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     QHash< EffectWindow*, TimeLine >::const_iterator entry = mTimeLineWindows.constFind(w);
-    if( entry != mTimeLineWindows.constEnd() )
-    {
+    if (entry != mTimeLineWindows.constEnd()) {
         // 0 = not minimized, 1 = fully minimized
         double progress = entry->value();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
         // If there's no icon geometry, minimize to the center of the screen
-        if( !icon.isValid() )
-            icon = QRect( displayWidth() / 2, displayHeight() / 2, 0, 0 );
+        if (!icon.isValid())
+            icon = QRect(displayWidth() / 2, displayHeight() / 2, 0, 0);
 
         data.xScale *= interpolate(1.0, icon.width() / (double)geo.width(), progress);
         data.yScale *= interpolate(1.0, icon.height() / (double)geo.height(), progress);
         data.xTranslate = (int)interpolate(data.xTranslate, icon.x() - geo.x(), progress);
         data.yTranslate = (int)interpolate(data.yTranslate, icon.y() - geo.y(), progress);
-        data.opacity *= 0.1 + (1-progress)*0.9;
+        data.opacity *= 0.1 + (1 - progress) * 0.9;
     }
 
     // Call the next effect.
-    effects->paintWindow( w, mask, region, data );
-    }
+    effects->paintWindow(w, mask, region, data);
+}
 
 void MinimizeAnimationEffect::postPaintScreen()
-    {
-    if( mActiveAnimations > 0 )
+{
+    if (mActiveAnimations > 0)
         // Repaint the workspace so that everything would be repainted next time
         effects->addRepaintFull();
     mActiveAnimations = mTimeLineWindows.count();
 
     // Call the next effect.
     effects->postPaintScreen();
-    }
+}
 
-void MinimizeAnimationEffect::windowDeleted( EffectWindow* w )
-    {
-        mTimeLineWindows.remove( w );
-    }
+void MinimizeAnimationEffect::windowDeleted(EffectWindow* w)
+{
+    mTimeLineWindows.remove(w);
+}
 
-void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
-    {
-    if ( effects->activeFullScreenEffect() )
+void MinimizeAnimationEffect::windowMinimized(EffectWindow* w)
+{
+    if (effects->activeFullScreenEffect())
         return;
     TimeLine &timeline = mTimeLineWindows[w];
     timeline.setCurveShape(TimeLine::EaseInCurve);
-    timeline.setDuration( animationTime( 250 ));
+    timeline.setDuration(animationTime(250));
     timeline.setProgress(0.0f);
-    }
+}
 
-void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
-    {
-    if ( effects->activeFullScreenEffect() )
+void MinimizeAnimationEffect::windowUnminimized(EffectWindow* w)
+{
+    if (effects->activeFullScreenEffect())
         return;
     TimeLine &timeline = mTimeLineWindows[w];
     timeline.setCurveShape(TimeLine::EaseOutCurve);
-    timeline.setDuration( animationTime( 250 ));
+    timeline.setDuration(animationTime(250));
     timeline.setProgress(1.0f);
-    }
+}
 
 } // namespace
 

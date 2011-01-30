@@ -33,23 +33,23 @@ namespace KWin
  **/
 class MinimizeAnimationEffect
     : public Effect
-    {
-    public:
-        MinimizeAnimationEffect();
+{
+public:
+    MinimizeAnimationEffect();
 
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintScreen();
 
-        virtual void windowDeleted( EffectWindow* c );
-        virtual void windowMinimized( EffectWindow* c );
-        virtual void windowUnminimized( EffectWindow* c );
+    virtual void windowDeleted(EffectWindow* c);
+    virtual void windowMinimized(EffectWindow* c);
+    virtual void windowUnminimized(EffectWindow* c);
 
-    private:
-        QHash< EffectWindow*, TimeLine > mTimeLineWindows;
-        int mActiveAnimations;
-    };
+private:
+    QHash< EffectWindow*, TimeLine > mTimeLineWindows;
+    int mActiveAnimations;
+};
 
 } // namespace
 

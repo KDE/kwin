@@ -28,24 +28,24 @@ namespace KWin
 
 class DimScreenEffect
     : public Effect
-    {
-    public:
-        DimScreenEffect();
-        ~DimScreenEffect();
+{
+public:
+    DimScreenEffect();
+    ~DimScreenEffect();
 
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void postPaintScreen();
-        virtual void paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data );
-        virtual void windowActivated( EffectWindow *w );
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
+    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual void windowActivated(EffectWindow *w);
 
-    private:
-        bool mActivated;
-        bool activateAnimation;
-        bool deactivateAnimation;
-        TimeLine timeline;
-        EffectWindow* window;
-    };
+private:
+    bool mActivated;
+    bool activateAnimation;
+    bool deactivateAnimation;
+    TimeLine timeline;
+    EffectWindow* window;
+};
 
 } // namespace
 

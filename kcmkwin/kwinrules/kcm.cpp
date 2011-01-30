@@ -32,41 +32,41 @@
 #include <KPluginLoader>
 
 K_PLUGIN_FACTORY(KCMRulesFactory,
-        registerPlugin<KWin::KCMRules>();
-        )
+                 registerPlugin<KWin::KCMRules>();
+                )
 K_EXPORT_PLUGIN(KCMRulesFactory("kcmkwinrules"))
 
 namespace KWin
 {
 
-KCMRules::KCMRules( QWidget *parent, const QVariantList & )
-: KCModule( KCMRulesFactory::componentData(), parent )
-, config( "kwinrulesrc" )
-    {
-    QVBoxLayout *layout = new QVBoxLayout( this );
+KCMRules::KCMRules(QWidget *parent, const QVariantList &)
+    : KCModule(KCMRulesFactory::componentData(), parent)
+    , config("kwinrulesrc")
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    widget = new KCMRulesList( this );
-    layout->addWidget( widget );
-    connect( widget, SIGNAL( changed( bool )), SLOT( moduleChanged( bool )));
-    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ), 0,
-        ki18n( "Window-Specific Settings Configuration Module" ),
-        0, KLocalizedString(), KAboutData::License_GPL, ki18n( "(c) 2004 KWin and KControl Authors" ));
-    about->addAuthor(ki18n("Lubos Lunak"),KLocalizedString(),"l.lunak@kde.org");
+    widget = new KCMRulesList(this);
+    layout->addWidget(widget);
+    connect(widget, SIGNAL(changed(bool)), SLOT(moduleChanged(bool)));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkwinrules"), 0,
+                                       ki18n("Window-Specific Settings Configuration Module"),
+                                       0, KLocalizedString(), KAboutData::License_GPL, ki18n("(c) 2004 KWin and KControl Authors"));
+    about->addAuthor(ki18n("Lubos Lunak"), KLocalizedString(), "l.lunak@kde.org");
     setAboutData(about);
-    }
+}
 
 void KCMRules::load()
-    {
+{
     config.reparseConfiguration();
     widget->load();
-    emit KCModule::changed( false );
-    }
+    emit KCModule::changed(false);
+}
 
 void KCMRules::save()
-    {
+{
     widget->save();
-    emit KCModule::changed( false );
+    emit KCModule::changed(false);
     // Send signal to kwin
     config.sync();
     // Send signal to all kwin instances
@@ -74,26 +74,26 @@ void KCMRules::save()
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 
-    }
+}
 
 void KCMRules::defaults()
-    {
+{
     widget->defaults();
-    }
+}
 
 QString KCMRules::quickHelp() const
-    {
+{
     return i18n("<p><h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
-        " for some windows.</p>"
-        " <p>Please note that this configuration will not take effect if you do not use"
-        " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
-        " for how to customize window behavior.</p>");
-    }
+                " for some windows.</p>"
+                " <p>Please note that this configuration will not take effect if you do not use"
+                " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
+                " for how to customize window behavior.</p>");
+}
 
-void KCMRules::moduleChanged( bool state )
-    {
-    emit KCModule::changed( state );
-    }
+void KCMRules::moduleChanged(bool state)
+{
+    emit KCModule::changed(state);
+}
 
 }
 

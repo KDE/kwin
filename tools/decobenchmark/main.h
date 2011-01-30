@@ -22,28 +22,28 @@
 #define BENCH_MAIN_H
 
 enum Tests {
-	AllTests,
-	RepaintTest,
-	CaptionTest,
-	ResizeTest,
-	RecreationTest
+    AllTests,
+    RepaintTest,
+    CaptionTest,
+    ResizeTest,
+    RecreationTest
 };
 
 class DecoBenchApplication : public KApplication
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	DecoBenchApplication(const QString &library, Tests tests, int count);
-	~DecoBenchApplication();
+    DecoBenchApplication(const QString &library, Tests tests, int count);
+    ~DecoBenchApplication();
 
 public slots:
-	void executeTest();
+    void executeTest();
 
 private:
-	KDecorationPreview *preview;
-	KDecorationPlugins *plugins;
-	Tests m_tests;
-	int m_count;
+    KDecorationPreview *preview;
+    KDecorationPlugins *plugins;
+    Tests m_tests;
+    int m_count;
 };
 
 #endif // BENCH_MAIN_H

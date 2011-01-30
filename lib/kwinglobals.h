@@ -38,15 +38,13 @@ namespace KWin
 {
 
 
-enum CompositingType
-{
+enum CompositingType {
     NoCompositing = 0,
     OpenGLCompositing,
     XRenderCompositing
 };
 
-enum clientAreaOption
-{
+enum clientAreaOption {
     PlacementArea,         // geometry where a window will be initially placed after being mapped
     MovementArea,          // ???  window movement snapping area?  ignore struts
     MaximizeArea,          // geometry to which a window will be maximized
@@ -58,8 +56,7 @@ enum clientAreaOption
     ScreenArea             // one whole screen, ignore struts
 };
 
-enum ElectricBorder
-{
+enum ElectricBorder {
     ElectricTop,
     ElectricTopRight,
     ElectricRight,
@@ -72,8 +69,7 @@ enum ElectricBorder
     ElectricNone
 };
 
-enum ElectricMaximizingMode
-{
+enum ElectricMaximizingMode {
     ElectricMaximizeMode,
     ElectricLeftMode,
     ElectricRightMode,
@@ -83,8 +79,7 @@ enum ElectricMaximizingMode
     ElectricBottomRightMode
 };
 
-enum QuickTileMode
-{
+enum QuickTileMode {
     QuickTileNone,
     QuickTileLeft,
     QuickTileRight,
@@ -98,8 +93,7 @@ enum QuickTileMode
 // When designing the new system we must keep in mind that we have conditional actions
 // such as "only when moving windows" desktop switching that the current global action
 // system doesn't support.
-enum ElectricBorderAction
-{
+enum ElectricBorderAction {
     ElectricActionNone,          // No special action, not set, desktop switch or an effect
     ElectricActionDashboard,     // Launch the Plasma dashboard
     ElectricActionShowDesktop,   // Show desktop or restore
@@ -111,8 +105,7 @@ enum ElectricBorderAction
 // DesktopMode and WindowsMode are based on the order in which the desktop
 //  or window were viewed.
 // DesktopListMode lists them in the order created.
-enum TabBoxMode
-{
+enum TabBoxMode {
     TabBoxDesktopMode,           // Focus chain of desktops
     TabBoxDesktopListMode,       // Static desktop order
     TabBoxWindowsMode,           // Primary window switching mode
@@ -121,75 +114,91 @@ enum TabBoxMode
 
 inline
 KWIN_EXPORT Display* display()
-    {
+{
     return QX11Info::display();
-    }
+}
 
 inline
 KWIN_EXPORT Window rootWindow()
-    {
+{
     return QX11Info::appRootWindow();
-    }
+}
 
 inline
 KWIN_EXPORT Window xTime()
-    {
+{
     return QX11Info::appTime();
-    }
+}
 
 inline
 KWIN_EXPORT int displayWidth()
-    {
-    return XDisplayWidth( display(), DefaultScreen( display()));
-    }
+{
+    return XDisplayWidth(display(), DefaultScreen(display()));
+}
 
 inline
 KWIN_EXPORT int displayHeight()
-    {
-    return XDisplayHeight( display(), DefaultScreen( display()));
-    }
+{
+    return XDisplayHeight(display(), DefaultScreen(display()));
+}
 
 /** @internal */
 class KWIN_EXPORT Extensions
-    {
-    public:
-        static void init();
-        static bool shapeAvailable() { return shape_version > 0; }
-        static bool shapeInputAvailable();
-        static int shapeNotifyEvent();
-        static bool hasShape( Window w );
-        static bool randrAvailable() { return has_randr; }
-        static int randrNotifyEvent();
-        static bool damageAvailable() { return has_damage; }
-        static int damageNotifyEvent();
-        static bool compositeAvailable() { return composite_version > 0; }
-        static bool compositeOverlayAvailable();
-        static bool renderAvailable() { return render_version > 0; }
-        static bool fixesAvailable() { return fixes_version > 0; }
-        static bool fixesRegionAvailable();
-        static bool glxAvailable() { return has_glx; }
-        static bool syncAvailable() { return has_sync; }
-        static int syncAlarmNotifyEvent();
-        static void fillExtensionsData( const char**& extensions, int& nextensions, int*&majors, int*& error_bases );
-    private:
-        static void addData( const char* name );
-        static int shape_version;
-        static int shape_event_base;
-        static bool has_randr;
-        static int randr_event_base;
-        static bool has_damage;
-        static int damage_event_base;
-        static int composite_version;
-        static int render_version;
-        static int fixes_version;
-        static bool has_glx;
-        static bool has_sync;
-        static int sync_event_base;
-        static const char* data_extensions[ 32 ];
-        static int data_nextensions;
-        static int data_opcodes[ 32 ];
-        static int data_error_bases[ 32 ];
-    };
+{
+public:
+    static void init();
+    static bool shapeAvailable() {
+        return shape_version > 0;
+    }
+    static bool shapeInputAvailable();
+    static int shapeNotifyEvent();
+    static bool hasShape(Window w);
+    static bool randrAvailable() {
+        return has_randr;
+    }
+    static int randrNotifyEvent();
+    static bool damageAvailable() {
+        return has_damage;
+    }
+    static int damageNotifyEvent();
+    static bool compositeAvailable() {
+        return composite_version > 0;
+    }
+    static bool compositeOverlayAvailable();
+    static bool renderAvailable() {
+        return render_version > 0;
+    }
+    static bool fixesAvailable() {
+        return fixes_version > 0;
+    }
+    static bool fixesRegionAvailable();
+    static bool glxAvailable() {
+        return has_glx;
+    }
+    static bool syncAvailable() {
+        return has_sync;
+    }
+    static int syncAlarmNotifyEvent();
+    static void fillExtensionsData(const char**& extensions, int& nextensions, int*&majors, int*& error_bases);
+private:
+    static void addData(const char* name);
+    static int shape_version;
+    static int shape_event_base;
+    static bool has_randr;
+    static int randr_event_base;
+    static bool has_damage;
+    static int damage_event_base;
+    static int composite_version;
+    static int render_version;
+    static int fixes_version;
+    static bool has_glx;
+    static bool has_sync;
+    static int sync_event_base;
+    static const char* data_extensions[ 32 ];
+    static int data_nextensions;
+    static int data_opcodes[ 32 ];
+    static int data_error_bases[ 32 ];
+};
 
 } // namespace
 

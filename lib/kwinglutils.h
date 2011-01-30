@@ -73,14 +73,17 @@ bool KWIN_EXPORT hasEGLVersion(int major, int minor, int release = 0);
 bool KWIN_EXPORT hasGLExtension(const QString& extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
-bool KWIN_EXPORT checkGLError( const char* txt );
+bool KWIN_EXPORT checkGLError(const char* txt);
 
-inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
+inline bool KWIN_EXPORT isPowerOfTwo(int x)
+{
+    return ((x & (x - 1)) == 0);
+}
 /**
  * @return power of two integer _greater or equal to_ x.
  *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
  **/
-int KWIN_EXPORT nearestPowerOfTwo( int x );
+int KWIN_EXPORT nearestPowerOfTwo(int x);
 
 /**
  * Renders quads using given vertices.
@@ -98,32 +101,32 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * @deprecated  Use GLVertexBuffer
  * @see GLVertexBuffer
  **/
-KWIN_EXPORT void renderGLGeometry( const QRegion& region, int count,
-    const float* vertices, const float* texture = 0, const float* color = 0,
-    int dim = 2, int stride = 0 );
+KWIN_EXPORT void renderGLGeometry(const QRegion& region, int count,
+                                  const float* vertices, const float* texture = 0, const float* color = 0,
+                                  int dim = 2, int stride = 0);
 /**
  * Same as above, renders without specified region
  * @deprecated  Use GLVertexBuffer
  * @see GLVertexBuffer
  **/
-KWIN_EXPORT void renderGLGeometry( int count,
-    const float* vertices, const float* texture = 0, const float* color = 0,
-    int dim = 2, int stride = 0 );
+KWIN_EXPORT void renderGLGeometry(int count,
+                                  const float* vertices, const float* texture = 0, const float* color = 0,
+                                  int dim = 2, int stride = 0);
 
 /**
  * In OpenGL ES this method is a no-op.
- * 
+ *
  * @deprecated Use GLVertexBuffer
  * @see GLVertexBuffer
  **/
-KWIN_EXPORT void renderGLGeometryImmediate( int count,
-    const float* vertices, const float* texture = 0, const float* color = 0,
-    int dim = 2, int stride = 0 );
+KWIN_EXPORT void renderGLGeometryImmediate(int count,
+        const float* vertices, const float* texture = 0, const float* color = 0,
+        int dim = 2, int stride = 0);
 
 /**
  * @deprecated Quads are not available in OpenGL ES
  **/
-KWIN_EXPORT void addQuadVertices( QVector<float>& verts, float x1, float y1, float x2, float y2 );
+KWIN_EXPORT void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2);
 
 /**
  * Push a new matrix on the GL matrix stack.
@@ -170,158 +173,174 @@ KWIN_EXPORT void popMatrix();
 
 class KWIN_EXPORT GLTexture
     : public QSharedData
-    {
-    public:
-        GLTexture();
-        explicit GLTexture( const QImage& image, GLenum target = GL_TEXTURE_2D );
-        explicit GLTexture( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
-        GLTexture( const QString& fileName );
-        GLTexture( int width, int height );
-        virtual ~GLTexture();
+{
+public:
+    GLTexture();
+    explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
+    explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
+    GLTexture(const QString& fileName);
+    GLTexture(int width, int height);
+    virtual ~GLTexture();
 
-        bool isNull() const;
-        QSize size() const;
-        int width() const { return mSize.width(); }   /// @since 4.5
-        int height() const { return mSize.height(); } /// @since 4.5
+    bool isNull() const;
+    QSize size() const;
+    int width() const {
+        return mSize.width();    /// @since 4.5
+    }
+    int height() const {
+        return mSize.height();    /// @since 4.5
+    }
 
-        virtual bool load( const QImage& image, GLenum target = GL_TEXTURE_2D );
-        virtual bool load( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
-        virtual bool load( const QString& fileName );
-        virtual void discard();
-        virtual void bind();
-        virtual void unbind();
-        void render( QRegion region, const QRect& rect );
-        /**
-         * Set up texture transformation matrix to automatically map unnormalized
-         * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
-         * to OpenGL coordinates. Automatically adjusts for different texture
-         * types. This can be done only for one texture at a time, repeated
-         * calls for the same texture are allowed though, requiring the same
-         * amount of calls to disableUnnormalizedTexCoords().
-         *
-         * In OpenGL ES this method is a no-op. In core profile a shader should be used
-         * @deprecated
-         */
-        void enableUnnormalizedTexCoords();
-        /**
-         * Disables transformation set up using enableUnnormalizedTexCoords().
-         *
-         * In OpenGL ES this method is a no-op. In core profile a shader should be used
-         * @deprecated
-         */
-        void disableUnnormalizedTexCoords();
-        /**
-         * Set up texture transformation matrix to automatically map normalized
-         * texture coordinates (i.e. 0 to 1, 0 to 1, (0,0) is bottom-left)
-         * to OpenGL coordinates. Automatically adjusts for different texture
-         * types. This can be done only for one texture at a time, repeated
-         * calls for the same texture are allowed though, requiring the same
-         * amount of calls to disableNormalizedTexCoords().
-         *
-         * In OpenGL ES this method is a no-op. In core profile a shader should be used
-         * @deprecated
-         */
-        void enableNormalizedTexCoords();
-        /**
-         * Disables transformation set up using enableNormalizedTexCoords().
-         *
-         * In OpenGL ES this method is a no-op. In core profile a shader should be used
-         * @deprecated
-         */
-        void disableNormalizedTexCoords();
+    virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
+    virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
+    virtual bool load(const QString& fileName);
+    virtual void discard();
+    virtual void bind();
+    virtual void unbind();
+    void render(QRegion region, const QRect& rect);
+    /**
+     * Set up texture transformation matrix to automatically map unnormalized
+     * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
+     * to OpenGL coordinates. Automatically adjusts for different texture
+     * types. This can be done only for one texture at a time, repeated
+     * calls for the same texture are allowed though, requiring the same
+     * amount of calls to disableUnnormalizedTexCoords().
+     *
+     * In OpenGL ES this method is a no-op. In core profile a shader should be used
+     * @deprecated
+     */
+    void enableUnnormalizedTexCoords();
+    /**
+     * Disables transformation set up using enableUnnormalizedTexCoords().
+     *
+     * In OpenGL ES this method is a no-op. In core profile a shader should be used
+     * @deprecated
+     */
+    void disableUnnormalizedTexCoords();
+    /**
+     * Set up texture transformation matrix to automatically map normalized
+     * texture coordinates (i.e. 0 to 1, 0 to 1, (0,0) is bottom-left)
+     * to OpenGL coordinates. Automatically adjusts for different texture
+     * types. This can be done only for one texture at a time, repeated
+     * calls for the same texture are allowed though, requiring the same
+     * amount of calls to disableNormalizedTexCoords().
+     *
+     * In OpenGL ES this method is a no-op. In core profile a shader should be used
+     * @deprecated
+     */
+    void enableNormalizedTexCoords();
+    /**
+     * Disables transformation set up using enableNormalizedTexCoords().
+     *
+     * In OpenGL ES this method is a no-op. In core profile a shader should be used
+     * @deprecated
+     */
+    void disableNormalizedTexCoords();
 
-        GLuint texture() const;
-        GLenum target() const;
-        GLenum filter() const;
-        virtual bool isDirty() const;
-        void setTexture( GLuint texture );
-        void setTarget( GLenum target );
-        void setFilter( GLenum filter );
-        void setWrapMode( GLenum mode );
-        virtual void setDirty();
+    GLuint texture() const;
+    GLenum target() const;
+    GLenum filter() const;
+    virtual bool isDirty() const;
+    void setTexture(GLuint texture);
+    void setTarget(GLenum target);
+    void setFilter(GLenum filter);
+    void setWrapMode(GLenum mode);
+    virtual void setDirty();
 
-        static void initStatic();
-        static bool NPOTTextureSupported()  { return mNPOTTextureSupported; }
-        static bool framebufferObjectSupported()  { return mFramebufferObjectSupported; }
-        static bool saturationSupported()  { return mSaturationSupported; }
+    static void initStatic();
+    static bool NPOTTextureSupported()  {
+        return mNPOTTextureSupported;
+    }
+    static bool framebufferObjectSupported()  {
+        return mFramebufferObjectSupported;
+    }
+    static bool saturationSupported()  {
+        return mSaturationSupported;
+    }
 
-    protected:
-        void enableFilter();
-        QImage convertToGLFormat( const QImage& img ) const;
+protected:
+    void enableFilter();
+    QImage convertToGLFormat(const QImage& img) const;
 
-        GLuint mTexture;
-        GLenum mTarget;
-        GLenum mFilter;
-        QSize mSize;
-        QSizeF mScale; // to un-normalize GL_TEXTURE_2D
-        bool y_inverted; // texture has y inverted
-        bool can_use_mipmaps;
-        bool has_valid_mipmaps;
+    GLuint mTexture;
+    GLenum mTarget;
+    GLenum mFilter;
+    QSize mSize;
+    QSizeF mScale; // to un-normalize GL_TEXTURE_2D
+    bool y_inverted; // texture has y inverted
+    bool can_use_mipmaps;
+    bool has_valid_mipmaps;
 
-    private:
-        void init();
-        int mUnnormalizeActive; // 0 - no, otherwise refcount
-        int mNormalizeActive; // 0 - no, otherwise refcount
-        GLVertexBuffer* m_vbo;
-        QSize m_cachedSize;
+private:
+    void init();
+    int mUnnormalizeActive; // 0 - no, otherwise refcount
+    int mNormalizeActive; // 0 - no, otherwise refcount
+    GLVertexBuffer* m_vbo;
+    QSize m_cachedSize;
 
-        static bool mNPOTTextureSupported;
-        static bool mFramebufferObjectSupported;
-        static bool mSaturationSupported;
-        Q_DISABLE_COPY( GLTexture )
-    };
+    static bool mNPOTTextureSupported;
+    static bool mFramebufferObjectSupported;
+    static bool mSaturationSupported;
+    Q_DISABLE_COPY(GLTexture)
+};
 
 class KWIN_EXPORT GLShader
-    {
-    public:
-        GLShader(const QString& vertexfile, const QString& fragmentfile);
-        ~GLShader();
+{
+public:
+    GLShader(const QString& vertexfile, const QString& fragmentfile);
+    ~GLShader();
 
-        bool isValid() const  { return mValid; }
+    bool isValid() const  {
+        return mValid;
+    }
 
-        int uniformLocation(const char* name);
-        bool setUniform(const char* name, float value);
-        bool setUniform(const char* name, int value);
-        bool setUniform(const char* name, const QVector2D& value);
-        bool setUniform(const char* name, const QVector3D& value);
-        bool setUniform(const char* name, const QVector4D& value);
-        bool setUniform(const char* name, const QMatrix4x4& value);
-        bool setUniform(const char* name, const QColor& color);
-        int attributeLocation(const char* name);
-        bool setAttribute(const char* name, float value);
-        /**
-         * @return The value of the uniform as a matrix
-         * @since 4.7
-         **/
-        QMatrix4x4 getUniformMatrix4x4(const char* name);
+    int uniformLocation(const char* name);
+    bool setUniform(const char* name, float value);
+    bool setUniform(const char* name, int value);
+    bool setUniform(const char* name, const QVector2D& value);
+    bool setUniform(const char* name, const QVector3D& value);
+    bool setUniform(const char* name, const QVector4D& value);
+    bool setUniform(const char* name, const QMatrix4x4& value);
+    bool setUniform(const char* name, const QColor& color);
+    int attributeLocation(const char* name);
+    bool setAttribute(const char* name, float value);
+    /**
+     * @return The value of the uniform as a matrix
+     * @since 4.7
+     **/
+    QMatrix4x4 getUniformMatrix4x4(const char* name);
 
-        void setTextureWidth( float width );
-        void setTextureHeight( float height );
-        float textureWidth();
-        float textureHeight();
+    void setTextureWidth(float width);
+    void setTextureHeight(float height);
+    float textureWidth();
+    float textureHeight();
 
-        static void initStatic();
-        static bool fragmentShaderSupported()  { return mFragmentShaderSupported; }
-        static bool vertexShaderSupported()  { return mVertexShaderSupported; }
-
-
-    protected:
-        GLShader();
-        bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
-        bool load(const QString& vertexsource, const QString& fragmentsource);
-        void bind();
-        void unbind();
+    static void initStatic();
+    static bool fragmentShaderSupported()  {
+        return mFragmentShaderSupported;
+    }
+    static bool vertexShaderSupported()  {
+        return mVertexShaderSupported;
+    }
 
 
-    private:
-        unsigned int mProgram;
-        bool mValid;
-        static bool mFragmentShaderSupported;
-        static bool mVertexShaderSupported;
-        float mTextureWidth;
-        float mTextureHeight;
-        friend class ShaderManager;
-    };
+protected:
+    GLShader();
+    bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
+    bool load(const QString& vertexsource, const QString& fragmentsource);
+    void bind();
+    void unbind();
+
+
+private:
+    unsigned int mProgram;
+    bool mValid;
+    static bool mFragmentShaderSupported;
+    static bool mVertexShaderSupported;
+    float mTextureWidth;
+    float mTextureHeight;
+    friend class ShaderManager;
+};
 
 /**
  * @short Manager for Shaders.
@@ -336,132 +355,132 @@ class KWIN_EXPORT GLShader
  **/
 class KWIN_EXPORT ShaderManager
 {
-    public:
+public:
+    /**
+     * Identifiers for built-in shaders available for effects and scene
+     **/
+    enum ShaderType {
         /**
-         * Identifiers for built-in shaders available for effects and scene
+         * An orthographic projection shader able to render textured geometries.
+         * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
+         * and defaults to @c (0/0). Expects a @c vec2 uniform @c textureSize to calculate
+         * normalized texture coordinates. Defaults to @c (1.0/1.0). And expects a @c vec3
+         * uniform @c colorManiuplation, with @c x being opacity, @c y being brightness and
+         * @c z being saturation. All three values default to @c 1.0.
+         * The fragment shader takes a uniform @c u_forceAlpha to force the alpha component
+         * to @c 1.0 if it is set to a value not @c 0. This uniform is useful when rendering
+         * a RGB-only window and the alpha channel is required in a later step.
+         * The sampler uniform is @c sample and defaults to @c 0.
+         * The shader uses two vertex attributes @c vertex and @c texCoord.
          **/
-        enum ShaderType {
-            /**
-             * An orthographic projection shader able to render textured geometries.
-             * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
-             * and defaults to @c (0/0). Expects a @c vec2 uniform @c textureSize to calculate
-             * normalized texture coordinates. Defaults to @c (1.0/1.0). And expects a @c vec3
-             * uniform @c colorManiuplation, with @c x being opacity, @c y being brightness and
-             * @c z being saturation. All three values default to @c 1.0.
-             * The fragment shader takes a uniform @c u_forceAlpha to force the alpha component
-             * to @c 1.0 if it is set to a value not @c 0. This uniform is useful when rendering
-             * a RGB-only window and the alpha channel is required in a later step.
-             * The sampler uniform is @c sample and defaults to @c 0.
-             * The shader uses two vertex attributes @c vertex and @c texCoord.
-             **/
-            SimpleShader,
-            /**
-             * A generic shader able to render transformed, textured geometries.
-             * This shader is mostly needed by the scene and not of much interest for effects.
-             * Effects can influence this shader through @link ScreenPaintData and @link WindowPaintData.
-             * The shader expects four @c mat4 uniforms @c projection, @c modelview,
-             * @c screenTransformation and @c windowTransformation. The fragment shader expect the
-             * same uniforms as the SimpleShader and the same vertex attributes are used.
-             **/
-            GenericShader,
-            /**
-             * An orthographic shader to render simple colored geometries without texturing.
-             * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
-             * and defaults to @c (0/0). The fragment shader expects a single @c vec4 uniform
-             * @c geometryColor, which defaults to fully opaque black.
-             * The Shader uses one vertex attribute @c vertex.
-             **/
-            ColorShader
-        };
+        SimpleShader,
+        /**
+         * A generic shader able to render transformed, textured geometries.
+         * This shader is mostly needed by the scene and not of much interest for effects.
+         * Effects can influence this shader through @link ScreenPaintData and @link WindowPaintData.
+         * The shader expects four @c mat4 uniforms @c projection, @c modelview,
+         * @c screenTransformation and @c windowTransformation. The fragment shader expect the
+         * same uniforms as the SimpleShader and the same vertex attributes are used.
+         **/
+        GenericShader,
+        /**
+         * An orthographic shader to render simple colored geometries without texturing.
+         * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
+         * and defaults to @c (0/0). The fragment shader expects a single @c vec4 uniform
+         * @c geometryColor, which defaults to fully opaque black.
+         * The Shader uses one vertex attribute @c vertex.
+         **/
+        ColorShader
+    };
 
-        /**
-         * @return The currently bound shader or @c null if no shader is bound.
-         **/
-        GLShader *getBoundShader() const;
+    /**
+     * @return The currently bound shader or @c null if no shader is bound.
+     **/
+    GLShader *getBoundShader() const;
 
-        /**
-         * @return @c true if a shader is bound, @c false otherwise
-         **/
-        bool isShaderBound() const;
-        /**
-         * @return @c true if the built-in shaders are valid, @c false otherwise
-         **/
-        bool isValid() const;
+    /**
+     * @return @c true if a shader is bound, @c false otherwise
+     **/
+    bool isShaderBound() const;
+    /**
+     * @return @c true if the built-in shaders are valid, @c false otherwise
+     **/
+    bool isValid() const;
 
-        /**
-         * Binds the shader of specified @p type.
-         * To unbind the shader use @link popShader. A previous bound shader will be rebound.
-         * @param type The built-in shader to bind
-         * @param reset Whether all uniforms should be reset to their default values
-         * @return The bound shader or @c NULL if shaders are not valid
-         * @see popShader
-         **/
-        GLShader *pushShader(ShaderType type, bool reset = false);
-        /**
-         * Binds the @p shader.
-         * To unbind the shader use @link popShader. A previous bound shader will be rebound.
-         * To bind a built-in shader use the more specific method.
-         * @param shader The shader to be bound
-         * @see popShader
-         **/
-        void pushShader(GLShader *shader);
+    /**
+     * Binds the shader of specified @p type.
+     * To unbind the shader use @link popShader. A previous bound shader will be rebound.
+     * @param type The built-in shader to bind
+     * @param reset Whether all uniforms should be reset to their default values
+     * @return The bound shader or @c NULL if shaders are not valid
+     * @see popShader
+     **/
+    GLShader *pushShader(ShaderType type, bool reset = false);
+    /**
+     * Binds the @p shader.
+     * To unbind the shader use @link popShader. A previous bound shader will be rebound.
+     * To bind a built-in shader use the more specific method.
+     * @param shader The shader to be bound
+     * @see popShader
+     **/
+    void pushShader(GLShader *shader);
 
-        /**
-         * Unbinds the currently bound shader and rebinds a previous stored shader.
-         * If there is no previous shader, no shader will be rebound.
-         * It is not safe to call this method if there is no bound shader.
-         * @see pushShader
-         * @see getBoundShader
-         **/
-        void popShader();
+    /**
+     * Unbinds the currently bound shader and rebinds a previous stored shader.
+     * If there is no previous shader, no shader will be rebound.
+     * It is not safe to call this method if there is no bound shader.
+     * @see pushShader
+     * @see getBoundShader
+     **/
+    void popShader();
 
-        /**
-         * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
-         * @param vertex The generic vertex shader
-         * @param fragmentFile The path to the source code of the fragment shader
-         * @return The created shader
-         **/
-        GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
-        /**
-         * Creates a GLShader with a built-in fragment shader and a custom vertex shader.
-         * @param fragment The generic fragment shader
-         * @param vertexFile The path to the source code of the vertex shader
-         * @return The created shader
-         **/
-        GLShader *loadVertexShader(ShaderType fragment, const QString &vertexFile);
-        /**
-         * Creates a GLShader with the specified sources.
-         * The difference to GLShader is that it does not need to be loaded from files.
-         * @param vertexSource The source code of the vertex shader
-         * @param fragmentSource The source code of the fragment shader.
-         * @return The created shader
-         **/
-        GLShader *loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource);
+    /**
+     * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
+     * @param vertex The generic vertex shader
+     * @param fragmentFile The path to the source code of the fragment shader
+     * @return The created shader
+     **/
+    GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
+    /**
+     * Creates a GLShader with a built-in fragment shader and a custom vertex shader.
+     * @param fragment The generic fragment shader
+     * @param vertexFile The path to the source code of the vertex shader
+     * @return The created shader
+     **/
+    GLShader *loadVertexShader(ShaderType fragment, const QString &vertexFile);
+    /**
+     * Creates a GLShader with the specified sources.
+     * The difference to GLShader is that it does not need to be loaded from files.
+     * @param vertexSource The source code of the vertex shader
+     * @param fragmentSource The source code of the fragment shader.
+     * @return The created shader
+     **/
+    GLShader *loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource);
 
-        /**
-         * @return a pointer to the ShaderManager instance
-         **/
-        static ShaderManager *instance();
+    /**
+     * @return a pointer to the ShaderManager instance
+     **/
+    static ShaderManager *instance();
 
-        /**
-         * @internal
-         **/
-        static void cleanup();
+    /**
+     * @internal
+     **/
+    static void cleanup();
 
-    private:
-        ShaderManager();
-        ~ShaderManager();
+private:
+    ShaderManager();
+    ~ShaderManager();
 
-        void initShaders();
-        void resetShader(ShaderType type);
+    void initShaders();
+    void resetShader(ShaderType type);
 
-        QStack<GLShader*> m_boundShaders;
-        GLShader *m_orthoShader;
-        GLShader *m_genericShader;
-        GLShader *m_colorShader;
-        bool m_inited;
-        bool m_valid;
-        static ShaderManager *s_shaderManager;
+    QStack<GLShader*> m_boundShaders;
+    GLShader *m_orthoShader;
+    GLShader *m_genericShader;
+    GLShader *m_colorShader;
+    bool m_inited;
+    bool m_valid;
+    static ShaderManager *s_shaderManager;
 };
 
 /**
@@ -474,43 +493,47 @@ class KWIN_EXPORT ShaderManager
  **/
 class KWIN_EXPORT GLRenderTarget
 {
-    public:
-        /**
-         * Constructs a GLRenderTarget
-         * @param color texture where the scene will be rendered onto
-         **/
-        GLRenderTarget(GLTexture* color);
-        ~GLRenderTarget();
+public:
+    /**
+     * Constructs a GLRenderTarget
+     * @param color texture where the scene will be rendered onto
+     **/
+    GLRenderTarget(GLTexture* color);
+    ~GLRenderTarget();
 
-        /**
-         * Enables this render target.
-         * All OpenGL commands from now on affect this render target until the
-         *  @ref disable method is called
-         **/
-        bool enable();
-        /**
-         * Disables this render target, activating whichever target was active
-         *  when @ref enable was called.
-         **/
-        bool disable();
+    /**
+     * Enables this render target.
+     * All OpenGL commands from now on affect this render target until the
+     *  @ref disable method is called
+     **/
+    bool enable();
+    /**
+     * Disables this render target, activating whichever target was active
+     *  when @ref enable was called.
+     **/
+    bool disable();
 
-        bool valid() const  { return mValid; }
+    bool valid() const  {
+        return mValid;
+    }
 
-        static void initStatic();
-        static bool supported()  { return mSupported; }
+    static void initStatic();
+    static bool supported()  {
+        return mSupported;
+    }
 
 
-    protected:
-        void initFBO();
+protected:
+    void initFBO();
 
 
-    private:
-        static bool mSupported;
+private:
+    static bool mSupported;
 
-        GLTexture* mTexture;
-        bool mValid;
+    GLTexture* mTexture;
+    bool mValid;
 
-        GLuint mFramebuffer;
+    GLuint mFramebuffer;
 };
 
 /**
@@ -528,94 +551,93 @@ class KWIN_EXPORT GLRenderTarget
  */
 class KWIN_EXPORT GLVertexBuffer
 {
-    public:
-        /**
-         * Enum to define how often the vertex data in the buffer object changes.
-         */
-        enum UsageHint
-            {
-            Dynamic, ///< frequent changes, but used several times for rendering
-            Static, ///< No changes to data
-            Stream ///< Data only used once for rendering, updated very frequently
-            };
+public:
+    /**
+     * Enum to define how often the vertex data in the buffer object changes.
+     */
+    enum UsageHint {
+        Dynamic, ///< frequent changes, but used several times for rendering
+        Static, ///< No changes to data
+        Stream ///< Data only used once for rendering, updated very frequently
+    };
 
-        GLVertexBuffer( UsageHint hint );
-        ~GLVertexBuffer();
+    GLVertexBuffer(UsageHint hint);
+    ~GLVertexBuffer();
 
-        /**
-         * Sets the vertex data.
-         * @param numberVertices The number of vertices in the arrays
-         * @param dim The dimension of the vertices: 2 for x/y, 3 for x/y/z
-         * @param vertices The vertices, size must equal @a numberVertices * @a dim
-         * @param texcoords The texture coordinates for each vertex.
-         * Size must equal 2 * @a numberVertices.
-         */
-        void setData( int numberVertices, int dim, const float* vertices, const float* texcoords);
-        /**
-         * Renders the vertex data in given @a primitiveMode.
-         * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed
-         * values for @a primitiveMode. Best is to use GL_TRIANGLES or similar to be future
-         * compatible.
-         */
-        void render( GLenum primitiveMode );
-        /**
-         * Same as above restricting painting to @a region.
-         */
-        void render( const QRegion& region, GLenum primitiveMode );
-        /**
-         * Sets the color the geometry will be rendered with.
-         * For legacy rendering glColor is used before rendering the geometry.
-         * For core shader a uniform "geometryColor" is expected and is set.
-         * @param color The color to render the geometry
-         * @param enableColor Whether the geometry should be rendered with a color or not
-         * @see setUseColor
-         * @see isUseColor
-         * @since 4.7
-         **/
-        void setColor(const QColor& color, bool enableColor = true);
-        /**
-         * @return @c true if geometry will be painted with a color, @c false otherwise
-         * @see setUseColor
-         * @see setColor
-         * @since 4.7
-         **/
-        bool isUseColor() const;
-        /**
-         * Enables/Disables rendering the geometry with a color.
-         * If no color is set an opaque, black color is used.
-         * @param enable Enable/Disable rendering with color
-         * @see isUseColor
-         * @see setColor
-         * @since 4.7
-         **/
-        void setUseColor(bool enable);
+    /**
+     * Sets the vertex data.
+     * @param numberVertices The number of vertices in the arrays
+     * @param dim The dimension of the vertices: 2 for x/y, 3 for x/y/z
+     * @param vertices The vertices, size must equal @a numberVertices * @a dim
+     * @param texcoords The texture coordinates for each vertex.
+     * Size must equal 2 * @a numberVertices.
+     */
+    void setData(int numberVertices, int dim, const float* vertices, const float* texcoords);
+    /**
+     * Renders the vertex data in given @a primitiveMode.
+     * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed
+     * values for @a primitiveMode. Best is to use GL_TRIANGLES or similar to be future
+     * compatible.
+     */
+    void render(GLenum primitiveMode);
+    /**
+     * Same as above restricting painting to @a region.
+     */
+    void render(const QRegion& region, GLenum primitiveMode);
+    /**
+     * Sets the color the geometry will be rendered with.
+     * For legacy rendering glColor is used before rendering the geometry.
+     * For core shader a uniform "geometryColor" is expected and is set.
+     * @param color The color to render the geometry
+     * @param enableColor Whether the geometry should be rendered with a color or not
+     * @see setUseColor
+     * @see isUseColor
+     * @since 4.7
+     **/
+    void setColor(const QColor& color, bool enableColor = true);
+    /**
+     * @return @c true if geometry will be painted with a color, @c false otherwise
+     * @see setUseColor
+     * @see setColor
+     * @since 4.7
+     **/
+    bool isUseColor() const;
+    /**
+     * Enables/Disables rendering the geometry with a color.
+     * If no color is set an opaque, black color is used.
+     * @param enable Enable/Disable rendering with color
+     * @see isUseColor
+     * @see setColor
+     * @since 4.7
+     **/
+    void setUseColor(bool enable);
 
-        /**
-         * Resets the instance to default values.
-         * Useful for shared buffers.
-         * @since 4.7
-         **/
-        void reset();
+    /**
+     * Resets the instance to default values.
+     * Useful for shared buffers.
+     * @since 4.7
+     **/
+    void reset();
 
-        /**
-         * @internal
-         */
-        static void initStatic();
-        /**
-         * Returns true if VBOs are supported, it is save to use this class even if VBOs are not
-         * supported.
-         * @returns true if vertex buffer objects are supported
-         */
-        static bool isSupported();
+    /**
+     * @internal
+     */
+    static void initStatic();
+    /**
+     * Returns true if VBOs are supported, it is save to use this class even if VBOs are not
+     * supported.
+     * @returns true if vertex buffer objects are supported
+     */
+    static bool isSupported();
 
-        /**
-         * @return A shared VBO for streaming data
-         * @since 4.7
-         **/
-        static GLVertexBuffer *streamingBuffer();
+    /**
+     * @return A shared VBO for streaming data
+     * @since 4.7
+     **/
+    static GLVertexBuffer *streamingBuffer();
 
-    private:
-        GLVertexBufferPrivate* const d;
+private:
+    GLVertexBufferPrivate* const d;
 };
 
 } // namespace

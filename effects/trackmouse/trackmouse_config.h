@@ -33,30 +33,30 @@ namespace KWin
 {
 
 class TrackMouseEffectConfigForm : public QWidget, public Ui::TrackMouseEffectConfigForm
-    {
-      Q_OBJECT
-      public:
-        explicit TrackMouseEffectConfigForm( QWidget* parent );
-    };
+{
+    Q_OBJECT
+public:
+    explicit TrackMouseEffectConfigForm(QWidget* parent);
+};
 
 class TrackMouseEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit TrackMouseEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~TrackMouseEffectConfig();
+public:
+    explicit TrackMouseEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~TrackMouseEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
-    private slots:
-        virtual void enableEditor( bool );
-    private:
-        TrackMouseEffectConfigForm* m_ui;
-        KAction *action;
-        KActionCollection* m_actionCollection;
-    };
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
+private slots:
+    virtual void enableEditor(bool);
+private:
+    TrackMouseEffectConfigForm* m_ui;
+    KAction *action;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

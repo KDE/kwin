@@ -38,35 +38,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
-    registerPlugin<KWin::VideoRecordEffectConfig>("videorecord");
-    )
+                            registerPlugin<KWin::VideoRecordEffectConfig>("videorecord");
+                           )
 K_EXPORT_PLUGIN(EffectFactory("kwin"))
 
 namespace KWin
 {
 
 VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     QVBoxLayout* layout = new QVBoxLayout(this);
-    QHBoxLayout* hlayout = new QHBoxLayout( this );
-    QLabel *label = new QLabel( i18n( "Path to save video:" ), this );
-    hlayout->addWidget( label );
-    saveVideo = new KUrlRequester( this );
-    saveVideo->setMode( KFile::Directory | KFile::LocalOnly );
-    hlayout->addWidget( saveVideo );
-    layout->addLayout( hlayout );
+    QHBoxLayout* hlayout = new QHBoxLayout(this);
+    QLabel *label = new QLabel(i18n("Path to save video:"), this);
+    hlayout->addWidget(label);
+    saveVideo = new KUrlRequester(this);
+    saveVideo->setMode(KFile::Directory | KFile::LocalOnly);
+    hlayout->addWidget(saveVideo);
+    layout->addLayout(hlayout);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    KActionCollection* actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    KAction* a = static_cast<KAction*>(actionCollection->addAction( "VideoRecord" ));
-    a->setText( i18n("Toggle Video Recording" ));
+    KAction* a = static_cast<KAction*>(actionCollection->addAction("VideoRecord"));
+    a->setText(i18n("Toggle Video Recording"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_V));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
-            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
+                                           KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     layout->addWidget(mShortcutEditor);
 
     connect(saveVideo, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
@@ -75,48 +75,48 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
     layout->addStretch();
 
     load();
-    }
+}
 
 VideoRecordEffectConfig::~VideoRecordEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
-    }
+}
 
 void VideoRecordEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
-    saveVideo->setPath( conf.readEntry( "videopath", KGlobalSettings::documentPath() ) );
+    saveVideo->setPath(conf.readEntry("videopath", KGlobalSettings::documentPath()));
     emit changed(false);
-    }
+}
 
 void VideoRecordEffectConfig::save()
-    {
+{
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
 
-    if( saveVideo->url().isEmpty() )
-       conf.writeEntry("videopath", KGlobalSettings::documentPath());
+    if (saveVideo->url().isEmpty())
+        conf.writeEntry("videopath", KGlobalSettings::documentPath());
     else
-       conf.writeEntry("videopath", saveVideo->url().path());
+        conf.writeEntry("videopath", saveVideo->url().path());
 
     conf.sync();
 
     mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "videorecord" );
-    }
+    EffectsHandler::sendReloadMessage("videorecord");
+}
 
 void VideoRecordEffectConfig::defaults()
-    {
-    saveVideo->setPath(KGlobalSettings::documentPath() );
+{
+    saveVideo->setPath(KGlobalSettings::documentPath());
     mShortcutEditor->allDefault();
     emit changed(true);
-    }
+}
 
 
 } // namespace

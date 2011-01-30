@@ -30,155 +30,153 @@ namespace TabBox
 {
 
 PreviewClientImpl::PreviewClientImpl(WId id)
-    : m_id( id )
-    {
-    }
+    : m_id(id)
+{
+}
 
 PreviewClientImpl::~PreviewClientImpl()
-    {
-    }
+{
+}
 
 QString PreviewClientImpl::caption() const
-    {
-    KWindowInfo info = KWindowSystem::windowInfo( m_id, NET::WMVisibleName );
+{
+    KWindowInfo info = KWindowSystem::windowInfo(m_id, NET::WMVisibleName);
     return info.visibleName();
-    }
+}
 
-QPixmap PreviewClientImpl::icon( const QSize& size ) const
-    {
-    return KWindowSystem::icon( m_id, size.width(), size.height(), true );
-    }
+QPixmap PreviewClientImpl::icon(const QSize& size) const
+{
+    return KWindowSystem::icon(m_id, size.width(), size.height(), true);
+}
 
 bool PreviewClientImpl::isMinimized() const
-    {
-    KWindowInfo info = KWindowSystem::windowInfo( m_id, NET::WMState | NET::XAWMState );
+{
+    KWindowInfo info = KWindowSystem::windowInfo(m_id, NET::WMState | NET::XAWMState);
     return info.isMinimized();
-    }
+}
 
 int PreviewClientImpl::width() const
-    {
+{
     return 0; // only needed for the outline - not needed in preview
-    }
+}
 
 int PreviewClientImpl::height() const
-    {
+{
     return 0; // only needed for the outline - not needed in preview
-    }
+}
 
 WId PreviewClientImpl::window() const
-    {
+{
     return m_id;
-    }
+}
 
 int PreviewClientImpl::x() const
-    {
+{
     return 0; // only needed for the outline - not needed in preview
-    }
+}
 
 int PreviewClientImpl::y() const
-    {
+{
     return 0; // only needed for the outline - not needed in preview
-    }
+}
 
 /*******************************************************
 * PreviewHandlerImpl
 *******************************************************/
 PreviewHandlerImpl::PreviewHandlerImpl()
-    {
+{
     QList< WId > windows = KWindowSystem::stackingOrder();
-    foreach( WId w, windows )
-        {
-        m_stackingOrder.append( new PreviewClientImpl( w ) );
-        kDebug( 1212 ) << "Window " << w;
-        }
+    foreach (WId w, windows) {
+        m_stackingOrder.append(new PreviewClientImpl(w));
+        kDebug(1212) << "Window " << w;
     }
+}
 
 PreviewHandlerImpl::~PreviewHandlerImpl()
-    {
-    qDeleteAll( m_stackingOrder.begin(), m_stackingOrder.end() );
+{
+    qDeleteAll(m_stackingOrder.begin(), m_stackingOrder.end());
     m_stackingOrder.clear();
-    }
+}
 
-TabBoxClient* PreviewHandlerImpl::clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const
-    {
-    Q_UNUSED( desktop )
-    Q_UNUSED( allDesktops )
+TabBoxClient* PreviewHandlerImpl::clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const
+{
+    Q_UNUSED(desktop)
+    Q_UNUSED(allDesktops)
     // don't include desktops and panels
-    KWindowInfo info = KWindowSystem::windowInfo( client->window(), NET::WMWindowType );
+    KWindowInfo info = KWindowSystem::windowInfo(client->window(), NET::WMWindowType);
     NET::WindowType wType = info.windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask |
                                             NET::ToolbarMask | NET::MenuMask | NET::DialogMask |
                                             NET::OverrideMask | NET::TopMenuMask |
                                             NET::UtilityMask | NET::SplashMask);
 
     if (wType != NET::Normal && wType != NET::Override && wType != NET::Unknown &&
-        wType != NET::Dialog && wType != NET::Utility)
-        {
+            wType != NET::Dialog && wType != NET::Utility) {
         return NULL;
-        }
-    return client;
     }
+    return client;
+}
 
 TabBoxClientList PreviewHandlerImpl::stackingOrder() const
-    {
+{
     return m_stackingOrder;
-    }
+}
 
-int PreviewHandlerImpl::nextDesktopFocusChain( int desktop ) const
-    {
+int PreviewHandlerImpl::nextDesktopFocusChain(int desktop) const
+{
     int ret = desktop + 1;
-    if( ret > numberOfDesktops() )
+    if (ret > numberOfDesktops())
         ret = 1;
     return ret;
-    }
+}
 
 int PreviewHandlerImpl::numberOfDesktops() const
-    {
+{
     return KWindowSystem::numberOfDesktops();
-    }
+}
 
 int PreviewHandlerImpl::currentDesktop() const
-    {
+{
     return KWindowSystem::currentDesktop();
-    }
+}
 
-QString PreviewHandlerImpl::desktopName( int desktop ) const
-    {
-    return KWindowSystem::desktopName( desktop );
-    }
+QString PreviewHandlerImpl::desktopName(int desktop) const
+{
+    return KWindowSystem::desktopName(desktop);
+}
 
-QString PreviewHandlerImpl::desktopName( TabBoxClient* client ) const
-    {
-    Q_UNUSED( client )
-    return desktopName( 1 );
-    }
+QString PreviewHandlerImpl::desktopName(TabBoxClient* client) const
+{
+    Q_UNUSED(client)
+    return desktopName(1);
+}
 
-TabBoxClient* PreviewHandlerImpl::nextClientFocusChain( TabBoxClient* client ) const
-    {
-    if( m_stackingOrder.isEmpty() )
+TabBoxClient* PreviewHandlerImpl::nextClientFocusChain(TabBoxClient* client) const
+{
+    if (m_stackingOrder.isEmpty())
         return NULL;
-    int index = m_stackingOrder.indexOf( client );
+    int index = m_stackingOrder.indexOf(client);
     index++;
-    if( index >= m_stackingOrder.count() )
+    if (index >= m_stackingOrder.count())
         index = 0;
     return m_stackingOrder[ index ];
-    }
+}
 
 KWin::TabBox::TabBoxClient* PreviewHandlerImpl::activeClient() const
-    {
-    if( m_stackingOrder.isEmpty() )
+{
+    if (m_stackingOrder.isEmpty())
         return NULL;
     return m_stackingOrder[ 0 ];
-    }
+}
 
 int PreviewHandlerImpl::activeScreen() const
-    {
+{
     return 0;
-    }
+}
 
 TabBoxClient* PreviewHandlerImpl::desktopClient() const
-    {
+{
     return 0;
-    }
+}
 
 
 } // namespace TabBox

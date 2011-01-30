@@ -30,21 +30,21 @@ namespace KWin
 {
 
 class VideoRecordEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit VideoRecordEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~VideoRecordEffectConfig();
+public:
+    explicit VideoRecordEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~VideoRecordEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        KShortcutsEditor* mShortcutEditor;
-        KUrlRequester *saveVideo;
-    };
+private:
+    KShortcutsEditor* mShortcutEditor;
+    KUrlRequester *saveVideo;
+};
 
 } // namespace
 

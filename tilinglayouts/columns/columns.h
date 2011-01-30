@@ -34,16 +34,16 @@ class Client;
 // simulates a 2 column right layout for now, make it arbitrary
 // in columns and direction
 class Columns : public TilingLayout
-    {
-    public:
-        Columns( Workspace * );
-        KDecorationDefines::Position resizeMode( Client *c, KDecorationDefines::Position currentMode ) const;
-        bool clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig );
-        
-    private:
-        void arrange( QRect wgeom );
-        int m_leftWidth; // width of left column
-    };
+{
+public:
+    Columns(Workspace *);
+    KDecorationDefines::Position resizeMode(Client *c, KDecorationDefines::Position currentMode) const;
+    bool clientResized(Client *c, const QRect &moveResizeGeom, const QRect &orig);
+
+private:
+    void arrange(QRect wgeom);
+    int m_leftWidth; // width of left column
+};
 } // end namespace
 
 #endif

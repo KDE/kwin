@@ -37,13 +37,13 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
-    {
+{
     setupUi(this);
-    }
+}
 
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new ZoomEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -57,71 +57,71 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    KActionCollection *actionCollection = new KActionCollection( this, KComponentData("kwin") );
-    actionCollection->setConfigGroup( "Zoom" );
+    KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    actionCollection->setConfigGroup("Zoom");
     actionCollection->setConfigGlobal(true);
 
     KAction* a;
-    a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn ));
+    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Equal));
 
-    a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomOut ));
+    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomOut));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
 
-    a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize ));
+    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveZoomLeft" ) );
-    a->setIcon( KIcon("go-previous") );
-    a->setText( i18n("Move Left") );
+    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomLeft"));
+    a->setIcon(KIcon("go-previous"));
+    a->setText(i18n("Move Left"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Left));
-    
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveZoomRight" ) );
-    a->setIcon( KIcon("go-next") );
-    a->setText( i18n("Move Right") );
+
+    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomRight"));
+    a->setIcon(KIcon("go-next"));
+    a->setText(i18n("Move Right"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Right));
 
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveZoomUp" ) );
-    a->setIcon( KIcon("go-up") );
-    a->setText( i18n("Move Up") );
+    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomUp"));
+    a->setIcon(KIcon("go-up"));
+    a->setText(i18n("Move Up"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Up));
 
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveZoomDown" ) );
-    a->setIcon( KIcon("go-down") );
-    a->setText( i18n("Move Down") );
+    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomDown"));
+    a->setIcon(KIcon("go-down"));
+    a->setText(i18n("Move Down"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Down));
 
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveMouseToFocus" ) );
-    a->setIcon( KIcon("view-restore") );
-    a->setText( i18n("Move Mouse to Focus") );
+    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToFocus"));
+    a->setIcon(KIcon("view-restore"));
+    a->setText(i18n("Move Mouse to Focus"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F5));
 
-    a = static_cast< KAction* >( actionCollection->addAction( "MoveMouseToCenter" ) );
-    a->setIcon( KIcon("view-restore") );
-    a->setText( i18n("Move Mouse to Center") );
+    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToCenter"));
+    a->setIcon(KIcon("view-restore"));
+    a->setText(i18n("Move Mouse to Center"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F6));
-    
+
     m_ui->editor->addCollection(actionCollection);
     load();
-    }
+}
 
 ZoomEffectConfig::~ZoomEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    }
+}
 
 void ZoomEffectConfig::load()
-    {
+{
     KCModule::load();
     KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
     m_ui->zoomStepsSpinBox->setValue(conf.readEntry("ZoomFactor", 1.2));
@@ -130,10 +130,10 @@ void ZoomEffectConfig::load()
     m_ui->focusTrackingCheckBox->setChecked(conf.readEntry("EnableFocusTracking", false));
     m_ui->followFocusCheckBox->setChecked(conf.readEntry("EnableFollowFocus", true));
     emit changed(false);
-    }
+}
 
 void ZoomEffectConfig::save()
-    {
+{
     //KCModule::save();
     KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
     conf.writeEntry("ZoomFactor", m_ui->zoomStepsSpinBox->value());
@@ -144,11 +144,11 @@ void ZoomEffectConfig::save()
     m_ui->editor->save(); // undo() will restore to this state from now on
     conf.sync();
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "zoom" );
-    }
+    EffectsHandler::sendReloadMessage("zoom");
+}
 
 void ZoomEffectConfig::defaults()
-    {
+{
     m_ui->zoomStepsSpinBox->setValue(1.25);
     m_ui->mousePointerComboBox->setCurrentIndex(0);
     m_ui->mouseTrackingComboBox->setCurrentIndex(0);
@@ -156,7 +156,7 @@ void ZoomEffectConfig::defaults()
     m_ui->followFocusCheckBox->setChecked(true);
     m_ui->editor->allDefault();
     emit changed(true);
-    }
+}
 
 } // namespace
 

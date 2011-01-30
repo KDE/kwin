@@ -34,77 +34,77 @@ class Workspace;
 class EffectWindowGroupImpl;
 
 class Group
-    {
-    public:
-        Group( Window leader, Workspace* workspace );
-        ~Group();
-        Window leader() const;
-        const Client* leaderClient() const;
-        Client* leaderClient();
-        const ClientList& members() const;
-        QPixmap icon() const;
-        QPixmap miniIcon() const;
-        QPixmap bigIcon() const;
-        QPixmap hugeIcon() const;
-        void addMember( Client* member );
-        void removeMember( Client* member );
-        void gotLeader( Client* leader );
-        void lostLeader();
-        Workspace* workspace();
-        bool groupEvent( XEvent* e );
-        void updateUserTime( Time time = CurrentTime );
-        Time userTime() const;
-        void ref();
-        void deref();
-        EffectWindowGroupImpl* effectGroup();
-    private:
-        void getIcons();
-        void startupIdChanged();
-        ClientList _members;
-        Client* leader_client;
-        Window leader_wid;
-        Workspace* _workspace;
-        NETWinInfo2* leader_info;
-        Time user_time;
-        int refcount;
-        EffectWindowGroupImpl* effect_group;
-    };
+{
+public:
+    Group(Window leader, Workspace* workspace);
+    ~Group();
+    Window leader() const;
+    const Client* leaderClient() const;
+    Client* leaderClient();
+    const ClientList& members() const;
+    QPixmap icon() const;
+    QPixmap miniIcon() const;
+    QPixmap bigIcon() const;
+    QPixmap hugeIcon() const;
+    void addMember(Client* member);
+    void removeMember(Client* member);
+    void gotLeader(Client* leader);
+    void lostLeader();
+    Workspace* workspace();
+    bool groupEvent(XEvent* e);
+    void updateUserTime(Time time = CurrentTime);
+    Time userTime() const;
+    void ref();
+    void deref();
+    EffectWindowGroupImpl* effectGroup();
+private:
+    void getIcons();
+    void startupIdChanged();
+    ClientList _members;
+    Client* leader_client;
+    Window leader_wid;
+    Workspace* _workspace;
+    NETWinInfo2* leader_info;
+    Time user_time;
+    int refcount;
+    EffectWindowGroupImpl* effect_group;
+};
 
 inline Window Group::leader() const
-    {
+{
     return leader_wid;
-    }
+}
 
 inline const Client* Group::leaderClient() const
-    {
+{
     return leader_client;
-    }
+}
 
 inline Client* Group::leaderClient()
-    {
+{
     return leader_client;
-    }
+}
 
 inline const ClientList& Group::members() const
-    {
+{
     return _members;
-    }
+}
 
 inline Workspace* Group::workspace()
-    {
+{
     return _workspace;
-    }
+}
 
 inline Time Group::userTime() const
-    {
+{
     return user_time;
-    }
+}
 
 inline
 EffectWindowGroupImpl* Group::effectGroup()
-    {
+{
     return effect_group;
-    }
+}
 
 } // namespace
 

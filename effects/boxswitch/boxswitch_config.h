@@ -31,25 +31,25 @@ namespace KWin
 class BoxSwitchEffectConfigForm : public QWidget, public Ui::BoxSwitchEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit BoxSwitchEffectConfigForm(QWidget* parent);
+public:
+    explicit BoxSwitchEffectConfigForm(QWidget* parent);
 };
 
 class BoxSwitchEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit BoxSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~BoxSwitchEffectConfig();
+public:
+    explicit BoxSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~BoxSwitchEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        BoxSwitchEffectConfigForm* m_ui;
-    };
+private:
+    BoxSwitchEffectConfigForm* m_ui;
+};
 
 } // namespace
 

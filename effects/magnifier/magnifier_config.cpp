@@ -39,12 +39,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new MagnifierEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -56,35 +56,35 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->spinHeight, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
     m_actionCollection->setConfigGroup("Magnifier");
     m_actionCollection->setConfigGlobal(true);
 
     KAction* a;
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomIn));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomIn));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
 
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomOut));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomOut));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
 
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ActualSize));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ActualSize));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     m_ui->editor->addCollection(m_actionCollection);
-    }
+}
 
 MagnifierEffectConfig::~MagnifierEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    }
+}
 
 void MagnifierEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
@@ -96,10 +96,10 @@ void MagnifierEffectConfig::load()
 
 
     emit changed(false);
-    }
+}
 
 void MagnifierEffectConfig::save()
-    {
+{
     kDebug(1212) << "Saving config of Magnifier" ;
     //KCModule::save();
 
@@ -113,16 +113,16 @@ void MagnifierEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "magnifier" );
-    }
+    EffectsHandler::sendReloadMessage("magnifier");
+}
 
 void MagnifierEffectConfig::defaults()
-    {
+{
     m_ui->spinWidth->setValue(200);
     m_ui->spinHeight->setValue(200);
     m_ui->editor->allDefault();
     emit changed(true);
-    }
+}
 
 
 } // namespace

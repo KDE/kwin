@@ -31,139 +31,131 @@ namespace KWin
 namespace TabBox
 {
 
-DesktopModel::DesktopModel( QObject* parent )
-    : QAbstractItemModel( parent )
-    {
-    }
+DesktopModel::DesktopModel(QObject* parent)
+    : QAbstractItemModel(parent)
+{
+}
 
 DesktopModel::~DesktopModel()
-    {
-    }
+{
+}
 
-QVariant DesktopModel::data( const QModelIndex& index, int role ) const
-    {
-    if( !index.isValid() )
+QVariant DesktopModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
         return QVariant();
 
-    int desktopIndex = index.row()*columnCount() + index.column();
-    if( desktopIndex >= m_desktopList.count() )
+    int desktopIndex = index.row() * columnCount() + index.column();
+    if (desktopIndex >= m_desktopList.count())
         return QVariant();
-    switch( role )
-        {
-        case Qt::DisplayRole:
-        case DesktopNameRole:
-            return tabBox->desktopName( m_desktopList[ desktopIndex ] );
-        case DesktopRole:
-            return m_desktopList[ desktopIndex ];
-        case ClientModelRole:
-            return qVariantFromValue( (void*)m_clientModels[ m_desktopList[ desktopIndex ] ] );
-        default:
-            return QVariant();
-        }
+    switch(role) {
+    case Qt::DisplayRole:
+    case DesktopNameRole:
+        return tabBox->desktopName(m_desktopList[ desktopIndex ]);
+    case DesktopRole:
+        return m_desktopList[ desktopIndex ];
+    case ClientModelRole:
+        return qVariantFromValue((void*)m_clientModels[ m_desktopList[ desktopIndex ] ]);
+    default:
+        return QVariant();
     }
+}
 
-int DesktopModel::columnCount( const QModelIndex& parent ) const
-    {
-    Q_UNUSED( parent )
+int DesktopModel::columnCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent)
     int count = 1;
-    switch( tabBox->config().layout() )
-        {
-        case TabBoxConfig::HorizontalLayout:
-            count = m_desktopList.count();
-            break;
-        case TabBoxConfig::VerticalLayout:
-            count = 1;
-            break;
-        case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( float(m_desktopList.count() )) );
-            if( count * count < m_desktopList.count() )
-                count++;
-            // TODO: pager layout?
-            break;
-        }
-    return qMax( count, 1 );
+    switch(tabBox->config().layout()) {
+    case TabBoxConfig::HorizontalLayout:
+        count = m_desktopList.count();
+        break;
+    case TabBoxConfig::VerticalLayout:
+        count = 1;
+        break;
+    case TabBoxConfig::HorizontalVerticalLayout:
+        count = qRound(sqrt(float(m_desktopList.count())));
+        if (count * count < m_desktopList.count())
+            count++;
+        // TODO: pager layout?
+        break;
     }
+    return qMax(count, 1);
+}
 
-int DesktopModel::rowCount( const QModelIndex& parent ) const
-    {
-    Q_UNUSED( parent )
+int DesktopModel::rowCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent)
     int count = 1;
-    switch( tabBox->config().layout() )
-        {
-        case TabBoxConfig::HorizontalLayout:
-            count = 1;
-            break;
-        case TabBoxConfig::VerticalLayout:
-            count = m_desktopList.count();
-            break;
-        case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( float(m_desktopList.count()) ) );
-            // TODO: pager layout?
-            break;
-        }
-    return qMax( count, 1 );
+    switch(tabBox->config().layout()) {
+    case TabBoxConfig::HorizontalLayout:
+        count = 1;
+        break;
+    case TabBoxConfig::VerticalLayout:
+        count = m_desktopList.count();
+        break;
+    case TabBoxConfig::HorizontalVerticalLayout:
+        count = qRound(sqrt(float(m_desktopList.count())));
+        // TODO: pager layout?
+        break;
     }
+    return qMax(count, 1);
+}
 
-QModelIndex DesktopModel::parent( const QModelIndex& child ) const
-    {
-    Q_UNUSED( child )
+QModelIndex DesktopModel::parent(const QModelIndex& child) const
+{
+    Q_UNUSED(child)
     return QModelIndex();
-    }
+}
 
-QModelIndex DesktopModel::index( int row, int column, const QModelIndex& parent ) const
-    {
-    Q_UNUSED( parent )
+QModelIndex DesktopModel::index(int row, int column, const QModelIndex& parent) const
+{
+    Q_UNUSED(parent)
     int index = row * columnCount() + column;
-    if( index > m_desktopList.count() || m_desktopList.isEmpty() )
+    if (index > m_desktopList.count() || m_desktopList.isEmpty())
         return QModelIndex();
-    return createIndex( row, column );
-    }
+    return createIndex(row, column);
+}
 
-QModelIndex DesktopModel::desktopIndex( int desktop ) const
-    {
-    if( desktop > m_desktopList.count() )
+QModelIndex DesktopModel::desktopIndex(int desktop) const
+{
+    if (desktop > m_desktopList.count())
         return QModelIndex();
-    int index = m_desktopList.indexOf( desktop );
+    int index = m_desktopList.indexOf(desktop);
     int row = index / columnCount();
     int column = index % columnCount();
-    return createIndex( row, column );
-    }
+    return createIndex(row, column);
+}
 
 void DesktopModel::createDesktopList()
-    {
+{
     m_desktopList.clear();
-    qDeleteAll( m_clientModels );
+    qDeleteAll(m_clientModels);
     m_clientModels.clear();
 
-    switch( tabBox->config().desktopSwitchingMode() )
-        {
-        case TabBoxConfig::MostRecentlyUsedDesktopSwitching:
-            {
-            int desktop = tabBox->currentDesktop();
-            do
-                {
-                m_desktopList.append( desktop );
-                ClientModel* clientModel = new ClientModel( this );
-                clientModel->createClientList( desktop );
-                m_clientModels.insert( desktop, clientModel );
-                desktop = tabBox->nextDesktopFocusChain( desktop );
-                } while( desktop != tabBox->currentDesktop() );
-            break;
-            }
-        case TabBoxConfig::StaticDesktopSwitching:
-            {
-            for( int i=1; i<=tabBox->numberOfDesktops(); i++ )
-                {
-                m_desktopList.append( i );
-                ClientModel* clientModel = new ClientModel( this );
-                clientModel->createClientList( i );
-                m_clientModels.insert( i, clientModel );
-                }
-            break;
-            }
-        }
-    reset();
+    switch(tabBox->config().desktopSwitchingMode()) {
+    case TabBoxConfig::MostRecentlyUsedDesktopSwitching: {
+        int desktop = tabBox->currentDesktop();
+        do {
+            m_desktopList.append(desktop);
+            ClientModel* clientModel = new ClientModel(this);
+            clientModel->createClientList(desktop);
+            m_clientModels.insert(desktop, clientModel);
+            desktop = tabBox->nextDesktopFocusChain(desktop);
+        } while (desktop != tabBox->currentDesktop());
+        break;
     }
+    case TabBoxConfig::StaticDesktopSwitching: {
+        for (int i = 1; i <= tabBox->numberOfDesktops(); i++) {
+            m_desktopList.append(i);
+            ClientModel* clientModel = new ClientModel(this);
+            clientModel->createClientList(i);
+            m_clientModels.insert(i, clientModel);
+        }
+        break;
+    }
+    }
+    reset();
+}
 
 } // namespace Tabbox
 } // namespace KWin

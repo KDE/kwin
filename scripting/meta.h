@@ -164,21 +164,21 @@ void supplyConfig(QScriptEngine*);
 // storage, but do not use caching.
 template <typename T>
 void RefWrapping::embed(QScriptValue& value, const T datum)
-    {
+{
     QScriptEngine* eng = value.engine();
     value.setData(qScriptValueFromValue(eng,
                                         static_cast<void*>(
                                             const_cast<T>(datum)
                                         )
                                        ));
-    }
+}
 
 template <typename T>
 T RefWrapping::extract(const QScriptValue& value)
-    {
+{
     T datum = static_cast<T>(qscriptvalue_cast<void*>(value.data()));
     return datum;
-    }
+}
 }
 }
 

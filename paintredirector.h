@@ -37,29 +37,29 @@ namespace KWin
 // into a paint device (QPixmap).
 class PaintRedirector
     : public QObject
-    {
+{
     Q_OBJECT
-    public:
-        PaintRedirector( QWidget* widget );
-        QPixmap performPendingPaint();
-        virtual bool eventFilter( QObject* o, QEvent* e );
-        QRegion pendingRegion() const;
-        QRegion scheduledRepaintRegion();
-    signals:
-        void paintPending();
-    private:
-        void added( QWidget* widget );
-        void removed( QWidget* widget );
-        bool isToolTip( QWidget* widget ) const;
-        void timerEvent( QTimerEvent* event );
-        QWidget* widget;
-        QRegion pending;
-        QRegion scheduled;
-        QPixmap scratch;
-        bool recursionCheck;
-        QTimer timer;
-        QBasicTimer cleanupTimer;
-    };
+public:
+    PaintRedirector(QWidget* widget);
+    QPixmap performPendingPaint();
+    virtual bool eventFilter(QObject* o, QEvent* e);
+    QRegion pendingRegion() const;
+    QRegion scheduledRepaintRegion();
+signals:
+    void paintPending();
+private:
+    void added(QWidget* widget);
+    void removed(QWidget* widget);
+    bool isToolTip(QWidget* widget) const;
+    void timerEvent(QTimerEvent* event);
+    QWidget* widget;
+    QRegion pending;
+    QRegion scheduled;
+    QPixmap scratch;
+    bool recursionCheck;
+    QTimer timer;
+    QBasicTimer cleanupTimer;
+};
 
 } // namespace
 

@@ -28,52 +28,52 @@ namespace KWin
 {
 
 class SlideBackEffect
-            : public Effect
-    {
-    public:
-        SlideBackEffect();
+    : public Effect
+{
+public:
+    SlideBackEffect();
 
-        virtual void windowActivated( EffectWindow* c );
+    virtual void windowActivated(EffectWindow* c);
 
-        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
 
-        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void postPaintScreen();
 
-        virtual void windowDeleted( EffectWindow* w );
-        virtual void windowAdded( EffectWindow* w );
-	virtual void windowUnminimized( EffectWindow* w );
-        virtual void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
+    virtual void windowDeleted(EffectWindow* w);
+    virtual void windowAdded(EffectWindow* w);
+    virtual void windowUnminimized(EffectWindow* w);
+    virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
 
-        virtual void tabBoxClosed();
+    virtual void tabBoxClosed();
 
-    private:
+private:
 
-        WindowMotionManager motionManager;
-        EffectWindowList usableOldStackingOrder;
-        EffectWindowList oldStackingOrder;
-        EffectWindowList coveringWindows;
-        EffectWindowList elevatedList;
-	EffectWindow* unminimizedWindow;
-        EffectWindow* clientItemShown;
-        EffectWindow* clientItemHidden;
-        QHash<EffectWindow *, QRect> destinationList;
-        bool disabled;
-	QList <QRegion> clippedRegions;
+    WindowMotionManager motionManager;
+    EffectWindowList usableOldStackingOrder;
+    EffectWindowList oldStackingOrder;
+    EffectWindowList coveringWindows;
+    EffectWindowList elevatedList;
+    EffectWindow* unminimizedWindow;
+    EffectWindow* clientItemShown;
+    EffectWindow* clientItemHidden;
+    QHash<EffectWindow *, QRect> destinationList;
+    bool disabled;
+    QList <QRegion> clippedRegions;
 
-        QRect getSlideDestination( const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
-        void updateStackingOrder();
-        bool isWindowOnTop( EffectWindow *w );
-        bool isWindowUsable( EffectWindow *w );
-        bool stackingOrderChanged();
-        bool intersects( EffectWindow *windowUnder, const QRect &windowOverGeometry );
-        EffectWindowList usableWindows( const EffectWindowList &allWindows );
-        EffectWindow *newTopWindow();
-        QRect getModalGroupGeometry( EffectWindow *w );
+    QRect getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
+    void updateStackingOrder();
+    bool isWindowOnTop(EffectWindow *w);
+    bool isWindowUsable(EffectWindow *w);
+    bool stackingOrderChanged();
+    bool intersects(EffectWindow *windowUnder, const QRect &windowOverGeometry);
+    EffectWindowList usableWindows(const EffectWindowList &allWindows);
+    EffectWindow *newTopWindow();
+    QRect getModalGroupGeometry(EffectWindow *w);
 
-    };
+};
 
 } // namespace
 

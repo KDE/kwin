@@ -28,57 +28,67 @@ namespace KWin
 
 class Deleted
     : public Toplevel
-    {
+{
     Q_OBJECT
-    public:
-        static Deleted* create( Toplevel* c );
-        // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
-        void refWindow();
-        void unrefWindow( bool delay = false );
-        void discard( allowed_t );
-        virtual int desktop() const;
-        virtual QStringList activities() const;
-        virtual QPoint clientPos() const;
-        virtual QSize clientSize() const;
-        virtual QRect transparentRect() const;
-        const QPixmap *topDecoPixmap() const { return &decorationPixmapTop; }
-        const QPixmap *leftDecoPixmap() const { return &decorationPixmapLeft; }
-        const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; }
-        const QPixmap *rightDecoPixmap() const { return &decorationPixmapRight; }
-        bool noBorder() const { return no_border; }
-        void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-        virtual void addRepaintFull(); // in composite.cpp
-        QRect decorationRect() const;
-    protected:
-        virtual void debug( QDebug& stream ) const;
-        virtual bool shouldUnredirect() const;
-    private:
-        Deleted( Workspace *ws ); // use create()
-        void copyToDeleted( Toplevel* c );
-        virtual ~Deleted(); // deleted only using unrefWindow()
-        int delete_refcount;
-        double window_opacity;
-        int desk;
-        QStringList activityList;
-        QRect contentsRect; // for clientPos()/clientSize()
-        QRect transparent_rect;
+public:
+    static Deleted* create(Toplevel* c);
+    // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
+    void refWindow();
+    void unrefWindow(bool delay = false);
+    void discard(allowed_t);
+    virtual int desktop() const;
+    virtual QStringList activities() const;
+    virtual QPoint clientPos() const;
+    virtual QSize clientSize() const;
+    virtual QRect transparentRect() const;
+    const QPixmap *topDecoPixmap() const {
+        return &decorationPixmapTop;
+    }
+    const QPixmap *leftDecoPixmap() const {
+        return &decorationPixmapLeft;
+    }
+    const QPixmap *bottomDecoPixmap() const {
+        return &decorationPixmapBottom;
+    }
+    const QPixmap *rightDecoPixmap() const {
+        return &decorationPixmapRight;
+    }
+    bool noBorder() const {
+        return no_border;
+    }
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+    virtual void addRepaintFull(); // in composite.cpp
+    QRect decorationRect() const;
+protected:
+    virtual void debug(QDebug& stream) const;
+    virtual bool shouldUnredirect() const;
+private:
+    Deleted(Workspace *ws);   // use create()
+    void copyToDeleted(Toplevel* c);
+    virtual ~Deleted(); // deleted only using unrefWindow()
+    int delete_refcount;
+    double window_opacity;
+    int desk;
+    QStringList activityList;
+    QRect contentsRect; // for clientPos()/clientSize()
+    QRect transparent_rect;
 
-        QPixmap decorationPixmapLeft;
-        QPixmap decorationPixmapRight;
-        QPixmap decorationPixmapTop;
-        QPixmap decorationPixmapBottom;
-        bool no_border;
-        QRect decoration_left;
-        QRect decoration_right;
-        QRect decoration_top;
-        QRect decoration_bottom;
-        int padding_left, padding_top, padding_right, padding_bottom;
-    };
+    QPixmap decorationPixmapLeft;
+    QPixmap decorationPixmapRight;
+    QPixmap decorationPixmapTop;
+    QPixmap decorationPixmapBottom;
+    bool no_border;
+    QRect decoration_left;
+    QRect decoration_right;
+    QRect decoration_top;
+    QRect decoration_bottom;
+    int padding_left, padding_top, padding_right, padding_bottom;
+};
 
 inline void Deleted::refWindow()
-    {
+{
     ++delete_refcount;
-    }
+}
 
 } // namespace
 

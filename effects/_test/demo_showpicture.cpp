@@ -16,49 +16,47 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( demo_showpicture, ShowPictureEffect )
+KWIN_EFFECT(demo_showpicture, ShowPictureEffect)
 
 ShowPictureEffect::ShowPictureEffect()
-    : init( true )
-    , picture( NULL )
-    {
-    }
+    : init(true)
+    , picture(NULL)
+{
+}
 
 ShowPictureEffect::~ShowPictureEffect()
-    {
+{
     delete picture;
-    }
+}
 
-void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    effects->paintScreen( mask, region, data );
-    if( init )
-        {
+void ShowPictureEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    effects->paintScreen(mask, region, data);
+    if (init) {
         loadPicture();
         init = false;
-        }
-    if( picture && region.intersects( pictureRect ))
-        {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+    }
+    if (picture && region.intersects(pictureRect)) {
+        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
         picture->bind();
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        picture->render( region, pictureRect );
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        picture->render(region, pictureRect);
         picture->unbind();
         glPopAttrib();
-        }
     }
+}
 
 void ShowPictureEffect::loadPicture()
-    {
-    QString file = KGlobal::dirs()->findResource( "appdata", "showpicture.png" );
-    if( file.isEmpty())
+{
+    QString file = KGlobal::dirs()->findResource("appdata", "showpicture.png");
+    if (file.isEmpty())
         return;
-    QImage im( file );
-    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
-    picture = new GLTexture( im );
-    pictureRect = QRect( area.x() + ( area.width() - im.width()) / 2,
-        area.y() + ( area.height() - im.height()) / 2, im.width(), im.height());
-    }
+    QImage im(file);
+    QRect area = effects->clientArea(PlacementArea, effects->activeScreen(), effects->currentDesktop());
+    picture = new GLTexture(im);
+    pictureRect = QRect(area.x() + (area.width() - im.width()) / 2,
+                        area.y() + (area.height() - im.height()) / 2, im.width(), im.height());
+}
 
 } // namespace
