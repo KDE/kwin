@@ -278,8 +278,6 @@ class KWIN_EXPORT GLShader
         ~GLShader();
 
         bool isValid() const  { return mValid; }
-        void bind();
-        void unbind();
 
         int uniformLocation(const char* name);
         bool setUniform(const char* name, float value);
@@ -311,6 +309,8 @@ class KWIN_EXPORT GLShader
         GLShader();
         bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
         bool load(const QString& vertexsource, const QString& fragmentsource);
+        void bind();
+        void unbind();
 
 
     private:
