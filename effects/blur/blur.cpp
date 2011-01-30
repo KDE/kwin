@@ -238,10 +238,6 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()))
     {
         doBlur(shape, screen, data.opacity * data.contents_opacity);
-
-        // Rebind the shader used for drawing the window if one was set
-        if (data.shader)
-            data.shader->bind();
     }
 
     // Draw the window over the blurred area
