@@ -77,8 +77,6 @@ Sources and other compositing managers:
 #include "deleted.h"
 #include "effects.h"
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <math.h>
 
 // turns on checks for opengl errors in various places (for easier finding of them)
@@ -103,12 +101,7 @@ extern int currentRefreshRate();
 // SceneOpenGL
 //****************************************
 
-bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::db; // destination drawable is double-buffered
-bool SceneOpenGL::shm_mode;
-#ifdef HAVE_XSHM
-XShmSegmentInfo SceneOpenGL::shm;
-#endif
 
 #ifdef KWIN_HAVE_OPENGLES
 #include "scene_opengl_egl.cpp"
@@ -123,78 +116,9 @@ bool SceneOpenGL::initFailed() const
 
 bool SceneOpenGL::selectMode()
     {
-    // select mode - try TFP first, then SHM, otherwise fallback mode
-    shm_mode = false;
-    tfp_mode = false;
-    if( options->glMode == Options::GLTFP )
-        {
-        if( initTfp())
-            tfp_mode = true;
-        else if( initShm())
-            shm_mode = true;
-        }
-    else if( options->glMode == Options::GLSHM )
-        {
-        if( initShm())
-            shm_mode = true;
-        else if( initTfp())
-            tfp_mode = true;
-        }
     if( !initDrawableConfigs())
         return false;
     return true;
-    }
-
-bool SceneOpenGL::initShm()
-    {
-#ifdef HAVE_XSHM
-    int major, minor;
-    Bool pixmaps;
-    if( !XShmQueryVersion( display(), &major, &minor, &pixmaps ) || !pixmaps )
-        return false;
-    if( XShmPixmapFormat( display()) != ZPixmap )
-        return false;
-    const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
-    // TODO check that bytes_per_line doesn't involve padding?
-    shm.readOnly = False;
-    shm.shmid = shmget( IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600 );
-    if( shm.shmid < 0 )
-        return false;
-    shm.shmaddr = ( char* ) shmat( shm.shmid, NULL, 0 );
-    if( shm.shmaddr == ( void * ) -1 )
-        {
-        shmctl( shm.shmid, IPC_RMID, 0 );
-        return false;
-        }
-#ifdef __linux__
-    // mark as deleted to automatically free the memory in case
-    // of a crash (but this doesn't work e.g. on Solaris ... oh well)
-    shmctl( shm.shmid, IPC_RMID, 0 );
-#endif
-    KXErrorHandler errs;
-    XShmAttach( display(), &shm );
-    if( errs.error( true ))
-        {
-#ifndef __linux__
-        shmctl( shm.shmid, IPC_RMID, 0 );
-#endif
-        shmdt( shm.shmaddr );
-        return false;
-        }
-    return true;
-#else
-    return false;
-#endif
-    }
-
-void SceneOpenGL::cleanupShm()
-    {
-#ifdef HAVE_XSHM
-    shmdt( shm.shmaddr );
-#ifndef __linux__
-    shmctl( shm.shmid, IPC_RMID, 0 );
-#endif
-#endif
     }
 
 // Test if compositing actually _really_ works, by creating a texture from a testing

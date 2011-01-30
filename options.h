@@ -347,8 +347,6 @@ class Options : public KDecorationOptions
         //----------------------
         // Compositing settings
 
-        enum GLMode { GLTFP, GLSHM, GLFallback };
-
         CompositingType compositingMode;
         bool useCompositing; // Separate to mode so the user can toggle
 
@@ -357,7 +355,6 @@ class Options : public KDecorationOptions
         bool unredirectFullscreen;
         bool disableCompositingChecks;
         // OpenGL
-        GLMode glMode;
         int glSmoothScale;  // 0 = no, 1 = yes when transformed,
                             // 2 = try trilinear when transformed; else 1,
                             // -1 = auto

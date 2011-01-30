@@ -536,51 +536,7 @@ p, li { white-space: pre-wrap; }
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>1</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>OpenGL mode:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="buddy">
-             <cstring>glMode</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="KComboBox" name="glMode">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>3</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <item>
-             <property name="text">
-              <string>Texture From Pixmap</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Shared Memory</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Fallback</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
+          <item row="0" column="0" colspan="2">
            <widget class="QCheckBox" name="glDirect">
             <property name="text">
              <string>Enable direct rendering</string>
@@ -590,7 +546,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item row="1" column="0" colspan="2">
            <widget class="QCheckBox" name="glVSync">
             <property name="text">
              <string>Use VSync</string>

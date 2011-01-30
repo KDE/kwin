@@ -138,8 +138,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         selfCheckDone = true;
         }
 #endif
-    kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
-        << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
+    kDebug( 1212 ) << "DB:" << db << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
     }
 
@@ -169,14 +168,6 @@ SceneOpenGL::~SceneOpenGL()
         XFreeGC( display(), gcroot );
         XFreePixmap( display(), buffer );
         }
-    if( shm_mode )
-        cleanupShm();
-    if( !tfp_mode && !shm_mode )
-        {
-        if( last_pixmap != None )
-            glXDestroyPixmap( display(), last_pixmap );
-        glXDestroyContext( display(), ctxdrawable );
-        }
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }
@@ -191,8 +182,6 @@ bool SceneOpenGL::initTfp()
 bool SceneOpenGL::initRenderingContext()
     {
     bool direct_rendering = options->glDirect;
-    if( !tfp_mode && !shm_mode )
-        direct_rendering = false; // fallback doesn't seem to work with direct rendering
     KXErrorHandler errs1;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
         direct_rendering ? GL_TRUE : GL_FALSE );
@@ -222,11 +211,6 @@ bool SceneOpenGL::initRenderingContext()
                 << KXErrorHandler::errorMessage( errs2.errorEvent()) << ")";
             return false;
             }
-        }
-    if( !tfp_mode && !shm_mode )
-        {
-        ctxdrawable = glXCreateNewContext( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, GLX_RGBA_TYPE, ctxbuffer,
-            direct_rendering ? GL_TRUE : GL_FALSE );
         }
     return true;
     }
@@ -414,30 +398,27 @@ bool SceneOpenGL::initDrawableConfigs()
                                   GLX_RENDER_TYPE, &value );
             if( !( value & GLX_RGBA_BIT ))
                 continue;
-            if( tfp_mode )
+            value = 0;
+            if( i == 32 )
                 {
-                value = 0;
-                if( i == 32 )
+                glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                        GLX_BIND_TO_TEXTURE_RGBA_EXT, &value );
+                if( value )
                     {
-                    glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                          GLX_BIND_TO_TEXTURE_RGBA_EXT, &value );
-                    if( value )
-                        {
-                        // TODO I think this should be set only after the config passes all tests
-                        rgba = 1;
-                        fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGBA_EXT;
-                        }
+                    // TODO I think this should be set only after the config passes all tests
+                    rgba = 1;
+                    fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGBA_EXT;
                     }
+                }
+            if( !value )
+                {
+                if( rgba )
+                    continue;
+                glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                        GLX_BIND_TO_TEXTURE_RGB_EXT, &value );
                 if( !value )
-                    {
-                    if( rgba )
-                        continue;
-                    glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                          GLX_BIND_TO_TEXTURE_RGB_EXT, &value );
-                    if( !value )
-                        continue;
-                    fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGB_EXT;
-                    }
+                    continue;
+                fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGB_EXT;
                 }
             int back_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
@@ -455,7 +436,7 @@ bool SceneOpenGL::initDrawableConfigs()
             if( depth_value > depth )
                 continue;
             int mipmap_value = -1;
-            if( tfp_mode && GLTexture::framebufferObjectSupported())
+            if( GLTexture::framebufferObjectSupported())
                 {
                 glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                       GLX_BIND_TO_MIPMAP_TEXTURE_EXT, &mipmap_value );
@@ -474,12 +455,9 @@ bool SceneOpenGL::initDrawableConfigs()
             stencil = stencil_value;
             depth = depth_value;
             mipmap = mipmap_value;
-            if ( tfp_mode )
-                {
-                glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                      GLX_BIND_TO_TEXTURE_TARGETS_EXT, &value );
-                fbcdrawableinfo[ i ].texture_targets = value;
-                }
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                    GLX_BIND_TO_TEXTURE_TARGETS_EXT, &value );
+            fbcdrawableinfo[ i ].texture_targets = value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_Y_INVERTED_EXT, &value );
             fbcdrawableinfo[ i ].y_inverted = value;
@@ -713,7 +691,7 @@ void SceneOpenGL::Texture::init()
 
 void SceneOpenGL::Texture::release()
     {
-    if( tfp_mode && glxpixmap != None )
+    if( glxpixmap != None )
         {
         glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
         glXDestroyPixmap( display(), glxpixmap );
@@ -724,7 +702,7 @@ void SceneOpenGL::Texture::release()
 void SceneOpenGL::Texture::findTarget()
     {
     unsigned int new_target = 0;
-    if( tfp_mode && glXQueryDrawable && glxpixmap != None )
+    if( glXQueryDrawable && glxpixmap != None )
         glXQueryDrawable( display(), glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
     switch( new_target )
         {
@@ -751,14 +729,11 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
 #endif
     if( pix == None || size.isEmpty() || depth < 1 )
         return false;
-    if( tfp_mode )
+    if( fbcdrawableinfo[ depth ].fbconfig == NULL )
         {
-        if( fbcdrawableinfo[ depth ].fbconfig == NULL )
-            {
-            kDebug( 1212 ) << "No framebuffer configuration for depth " << depth
-                           << "; not binding pixmap" << endl;
-            return false;
-            }
+        kDebug( 1212 ) << "No framebuffer configuration for depth " << depth
+                        << "; not binding pixmap" << endl;
+        return false;
         }
 
     mSize = size;
@@ -770,160 +745,54 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
 #ifdef CHECK_GL_ERROR
     checkGLError( "TextureLoad2" );
 #endif
-    if( tfp_mode )
-        { // tfp mode, simply bind the pixmap to texture
-        if( mTexture == None )
-            createTexture();
-        // The GLX pixmap references the contents of the original pixmap, so it doesn't
-        // need to be recreated when the contents change.
-        // The texture may or may not use the same storage depending on the EXT_tfp
-        // implementation. When options->glStrictBinding is true, the texture uses
-        // a different storage and needs to be updated with a call to
-        // glXBindTexImageEXT() when the contents of the pixmap has changed.
-        if( glxpixmap != None )
-            glBindTexture( mTarget, mTexture );
-        else
+    // tfp mode, simply bind the pixmap to texture
+    if( mTexture == None )
+        createTexture();
+    // The GLX pixmap references the contents of the original pixmap, so it doesn't
+    // need to be recreated when the contents change.
+    // The texture may or may not use the same storage depending on the EXT_tfp
+    // implementation. When options->glStrictBinding is true, the texture uses
+    // a different storage and needs to be updated with a call to
+    // glXBindTexImageEXT() when the contents of the pixmap has changed.
+    if( glxpixmap != None )
+        glBindTexture( mTarget, mTexture );
+    else
+        {
+        int attrs[] =
             {
-            int attrs[] =
-                {
-                GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
-                GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
-                None, None, None
-                };
-            if ( ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT ) &&
-                 ( GLTexture::NPOTTextureSupported() ||
-                   ( isPowerOfTwo(size.width()) && isPowerOfTwo(size.height()) )))
-                {
-                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-                attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
-                }
-            else if ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT )
-                {
-                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-                attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
-                }
-            glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
-#ifdef CHECK_GL_ERROR
-            checkGLError( "TextureLoadTFP1" );
-#endif
-            findTarget();
-            y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
-            can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
-            glBindTexture( mTarget, mTexture );
-#ifdef CHECK_GL_ERROR
-            checkGLError( "TextureLoadTFP2" );
-#endif
-            if( !options->glStrictBinding )
-                glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+            GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
+            GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
+            None, None, None
+            };
+        if ( ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT ) &&
+                ( GLTexture::NPOTTextureSupported() ||
+                ( isPowerOfTwo(size.width()) && isPowerOfTwo(size.height()) )))
+            {
+            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+            attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
             }
-        if( options->glStrictBinding )
-            // Mark the texture as damaged so it will be updated on the next call to bind()
+        else if ( fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT )
+            {
+            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+            attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
+            }
+        glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
+#ifdef CHECK_GL_ERROR
+        checkGLError( "TextureLoadTFP1" );
+#endif
+        findTarget();
+        y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
+        can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
+        glBindTexture( mTarget, mTexture );
+#ifdef CHECK_GL_ERROR
+        checkGLError( "TextureLoadTFP2" );
+#endif
+        if( !options->glStrictBinding )
             glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
-    else if( shm_mode )
-        { // copy pixmap contents to a texture via shared memory
-#ifdef HAVE_XSHM
-        GLenum pixfmt, type;
-        if( depth >= 24 )
-            {
-            pixfmt = GL_BGRA;
-            type = GL_UNSIGNED_BYTE;
-            }
-        else
-            { // depth 16
-            pixfmt = GL_RGB;
-            type = GL_UNSIGNED_SHORT_5_6_5;
-            }
-        findTarget();
-#ifdef CHECK_GL_ERROR
-        checkGLError( "TextureLoadSHM1" );
-#endif
-        if( mTexture == None )
-            {
-            createTexture();
-            glBindTexture( mTarget, mTexture );
-            y_inverted = false;
-            glTexImage2D( mTarget, 0, depth == 32 ? GL_RGBA : GL_RGB,
-                mSize.width(), mSize.height(), 0,
-                pixfmt, type, NULL );
-            }
-        else
-            glBindTexture( mTarget, mTexture );
-        if( !region.isEmpty())
-            {
-            XGCValues xgcv;
-            xgcv.graphics_exposures = False;
-            xgcv.subwindow_mode = IncludeInferiors;
-            GC gc = XCreateGC( display(), pix, GCGraphicsExposures | GCSubwindowMode, &xgcv );
-            Pixmap p = XShmCreatePixmap( display(), rootWindow(), shm.shmaddr, &shm,
-                mSize.width(), mSize.height(), depth );
-            QRegion damage = optimizeBindDamage( region, 100 * 100 );
-            glPixelStorei( GL_UNPACK_ROW_LENGTH, mSize.width());
-            foreach( const QRect &r, damage.rects())
-                { // TODO for small areas it might be faster to not use SHM to avoid the XSync()
-                XCopyArea( display(), pix, p, gc, r.x(), r.y(), r.width(), r.height(), 0, 0 );
-                glXWaitX();
-                glTexSubImage2D( mTarget, 0,
-                    r.x(), r.y(), r.width(), r.height(),
-                    pixfmt, type, shm.shmaddr );
-                glXWaitGL();
-                }
-            glPixelStorei( GL_UNPACK_ROW_LENGTH, 0 );
-            XFreePixmap( display(), p );
-            XFreeGC( display(), gc );
-            }
-#ifdef CHECK_GL_ERROR
-        checkGLError( "TextureLoadSHM2" );
-#endif
-        y_inverted = true;
-        can_use_mipmaps = true;
-#endif
-        }
-    else
-        { // fallback, copy pixmap contents to a texture
-        // note that if depth is not QX11Info::appDepth(), this may
-        // not work (however, it does seem to work with nvidia)
-        findTarget();
-        GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, pix, NULL );
-        glXMakeCurrent( display(), pixmap, ctxdrawable );
-        if( last_pixmap != None )
-            glXDestroyPixmap( display(), last_pixmap );
-        // workaround for ATI - it leaks/crashes when the pixmap is destroyed immediately
-        // here (http://lists.kde.org/?l=kwin&m=116353772208535&w=2)
-        last_pixmap = pixmap;
-        glReadBuffer( GL_FRONT );
-        glDrawBuffer( GL_FRONT );
-        if( mTexture == None )
-            {
-            createTexture();
-            glBindTexture( mTarget, mTexture );
-            y_inverted = false;
-            glCopyTexImage2D( mTarget, 0,
-                depth == 32 ? GL_RGBA : GL_RGB,
-                0, 0, mSize.width(), mSize.height(), 0 );
-            }
-        else
-            {
-            glBindTexture( mTarget, mTexture );
-            QRegion damage = optimizeBindDamage( region, 30 * 30 );
-            foreach( const QRect &r, damage.rects())
-                {
-                // convert to OpenGL coordinates (this is mapping
-                // the pixmap to a texture, this is not affected
-                // by using glOrtho() for the OpenGL scene)
-                int gly = mSize.height() - r.y() - r.height();
-                glCopyTexSubImage2D( mTarget, 0,
-                    r.x(), gly, r.x(), gly, r.width(), r.height());
-                }
-            }
-        glXWaitGL();
-        if( db )
-            glDrawBuffer( GL_BACK );
-        glXMakeCurrent( display(), glxbuffer, ctxbuffer );
-        glBindTexture( mTarget, mTexture );
-        y_inverted = false;
-        can_use_mipmaps = true;
-        }
+    if( options->glStrictBinding )
+        // Mark the texture as damaged so it will be updated on the next call to bind()
+        glXBindTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
 #ifdef CHECK_GL_ERROR
     checkGLError( "TextureLoad0" );
 #endif
@@ -934,7 +803,7 @@ void SceneOpenGL::Texture::bind()
     {
     glEnable( mTarget );
     glBindTexture( mTarget, mTexture );
-    if( tfp_mode && options->glStrictBinding )
+    if( options->glStrictBinding )
         {
         assert( glxpixmap != None );
         glXReleaseTexImageEXT( display(), glxpixmap, GLX_FRONT_LEFT_EXT );
@@ -955,7 +824,7 @@ void SceneOpenGL::Texture::unbind()
         {
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f );
         }
-    if( tfp_mode && options->glStrictBinding )
+    if( options->glStrictBinding )
         {
         assert( glxpixmap != None );
         glBindTexture( mTarget, mTexture );
