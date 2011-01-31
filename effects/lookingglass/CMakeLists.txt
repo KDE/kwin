@@ -14,7 +14,6 @@ install( FILES
 # Data files
 install( FILES
     lookingglass/data/lookingglass.frag
-    lookingglass/data/lookingglass.vert
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
 
 #######################################

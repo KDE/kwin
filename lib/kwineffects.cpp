@@ -709,22 +709,40 @@ WindowQuadList WindowQuadList::makeRegularGrid( int xSubdivisions, int ySubdivis
 
 void WindowQuadList::makeArrays( float** vertices, float** texcoords ) const
     {
-    *vertices = new float[ count() * 4 * 2 ];
-    *texcoords = new float[ count() * 4 * 2 ];
+    *vertices = new float[ count() * 6 * 2 ];
+    *texcoords = new float[ count() * 6 * 2 ];
     float* vpos = *vertices;
     float* tpos = *texcoords;
     for( int i = 0;
          i < count();
          ++i )
-        for( int j = 0;
-             j < 4;
-             ++j )
-            {
-            *vpos++ = at( i )[ j ].x();
-            *vpos++ = at( i )[ j ].y();
-            *tpos++ = at( i )[ j ].tx;
-            *tpos++ = at( i )[ j ].ty;
-            }
+        {
+        *vpos++ = at( i )[ 1 ].x();
+        *vpos++ = at( i )[ 1 ].y();
+        *vpos++ = at( i )[ 0 ].x();
+        *vpos++ = at( i )[ 0 ].y();
+        *vpos++ = at( i )[ 3 ].x();
+        *vpos++ = at( i )[ 3 ].y();
+        *vpos++ = at( i )[ 3 ].x();
+        *vpos++ = at( i )[ 3 ].y();
+        *vpos++ = at( i )[ 2 ].x();
+        *vpos++ = at( i )[ 2 ].y();
+        *vpos++ = at( i )[ 1 ].x();
+        *vpos++ = at( i )[ 1 ].y();
+
+        *tpos++ = at( i )[ 1 ].tx;
+        *tpos++ = at( i )[ 1 ].ty;
+        *tpos++ = at( i )[ 0 ].tx;
+        *tpos++ = at( i )[ 0 ].ty;
+        *tpos++ = at( i )[ 3 ].tx;
+        *tpos++ = at( i )[ 3 ].ty;
+        *tpos++ = at( i )[ 3 ].tx;
+        *tpos++ = at( i )[ 3 ].ty;
+        *tpos++ = at( i )[ 2 ].tx;
+        *tpos++ = at( i )[ 2 ].ty;
+        *tpos++ = at( i )[ 1 ].tx;
+        *tpos++ = at( i )[ 1 ].ty;
+        }
     }
 
 WindowQuadList WindowQuadList::select( WindowQuadType type ) const
@@ -848,7 +866,9 @@ PaintClipper::Iterator::Iterator()
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( clip() && effects->compositingType() == OpenGLCompositing )
         {
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_SCISSOR_BIT );
+#endif
         if( !effects->isRenderTargetBound() )
             glEnable( GL_SCISSOR_TEST );
         data->rects = paintArea().rects();
@@ -870,7 +890,13 @@ PaintClipper::Iterator::~Iterator()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( clip() && effects->compositingType() == OpenGLCompositing )
+        {
+        if( !effects->isRenderTargetBound() )
+            glDisable( GL_SCISSOR_TEST );
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
+        }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( clip() && effects->compositingType() == XRenderCompositing )

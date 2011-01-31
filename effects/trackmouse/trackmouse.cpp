@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTime>
 
 #include <kwinconfig.h>
+#include <kwinglutils.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -33,9 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
-#endif
 
 #include <kdebug.h>
 
@@ -57,6 +55,7 @@ TrackMouseEffect::TrackMouseEffect()
     action = static_cast< KAction* >( actionCollection->addAction( "TrackMouse" ));
     action->setText( i18n( "Track mouse" ) );
     action->setGlobalShortcut( KShortcut() );
+
     connect( action, SIGNAL( triggered( bool ) ), this, SLOT( toggle() ) );
     reconfigure( ReconfigureAll );
     }
@@ -115,7 +114,14 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( texture )
         {
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
+        bool useShader = false;
+        if (ShaderManager::instance()->isValid()) {
+            useShader = true;
+            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+        }
         texture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -127,7 +133,13 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             texture->render( region, r );
             }
         texture->unbind();
+        glDisable(GL_BLEND);
+        if (ShaderManager::instance()->isValid()) {
+            ShaderManager::instance()->popShader();
+        }
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
         }
 #endif
     }

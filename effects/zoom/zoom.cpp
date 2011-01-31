@@ -38,10 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xfixes.h>
 #include <X11/Xcursor/Xcursor.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
-#endif
-
 namespace KWin
 {
 
@@ -348,7 +344,9 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( texture )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
             texture->bind();
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -363,7 +361,10 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
             texture->render(region, rect);
             texture->unbind();
+            glDisable(GL_BLEND);
+#ifndef KWIN_HAVE_OPENGLES
             glPopAttrib();
+#endif
             }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

@@ -19,8 +19,12 @@
 
 #include "blurshader.h"
 
+#include <kwineffects.h>
+
 #include <QByteArray>
+#include <QMatrix4x4>
 #include <QTextStream>
+#include <QVector2D>
 #include <KDebug>
 
 #include <cmath>
@@ -103,7 +107,7 @@ QVector<float> BlurShader::gaussianKernel() const
 
 
 GLSLBlurShader::GLSLBlurShader()
-    : BlurShader(), program(0)
+    : BlurShader(), shader(NULL)
 {
 }
 
@@ -114,10 +118,8 @@ GLSLBlurShader::~GLSLBlurShader()
 
 void GLSLBlurShader::reset()
 {
-    if (program) {
-        glDeleteProgram(program);
-        program = 0;
-    }
+    delete shader;
+    shader = NULL;
 
     setIsValid(false);
 }
@@ -129,6 +131,7 @@ bool GLSLBlurShader::supported()
 
     (void) glGetError(); // Clear the error state
 
+#ifndef KWIN_HAVE_OPENGLES
     // These are the minimum values the implementation is required to support
     int value = 0;
 
@@ -143,6 +146,7 @@ bool GLSLBlurShader::supported()
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &value);
     if (value < 512)
         return false;
+#endif
 
     if (glGetError() != GL_NO_ERROR)
         return false;
@@ -155,14 +159,20 @@ void GLSLBlurShader::setPixelDistance(float val)
     if (!isValid())
         return;
 
-    float pixelSize[2] = { 0.0, 0.0 };
-
+    QVector2D pixelSize(0.0, 0.0);
     if (direction() == Qt::Horizontal)
-        pixelSize[0] = val;
+        pixelSize.setX(val);
     else
-        pixelSize[1] = val;
+        pixelSize.setY(val);
+    shader->setUniform("pixelSize", pixelSize);
+}
 
-    glUniform2fv(uPixelSize, 1, pixelSize);
+void GLSLBlurShader::setTextureMatrix(const QMatrix4x4 &matrix)
+{
+    if (!isValid()) {
+        return;
+    }
+    shader->setUniform("u_textureMatrix", matrix);
 }
 
 void GLSLBlurShader::bind()
@@ -170,74 +180,30 @@ void GLSLBlurShader::bind()
     if (!isValid())
         return;
 
-    glUseProgram(program);
-    glUniform1i(uTexUnit, 0);
+    ShaderManager::instance()->pushShader(shader);
 }
 
 void GLSLBlurShader::unbind()
 {
-    glUseProgram(0);
+    ShaderManager::instance()->popShader();
 }
 
 int GLSLBlurShader::maxKernelSize() const
 {
     int value;
+#ifdef KWIN_HAVE_OPENGLES
+    // GL_MAX_VARYING_FLOATS not available in GLES
+    // querying for GL_MAX_VARYING_VECTORS crashes on nouveau
+    // using the minimum value of 8
+    return 8;
+#else
     glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
     // Note: In theory the driver could pack two vec2's in one vec4,
     //       but we'll assume it doesn't do that
     return value / 4; // Max number of vec4 varyings
+#endif
 }
 
-GLuint GLSLBlurShader::compile(GLenum type, const QByteArray &source)
-{
-    const char *sourceData = source.constData();
-
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &sourceData, 0);
-    glCompileShader(shader);
-
-    int status;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-
-    if (status == GL_FALSE) {
-        GLsizei size, length;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &size);
-
-        QByteArray log(size, 0);
-        glGetShaderInfoLog(shader, size, &length, log.data());
-
-        kError() << "Failed to compile shader: " << log;
-        glDeleteShader(shader);
-        shader = 0;
-    }
-
-    return shader;
-}
-
-GLuint GLSLBlurShader::link(GLuint vertexShader, GLuint fragmentShader)
-{
-    GLuint program = glCreateProgram();
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
-    glLinkProgram(program);
-
-    int status;
-    glGetProgramiv(program, GL_LINK_STATUS, &status);
-
-    if (status == GL_FALSE) {
-        GLsizei size, length;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &size);
-
-        QByteArray log(size, 0);
-        glGetProgramInfoLog(program, size, &length, log.data());
-
-        kError() << "Failed to link shader: " << log;
-        glDeleteProgram(program);
-        program = 0;
-    }
-
-    return program;
-}
 
 void GLSLBlurShader::init()
 {
@@ -252,13 +218,17 @@ void GLSLBlurShader::init()
     // ===================================================================
     QTextStream stream(&vertexSource);
 
+    stream << "uniform mat4 u_modelViewProjectionMatrix;\n";
+    stream << "uniform mat4 u_textureMatrix;\n";
     stream << "uniform vec2 pixelSize;\n\n";
+    stream << "attribute vec4 vertex;\n";
+    stream << "attribute vec4 texCoord;\n\n";
     for (int i = 0; i < size; i++)
         stream << "varying vec2 samplePos" << i << ";\n";
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    vec2 center = vec4(gl_TextureMatrix[0] * gl_MultiTexCoord0).st;\n\n";
+    stream << "    vec2 center = vec4(texCoord * u_textureMatrix).st;\n\n";
 
     for (int i = 0; i < center; i++)
         stream << "    samplePos" << i << " = center + pixelSize * vec2("
@@ -268,7 +238,7 @@ void GLSLBlurShader::init()
         stream << "    samplePos" << i << " = center + pixelSize * vec2("
                << 1.5 + (i - center - 1) * 2.0 << ");\n";
     stream << "\n";
-    stream << "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n";
+    stream << "    gl_Position = vertex * u_modelViewProjectionMatrix;\n";
     stream << "}\n";
     stream.flush();
 
@@ -294,24 +264,18 @@ void GLSLBlurShader::init()
     stream2 << "}\n";
     stream2.flush();
 
-    GLuint vertexShader   = compile(GL_VERTEX_SHADER, vertexSource);
-    GLuint fragmentShader = compile(GL_FRAGMENT_SHADER, fragmentSource);
-
-    if (vertexShader && fragmentShader)
-        program = link(vertexShader, fragmentShader);
-
-    if (vertexShader)
-        glDeleteShader(vertexShader);
-
-    if (fragmentShader)    
-        glDeleteShader(fragmentShader);
-
-    if (program) {
-        uTexUnit   = glGetUniformLocation(program, "texUnit");
-        uPixelSize = glGetUniformLocation(program, "pixelSize");
+    shader = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentSource);
+    if (shader->isValid()) {
+        QMatrix4x4 modelViewProjection;
+        modelViewProjection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        ShaderManager::instance()->pushShader(shader);
+        shader->setUniform("texUnit", 0);
+        shader->setUniform("u_textureMatrix", QMatrix4x4());
+        shader->setUniform("u_modelViewProjectionMatrix", modelViewProjection);
+        ShaderManager::instance()->popShader();
     }
 
-    setIsValid(program != 0);
+    setIsValid(shader->isValid());
 }
 
 
@@ -332,16 +296,21 @@ ARBBlurShader::~ARBBlurShader()
 
 void ARBBlurShader::reset()
 {
+#ifndef KWIN_HAVE_OPENGLES
     if (program) {
         glDeleteProgramsARB(1, &program);
         program = 0;
     }
 
     setIsValid(false);
+#endif
 }
 
 bool ARBBlurShader::supported()
 {
+#ifdef KWIN_HAVE_OPENGLES
+    return false;
+#else
     if (!hasGLExtension("GL_ARB_fragment_program"))
         return false;
 
@@ -374,10 +343,14 @@ bool ARBBlurShader::supported()
         return false;
 
     return true;
+#endif
 }
 
 void ARBBlurShader::setPixelDistance(float val)
 {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(val)
+#else
     float firstStep = val * 1.5;
     float nextStep = val * 2.0;
 
@@ -388,19 +361,23 @@ void ARBBlurShader::setPixelDistance(float val)
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 0, 0, firstStep, 0, 0);
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 1, 0, nextStep, 0, 0);
     }
+#endif
 }
 
 void ARBBlurShader::bind()
 {
+#ifndef KWIN_HAVE_OPENGLES
     if (!isValid())
         return;
 
     glEnable(GL_FRAGMENT_PROGRAM_ARB);
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, program);
+#endif
 }
 
 void ARBBlurShader::unbind()
 {
+#ifndef KWIN_HAVE_OPENGLES
     int boundObject;
     glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
     if( boundObject == program )
@@ -408,10 +385,14 @@ void ARBBlurShader::unbind()
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
         glDisable(GL_FRAGMENT_PROGRAM_ARB);
         }
+#endif
 }
 
 int ARBBlurShader::maxKernelSize() const
 {
+#ifdef KWIN_HAVE_OPENGLES
+    return 0;
+#else
     int value;
     int result;
 
@@ -422,10 +403,12 @@ int ARBBlurShader::maxKernelSize() const
     result = qMin(result, value / 3); // We need 3 instructions / sample
 
     return result;
+#endif
 }
 
 void ARBBlurShader::init()
 {
+#ifndef KWIN_HAVE_OPENGLES
     QVector<float> kernel = gaussianKernel();
     const int size = kernel.size();
     const int center = size / 2;
@@ -481,6 +464,7 @@ void ARBBlurShader::init()
     } else
         setIsValid(true);
 
-    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0); 
+    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
+#endif
 }
 

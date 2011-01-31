@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com>
+ Copyright (C) 2008, 2011 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,29 +17,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+uniform mat4 projection;
+uniform mat4 modelview;
+uniform mat4 screenTransformation;
+uniform mat4 windowTransformation;
 uniform float width;
 uniform float height;
 uniform float cubeAngle;
-uniform float xCoord;
-uniform float yCoord;
+uniform vec2 u_offset;
 uniform float timeLine;
+
+attribute vec4 vertex;
+attribute vec2 texCoord;
+
+varying vec2 varyingTexCoords;
 
 void main()
 {
-    gl_TexCoord[0].xy = gl_Vertex.xy;
-    vec3 vertex = vec3( gl_Vertex.xy - vec2( width*0.5 - xCoord, height*0.5 - yCoord ), gl_Vertex.z );
-    float radian = radians(cubeAngle*0.5);
-    float radius = (width*0.5)/cos(radian);
-    float zenithAngle = acos( vertex.y/radius );
-    float azimuthAngle = asin( vertex.x/radius );
-    vertex.z = radius * sin( zenithAngle ) * cos( azimuthAngle ) - radius*cos( radians( 90.0 - cubeAngle*0.5 ) );
-    vertex.x = radius * sin( zenithAngle ) * sin( azimuthAngle );
+    varyingTexCoords = texCoord;
+    vec4 transformedVertex = vertex;
+    transformedVertex.x = transformedVertex.x - width;
+    transformedVertex.y = transformedVertex.y - height;
+    transformedVertex.xy = transformedVertex.xy + u_offset;
+    float radian = radians(cubeAngle);
+    float radius = (width)/cos(radian);
+    float zenithAngle = acos(transformedVertex.y/radius);
+    float azimuthAngle = asin(transformedVertex.x/radius);
+    transformedVertex.z = radius * sin( zenithAngle ) * cos( azimuthAngle ) - radius*cos( radians( 90.0 - cubeAngle ) );
+    transformedVertex.x = radius * sin( zenithAngle ) * sin( azimuthAngle );
 
-    vertex.xy += vec2( width*0.5 - xCoord, height*0.5 - yCoord );
+    transformedVertex.xy += vec2( width - u_offset.x, height - u_offset.y );
 
-    vec3 diff = (gl_Vertex.xyz - vertex.xyz)*timeLine;
-    vertex.xyz += diff;
+    vec3 diff = (vertex.xyz - transformedVertex.xyz)*timeLine;
+    transformedVertex.xyz += diff;
 
-    gl_Position = gl_ModelViewProjectionMatrix * vec4( vertex, 1.0 );
-    gl_FrontColor = gl_Color;
+    gl_Position = transformedVertex*(windowTransformation*screenTransformation*modelview)*projection;
 }

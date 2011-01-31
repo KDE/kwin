@@ -170,7 +170,7 @@ void LanczosShader::createOffsets( int count, float width, Qt::Orientation direc
 void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == KWin::OpenGLCompositing && data.opacity == 1.0 &&
+    if( effects->compositingType() == KWin::OpenGLCompositing &&
         KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects )
         {
         if (!m_inited)
@@ -216,9 +216,23 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
                 if( cachedTexture->width() == tw && cachedTexture->height() == th )
                     {
                     cachedTexture->bind();
-                    prepareRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
-                    cachedTexture->render( textureRect, textureRect );
-                    restoreRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
+                    if (ShaderManager::instance()->isValid()) {
+                        glEnable(GL_BLEND);
+                        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+                        shader->setUniform("offset", QVector2D(0, 0));
+                        shader->setUniform("opacity", (float)data.opacity);
+                        shader->setUniform("brightness", (float)data.brightness);
+                        shader->setUniform("saturation", (float)data.saturation);
+                        shader->setUniform("u_forceAlpha", 0);
+                        cachedTexture->render(textureRect, textureRect);
+                        ShaderManager::instance()->popShader();
+                        glDisable(GL_BLEND);
+                    } else {
+                        prepareRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
+                        cachedTexture->render( textureRect, textureRect );
+                        restoreRenderStates( cachedTexture, data.opacity, data.brightness, data.saturation );
+                    }
                     cachedTexture->unbind();
                     m_timer.start( 5000, this );
                     return;
@@ -245,8 +259,9 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             updateOffscreenSurfaces();
             effects->pushRenderTarget( m_offscreenTarget );
 
+            glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear( GL_COLOR_BUFFER_BIT );
-            w->sceneWindow()->performPaint( mask, QRegion(0, 0, sw, sh), thumbData );
+            w->sceneWindow()->performPaint( mask, infiniteRegion(), thumbData );
 
             // Create a scratch texture and copy the rendered window into it
             GLTexture tex( sw, sh );
@@ -267,13 +282,21 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
 
             // Draw the window back into the FBO, this time scaled horizontally
             glClear( GL_COLOR_BUFFER_BIT );
+            QVector<float> verts;
+            QVector<float> texCoords;
+            verts.reserve(12);
+            texCoords.reserve(12);
 
-            glBegin( GL_QUADS );
-            glTexCoord2f( 0, 0 ); glVertex2i( 0,   0 ); // Top left
-            glTexCoord2f( 1, 0 ); glVertex2i( tw,  0 ); // Top right
-            glTexCoord2f( 1, 1 ); glVertex2i( tw, sh ); // Bottom right
-            glTexCoord2f( 0, 1 ); glVertex2i( 0,  sh ); // Bottom left
-            glEnd();
+            texCoords << 1.0 << 0.0; verts << tw  << 0.0; // Top right
+            texCoords << 0.0 << 0.0; verts << 0.0 << 0.0; // Top left
+            texCoords << 0.0 << 1.0; verts << 0.0 << sh;  // Bottom left
+            texCoords << 0.0 << 1.0; verts << 0.0 << sh;  // Bottom left
+            texCoords << 1.0 << 1.0; verts << tw  << sh;  // Bottom right
+            texCoords << 1.0 << 0.0; verts << tw  << 0.0; // Top right
+            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+            vbo->reset();
+            vbo->setData(6, 2, verts.constData(), texCoords.constData());
+            vbo->render(GL_TRIANGLES);
 
             // At this point we don't need the scratch texture anymore
             tex.unbind();
@@ -297,12 +320,16 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             // coordinates on the screen, while scaling it vertically and blending it.
             glClear( GL_COLOR_BUFFER_BIT );
 
-            glBegin( GL_QUADS );
-            glTexCoord2f( 0, 0 ); glVertex2i(  0,  0 );      // Top left
-            glTexCoord2f( 1, 0 ); glVertex2i( tw,  0 );      // Top right
-            glTexCoord2f( 1, 1 ); glVertex2i( tw, th ); // Bottom right
-            glTexCoord2f( 0, 1 ); glVertex2i(  0, th ); // Bottom left
-            glEnd();
+            verts.clear();
+
+            verts << tw  << 0.0; // Top right
+            verts << 0.0 << 0.0; // Top left
+            verts << 0.0 << th;  // Bottom left
+            verts << 0.0 << th;  // Bottom left
+            verts << tw  << th;  // Bottom right
+            verts << tw  << 0.0; // Top right
+            vbo->setData(6, 2, verts.constData(), texCoords.constData());
+            vbo->render(GL_TRIANGLES);
 
             tex2.unbind();
             tex2.discard();
@@ -316,9 +343,23 @@ void LanczosFilter::performPaint( EffectWindowImpl* w, int mask, QRegion region,
             cache->bind();
             glCopyTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th );
             effects->popRenderTarget();
-            prepareRenderStates( cache, data.opacity, data.brightness, data.saturation );
-            cache->render( textureRect, textureRect );
-            restoreRenderStates( cache, data.opacity, data.brightness, data.saturation );
+            if (ShaderManager::instance()->isValid()) {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+                shader->setUniform("offset", QVector2D(0, 0));
+                shader->setUniform("opacity", (float)data.opacity);
+                shader->setUniform("brightness", (float)data.brightness);
+                shader->setUniform("saturation", (float)data.saturation);
+                shader->setUniform("u_forceAlpha", 0);
+                cache->render(textureRect, textureRect);
+                ShaderManager::instance()->popShader();
+                glDisable(GL_BLEND);
+            } else {
+                prepareRenderStates( cache, data.opacity, data.brightness, data.saturation );
+                cache->render( textureRect, textureRect );
+                restoreRenderStates( cache, data.opacity, data.brightness, data.saturation );
+            }
             cache->unbind();
             w->setData( LanczosCacheRole, QVariant::fromValue( static_cast<void*>( cache )));
 
@@ -360,6 +401,7 @@ void LanczosFilter::timerEvent( QTimerEvent *event )
 void LanczosFilter::prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     const bool alpha = true;
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
@@ -477,11 +519,13 @@ void LanczosFilter::prepareRenderStates( GLTexture* tex, double opacity, double 
             }
         }
 #endif
+#endif
     }
 
 void LanczosFilter::restoreRenderStates( GLTexture* tex, double opacity, double brightness, double saturation )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0f )
         {
         if( saturation != 1.0 && tex->saturationSupported())
@@ -500,6 +544,7 @@ void LanczosFilter::restoreRenderStates( GLTexture* tex, double opacity, double 
 
     glPopAttrib();  // ENABLE_BIT
 #endif
+#endif
     }
 
 /************************************************
@@ -516,28 +561,33 @@ LanczosShader::LanczosShader( QObject* parent )
 LanczosShader::~LanczosShader()
     {
     delete m_shader;
+#ifndef KWIN_HAVE_OPENGLES
     if( m_arbProgram )
         {
         glDeleteProgramsARB(1, &m_arbProgram);
         m_arbProgram = 0;
         }
+#endif
     }
 
 void LanczosShader::bind()
     {
     if( m_shader )
-        m_shader->bind();
+        ShaderManager::instance()->pushShader(m_shader);
+#ifndef KWIN_HAVE_OPENGLES
     else
         {
         glEnable(GL_FRAGMENT_PROGRAM_ARB);
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
         }
+#endif
     }
 
 void LanczosShader::unbind()
     {
     if( m_shader )
-        m_shader->unbind();
+        ShaderManager::instance()->popShader();
+#ifndef KWIN_HAVE_OPENGLES
     else
         {
         int boundObject;
@@ -548,6 +598,7 @@ void LanczosShader::unbind()
             glDisable(GL_FRAGMENT_PROGRAM_ARB);
             }
         }
+#endif
     }
 
 void LanczosShader::setUniforms()
@@ -558,6 +609,7 @@ void LanczosShader::setUniforms()
         glUniform2fv( m_uOffsets, 25, (const GLfloat*)m_offsets );
         glUniform4fv( m_uKernel, 25, (const GLfloat*)m_kernel );
         }
+#ifndef KWIN_HAVE_OPENGLES
     else
         {
         for( int i=0; i<25; ++i )
@@ -569,6 +621,7 @@ void LanczosShader::setUniforms()
             glProgramLocalParameter4fARB( GL_FRAGMENT_PROGRAM_ARB, i+25, m_kernel[i].x(), m_kernel[i].y(), m_kernel[i].z(), m_kernel[i].w() );
             }
         }
+#endif
     }
 
 bool LanczosShader::init()
@@ -577,14 +630,14 @@ bool LanczosShader::init()
          GLShader::vertexShaderSupported() &&
          GLRenderTarget::supported() )
         {
-        m_shader = new GLShader(":/resources/lanczos-vertex.glsl", ":/resources/lanczos-fragment.glsl");
+        m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");
         if (m_shader->isValid())
             {
-            m_shader->bind();
+            ShaderManager::instance()->pushShader(m_shader);
             m_uTexUnit    = m_shader->uniformLocation("texUnit");
             m_uKernel     = m_shader->uniformLocation("kernel");
             m_uOffsets    = m_shader->uniformLocation("offsets");
-            m_shader->unbind();
+            ShaderManager::instance()->popShader();
             return true;
             }
         else
@@ -595,6 +648,10 @@ bool LanczosShader::init()
             }
         }
 
+#ifdef KWIN_HAVE_OPENGLES
+    // no ARB shader in GLES
+    return false;
+#else
     // try to create an ARB Shader
     if( !hasGLExtension("GL_ARB_fragment_program") )
         return false;
@@ -637,6 +694,7 @@ bool LanczosShader::init()
     glDisable(GL_FRAGMENT_PROGRAM_ARB);
     kDebug( 1212 ) << "ARB Shader compiled, id: " << m_arbProgram;
     return true;
+#endif
     }
 #endif
 

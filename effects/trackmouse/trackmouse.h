@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TRACKMOUSE_H
 
 #include <kwineffects.h>
-#include <kwinglutils.h>
 
 class KAction;
 
 namespace KWin
 {
+class GLTexture;
 
 class TrackMouseEffect
     : public QObject, public Effect

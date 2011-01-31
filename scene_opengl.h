@@ -72,15 +72,20 @@ class SceneOpenGL
         class FBConfigInfo
             {
             public:
+#ifndef KWIN_HAVE_OPENGLES
                 GLXFBConfig fbconfig;
+#endif
                 int bind_texture_format;
                 int texture_targets;
                 int y_inverted;
                 int mipmap;
             };
+#ifndef KWIN_HAVE_OPENGLES
         Drawable buffer;
         GLXFBConfig fbcbuffer;
+#endif
         static bool db;
+#ifndef KWIN_HAVE_OPENGLES
         static GLXFBConfig fbcbuffer_db;
         static GLXFBConfig fbcbuffer_nondb;
         static FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
@@ -88,6 +93,7 @@ class SceneOpenGL
         static GLXContext ctxbuffer;
         static GLXContext ctxdrawable;
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
+#endif
         static bool tfp_mode;
         static bool shm_mode;
         QHash< Toplevel*, Window* > windows;
@@ -96,6 +102,7 @@ class SceneOpenGL
 #endif
         bool init_ok;
         bool selfCheckDone;
+        bool debug;
     };
 
 class SceneOpenGL::Texture
@@ -116,6 +123,9 @@ class SceneOpenGL::Texture
         virtual void release(); // undo the tfp_mode binding
         virtual void bind();
         virtual void unbind();
+        void setYInverted(bool inverted) {
+            y_inverted = inverted;
+        }
 
     protected:
         void findTarget();
@@ -125,7 +135,9 @@ class SceneOpenGL::Texture
     private:
         void init();
 
+#ifndef KWIN_HAVE_OPENGLES
         GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+#endif
     };
 
 class SceneOpenGL::Window
@@ -150,7 +162,7 @@ class SceneOpenGL::Window
             DecorationBottom
             };
         void paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco );
-        void makeDecorationArrays( float** vertices, float** texcoords, const WindowQuadList& quads, const QRect& rect  ) const;
+        void makeDecorationArrays( const WindowQuadList& quads, const QRect& rect  ) const;
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
         void prepareStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
         void prepareRenderStates( TextureType type, double opacity, double brightness, double saturation );
@@ -190,16 +202,16 @@ class SceneOpenGL::EffectFrame
         void updateTexture();
         void updateTextTexture();
 
-        GLTexture* m_texture;
-        GLTexture* m_textTexture;
-        GLTexture* m_oldTextTexture;
+        Texture* m_texture;
+        Texture* m_textTexture;
+        Texture* m_oldTextTexture;
         QPixmap* m_textPixmap; // need to keep the pixmap around to workaround some driver problems
-        GLTexture* m_iconTexture;
-        GLTexture* m_oldIconTexture;
-        GLTexture* m_selectionTexture;
+        Texture* m_iconTexture;
+        Texture* m_oldIconTexture;
+        Texture* m_selectionTexture;
         GLVertexBuffer* m_unstyledVBO;
 
-        static GLTexture* m_unstyledTexture;
+        static Texture* m_unstyledTexture;
         static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
         static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };

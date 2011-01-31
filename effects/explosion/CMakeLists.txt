@@ -16,5 +16,4 @@ install( FILES
     explosion/data/explosion-end.png
     explosion/data/explosion-start.png
     explosion/data/explosion.frag
-    explosion/data/explosion.vert
     DESTINATION ${DATA_INSTALL_DIR}/kwin )

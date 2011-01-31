@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mousemark.h"
 
 #include <kwinconfig.h>
+#include <kwinglutils.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -31,10 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 
 #include <math.h>
-
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
-#endif
 
 #include <kdebug.h>
 
@@ -71,6 +68,7 @@ void MouseMarkEffect::reconfigure( ReconfigureFlags )
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry( "LineWidth", 3 );
     color = conf.readEntry( "Color", QColor( Qt::red ));
+    color.setAlphaF(1.0);
     }
 
 void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -78,25 +76,45 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen( mask, region, data ); // paint normal screen
     if( marks.isEmpty() && drawing.isEmpty())
         return;
+#ifndef KWIN_HAVE_OPENGLES
     glPushAttrib( GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT );
-    glColor4f( color.redF(), color.greenF(), color.blueF(), 1 );
     glEnable( GL_LINE_SMOOTH );
+#endif
     glLineWidth( width );
-    foreach( const Mark& mark, marks )
-        {
-        glBegin( GL_LINE_STRIP );
-        foreach( const QPoint& p, mark )
-            glVertex2i( p.x(), p.y());
-        glEnd();
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
+    vbo->setColor(color);
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    }
+    QVector<float> verts;
+    foreach (const Mark& mark, marks) {
+        verts.clear();
+        verts.reserve(mark.size()*2);
+        foreach (const QPoint& p, mark) {
+            verts << p.x() << p.y();
         }
-    if( !drawing.isEmpty())
-        {
-        glBegin( GL_LINE_STRIP );
-        foreach( const QPoint& p, drawing )
-            glVertex2i( p.x(), p.y());
-        glEnd();
+        vbo->setData(verts.size()/2, 2, verts.data(), NULL);
+        vbo->render(GL_LINE_STRIP);
+    }
+    if (!drawing.isEmpty()) {
+        verts.clear();
+        verts.reserve(drawing.size()*2);
+        foreach (const QPoint& p, drawing) {
+            verts << p.x() << p.y();
         }
+        vbo->setData(verts.size()/2, 2, verts.data(), NULL);
+        vbo->render(GL_LINE_STRIP);
+    }
+    if (ShaderManager::instance()->isValid()) {
+        ShaderManager::instance()->popShader();
+    }
+    glLineWidth( 1.0 );
+#ifndef KWIN_HAVE_OPENGLES
+    glDisable( GL_LINE_SMOOTH );
     glPopAttrib();
+#endif
     }
 
 void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,

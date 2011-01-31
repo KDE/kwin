@@ -28,9 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kstandardaction.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
-#endif
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -96,37 +94,46 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
         data2.yTranslate = - int( cursor.y() * ( zoom - 1 ));
         effects->paintScreen( mask, region, data2 );
         PaintClipper::pop( area );
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        if( effects->compositingType() == KWin::OpenGLCompositing )
-            {
-            glPushAttrib( GL_CURRENT_BIT );
-            glColor4f( 0, 0, 0, 1 ); // black
-            for( PaintClipper::Iterator iterator;
-                !iterator.isDone();
-                iterator.next())
-                {
-                glBegin( GL_QUADS );
-                glVertex2i( area.left() - FRAME_WIDTH, area.top() - FRAME_WIDTH ); // top frame
-                glVertex2i( area.right() + FRAME_WIDTH, area.top() - FRAME_WIDTH );
-                glVertex2i( area.right() + FRAME_WIDTH, area.top() - 1 );
-                glVertex2i( area.left() - FRAME_WIDTH, area.top() - 1 );
-                glVertex2i( area.left() - FRAME_WIDTH, area.top() - FRAME_WIDTH ); // left frame
-                glVertex2i( area.left() - 1, area.top() - FRAME_WIDTH );
-                glVertex2i( area.left() - 1, area.bottom() + FRAME_WIDTH );
-                glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
-                glVertex2i( area.right() + 1, area.top() - FRAME_WIDTH ); // right frame
-                glVertex2i( area.right() + FRAME_WIDTH, area.top() - FRAME_WIDTH );
-                glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
-                glVertex2i( area.right() + 1, area.bottom() + FRAME_WIDTH );
-                glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + 1 ); // bottom frame
-                glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + 1 );
-                glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
-                glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
-                glEnd();
-                }
-            glPopAttrib();
-            }
-#endif
+        QVector<float> verts;
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->reset();
+        vbo->setColor(QColor(0, 0, 0));
+        // top frame
+        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.top() - 1;
+        verts << area.left() - FRAME_WIDTH << area.top() - 1;
+        verts << area.right() + FRAME_WIDTH << area.top() - 1;
+        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        // left frame
+        verts << area.left() - 1 << area.top() - FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.left() - 1 << area.bottom() + FRAME_WIDTH;
+        verts << area.left() - 1 << area.top() - FRAME_WIDTH;
+        // right frame
+        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        verts << area.right() + 1 << area.top() - FRAME_WIDTH;
+        verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
+        verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
+        verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+        // bottom frame
+        verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
+        verts << area.left() - FRAME_WIDTH << area.bottom() + 1;
+        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+        verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
+        vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+        if (ShaderManager::instance()->isValid()) {
+            ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+        }
+        vbo->render(GL_TRIANGLES);
+        if (ShaderManager::instance()->isValid()) {
+            ShaderManager::instance()->popShader();
+        }
         }
     }
 

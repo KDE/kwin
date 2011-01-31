@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     function = (function ## _func)getProcAddress( #backup );
 
 #ifdef KWIN_HAVE_OPENGL
+#ifndef KWIN_HAVE_OPENGLES
 
 namespace KWin
 {
@@ -94,15 +95,21 @@ glGetProgramInfoLog_func glGetProgramInfoLog;
 glGetProgramiv_func glGetProgramiv;
 glGetShaderiv_func glGetShaderiv;
 glUniform1f_func glUniform1f;
+glUniform2f_func glUniform2f;
+glUniform3f_func glUniform3f;
+glUniform4f_func glUniform4f;
 glUniform1i_func glUniform1i;
 glUniform1fv_func glUniform1fv;
 glUniform2fv_func glUniform2fv;
 glUniform3fv_func glUniform3fv;
 glUniform4fv_func glUniform4fv;
+glGetUniformfv_func glGetUniformfv;
+glUniformMatrix4fv_func glUniformMatrix4fv;
 glValidateProgram_func glValidateProgram;
 glGetUniformLocation_func glGetUniformLocation;
 glVertexAttrib1f_func glVertexAttrib1f;
 glGetAttribLocation_func glGetAttribLocation;
+glBindAttribLocation_func glBindAttribLocation;
 glGenProgramsARB_func glGenProgramsARB;
 glBindProgramARB_func glBindProgramARB;
 glProgramStringARB_func glProgramStringARB;
@@ -114,6 +121,9 @@ glGenBuffers_func glGenBuffers;
 glDeleteBuffers_func glDeleteBuffers;
 glBindBuffer_func glBindBuffer;
 glBufferData_func glBufferData;
+glEnableVertexAttribArray_func glEnableVertexAttribArray;
+glDisableVertexAttribArray_func glDisableVertexAttribArray;
+glVertexAttribPointer_func glVertexAttribPointer;
 
 
 static glXFuncPtr getProcAddress( const char* name )
@@ -244,15 +254,21 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glGetProgramiv, glGetObjectParameterivARB );
         GL_RESOLVE_WITH_EXT( glGetShaderiv, glGetObjectParameterivARB );
         GL_RESOLVE_WITH_EXT( glUniform1f, glUniform1fARB );
+        GL_RESOLVE_WITH_EXT( glUniform2f, glUniform2fARB );
+        GL_RESOLVE_WITH_EXT( glUniform3f, glUniform3fARB );
+        GL_RESOLVE_WITH_EXT( glUniform4f, glUniform4fARB );
         GL_RESOLVE_WITH_EXT( glUniform1i, glUniform1iARB );
         GL_RESOLVE_WITH_EXT( glUniform1fv, glUniform1fvARB );
         GL_RESOLVE_WITH_EXT( glUniform2fv, glUniform2fvARB );
         GL_RESOLVE_WITH_EXT( glUniform3fv, glUniform3fvARB );
         GL_RESOLVE_WITH_EXT( glUniform4fv, glUniform4fvARB );
+        GL_RESOLVE_WITH_EXT( glUniformMatrix4fv, glUniformMatrix4fvARB );
         GL_RESOLVE_WITH_EXT( glValidateProgram, glValidateProgramARB );
         GL_RESOLVE_WITH_EXT( glGetUniformLocation, glGetUniformLocationARB );
         GL_RESOLVE_WITH_EXT( glVertexAttrib1f, glVertexAttrib1fARB );
         GL_RESOLVE_WITH_EXT( glGetAttribLocation, glGetAttribLocationARB );
+        GL_RESOLVE_WITH_EXT( glBindAttribLocation, glBindAttribLocationARB );
+        GL_RESOLVE_WITH_EXT( glGetUniformfv, glGetUniformfvARB );
         }
     if( hasGLExtension( "GL_ARB_fragment_program" ) && hasGLExtension( "GL_ARB_vertex_program" ))
         {
@@ -270,6 +286,9 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glDeleteBuffers, glDeleteBuffersARB );
         GL_RESOLVE_WITH_EXT( glBindBuffer, glBindBufferARB );
         GL_RESOLVE_WITH_EXT( glBufferData, glBufferDataARB );
+        GL_RESOLVE_WITH_EXT( glEnableVertexAttribArray, glEnableVertexAttribArrayARB );
+        GL_RESOLVE_WITH_EXT( glDisableVertexAttribArray, glDisableVertexAttribArrayARB );
+        GL_RESOLVE_WITH_EXT( glVertexAttribPointer, glVertexAttribPointerARB );
         }
     else
         {
@@ -282,4 +301,36 @@ void glResolveFunctions()
 
 } // namespace
 
+#else
+namespace KWin
+{
+
+// EGL
+eglCreateImageKHR_func eglCreateImageKHR;
+eglDestroyImageKHR_func eglDestroyImageKHR;
+// GLES
+glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+
+void eglResolveFunctions()
+{
+    if (hasGLExtension("EGL_KHR_image_pixmap")) {
+        eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
+        eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
+    } else {
+        eglCreateImageKHR = NULL;
+        eglDestroyImageKHR = NULL;
+    }
+}
+
+void glResolveFunctions()
+{
+    if (hasGLExtension("GL_OES_EGL_image")) {
+        glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+    } else {
+        glEGLImageTargetTexture2DOES = NULL;
+    }
+}
+
+} // namespace
+#endif
 #endif

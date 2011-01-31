@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 
+#include <QMatrix4x4>
 
 #include <KStandardDirs>
 #include <kdebug.h>
@@ -63,22 +64,16 @@ bool ExplosionEffect::loadData()
 {
     mInited = true;
     QString shadername("explosion");
-    QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.frag");
-    QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.vert");
+    const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.frag");
     QString starttexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-start.png");
     QString endtexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-end.png");
-    if(fragmentshader.isEmpty() || vertexshader.isEmpty())
-    {
-        kError(1212) << "Couldn't locate shader files" << endl;
-        return false;
-    }
     if(starttexture.isEmpty() || endtexture.isEmpty())
     {
         kError(1212) << "Couldn't locate texture files" << endl;
         return false;
     }
 
-    mShader = new GLShader(vertexshader, fragmentshader);
+    mShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     if(!mShader->isValid())
     {
         kError(1212) << "The shader failed to load!" << endl;
@@ -86,11 +81,10 @@ bool ExplosionEffect::loadData()
     }
     else
     {
-        mShader->bind();
-        mShader->setUniform("winTexture", 0);
+        ShaderManager::instance()->pushShader(mShader);
         mShader->setUniform("startOffsetTexture", 4);
         mShader->setUniform("endOffsetTexture", 5);
-        mShader->unbind();
+        ShaderManager::instance()->popShader();
     }
 
     mStartOffsetTex = new GLTexture(starttexture);
@@ -160,7 +154,12 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         data.xTranslate += int( w->width() / 2 * ( 1 - scale ));
         data.yTranslate += int( w->height() / 2 * ( 1 - scale ));
         data.opacity *= 0.99;  // Force blending
-        mShader->bind();
+        ShaderManager *manager = ShaderManager::instance();
+        GLShader *shader = manager->pushShader(ShaderManager::GenericShader);
+        QMatrix4x4 screenTransformation = shader->getUniformMatrix4x4("screenTransformation");
+        manager->popShader();
+        ShaderManager::instance()->pushShader(mShader);
+        mShader->setUniform("screenTransformation", screenTransformation);
         mShader->setUniform("factor", (float)mWindows[w]);
         mShader->setUniform("scale", (float)scale);
         glActiveTexture(GL_TEXTURE4);
@@ -176,7 +175,7 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 
     if( useshader )
         {
-        mShader->unbind();
+        ShaderManager::instance()->popShader();
         glActiveTexture(GL_TEXTURE4);
         mStartOffsetTex->unbind();
         glActiveTexture(GL_TEXTURE5);

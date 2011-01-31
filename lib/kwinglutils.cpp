@@ -31,7 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QHash>
 #include <QFile>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
+#include <QMatrix4x4>
 
+#include <math.h>
 
 #define DEBUG_GLRENDERTARGET 0
 
@@ -44,9 +49,12 @@ namespace KWin
 static int glVersion;
 // GLX version, use MAKE_GL_VERSION() macro for comparing with a specific version
 static int glXVersion;
-// List of all supported GL and GLX extensions
+// EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
+static int eglVersion;
+// List of all supported GL, EGL and GLX extensions
 static QStringList glExtensions;
 static QStringList glxExtensions;
+static QStringList eglExtension;
 
 int glTextureUnitsCount;
 
@@ -54,6 +62,7 @@ int glTextureUnitsCount;
 // Functions
 void initGLX()
     {
+#ifndef KWIN_HAVE_OPENGLES
     // Get GLX version
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
@@ -63,15 +72,31 @@ void initGLX()
         display(), DefaultScreen( display()))).split(' ');
 
     glxResolveFunctions();
+#endif
     }
+
+void initEGL()
+{
+#ifdef KWIN_HAVE_OPENGLES
+    EGLDisplay dpy = eglGetCurrentDisplay();
+    int major, minor;
+    eglInitialize(dpy, &major, &minor);
+    eglVersion = MAKE_GL_VERSION(major, minor, 0);
+    eglExtension = QString((const char*)eglQueryString(dpy, EGL_EXTENSIONS)).split(' ');
+
+    eglResolveFunctions();
+#endif
+}
 
 void initGL()
     {
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
+#ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(),
                                     glversioninfo.count() > 2 ? glversioninfo[2].toInt() : 0);
+#endif
     // Get list of supported OpenGL extensions
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
@@ -94,9 +119,14 @@ bool hasGLXVersion(int major, int minor, int release)
     return glXVersion >= MAKE_GL_VERSION(major, minor, release);
     }
 
+bool hasEGLVersion(int major, int minor, int release)
+{
+    return eglVersion >= MAKE_GL_VERSION(major, minor, release);
+}
+
 bool hasGLExtension(const QString& extension)
     {
-    return glExtensions.contains(extension) || glxExtensions.contains(extension);
+    return glExtensions.contains(extension) || glxExtensions.contains(extension) || eglExtension.contains(extension);
     }
 
 static QString formatGLError( GLenum err )
@@ -107,8 +137,10 @@ static QString formatGLError( GLenum err )
         case GL_INVALID_ENUM:      return "GL_INVALID_ENUM";
         case GL_INVALID_VALUE:     return "GL_INVALID_VALUE";
         case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
+#ifndef KWIN_HAVE_OPENGLES
         case GL_STACK_OVERFLOW:    return "GL_STACK_OVERFLOW";
         case GL_STACK_UNDERFLOW:   return "GL_STACK_UNDERFLOW";
+#endif
         case GL_OUT_OF_MEMORY:     return "GL_OUT_OF_MEMORY";
         default: return QString( "0x" ) + QString::number( err, 16 );
         }
@@ -150,6 +182,15 @@ void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
+    Q_UNUSED(count)
+    Q_UNUSED(vertices)
+    Q_UNUSED(texture)
+    Q_UNUSED(color)
+    Q_UNUSED(dim)
+    Q_UNUSED(stride)
+#else
     // Using arrays only makes sense if we have larger number of vertices.
     //  Otherwise overhead of enabling/disabling them is too big.
     bool use_arrays = (count > 5);
@@ -200,11 +241,20 @@ void renderGLGeometry( const QRegion& region, int count,
         glPopClientAttrib();
         glPopAttrib();
         }
+#endif
     }
 
 void renderGLGeometryImmediate( int count, const float* vertices, const float* texture, const float* color,
       int dim, int stride )
 {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(count)
+    Q_UNUSED(vertices)
+    Q_UNUSED(texture)
+    Q_UNUSED(color)
+    Q_UNUSED(dim)
+    Q_UNUSED(stride)
+#else
     // Find out correct glVertex*fv function according to dim parameter.
     void ( *glVertexFunc )( const float* ) = glVertex2fv;
     if( dim == 3 )
@@ -257,6 +307,7 @@ void renderGLGeometryImmediate( int count, const float* vertices, const float* t
             glVertexFunc( vertices + i*vsize );
         }
     glEnd();
+#endif
 }
 
 void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2)
@@ -265,6 +316,62 @@ void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float 
     verts << x1 << y2;
     verts << x2 << y2;
     verts << x2 << y1;
+}
+
+void pushMatrix()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glPushMatrix();
+#endif
+}
+
+void pushMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    glPushMatrix();
+    multiplyMatrix(matrix);
+#endif
+}
+
+void multiplyMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    GLfloat m[16];
+    const qreal *data = matrix.constData();
+    for (int i = 0; i < 4; ++i) {
+        for (int j=0; j < 4; ++j) {
+            m[i*4+j] = data[i*4+j];
+        }
+    }
+    glMultMatrixf(m);
+#endif
+}
+
+void loadMatrix(const QMatrix4x4 &matrix)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(matrix)
+#else
+    GLfloat m[16];
+    const qreal *data = matrix.constData();
+    for (int i = 0; i < 4; ++i) {
+        for (int j=0; j < 4; ++j) {
+            m[i*4+j] = data[i*4+j];
+        }
+    }
+    glLoadMatrixf(m);
+#endif
+}
+
+void popMatrix()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glPopMatrix();
+#endif
 }
 
 //****************************************
@@ -312,7 +419,13 @@ GLTexture::GLTexture( int width, int height )
 
         glGenTextures( 1, &mTexture );
         bind();
+#ifdef KWIN_HAVE_OPENGLES
+        // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
+        // see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+        glTexImage2D( mTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#else
         glTexImage2D( mTarget, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+#endif
         unbind();
         }
     }
@@ -340,11 +453,17 @@ void GLTexture::init()
 
 void GLTexture::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    mNPOTTextureSupported = true;
+    mFramebufferObjectSupported = true;
+    mSaturationSupported = true;
+#else
     mNPOTTextureSupported = hasGLExtension( "GL_ARB_texture_non_power_of_two" );
     mFramebufferObjectSupported = hasGLExtension( "GL_EXT_framebuffer_object" );
     mSaturationSupported = ((hasGLExtension("GL_ARB_texture_env_crossbar")
         && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
         && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
+#endif
     }
 
 bool GLTexture::isNull() const
@@ -363,8 +482,10 @@ bool GLTexture::load( const QImage& image, GLenum target )
         return false;
     QImage img = image;
     mTarget = target;
+#ifndef KWIN_HAVE_OPENGLES
     if( mTarget != GL_TEXTURE_RECTANGLE_ARB )
         {
+#endif
         if( !NPOTTextureSupported()
             && ( !isPowerOfTwo( image.width()) || !isPowerOfTwo( image.height())))
             { // non-rectangular target requires POT texture
@@ -374,6 +495,7 @@ bool GLTexture::load( const QImage& image, GLenum target )
         mScale.setWidth( 1.0 / img.width());
         mScale.setHeight( 1.0 / img.height());
         can_use_mipmaps = true;
+#ifndef KWIN_HAVE_OPENGLES
         }
     else
         {
@@ -381,6 +503,7 @@ bool GLTexture::load( const QImage& image, GLenum target )
         mScale.setHeight( 1.0 );
         can_use_mipmaps = false;
         }
+#endif
     setFilter( GL_LINEAR );
     mSize = img.size();
     y_inverted = false;
@@ -391,8 +514,14 @@ bool GLTexture::load( const QImage& image, GLenum target )
     if( isNull())
         glGenTextures( 1, &mTexture );
     bind();
+#ifdef KWIN_HAVE_OPENGLES
+    // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
+    // see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+    glTexImage2D( mTarget, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+#else
     glTexImage2D( mTarget, 0, GL_RGBA8, img.width(), img.height(), 0,
         GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+#endif
     unbind();
     return true;
     }
@@ -421,7 +550,9 @@ void GLTexture::discard()
 
 void GLTexture::bind()
     {
+#ifndef KWIN_HAVE_OPENGLES
     glEnable( mTarget );
+#endif
     glBindTexture( mTarget, mTexture );
     enableFilter();
     }
@@ -429,7 +560,9 @@ void GLTexture::bind()
 void GLTexture::unbind()
     {
     glBindTexture( mTarget, 0 );
+#ifndef KWIN_HAVE_OPENGLES
     glDisable( mTarget );
+#endif
     }
 
 void GLTexture::render( QRegion region, const QRect& rect )
@@ -459,13 +592,29 @@ void GLTexture::render( QRegion region, const QRect& rect )
             };
         m_vbo->setData( 4, 2, verts, texcoords );
         }
-    glTranslatef( rect.x(), rect.y(), 0.0f );
+    QMatrix4x4 translation;
+    translation.translate(rect.x(), rect.y());
+    if (ShaderManager::instance()->isShaderBound()) {
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
+        shader->setUniform("offset", QVector2D(rect.x(), rect.y()));
+        shader->setUniform("windowTransformation", translation);
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+    } else {
+        pushMatrix(translation);
+    }
     m_vbo->render( region, GL_TRIANGLE_STRIP );
-    glTranslatef( -rect.x(), -rect.y(), 0.0f );
+    if (ShaderManager::instance()->isShaderBound()) {
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
+        shader->setUniform("windowTransformation", QMatrix4x4());
+    } else {
+        popMatrix();
+    }
     }
 
 void GLTexture::enableUnnormalizedTexCoords()
     {
+#ifndef KWIN_HAVE_OPENGLES
     assert( mNormalizeActive == 0 );
     if( mUnnormalizeActive++ != 0 )
         return;
@@ -482,20 +631,24 @@ void GLTexture::enableUnnormalizedTexCoords()
         glTranslatef( 0, -mSize.height(), 0 );
         }
     glMatrixMode( GL_MODELVIEW );
+#endif
     }
 
 void GLTexture::disableUnnormalizedTexCoords()
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( --mUnnormalizeActive != 0 )
         return;
     // Restore texture matrix
     glMatrixMode( GL_TEXTURE );
     glPopMatrix();
     glMatrixMode( GL_MODELVIEW );
+#endif
     }
 
 void GLTexture::enableNormalizedTexCoords()
     {
+#ifndef KWIN_HAVE_OPENGLES
     assert( mUnnormalizeActive == 0 );
     if( mNormalizeActive++ != 0 )
         return;
@@ -512,16 +665,19 @@ void GLTexture::enableNormalizedTexCoords()
         glTranslatef( 0, -1, 0 );
         }
     glMatrixMode( GL_MODELVIEW );
+#endif
     }
 
 void GLTexture::disableNormalizedTexCoords()
     {
+#ifndef KWIN_HAVE_OPENGLES
     if( --mNormalizeActive != 0 )
         return;
     // Restore texture matrix
     glMatrixMode( GL_TEXTURE );
     glPopMatrix();
     glMatrixMode( GL_MODELVIEW );
+#endif
     }
 
 GLuint GLTexture::texture() const
@@ -611,7 +767,11 @@ void GLTexture::enableFilter()
     }
 
 static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum texture_format)
-    { // Copied from Qt
+    {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(texture_format)
+#endif
+    // Copied from Qt
     Q_ASSERT(dst.size() == img.size());
     Q_ASSERT(dst.depth() == 32);
     Q_ASSERT(img.depth() == 32);
@@ -621,6 +781,7 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
     const uint *p = (const uint*) img.scanLine(img.height() - 1);
     uint *q = (uint*) dst.scanLine(0);
 
+#ifndef KWIN_HAVE_OPENGLES
     if (texture_format == GL_BGRA) {
         if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
             // mirror + swizzle
@@ -645,6 +806,7 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
             }
         }
     } else {
+#endif
         if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
             for (int i=0; i < height; ++i) {
                 const uint *end = p + width;
@@ -666,13 +828,19 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
                 p -= 2 * width;
             }
         }
+#ifndef KWIN_HAVE_OPENGLES
     }
+#endif
 }
 
 QImage GLTexture::convertToGLFormat( const QImage& img ) const
     { // Copied from Qt's QGLWidget::convertToGLFormat()
     QImage res(img.size(), QImage::Format_ARGB32);
+#ifdef KWIN_HAVE_OPENGLES
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_RGBA);
+#else
     convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_BGRA);
+#endif
     return res;
     }
 
@@ -685,12 +853,23 @@ bool GLShader::mVertexShaderSupported = false;
 
 void GLShader::initStatic()
 {
+#ifdef KWIN_HAVE_OPENGLES
+    mFragmentShaderSupported = mVertexShaderSupported = true;
+#else
     mFragmentShaderSupported = mVertexShaderSupported =
             hasGLExtension("GL_ARB_shader_objects") && hasGLExtension("GL_ARB_shading_language_100");
     mVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
     mFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
+#endif
 }
 
+GLShader::GLShader()
+    : mValid(false)
+    , mProgram(0)
+    , mTextureWidth(-1.0f)
+    , mTextureHeight(-1.0f)
+{
+}
 
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
@@ -754,7 +933,11 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         // Create shader object
         vertexshader = glCreateShader(GL_VERTEX_SHADER);
         // Load it
-        const QByteArray& srcba = vertexsource.toLatin1();
+        QByteArray srcba;
+#ifdef KWIN_HAVE_OPENGLES
+        srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
+#endif
+        srcba.append(vertexsource.toLatin1());
         const char* src = srcba.data();
         glShaderSource(vertexshader, 1, &src, NULL);
         // Compile the shader
@@ -786,7 +969,11 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         {
         fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
         // Load it
-        const QByteArray& srcba = fragmentsource.toLatin1();
+        QByteArray srcba;
+#ifdef KWIN_HAVE_OPENGLES
+        srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
+#endif
+        srcba.append(fragmentsource.toLatin1());
         const char* src = srcba.data();
         glShaderSource(fragmentshader, 1, &src, NULL);
         //glShaderSource(fragmentshader, 1, &fragmentsrc.latin1(), NULL);
@@ -874,6 +1061,62 @@ bool GLShader::setUniform(const char* name, int value)
     return (location >= 0);
     }
 
+bool GLShader::setUniform(const char* name, const QVector2D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform2f(location, value.x(), value.y());
+        }
+    return (location >= 0);
+    }
+
+bool GLShader::setUniform(const char* name, const QVector3D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform3f(location, value.x(), value.y(), value.z());
+        }
+    return (location >= 0);
+    }
+
+bool GLShader::setUniform(const char* name, const QVector4D& value)
+    {
+    const int location = uniformLocation(name);
+    if(location >= 0)
+        {
+        glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+        }
+    return (location >= 0);
+    }
+
+bool GLShader::setUniform(const char* name, const QMatrix4x4& value)
+{
+    const int location = uniformLocation(name);
+    if (location >= 0) {
+        GLfloat m[16];
+        const qreal *data = value.constData();
+        // i is column, j is row for m
+        for (int i = 0; i < 4; ++i) {
+            for (int j=0; j < 4; ++j) {
+                m[i*4+j] = data[j*4+i];
+            }
+        }
+        glUniformMatrix4fv(location, 1, GL_FALSE, m);
+    }
+    return (location >= 0);
+}
+
+bool GLShader::setUniform(const char* name, const QColor& color)
+{
+    const int location = uniformLocation(name);
+    if (location >= 0) {
+        glUniform4f(location, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    }
+    return (location >= 0);
+}
+
 int GLShader::attributeLocation(const char* name)
     {
     int location = glGetAttribLocation(mProgram, name);
@@ -910,13 +1153,306 @@ float GLShader::textureWidth()
     return mTextureWidth;
     }
 
+QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
+{
+    int location = uniformLocation(name);
+    if (location >= 0) {
+        GLfloat m[16];
+        glGetUniformfv(mProgram, location, m);
+        QMatrix4x4 matrix(m[0], m[1],  m[2], m[3],
+                          m[4], m[5],  m[6], m[7],
+                          m[8], m[9], m[10], m[11],
+                          m[12], m[13], m[14], m[15]);
+        matrix.optimize();
+        return matrix;
+    } else {
+        return QMatrix4x4();
+    }
+}
+
+//****************************************
+// ShaderManager
+//****************************************
+ShaderManager *ShaderManager::s_shaderManager = NULL;
+
+ShaderManager *ShaderManager::instance()
+{
+    if (!s_shaderManager) {
+        s_shaderManager = new ShaderManager();
+    }
+    return s_shaderManager;
+}
+
+void ShaderManager::cleanup()
+{
+    delete s_shaderManager;
+}
+
+ShaderManager::ShaderManager()
+    : m_orthoShader(NULL)
+    , m_genericShader(NULL)
+    , m_colorShader(NULL)
+    , m_inited(false)
+    , m_valid(false)
+{
+    initShaders();
+    m_inited = true;
+}
+
+ShaderManager::~ShaderManager()
+{
+    while (!m_boundShaders.isEmpty()) {
+        popShader();
+    }
+    delete m_orthoShader;
+    delete m_genericShader;
+    delete m_colorShader;
+}
+
+GLShader *ShaderManager::getBoundShader() const
+{
+    if (m_boundShaders.isEmpty()) {
+        return NULL;
+    } else {
+        return m_boundShaders.top();
+    }
+}
+
+bool ShaderManager::isShaderBound() const
+{
+    return !m_boundShaders.isEmpty();
+}
+
+bool ShaderManager::isValid() const
+{
+    return m_valid;
+}
+
+GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
+{
+    if (m_inited && !m_valid) {
+        return NULL;
+    }
+    GLShader *shader;
+    switch (type) {
+    case SimpleShader:
+        shader = m_orthoShader;
+        break;
+    case GenericShader:
+        shader = m_genericShader;
+        break;
+    case ColorShader:
+        shader = m_colorShader;
+        break;
+    default:
+        return NULL;
+    }
+
+    pushShader(shader);
+    if (reset) {
+        resetShader(type);
+    }
+
+    return shader;
+}
+
+void ShaderManager::pushShader(GLShader *shader)
+{
+    // only bind shader if it is not already bound
+    if (shader != getBoundShader()) {
+        shader->bind();
+    }
+    m_boundShaders.push(shader);
+}
+
+void ShaderManager::popShader()
+{
+    if (m_boundShaders.isEmpty()) {
+        return;
+    }
+    GLShader *shader = m_boundShaders.pop();
+    if (m_boundShaders.isEmpty()) {
+        // no more shader bound - unbind
+        shader->unbind();
+    } else if (shader != m_boundShaders.top()) {
+        // only rebind if a different shader is on top of stack
+        m_boundShaders.top()->bind();
+    }
+}
+
+GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
+{
+    QString vertexShader;
+    switch (vertex) {
+    case SimpleShader:
+        vertexShader = ":/resources/scene-vertex.glsl";
+        break;
+    case GenericShader:
+        vertexShader = ":/resources/scene-generic-vertex.glsl";
+        break;
+    case ColorShader:
+        vertexShader = ":/resources/scene-color-vertex.glsl";
+        break;
+    }
+    GLShader *shader = new GLShader(vertexShader, fragmentFile);
+    if (shader->isValid()) {
+        pushShader(shader);
+        resetShader(vertex);
+        popShader();
+    }
+    return shader;
+}
+
+GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &vertexFile)
+{
+    QString fragmentShader;
+    switch (fragment) {
+    // Simple and Generic Shader use same fragment Shader
+    case SimpleShader:
+    case GenericShader:
+        fragmentShader = ":/resources/scene-fragment.glsl";
+        break;
+    case ColorShader:
+        fragmentShader = ":/resources/scene-color-fragment.glsl";
+        break;
+    }
+    GLShader *shader = new GLShader(vertexFile, fragmentShader);
+    if (shader->isValid()) {
+        pushShader(shader);
+        resetShader(fragment);
+        popShader();
+    }
+    return shader;
+}
+
+GLShader *ShaderManager::loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource)
+{
+    GLShader *shader = new GLShader();
+    shader->load(vertexSource, fragmentSource);
+    return shader;
+}
+
+void ShaderManager::initShaders()
+{
+    m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
+    if (m_orthoShader->isValid()) {
+        pushShader(SimpleShader, true);
+        popShader();
+        kDebug(1212) << "Ortho Shader is valid";
+    }
+    else {
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        kDebug(1212) << "Orho Shader is not valid";
+        return;
+    }
+    m_genericShader = new GLShader( ":/resources/scene-generic-vertex.glsl", ":/resources/scene-fragment.glsl" );
+    if (m_genericShader->isValid()) {
+        pushShader(GenericShader, true);
+        popShader();
+        kDebug(1212) << "Generic Shader is valid";
+    }
+    else {
+        delete m_genericShader;
+        m_genericShader = NULL;
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        kDebug(1212) << "Generic Shader is not valid";
+        return;
+    }
+    m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
+    if (m_colorShader->isValid()) {
+        pushShader(ColorShader, true);
+        popShader();
+        kDebug(1212) << "Color Shader is valid";
+    } else {
+        delete m_genericShader;
+        m_genericShader = NULL;
+        delete m_orthoShader;
+        m_orthoShader = NULL;
+        delete m_colorShader;
+        m_colorShader = NULL;
+        kDebug(1212) << "Color Scene Shader is not valid";
+        return;
+    }
+    m_valid = true;
+}
+
+void ShaderManager::resetShader(ShaderType type)
+{
+    // resetShader is either called from init or from push, we know that a built-in shader is bound
+    GLShader *shader = getBoundShader();
+    switch (type) {
+    case SimpleShader: {
+        QMatrix4x4 projection;
+        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        shader->setUniform("projection", projection);
+        shader->setUniform("offset", QVector2D(0, 0));
+        shader->setUniform("debug", 0);
+        shader->setUniform("sample", 0);
+        // TODO: has to become textureSize
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+        // TODO: has to become colorManiuplation
+        shader->setUniform("opacity", 1.0f);
+        shader->setUniform("brightness", 1.0f);
+        shader->setUniform("saturation", 1.0f);
+        shader->setUniform("u_forceAlpha", 0);
+        break;
+    }
+    case GenericShader: {
+        shader->setUniform("debug", 0);
+        shader->setUniform("sample", 0);
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        shader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        shader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        shader->setUniform("screenTransformation", identity);
+        shader->setUniform("windowTransformation", identity);
+        // TODO: has to become textureSize
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
+        // TODO: has to become colorManiuplation
+        shader->setUniform("opacity", 1.0f);
+        shader->setUniform("brightness", 1.0f);
+        shader->setUniform("saturation", 1.0f);
+        shader->setUniform("u_forceAlpha", 0);
+        break;
+    }
+    case ColorShader: {
+        QMatrix4x4 projection;
+        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        shader->setUniform("projection", projection);
+        shader->setUniform("offset", QVector2D(0, 0));
+        shader->setUniform("geometryColor", QVector4D(0, 0, 0, 1));
+        break;
+    }
+    }
+}
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::mSupported = false;
 
 void GLRenderTarget::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    mSupported = true;
+#else
     mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
+#endif
     }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)
@@ -951,7 +1487,7 @@ bool GLRenderTarget::enable()
         return false;
         }
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     mTexture->setDirty();
 
     return true;
@@ -965,7 +1501,7 @@ bool GLRenderTarget::disable()
         return false;
         }
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     mTexture->setDirty();
 
     return true;
@@ -975,18 +1511,19 @@ static QString formatFramebufferStatus( GLenum status )
     {
     switch( status )
         {
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
             // An attachment is the wrong type / is invalid / has 0 width or height
             return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
             // There are no images attached to the framebuffer
             return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        case GL_FRAMEBUFFER_UNSUPPORTED:
+            // A format or the combination of formats of the attachments is unsupported
+            return "GL_FRAMEBUFFER_UNSUPPORTED";
+#ifndef KWIN_HAVE_OPENGLES
         case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
             // Not all attached images have the same width and height
             return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
-        case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-            // A format or the combination of formats of the attachments is unsupported
-            return "GL_FRAMEBUFFER_UNSUPPORTED";
         case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
             // The color attachments don't have the same format
             return "GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT";
@@ -999,6 +1536,7 @@ static QString formatFramebufferStatus( GLenum status )
         case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
             // The read buffer is missing
             return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+#endif
         default:
             return "Unknown (0x" + QString::number(status, 16) + ')';
         }
@@ -1022,7 +1560,7 @@ void GLRenderTarget::initFBO()
         }
 #endif
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
 #if DEBUG_GLRENDERTARGET
     if( (err = glGetError()) != GL_NO_ERROR )
@@ -1033,24 +1571,24 @@ void GLRenderTarget::initFBO()
         }
 #endif
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            mTexture->target(), mTexture->texture(), 0);
 
 #if DEBUG_GLRENDERTARGET
     if( (err = glGetError()) != GL_NO_ERROR )
         {
         kError(1212) << "glFramebufferTexture2D failed: " << formatGLError( err );
-        glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
         }
 #endif
 
-    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
+    const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
+    if( status != GL_FRAMEBUFFER_COMPLETE )
         { // We have an incomplete framebuffer, consider it invalid
         if (status == 0)
             kError(1212) << "glCheckFramebufferStatus failed: " << formatGLError( glGetError() );
@@ -1074,6 +1612,9 @@ class GLVertexBufferPrivate
             : hint( usageHint )
             , numberVertices( 0 )
             , dimension( 2 )
+            , useColor( false )
+            , useTexCoords( true )
+            , color( 0, 0, 0, 255 )
             {
             if( GLVertexBufferPrivate::supported )
                 {
@@ -1092,32 +1633,93 @@ class GLVertexBufferPrivate
         int numberVertices;
         int dimension;
         static bool supported;
+        static GLVertexBuffer *streamingBuffer;
         QVector<float> legacyVertices;
         QVector<float> legacyTexCoords;
+        bool useColor;
+        bool useTexCoords;
+        QColor color;
 
         void legacyPainting( QRegion region, GLenum primitiveMode );
+        void corePainting( const QRegion& region, GLenum primitiveMode );
     };
 bool GLVertexBufferPrivate::supported = false;
+GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 
 void GLVertexBufferPrivate::legacyPainting( QRegion region, GLenum primitiveMode )
     {
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
+    Q_UNUSED(primitiveMode)
+#else
     // Enable arrays
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( dimension, GL_FLOAT, 0, legacyVertices.constData() );
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer( 2, GL_FLOAT, 0, legacyTexCoords.constData() );
+    if (!legacyTexCoords.isEmpty()) {
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        glTexCoordPointer( 2, GL_FLOAT, 0, legacyTexCoords.constData() );
+    }
+
+    if (useColor) {
+        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    }
 
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-        !iterator.isDone();
-        iterator.next())
-        {
-        glDrawArrays( primitiveMode, 0, numberVertices );
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, numberVertices);
         }
+    } else {
+        glDrawArrays(primitiveMode, 0, numberVertices);
+    }
 
     glDisableClientState( GL_VERTEX_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    if (!legacyTexCoords.isEmpty()) {
+        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    }
+#endif
+    }
+
+void GLVertexBufferPrivate::corePainting( const QRegion& region, GLenum primitiveMode )
+    {
+    glEnableVertexAttribArray( 0 );
+    if (useTexCoords) {
+        glEnableVertexAttribArray( 1 );
+    }
+
+    GLShader *shader = ShaderManager::instance()->getBoundShader();
+    GLint vertexAttrib = shader->attributeLocation("vertex");
+    GLint texAttrib = shader->attributeLocation("texCoord" );
+
+    if (useColor) {
+        shader->setUniform("geometryColor", color);
+    }
+
+    glBindBuffer( GL_ARRAY_BUFFER, buffers[ 0 ] );
+    glVertexAttribPointer( vertexAttrib, dimension, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    if (texAttrib != -1 && useTexCoords) {
+        glBindBuffer( GL_ARRAY_BUFFER, buffers[ 1 ] );
+        glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+    }
+
+    // Clip using scissoring
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, numberVertices);
+        }
+    } else {
+        glDrawArrays(primitiveMode, 0, numberVertices);
+    }
+
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+    if (useTexCoords) {
+        glDisableVertexAttribArray( 1 );
+    }
+    glDisableVertexAttribArray( 0 );
     }
 
 //*********************************
@@ -1137,6 +1739,7 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
     {
     d->numberVertices = numberVertices;
     d->dimension = dim;
+    d->useTexCoords = (texcoords != NULL);
     if( !GLVertexBufferPrivate::supported )
         {
         // legacy data
@@ -1147,11 +1750,12 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
             d->legacyVertices << vertices[i];
             }
         d->legacyTexCoords.clear();
-        d->legacyTexCoords.reserve( numberVertices * 2 );
-        for( int i=0; i<numberVertices*2; ++i)
-            {
-            d->legacyTexCoords << texcoords[i];
+        if (d->useTexCoords) {
+            d->legacyTexCoords.reserve( numberVertices * 2 );
+            for (int i=0; i<numberVertices*2; ++i) {
+                d->legacyTexCoords << texcoords[i];
             }
+        }
         return;
         }
     GLenum hint;
@@ -1171,18 +1775,15 @@ void GLVertexBuffer::setData( int numberVertices, int dim, const float* vertices
             hint = GL_STREAM_DRAW;
             break;
         }
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
     glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*d->dimension, vertices, hint );
 
-    glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
+    if (d->useTexCoords) {
+        glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
+        glBufferData( GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices*2, texcoords, hint );
+    }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-    glDisableClientState( GL_VERTEX_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     }
 
 void GLVertexBuffer::render( GLenum primitiveMode )
@@ -1197,6 +1798,12 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
         d->legacyPainting( region, primitiveMode );
         return;
         }
+    if( ShaderManager::instance()->isShaderBound() )
+        {
+        d->corePainting( region, primitiveMode );
+        return;
+        }
+#ifndef KWIN_HAVE_OPENGLES
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 0 ] );
@@ -1205,32 +1812,71 @@ void GLVertexBuffer::render( const QRegion& region, GLenum primitiveMode )
     glBindBuffer( GL_ARRAY_BUFFER, d->buffers[ 1 ] );
     glTexCoordPointer( 2, GL_FLOAT, 0, 0 );
 
+    if (d->useColor) {
+        glColor4f(d->color.redF(), d->color.greenF(), d->color.blueF(), d->color.alphaF());
+    }
+
     // Clip using scissoring
-    PaintClipper pc( region );
-    for( PaintClipper::Iterator iterator;
-        !iterator.isDone();
-        iterator.next())
-        {
-        glDrawArrays( primitiveMode, 0, d->numberVertices );
+    if (region != infiniteRegion()) {
+        PaintClipper pc(region);
+        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
+            glDrawArrays(primitiveMode, 0, d->numberVertices);
         }
+    } else {
+        glDrawArrays(primitiveMode, 0, d->numberVertices);
+    }
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+#endif
     }
-
 
 bool GLVertexBuffer::isSupported()
     {
     return GLVertexBufferPrivate::supported;
     }
 
+bool GLVertexBuffer::isUseColor() const
+{
+    return d->useColor;
+}
+
+void GLVertexBuffer::setUseColor(bool enable)
+{
+    d->useColor = enable;
+}
+
+void GLVertexBuffer::setColor(const QColor& color, bool enable)
+{
+    d->useColor = enable;
+    d->color = color;
+}
+
+void GLVertexBuffer::reset()
+{
+    d->useColor       = false;
+    d->color          = QColor(0, 0, 0, 255);
+    d->numberVertices = 0;
+    d->dimension      = 2;
+    d->useTexCoords   = true;
+}
+
 void GLVertexBuffer::initStatic()
     {
+#ifdef KWIN_HAVE_OPENGLES
+    GLVertexBufferPrivate::supported = true;
+#else
     GLVertexBufferPrivate::supported = hasGLExtension( "GL_ARB_vertex_buffer_object" );
+#endif
+    GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
     }
 
+GLVertexBuffer *GLVertexBuffer::streamingBuffer()
+{
+    return GLVertexBufferPrivate::streamingBuffer;
+}
 
 } // namespace
 

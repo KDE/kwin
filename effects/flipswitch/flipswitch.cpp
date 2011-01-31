@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QMatrix4x4>
 #include <kconfiggroup.h>
 
 #include <kdebug.h>
@@ -234,13 +235,13 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 
         // multiscreen part taken from coverswitch.cpp
         // TODO: move to kwinglutils
+        QMatrix4x4 origProjection;
+        QMatrix4x4 origModelview;
+        ShaderManager *shaderManager = ShaderManager::instance();
         if( effects->numScreens() > 1 )
             {
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop() );
-            glMatrixMode( GL_PROJECTION );
-            glPushMatrix();
-            glLoadIdentity();
             float fovy = 60.0f;
             float aspect = 1.0f;
             float zNear = 0.1f;
@@ -283,10 +284,26 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 ymaxFactor = ((float)fullRect.height()-(float)m_screenArea.height()*0.5f)/((float)fullRect.height()*0.5f);
                 yTranslate = (float)fullRect.height()*0.5f-(float)m_screenArea.height()*0.5f;
                 }
-            glFrustum( xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar );
-            glMatrixMode( GL_MODELVIEW );
-            glPushMatrix();
-            glTranslatef( xTranslate, yTranslate, 0.0 );
+            QMatrix4x4 projection;
+            projection.frustum(xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar);
+            QMatrix4x4 modelview;
+            modelview.translate(xTranslate, yTranslate, 0.0);
+            if (shaderManager->isShaderBound()) {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                origProjection = shader->getUniformMatrix4x4("projection");
+                origModelview = shader->getUniformMatrix4x4("modelview");
+                shader->setUniform("projection", projection);
+                shader->setUniform("modelview", origModelview*modelview);
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glMatrixMode(GL_PROJECTION);
+                pushMatrix();
+                loadMatrix(projection);
+                glMatrixMode(GL_MODELVIEW);
+                pushMatrix(modelview);
+#endif
+            }
             }
 
         int winMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
@@ -399,11 +416,20 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 
         if( effects->numScreens() > 1 )
             {
-            glPopMatrix();
-            // revert change of projection matrix
-            glMatrixMode( GL_PROJECTION );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
+            if (shaderManager->isShaderBound())  {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                shader->setUniform("projection", origProjection);
+                shader->setUniform("modelview", origModelview);
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                popMatrix();
+                // revert change of projection matrix
+                glMatrixMode(GL_PROJECTION);
+                popMatrix();
+                glMatrixMode(GL_MODELVIEW);
+#endif
+            }
             }
 
         if( m_windowTitle )

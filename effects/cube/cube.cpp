@@ -34,10 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QVector2D>
 
 #include <math.h>
 
-#include <GL/gl.h>
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -88,14 +89,19 @@ CubeEffect::CubeEffect()
     , zOrderingFactor( 0.0f )
     , mAddedHeightCoeff1( 0.0f )
     , mAddedHeightCoeff2( 0.0f )
-    , capListCreated( false )
-    , recompileList( true )
-    , glList( 0 )
+    , m_cubeCapBuffer( NULL )
     , m_proxy( this )
     {
     desktopNameFont.setBold( true );
     desktopNameFont.setPointSize( 14 );
     desktopNameFrame->setFont( desktopNameFont );
+
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/cube-reflection.glsl");
+    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+    const QString capshader = KGlobal::dirs()->findResource("data", "kwin/cube-cap.glsl");
+    m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
+    m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
+    m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
 
     reconfigure( ReconfigureAll );
     }
@@ -195,7 +201,9 @@ void CubeEffect::loadConfig( QString config )
             {
             capTexture = new GLTexture( img );
             capTexture->setFilter( GL_LINEAR );
+#ifndef KWIN_HAVE_OPENGLES
             capTexture->setWrapMode( GL_CLAMP_TO_BORDER );
+#endif
             }
         }
 
@@ -229,6 +237,13 @@ void CubeEffect::loadConfig( QString config )
         connect( sphereAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( sphereShortcutChanged(QKeySequence)));
         shortcutsRegistered = true;
         }
+
+    // set the cap color on the shader
+    if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+        ShaderManager::instance()->pushShader(m_capShader);
+        m_capShader->setUniform("u_capColor", capColor);
+        ShaderManager::instance()->popShader();
+    }
     }
 
 CubeEffect::~CubeEffect()
@@ -250,6 +265,9 @@ CubeEffect::~CubeEffect()
     delete cylinderShader;
     delete sphereShader;
     delete desktopNameFrame;
+    delete m_reflectionShader;
+    delete m_capShader;
+    delete m_cubeCapBuffer;
     }
 
 bool CubeEffect::loadShader()
@@ -266,6 +284,8 @@ bool CubeEffect::loadShader()
         return false;
         }
 
+    ShaderManager *shaderManager = ShaderManager::instance();
+    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     cylinderShader = new GLShader(cylinderVertexshader, fragmentshader);
     if( !cylinderShader->isValid() )
         {
@@ -274,13 +294,33 @@ bool CubeEffect::loadShader()
         }
     else
         {
-        cylinderShader->bind();
-        cylinderShader->setUniform( "winTexture", 0 );
+        shaderManager->pushShader(cylinderShader);
+        cylinderShader->setUniform( "sample", 0 );
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        cylinderShader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        cylinderShader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        cylinderShader->setUniform("screenTransformation", identity);
+        cylinderShader->setUniform("windowTransformation", identity);
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        cylinderShader->setUniform( "width", (float)rect.width() );
-        cylinderShader->unbind();
+        cylinderShader->setUniform( "width", (float)rect.width()*0.5f );
+        shaderManager->popShader();
         }
-    sphereShader = new GLShader( sphereVertexshader, fragmentshader );
+    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
+    sphereShader = new GLShader(sphereVertexshader, fragmentshader);
     if( !sphereShader->isValid() )
         {
         kError(1212) << "The sphere shader failed to load!" << endl;
@@ -288,12 +328,33 @@ bool CubeEffect::loadShader()
         }
     else
         {
-        sphereShader->bind();
-        sphereShader->setUniform( "winTexture", 0 );
+        shaderManager->pushShader(sphereShader);
+        sphereShader->setUniform( "sample", 0 );
+        QMatrix4x4 projection;
+        float fovy = 60.0f;
+        float aspect = 1.0f;
+        float zNear = 0.1f;
+        float zFar = 100.0f;
+        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin = -ymax;
+        float xmin =  ymin * aspect;
+        float xmax = ymax * aspect;
+        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+        sphereShader->setUniform("projection", projection);
+        QMatrix4x4 modelview;
+        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
+        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        sphereShader->setUniform("modelview", modelview);
+        const QMatrix4x4 identity;
+        sphereShader->setUniform("screenTransformation", identity);
+        sphereShader->setUniform("windowTransformation", identity);
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        sphereShader->setUniform( "width", (float)rect.width() );
-        sphereShader->setUniform( "height", (float)rect.height() );
-        sphereShader->unbind();
+        sphereShader->setUniform( "width", (float)rect.width()*0.5f );
+        sphereShader->setUniform( "height", (float)rect.height()*0.5f );
+        sphereShader->setUniform( "u_offset", QVector2D(0, 0));
+        shaderManager->popShader();
+        checkGLError("Loading Sphere Shader");
         }
     return true;
     }
@@ -307,12 +368,12 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         if( rotating || start || stop )
             {
             timeLine.addTime( time );
-            recompileList = true;
+            rotateCube();
             }
         if( verticalRotating )
             {
             verticalTimeLine.addTime( time );
-            recompileList = true;
+            rotateCube();
             }
         }
     effects->prePaintScreen( data, time );
@@ -322,26 +383,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( activated )
         {
-        if( recompileList )
-            {
-            recompileList = false;
-            glPushMatrix();
-            glNewList( glList, GL_COMPILE );
-            rotateCube();
-            glEndList();
-            glPopMatrix();
-            }
-
-        // compile List for cube
-        if( useList )
-            {
-            glNewList( glList + 1, GL_COMPILE );
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            glEndList();
-            }
-
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
         // background
@@ -359,7 +400,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             wallpaper->unbind();
             }
 
+#ifndef KWIN_HAVE_OPENGLES
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -376,140 +419,66 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             {
             // restrict painting the reflections to the current screen
             PaintClipper::push( QRegion( rect ));
-            glPushMatrix();
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float scaleFactor = 1000000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
-            glScalef( 1.0, -1.0, 1.0 );
+            m_reflectionMatrix.setToIdentity();
+            m_reflectionMatrix.scale(1.0, -1.0, 1.0);
 
             // TODO reflection is not correct when mixing manual (mouse) rotating with rotation by cursor keys
             // there's also a small bug when zooming
             float addedHeight1 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff1 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff1;
             float addedHeight2 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff2 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff2 - addedHeight1;
             if( manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1 )
-                glTranslatef( 0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
+                {
+                m_reflectionMatrix.translate(0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
+                }
             else
-                glTranslatef( 0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
+                {
+                m_reflectionMatrix.translate(0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
+                }
+            pushMatrix(m_reflectionMatrix);
 
-
+#ifndef KWIN_HAVE_OPENGLES
+            // TODO: find a solution for GLES
             glEnable( GL_CLIP_PLANE0 );
+#endif
             reflectionPainting = true;
             glEnable( GL_CULL_FACE );
-            // caps
-            if( paintCaps && ( effects->numberOfDesktops() >= 2 ) )
-                {
-                glPushMatrix();
-                glCallList( glList );
-                glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
-                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-                glTranslatef( 0.0, rect.height(), 0.0 );
-                glCullFace( GL_FRONT );
-
-                // bottom texture has to be mirrored
-                glMatrixMode( GL_TEXTURE );
-                glPushMatrix();
-                glLoadIdentity();
-                glScalef( 1.0f, -1.0f, 1.0f );
-                glTranslatef( 0.0f, -1.0f, 0.0f );
-                glMatrixMode( GL_MODELVIEW );
-
-                glCallList( glList + 2 );
-
-                glMatrixMode( GL_TEXTURE );
-                glPopMatrix();
-                glMatrixMode( GL_MODELVIEW );
-
-                glTranslatef( 0.0, -rect.height(), 0.0 );
-                glCullFace( GL_BACK );
-                glCallList( glList + 2 );
-                glPopMatrix();
-                }
+            paintCap(true, -point-zTranslate);
 
             // cube
-            glCullFace( GL_FRONT );
-            if( mode == Cylinder )
-                {
-                cylinderShader->bind();
-                cylinderShader->setUniform( "front", 1.0f );
-                cylinderShader->unbind();
-                }
-            glPushMatrix();
-            glCallList( glList );
-            if( useList )
-                glCallList( glList + 1 );
-            else
-                {
-                glPushMatrix();
-                paintCube( mask, region, data );
-                glPopMatrix();
-                }
-            glPopMatrix();
+            glCullFace( GL_BACK );
+            pushMatrix(m_rotationMatrix);
+            paintCube(mask, region, data);
+            popMatrix();
 
             // call the inside cube effects
+#ifndef KWIN_HAVE_OPENGLES
             foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
                 {
-                glPushMatrix();
-                glCallList( glList );
+                pushMatrix(m_rotationMatrix);
                 glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
                 glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
                 inside->paint();
-                glPopMatrix();
+                popMatrix();
                 }
+#endif
 
-            glCullFace( GL_BACK );
-            if( mode == Cylinder )
-                {
-                cylinderShader->bind();
-                cylinderShader->setUniform( "front", -1.0f );
-                cylinderShader->unbind();
-                }
-            glPushMatrix();
-            glCallList( glList );
-            if( useList )
-                glCallList( glList + 1 );
-            else
-                {
-                glPushMatrix();
-                paintCube( mask, region, data );
-                glPopMatrix();
-                }
-            glPopMatrix();
+            glCullFace( GL_FRONT );
+            pushMatrix(m_rotationMatrix);
+            paintCube(mask, region, data);
+            popMatrix();
 
-            // cap
-            if( paintCaps && ( effects->numberOfDesktops() >= 2 ) )
-                {
-                glPushMatrix();
-                glCallList( glList );
-                glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
-                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-                glTranslatef( 0.0, rect.height(), 0.0 );
-                glCullFace( GL_BACK );
-
-                // bottom texture has to be mirrored
-                glMatrixMode( GL_TEXTURE );
-                glPushMatrix();
-                glLoadIdentity();
-                glScalef( 1.0f, -1.0f, 1.0f );
-                glTranslatef( 0.0f, -1.0f, 0.0f );
-                glMatrixMode( GL_MODELVIEW );
-                glCallList( glList + 2 );
-
-                glMatrixMode( GL_TEXTURE );
-                glPopMatrix();
-                glMatrixMode( GL_MODELVIEW );
-
-                glTranslatef( 0.0, -rect.height(), 0.0 );
-                glCullFace( GL_FRONT );
-                glCallList( glList + 2 );
-                glPopMatrix();
-                }
+            paintCap(false, -point-zTranslate);
             glDisable( GL_CULL_FACE );
             reflectionPainting = false;
+#ifndef KWIN_HAVE_OPENGLES
+            // TODO: find a solution for GLES
             glDisable( GL_CLIP_PLANE0 );
+#endif
+            popMatrix();
 
-            glPopMatrix();
-            glPushMatrix();
-            glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
                 -rect.width()*0.5f, rect.height(), 0.0,
                 rect.width()*0.5f, rect.height(), 0.0,
@@ -521,161 +490,94 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 alpha = 0.3 + 0.4 * timeLine.value();
             if( stop )
                 alpha = 0.3 + 0.4 * ( 1.0 - timeLine.value() );
-            glColor4f( 0.0, 0.0, 0.0, alpha );
-            glBegin( GL_POLYGON );
-            glVertex3f( vertices[0], vertices[1], vertices[2] );
-            glVertex3f( vertices[3], vertices[4], vertices[5] );
-            // rearground
-            alpha = -1.0;
-            glColor4f( 0.0, 0.0, 0.0, alpha );
-            glVertex3f( vertices[6], vertices[7], vertices[8] );
-            glVertex3f( vertices[9], vertices[10], vertices[11] );
-            glEnd();
-            glPopMatrix();
+            glEnable( GL_BLEND );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            ShaderManager *shaderManager = ShaderManager::instance();
+            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+                // ensure blending is enabled - no attribute stack
+                shaderManager->pushShader(m_reflectionShader);
+                QMatrix4x4 windowTransformation;
+                windowTransformation.translate(rect.x() + rect.width()*0.5f, 0.0, 0.0);
+                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform("u_alpha", alpha);
+                QVector<float> verts;
+                QVector<float> texcoords;
+                verts.reserve(18);
+                texcoords.reserve(12);
+                texcoords << 0.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[9] << vertices[10] << vertices[11];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[3] << vertices[4] << vertices[5];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setData(6, 3, verts.data(), texcoords.data());
+                vbo->render(GL_TRIANGLES);
+
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glColor4f( 0.0, 0.0, 0.0, alpha );
+                glPushMatrix();
+                glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
+                glBegin( GL_POLYGON );
+                glVertex3f( vertices[0], vertices[1], vertices[2] );
+                glVertex3f( vertices[3], vertices[4], vertices[5] );
+                // rearground
+                alpha = -1.0;
+                glColor4f( 0.0, 0.0, 0.0, alpha );
+                glVertex3f( vertices[6], vertices[7], vertices[8] );
+                glVertex3f( vertices[9], vertices[10], vertices[11] );
+                glEnd();
+                glPopMatrix();
+#endif
+            }
+            glDisable( GL_BLEND );
             PaintClipper::pop( QRegion( rect ));
             }
         glEnable( GL_CULL_FACE );
         // caps
-        if( paintCaps && ( effects->numberOfDesktops() >= 2 ))
-            {
-            glPushMatrix();
-            glCallList( glList );
-            glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
-            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            glCullFace( GL_BACK );
-            if( mode == Sphere )
-                {
-                glPushMatrix();
-                glScalef( 1.0, -1.0, 1.0 );
-                }
-
-            // bottom texture has to be mirrored
-            glMatrixMode( GL_TEXTURE );
-            glPushMatrix();
-            glLoadIdentity();
-            glScalef( 1.0f, -1.0f, 1.0f );
-            glTranslatef( 0.0f, -1.0f, 0.0f );
-            glMatrixMode( GL_MODELVIEW );
-
-            glCallList( glList + 2 );
-
-            glMatrixMode( GL_TEXTURE );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
-            if( mode == Sphere )
-                glPopMatrix();
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            glCullFace( GL_FRONT );
-            glCallList( glList + 2 );
-            glPopMatrix();
-            }
+        paintCap(false, -point-zTranslate);
 
         // cube
-        glCullFace( GL_BACK );
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "front", -1.0f );
-            cylinderShader->unbind();
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "front", -1.0f );
-            sphereShader->unbind();
-            }
-        glPushMatrix();
-        glCallList( glList );
-        if( useList )
-            glCallList( glList + 1 );
-        else
-            {
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            }
-        glPopMatrix();
+        glCullFace( GL_FRONT );
+        pushMatrix(m_rotationMatrix);
+        paintCube(mask, region, data);
+        popMatrix();
 
 
         // call the inside cube effects
+#ifndef KWIN_HAVE_OPENGLES
         foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
             {
-            glPushMatrix();
-            glCallList( glList );
+            pushMatrix(m_rotationMatrix);
             glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
             glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
             inside->paint();
-            glPopMatrix();
+            popMatrix();
             }
+#endif
 
-        glCullFace( GL_FRONT );
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "front", 1.0f );
-            cylinderShader->unbind();
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "front", 1.0f );
-            sphereShader->unbind();
-            }
-        glPushMatrix();
-        glCallList( glList );
-        if( useList )
-            glCallList( glList + 1 );
-        else
-            {
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
-            }
-        glPopMatrix();
-        // we painted once without glList, now it's safe to paint using lists
-        useList = true;
+        glCullFace( GL_BACK );
+        pushMatrix(m_rotationMatrix);
+        paintCube(mask, region, data);
+        popMatrix();
 
         // cap
-        if( paintCaps && ( effects->numberOfDesktops() >= 2 ))
-            {
-            glPushMatrix();
-            glCallList( glList );
-            glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
-            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            glCullFace( GL_FRONT );
-            if( mode == Sphere )
-                {
-                glPushMatrix();
-                glScalef( 1.0, -1.0, 1.0 );
-                }
-
-            // bottom texture has to be mirrored
-            glMatrixMode( GL_TEXTURE );
-            glPushMatrix();
-            glLoadIdentity();
-            glScalef( 1.0f, -1.0f, 1.0f );
-            glTranslatef( 0.0f, -1.0f, 0.0f );
-            glMatrixMode( GL_MODELVIEW );
-
-            glCallList( glList + 2 );
-
-            glMatrixMode( GL_TEXTURE );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
-
-            if( mode == Sphere )
-                glPopMatrix();
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            glCullFace( GL_BACK );
-            glCallList( glList + 2 );
-            glPopMatrix();
-            }
+        paintCap(true, -point-zTranslate);
         glDisable( GL_CULL_FACE );
 
         glDisable( GL_BLEND );
+#ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
+#endif
 
         // desktop name box - inspired from coverswitch
         if( displayDesktopName )
@@ -703,6 +605,7 @@ void CubeEffect::rotateCube()
     {
     QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
+    m_rotationMatrix.setToIdentity();
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
     if( start )
@@ -769,9 +672,9 @@ void CubeEffect::rotateCube()
             }
         if( stop )
             angle *= (1.0 - timeLine.value());
-        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-        glRotatef( angle, 1.0, 0.0, 0.0 );
-        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
+        m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
+        m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
+        m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
         }
     if( rotating || (manualAngle != 0.0) )
         {
@@ -822,9 +725,9 @@ void CubeEffect::rotateCube()
             rotationAngle = manualAngle * (1.0 - timeLine.value());
         else
             rotationAngle += manualAngle * (1.0 - timeLine.value());
-        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-        glRotatef( rotationAngle, 0.0, 1.0, 0.0 );
-        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
+        m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
+        m_rotationMatrix.rotate(rotationAngle, 0.0, 1.0, 0.0);
+        m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
         }
     }
 
@@ -865,15 +768,72 @@ void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     painting_desktop = effects->currentDesktop();
     }
 
-void CubeEffect::paintCap()
+void CubeEffect::paintCap(bool frontFirst, float zOffset)
     {
     if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
         return;
+    GLenum firstCull = frontFirst ? GL_FRONT : GL_BACK;
+    GLenum secondCull = frontFirst ? GL_BACK : GL_FRONT;
+    const QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
 
-    if( !capListCreated )
-        {
-        capListCreated = true;
-        glNewList( glList + 2, GL_COMPILE );
+    // create the VBO if not yet created
+    if (!m_cubeCapBuffer) {
+        switch (mode) {
+        case Cube:
+            paintCubeCap();
+            break;
+        case Cylinder:
+            paintCylinderCap();
+            break;
+        case Sphere:
+            paintSphereCap();
+            break;
+        default:
+            // impossible
+            break;
+        }
+    }
+
+    QMatrix4x4 capMatrix;
+    capMatrix.translate(rect.width()/2, 0.0, zOffset);
+    capMatrix.rotate((1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+    capMatrix.translate(0.0, rect.height(), 0.0);
+    if (mode == Sphere) {
+        capMatrix.scale(1.0, -1.0, 1.0);
+    }
+
+    bool capShader = false;
+    if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+        capShader = true;
+        ShaderManager::instance()->pushShader(m_capShader);
+        float opacity = cubeOpacity;
+        if (start) {
+            opacity *= timeLine.value();
+        } else if (stop) {
+            opacity *= (1.0 - timeLine.value());
+        }
+        m_capShader->setUniform("u_opacity", opacity);
+        m_capShader->setUniform("u_mirror", 1);
+        if (reflectionPainting) {
+            m_capShader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix);
+        } else {
+            m_capShader->setUniform("screenTransformation", m_rotationMatrix);
+        }
+        m_capShader->setUniform("windowTransformation", capMatrix);
+        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
+            capTexture->bind();
+        }
+    } else {
+        pushMatrix(m_rotationMatrix*capMatrix);
+
+#ifndef KWIN_HAVE_OPENGLES
+        glMatrixMode( GL_TEXTURE );
+#endif
+        pushMatrix();
+        loadMatrix(m_textureMirrorMatrix);
+#ifndef KWIN_HAVE_OPENGLES
+        glMatrixMode( GL_MODELVIEW );
+
         glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
         if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
             {
@@ -899,34 +859,52 @@ void CubeEffect::paintCap()
             glActiveTexture( GL_TEXTURE0 );
             glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
             }
-        glPushMatrix();
-        switch( mode )
-            {
-            case Cube:
-                paintCubeCap();
-                break;
-            case Cylinder:
-                paintCylinderCap();
-                break;
-            case Sphere:
-                paintSphereCap();
-                break;
-            default:
-                // impossible
-                break;
-            }
-        glPopMatrix();
+#endif
+    }
+
+    glEnable(GL_BLEND);
+    glCullFace(firstCull);
+    m_cubeCapBuffer->render(GL_TRIANGLES);
+
+    if (mode == Sphere) {
+        capMatrix.scale(1.0, -1.0, 1.0);
+    }
+    capMatrix.translate(0.0, -rect.height(), 0.0);
+    if (capShader) {
+        m_capShader->setUniform("windowTransformation", capMatrix);
+        m_capShader->setUniform("u_mirror", 0);
+    } else {
+#ifndef KWIN_HAVE_OPENGLES
+        glMatrixMode( GL_TEXTURE );
+        popMatrix();
+        glMatrixMode( GL_MODELVIEW );
+#endif
+        popMatrix();
+        pushMatrix(m_rotationMatrix*capMatrix);
+    }
+    glCullFace(secondCull);
+    m_cubeCapBuffer->render(GL_TRIANGLES);
+    glDisable(GL_BLEND);
+
+    if (capShader) {
+        ShaderManager::instance()->popShader();
+        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
+            capTexture->unbind();
+        }
+    } else {
+        popMatrix();
         if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
             {
+#ifndef KWIN_HAVE_OPENGLES
             glActiveTexture( GL_TEXTURE1 );
             glDisable( capTexture->target() );
             glActiveTexture( GL_TEXTURE0 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
             glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
             capTexture->unbind();
+#endif
             }
-        glEndList();
-        }
+    }
     }
 
 void CubeEffect::paintCubeCap()
@@ -937,13 +915,14 @@ void CubeEffect::paintCubeCap()
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
     float angle = 360.0f/effects->numberOfDesktops();
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
+    QVector<float> verts;
+    QVector<float> texCoords;
     for( int i=0; i<effects->numberOfDesktops(); i++ )
         {
         int triangleRows = effects->numberOfDesktops()*5;
         float zTriangleDistance = z/(float)triangleRows;
         float widthTriangle = tan( angle*0.5 * M_PI/180.0 ) * zTriangleDistance;
         float currentWidth = 0.0;
-        glBegin( GL_TRIANGLES );
         float cosValue = cos( i*angle  * M_PI/180.0 );
         float sinValue = sin( i*angle  * M_PI/180.0 );
         for( int j=0; j<triangleRows; j++ )
@@ -1018,23 +997,25 @@ void CubeEffect::paintCubeCap()
                     texY2 = 0.5 - z2/zTexture * 0.5;
                     texX3 = x3/(rect.width())+0.5;
                     texY3 = 0.5 - z3/zTexture * 0.5;
-                    glTexCoord2f( texX1, texY1 );
+                    texCoords << texX1 << texY1;
                     }
-                glVertex3f( x1, 0.0, z1 );
+                verts << x1 << 0.0 << z1;
                 if( texture )
                     {
-                    glTexCoord2f( texX2, texY2 );
+                    texCoords << texX2 << texY2;
                     }
-                glVertex3f( x2, 0.0, z2 );
+                verts << x2 << 0.0 << z2;
                 if( texture )
                     {
-                    glTexCoord2f( texX3, texY3 );
+                    texCoords << texX3 << texY3;
                     }
-                glVertex3f( x3, 0.0, z3 );
+                verts << x3 << 0.0 << z3;
                 }
             }
-        glEnd();
         }
+    delete m_cubeCapBuffer;
+    m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
+    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
     }
 
 void CubeEffect::paintCylinderCap()
@@ -1047,26 +1028,42 @@ void CubeEffect::paintCylinderCap()
     float segment = radius/30.0f;
 
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
+    QVector<float> verts;
+    QVector<float> texCoords;
     for( int i=1; i<=30; i++ )
         {
-        glBegin( GL_TRIANGLE_STRIP );
         int steps =  72;
         for( int j=0; j<=steps; j++ )
             {
-            float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
-            float x1 = segment*(i-1) * sin( azimuthAngle );
-            float x2 = segment*i * sin( azimuthAngle );
-            float z1 = segment*(i-1) * cos( azimuthAngle );
-            float z2 = segment*i * cos( azimuthAngle );
-            if( texture )
-                glTexCoord2f( (radius+x1)/(radius*2.0f), 1.0f - (z1+radius)/(radius*2.0f) );
-            glVertex3f( x1, 0.0, z1 );
-            if( texture )
-                glTexCoord2f( (radius+x2)/(radius*2.0f), 1.0f - (z2+radius)/(radius*2.0f) );
-            glVertex3f( x2, 0.0, z2 );
+            const float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
+            const float azimuthAngle2 = ((j+1)*(360.0f/steps))*M_PI/180.0f;
+            const float x1 = segment*(i-1) * sin( azimuthAngle );
+            const float x2 = segment*i * sin( azimuthAngle );
+            const float x3 = segment*(i-1) * sin( azimuthAngle2 );
+            const float x4 = segment*i * sin( azimuthAngle2 );
+            const float z1 = segment*(i-1) * cos( azimuthAngle );
+            const float z2 = segment*i * cos( azimuthAngle );
+            const float z3 = segment*(i-1) * cos( azimuthAngle2 );
+            const float z4 = segment*i * cos( azimuthAngle2 );
+            if  (texture) {
+                texCoords << (radius+x1)/(radius*2.0f) << 1.0f - (z1+radius)/(radius*2.0f);
+                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
+                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
+                texCoords << (radius+x4)/(radius*2.0f) << 1.0f - (z4+radius)/(radius*2.0f);
+                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
+                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
             }
-        glEnd();
+            verts << x1 << 0.0 << z1;
+            verts << x2 << 0.0 << z2;
+            verts << x3 << 0.0 << z3;
+            verts << x4 << 0.0 << z4;
+            verts << x3 << 0.0 << z3;
+            verts << x2 << 0.0 << z2;
+            }
         }
+    delete m_cubeCapBuffer;
+    m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
+    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
     }
 
 void CubeEffect::paintSphereCap()
@@ -1078,43 +1075,45 @@ void CubeEffect::paintSphereCap()
     float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;
     angle /= 30;
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
-    glPushMatrix();
-    glTranslatef( 0.0, -rect.height()*0.5, 0.0 );
-    glBegin( GL_QUADS );
+    QVector<float> verts;
+    QVector<float> texCoords;
     for( int i=0; i<30; i++ )
         {
         float topAngle = angle*i*M_PI/180.0;
         float bottomAngle = angle*(i+1)*M_PI/180.0;
-        float yTop = rect.height() - radius * cos( topAngle );
+        float yTop = rect.height()*0.5 - radius * cos( topAngle );
         yTop -= (yTop-rect.height()*0.5)*capDeformationFactor;
-        float yBottom = rect.height() -radius * cos( bottomAngle );
+        float yBottom = rect.height()*0.5 -radius * cos( bottomAngle );
         yBottom -= (yBottom-rect.height()*0.5)*capDeformationFactor;
         for( int j=0; j<36; j++ )
             {
-            float x = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
-            float z = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yTop, z );
-            x = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
-            z = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yBottom, z );
-            x = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            z = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yBottom, z );
-            x = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            z = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            if( texture )
-                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
-            glVertex3f( x, yTop, z );
+            const float x1 = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
+            const float z1 = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            const float x2 = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
+            const float z2 = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            const float x3 = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float z3 = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float x4 = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            const float z4 = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            if (texture) {
+                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
+                texCoords << x1/(rect.width())+0.5 << 0.5 - z1/zTexture * 0.5;
+                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
+                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
+                texCoords << x3/(rect.width())+0.5 << 0.5 - z3/zTexture * 0.5;
+                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
+            }
+            verts << x4 << yTop    << z4;
+            verts << x1 << yTop    << z1;
+            verts << x2 << yBottom << z2;
+            verts << x2 << yBottom << z2;
+            verts << x3 << yBottom << z3;
+            verts << x4 << yTop    << z4;
             }
         }
-    glEnd();
-    glPopMatrix();
+    delete m_cubeCapBuffer;
+    m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
+    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
     }
 
 void CubeEffect::postPaintScreen()
@@ -1178,8 +1177,8 @@ void CubeEffect::postPaintScreen()
 
                 effects->setActiveFullScreenEffect( 0 );
 
-                // delete the GL lists
-                glDeleteLists( glList, 3 );
+                delete m_cubeCapBuffer;
+                m_cubeCapBuffer = NULL;
                 desktopNameFrame->free();
                 }
             effects->addRepaintFull();
@@ -1320,7 +1319,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int prev_desktop = painting_desktop -1;
                 if( prev_desktop == 0 )
                     prev_desktop = effects->numberOfDesktops();
-                if( w->isOnDesktop( prev_desktop ) && mode == Cube )
+                if( w->isOnDesktop( prev_desktop ) && mode == Cube && !useZOrdering )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
                     if( w->x()+w->width() > rect.x() + rect.width() )
@@ -1344,7 +1343,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int next_desktop = painting_desktop +1;
                 if( next_desktop > effects->numberOfDesktops() )
                     next_desktop = 1;
-                if( w->isOnDesktop( next_desktop ) && mode == Cube )
+                if( w->isOnDesktop( next_desktop ) && mode == Cube && !useZOrdering )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
                     if( w->x() < rect.x() )
@@ -1373,50 +1372,11 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
 
 void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
+    ShaderManager *shaderManager = ShaderManager::instance();
+    GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+    QMatrix4x4 origMatrix;
     if( activated && cube_painting )
         {
-        if( mode == Cylinder )
-            {
-            cylinderShader->bind();
-            cylinderShader->setUniform( "xCoord", (float)w->x() );
-            cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
-            cylinderShader->setUniform( "useTexture", 1.0f );
-            float factor = 0.0f;
-            if( start )
-                factor = 1.0f - timeLine.value();
-            if( stop )
-                factor = timeLine.value();
-            cylinderShader->setUniform( "timeLine", factor );
-            data.shader = cylinderShader;
-            }
-        if( mode == Sphere )
-            {
-            sphereShader->bind();
-            sphereShader->setUniform( "xCoord", (float)w->x() );
-            sphereShader->setUniform( "yCoord", (float)w->y() );
-            sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
-            sphereShader->setUniform( "useTexture", 1.0f );
-            float factor = 0.0f;
-            if( start )
-                factor = 1.0f - timeLine.value();
-            if( stop )
-                factor = timeLine.value();
-            sphereShader->setUniform( "timeLine", factor );
-            data.shader = sphereShader;
-            }
-        if( data.shader )
-            {
-            int texw = w->width();
-            int texh = w->height();
-            if( !GLTexture::NPOTTextureSupported() )
-                {
-                kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
-                texw = nearestPowerOfTwo(texw);
-                texh = nearestPowerOfTwo(texh);
-                }
-            data.shader->setTextureWidth( texw );
-            data.shader->setTextureHeight( texh );
-            }
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
         if( start )
@@ -1454,7 +1414,9 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         int next_desktop = painting_desktop +1;
         if( next_desktop > effects->numberOfDesktops() )
             next_desktop = 1;
-        glPushMatrix();
+        if (!shader) {
+            pushMatrix();
+        }
         if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
             QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
@@ -1467,16 +1429,22 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
-            RotationData rot = RotationData();
-            rot.axis = RotationData::YAxis;
-            rot.xRotationPoint = rect.width() - w->x();
-            rot.angle = 360.0f / effects->numberOfDesktops();
-            data.rotation = &rot;
-            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-            glTranslatef( rect.width()/2, 0.0, -point );
-            glRotatef( -360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( -rect.width()/2, 0.0, point );
+            if (shader) {
+                data.xTranslate = -rect.width();
+            } else {
+                RotationData rot = RotationData();
+                rot.axis = RotationData::YAxis;
+                rot.xRotationPoint = rect.width() - w->x();
+                rot.angle = 360.0f / effects->numberOfDesktops();
+                data.rotation = &rot;
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                QMatrix4x4 matrix;
+                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.rotate(-360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+                matrix.translate(-rect.width()/2, 0.0, point);
+                multiplyMatrix(matrix);
+            }
             }
         if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
@@ -1490,16 +1458,22 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
-            RotationData rot = RotationData();
-            rot.axis = RotationData::YAxis;
-            rot.xRotationPoint = -w->x();
-            rot.angle = -360.0f / effects->numberOfDesktops();
-            data.rotation = &rot;
-            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-            glTranslatef( rect.width()/2, 0.0, -point );
-            glRotatef( 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
-            glTranslatef( -rect.width()/2, 0.0, point );
+            if (shader) {
+                data.xTranslate = rect.width();
+            } else {
+                RotationData rot = RotationData();
+                rot.axis = RotationData::YAxis;
+                rot.xRotationPoint = -w->x();
+                rot.angle = -360.0f / effects->numberOfDesktops();
+                data.rotation = &rot;
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                QMatrix4x4 matrix;
+                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.rotate(360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+                matrix.translate(-rect.width()/2, 0.0, point);
+                multiplyMatrix(matrix);
+            }
             }
         QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
 
@@ -1577,10 +1551,50 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             data.quads = new_quads;
             }
+        if (shader) {
+            origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+            if (mode == Cylinder) {
+                shaderManager->pushShader(cylinderShader);
+                cylinderShader->setUniform( "xCoord", (float)w->x() );
+                cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                float factor = 0.0f;
+                if( start )
+                    factor = 1.0f - timeLine.value();
+                if( stop )
+                    factor = timeLine.value();
+                cylinderShader->setUniform( "timeLine", factor );
+                data.shader = cylinderShader;
+            }
+            if (mode == Sphere) {
+                shaderManager->pushShader(sphereShader);
+                sphereShader->setUniform( "u_offset", QVector2D(w->x(), w->y()));
+                sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                float factor = 0.0f;
+                if( start )
+                    factor = 1.0f - timeLine.value();
+                if( stop )
+                    factor = timeLine.value();
+                sphereShader->setUniform( "timeLine", factor );
+                data.shader = sphereShader;
+            }
+            if (reflectionPainting) {
+                shader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix*origMatrix);
+            } else {
+                shader->setUniform("screenTransformation", m_rotationMatrix*origMatrix);
+            }
+        }
         }
     effects->paintWindow( w, mask, region, data );
     if( activated && cube_painting )
         {
+        if (shader) {
+            if (mode == Cylinder || mode == Sphere) {
+                shaderManager->popShader();
+            } else {
+                shader->setUniform("screenTransformation", origMatrix);
+            }
+            shaderManager->popShader();
+        }
         if( w->isDesktop() && effects->numScreens() > 1 && paintCaps )
             {
             QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
@@ -1595,22 +1609,12 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             // in case of free area in multiscreen setup fill it with cap color
             if( !paint.isEmpty() )
                 {
-                if( mode == Cylinder )
-                    {
-                    cylinderShader->setUniform( "useTexture", -1.0f );
-                    cylinderShader->setUniform( "xCoord", 0.0f );
-                    }
-                if( mode == Sphere )
-                    {
-                    sphereShader->setUniform( "useTexture", -1.0f );
-                    sphereShader->setUniform( "xCoord", 0.0f );
-                    sphereShader->setUniform( "yCoord", 0.0f );
-                    }
-                glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
+#ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-                glBegin( GL_QUADS );
+                QVector<float> verts;
                 float quadSize = 0.0f;
                 int leftDesktop = frontDesktop -1;
                 int rightDesktop = frontDesktop + 1;
@@ -1630,26 +1634,32 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                         {
                         for( int j=0; j<=(paintRect.width()/quadSize); j++ )
                             {
-                            glVertex2f( paintRect.x()+j*quadSize, paintRect.y()+i*quadSize );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
-                                paintRect.y()+i*quadSize );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
-                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
-                            glVertex2f( paintRect.x()+j*quadSize,
-                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
+                            verts << paintRect.x()+j*quadSize << paintRect.y()+i*quadSize;
+                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
+                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
                             }
                         }
                     }
-                glEnd();
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                QColor color = capColor;
+                capColor.setAlphaF(cubeOpacity);
+                // TODO: use sphere and cylinder shaders
+                vbo->setColor(color);
+                vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+                vbo->render(GL_TRIANGLES);
                 glDisable( GL_BLEND );
+#ifndef KWIN_HAVE_OPENGLES
                 glPopAttrib();
+#endif
                 }
             }
-        glPopMatrix();
-        if( mode == Cylinder )
-            cylinderShader->unbind();
-        if( mode == Sphere )
-            sphereShader->unbind();
+        if (!shader) {
+            popMatrix();
+        }
         }
     }
 
@@ -1943,11 +1953,11 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
             case Qt::Key_Plus:
                 zoom -= 10.0;
                 zoom = qMax( -zPosition, zoom );
-                recompileList = true;
+                rotateCube();
                 break;
             case Qt::Key_Minus:
                 zoom += 10.0f;
-                recompileList = true;
+                rotateCube();
                 break;
             default:
                 break;
@@ -2044,25 +2054,20 @@ void CubeEffect::setActive( bool active )
         manualVerticalAngle = 0.0;
         if( reflection )
             {
+            QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
+#ifndef KWIN_HAVE_OPENGLES
             // clip parts above the reflection area
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
-            QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
+#endif
             float temporaryCoeff = float( rect.width() ) / tan( M_PI / float( effects->numberOfDesktops() ) );
             mAddedHeightCoeff1 = sqrt( float( rect.height() ) * float( rect.height() ) + temporaryCoeff * temporaryCoeff );
             mAddedHeightCoeff2 = sqrt( float( rect.height() ) * float( rect.height() ) + float( rect.width() ) * float( rect.width() ) + temporaryCoeff * temporaryCoeff );
             }
-        // create the needed GL lists
-        glList = glGenLists(3);
-        capListCreated = false;
-        recompileList = true;
-        useList = false;
-        // create the capList
-        if( paintCaps )
-            paintCap();
+        m_rotationMatrix.setToIdentity();
         effects->addRepaintFull();
         }
     else
@@ -2126,7 +2131,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
             }
         if( repaint )
             {
-            recompileList = true;
+            rotateCube();
             effects->addRepaintFull();
             }
         }
@@ -2233,14 +2238,6 @@ void CubeEffect::tabBoxClosed()
         tabBoxMode = false;
         setActive( false );
         }
-    }
-
-void CubeEffect::windowAdded( EffectWindow* )
-    {
-    // when there is a new window we have to paint it once without using GL List
-    // to prevent that the window is black
-    if( activated )
-        useList = false;
     }
 
 void CubeEffect::cubeShortcutChanged( const QKeySequence& seq )

@@ -31,6 +31,7 @@ class ShowPaintEffect
     {
     public:
         ShowPaintEffect();
+        ~ShowPaintEffect();
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
     private:

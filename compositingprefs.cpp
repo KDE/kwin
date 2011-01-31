@@ -75,6 +75,9 @@ bool CompositingPrefs::compositingPossible()
     if( Extensions::renderAvailable() && Extensions::fixesAvailable())
         return true;
 #endif
+#ifdef KWIN_HAVE_OPENGLES
+    return true;
+#endif
     kDebug( 1212 ) << "No OpenGL or XRender/XFixes support";
     return false;
 #else
@@ -119,6 +122,28 @@ void CompositingPrefs::detect()
         }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGLES
+    bool haveContext = false;
+    bool canDetect = false;
+    EGLDisplay dpy = eglGetCurrentDisplay();
+    if (dpy != EGL_NO_DISPLAY) {
+        EGLContext ctx = eglGetCurrentContext();
+        if (ctx != EGL_NO_CONTEXT) {
+            haveContext = true;
+            canDetect = true;
+        }
+    }
+    if (!haveContext) {
+        canDetect = initEGLContext();
+    }
+    if (canDetect) {
+        detectDriverAndVersion();
+        applyDriverSpecificOptions();
+    }
+    if (!haveContext) {
+        deleteEGLContext();
+    }
+#else
     // HACK: This is needed for AIGLX
     if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
         {
@@ -161,11 +186,13 @@ void CompositingPrefs::detect()
         glXMakeCurrent( display(), olddrawable, oldcontext );
     deleteGLXContext();
 #endif
+#endif
     }
 
 bool CompositingPrefs::initGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     mGLContext = NULL;
     KXErrorHandler handler;
     // Most of this code has been taken from glxinfo.c
@@ -210,6 +237,9 @@ bool CompositingPrefs::initGLXContext()
 
     return glXMakeCurrent( display(), mGLWindow, mGLContext ) && !handler.error( true );
 #else
+    return false;
+#endif
+#else
    return false;
 #endif
 }
@@ -217,9 +247,97 @@ bool CompositingPrefs::initGLXContext()
 void CompositingPrefs::deleteGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if( mGLContext == NULL )
         return;
     glXDestroyContext( display(), mGLContext );
+    XDestroyWindow( display(), mGLWindow );
+#endif
+#endif
+}
+
+bool CompositingPrefs::initEGLContext()
+{
+#ifdef KWIN_HAVE_OPENGLES
+    mEGLDisplay = eglGetDisplay( display() );
+    if (mEGLDisplay == EGL_NO_DISPLAY) {
+        return false;
+    }
+    if (eglInitialize( mEGLDisplay, 0, 0 ) == EGL_FALSE) {
+        return false;
+    }
+    eglBindAPI( EGL_OPENGL_ES_API );
+
+    const EGLint config_attribs[] = {
+        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
+        EGL_RED_SIZE,             1,
+        EGL_GREEN_SIZE,           1,
+        EGL_BLUE_SIZE,            1,
+        EGL_ALPHA_SIZE,           0,
+        EGL_RENDERABLE_TYPE,      EGL_OPENGL_ES2_BIT,
+        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_NONE,
+    };
+
+    EGLint count;
+    EGLConfig configs[1024];
+    eglChooseConfig(mEGLDisplay, config_attribs, configs, 1024, &count);
+
+    EGLint visualId = XVisualIDFromVisual((Visual*)QX11Info::appVisual());
+
+    EGLConfig config = configs[0];
+    for (int i = 0; i < count; i++) {
+        EGLint val;
+        eglGetConfigAttrib(mEGLDisplay, configs[i], EGL_NATIVE_VISUAL_ID, &val);
+        if (visualId == val) {
+            config = configs[i];
+            break;
+        }
+    }
+
+    XSetWindowAttributes attr;
+    attr.background_pixel = 0;
+    attr.border_pixel = 0;
+    attr.colormap = XCreateColormap( display(), rootWindow(), (Visual*)QX11Info::appVisual(), AllocNone );
+    attr.event_mask = StructureNotifyMask | ExposureMask;
+    unsigned long mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
+    int width = 100, height = 100;
+    mGLWindow = XCreateWindow( display(), rootWindow(), 0, 0, width, height,
+                       0, QX11Info::appDepth(), InputOutput,
+                       (Visual*)QX11Info::appVisual(), mask, &attr );
+
+    mEGLSurface = eglCreateWindowSurface( mEGLDisplay, config, mGLWindow, 0 );
+
+    const EGLint context_attribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2,
+        EGL_NONE
+    };
+
+    mEGLContext = eglCreateContext( mEGLDisplay, config, EGL_NO_CONTEXT, context_attribs );
+    if (mEGLContext == EGL_NO_CONTEXT) {
+        return false;
+    }
+    if (eglMakeCurrent( mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext ) == EGL_FALSE) {
+        return false;
+    }
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS) {
+        return false;
+    }
+    return true;
+#else
+    return false;
+#endif
+}
+
+void CompositingPrefs::deleteEGLContext()
+{
+#ifdef KWIN_HAVE_OPENGLES
+    eglMakeCurrent(mEGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroyContext(mEGLDisplay, mEGLContext);
+    eglDestroySurface(mEGLDisplay, mEGLSurface);
+    eglTerminate(mEGLDisplay);
+    eglReleaseThread();
     XDestroyWindow( display(), mGLWindow );
 #endif
 }

@@ -30,10 +30,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "translucency/translucency_config.h"
 #include "presentwindows/presentwindows_config.h"
 #include "resize/resize_config.h"
-#include "shadow/shadow_config.h"
 #include "showfps/showfps_config.h"
 #include "thumbnailaside/thumbnailaside_config.h"
 #include "zoom/zoom_config.h"
+
+#ifndef KWIN_HAVE_OPENGLES
+#include "shadow/shadow_config.h"
+#endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "blur/blur_config.h"
@@ -44,12 +47,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glide/glide_config.h"
 #include "invert/invert_config.h"
 #include "lookingglass/lookingglass_config.h"
-#include "mousemark/mousemark_config.h"
 #include "magnifier/magnifier_config.h"
-#include "sharpen/sharpen_config.h"
-#include "snow/snow_config.h"
+#include "mousemark/mousemark_config.h"
 #include "trackmouse/trackmouse_config.h"
 #include "wobblywindows/wobblywindows_config.h"
+#ifndef KWIN_HAVE_OPENGLES
+#include "sharpen/sharpen_config.h"
+#include "snow/snow_config.h"
+#endif
 #endif
 
 #include <kwineffects.h>
@@ -65,13 +70,15 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( desktopgrid, DesktopGridEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( diminactive, DimInactiveEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( magiclamp, MagicLampEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( translucency, TranslucencyEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( presentwindows, PresentWindowsEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( resize, ResizeEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( shadow, ShadowEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( showfps, ShowFpsEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( translucency, TranslucencyEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( thumbnailaside, ThumbnailAsideEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( zoom, ZoomEffectConfig )
+#ifndef KWIN_HAVE_OPENGLES
+    KWIN_EFFECT_CONFIG_SINGLE( shadow, ShadowEffectConfig )
+#endif
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
@@ -82,12 +89,14 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( glide, GlideEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( lookingglass, LookingGlassEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( mousemark, MouseMarkEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( magnifier, MagnifierEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( mousemark, MouseMarkEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
+#ifndef KWIN_HAVE_OPENGLES
+    KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
+#endif
 #endif
     )
 

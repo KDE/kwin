@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
+#include <QMatrix4x4>
 #include "cube_inside.h"
 #include "cube_proxy.h"
 
@@ -53,7 +54,6 @@ class CubeEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
-        virtual void windowAdded( EffectWindow* );
 
         // proxy functions
         virtual void* proxy();
@@ -92,7 +92,7 @@ class CubeEffect
             };
         void toggle( CubeMode newMode = Cube );
         void paintCube( int mask, QRegion region, ScreenPaintData& data );
-        void paintCap();
+        void paintCap(bool frontFirst, float zOffset);
         void paintCubeCap();
         void paintCylinderCap();
         void paintSphereCap();
@@ -155,6 +155,8 @@ class CubeEffect
         bool useShaders;
         GLShader* cylinderShader;
         GLShader* sphereShader;
+        GLShader* m_reflectionShader;
+        GLShader* m_capShader;
         float capDeformationFactor;
         bool useZOrdering;
         float zOrderingFactor;
@@ -163,10 +165,10 @@ class CubeEffect
         float mAddedHeightCoeff1;
         float mAddedHeightCoeff2;
 
-        // GL lists
-        bool capListCreated;
-        bool recompileList;
-        GLuint glList;
+        QMatrix4x4 m_rotationMatrix;
+        QMatrix4x4 m_reflectionMatrix;
+        QMatrix4x4 m_textureMirrorMatrix;
+        GLVertexBuffer *m_cubeCapBuffer;
 
         // Shortcuts - needed to toggle the effect
         KShortcut cubeShortcut;

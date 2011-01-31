@@ -21,10 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QMatrix4x4>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>
 #include <kconfiggroup.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
 
 #include <kwinglutils.h>
 
@@ -32,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#include <GL/gl.h>
+#include <kwinglutils.h>
 #include "../boxswitch/boxswitch_proxy.h"
 
 namespace KWin
@@ -64,11 +67,15 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setPointSize( captionFont.pointSize() * 2 );
     captionFrame->setFont( captionFont );
     captionFrame->enableCrossFade( true );
+
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
+    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
     {
     delete captionFrame;
+    delete m_reflectionShader;
     }
 
 bool CoverSwitchEffect::supported()
@@ -127,13 +134,13 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
     if( mActivated || stop || stopRequested )
         {
+        QMatrix4x4 origProjection;
+        QMatrix4x4 origModelview;
+        ShaderManager *shaderManager = ShaderManager::instance();
         if( effects->numScreens() > 1 )
             {
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-            glMatrixMode( GL_PROJECTION );
-            glPushMatrix();
-            glLoadIdentity();
             float fovy = 60.0f;
             float aspect = 1.0f;
             float zNear = 0.1f;
@@ -176,10 +183,26 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 ymaxFactor = ((float)fullRect.height()-(float)area.height()*0.5f)/((float)fullRect.height()*0.5f);
                 yTranslate = (float)fullRect.height()*0.5f-(float)area.height()*0.5f;
                 }
-            glFrustum( xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar );
-            glMatrixMode( GL_MODELVIEW );
-            glPushMatrix();
-            glTranslatef( xTranslate, yTranslate, 0.0 );
+            QMatrix4x4 projection;
+            projection.frustum(xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar);
+            QMatrix4x4 modelview;
+            modelview.translate(xTranslate, yTranslate, 0.0);
+            if (shaderManager->isShaderBound()) {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                origProjection = shader->getUniformMatrix4x4("projection");
+                origModelview = shader->getUniformMatrix4x4("modelview");
+                shader->setUniform("projection", projection);
+                shader->setUniform("modelview", origModelview*modelview);
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glMatrixMode(GL_PROJECTION);
+                pushMatrix();
+                loadMatrix(projection);
+                glMatrixMode(GL_MODELVIEW);
+                pushMatrix(modelview);
+#endif
+            }
             }
     
         QList< EffectWindow* > tempList = currentWindowList;
@@ -250,35 +273,32 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             QRegion clip = QRegion( area );
             PaintClipper::push( clip );
             // no reflections during start and stop animation
-            if( !start && !stop )
+            // except when using a shader
+            if( (!start && !stop) || ShaderManager::instance()->isValid() )
                 paintScene( frontWindow, leftWindows, rightWindows, true );
             PaintClipper::pop( clip );
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
+#ifndef KWIN_HAVE_OPENGLES
             glPolygonMode( GL_FRONT, GL_FILL );
-            glPushMatrix();
+#endif
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float reflectionScaleFactor = 100000 * tan( 60.0 * M_PI / 360.0f )/area.width();
-            if( effects->numScreens() > 1 && area.x() != fullRect.x() )
-                {
-                // have to change the reflection area in horizontal layout and right screen
-                glTranslatef( -area.x(), 0.0, 0.0 );
-                }
-            glTranslatef( area.x() + area.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
                 -area.width()*0.5f, area.height(), 0.0,
                 area.width()*0.5f, area.height(), 0.0,
                 (float)area.width()*reflectionScaleFactor, area.height(), -5000,
                 -(float)area.width()*reflectionScaleFactor, area.height(), -5000 };
             // foreground
-            if( start )
+            if (start) {
                 mirrorColor[0][3] = timeLine.value();
-            else if( stop )
+            } else if (stop) {
                 mirrorColor[0][3] = 1.0 - timeLine.value();
-            glColor4fv( mirrorColor[0] );
-            mirrorColor[0][3] = 1.0;
+            } else {
+                mirrorColor[0][3] = 1.0;
+            }
 
             int y = 0;
             // have to adjust the y values to fit OpenGL
@@ -297,28 +317,80 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             // use scissor to restrict painting of the reflection plane to current screen
             glScissor( area.x(), y, area.width(), area.height() );
             glEnable( GL_SCISSOR_TEST );
-            glBegin( GL_POLYGON );
-            glVertex3f( vertices[0], vertices[1], vertices[2] );
-            glVertex3f( vertices[3], vertices[4], vertices[5] );
-            // rearground
-            glColor4fv( mirrorColor[1] );
-            glVertex3f( vertices[6], vertices[7], vertices[8] );
-            glVertex3f( vertices[9], vertices[10], vertices[11] );
-            glEnd();
-            glDisable( GL_SCISSOR_TEST );
 
-            glPopMatrix();
+            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+                shaderManager->pushShader(m_reflectionShader);
+                QMatrix4x4 windowTransformation;
+                windowTransformation.translate(area.x() + area.width()*0.5f, 0.0, 0.0);
+                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform("u_frontColor", QVector4D(mirrorColor[0][0], mirrorColor[0][1], mirrorColor[0][2], mirrorColor[0][3]));
+                m_reflectionShader->setUniform("u_backColor", QVector4D(mirrorColor[1][0], mirrorColor[1][1], mirrorColor[1][2], mirrorColor[1][3]));
+                // TODO: make this one properly
+                QVector<float> verts;
+                QVector<float> texcoords;
+                verts.reserve(18);
+                texcoords.reserve(12);
+                texcoords << 1.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[9] << vertices[10] << vertices[11];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[0] << vertices[1] << vertices[2];
+                texcoords << 0.0 << 0.0;
+                verts << vertices[3] << vertices[4] << vertices[5];
+                texcoords << 1.0 << 0.0;
+                verts << vertices[6] << vertices[7] << vertices[8];
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setData(6, 3, verts.data(), texcoords.data());
+                vbo->render(GL_TRIANGLES);
+
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                glPushMatrix();
+                if( effects->numScreens() > 1 && area.x() != fullRect.x() )
+                    {
+                    // have to change the reflection area in horizontal layout and right screen
+                    glTranslatef( -area.x(), 0.0, 0.0 );
+                    }
+                glTranslatef( area.x() + area.width()*0.5f, 0.0, 0.0 );
+                glColor4fv( mirrorColor[0] );
+                glBegin( GL_POLYGON );
+                glVertex3f( vertices[0], vertices[1], vertices[2] );
+                glVertex3f( vertices[3], vertices[4], vertices[5] );
+                // rearground
+                glColor4fv( mirrorColor[1] );
+                glVertex3f( vertices[6], vertices[7], vertices[8] );
+                glVertex3f( vertices[9], vertices[10], vertices[11] );
+                glEnd();
+
+                glPopMatrix();
+#endif
+            }
+            glDisable( GL_SCISSOR_TEST );
             glDisable( GL_BLEND );
             }
         paintScene( frontWindow, leftWindows, rightWindows );
 
         if( effects->numScreens() > 1 )
             {
-            glPopMatrix();
-            // revert change of projection matrix
-            glMatrixMode( GL_PROJECTION );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
+            if (shaderManager->isShaderBound())  {
+                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+                shader->setUniform("projection", origProjection);
+                shader->setUniform("modelview", origModelview);
+                shaderManager->popShader();
+            } else {
+#ifndef KWIN_HAVE_OPENGLES
+                popMatrix();
+                // revert change of projection matrix
+                glMatrixMode(GL_PROJECTION);
+                popMatrix();
+                glMatrixMode(GL_MODELVIEW);
+#endif
+            }
             }
 
         // Render the caption frame
@@ -764,13 +836,34 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, bool reflectedWindow,
 
     if( reflectedWindow )
         {
-        glPushMatrix();
-        glScalef( 1.0, -1.0, 1.0 );
-        data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
-        effects->paintWindow( w,
-            PAINT_WINDOW_TRANSFORMED,
-            infiniteRegion(), data );
-        glPopMatrix();
+        if (ShaderManager::instance()->isValid()) {
+            GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+            QMatrix4x4 origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+            QMatrix4x4 reflectionMatrix;
+            reflectionMatrix.scale(1.0, -1.0, 1.0);
+            shader->setUniform("screenTransformation", origMatrix*reflectionMatrix);
+            data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
+            if (start) {
+                data.opacity *= timeLine.value();
+            } else if (stop) {
+                data.opacity *= 1.0 - timeLine.value();
+            }
+            effects->paintWindow( w,
+                PAINT_WINDOW_TRANSFORMED,
+                infiniteRegion(), data );
+            shader->setUniform("screenTransformation", origMatrix);
+            ShaderManager::instance()->popShader();
+        } else {
+#ifndef KWIN_HAVE_OPENGLES
+            glPushMatrix();
+            glScalef( 1.0, -1.0, 1.0 );
+            data.yTranslate = - area.height() - windowRect.y() - windowRect.height();
+            effects->paintWindow( w,
+                PAINT_WINDOW_TRANSFORMED,
+                infiniteRegion(), data );
+            glPopMatrix();
+#endif
+        }
         }
     else
         {

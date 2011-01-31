@@ -56,6 +56,8 @@ protected:
 
     bool initGLXContext();
     void deleteGLXContext();
+    bool initEGLContext();
+    void deleteEGLContext();
 
 
 private:
@@ -67,7 +69,13 @@ private:
     bool mStrictBinding;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGLES
+    EGLDisplay mEGLDisplay;
+    EGLContext mEGLContext;
+    EGLSurface mEGLSurface;
+#else
     GLXContext mGLContext;
+#endif
     Window mGLWindow;
 #endif
 };

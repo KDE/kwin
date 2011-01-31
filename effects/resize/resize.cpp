@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "resize.h"
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include <GL/gl.h>
+#include <kwinglutils.h>
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
@@ -85,23 +85,40 @@ void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
             QColor color = KColorScheme( QPalette::Normal, KColorScheme::Selection ).background().color();
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-            if( effects->compositingType() == OpenGLCompositing)
-                {
+            if (effects->compositingType() == OpenGLCompositing) {
+#ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+#endif
+                GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+                vbo->reset();
+                vbo->setUseColor(true);
+                if (ShaderManager::instance()->isValid()) {
+                    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+                }
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-                glColor4f( color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f, alpha );
-                glBegin( GL_QUADS );
-                foreach( const QRect &r, paintRegion.rects() )
-                    {
-                    glVertex2i( r.x(), r.y() );
-                    glVertex2i( r.x() + r.width(), r.y() );
-                    glVertex2i( r.x() + r.width(), r.y() + r.height() );
-                    glVertex2i( r.x(), r.y() + r.height() );
-                    }
-                glEnd();
-                glPopAttrib();
+                color.setAlphaF(alpha);
+                vbo->setColor(color);
+                QVector<float> verts;
+                verts.reserve(paintRegion.rects().count()*12);
+                foreach( const QRect &r, paintRegion.rects() ) {
+                    verts << r.x() + r.width() << r.y();
+                    verts << r.x() << r.y();
+                    verts << r.x() << r.y() + r.height();
+                    verts << r.x() << r.y() + r.height();
+                    verts << r.x() + r.width() << r.y() + r.height();
+                    verts << r.x() + r.width() << r.y();
                 }
+                vbo->setData(verts.count()/2, 2, verts.data(), NULL);
+                vbo->render(GL_TRIANGLES);
+                if (ShaderManager::instance()->isValid()) {
+                    ShaderManager::instance()->popShader();
+                }
+                glDisable(GL_BLEND);
+#ifndef KWIN_HAVE_OPENGLES
+                glPopAttrib();
+#endif
+            }
 #endif
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

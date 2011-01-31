@@ -22,6 +22,8 @@
 
 #include <kwinglutils.h>
 
+class QMatrix4x4;
+
 namespace KWin
 {
 
@@ -45,6 +47,7 @@ public:
 
     // Sets the distance between two pixels
     virtual void setPixelDistance(float val) = 0;
+    virtual void setTextureMatrix(const QMatrix4x4 &matrix) = 0;
 
     virtual void bind() = 0;
     virtual void unbind() = 0;
@@ -77,6 +80,7 @@ public:
     void setPixelDistance(float val);
     void bind();
     void unbind();
+    void setTextureMatrix(const QMatrix4x4 &matrix);
 
     static bool supported();
 
@@ -85,13 +89,8 @@ protected:
     void reset();
     int maxKernelSize() const;
 
-    GLuint compile(GLenum type, const QByteArray &source);
-    GLuint link(GLuint vertexShader, GLuint fragmentShader);
-
 private:
-    GLuint program;
-    int uTexUnit;
-    int uPixelSize;
+    GLShader *shader;
 };
 
 
@@ -109,6 +108,7 @@ public:
     void setPixelDistance(float val);
     void bind();
     void unbind();
+    void setTextureMatrix(const QMatrix4x4 &) {};
 
     static bool supported();
 

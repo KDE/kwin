@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_OPENGL
 
+#ifndef KWIN_HAVE_OPENGLES
+
 // gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
 // so hide possible global functions
 #define glXQueryDrawable kwinhide_glXQueryDrawable
@@ -274,15 +276,22 @@ typedef GLvoid (*glGetProgramInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
 typedef GLvoid (*glGetProgramiv_func)(GLuint, GLenum, GLint*);
 typedef GLvoid (*glGetShaderiv_func)(GLuint, GLenum, GLint*);
 typedef GLvoid (*glUniform1f_func)(GLint, GLfloat);
+typedef GLvoid (*glUniform2f_func)(GLint, GLfloat, GLfloat);
+typedef GLvoid (*glUniform3f_func)(GLint, GLfloat, GLfloat, GLfloat);
+typedef GLvoid (*glUniform4f_func)(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+typedef GLvoid (*glUniformf_func)(GLint, GLfloat);
 typedef GLvoid (*glUniform1i_func)(GLint, GLint);
 typedef GLvoid (*glUniform1fv_func)(GLint, GLsizei, const GLfloat*);
 typedef GLvoid (*glUniform2fv_func)(GLint, GLsizei, const GLfloat*);
 typedef GLvoid (*glUniform3fv_func)(GLint, GLsizei, const GLfloat*);
 typedef GLvoid (*glUniform4fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid (*glUniformMatrix4fv_func)(GLint, GLsizei, GLboolean, const GLfloat*);
+typedef GLvoid (*glGetUniformfv_func)(GLuint, GLint, GLfloat*);
 typedef GLvoid (*glValidateProgram_func)(GLuint);
 typedef GLint (*glGetUniformLocation_func)(GLuint, const GLchar*);
 typedef GLvoid (*glVertexAttrib1f_func)(GLuint, GLfloat);
 typedef GLint (*glGetAttribLocation_func)(GLuint, const GLchar*);
+typedef GLvoid (*glBindAttribLocation_func)(GLuint, GLuint, const GLchar*);
 typedef void (*glGenProgramsARB_func)(GLsizei, GLuint*);
 typedef void (*glBindProgramARB_func)(GLenum, GLuint);
 typedef void (*glProgramStringARB_func)(GLenum, GLenum, GLsizei, const GLvoid*);
@@ -303,15 +312,21 @@ extern KWIN_EXPORT glGetProgramInfoLog_func glGetProgramInfoLog;
 extern KWIN_EXPORT glGetProgramiv_func glGetProgramiv;
 extern KWIN_EXPORT glGetShaderiv_func glGetShaderiv;
 extern KWIN_EXPORT glUniform1f_func glUniform1f;
+extern KWIN_EXPORT glUniform2f_func glUniform2f;
+extern KWIN_EXPORT glUniform3f_func glUniform3f;
+extern KWIN_EXPORT glUniform4f_func glUniform4f;
 extern KWIN_EXPORT glUniform1i_func glUniform1i;
 extern KWIN_EXPORT glUniform1fv_func glUniform1fv;
 extern KWIN_EXPORT glUniform2fv_func glUniform2fv;
 extern KWIN_EXPORT glUniform3fv_func glUniform3fv;
 extern KWIN_EXPORT glUniform4fv_func glUniform4fv;
+extern KWIN_EXPORT glGetUniformfv_func glGetUniformfv;
+extern KWIN_EXPORT glUniformMatrix4fv_func glUniformMatrix4fv;
 extern KWIN_EXPORT glValidateProgram_func glValidateProgram;
 extern KWIN_EXPORT glGetUniformLocation_func glGetUniformLocation;
 extern KWIN_EXPORT glVertexAttrib1f_func glVertexAttrib1f;
 extern KWIN_EXPORT glGetAttribLocation_func glGetAttribLocation;
+extern KWIN_EXPORT glBindAttribLocation_func glBindAttribLocation;
 extern KWIN_EXPORT glGenProgramsARB_func glGenProgramsARB;
 extern KWIN_EXPORT glBindProgramARB_func glBindProgramARB;
 extern KWIN_EXPORT glProgramStringARB_func glProgramStringARB;
@@ -327,8 +342,42 @@ typedef void (*glBindBuffer_func)(GLenum, GLuint);
 extern KWIN_EXPORT glBindBuffer_func glBindBuffer;
 typedef void (*glBufferData_func)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
 extern KWIN_EXPORT glBufferData_func glBufferData;
+typedef void (*glEnableVertexAttribArray_func)(GLuint);
+extern KWIN_EXPORT glEnableVertexAttribArray_func glEnableVertexAttribArray;
+typedef void (*glDisableVertexAttribArray_func)(GLuint);
+extern KWIN_EXPORT glDisableVertexAttribArray_func glDisableVertexAttribArray;
+typedef void (*glVertexAttribPointer_func)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
+extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 
 } // namespace
+
+#else
+#define EGL_EGLEXT_PROTOTYPES
+#define GL_GLEXT_PROTOTYPES
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <fixx11h.h>
+
+namespace KWin
+{
+
+void KWIN_EXPORT eglResolveFunctions();
+void KWIN_EXPORT glResolveFunctions();
+// EGL
+typedef EGLImageKHR (*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
+typedef EGLBoolean (*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
+extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
+extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
+
+// GLES
+typedef GLvoid (*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
+extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+
+} // namespace
+
+#endif
 
 #endif
 

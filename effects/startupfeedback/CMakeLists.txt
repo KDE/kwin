@@ -11,5 +11,10 @@ install( FILES
     startupfeedback/startupfeedback.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
+# Data files
+install( FILES
+    startupfeedback/data/blinking-startup-fragment.glsl
+    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+
 #######################################
 # Config
