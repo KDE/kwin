@@ -130,11 +130,6 @@ unsigned long Options::updateSettings()
     else if ( val == "FocusStrictlyUnderMouse" )
         focusPolicy = FocusStrictlyUnderMouse;
 
-    val = config.readEntry ("AltTabStyle", "KDE");
-    altTabStyle = KDE; // what a default :-)
-    if ( val == "CDE" )
-        altTabStyle = CDE;
-
     separateScreenFocus = config.readEntry( "SeparateScreenFocus", false );
     activeMouseScreen = config.readEntry( "ActiveMouseScreen", focusPolicy != ClickToFocus );
 
@@ -311,13 +306,6 @@ void Options::reloadCompositingSettings()
     else
         compositingMode = OpenGLCompositing;
     disableCompositingChecks = config.readEntry("DisableChecks", false);
-    QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
-    if( glmode == "TFP" )
-        glMode = GLTFP;
-    else if( glmode == "SHM" )
-        glMode = GLSHM;
-    else
-        glMode = GLFallback;
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering() );
     glVSync = config.readEntry("GLVSync", prefs.enableVSync() );
     glSmoothScale = qBound( -1, config.readEntry( "GLTextureFilter", 2 ), 2 );

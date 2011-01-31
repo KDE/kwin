@@ -698,9 +698,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void slotKillWindow();
 
-        void slotGrabWindow();
-        void slotGrabDesktop();
-
         void slotSetupWindowShortcut();
         void setupWindowShortcutDone( bool );
         void slotToggleCompositing();

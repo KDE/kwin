@@ -57,8 +57,6 @@ class SceneOpenGL
     private:
         bool selectMode();
         bool initTfp();
-        bool initShm();
-        void cleanupShm();
         bool initBuffer();
         bool initRenderingContext();
         bool initBufferConfigs();
@@ -94,12 +92,7 @@ class SceneOpenGL
         static GLXContext ctxdrawable;
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
 #endif
-        static bool tfp_mode;
-        static bool shm_mode;
         QHash< Toplevel*, Window* > windows;
-#ifdef HAVE_XSHM
-        static XShmSegmentInfo shm;
-#endif
         bool init_ok;
         bool selfCheckDone;
         bool debug;

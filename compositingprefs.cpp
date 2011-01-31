@@ -36,8 +36,7 @@ namespace KWin
 {
 
 CompositingPrefs::CompositingPrefs()
-    : mXgl( false )
-    , mRecommendCompositing( false )
+    : mRecommendCompositing( false )
     , mEnableVSync( true )
     , mEnableDirectRendering( true )
     , mStrictBinding( true )
@@ -348,11 +347,6 @@ void CompositingPrefs::detectDriverAndVersion()
     GLPlatform *gl = GLPlatform::instance();
     gl->detect();
     gl->printResults();
-
-    mXgl = detectXgl();
-
-    if( mXgl )
-        kWarning( 1212 ) << "Using XGL";
 #endif
     }
 
@@ -368,12 +362,6 @@ void CompositingPrefs::applyDriverSpecificOptions()
     if ( gl->driver() == Driver_Intel )
         mEnableVSync = false;
 #endif
-    }
-
-
-bool CompositingPrefs::detectXgl()
-    { // Xgl apparently uses only this specific X version
-    return VendorRelease(display()) == 70000001;
     }
 
 } // namespace

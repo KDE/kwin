@@ -108,7 +108,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectWinManagement, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(ui.effectShadows, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectAnimations, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     connect(ui.effectSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
@@ -127,7 +126,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.glScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.xrScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     
-    connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.compositingStateButton, SIGNAL(clicked(bool)), kwinInterface, SLOT(toggleCompositing()));
@@ -344,7 +342,6 @@ void KWinCompositingConfig::loadGeneralTab()
         }
     else
         ui.effectWinManagement->setChecked(winManagementEnabled);
-    ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
 #undef LOAD_EFFECT_CONFIG
 
@@ -461,8 +458,6 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
     ui.glScaleFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 2));
     
-    QString glMode = config.readEntry("GLMode", "TFP");
-    ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
     ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering()));
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
 
@@ -512,7 +507,6 @@ void KWinCompositingConfig::saveGeneralTab()
         WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
         }
-    WRITE_EFFECT_CONFIG("shadow", ui.effectShadows);
     // TODO: maybe also do some effect-specific configuration here, e.g.
     //  enable/disable desktopgrid's animation according to this setting
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
@@ -603,11 +597,9 @@ bool KWinCompositingConfig::saveAdvancedTab()
     static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
 
     KConfigGroup config(mKWinConfig, "Compositing");
-    QString glModes[] = { "TFP", "SHM", "Fallback" };
 
     if( config.readEntry("Backend", "OpenGL")
             != ((ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender")
-        || config.readEntry("GLMode", "TFP") != glModes[ui.glMode->currentIndex()]
         || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
             != ui.glDirect->isChecked()
         || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
@@ -629,7 +621,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("XRenderSmoothScale", ui.xrScaleFilter->currentIndex() == 1);
     config.writeEntry("GLTextureFilter", ui.glScaleFilter->currentIndex());
 
-    config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
     config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
 
@@ -759,7 +750,6 @@ void KWinCompositingConfig::defaults()
 
     ui.useCompositing->setChecked(mDefaultPrefs.recommendCompositing());
     ui.effectWinManagement->setChecked(true);
-    ui.effectShadows->setChecked(true);
     ui.effectAnimations->setChecked(true);
 
     ui.windowSwitchingCombo->setCurrentIndex( 1 );
@@ -774,7 +764,6 @@ void KWinCompositingConfig::defaults()
     ui.unredirectFullscreen->setChecked( true );
     ui.xrScaleFilter->setCurrentIndex( 0 );
     ui.glScaleFilter->setCurrentIndex( 2 );
-    ui.glMode->setCurrentIndex( 0 );
     ui.glDirect->setChecked( mDefaultPrefs.enableDirectRendering() );
     ui.glVSync->setChecked( mDefaultPrefs.enableVSync() );
     }

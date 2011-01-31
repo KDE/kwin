@@ -84,7 +84,6 @@ include( zoom/CMakeLists.txt )
 
 if( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 include( logout/CMakeLists.txt )
-include( shadow/CMakeLists.txt )
 endif( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 # OpenGL-specific effects
@@ -106,10 +105,6 @@ if( KWIN_HAVE_OPENGL_COMPOSITING )
     include( trackmouse/CMakeLists.txt )
     include( wobblywindows/CMakeLists.txt )
 endif( KWIN_HAVE_OPENGL_COMPOSITING )
-if( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
-    include( sharpen/CMakeLists.txt )
-    include( snow/CMakeLists.txt )
-endif( KWIN_HAVE_OPENGL_COMPOSITING AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
 
 ###############################################################################
 
