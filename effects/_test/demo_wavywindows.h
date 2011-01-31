@@ -32,18 +32,18 @@ namespace KWin
  **/
 class WavyWindowsEffect
     : public Effect
-    {
-    public:
-        WavyWindowsEffect();
+{
+public:
+    WavyWindowsEffect();
 
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintScreen();
 
-    private:
-        double mTimeElapsed;
-    };
+private:
+    double mTimeElapsed;
+};
 
 } // namespace
 

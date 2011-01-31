@@ -18,17 +18,17 @@ namespace KWin
 
 class FlameEffect
     : public Effect
-    {
-    public:
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
-    private:
-        QHash< const EffectWindow*, double > windows;
-    };
+{
+public:
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowDeleted(EffectWindow* c);
+private:
+    QHash< const EffectWindow*, double > windows;
+};
 
 } // namespace
 

@@ -29,15 +29,15 @@ namespace KWin
 class DecorationDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    public:
-        DecorationDelegate( QObject* parent = 0 );
-        ~DecorationDelegate();
+public:
+    DecorationDelegate(QObject* parent = 0);
+    ~DecorationDelegate();
 
-        virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-        virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
-    signals:
-        void regeneratePreview( const QModelIndex& index, const QSize& size ) const;
+signals:
+    void regeneratePreview(const QModelIndex& index, const QSize& size) const;
 };
 
 } // namespace KWin

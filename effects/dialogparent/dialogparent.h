@@ -36,25 +36,25 @@ namespace KWin
  **/
 class DialogParentEffect
     : public Effect
-    {
-    public:
-        DialogParentEffect();
-        virtual void reconfigure( ReconfigureFlags );
+{
+public:
+    DialogParentEffect();
+    virtual void reconfigure(ReconfigureFlags);
 
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
 
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowActivated( EffectWindow* c );
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowActivated(EffectWindow* c);
 
-    protected:
-        bool hasModalWindow( EffectWindow* t );
-    private:
-        // The progress of the fading.
-        QHash<EffectWindow*, double> effectStrength;
-        double changeTime;
-    };
+protected:
+    bool hasModalWindow(EffectWindow* t);
+private:
+    // The progress of the fading.
+    QHash<EffectWindow*, double> effectStrength;
+    double changeTime;
+};
 
 } // namespace
 

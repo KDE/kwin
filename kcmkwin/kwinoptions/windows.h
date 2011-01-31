@@ -67,180 +67,186 @@ class KIntNumInput;
 
 class KFocusConfig : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KFocusConfig( bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent );
-  ~KFocusConfig();
+    KFocusConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent);
+    ~KFocusConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
-  void showEvent( QShowEvent *ev );
+    void showEvent(QShowEvent *ev);
 
 private slots:
-  void setDelayFocusEnabled();
-  void focusPolicyChanged();
-  void autoRaiseOnTog(bool);//CT 23Oct1998
-  void delayFocusOnTog(bool);
-  void clickRaiseOnTog(bool);
-  void updateActiveMouseScreen();
-	void changed() { emit KCModule::changed(true); }
+    void setDelayFocusEnabled();
+    void focusPolicyChanged();
+    void autoRaiseOnTog(bool);//CT 23Oct1998
+    void delayFocusOnTog(bool);
+    void clickRaiseOnTog(bool);
+    void updateActiveMouseScreen();
+    void changed() {
+        emit KCModule::changed(true);
+    }
 
 
 private:
 
-  int getFocus( void );
-  int getAutoRaiseInterval( void );
-  int getDelayFocusInterval( void );
+    int getFocus(void);
+    int getAutoRaiseInterval(void);
+    int getDelayFocusInterval(void);
 
-  void setFocus(int);
-  void setAutoRaiseInterval(int);
-  void setAutoRaise(bool);
-  void setDelayFocusInterval(int);
-  void setDelayFocus(bool);
-  void setClickRaise(bool);
-  void setSeparateScreenFocus(bool);
-  void setActiveMouseScreen(bool);
+    void setFocus(int);
+    void setAutoRaiseInterval(int);
+    void setAutoRaise(bool);
+    void setDelayFocusInterval(int);
+    void setDelayFocus(bool);
+    void setClickRaise(bool);
+    void setSeparateScreenFocus(bool);
+    void setActiveMouseScreen(bool);
 
-  void setFocusStealing( int );
-  KComboBox* focusStealing;
+    void setFocusStealing(int);
+    KComboBox* focusStealing;
 
-  //QGroupBox *fcsBox;
-  QWidget* fcsBox;
-  KComboBox *focusCombo;
-  QLabel *autoRaiseOnLabel;
-  QCheckBox *autoRaiseOn;
-  QLabel *delayFocusOnLabel;
-  QCheckBox *delayFocusOn;
-  QCheckBox *clickRaiseOn;
-  KIntNumInput *autoRaise;
-  KIntNumInput *delayFocus;
-  QCheckBox *separateScreenFocus;
-  QCheckBox *activeMouseScreen;
+    //QGroupBox *fcsBox;
+    QWidget* fcsBox;
+    KComboBox *focusCombo;
+    QLabel *autoRaiseOnLabel;
+    QCheckBox *autoRaiseOn;
+    QLabel *delayFocusOnLabel;
+    QCheckBox *delayFocusOn;
+    QCheckBox *clickRaiseOn;
+    KIntNumInput *autoRaise;
+    KIntNumInput *delayFocus;
+    QCheckBox *separateScreenFocus;
+    QCheckBox *activeMouseScreen;
 
-  KConfig *config;
-  bool     standAlone;
+    KConfig *config;
+    bool     standAlone;
 };
 
 class KMovingConfig : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KMovingConfig( bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent );
-  ~KMovingConfig();
+    KMovingConfig(bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent);
+    ~KMovingConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
-  void showEvent( QShowEvent *ev );
+    void showEvent(QShowEvent *ev);
 
 private slots:
-  void changed() { emit KCModule::changed(true); }
-  void slotBrdrSnapChanged( int );
-  void slotWndwSnapChanged( int );
-  void slotCntrSnapChanged( int );
+    void changed() {
+        emit KCModule::changed(true);
+    }
+    void slotBrdrSnapChanged(int);
+    void slotWndwSnapChanged(int);
+    void slotCntrSnapChanged(int);
 
 private:
-  int getMove( void );
-  int getResizeOpaque ( void );
-  bool getGeometryTip( void ); //KS
+    int getMove(void);
+    int getResizeOpaque(void);
+    bool getGeometryTip(void);   //KS
 
-  void setMove(int);
-  void setResizeOpaque(int);
-  void setGeometryTip(bool); //KS
-  void setMoveResizeMaximized(bool);
+    void setMove(int);
+    void setResizeOpaque(int);
+    void setGeometryTip(bool); //KS
+    void setMoveResizeMaximized(bool);
 
-  KButtonGroup *windowsBox;
-  QCheckBox *opaque;
-  QCheckBox *resizeOpaqueOn;
-  QCheckBox *geometryTipOn;
-  QCheckBox *moveResizeMaximized;
+    KButtonGroup *windowsBox;
+    QCheckBox *opaque;
+    QCheckBox *resizeOpaqueOn;
+    QCheckBox *geometryTipOn;
+    QCheckBox *moveResizeMaximized;
 
-  KConfig *config;
-  bool     standAlone;
+    KConfig *config;
+    bool     standAlone;
 
-  int getBorderSnapZone();
-  void setBorderSnapZone( int );
-  int getWindowSnapZone();
-  void setWindowSnapZone( int );
-  int getCenterSnapZone();
-  void setCenterSnapZone( int );
+    int getBorderSnapZone();
+    void setBorderSnapZone(int);
+    int getWindowSnapZone();
+    void setWindowSnapZone(int);
+    int getCenterSnapZone();
+    void setCenterSnapZone(int);
 
-  KButtonGroup *MagicBox;
-  QLabel *BrdrSnapLabel, *WndwSnapLabel, *CntrSnapLabel;
-  KIntNumInput *BrdrSnap, *WndwSnap, *CntrSnap;
-  QCheckBox *OverlapSnap;
+    KButtonGroup *MagicBox;
+    QLabel *BrdrSnapLabel, *WndwSnapLabel, *CntrSnapLabel;
+    KIntNumInput *BrdrSnap, *WndwSnap, *CntrSnap;
+    QCheckBox *OverlapSnap;
 
 };
 
 class KAdvancedConfig : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KAdvancedConfig( bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent );
-  ~KAdvancedConfig();
+    KAdvancedConfig(bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent);
+    ~KAdvancedConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
-  void showEvent( QShowEvent *ev );
+    void showEvent(QShowEvent *ev);
 
 private slots:
-  void shadeHoverChanged(bool);
+    void shadeHoverChanged(bool);
 
-  void changed() { emit KCModule::changed(true); }
+    void changed() {
+        emit KCModule::changed(true);
+    }
 
-  void tilingOnChanged( bool a );
+    void tilingOnChanged(bool a);
 private:
 
-  int getShadeHoverInterval (void );
-  void setShadeHover(bool);
-  void setShadeHoverInterval(int);
+    int getShadeHoverInterval(void);
+    void setShadeHover(bool);
+    void setShadeHoverInterval(int);
 
-  KButtonGroup *shBox;
-  KButtonGroup *wtBox;
-  QCheckBox *shadeHoverOn;
-  QLabel *shadeHoverLabel;
-  KIntNumInput *shadeHover;
+    KButtonGroup *shBox;
+    KButtonGroup *wtBox;
+    QCheckBox *shadeHoverOn;
+    QLabel *shadeHoverLabel;
+    KIntNumInput *shadeHover;
 
-  KConfig *config;
-  bool     standAlone;
+    KConfig *config;
+    bool     standAlone;
 
-  void setHideUtilityWindowsForInactive( bool );
-  QCheckBox* hideUtilityWindowsForInactive;
+    void setHideUtilityWindowsForInactive(bool);
+    QCheckBox* hideUtilityWindowsForInactive;
 
-  void setInactiveTabsSkipTaskbar( bool );
-  QCheckBox* inactiveTabsSkipTaskbar;
+    void setInactiveTabsSkipTaskbar(bool);
+    QCheckBox* inactiveTabsSkipTaskbar;
 
-  void setAutogroupSimilarWindows( bool );
-  QCheckBox* autogroupSimilarWindows;
+    void setAutogroupSimilarWindows(bool);
+    QCheckBox* autogroupSimilarWindows;
 
-  void setAutogroupInForeground( bool );
-  QCheckBox* autogroupInForeground;
+    void setAutogroupInForeground(bool);
+    QCheckBox* autogroupInForeground;
 
-  int getPlacement( void ); //CT
-  void setPlacement(int); //CT
+    int getPlacement(void);   //CT
+    void setPlacement(int); //CT
 
-  KComboBox *placementCombo;
+    KComboBox *placementCombo;
 
-  // ------------------------------
-  // Tiling related widgets/methods
-  // ------------------------------
-  KButtonGroup *tilBox;
-  QCheckBox *tilingOn;
-  QLabel *tilingLayoutLabel;
-  QLabel *tilingRaiseLabel;
-  KComboBox *tilingLayoutCombo;
-  KComboBox *tilingRaiseCombo;
-  void setTilingOn( bool );
-  void setTilingLayout( int );
-  void setTilingRaisePolicy( int );
+    // ------------------------------
+    // Tiling related widgets/methods
+    // ------------------------------
+    KButtonGroup *tilBox;
+    QCheckBox *tilingOn;
+    QLabel *tilingLayoutLabel;
+    QLabel *tilingRaiseLabel;
+    KComboBox *tilingLayoutCombo;
+    KComboBox *tilingRaiseCombo;
+    void setTilingOn(bool);
+    void setTilingLayout(int);
+    void setTilingRaisePolicy(int);
 };
 
 #endif // KKWMWINDOWS_H

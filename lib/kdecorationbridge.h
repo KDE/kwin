@@ -41,75 +41,75 @@ DEALINGS IN THE SOFTWARE.
 // Extending should be done the same way, i.e. inheriting KDecorationBridge2 from it
 // and adding new functionality there.
 class KDecorationBridge : public KDecorationDefines
-    {
-    public:
-        virtual ~KDecorationBridge(){}
-        virtual bool isActive() const = 0;
-        virtual bool isCloseable() const = 0;
-        virtual bool isMaximizable() const = 0;
-        virtual MaximizeMode maximizeMode() const = 0;
-        virtual bool isMinimizable() const = 0;
-        virtual bool providesContextHelp() const = 0;
-        virtual int desktop() const = 0;
-        virtual bool isModal() const = 0;
-        virtual bool isShadeable() const = 0;
-        virtual bool isShade() const = 0;
-        virtual bool isSetShade() const = 0;
-        virtual bool keepAbove() const = 0;
-        virtual bool keepBelow() const = 0;
-        virtual bool isMovable() const = 0;
-        virtual bool isResizable() const = 0;
-        virtual NET::WindowType windowType( unsigned long supported_types ) const = 0;
-        virtual QIcon icon() const = 0;
-        virtual QString caption() const = 0;
-        virtual void processMousePressEvent( QMouseEvent* ) = 0;
-        virtual void showWindowMenu( const QRect &) = 0;
-        virtual void showWindowMenu( const QPoint & ) = 0;
-        virtual void performWindowOperation( WindowOperation ) = 0;
-        virtual void setMask( const QRegion&, int ) = 0;
-        virtual bool isPreview() const = 0;
-        virtual QRect geometry() const = 0;
-        virtual QRect iconGeometry() const = 0;
-        virtual QRegion unobscuredRegion( const QRegion& r ) const = 0;
-        virtual WId windowId() const = 0;
-        virtual void closeWindow() = 0;
-        virtual void maximize( MaximizeMode mode ) = 0;
-        virtual void minimize() = 0;
-        virtual void showContextHelp() = 0;
-        virtual void setDesktop( int desktop ) = 0;
-        virtual void titlebarDblClickOperation() = 0;
-        virtual void titlebarMouseWheelOperation( int delta ) = 0;
-        virtual void setShade( bool set ) = 0;
-        virtual void setKeepAbove( bool ) = 0;
-        virtual void setKeepBelow( bool ) = 0;
-        // not part of public API
-        virtual int currentDesktop() const = 0;
-        virtual QWidget* initialParentWidget() const = 0;
-        virtual Qt::WFlags initialWFlags() const = 0;
-        virtual void grabXServer( bool grab ) = 0;
-    };
+{
+public:
+    virtual ~KDecorationBridge() {}
+    virtual bool isActive() const = 0;
+    virtual bool isCloseable() const = 0;
+    virtual bool isMaximizable() const = 0;
+    virtual MaximizeMode maximizeMode() const = 0;
+    virtual bool isMinimizable() const = 0;
+    virtual bool providesContextHelp() const = 0;
+    virtual int desktop() const = 0;
+    virtual bool isModal() const = 0;
+    virtual bool isShadeable() const = 0;
+    virtual bool isShade() const = 0;
+    virtual bool isSetShade() const = 0;
+    virtual bool keepAbove() const = 0;
+    virtual bool keepBelow() const = 0;
+    virtual bool isMovable() const = 0;
+    virtual bool isResizable() const = 0;
+    virtual NET::WindowType windowType(unsigned long supported_types) const = 0;
+    virtual QIcon icon() const = 0;
+    virtual QString caption() const = 0;
+    virtual void processMousePressEvent(QMouseEvent*) = 0;
+    virtual void showWindowMenu(const QRect &) = 0;
+    virtual void showWindowMenu(const QPoint &) = 0;
+    virtual void performWindowOperation(WindowOperation) = 0;
+    virtual void setMask(const QRegion&, int) = 0;
+    virtual bool isPreview() const = 0;
+    virtual QRect geometry() const = 0;
+    virtual QRect iconGeometry() const = 0;
+    virtual QRegion unobscuredRegion(const QRegion& r) const = 0;
+    virtual WId windowId() const = 0;
+    virtual void closeWindow() = 0;
+    virtual void maximize(MaximizeMode mode) = 0;
+    virtual void minimize() = 0;
+    virtual void showContextHelp() = 0;
+    virtual void setDesktop(int desktop) = 0;
+    virtual void titlebarDblClickOperation() = 0;
+    virtual void titlebarMouseWheelOperation(int delta) = 0;
+    virtual void setShade(bool set) = 0;
+    virtual void setKeepAbove(bool) = 0;
+    virtual void setKeepBelow(bool) = 0;
+    // not part of public API
+    virtual int currentDesktop() const = 0;
+    virtual QWidget* initialParentWidget() const = 0;
+    virtual Qt::WFlags initialWFlags() const = 0;
+    virtual void grabXServer(bool grab) = 0;
+};
 
 class KWIN_EXPORT KDecorationBridgeUnstable
     : public KDecorationBridge
-    {
-    public:
-        virtual bool compositingActive() const = 0;
-        virtual QRect transparentRect() const = 0;
+{
+public:
+    virtual bool compositingActive() const = 0;
+    virtual QRect transparentRect() const = 0;
 
-        // Window tabbing
-        virtual bool isClientGroupActive() = 0;
-        virtual QList< ClientGroupItem > clientGroupItems() const = 0;
-        virtual long itemId( int index ) = 0;
-        virtual int visibleClientGroupItem() = 0;
-        virtual void setVisibleClientGroupItem( int index ) = 0;
-        virtual void moveItemInClientGroup( int index, int before ) = 0;
-        virtual void moveItemToClientGroup( long itemId, int before ) = 0;
-        virtual void removeFromClientGroup( int index, const QRect& newGeom ) = 0;
-        virtual void closeClientGroupItem( int index ) = 0;
-        virtual void closeAllInClientGroup() = 0;
-        virtual void displayClientMenu( int index, const QPoint& pos ) = 0;
-        virtual WindowOperation buttonToWindowOperation( Qt::MouseButtons button ) = 0;
-    };
+    // Window tabbing
+    virtual bool isClientGroupActive() = 0;
+    virtual QList< ClientGroupItem > clientGroupItems() const = 0;
+    virtual long itemId(int index) = 0;
+    virtual int visibleClientGroupItem() = 0;
+    virtual void setVisibleClientGroupItem(int index) = 0;
+    virtual void moveItemInClientGroup(int index, int before) = 0;
+    virtual void moveItemToClientGroup(long itemId, int before) = 0;
+    virtual void removeFromClientGroup(int index, const QRect& newGeom) = 0;
+    virtual void closeClientGroupItem(int index) = 0;
+    virtual void closeAllInClientGroup() = 0;
+    virtual void displayClientMenu(int index, const QPoint& pos) = 0;
+    virtual WindowOperation buttonToWindowOperation(Qt::MouseButtons button) = 0;
+};
 
 /** @} */
 

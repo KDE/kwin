@@ -37,34 +37,34 @@ class GLTexture;
  **/
 class ExplosionEffect
     : public Effect
-    {
-    public:
-        ExplosionEffect();
-        ~ExplosionEffect();
+{
+public:
+    ExplosionEffect();
+    ~ExplosionEffect();
 
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintScreen();
 
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowDeleted(EffectWindow* c);
 
-        static bool supported();
+    static bool supported();
 
 
-    protected:
-        bool loadData();
+protected:
+    bool loadData();
 
-    private:
-        GLShader* mShader;
-        GLTexture* mStartOffsetTex;
-        GLTexture* mEndOffsetTex;
-        QMap< const EffectWindow*, double > mWindows;
-        int mActiveAnimations;
-        bool mValid;
-        bool mInited;
-    };
+private:
+    GLShader* mShader;
+    GLTexture* mStartOffsetTex;
+    GLTexture* mEndOffsetTex;
+    QMap< const EffectWindow*, double > mWindows;
+    int mActiveAnimations;
+    bool mValid;
+    bool mInited;
+};
 
 } // namespace
 

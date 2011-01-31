@@ -39,163 +39,153 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecorationfactory.h"
 
 KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
-    :   create_ptr( NULL ),
-        library( NULL ),
-        fact( NULL ),
-        old_library( NULL ),
-        old_fact( NULL ),
-        pluginStr( "kwin3_undefined " ),
-        config( cfg )
-    {
-    }
+    :   create_ptr(NULL),
+        library(NULL),
+        fact(NULL),
+        old_library(NULL),
+        old_fact(NULL),
+        pluginStr("kwin3_undefined "),
+        config(cfg)
+{
+}
 
 KDecorationPlugins::~KDecorationPlugins()
-    {
-    if(library)
-        {
-        assert( fact != NULL );
+{
+    if (library) {
+        assert(fact != NULL);
         delete fact;
-	library->unload();
-        }
-    if(old_library)
-        {
-        assert( old_fact != NULL );
-        delete old_fact;
-	old_library->unload();
-        }
+        library->unload();
     }
+    if (old_library) {
+        assert(old_fact != NULL);
+        delete old_fact;
+        old_library->unload();
+    }
+}
 
 QString KDecorationPlugins::currentPlugin()
-    {
+{
     return pluginStr;
-    }
+}
 
-bool KDecorationPlugins::reset( unsigned long changed )
-    {
+bool KDecorationPlugins::reset(unsigned long changed)
+{
     QString oldPlugin = pluginStr;
     config->reparseConfiguration();
     bool ret = false;
-    if(( !loadPlugin( "" ) && library ) // "" = read the one in cfg file
-        || oldPlugin == pluginStr )
-        { // no new plugin loaded, reset the old one
- //       assert( fact != NULL );
-	if(fact != NULL)
-	{
-        ret = fact->reset( changed );
-	}
-
+    if ((!loadPlugin("") && library)     // "" = read the one in cfg file
+            || oldPlugin == pluginStr) {
+        // no new plugin loaded, reset the old one
+//       assert( fact != NULL );
+        if (fact != NULL) {
+            ret = fact->reset(changed);
         }
-    return ret || oldPlugin != pluginStr;
+
     }
+    return ret || oldPlugin != pluginStr;
+}
 
 KDecorationFactory* KDecorationPlugins::factory()
-    {
+{
     return fact;
-    }
+}
 
 // convenience
-KDecoration* KDecorationPlugins::createDecoration( KDecorationBridge* bridge )
-    {
-    if( fact != NULL )
-        return fact->createDecoration( bridge );
+KDecoration* KDecorationPlugins::createDecoration(KDecorationBridge* bridge)
+{
+    if (fact != NULL)
+        return fact->createDecoration(bridge);
     return NULL;
-    }
+}
 
 // returns true if plugin was loaded successfully
-bool KDecorationPlugins::loadPlugin( QString nameStr )
-    {
-    if( nameStr.isEmpty())
-        {
-        KConfigGroup group( config, QString("Style") );
-        nameStr = group.readEntry("PluginLib", defaultPlugin );
-        }
+bool KDecorationPlugins::loadPlugin(QString nameStr)
+{
+    if (nameStr.isEmpty()) {
+        KConfigGroup group(config, QString("Style"));
+        nameStr = group.readEntry("PluginLib", defaultPlugin);
+    }
     // make sure people can switch between HEAD and kwin_iii branch
-    if( nameStr.startsWith( QLatin1String("kwin_") ))
-	nameStr = "kwin3_" + nameStr.mid( 5 );
+    if (nameStr.startsWith(QLatin1String("kwin_")))
+        nameStr = "kwin3_" + nameStr.mid(5);
 
     KLibrary *oldLibrary = library;
     KDecorationFactory* oldFactory = fact;
 
     KLibrary libToFind(nameStr);
     QString path = libToFind.fileName();
-	kDebug(1212) << "kwin : path " << path << " for " << nameStr;
+    kDebug(1212) << "kwin : path " << path << " for " << nameStr;
 
     // If the plugin was not found, try to find the default
-    if (path.isEmpty())
-        {
+    if (path.isEmpty()) {
         nameStr = defaultPlugin;
         KLibrary libToFind(nameStr);
         path = libToFind.fileName();
-        }
+    }
 
     // If no library was found, exit kwin with an error message
-    if (path.isEmpty())
-        {
-        error( i18n("No window decoration plugin library was found." ));
+    if (path.isEmpty()) {
+        error(i18n("No window decoration plugin library was found."));
         return false;
-        }
+    }
 
     // Check if this library is not already loaded.
-    if(pluginStr == nameStr)
-	return true;
+    if (pluginStr == nameStr)
+        return true;
 
     // Try loading the requested plugin
     library = new KLibrary(path);
 
     // If that fails, fall back to the default plugin
 trydefaultlib:
-    if (!library)
-        {
-	kDebug(1212) << " could not load library, try default plugin again";
+    if (!library) {
+        kDebug(1212) << " could not load library, try default plugin again";
         nameStr = defaultPlugin;
-	if ( pluginStr == nameStr )
-	    return true;
+        if (pluginStr == nameStr)
+            return true;
         KLibrary libToFind(nameStr);
         path = libToFind.fileName();
-	if (!path.isEmpty())
+        if (!path.isEmpty())
             library = new KLibrary(path);
-        }
+    }
 
-    if (!library)
-        {
-        error( i18n("The default decoration plugin is corrupt "
-                          "and could not be loaded." ));
+    if (!library) {
+        error(i18n("The default decoration plugin is corrupt "
+                   "and could not be loaded."));
         return false;
-        }
+    }
 
     create_ptr = NULL;
     KLibrary::void_function_ptr create_func = library->resolveFunction("create_factory");
-    if(create_func)
-        create_ptr = (KDecorationFactory* (*)())create_func;
+    if (create_func)
+        create_ptr = (KDecorationFactory * (*)())create_func;
 
-    if(!create_ptr)
-        {
-        if( nameStr != defaultPlugin )
-            {
-            kDebug(1212) << i18n( "The library %1 is not a KWin plugin.", path );
+    if (!create_ptr) {
+        if (nameStr != defaultPlugin) {
+            kDebug(1212) << i18n("The library %1 is not a KWin plugin.", path);
             library->unload();
             library = NULL;
             goto trydefaultlib;
-            }
-        error( i18n( "The library %1 is not a KWin plugin.", path ));
+        }
+        error(i18n("The library %1 is not a KWin plugin.", path));
         library->unload();
         return false;
-        }
+    }
     fact = create_ptr();
-    fact->checkRequirements( this ); // let it check what is supported
+    fact->checkRequirements(this);   // let it check what is supported
 
     pluginStr = nameStr;
 
     // For clients in kdeartwork
     QString catalog = nameStr;
-    catalog.replace( "kwin3_", "kwin_" );
-    KGlobal::locale()->insertCatalog( catalog );
+    catalog.replace("kwin3_", "kwin_");
+    KGlobal::locale()->insertCatalog(catalog);
     // For KCommonDecoration based clients
-    KGlobal::locale()->insertCatalog( "kwin_lib" );
+    KGlobal::locale()->insertCatalog("kwin_lib");
     // For clients in kdebase
-    KGlobal::locale()->insertCatalog( "kwin_clients" );
+    KGlobal::locale()->insertCatalog("kwin_clients");
     // For clients in kdeartwork
-    KGlobal::locale()->insertCatalog( "kwin_art_clients" );
+    KGlobal::locale()->insertCatalog("kwin_art_clients");
 
     old_library = oldLibrary; // save for delayed destroying
     old_fact = oldFactory;
@@ -206,15 +196,14 @@ trydefaultlib:
 void KDecorationPlugins::destroyPreviousPlugin()
 {
     // Destroy the old plugin
-    if(old_library)
-        {
+    if (old_library) {
         delete old_fact;
         old_fact = NULL;
-	old_library->unload();
+        old_library->unload();
         old_library = NULL;
-        }
+    }
 }
 
-void KDecorationPlugins::error( const QString& )
-    {
-    }
+void KDecorationPlugins::error(const QString&)
+{
+}

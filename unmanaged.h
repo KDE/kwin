@@ -30,29 +30,29 @@ namespace KWin
 
 class Unmanaged
     : public Toplevel
-    {
+{
     Q_OBJECT
-    public:
-        Unmanaged( Workspace *ws );
-        bool windowEvent( XEvent* e );
-        void release();
-        bool track( Window w );
-        static void deleteUnmanaged( Unmanaged* c, allowed_t );
-        virtual int desktop() const;
-        virtual QStringList activities() const;
-        virtual QPoint clientPos() const;
-        virtual QSize clientSize() const;
-        virtual QRect transparentRect() const;
-    protected:
-        virtual void debug( QDebug& stream ) const;
-        virtual bool shouldUnredirect() const;
-    private:
-        virtual ~Unmanaged(); // use release()
+public:
+    Unmanaged(Workspace *ws);
+    bool windowEvent(XEvent* e);
+    void release();
+    bool track(Window w);
+    static void deleteUnmanaged(Unmanaged* c, allowed_t);
+    virtual int desktop() const;
+    virtual QStringList activities() const;
+    virtual QPoint clientPos() const;
+    virtual QSize clientSize() const;
+    virtual QRect transparentRect() const;
+protected:
+    virtual void debug(QDebug& stream) const;
+    virtual bool shouldUnredirect() const;
+private:
+    virtual ~Unmanaged(); // use release()
     // handlers for X11 events
-        void mapNotifyEvent( XMapEvent* e );
-        void unmapNotifyEvent( XUnmapEvent*e );
-        void configureNotifyEvent( XConfigureEvent* e );
-    };
+    void mapNotifyEvent(XMapEvent* e);
+    void unmapNotifyEvent(XUnmapEvent*e);
+    void configureNotifyEvent(XConfigureEvent* e);
+};
 
 } // namespace
 

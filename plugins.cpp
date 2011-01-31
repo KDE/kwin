@@ -30,23 +30,23 @@ namespace KWin
 {
 
 PluginMgr::PluginMgr()
-    : KDecorationPlugins( KGlobal::config())
-    {
+    : KDecorationPlugins(KGlobal::config())
+{
     defaultPlugin = (QPixmap::defaultDepth() > 8) ?
-            "kwin3_oxygen" : "kwin3_plastik";
-    loadPlugin( "" ); // load the plugin specified in cfg file
-    }
+                    "kwin3_oxygen" : "kwin3_plastik";
+    loadPlugin("");   // load the plugin specified in cfg file
+}
 
-void PluginMgr::error( const QString &error_msg )
-    {
-    qWarning( "%s", (i18n("KWin: ") + error_msg +
-                    i18n("\nKWin will now exit...")).toLocal8Bit().data() );
+void PluginMgr::error(const QString &error_msg)
+{
+    qWarning("%s", (i18n("KWin: ") + error_msg +
+                    i18n("\nKWin will now exit...")).toLocal8Bit().data());
     exit(1);
-    }
+}
 
-bool PluginMgr::provides( Requirement )
-    {
+bool PluginMgr::provides(Requirement)
+{
     return false;
-    }
+}
 
 } // namespace

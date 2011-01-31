@@ -26,169 +26,160 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( slidetabs, SlideTabsEffect )
+KWIN_EFFECT(slidetabs, SlideTabsEffect)
 
 SlideTabsEffect::SlideTabsEffect()
-    {
-    reconfigure( ReconfigureAll );
-    }
+{
+    reconfigure(ReconfigureAll);
+}
 
-void SlideTabsEffect::reconfigure( ReconfigureFlags )
-    {
+void SlideTabsEffect::reconfigure(ReconfigureFlags)
+{
     KConfigGroup conf = EffectsHandler::effectConfig("SlideTabs");
-    switching = conf.readEntry("SlideSwitching", true );
-    grouping = conf.readEntry("SlideGrouping", true );
-    totalTime = conf.readEntry("SlideDuration", 500 );
-    }
+    switching = conf.readEntry("SlideSwitching", true);
+    grouping = conf.readEntry("SlideGrouping", true);
+    totalTime = conf.readEntry("SlideDuration", 500);
+}
 
-void SlideTabsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time )
-    {
-    if( motionManager.isManaging( w ) )
-        {
+void SlideTabsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+{
+    if (motionManager.isManaging(w)) {
         data.setTransformed();
-        w->enablePainting( EffectWindow::PAINT_DISABLED );
-        timeLine.addTime( time );
-        }
-    effects->prePaintWindow( w, data, time );
+        w->enablePainting(EffectWindow::PAINT_DISABLED);
+        timeLine.addTime(time);
     }
+    effects->prePaintWindow(w, data, time);
+}
 
-void SlideTabsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( motionManager.isManaging( w ) && w == inMove )
-        motionManager.apply( w, data );
-    effects->paintWindow( w, mask, region, data );
-    }
+void SlideTabsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (motionManager.isManaging(w) && w == inMove)
+        motionManager.apply(w, data);
+    effects->paintWindow(w, mask, region, data);
+}
 
-void SlideTabsEffect::postPaintWindow( EffectWindow* w )
-    {
-    if( motionManager.isManaging( w ) )
-        {
-        if( w == inMove )
-            {
+void SlideTabsEffect::postPaintWindow(EffectWindow* w)
+{
+    if (motionManager.isManaging(w)) {
+        if (w == inMove) {
             QRect moving = calculateNextMove();
-            motionManager.moveWindow( w, moving );
-            if( direction && timeLine.progress() >= 0.5 )
-                {
+            motionManager.moveWindow(w, moving);
+            if (direction && timeLine.progress() >= 0.5) {
                 moving = target;
                 target = source;
                 source = moving;
                 direction = false;
-                effects->setElevatedWindow( notMoving, false );
-                effects->setElevatedWindow( w, true );
-                }
-            else if( timeLine.progress() >= 1.0 )
-                {
-                effects->setElevatedWindow( notMoving, false );
-                effects->setElevatedWindow( inMove, false );
-                motionManager.unmanage( notMoving );
-                motionManager.unmanage( inMove );
+                effects->setElevatedWindow(notMoving, false);
+                effects->setElevatedWindow(w, true);
+            } else if (timeLine.progress() >= 1.0) {
+                effects->setElevatedWindow(notMoving, false);
+                effects->setElevatedWindow(inMove, false);
+                motionManager.unmanage(notMoving);
+                motionManager.unmanage(inMove);
                 notMoving = NULL;
                 inMove = NULL;
                 wasD = false;
                 effects->addRepaintFull();
-                }
             }
-        else if( w == notMoving && !direction && target != w->geometry() && !wasD )
-            {
+        } else if (w == notMoving && !direction && target != w->geometry() && !wasD) {
             target = w->geometry();
-            }
+        }
         w->addRepaintFull();
-        }
-    effects->postPaintWindow( w );
     }
+    effects->postPaintWindow(w);
+}
 
-void SlideTabsEffect::prePaintScreen( ScreenPrePaintData &data, int time )
-    {
-    if( motionManager.managingWindows() )
-        {
-        motionManager.calculate( time );
+void SlideTabsEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+{
+    if (motionManager.managingWindows()) {
+        motionManager.calculate(time);
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-        }
-    effects->prePaintScreen( data, time );
     }
+    effects->prePaintScreen(data, time);
+}
 
 void SlideTabsEffect::postPaintScreen()
-    {
-    if( motionManager.managingWindows() )
+{
+    if (motionManager.managingWindows())
         effects->addRepaintFull();
     effects->postPaintScreen();
-    }
+}
 
-void SlideTabsEffect::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
-    {
-    if( !switching )
+void SlideTabsEffect::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+{
+    if (!switching)
         return;
     inMove = to;
     notMoving = from;
     source = notMoving->geometry();
     QRect window = notMoving->geometry();
-    int leftSpace = window.x(), rightSpace = displayWidth() - ( window.x() + window.width() ),
-        upSpace = window.y(), downSpace = displayHeight() - ( window.y() + window.height() );
+    int leftSpace = window.x(), rightSpace = displayWidth() - (window.x() + window.width()),
+        upSpace = window.y(), downSpace = displayHeight() - (window.y() + window.height());
 
-    if( leftSpace >= rightSpace && leftSpace >= upSpace && leftSpace >= downSpace )
-        target = QRect( source.x() - ( 1.2 * source.width() ), source.y(), source.width(), source.height() );
-    else if( rightSpace >= leftSpace && rightSpace >= upSpace && rightSpace >= downSpace )
-        target = QRect( source.x() + ( 1.2 * source.width() ), source.y(), source.width(), source.height() );
-    else if( upSpace >= leftSpace && upSpace >= rightSpace && upSpace >= downSpace )
-        target = QRect( source.x(), source.y() - ( 1.2 * source.height() ), source.width(), source.height() );
+    if (leftSpace >= rightSpace && leftSpace >= upSpace && leftSpace >= downSpace)
+        target = QRect(source.x() - (1.2 * source.width()), source.y(), source.width(), source.height());
+    else if (rightSpace >= leftSpace && rightSpace >= upSpace && rightSpace >= downSpace)
+        target = QRect(source.x() + (1.2 * source.width()), source.y(), source.width(), source.height());
+    else if (upSpace >= leftSpace && upSpace >= rightSpace && upSpace >= downSpace)
+        target = QRect(source.x(), source.y() - (1.2 * source.height()), source.width(), source.height());
     else
-        target = QRect( source.x(), source.y() + ( 1.2 * source.height() ), source.width(), source.height() );
+        target = QRect(source.x(), source.y() + (1.2 * source.height()), source.width(), source.height());
 
-    timeLine.setCurveShape( TimeLine::LinearCurve );
-    timeLine.setDuration( animationTime( totalTime ) );
-    timeLine.setProgress( 0.0f );
-    motionManager.manage( inMove );
-    motionManager.manage( notMoving );
-    distance = sqrt( ( ( source.x()-target.x() ) * ( source.x()-target.x() ) ) + ( ( source.y()-target.y() ) * ( source.y()-target.y() ) ) );
-    effects->setElevatedWindow( notMoving, true );
+    timeLine.setCurveShape(TimeLine::LinearCurve);
+    timeLine.setDuration(animationTime(totalTime));
+    timeLine.setProgress(0.0f);
+    motionManager.manage(inMove);
+    motionManager.manage(notMoving);
+    distance = sqrt(((source.x() - target.x()) * (source.x() - target.x())) + ((source.y() - target.y()) * (source.y() - target.y())));
+    effects->setElevatedWindow(notMoving, true);
     direction = wasD = true;
 
     QRect moving = calculateNextMove();
-    motionManager.moveWindow( inMove, moving );
-    }
+    motionManager.moveWindow(inMove, moving);
+}
 
-void SlideTabsEffect::clientGroupItemAdded( EffectWindow* from, EffectWindow* to )
-    {
-    if( !grouping || from->desktop() != to->desktop() || from->isMinimized() || to->isMinimized() )
+void SlideTabsEffect::clientGroupItemAdded(EffectWindow* from, EffectWindow* to)
+{
+    if (!grouping || from->desktop() != to->desktop() || from->isMinimized() || to->isMinimized())
         return;
-    timeLine.setCurveShape( TimeLine::LinearCurve );
-    timeLine.setDuration( animationTime( totalTime ) );
-    timeLine.setProgress( 0.0f );
+    timeLine.setCurveShape(TimeLine::LinearCurve);
+    timeLine.setDuration(animationTime(totalTime));
+    timeLine.setProgress(0.0f);
     inMove = from;
     notMoving = to;
     source = inMove->geometry();
     target = notMoving->geometry();
-    distance = sqrt( ( ( source.x()-target.x() ) * ( source.x()-target.x() ) ) + ( ( source.y()-target.y() ) * ( source.y()-target.y() ) ) );
-    motionManager.manage( inMove );
-    motionManager.manage( notMoving );
+    distance = sqrt(((source.x() - target.x()) * (source.x() - target.x())) + ((source.y() - target.y()) * (source.y() - target.y())));
+    motionManager.manage(inMove);
+    motionManager.manage(notMoving);
     QRect moving = calculateNextMove();
-    motionManager.moveWindow( inMove, moving );
-    effects->setElevatedWindow( notMoving, true );
+    motionManager.moveWindow(inMove, moving);
+    effects->setElevatedWindow(notMoving, true);
     direction = wasD = false;
-    }
+}
 
-QPoint SlideTabsEffect::calculatePointTarget( const QPoint &a, const QPoint &b )
-    {
+QPoint SlideTabsEffect::calculatePointTarget(const QPoint &a, const QPoint &b)
+{
     double dy, dx, x, y, k;
-    k = direction? (2.0*timeLine.progress()):(wasD?((timeLine.progress()-0.5)*2):timeLine.progress());
-    dx = fabs( a.x() - b.x() );
-    dy = fabs( a.y() - b.y() );
-    y = k*dy;
-    x = k*dx;
-    if( a.x() > b.x() )
+    k = direction ? (2.0 * timeLine.progress()) : (wasD ? ((timeLine.progress() - 0.5) * 2) : timeLine.progress());
+    dx = fabs(a.x() - b.x());
+    dy = fabs(a.y() - b.y());
+    y = k * dy;
+    x = k * dx;
+    if (a.x() > b.x())
         x = -x;
-    if( a.y() > b.y() )
+    if (a.y() > b.y())
         y = -y;
-    return QPoint( a.x() + x, a.y() + y );
-    }
+    return QPoint(a.x() + x, a.y() + y);
+}
 
 QRect SlideTabsEffect::calculateNextMove()
-    {
+{
     QPoint topLeft, bottomRight;
     int mw = source.width(), mh = source.height(), tw = target.width(), th = target.height();
-    topLeft = calculatePointTarget( QPoint( source.x(), source.y() ), QPoint( target.x(), target.y() ) );
-    bottomRight = calculatePointTarget( QPoint( source.x() + mw, source.y() + mh ), QPoint( target.x() + tw, target.y() + th ) );
-    return QRect( topLeft.x(), topLeft.y(), bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y() );
-    }
+    topLeft = calculatePointTarget(QPoint(source.x(), source.y()), QPoint(target.x(), target.y()));
+    bottomRight = calculatePointTarget(QPoint(source.x() + mw, source.y() + mh), QPoint(target.x() + tw, target.y() + th));
+    return QRect(topLeft.x(), topLeft.y(), bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y());
+}
 
 }

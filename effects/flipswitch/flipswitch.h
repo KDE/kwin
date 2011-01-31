@@ -32,92 +32,90 @@ namespace KWin
 
 class FlipSwitchEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        FlipSwitchEffect();
-        ~FlipSwitchEffect();
+public:
+    FlipSwitchEffect();
+    ~FlipSwitchEffect();
 
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void tabBoxAdded( int mode );
-        virtual void tabBoxClosed();
-        virtual void tabBoxUpdated();
-        virtual void windowAdded( EffectWindow* w );
-        virtual void windowClosed( EffectWindow* w );
-        virtual bool borderActivated( ElectricBorder border );
-        virtual void grabbedKeyboardEvent( QKeyEvent* e );
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void tabBoxAdded(int mode);
+    virtual void tabBoxClosed();
+    virtual void tabBoxUpdated();
+    virtual void windowAdded(EffectWindow* w);
+    virtual void windowClosed(EffectWindow* w);
+    virtual bool borderActivated(ElectricBorder border);
+    virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
-        static bool supported();
-    private Q_SLOTS:
-        void toggleActiveCurrent();
-        void toggleActiveAllDesktops();
-        void globalShortcutChangedCurrent( QKeySequence shortcut );
-        void globalShortcutChangedAll( QKeySequence shortcut );
+    static bool supported();
+private Q_SLOTS:
+    void toggleActiveCurrent();
+    void toggleActiveAllDesktops();
+    void globalShortcutChangedCurrent(QKeySequence shortcut);
+    void globalShortcutChangedAll(QKeySequence shortcut);
 
-    private:
-        class ItemInfo;
-        enum SwitchingDirection
-            {
-            DirectionForward,
-            DirectionBackward
-            };
-        enum FlipSwitchMode
-            {
-            TabboxMode,
-            CurrentDesktopMode,
-            AllDesktopsMode
-            };
-        void setActive( bool activate, FlipSwitchMode mode );
-        bool isSelectableWindow( EffectWindow *w ) const;
-        void scheduleAnimation( const SwitchingDirection& direction, int distance = 1 );
-        void adjustWindowMultiScreen( const EffectWindow *w, WindowPaintData& data );
-        QQueue< SwitchingDirection> m_scheduledDirections;
-        EffectWindow* m_selectedWindow;
-        TimeLine m_timeLine;
-        TimeLine m_startStopTimeLine;
-        TimeLine::CurveShape m_currentAnimationShape;
-        QRect m_screenArea;
-        int m_activeScreen;
-        bool m_active;
-        bool m_start;
-        bool m_stop;
-        bool m_animation;
-        bool m_hasKeyboardGrab;
-        Window m_input;
-        FlipSwitchMode m_mode;
-        EffectFrame* m_captionFrame;
-        QFont m_captionFont;
-        EffectWindowList m_flipOrderedWindows;
-        QHash< const EffectWindow*, ItemInfo* > m_windows;
-        // options
-        QList<ElectricBorder> m_borderActivate;
-        QList<ElectricBorder> m_borderActivateAll;
-        bool m_tabbox;
-        bool m_tabboxAlternative;
-        float m_angle;
-        float m_xPosition;
-        float m_yPosition;
-        bool m_windowTitle;
-        // Shortcuts
-        KShortcut m_shortcutCurrent;
-        KShortcut m_shortcutAll;
+private:
+    class ItemInfo;
+    enum SwitchingDirection {
+        DirectionForward,
+        DirectionBackward
     };
+    enum FlipSwitchMode {
+        TabboxMode,
+        CurrentDesktopMode,
+        AllDesktopsMode
+    };
+    void setActive(bool activate, FlipSwitchMode mode);
+    bool isSelectableWindow(EffectWindow *w) const;
+    void scheduleAnimation(const SwitchingDirection& direction, int distance = 1);
+    void adjustWindowMultiScreen(const EffectWindow *w, WindowPaintData& data);
+    QQueue< SwitchingDirection> m_scheduledDirections;
+    EffectWindow* m_selectedWindow;
+    TimeLine m_timeLine;
+    TimeLine m_startStopTimeLine;
+    TimeLine::CurveShape m_currentAnimationShape;
+    QRect m_screenArea;
+    int m_activeScreen;
+    bool m_active;
+    bool m_start;
+    bool m_stop;
+    bool m_animation;
+    bool m_hasKeyboardGrab;
+    Window m_input;
+    FlipSwitchMode m_mode;
+    EffectFrame* m_captionFrame;
+    QFont m_captionFont;
+    EffectWindowList m_flipOrderedWindows;
+    QHash< const EffectWindow*, ItemInfo* > m_windows;
+    // options
+    QList<ElectricBorder> m_borderActivate;
+    QList<ElectricBorder> m_borderActivateAll;
+    bool m_tabbox;
+    bool m_tabboxAlternative;
+    float m_angle;
+    float m_xPosition;
+    float m_yPosition;
+    bool m_windowTitle;
+    // Shortcuts
+    KShortcut m_shortcutCurrent;
+    KShortcut m_shortcutAll;
+};
 
 class FlipSwitchEffect::ItemInfo
-    {
-    public:
-        ItemInfo();
-        ~ItemInfo();
-        bool deleted;
-        double opacity;
-        double brightness;
-        double saturation;
-    };
+{
+public:
+    ItemInfo();
+    ~ItemInfo();
+    bool deleted;
+    double opacity;
+    double brightness;
+    double saturation;
+};
 
 } // namespace
 

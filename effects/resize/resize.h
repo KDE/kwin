@@ -28,25 +28,27 @@ namespace KWin
 
 class ResizeEffect
     : public Effect
-    {
-    public:
-        ResizeEffect();
-        ~ResizeEffect();
-        virtual inline bool provides( Effect::Feature ef ) { return ef == Effect::Resize; }
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void windowUserMovedResized( EffectWindow *w, bool first, bool last );
-        virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
+{
+public:
+    ResizeEffect();
+    ~ResizeEffect();
+    virtual inline bool provides(Effect::Feature ef) {
+        return ef == Effect::Resize;
+    }
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void windowUserMovedResized(EffectWindow *w, bool first, bool last);
+    virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
-    private:
-        enum Feature { TextureScale = 1<<0, Outline = 1<<1 };
-        bool m_active;
-        int m_features;
-        EffectWindow* m_resizeWindow;
-        QRect m_currentGeometry, m_originalGeometry;
-    };
+private:
+    enum Feature { TextureScale = 1 << 0, Outline = 1 << 1 };
+    bool m_active;
+    int m_features;
+    EffectWindow* m_resizeWindow;
+    QRect m_currentGeometry, m_originalGeometry;
+};
 
 }
 

@@ -32,49 +32,49 @@ class KWinAuroraeConfigForm : public QWidget, public Ui::KWinAuroraeConfigForm
 {
     Q_OBJECT
 
-    public:
-        explicit KWinAuroraeConfigForm( QWidget* parent );
+public:
+    explicit KWinAuroraeConfigForm(QWidget* parent);
 };
 
 class KWinDecorationConfigForm : public QWidget, public Ui::KWinDecorationConfigForm
 {
     Q_OBJECT
 
-    public:
-        explicit KWinDecorationConfigForm( QWidget* parent );
+public:
+    explicit KWinDecorationConfigForm(QWidget* parent);
 };
 
 class KWinDecorationConfigDialog : public KDialog, public KDecorationDefines
 {
     Q_OBJECT
-    public:
-        KWinDecorationConfigDialog( QString decoLib, const QList<QVariant>& borderSizes,
-                                    KDecorationDefines::BorderSize size, QWidget* parent = 0,
-                                    Qt::WFlags flags = 0 );
-        ~KWinDecorationConfigDialog();
+public:
+    KWinDecorationConfigDialog(QString decoLib, const QList<QVariant>& borderSizes,
+                               KDecorationDefines::BorderSize size, QWidget* parent = 0,
+                               Qt::WFlags flags = 0);
+    ~KWinDecorationConfigDialog();
 
     KDecorationDefines::BorderSize borderSize() const;
 
-    signals:
-        void pluginSave( KConfigGroup& group );
+signals:
+    void pluginSave(KConfigGroup& group);
 
-    private slots:
-        void slotSelectionChanged();
-        void slotAccepted();
-        void slotDefault();
+private slots:
+    void slotSelectionChanged();
+    void slotAccepted();
+    void slotDefault();
 
-    private:
-        int borderSizeToIndex( KDecorationDefines::BorderSize size, const QList<QVariant>& sizes );
-        QString styleToConfigLib( const QString& styleLib ) const;
+private:
+    int borderSizeToIndex(KDecorationDefines::BorderSize size, const QList<QVariant>& sizes);
+    QString styleToConfigLib(const QString& styleLib) const;
 
-    private:
-        KWinDecorationConfigForm* m_ui;
-        QList<QVariant> m_borderSizes;
-        KSharedConfigPtr m_kwinConfig;
+private:
+    KWinDecorationConfigForm* m_ui;
+    QList<QVariant> m_borderSizes;
+    KSharedConfigPtr m_kwinConfig;
 
-        QObject* (*allocatePlugin)( KConfigGroup& conf, QWidget* parent );
-        QObject* m_pluginObject;
-        QWidget* m_pluginConfigWidget;
+    QObject*(*allocatePlugin)(KConfigGroup& conf, QWidget* parent);
+    QObject* m_pluginObject;
+    QWidget* m_pluginConfigWidget;
 };
 
 } // namespace KWin

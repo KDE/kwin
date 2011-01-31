@@ -28,47 +28,47 @@ namespace KWin
 
 class HighlightWindowEffect
     : public Effect
-    {
-    public:
-        HighlightWindowEffect();
-        virtual ~HighlightWindowEffect();
+{
+public:
+    HighlightWindowEffect();
+    virtual ~HighlightWindowEffect();
 
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
-        virtual void windowAdded( EffectWindow* w );
-        virtual void windowClosed( EffectWindow* w );
-        virtual void windowDeleted( EffectWindow* w );
+    virtual void windowAdded(EffectWindow* w);
+    virtual void windowClosed(EffectWindow* w);
+    virtual void windowDeleted(EffectWindow* w);
 
-        virtual void propertyNotify( EffectWindow* w, long atom );
+    virtual void propertyNotify(EffectWindow* w, long atom);
 
-    private:
-        void prepareHighlighting();
-        void finishHighlighting();
+private:
+    void prepareHighlighting();
+    void finishHighlighting();
 
-        bool m_finishing;
+    bool m_finishing;
 
-        double m_fadeDuration;
-        QHash<EffectWindow*, double> m_windowOpacity;
+    double m_fadeDuration;
+    QHash<EffectWindow*, double> m_windowOpacity;
 
-        long m_atom;
-        QList<EffectWindow*> m_highlightedWindows;
-        EffectWindow* m_monitorWindow;
+    long m_atom;
+    QList<EffectWindow*> m_highlightedWindows;
+    EffectWindow* m_monitorWindow;
 
-        // Offscreen position cache
-        /*QRect m_thumbArea; // Thumbnail area
-        QPoint m_arrowTip; // Position of the arrow's tip
-        QPoint m_arrowA; // Arrow vertex position at the base (First)
-        QPoint m_arrowB; // Arrow vertex position at the base (Second)
+    // Offscreen position cache
+    /*QRect m_thumbArea; // Thumbnail area
+    QPoint m_arrowTip; // Position of the arrow's tip
+    QPoint m_arrowA; // Arrow vertex position at the base (First)
+    QPoint m_arrowB; // Arrow vertex position at the base (Second)
 
-        // Helper functions
-        inline double aspectRatio( EffectWindow *w )
-            { return w->width() / double( w->height() ); }
-        inline int widthForHeight( EffectWindow *w, int height )
-            { return int(( height / double( w->height() )) * w->width() ); }
-        inline int heightForWidth( EffectWindow *w, int width )
-            { return int(( width / double( w->width() )) * w->height() ); }*/
-    };
+    // Helper functions
+    inline double aspectRatio( EffectWindow *w )
+        { return w->width() / double( w->height() ); }
+    inline int widthForHeight( EffectWindow *w, int height )
+        { return int(( height / double( w->height() )) * w->width() ); }
+    inline int heightForWidth( EffectWindow *w, int width )
+        { return int(( width / double( w->width() )) * w->height() ); }*/
+};
 
 } // namespace
 

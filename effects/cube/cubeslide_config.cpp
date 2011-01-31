@@ -30,12 +30,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 CubeSlideEffectConfigForm::CubeSlideEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new CubeSlideEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -49,53 +49,53 @@ CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->windowsMovingBox, SIGNAL(stateChanged(int)), SLOT(changed()));
 
     load();
-    }
+}
 
 void CubeSlideEffectConfig::load()
-    {
+{
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "CubeSlide" );
+    KConfigGroup conf = EffectsHandler::effectConfig("CubeSlide");
 
-    int duration       = conf.readEntry( "RotationDuration", 0 );
-    bool dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
-    bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
-    bool usePager = conf.readEntry( "UsePagerLayout", true );
+    int duration       = conf.readEntry("RotationDuration", 0);
+    bool dontSlidePanels = conf.readEntry("DontSlidePanels", true);
+    bool dontSlideStickyWindows = conf.readEntry("DontSlideStickyWindows", false);
+    bool usePager = conf.readEntry("UsePagerLayout", true);
 
-    m_ui->rotationDurationSpin->setValue( duration );
-    m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
-    m_ui->dontSlideStickyWindowsBox->setChecked( dontSlideStickyWindows );
-    m_ui->usePagerBox->setChecked( usePager );
-    m_ui->windowsMovingBox->setChecked( conf.readEntry( "UseWindowMoving", false ) );
+    m_ui->rotationDurationSpin->setValue(duration);
+    m_ui->dontSlidePanelsBox->setChecked(dontSlidePanels);
+    m_ui->dontSlideStickyWindowsBox->setChecked(dontSlideStickyWindows);
+    m_ui->usePagerBox->setChecked(usePager);
+    m_ui->windowsMovingBox->setChecked(conf.readEntry("UseWindowMoving", false));
 
     emit changed(false);
-    }
+}
 
 void CubeSlideEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "CubeSlide" );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("CubeSlide");
 
-    conf.writeEntry( "RotationDuration", m_ui->rotationDurationSpin->value() );
-    conf.writeEntry( "DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked() );
-    conf.writeEntry( "DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked() );
-    conf.writeEntry( "UsePagerLayout", m_ui->usePagerBox->isChecked() );
-    conf.writeEntry( "UseWindowMoving", m_ui->windowsMovingBox->isChecked() );
+    conf.writeEntry("RotationDuration", m_ui->rotationDurationSpin->value());
+    conf.writeEntry("DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked());
+    conf.writeEntry("DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked());
+    conf.writeEntry("UsePagerLayout", m_ui->usePagerBox->isChecked());
+    conf.writeEntry("UseWindowMoving", m_ui->windowsMovingBox->isChecked());
 
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "cubeslide" );
-    }
+    EffectsHandler::sendReloadMessage("cubeslide");
+}
 
 void CubeSlideEffectConfig::defaults()
-    {
-    m_ui->rotationDurationSpin->setValue( 0 );
-    m_ui->dontSlidePanelsBox->setChecked( true );
-    m_ui->dontSlideStickyWindowsBox->setChecked( false );
-    m_ui->usePagerBox->setChecked( true );
-    m_ui->windowsMovingBox->setChecked( false );
+{
+    m_ui->rotationDurationSpin->setValue(0);
+    m_ui->dontSlidePanelsBox->setChecked(true);
+    m_ui->dontSlideStickyWindowsBox->setChecked(false);
+    m_ui->usePagerBox->setChecked(true);
+    m_ui->windowsMovingBox->setChecked(false);
     emit changed(true);
-    }
+}
 
 } // namespace
 

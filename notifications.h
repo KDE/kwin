@@ -33,49 +33,47 @@ namespace KWin
 class Client;
 
 class Notify
-    {
-    public:
+{
+public:
 
-        enum Event 
-            {
-            Activate,
-            Close,
-            Minimize,
-            UnMinimize,
-            Maximize,
-            UnMaximize,
-            OnAllDesktops,
-            NotOnAllDesktops,
-            New,
-            Delete,
-            TransNew,
-            TransDelete,
-            ShadeUp,
-            ShadeDown,
-            MoveStart,
-            MoveEnd,
-            ResizeStart,
-            ResizeEnd,
-            DemandAttentionCurrent,
-            DemandAttentionOther,
-            CompositingSlow,
-            CompositingSuspendedDbus,
-            TilingLayoutChanged,
-            DesktopChange = 100
-            };
-
-        static bool raise( Event, const QString& message = QString(), Client* c = NULL );
-        static void sendPendingEvents();
-    private:
-        struct EventData
-            {
-            QString event;
-            QString message;
-            long window;
-            KNotification::NotificationFlags flags;
-            };
-        static QList< EventData > pending_events;
+    enum Event {
+        Activate,
+        Close,
+        Minimize,
+        UnMinimize,
+        Maximize,
+        UnMaximize,
+        OnAllDesktops,
+        NotOnAllDesktops,
+        New,
+        Delete,
+        TransNew,
+        TransDelete,
+        ShadeUp,
+        ShadeDown,
+        MoveStart,
+        MoveEnd,
+        ResizeStart,
+        ResizeEnd,
+        DemandAttentionCurrent,
+        DemandAttentionOther,
+        CompositingSlow,
+        CompositingSuspendedDbus,
+        TilingLayoutChanged,
+        DesktopChange = 100
     };
+
+    static bool raise(Event, const QString& message = QString(), Client* c = NULL);
+    static void sendPendingEvents();
+private:
+    struct EventData {
+        QString event;
+        QString message;
+        long window;
+        KNotification::NotificationFlags flags;
+    };
+    static QList< EventData > pending_events;
+};
 
 } // namespace
 

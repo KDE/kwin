@@ -28,169 +28,156 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( sheet, SheetEffect )
-KWIN_EFFECT_SUPPORTED( sheet, SheetEffect::supported() )
+KWIN_EFFECT(sheet, SheetEffect)
+KWIN_EFFECT_SUPPORTED(sheet, SheetEffect::supported())
 
 static const int IsSheetWindow = 0x22A982D5;
 
 SheetEffect::SheetEffect()
-    {
-    reconfigure( ReconfigureAll );
-    }
+{
+    reconfigure(ReconfigureAll);
+}
 
 bool SheetEffect::supported()
-    {
+{
     return effects->compositingType() == OpenGLCompositing;
-    }
+}
 
-void SheetEffect::reconfigure( ReconfigureFlags )
-    {
-    KConfigGroup conf = effects->effectConfig( "Sheet" );
-    duration = animationTime( conf, "AnimationTime", 500 );
-    }
+void SheetEffect::reconfigure(ReconfigureFlags)
+{
+    KConfigGroup conf = effects->effectConfig("Sheet");
+    duration = animationTime(conf, "AnimationTime", 500);
+}
 
-void SheetEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( !windows.isEmpty() )
-        {
+void SheetEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (!windows.isEmpty()) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         screenTime = time;
+    }
+    effects->prePaintScreen(data, time);
+}
+
+void SheetEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    InfoMap::iterator info = windows.find(w);
+    if (info != windows.end()) {
+        data.setTransformed();
+        if (info->added)
+            info->timeLine.addTime(screenTime);
+        else if (info->closed) {
+            info->timeLine.removeTime(screenTime);
+            if (info->deleted)
+                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         }
-    effects->prePaintScreen( data, time );
     }
 
-void SheetEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
-    InfoMap::iterator info = windows.find( w );
-    if( info != windows.end() )
-        {
-        data.setTransformed();
-        if( info->added )
-            info->timeLine.addTime( screenTime );
-        else if( info->closed )
-            {
-            info->timeLine.removeTime( screenTime );
-            if( info->deleted )
-                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
-            }
-        }
-    
-    effects->prePaintWindow( w, data, time );
-    
+    effects->prePaintWindow(w, data, time);
+
     // if the window isn't to be painted, then let's make sure
     // to track its progress
-    if( info != windows.end() && !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
+    if (info != windows.end() && !w->isPaintingEnabled() && !effects->activeFullScreenEffect())
         w->addRepaintFull();
-    }
+}
 
-void SheetEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    InfoMap::const_iterator info = windows.constFind( w );
-    if( info != windows.constEnd() )
-        {
+void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    InfoMap::const_iterator info = windows.constFind(w);
+    if (info != windows.constEnd()) {
         const double progress = info->timeLine.value();
         RotationData rot;
         rot.axis = RotationData::XAxis;
-        rot.angle = 60.0 * ( 1.0 - progress );
+        rot.angle = 60.0 * (1.0 - progress);
         data.rotation = &rot;
         data.yScale *= progress;
         data.zScale *= progress;
-        data.yTranslate -= (w->y() - info->parentY) * ( 1.0 - progress );
-        }
-    effects->paintWindow( w, mask, region, data );
+        data.yTranslate -= (w->y() - info->parentY) * (1.0 - progress);
     }
+    effects->paintWindow(w, mask, region, data);
+}
 
-void SheetEffect::postPaintWindow( EffectWindow* w )
-    {
-    InfoMap::iterator info = windows.find( w );
-    if( info != windows.end() )
-        {
-        if( info->added && info->timeLine.value() == 1.0 )
-            {
-            windows.remove( w );
+void SheetEffect::postPaintWindow(EffectWindow* w)
+{
+    InfoMap::iterator info = windows.find(w);
+    if (info != windows.end()) {
+        if (info->added && info->timeLine.value() == 1.0) {
+            windows.remove(w);
             effects->addRepaintFull();
-            }
-        else if( info->closed && info->timeLine.value() == 0.0 )
-            {
+        } else if (info->closed && info->timeLine.value() == 0.0) {
             info->closed = false;
-            if( info->deleted )
-                {
-                windows.remove( w );
+            if (info->deleted) {
+                windows.remove(w);
                 w->unrefWindow();
-                }
-            effects->addRepaintFull();
             }
-        if( info->added || info->closed )
-            w->addRepaintFull();
+            effects->addRepaintFull();
         }
-    effects->postPaintWindow( w );
+        if (info->added || info->closed)
+            w->addRepaintFull();
     }
+    effects->postPaintWindow(w);
+}
 
-void SheetEffect::windowAdded( EffectWindow* w )
-    {
-    if( !isSheetWindow( w ) )
+void SheetEffect::windowAdded(EffectWindow* w)
+{
+    if (!isSheetWindow(w))
         return;
-    w->setData( IsSheetWindow, true );
-    
-    InfoMap::iterator it = windows.find( w );
-    WindowInfo *info = ( it == windows.end() ) ? &windows[w] : &it.value();
+    w->setData(IsSheetWindow, true);
+
+    InfoMap::iterator it = windows.find(w);
+    WindowInfo *info = (it == windows.end()) ? &windows[w] : &it.value();
     info->added = true;
     info->closed = false;
     info->deleted = false;
-    info->timeLine.setDuration( duration );
+    info->timeLine.setDuration(duration);
     const EffectWindowList stack = effects->stackingOrder();
     // find parent
-    foreach( EffectWindow* window, stack )
-        {
-        if( window->findModal() == w )
-            {
+    foreach (EffectWindow * window, stack) {
+        if (window->findModal() == w) {
             info->parentY = window->y();
             break;
-            }
         }
-    w->addRepaintFull();
     }
+    w->addRepaintFull();
+}
 
-void SheetEffect::windowClosed( EffectWindow* w )
-    {
-    if( !isSheetWindow( w ) )
+void SheetEffect::windowClosed(EffectWindow* w)
+{
+    if (!isSheetWindow(w))
         return;
-    
+
     w->refWindow();
-    
-    InfoMap::iterator it = windows.find( w );
-    WindowInfo *info = ( it == windows.end() ) ? &windows[w] : &it.value();
+
+    InfoMap::iterator it = windows.find(w);
+    WindowInfo *info = (it == windows.end()) ? &windows[w] : &it.value();
     info->added = false;
     info->closed = true;
     info->deleted = true;
-    info->timeLine.setDuration( duration );
-    info->timeLine.setProgress( 1.0 );
+    info->timeLine.setDuration(duration);
+    info->timeLine.setProgress(1.0);
 
     bool found = false;
     // find parent
     const EffectWindowList stack = effects->stackingOrder();
-    foreach( EffectWindow* window, stack )
-        {
-        if( window->findModal() == w )
-            {
+    foreach (EffectWindow * window, stack) {
+        if (window->findModal() == w) {
             info->parentY = window->y();
             found = true;
             break;
-            }
         }
-    if( !found )
+    }
+    if (!found)
         info->parentY = 0;
     w->addRepaintFull();
-    }
+}
 
-void SheetEffect::windowDeleted( EffectWindow* w )
-    {
-    windows.remove( w );
-    }
+void SheetEffect::windowDeleted(EffectWindow* w)
+{
+    windows.remove(w);
+}
 
-bool SheetEffect::isSheetWindow( EffectWindow* w )
-    {
-    return ( w->isModal() || w->data( IsSheetWindow ).toBool() );
-    }
+bool SheetEffect::isSheetWindow(EffectWindow* w)
+{
+    return (w->isModal() || w->data(IsSheetWindow).toBool());
+}
 
 } // namespace

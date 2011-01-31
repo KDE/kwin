@@ -26,169 +26,162 @@ namespace KWin
 {
 
 void Workspace::updateDesktopLayout()
-    {
+{
     // TODO: Is there a sane way to avoid overriding the existing grid?
     int width = rootInfo->desktopLayoutColumnsRows().width();
     int height = rootInfo->desktopLayoutColumnsRows().height();
-    if( width == 0 && height == 0 ) // Not given, set default layout
+    if (width == 0 && height == 0)   // Not given, set default layout
         height = 2;
     setNETDesktopLayout(
         rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
         width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
-        );
-    }
+    );
+}
 
-void Workspace::setNETDesktopLayout( Qt::Orientation orientation, int width, int height,
-    int startingCorner )
-    {
-    Q_UNUSED( startingCorner ); // Not really worth implementing right now.
+void Workspace::setNETDesktopLayout(Qt::Orientation orientation, int width, int height,
+                                    int startingCorner)
+{
+    Q_UNUSED(startingCorner);   // Not really worth implementing right now.
 
     // Calculate valid grid size
-    assert( width > 0 || height > 0 );
-    if(( width <= 0 ) && ( height > 0 ))
-       width = ( desktopCount_ + height - 1 ) / height;
-    else if(( height <= 0 ) && ( width > 0 ))
-       height = ( desktopCount_ + width - 1 ) / width;
-    while( width * height < desktopCount_ )
-        {
-        if( orientation == Qt::Horizontal )
+    assert(width > 0 || height > 0);
+    if ((width <= 0) && (height > 0))
+        width = (desktopCount_ + height - 1) / height;
+    else if ((height <= 0) && (width > 0))
+        height = (desktopCount_ + width - 1) / width;
+    while (width * height < desktopCount_) {
+        if (orientation == Qt::Horizontal)
             ++width;
         else
             ++height;
-        }
+    }
 
     // Set private variables
     delete[] desktopGrid_;
-    desktopGridSize_ = QSize( width, height );
+    desktopGridSize_ = QSize(width, height);
     int size = width * height;
     desktopGrid_ = new int[size];
 
     // Populate grid
     int desktop = 1;
-    if( orientation == Qt::Horizontal )
-        for( int y = 0; y < height; y++ )
-            for( int x = 0; x < width; x++ )
+    if (orientation == Qt::Horizontal)
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
                 desktopGrid_[y * width + x] = (desktop <= desktopCount_ ? desktop++ : 0);
     else
-        for( int x = 0; x < width; x++ )
-            for( int y = 0; y < height; y++ )
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
                 desktopGrid_[y * width + x] = (desktop <= desktopCount_ ? desktop++ : 0);
-    }
+}
 
-QPoint Workspace::desktopGridCoords( int id ) const
-    {
-    for( int y = 0; y < desktopGridSize_.height(); y++ )
-        for( int x = 0; x < desktopGridSize_.width(); x++ )
-            if( desktopGrid_[y * desktopGridSize_.width() + x] == id )
-                return QPoint( x, y );
-    return QPoint( -1, -1 );
-    }
+QPoint Workspace::desktopGridCoords(int id) const
+{
+    for (int y = 0; y < desktopGridSize_.height(); y++)
+        for (int x = 0; x < desktopGridSize_.width(); x++)
+            if (desktopGrid_[y * desktopGridSize_.width() + x] == id)
+                return QPoint(x, y);
+    return QPoint(-1, -1);
+}
 
-QPoint Workspace::desktopCoords( int id ) const
-    {
-    QPoint coords = desktopGridCoords( id );
-    if( coords.x() == -1 )
-        return QPoint( -1, -1 );
-    return QPoint( coords.x() * displayWidth(), coords.y() * displayHeight() );
-    }
+QPoint Workspace::desktopCoords(int id) const
+{
+    QPoint coords = desktopGridCoords(id);
+    if (coords.x() == -1)
+        return QPoint(-1, -1);
+    return QPoint(coords.x() * displayWidth(), coords.y() * displayHeight());
+}
 
-int Workspace::desktopAbove( int id, bool wrap ) const
-    {
-    if( id == 0 )
+int Workspace::desktopAbove(int id, bool wrap) const
+{
+    if (id == 0)
         id = currentDesktop();
-    QPoint coords = desktopGridCoords( id );
-    assert( coords.x() >= 0 );
-    for(;;)
-        {
+    QPoint coords = desktopGridCoords(id);
+    assert(coords.x() >= 0);
+    for (;;) {
         coords.ry()--;
-        if( coords.y() < 0 )
-            {
-            if( wrap )
-                coords.setY( desktopGridSize_.height() - 1 );
+        if (coords.y() < 0) {
+            if (wrap)
+                coords.setY(desktopGridSize_.height() - 1);
             else
                 return id; // Already at the top-most desktop
-            }
-        int desktop = desktopAtCoords( coords );
-        if( desktop > 0 )
-            return desktop;
         }
+        int desktop = desktopAtCoords(coords);
+        if (desktop > 0)
+            return desktop;
     }
+}
 
-int Workspace::desktopToRight( int id, bool wrap ) const
-    {
-    if( id == 0 )
+int Workspace::desktopToRight(int id, bool wrap) const
+{
+    if (id == 0)
         id = currentDesktop();
-    QPoint coords = desktopGridCoords( id );
-    assert( coords.x() >= 0 );
-    for(;;)
-        {
+    QPoint coords = desktopGridCoords(id);
+    assert(coords.x() >= 0);
+    for (;;) {
         coords.rx()++;
-        if( coords.x() >= desktopGridSize_.width() )
-            {
-            if( wrap )
-                coords.setX( 0 );
+        if (coords.x() >= desktopGridSize_.width()) {
+            if (wrap)
+                coords.setX(0);
             else
                 return id; // Already at the right-most desktop
-            }
-        int desktop = desktopAtCoords( coords );
-        if( desktop > 0 )
-            return desktop;
         }
+        int desktop = desktopAtCoords(coords);
+        if (desktop > 0)
+            return desktop;
     }
+}
 
-int Workspace::desktopBelow( int id, bool wrap ) const
-    {
-    if( id == 0 )
+int Workspace::desktopBelow(int id, bool wrap) const
+{
+    if (id == 0)
         id = currentDesktop();
-    QPoint coords = desktopGridCoords( id );
-    assert( coords.x() >= 0 );
-    for(;;)
-        {
+    QPoint coords = desktopGridCoords(id);
+    assert(coords.x() >= 0);
+    for (;;) {
         coords.ry()++;
-        if( coords.y() >= desktopGridSize_.height() )
-            {
-            if( wrap )
-                coords.setY( 0 );
+        if (coords.y() >= desktopGridSize_.height()) {
+            if (wrap)
+                coords.setY(0);
             else
                 return id; // Already at the bottom-most desktop
-            }
-        int desktop = desktopAtCoords( coords );
-        if( desktop > 0 )
-            return desktop;
         }
+        int desktop = desktopAtCoords(coords);
+        if (desktop > 0)
+            return desktop;
     }
+}
 
-int Workspace::desktopToLeft( int id, bool wrap ) const
-    {
-    if( id == 0 )
+int Workspace::desktopToLeft(int id, bool wrap) const
+{
+    if (id == 0)
         id = currentDesktop();
-    QPoint coords = desktopGridCoords( id );
-    assert( coords.x() >= 0 );
-    for(;;)
-        {
+    QPoint coords = desktopGridCoords(id);
+    assert(coords.x() >= 0);
+    for (;;) {
         coords.rx()--;
-        if( coords.x() < 0 )
-            {
-            if( wrap )
-                coords.setX( desktopGridSize_.width() - 1 );
+        if (coords.x() < 0) {
+            if (wrap)
+                coords.setX(desktopGridSize_.width() - 1);
             else
                 return id; // Already at the left-most desktop
-            }
-        int desktop = desktopAtCoords( coords );
-        if( desktop > 0 )
-            return desktop;
         }
+        int desktop = desktopAtCoords(coords);
+        if (desktop > 0)
+            return desktop;
     }
+}
 
-int Workspace::addDesktop( QPoint coords )
-    { // TODO
-    Q_UNUSED( coords );
+int Workspace::addDesktop(QPoint coords)
+{
+    // TODO
+    Q_UNUSED(coords);
     return 0;
-    }
+}
 
-void Workspace::deleteDesktop( int id )
-    { // TODO
-    Q_UNUSED( id );
-    }
+void Workspace::deleteDesktop(int id)
+{
+    // TODO
+    Q_UNUSED(id);
+}
 
 } // namespace

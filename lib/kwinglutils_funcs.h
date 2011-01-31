@@ -182,39 +182,39 @@ typedef char GLchar;
 // Function pointers
 // finding of OpenGL extensions functions
 typedef void (*glXFuncPtr)();
-typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
+typedef glXFuncPtr(*glXGetProcAddress_func)(const GLubyte*);
 extern KWIN_EXPORT glXGetProcAddress_func  glXGetProcAddress;
 // glXQueryDrawable (added in GLX 1.3)
-typedef void (*glXQueryDrawable_func)( Display* dpy, GLXDrawable drawable,
-    int attribute, unsigned int *value );
+typedef void (*glXQueryDrawable_func)(Display* dpy, GLXDrawable drawable,
+                                      int attribute, unsigned int *value);
 extern KWIN_EXPORT glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
-typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
-    int buffer, const int* attrib_list );
-typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
+typedef void (*glXBindTexImageEXT_func)(Display* dpy, GLXDrawable drawable,
+                                        int buffer, const int* attrib_list);
+typedef void (*glXReleaseTexImageEXT_func)(Display* dpy, GLXDrawable drawable, int buffer);
 extern KWIN_EXPORT glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 extern KWIN_EXPORT glXBindTexImageEXT_func glXBindTexImageEXT;
 // glXCopySubBufferMESA
-typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
+typedef void (*glXCopySubBuffer_func)(Display* , GLXDrawable, int, int, int, int);
 extern KWIN_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
-typedef int (*glXGetVideoSync_func)( unsigned int *count );
-typedef int (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
+typedef int (*glXGetVideoSync_func)(unsigned int *count);
+typedef int (*glXWaitVideoSync_func)(int divisor, int remainder, unsigned int *count);
 extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
 extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
 // GLX_SGIX_fbconfig and misc GLX 1.3 stuff
-typedef int (*glXGetFBConfigAttrib_func) ( Display *dpy, GLXFBConfig config,
-    int attribute, int *value );
-typedef XVisualInfo* (*glXGetVisualFromFBConfig_func) ( Display *dpy, GLXFBConfig config );
+typedef int (*glXGetFBConfigAttrib_func)(Display *dpy, GLXFBConfig config,
+        int attribute, int *value);
+typedef XVisualInfo*(*glXGetVisualFromFBConfig_func)(Display *dpy, GLXFBConfig config);
 extern KWIN_EXPORT glXGetFBConfigAttrib_func glXGetFBConfigAttrib;
 extern KWIN_EXPORT glXGetVisualFromFBConfig_func glXGetVisualFromFBConfig;
-typedef GLXWindow (*glXCreateWindow_func) ( Display *dpy, GLXFBConfig config,
-    Window win, const int *attribList );
-typedef void (*glXDestroyWindow_func) ( Display *dpy, GLXWindow window );
-typedef GLXPixmap (*glXCreatePixmap_func) ( Display *dpy, GLXFBConfig config,
-    Pixmap pixmap, const int *attribList );
-typedef void (*glXDestroyPixmap_func) ( Display *dpy, GLXPixmap pixmap );
-typedef GLXFBConfig* (*glXGetFBConfigs_func) ( Display *dpy, int screen, int *nelements );
+typedef GLXWindow(*glXCreateWindow_func)(Display *dpy, GLXFBConfig config,
+        Window win, const int *attribList);
+typedef void (*glXDestroyWindow_func)(Display *dpy, GLXWindow window);
+typedef GLXPixmap(*glXCreatePixmap_func)(Display *dpy, GLXFBConfig config,
+        Pixmap pixmap, const int *attribList);
+typedef void (*glXDestroyPixmap_func)(Display *dpy, GLXPixmap pixmap);
+typedef GLXFBConfig*(*glXGetFBConfigs_func)(Display *dpy, int screen, int *nelements);
 extern KWIN_EXPORT glXCreateWindow_func glXCreateWindow;
 extern KWIN_EXPORT glXDestroyWindow_func glXDestroyWindow;
 extern KWIN_EXPORT glXCreatePixmap_func glXCreatePixmap;
@@ -227,23 +227,23 @@ extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
 typedef void (*glBlendColor_func)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 extern KWIN_EXPORT glBlendColor_func glBlendColor;
 // framebuffer_object extension functions
-typedef GLboolean (*glIsRenderbuffer_func)( GLuint renderbuffer );
-typedef void (*glBindRenderbuffer_func)( GLenum target, GLuint renderbuffer );
-typedef void (*glDeleteRenderbuffers_func)( GLsizei n, const GLuint *renderbuffers );
-typedef void (*glGenRenderbuffers_func)( GLsizei n, GLuint *renderbuffers );
-typedef void (*glRenderbufferStorage_func)( GLenum target, GLenum internalformat, GLsizei width, GLsizei height );
-typedef void (*glGetRenderbufferParameteriv_func)( GLenum target, GLenum pname, GLint *params );
-typedef GLboolean (*glIsFramebuffer_func)( GLuint framebuffer );
-typedef void (*glBindFramebuffer_func)( GLenum target, GLuint framebuffer );
-typedef void (*glDeleteFramebuffers_func)( GLsizei n, const GLuint *framebuffers );
-typedef void (*glGenFramebuffers_func)( GLsizei n, GLuint *framebuffers );
-typedef GLenum (*glCheckFramebufferStatus_func)( GLenum target );
-typedef void (*glFramebufferTexture1D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
-typedef void (*glFramebufferTexture2D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
-typedef void (*glFramebufferTexture3D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset );
-typedef void (*glFramebufferRenderbuffer_func)( GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer );
-typedef void (*glGetFramebufferAttachmentParameteriv_func)( GLenum target, GLenum attachment, GLenum pname, GLint *params );
-typedef void (*glGenerateMipmap_func)( GLenum target );
+typedef GLboolean(*glIsRenderbuffer_func)(GLuint renderbuffer);
+typedef void (*glBindRenderbuffer_func)(GLenum target, GLuint renderbuffer);
+typedef void (*glDeleteRenderbuffers_func)(GLsizei n, const GLuint *renderbuffers);
+typedef void (*glGenRenderbuffers_func)(GLsizei n, GLuint *renderbuffers);
+typedef void (*glRenderbufferStorage_func)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+typedef void (*glGetRenderbufferParameteriv_func)(GLenum target, GLenum pname, GLint *params);
+typedef GLboolean(*glIsFramebuffer_func)(GLuint framebuffer);
+typedef void (*glBindFramebuffer_func)(GLenum target, GLuint framebuffer);
+typedef void (*glDeleteFramebuffers_func)(GLsizei n, const GLuint *framebuffers);
+typedef void (*glGenFramebuffers_func)(GLsizei n, GLuint *framebuffers);
+typedef GLenum(*glCheckFramebufferStatus_func)(GLenum target);
+typedef void (*glFramebufferTexture1D_func)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+typedef void (*glFramebufferTexture2D_func)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+typedef void (*glFramebufferTexture3D_func)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
+typedef void (*glFramebufferRenderbuffer_func)(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+typedef void (*glGetFramebufferAttachmentParameteriv_func)(GLenum target, GLenum attachment, GLenum pname, GLint *params);
+typedef void (*glGenerateMipmap_func)(GLenum target);
 extern KWIN_EXPORT glIsRenderbuffer_func glIsRenderbuffer;
 extern KWIN_EXPORT glBindRenderbuffer_func glBindRenderbuffer;
 extern KWIN_EXPORT glDeleteRenderbuffers_func glDeleteRenderbuffers;
@@ -262,36 +262,36 @@ extern KWIN_EXPORT glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
 extern KWIN_EXPORT glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
 extern KWIN_EXPORT glGenerateMipmap_func glGenerateMipmap;
 // Shader stuff
-typedef GLuint (*glCreateShader_func)(GLenum);
-typedef GLvoid (*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
-typedef GLvoid (*glCompileShader_func)(GLuint);
-typedef GLvoid (*glDeleteShader_func)(GLuint);
-typedef GLuint (*glCreateProgram_func)();
-typedef GLvoid (*glAttachShader_func)(GLuint, GLuint);
-typedef GLvoid (*glLinkProgram_func)(GLuint);
-typedef GLvoid (*glUseProgram_func)(GLuint);
-typedef GLvoid (*glDeleteProgram_func)(GLuint);
-typedef GLvoid (*glGetShaderInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
-typedef GLvoid (*glGetProgramInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
-typedef GLvoid (*glGetProgramiv_func)(GLuint, GLenum, GLint*);
-typedef GLvoid (*glGetShaderiv_func)(GLuint, GLenum, GLint*);
-typedef GLvoid (*glUniform1f_func)(GLint, GLfloat);
-typedef GLvoid (*glUniform2f_func)(GLint, GLfloat, GLfloat);
-typedef GLvoid (*glUniform3f_func)(GLint, GLfloat, GLfloat, GLfloat);
-typedef GLvoid (*glUniform4f_func)(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
-typedef GLvoid (*glUniformf_func)(GLint, GLfloat);
-typedef GLvoid (*glUniform1i_func)(GLint, GLint);
-typedef GLvoid (*glUniform1fv_func)(GLint, GLsizei, const GLfloat*);
-typedef GLvoid (*glUniform2fv_func)(GLint, GLsizei, const GLfloat*);
-typedef GLvoid (*glUniform3fv_func)(GLint, GLsizei, const GLfloat*);
-typedef GLvoid (*glUniform4fv_func)(GLint, GLsizei, const GLfloat*);
-typedef GLvoid (*glUniformMatrix4fv_func)(GLint, GLsizei, GLboolean, const GLfloat*);
-typedef GLvoid (*glGetUniformfv_func)(GLuint, GLint, GLfloat*);
-typedef GLvoid (*glValidateProgram_func)(GLuint);
-typedef GLint (*glGetUniformLocation_func)(GLuint, const GLchar*);
-typedef GLvoid (*glVertexAttrib1f_func)(GLuint, GLfloat);
-typedef GLint (*glGetAttribLocation_func)(GLuint, const GLchar*);
-typedef GLvoid (*glBindAttribLocation_func)(GLuint, GLuint, const GLchar*);
+typedef GLuint(*glCreateShader_func)(GLenum);
+typedef GLvoid(*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
+typedef GLvoid(*glCompileShader_func)(GLuint);
+typedef GLvoid(*glDeleteShader_func)(GLuint);
+typedef GLuint(*glCreateProgram_func)();
+typedef GLvoid(*glAttachShader_func)(GLuint, GLuint);
+typedef GLvoid(*glLinkProgram_func)(GLuint);
+typedef GLvoid(*glUseProgram_func)(GLuint);
+typedef GLvoid(*glDeleteProgram_func)(GLuint);
+typedef GLvoid(*glGetShaderInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef GLvoid(*glGetProgramInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef GLvoid(*glGetProgramiv_func)(GLuint, GLenum, GLint*);
+typedef GLvoid(*glGetShaderiv_func)(GLuint, GLenum, GLint*);
+typedef GLvoid(*glUniform1f_func)(GLint, GLfloat);
+typedef GLvoid(*glUniform2f_func)(GLint, GLfloat, GLfloat);
+typedef GLvoid(*glUniform3f_func)(GLint, GLfloat, GLfloat, GLfloat);
+typedef GLvoid(*glUniform4f_func)(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+typedef GLvoid(*glUniformf_func)(GLint, GLfloat);
+typedef GLvoid(*glUniform1i_func)(GLint, GLint);
+typedef GLvoid(*glUniform1fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid(*glUniform2fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid(*glUniform3fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid(*glUniform4fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid(*glUniformMatrix4fv_func)(GLint, GLsizei, GLboolean, const GLfloat*);
+typedef GLvoid(*glGetUniformfv_func)(GLuint, GLint, GLfloat*);
+typedef GLvoid(*glValidateProgram_func)(GLuint);
+typedef GLint(*glGetUniformLocation_func)(GLuint, const GLchar*);
+typedef GLvoid(*glVertexAttrib1f_func)(GLuint, GLfloat);
+typedef GLint(*glGetAttribLocation_func)(GLuint, const GLchar*);
+typedef GLvoid(*glBindAttribLocation_func)(GLuint, GLuint, const GLchar*);
 typedef void (*glGenProgramsARB_func)(GLsizei, GLuint*);
 typedef void (*glBindProgramARB_func)(GLenum, GLuint);
 typedef void (*glProgramStringARB_func)(GLenum, GLenum, GLsizei, const GLvoid*);
@@ -336,7 +336,7 @@ extern KWIN_EXPORT glGetProgramivARB_func glGetProgramivARB;
 // vertex buffer objects
 typedef void (*glGenBuffers_func)(GLsizei, GLuint*);
 extern KWIN_EXPORT glGenBuffers_func glGenBuffers;
-typedef void (*glDeleteBuffers_func)(GLsizei n, const GLuint* );
+typedef void (*glDeleteBuffers_func)(GLsizei n, const GLuint*);
 extern KWIN_EXPORT glDeleteBuffers_func glDeleteBuffers;
 typedef void (*glBindBuffer_func)(GLenum, GLuint);
 extern KWIN_EXPORT glBindBuffer_func glBindBuffer;
@@ -366,13 +366,13 @@ namespace KWin
 void KWIN_EXPORT eglResolveFunctions();
 void KWIN_EXPORT glResolveFunctions();
 // EGL
-typedef EGLImageKHR (*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
-typedef EGLBoolean (*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
+typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
+typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
 extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
 extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
 
 // GLES
-typedef GLvoid (*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
+typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
 extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
 } // namespace

@@ -19,17 +19,17 @@ namespace KWin
 
 class ShowPictureEffect
     : public Effect
-    {
-    public:
-        ShowPictureEffect();
-        virtual ~ShowPictureEffect();
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-    private:
-        void loadPicture();
-        bool init;
-        GLTexture* picture;
-        QRect pictureRect;
-    };
+{
+public:
+    ShowPictureEffect();
+    virtual ~ShowPictureEffect();
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+private:
+    void loadPicture();
+    bool init;
+    GLTexture* picture;
+    QRect pictureRect;
+};
 
 } // namespace
 

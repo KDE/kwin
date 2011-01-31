@@ -35,27 +35,27 @@ class GLShader;
  * Turns your desktop into a wavy (liquid) surface
  **/
 class LiquidEffect : public Effect
-    {
-    public:
-        LiquidEffect();
-        ~LiquidEffect();
+{
+public:
+    LiquidEffect();
+    ~LiquidEffect();
 
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
 
-        static bool supported();
+    static bool supported();
 
-    protected:
-        bool loadData();
+protected:
+    bool loadData();
 
-    private:
-        GLTexture* mTexture;
-        GLRenderTarget* mRenderTarget;
-        GLShader* mShader;
-        bool mValid;
+private:
+    GLTexture* mTexture;
+    GLRenderTarget* mRenderTarget;
+    GLShader* mShader;
+    bool mValid;
 
-        double mTime;
-    };
+    double mTime;
+};
 
 } // namespace
 

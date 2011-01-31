@@ -27,12 +27,12 @@ EGLConfig config;
 EGLSurface surface;
 EGLContext ctx;
 
-SceneOpenGL::SceneOpenGL( Workspace* ws )
-    : Scene( ws )
-    , init_ok( false )
-    , selfCheckDone( true )
-    {
-    if( !initRenderingContext() )
+SceneOpenGL::SceneOpenGL(Workspace* ws)
+    : Scene(ws)
+    , init_ok(false)
+    , selfCheckDone(true)
+{
+    if (!initRenderingContext())
         return;
 
     initEGL();
@@ -45,84 +45,81 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kError(1212) << "Required extension GL_OES_EGL_image not found, disabling compositing";
         return;
     }
-    debug = qstrcmp( qgetenv( "KWIN_GL_DEBUG" ), "1" ) == 0;
+    debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
     if (!ShaderManager::instance()->isValid()) {
-        kError( 1212 ) << "Shaders not valid, ES compositing not possible";
+        kError(1212) << "Shaders not valid, ES compositing not possible";
         return;
     }
     ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
 
-    if( checkGLError( "Init" ))
-        {
-        kError( 1212 ) << "OpenGL compositing setup failed";
+    if (checkGLError("Init")) {
+        kError(1212) << "OpenGL compositing setup failed";
         return; // error
-        }
-    init_ok = true;
     }
+    init_ok = true;
+}
 
 SceneOpenGL::~SceneOpenGL()
-    {
-    foreach( Window* w, windows )
-        delete w;
+{
+    foreach (Window * w, windows)
+    delete w;
     // do cleanup after initBuffer()
-    eglMakeCurrent( dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT );
-    eglDestroyContext( dpy, ctx );
-    eglDestroySurface( dpy, surface );
-    eglTerminate( dpy );
+    eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroyContext(dpy, ctx);
+    eglDestroySurface(dpy, surface);
+    eglTerminate(dpy);
     eglReleaseThread();
     SceneOpenGL::EffectFrame::cleanup();
-    checkGLError( "Cleanup" );
-    }
+    checkGLError("Cleanup");
+}
 
 bool SceneOpenGL::initTfp()
-    {
+{
     return false;
-    }
+}
 
 bool SceneOpenGL::initRenderingContext()
-    {
-    dpy = eglGetDisplay( display() );
-    if( dpy == EGL_NO_DISPLAY )
+{
+    dpy = eglGetDisplay(display());
+    if (dpy == EGL_NO_DISPLAY)
         return false;
     EGLint major, minor;
-    if( eglInitialize( dpy, &major, &minor ) == EGL_FALSE )
+    if (eglInitialize(dpy, &major, &minor) == EGL_FALSE)
         return false;
-    eglBindAPI( EGL_OPENGL_ES_API );
+    eglBindAPI(EGL_OPENGL_ES_API);
     initBufferConfigs();
-    if( !wspace->createOverlay() )
-        {
-        kError( 1212 ) << "Could not get overlay window";
+    if (!wspace->createOverlay()) {
+        kError(1212) << "Could not get overlay window";
         return false;
-        }
-    surface = eglCreateWindowSurface( dpy, config, wspace->overlayWindow(), 0 );
+    }
+    surface = eglCreateWindowSurface(dpy, config, wspace->overlayWindow(), 0);
 
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
     };
 
-    ctx = eglCreateContext( dpy, config, EGL_NO_CONTEXT, context_attribs );
-    if( ctx == EGL_NO_CONTEXT )
+    ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs);
+    if (ctx == EGL_NO_CONTEXT)
         return false;
-    if( eglMakeCurrent( dpy, surface, surface, ctx ) == EGL_FALSE )
+    if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE)
         return false;
-    kDebug( 1212 ) << "EGL version: " << major << "." << minor;
+    kDebug(1212) << "EGL version: " << major << "." << minor;
     EGLint error = eglGetError();
-    if( error != EGL_SUCCESS )
-        {
-        kWarning( 1212 ) << "Error occurred while creating context " << error;
+    if (error != EGL_SUCCESS) {
+        kWarning(1212) << "Error occurred while creating context " << error;
         return false;
-        }
-    return true;
     }
+    return true;
+}
 
 bool SceneOpenGL::initBuffer()
-    {
+{
     return false;
-    }
+}
 
 bool SceneOpenGL::initBufferConfigs()
-    {
+{
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
         EGL_RED_SIZE,             1,
@@ -141,107 +138,100 @@ bool SceneOpenGL::initBufferConfigs()
     EGLint visualId = XVisualIDFromVisual((Visual*)QX11Info::appVisual());
 
     config = configs[0];
-    for (int i = 0; i < count; i++)
-        {
+    for (int i = 0; i < count; i++) {
         EGLint val;
         eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val);
-        if (visualId == val)
-            {
+        if (visualId == val) {
             config = configs[i];
             break;
-            }
         }
-    return true;
     }
+    return true;
+}
 
 bool SceneOpenGL::initDrawableConfigs()
-    {
+{
     return false;
-    }
+}
 
 void SceneOpenGL::selfCheckSetup()
-    {
+{
     // not used in EGL
-    }
+}
 
 bool SceneOpenGL::selfCheckFinish()
-    {
+{
     // not used in EGL
     return true;
-    }
+}
 
 // the entry function for painting
-void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
-    {
+void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
+{
     QTime t = QTime::currentTime();
-    foreach( Toplevel* c, toplevels )
-        {
-        assert( windows.contains( c ));
-        stacking_order.append( windows[ c ] );
-        }
+    foreach (Toplevel * c, toplevels) {
+        assert(windows.contains(c));
+        stacking_order.append(windows[ c ]);
+    }
     grabXServer();
     int mask = 0;
-    paintScreen( &mask, &damage ); // call generic implementation
+    paintScreen(&mask, &damage);   // call generic implementation
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
-    if( wspace->overlayWindow()) // show the window only after the first pass, since
+    if (wspace->overlayWindow())  // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
     lastRenderTime = t.elapsed();
-    flushBuffer( mask, damage );
+    flushBuffer(mask, damage);
     // do cleanup
     stacking_order.clear();
-    checkGLError( "PostPaint" );
-    }
+    checkGLError("PostPaint");
+}
 
 void SceneOpenGL::waitSync()
-    {
+{
     // not used in EGL
-    }
+}
 
-void SceneOpenGL::flushBuffer( int mask, QRegion damage )
-    {
+void SceneOpenGL::flushBuffer(int mask, QRegion damage)
+{
     Q_UNUSED(damage)
     glFlush();
-    if( mask & PAINT_SCREEN_REGION )
-        {
+    if (mask & PAINT_SCREEN_REGION) {
         // TODO: implement me properly
-        eglSwapBuffers( dpy, surface );
-        }
-    else
-        {
-        eglSwapBuffers( dpy, surface );
-        }
+        eglSwapBuffers(dpy, surface);
+    } else {
+        eglSwapBuffers(dpy, surface);
+    }
     eglWaitGL();
     // TODO: remove for wayland
-    XFlush( display());
-    }
+    XFlush(display());
+}
 
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
 
 void SceneOpenGL::Texture::init()
-    {
+{
     findTarget();
-    }
+}
 
 void SceneOpenGL::Texture::release()
-    {
+{
     mTexture = None;
-    }
+}
 
 void SceneOpenGL::Texture::findTarget()
-    {
+{
     mTarget = GL_TEXTURE_2D;
-    }
+}
 
-bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
-    int depth, QRegion region )
-    {
+bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
+                                int depth, QRegion region)
+{
     Q_UNUSED(size)
     Q_UNUSED(depth)
     Q_UNUSED(region)
-    if( mTexture == None )
-        {
+    if (mTexture == None) {
         createTexture();
         bind();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -253,21 +243,21 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             EGL_NONE
         };
         EGLImageKHR image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                                (EGLClientBuffer)pix, attribs);
+                                              (EGLClientBuffer)pix, attribs);
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
-        eglDestroyImageKHR( dpy, image );
+        eglDestroyImageKHR(dpy, image);
         unbind();
         checkGLError("load texture");
-        }
-    return true;
     }
+    return true;
+}
 
 void SceneOpenGL::Texture::bind()
-    {
+{
     GLTexture::bind();
-    }
+}
 
 void SceneOpenGL::Texture::unbind()
-    {
+{
     GLTexture::unbind();
-    }
+}

@@ -39,12 +39,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new ThumbnailAsideEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -57,28 +57,28 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     connect(m_ui->spinOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
     m_actionCollection->setConfigGroup("ThumbnailAside");
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*)m_actionCollection->addAction( "ToggleCurrentThumbnail" );
-    a->setText( i18n("Toggle Thumbnail for Current Window" ));
+    KAction* a = (KAction*)m_actionCollection->addAction("ToggleCurrentThumbnail");
+    a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
 
     m_ui->editor->addCollection(m_actionCollection);
 
-    }
+}
 
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    }
+}
 
 void ThumbnailAsideEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
@@ -93,10 +93,10 @@ void ThumbnailAsideEffectConfig::load()
     m_ui->spinOpacity->setValue(opacity);
 
     emit changed(false);
-    }
+}
 
 void ThumbnailAsideEffectConfig::save()
-    {
+{
     kDebug(1212) << "Saving config of ThumbnailAside" ;
     //KCModule::save();
 
@@ -112,19 +112,19 @@ void ThumbnailAsideEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "thumbnailaside" );
-    }
+    EffectsHandler::sendReloadMessage("thumbnailaside");
+}
 
 void ThumbnailAsideEffectConfig::defaults()
-    {
+{
     m_ui->spinWidth->setValue(200);
     m_ui->spinSpacing->setValue(10);
     m_ui->spinOpacity->setValue(50);
     m_ui->editor->allDefault();
     emit changed(true);
 
-    
-    }
+
+}
 
 
 } // namespace

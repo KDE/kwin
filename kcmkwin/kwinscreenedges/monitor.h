@@ -35,7 +35,7 @@ class QMenu;
 
 namespace Plasma
 {
-    class FrameSvg;
+class FrameSvg;
 }
 
 namespace KWin
@@ -43,71 +43,70 @@ namespace KWin
 
 class Monitor
     : public ScreenPreviewWidget
-    {
+{
     Q_OBJECT
-    public:
-        Monitor( QWidget* parent );
-        void setEdge( int edge, bool set );
-        bool edge( int edge ) const;
-        void setEdgeHidden( int edge, bool set );
-        bool edgeHidden( int edge ) const;
-        void clear();
-        void addEdgeItem( int edge, const QString& item );
-        void setEdgeItemEnabled( int edge, int index, bool enabled );
-        bool edgeItemEnabled( int edge, int index ) const;
-        void selectEdgeItem( int edge, int index );
-        int selectedEdgeItem( int edge ) const;
+public:
+    Monitor(QWidget* parent);
+    void setEdge(int edge, bool set);
+    bool edge(int edge) const;
+    void setEdgeHidden(int edge, bool set);
+    bool edgeHidden(int edge) const;
+    void clear();
+    void addEdgeItem(int edge, const QString& item);
+    void setEdgeItemEnabled(int edge, int index, bool enabled);
+    bool edgeItemEnabled(int edge, int index) const;
+    void selectEdgeItem(int edge, int index);
+    int selectedEdgeItem(int edge) const;
 
-        enum Edges
-            {
-            Left,
-            Right,
-            Top,
-            Bottom,
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
-            };
-    signals:
-        void changed();
-        void edgeSelectionChanged( int edge, int index );
-    protected:
-        virtual void resizeEvent( QResizeEvent* e );
-    private:
-        class Corner;
-        void popup( Corner* c, QPoint pos );
-        void flip( Corner* c, QPoint pos );
-        void checkSize();
-        QGraphicsView* view;
-        QGraphicsScene* scene;
-        Corner* items[ 8 ];
-        bool hidden[ 8 ];
-        QMenu* popups[ 8 ];
-        QVector< QAction* > popup_actions[ 8 ];
-        QActionGroup* grp[ 8 ];
+    enum Edges {
+        Left,
+        Right,
+        Top,
+        Bottom,
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
     };
+signals:
+    void changed();
+    void edgeSelectionChanged(int edge, int index);
+protected:
+    virtual void resizeEvent(QResizeEvent* e);
+private:
+    class Corner;
+    void popup(Corner* c, QPoint pos);
+    void flip(Corner* c, QPoint pos);
+    void checkSize();
+    QGraphicsView* view;
+    QGraphicsScene* scene;
+    Corner* items[ 8 ];
+    bool hidden[ 8 ];
+    QMenu* popups[ 8 ];
+    QVector< QAction* > popup_actions[ 8 ];
+    QActionGroup* grp[ 8 ];
+};
 
 class Monitor::Corner
     : public QGraphicsRectItem
-    {
-    public:
-        Corner( Monitor* m );
-        ~Corner( );
-        void setActive(bool active);
-        bool active() const;
-    protected:
-        virtual void contextMenuEvent( QGraphicsSceneContextMenuEvent* e );
-        virtual void mousePressEvent( QGraphicsSceneMouseEvent* e );
-        virtual void hoverEnterEvent( QGraphicsSceneHoverEvent * e);
-        virtual void hoverLeaveEvent( QGraphicsSceneHoverEvent * e);
-        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
-    private:
-        Monitor* monitor;
-        Plasma::FrameSvg *button;
-        bool m_active;
-        bool m_hover;
-    };
+{
+public:
+    Corner(Monitor* m);
+    ~Corner();
+    void setActive(bool active);
+    bool active() const;
+protected:
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* e);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* e);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * e);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * e);
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+private:
+    Monitor* monitor;
+    Plasma::FrameSvg *button;
+    bool m_active;
+    bool m_hover;
+};
 
 } // namespace
 

@@ -31,23 +31,23 @@ namespace KWin
 class DimInactiveEffectConfigForm : public QWidget, public Ui::DimInactiveEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit DimInactiveEffectConfigForm(QWidget* parent);
+public:
+    explicit DimInactiveEffectConfigForm(QWidget* parent);
 };
 
 class DimInactiveEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit DimInactiveEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+public:
+    explicit DimInactiveEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        DimInactiveEffectConfigForm* m_ui;
-    };
+private:
+    DimInactiveEffectConfigForm* m_ui;
+};
 
 } // namespace
 

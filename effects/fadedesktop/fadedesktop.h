@@ -29,22 +29,22 @@ namespace KWin
 
 class FadeDesktopEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        FadeDesktopEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
-        virtual void paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data );
-        virtual void desktopChanged( int old );
+public:
+    FadeDesktopEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual void desktopChanged(int old);
 
-    private:
-        bool m_fading;
-        TimeLine m_timeline;
-        int m_oldDesktop;
-    };
+private:
+    bool m_fading;
+    TimeLine m_timeline;
+    int m_oldDesktop;
+};
 
 } // namespace
 

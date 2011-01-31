@@ -29,19 +29,19 @@ namespace KWin
 
 class LoginEffect
     : public Effect
-    {
-    public:
-        LoginEffect();
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowClosed( EffectWindow* w );
-    private:
-        bool isLoginSplash( EffectWindow* w );
-        double progress; // 0-1
-        EffectWindow* login_window;
-    };
+{
+public:
+    LoginEffect();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowClosed(EffectWindow* w);
+private:
+    bool isLoginSplash(EffectWindow* w);
+    double progress; // 0-1
+    EffectWindow* login_window;
+};
 
 } // namespace
 

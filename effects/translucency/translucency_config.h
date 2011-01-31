@@ -31,23 +31,23 @@ namespace KWin
 class TranslucencyEffectConfigForm : public QWidget, public Ui::TranslucencyEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit TranslucencyEffectConfigForm(QWidget* parent);
+public:
+    explicit TranslucencyEffectConfigForm(QWidget* parent);
 };
 
 class TranslucencyEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit TranslucencyEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+public:
+    explicit TranslucencyEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        TranslucencyEffectConfigForm* m_ui;
-    };
+private:
+    TranslucencyEffectConfigForm* m_ui;
+};
 
 } // namespace
 

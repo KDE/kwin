@@ -30,62 +30,62 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(parent)
-    {
+{
     setupUi(this);
-    }
+}
 
 WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& args)
     : KCModule(KWin::EffectFactory::componentData(), parent, args)
-    {
+{
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    myActionCollection = new KActionCollection( this, KComponentData("kwin") );
-    KAction* a = (KAction*)myActionCollection->addAction( "WindowGeometry" );
-    a->setText( i18n("Toggle KWin composited geometry display" ));
+    myActionCollection = new KActionCollection(this, KComponentData("kwin"));
+    KAction* a = (KAction*)myActionCollection->addAction("WindowGeometry");
+    a->setText(i18n("Toggle KWin composited geometry display"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
-    
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
+
     myUi->shortcuts->addCollection(myActionCollection);
     connect(myUi->shortcuts,    SIGNAL(keyChange()), this, SLOT(changed()));
 
     connect(myUi->handleMove,   SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(myUi->handleResize, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    }
+}
 
 WindowGeometryConfig::~WindowGeometryConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     myUi->shortcuts->undoChanges();
-    }
+}
 
 void WindowGeometryConfig::load()
-    {
+{
     KCModule::load();
     KConfigGroup conf = EffectsHandler::effectConfig("WindowGeometry");
-    myUi->handleMove->setChecked( conf.readEntry("Move", true) );
-    myUi->handleResize->setChecked( conf.readEntry("Resize", true) );
+    myUi->handleMove->setChecked(conf.readEntry("Move", true));
+    myUi->handleResize->setChecked(conf.readEntry("Resize", true));
     emit changed(false);
-    }
+}
 
 void WindowGeometryConfig::save()
-    {
+{
     KConfigGroup conf = EffectsHandler::effectConfig("WindowGeometry");
     conf.writeEntry("Move",   myUi->handleMove->isChecked());
     conf.writeEntry("Resize", myUi->handleResize->isChecked());
     myUi->shortcuts->save();   // undo() will restore to this state from now on
     conf.sync();
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "windowgeometry" );
-    }
+    EffectsHandler::sendReloadMessage("windowgeometry");
+}
 
 void WindowGeometryConfig::defaults()
-    {
-    myUi->handleMove->setChecked( true );
-    myUi->handleResize->setChecked( true );
+{
+    myUi->handleMove->setChecked(true);
+    myUi->handleResize->setChecked(true);
     myUi->shortcuts->allDefault();
     emit changed(true);
-    }
+}
 } //namespace
 #include "windowgeometry_config.moc"

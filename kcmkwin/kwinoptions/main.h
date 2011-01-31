@@ -37,63 +37,63 @@ class KMovingConfig;
 
 class KWinOptions : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  KWinOptions(QWidget *parent, const QVariantList &args);
-  virtual ~KWinOptions();
+    KWinOptions(QWidget *parent, const QVariantList &args);
+    virtual ~KWinOptions();
 
-  void load();
-  void save();
-  void defaults();
-  QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
 
 protected slots:
 
-  void moduleChanged(bool state);
+    void moduleChanged(bool state);
 
 
 private:
 
-  KTabWidget   *tab;
+    KTabWidget   *tab;
 
-  KFocusConfig *mFocus;
-  KTitleBarActionsConfig *mTitleBarActions;
-  KWindowActionsConfig *mWindowActions;
-  KMovingConfig *mMoving;
-  KAdvancedConfig *mAdvanced;
+    KFocusConfig *mFocus;
+    KTitleBarActionsConfig *mTitleBarActions;
+    KWindowActionsConfig *mWindowActions;
+    KMovingConfig *mMoving;
+    KAdvancedConfig *mAdvanced;
 
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
 class KActionsOptions : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  KActionsOptions(QWidget *parent, const QVariantList &args);
-  virtual ~KActionsOptions();
+    KActionsOptions(QWidget *parent, const QVariantList &args);
+    virtual ~KActionsOptions();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected slots:
 
-  void moduleChanged(bool state);
+    void moduleChanged(bool state);
 
 
 private:
 
-  KTabWidget   *tab;
+    KTabWidget   *tab;
 
-  KTitleBarActionsConfig *mTitleBarActions;
-  KWindowActionsConfig *mWindowActions;
+    KTitleBarActionsConfig *mTitleBarActions;
+    KWindowActionsConfig *mWindowActions;
 
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
 #endif

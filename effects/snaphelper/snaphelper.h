@@ -28,26 +28,26 @@ namespace KWin
 
 class SnapHelperEffect
     : public Effect
-    {
-    public:
-        SnapHelperEffect();
-        ~SnapHelperEffect();
+{
+public:
+    SnapHelperEffect();
+    ~SnapHelperEffect();
 
-        virtual void reconfigure( ReconfigureFlags );
+    virtual void reconfigure(ReconfigureFlags);
 
-        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
-        virtual void postPaintScreen();
-        virtual void windowClosed( EffectWindow* w );
-        virtual void windowUserMovedResized( EffectWindow* w, bool first, bool last );
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void postPaintScreen();
+    virtual void windowClosed(EffectWindow* w);
+    virtual void windowUserMovedResized(EffectWindow* w, bool first, bool last);
 
-        static bool supported();
+    static bool supported();
 
-    private:
-        bool m_active;
-        EffectWindow* m_window;
-        TimeLine m_timeline;
-        //GC m_gc;
-    };
+private:
+    bool m_active;
+    EffectWindow* m_window;
+    TimeLine m_timeline;
+    //GC m_gc;
+};
 
 } // namespace
 

@@ -31,35 +31,35 @@ namespace KWin
 
 
 class DashboardEffect : public KWin::Effect
-    {
-    public:
-        DashboardEffect();
-        ~DashboardEffect();
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void postPaintScreen();
-        virtual void propagate();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void unpropagate();
-        virtual void windowActivated( EffectWindow *w );
-	virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-    private:
-        bool blur;
-        bool isDashboard( EffectWindow* w );
-        bool transformWindow;
-        bool retransformWindow;
-        bool activateAnimation;
-        bool deactivateAnimation;
-        TimeLine timeline;
-        long atom;
-        QString brightness;
-        double brightnessDelta;
-        QString saturation;
-        double saturationDelta;
-        QString duration;
-        EffectWindow* window;
-    };
+{
+public:
+    DashboardEffect();
+    ~DashboardEffect();
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
+    virtual void propagate();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void unpropagate();
+    virtual void windowActivated(EffectWindow *w);
+    virtual void windowAdded(EffectWindow* c);
+    virtual void windowClosed(EffectWindow* c);
+private:
+    bool blur;
+    bool isDashboard(EffectWindow* w);
+    bool transformWindow;
+    bool retransformWindow;
+    bool activateAnimation;
+    bool deactivateAnimation;
+    TimeLine timeline;
+    long atom;
+    QString brightness;
+    double brightnessDelta;
+    QString saturation;
+    double saturationDelta;
+    QString duration;
+    EffectWindow* window;
+};
 
 } // namespace
 

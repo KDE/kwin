@@ -31,26 +31,26 @@ namespace KWin
 
 class DimInactiveEffect
     : public Effect
-    {
-    public:
-        DimInactiveEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowDeleted( EffectWindow* w );
-        virtual void windowActivated( EffectWindow* c );
-    private:
-        bool dimWindow( const EffectWindow* w ) const;
-        TimeLine timeline;
-        EffectWindow* active;
-        EffectWindow* previousActive;
-        TimeLine previousActiveTimeline;
-        int dim_strength; // reduce saturation and brightness by this percentage
-        bool dim_panels; // do/don't dim also all panels
-        bool dim_desktop; // do/don't dim the desktop
-        bool dim_keepabove; // do/don't dim keep-above windows
-        bool dim_by_group; // keep visible all windows from the active window's group or only the active window
-    };
+{
+public:
+    DimInactiveEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowDeleted(EffectWindow* w);
+    virtual void windowActivated(EffectWindow* c);
+private:
+    bool dimWindow(const EffectWindow* w) const;
+    TimeLine timeline;
+    EffectWindow* active;
+    EffectWindow* previousActive;
+    TimeLine previousActiveTimeline;
+    int dim_strength; // reduce saturation and brightness by this percentage
+    bool dim_panels; // do/don't dim also all panels
+    bool dim_desktop; // do/don't dim the desktop
+    bool dim_keepabove; // do/don't dim keep-above windows
+    bool dim_by_group; // keep visible all windows from the active window's group or only the active window
+};
 
 } // namespace
 

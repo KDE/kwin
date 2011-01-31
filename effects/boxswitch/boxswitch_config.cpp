@@ -32,72 +32,72 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 BoxSwitchEffectConfigForm::BoxSwitchEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 BoxSwitchEffectConfig::BoxSwitchEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule( EffectFactory::componentData(), parent, args )
-    {
-    m_ui = new BoxSwitchEffectConfigForm( this );
+    :   KCModule(EffectFactory::componentData(), parent, args)
+{
+    m_ui = new BoxSwitchEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget( m_ui );
+    layout->addWidget(m_ui);
 
-    connect( m_ui->opacitySpin, SIGNAL( valueChanged(int) ), this, SLOT( changed() ));
-    connect( m_ui->elevateBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
-    connect( m_ui->animateBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
+    connect(m_ui->opacitySpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->elevateBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->animateBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
-    }
+}
 
 BoxSwitchEffectConfig::~BoxSwitchEffectConfig()
-    {
-    }
+{
+}
 
 void BoxSwitchEffectConfig::load()
-    {
+{
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "BoxSwitch" );
-    
-    int opacity = conf.readEntry( "BackgroundOpacity", 25 );
-    m_ui->opacitySpin->setValue( opacity );
+    KConfigGroup conf = EffectsHandler::effectConfig("BoxSwitch");
 
-    bool elevate = conf.readEntry( "ElevateSelected", true );
-    m_ui->elevateBox->setChecked( elevate );
+    int opacity = conf.readEntry("BackgroundOpacity", 25);
+    m_ui->opacitySpin->setValue(opacity);
 
-    bool animate = conf.readEntry( "AnimateSwitch", false );
-    m_ui->animateBox->setChecked( animate );
+    bool elevate = conf.readEntry("ElevateSelected", true);
+    m_ui->elevateBox->setChecked(elevate);
+
+    bool animate = conf.readEntry("AnimateSwitch", false);
+    m_ui->animateBox->setChecked(animate);
 
     emit changed(false);
-    }
+}
 
 void BoxSwitchEffectConfig::save()
-    {
+{
     KCModule::save();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "BoxSwitch" );
+    KConfigGroup conf = EffectsHandler::effectConfig("BoxSwitch");
 
-    conf.writeEntry( "BackgroundOpacity", m_ui->opacitySpin->value() );
+    conf.writeEntry("BackgroundOpacity", m_ui->opacitySpin->value());
 
-    conf.writeEntry( "ElevateSelected", m_ui->elevateBox->isChecked() );
+    conf.writeEntry("ElevateSelected", m_ui->elevateBox->isChecked());
 
-    conf.writeEntry( "AnimateSwitch", m_ui->animateBox->isChecked() );
+    conf.writeEntry("AnimateSwitch", m_ui->animateBox->isChecked());
 
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "boxswitch" );
-    }
+    EffectsHandler::sendReloadMessage("boxswitch");
+}
 
 void BoxSwitchEffectConfig::defaults()
-    {
-    m_ui->opacitySpin->setValue( 25 );
-    m_ui->elevateBox->setChecked( true );
-    m_ui->animateBox->setChecked( false );
+{
+    m_ui->opacitySpin->setValue(25);
+    m_ui->elevateBox->setChecked(true);
+    m_ui->animateBox->setChecked(false);
     emit changed(true);
-    }
+}
 
 } // namespace
 

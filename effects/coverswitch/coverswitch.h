@@ -35,76 +35,75 @@ namespace KWin
 
 class CoverSwitchEffect
     : public Effect
-    {
-    public:
-        CoverSwitchEffect();
-        ~CoverSwitchEffect();
+{
+public:
+    CoverSwitchEffect();
+    ~CoverSwitchEffect();
 
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void tabBoxAdded( int mode );
-        virtual void tabBoxClosed();
-        virtual void tabBoxUpdated();
-        virtual void windowInputMouseEvent( Window w, QEvent* e );
-        virtual void windowClosed( EffectWindow* c );
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void tabBoxAdded(int mode);
+    virtual void tabBoxClosed();
+    virtual void tabBoxUpdated();
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowClosed(EffectWindow* c);
 
-        static bool supported();
-    private:
-        void paintScene( EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,
-        bool reflectedWindows = false );
-        void paintWindowCover( EffectWindow* w, bool reflectedWindow, WindowPaintData& data );
-        void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
-        void paintWindows( const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
-        void abort();
+    static bool supported();
+private:
+    void paintScene(EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,
+                    bool reflectedWindows = false);
+    void paintWindowCover(EffectWindow* w, bool reflectedWindow, WindowPaintData& data);
+    void paintFrontWindow(EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow);
+    void paintWindows(const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL);
+    void abort();
 
-        bool mActivated;
-        float angle;
-        bool animateSwitch;
-        bool animateStart;
-        bool animateStop;
-        bool animation;
-        bool start;
-        bool stop;
-        bool reflection;
-        float mirrorColor[2][4];
-        bool windowTitle;
-        int animationDuration;
-        bool stopRequested;
-        bool startRequested;
-        TimeLine timeLine;
-        QRect area;
-        Window input;
-        float zPosition;
-        float scaleFactor;
-        enum Direction
-            {
-            Left,
-            Right
-            };
-        Direction direction;
-        QQueue<Direction> scheduled_directions;
-        EffectWindow* selected_window;
-        int activeScreen;
-        QList< EffectWindow* > leftWindows;
-        QList< EffectWindow* > rightWindows;
-        EffectWindowList currentWindowList;
-        EffectWindowList referrencedWindows;
-
-        EffectFrame* captionFrame;
-        QFont captionFont;
-
-        bool thumbnails;
-        bool dynamicThumbnails;
-        int thumbnailWindows;
-
-        bool primaryTabBox;
-        bool secondaryTabBox;
-
-        GLShader *m_reflectionShader;
+    bool mActivated;
+    float angle;
+    bool animateSwitch;
+    bool animateStart;
+    bool animateStop;
+    bool animation;
+    bool start;
+    bool stop;
+    bool reflection;
+    float mirrorColor[2][4];
+    bool windowTitle;
+    int animationDuration;
+    bool stopRequested;
+    bool startRequested;
+    TimeLine timeLine;
+    QRect area;
+    Window input;
+    float zPosition;
+    float scaleFactor;
+    enum Direction {
+        Left,
+        Right
     };
+    Direction direction;
+    QQueue<Direction> scheduled_directions;
+    EffectWindow* selected_window;
+    int activeScreen;
+    QList< EffectWindow* > leftWindows;
+    QList< EffectWindow* > rightWindows;
+    EffectWindowList currentWindowList;
+    EffectWindowList referrencedWindows;
+
+    EffectFrame* captionFrame;
+    QFont captionFont;
+
+    bool thumbnails;
+    bool dynamicThumbnails;
+    int thumbnailWindows;
+
+    bool primaryTabBox;
+    bool secondaryTabBox;
+
+    GLShader *m_reflectionShader;
+};
 
 } // namespace
 

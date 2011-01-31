@@ -40,59 +40,59 @@ namespace KWin
 
 class ConfirmDialog : public KTimerDialog
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     ConfirmDialog();
 };
 
 class KWinCompositingConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        KWinCompositingConfig(QWidget *parent, const QVariantList &args);
-        virtual ~KWinCompositingConfig();
+public:
+    KWinCompositingConfig(QWidget *parent, const QVariantList &args);
+    virtual ~KWinCompositingConfig();
 
-        virtual QString quickHelp() const;
+    virtual QString quickHelp() const;
 
-    public slots:
-        virtual void compositingEnabled(bool enabled);
-        virtual void showConfirmDialog(bool reinitCompositing);
-        void currentTabChanged(int tab);
+public slots:
+    virtual void compositingEnabled(bool enabled);
+    virtual void showConfirmDialog(bool reinitCompositing);
+    void currentTabChanged(int tab);
 
-        virtual void load();
-        virtual void save();
-        virtual void defaults();
-        void reparseConfiguration(const QByteArray& conf);
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    void reparseConfiguration(const QByteArray& conf);
 
-        void loadGeneralTab();
-        void loadEffectsTab();
-        void loadAdvancedTab();
-        void saveGeneralTab();
-        void saveEffectsTab();
-        bool saveAdvancedTab();
+    void loadGeneralTab();
+    void loadEffectsTab();
+    void loadAdvancedTab();
+    void saveGeneralTab();
+    void saveEffectsTab();
+    bool saveAdvancedTab();
 
-        void checkLoadedEffects();
-        void configChanged(bool reinitCompositing);
-        void initEffectSelector();
-        void setupCompositingState( bool active, bool enabled = true );
-    
-    private slots:
-        void toogleSmoothScaleUi( int compositingType );
+    void checkLoadedEffects();
+    void configChanged(bool reinitCompositing);
+    void initEffectSelector();
+    void setupCompositingState(bool active, bool enabled = true);
 
-    private:
-        bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
+private slots:
+    void toogleSmoothScaleUi(int compositingType);
 
-        KSharedConfigPtr mKWinConfig;
-        Ui::KWinCompositingConfig ui;
-        CompositingPrefs mDefaultPrefs;
+private:
+    bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
 
-        QMap<QString, QString> mPreviousConfig;
-        KTemporaryFile mTmpConfigFile;
-        KSharedConfigPtr mTmpConfig;
-        bool m_showConfirmDialog;
+    KSharedConfigPtr mKWinConfig;
+    Ui::KWinCompositingConfig ui;
+    CompositingPrefs mDefaultPrefs;
 
-        OrgKdeKWinInterface* kwinInterface;
-    };
+    QMap<QString, QString> mPreviousConfig;
+    KTemporaryFile mTmpConfigFile;
+    KSharedConfigPtr mTmpConfig;
+    bool m_showConfirmDialog;
+
+    OrgKdeKWinInterface* kwinInterface;
+};
 
 } // namespace
 

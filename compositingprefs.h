@@ -40,9 +40,15 @@ public:
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
     bool recommendCompositing() const;
-    bool enableVSync() const  { return mEnableVSync; }
-    bool enableDirectRendering() const  { return mEnableDirectRendering; }
-    bool strictBinding() const { return mStrictBinding; }
+    bool enableVSync() const  {
+        return mEnableVSync;
+    }
+    bool enableDirectRendering() const  {
+        return mEnableDirectRendering;
+    }
+    bool strictBinding() const {
+        return mStrictBinding;
+    }
 
     void detect();
 

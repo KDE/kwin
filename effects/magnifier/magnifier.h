@@ -28,28 +28,28 @@ namespace KWin
 
 class MagnifierEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        MagnifierEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
-    private slots:
-        void zoomIn();
-        void zoomOut();
-        void toggle();
-    private:
-        QRect magnifierArea( QPoint pos = cursorPos()) const;
-        double zoom;
-        double target_zoom;
-        bool polling; // Mouse polling
-        QSize magnifier_size;
-    };
+public:
+    MagnifierEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void mouseChanged(const QPoint& pos, const QPoint& old,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+private slots:
+    void zoomIn();
+    void zoomOut();
+    void toggle();
+private:
+    QRect magnifierArea(QPoint pos = cursorPos()) const;
+    double zoom;
+    double target_zoom;
+    bool polling; // Mouse polling
+    QSize magnifier_size;
+};
 
 } // namespace
 

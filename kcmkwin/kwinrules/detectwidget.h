@@ -35,54 +35,54 @@ namespace KWin
 
 class DetectWidget
     : public QWidget, public Ui_DetectWidget
-    {
+{
     Q_OBJECT
-    public:
-        explicit DetectWidget( QWidget* parent = NULL );
-    };
+public:
+    explicit DetectWidget(QWidget* parent = NULL);
+};
 
 class DetectDialog
     : public KDialog
-    {
+{
     Q_OBJECT
-    public:
-        explicit DetectDialog( QWidget* parent = NULL, const char* name = NULL );
-        void detect( WId window );
-        QByteArray selectedClass() const;
-        bool selectedWholeClass() const;
-        QByteArray selectedRole() const;
-        bool selectedWholeApp() const;
-        NET::WindowType selectedType() const;
-        QString selectedTitle() const;
-        Rules::StringMatch titleMatch() const;
-        QByteArray selectedMachine() const;
-        const KWindowInfo& windowInfo() const;
-    signals:
-        void detectionDone( bool );
-    protected:
-        virtual bool eventFilter( QObject* o, QEvent* e );
-    private:
-        void selectWindow();
-        void readWindow( WId window );
-        void executeDialog();
-        WId findWindow();
-        QByteArray wmclass_class;
-        QByteArray wmclass_name;
-        QByteArray role;
-        NET::WindowType type;
-        QString title;
-        QByteArray extrarole;
-        QByteArray machine;
-        DetectWidget* widget;
-        KDialog* grabber;
-        KWindowInfo info;
-    };
+public:
+    explicit DetectDialog(QWidget* parent = NULL, const char* name = NULL);
+    void detect(WId window);
+    QByteArray selectedClass() const;
+    bool selectedWholeClass() const;
+    QByteArray selectedRole() const;
+    bool selectedWholeApp() const;
+    NET::WindowType selectedType() const;
+    QString selectedTitle() const;
+    Rules::StringMatch titleMatch() const;
+    QByteArray selectedMachine() const;
+    const KWindowInfo& windowInfo() const;
+signals:
+    void detectionDone(bool);
+protected:
+    virtual bool eventFilter(QObject* o, QEvent* e);
+private:
+    void selectWindow();
+    void readWindow(WId window);
+    void executeDialog();
+    WId findWindow();
+    QByteArray wmclass_class;
+    QByteArray wmclass_name;
+    QByteArray role;
+    NET::WindowType type;
+    QString title;
+    QByteArray extrarole;
+    QByteArray machine;
+    DetectWidget* widget;
+    KDialog* grabber;
+    KWindowInfo info;
+};
 
 inline
 const KWindowInfo& DetectDialog::windowInfo() const
-    {
+{
     return info;
-    }
+}
 
 } // namespace
 

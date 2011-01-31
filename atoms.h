@@ -29,38 +29,38 @@ namespace KWin
 {
 
 class Atoms
-    {
-    public:
-        Atoms();
+{
+public:
+    Atoms();
 
-        Atom kwin_running;
-        Atom activities;
+    Atom kwin_running;
+    Atom activities;
 
-        Atom wm_protocols;
-        Atom wm_delete_window;
-        Atom wm_take_focus;
-        Atom wm_change_state;
-        Atom wm_client_leader;
-        Atom wm_window_role;
-        Atom wm_state;
-        Atom sm_client_id;
+    Atom wm_protocols;
+    Atom wm_delete_window;
+    Atom wm_take_focus;
+    Atom wm_change_state;
+    Atom wm_client_leader;
+    Atom wm_window_role;
+    Atom wm_state;
+    Atom sm_client_id;
 
-        Atom motif_wm_hints;
-        Atom net_wm_context_help;
-        Atom net_wm_ping;
-        Atom kde_wm_change_state;
-        Atom net_wm_user_time;
-        Atom kde_net_wm_user_creation_time;
-        Atom kde_system_tray_embedding;
-        Atom net_wm_take_activity;
-        Atom net_wm_window_opacity;
-        Atom xdnd_aware;
-        Atom xdnd_position;
-        Atom net_frame_extents;
-        Atom kde_net_wm_frame_strut;
-        Atom net_wm_sync_request_counter;
-        Atom net_wm_sync_request;
-    };
+    Atom motif_wm_hints;
+    Atom net_wm_context_help;
+    Atom net_wm_ping;
+    Atom kde_wm_change_state;
+    Atom net_wm_user_time;
+    Atom kde_net_wm_user_creation_time;
+    Atom kde_system_tray_embedding;
+    Atom net_wm_take_activity;
+    Atom net_wm_window_opacity;
+    Atom xdnd_aware;
+    Atom xdnd_position;
+    Atom net_frame_extents;
+    Atom kde_net_wm_frame_strut;
+    Atom net_wm_sync_request_counter;
+    Atom net_wm_sync_request;
+};
 
 
 extern Atoms* atoms;

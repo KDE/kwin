@@ -33,25 +33,25 @@ namespace KWin
 class LookingGlassEffectConfigForm : public QWidget, public Ui::LookingGlassEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit LookingGlassEffectConfigForm(QWidget* parent);
+public:
+    explicit LookingGlassEffectConfigForm(QWidget* parent);
 };
 
 class LookingGlassEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit LookingGlassEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        virtual ~LookingGlassEffectConfig();
+public:
+    explicit LookingGlassEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~LookingGlassEffectConfig();
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        LookingGlassEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    LookingGlassEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

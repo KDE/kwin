@@ -43,58 +43,58 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( cube, CubeEffect )
-KWIN_EFFECT_SUPPORTED( cube, CubeEffect::supported() )
+KWIN_EFFECT(cube, CubeEffect)
+KWIN_EFFECT_SUPPORTED(cube, CubeEffect::supported())
 
 CubeEffect::CubeEffect()
-    : activated( false )
-    , mousePolling( false )
-    , cube_painting( false )
-    , keyboard_grab( false )
-    , schedule_close( false )
-    , painting_desktop( 1 )
-    , frontDesktop( 0 )
-    , cubeOpacity( 1.0 )
-    , opacityDesktopOnly( true )
-    , displayDesktopName( false )
-    , desktopNameFrame( effects->effectFrame( EffectFrameStyled ) )
-    , reflection( true )
-    , rotating( false )
-    , desktopChangedWhileRotating( false )
-    , paintCaps( true )
-    , rotationDirection( Left )
-    , verticalRotationDirection( Upwards )
-    , verticalPosition( Normal )
-    , wallpaper( NULL )
-    , texturedCaps( true )
-    , capTexture( NULL )
-    , manualAngle( 0.0 )
-    , manualVerticalAngle( 0.0 )
-    , currentShape( TimeLine::EaseInOutCurve )
-    , start( false )
-    , stop( false )
-    , reflectionPainting( false )
-    , activeScreen( 0 )
-    , bottomCap( false )
-    , closeOnMouseRelease( false )
-    , zoom( 0.0 )
-    , zPosition( 0.0 )
-    , useForTabBox( false )
-    , tabBoxMode( false )
-    , shortcutsRegistered( false )
-    , mode( Cube )
-    , useShaders( false )
-    , cylinderShader( 0 )
-    , sphereShader( 0 )
-    , zOrderingFactor( 0.0f )
-    , mAddedHeightCoeff1( 0.0f )
-    , mAddedHeightCoeff2( 0.0f )
-    , m_cubeCapBuffer( NULL )
-    , m_proxy( this )
-    {
-    desktopNameFont.setBold( true );
-    desktopNameFont.setPointSize( 14 );
-    desktopNameFrame->setFont( desktopNameFont );
+    : activated(false)
+    , mousePolling(false)
+    , cube_painting(false)
+    , keyboard_grab(false)
+    , schedule_close(false)
+    , painting_desktop(1)
+    , frontDesktop(0)
+    , cubeOpacity(1.0)
+    , opacityDesktopOnly(true)
+    , displayDesktopName(false)
+    , desktopNameFrame(effects->effectFrame(EffectFrameStyled))
+    , reflection(true)
+    , rotating(false)
+    , desktopChangedWhileRotating(false)
+    , paintCaps(true)
+    , rotationDirection(Left)
+    , verticalRotationDirection(Upwards)
+    , verticalPosition(Normal)
+    , wallpaper(NULL)
+    , texturedCaps(true)
+    , capTexture(NULL)
+    , manualAngle(0.0)
+    , manualVerticalAngle(0.0)
+    , currentShape(TimeLine::EaseInOutCurve)
+    , start(false)
+    , stop(false)
+    , reflectionPainting(false)
+    , activeScreen(0)
+    , bottomCap(false)
+    , closeOnMouseRelease(false)
+    , zoom(0.0)
+    , zPosition(0.0)
+    , useForTabBox(false)
+    , tabBoxMode(false)
+    , shortcutsRegistered(false)
+    , mode(Cube)
+    , useShaders(false)
+    , cylinderShader(0)
+    , sphereShader(0)
+    , zOrderingFactor(0.0f)
+    , mAddedHeightCoeff1(0.0f)
+    , mAddedHeightCoeff2(0.0f)
+    , m_cubeCapBuffer(NULL)
+    , m_proxy(this)
+{
+    desktopNameFont.setBold(true);
+    desktopNameFont.setPointSize(14);
+    desktopNameFrame->setFont(desktopNameFont);
 
     const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/cube-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
@@ -103,140 +103,129 @@ CubeEffect::CubeEffect()
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
 
-    reconfigure( ReconfigureAll );
-    }
+    reconfigure(ReconfigureAll);
+}
 
 bool CubeEffect::supported()
-    {
+{
     return effects->compositingType() == OpenGLCompositing;
-    }
+}
 
-void CubeEffect::reconfigure( ReconfigureFlags )
-    {
-    loadConfig( "Cube" );
-    }
+void CubeEffect::reconfigure(ReconfigureFlags)
+{
+    loadConfig("Cube");
+}
 
-void CubeEffect::loadConfig( QString config )
-    {
-    KConfigGroup conf = effects->effectConfig( config );
-    foreach( ElectricBorder border, borderActivate )
-        {
-        effects->unreserveElectricBorder( border );
-        }
-    foreach( ElectricBorder border, borderActivateCylinder )
-        {
-        effects->unreserveElectricBorder( border );
-        }
-    foreach( ElectricBorder border, borderActivateSphere )
-        {
-        effects->unreserveElectricBorder( border );
-        }
+void CubeEffect::loadConfig(QString config)
+{
+    KConfigGroup conf = effects->effectConfig(config);
+    foreach (ElectricBorder border, borderActivate) {
+        effects->unreserveElectricBorder(border);
+    }
+    foreach (ElectricBorder border, borderActivateCylinder) {
+        effects->unreserveElectricBorder(border);
+    }
+    foreach (ElectricBorder border, borderActivateSphere) {
+        effects->unreserveElectricBorder(border);
+    }
     borderActivate.clear();
     borderActivateCylinder.clear();
     borderActivateSphere.clear();
     QList<int> borderList = QList<int>();
-    borderList.append( int( ElectricNone ) );
-    borderList = conf.readEntry( "BorderActivate", borderList );
-    foreach( int i, borderList )
-        {
-        borderActivate.append( ElectricBorder( i ) );
-        effects->reserveElectricBorder( ElectricBorder( i ) );
-        }
+    borderList.append(int(ElectricNone));
+    borderList = conf.readEntry("BorderActivate", borderList);
+    foreach (int i, borderList) {
+        borderActivate.append(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i));
+    }
     borderList.clear();
-    borderList.append( int( ElectricNone ) );
-    borderList = conf.readEntry( "BorderActivateCylinder", borderList );
-    foreach( int i, borderList )
-        {
-        borderActivateCylinder.append( ElectricBorder( i ) );
-        effects->reserveElectricBorder( ElectricBorder( i ) );
-        }
+    borderList.append(int(ElectricNone));
+    borderList = conf.readEntry("BorderActivateCylinder", borderList);
+    foreach (int i, borderList) {
+        borderActivateCylinder.append(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i));
+    }
     borderList.clear();
-    borderList.append( int( ElectricNone ) );
-    borderList = conf.readEntry( "BorderActivateSphere", borderList );
-    foreach( int i, borderList )
-        {
-        borderActivateSphere.append( ElectricBorder( i ) );
-        effects->reserveElectricBorder( ElectricBorder( i ) );
-        }
+    borderList.append(int(ElectricNone));
+    borderList = conf.readEntry("BorderActivateSphere", borderList);
+    foreach (int i, borderList) {
+        borderActivateSphere.append(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i));
+    }
 
-    cubeOpacity = (float)conf.readEntry( "Opacity", 80 )/100.0f;
-    opacityDesktopOnly = conf.readEntry( "OpacityDesktopOnly", false );
-    displayDesktopName = conf.readEntry( "DisplayDesktopName", true );
-    reflection = conf.readEntry( "Reflection", true );
-    rotationDuration = animationTime( conf, "RotationDuration", 500 );
-    backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
-    capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
-    paintCaps = conf.readEntry( "Caps", true );
-    closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
+    cubeOpacity = (float)conf.readEntry("Opacity", 80) / 100.0f;
+    opacityDesktopOnly = conf.readEntry("OpacityDesktopOnly", false);
+    displayDesktopName = conf.readEntry("DisplayDesktopName", true);
+    reflection = conf.readEntry("Reflection", true);
+    rotationDuration = animationTime(conf, "RotationDuration", 500);
+    backgroundColor = conf.readEntry("BackgroundColor", QColor(Qt::black));
+    capColor = conf.readEntry("CapColor", KColorScheme(QPalette::Active, KColorScheme::Window).background().color());
+    paintCaps = conf.readEntry("Caps", true);
+    closeOnMouseRelease = conf.readEntry("CloseOnMouseRelease", false);
     float defaultZPosition = 100.0f;
-    if( config == "Sphere" )
+    if (config == "Sphere")
         defaultZPosition = 450.0f;
-    zPosition = conf.readEntry( "ZPosition", defaultZPosition );
-    useForTabBox = conf.readEntry( "TabBox", false );
-    invertKeys = conf.readEntry( "InvertKeys", false );
-    invertMouse = conf.readEntry( "InvertMouse", false );
-    capDeformationFactor = conf.readEntry( "CapDeformation", 0 )/100.0f;
-    useZOrdering = conf.readEntry( "ZOrdering", false );
-    QString file = conf.readEntry( "Wallpaper", QString("") );
-    if( wallpaper )
+    zPosition = conf.readEntry("ZPosition", defaultZPosition);
+    useForTabBox = conf.readEntry("TabBox", false);
+    invertKeys = conf.readEntry("InvertKeys", false);
+    invertMouse = conf.readEntry("InvertMouse", false);
+    capDeformationFactor = conf.readEntry("CapDeformation", 0) / 100.0f;
+    useZOrdering = conf.readEntry("ZOrdering", false);
+    QString file = conf.readEntry("Wallpaper", QString(""));
+    if (wallpaper)
         wallpaper->discard();
     delete wallpaper;
     wallpaper = NULL;
-    if( !file.isEmpty() )
-        {
-        QImage img = QImage( file );
-        if( !img.isNull() )
-            {
-            wallpaper = new GLTexture( img );
-            }
+    if (!file.isEmpty()) {
+        QImage img = QImage(file);
+        if (!img.isNull()) {
+            wallpaper = new GLTexture(img);
         }
+    }
     delete capTexture;
     capTexture = NULL;
-    texturedCaps = conf.readEntry( "TexturedCaps", true );
-    if( texturedCaps )
-        {
-        QString capPath = conf.readEntry( "CapPath", KGlobal::dirs()->findResource( "appdata", "cubecap.png" ) );
-        QImage img = QImage( capPath );
-        if( !img.isNull() )
-            {
-            capTexture = new GLTexture( img );
-            capTexture->setFilter( GL_LINEAR );
+    texturedCaps = conf.readEntry("TexturedCaps", true);
+    if (texturedCaps) {
+        QString capPath = conf.readEntry("CapPath", KGlobal::dirs()->findResource("appdata", "cubecap.png"));
+        QImage img = QImage(capPath);
+        if (!img.isNull()) {
+            capTexture = new GLTexture(img);
+            capTexture->setFilter(GL_LINEAR);
 #ifndef KWIN_HAVE_OPENGLES
-            capTexture->setWrapMode( GL_CLAMP_TO_BORDER );
+            capTexture->setWrapMode(GL_CLAMP_TO_BORDER);
 #endif
-            }
         }
+    }
 
-    timeLine.setCurveShape( TimeLine::EaseInOutCurve );
-    timeLine.setDuration( rotationDuration );
+    timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    timeLine.setDuration(rotationDuration);
 
-    verticalTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
-    verticalTimeLine.setDuration( rotationDuration );
+    verticalTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    verticalTimeLine.setDuration(rotationDuration);
 
     // do not connect the shortcut if we use cylinder or sphere
-    if( !shortcutsRegistered )
-        {
-        KActionCollection* actionCollection = new KActionCollection( this );
-        KAction* cubeAction = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
-        cubeAction->setText( i18n("Desktop Cube" ));
-        cubeAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    if (!shortcutsRegistered) {
+        KActionCollection* actionCollection = new KActionCollection(this);
+        KAction* cubeAction = static_cast< KAction* >(actionCollection->addAction("Cube"));
+        cubeAction->setText(i18n("Desktop Cube"));
+        cubeAction->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
         cubeShortcut = cubeAction->globalShortcut();
-        KAction* cylinderAction = static_cast< KAction* >( actionCollection->addAction( "Cylinder" ));
-        cylinderAction->setText( i18n("Desktop Cylinder" ));
-        cylinderAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
+        KAction* cylinderAction = static_cast< KAction* >(actionCollection->addAction("Cylinder"));
+        cylinderAction->setText(i18n("Desktop Cylinder"));
+        cylinderAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
         cylinderShortcut = cylinderAction->globalShortcut();
-        KAction* sphereAction = static_cast< KAction* >( actionCollection->addAction( "Sphere" ));
-        sphereAction->setText( i18n("Desktop Sphere" ));
-        sphereAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
+        KAction* sphereAction = static_cast< KAction* >(actionCollection->addAction("Sphere"));
+        sphereAction->setText(i18n("Desktop Sphere"));
+        sphereAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
         sphereShortcut = sphereAction->globalShortcut();
-        connect( cubeAction, SIGNAL( triggered( bool )), this, SLOT( toggleCube()));
-        connect( cylinderAction, SIGNAL( triggered( bool )), this, SLOT( toggleCylinder()));
-        connect( sphereAction, SIGNAL( triggered( bool )), this, SLOT( toggleSphere()));
-        connect( cubeAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( cubeShortcutChanged(QKeySequence)));
-        connect( cylinderAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( cylinderShortcutChanged(QKeySequence)));
-        connect( sphereAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( sphereShortcutChanged(QKeySequence)));
+        connect(cubeAction, SIGNAL(triggered(bool)), this, SLOT(toggleCube()));
+        connect(cylinderAction, SIGNAL(triggered(bool)), this, SLOT(toggleCylinder()));
+        connect(sphereAction, SIGNAL(triggered(bool)), this, SLOT(toggleSphere()));
+        connect(cubeAction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(cubeShortcutChanged(QKeySequence)));
+        connect(cylinderAction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(cylinderShortcutChanged(QKeySequence)));
+        connect(sphereAction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(sphereShortcutChanged(QKeySequence)));
         shortcutsRegistered = true;
-        }
+    }
 
     // set the cap color on the shader
     if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
@@ -244,22 +233,19 @@ void CubeEffect::loadConfig( QString config )
         m_capShader->setUniform("u_capColor", capColor);
         ShaderManager::instance()->popShader();
     }
-    }
+}
 
 CubeEffect::~CubeEffect()
-    {
-    foreach( ElectricBorder border, borderActivate )
-        {
-        effects->unreserveElectricBorder( border );
-        }
-    foreach( ElectricBorder border, borderActivateCylinder )
-        {
-        effects->unreserveElectricBorder( border );
-        }
-    foreach( ElectricBorder border, borderActivateSphere )
-        {
-        effects->unreserveElectricBorder( border );
-        }
+{
+    foreach (ElectricBorder border, borderActivate) {
+        effects->unreserveElectricBorder(border);
+    }
+    foreach (ElectricBorder border, borderActivateCylinder) {
+        effects->unreserveElectricBorder(border);
+    }
+    foreach (ElectricBorder border, borderActivateSphere) {
+        effects->unreserveElectricBorder(border);
+    }
     delete wallpaper;
     delete capTexture;
     delete cylinderShader;
@@ -268,34 +254,30 @@ CubeEffect::~CubeEffect()
     delete m_reflectionShader;
     delete m_capShader;
     delete m_cubeCapBuffer;
-    }
+}
 
 bool CubeEffect::loadShader()
-    {
-    if( !(GLShader::fragmentShaderSupported() &&
+{
+    if (!(GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing)))
         return false;
-    QString fragmentshader       =  KGlobal::dirs()->findResource( "data", "kwin/cylinder.frag" );
-    QString cylinderVertexshader =  KGlobal::dirs()->findResource( "data", "kwin/cylinder.vert" );
-    QString sphereVertexshader   = KGlobal::dirs()->findResource( "data", "kwin/sphere.vert" );
-    if( fragmentshader.isEmpty() || cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty() )
-        {
+    QString fragmentshader       =  KGlobal::dirs()->findResource("data", "kwin/cylinder.frag");
+    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", "kwin/cylinder.vert");
+    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", "kwin/sphere.vert");
+    if (fragmentshader.isEmpty() || cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;
-        }
+    }
 
     ShaderManager *shaderManager = ShaderManager::instance();
     // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     cylinderShader = new GLShader(cylinderVertexshader, fragmentshader);
-    if( !cylinderShader->isValid() )
-        {
+    if (!cylinderShader->isValid()) {
         kError(1212) << "The cylinder shader failed to load!" << endl;
         return false;
-        }
-    else
-        {
+    } else {
         shaderManager->pushShader(cylinderShader);
-        cylinderShader->setUniform( "sample", 0 );
+        cylinderShader->setUniform("sample", 0);
         QMatrix4x4 projection;
         float fovy = 60.0f;
         float aspect = 1.0f;
@@ -308,28 +290,25 @@ bool CubeEffect::loadShader()
         projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
         cylinderShader->setUniform("projection", projection);
         QMatrix4x4 modelview;
-        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
-        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
-        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
+        modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+        modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
         cylinderShader->setUniform("modelview", modelview);
         const QMatrix4x4 identity;
         cylinderShader->setUniform("screenTransformation", identity);
         cylinderShader->setUniform("windowTransformation", identity);
-        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        cylinderShader->setUniform( "width", (float)rect.width()*0.5f );
+        QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+        cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
         shaderManager->popShader();
-        }
+    }
     // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     sphereShader = new GLShader(sphereVertexshader, fragmentshader);
-    if( !sphereShader->isValid() )
-        {
+    if (!sphereShader->isValid()) {
         kError(1212) << "The sphere shader failed to load!" << endl;
         return false;
-        }
-    else
-        {
+    } else {
         shaderManager->pushShader(sphereShader);
-        sphereShader->setUniform( "sample", 0 );
+        sphereShader->setUniform("sample", 0);
         QMatrix4x4 projection;
         float fovy = 60.0f;
         float aspect = 1.0f;
@@ -342,162 +321,153 @@ bool CubeEffect::loadShader()
         projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
         sphereShader->setUniform("projection", projection);
         QMatrix4x4 modelview;
-        float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
-        modelview.translate(xmin*scaleFactor, ymax*scaleFactor, -1.1);
-        modelview.scale((xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001);
+        float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
+        modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+        modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
         sphereShader->setUniform("modelview", modelview);
         const QMatrix4x4 identity;
         sphereShader->setUniform("screenTransformation", identity);
         sphereShader->setUniform("windowTransformation", identity);
-        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        sphereShader->setUniform( "width", (float)rect.width()*0.5f );
-        sphereShader->setUniform( "height", (float)rect.height()*0.5f );
-        sphereShader->setUniform( "u_offset", QVector2D(0, 0));
+        QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+        sphereShader->setUniform("width", (float)rect.width() * 0.5f);
+        sphereShader->setUniform("height", (float)rect.height() * 0.5f);
+        sphereShader->setUniform("u_offset", QVector2D(0, 0));
         shaderManager->popShader();
         checkGLError("Loading Sphere Shader");
-        }
-    return true;
     }
+    return true;
+}
 
-void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( activated )
-        {
+void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (activated) {
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
 
-        if( rotating || start || stop )
-            {
-            timeLine.addTime( time );
+        if (rotating || start || stop) {
+            timeLine.addTime(time);
             rotateCube();
-            }
-        if( verticalRotating )
-            {
-            verticalTimeLine.addTime( time );
-            rotateCube();
-            }
         }
-    effects->prePaintScreen( data, time );
+        if (verticalRotating) {
+            verticalTimeLine.addTime(time);
+            rotateCube();
+        }
     }
+    effects->prePaintScreen(data, time);
+}
 
-void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    if( activated )
-        {
-        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    if (activated) {
+        QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
 
         // background
         float clearColor[4];
-        glGetFloatv( GL_COLOR_CLEAR_VALUE, clearColor );
-        glClearColor( backgroundColor.redF(), backgroundColor.greenF(), backgroundColor.blueF(), 1.0 );
-        glClear( GL_COLOR_BUFFER_BIT );
-        glClearColor( clearColor[0], clearColor[1], clearColor[2], clearColor[3] );
+        glGetFloatv(GL_COLOR_CLEAR_VALUE, clearColor);
+        glClearColor(backgroundColor.redF(), backgroundColor.greenF(), backgroundColor.blueF(), 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 
         // wallpaper
-        if( wallpaper )
-            {
+        if (wallpaper) {
             wallpaper->bind();
-            wallpaper->render( region, rect );
+            wallpaper->render(region, rect);
             wallpaper->unbind();
-            }
+        }
 
 #ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // some veriables needed for painting the caps
-        float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-        float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+        float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+        float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
         float zTranslate = zPosition + zoom;
-        if( start )
+        if (start)
             zTranslate *= timeLine.value();
-        if( stop )
-            zTranslate *= ( 1.0 - timeLine.value() );
+        if (stop)
+            zTranslate *= (1.0 - timeLine.value());
         // reflection
-        if( reflection && mode != Sphere )
-            {
+        if (reflection && mode != Sphere) {
             // restrict painting the reflections to the current screen
-            PaintClipper::push( QRegion( rect ));
+            PaintClipper::push(QRegion(rect));
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
-            float scaleFactor = 1000000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
+            float scaleFactor = 1000000 * tan(60.0 * M_PI / 360.0f) / rect.height();
             m_reflectionMatrix.setToIdentity();
             m_reflectionMatrix.scale(1.0, -1.0, 1.0);
 
             // TODO reflection is not correct when mixing manual (mouse) rotating with rotation by cursor keys
             // there's also a small bug when zooming
-            float addedHeight1 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff1 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff1;
-            float addedHeight2 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff2 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff2 - addedHeight1;
-            if( manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1 )
-                {
-                m_reflectionMatrix.translate(0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
-                }
-            else
-                {
-                m_reflectionMatrix.translate(0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0);
-                }
+            float addedHeight1 = -sin(asin(float(rect.height()) / mAddedHeightCoeff1) + fabs(manualVerticalAngle) * M_PI / 180.0f) * mAddedHeightCoeff1;
+            float addedHeight2 = -sin(asin(float(rect.height()) / mAddedHeightCoeff2) + fabs(manualVerticalAngle) * M_PI / 180.0f) * mAddedHeightCoeff2 - addedHeight1;
+            if (manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1) {
+                m_reflectionMatrix.translate(0.0, cos(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
+            } else {
+                m_reflectionMatrix.translate(0.0, sin(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
+            }
             pushMatrix(m_reflectionMatrix);
 
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
-            glEnable( GL_CLIP_PLANE0 );
+            glEnable(GL_CLIP_PLANE0);
 #endif
             reflectionPainting = true;
-            glEnable( GL_CULL_FACE );
-            paintCap(true, -point-zTranslate);
+            glEnable(GL_CULL_FACE);
+            paintCap(true, -point - zTranslate);
 
             // cube
-            glCullFace( GL_BACK );
+            glCullFace(GL_BACK);
             pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
             popMatrix();
 
             // call the inside cube effects
 #ifndef KWIN_HAVE_OPENGLES
-            foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
-                {
+            foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
                 pushMatrix(m_rotationMatrix);
-                glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+                glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
+                glRotatef((1 - frontDesktop) * 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
                 inside->paint();
                 popMatrix();
-                }
+            }
 #endif
 
-            glCullFace( GL_FRONT );
+            glCullFace(GL_FRONT);
             pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
             popMatrix();
 
-            paintCap(false, -point-zTranslate);
-            glDisable( GL_CULL_FACE );
+            paintCap(false, -point - zTranslate);
+            glDisable(GL_CULL_FACE);
             reflectionPainting = false;
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
-            glDisable( GL_CLIP_PLANE0 );
+            glDisable(GL_CLIP_PLANE0);
 #endif
             popMatrix();
 
             float vertices[] = {
-                -rect.width()*0.5f, rect.height(), 0.0,
-                rect.width()*0.5f, rect.height(), 0.0,
+                -rect.width() * 0.5f, rect.height(), 0.0,
+                rect.width() * 0.5f, rect.height(), 0.0,
                 (float)rect.width()*scaleFactor, rect.height(), -5000,
-                -(float)rect.width()*scaleFactor, rect.height(), -5000 };
+                -(float)rect.width()*scaleFactor, rect.height(), -5000
+            };
             // foreground
             float alpha = 0.7;
-            if( start )
+            if (start)
                 alpha = 0.3 + 0.4 * timeLine.value();
-            if( stop )
-                alpha = 0.3 + 0.4 * ( 1.0 - timeLine.value() );
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            if (stop)
+                alpha = 0.3 + 0.4 * (1.0 - timeLine.value());
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             ShaderManager *shaderManager = ShaderManager::instance();
             if (shaderManager->isValid() && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
                 shaderManager->pushShader(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
-                windowTransformation.translate(rect.x() + rect.width()*0.5f, 0.0, 0.0);
+                windowTransformation.translate(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
                 m_reflectionShader->setUniform("windowTransformation", windowTransformation);
                 m_reflectionShader->setUniform("u_alpha", alpha);
                 QVector<float> verts;
@@ -524,30 +494,30 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 shaderManager->popShader();
             } else {
 #ifndef KWIN_HAVE_OPENGLES
-                glColor4f( 0.0, 0.0, 0.0, alpha );
+                glColor4f(0.0, 0.0, 0.0, alpha);
                 glPushMatrix();
-                glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
-                glBegin( GL_POLYGON );
-                glVertex3f( vertices[0], vertices[1], vertices[2] );
-                glVertex3f( vertices[3], vertices[4], vertices[5] );
+                glTranslatef(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
+                glBegin(GL_POLYGON);
+                glVertex3f(vertices[0], vertices[1], vertices[2]);
+                glVertex3f(vertices[3], vertices[4], vertices[5]);
                 // rearground
                 alpha = -1.0;
-                glColor4f( 0.0, 0.0, 0.0, alpha );
-                glVertex3f( vertices[6], vertices[7], vertices[8] );
-                glVertex3f( vertices[9], vertices[10], vertices[11] );
+                glColor4f(0.0, 0.0, 0.0, alpha);
+                glVertex3f(vertices[6], vertices[7], vertices[8]);
+                glVertex3f(vertices[9], vertices[10], vertices[11]);
                 glEnd();
                 glPopMatrix();
 #endif
             }
-            glDisable( GL_BLEND );
-            PaintClipper::pop( QRegion( rect ));
-            }
-        glEnable( GL_CULL_FACE );
+            glDisable(GL_BLEND);
+            PaintClipper::pop(QRegion(rect));
+        }
+        glEnable(GL_CULL_FACE);
         // caps
-        paintCap(false, -point-zTranslate);
+        paintCap(false, -point - zTranslate);
 
         // cube
-        glCullFace( GL_FRONT );
+        glCullFace(GL_FRONT);
         pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
         popMatrix();
@@ -555,222 +525,196 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
         // call the inside cube effects
 #ifndef KWIN_HAVE_OPENGLES
-        foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
-            {
+        foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
             pushMatrix(m_rotationMatrix);
-            glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
-            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
+            glRotatef((1 - frontDesktop) * 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
             inside->paint();
             popMatrix();
-            }
+        }
 #endif
 
-        glCullFace( GL_BACK );
+        glCullFace(GL_BACK);
         pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
         popMatrix();
 
         // cap
-        paintCap(true, -point-zTranslate);
-        glDisable( GL_CULL_FACE );
+        paintCap(true, -point - zTranslate);
+        glDisable(GL_CULL_FACE);
 
-        glDisable( GL_BLEND );
+        glDisable(GL_BLEND);
 #ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
 #endif
 
         // desktop name box - inspired from coverswitch
-        if( displayDesktopName )
-            {
+        if (displayDesktopName) {
             double opacity = 1.0;
-            if( start )
+            if (start)
                 opacity = timeLine.value();
-            if( stop )
+            if (stop)
                 opacity = 1.0 - timeLine.value();
-            QRect screenRect = effects->clientArea( ScreenArea, activeScreen, frontDesktop );
-            QRect frameRect = QRect( screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
-                screenRect.width() * 0.34f, QFontMetrics( desktopNameFont ).height() );
-            desktopNameFrame->setGeometry( frameRect );
-            desktopNameFrame->setText( effects->desktopName( frontDesktop ) );
-            desktopNameFrame->render( region, opacity );
-            }
+            QRect screenRect = effects->clientArea(ScreenArea, activeScreen, frontDesktop);
+            QRect frameRect = QRect(screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
+                                    screenRect.width() * 0.34f, QFontMetrics(desktopNameFont).height());
+            desktopNameFrame->setGeometry(frameRect);
+            desktopNameFrame->setText(effects->desktopName(frontDesktop));
+            desktopNameFrame->render(region, opacity);
         }
-    else
-        {
-        effects->paintScreen( mask, region, data );
-        }
+    } else {
+        effects->paintScreen(mask, region, data);
     }
+}
 
 void CubeEffect::rotateCube()
-    {
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+{
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
 
     m_rotationMatrix.setToIdentity();
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
-    if( start )
+    if (start)
         zTranslate *= timeLine.value();
-    if( stop )
-        zTranslate *= ( 1.0 - timeLine.value() );
+    if (stop)
+        zTranslate *= (1.0 - timeLine.value());
     // Rotation of the cube
-    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-    if( verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0 )
-        {
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+    float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
+    if (verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0) {
         // change the verticalPosition if manualVerticalAngle > 90 or < -90 degrees
-        if( manualVerticalAngle <= -90.0 )
-            {
+        if (manualVerticalAngle <= -90.0) {
             manualVerticalAngle += 90.0;
-            if( verticalPosition == Normal )
+            if (verticalPosition == Normal)
                 verticalPosition = Down;
-            if( verticalPosition == Up )
+            if (verticalPosition == Up)
                 verticalPosition = Normal;
-            }
-        if( manualVerticalAngle >= 90.0 )
-            {
-            manualVerticalAngle -= 90.0;
-            if( verticalPosition == Normal )
-                verticalPosition = Up;
-            if( verticalPosition == Down )
-                verticalPosition = Normal;
-            }
-        float angle = 0.0;
-        if( verticalPosition == Up )
-            {
-            angle = 90.0;
-            if( !verticalRotating)
-                {
-                if( manualVerticalAngle < 0.0 )
-                    angle += manualVerticalAngle;
-                else
-                    manualVerticalAngle = 0.0;
-                }
-            }
-        else if( verticalPosition == Down )
-            {
-            angle = -90.0;
-            if( !verticalRotating)
-                {
-                if( manualVerticalAngle > 0.0 )
-                    angle += manualVerticalAngle;
-                else
-                    manualVerticalAngle = 0.0;
-                }
-            }
-        else
-            {
-            angle = manualVerticalAngle;
-            }
-        if( verticalRotating )
-            {
-            angle *= verticalTimeLine.value();
-            if( verticalPosition == Normal && verticalRotationDirection == Upwards )
-                angle = -90.0 + 90*verticalTimeLine.value();
-            if( verticalPosition == Normal && verticalRotationDirection == Downwards )
-                angle = 90.0 - 90*verticalTimeLine.value();
-            angle += manualVerticalAngle * (1.0-verticalTimeLine.value());
-            }
-        if( stop )
-            angle *= (1.0 - timeLine.value());
-        m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
-        m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
-        m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
         }
-    if( rotating || (manualAngle != 0.0) )
-        {
+        if (manualVerticalAngle >= 90.0) {
+            manualVerticalAngle -= 90.0;
+            if (verticalPosition == Normal)
+                verticalPosition = Up;
+            if (verticalPosition == Down)
+                verticalPosition = Normal;
+        }
+        float angle = 0.0;
+        if (verticalPosition == Up) {
+            angle = 90.0;
+            if (!verticalRotating) {
+                if (manualVerticalAngle < 0.0)
+                    angle += manualVerticalAngle;
+                else
+                    manualVerticalAngle = 0.0;
+            }
+        } else if (verticalPosition == Down) {
+            angle = -90.0;
+            if (!verticalRotating) {
+                if (manualVerticalAngle > 0.0)
+                    angle += manualVerticalAngle;
+                else
+                    manualVerticalAngle = 0.0;
+            }
+        } else {
+            angle = manualVerticalAngle;
+        }
+        if (verticalRotating) {
+            angle *= verticalTimeLine.value();
+            if (verticalPosition == Normal && verticalRotationDirection == Upwards)
+                angle = -90.0 + 90 * verticalTimeLine.value();
+            if (verticalPosition == Normal && verticalRotationDirection == Downwards)
+                angle = 90.0 - 90 * verticalTimeLine.value();
+            angle += manualVerticalAngle * (1.0 - verticalTimeLine.value());
+        }
+        if (stop)
+            angle *= (1.0 - timeLine.value());
+        m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
+        m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
+        m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
+    }
+    if (rotating || (manualAngle != 0.0)) {
         int tempFrontDesktop = frontDesktop;
-        if( manualAngle > internalCubeAngle * 0.5f )
-            {
+        if (manualAngle > internalCubeAngle * 0.5f) {
             manualAngle -= internalCubeAngle;
             tempFrontDesktop--;
-            if( tempFrontDesktop == 0 )
+            if (tempFrontDesktop == 0)
                 tempFrontDesktop = effects->numberOfDesktops();
-            }
-        if( manualAngle < -internalCubeAngle * 0.5f )
-            {
+        }
+        if (manualAngle < -internalCubeAngle * 0.5f) {
             manualAngle += internalCubeAngle;
             tempFrontDesktop++;
-            if( tempFrontDesktop > effects->numberOfDesktops() )
+            if (tempFrontDesktop > effects->numberOfDesktops())
                 tempFrontDesktop = 1;
-            }
+        }
         float rotationAngle = internalCubeAngle * timeLine.value();
-        if( rotationAngle > internalCubeAngle * 0.5f )
-            {
+        if (rotationAngle > internalCubeAngle * 0.5f) {
             rotationAngle -= internalCubeAngle;
-            if( !desktopChangedWhileRotating )
-                {
+            if (!desktopChangedWhileRotating) {
                 desktopChangedWhileRotating = true;
-                if( rotationDirection == Left )
-                    {
+                if (rotationDirection == Left) {
                     tempFrontDesktop++;
-                    }
-                else if( rotationDirection == Right )
-                    {
+                } else if (rotationDirection == Right) {
                     tempFrontDesktop--;
-                    }
-                if( tempFrontDesktop > effects->numberOfDesktops() )
-                    tempFrontDesktop = 1;
-                else if( tempFrontDesktop == 0 )
-                    tempFrontDesktop = effects->numberOfDesktops();
                 }
+                if (tempFrontDesktop > effects->numberOfDesktops())
+                    tempFrontDesktop = 1;
+                else if (tempFrontDesktop == 0)
+                    tempFrontDesktop = effects->numberOfDesktops();
             }
+        }
         // don't change front desktop during stop animation as this would break some logic
-        if( !stop )
+        if (!stop)
             frontDesktop = tempFrontDesktop;
-        if( rotationDirection == Left )
-            {
+        if (rotationDirection == Left) {
             rotationAngle *= -1;
-            }
-        if( stop )
+        }
+        if (stop)
             rotationAngle = manualAngle * (1.0 - timeLine.value());
         else
             rotationAngle += manualAngle * (1.0 - timeLine.value());
-        m_rotationMatrix.translate(rect.width()/2, rect.height()/2, -point-zTranslate);
+        m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
         m_rotationMatrix.rotate(rotationAngle, 0.0, 1.0, 0.0);
-        m_rotationMatrix.translate(-rect.width()/2, -rect.height()/2, point+zTranslate);
-        }
+        m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
     }
+}
 
-void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
-    {
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+void CubeEffect::paintCube(int mask, QRegion region, ScreenPaintData& data)
+{
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
     float zTranslate = zPosition + zoom;
-    if( start )
+    if (start)
         zTranslate *= timeLine.value();
-    if( stop )
-        zTranslate *= ( 1.0 - timeLine.value() );
+    if (stop)
+        zTranslate *= (1.0 - timeLine.value());
 
     // Rotation of the cube
-    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+    float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
 
-    for( int i=0; i<effects->numberOfDesktops(); i++ )
-        {
+    for (int i = 0; i < effects->numberOfDesktops(); i++) {
         // start painting the cube
-        painting_desktop = (i + frontDesktop )%effects->numberOfDesktops();
-        if( painting_desktop == 0 )
-            {
+        painting_desktop = (i + frontDesktop) % effects->numberOfDesktops();
+        if (painting_desktop == 0) {
             painting_desktop = effects->numberOfDesktops();
-            }
+        }
         ScreenPaintData newData = data;
         RotationData rot = RotationData();
         rot.axis = RotationData::YAxis;
         rot.angle = internalCubeAngle * i;
-        rot.xRotationPoint = rect.width()/2;
+        rot.xRotationPoint = rect.width() / 2;
         rot.zRotationPoint = -point;
         newData.rotation = &rot;
         newData.zTranslate = -zTranslate;
-        effects->paintScreen( mask, region, newData );
-        }
+        effects->paintScreen(mask, region, newData);
+    }
     cube_painting = false;
     painting_desktop = effects->currentDesktop();
-    }
+}
 
 void CubeEffect::paintCap(bool frontFirst, float zOffset)
-    {
-    if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
+{
+    if ((!paintCaps) || effects->numberOfDesktops() <= 2)
         return;
     GLenum firstCull = frontFirst ? GL_FRONT : GL_BACK;
     GLenum secondCull = frontFirst ? GL_BACK : GL_FRONT;
@@ -778,7 +722,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
 
     // create the VBO if not yet created
     if (!m_cubeCapBuffer) {
-        switch (mode) {
+        switch(mode) {
         case Cube:
             paintCubeCap();
             break;
@@ -795,8 +739,8 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     }
 
     QMatrix4x4 capMatrix;
-    capMatrix.translate(rect.width()/2, 0.0, zOffset);
-    capMatrix.rotate((1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
+    capMatrix.translate(rect.width() / 2, 0.0, zOffset);
+    capMatrix.rotate((1 - frontDesktop) * 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
     capMatrix.translate(0.0, rect.height(), 0.0);
     if (mode == Sphere) {
         capMatrix.scale(1.0, -1.0, 1.0);
@@ -815,7 +759,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         m_capShader->setUniform("u_opacity", opacity);
         m_capShader->setUniform("u_mirror", 1);
         if (reflectionPainting) {
-            m_capShader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix);
+            m_capShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix);
         } else {
             m_capShader->setUniform("screenTransformation", m_rotationMatrix);
         }
@@ -824,41 +768,40 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
             capTexture->bind();
         }
     } else {
-        pushMatrix(m_rotationMatrix*capMatrix);
+        pushMatrix(m_rotationMatrix * capMatrix);
 
 #ifndef KWIN_HAVE_OPENGLES
-        glMatrixMode( GL_TEXTURE );
+        glMatrixMode(GL_TEXTURE);
 #endif
         pushMatrix();
         loadMatrix(m_textureMirrorMatrix);
 #ifndef KWIN_HAVE_OPENGLES
-        glMatrixMode( GL_MODELVIEW );
+        glMatrixMode(GL_MODELVIEW);
 
-        glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
-        if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
-            {
+        glColor4f(capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity);
+        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
             // modulate the cap texture: cap color should be background for translucent pixels
             // cube opacity should be used for all pixels
             // blend with cap color
             float color[4] = { capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity };
-            glActiveTexture( GL_TEXTURE0 );
+            glActiveTexture(GL_TEXTURE0);
             capTexture->bind();
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL );
-            glColor4fv( color );
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+            glColor4fv(color);
 
             // set Opacity to cube opacity
             // TODO: change opacity during start/stop animation
-            glActiveTexture( GL_TEXTURE1 );
+            glActiveTexture(GL_TEXTURE1);
             capTexture->bind();
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
-            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color );
-            glActiveTexture( GL_TEXTURE0 );
-            glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
-            }
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
+            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
+            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
+            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color);
+            glActiveTexture(GL_TEXTURE0);
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+        }
 #endif
     }
 
@@ -875,12 +818,12 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         m_capShader->setUniform("u_mirror", 0);
     } else {
 #ifndef KWIN_HAVE_OPENGLES
-        glMatrixMode( GL_TEXTURE );
+        glMatrixMode(GL_TEXTURE);
         popMatrix();
-        glMatrixMode( GL_MODELVIEW );
+        glMatrixMode(GL_MODELVIEW);
 #endif
         popMatrix();
-        pushMatrix(m_rotationMatrix*capMatrix);
+        pushMatrix(m_rotationMatrix * capMatrix);
     }
     glCullFace(secondCull);
     m_cubeCapBuffer->render(GL_TRIANGLES);
@@ -893,60 +836,55 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         }
     } else {
         popMatrix();
-        if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
-            {
+        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
 #ifndef KWIN_HAVE_OPENGLES
-            glActiveTexture( GL_TEXTURE1 );
-            glDisable( capTexture->target() );
-            glActiveTexture( GL_TEXTURE0 );
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-            glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+            glActiveTexture(GL_TEXTURE1);
+            glDisable(capTexture->target());
+            glActiveTexture(GL_TEXTURE0);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+            glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
             capTexture->unbind();
 #endif
-            }
+        }
     }
-    }
+}
 
 void CubeEffect::paintCubeCap()
-    {
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float z = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-    float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
-    float angle = 360.0f/effects->numberOfDesktops();
+{
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+    float z = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
+    float zTexture = rect.width() / 2 * tan(45.0f * M_PI / 180.0f);
+    float angle = 360.0f / effects->numberOfDesktops();
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
     QVector<float> verts;
     QVector<float> texCoords;
-    for( int i=0; i<effects->numberOfDesktops(); i++ )
-        {
-        int triangleRows = effects->numberOfDesktops()*5;
-        float zTriangleDistance = z/(float)triangleRows;
-        float widthTriangle = tan( angle*0.5 * M_PI/180.0 ) * zTriangleDistance;
+    for (int i = 0; i < effects->numberOfDesktops(); i++) {
+        int triangleRows = effects->numberOfDesktops() * 5;
+        float zTriangleDistance = z / (float)triangleRows;
+        float widthTriangle = tan(angle * 0.5 * M_PI / 180.0) * zTriangleDistance;
         float currentWidth = 0.0;
-        float cosValue = cos( i*angle  * M_PI/180.0 );
-        float sinValue = sin( i*angle  * M_PI/180.0 );
-        for( int j=0; j<triangleRows; j++ )
-            {
+        float cosValue = cos(i * angle  * M_PI / 180.0);
+        float sinValue = sin(i * angle  * M_PI / 180.0);
+        for (int j = 0; j < triangleRows; j++) {
             float previousWidth = currentWidth;
-            currentWidth = tan( angle*0.5 * M_PI/180.0 ) * zTriangleDistance * (j+1);
+            currentWidth = tan(angle * 0.5 * M_PI / 180.0) * zTriangleDistance * (j + 1);
             int evenTriangles = 0;
             int oddTriangles = 0;
-            for( int k=0; k<floor(currentWidth/widthTriangle*2-1+0.5f); k++ )
-                {
+            for (int k = 0; k < floor(currentWidth / widthTriangle * 2 - 1 + 0.5f); k++) {
                 float x1 = -previousWidth;
                 float x2 = -currentWidth;
                 float x3 = 0.0;
                 float z1 = 0.0;
                 float z2 = 0.0;
                 float z3 = 0.0;
-                if( k%2 == 0 )
-                    {
-                    x1 += evenTriangles*widthTriangle*2;
-                    x2 += evenTriangles*widthTriangle*2;
-                    x3 = x2+widthTriangle*2;
-                    z1 = j*zTriangleDistance;
-                    z2 = (j+1)*zTriangleDistance;
-                    z3 = (j+1)*zTriangleDistance;
+                if (k % 2 == 0) {
+                    x1 += evenTriangles * widthTriangle * 2;
+                    x2 += evenTriangles * widthTriangle * 2;
+                    x3 = x2 + widthTriangle * 2;
+                    z1 = j * zTriangleDistance;
+                    z2 = (j + 1) * zTriangleDistance;
+                    z3 = (j + 1) * zTriangleDistance;
                     float xRot = cosValue * x1 - sinValue * z1;
                     float zRot = sinValue * x1 + cosValue * z1;
                     x1 = xRot;
@@ -960,15 +898,13 @@ void CubeEffect::paintCubeCap()
                     x3 = xRot;
                     z3 = zRot;
                     evenTriangles++;
-                    }
-                else
-                    {
-                    x1 += oddTriangles*widthTriangle*2;
-                    x2 += (oddTriangles+1)*widthTriangle*2;
-                    x3 = x1+widthTriangle*2;
-                    z1 = j*zTriangleDistance;
-                    z2 = (j+1)*zTriangleDistance;
-                    z3 = j*zTriangleDistance;
+                } else {
+                    x1 += oddTriangles * widthTriangle * 2;
+                    x2 += (oddTriangles + 1) * widthTriangle * 2;
+                    x3 = x1 + widthTriangle * 2;
+                    z1 = j * zTriangleDistance;
+                    z2 = (j + 1) * zTriangleDistance;
+                    z3 = j * zTriangleDistance;
                     float xRot = cosValue * x1 - sinValue * z1;
                     float zRot = sinValue * x1 + cosValue * z1;
                     x1 = xRot;
@@ -982,76 +918,71 @@ void CubeEffect::paintCubeCap()
                     x3 = xRot;
                     z3 = zRot;
                     oddTriangles++;
-                    }
+                }
                 float texX1 = 0.0;
                 float texX2 = 0.0;
                 float texX3 = 0.0;
                 float texY1 = 0.0;
                 float texY2 = 0.0;
                 float texY3 = 0.0;
-                if( texture )
-                    {
-                    texX1 = x1/(rect.width())+0.5;
-                    texY1 = 0.5 - z1/zTexture * 0.5;
-                    texX2 = x2/(rect.width())+0.5;
-                    texY2 = 0.5 - z2/zTexture * 0.5;
-                    texX3 = x3/(rect.width())+0.5;
-                    texY3 = 0.5 - z3/zTexture * 0.5;
+                if (texture) {
+                    texX1 = x1 / (rect.width()) + 0.5;
+                    texY1 = 0.5 - z1 / zTexture * 0.5;
+                    texX2 = x2 / (rect.width()) + 0.5;
+                    texY2 = 0.5 - z2 / zTexture * 0.5;
+                    texX3 = x3 / (rect.width()) + 0.5;
+                    texY3 = 0.5 - z3 / zTexture * 0.5;
                     texCoords << texX1 << texY1;
-                    }
-                verts << x1 << 0.0 << z1;
-                if( texture )
-                    {
-                    texCoords << texX2 << texY2;
-                    }
-                verts << x2 << 0.0 << z2;
-                if( texture )
-                    {
-                    texCoords << texX3 << texY3;
-                    }
-                verts << x3 << 0.0 << z3;
                 }
+                verts << x1 << 0.0 << z1;
+                if (texture) {
+                    texCoords << texX2 << texY2;
+                }
+                verts << x2 << 0.0 << z2;
+                if (texture) {
+                    texCoords << texX3 << texY3;
+                }
+                verts << x3 << 0.0 << z3;
             }
         }
+    }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
-    }
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+}
 
 void CubeEffect::paintCylinderCap()
-    {
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+{
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
 
-    float radian = (cubeAngle*0.5)*M_PI/180;
-    float radius = (rect.width()*0.5)*tan(radian);
-    float segment = radius/30.0f;
+    float radian = (cubeAngle * 0.5) * M_PI / 180;
+    float radius = (rect.width() * 0.5) * tan(radian);
+    float segment = radius / 30.0f;
 
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
     QVector<float> verts;
     QVector<float> texCoords;
-    for( int i=1; i<=30; i++ )
-        {
+    for (int i = 1; i <= 30; i++) {
         int steps =  72;
-        for( int j=0; j<=steps; j++ )
-            {
-            const float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
-            const float azimuthAngle2 = ((j+1)*(360.0f/steps))*M_PI/180.0f;
-            const float x1 = segment*(i-1) * sin( azimuthAngle );
-            const float x2 = segment*i * sin( azimuthAngle );
-            const float x3 = segment*(i-1) * sin( azimuthAngle2 );
-            const float x4 = segment*i * sin( azimuthAngle2 );
-            const float z1 = segment*(i-1) * cos( azimuthAngle );
-            const float z2 = segment*i * cos( azimuthAngle );
-            const float z3 = segment*(i-1) * cos( azimuthAngle2 );
-            const float z4 = segment*i * cos( azimuthAngle2 );
-            if  (texture) {
-                texCoords << (radius+x1)/(radius*2.0f) << 1.0f - (z1+radius)/(radius*2.0f);
-                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
-                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
-                texCoords << (radius+x4)/(radius*2.0f) << 1.0f - (z4+radius)/(radius*2.0f);
-                texCoords << (radius+x3)/(radius*2.0f) << 1.0f - (z3+radius)/(radius*2.0f);
-                texCoords << (radius+x2)/(radius*2.0f) << 1.0f - (z2+radius)/(radius*2.0f);
+        for (int j = 0; j <= steps; j++) {
+            const float azimuthAngle = (j * (360.0f / steps)) * M_PI / 180.0f;
+            const float azimuthAngle2 = ((j + 1) * (360.0f / steps)) * M_PI / 180.0f;
+            const float x1 = segment * (i - 1) * sin(azimuthAngle);
+            const float x2 = segment * i * sin(azimuthAngle);
+            const float x3 = segment * (i - 1) * sin(azimuthAngle2);
+            const float x4 = segment * i * sin(azimuthAngle2);
+            const float z1 = segment * (i - 1) * cos(azimuthAngle);
+            const float z2 = segment * i * cos(azimuthAngle);
+            const float z3 = segment * (i - 1) * cos(azimuthAngle2);
+            const float z4 = segment * i * cos(azimuthAngle2);
+            if (texture) {
+                texCoords << (radius + x1) / (radius * 2.0f) << 1.0f - (z1 + radius) / (radius * 2.0f);
+                texCoords << (radius + x2) / (radius * 2.0f) << 1.0f - (z2 + radius) / (radius * 2.0f);
+                texCoords << (radius + x3) / (radius * 2.0f) << 1.0f - (z3 + radius) / (radius * 2.0f);
+                texCoords << (radius + x4) / (radius * 2.0f) << 1.0f - (z4 + radius) / (radius * 2.0f);
+                texCoords << (radius + x3) / (radius * 2.0f) << 1.0f - (z3 + radius) / (radius * 2.0f);
+                texCoords << (radius + x2) / (radius * 2.0f) << 1.0f - (z2 + radius) / (radius * 2.0f);
             }
             verts << x1 << 0.0 << z1;
             verts << x2 << 0.0 << z2;
@@ -1059,49 +990,47 @@ void CubeEffect::paintCylinderCap()
             verts << x4 << 0.0 << z4;
             verts << x3 << 0.0 << z3;
             verts << x2 << 0.0 << z2;
-            }
         }
+    }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
-    }
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+}
 
 void CubeEffect::paintSphereCap()
-    {
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
-    float radius = (rect.width()*0.5)/cos(cubeAngle*0.5*M_PI/180.0);
-    float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;
+{
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+    float zTexture = rect.width() / 2 * tan(45.0f * M_PI / 180.0f);
+    float radius = (rect.width() * 0.5) / cos(cubeAngle * 0.5 * M_PI / 180.0);
+    float angle = acos((rect.height() * 0.5) / radius) * 180.0 / M_PI;
     angle /= 30;
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
     QVector<float> verts;
     QVector<float> texCoords;
-    for( int i=0; i<30; i++ )
-        {
-        float topAngle = angle*i*M_PI/180.0;
-        float bottomAngle = angle*(i+1)*M_PI/180.0;
-        float yTop = rect.height()*0.5 - radius * cos( topAngle );
-        yTop -= (yTop-rect.height()*0.5)*capDeformationFactor;
-        float yBottom = rect.height()*0.5 -radius * cos( bottomAngle );
-        yBottom -= (yBottom-rect.height()*0.5)*capDeformationFactor;
-        for( int j=0; j<36; j++ )
-            {
-            const float x1 = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
-            const float z1 = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            const float x2 = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
-            const float z2 = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
-            const float x3 = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            const float z3 = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            const float x4 = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
-            const float z4 = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+    for (int i = 0; i < 30; i++) {
+        float topAngle = angle * i * M_PI / 180.0;
+        float bottomAngle = angle * (i + 1) * M_PI / 180.0;
+        float yTop = rect.height() * 0.5 - radius * cos(topAngle);
+        yTop -= (yTop - rect.height() * 0.5) * capDeformationFactor;
+        float yBottom = rect.height() * 0.5 - radius * cos(bottomAngle);
+        yBottom -= (yBottom - rect.height() * 0.5) * capDeformationFactor;
+        for (int j = 0; j < 36; j++) {
+            const float x1 = radius * sin(topAngle) * sin((90.0 + j * 10.0) * M_PI / 180.0);
+            const float z1 = radius * sin(topAngle) * cos((90.0 + j * 10.0) * M_PI / 180.0);
+            const float x2 = radius * sin(bottomAngle) * sin((90.0 + j * 10.0) * M_PI / 180.00);
+            const float z2 = radius * sin(bottomAngle) * cos((90.0 + j * 10.0) * M_PI / 180.0);
+            const float x3 = radius * sin(bottomAngle) * sin((90.0 + (j + 1) * 10.0) * M_PI / 180.0);
+            const float z3 = radius * sin(bottomAngle) * cos((90.0 + (j + 1) * 10.0) * M_PI / 180.0);
+            const float x4 = radius * sin(topAngle) * sin((90.0 + (j + 1) * 10.0) * M_PI / 180.0);
+            const float z4 = radius * sin(topAngle) * cos((90.0 + (j + 1) * 10.0) * M_PI / 180.0);
             if (texture) {
-                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
-                texCoords << x1/(rect.width())+0.5 << 0.5 - z1/zTexture * 0.5;
-                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
-                texCoords << x2/(rect.width())+0.5 << 0.5 - z2/zTexture * 0.5;
-                texCoords << x3/(rect.width())+0.5 << 0.5 - z3/zTexture * 0.5;
-                texCoords << x4/(rect.width())+0.5 << 0.5 - z4/zTexture * 0.5;
+                texCoords << x4 / (rect.width()) + 0.5 << 0.5 - z4 / zTexture * 0.5;
+                texCoords << x1 / (rect.width()) + 0.5 << 0.5 - z1 / zTexture * 0.5;
+                texCoords << x2 / (rect.width()) + 0.5 << 0.5 - z2 / zTexture * 0.5;
+                texCoords << x2 / (rect.width()) + 0.5 << 0.5 - z2 / zTexture * 0.5;
+                texCoords << x3 / (rect.width()) + 0.5 << 0.5 - z3 / zTexture * 0.5;
+                texCoords << x4 / (rect.width()) + 0.5 << 0.5 - z4 / zTexture * 0.5;
             }
             verts << x4 << yTop    << z4;
             verts << x1 << yTop    << z1;
@@ -1109,325 +1038,271 @@ void CubeEffect::paintSphereCap()
             verts << x2 << yBottom << z2;
             verts << x3 << yBottom << z3;
             verts << x4 << yTop    << z4;
-            }
         }
+    }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count()/3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
-    }
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+}
 
 void CubeEffect::postPaintScreen()
-    {
+{
     effects->postPaintScreen();
-    if( activated )
-        {
-        if( start )
-            {
-            if( timeLine.value() == 1.0 )
-                {
+    if (activated) {
+        if (start) {
+            if (timeLine.value() == 1.0) {
                 start = false;
                 timeLine.setProgress(0.0);
                 // more rotations?
-                if( !rotations.empty() )
-                    {
+                if (!rotations.empty()) {
                     rotationDirection = rotations.dequeue();
                     rotating = true;
                     // change the curve shape if current shape is not easeInOut
-                    if( currentShape != TimeLine::EaseInOutCurve )
-                        {
+                    if (currentShape != TimeLine::EaseInOutCurve) {
                         // more rotations follow -> linear curve
-                        if( !rotations.empty() )
-                            {
+                        if (!rotations.empty()) {
                             currentShape = TimeLine::LinearCurve;
-                            }
-                        // last rotation step -> easeOut curve
-                        else
-                            {
-                            currentShape = TimeLine::EaseOutCurve;
-                            }
-                        timeLine.setCurveShape( currentShape );
                         }
-                    else
-                        {
+                        // last rotation step -> easeOut curve
+                        else {
+                            currentShape = TimeLine::EaseOutCurve;
+                        }
+                        timeLine.setCurveShape(currentShape);
+                    } else {
                         // if there is at least one more rotation, we can change to easeIn
-                        if( !rotations.empty() )
-                            {
+                        if (!rotations.empty()) {
                             currentShape = TimeLine::EaseInCurve;
-                            timeLine.setCurveShape( currentShape );
-                            }
+                            timeLine.setCurveShape(currentShape);
                         }
                     }
                 }
+            }
             effects->addRepaintFull();
             return; // schedule_close could have been called, start has to finish first
-            }
-        if( stop )
-            {
-            if( timeLine.value() == 1.0 )
-                {
-                effects->setCurrentDesktop( frontDesktop );
+        }
+        if (stop) {
+            if (timeLine.value() == 1.0) {
+                effects->setCurrentDesktop(frontDesktop);
                 stop = false;
                 timeLine.setProgress(0.0);
                 activated = false;
                 // set the new desktop
-                if( keyboard_grab )
+                if (keyboard_grab)
                     effects->ungrabKeyboard();
                 keyboard_grab = false;
-                effects->destroyInputWindow( input );
+                effects->destroyInputWindow(input);
 
-                effects->setActiveFullScreenEffect( 0 );
+                effects->setActiveFullScreenEffect(0);
 
                 delete m_cubeCapBuffer;
                 m_cubeCapBuffer = NULL;
                 desktopNameFrame->free();
-                }
-            effects->addRepaintFull();
             }
-        if( rotating || verticalRotating )
-            {
-            if( rotating && timeLine.value() == 1.0 )
-                {
+            effects->addRepaintFull();
+        }
+        if (rotating || verticalRotating) {
+            if (rotating && timeLine.value() == 1.0) {
                 timeLine.setProgress(0.0);
                 rotating = false;
                 desktopChangedWhileRotating = false;
                 manualAngle = 0.0;
                 // more rotations?
-                if( !rotations.empty() )
-                    {
+                if (!rotations.empty()) {
                     rotationDirection = rotations.dequeue();
                     rotating = true;
                     // change the curve shape if current shape is not easeInOut
-                    if( currentShape != TimeLine::EaseInOutCurve )
-                        {
+                    if (currentShape != TimeLine::EaseInOutCurve) {
                         // more rotations follow -> linear curve
-                        if( !rotations.empty() )
-                            {
+                        if (!rotations.empty()) {
                             currentShape = TimeLine::LinearCurve;
-                            }
-                        // last rotation step -> easeOut curve
-                        else
-                            {
-                            currentShape = TimeLine::EaseOutCurve;
-                            }
-                        timeLine.setCurveShape( currentShape );
                         }
-                    else
-                        {
+                        // last rotation step -> easeOut curve
+                        else {
+                            currentShape = TimeLine::EaseOutCurve;
+                        }
+                        timeLine.setCurveShape(currentShape);
+                    } else {
                         // if there is at least one more rotation, we can change to easeIn
-                        if( !rotations.empty() )
-                            {
+                        if (!rotations.empty()) {
                             currentShape = TimeLine::EaseInCurve;
-                            timeLine.setCurveShape( currentShape );
-                            }
+                            timeLine.setCurveShape(currentShape);
                         }
                     }
-                else
-                    {
+                } else {
                     // reset curve shape if there are no more rotations
-                    if( currentShape != TimeLine::EaseInOutCurve )
-                        {
+                    if (currentShape != TimeLine::EaseInOutCurve) {
                         currentShape = TimeLine::EaseInOutCurve;
-                        timeLine.setCurveShape( currentShape );
-                        }
+                        timeLine.setCurveShape(currentShape);
                     }
                 }
-            if( verticalRotating && verticalTimeLine.value() == 1.0 )
-                {
+            }
+            if (verticalRotating && verticalTimeLine.value() == 1.0) {
                 verticalTimeLine.setProgress(0.0);
                 verticalRotating = false;
                 manualVerticalAngle = 0.0;
                 // more rotations?
-                if( !verticalRotations.empty() )
-                    {
+                if (!verticalRotations.empty()) {
                     verticalRotationDirection = verticalRotations.dequeue();
                     verticalRotating = true;
-                    if( verticalRotationDirection == Upwards )
-                        {
-                        if( verticalPosition == Normal )
+                    if (verticalRotationDirection == Upwards) {
+                        if (verticalPosition == Normal)
                             verticalPosition = Up;
-                        if( verticalPosition == Down )
+                        if (verticalPosition == Down)
                             verticalPosition = Normal;
-                        }
-                    if( verticalRotationDirection == Downwards )
-                        {
-                        if( verticalPosition == Normal )
+                    }
+                    if (verticalRotationDirection == Downwards) {
+                        if (verticalPosition == Normal)
                             verticalPosition = Down;
-                        if( verticalPosition == Up )
+                        if (verticalPosition == Up)
                             verticalPosition = Normal;
-                        }
                     }
                 }
+            }
             effects->addRepaintFull();
             return; // rotation has to end before cube is closed
-            }
-        if( schedule_close )
-            {
+        }
+        if (schedule_close) {
             schedule_close = false;
             stop = true;
             effects->addRepaintFull();
-            }
         }
     }
+}
 
-void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
-    if( activated )
-        {
-        if( cube_painting )
-            {
-            if( mode == Cylinder || mode == Sphere )
-                {
-                int leftDesktop = frontDesktop -1;
+void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    if (activated) {
+        if (cube_painting) {
+            if (mode == Cylinder || mode == Sphere) {
+                int leftDesktop = frontDesktop - 1;
                 int rightDesktop = frontDesktop + 1;
-                if( leftDesktop == 0 )
+                if (leftDesktop == 0)
                     leftDesktop = effects->numberOfDesktops();
-                if( rightDesktop > effects->numberOfDesktops() )
+                if (rightDesktop > effects->numberOfDesktops())
                     rightDesktop = 1;
-                if( painting_desktop == frontDesktop )
-                    data.quads = data.quads.makeGrid( 40 );
-                else if( painting_desktop == leftDesktop || painting_desktop == rightDesktop )
-                    data.quads = data.quads.makeGrid( 100 );
+                if (painting_desktop == frontDesktop)
+                    data.quads = data.quads.makeGrid(40);
+                else if (painting_desktop == leftDesktop || painting_desktop == rightDesktop)
+                    data.quads = data.quads.makeGrid(100);
                 else
-                    data.quads = data.quads.makeGrid( 250 );
+                    data.quads = data.quads.makeGrid(250);
+            }
+            if (w->isOnDesktop(painting_desktop)) {
+                QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
+                if (w->x() < rect.x()) {
+                    data.quads = data.quads.splitAtX(-w->x());
                 }
-            if( w->isOnDesktop( painting_desktop ))
-                {
-                QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
-                if( w->x() < rect.x() )
-                    {
-                    data.quads = data.quads.splitAtX( -w->x() );
-                    }
-                if( w->x() + w->width() > rect.x() + rect.width() )
-                    {
-                    data.quads = data.quads.splitAtX( rect.width() - w->x() );
-                    }
-                if( w->y() < rect.y() )
-                    {
-                    data.quads = data.quads.splitAtY( -w->y() );
-                    }
-                if( w->y() + w->height() > rect.y() + rect.height() )
-                    {
-                    data.quads = data.quads.splitAtY( rect.height() - w->y() );
-                    }
-                if( useZOrdering && !w->isDesktop() && !w->isDock() && !w->isOnAllDesktops() )
+                if (w->x() + w->width() > rect.x() + rect.width()) {
+                    data.quads = data.quads.splitAtX(rect.width() - w->x());
+                }
+                if (w->y() < rect.y()) {
+                    data.quads = data.quads.splitAtY(-w->y());
+                }
+                if (w->y() + w->height() > rect.y() + rect.height()) {
+                    data.quads = data.quads.splitAtY(rect.height() - w->y());
+                }
+                if (useZOrdering && !w->isDesktop() && !w->isDock() && !w->isOnAllDesktops())
                     data.setTransformed();
-                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-                }
-            else
-                {
+                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+            } else {
                 // check for windows belonging to the previous desktop
-                int prev_desktop = painting_desktop -1;
-                if( prev_desktop == 0 )
+                int prev_desktop = painting_desktop - 1;
+                if (prev_desktop == 0)
                     prev_desktop = effects->numberOfDesktops();
-                if( w->isOnDesktop( prev_desktop ) && mode == Cube && !useZOrdering )
-                    {
-                    QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
-                    if( w->x()+w->width() > rect.x() + rect.width() )
-                        {
-                        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-                        data.quads = data.quads.splitAtX( rect.width() - w->x() );
-                        if( w->y() < rect.y() )
-                            {
-                            data.quads = data.quads.splitAtY( -w->y() );
-                            }
-                        if( w->y() + w->height() > rect.y() + rect.height() )
-                            {
-                            data.quads = data.quads.splitAtY( rect.height() - w->y() );
-                            }
-                        data.setTransformed();
-                        effects->prePaintWindow( w, data, time );
-                        return;
+                if (w->isOnDesktop(prev_desktop) && mode == Cube && !useZOrdering) {
+                    QRect rect = effects->clientArea(FullArea, activeScreen, prev_desktop);
+                    if (w->x() + w->width() > rect.x() + rect.width()) {
+                        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+                        data.quads = data.quads.splitAtX(rect.width() - w->x());
+                        if (w->y() < rect.y()) {
+                            data.quads = data.quads.splitAtY(-w->y());
                         }
-                    }
-                // check for windows belonging to the next desktop
-                int next_desktop = painting_desktop +1;
-                if( next_desktop > effects->numberOfDesktops() )
-                    next_desktop = 1;
-                if( w->isOnDesktop( next_desktop ) && mode == Cube && !useZOrdering )
-                    {
-                    QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
-                    if( w->x() < rect.x() )
-                        {
-                        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-                        data.quads = data.quads.splitAtX( -w->x() );
-                        if( w->y() < rect.y() )
-                            {
-                            data.quads = data.quads.splitAtY( -w->y() );
-                            }
-                        if( w->y() + w->height() > rect.y() + rect.height() )
-                            {
-                            data.quads = data.quads.splitAtY( rect.height() - w->y() );
-                            }
-                        data.setTransformed();
-                        effects->prePaintWindow( w, data, time );
-                        return;
+                        if (w->y() + w->height() > rect.y() + rect.height()) {
+                            data.quads = data.quads.splitAtY(rect.height() - w->y());
                         }
+                        data.setTransformed();
+                        effects->prePaintWindow(w, data, time);
+                        return;
                     }
-                w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
+                // check for windows belonging to the next desktop
+                int next_desktop = painting_desktop + 1;
+                if (next_desktop > effects->numberOfDesktops())
+                    next_desktop = 1;
+                if (w->isOnDesktop(next_desktop) && mode == Cube && !useZOrdering) {
+                    QRect rect = effects->clientArea(FullArea, activeScreen, next_desktop);
+                    if (w->x() < rect.x()) {
+                        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+                        data.quads = data.quads.splitAtX(-w->x());
+                        if (w->y() < rect.y()) {
+                            data.quads = data.quads.splitAtY(-w->y());
+                        }
+                        if (w->y() + w->height() > rect.y() + rect.height()) {
+                            data.quads = data.quads.splitAtY(rect.height() - w->y());
+                        }
+                        data.setTransformed();
+                        effects->prePaintWindow(w, data, time);
+                        return;
+                    }
+                }
+                w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
             }
         }
-    effects->prePaintWindow( w, data, time );
     }
+    effects->prePaintWindow(w, data, time);
+}
 
-void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     ShaderManager *shaderManager = ShaderManager::instance();
     GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
     QMatrix4x4 origMatrix;
-    if( activated && cube_painting )
-        {
+    if (activated && cube_painting) {
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
-        if( start )
-            {
-            opacity = 1.0 - (1.0 - opacity)*timeLine.value();
-            if( reflectionPainting )
-                opacity = 0.5 + ( cubeOpacity - 0.5 )*timeLine.value();
+        if (start) {
+            opacity = 1.0 - (1.0 - opacity) * timeLine.value();
+            if (reflectionPainting)
+                opacity = 0.5 + (cubeOpacity - 0.5) * timeLine.value();
             // fade in windows belonging to different desktops
-            if( painting_desktop == effects->currentDesktop() && (!w->isOnDesktop( painting_desktop )) )
+            if (painting_desktop == effects->currentDesktop() && (!w->isOnDesktop(painting_desktop)))
                 opacity = timeLine.value() * cubeOpacity;
-            }
-        if( stop )
-            {
-            opacity = 1.0 - (1.0 - opacity)*( 1.0 - timeLine.value() );
-            if( reflectionPainting )
-                opacity = 0.5 + ( cubeOpacity - 0.5 )*( 1.0 - timeLine.value() );
+        }
+        if (stop) {
+            opacity = 1.0 - (1.0 - opacity) * (1.0 - timeLine.value());
+            if (reflectionPainting)
+                opacity = 0.5 + (cubeOpacity - 0.5) * (1.0 - timeLine.value());
             // fade out windows belonging to different desktops
-            if( painting_desktop == effects->currentDesktop() && (!w->isOnDesktop( painting_desktop )) )
+            if (painting_desktop == effects->currentDesktop() && (!w->isOnDesktop(painting_desktop)))
                 opacity = cubeOpacity * (1.0 - timeLine.value());
-            }
+        }
         // z-Ordering
-        if( !w->isDesktop() && !w->isDock() && useZOrdering && !w->isOnAllDesktops() )
-            {
-            float zOrdering = (effects->stackingOrder().indexOf( w )+1)*zOrderingFactor;
-            if( start )
+        if (!w->isDesktop() && !w->isDock() && useZOrdering && !w->isOnAllDesktops()) {
+            float zOrdering = (effects->stackingOrder().indexOf(w) + 1) * zOrderingFactor;
+            if (start)
                 zOrdering *= timeLine.value();
-            if( stop )
+            if (stop)
                 zOrdering *= (1.0 - timeLine.value());
             data.zTranslate += zOrdering;
-            }
+        }
         // check for windows belonging to the previous desktop
-        int prev_desktop = painting_desktop -1;
-        if( prev_desktop == 0 )
+        int prev_desktop = painting_desktop - 1;
+        if (prev_desktop == 0)
             prev_desktop = effects->numberOfDesktops();
-        int next_desktop = painting_desktop +1;
-        if( next_desktop > effects->numberOfDesktops() )
+        int next_desktop = painting_desktop + 1;
+        if (next_desktop > effects->numberOfDesktops())
             next_desktop = 1;
         if (!shader) {
             pushMatrix();
         }
-        if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
-            {
-            QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
+        if (w->isOnDesktop(prev_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
+            QRect rect = effects->clientArea(FullArea, activeScreen, prev_desktop);
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( quad.right() > rect.width() - w->x() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (quad.right() > rect.width() - w->x()) {
+                    new_quads.append(quad);
                 }
+            }
             data.quads = new_quads;
             if (shader) {
                 data.xTranslate = -rect.width();
@@ -1437,26 +1312,23 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 rot.xRotationPoint = rect.width() - w->x();
                 rot.angle = 360.0f / effects->numberOfDesktops();
                 data.rotation = &rot;
-                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
                 QMatrix4x4 matrix;
-                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.translate(rect.width() / 2, 0.0, -point);
                 matrix.rotate(-360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-                matrix.translate(-rect.width()/2, 0.0, point);
+                matrix.translate(-rect.width() / 2, 0.0, point);
                 multiplyMatrix(matrix);
             }
-            }
-        if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
-            {
-            QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
+        }
+        if (w->isOnDesktop(next_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
+            QRect rect = effects->clientArea(FullArea, activeScreen, next_desktop);
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( w->x() + quad.right() <= rect.x() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (w->x() + quad.right() <= rect.x()) {
+                    new_quads.append(quad);
                 }
+            }
             data.quads = new_quads;
             if (shader) {
                 data.xTranslate = rect.width();
@@ -1466,127 +1338,111 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 rot.xRotationPoint = -w->x();
                 rot.angle = -360.0f / effects->numberOfDesktops();
                 data.rotation = &rot;
-                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-                float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
+                float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
                 QMatrix4x4 matrix;
-                matrix.translate(rect.width()/2, 0.0, -point);
+                matrix.translate(rect.width() / 2, 0.0, -point);
                 matrix.rotate(360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-                matrix.translate(-rect.width()/2, 0.0, point);
+                matrix.translate(-rect.width() / 2, 0.0, point);
                 multiplyMatrix(matrix);
             }
-            }
-        QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+        }
+        QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
 
-        if( start || stop )
-            {
+        if (start || stop) {
             // we have to change opacity values for fade in/out of windows which are shown on front-desktop
-            if( prev_desktop == effects->currentDesktop() && w->x() < rect.x() )
-                {
-                if( start )
+            if (prev_desktop == effects->currentDesktop() && w->x() < rect.x()) {
+                if (start)
                     opacity = timeLine.value() * cubeOpacity;
-                if( stop )
+                if (stop)
                     opacity = cubeOpacity * (1.0 - timeLine.value());
-                }
-            if( next_desktop == effects->currentDesktop() && w->x() + w->width() > rect.x() + rect.width() )
-                {
-                if( start )
-                    opacity = timeLine.value() * cubeOpacity;
-                if( stop )
-                    opacity = cubeOpacity * (1.0 - timeLine.value());
-                }
             }
+            if (next_desktop == effects->currentDesktop() && w->x() + w->width() > rect.x() + rect.width()) {
+                if (start)
+                    opacity = timeLine.value() * cubeOpacity;
+                if (stop)
+                    opacity = cubeOpacity * (1.0 - timeLine.value());
+            }
+        }
         // HACK set opacity to 0.99 in case of fully opaque to ensure that windows are painted in correct sequence
         // bug #173214
-        if( opacity > 0.99f )
+        if (opacity > 0.99f)
             opacity = 0.99f;
-        if( opacityDesktopOnly && !w->isDesktop() )
+        if (opacityDesktopOnly && !w->isDesktop())
             opacity = 0.99f;
         data.opacity *= opacity;
 
-        if( w->isOnDesktop(painting_desktop) && w->x() < rect.x() )
-            {
+        if (w->isOnDesktop(painting_desktop) && w->x() < rect.x()) {
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( quad.right() > -w->x() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (quad.right() > -w->x()) {
+                    new_quads.append(quad);
                 }
-            data.quads = new_quads;
             }
-        if( w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width() )
-            {
+            data.quads = new_quads;
+        }
+        if (w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width()) {
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( quad.right() <= rect.width() - w->x() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (quad.right() <= rect.width() - w->x()) {
+                    new_quads.append(quad);
                 }
-            data.quads = new_quads;
             }
-        if( w->y() < rect.y() )
-            {
+            data.quads = new_quads;
+        }
+        if (w->y() < rect.y()) {
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( quad.bottom() > -w->y() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (quad.bottom() > -w->y()) {
+                    new_quads.append(quad);
                 }
-            data.quads = new_quads;
             }
-        if( w->y() + w->height() > rect.y() + rect.height() )
-            {
+            data.quads = new_quads;
+        }
+        if (w->y() + w->height() > rect.y() + rect.height()) {
             WindowQuadList new_quads;
-            foreach( const WindowQuad &quad, data.quads )
-                {
-                if( quad.bottom() <= rect.height() - w->y() )
-                    {
-                    new_quads.append( quad );
-                    }
+            foreach (const WindowQuad & quad, data.quads) {
+                if (quad.bottom() <= rect.height() - w->y()) {
+                    new_quads.append(quad);
                 }
-            data.quads = new_quads;
             }
+            data.quads = new_quads;
+        }
         if (shader) {
             origMatrix = shader->getUniformMatrix4x4("screenTransformation");
             if (mode == Cylinder) {
                 shaderManager->pushShader(cylinderShader);
-                cylinderShader->setUniform( "xCoord", (float)w->x() );
-                cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                cylinderShader->setUniform("xCoord", (float)w->x());
+                cylinderShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
                 float factor = 0.0f;
-                if( start )
+                if (start)
                     factor = 1.0f - timeLine.value();
-                if( stop )
+                if (stop)
                     factor = timeLine.value();
-                cylinderShader->setUniform( "timeLine", factor );
+                cylinderShader->setUniform("timeLine", factor);
                 data.shader = cylinderShader;
             }
             if (mode == Sphere) {
                 shaderManager->pushShader(sphereShader);
-                sphereShader->setUniform( "u_offset", QVector2D(w->x(), w->y()));
-                sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 90.0f );
+                sphereShader->setUniform("u_offset", QVector2D(w->x(), w->y()));
+                sphereShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
                 float factor = 0.0f;
-                if( start )
+                if (start)
                     factor = 1.0f - timeLine.value();
-                if( stop )
+                if (stop)
                     factor = timeLine.value();
-                sphereShader->setUniform( "timeLine", factor );
+                sphereShader->setUniform("timeLine", factor);
                 data.shader = sphereShader;
             }
             if (reflectionPainting) {
-                shader->setUniform("screenTransformation", m_reflectionMatrix*m_rotationMatrix*origMatrix);
+                shader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
             } else {
-                shader->setUniform("screenTransformation", m_rotationMatrix*origMatrix);
+                shader->setUniform("screenTransformation", m_rotationMatrix * origMatrix);
             }
         }
-        }
-    effects->paintWindow( w, mask, region, data );
-    if( activated && cube_painting )
-        {
+    }
+    effects->paintWindow(w, mask, region, data);
+    if (activated && cube_painting) {
         if (shader) {
             if (mode == Cylinder || mode == Sphere) {
                 shaderManager->popShader();
@@ -1595,679 +1451,582 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             }
             shaderManager->popShader();
         }
-        if( w->isDesktop() && effects->numScreens() > 1 && paintCaps )
-            {
-            QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
-            QRegion paint = QRegion( rect );
-            for( int i=0; i<effects->numScreens(); i++ )
-                {
-                if( i == w->screen() )
+        if (w->isDesktop() && effects->numScreens() > 1 && paintCaps) {
+            QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
+            QRegion paint = QRegion(rect);
+            for (int i = 0; i < effects->numScreens(); i++) {
+                if (i == w->screen())
                     continue;
-                paint = paint.subtracted( QRegion( effects->clientArea( ScreenArea, i, painting_desktop )));
-                }
-            paint = paint.subtracted( QRegion( w->geometry()));
+                paint = paint.subtracted(QRegion(effects->clientArea(ScreenArea, i, painting_desktop)));
+            }
+            paint = paint.subtracted(QRegion(w->geometry()));
             // in case of free area in multiscreen setup fill it with cap color
-            if( !paint.isEmpty() )
-                {
+            if (!paint.isEmpty()) {
 #ifndef KWIN_HAVE_OPENGLES
-                glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+                glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif
-                glEnable( GL_BLEND );
-                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 QVector<float> verts;
                 float quadSize = 0.0f;
-                int leftDesktop = frontDesktop -1;
+                int leftDesktop = frontDesktop - 1;
                 int rightDesktop = frontDesktop + 1;
-                if( leftDesktop == 0 )
+                if (leftDesktop == 0)
                     leftDesktop = effects->numberOfDesktops();
-                if( rightDesktop > effects->numberOfDesktops() )
+                if (rightDesktop > effects->numberOfDesktops())
                     rightDesktop = 1;
-                if( painting_desktop == frontDesktop )
+                if (painting_desktop == frontDesktop)
                     quadSize = 100.0f;
-                else if( painting_desktop == leftDesktop || painting_desktop == rightDesktop )
+                else if (painting_desktop == leftDesktop || painting_desktop == rightDesktop)
                     quadSize = 150.0f;
                 else
                     quadSize = 250.0f;
-                foreach( const QRect &paintRect, paint.rects() )
-                    {
-                    for( int i=0; i<=(paintRect.height()/quadSize); i++ )
-                        {
-                        for( int j=0; j<=(paintRect.width()/quadSize); j++ )
-                            {
-                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
-                            verts << paintRect.x()+j*quadSize << paintRect.y()+i*quadSize;
-                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
-                            verts << paintRect.x()+j*quadSize << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
-                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() );
-                            verts << qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ) << paintRect.y()+i*quadSize;
-                            }
+                foreach (const QRect & paintRect, paint.rects()) {
+                    for (int i = 0; i <= (paintRect.height() / quadSize); i++) {
+                        for (int j = 0; j <= (paintRect.width() / quadSize); j++) {
+                            verts << qMin(paintRect.x() + (j + 1)*quadSize, (float)paintRect.x() + paintRect.width()) << paintRect.y() + i*quadSize;
+                            verts << paintRect.x() + j*quadSize << paintRect.y() + i*quadSize;
+                            verts << paintRect.x() + j*quadSize << qMin(paintRect.y() + (i + 1)*quadSize, (float)paintRect.y() + paintRect.height());
+                            verts << paintRect.x() + j*quadSize << qMin(paintRect.y() + (i + 1)*quadSize, (float)paintRect.y() + paintRect.height());
+                            verts << qMin(paintRect.x() + (j + 1)*quadSize, (float)paintRect.x() + paintRect.width()) << qMin(paintRect.y() + (i + 1)*quadSize, (float)paintRect.y() + paintRect.height());
+                            verts << qMin(paintRect.x() + (j + 1)*quadSize, (float)paintRect.x() + paintRect.width()) << paintRect.y() + i*quadSize;
                         }
                     }
+                }
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 QColor color = capColor;
                 capColor.setAlphaF(cubeOpacity);
                 // TODO: use sphere and cylinder shaders
                 vbo->setColor(color);
-                vbo->setData(verts.size()/2, 2, verts.constData(), NULL);
+                vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
                 vbo->render(GL_TRIANGLES);
-                glDisable( GL_BLEND );
+                glDisable(GL_BLEND);
 #ifndef KWIN_HAVE_OPENGLES
                 glPopAttrib();
 #endif
-                }
             }
+        }
         if (!shader) {
             popMatrix();
         }
-        }
     }
+}
 
-bool CubeEffect::borderActivated( ElectricBorder border )
-    {
-    if( !borderActivate.contains( border ) &&
-        !borderActivateCylinder.contains( border ) &&
-        !borderActivateSphere.contains( border ) )
+bool CubeEffect::borderActivated(ElectricBorder border)
+{
+    if (!borderActivate.contains(border) &&
+            !borderActivateCylinder.contains(border) &&
+            !borderActivateSphere.contains(border))
         return false;
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return false;
-    if( borderActivate.contains( border ) )
-        {
-        if( !activated || ( activated && mode == Cube ) )
+    if (borderActivate.contains(border)) {
+        if (!activated || (activated && mode == Cube))
             toggleCube();
         else
             return false;
-        }
-    if( borderActivateCylinder.contains( border ) )
-        {
-        if( !activated || ( activated && mode == Cylinder ) )
+    }
+    if (borderActivateCylinder.contains(border)) {
+        if (!activated || (activated && mode == Cylinder))
             toggleCylinder();
         else
             return false;
-        }
-    if( borderActivateSphere.contains( border ) )
-        {
-        if( !activated || ( activated && mode == Sphere ) )
+    }
+    if (borderActivateSphere.contains(border)) {
+        if (!activated || (activated && mode == Sphere))
             toggleSphere();
         else
             return false;
-        }
-    return true;
     }
+    return true;
+}
 
 void CubeEffect::toggleCube()
-    {
+{
     kDebug(1212) << "toggle cube";
-    toggle( Cube );
-    }
+    toggle(Cube);
+}
 
 void CubeEffect::toggleCylinder()
-    {
+{
     kDebug(1212) << "toggle cylinder";
-    if( !useShaders )
+    if (!useShaders)
         useShaders = loadShader();
-    if( useShaders )
-        toggle( Cylinder );
+    if (useShaders)
+        toggle(Cylinder);
     else
-        kError( 1212 ) << "Sorry shaders are not available - cannot activate Cylinder";
-    }
+        kError(1212) << "Sorry shaders are not available - cannot activate Cylinder";
+}
 
 void CubeEffect::toggleSphere()
-    {
+{
     kDebug(1212) << "toggle sphere";
-    if( !useShaders )
+    if (!useShaders)
         useShaders = loadShader();
-    if( useShaders )
-        toggle( Sphere );
+    if (useShaders)
+        toggle(Sphere);
     else
-        kError( 1212 ) << "Sorry shaders are not available - cannot activate Sphere";
-    }
+        kError(1212) << "Sorry shaders are not available - cannot activate Sphere";
+}
 
-void CubeEffect::toggle( CubeMode newMode )
-    {
-    if( ( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this ) ||
-        effects->numberOfDesktops() < 2 )
+void CubeEffect::toggle(CubeMode newMode)
+{
+    if ((effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) ||
+            effects->numberOfDesktops() < 2)
         return;
-    if( !activated )
-        {
+    if (!activated) {
         mode = newMode;
-        setActive( true );
-        }
-    else
-        {
-        setActive( false );
-        }
+        setActive(true);
+    } else {
+        setActive(false);
     }
+}
 
-void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
-    {
-    if( stop )
+void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
+{
+    if (stop)
         return;
     // taken from desktopgrid.cpp
-    if( e->type() == QEvent::KeyPress )
-        {
+    if (e->type() == QEvent::KeyPress) {
         // check for global shortcuts
         // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if( mode == Cube && cubeShortcut.contains( e->key() + e->modifiers() ) )
-            {
+        if (mode == Cube && cubeShortcut.contains(e->key() + e->modifiers())) {
             toggleCube();
             return;
-            }
-        if( mode == Cylinder && cylinderShortcut.contains( e->key() + e->modifiers() ) )
-            {
+        }
+        if (mode == Cylinder && cylinderShortcut.contains(e->key() + e->modifiers())) {
             toggleCylinder();
             return;
-            }
-        if( mode == Sphere && sphereShortcut.contains( e->key() + e->modifiers() ) )
-            {
+        }
+        if (mode == Sphere && sphereShortcut.contains(e->key() + e->modifiers())) {
             toggleSphere();
             return;
-            }
+        }
 
         int desktop = -1;
         // switch by F<number> or just <number>
-        if( e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35 )
+        if (e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35)
             desktop = e->key() - Qt::Key_F1 + 1;
-        else if( e->key() >= Qt::Key_0 && e->key() <= Qt::Key_9 )
+        else if (e->key() >= Qt::Key_0 && e->key() <= Qt::Key_9)
             desktop = e->key() == Qt::Key_0 ? 10 : e->key() - Qt::Key_0;
-        if( desktop != -1 )
-            {
-            if( desktop <= effects->numberOfDesktops())
-                {
+        if (desktop != -1) {
+            if (desktop <= effects->numberOfDesktops()) {
                 // we have to rotate to chosen desktop
                 // and end effect when rotation finished
-                rotateToDesktop( desktop );
-                setActive( false );
-                }
+                rotateToDesktop(desktop);
+                setActive(false);
+            }
             return;
-            }
-        switch( e->key())
-            { // wrap only on autorepeat
-            case Qt::Key_Left:
-                // rotate to previous desktop
-                kDebug(1212) << "left";
-                if( !rotating && !start )
-                    {
-                    rotating = true;
-                    if( invertKeys )
-                        rotationDirection = Right;
-                    else
-                        rotationDirection = Left;
-                    }
-                else
-                    {
-                    if( rotations.count() < effects->numberOfDesktops() )
-                        {
-                        if( invertKeys )
-                            rotations.enqueue( Right );
-                        else
-                            rotations.enqueue( Left );
-                        }
-                    }
-                break;
-            case Qt::Key_Right:
-                // rotate to next desktop
-                kDebug(1212) << "right";
-                if( !rotating && !start )
-                    {
-                    rotating = true;
-                    if( invertKeys )
-                        rotationDirection = Left;
-                    else
-                        rotationDirection = Right;
-                    }
-                else
-                    {
-                    if( rotations.count() < effects->numberOfDesktops() )
-                        {
-                        if( invertKeys )
-                            rotations.enqueue( Left );
-                        else
-                            rotations.enqueue( Right );
-                        }
-                    }
-                break;
-            case Qt::Key_Up:
-                kDebug(1212) << "up";
-                if( invertKeys )
-                    {
-                    if( verticalPosition != Down )
-                        {
-                        if( !verticalRotating )
-                            {
-                            verticalRotating = true;
-                            verticalRotationDirection = Downwards;
-                            if( verticalPosition == Normal )
-                                verticalPosition = Down;
-                            if( verticalPosition == Up )
-                                verticalPosition = Normal;
-                            }
-                        else
-                            {
-                            verticalRotations.enqueue( Downwards );
-                            }
-                        }
-                    else if( manualVerticalAngle > 0.0 && !verticalRotating )
-                        {
-                        // rotate to down position from the manual position
-                        verticalRotating = true;
-                        verticalRotationDirection = Downwards;
-                        verticalPosition = Down;
-                        manualVerticalAngle -= 90.0;
-                        }
-                    }
-                else
-                    {
-                    if( verticalPosition != Up )
-                        {
-                        if( !verticalRotating )
-                            {
-                            verticalRotating = true;
-                            verticalRotationDirection = Upwards;
-                            if( verticalPosition == Normal )
-                                verticalPosition = Up;
-                            if( verticalPosition == Down )
-                                verticalPosition = Normal;
-                            }
-                        else
-                            {
-                            verticalRotations.enqueue( Upwards );
-                            }
-                        }
-                    else if( manualVerticalAngle < 0.0 && !verticalRotating )
-                        {
-                        // rotate to up position from the manual position
-                        verticalRotating = true;
-                        verticalRotationDirection = Upwards;
-                        verticalPosition = Up;
-                        manualVerticalAngle += 90.0;
-                        }
-                    }
-                break;
-            case Qt::Key_Down:
-                kDebug(1212) << "down";
-                if( invertKeys )
-                    {
-                    if( verticalPosition != Up )
-                        {
-                        if( !verticalRotating )
-                            {
-                            verticalRotating = true;
-                            verticalRotationDirection = Upwards;
-                            if( verticalPosition == Normal )
-                                verticalPosition = Up;
-                            if( verticalPosition == Down )
-                                verticalPosition = Normal;
-                            }
-                        else
-                            {
-                            verticalRotations.enqueue( Upwards );
-                            }
-                        }
-                    else if( manualVerticalAngle < 0.0 && !verticalRotating )
-                        {
-                        // rotate to up position from the manual position
-                        verticalRotating = true;
-                        verticalRotationDirection = Upwards;
-                        verticalPosition = Up;
-                        manualVerticalAngle += 90.0;
-                        }
-                    }
-                else
-                    {
-                    if( verticalPosition != Down )
-                        {
-                        if( !verticalRotating )
-                            {
-                            verticalRotating = true;
-                            verticalRotationDirection = Downwards;
-                            if( verticalPosition == Normal )
-                                verticalPosition = Down;
-                            if( verticalPosition == Up )
-                                verticalPosition = Normal;
-                            }
-                        else
-                            {
-                            verticalRotations.enqueue( Downwards );
-                            }
-                        }
-                    else if( manualVerticalAngle > 0.0 && !verticalRotating )
-                        {
-                        // rotate to down position from the manual position
-                        verticalRotating = true;
-                        verticalRotationDirection = Downwards;
-                        verticalPosition = Down;
-                        manualVerticalAngle -= 90.0;
-                        }
-                    }
-                break;
-            case Qt::Key_Escape:
-                rotateToDesktop( effects->currentDesktop() );
-                setActive( false );
-                return;
-            case Qt::Key_Enter:
-            case Qt::Key_Return:
-            case Qt::Key_Space:
-                setActive( false );
-                return;
-            case Qt::Key_Plus:
-                zoom -= 10.0;
-                zoom = qMax( -zPosition, zoom );
-                rotateCube();
-                break;
-            case Qt::Key_Minus:
-                zoom += 10.0f;
-                rotateCube();
-                break;
-            default:
-                break;
-            }
-        effects->addRepaintFull();
         }
+        switch(e->key()) {
+            // wrap only on autorepeat
+        case Qt::Key_Left:
+            // rotate to previous desktop
+            kDebug(1212) << "left";
+            if (!rotating && !start) {
+                rotating = true;
+                if (invertKeys)
+                    rotationDirection = Right;
+                else
+                    rotationDirection = Left;
+            } else {
+                if (rotations.count() < effects->numberOfDesktops()) {
+                    if (invertKeys)
+                        rotations.enqueue(Right);
+                    else
+                        rotations.enqueue(Left);
+                }
+            }
+            break;
+        case Qt::Key_Right:
+            // rotate to next desktop
+            kDebug(1212) << "right";
+            if (!rotating && !start) {
+                rotating = true;
+                if (invertKeys)
+                    rotationDirection = Left;
+                else
+                    rotationDirection = Right;
+            } else {
+                if (rotations.count() < effects->numberOfDesktops()) {
+                    if (invertKeys)
+                        rotations.enqueue(Left);
+                    else
+                        rotations.enqueue(Right);
+                }
+            }
+            break;
+        case Qt::Key_Up:
+            kDebug(1212) << "up";
+            if (invertKeys) {
+                if (verticalPosition != Down) {
+                    if (!verticalRotating) {
+                        verticalRotating = true;
+                        verticalRotationDirection = Downwards;
+                        if (verticalPosition == Normal)
+                            verticalPosition = Down;
+                        if (verticalPosition == Up)
+                            verticalPosition = Normal;
+                    } else {
+                        verticalRotations.enqueue(Downwards);
+                    }
+                } else if (manualVerticalAngle > 0.0 && !verticalRotating) {
+                    // rotate to down position from the manual position
+                    verticalRotating = true;
+                    verticalRotationDirection = Downwards;
+                    verticalPosition = Down;
+                    manualVerticalAngle -= 90.0;
+                }
+            } else {
+                if (verticalPosition != Up) {
+                    if (!verticalRotating) {
+                        verticalRotating = true;
+                        verticalRotationDirection = Upwards;
+                        if (verticalPosition == Normal)
+                            verticalPosition = Up;
+                        if (verticalPosition == Down)
+                            verticalPosition = Normal;
+                    } else {
+                        verticalRotations.enqueue(Upwards);
+                    }
+                } else if (manualVerticalAngle < 0.0 && !verticalRotating) {
+                    // rotate to up position from the manual position
+                    verticalRotating = true;
+                    verticalRotationDirection = Upwards;
+                    verticalPosition = Up;
+                    manualVerticalAngle += 90.0;
+                }
+            }
+            break;
+        case Qt::Key_Down:
+            kDebug(1212) << "down";
+            if (invertKeys) {
+                if (verticalPosition != Up) {
+                    if (!verticalRotating) {
+                        verticalRotating = true;
+                        verticalRotationDirection = Upwards;
+                        if (verticalPosition == Normal)
+                            verticalPosition = Up;
+                        if (verticalPosition == Down)
+                            verticalPosition = Normal;
+                    } else {
+                        verticalRotations.enqueue(Upwards);
+                    }
+                } else if (manualVerticalAngle < 0.0 && !verticalRotating) {
+                    // rotate to up position from the manual position
+                    verticalRotating = true;
+                    verticalRotationDirection = Upwards;
+                    verticalPosition = Up;
+                    manualVerticalAngle += 90.0;
+                }
+            } else {
+                if (verticalPosition != Down) {
+                    if (!verticalRotating) {
+                        verticalRotating = true;
+                        verticalRotationDirection = Downwards;
+                        if (verticalPosition == Normal)
+                            verticalPosition = Down;
+                        if (verticalPosition == Up)
+                            verticalPosition = Normal;
+                    } else {
+                        verticalRotations.enqueue(Downwards);
+                    }
+                } else if (manualVerticalAngle > 0.0 && !verticalRotating) {
+                    // rotate to down position from the manual position
+                    verticalRotating = true;
+                    verticalRotationDirection = Downwards;
+                    verticalPosition = Down;
+                    manualVerticalAngle -= 90.0;
+                }
+            }
+            break;
+        case Qt::Key_Escape:
+            rotateToDesktop(effects->currentDesktop());
+            setActive(false);
+            return;
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Space:
+            setActive(false);
+            return;
+        case Qt::Key_Plus:
+            zoom -= 10.0;
+            zoom = qMax(-zPosition, zoom);
+            rotateCube();
+            break;
+        case Qt::Key_Minus:
+            zoom += 10.0f;
+            rotateCube();
+            break;
+        default:
+            break;
+        }
+        effects->addRepaintFull();
     }
+}
 
-void CubeEffect::rotateToDesktop( int desktop )
-    {
+void CubeEffect::rotateToDesktop(int desktop)
+{
     int tempFrontDesktop = frontDesktop;
-    if( !rotations.empty() )
-        {
+    if (!rotations.empty()) {
         // all scheduled rotations will be removed as a speed up
         rotations.clear();
-        }
-    if( rotating && !desktopChangedWhileRotating )
-        {
+    }
+    if (rotating && !desktopChangedWhileRotating) {
         // front desktop will change during the actual rotation - this has to be considered
-        if( rotationDirection == Left )
-            {
+        if (rotationDirection == Left) {
             tempFrontDesktop++;
-            }
-        else if( rotationDirection == Right )
-            {
+        } else if (rotationDirection == Right) {
             tempFrontDesktop--;
-            }
-        if( tempFrontDesktop > effects->numberOfDesktops() )
-            tempFrontDesktop = 1;
-        else if( tempFrontDesktop == 0 )
-            tempFrontDesktop = effects->numberOfDesktops();
         }
+        if (tempFrontDesktop > effects->numberOfDesktops())
+            tempFrontDesktop = 1;
+        else if (tempFrontDesktop == 0)
+            tempFrontDesktop = effects->numberOfDesktops();
+    }
     // find the fastest rotation path from tempFrontDesktop to desktop
     int rightRotations = tempFrontDesktop - desktop;
-    if( rightRotations < 0 )
+    if (rightRotations < 0)
         rightRotations += effects->numberOfDesktops();
     int leftRotations = desktop - tempFrontDesktop;
-    if( leftRotations < 0 )
+    if (leftRotations < 0)
         leftRotations += effects->numberOfDesktops();
-    if( leftRotations <= rightRotations )
-        {
-        for( int i=0; i<leftRotations; i++ )
-            {
-            rotations.enqueue( Left );
-            }
+    if (leftRotations <= rightRotations) {
+        for (int i = 0; i < leftRotations; i++) {
+            rotations.enqueue(Left);
         }
-    else
-        {
-        for( int i=0; i<rightRotations; i++ )
-            {
-            rotations.enqueue( Right );
-            }
-        }
-    if( !start && !rotating && !rotations.empty() )
-        {
-        rotating = true;
-        rotationDirection = rotations.dequeue();
-        }
-    // change timeline curve if more rotations are following
-    if( !rotations.empty() )
-        {
-        currentShape = TimeLine::EaseInCurve;
-        timeLine.setCurveShape( currentShape );
+    } else {
+        for (int i = 0; i < rightRotations; i++) {
+            rotations.enqueue(Right);
         }
     }
+    if (!start && !rotating && !rotations.empty()) {
+        rotating = true;
+        rotationDirection = rotations.dequeue();
+    }
+    // change timeline curve if more rotations are following
+    if (!rotations.empty()) {
+        currentShape = TimeLine::EaseInCurve;
+        timeLine.setCurveShape(currentShape);
+    }
+}
 
-void CubeEffect::setActive( bool active )
-    {
-    foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
-        {
-        inside->setActive( true );
-        }
-    if( active )
-        {
-        if( !mousePolling )
-            {
+void CubeEffect::setActive(bool active)
+{
+    foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
+        inside->setActive(true);
+    }
+    if (active) {
+        if (!mousePolling) {
             effects->startMousePolling();
             mousePolling = true;
-            }
+        }
         activated = true;
         activeScreen = effects->activeScreen();
-        keyboard_grab = effects->grabKeyboard( this );
-        input = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(),
-            Qt::OpenHandCursor );
+        keyboard_grab = effects->grabKeyboard(this);
+        input = effects->createInputWindow(this, 0, 0, displayWidth(), displayHeight(),
+                                           Qt::OpenHandCursor);
         frontDesktop = effects->currentDesktop();
         zoom = 0.0;
-        zOrderingFactor = zPosition / ( effects->stackingOrder().count() - 1 );
+        zOrderingFactor = zPosition / (effects->stackingOrder().count() - 1);
         start = true;
-        effects->setActiveFullScreenEffect( this );
+        effects->setActiveFullScreenEffect(this);
         kDebug(1212) << "Cube is activated";
         verticalPosition = Normal;
         verticalRotating = false;
         manualAngle = 0.0;
         manualVerticalAngle = 0.0;
-        if( reflection )
-            {
-            QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
+        if (reflection) {
+            QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
 #ifndef KWIN_HAVE_OPENGLES
             // clip parts above the reflection area
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            glClipPlane( GL_CLIP_PLANE0, eqn );
+            glTranslatef(0.0, rect.height(), 0.0);
+            glClipPlane(GL_CLIP_PLANE0, eqn);
             glPopMatrix();
 #endif
-            float temporaryCoeff = float( rect.width() ) / tan( M_PI / float( effects->numberOfDesktops() ) );
-            mAddedHeightCoeff1 = sqrt( float( rect.height() ) * float( rect.height() ) + temporaryCoeff * temporaryCoeff );
-            mAddedHeightCoeff2 = sqrt( float( rect.height() ) * float( rect.height() ) + float( rect.width() ) * float( rect.width() ) + temporaryCoeff * temporaryCoeff );
-            }
+            float temporaryCoeff = float(rect.width()) / tan(M_PI / float(effects->numberOfDesktops()));
+            mAddedHeightCoeff1 = sqrt(float(rect.height()) * float(rect.height()) + temporaryCoeff * temporaryCoeff);
+            mAddedHeightCoeff2 = sqrt(float(rect.height()) * float(rect.height()) + float(rect.width()) * float(rect.width()) + temporaryCoeff * temporaryCoeff);
+        }
         m_rotationMatrix.setToIdentity();
         effects->addRepaintFull();
-        }
-    else
-        {
-        if( mousePolling )
-            {
+    } else {
+        if (mousePolling) {
             effects->stopMousePolling();
             mousePolling = false;
-            }
+        }
         schedule_close = true;
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();
-        }
     }
+}
 
-void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
-            Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
-    {
-    if( !activated )
+void CubeEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+{
+    if (!activated)
         return;
-    if( tabBoxMode )
+    if (tabBoxMode)
         return;
-    if( stop )
+    if (stop)
         return;
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-    if( buttons.testFlag( Qt::LeftButton ) )
-        {
+    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+    if (buttons.testFlag(Qt::LeftButton)) {
         bool repaint = false;
         // vertical movement only if there is not a rotation
-        if( !verticalRotating )
-            {
+        if (!verticalRotating) {
             // display height corresponds to 180*
             int deltaY = pos.y() - oldpos.y();
-            float deltaVerticalDegrees = (float)deltaY/rect.height()*180.0f;
-            if( invertMouse )
+            float deltaVerticalDegrees = (float)deltaY / rect.height() * 180.0f;
+            if (invertMouse)
                 manualVerticalAngle += deltaVerticalDegrees;
             else
                 manualVerticalAngle -= deltaVerticalDegrees;
-            if( deltaVerticalDegrees != 0.0 )
+            if (deltaVerticalDegrees != 0.0)
                 repaint = true;
-            }
+        }
         // horizontal movement only if there is not a rotation
-        if( !rotating )
-            {
+        if (!rotating) {
             // display width corresponds to sum of angles of the polyhedron
             int deltaX = oldpos.x() - pos.x();
-            float deltaDegrees = (float)deltaX/rect.width() * 360.0f;
-            if( deltaX == 0 )
-                {
-                if( pos.x() == 0 )
+            float deltaDegrees = (float)deltaX / rect.width() * 360.0f;
+            if (deltaX == 0) {
+                if (pos.x() == 0)
                     deltaDegrees = 5.0f;
-                if( pos.x() == displayWidth() -1 )
+                if (pos.x() == displayWidth() - 1)
                     deltaDegrees = -5.0f;
-                }
-            if( invertMouse )
+            }
+            if (invertMouse)
                 manualAngle += deltaDegrees;
             else
                 manualAngle -= deltaDegrees;
-            if( deltaDegrees != 0.0 )
+            if (deltaDegrees != 0.0)
                 repaint = true;
-            }
-        if( repaint )
-            {
+        }
+        if (repaint) {
             rotateCube();
             effects->addRepaintFull();
-            }
         }
-    if( !oldbuttons.testFlag( Qt::LeftButton ) && buttons.testFlag( Qt::LeftButton ) )
-        {
-        XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor).handle() );
-        }
-    if( oldbuttons.testFlag( Qt::LeftButton) && !buttons.testFlag( Qt::LeftButton ) )
-        {
-        XDefineCursor( display(), input, QCursor( Qt::OpenHandCursor).handle() );
-        if( closeOnMouseRelease )
-            setActive( false );
-        }
-    if( oldbuttons.testFlag( Qt::RightButton) && !buttons.testFlag( Qt::RightButton ) )
-        {
+    }
+    if (!oldbuttons.testFlag(Qt::LeftButton) && buttons.testFlag(Qt::LeftButton)) {
+        XDefineCursor(display(), input, QCursor(Qt::ClosedHandCursor).handle());
+    }
+    if (oldbuttons.testFlag(Qt::LeftButton) && !buttons.testFlag(Qt::LeftButton)) {
+        XDefineCursor(display(), input, QCursor(Qt::OpenHandCursor).handle());
+        if (closeOnMouseRelease)
+            setActive(false);
+    }
+    if (oldbuttons.testFlag(Qt::RightButton) && !buttons.testFlag(Qt::RightButton)) {
         // end effect on right mouse button
-        setActive( false );
-        }
+        setActive(false);
     }
+}
 
-void CubeEffect::windowInputMouseEvent( Window w, QEvent* e )
-    {
-    assert( w == input );
-    Q_UNUSED( w );
-    QMouseEvent *mouse = dynamic_cast< QMouseEvent* >( e );
-    if( mouse && mouse->type() == QEvent::MouseButtonRelease )
-        {
-        if( mouse->button() == Qt::XButton1 )
-            {
-            if( !rotating && !start )
-                {
+void CubeEffect::windowInputMouseEvent(Window w, QEvent* e)
+{
+    assert(w == input);
+    Q_UNUSED(w);
+    QMouseEvent *mouse = dynamic_cast< QMouseEvent* >(e);
+    if (mouse && mouse->type() == QEvent::MouseButtonRelease) {
+        if (mouse->button() == Qt::XButton1) {
+            if (!rotating && !start) {
                 rotating = true;
-                if( invertMouse )
+                if (invertMouse)
                     rotationDirection = Right;
                 else
                     rotationDirection = Left;
-                }
-            else
-                {
-                if( rotations.count() < effects->numberOfDesktops() )
-                    {
-                    if( invertMouse )
-                        rotations.enqueue( Right );
+            } else {
+                if (rotations.count() < effects->numberOfDesktops()) {
+                    if (invertMouse)
+                        rotations.enqueue(Right);
                     else
-                        rotations.enqueue( Left );
-                    }
+                        rotations.enqueue(Left);
                 }
-            effects->addRepaintFull();
             }
-        if( mouse->button() == Qt::XButton2 )
-            {
-            if( !rotating && !start )
-                {
+            effects->addRepaintFull();
+        }
+        if (mouse->button() == Qt::XButton2) {
+            if (!rotating && !start) {
                 rotating = true;
-                if( invertMouse )
+                if (invertMouse)
                     rotationDirection = Left;
                 else
                     rotationDirection = Right;
-                }
-            else
-                {
-                if( rotations.count() < effects->numberOfDesktops() )
-                    {
-                    if( invertMouse )
-                        rotations.enqueue( Left );
+            } else {
+                if (rotations.count() < effects->numberOfDesktops()) {
+                    if (invertMouse)
+                        rotations.enqueue(Left);
                     else
-                        rotations.enqueue( Right );
-                    }
+                        rotations.enqueue(Right);
                 }
-            effects->addRepaintFull();
             }
+            effects->addRepaintFull();
         }
     }
+}
 
-void CubeEffect::tabBoxAdded( int mode )
-    {
-    if( activated )
+void CubeEffect::tabBoxAdded(int mode)
+{
+    if (activated)
         return;
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
-    if( useForTabBox && mode == TabBoxDesktopListMode )
-        {
+    if (useForTabBox && mode == TabBoxDesktopListMode) {
         effects->refTabBox();
         tabBoxMode = true;
-        setActive( true );
-        rotateToDesktop( effects->currentTabBoxDesktop() );
-        }
+        setActive(true);
+        rotateToDesktop(effects->currentTabBoxDesktop());
     }
+}
 
 void CubeEffect::tabBoxUpdated()
-    {
-    if( activated )
-        {
-        rotateToDesktop( effects->currentTabBoxDesktop() );
+{
+    if (activated) {
+        rotateToDesktop(effects->currentTabBoxDesktop());
         effects->addRepaintFull();
-        }
     }
+}
 
 void CubeEffect::tabBoxClosed()
-    {
-    if( activated )
-        {
+{
+    if (activated) {
         effects->unrefTabBox();
         tabBoxMode = false;
-        setActive( false );
-        }
+        setActive(false);
     }
+}
 
-void CubeEffect::cubeShortcutChanged( const QKeySequence& seq )
-    {
-    cubeShortcut = KShortcut( seq );
-    }
+void CubeEffect::cubeShortcutChanged(const QKeySequence& seq)
+{
+    cubeShortcut = KShortcut(seq);
+}
 
-void CubeEffect::cylinderShortcutChanged( const QKeySequence& seq )
-    {
-    cylinderShortcut = KShortcut( seq );
-    }
+void CubeEffect::cylinderShortcutChanged(const QKeySequence& seq)
+{
+    cylinderShortcut = KShortcut(seq);
+}
 
-void CubeEffect::sphereShortcutChanged( const QKeySequence& seq )
-    {
-    sphereShortcut = KShortcut( seq );
-    }
+void CubeEffect::sphereShortcutChanged(const QKeySequence& seq)
+{
+    sphereShortcut = KShortcut(seq);
+}
 
 void* CubeEffect::proxy()
-    {
+{
     return &m_proxy;
-    }
+}
 
 void CubeEffect::registerCubeInsideEffect(CubeInsideEffect* effect)
-    {
-    m_cubeInsideEffects.append( effect );
-    }
+{
+    m_cubeInsideEffects.append(effect);
+}
 
 void CubeEffect::unregisterCubeInsideEffect(CubeInsideEffect* effect)
-    {
-    m_cubeInsideEffects.removeAll( effect );
-    }
+{
+    m_cubeInsideEffects.removeAll(effect);
+}
 
 } // namespace

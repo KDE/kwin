@@ -27,116 +27,105 @@ using namespace KWin::MetaScripting;
 
 // Wrapper for KWin::Client* objects
 QScriptValue Client::toScriptValue(QScriptEngine* eng, const KClientRef& client)
-    {
+{
     return SWrapper::Client::generate(client, eng);
-    }
+}
 
 void Client::fromScriptValue(const QScriptValue& obj, KWin::Client*& client)
-    {
+{
     SWrapper::Client* wrapper = qscriptvalue_cast<SWrapper::Client*>(obj);
 
-    if(wrapper == 0)
-        {
+    if (wrapper == 0) {
         client = 0;
-        }
-    else
-        {
+    } else {
         client = wrapper->getCentralObject();
-        }
     }
+}
 // End of metas for KWin::Client* objects
 
 // Meta for KWin::ClientGroup* objects
 QScriptValue ClientGroup::toScriptValue(QScriptEngine* eng, const KClientGroupRef& cGrp)
-    {
+{
     return SWrapper::ClientGroup::generate(eng, new SWrapper::ClientGroup(cGrp));
-    }
+}
 
 void ClientGroup::fromScriptValue(const QScriptValue& obj, KWin::ClientGroup*& cGrp)
-    {
+{
     SWrapper::ClientGroup* wrapper = qscriptvalue_cast<SWrapper::ClientGroup*>(obj);
 
-    if(wrapper == 0)
-        {
+    if (wrapper == 0) {
         cGrp = 0;
-        }
-    else
-        {
+    } else {
         cGrp = wrapper->getCentralObject();
-        }
     }
+}
 // End of metas for KWin::ClientGroup* objects
 
 // Wrapper for KWin::Toplevel* objects [ONE DIRTY HACK]
 QScriptValue Toplevel::toScriptValue(QScriptEngine* eng, const KToplevelRef& tlevel)
-    {
+{
     Q_UNUSED(eng)
     Q_UNUSED(tlevel)
     return QScriptValue();
-    }
+}
 
 void Toplevel::fromScriptValue(const QScriptValue& obj, KWin::Toplevel*& tlevel)
-    {
+{
     SWrapper::Client* wrapper = qscriptvalue_cast<SWrapper::Client*>(obj);
-    if(wrapper == 0)
-        {
+    if (wrapper == 0) {
         tlevel = 0;
-        }
-    else
-        {
+    } else {
         tlevel = static_cast<KWin::Client*>(wrapper->getCentralObject());
-        }
     }
+}
 // End of wrapper for KWin::Toplevel* object
 
 // Meta for QPoint object
 QScriptValue Point::toScriptValue(QScriptEngine* eng, const QPoint& point)
-    {
+{
     QScriptValue temp = eng->newObject();
     temp.setProperty("x", point.x());
     temp.setProperty("y", point.y());
     return temp;
-    }
+}
 
 void Point::fromScriptValue(const QScriptValue& obj, QPoint& point)
-    {
+{
     QScriptValue x = obj.property("x", QScriptValue::ResolveLocal);
     QScriptValue y = obj.property("y", QScriptValue::ResolveLocal);
 
-    if(!x.isUndefined() && !y.isUndefined())
-        {
+    if (!x.isUndefined() && !y.isUndefined()) {
         point.setX(x.toInt32());
         point.setY(y.toInt32());
-        }
     }
+}
 // End of meta for QPoint object
 
 // Meta for QSize object
 QScriptValue Size::toScriptValue(QScriptEngine* eng, const QSize& size)
-    {
+{
     QScriptValue temp = eng->newObject();
     temp.setProperty("w", size.width());
     temp.setProperty("h", size.height());
     return temp;
-    }
+}
 
 void Size::fromScriptValue(const QScriptValue& obj, QSize& size)
-    {
+{
     QScriptValue w = obj.property("w", QScriptValue::ResolveLocal);
     QScriptValue h = obj.property("h", QScriptValue::ResolveLocal);
 
-    if(!w.isUndefined() && !h.isUndefined())
-        {
+    if (!w.isUndefined() && !h.isUndefined()) {
         size.setWidth(w.toInt32());
         size.setHeight(h.toInt32());
-        }
     }
+}
 // End of meta for QSize object
 
 // Meta for QRect object. Just a temporary measure, hope to
 // add a much better wrapping of the QRect object soon
 QScriptValue Rect::toScriptValue(QScriptEngine* eng, const QRect& rect)
-    {
+{
     QScriptValue temp = eng->newObject();
     temp.setProperty("x", rect.x());
     temp.setProperty("y", rect.y());
@@ -144,28 +133,27 @@ QScriptValue Rect::toScriptValue(QScriptEngine* eng, const QRect& rect)
     temp.setProperty("height", rect.height());
 
     return temp;
-    }
+}
 
 void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
-    {
+{
     QScriptValue w = obj.property("w", QScriptValue::ResolveLocal);
     QScriptValue h = obj.property("h", QScriptValue::ResolveLocal);
     QScriptValue x = obj.property("x", QScriptValue::ResolveLocal);
     QScriptValue y = obj.property("y", QScriptValue::ResolveLocal);
 
-    if(!w.isUndefined() && !h.isUndefined() && !x.isUndefined() && !y.isUndefined())
-        {
+    if (!w.isUndefined() && !h.isUndefined() && !x.isUndefined() && !y.isUndefined()) {
         rect.setX(x.toInt32());
         rect.setY(y.toInt32());
         rect.setWidth(w.toInt32());
         rect.setHeight(h.toInt32());
-        }
     }
+}
 // End of meta for QRect object
 
 // Other helper functions
 void KWin::MetaScripting::registration(QScriptEngine* eng)
-    {
+{
     qScriptRegisterMetaType<KClientRef>(eng, Client::toScriptValue, Client::fromScriptValue);
     qScriptRegisterMetaType<QPoint>(eng, Point::toScriptValue, Point::fromScriptValue);
     qScriptRegisterMetaType<QSize>(eng, Size::toScriptValue, Size::fromScriptValue);
@@ -176,137 +164,115 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
     qScriptRegisterSequenceMetaType<QStringList>(eng);
     qScriptRegisterSequenceMetaType< QList<KWin::ClientGroup*> >(eng);
     qScriptRegisterSequenceMetaType<KClientList>(eng);
-    }
+}
 
 QScriptValue KWin::MetaScripting::configExists(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     QHash<QString, QVariant> scriptConfig = (((ctx->thisObject()).data()).toVariant()).toHash();
     QVariant val = scriptConfig.value((ctx->argument(0)).toString(), QVariant());
 
     return eng->toScriptValue<bool>(val.isValid());
-    }
+}
 
 QScriptValue KWin::MetaScripting::getConfigValue(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     int num = ctx->argumentCount();
     QHash<QString, QVariant> scriptConfig = (((ctx->thisObject()).data()).toVariant()).toHash();
 
     /*
      * Handle config.get() separately. Compute and return immediately.
      **/
-    if(num == 0)
-        {
+    if (num == 0) {
         QHash<QString, QVariant>::const_iterator i;
         QScriptValue ret = eng->newArray();
 
-        for(i = scriptConfig.constBegin(); i != scriptConfig.constEnd(); ++i)
-            {
+        for (i = scriptConfig.constBegin(); i != scriptConfig.constEnd(); ++i) {
             ret.setProperty(i.key(), eng->newVariant(i.value()));
-            }
+        }
 
         return ret;
-        }
+    }
 
-    if((num == 1) && !((ctx->argument(0)).isArray()))
-        {
+    if ((num == 1) && !((ctx->argument(0)).isArray())) {
         QVariant val = scriptConfig.value((ctx->argument(0)).toString(), QVariant());
 
-        if(val.isValid())
-            {
+        if (val.isValid()) {
             return eng->newVariant(val);
-            }
-        else
-            {
+        } else {
             return QScriptValue();
-            }
         }
-    else
-        {
+    } else {
         QScriptValue ret = eng->newArray();
         int j = 0;
 
-        if((ctx->argument(0)).isArray())
-            {
-            bool simple = (num == 1)?0:(ctx->argument(1)).toBool();
+        if ((ctx->argument(0)).isArray()) {
+            bool simple = (num == 1) ? 0 : (ctx->argument(1)).toBool();
             QScriptValue array = (ctx->argument(0));
-            int len = (array.property("length").isValid())?array.property("length").toNumber():0;
+            int len = (array.property("length").isValid()) ? array.property("length").toNumber() : 0;
 
-            for(int i=0; i<len; i++)
-                {
+            for (int i = 0; i < len; i++) {
                 QVariant val = scriptConfig.value(array.property(i).toString(), QVariant());
 
-                if(val.isValid())
-                    {
-                    if(simple)
-                        {
+                if (val.isValid()) {
+                    if (simple) {
                         ret.setProperty(j, eng->newVariant(val));
-                        }
-                    else
-                        {
+                    } else {
                         ret.setProperty(array.property(i).toString(), eng->newVariant(val));
-                        }
+                    }
 
                     j++;
-                    }
                 }
             }
-        else
-            {
-            for(int i=0; i<num; i++)
-                {
+        } else {
+            for (int i = 0; i < num; i++) {
                 QVariant val = scriptConfig.value((ctx->argument(i)).toString(), QVariant());
 
-                if(val.isValid())
-                    {
+                if (val.isValid()) {
                     ret.setProperty((ctx->argument(i)).toString(), eng->newVariant(val));
                     j = 1;
-                    }
                 }
             }
+        }
 
 
-        if(j == 0)
-            {
+        if (j == 0) {
             return QScriptValue();
-            }
-        else
-            {
+        } else {
             return ret;
-            }
         }
     }
+}
 
 void KWin::MetaScripting::supplyConfig(QScriptEngine* eng, const QVariant& scriptConfig)
-    {
+{
     QScriptValue configObject = eng->newObject();
     configObject.setData(eng->newVariant(scriptConfig));
     configObject.setProperty("get", eng->newFunction(getConfigValue, 0), QScriptValue::Undeletable);
     configObject.setProperty("exists", eng->newFunction(configExists, 0), QScriptValue::Undeletable);
-    configObject.setProperty("loaded", ((scriptConfig.toHash().empty())?eng->newVariant((bool)0):eng->newVariant((bool)1)), QScriptValue::Undeletable);
+    configObject.setProperty("loaded", ((scriptConfig.toHash().empty()) ? eng->newVariant((bool)0) : eng->newVariant((bool)1)), QScriptValue::Undeletable);
     (eng->globalObject()).setProperty("config", configObject);
-    }
+}
 
 void KWin::MetaScripting::supplyConfig(QScriptEngine* eng)
-    {
+{
     KWin::MetaScripting::supplyConfig(eng, QVariant(QHash<QString, QVariant>()));
-    }
+}
 
 void KWin::MetaScripting::valueMerge(QScriptValue& first, QScriptValue second)
-    {
+{
     QScriptValueIterator value_it(second);
 
-    while(value_it.hasNext())
-        {
+    while (value_it.hasNext()) {
         value_it.next();
         first.setProperty(value_it.name(), value_it.value());
-        }
     }
+}
 
 QScriptValue KWin::MetaScripting::getLazyLogicFunction(QScriptEngine* eng, const QString& type)
-    {
+{
     QScriptValue base = eng->newFunction(KWin::Chelate::lazyLogicGenerate, 0);
     QScriptValue data = eng->newObject();
     data.setProperty("lazylogic_type", eng->toScriptValue<QString>(type));
     base.setData(data);
     return base;
-    }
+}

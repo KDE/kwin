@@ -41,95 +41,94 @@ namespace KWin
 
 class DecorationModelData
 {
-    public:
-        enum DecorationType
-            {
-            NativeDecoration = 0,
-            AuroraeDecoration = 1
-            };
-        QString name;
-        QString libraryName;
-        QPixmap preview;
-        DecorationType type;
-        QString comment;
-        QString author;
-        QString email;
-        QString website;
-        QString version;
-        QString license;
-        QString auroraeName;
-        KDecorationDefines::BorderSize borderSize;
-        KDecorationDefines::BorderSize buttonSize;
+public:
+    enum DecorationType {
+        NativeDecoration = 0,
+        AuroraeDecoration = 1
+    };
+    QString name;
+    QString libraryName;
+    QPixmap preview;
+    DecorationType type;
+    QString comment;
+    QString author;
+    QString email;
+    QString website;
+    QString version;
+    QString license;
+    QString auroraeName;
+    KDecorationDefines::BorderSize borderSize;
+    KDecorationDefines::BorderSize buttonSize;
 
-        static bool less( const DecorationModelData& a, const DecorationModelData& b )
-            { return a.name < b.name; }
+    static bool less(const DecorationModelData& a, const DecorationModelData& b) {
+        return a.name < b.name;
+    }
 };
 
 class DecorationModel : public QAbstractListModel
 {
     Q_OBJECT
-    public:
-        enum
-            {
-            NameRole = Qt::UserRole,
-            LibraryNameRole = Qt::UserRole + 1,
-            PixmapRole = Qt::UserRole + 2,
-            TypeRole = Qt::UserRole + 3,
-            AuroraeNameRole = Qt::UserRole + 4,
-            PackageDescriptionRole = Qt::UserRole + 5,
-            PackageAuthorRole = Qt::UserRole + 6,
-            PackageEmailRole = Qt::UserRole + 7,
-            PackageWebsiteRole = Qt::UserRole + 8,
-            PackageVersionRole = Qt::UserRole + 9,
-            PackageLicenseRole = Qt::UserRole + 10,
-            BorderSizeRole = Qt::UserRole + 11,
-            BorderSizesRole = Qt::UserRole + 12,
-            ButtonSizeRole = Qt::UserRole + 13
-            };
-        DecorationModel( KSharedConfigPtr config, QObject* parent = 0 );
-        ~DecorationModel();
+public:
+    enum {
+        NameRole = Qt::UserRole,
+        LibraryNameRole = Qt::UserRole + 1,
+        PixmapRole = Qt::UserRole + 2,
+        TypeRole = Qt::UserRole + 3,
+        AuroraeNameRole = Qt::UserRole + 4,
+        PackageDescriptionRole = Qt::UserRole + 5,
+        PackageAuthorRole = Qt::UserRole + 6,
+        PackageEmailRole = Qt::UserRole + 7,
+        PackageWebsiteRole = Qt::UserRole + 8,
+        PackageVersionRole = Qt::UserRole + 9,
+        PackageLicenseRole = Qt::UserRole + 10,
+        BorderSizeRole = Qt::UserRole + 11,
+        BorderSizesRole = Qt::UserRole + 12,
+        ButtonSizeRole = Qt::UserRole + 13
+    };
+    DecorationModel(KSharedConfigPtr config, QObject* parent = 0);
+    ~DecorationModel();
 
-        virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-        virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
-        virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-        void reload();
+    void reload();
 
-        void regeneratePreview( const QModelIndex& index );
+    void regeneratePreview(const QModelIndex& index);
 
-        /**
-        * Changes the button state and regenerates the preview.
-        */
-        void changeButtons( bool custom, const QString& left, const QString& right );
-        /**
-        * Changes the button state without regenerating the preview.
-        */
-        void setButtons( bool custom, const QString& left, const QString& right );
+    /**
+    * Changes the button state and regenerates the preview.
+    */
+    void changeButtons(bool custom, const QString& left, const QString& right);
+    /**
+    * Changes the button state without regenerating the preview.
+    */
+    void setButtons(bool custom, const QString& left, const QString& right);
 
-        void setBorderSize( const QModelIndex& index, KDecorationDefines::BorderSize size );
+    void setBorderSize(const QModelIndex& index, KDecorationDefines::BorderSize size);
 
-        QModelIndex indexOfLibrary( const QString& libraryName ) const;
-        QModelIndex indexOfName( const QString& decoName ) const;
-        QModelIndex indexOfAuroraeName( const QString& auroraeName ) const;
+    QModelIndex indexOfLibrary(const QString& libraryName) const;
+    QModelIndex indexOfName(const QString& decoName) const;
+    QModelIndex indexOfAuroraeName(const QString& auroraeName) const;
 
-    public slots:
-        void regeneratePreview( const QModelIndex& index, const QSize& size );
+public slots:
+    void regeneratePreview(const QModelIndex& index, const QSize& size);
 
-    private:
-        void findDecorations();
-        void findAuroraeThemes();
-        void regeneratePreviews();
-        void metaData( DecorationModelData& data, const KDesktopFile& df );
-        QList<DecorationModelData> m_decorations;
-        KDecorationPlugins* m_plugins;
-        KDecorationPreview* m_preview;
-        bool m_customButtons;
-        QString m_leftButtons;
-        QString m_rightButtons;
-        Aurorae::AuroraeTheme* m_theme;
-        Aurorae::AuroraeScene* m_scene;
-        KSharedConfigPtr m_config;
-        QWidget* m_renderWidget;
+private:
+    void findDecorations();
+    void findAuroraeThemes();
+    void regeneratePreviews();
+    void metaData(DecorationModelData& data, const KDesktopFile& df);
+    QList<DecorationModelData> m_decorations;
+    KDecorationPlugins* m_plugins;
+    KDecorationPreview* m_preview;
+    bool m_customButtons;
+    QString m_leftButtons;
+    QString m_rightButtons;
+    Aurorae::AuroraeTheme* m_theme;
+    Aurorae::AuroraeScene* m_scene;
+    KSharedConfigPtr m_config;
+    QWidget* m_renderWidget;
 };
 
 } // namespace KWin

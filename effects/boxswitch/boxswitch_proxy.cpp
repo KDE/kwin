@@ -24,23 +24,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-BoxSwitchEffectProxy::BoxSwitchEffectProxy( BoxSwitchEffect* effect )
-    : m_effect( effect )
-    {
-    }
+BoxSwitchEffectProxy::BoxSwitchEffectProxy(BoxSwitchEffect* effect)
+    : m_effect(effect)
+{
+}
 
 BoxSwitchEffectProxy::~BoxSwitchEffectProxy()
-    {
-    }
+{
+}
 
-void BoxSwitchEffectProxy::activate( int mode, bool animate, bool showText, float positioningFactor )
-    {
-    m_effect->activateFromProxy( mode, animate, showText, positioningFactor );
-    }
+void BoxSwitchEffectProxy::activate(int mode, bool animate, bool showText, float positioningFactor)
+{
+    m_effect->activateFromProxy(mode, animate, showText, positioningFactor);
+}
 
-void BoxSwitchEffectProxy::paintWindowsBox( const QRegion& region )
-    {
-    m_effect->paintWindowsBox( region );
-    }
+void BoxSwitchEffectProxy::paintWindowsBox(const QRegion& region)
+{
+    m_effect->paintWindowsBox(region);
+}
 
 } // namespace

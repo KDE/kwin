@@ -36,23 +36,23 @@ class GLTexture;
  *  on top of the usual scene.
  **/
 class TestFBOEffect : public Effect
-    {
-    public:
-        TestFBOEffect();
-        ~TestFBOEffect();
+{
+public:
+    TestFBOEffect();
+    ~TestFBOEffect();
 
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void postPaintScreen();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void postPaintScreen();
 
-        static bool supported();
+    static bool supported();
 
-    private:
-        GLTexture* mTexture;
-        GLRenderTarget* mRenderTarget;
-        bool mValid;
+private:
+    GLTexture* mTexture;
+    GLRenderTarget* mRenderTarget;
+    bool mValid;
 
-        double mRot;
-    };
+    double mRot;
+};
 
 } // namespace
 

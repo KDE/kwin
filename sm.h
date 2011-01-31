@@ -36,8 +36,7 @@ namespace KWin
 
 class Client;
 
-struct SessionInfo
-    {
+struct SessionInfo {
     QByteArray sessionId;
     QByteArray windowRole;
     QByteArray wmCommand;
@@ -69,41 +68,42 @@ struct SessionInfo
 
     Client* clientGroupClient; // The first client created that has an identical identifier
     QStringList activities;
-    };
+};
 
 
-enum SMSavePhase
-    {
+enum SMSavePhase {
     SMSavePhase0,     // saving global state in "phase 0"
     SMSavePhase2,     // saving window state in phase 2
     SMSavePhase2Full  // complete saving in phase2, there was no phase 0
-    };
-    
+};
+
 class SessionSaveDoneHelper
     : public QObject
-    {
+{
     Q_OBJECT
-    public:
-        SessionSaveDoneHelper();
-        virtual ~SessionSaveDoneHelper();
-        SmcConn connection() const { return conn; }
-        void saveDone();
-        void close();
-    private slots:
-        void processData();
-    private:
-        QSocketNotifier* notifier;
-        SmcConn conn;
-    };
+public:
+    SessionSaveDoneHelper();
+    virtual ~SessionSaveDoneHelper();
+    SmcConn connection() const {
+        return conn;
+    }
+    void saveDone();
+    void close();
+private slots:
+    void processData();
+private:
+    QSocketNotifier* notifier;
+    SmcConn conn;
+};
 
 
 class SessionManager
     : public KSessionManager
-    {
-    public:
-        virtual bool saveState( QSessionManager& sm );
-        virtual bool commitData( QSessionManager& sm );
-    };
+{
+public:
+    virtual bool saveState(QSessionManager& sm);
+    virtual bool commitData(QSessionManager& sm);
+};
 
 } // namespace
 

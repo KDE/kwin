@@ -20,21 +20,21 @@ namespace KWin
 
 class ShakyMoveEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        ShakyMoveEffect();
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowClosed( EffectWindow* c );
-    private slots:
-        void tick();
-    private:
-        QHash< const EffectWindow*, int > windows;
-        QTimer timer;
-    };
+public:
+    ShakyMoveEffect();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
+    virtual void windowClosed(EffectWindow* c);
+private slots:
+    void tick();
+private:
+    QHash< const EffectWindow*, int > windows;
+    QTimer timer;
+};
 
 } // namespace
 

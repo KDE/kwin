@@ -25,213 +25,188 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( translucency, TranslucencyEffect )
+KWIN_EFFECT(translucency, TranslucencyEffect)
 
 TranslucencyEffect::TranslucencyEffect()
-    : fadeout( NULL )
-    , current( NULL )
-    , previous( NULL )
-    {
-    reconfigure( ReconfigureAll );
+    : fadeout(NULL)
+    , current(NULL)
+    , previous(NULL)
+{
+    reconfigure(ReconfigureAll);
     active = effects->activeWindow();
-    }
+}
 
-void TranslucencyEffect::reconfigure( ReconfigureFlags )
-    {
+void TranslucencyEffect::reconfigure(ReconfigureFlags)
+{
     KConfigGroup conf = effects->effectConfig("Translucency");
-    decoration = conf.readEntry( "Decoration", 1.0 );
-    moveresize = conf.readEntry( "MoveResize", 0.8 );
-    dialogs = conf.readEntry( "Dialogs", 1.0 );
-    inactive = conf.readEntry( "Inactive", 1.0 );
-    comboboxpopups = conf.readEntry( "ComboboxPopups", 1.0 );
-    menus = conf.readEntry( "Menus", 1.0 );
-    individualmenuconfig = conf.readEntry( "IndividualMenuConfig", false );
-    if( individualmenuconfig )
-        {
-        dropdownmenus = conf.readEntry( "DropdownMenus", 1.0 );
-        popupmenus = conf.readEntry( "PopupMenus", 1.0 );
-        tornoffmenus = conf.readEntry( "TornOffMenus", 1.0 );
-        }
-    else
-        {
+    decoration = conf.readEntry("Decoration", 1.0);
+    moveresize = conf.readEntry("MoveResize", 0.8);
+    dialogs = conf.readEntry("Dialogs", 1.0);
+    inactive = conf.readEntry("Inactive", 1.0);
+    comboboxpopups = conf.readEntry("ComboboxPopups", 1.0);
+    menus = conf.readEntry("Menus", 1.0);
+    individualmenuconfig = conf.readEntry("IndividualMenuConfig", false);
+    if (individualmenuconfig) {
+        dropdownmenus = conf.readEntry("DropdownMenus", 1.0);
+        popupmenus = conf.readEntry("PopupMenus", 1.0);
+        tornoffmenus = conf.readEntry("TornOffMenus", 1.0);
+    } else {
         dropdownmenus = menus;
         popupmenus = menus;
         tornoffmenus = menus;
-        }
-    moveresize_timeline.setCurveShape( TimeLine::EaseOutCurve );
-    moveresize_timeline.setDuration( animationTime( conf, "Duration", 800 ) );
-    activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );
-    activeinactive_timeline.setDuration( animationTime( conf, "Duration", 800 ) );
+    }
+    moveresize_timeline.setCurveShape(TimeLine::EaseOutCurve);
+    moveresize_timeline.setDuration(animationTime(conf, "Duration", 800));
+    activeinactive_timeline.setCurveShape(TimeLine::EaseInOutCurve);
+    activeinactive_timeline.setDuration(animationTime(conf, "Duration", 800));
 
     // Repaint the screen just in case the user changed the inactive opacity
     effects->addRepaintFull();
-    }
+}
 
-void TranslucencyEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
+void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
     moveresize_timeline.addTime(time);
     activeinactive_timeline.addTime(time);
 
-    if( decoration != 1.0 && w->hasDecoration())
-        {
+    if (decoration != 1.0 && w->hasDecoration()) {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
         // don't clear PAINT_WINDOW_OPAQUE, contents are not affected
-        data.clip &= w->contentsRect().translated( w->pos()); // decoration cannot clip
-        }
-    if( inactive != 1.0 && isInactive( w ))
+        data.clip &= w->contentsRect().translated(w->pos());  // decoration cannot clip
+    }
+    if (inactive != 1.0 && isInactive(w))
         data.setTranslucent();
-    if(( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
-        || ( dialogs != 1.0 && w->isDialog()))
-        {
+    if ((moveresize != 1.0 && (w->isUserMove() || w->isUserResize()))
+            || (dialogs != 1.0 && w->isDialog())) {
         data.setTranslucent();
-        }
-    if( ( dropdownmenus != 1.0 && w->isDropdownMenu() )
-        || ( popupmenus != 1.0 && w->isPopupMenu() )
-        || ( tornoffmenus != 1.0 && w->isMenu() )
-        || ( comboboxpopups != 1.0 && w->isComboBox() ) )
-        {
+    }
+    if ((dropdownmenus != 1.0 && w->isDropdownMenu())
+            || (popupmenus != 1.0 && w->isPopupMenu())
+            || (tornoffmenus != 1.0 && w->isMenu())
+            || (comboboxpopups != 1.0 && w->isComboBox())) {
         data.setTranslucent();
-        }
-
-    effects->prePaintWindow( w, data, time );
     }
 
-void TranslucencyEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+    effects->prePaintWindow(w, data, time);
+}
+
+void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     // We keep track of the windows that was last active so we know
     // which one to fade out and which ones to paint as fully inactive
-    if ( w == active && w != current )
-        {
+    if (w == active && w != current) {
         previous = current;
         current = w;
-        }
+    }
 
-    if ( w->isDesktop() || w->isDock() )
-        {
-        effects->paintWindow( w, mask, region, data );
+    if (w->isDesktop() || w->isDock()) {
+        effects->paintWindow(w, mask, region, data);
         return;
-        }
+    }
     // Handling active and inactive windows
-    if( inactive != 1.0 && isInactive(w) )
-        {
+    if (inactive != 1.0 && isInactive(w)) {
         data.opacity *= inactive;
 
-        if ( w == previous )
-            {
+        if (w == previous) {
             data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.value())));
-            if ( activeinactive_timeline.value() < 1.0 )
+            if (activeinactive_timeline.value() < 1.0)
                 w->addRepaintFull();
-            }
         }
-    else
-        {
+    } else {
         // Fading in
-        if ( !isInactive(w) && !w->isDesktop() )
-            {
+        if (!isInactive(w) && !w->isDesktop()) {
             data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.value()));
-            if ( activeinactive_timeline.value() < 1.0 )
+            if (activeinactive_timeline.value() < 1.0)
                 w->addRepaintFull();
-            }
+        }
         // decoration and dialogs
-        if( decoration != 1.0 && w->hasDecoration())
+        if (decoration != 1.0 && w->hasDecoration())
             data.decoration_opacity *= decoration;
-        if( dialogs != 1.0 && w->isDialog())
+        if (dialogs != 1.0 && w->isDialog())
             data.opacity *= dialogs;
 
         // Handling moving and resizing
-        if( moveresize != 1.0 && !w->isDesktop() && !w->isDock())
-            {
+        if (moveresize != 1.0 && !w->isDesktop() && !w->isDock()) {
             double progress = moveresize_timeline.value();
-            if ( w->isUserMove() || w->isUserResize() )
-                { // Fading to translucent
-                data.opacity *= (moveresize + ((1.0 - moveresize) * ( 1.0 - progress )));
-                if (progress < 1.0 && progress > 0.0)
-                    {
+            if (w->isUserMove() || w->isUserResize()) {
+                // Fading to translucent
+                data.opacity *= (moveresize + ((1.0 - moveresize) * (1.0 - progress)));
+                if (progress < 1.0 && progress > 0.0) {
                     w->addRepaintFull();
-                    if ( fadeout != w )
+                    if (fadeout != w)
                         fadeout = w;
-                    }
                 }
-            else
-                { // Fading back to more opaque
-                if( w == fadeout && !w->isUserMove() && !w->isUserResize() )
-                    {
+            } else {
+                // Fading back to more opaque
+                if (w == fadeout && !w->isUserMove() && !w->isUserResize()) {
                     data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
-                    if ( progress == 1.0 || progress == 0.0)
+                    if (progress == 1.0 || progress == 0.0)
                         fadeout = NULL;
                     else
                         w->addRepaintFull();
 
-                    }
                 }
             }
+        }
 
         // Menus and combos
-        if( dropdownmenus != 1.0 && w->isDropdownMenu() )
+        if (dropdownmenus != 1.0 && w->isDropdownMenu())
             data.opacity *= dropdownmenus;
-        if( popupmenus != 1.0 && w->isPopupMenu() )
+        if (popupmenus != 1.0 && w->isPopupMenu())
             data.opacity *= popupmenus;
-        if( tornoffmenus != 1.0 && w->isMenu() )
+        if (tornoffmenus != 1.0 && w->isMenu())
             data.opacity *= tornoffmenus;
-        if( comboboxpopups != 1.0 && w->isComboBox() )
+        if (comboboxpopups != 1.0 && w->isComboBox())
             data.opacity *= comboboxpopups;
 
-        }
-    effects->paintWindow( w, mask, region, data );
     }
+    effects->paintWindow(w, mask, region, data);
+}
 
-bool TranslucencyEffect::isInactive( const EffectWindow* w ) const
-    {
-    if( active == w || w->isDock() || !w->isManaged() )
+bool TranslucencyEffect::isInactive(const EffectWindow* w) const
+{
+    if (active == w || w->isDock() || !w->isManaged())
         return false;
-    if( NULL != active && NULL != active->group() )
-        if (active->group() == w->group() )
+    if (NULL != active && NULL != active->group())
+        if (active->group() == w->group())
             return false;
-    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock() )
+    if (!w->isNormalWindow() && !w->isDialog() && !w->isDock())
         return false;
     return true;
-    }
+}
 
-void TranslucencyEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
-    {
-    if( moveresize != 1.0 && ( first || last ))
-        {
+void TranslucencyEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+{
+    if (moveresize != 1.0 && (first || last)) {
         moveresize_timeline.setProgress(0.0);
         w->addRepaintFull();
-        }
     }
+}
 
-void TranslucencyEffect::windowActivated( EffectWindow* w )
-    {
-    if( inactive != 1.0 )
-        {
+void TranslucencyEffect::windowActivated(EffectWindow* w)
+{
+    if (inactive != 1.0) {
         activeinactive_timeline.setProgress(0.0);
-        if( NULL != active && active != w )
-            {
-            if( ( NULL == w || w->group() != active->group() ) &&
-                NULL != active->group() )
-                {
+        if (NULL != active && active != w) {
+            if ((NULL == w || w->group() != active->group()) &&
+                    NULL != active->group()) {
                 // Active group has changed. so repaint old group
-                foreach( EffectWindow *tmp, active->group()->members() )
-                    tmp->addRepaintFull();
-                }
-            else
+                foreach (EffectWindow * tmp, active->group()->members())
+                tmp->addRepaintFull();
+            } else
                 active->addRepaintFull();
-            }
-
-        if( NULL != w )
-            {
-            if (NULL != w->group() )
-                {
-                // Repaint windows in new group
-                foreach( EffectWindow *tmp, w->group()->members() )
-                    tmp->addRepaintFull();
-                }
-            else
-                w->addRepaintFull();
-            }
         }
-    active = w;
+
+        if (NULL != w) {
+            if (NULL != w->group()) {
+                // Repaint windows in new group
+                foreach (EffectWindow * tmp, w->group()->members())
+                tmp->addRepaintFull();
+            } else
+                w->addRepaintFull();
+        }
     }
+    active = w;
+}
 
 } // namespace

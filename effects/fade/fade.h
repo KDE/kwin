@@ -28,45 +28,45 @@ namespace KWin
 
 class FadeEffect
     : public Effect
-    {
-    public:
-        FadeEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+{
+public:
+    FadeEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
-        // TODO react also on virtual desktop changes
-        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
+    // TODO react also on virtual desktop changes
+    virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
+    virtual void windowAdded(EffectWindow* c);
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowDeleted(EffectWindow* c);
 
-        bool isFadeWindow( EffectWindow* w );
-    private:
-        class WindowInfo;
-        QHash< const EffectWindow*, WindowInfo > windows;
-        double fadeInStep, fadeOutStep;
-        int fadeInTime, fadeOutTime;
-        bool fadeWindows;
-    };
+    bool isFadeWindow(EffectWindow* w);
+private:
+    class WindowInfo;
+    QHash< const EffectWindow*, WindowInfo > windows;
+    double fadeInStep, fadeOutStep;
+    int fadeInTime, fadeOutTime;
+    bool fadeWindows;
+};
 
 class FadeEffect::WindowInfo
-    {
-    public:
-        WindowInfo()
-            : fadeInStep( 0.0 )
-            , fadeOutStep( 0.0 )
-            , opacity( 1.0 )
-            , saturation( 1.0 )
-            , brightness( 1.0 )
-            , deleted( false )
-            {}
-        double fadeInStep, fadeOutStep;
-        double opacity;
-        double saturation, brightness;
-        bool deleted;
-    };
+{
+public:
+    WindowInfo()
+        : fadeInStep(0.0)
+        , fadeOutStep(0.0)
+        , opacity(1.0)
+        , saturation(1.0)
+        , brightness(1.0)
+        , deleted(false)
+    {}
+    double fadeInStep, fadeOutStep;
+    double opacity;
+    double saturation, brightness;
+    bool deleted;
+};
 
 } // namespace
 

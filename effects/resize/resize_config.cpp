@@ -30,16 +30,16 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget* parent) : QWidget(parent)
-    {
-    setupUi( this );
-    }
+{
+    setupUi(this);
+}
 
 ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
-    m_ui = new ResizeEffectConfigForm( this );
+    KCModule(EffectFactory::componentData(), parent, args)
+{
+    m_ui = new ResizeEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -47,37 +47,37 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
     connect(m_ui->outlineBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
-    }
+}
 
 void ResizeEffectConfig::load()
-    {
+{
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "Resize" );
-    m_ui->scaleBox->setChecked(conf.readEntry<bool>( "TextureScale", true ));
-    m_ui->outlineBox->setChecked(conf.readEntry<bool>( "Outline" , false ));
+    KConfigGroup conf = EffectsHandler::effectConfig("Resize");
+    m_ui->scaleBox->setChecked(conf.readEntry<bool>("TextureScale", true));
+    m_ui->outlineBox->setChecked(conf.readEntry<bool>("Outline" , false));
 
-    emit changed( false );
-    }
+    emit changed(false);
+}
 
 void ResizeEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "Resize" );
-    conf.writeEntry( "TextureScale", m_ui->scaleBox->isChecked() );
-    conf.writeEntry( "Outline", m_ui->outlineBox->isChecked() );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("Resize");
+    conf.writeEntry("TextureScale", m_ui->scaleBox->isChecked());
+    conf.writeEntry("Outline", m_ui->outlineBox->isChecked());
 
     conf.sync();
 
-    emit changed( false );
-    EffectsHandler::sendReloadMessage( "resize" );
-    }
+    emit changed(false);
+    EffectsHandler::sendReloadMessage("resize");
+}
 
 void ResizeEffectConfig::defaults()
-    {
-    m_ui->scaleBox->setChecked( true );
-    m_ui->outlineBox->setChecked( false );
-    emit changed( true );
-    }
+{
+    m_ui->scaleBox->setChecked(true);
+    m_ui->outlineBox->setChecked(false);
+    emit changed(true);
+}
 
 } // namespace
 

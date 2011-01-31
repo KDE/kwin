@@ -35,106 +35,108 @@ namespace KWin
 
 class SceneXrender
     : public Scene
-    {
-    public:
-        class EffectFrame;
-        SceneXrender( Workspace* ws );
-        virtual ~SceneXrender();
-        virtual bool initFailed() const;
-        virtual CompositingType compositingType() const { return XRenderCompositing; }
-        virtual void paint( QRegion damage, ToplevelList windows );
-        virtual void windowGeometryShapeChanged( Toplevel* );
-        virtual void windowOpacityChanged( Toplevel* );
-        virtual void windowAdded( Toplevel* );
-        virtual void windowClosed( Toplevel*, Deleted* );
-        virtual void windowDeleted( Deleted* );
-        Picture bufferPicture();
-    protected:
-        virtual void paintBackground( QRegion region );
-        virtual void paintGenericScreen( int mask, ScreenPaintData data );
-    private:
-        void paintTransformedScreen( int mask );
-        void createBuffer();
-        void flushBuffer( int mask, QRegion damage );
-        bool selfCheck();
-        void selfCheckSetup();
-        bool selfCheckFinish();
-        XRenderPictFormat* format;
-        Picture front;
-        static Picture buffer;
-        static ScreenPaintData screen_paint;
-        class Window;
-        QHash< Toplevel*, Window* > windows;
-        bool init_ok;
-    };
+{
+public:
+    class EffectFrame;
+    SceneXrender(Workspace* ws);
+    virtual ~SceneXrender();
+    virtual bool initFailed() const;
+    virtual CompositingType compositingType() const {
+        return XRenderCompositing;
+    }
+    virtual void paint(QRegion damage, ToplevelList windows);
+    virtual void windowGeometryShapeChanged(Toplevel*);
+    virtual void windowOpacityChanged(Toplevel*);
+    virtual void windowAdded(Toplevel*);
+    virtual void windowClosed(Toplevel*, Deleted*);
+    virtual void windowDeleted(Deleted*);
+    Picture bufferPicture();
+protected:
+    virtual void paintBackground(QRegion region);
+    virtual void paintGenericScreen(int mask, ScreenPaintData data);
+private:
+    void paintTransformedScreen(int mask);
+    void createBuffer();
+    void flushBuffer(int mask, QRegion damage);
+    bool selfCheck();
+    void selfCheckSetup();
+    bool selfCheckFinish();
+    XRenderPictFormat* format;
+    Picture front;
+    static Picture buffer;
+    static ScreenPaintData screen_paint;
+    class Window;
+    QHash< Toplevel*, Window* > windows;
+    bool init_ok;
+};
 
 class SceneXrender::Window
     : public Scene::Window
-    {
-    public:
-        Window( Toplevel* c );
-        virtual ~Window();
-        virtual void performPaint( int mask, QRegion region, WindowPaintData data );
-        void discardPicture();
-        void discardAlpha();
-        QRegion transformedShape() const;
-        void setTransformedShape( const QRegion& shape );
-    private:
-        Picture picture();
-        Picture alphaMask( double opacity );
-        QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
-        QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
-        void prepareTempPixmap(const QPixmap *left, const QPixmap *top, const QPixmap *right, const QPixmap *bottom);
-        Picture _picture;
-        XRenderPictFormat* format;
-        Picture alpha;
-        double alpha_cached_opacity;
-        QRegion transformed_shape;
-        static QPixmap *temp_pixmap;
-    };
+{
+public:
+    Window(Toplevel* c);
+    virtual ~Window();
+    virtual void performPaint(int mask, QRegion region, WindowPaintData data);
+    void discardPicture();
+    void discardAlpha();
+    QRegion transformedShape() const;
+    void setTransformedShape(const QRegion& shape);
+private:
+    Picture picture();
+    Picture alphaMask(double opacity);
+    QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
+    QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
+    void prepareTempPixmap(const QPixmap *left, const QPixmap *top, const QPixmap *right, const QPixmap *bottom);
+    Picture _picture;
+    XRenderPictFormat* format;
+    Picture alpha;
+    double alpha_cached_opacity;
+    QRegion transformed_shape;
+    static QPixmap *temp_pixmap;
+};
 
 class SceneXrender::EffectFrame
     : public Scene::EffectFrame
-    {
-    public:
-        EffectFrame( EffectFrameImpl* frame );
-        virtual ~EffectFrame();
+{
+public:
+    EffectFrame(EffectFrameImpl* frame);
+    virtual ~EffectFrame();
 
-        virtual void free();
-        virtual void freeIconFrame();
-        virtual void freeTextFrame();
-        virtual void freeSelection();
-        virtual void crossFadeIcon();
-        virtual void crossFadeText();
-        virtual void render( QRegion region, double opacity, double frameOpacity );
+    virtual void free();
+    virtual void freeIconFrame();
+    virtual void freeTextFrame();
+    virtual void freeSelection();
+    virtual void crossFadeIcon();
+    virtual void crossFadeText();
+    virtual void render(QRegion region, double opacity, double frameOpacity);
 
-    private:
-        void updatePicture();
-        void updateTextPicture();
+private:
+    void updatePicture();
+    void updateTextPicture();
 
-        XRenderPicture* m_picture;
-        XRenderPicture* m_textPicture;
-        XRenderPicture* m_iconPicture;
-        XRenderPicture* m_selectionPicture;
-    };
+    XRenderPicture* m_picture;
+    XRenderPicture* m_textPicture;
+    XRenderPicture* m_iconPicture;
+    XRenderPicture* m_selectionPicture;
+};
 
 inline
 Picture SceneXrender::bufferPicture()
-    {
+{
     return buffer;
-    }
+}
 
 inline
 QRegion SceneXrender::Window::transformedShape() const
-    {
+{
     return transformed_shape;
-    }
+}
 
 inline
-void SceneXrender::Window::setTransformedShape( const QRegion& shape )
-    {
+void SceneXrender::Window::setTransformedShape(const QRegion& shape)
+{
     transformed_shape = shape;
-    }
+}
 
 } // namespace
 

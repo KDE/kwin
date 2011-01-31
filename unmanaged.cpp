@@ -29,32 +29,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Unmanaged::Unmanaged( Workspace* ws )
-    : Toplevel( ws )
-    {
-    }
-    
-Unmanaged::~Unmanaged()
-    {
-    }
+Unmanaged::Unmanaged(Workspace* ws)
+    : Toplevel(ws)
+{
+}
 
-bool Unmanaged::track( Window w )
-    {
+Unmanaged::~Unmanaged()
+{
+}
+
+bool Unmanaged::track(Window w)
+{
     XWindowAttributes attr;
     grabXServer();
-    if( !XGetWindowAttributes(display(), w, &attr) || attr.map_state != IsViewable )
-        {
+    if (!XGetWindowAttributes(display(), w, &attr) || attr.map_state != IsViewable) {
         ungrabXServer();
         return false;
-        }
-    if( attr.c_class == InputOnly )
-        {
+    }
+    if (attr.c_class == InputOnly) {
         ungrabXServer();
         return false;
-        }
-    setWindowHandles( w, w ); // the window is also the frame
-    XSelectInput( display(), w, attr.your_event_mask | StructureNotifyMask | PropertyChangeMask);
-    geom = QRect( attr.x, attr.y, attr.width, attr.height );
+    }
+    setWindowHandles(w, w);   // the window is also the frame
+    XSelectInput(display(), w, attr.your_event_mask | StructureNotifyMask | PropertyChangeMask);
+    geom = QRect(attr.x, attr.y, attr.width, attr.height);
     vis = attr.visual;
     bit_depth = attr.depth;
     unsigned long properties[ 2 ];
@@ -65,77 +63,75 @@ bool Unmanaged::track( Window w )
     properties[ NETWinInfo::PROTOCOLS2 ] =
         NET::WM2Opacity |
         0;
-    info = new NETWinInfo2( display(), w, rootWindow(), properties, 2 );
+    info = new NETWinInfo2(display(), w, rootWindow(), properties, 2);
     getResourceClass();
     getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
-    if( Extensions::shapeAvailable())
-        XShapeSelectInput( display(), w, ShapeNotifyMask );
-    detectShape( w );
+    if (Extensions::shapeAvailable())
+        XShapeSelectInput(display(), w, ShapeNotifyMask);
+    detectShape(w);
     setupCompositing();
     ungrabXServer();
-    if( effects )
+    if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking();
     return true;
-    }
+}
 
 void Unmanaged::release()
-    {
-    Deleted* del = Deleted::create( this );
-    if( effects )
-        {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed( effectWindow());
-        scene->windowClosed( this, del );
-        }
+{
+    Deleted* del = Deleted::create(this);
+    if (effects) {
+        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+        scene->windowClosed(this, del);
+    }
     finishCompositing();
-    workspace()->removeUnmanaged( this, Allowed );
-    if( !QWidget::find( window())) // don't affect our own windows
-        {
-        if( Extensions::shapeAvailable())
-            XShapeSelectInput( display(), window(), NoEventMask );
-        XSelectInput( display(), window(), NoEventMask );
-        }
-    addWorkspaceRepaint( geometry());
+    workspace()->removeUnmanaged(this, Allowed);
+    if (!QWidget::find(window())) { // don't affect our own windows
+        if (Extensions::shapeAvailable())
+            XShapeSelectInput(display(), window(), NoEventMask);
+        XSelectInput(display(), window(), NoEventMask);
+    }
+    addWorkspaceRepaint(geometry());
     disownDataPassedToDeleted();
     del->unrefWindow();
-    deleteUnmanaged( this, Allowed );
-    }
+    deleteUnmanaged(this, Allowed);
+}
 
-void Unmanaged::deleteUnmanaged( Unmanaged* c, allowed_t )
-    {
+void Unmanaged::deleteUnmanaged(Unmanaged* c, allowed_t)
+{
     delete c;
-    }
+}
 
 int Unmanaged::desktop() const
-    {
+{
     return NET::OnAllDesktops; // TODO for some window types should be the current desktop?
-    }
+}
 
 QStringList Unmanaged::activities() const
-    {
+{
     return QStringList();
-    }
+}
 
 QPoint Unmanaged::clientPos() const
-    {
-    return QPoint( 0, 0 ); // unmanaged windows don't have decorations
-    }
+{
+    return QPoint(0, 0);   // unmanaged windows don't have decorations
+}
 
 QSize Unmanaged::clientSize() const
-    {
+{
     return size();
-    }
+}
 
 QRect Unmanaged::transparentRect() const
-    {
+{
     return QRect(clientPos(), clientSize());
-    }
+}
 
-void Unmanaged::debug( QDebug& stream ) const
-    {
+void Unmanaged::debug(QDebug& stream) const
+{
     stream << "\'ID:" << window() << "\'";
-    }
+}
 
 } // namespace
 

@@ -38,122 +38,122 @@ namespace KWin
 class PresentWindowsEffectProxy;
 
 class DesktopButtonsView : public QGraphicsView
-    {
+{
     Q_OBJECT
-    public:
-        DesktopButtonsView( QWidget* parent = 0 );
-        void windowInputMouseEvent( QMouseEvent* e );
-        void setAddDesktopEnabled( bool enable );
-        void setRemoveDesktopEnabled( bool enable );
-        virtual void drawBackground( QPainter* painter, const QRectF& rect );
+public:
+    DesktopButtonsView(QWidget* parent = 0);
+    void windowInputMouseEvent(QMouseEvent* e);
+    void setAddDesktopEnabled(bool enable);
+    void setRemoveDesktopEnabled(bool enable);
+    virtual void drawBackground(QPainter* painter, const QRectF& rect);
 
-    Q_SIGNALS:
-        void addDesktop();
-        void removeDesktop();
+Q_SIGNALS:
+    void addDesktop();
+    void removeDesktop();
 
-    private:
-        Plasma::PushButton* m_addDesktopButton;
-        Plasma::PushButton* m_removeDesktopButton;
-        Plasma::FrameSvg* m_frame;
-    };
+private:
+    Plasma::PushButton* m_addDesktopButton;
+    Plasma::PushButton* m_removeDesktopButton;
+    Plasma::FrameSvg* m_frame;
+};
 
 class DesktopGridEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        DesktopGridEffect();
-        ~DesktopGridEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowClosed( EffectWindow* w );
-        virtual void windowDeleted( EffectWindow* w );
-        virtual void windowAdded( EffectWindow* w );
-        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void windowInputMouseEvent( Window w, QEvent* e );
-        virtual void grabbedKeyboardEvent( QKeyEvent* e );
-        virtual bool borderActivated( ElectricBorder border );
-        virtual void numberDesktopsChanged( int old );
+public:
+    DesktopGridEffect();
+    ~DesktopGridEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowClosed(EffectWindow* w);
+    virtual void windowDeleted(EffectWindow* w);
+    virtual void windowAdded(EffectWindow* w);
+    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void grabbedKeyboardEvent(QKeyEvent* e);
+    virtual bool borderActivated(ElectricBorder border);
+    virtual void numberDesktopsChanged(int old);
 
-        enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
+    enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
-    private slots:
-        void toggle();
-        // slots for global shortcut changed
-        // needed to toggle the effect
-        void globalShortcutChanged( const QKeySequence& seq );
-        void slotAddDesktop();
-        void slotRemoveDesktop();
+private slots:
+    void toggle();
+    // slots for global shortcut changed
+    // needed to toggle the effect
+    void globalShortcutChanged(const QKeySequence& seq);
+    void slotAddDesktop();
+    void slotRemoveDesktop();
 
-    private:
-        QPointF scalePos( const QPoint& pos, int desktop, int screen = -1 ) const;
-        QPoint unscalePos( const QPoint& pos, int* desktop = NULL ) const;
-        int posToDesktop( const QPoint& pos ) const;
-        EffectWindow* windowAt( QPoint pos ) const;
-        void setCurrentDesktop( int desktop );
-        void setHighlightedDesktop( int desktop );
-        int desktopToRight( int desktop, bool wrap = true ) const;
-        int desktopToLeft( int desktop, bool wrap = true ) const;
-        int desktopUp( int desktop, bool wrap = true ) const;
-        int desktopDown( int desktop, bool wrap = true ) const;
-        void setActive( bool active );
-        void setup();
-        void setupGrid();
-        void finish();
-        bool isMotionManagerMovingWindows();
-        bool isUsingPresentWindows() const;
-        QRectF moveGeometryToDesktop( int desktop ) const;
-        void desktopsAdded( int old );
-        void desktopsRemoved( int old );
-        
-        QList<ElectricBorder> borderActivate;
-        int zoomDuration;
-        int border;
-        Qt::Alignment desktopNameAlignment;
-        int layoutMode;
-        int customLayoutRows;
-        
-        bool activated;
-        TimeLine timeline;
-        int paintingDesktop;
-        int highlightedDesktop;
-        Window input;
-        bool keyboardGrab;
-        bool wasWindowMove, wasDesktopMove;
-        EffectWindow* windowMove;
-        QPoint windowMoveDiff;
-        QPoint dragStartPos;
-        
-        // Soft highlighting
-        QList<TimeLine> hoverTimeline;
+private:
+    QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;
+    QPoint unscalePos(const QPoint& pos, int* desktop = NULL) const;
+    int posToDesktop(const QPoint& pos) const;
+    EffectWindow* windowAt(QPoint pos) const;
+    void setCurrentDesktop(int desktop);
+    void setHighlightedDesktop(int desktop);
+    int desktopToRight(int desktop, bool wrap = true) const;
+    int desktopToLeft(int desktop, bool wrap = true) const;
+    int desktopUp(int desktop, bool wrap = true) const;
+    int desktopDown(int desktop, bool wrap = true) const;
+    void setActive(bool active);
+    void setup();
+    void setupGrid();
+    void finish();
+    bool isMotionManagerMovingWindows();
+    bool isUsingPresentWindows() const;
+    QRectF moveGeometryToDesktop(int desktop) const;
+    void desktopsAdded(int old);
+    void desktopsRemoved(int old);
 
-        QList< EffectFrame* > desktopNames;
+    QList<ElectricBorder> borderActivate;
+    int zoomDuration;
+    int border;
+    Qt::Alignment desktopNameAlignment;
+    int layoutMode;
+    int customLayoutRows;
 
-        QSize gridSize;
-        Qt::Orientation orientation;
-        QPoint activeCell;
-        // Per screen variables
-        QList<double> scale; // Because the border isn't a ratio each screen is different
-        QList<double> unscaledBorder;
-        QList<QSizeF> scaledSize;
-        QList<QPointF> scaledOffset;
+    bool activated;
+    TimeLine timeline;
+    int paintingDesktop;
+    int highlightedDesktop;
+    Window input;
+    bool keyboardGrab;
+    bool wasWindowMove, wasDesktopMove;
+    EffectWindow* windowMove;
+    QPoint windowMoveDiff;
+    QPoint dragStartPos;
 
-        // Shortcut - needed to toggle the effect
-        KShortcut shortcut;
+    // Soft highlighting
+    QList<TimeLine> hoverTimeline;
 
-        PresentWindowsEffectProxy* m_proxy;
-        QList<WindowMotionManager> m_managers;
-        bool m_usePresentWindows;
-        QRect m_windowMoveGeometry;
-        QPoint m_windowMoveStartPoint;
+    QList< EffectFrame* > desktopNames;
 
-        QHash< DesktopButtonsView*, EffectWindow* > m_desktopButtonsViews;
+    QSize gridSize;
+    Qt::Orientation orientation;
+    QPoint activeCell;
+    // Per screen variables
+    QList<double> scale; // Because the border isn't a ratio each screen is different
+    QList<double> unscaledBorder;
+    QList<QSizeF> scaledSize;
+    QList<QPointF> scaledOffset;
 
-    };
+    // Shortcut - needed to toggle the effect
+    KShortcut shortcut;
+
+    PresentWindowsEffectProxy* m_proxy;
+    QList<WindowMotionManager> m_managers;
+    bool m_usePresentWindows;
+    QRect m_windowMoveGeometry;
+    QPoint m_windowMoveStartPoint;
+
+    QHash< DesktopButtonsView*, EffectWindow* > m_desktopButtonsViews;
+
+};
 
 } // namespace
 

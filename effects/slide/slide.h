@@ -30,27 +30,27 @@ namespace KWin
 
 class SlideEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        SlideEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void desktopChanged( int old );
-    private:
-        QRect desktopRect( int desktop ) const;
-        TimeLine mTimeLine;
-        int painting_desktop;
-        bool slide;
-        QPoint slide_start_pos;
-        bool slide_painting_sticky;
-        QPoint slide_painting_diff;
+public:
+    SlideEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void desktopChanged(int old);
+private:
+    QRect desktopRect(int desktop) const;
+    TimeLine mTimeLine;
+    int painting_desktop;
+    bool slide;
+    QPoint slide_start_pos;
+    bool slide_painting_sticky;
+    QPoint slide_painting_diff;
 
-    };
+};
 
 } // namespace
 

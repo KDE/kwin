@@ -31,12 +31,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 MagicLampEffectConfigForm::MagicLampEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new MagicLampEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -45,37 +45,37 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 
     connect(m_ui->animationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     load();
-    }
+}
 
 void MagicLampEffectConfig::load()
-    {
+{
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "MagicLamp" );
+    KConfigGroup conf = EffectsHandler::effectConfig("MagicLamp");
 
-    int duration       = conf.readEntry( "AnimationDuration", 0 );
-    m_ui->animationDurationSpin->setValue( duration );
+    int duration       = conf.readEntry("AnimationDuration", 0);
+    m_ui->animationDurationSpin->setValue(duration);
     m_ui->animationDurationSpin->setSuffix(ki18np(" millisecond", " milliseconds"));
     emit changed(false);
-    }
+}
 
 void MagicLampEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "MagicLamp" );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("MagicLamp");
 
-    conf.writeEntry( "AnimationDuration", m_ui->animationDurationSpin->value() );
+    conf.writeEntry("AnimationDuration", m_ui->animationDurationSpin->value());
 
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "magiclamp" );
-    }
+    EffectsHandler::sendReloadMessage("magiclamp");
+}
 
 void MagicLampEffectConfig::defaults()
-    {
-    m_ui->animationDurationSpin->setValue( 0 );
+{
+    m_ui->animationDurationSpin->setValue(0);
     emit changed(true);
-    }
+}
 } // namespace
 
 #include "magiclamp_config.moc"

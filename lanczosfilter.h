@@ -47,25 +47,25 @@ class LanczosFilter
 {
     Q_OBJECT
 
-    public:
-        LanczosFilter(QObject* parent = 0);
-        ~LanczosFilter();
-        void performPaint( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
+public:
+    LanczosFilter(QObject* parent = 0);
+    ~LanczosFilter();
+    void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 
-    protected:
-        virtual void timerEvent(QTimerEvent*);
-    private:
-        void init();
-        void updateOffscreenSurfaces();
-        void prepareRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
-        void restoreRenderStates( GLTexture* tex, double opacity, double brightness, double saturation );
-        GLTexture *m_offscreenTex;
-        GLRenderTarget *m_offscreenTarget;
+protected:
+    virtual void timerEvent(QTimerEvent*);
+private:
+    void init();
+    void updateOffscreenSurfaces();
+    void prepareRenderStates(GLTexture* tex, double opacity, double brightness, double saturation);
+    void restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation);
+    GLTexture *m_offscreenTex;
+    GLRenderTarget *m_offscreenTarget;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        LanczosShader *m_shader;
+    LanczosShader *m_shader;
 #endif
-        QBasicTimer m_timer;
-        bool m_inited;
+    QBasicTimer m_timer;
+    bool m_inited;
 };
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -74,25 +74,25 @@ class LanczosShader
 {
     Q_OBJECT
 
-    public:
-        explicit LanczosShader( QObject* parent = 0 );
-        virtual ~LanczosShader();
-        bool init();
-        void bind();
-        void unbind();
-        void setUniforms();
+public:
+    explicit LanczosShader(QObject* parent = 0);
+    virtual ~LanczosShader();
+    bool init();
+    void bind();
+    void unbind();
+    void setUniforms();
 
-        void createKernel(float delta, int *kernelSize);
-        void createOffsets(int count, float width, Qt::Orientation direction);
+    void createKernel(float delta, int *kernelSize);
+    void createOffsets(int count, float width, Qt::Orientation direction);
 
-    private:
-        GLShader *m_shader;
-        int m_uTexUnit;
-        int m_uOffsets;
-        int m_uKernel;
-        QVector2D m_offsets[25];
-        QVector4D m_kernel[25];
-        uint m_arbProgram; // TODO: GLuint
+private:
+    GLShader *m_shader;
+    int m_uTexUnit;
+    int m_uOffsets;
+    int m_uKernel;
+    QVector2D m_offsets[16];
+    QVector4D m_kernel[16];
+    uint m_arbProgram; // TODO: GLuint
 };
 #endif
 

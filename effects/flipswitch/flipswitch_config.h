@@ -33,26 +33,26 @@ namespace KWin
 class FlipSwitchEffectConfigForm : public QWidget, public Ui::FlipSwitchEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit FlipSwitchEffectConfigForm(QWidget* parent);
+public:
+    explicit FlipSwitchEffectConfigForm(QWidget* parent);
 };
 
 class FlipSwitchEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit FlipSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~FlipSwitchEffectConfig();
+public:
+    explicit FlipSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    ~FlipSwitchEffectConfig();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        FlipSwitchEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    FlipSwitchEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

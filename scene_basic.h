@@ -28,21 +28,23 @@ namespace KWin
 
 class SceneBasic
     : public Scene
-    {
-    public:
-        SceneBasic( Workspace* ws );
-        virtual ~SceneBasic();
-        virtual bool initFailed() const;
-        virtual CompositingType compositingType() const { return NoCompositing; }
-        virtual void paint( QRegion damage, ToplevelList windows );
-    protected:
-        virtual void paintBackground( QRegion region );
-        virtual void windowGeometryShapeChanged( Toplevel* );
-        virtual void windowOpacityChanged( Toplevel* );
-        virtual void windowAdded( Toplevel* );
-        virtual void windowClosed( Toplevel*, Deleted* );
-        virtual void windowDeleted( Deleted* );
-    };
+{
+public:
+    SceneBasic(Workspace* ws);
+    virtual ~SceneBasic();
+    virtual bool initFailed() const;
+    virtual CompositingType compositingType() const {
+        return NoCompositing;
+    }
+    virtual void paint(QRegion damage, ToplevelList windows);
+protected:
+    virtual void paintBackground(QRegion region);
+    virtual void windowGeometryShapeChanged(Toplevel*);
+    virtual void windowOpacityChanged(Toplevel*);
+    virtual void windowAdded(Toplevel*);
+    virtual void windowClosed(Toplevel*, Deleted*);
+    virtual void windowDeleted(Deleted*);
+};
 
 } // namespace
 

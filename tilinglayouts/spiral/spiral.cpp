@@ -26,57 +26,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Spiral::Spiral( Workspace *w )
-    : TilingLayout( w )
-    {
-    }
+Spiral::Spiral(Workspace *w)
+    : TilingLayout(w)
+{
+}
 
 Spiral::~Spiral()
-    {
-    }
+{
+}
 
-void Spiral::arrange( QRect wgeom )
-    {
-    QList<Tile *> tiled( tiles() );
+void Spiral::arrange(QRect wgeom)
+{
+    QList<Tile *> tiled(tiles());
 
     QMutableListIterator<Tile *> it(tiled);
-    while( it.hasNext() )
-        {
+    while (it.hasNext()) {
         Tile *t = it.next();
-        if( t->ignoreGeometry() )
+        if (t->ignoreGeometry())
             it.remove();
-        }
+    }
 
     int n = tiled.length();
     int i = 1;
 
-    foreach( Tile *t, tiled )
-        {
-        if( t->floating() )
+    foreach (Tile * t, tiled) {
+        if (t->floating())
             continue;
 
-        if( i < n )
-            {
-            if( i % 2 == 0 )
-                wgeom.setHeight( wgeom.height() / 2 );
+        if (i < n) {
+            if (i % 2 == 0)
+                wgeom.setHeight(wgeom.height() / 2);
             else
-                wgeom.setWidth( wgeom.width() / 2 );
-            }
+                wgeom.setWidth(wgeom.width() / 2);
+        }
 
-        if( i % 4 == 0 )
-            wgeom.moveLeft( wgeom.x() - wgeom.width() );
-        else if( i % 2 == 0 || ( i % 4 == 3 && i < n ) )
-            wgeom.moveLeft( wgeom.x() + wgeom.width() );
+        if (i % 4 == 0)
+            wgeom.moveLeft(wgeom.x() - wgeom.width());
+        else if (i % 2 == 0 || (i % 4 == 3 && i < n))
+            wgeom.moveLeft(wgeom.x() + wgeom.width());
 
-        if( i % 4 == 1 && i != 1 )
-            wgeom.moveTop( wgeom.y() - wgeom.height() );
-        else if( ( i % 2 == 1 && i != 1 )
-                || ( i % 4 == 0 && i < n ) )
-            wgeom.moveTop( wgeom.y() + wgeom.height() );
+        if (i % 4 == 1 && i != 1)
+            wgeom.moveTop(wgeom.y() - wgeom.height());
+        else if ((i % 2 == 1 && i != 1)
+                || (i % 4 == 0 && i < n))
+            wgeom.moveTop(wgeom.y() + wgeom.height());
 
-        t->setGeometry( wgeom );
+        t->setGeometry(wgeom);
         t->commit();
         i++;
-        }
     }
+}
 }

@@ -31,52 +31,51 @@ class GLTexture;
 
 class StartupFeedbackEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        StartupFeedbackEffect();
-        virtual ~StartupFeedbackEffect();
+public:
+    StartupFeedbackEffect();
+    virtual ~StartupFeedbackEffect();
 
-        virtual void reconfigure( ReconfigureFlags flags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
+    virtual void reconfigure(ReconfigureFlags flags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
-        static bool supported();
+    static bool supported();
 
-    private Q_SLOTS:
-        void gotNewStartup( const KStartupInfoId& id, const KStartupInfoData& data );
-        void gotRemoveStartup (const KStartupInfoId& id, const KStartupInfoData& data );
-        void gotStartupChange( const KStartupInfoId& id, const KStartupInfoData& data );
+private Q_SLOTS:
+    void gotNewStartup(const KStartupInfoId& id, const KStartupInfoData& data);
+    void gotRemoveStartup(const KStartupInfoId& id, const KStartupInfoData& data);
+    void gotStartupChange(const KStartupInfoId& id, const KStartupInfoData& data);
 
-    private:
-        enum FeedbackType
-            {
-            NoFeedback,
-            BouncingFeedback,
-            BlinkingFeedback,
-            PassiveFeedback
-            };
-        void start( const QString& icon );
-        void stop();
-        QImage scalePixmap( const QPixmap& pm, const QSize& size ) const;
-        void prepareTextures( const QPixmap& pix );
-        QRect feedbackRect() const;
-
-        KStartupInfo* m_startupInfo;
-        KSelectionOwner* m_selection;
-        KStartupInfoId m_currentStartup;
-        QMap< KStartupInfoId, QString > m_startups; // QString == pixmap
-        bool m_active;
-        int m_frame;
-        int m_progress;
-        GLTexture* m_bouncingTextures[5];
-        GLTexture* m_texture; // for passive and blinking
-        FeedbackType m_type;
-        QRect m_currentGeometry;
-        GLShader *m_blinkingShader;
+private:
+    enum FeedbackType {
+        NoFeedback,
+        BouncingFeedback,
+        BlinkingFeedback,
+        PassiveFeedback
     };
+    void start(const QString& icon);
+    void stop();
+    QImage scalePixmap(const QPixmap& pm, const QSize& size) const;
+    void prepareTextures(const QPixmap& pix);
+    QRect feedbackRect() const;
+
+    KStartupInfo* m_startupInfo;
+    KSelectionOwner* m_selection;
+    KStartupInfoId m_currentStartup;
+    QMap< KStartupInfoId, QString > m_startups; // QString == pixmap
+    bool m_active;
+    int m_frame;
+    int m_progress;
+    GLTexture* m_bouncingTextures[5];
+    GLTexture* m_texture; // for passive and blinking
+    FeedbackType m_type;
+    QRect m_currentGeometry;
+    GLShader *m_blinkingShader;
+};
 } // namespace
 
 #endif

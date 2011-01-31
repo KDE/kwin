@@ -36,59 +36,59 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     QVBoxLayout* layout = new QVBoxLayout(this);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    KActionCollection *actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    KAction* a = static_cast<KAction*>(actionCollection->addAction( "Invert" ));
-    a->setText( i18n("Toggle Invert Effect" ));
+    KAction* a = static_cast<KAction*>(actionCollection->addAction("Invert"));
+    a->setText(i18n("Toggle Invert Effect"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
 
-    KAction* b = static_cast<KAction*>(actionCollection->addAction( "InvertWindow" ));
-    b->setText( i18n("Toggle Invert Effect on Window" ));
+    KAction* b = static_cast<KAction*>(actionCollection->addAction("InvertWindow"));
+    b->setText(i18n("Toggle Invert Effect on Window"));
     b->setProperty("isConfigurationAction", true);
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
-            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
+                                           KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
     layout->addWidget(mShortcutEditor);
 
     load();
-    }
+}
 
 InvertEffectConfig::~InvertEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
-    }
+}
 
 void InvertEffectConfig::load()
-    {
+{
     KCModule::load();
 
     emit changed(false);
-    }
+}
 
 void InvertEffectConfig::save()
-    {
+{
     KCModule::save();
 
     mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "invert" );
-    }
+    EffectsHandler::sendReloadMessage("invert");
+}
 
 void InvertEffectConfig::defaults()
-    {
+{
     mShortcutEditor->allDefault();
     emit changed(true);
-    }
+}
 
 
 } // namespace

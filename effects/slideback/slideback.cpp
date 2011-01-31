@@ -26,121 +26,102 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( slideback, SlideBackEffect )
+KWIN_EFFECT(slideback, SlideBackEffect)
 
 SlideBackEffect::SlideBackEffect()
-    {
+{
     updateStackingOrder();
     disabled = false;
     unminimizedWindow = NULL;
-    }
-    
-static inline bool windowsShareDesktop( EffectWindow *w1, EffectWindow *w2 )
-    {
+}
+
+static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
+{
     return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
+}
+
+void SlideBackEffect::windowActivated(EffectWindow* w)
+{
+    if (w == NULL || w->keepAbove()) { // plasma popups, yakuake etc...
+        return;
     }
 
-void SlideBackEffect::windowActivated( EffectWindow* w )
-    {
-    if( w == NULL || w->keepAbove()) // plasma popups, yakuake etc...
-        {
-        return;
-        }    
-    
-    if( disabled || effects->activeFullScreenEffect() )  // TabBox or PresentWindows/Cube in progress
-        {
+    if (disabled || effects->activeFullScreenEffect()) {  // TabBox or PresentWindows/Cube in progress
         updateStackingOrder();
         disabled = false;
         return;
-        }
+    }
 
-    if( !isWindowUsable( w ) || !stackingOrderChanged() || !isWindowOnTop( w ) )     // Focus changed but stacking still the same
-        {
+    if (!isWindowUsable(w) || !stackingOrderChanged() || !isWindowOnTop(w)) {         // Focus changed but stacking still the same
         updateStackingOrder();
         return;
-        }
+    }
 
-    if( unminimizedWindow == w ){  // A window was activated by being unminimized. Don't trigger SlideBack.
+    if (unminimizedWindow == w) {   // A window was activated by being unminimized. Don't trigger SlideBack.
         unminimizedWindow = NULL;
         updateStackingOrder();
         return;
     }
-    
-    if( clientItemShown == w )
-        {
+
+    if (clientItemShown == w) {
         clientItemShown = NULL;
         updateStackingOrder();
         return;
-        }
-    if( clientItemHidden == w )
-        {
+    }
+    if (clientItemHidden == w) {
         clientItemHidden = NULL;
         updateStackingOrder();
         return;
-        }
+    }
     // Determine all windows on top of the activated one
     bool currentFound = false;
-    foreach( EffectWindow *tmp, oldStackingOrder )
-        {
-        if( !currentFound )
-            {
-            if( tmp == w )
-                {
+    foreach (EffectWindow * tmp, oldStackingOrder) {
+        if (!currentFound) {
+            if (tmp == w) {
                 currentFound = true;
+            }
+        } else {
+            if (isWindowUsable(tmp) && windowsShareDesktop(tmp, w)) {
+                // Do we have to move it?
+                if (intersects(w, tmp->geometry())) {
+                    QRect slideRect;
+                    slideRect = getSlideDestination(getModalGroupGeometry(w), tmp->geometry());
+                    effects->setElevatedWindow(tmp, true);
+                    elevatedList.append(tmp);
+                    motionManager.manage(tmp);
+                    motionManager.moveWindow(tmp, slideRect);
+                    destinationList.insert(tmp, slideRect);
+                    coveringWindows.append(tmp);
+                } else {
+                    //Does it intersect with a moved (elevated) window and do we have to elevate it too?
+                    foreach (EffectWindow * elevatedWindow, elevatedList) {
+                        if (tmp->geometry().intersects(elevatedWindow->geometry())) {
+                            effects->setElevatedWindow(tmp, true);
+                            elevatedList.append(tmp);
+                            break;
+                        }
+                    }
+
                 }
             }
-        else
-            {
-            if( isWindowUsable( tmp ) && windowsShareDesktop( tmp, w ) )
-                {
-                // Do we have to move it?
-                if( intersects( w, tmp->geometry() ) )
-                    {
-                    QRect slideRect;
-                    slideRect = getSlideDestination( getModalGroupGeometry( w ), tmp->geometry() );
-                    effects->setElevatedWindow( tmp, true );
-                    elevatedList.append( tmp );
-                    motionManager.manage( tmp );
-                    motionManager.moveWindow( tmp, slideRect );
-                    destinationList.insert( tmp, slideRect );
-                    coveringWindows.append( tmp );
-                    }
-                else
-                    {
-                    //Does it intersect with a moved (elevated) window and do we have to elevate it too?
-                    foreach( EffectWindow *elevatedWindow, elevatedList )
-                        {
-                        if( tmp->geometry().intersects( elevatedWindow->geometry() ) )
-                            {
-                            effects->setElevatedWindow( tmp, true );
-                            elevatedList.append( tmp );
-                            break;
-                            }
-                        }
-
-                    }
-                }
-            if( tmp->isDock() || tmp->keepAbove() )
-                {
-                effects->setElevatedWindow( tmp, true );
-                elevatedList.append( tmp );
-                }
+            if (tmp->isDock() || tmp->keepAbove()) {
+                effects->setElevatedWindow(tmp, true);
+                elevatedList.append(tmp);
             }
         }
+    }
     // If a window is minimized it could happen that the panels stay elevated without any windows sliding.
     // clear all elevation settings
-    if( !motionManager.managingWindows() )
-        {
-        foreach( EffectWindow* tmp, elevatedList )
-            {
-            effects->setElevatedWindow( tmp, false );
-            }
+    if (!motionManager.managingWindows()) {
+        foreach (EffectWindow * tmp, elevatedList) {
+            effects->setElevatedWindow(tmp, false);
         }
-    updateStackingOrder();
     }
+    updateStackingOrder();
+}
 
-QRect SlideBackEffect::getSlideDestination( const QRect &windowUnderGeometry, const QRect &windowOverGeometry)
-    {
+QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry)
+{
     // Determine the shortest way:
     int leftSlide = windowUnderGeometry.left() - windowOverGeometry.right() - 20;
     int rightSlide = windowUnderGeometry.right() - windowOverGeometry.left() + 20;
@@ -148,289 +129,245 @@ QRect SlideBackEffect::getSlideDestination( const QRect &windowUnderGeometry, co
     int downSlide = windowUnderGeometry.bottom() - windowOverGeometry.top() + 20;
 
     int horizSlide = leftSlide;
-    if( qAbs( horizSlide ) > qAbs( rightSlide ) )
-        {
+    if (qAbs(horizSlide) > qAbs(rightSlide)) {
         horizSlide = rightSlide;
-        }
+    }
     int vertSlide = upSlide;
-    if( qAbs( vertSlide ) > qAbs( downSlide ) )
-	{
-	vertSlide = downSlide;
-	}
+    if (qAbs(vertSlide) > qAbs(downSlide)) {
+        vertSlide = downSlide;
+    }
 
     QRect slideRect = windowOverGeometry;
-    if( qAbs( horizSlide ) < qAbs( vertSlide ) )
-	{
-	slideRect.moveLeft( slideRect.x() + horizSlide );
-	}
-    else
-	{
-	slideRect.moveTop( slideRect.y() + vertSlide );
-	}
-    return slideRect;
+    if (qAbs(horizSlide) < qAbs(vertSlide)) {
+        slideRect.moveLeft(slideRect.x() + horizSlide);
+    } else {
+        slideRect.moveTop(slideRect.y() + vertSlide);
     }
+    return slideRect;
+}
 
 void SlideBackEffect::updateStackingOrder()
-    {
-    usableOldStackingOrder = usableWindows( effects->stackingOrder() );
+{
+    usableOldStackingOrder = usableWindows(effects->stackingOrder());
     oldStackingOrder = effects->stackingOrder();
-    }
+}
 
-void SlideBackEffect::prePaintScreen( ScreenPrePaintData &data, int time )
-    {
-    if( motionManager.managingWindows() )
-        {
-        motionManager.calculate( time );
+void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+{
+    if (motionManager.managingWindows()) {
+        motionManager.calculate(time);
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-        }
-    effects->prePaintScreen( data, time );
     }
+    effects->prePaintScreen(data, time);
+}
 
 void SlideBackEffect::postPaintScreen()
-    {
-    if( motionManager.areWindowsMoving() )
-        {
+{
+    if (motionManager.areWindowsMoving()) {
         effects->addRepaintFull();
-        }
+    }
     effects->postPaintScreen();
-    }
+}
 
-void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time )
-    {
-    if( motionManager.isManaging( w ) )
-        {
+void SlideBackEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+{
+    if (motionManager.isManaging(w)) {
         data.setTransformed();
-        }
-
-    effects->prePaintWindow( w, data, time );
     }
 
-void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
-    {
-    if( stackingOrderChanged() && ( w == newTopWindow() ) && !disabled )
-        {
+    effects->prePaintWindow(w, data, time);
+}
+
+void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (stackingOrderChanged() && (w == newTopWindow()) && !disabled) {
         /* This can happen because of two reasons:
            - a window has received the focus earlier without being raised and is raised now. -> call windowActivated() now
            - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
-        foreach( EffectWindow *tmp, oldStackingOrder )
-            {
-            if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) && windowsShareDesktop( tmp, w ) )
-                {
-                kDebug( 1212 ) << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
-                clippedRegions << region.subtracted( tmp->geometry() );
-                PaintClipper::push( clippedRegions.last() );
+        foreach (EffectWindow * tmp, oldStackingOrder) {
+            if (oldStackingOrder.lastIndexOf(tmp) > oldStackingOrder.lastIndexOf(w) && isWindowUsable(tmp) && windowsShareDesktop(tmp, w)) {
+                kDebug(1212) << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
+                clippedRegions << region.subtracted(tmp->geometry());
+                PaintClipper::push(clippedRegions.last());
 //                region = region.subtracted( tmp->geometry() );
-                }
             }
+        }
         // Finally call windowActivated in case a already active window is raised.
-        windowActivated( w );
-        }
-    if( motionManager.isManaging( w ) )
-        {
-        motionManager.apply( w, data );
-        }
-    effects->paintWindow( w, mask, region, data );
-    for ( int i = clippedRegions.count() - 1; i > -1; --i )
-        PaintClipper::pop( clippedRegions.at(i) );
-    clippedRegions.clear();
+        windowActivated(w);
     }
+    if (motionManager.isManaging(w)) {
+        motionManager.apply(w, data);
+    }
+    effects->paintWindow(w, mask, region, data);
+    for (int i = clippedRegions.count() - 1; i > -1; --i)
+        PaintClipper::pop(clippedRegions.at(i));
+    clippedRegions.clear();
+}
 
-void SlideBackEffect::postPaintWindow( EffectWindow* w )
-    {
-    if( motionManager.isManaging( w ) )
-        {
-        if( destinationList.contains( w ) )
-            {
+void SlideBackEffect::postPaintWindow(EffectWindow* w)
+{
+    if (motionManager.isManaging(w)) {
+        if (destinationList.contains(w)) {
             // has window reched its destination?
-            if(( qAbs( motionManager.transformedGeometry( w ).x() - destinationList[w].x() ) < 1 ) &&
-                    ( qAbs( motionManager.transformedGeometry( w ).y() - destinationList[w].y() ) < 1 ) )
-                {
+            if ((qAbs(motionManager.transformedGeometry(w).x() - destinationList[w].x()) < 1) &&
+                    (qAbs(motionManager.transformedGeometry(w).y() - destinationList[w].y()) < 1)) {
                 // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
-                if( coveringWindows.contains( w ) )
-                    {
+                if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
-                    foreach( EffectWindow *tmp, elevatedList )
-                        {
+                    foreach (EffectWindow * tmp, elevatedList) {
                         QRect elevatedGeometry = tmp->geometry();
-                        if( motionManager.isManaging( tmp ) )
-                            {
-                            elevatedGeometry = motionManager.transformedGeometry( tmp ).toAlignedRect();
-                            }
-                        if( effects->activeWindow() && !tmp->isDock() && !tmp->keepAbove() && effects->activeWindow()->geometry().intersects( elevatedGeometry ) )
-                            {
-                            QRect newDestination;
-                            newDestination = getSlideDestination( getModalGroupGeometry( effects->activeWindow() ), elevatedGeometry );
-                            if( !motionManager.isManaging( tmp ) )
-                                {
-                                motionManager.manage( tmp );
-                                }
-                            motionManager.moveWindow( tmp, newDestination );
-                            destinationList[tmp] = newDestination;
-                            }
-                        else
-                            {
-                            if( !tmp->isDock() )
-                                {
-                                bool keepElevated = false;
-                                foreach( EffectWindow *elevatedWindow, tmpList)
-                                    {
-                                    if( tmp->geometry().intersects( elevatedWindow->geometry() ) )
-                                        {
-                                        keepElevated = true;
-                                        }
-                                    }
-                                if( !keepElevated )
-                                    {
-                                    effects->setElevatedWindow( tmp, false );
-                                    elevatedList.removeAll( tmp );
-                                    }
-                                }
-                            }
-                        tmpList.append(tmp);
+                        if (motionManager.isManaging(tmp)) {
+                            elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
                         }
+                        if (effects->activeWindow() && !tmp->isDock() && !tmp->keepAbove() && effects->activeWindow()->geometry().intersects(elevatedGeometry)) {
+                            QRect newDestination;
+                            newDestination = getSlideDestination(getModalGroupGeometry(effects->activeWindow()), elevatedGeometry);
+                            if (!motionManager.isManaging(tmp)) {
+                                motionManager.manage(tmp);
+                            }
+                            motionManager.moveWindow(tmp, newDestination);
+                            destinationList[tmp] = newDestination;
+                        } else {
+                            if (!tmp->isDock()) {
+                                bool keepElevated = false;
+                                foreach (EffectWindow * elevatedWindow, tmpList) {
+                                    if (tmp->geometry().intersects(elevatedWindow->geometry())) {
+                                        keepElevated = true;
+                                    }
+                                }
+                                if (!keepElevated) {
+                                    effects->setElevatedWindow(tmp, false);
+                                    elevatedList.removeAll(tmp);
+                                }
+                            }
+                        }
+                        tmpList.append(tmp);
                     }
-                else
-                    {
+                } else {
                     // Move the window back where it belongs
-                    motionManager.moveWindow( w, w->geometry() );
-                    destinationList.remove( w );
-                    }
+                    motionManager.moveWindow(w, w->geometry());
+                    destinationList.remove(w);
                 }
             }
-        else
-            {
+        } else {
             // is window back at its original position?
-            if(( qAbs( motionManager.transformedGeometry( w ).x() - w->geometry().x() ) < 1 ) &&
-                    ( qAbs( motionManager.transformedGeometry( w ).y() - w->geometry().y() ) < 1 ) )
-                {
-                motionManager.unmanage( w );
+            if ((qAbs(motionManager.transformedGeometry(w).x() - w->geometry().x()) < 1) &&
+                    (qAbs(motionManager.transformedGeometry(w).y() - w->geometry().y()) < 1)) {
+                motionManager.unmanage(w);
                 effects->addRepaintFull();
-                }
             }
-        if( coveringWindows.contains( w ) )
-            {
+        }
+        if (coveringWindows.contains(w)) {
             // It could happen that there is no aciveWindow() here if the user clicks the close-button on an inactive window.
             // Just skip... the window will be removed in windowDeleted() later
-            if( effects->activeWindow() && !intersects( effects->activeWindow(), motionManager.transformedGeometry( w ).toAlignedRect() ) )
-                {
-                coveringWindows.removeAll( w );
-                if( coveringWindows.isEmpty() )
-                    {
+            if (effects->activeWindow() && !intersects(effects->activeWindow(), motionManager.transformedGeometry(w).toAlignedRect())) {
+                coveringWindows.removeAll(w);
+                if (coveringWindows.isEmpty()) {
                     // Restore correct stacking order
-                    foreach( EffectWindow *tmp, elevatedList )
-                        {
-                        effects->setElevatedWindow( tmp, false );
-                        }
-                    elevatedList.clear();
+                    foreach (EffectWindow * tmp, elevatedList) {
+                        effects->setElevatedWindow(tmp, false);
                     }
+                    elevatedList.clear();
                 }
             }
         }
-    effects->postPaintWindow( w );
     }
+    effects->postPaintWindow(w);
+}
 
-void SlideBackEffect::windowDeleted( EffectWindow* w )
-    {
-    usableOldStackingOrder.removeAll( w );
-    oldStackingOrder.removeAll( w );
-    coveringWindows.removeAll( w );
-    elevatedList.removeAll( w );
-    if( motionManager.isManaging( w ) )
-        {
-        motionManager.unmanage( w );
-        }
+void SlideBackEffect::windowDeleted(EffectWindow* w)
+{
+    usableOldStackingOrder.removeAll(w);
+    oldStackingOrder.removeAll(w);
+    coveringWindows.removeAll(w);
+    elevatedList.removeAll(w);
+    if (motionManager.isManaging(w)) {
+        motionManager.unmanage(w);
     }
+}
 
-void SlideBackEffect::windowAdded( KWin::EffectWindow* w )
-    {
-    Q_UNUSED( w );
+void SlideBackEffect::windowAdded(KWin::EffectWindow* w)
+{
+    Q_UNUSED(w);
     updateStackingOrder();
-    }
+}
 
-void SlideBackEffect::windowUnminimized( EffectWindow* w)
-    {
+void SlideBackEffect::windowUnminimized(EffectWindow* w)
+{
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
-    // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not 
+    // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not
     // followed by a windowActivated().
-    if( isWindowOnTop( w ) )
-        {
+    if (isWindowOnTop(w)) {
         unminimizedWindow = w;
-        }
-    else
-        {
+    } else {
         unminimizedWindow = NULL;
-        }
     }
+}
 
-void SlideBackEffect::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
-    {
+void SlideBackEffect::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+{
     clientItemShown = to;
     clientItemHidden = from;
-    }
+}
 
 void SlideBackEffect::tabBoxClosed()
-    {
+{
     disabled = true;
-    }
+}
 
-bool SlideBackEffect::isWindowOnTop( EffectWindow* w )
-    {
-    EffectWindowList openWindows = usableWindows( effects->stackingOrder() );
-    if( !openWindows.isEmpty() && ( openWindows.last() == w ) )
-        {
+bool SlideBackEffect::isWindowOnTop(EffectWindow* w)
+{
+    EffectWindowList openWindows = usableWindows(effects->stackingOrder());
+    if (!openWindows.isEmpty() && (openWindows.last() == w)) {
         return true;
-        }
+    }
     return false;
-    }
+}
 
-bool SlideBackEffect::isWindowUsable( EffectWindow* w )
-    {
-    return w && ( w->isNormalWindow() || w->isDialog() ) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
-        && w->visibleInClientGroup();
-    }
+bool SlideBackEffect::isWindowUsable(EffectWindow* w)
+{
+    return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
+           && w->visibleInClientGroup();
+}
 
-bool SlideBackEffect::intersects( EffectWindow* windowUnder, const QRect &windowOverGeometry )
-    {
-    QRect windowUnderGeometry = getModalGroupGeometry( windowUnder );
-    return windowUnderGeometry.intersects( windowOverGeometry );
-    }
+bool SlideBackEffect::intersects(EffectWindow* windowUnder, const QRect &windowOverGeometry)
+{
+    QRect windowUnderGeometry = getModalGroupGeometry(windowUnder);
+    return windowUnderGeometry.intersects(windowOverGeometry);
+}
 
-EffectWindowList SlideBackEffect::usableWindows( const EffectWindowList & allWindows )
-    {
+EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWindows)
+{
     EffectWindowList retList;
-    foreach( EffectWindow *tmp, allWindows )
-        {
-        if( isWindowUsable( tmp ) )
-            {
-            retList.append( tmp );
-            }
+    foreach (EffectWindow * tmp, allWindows) {
+        if (isWindowUsable(tmp)) {
+            retList.append(tmp);
         }
-    return retList;
     }
+    return retList;
+}
 
 bool SlideBackEffect::stackingOrderChanged()
-    {
-    return !( usableOldStackingOrder == usableWindows( effects->stackingOrder() ) );
-    }
+{
+    return !(usableOldStackingOrder == usableWindows(effects->stackingOrder()));
+}
 
 EffectWindow* SlideBackEffect::newTopWindow()
-    {
-    EffectWindowList stacking = usableWindows( effects->stackingOrder() );
+{
+    EffectWindowList stacking = usableWindows(effects->stackingOrder());
     return stacking.isEmpty() ? NULL : stacking.last();
-    }
+}
 
-QRect SlideBackEffect::getModalGroupGeometry( EffectWindow *w )
-    {
+QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
+{
     QRect modalGroupGeometry = w->geometry();
-    if( w->isModal() )
-        {
-        foreach( EffectWindow *modalWindow, w->mainWindows() )
-            {
-            modalGroupGeometry = modalGroupGeometry.united( getModalGroupGeometry( modalWindow ) );
-            }
+    if (w->isModal()) {
+        foreach (EffectWindow * modalWindow, w->mainWindows()) {
+            modalGroupGeometry = modalGroupGeometry.united(getModalGroupGeometry(modalWindow));
         }
-    return modalGroupGeometry;        
     }
+    return modalGroupGeometry;
+}
 
 } //Namespace

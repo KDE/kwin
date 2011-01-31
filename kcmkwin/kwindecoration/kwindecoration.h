@@ -48,51 +48,51 @@ class KWinDecorationForm : public QWidget, public Ui::KWinDecorationForm
 {
     Q_OBJECT
 
-    public:
-        explicit KWinDecorationForm( QWidget* parent );
+public:
+    explicit KWinDecorationForm(QWidget* parent);
 };
 
 class KWinDecorationModule : public KCModule, public KDecorationDefines
 {
     Q_OBJECT
 
-    public:
-        KWinDecorationModule(QWidget* parent, const QVariantList &);
-        ~KWinDecorationModule();
+public:
+    KWinDecorationModule(QWidget* parent, const QVariantList &);
+    ~KWinDecorationModule();
 
-        virtual void load();
-        virtual void save();
-        virtual void defaults();
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
 
-        QString quickHelp() const;
+    QString quickHelp() const;
 
-    signals:
-        void pluginLoad( const KConfigGroup& conf );
-        void pluginSave( KConfigGroup &conf );
-        void pluginDefaults();
+signals:
+    void pluginLoad(const KConfigGroup& conf);
+    void pluginSave(KConfigGroup &conf);
+    void pluginDefaults();
 
-    protected slots:
-        // Allows us to turn "save" on
-        void slotSelectionChanged();
-        void slotConfigureButtons();
-        void slotGHNSClicked();
-        void slotConfigureDecoration();
+protected slots:
+    // Allows us to turn "save" on
+    void slotSelectionChanged();
+    void slotConfigureButtons();
+    void slotGHNSClicked();
+    void slotConfigureDecoration();
 
-    private:
-        void readConfig( const KConfigGroup& conf );
-        void writeConfig( KConfigGroup &conf );
+private:
+    void readConfig(const KConfigGroup& conf);
+    void writeConfig(KConfigGroup &conf);
 
-        KSharedConfigPtr kwinConfig;
+    KSharedConfigPtr kwinConfig;
 
-        KWinDecorationForm* m_ui;
-        bool m_showTooltips;
-        bool m_customPositions;
-        QString m_leftButtons;
-        QString m_rightButtons;
+    KWinDecorationForm* m_ui;
+    bool m_showTooltips;
+    bool m_customPositions;
+    QString m_leftButtons;
+    QString m_rightButtons;
 
-        DecorationModel* m_model;
-        QSortFilterProxyModel* m_proxyModel;
-        bool m_configLoaded;
+    DecorationModel* m_model;
+    QSortFilterProxyModel* m_proxyModel;
+    bool m_configLoaded;
 };
 
 } //namespace

@@ -32,61 +32,61 @@ class XRenderPicture;
 
 class ZoomEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        ZoomEffect();
-        virtual ~ZoomEffect();
-        virtual void reconfigure( ReconfigureFlags flags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
-    private slots:
-        void zoomIn();
-        void zoomOut();
-        void actualSize();
-        void moveZoomLeft();
-        void moveZoomRight();
-        void moveZoomUp();
-        void moveZoomDown();
-        void moveMouseToFocus();
-        void moveMouseToCenter();
-        void timelineFrameChanged(int frame);
-        void focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight);
-    private:
-        void showCursor();
-        void hideCursor();
-        void recreateTexture();
-        void moveZoom(int x, int y);
-    private:
-        double zoom;
-        double target_zoom;
-        bool polling; // Mouse polling
-        double zoomFactor;
-        enum MouseTrackingType { MouseTrackingProportional = 0, MouseTrackingCentred = 1, MouseTrackingPush = 2, MouseTrackingDisabled = 3 };
-        MouseTrackingType mouseTracking;
-        bool enableFocusTracking;
-        bool followFocus;
-        enum MousePointerType { MousePointerScale = 0, MousePointerKeep = 1, MousePointerHide = 2 };
-        MousePointerType mousePointer;
-        int focusDelay;
-        QPoint cursorPoint;
-        QPoint focusPoint;
-        QPoint prevPoint;
-        QTime lastMouseEvent;
-        QTime lastFocusEvent;
-        GLTexture* texture;
-        XRenderPicture* xrenderPicture;
-        int imageWidth;
-        int imageHeight;
-        bool isMouseHidden;
-        QTimeLine timeline;
-        int xMove, yMove;
-        double moveFactor;
-    };
+public:
+    ZoomEffect();
+    virtual ~ZoomEffect();
+    virtual void reconfigure(ReconfigureFlags flags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void mouseChanged(const QPoint& pos, const QPoint& old,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+private slots:
+    void zoomIn();
+    void zoomOut();
+    void actualSize();
+    void moveZoomLeft();
+    void moveZoomRight();
+    void moveZoomUp();
+    void moveZoomDown();
+    void moveMouseToFocus();
+    void moveMouseToCenter();
+    void timelineFrameChanged(int frame);
+    void focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight);
+private:
+    void showCursor();
+    void hideCursor();
+    void recreateTexture();
+    void moveZoom(int x, int y);
+private:
+    double zoom;
+    double target_zoom;
+    bool polling; // Mouse polling
+    double zoomFactor;
+    enum MouseTrackingType { MouseTrackingProportional = 0, MouseTrackingCentred = 1, MouseTrackingPush = 2, MouseTrackingDisabled = 3 };
+    MouseTrackingType mouseTracking;
+    bool enableFocusTracking;
+    bool followFocus;
+    enum MousePointerType { MousePointerScale = 0, MousePointerKeep = 1, MousePointerHide = 2 };
+    MousePointerType mousePointer;
+    int focusDelay;
+    QPoint cursorPoint;
+    QPoint focusPoint;
+    QPoint prevPoint;
+    QTime lastMouseEvent;
+    QTime lastFocusEvent;
+    GLTexture* texture;
+    XRenderPicture* xrenderPicture;
+    int imageWidth;
+    int imageHeight;
+    bool isMouseHidden;
+    QTimeLine timeline;
+    int xMove, yMove;
+    double moveFactor;
+};
 
 } // namespace
 

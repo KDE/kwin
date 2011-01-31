@@ -44,43 +44,44 @@ class ClientModel;
 */
 class DesktopModel
     : public QAbstractItemModel
-    {
-    public:
-        enum
-            {
-            DesktopRole = Qt::UserRole, ///< Desktop number
-            DesktopNameRole = Qt::UserRole + 1, ///< Desktop name
-            ClientModelRole = Qt::UserRole + 2 ///< Clients on this desktop
-            };
-        DesktopModel( QObject* parent = 0 );
-        ~DesktopModel();
-
-        virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-        virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
-        virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
-        virtual QModelIndex parent( const QModelIndex& child ) const;
-        virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
-
-        /**
-        * Generates a new list of desktops based on the current config.
-        * Calling this method will reset the model.
-        */
-        void createDesktopList();
-        /**
-        * @return The current list of desktops.
-        */
-        QList< int > desktopList() const { return m_desktopList; }
-        /**
-        * @param desktop The desktop whose ModelIndex should be retrieved
-        * @return The ModelIndex of given desktop or an invalid ModelIndex if
-        * the desktop is not in the model.
-        */
-        QModelIndex desktopIndex( int desktop ) const;
-
-    private:
-        QList< int > m_desktopList;
-        QMap< int, ClientModel* > m_clientModels;
+{
+public:
+    enum {
+        DesktopRole = Qt::UserRole, ///< Desktop number
+        DesktopNameRole = Qt::UserRole + 1, ///< Desktop name
+        ClientModelRole = Qt::UserRole + 2 ///< Clients on this desktop
     };
+    DesktopModel(QObject* parent = 0);
+    ~DesktopModel();
+
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex& child) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+
+    /**
+    * Generates a new list of desktops based on the current config.
+    * Calling this method will reset the model.
+    */
+    void createDesktopList();
+    /**
+    * @return The current list of desktops.
+    */
+    QList< int > desktopList() const {
+        return m_desktopList;
+    }
+    /**
+    * @param desktop The desktop whose ModelIndex should be retrieved
+    * @return The ModelIndex of given desktop or an invalid ModelIndex if
+    * the desktop is not in the model.
+    */
+    QModelIndex desktopIndex(int desktop) const;
+
+private:
+    QList< int > m_desktopList;
+    QMap< int, ClientModel* > m_clientModels;
+};
 
 } // namespace Tabbox
 } // namespace KWin

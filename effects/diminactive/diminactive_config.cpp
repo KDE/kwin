@@ -38,12 +38,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 DimInactiveEffectConfigForm::DimInactiveEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new DimInactiveEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -57,10 +57,10 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
     connect(m_ui->checkGroup, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     load();
-    }
+}
 
 void DimInactiveEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
@@ -77,10 +77,10 @@ void DimInactiveEffectConfig::load()
     m_ui->checkGroup->setChecked(group);
 
     emit changed(false);
-    }
+}
 
 void DimInactiveEffectConfig::save()
-    {
+{
     KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
 
     conf.writeEntry("Strength", m_ui->spinStrength->value());
@@ -93,18 +93,18 @@ void DimInactiveEffectConfig::save()
 
     KCModule::save();
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "diminactive" );
-    }
+    EffectsHandler::sendReloadMessage("diminactive");
+}
 
 void DimInactiveEffectConfig::defaults()
-    {
+{
     m_ui->spinStrength->setValue(25);
     m_ui->checkPanel->setChecked(false);
     m_ui->checkDesktop->setChecked(false);
     m_ui->checkKeepAbove->setChecked(false);
     m_ui->checkGroup->setChecked(true);
     emit changed(true);
-    }
+}
 
 
 } // namespace

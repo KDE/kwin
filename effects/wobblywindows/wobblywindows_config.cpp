@@ -36,43 +36,37 @@ KWIN_EFFECT_CONFIG_FACTORY
 //-----------------------------------------------------------------------------
 // WARNING: This is (kinda) copied from wobblywindows.cpp
 
-struct ParameterSet
-{
+struct ParameterSet {
     int stiffness;
     int drag;
     int move_factor;
 };
 
-ParameterSet set_0 =
-{
+ParameterSet set_0 = {
     15,
     80,
     10
 };
 
-ParameterSet set_1 =
-{
+ParameterSet set_1 = {
     10,
     85,
     10
 };
 
-ParameterSet set_2 =
-{
+ParameterSet set_2 = {
     6,
     90,
     10
 };
 
-ParameterSet set_3 =
-{
+ParameterSet set_3 = {
     3,
     92,
     20
 };
 
-ParameterSet set_4 =
-{
+ParameterSet set_4 = {
     1,
     97,
     25
@@ -83,7 +77,7 @@ ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 //-----------------------------------------------------------------------------
 
 WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(EffectFactory::componentData(), parent, args)
 {
     m_ui.setupUi(this);
 
@@ -113,13 +107,11 @@ void WobblyWindowsEffectConfig::load()
 
     unsigned int wobblynessLevel = 0;
     QString settingsMode = conf.readEntry("Settings", "Auto");
-    if (settingsMode != "Custom")
-    {
+    if (settingsMode != "Custom") {
         wobblynessLevel = conf.readEntry("WobblynessLevel", 0);
         change = false;
     }
-    if (wobblynessLevel > 4)
-    {
+    if (wobblynessLevel > 4) {
         wobblynessLevel = 4;
         change = true;
     }
@@ -173,21 +165,21 @@ void WobblyWindowsEffectConfig::defaults()
 }
 
 void WobblyWindowsEffectConfig::advancedChanged()
-    {
-    if(m_ui.advancedBox->isChecked())
+{
+    if (m_ui.advancedBox->isChecked())
         m_ui.advancedGroup->setEnabled(true);
     else
         m_ui.advancedGroup->setEnabled(false);
-    }
+}
 
 void WobblyWindowsEffectConfig::wobblinessChanged()
-    {
+{
     ParameterSet preset = pset[m_ui.wobblinessSlider->value()];
 
     m_ui.stiffnessSlider->setValue(preset.stiffness);
     m_ui.dragSlider->setValue(preset.drag);
     m_ui.moveFactorSlider->setValue(preset.move_factor);
-    }
+}
 
 } // namespace
 

@@ -32,7 +32,7 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(EffectFactory::componentData(), parent, args)
-    {
+{
     m_ui = new Ui::ShowFpsEffectConfigForm;
     m_ui->setupUi(this);
 
@@ -42,38 +42,38 @@ ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& ar
     connect(m_ui->textAlpha, SIGNAL(valueChanged(double)), this, SLOT(changed()));
 
     load();
-    }
-    
+}
+
 ShowFpsEffectConfig::~ShowFpsEffectConfig()
-    {
+{
     delete m_ui;
-    }
-    
+}
+
 void ShowFpsEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
 
     int position = conf.readEntry("TextPosition", int(ShowFpsEffect::INSIDE_GRAPH));
-    if(position > -1)
+    if (position > -1)
         m_ui->textPosition->setCurrentIndex(position);
 
     QFont font = conf.readEntry("TextFont", QFont());
     m_ui->textFont->setFont(font);
 
     QColor color = conf.readEntry("TextColor", QColor());
-    if(color.isValid())
+    if (color.isValid())
         m_ui->textColor->setColor(color);
 
     double alpha = conf.readEntry("TextAlpha", 1.0);
     m_ui->textAlpha->setValue(alpha);
 
     emit changed(false);
-    }
-    
+}
+
 void ShowFpsEffectConfig::save()
-    {
+{
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
@@ -94,17 +94,17 @@ void ShowFpsEffectConfig::save()
 
     emit changed(false);
     EffectsHandler::sendReloadMessage("showfps");
-    }
-    
+}
+
 void ShowFpsEffectConfig::defaults()
-    {
+{
     m_ui->textPosition->setCurrentIndex(0);
     m_ui->textFont->setFont(QFont());
     m_ui->textColor->setColor(QColor());
     m_ui->textAlpha->setValue(1.0);
 
     emit changed(true);
-    }
+}
 
 } // namespace
 

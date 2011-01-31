@@ -28,16 +28,16 @@ namespace KWin
 {
 
 class GeometryTip: public QLabel
-    {
+{
     Q_OBJECT
-    public:
-        GeometryTip( const XSizeHints* xSizeHints, bool save_under );
-        ~GeometryTip();
-        void setGeometry( const QRect& geom );
+public:
+    GeometryTip(const XSizeHints* xSizeHints, bool save_under);
+    ~GeometryTip();
+    void setGeometry(const QRect& geom);
 
-    private:
-        const XSizeHints* sizeHints;
-    };
+private:
+    const XSizeHints* sizeHints;
+};
 
 } // namespace
 

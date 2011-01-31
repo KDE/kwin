@@ -33,25 +33,25 @@ namespace KWin
 class ThumbnailAsideEffectConfigForm : public QWidget, public Ui::ThumbnailAsideEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit ThumbnailAsideEffectConfigForm(QWidget* parent);
+public:
+    explicit ThumbnailAsideEffectConfigForm(QWidget* parent);
 };
 
 class ThumbnailAsideEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit ThumbnailAsideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        virtual ~ThumbnailAsideEffectConfig();
+public:
+    explicit ThumbnailAsideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~ThumbnailAsideEffectConfig();
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        ThumbnailAsideEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    ThumbnailAsideEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

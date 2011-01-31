@@ -33,11 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( explosion, ExplosionEffect )
-KWIN_EFFECT_SUPPORTED( explosion, ExplosionEffect::supported() )
+KWIN_EFFECT(explosion, ExplosionEffect)
+KWIN_EFFECT_SUPPORTED(explosion, ExplosionEffect::supported())
 
 ExplosionEffect::ExplosionEffect() : Effect()
-    {
+{
     mShader = 0;
     mStartOffsetTex = 0;
     mEndOffsetTex = 0;
@@ -45,20 +45,20 @@ ExplosionEffect::ExplosionEffect() : Effect()
     mActiveAnimations = 0;
     mValid = true;
     mInited = false;
-    }
+}
 
 ExplosionEffect::~ExplosionEffect()
-    {
+{
     delete mShader;
     delete mStartOffsetTex;
     delete mEndOffsetTex;
-    }
+}
 
 bool ExplosionEffect::supported()
-    {
+{
     return GLShader::fragmentShaderSupported() &&
-            (effects->compositingType() == OpenGLCompositing);
-    }
+           (effects->compositingType() == OpenGLCompositing);
+}
 
 bool ExplosionEffect::loadData()
 {
@@ -67,20 +67,16 @@ bool ExplosionEffect::loadData()
     const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.frag");
     QString starttexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-start.png");
     QString endtexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-end.png");
-    if(starttexture.isEmpty() || endtexture.isEmpty())
-    {
+    if (starttexture.isEmpty() || endtexture.isEmpty()) {
         kError(1212) << "Couldn't locate texture files" << endl;
         return false;
     }
 
     mShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
-    if(!mShader->isValid())
-    {
+    if (!mShader->isValid()) {
         kError(1212) << "The shader failed to load!" << endl;
         return false;
-    }
-    else
-    {
+    } else {
         ShaderManager::instance()->pushShader(mShader);
         mShader->setUniform("startOffsetTexture", 4);
         mShader->setUniform("endOffsetTexture", 5);
@@ -89,70 +85,61 @@ bool ExplosionEffect::loadData()
 
     mStartOffsetTex = new GLTexture(starttexture);
     mEndOffsetTex = new GLTexture(endtexture);
-    if(mStartOffsetTex->isNull() || mEndOffsetTex->isNull())
-    {
+    if (mStartOffsetTex->isNull() || mEndOffsetTex->isNull()) {
         kError(1212) << "The textures failed to load!" << endl;
         return false;
-    }
-    else
-    {
-        mStartOffsetTex->setFilter( GL_LINEAR );
-        mEndOffsetTex->setFilter( GL_LINEAR );
+    } else {
+        mStartOffsetTex->setFilter(GL_LINEAR);
+        mEndOffsetTex->setFilter(GL_LINEAR);
     }
 
     return true;
-    }
+}
 
-void ExplosionEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( mActiveAnimations > 0 )
+void ExplosionEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (mActiveAnimations > 0)
         // We need to mark the screen as transformed. Otherwise the whole screen
         //  won't be repainted, resulting in artefacts
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
-    }
+}
 
-void ExplosionEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
-    if( mWindows.contains( w ))
-        {
-        if( mValid && !mInited )
+void ExplosionEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    if (mWindows.contains(w)) {
+        if (mValid && !mInited)
             mValid = loadData();
-        if( mValid )
-            {
-            mWindows[ w  ] += time / animationTime( 700.0 ); // complete change in 700ms
-            if( mWindows[ w  ] < 1 )
-                {
+        if (mValid) {
+            mWindows[ w  ] += time / animationTime(700.0);   // complete change in 700ms
+            if (mWindows[ w  ] < 1) {
                 data.setTranslucent();
                 data.setTransformed();
-                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
-                }
-            else
-                {
-                mWindows.remove( w );
+                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
+            } else {
+                mWindows.remove(w);
                 w->unrefWindow();
                 mActiveAnimations--;
-                }
             }
         }
-
-    effects->prePaintWindow( w, data, time );
     }
 
-void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
+    effects->prePaintWindow(w, data, time);
+}
+
+void ExplosionEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
     // Make sure we have OpenGL compositing and the window is vidible and not a
     //  special window
-    bool useshader = ( mValid && mWindows.contains( w ) );
-    if( useshader )
-        {
+    bool useshader = (mValid && mWindows.contains(w));
+    if (useshader) {
         double maxscaleadd = 1.5f;
-        double scale = 1 + maxscaleadd*mWindows[w];
+        double scale = 1 + maxscaleadd * mWindows[w];
         data.xScale = scale;
         data.yScale = scale;
-        data.xTranslate += int( w->width() / 2 * ( 1 - scale ));
-        data.yTranslate += int( w->height() / 2 * ( 1 - scale ));
+        data.xTranslate += int(w->width() / 2 * (1 - scale));
+        data.yTranslate += int(w->height() / 2 * (1 - scale));
         data.opacity *= 0.99;  // Force blending
         ShaderManager *manager = ShaderManager::instance();
         GLShader *shader = manager->pushShader(ShaderManager::GenericShader);
@@ -168,49 +155,47 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         mEndOffsetTex->bind();
         glActiveTexture(GL_TEXTURE0);
         data.shader = mShader;
-        }
+    }
 
     // Call the next effect.
-    effects->paintWindow( w, mask, region, data );
+    effects->paintWindow(w, mask, region, data);
 
-    if( useshader )
-        {
+    if (useshader) {
         ShaderManager::instance()->popShader();
         glActiveTexture(GL_TEXTURE4);
         mStartOffsetTex->unbind();
         glActiveTexture(GL_TEXTURE5);
         mEndOffsetTex->unbind();
         glActiveTexture(GL_TEXTURE0);
-        }
     }
+}
 
 void ExplosionEffect::postPaintScreen()
-    {
-    if( mActiveAnimations > 0 )
+{
+    if (mActiveAnimations > 0)
         effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();
-    }
+}
 
-void ExplosionEffect::windowClosed( EffectWindow* c )
-    {
-    const void* e = c->data( WindowClosedGrabRole ).value<void*>();
-    if( e && e != this )
+void ExplosionEffect::windowClosed(EffectWindow* c)
+{
+    const void* e = c->data(WindowClosedGrabRole).value<void*>();
+    if (e && e != this)
         return;
-    if( c->isOnCurrentDesktop() && !c->isMinimized())
-        {
+    if (c->isOnCurrentDesktop() && !c->isMinimized()) {
         mWindows[ c ] = 0; // count up to 1
         c->addRepaintFull();
         c->refWindow();
         mActiveAnimations++;
-        }
     }
+}
 
-void ExplosionEffect::windowDeleted( EffectWindow* c )
-    {
-    mWindows.remove( c );
-    }
+void ExplosionEffect::windowDeleted(EffectWindow* c)
+{
+    mWindows.remove(c);
+}
 
 } // namespace
 

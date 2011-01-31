@@ -32,24 +32,24 @@ namespace KWin
 class ResizeEffectConfigForm : public QWidget, public Ui::ResizeEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit ResizeEffectConfigForm(QWidget* parent = 0);
+public:
+    explicit ResizeEffectConfigForm(QWidget* parent = 0);
 };
 
 class ResizeEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit ResizeEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+public:
+    explicit ResizeEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        ResizeEffectConfigForm* m_ui;
-    };
+private:
+    ResizeEffectConfigForm* m_ui;
+};
 
 } // namespace
 

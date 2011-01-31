@@ -29,26 +29,26 @@ namespace KWin
 
 class KCMRulesList
     : public QWidget, Ui_KCMRulesList
-    {
+{
     Q_OBJECT
-    public:
-        KCMRulesList( QWidget* parent = NULL );
-        virtual ~KCMRulesList();
-        void load();
-        void save();
-        void defaults();
-    signals:
-        void changed( bool );
-    private slots:
-        void newClicked();
-        void modifyClicked();
-        void deleteClicked();
-        void moveupClicked();
-        void movedownClicked();
-        void activeChanged();
-    private:
-        QVector< Rules* > rules;
-    };
+public:
+    KCMRulesList(QWidget* parent = NULL);
+    virtual ~KCMRulesList();
+    void load();
+    void save();
+    void defaults();
+signals:
+    void changed(bool);
+private slots:
+    void newClicked();
+    void modifyClicked();
+    void deleteClicked();
+    void moveupClicked();
+    void movedownClicked();
+    void activeChanged();
+private:
+    QVector< Rules* > rules;
+};
 
 } // namespace
 

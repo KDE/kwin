@@ -27,35 +27,34 @@ namespace KWin
 {
 
 class SwivelTabsEffect : public Effect
-    {
-    public:
-        SwivelTabsEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        virtual void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
-        static bool supported();
-    private:
-        struct swivel
-            {
-            EffectWindow* hide;
-            EffectWindow* show;
-            TimeLine time;
-            // The points of the transformed window
-            QPoint topLeft, topRight, bottomLeft, bottomRight;
-            // The size of the transformed window
-            double left, top, right, bottom;
-            };
-        swivel windows;
-        bool isActive, horizontal, vertical;
-        int totalTime, kal;
-        double PI, lastF;
-        void nextStep( EffectWindow *w );
-        void transformQuad( WindowQuad &quad );
-        double calculateCoords( double original, double space, double newSpace );
+{
+public:
+    SwivelTabsEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
+    virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    static bool supported();
+private:
+    struct swivel {
+        EffectWindow* hide;
+        EffectWindow* show;
+        TimeLine time;
+        // The points of the transformed window
+        QPoint topLeft, topRight, bottomLeft, bottomRight;
+        // The size of the transformed window
+        double left, top, right, bottom;
     };
+    swivel windows;
+    bool isActive, horizontal, vertical;
+    int totalTime, kal;
+    double PI, lastF;
+    void nextStep(EffectWindow *w);
+    void transformQuad(WindowQuad &quad);
+    double calculateCoords(double original, double space, double newSpace);
+};
 
 }
 

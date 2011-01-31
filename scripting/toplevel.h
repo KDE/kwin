@@ -27,15 +27,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #undef MAP_GET
 #define MAP_GET(type, method) \
-QScriptValue SWrapper::Toplevel::method(QScriptContext* ctx, QScriptEngine* eng) { \
-    KWin::Toplevel* central = extractClient(ctx->thisObject()); \
-    \
-    if(central == 0) { \
-	return QScriptValue(); \
-    } else { \
-	return eng->toScriptValue<type>(central->method()); \
-    } \
-}
+    QScriptValue SWrapper::Toplevel::method(QScriptContext* ctx, QScriptEngine* eng) { \
+        KWin::Toplevel* central = extractClient(ctx->thisObject()); \
+        \
+        if (central == 0) { \
+            return QScriptValue(); \
+        } else { \
+            return eng->toScriptValue<type>(central->method()); \
+        } \
+    }
 
 #define MAP_PROTO(method) static QScriptValue method(QScriptContext* ctx, QScriptEngine* eng);
 
@@ -45,41 +45,41 @@ namespace SWrapper
 {
 
 class Toplevel : public QObject
-    {
-        Q_OBJECT
-    protected:
-        KWin::Toplevel* tl_centralObject;
+{
+    Q_OBJECT
+protected:
+    KWin::Toplevel* tl_centralObject;
 
-    private:
-        /**
-          * Naming abuse. Shoud've been extractToplevel, but let it just be
-          * for a while now :)
-          */
-        static KWin::Toplevel* extractClient(const QScriptValue&);
+private:
+    /**
+      * Naming abuse. Shoud've been extractToplevel, but let it just be
+      * for a while now :)
+      */
+    static KWin::Toplevel* extractClient(const QScriptValue&);
 
-    public:
-        //generate a new QScriptValue constructed from a
-        //Toplevel object or any of it's derived classes
-        static void tl_append(QScriptValue&, QScriptEngine*);
+public:
+    //generate a new QScriptValue constructed from a
+    //Toplevel object or any of it's derived classes
+    static void tl_append(QScriptValue&, QScriptEngine*);
 
-        static QScriptValue pos(QScriptContext* ctx, QScriptEngine* eng);
+    static QScriptValue pos(QScriptContext* ctx, QScriptEngine* eng);
 
-        // No more properties
-        /**
-          * The various properties of KWin::Toplevel.
-          */
-        MAP_PROTO(size)
-        MAP_PROTO(width)
-        MAP_PROTO(height)
-        MAP_PROTO(x)
-        MAP_PROTO(y)
-        MAP_PROTO(geometry)
-        MAP_PROTO(opacity)
-        MAP_PROTO(hasAlpha)
-        MAP_PROTO(setOpacity)
+    // No more properties
+    /**
+      * The various properties of KWin::Toplevel.
+      */
+    MAP_PROTO(size)
+    MAP_PROTO(width)
+    MAP_PROTO(height)
+    MAP_PROTO(x)
+    MAP_PROTO(y)
+    MAP_PROTO(geometry)
+    MAP_PROTO(opacity)
+    MAP_PROTO(hasAlpha)
+    MAP_PROTO(setOpacity)
 
-        Toplevel(KWin::Toplevel*);
-    };
+    Toplevel(KWin::Toplevel*);
+};
 
 }
 

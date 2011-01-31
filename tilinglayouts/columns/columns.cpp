@@ -34,131 +34,121 @@ namespace KWin
 // ( ie. not floating or minimized )
 // This can probably be moved to TilingLayout
 // and cached. But remember to preserve order!
-  
-Columns::Columns( Workspace *w )
-    : TilingLayout( w )
-    , m_leftWidth( 0 )
-    {
-    }
 
-KDecorationDefines::Position Columns::resizeMode( Client *c, KDecorationDefines::Position currentMode ) const
-    {
-    Tile *t = findTile( c );
+Columns::Columns(Workspace *w)
+    : TilingLayout(w)
+    , m_leftWidth(0)
+{
+}
 
-    if( !t )
+KDecorationDefines::Position Columns::resizeMode(Client *c, KDecorationDefines::Position currentMode) const
+{
+    Tile *t = findTile(c);
+
+    if (!t)
         return currentMode;
 
-    if( t && t->floating() )
+    if (t && t->floating())
         return currentMode;
 
-    QList<Tile *> tiled( tiles() );
+    QList<Tile *> tiled(tiles());
 
     QMutableListIterator<Tile *> i(tiled);
-    while( i.hasNext() )
-        {
+    while (i.hasNext()) {
         Tile *tile = i.next();
-        if( tile->ignoreGeometry() )
+        if (tile->ignoreGeometry())
             i.remove();
-        }
+    }
 
-    if(    tiled.first() == t
-        && (    currentMode == KDecorationDefines::PositionRight
-             || currentMode == KDecorationDefines::PositionTopRight
-             || currentMode == KDecorationDefines::PositionBottomRight ) )
-        {
+    if (tiled.first() == t
+            && (currentMode == KDecorationDefines::PositionRight
+                || currentMode == KDecorationDefines::PositionTopRight
+                || currentMode == KDecorationDefines::PositionBottomRight)) {
         return KDecorationDefines::PositionRight;
-        }
+    }
 
     // in right column so only left resize allowed
-    if(    tiled.contains( t )
-        && ( tiled.first() != t )
-        && (    currentMode == KDecorationDefines::PositionLeft
-             || currentMode == KDecorationDefines::PositionTopLeft
-             || currentMode == KDecorationDefines::PositionBottomLeft ) )
-        {
+    if (tiled.contains(t)
+            && (tiled.first() != t)
+            && (currentMode == KDecorationDefines::PositionLeft
+                || currentMode == KDecorationDefines::PositionTopLeft
+                || currentMode == KDecorationDefines::PositionBottomLeft)) {
         return KDecorationDefines::PositionLeft;
-        }
+    }
 
     return KDecorationDefines::PositionCenter;
-    }
+}
 
-bool Columns::clientResized( Client *c, const QRect &moveResizeGeom, const QRect &orig )
-    {
-    if( TilingLayout::clientResized( c, moveResizeGeom, orig ) )
+bool Columns::clientResized(Client *c, const QRect &moveResizeGeom, const QRect &orig)
+{
+    if (TilingLayout::clientResized(c, moveResizeGeom, orig))
         return true;
 
-    Tile *t = findTile( c );
+    Tile *t = findTile(c);
 
-    QList<Tile *> tiled( tiles() );
+    QList<Tile *> tiled(tiles());
 
     QMutableListIterator<Tile *> i(tiled);
-    while( i.hasNext() )
-        {
+    while (i.hasNext()) {
         Tile *tile = i.next();
-        if( tile->ignoreGeometry() )
+        if (tile->ignoreGeometry())
             i.remove();
-        }
-
-    if( tiled.first() == t )
-        {
-        m_leftWidth = moveResizeGeom.width();
-        }
-    else
-        {
-        m_leftWidth = layoutArea( t ).width() - moveResizeGeom.width();
-        }
-
-    arrange( layoutArea( t ) );
-    return true;
     }
 
-void Columns::arrange( QRect wgeom )
-    {
-    QList<Tile *> tiled( tiles() );
+    if (tiled.first() == t) {
+        m_leftWidth = moveResizeGeom.width();
+    } else {
+        m_leftWidth = layoutArea(t).width() - moveResizeGeom.width();
+    }
+
+    arrange(layoutArea(t));
+    return true;
+}
+
+void Columns::arrange(QRect wgeom)
+{
+    QList<Tile *> tiled(tiles());
 
     QMutableListIterator<Tile *> i(tiled);
-    while( i.hasNext() )
-        {
+    while (i.hasNext()) {
         Tile *t = i.next();
-        if( t->ignoreGeometry() )
+        if (t->ignoreGeometry())
             i.remove();
-        }
+    }
 
     int n = tiled.length();
-    if( n < 1 )
+    if (n < 1)
         return;
-    if( n == 1 )
-        {
-        tiled.first()->setGeometry( wgeom );
+    if (n == 1) {
+        tiled.first()->setGeometry(wgeom);
         tiled.first()->commit();
         return;
-        }
+    }
 
     // save the original before we mangle it
     int totalWidth = wgeom.width();
-    if( m_leftWidth == 0 )
+    if (m_leftWidth == 0)
         m_leftWidth = wgeom.width() / 2;
 
-    if( n > 1 )
-        wgeom.setWidth( m_leftWidth );
-    tiled.first()->setGeometry( wgeom );
+    if (n > 1)
+        wgeom.setWidth(m_leftWidth);
+    tiled.first()->setGeometry(wgeom);
     tiled.first()->commit();
 
-    wgeom.moveLeft( wgeom.x() + m_leftWidth );
-    wgeom.setWidth( totalWidth - m_leftWidth );
-    int ht = wgeom.height()/(n-1);
-    wgeom.setHeight( ht );
+    wgeom.moveLeft(wgeom.x() + m_leftWidth);
+    wgeom.setWidth(totalWidth - m_leftWidth);
+    int ht = wgeom.height() / (n - 1);
+    wgeom.setHeight(ht);
 
     int mult = 0;
     int originalTop = wgeom.y();
-    for( QList<Tile *>::const_iterator it = ++tiled.constBegin() ; it != tiled.constEnd() ; ++it )
-        {
-        if( (*it)->floating() )
+    for (QList<Tile *>::const_iterator it = ++tiled.constBegin() ; it != tiled.constEnd() ; ++it) {
+        if ((*it)->floating())
             continue;
-        (*it)->setGeometry( wgeom );
+        (*it)->setGeometry(wgeom);
         (*it)->commit();
         mult++;
-        wgeom.moveTop( originalTop + mult*ht );
-        }
+        wgeom.moveTop(originalTop + mult * ht);
     }
+}
 }

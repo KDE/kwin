@@ -27,86 +27,86 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWinDecorationButtonsConfigForm::KWinDecorationButtonsConfigForm( QWidget* parent )
-    : QWidget( parent )
-    {
-    setupUi( this );
-    }
+KWinDecorationButtonsConfigForm::KWinDecorationButtonsConfigForm(QWidget* parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
 
-KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog( bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent, Qt::WFlags flags )
-    : KDialog( parent, flags )
-    , m_customPositions( customPositions )
-    , m_showTooltip( showTooltips )
-    , m_buttonsLeft( buttonsLeft )
-    , m_buttonsRight( buttonsRight )
-    {
-    m_ui = new KWinDecorationButtonsConfigForm( this );
-    setWindowTitle( i18n("Buttons") );
-    setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default | KDialog::Reset );
-    enableButton( KDialog::Reset, false );
+KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent, Qt::WFlags flags)
+    : KDialog(parent, flags)
+    , m_customPositions(customPositions)
+    , m_showTooltip(showTooltips)
+    , m_buttonsLeft(buttonsLeft)
+    , m_buttonsRight(buttonsRight)
+{
+    m_ui = new KWinDecorationButtonsConfigForm(this);
+    setWindowTitle(i18n("Buttons"));
+    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default | KDialog::Reset);
+    enableButton(KDialog::Reset, false);
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget( m_ui );
+    layout->addWidget(m_ui);
 
-    QWidget* main = new QWidget( this );
-    main->setLayout( layout );
-    setMainWidget( main );
+    QWidget* main = new QWidget(this);
+    main->setLayout(layout);
+    setMainWidget(main);
 
-    connect( m_ui->buttonPositionWidget, SIGNAL(changed()), this, SLOT(changed()));
-    connect( m_ui->showToolTipsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect( m_ui->useCustomButtonPositionsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect( this, SIGNAL(resetClicked()), this, SLOT(slotResetClicked()));
+    connect(m_ui->buttonPositionWidget, SIGNAL(changed()), this, SLOT(changed()));
+    connect(m_ui->showToolTipsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->useCustomButtonPositionsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
+    connect(this, SIGNAL(resetClicked()), this, SLOT(slotResetClicked()));
 
     slotResetClicked();
-    }
+}
 
 KWinDecorationButtonsConfigDialog::~KWinDecorationButtonsConfigDialog()
-    {
-    }
+{
+}
 
 bool KWinDecorationButtonsConfigDialog::customPositions() const
-    {
+{
     return m_ui->useCustomButtonPositionsCheckBox->isChecked();
-    }
+}
 
 bool KWinDecorationButtonsConfigDialog::showTooltips() const
-    {
+{
     return m_ui->showToolTipsCheckBox->isChecked();
-    }
+}
 
 QString KWinDecorationButtonsConfigDialog::buttonsLeft() const
-    {
+{
     return m_ui->buttonPositionWidget->buttonsLeft();
-    }
+}
 
 QString KWinDecorationButtonsConfigDialog::buttonsRight() const
-    {
+{
     return m_ui->buttonPositionWidget->buttonsRight();
-    }
+}
 
 void KWinDecorationButtonsConfigDialog::changed()
-    {
-    enableButton( KDialog::Reset, true );
-    }
+{
+    enableButton(KDialog::Reset, true);
+}
 
 void KWinDecorationButtonsConfigDialog::slotDefaultClicked()
-    {
-    m_ui->useCustomButtonPositionsCheckBox->setChecked( false );
-    m_ui->showToolTipsCheckBox->setChecked( true );
-    m_ui->buttonPositionWidget->setButtonsLeft( KDecorationOptions::defaultTitleButtonsLeft() );
-    m_ui->buttonPositionWidget->setButtonsRight( KDecorationOptions::defaultTitleButtonsRight() );
+{
+    m_ui->useCustomButtonPositionsCheckBox->setChecked(false);
+    m_ui->showToolTipsCheckBox->setChecked(true);
+    m_ui->buttonPositionWidget->setButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
+    m_ui->buttonPositionWidget->setButtonsRight(KDecorationOptions::defaultTitleButtonsRight());
     changed();
-    }
+}
 
 void KWinDecorationButtonsConfigDialog::slotResetClicked()
-    {
-    m_ui->useCustomButtonPositionsCheckBox->setChecked( m_customPositions );
-    m_ui->showToolTipsCheckBox->setChecked( m_showTooltip );
-    m_ui->buttonPositionWidget->setButtonsLeft( m_buttonsLeft );
-    m_ui->buttonPositionWidget->setButtonsRight( m_buttonsRight );
+{
+    m_ui->useCustomButtonPositionsCheckBox->setChecked(m_customPositions);
+    m_ui->showToolTipsCheckBox->setChecked(m_showTooltip);
+    m_ui->buttonPositionWidget->setButtonsLeft(m_buttonsLeft);
+    m_ui->buttonPositionWidget->setButtonsRight(m_buttonsRight);
     changed();
-    enableButton( KDialog::Reset, false );
-    }
+    enableButton(KDialog::Reset, false);
+}
 
 } // namespace KWin
 

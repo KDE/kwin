@@ -31,79 +31,79 @@ class Client;
 class Workspace;
 
 class Tile
-    {
-    public:
-        enum Direction {
-            Top,
-            Right,
-            Bottom,
-            Left
-        };
-
-        enum LayoutMode {
-            UseRatio, // uses m_ratio
-            UseGeometry, // uses current geometry of children
-            Equal // distribute equally
-        };
-
-        Tile( Client *c, const QRect& area);
-        Tile(const Tile& orig);
-        virtual ~Tile();
-        void setGeometry(const QRect& area);
-        void setGeometry(int x, int y, int w, int h);
-
-        void resize( const QRect area );
-
-        void restorePreviousGeometry();
-        
-        void commit();
-
-        void focus();
-
-        // :| the float datatype interferes with naming
-        void floatTile();
-        void unfloatTile();
-
-        bool minimized() const;
-        bool floating() const;
-        bool ignoreGeometry() const;
-        QRect geometry() const;
-        Client* client() const;
-
-        void dumpTile( const QString& indent = "" ) const;
-
-    private:
-
-        // -------------
-        // PROPERTIES
-        // -------------
-
-        // our client
-        Client *m_client;
-
-        // tiled geometry
-        QRect m_geom;
-        // before tiling was enabled, if any
-        QRect m_prevGeom;
-
-        bool m_floating;
-
+{
+public:
+    enum Direction {
+        Top,
+        Right,
+        Bottom,
+        Left
     };
 
+    enum LayoutMode {
+        UseRatio, // uses m_ratio
+        UseGeometry, // uses current geometry of children
+        Equal // distribute equally
+    };
+
+    Tile(Client *c, const QRect& area);
+    Tile(const Tile& orig);
+    virtual ~Tile();
+    void setGeometry(const QRect& area);
+    void setGeometry(int x, int y, int w, int h);
+
+    void resize(const QRect area);
+
+    void restorePreviousGeometry();
+
+    void commit();
+
+    void focus();
+
+    // :| the float datatype interferes with naming
+    void floatTile();
+    void unfloatTile();
+
+    bool minimized() const;
+    bool floating() const;
+    bool ignoreGeometry() const;
+    QRect geometry() const;
+    Client* client() const;
+
+    void dumpTile(const QString& indent = "") const;
+
+private:
+
+    // -------------
+    // PROPERTIES
+    // -------------
+
+    // our client
+    Client *m_client;
+
+    // tiled geometry
+    QRect m_geom;
+    // before tiling was enabled, if any
+    QRect m_prevGeom;
+
+    bool m_floating;
+
+};
+
 inline QRect Tile::geometry() const
-    {
+{
     return m_geom;
-    }
+}
 
 inline Client* Tile::client() const
-    {
+{
     return m_client;
-    }
+}
 
 inline bool Tile::floating() const
-    {
+{
     return m_floating;
-    }
+}
 
 /*
  * should be respected by all geometry modifying methods.
@@ -111,14 +111,14 @@ inline bool Tile::floating() const
  * due to being minimized, floating or for some other reason.
  */
 inline bool Tile::ignoreGeometry() const
-    {
+{
     return minimized() || floating();
-    }
+}
 
 inline void Tile::setGeometry(const QRect& area)
-    {
+{
     setGeometry(area.x(), area.y(), area.width(), area.height());
-    }
+}
 
 } // namespace
 #endif

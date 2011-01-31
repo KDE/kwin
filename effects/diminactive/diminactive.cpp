@@ -26,120 +26,113 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( diminactive, DimInactiveEffect )
+KWIN_EFFECT(diminactive, DimInactiveEffect)
 
 DimInactiveEffect::DimInactiveEffect()
-    {
-    reconfigure( ReconfigureAll );
-    timeline.setDuration( animationTime( 250 ));
-    previousActiveTimeline.setDuration( animationTime( 250 ));
+{
+    reconfigure(ReconfigureAll);
+    timeline.setDuration(animationTime(250));
+    previousActiveTimeline.setDuration(animationTime(250));
     active = effects->activeWindow();
     previousActive = NULL;
-    }
+}
 
-void DimInactiveEffect::reconfigure( ReconfigureFlags )
-    {
+void DimInactiveEffect::reconfigure(ReconfigureFlags)
+{
     KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
     dim_panels = conf.readEntry("DimPanels", false);
     dim_desktop = conf.readEntry("DimDesktop", false);
     dim_keepabove = conf.readEntry("DimKeepAbove", false);
     dim_by_group = conf.readEntry("DimByGroup", true);
     dim_strength = conf.readEntry("Strength", 25);
-    }
+}
 
-void DimInactiveEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void DimInactiveEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
     double oldValue = timeline.value();
-    if( effects->activeFullScreenEffect() )
-        timeline.removeTime( time );
+    if (effects->activeFullScreenEffect())
+        timeline.removeTime(time);
     else
-        timeline.addTime( time );
-    if( oldValue != timeline.value() )
+        timeline.addTime(time);
+    if (oldValue != timeline.value())
         effects->addRepaintFull();
-    if( previousActive )
-        { // We are fading out the previous window
+    if (previousActive) {
+        // We are fading out the previous window
         previousActive->addRepaintFull();
-        previousActiveTimeline.addTime( time );
-        }
-    effects->prePaintScreen( data, time );
+        previousActiveTimeline.addTime(time);
     }
+    effects->prePaintScreen(data, time);
+}
 
-void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( dimWindow( w ) || w == previousActive )
-        {
+void DimInactiveEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (dimWindow(w) || w == previousActive) {
         double previous = 1.0;
-        if( w == previousActive )
+        if (w == previousActive)
             previous = previousActiveTimeline.value();
-        if( previousActiveTimeline.value() == 1.0 )
+        if (previousActiveTimeline.value() == 1.0)
             previousActive = NULL;
-        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous );
-        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous );
-        }
-    effects->paintWindow( w, mask, region, data );
+        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous);
+        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous);
     }
+    effects->paintWindow(w, mask, region, data);
+}
 
-bool DimInactiveEffect::dimWindow( const EffectWindow* w ) const
-    {
-    if( effects->activeWindow() == w )
+bool DimInactiveEffect::dimWindow(const EffectWindow* w) const
+{
+    if (effects->activeWindow() == w)
         return false; // never dim active window
-    if( active && dim_by_group && active->group() == w->group())
+    if (active && dim_by_group && active->group() == w->group())
         return false; // don't dim in active group if configured so
-    if( w->isDock() && !dim_panels )
+    if (w->isDock() && !dim_panels)
         return false; // don't dim panels if configured so
-    if( w->isDesktop() && !dim_desktop )
+    if (w->isDesktop() && !dim_desktop)
         return false; // don't dim the desktop if configured so
-    if( w->keepAbove() && !dim_keepabove )
+    if (w->keepAbove() && !dim_keepabove)
         return false; // don't dim keep-above windows if configured so
-    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock() && !w->isDesktop())
+    if (!w->isNormalWindow() && !w->isDialog() && !w->isDock() && !w->isDesktop())
         return false; // don't dim more special window types
     // don't dim unmanaged windows, grouping doesn't work for them and maybe dimming
     // them doesn't make sense in general (they should be short-lived anyway)
-    if( !w->isManaged())
+    if (!w->isManaged())
         return false;
     return true; // dim the rest
-    }
+}
 
-void DimInactiveEffect::windowDeleted( EffectWindow* w )
-    {
-    if( w == previousActive )
+void DimInactiveEffect::windowDeleted(EffectWindow* w)
+{
+    if (w == previousActive)
         previousActive = NULL;
-    }
+}
 
-void DimInactiveEffect::windowActivated( EffectWindow* w )
-    {
-    if( active != NULL )
-        {
+void DimInactiveEffect::windowActivated(EffectWindow* w)
+{
+    if (active != NULL) {
         previousActive = active;
-        previousActiveTimeline.setProgress( 0.0 );
-        if( !dimWindow( previousActive ) )
+        previousActiveTimeline.setProgress(0.0);
+        if (!dimWindow(previousActive))
             previousActive = NULL;
 
-        if( dim_by_group )
-            {
-            if(( w == NULL || w->group() != active->group()) && active->group() != NULL )
-                { // repaint windows that are no longer in the active group
-                foreach( EffectWindow* tmp, active->group()->members())
-                    tmp->addRepaintFull();
-                }
+        if (dim_by_group) {
+            if ((w == NULL || w->group() != active->group()) && active->group() != NULL) {
+                // repaint windows that are no longer in the active group
+                foreach (EffectWindow * tmp, active->group()->members())
+                tmp->addRepaintFull();
             }
-        else
+        } else
             active->addRepaintFull();
-        }
-    active = w;
-    if( active != NULL )
-        {
-        if( dim_by_group )
-            {
-            if( active->group() != NULL )
-                { // repaint newly active windows
-                foreach( EffectWindow* tmp, active->group()->members())
-                    tmp->addRepaintFull();
-                }
-            }
-        else
-            active->addRepaintFull();
-       }
     }
+    active = w;
+    if (active != NULL) {
+        if (dim_by_group) {
+            if (active->group() != NULL) {
+                // repaint newly active windows
+                foreach (EffectWindow * tmp, active->group()->members())
+                tmp->addRepaintFull();
+            }
+        } else
+            active->addRepaintFull();
+    }
+}
 
 } // namespace

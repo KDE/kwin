@@ -30,39 +30,39 @@ namespace KWin
 class HowtoEffect
 // Inherit from the base class for effects.
     : public Effect
-    {
-    public:
-        // There are two kinds of functions in an effect:
-        
-        // Functions related to painting: These allow the effect to affect painting.
+{
+public:
+    // There are two kinds of functions in an effect:
 
-        // A pre-paint function. It tells the compositing code how the painting will
-        // be affected by this effect.        
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        
-        // A paint function. It actually performs the modifications to the painting.
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        
-        // A post-paint function. It can be used for cleanups after painting, but with animations
-        // it is also used to trigger repaints during the next painting pass by manually "damaging"
-        // areas of the window.
-        virtual void postPaintWindow( EffectWindow* w );
-        
-        // Notification functions: These inform the effect about changes such as a new window
-        // being activated.
+    // Functions related to painting: These allow the effect to affect painting.
 
-        // The given window has been closed.
-        virtual void windowClosed( EffectWindow* c );
-        
-        // The given window has been activated.
-        virtual void windowActivated( EffectWindow* c );
-    private:
-        // The window that will be faded out and in again.
-        EffectWindow* fade_window;
-        
-        // The progress of the fading.
-        int progress;
-    };
+    // A pre-paint function. It tells the compositing code how the painting will
+    // be affected by this effect.
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+
+    // A paint function. It actually performs the modifications to the painting.
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+
+    // A post-paint function. It can be used for cleanups after painting, but with animations
+    // it is also used to trigger repaints during the next painting pass by manually "damaging"
+    // areas of the window.
+    virtual void postPaintWindow(EffectWindow* w);
+
+    // Notification functions: These inform the effect about changes such as a new window
+    // being activated.
+
+    // The given window has been closed.
+    virtual void windowClosed(EffectWindow* c);
+
+    // The given window has been activated.
+    virtual void windowActivated(EffectWindow* c);
+private:
+    // The window that will be faded out and in again.
+    EffectWindow* fade_window;
+
+    // The progress of the fading.
+    int progress;
+};
 
 } // namespace
 

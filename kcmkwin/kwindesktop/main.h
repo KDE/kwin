@@ -36,55 +36,55 @@ static const int maxDesktops = 20;
 static const int defaultDesktops = 4;
 
 class KWinDesktopConfigForm : public QWidget, public Ui::KWinDesktopConfigForm
-    {
+{
     Q_OBJECT
 
-    public:
-        explicit KWinDesktopConfigForm( QWidget* parent );
-    };
+public:
+    explicit KWinDesktopConfigForm(QWidget* parent);
+};
 
 class KWinDesktopConfig : public KCModule
-    {
+{
     Q_OBJECT
 
-    public:
-        explicit KWinDesktopConfig( QWidget* parent, const QVariantList& args );
-        ~KWinDesktopConfig();
-        QString cachedDesktopName( int desktop );
+public:
+    explicit KWinDesktopConfig(QWidget* parent, const QVariantList& args);
+    ~KWinDesktopConfig();
+    QString cachedDesktopName(int desktop);
 
-        // undo all changes
-        void undo();
+    // undo all changes
+    void undo();
 
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
 
-    private slots:
-        void slotChangeShortcuts( int number );
-        void slotShowAllShortcuts();
-        void slotEffectSelectionChanged( int index );
-        void slotAboutEffectClicked();
-        void slotConfigureEffectClicked();
+private slots:
+    void slotChangeShortcuts(int number);
+    void slotShowAllShortcuts();
+    void slotEffectSelectionChanged(int index);
+    void slotAboutEffectClicked();
+    void slotConfigureEffectClicked();
 
-    private:
-        void init();
-        bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
-        QString extrapolatedShortcut( int desktop ) const;
+private:
+    void init();
+    bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
+    QString extrapolatedShortcut(int desktop) const;
 
-    private:
-        KWinDesktopConfigForm* m_ui;
-        KSharedConfigPtr m_config;
-        // cache for desktop names given by NETRootInfo
-        // needed as the widget only stores the names for actual number of desktops
-        QStringList m_desktopNames;
-        // Collection for switching desktops like ctrl+f1
-        KActionCollection* m_actionCollection;
-        // Collection for next, previous, up, down desktop
-        KActionCollection* m_switchDesktopCollection;
-        KShortcutsEditor* m_editor;
-    };
+private:
+    KWinDesktopConfigForm* m_ui;
+    KSharedConfigPtr m_config;
+    // cache for desktop names given by NETRootInfo
+    // needed as the widget only stores the names for actual number of desktops
+    QStringList m_desktopNames;
+    // Collection for switching desktops like ctrl+f1
+    KActionCollection* m_actionCollection;
+    // Collection for next, previous, up, down desktop
+    KActionCollection* m_switchDesktopCollection;
+    KShortcutsEditor* m_editor;
+};
 
 } // namespace
 

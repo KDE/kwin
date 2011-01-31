@@ -28,7 +28,7 @@
 ** functionality provided by Qt Designer and its related libraries.
 **
 ** Trolltech reserves all rights not expressly granted herein.
-** 
+**
 ** Trolltech ASA (c) 2007
 **
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -44,16 +44,16 @@
     Class* self = qscriptvalue_cast<Class*>(ctx->thisObject()); \
     if (!self) { \
         return ctx->throwError(QScriptContext::TypeError, \
-            QString::fromLatin1("%0.prototype.%1: this object is not a %0") \
-            .arg(#Class).arg(#__fn__)); \
+                               QString::fromLatin1("%0.prototype.%1: this object is not a %0") \
+                               .arg(#Class).arg(#__fn__)); \
     }
 
 #define DECLARE_SELF2(Class, __fn__, __ret__) \
     Class* self = qscriptvalue_cast<Class*>(thisObject()); \
     if (!self) { \
         context()->throwError(QScriptContext::TypeError, \
-            QString::fromLatin1("%0.prototype.%1: this object is not a %0") \
-            .arg(#Class).arg(#__fn__)); \
+                              QString::fromLatin1("%0.prototype.%1: this object is not a %0") \
+                              .arg(#Class).arg(#__fn__)); \
         return __ret__; \
     }
 
@@ -66,10 +66,10 @@
     ADD_METHOD(__p__, __get__)
 
 #define ADD_GET_SET_METHODS(__p__, __get__, __set__) \
-do { \
-    ADD_METHOD(__p__, __get__); \
-    ADD_METHOD(__p__, __set__); \
-} while (0);
+    do { \
+        ADD_METHOD(__p__, __get__); \
+        ADD_METHOD(__p__, __set__); \
+    } while (0);
 
 #define ADD_CTOR_FUNCTION(__c__, __f__) ADD_METHOD(__c__, __f__)
 
@@ -78,41 +78,41 @@ do { \
 
 
 #define BEGIN_DECLARE_METHOD(Class, __mtd__) \
-static QScriptValue __mtd__(QScriptContext *ctx, QScriptEngine *eng) \
-{ \
-    DECLARE_SELF(Class, __mtd__);
+    static QScriptValue __mtd__(QScriptContext *ctx, QScriptEngine *eng) \
+    { \
+        DECLARE_SELF(Class, __mtd__);
 
 #define END_DECLARE_METHOD \
-}
+    }
 
 
 #define DECLARE_GET_METHOD(Class, __get__) \
-BEGIN_DECLARE_METHOD(Class, __get__) { \
-    return qScriptValueFromValue(eng, self->__get__()); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __get__) { \
+        return qScriptValueFromValue(eng, self->__get__()); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_SET_METHOD(Class, T, __set__) \
-BEGIN_DECLARE_METHOD(Class, __set__) { \
-    self->__set__(qscriptvalue_cast<T>(ctx->argument(0))); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __set__) { \
+        self->__set__(qscriptvalue_cast<T>(ctx->argument(0))); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_GET_SET_METHODS(Class, T, __get__, __set__) \
-DECLARE_GET_METHOD(Class, /*T,*/ __get__) \
-DECLARE_SET_METHOD(Class, T, __set__)
+    DECLARE_GET_METHOD(Class, /*T,*/ __get__) \
+    DECLARE_SET_METHOD(Class, T, __set__)
 
 
 
 #define DECLARE_SIMPLE_GET_METHOD(Class, __get__) \
-BEGIN_DECLARE_METHOD(Class, __get__) { \
-    return QScriptValue(eng, self->__get__()); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __get__) { \
+        return QScriptValue(eng, self->__get__()); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_SIMPLE_SET_METHOD(Class, ToType, __set__) \
-BEGIN_DECLARE_METHOD(Class, __set__) { \
-    self->__set__(ctx->argument(0).ToType()); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __set__) { \
+        self->__set__(ctx->argument(0).ToType()); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_BOOLEAN_GET_METHOD(Class, __set__) \
     DECLARE_SIMPLE_GET_METHOD(Class, __set__)
@@ -135,9 +135,9 @@ BEGIN_DECLARE_METHOD(Class, __set__) { \
     DECLARE_SIMPLE_SET_METHOD(Class, toString, __set__)
 
 #define DECLARE_QOBJECT_GET_METHOD(Class, __get__) \
-BEGIN_DECLARE_METHOD(Class, __get__) { \
-    return eng->newQObject(self->__get__()); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __get__) { \
+        return eng->newQObject(self->__get__()); \
+    } END_DECLARE_METHOD
 #define DECLARE_QOBJECT_SET_METHOD(Class, __set__) \
     DECLARE_SIMPLE_SET_METHOD(Class, toQObject, __set__)
 
@@ -163,39 +163,39 @@ BEGIN_DECLARE_METHOD(Class, __get__) { \
 
 
 #define DECLARE_VOID_METHOD(Class, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    self->__fun__(); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        self->__fun__(); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_VOID_NUMBER_METHOD(Class, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    self->__fun__(ctx->argument(0).toNumber()); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        self->__fun__(ctx->argument(0).toNumber()); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_VOID_NUMBER_NUMBER_METHOD(Class, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    self->__fun__(ctx->argument(0).toNumber(), ctx->argument(1).toNumber()); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        self->__fun__(ctx->argument(0).toNumber(), ctx->argument(1).toNumber()); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_VOID_QUAD_NUMBER_METHOD(Class, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    self->__fun__(ctx->argument(0).toNumber(), ctx->argument(1).toNumber(), ctx->argument(2).toNumber(), ctx->argument(3).toNumber()); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        self->__fun__(ctx->argument(0).toNumber(), ctx->argument(1).toNumber(), ctx->argument(2).toNumber(), ctx->argument(3).toNumber()); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_VOID_1ARG_METHOD(Class, ArgType, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    self->__fun__(qscriptvalue_cast<ArgType>(ctx->argument(0))); \
-    return eng->undefinedValue(); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        self->__fun__(qscriptvalue_cast<ArgType>(ctx->argument(0))); \
+        return eng->undefinedValue(); \
+    } END_DECLARE_METHOD
 
 #define DECLARE_BOOLEAN_1ARG_METHOD(Class, ArgType, __fun__) \
-BEGIN_DECLARE_METHOD(Class, __fun__) { \
-    return QScriptValue(eng, self->__fun__(qscriptvalue_cast<ArgType>(ctx->argument(0)))); \
-} END_DECLARE_METHOD
+    BEGIN_DECLARE_METHOD(Class, __fun__) { \
+        return QScriptValue(eng, self->__fun__(qscriptvalue_cast<ArgType>(ctx->argument(0)))); \
+    } END_DECLARE_METHOD
 
 
 #define DECLARE_POINTER_METATYPE(T) \
@@ -216,42 +216,36 @@ public:
     typedef T* pointer_type;
     typedef QExplicitlySharedDataPointer<Pointer<T> > wrapped_pointer_type;
 
-    ~Pointer()
-    {
+    ~Pointer() {
         if (!(m_flags & UserOwnership))
             delete m_value;
     }
 
-    operator T*()
-    {
+    operator T*() {
         return m_value;
     }
 
-    operator const T*() const
-    {
+    operator const T*() const {
         return m_value;
     }
 
-    static wrapped_pointer_type create(T *value, uint flags = 0)
-    {
+    static wrapped_pointer_type create(T *value, uint flags = 0) {
         return wrapped_pointer_type(new Pointer(value, flags));
     }
 
-    static QScriptValue toScriptValue(QScriptEngine *engine, T* const &source)
-    {
+    static QScriptValue toScriptValue(QScriptEngine *engine, T* const &source) {
         if (!source)
             return engine->nullValue();
         return engine->newVariant(qVariantFromValue(source));
     }
 
-    static void fromScriptValue(const QScriptValue &value, T* &target)
-    {
+    static void fromScriptValue(const QScriptValue &value, T* &target) {
         if (value.isVariant()) {
             QVariant var = value.toVariant();
             if (qVariantCanConvert<T*>(var)) {
                 target = qvariant_cast<T*>(var);
             } else if (qVariantCanConvert<wrapped_pointer_type>(var)) {
-                target = qvariant_cast<wrapped_pointer_type>(var)->operator T*();
+                target = qvariant_cast<wrapped_pointer_type>(var)->operator T * ();
             } else {
                 // look in prototype chain
                 target = 0;
@@ -263,7 +257,7 @@ public:
                     if ((type == protoType) || (pointerType == protoType)) {
                         QByteArray name = QMetaType::typeName(var.userType());
                         if (name.startsWith("QScript::Pointer<")) {
-                            target = (*reinterpret_cast<wrapped_pointer_type*>(var.data()))->operator T*();
+                            target = (*reinterpret_cast<wrapped_pointer_type*>(var.data()))->operator T * ();
                             break;
                         } else {
                             target = static_cast<T*>(var.data());
@@ -276,18 +270,21 @@ public:
         } else if (value.isQObject()) {
             QObject *qobj = value.toQObject();
             QByteArray typeName = QMetaType::typeName(qMetaTypeId<T*>());
-            target = reinterpret_cast<T*>(qobj->qt_metacast(typeName.left(typeName.size()-1)));
+            target = reinterpret_cast<T*>(qobj->qt_metacast(typeName.left(typeName.size() - 1)));
         } else {
             target = 0;
         }
     }
 
-    uint flags() const
-    { return m_flags; }
-    void setFlags(uint flags)
-    { m_flags = flags; }
-    void unsetFlags(uint flags)
-    { m_flags &= ~flags; }
+    uint flags() const {
+        return m_flags;
+    }
+    void setFlags(uint flags) {
+        m_flags = flags;
+    }
+    void unsetFlags(uint flags) {
+        m_flags &= ~flags;
+    }
 
 protected:
     Pointer(T* value, uint flags)
@@ -306,7 +303,7 @@ int registerPointerMetaType(
     T * /* dummy */ = 0
 )
 {
-    QScriptValue (*mf)(QScriptEngine *, T* const &) = Pointer<T>::toScriptValue;
+    QScriptValue(*mf)(QScriptEngine *, T * const &) = Pointer<T>::toScriptValue;
     void (*df)(const QScriptValue &, T* &) = Pointer<T>::fromScriptValue;
     const int id = qMetaTypeId<T*>();
     qScriptRegisterMetaType_helper(
@@ -347,7 +344,8 @@ inline QScriptValue wrapPointer(QScriptEngine *eng, T *ptr, uint flags = 0)
 
 #ifdef QGRAPHICSITEM_H
 
-namespace QScript {
+namespace QScript
+{
 
 template <class T>
 inline QScriptValue wrapGVPointer(QScriptEngine *eng, T *item)

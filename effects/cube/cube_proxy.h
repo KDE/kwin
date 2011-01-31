@@ -29,15 +29,15 @@ class CubeInsideEffect;
 
 class CubeEffectProxy
 {
-    public:
-        CubeEffectProxy( CubeEffect* effect );
-        ~CubeEffectProxy();
+public:
+    CubeEffectProxy(CubeEffect* effect);
+    ~CubeEffectProxy();
 
-        void registerCubeInsideEffect( CubeInsideEffect* effect );
-        void unregisterCubeInsideEffect( CubeInsideEffect* effect );
+    void registerCubeInsideEffect(CubeInsideEffect* effect);
+    void unregisterCubeInsideEffect(CubeInsideEffect* effect);
 
-    private:
-        CubeEffect* m_effect;
+private:
+    CubeEffect* m_effect;
 };
 
 } // namespace

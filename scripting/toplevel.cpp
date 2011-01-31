@@ -24,21 +24,20 @@ Q_DECLARE_METATYPE(SWrapper::Toplevel*)
 
 SWrapper::Toplevel::Toplevel(KWin::Toplevel* tlevel)
     : QObject(tlevel)
-    {
+{
     tl_centralObject = 0;
-    }
+}
 
 KWin::Toplevel* SWrapper::Toplevel::extractClient(const QScriptValue& value)
-    {
+{
     SWrapper::Toplevel* tlevel = qscriptvalue_cast<SWrapper::Toplevel*>(value);
 
-    if(tlevel != 0)
-        {
+    if (tlevel != 0) {
         return tlevel->tl_centralObject;
-        }
+    }
 
     return 0;
-    }
+}
 
 MAP_GET(int, x)
 MAP_GET(int, y)
@@ -50,55 +49,43 @@ MAP_GET(double, opacity)
 MAP_GET(bool, hasAlpha)
 
 QScriptValue SWrapper::Toplevel::pos(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::Toplevel* central = extractClient(ctx->thisObject());
 
-    if(central == 0)
-        {
+    if (central == 0) {
         return QScriptValue();
-        }
-    else
-        {
+    } else {
         return eng->toScriptValue(central->pos());
-        }
     }
+}
 
 QScriptValue SWrapper::Toplevel::setOpacity(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::Toplevel* central = extractClient(ctx->thisObject());
 
-    if(central == 0)
-        {
+    if (central == 0) {
         return eng->toScriptValue<bool>(0);
-        }
-    else
-        {
+    } else {
         QScriptValue opac = ctx->argument(0);
-        if(opac.isUndefined() || !opac.isNumber())
-            {
+        if (opac.isUndefined() || !opac.isNumber()) {
             return eng->toScriptValue<bool>(0);
-            }
-        else
-            {
+        } else {
             qsreal _opac = opac.toNumber();
             // For some access restrictions, setting any window
             // completely transperent is not allowed. As if, a window
             // with 0.001 is perceptible. huh
-            if((_opac > 1) || (_opac <= 0))
-                {
+            if ((_opac > 1) || (_opac <= 0)) {
                 return eng->toScriptValue<bool>(0);
-                }
-            else
-                {
+            } else {
                 central->setOpacity(_opac);
                 return eng->toScriptValue<bool>(1);
-                }
             }
         }
     }
+}
 
 void SWrapper::Toplevel::tl_append(QScriptValue& value, QScriptEngine* eng)
-    {
+{
     QScriptValue func = eng->newFunction(pos, 0);
     value.setProperty("pos", func, QScriptValue::Undeletable);
     value.setProperty("x", eng->newFunction(x, 0), QScriptValue::Undeletable);
@@ -110,4 +97,4 @@ void SWrapper::Toplevel::tl_append(QScriptValue& value, QScriptEngine* eng)
     value.setProperty("opacity", eng->newFunction(opacity, 0), QScriptValue::Undeletable);
     value.setProperty("hasAlpha", eng->newFunction(hasAlpha, 0), QScriptValue::Undeletable);
     value.setProperty("setOpacity", eng->newFunction(setOpacity, 1), QScriptValue::Undeletable);
-    }
+}

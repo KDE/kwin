@@ -39,12 +39,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new LookingGlassEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -53,37 +53,37 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->radiusSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    
+
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
     m_actionCollection->setConfigGroup("LookingGlass");
     m_actionCollection->setConfigGlobal(true);
-    
+
     KAction* a;
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomIn));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomIn));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
 
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomOut));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomOut));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
 
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ActualSize));
+    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ActualSize));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     m_ui->editor->addCollection(m_actionCollection);
-    }
+}
 
 LookingGlassEffectConfig::~LookingGlassEffectConfig()
-    {
+{
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    }
+}
 
 void LookingGlassEffectConfig::load()
-    {
+{
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
@@ -91,10 +91,10 @@ void LookingGlassEffectConfig::load()
     int radius = conf.readEntry("Radius", 200);
     m_ui->radiusSpin->setValue(radius);
     emit changed(false);
-    }
+}
 
 void LookingGlassEffectConfig::save()
-    {
+{
     kDebug(1212) << "Saving config of LookingGlass" ;
     //KCModule::save();
 
@@ -107,15 +107,15 @@ void LookingGlassEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "lookingglass" );
-    }
+    EffectsHandler::sendReloadMessage("lookingglass");
+}
 
 void LookingGlassEffectConfig::defaults()
-    {
+{
     m_ui->radiusSpin->setValue(200);
     m_ui->editor->allDefault();
     emit changed(true);
-    }
+}
 
 
 } // namespace

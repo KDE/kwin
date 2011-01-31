@@ -31,113 +31,119 @@ class KConfig;
 
 class ToolTipComboBox: public KComboBox
 {
-  Q_OBJECT
-    
+    Q_OBJECT
+
 public:
-  ToolTipComboBox(QWidget * owner, char const * const * toolTips_)
-    : KComboBox(owner)
-    , toolTips(toolTips_) {}
+    ToolTipComboBox(QWidget * owner, char const * const * toolTips_)
+        : KComboBox(owner)
+        , toolTips(toolTips_) {}
 
 public slots:
-  void changed() {this->setToolTip( i18n(toolTips[currentIndex()]) );}
+    void changed() {
+        this->setToolTip(i18n(toolTips[currentIndex()]));
+    }
 
 protected:
-  char const * const * toolTips;
+    char const * const * toolTips;
 };
 
 
 
 class KTitleBarActionsConfig : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  KTitleBarActionsConfig( bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent );
-  ~KTitleBarActionsConfig( );
+    KTitleBarActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent);
+    ~KTitleBarActionsConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
-  void showEvent( QShowEvent *ev );
+    void showEvent(QShowEvent *ev);
 
 public slots:
-	void changed() { emit KCModule::changed(true); }
+    void changed() {
+        emit KCModule::changed(true);
+    }
 
 private:
-  KComboBox* coTiDbl;
+    KComboBox* coTiDbl;
 
-  KComboBox* coTiAct1;
-  KComboBox* coTiAct2;
-  KComboBox* coTiAct3;
-  KComboBox* coTiAct4;  
-  KComboBox* coTiInAct1;
-  KComboBox* coTiInAct2;
-  KComboBox* coTiInAct3;
+    KComboBox* coTiAct1;
+    KComboBox* coTiAct2;
+    KComboBox* coTiAct3;
+    KComboBox* coTiAct4;
+    KComboBox* coTiInAct1;
+    KComboBox* coTiInAct2;
+    KComboBox* coTiInAct3;
 
-  ToolTipComboBox * coMax[3];
+    ToolTipComboBox * coMax[3];
 
-  KConfig *config;
-  bool standAlone;
+    KConfig *config;
+    bool standAlone;
 
-  const char* functionTiDbl(int);
-  const char* functionTiAc(int);
-  const char* functionTiWAc(int);  
-  const char* functionTiInAc(int);
-  const char* functionMax(int);
+    const char* functionTiDbl(int);
+    const char* functionTiAc(int);
+    const char* functionTiWAc(int);
+    const char* functionTiInAc(int);
+    const char* functionMax(int);
 
-  void setComboText(KComboBox* combo, const char* text);
-  const char* fixup( const char* s );
+    void setComboText(KComboBox* combo, const char* text);
+    const char* fixup(const char* s);
 
 private slots:
-  void paletteChanged();
+    void paletteChanged();
 
 };
 
 class KWindowActionsConfig : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  KWindowActionsConfig( bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent );
-  ~KWindowActionsConfig( );
+    KWindowActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent);
+    ~KWindowActionsConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
-  void showEvent( QShowEvent *ev );
+    void showEvent(QShowEvent *ev);
 
 public slots:
-	void changed() { emit KCModule::changed(true); }
+    void changed() {
+        emit KCModule::changed(true);
+    }
 
 private:
-  KComboBox* coWin1;
-  KComboBox* coWin2;
-  KComboBox* coWin3;
-  KComboBox* coWinWheel;
+    KComboBox* coWin1;
+    KComboBox* coWin2;
+    KComboBox* coWin3;
+    KComboBox* coWinWheel;
 
-  KComboBox* coAllKey;
-  KComboBox* coAll1;
-  KComboBox* coAll2;
-  KComboBox* coAll3;
-  KComboBox* coAllW;
+    KComboBox* coAllKey;
+    KComboBox* coAll1;
+    KComboBox* coAll2;
+    KComboBox* coAll3;
+    KComboBox* coAllW;
 
-  KConfig *config;
-  bool standAlone;
+    KConfig *config;
+    bool standAlone;
 
-  const char* functionWin(int);
-  const char* functionWinWheel(int);
-  const char* functionAllKey(int);
-  const char* functionAll(int);
-  const char* functionAllW(int);
+    const char* functionWin(int);
+    const char* functionWinWheel(int);
+    const char* functionAllKey(int);
+    const char* functionAll(int);
+    const char* functionAllW(int);
 
-  void setComboText(KComboBox* combo, const char* text);
-  const char* fixup( const char* s );
+    void setComboText(KComboBox* combo, const char* text);
+    const char* fixup(const char* s);
 };
 
 #endif

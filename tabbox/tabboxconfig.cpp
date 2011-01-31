@@ -25,57 +25,55 @@ namespace KWin
 namespace TabBox
 {
 class TabBoxConfigPrivate
-    {
-    public:
-        TabBoxConfigPrivate()
-            : showTabBox( TabBoxConfig::defaultShowTabBox() )
-            , highlightWindows( TabBoxConfig::defaultHighlightWindow() )
-            , showOutline( TabBoxConfig::defaultShowOutline() )
-            , tabBoxMode( TabBoxConfig::ClientTabBox )
-            , layout( TabBoxConfig::defaultLayoutMode() )
-            , clientListMode( TabBoxConfig::defaultListMode() )
-            , clientSwitchingMode( TabBoxConfig::defaultSwitchingMode() )
-            , desktopSwitchingMode( TabBoxConfig::MostRecentlyUsedDesktopSwitching )
-            , selectedItemViewPosition( TabBoxConfig::defaultSelectedItemViewPosition() )
-            , minWidth( TabBoxConfig::defaultMinWidth() )
-            , minHeight( TabBoxConfig::defaultMinHeight() )
-            , layoutName( TabBoxConfig::defaultLayoutName() )
-            , selectedItemLayoutName( TabBoxConfig::defaultSelectedItemLayoutName() )
-            , showDesktop( TabBoxConfig::defaultShowDesktop() )
-            {
-            }
-        ~TabBoxConfigPrivate()
-            {
-            }
-        bool showTabBox;
-        bool highlightWindows;
-        bool showOutline;
+{
+public:
+    TabBoxConfigPrivate()
+        : showTabBox(TabBoxConfig::defaultShowTabBox())
+        , highlightWindows(TabBoxConfig::defaultHighlightWindow())
+        , showOutline(TabBoxConfig::defaultShowOutline())
+        , tabBoxMode(TabBoxConfig::ClientTabBox)
+        , layout(TabBoxConfig::defaultLayoutMode())
+        , clientListMode(TabBoxConfig::defaultListMode())
+        , clientSwitchingMode(TabBoxConfig::defaultSwitchingMode())
+        , desktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching)
+        , selectedItemViewPosition(TabBoxConfig::defaultSelectedItemViewPosition())
+        , minWidth(TabBoxConfig::defaultMinWidth())
+        , minHeight(TabBoxConfig::defaultMinHeight())
+        , layoutName(TabBoxConfig::defaultLayoutName())
+        , selectedItemLayoutName(TabBoxConfig::defaultSelectedItemLayoutName())
+        , showDesktop(TabBoxConfig::defaultShowDesktop()) {
+    }
+    ~TabBoxConfigPrivate() {
+    }
+    bool showTabBox;
+    bool highlightWindows;
+    bool showOutline;
 
-        TabBoxConfig::TabBoxMode tabBoxMode;
-        TabBoxConfig::LayoutMode layout;
-        TabBoxConfig::ClientListMode clientListMode;
-        TabBoxConfig::ClientSwitchingMode clientSwitchingMode;
-        TabBoxConfig::DesktopSwitchingMode desktopSwitchingMode;
-        TabBoxConfig::SelectedItemViewPosition selectedItemViewPosition;
-        int minWidth;
-        int minHeight;
-        QString layoutName;
-        QString selectedItemLayoutName;
-        bool showDesktop;
-    };
+    TabBoxConfig::TabBoxMode tabBoxMode;
+    TabBoxConfig::LayoutMode layout;
+    TabBoxConfig::ClientListMode clientListMode;
+    TabBoxConfig::ClientSwitchingMode clientSwitchingMode;
+    TabBoxConfig::DesktopSwitchingMode desktopSwitchingMode;
+    TabBoxConfig::SelectedItemViewPosition selectedItemViewPosition;
+    int minWidth;
+    int minHeight;
+    QString layoutName;
+    QString selectedItemLayoutName;
+    bool showDesktop;
+};
 
 TabBoxConfig::TabBoxConfig()
-    : d( new TabBoxConfigPrivate )
-    {
-    }
+    : d(new TabBoxConfigPrivate)
+{
+}
 
 TabBoxConfig::~TabBoxConfig()
-    {
+{
     delete d;
-    }
+}
 
-TabBoxConfig& TabBoxConfig::operator=( const KWin::TabBox::TabBoxConfig& object )
-    {
+TabBoxConfig& TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig& object)
+{
     d->showTabBox = object.isShowTabBox();
     d->highlightWindows = object.isHighlightWindows();
     d->showOutline = object.isShowOutline();
@@ -91,147 +89,147 @@ TabBoxConfig& TabBoxConfig::operator=( const KWin::TabBox::TabBoxConfig& object 
     d->minHeight = object.minHeight();
     d->layoutName = object.layoutName();
     return *this;
-    }
+}
 
-void TabBoxConfig::setHighlightWindows( bool highlight )
-    {
+void TabBoxConfig::setHighlightWindows(bool highlight)
+{
     d->highlightWindows = highlight;
-    }
+}
 
 bool TabBoxConfig::isHighlightWindows() const
-    {
+{
     return d->highlightWindows;
-    }
+}
 
-void TabBoxConfig::setShowOutline( bool show )
-    {
+void TabBoxConfig::setShowOutline(bool show)
+{
     d->showOutline = show;
-    }
+}
 
 bool TabBoxConfig::isShowOutline() const
-    {
+{
     return d->showOutline;
-    }
+}
 
-void TabBoxConfig::setShowTabBox( bool show )
-    {
+void TabBoxConfig::setShowTabBox(bool show)
+{
     d->showTabBox = show;
-    }
+}
 
 bool TabBoxConfig::isShowTabBox() const
-    {
+{
     return d->showTabBox;
-    }
+}
 
 void TabBoxConfig::setTabBoxMode(TabBoxConfig::TabBoxMode mode)
-    {
+{
     d->tabBoxMode = mode;
-    }
+}
 
 TabBoxConfig::TabBoxMode TabBoxConfig::tabBoxMode() const
-    {
+{
     return d->tabBoxMode;
-    }
+}
 
-void TabBoxConfig::setLayout( TabBoxConfig::LayoutMode layout )
-    {
+void TabBoxConfig::setLayout(TabBoxConfig::LayoutMode layout)
+{
     d->layout = layout;
-    }
+}
 
 TabBoxConfig::LayoutMode TabBoxConfig::layout() const
-    {
+{
     return d->layout;
-    }
+}
 
 TabBoxConfig::ClientListMode TabBoxConfig::clientListMode() const
-    {
+{
     return d->clientListMode;
-    }
+}
 
-void TabBoxConfig::setClientListMode( ClientListMode listMode )
-    {
+void TabBoxConfig::setClientListMode(ClientListMode listMode)
+{
     d->clientListMode = listMode;
-    }
+}
 
 TabBoxConfig::ClientSwitchingMode TabBoxConfig::clientSwitchingMode() const
-    {
+{
     return d->clientSwitchingMode;
-    }
+}
 
-void TabBoxConfig::setClientSwitchingMode( ClientSwitchingMode switchingMode )
-    {
+void TabBoxConfig::setClientSwitchingMode(ClientSwitchingMode switchingMode)
+{
     d->clientSwitchingMode = switchingMode;
-    }
+}
 
 TabBoxConfig::DesktopSwitchingMode TabBoxConfig::desktopSwitchingMode() const
-    {
+{
     return d->desktopSwitchingMode;
-    }
+}
 
-void TabBoxConfig::setDesktopSwitchingMode( DesktopSwitchingMode switchingMode )
-    {
+void TabBoxConfig::setDesktopSwitchingMode(DesktopSwitchingMode switchingMode)
+{
     d->desktopSwitchingMode = switchingMode;
-    }
+}
 
 TabBoxConfig::SelectedItemViewPosition TabBoxConfig::selectedItemViewPosition() const
-    {
+{
     return d->selectedItemViewPosition;
-    }
+}
 
-void TabBoxConfig::setSelectedItemViewPosition( SelectedItemViewPosition viewPosition )
-    {
+void TabBoxConfig::setSelectedItemViewPosition(SelectedItemViewPosition viewPosition)
+{
     d->selectedItemViewPosition = viewPosition;
-    }
+}
 
 int TabBoxConfig::minWidth() const
-    {
+{
     return d->minWidth;
-    }
+}
 
-void TabBoxConfig::setMinWidth( int value )
-    {
+void TabBoxConfig::setMinWidth(int value)
+{
     d->minWidth = value;
-    }
+}
 
 int TabBoxConfig::minHeight() const
-    {
+{
     return d->minHeight;
-    }
+}
 
-void TabBoxConfig::setMinHeight( int value )
-    {
+void TabBoxConfig::setMinHeight(int value)
+{
     d->minHeight = value;
-    }
+}
 
 QString& TabBoxConfig::layoutName() const
-    {
+{
     return d->layoutName;
-    }
+}
 
-void TabBoxConfig::setLayoutName( const QString& name )
-    {
+void TabBoxConfig::setLayoutName(const QString& name)
+{
     d->layoutName = name;
-    }
+}
 
 QString& TabBoxConfig::selectedItemLayoutName() const
-    {
+{
     return d->selectedItemLayoutName;
-    }
+}
 
-void TabBoxConfig::setSelectedItemLayoutName( const QString& name )
-    {
+void TabBoxConfig::setSelectedItemLayoutName(const QString& name)
+{
     d->selectedItemLayoutName = name;
-    }
+}
 
 bool TabBoxConfig::isShowDesktop() const
-    {
+{
     return d->showDesktop;
-    }
+}
 
-void TabBoxConfig::setShowDesktop( bool show )
-    {
+void TabBoxConfig::setShowDesktop(bool show)
+{
     d->showDesktop = show;
-    }
+}
 
 } // namespace TabBox
 } // namespace KWin

@@ -34,34 +34,34 @@ class GLShader;
  **/
 class InvertEffect
     : public QObject, public Effect
-    {
+{
     Q_OBJECT
-    public:
-        InvertEffect();
-        ~InvertEffect();
+public:
+    InvertEffect();
+    ~InvertEffect();
 
-        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-        virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-        virtual void paintEffectFrame( KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity );
-        virtual void windowClosed( EffectWindow* w );
+    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
+    virtual void windowClosed(EffectWindow* w);
 
-        static bool supported();
+    static bool supported();
 
-    public slots:
-        void toggle();
-        void toggleWindow();
+public slots:
+    void toggle();
+    void toggleWindow();
 
-    protected:
-        bool loadData();
+protected:
+    bool loadData();
 
-    private:
-        bool m_inited;
-        bool m_valid;
-        GLShader* m_shader;
-        bool m_allWindows;
-        QList<EffectWindow*> m_windows;
-    };
+private:
+    bool m_inited;
+    bool m_valid;
+    GLShader* m_shader;
+    bool m_allWindows;
+    QList<EffectWindow*> m_windows;
+};
 
 } // namespace
 

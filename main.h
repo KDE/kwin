@@ -30,25 +30,25 @@ namespace KWin
 {
 
 class Application : public  KApplication
-    {
+{
     Q_OBJECT
-    public:
-        Application();
-        ~Application();
+public:
+    Application();
+    ~Application();
 
-    protected:
-        bool x11EventFilter( XEvent* );
-        bool notify( QObject* o, QEvent* e );
-        static void crashHandler( int signal );
+protected:
+    bool x11EventFilter(XEvent*);
+    bool notify(QObject* o, QEvent* e);
+    static void crashHandler(int signal);
 
-    private slots:
-        void lostSelection();
-        void resetCrashesCount();
+private slots:
+    void lostSelection();
+    void resetCrashesCount();
 
-    private:
-        KWinSelectionOwner owner;
-        static int crashes;
-    };
+private:
+    KWinSelectionOwner owner;
+    static int crashes;
+};
 
 } // namespace
 

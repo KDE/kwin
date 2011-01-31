@@ -34,43 +34,43 @@ class GLTexture;
 
 class LogoutEffect
     : public Effect
-    {
-    public:
-        LogoutEffect();
-        ~LogoutEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowAdded( EffectWindow* w );
-        virtual void windowClosed( EffectWindow* w );
-        virtual void windowDeleted( EffectWindow* w );
-        virtual void propertyNotify( EffectWindow* w, long a );
-    private:
-        bool isLogoutDialog( EffectWindow* w );
-        double progress; // 0-1
-        bool displayEffect;
-        EffectWindow* logoutWindow;
-        bool logoutWindowClosed;
-        bool logoutWindowPassed;
+{
+public:
+    LogoutEffect();
+    ~LogoutEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void postPaintScreen();
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void windowAdded(EffectWindow* w);
+    virtual void windowClosed(EffectWindow* w);
+    virtual void windowDeleted(EffectWindow* w);
+    virtual void propertyNotify(EffectWindow* w, long a);
+private:
+    bool isLogoutDialog(EffectWindow* w);
+    double progress; // 0-1
+    bool displayEffect;
+    EffectWindow* logoutWindow;
+    bool logoutWindowClosed;
+    bool logoutWindowPassed;
 
-        // Persistent effect
-        long logoutAtom;
-        bool canDoPersistent;
-        EffectWindowList ignoredWindows;
+    // Persistent effect
+    long logoutAtom;
+    bool canDoPersistent;
+    EffectWindowList ignoredWindows;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        void renderVignetting();
-        int frameDelay;
-        bool blurSupported, useBlur;
-        GLTexture* blurTexture;
-        GLRenderTarget* blurTarget;
-        double windowOpacity;
-        EffectWindowList windows;
-        QHash< EffectWindow*, double > windowsOpacities;
+    void renderVignetting();
+    int frameDelay;
+    bool blurSupported, useBlur;
+    GLTexture* blurTexture;
+    GLRenderTarget* blurTarget;
+    double windowOpacity;
+    EffectWindowList windows;
+    QHash< EffectWindow*, double > windowsOpacities;
 #endif
-    };
+};
 
 } // namespace
 

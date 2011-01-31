@@ -24,16 +24,16 @@ namespace KWin
 
 class TestInputEffect
     : public Effect
-    {
-    public:
-        TestInputEffect();
-        virtual ~TestInputEffect();
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void windowInputMouseEvent( Window w, QEvent* e );
-    private:
-        Window input;
-    };
+{
+public:
+    TestInputEffect();
+    virtual ~TestInputEffect();
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
+private:
+    Window input;
+};
 
 } // namespace
 

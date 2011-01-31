@@ -24,95 +24,87 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( dimscreen, DimScreenEffect )
+KWIN_EFFECT(dimscreen, DimScreenEffect)
 
 DimScreenEffect::DimScreenEffect()
-    : mActivated( false )
-    , activateAnimation( false )
-    , deactivateAnimation( false )
-    {
-    reconfigure( ReconfigureAll );
-    }
+    : mActivated(false)
+    , activateAnimation(false)
+    , deactivateAnimation(false)
+{
+    reconfigure(ReconfigureAll);
+}
 
 DimScreenEffect::~DimScreenEffect()
-    {
-    }
+{
+}
 
-void DimScreenEffect::reconfigure( ReconfigureFlags )
-    {
-    timeline.setDuration( animationTime( 250 ));
-    }
+void DimScreenEffect::reconfigure(ReconfigureFlags)
+{
+    timeline.setDuration(animationTime(250));
+}
 
-void DimScreenEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    if( mActivated && activateAnimation && !effects->activeFullScreenEffect() )
-        timeline.addTime( time );
-    if( mActivated && deactivateAnimation )
-        timeline.removeTime( time );
-    if( mActivated && effects->activeFullScreenEffect() )
-        timeline.removeTime( time );
-    if( mActivated && !activateAnimation && !deactivateAnimation && !effects->activeFullScreenEffect() && timeline.value() != 1.0 )
-        timeline.addTime( time );
-    effects->prePaintScreen( data, time );
-    }
+void DimScreenEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
+    if (mActivated && activateAnimation && !effects->activeFullScreenEffect())
+        timeline.addTime(time);
+    if (mActivated && deactivateAnimation)
+        timeline.removeTime(time);
+    if (mActivated && effects->activeFullScreenEffect())
+        timeline.removeTime(time);
+    if (mActivated && !activateAnimation && !deactivateAnimation && !effects->activeFullScreenEffect() && timeline.value() != 1.0)
+        timeline.addTime(time);
+    effects->prePaintScreen(data, time);
+}
 
 void DimScreenEffect::postPaintScreen()
-    {
-    if( mActivated )
-        {
-        if( activateAnimation && timeline.value() == 1.0 )
-            {
+{
+    if (mActivated) {
+        if (activateAnimation && timeline.value() == 1.0) {
             activateAnimation = false;
             effects->addRepaintFull();
-            }
-        if( deactivateAnimation && timeline.value() == 0.0 )
-            {
+        }
+        if (deactivateAnimation && timeline.value() == 0.0) {
             deactivateAnimation = false;
             mActivated = false;
             effects->addRepaintFull();
-            }
+        }
         // still animating
-        if( timeline.value() > 0.0 && timeline.value() < 1.0 )
+        if (timeline.value() > 0.0 && timeline.value() < 1.0)
             effects->addRepaintFull();
-        }
+    }
     effects->postPaintScreen();
-    }
+}
 
-void DimScreenEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
-    {
-    if( mActivated && ( w != window ) && w->isManaged() )
-        {
-        data.brightness *= (1.0 - 0.33 * timeline.value() );
-        data.saturation *= (1.0 - 0.33 * timeline.value() );
-        }
-    effects->paintWindow( w, mask, region, data );
+void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (mActivated && (w != window) && w->isManaged()) {
+        data.brightness *= (1.0 - 0.33 * timeline.value());
+        data.saturation *= (1.0 - 0.33 * timeline.value());
     }
+    effects->paintWindow(w, mask, region, data);
+}
 
-void DimScreenEffect::windowActivated( EffectWindow *w )
-    {
-    if( !w ) return;
+void DimScreenEffect::windowActivated(EffectWindow *w)
+{
+    if (!w) return;
     QStringList check;
     check << "kdesu kdesu";
     check << "kdesudo kdesudo";
     check << "polkit-kde-manager polkit-kde-manager";
     check << "polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1";
     check << "pinentry pinentry";
-    if( check.contains( w->windowClass() ) )
-        {
+    if (check.contains(w->windowClass())) {
         mActivated = true;
         activateAnimation = true;
         deactivateAnimation = false;
         window = w;
         effects->addRepaintFull();
-        }
-    else
-        {
-        if( mActivated)
-            {
+    } else {
+        if (mActivated) {
             activateAnimation = false;
             deactivateAnimation = true;
             effects->addRepaintFull();
-            }
         }
     }
+}
 } // namespace

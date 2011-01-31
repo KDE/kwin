@@ -31,45 +31,45 @@ namespace TabBox
 
 class PreviewClientImpl :
     public KWin::TabBox::TabBoxClient
-    {
-    public:
-        PreviewClientImpl( WId id );
-        ~PreviewClientImpl();
+{
+public:
+    PreviewClientImpl(WId id);
+    ~PreviewClientImpl();
 
-        virtual QString caption() const;
-        virtual int height() const;
-        virtual QPixmap icon( const QSize& size = QSize( 32, 32 ) ) const;
-        virtual bool isMinimized() const;
-        virtual int width() const;
-        virtual WId window() const;
-        virtual int x() const;
-        virtual int y() const;
+    virtual QString caption() const;
+    virtual int height() const;
+    virtual QPixmap icon(const QSize& size = QSize(32, 32)) const;
+    virtual bool isMinimized() const;
+    virtual int width() const;
+    virtual WId window() const;
+    virtual int x() const;
+    virtual int y() const;
 
-    private:
-        WId m_id;
-    };
+private:
+    WId m_id;
+};
 
 class PreviewHandlerImpl :
     public KWin::TabBox::TabBoxHandler
-    {
-    public:
-        PreviewHandlerImpl();
-        ~PreviewHandlerImpl();
-        virtual KWin::TabBox::TabBoxClient* clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop, bool allDesktops) const;
-        virtual KWin::TabBox::TabBoxClientList stackingOrder() const;
-        virtual int nextDesktopFocusChain(int desktop) const;
-        virtual int numberOfDesktops() const;
-        virtual int currentDesktop() const;
-        virtual QString desktopName(int desktop) const;
-        virtual QString desktopName(KWin::TabBox::TabBoxClient* client) const;
-        virtual KWin::TabBox::TabBoxClient* nextClientFocusChain(KWin::TabBox::TabBoxClient* client) const;
-        virtual KWin::TabBox::TabBoxClient* activeClient() const;
-        virtual int activeScreen() const;
-        virtual TabBoxClient* desktopClient() const;
+{
+public:
+    PreviewHandlerImpl();
+    ~PreviewHandlerImpl();
+    virtual KWin::TabBox::TabBoxClient* clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop, bool allDesktops) const;
+    virtual KWin::TabBox::TabBoxClientList stackingOrder() const;
+    virtual int nextDesktopFocusChain(int desktop) const;
+    virtual int numberOfDesktops() const;
+    virtual int currentDesktop() const;
+    virtual QString desktopName(int desktop) const;
+    virtual QString desktopName(KWin::TabBox::TabBoxClient* client) const;
+    virtual KWin::TabBox::TabBoxClient* nextClientFocusChain(KWin::TabBox::TabBoxClient* client) const;
+    virtual KWin::TabBox::TabBoxClient* activeClient() const;
+    virtual int activeScreen() const;
+    virtual TabBoxClient* desktopClient() const;
 
-    private:
-        TabBoxClientList m_stackingOrder;
-    };
+private:
+    TabBoxClientList m_stackingOrder;
+};
 
 } // namespace TabBox
 } // namespace KWin

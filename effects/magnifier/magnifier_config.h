@@ -33,25 +33,25 @@ namespace KWin
 class MagnifierEffectConfigForm : public QWidget, public Ui::MagnifierEffectConfigForm
 {
     Q_OBJECT
-    public:
-        explicit MagnifierEffectConfigForm(QWidget* parent);
+public:
+    explicit MagnifierEffectConfigForm(QWidget* parent);
 };
 
 class MagnifierEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit MagnifierEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        virtual ~MagnifierEffectConfig();
+public:
+    explicit MagnifierEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~MagnifierEffectConfig();
 
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
-    private:
-        MagnifierEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
-    };
+private:
+    MagnifierEffectConfigForm* m_ui;
+    KActionCollection* m_actionCollection;
+};
 
 } // namespace
 

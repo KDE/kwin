@@ -33,12 +33,12 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 FlipSwitchEffectConfigForm::FlipSwitchEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
-  setupUi(this);
+    setupUi(this);
 }
 
 FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
-    {
+    KCModule(EffectFactory::componentData(), parent, args)
+{
     m_ui = new FlipSwitchEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -46,79 +46,79 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
     layout->addWidget(m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
-    KAction* a = ( KAction* )m_actionCollection->addAction( "FlipSwitchCurrent" );
-    a->setText( i18n( "Toggle Flip Switch (Current desktop)" ));
-    a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
-    KAction* b = ( KAction* )m_actionCollection->addAction( "FlipSwitchAll" );
-    b->setText( i18n( "Toggle Flip Switch (All desktops)" ));
-    b->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    KAction* a = (KAction*)m_actionCollection->addAction("FlipSwitchCurrent");
+    a->setText(i18n("Toggle Flip Switch (Current desktop)"));
+    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+    KAction* b = (KAction*)m_actionCollection->addAction("FlipSwitchAll");
+    b->setText(i18n("Toggle Flip Switch (All desktops)"));
+    b->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
 
-    m_actionCollection->setConfigGroup( "FlipSwitch" );
-    m_actionCollection->setConfigGlobal( true );
+    m_actionCollection->setConfigGroup("FlipSwitch");
+    m_actionCollection->setConfigGlobal(true);
 
-    m_ui->shortcutEditor->addCollection( m_actionCollection );
+    m_ui->shortcutEditor->addCollection(m_actionCollection);
 
     connect(m_ui->durationSpin, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->angleSpin, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->verticalSlider, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->windowTitleBox, SIGNAL(stateChanged(int)), SLOT(changed()));
-    connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
+    connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
 
     load();
-    }
+}
 
 FlipSwitchEffectConfig::~FlipSwitchEffectConfig()
-    {
-    }
+{
+}
 
 void FlipSwitchEffectConfig::load()
-    {
+{
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig( "FlipSwitch" );
+    KConfigGroup conf = EffectsHandler::effectConfig("FlipSwitch");
 
-    m_ui->durationSpin->setValue( conf.readEntry( "Duration", 0 ));
-    m_ui->angleSpin->setValue( conf.readEntry( "Angle", 30 ));
-    m_ui->horizontalSlider->setValue( conf.readEntry( "XPosition", 33 ));
+    m_ui->durationSpin->setValue(conf.readEntry("Duration", 0));
+    m_ui->angleSpin->setValue(conf.readEntry("Angle", 30));
+    m_ui->horizontalSlider->setValue(conf.readEntry("XPosition", 33));
     // slider bottom is 0, effect bottom is 100
-    m_ui->verticalSlider->setValue( 100 - conf.readEntry( "YPosition", 100 ));
-    m_ui->windowTitleBox->setChecked( conf.readEntry( "WindowTitle", true ));
+    m_ui->verticalSlider->setValue(100 - conf.readEntry("YPosition", 100));
+    m_ui->windowTitleBox->setChecked(conf.readEntry("WindowTitle", true));
 
     emit changed(false);
-    }
+}
 
 void FlipSwitchEffectConfig::save()
-    {
-    KConfigGroup conf = EffectsHandler::effectConfig( "FlipSwitch" );
+{
+    KConfigGroup conf = EffectsHandler::effectConfig("FlipSwitch");
 
-    conf.writeEntry( "Duration", m_ui->durationSpin->value() );
-    conf.writeEntry( "Angle", m_ui->angleSpin->value() );
-    conf.writeEntry( "XPosition", m_ui->horizontalSlider->value() );
+    conf.writeEntry("Duration", m_ui->durationSpin->value());
+    conf.writeEntry("Angle", m_ui->angleSpin->value());
+    conf.writeEntry("XPosition", m_ui->horizontalSlider->value());
     // slider bottom is 0, effect bottom is 100
-    conf.writeEntry( "YPosition", 100 - m_ui->verticalSlider->value() );
-    conf.writeEntry( "WindowTitle", m_ui->windowTitleBox->isChecked() );
+    conf.writeEntry("YPosition", 100 - m_ui->verticalSlider->value());
+    conf.writeEntry("WindowTitle", m_ui->windowTitleBox->isChecked());
 
     m_ui->shortcutEditor->save();
 
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "flipswitch" );
-    }
+    EffectsHandler::sendReloadMessage("flipswitch");
+}
 
 void FlipSwitchEffectConfig::defaults()
-    {
-    m_ui->durationSpin->setValue( 0 );
-    m_ui->angleSpin->setValue( 30 );
-    m_ui->horizontalSlider->setValue( 33 );
+{
+    m_ui->durationSpin->setValue(0);
+    m_ui->angleSpin->setValue(30);
+    m_ui->horizontalSlider->setValue(33);
     // slider bottom is 0, effect bottom is 100
-    m_ui->verticalSlider->setValue( 0 );
-    m_ui->windowTitleBox->setChecked( true );
+    m_ui->verticalSlider->setValue(0);
+    m_ui->windowTitleBox->setChecked(true);
     m_ui->shortcutEditor->allDefault();
     emit changed(true);
-    }
+}
 
 
 } // namespace

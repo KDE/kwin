@@ -33,11 +33,13 @@ public:
     WindowGeometry();
     ~WindowGeometry();
 
-    inline bool provides( Effect::Feature ef ) { return ef == Effect::GeometryTip; }
-    void reconfigure( ReconfigureFlags );
+    inline bool provides(Effect::Feature ef) {
+        return ef == Effect::GeometryTip;
+    }
+    void reconfigure(ReconfigureFlags);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    void windowUserMovedResized( EffectWindow* w, bool first, bool last );
-    void windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry );
+    void windowUserMovedResized(EffectWindow* w, bool first, bool last);
+    void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
 private slots:
     void toggle();

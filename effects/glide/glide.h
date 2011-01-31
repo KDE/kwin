@@ -30,54 +30,52 @@ namespace KWin
 
 class GlideEffect
     : public Effect
-    {
-    public:
-        GlideEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
+{
+public:
+    GlideEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
 
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
+    virtual void windowAdded(EffectWindow* c);
+    virtual void windowClosed(EffectWindow* c);
+    virtual void windowDeleted(EffectWindow* c);
 
-        static bool supported();
-    private:
-        class WindowInfo;
-        typedef QMap< const EffectWindow*, WindowInfo > InfoHash;
-        void glideIn( EffectWindow* w, WindowPaintData& data );
-        void glideOut( EffectWindow* w, WindowPaintData& data );
-        bool isGlideWindow( EffectWindow* w );
-        InfoHash windows;
-        float duration;
-        int angle;
-        enum EffectStyle
-        {
-            GlideIn = 0,
-            GlideInOut = 1,
-            GlideOutIn = 2,
-            GlideOut = 3
-        };
-        EffectStyle effect;
+    static bool supported();
+private:
+    class WindowInfo;
+    typedef QMap< const EffectWindow*, WindowInfo > InfoHash;
+    void glideIn(EffectWindow* w, WindowPaintData& data);
+    void glideOut(EffectWindow* w, WindowPaintData& data);
+    bool isGlideWindow(EffectWindow* w);
+    InfoHash windows;
+    float duration;
+    int angle;
+    enum EffectStyle {
+        GlideIn = 0,
+        GlideInOut = 1,
+        GlideOutIn = 2,
+        GlideOut = 3
     };
+    EffectStyle effect;
+};
 
 class GlideEffect::WindowInfo
-    {
-    public:
-        WindowInfo()
-            : deleted( false )
-            , added( false )
-            , closed( false ) { }
-        ~WindowInfo()
-        {
-        } 
-        bool deleted;
-        bool added;
-        bool closed;
-        TimeLine timeLine;
-    };
+{
+public:
+    WindowInfo()
+        : deleted(false)
+        , added(false)
+        , closed(false) { }
+    ~WindowInfo() {
+    }
+    bool deleted;
+    bool added;
+    bool closed;
+    TimeLine timeLine;
+};
 
 } // namespace
 

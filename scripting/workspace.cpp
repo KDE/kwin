@@ -25,13 +25,10 @@ KWin::Workspace*  SWrapper::Workspace::centralObject = 0;
 SWrapper::Client* SWrapper::Workspace::clientHolder  = 0;
 
 SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
-    {
-    if(centralObject == 0)
-        {
+{
+    if (centralObject == 0) {
         return;
-        }
-    else
-        {
+    } else {
         SWrapper::WorkspaceProxy* proxy = SWrapper::WorkspaceProxy::instance();
 
         QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*, int)),
@@ -81,266 +78,217 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
         QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*, bool, bool)),
                          this, SLOT(sl_clientFullScreenSet(KWin::Client*, bool, bool))
                         );
-                        
+
         QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*, bool)),
                          this, SLOT(sl_clientSetKeepAbove(KWin::Client*, bool))
                         );
 
 
-        }
     }
+}
 
 void SWrapper::Workspace::sl_desktopPresenceChanged(KWin::Client* client, int prev_desk)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit desktopPresenceChanged(centralEngine->toScriptValue(client),
                                     centralEngine->toScriptValue(prev_desk)
                                    );
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientAdded(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientAdded(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientFullScreenSet(KWin::Client* client, bool set, bool user)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientFullScreenSet(centralEngine->toScriptValue<KWin::Client*>(client),
                                  centralEngine->toScriptValue<bool>(set),
                                  centralEngine->toScriptValue<bool>(user)
                                 );
-        }
     }
-    
+}
+
 void SWrapper::Workspace::sl_clientSetKeepAbove(KWin::Client* client, bool set)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientSetKeepAbove(centralEngine->toScriptValue<KWin::Client*>(client),
                                 centralEngine->toScriptValue<bool>(set)
                                );
-        }
     }
+}
 
 void SWrapper::Workspace::sl_currentDesktopChanged(int prev_desk)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit currentDesktopChanged(centralEngine->toScriptValue(prev_desk));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientRemoved(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientRemoved(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientManaging(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientManaging(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientMinimized(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientMinimized(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientUnminimized(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientUnminimized(centralEngine->toScriptValue<KWin::Client*>(client));
         emit clientRestored(centralEngine->toScriptValue<KWin::Client*>(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientMaximizeSet(KWin::Client* client, QPair<bool, bool> param)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         QScriptValue temp = centralEngine->newObject();
         temp.setProperty("v", centralEngine->toScriptValue(param.first));
         temp.setProperty("h", centralEngine->toScriptValue(param.second));
         emit clientMaximizeSet(centralEngine->toScriptValue(client), temp);
-        }
     }
+}
 
 void SWrapper::Workspace::sl_killWindowCalled(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit killWindowCalled(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_clientActivated(KWin::Client* client)
-    {
-    if(centralEngine == 0)
-        {
+{
+    if (centralEngine == 0) {
         return;
-        }
-    else
-        {
+    } else {
         emit clientActivated(centralEngine->toScriptValue(client));
-        }
     }
+}
 
 void SWrapper::Workspace::sl_groupAdded(KWin::Group* group)
-    {
+{
     Q_UNUSED(group);
     //TODO
-    }
+}
 
 bool SWrapper::Workspace::initialize(KWin::Workspace* wspace)
-    {
-    if(wspace == 0)
-        {
+{
+    if (wspace == 0) {
         return false;
-        }
-    else
-        {
+    } else {
         SWrapper::Workspace::centralObject = wspace;
         SWrapper::Workspace::clientHolder = new SWrapper::Client(0);
         return true;
-        }
     }
+}
 
 QScriptValue SWrapper::Workspace::getAllClients(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     KWin::ClientList x = centralObject->stackingOrder();
 
-    if(ctx->argumentCount() == 0)
-        {
+    if (ctx->argumentCount() == 0) {
         return eng->toScriptValue(x);
-        }
-    else
-        {
+    } else {
         KWin::ClientList ret;
         int desk_no = (ctx->argument(0)).toNumber();
-        if((desk_no >= 1) && (desk_no > SWrapper::Workspace::centralObject->numberOfDesktops()))
-            {
+        if ((desk_no >= 1) && (desk_no > SWrapper::Workspace::centralObject->numberOfDesktops())) {
             return QScriptValue();
-            }
-        else
-            {
-            for(int i=0; i<x.size(); i++)
-                {
-                if(x.at(i)->desktop() == desk_no)
-                    {
+        } else {
+            for (int i = 0; i < x.size(); i++) {
+                if (x.at(i)->desktop() == desk_no) {
                     ret.append(x.at(i));
-                    }
                 }
+            }
 
             return eng->toScriptValue(ret);
-            }
         }
     }
+}
 
 QScriptValue SWrapper::Workspace::activeClient(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     Q_UNUSED(ctx);
     return eng->toScriptValue<KWin::Client*>(centralObject->activeClient());
-    }
+}
 
 QScriptValue SWrapper::Workspace::setCurrentDesktop(QScriptContext* ctx, QScriptEngine* /*eng*/)
-    {
-    if(ctx->argumentCount() >= 1)
-        {
-        int num = ((ctx->argument(0)).isNumber())?((ctx->argument(0)).toNumber()):(-1);
-        if(num != -1)
-            {
+{
+    if (ctx->argumentCount() >= 1) {
+        int num = ((ctx->argument(0)).isNumber()) ? ((ctx->argument(0)).toNumber()) : (-1);
+        if (num != -1) {
             centralObject->setCurrentDesktop(num);
-            }
         }
+    }
 
     return QScriptValue();
-    }
+}
 
 QScriptValue SWrapper::Workspace::dimensions(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     Q_UNUSED(ctx);
     return eng->toScriptValue(QSize(centralObject->workspaceWidth(), centralObject->workspaceHeight()));
-    }
+}
 
 QScriptValue SWrapper::Workspace::desktopGridSize(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     Q_UNUSED(ctx);
     return eng->toScriptValue(centralObject->desktopGridSize());
-    }
+}
 
 QScriptValue SWrapper::Workspace::clientGroups(QScriptContext* ctx, QScriptEngine* eng)
-    {
+{
     Q_UNUSED(ctx);
     return eng->toScriptValue<QList<KWin::ClientGroup*> >(centralObject->clientGroups);
-    }
+}
 
 int SWrapper::Workspace::currentDesktop() const
-    {
+{
     return centralObject->currentDesktop();
-    }
+}
 
 void SWrapper::Workspace::attach(QScriptEngine* engine)
-    {
+{
     QScriptValue func;
     centralEngine = engine;
 
@@ -365,4 +313,4 @@ void SWrapper::Workspace::attach(QScriptEngine* engine)
     self.setProperty("clientGroups", engine->newFunction(clientGroups, 0), QScriptValue::Undeletable);
 
     (engine->globalObject()).setProperty("workspace", self, QScriptValue::Undeletable);
-    }
+}

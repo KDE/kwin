@@ -24,19 +24,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-PresentWindowsEffectProxy::PresentWindowsEffectProxy( PresentWindowsEffect* effect )
-    : m_effect( effect )
-    {
-    }
+PresentWindowsEffectProxy::PresentWindowsEffectProxy(PresentWindowsEffect* effect)
+    : m_effect(effect)
+{
+}
 
 PresentWindowsEffectProxy::~PresentWindowsEffectProxy()
-    {
-    }
+{
+}
 
 void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, int screen,
         WindowMotionManager& manager)
-    {
-    return m_effect->calculateWindowTransformations( windows, screen, manager, true );
-    }
+{
+    return m_effect->calculateWindowTransformations(windows, screen, manager, true);
+}
 
 } // namespace

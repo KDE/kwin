@@ -26,36 +26,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Floating::Floating( Workspace *w )
-    : TilingLayout( w )
-    {
-    }
+Floating::Floating(Workspace *w)
+    : TilingLayout(w)
+{
+}
 
-void Floating::postAddTile( Tile *t )
-    {
-    if( t->floating() )
-        was_floating.insert( t );
-    }
+void Floating::postAddTile(Tile *t)
+{
+    if (t->floating())
+        was_floating.insert(t);
+}
 
-void Floating::arrange( QRect wgeom )
-    {
-    foreach( Tile *t, tiles() )
-        {
-        if( !t->floating() )
+void Floating::arrange(QRect wgeom)
+{
+    foreach (Tile * t, tiles()) {
+        if (!t->floating())
             t->floatTile();
-        workspace()->place( t->client(), wgeom );
-        t->setGeometry( t->client()->geometry() );
-        }
+        workspace()->place(t->client(), wgeom);
+        t->setGeometry(t->client()->geometry());
     }
+}
 
-void Floating::preRemoveTile( Tile *t )
-    {
-    if( ! was_floating.contains( t ) )
+void Floating::preRemoveTile(Tile *t)
+{
+    if (! was_floating.contains(t))
         t->unfloatTile();
-    }
+}
 
 Floating::~Floating()
-    {
-    }
-        
+{
+}
+
 }

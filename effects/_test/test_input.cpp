@@ -29,46 +29,44 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( test_input, TestInputEffect )
+KWIN_EFFECT(test_input, TestInputEffect)
 
 TestInputEffect::TestInputEffect()
-    {
-    input = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(), Qt::CrossCursor );
-    }
+{
+    input = effects->createInputWindow(this, 0, 0, displayWidth(), displayHeight(), Qt::CrossCursor);
+}
 
 TestInputEffect::~TestInputEffect()
-    {
-    effects->destroyInputWindow( input );
-    }
+{
+    effects->destroyInputWindow(input);
+}
 
-void TestInputEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void TestInputEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
     data.mask |= PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( data, time );
-    }
+    effects->prePaintScreen(data, time);
+}
 
-void TestInputEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
+void TestInputEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
     data.yTranslate += 100;
-    effects->paintScreen( mask, region, data );
-    }
+    effects->paintScreen(mask, region, data);
+}
 
-void TestInputEffect::windowInputMouseEvent( Window w, QEvent* e )
-    {
-    assert( w == input );
-    if( e->type() != QEvent::MouseButtonPress )
+void TestInputEffect::windowInputMouseEvent(Window w, QEvent* e)
+{
+    assert(w == input);
+    if (e->type() != QEvent::MouseButtonPress)
         return;
-    QPoint pos = static_cast< QMouseEvent* >( e )->pos();
-    pos -= QPoint( 0, 100 ); // adjust for transformation
-    foreach( EffectWindow* c, effects->stackingOrder())
-        {
-        if( /* TODO c->isShown( true ) && */c->isOnCurrentDesktop()
-            && c->geometry().contains( pos ))
-            {
-            effects->activateWindow( c );
+    QPoint pos = static_cast< QMouseEvent* >(e)->pos();
+    pos -= QPoint(0, 100);   // adjust for transformation
+    foreach (EffectWindow * c, effects->stackingOrder()) {
+        if (/* TODO c->isShown( true ) && */c->isOnCurrentDesktop()
+                                           && c->geometry().contains(pos)) {
+            effects->activateWindow(c);
             return;
-            }
         }
     }
+}
 
 } // namespace

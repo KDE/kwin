@@ -29,24 +29,24 @@ namespace KWin
 {
 
 class SlideTabsEffectConfigForm : public QWidget, public Ui::SlideTabsEffectConfigForm
-    {
+{
     Q_OBJECT
-    public:
-        explicit SlideTabsEffectConfigForm( QWidget* parent );
-    };
+public:
+    explicit SlideTabsEffectConfigForm(QWidget* parent);
+};
 
 class SlideTabsEffectConfig : public KCModule
-    {
+{
     Q_OBJECT
-    public:
-        explicit SlideTabsEffectConfig( QWidget* parent = 0, const QVariantList& args = QVariantList() );
-    public slots:
-        virtual void save();
-        virtual void load();
-        virtual void defaults();
-    private:
-        SlideTabsEffectConfigForm* m_ui;
-    };
+public:
+    explicit SlideTabsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+public slots:
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
+private:
+    SlideTabsEffectConfigForm* m_ui;
+};
 
 }
 

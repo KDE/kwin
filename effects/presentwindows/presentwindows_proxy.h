@@ -28,16 +28,16 @@ namespace KWin
 class PresentWindowsEffect;
 
 class PresentWindowsEffectProxy
-    {
-    public:
-        PresentWindowsEffectProxy( PresentWindowsEffect* effect );
-        ~PresentWindowsEffectProxy();
+{
+public:
+    PresentWindowsEffectProxy(PresentWindowsEffect* effect);
+    ~PresentWindowsEffectProxy();
 
-        void calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager& manager);
+    void calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager& manager);
 
-    private:
-        PresentWindowsEffect* m_effect;
-    };
+private:
+    PresentWindowsEffect* m_effect;
+};
 
 } // namespace
 

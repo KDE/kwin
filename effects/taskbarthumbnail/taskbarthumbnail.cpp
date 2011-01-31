@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    #include <kwinglutils.h>
+#include <kwinglutils.h>
 #endif
 
 // This effect shows a preview inside a window that has a special property set
@@ -34,131 +34,126 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT( taskbarthumbnail, TaskbarThumbnailEffect )
+KWIN_EFFECT(taskbarthumbnail, TaskbarThumbnailEffect)
 
 TaskbarThumbnailEffect::TaskbarThumbnailEffect()
-    {
-    atom = XInternAtom( display(), "_KDE_WINDOW_PREVIEW", False );
-    effects->registerPropertyType( atom, true );
+{
+    atom = XInternAtom(display(), "_KDE_WINDOW_PREVIEW", False);
+    effects->registerPropertyType(atom, true);
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
-    XChangeProperty( display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1 );
-    }
+    XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
+}
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
-    {
-    XDeleteProperty( display(), rootWindow(), atom );
-    effects->registerPropertyType( atom, false );
-    }
+{
+    XDeleteProperty(display(), rootWindow(), atom);
+    effects->registerPropertyType(atom, false);
+}
 
-void TaskbarThumbnailEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
+void TaskbarThumbnailEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+{
     if (thumbnails.count() > 0) {
-       data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
     }
     effects->prePaintScreen(data, time);
-    }
+}
 
-void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
+void TaskbarThumbnailEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
     // TODO what if of the windows is translucent and one not? change data.mask?
-    effects->prePaintWindow( w, data, time );
-    }
+    effects->prePaintWindow(w, data, time);
+}
 
-void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    effects->paintWindow( w, mask, region, data ); // paint window first
-    if( thumbnails.contains( w ))
-        { // paint thumbnails on it
+void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+{
+    effects->paintWindow(w, mask, region, data);   // paint window first
+    if (thumbnails.contains(w)) {
+        // paint thumbnails on it
         int mask = PAINT_WINDOW_TRANSFORMED;
-        if( data.opacity == 1.0 )
+        if (data.opacity == 1.0)
             mask |= PAINT_WINDOW_OPAQUE;
         else
             mask |= PAINT_WINDOW_TRANSLUCENT;
         mask |= PAINT_WINDOW_LANCZOS;
-        foreach( const Data &thumb, thumbnails.values( w ))
-            {
-            EffectWindow* thumbw = effects->findWindow( thumb.window );
-            if( thumbw == NULL )
+        foreach (const Data & thumb, thumbnails.values(w)) {
+            EffectWindow* thumbw = effects->findWindow(thumb.window);
+            if (thumbw == NULL)
                 continue;
-            WindowPaintData thumbData( thumbw );
+            WindowPaintData thumbData(thumbw);
             thumbData.opacity *= data.opacity;
             QRect r;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-            if( effects->compositingType() == KWin::OpenGLCompositing )
-                {
-                if ( data.shader )
-                    {
+            if (effects->compositingType() == KWin::OpenGLCompositing) {
+                if (data.shader) {
                     // there is a shader - update texture width and height
                     int texw = thumbw->width();
                     int texh = thumbw->height();
-                    if( !GLTexture::NPOTTextureSupported() )
-                        {
-                        kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
-                        texw = nearestPowerOfTwo( texw );
-                        texh = nearestPowerOfTwo( texh );
-                        }
-                    thumbData.shader = data.shader;
-                    thumbData.shader->setTextureWidth( (float)texw );
-                    thumbData.shader->setTextureHeight( (float)texh );
+                    if (!GLTexture::NPOTTextureSupported()) {
+                        kWarning(1212) << "NPOT textures not supported, wasting some memory" ;
+                        texw = nearestPowerOfTwo(texw);
+                        texh = nearestPowerOfTwo(texh);
                     }
-                } // if ( effects->compositingType() == KWin::OpenGLCompositing ) 
+                    thumbData.shader = data.shader;
+                    thumbData.shader->setTextureWidth((float)texw);
+                    thumbData.shader->setTextureHeight((float)texh);
+                }
+            } // if ( effects->compositingType() == KWin::OpenGLCompositing )
 #endif
-            setPositionTransformations( thumbData, r,
-                    thumbw, thumb.rect.translated( w->pos()), Qt::KeepAspectRatio );
-            effects->drawWindow( thumbw, mask, r, thumbData );
-            }
+            setPositionTransformations(thumbData, r,
+                                       thumbw, thumb.rect.translated(w->pos()), Qt::KeepAspectRatio);
+            effects->drawWindow(thumbw, mask, r, thumbData);
         }
-    } // End of function
+    }
+} // End of function
 
-void TaskbarThumbnailEffect::windowDamaged( EffectWindow* w, const QRect& damage )
-    {
-    Q_UNUSED( damage );
+void TaskbarThumbnailEffect::windowDamaged(EffectWindow* w, const QRect& damage)
+{
+    Q_UNUSED(damage);
     // Update the thumbnail if the window was damaged
-    foreach( EffectWindow* window, thumbnails.uniqueKeys() )
-        foreach( const Data &thumb, thumbnails.values( window ))
-            if( w == effects->findWindow( thumb.window ))
-                effects->addRepaint( thumb.rect.translated( window->pos() ));
-    }
+    foreach (EffectWindow * window, thumbnails.uniqueKeys())
+    foreach (const Data & thumb, thumbnails.values(window))
+    if (w == effects->findWindow(thumb.window))
+        effects->addRepaint(thumb.rect.translated(window->pos()));
+}
 
-void TaskbarThumbnailEffect::windowAdded( EffectWindow* w )
-    {
-    propertyNotify( w, atom ); // read initial value
-    }
+void TaskbarThumbnailEffect::windowAdded(EffectWindow* w)
+{
+    propertyNotify(w, atom);   // read initial value
+}
 
-void TaskbarThumbnailEffect::windowDeleted( EffectWindow* w )
-    {
-    thumbnails.remove( w );
-    }
+void TaskbarThumbnailEffect::windowDeleted(EffectWindow* w)
+{
+    thumbnails.remove(w);
+}
 
-void TaskbarThumbnailEffect::propertyNotify( EffectWindow* w, long a )
-    {
-    if( !w || a != atom )
+void TaskbarThumbnailEffect::propertyNotify(EffectWindow* w, long a)
+{
+    if (!w || a != atom)
         return;
-    thumbnails.remove( w );
-    QByteArray data = w->readProperty( atom, atom, 32 );
-    if( data.length() < 1 )
+    thumbnails.remove(w);
+    QByteArray data = w->readProperty(atom, atom, 32);
+    if (data.length() < 1)
         return;
-    long* d = reinterpret_cast< long* >( data.data());
-    int len = data.length() / sizeof( d[ 0 ] );
+    long* d = reinterpret_cast< long* >(data.data());
+    int len = data.length() / sizeof(d[ 0 ]);
     int pos = 0;
     int cnt = d[ 0 ];
     ++pos;
-    for( int i = 0;
-         i < cnt;
-         ++i )
-        {
+    for (int i = 0;
+            i < cnt;
+            ++i) {
         int size = d[ pos ];
-        if( len - pos < size )
+        if (len - pos < size)
             return; // format error
         ++pos;
         Data data;
         data.window = d[ pos ];
-        data.rect = QRect( d[ pos + 1 ], d[ pos + 2 ], d[ pos + 3 ], d[ pos + 4 ] );
-        thumbnails.insert( w, data );
+        data.rect = QRect(d[ pos + 1 ], d[ pos + 2 ], d[ pos + 3 ], d[ pos + 4 ]);
+        thumbnails.insert(w, data);
         pos += size;
-        }
     }
+}
 
 } // namespace

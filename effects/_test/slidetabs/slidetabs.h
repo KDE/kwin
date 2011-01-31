@@ -27,29 +27,29 @@ namespace KWin
 {
 
 class SlideTabsEffect : public Effect
-    {
-    public:
-        SlideTabsEffect();
-        virtual void reconfigure( ReconfigureFlags );
-        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
-        virtual void postPaintScreen();
-        virtual void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
-        virtual void clientGroupItemAdded( EffectWindow* from, EffectWindow* to );
+{
+public:
+    SlideTabsEffect();
+    virtual void reconfigure(ReconfigureFlags);
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void postPaintWindow(EffectWindow* w);
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void postPaintScreen();
+    virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
 
-    private:
-        QRect calculateNextMove();
-        QPoint calculatePointTarget( const QPoint &a, const QPoint &b );
-        WindowMotionManager motionManager;
-        EffectWindow* inMove;
-        EffectWindow* notMoving;
-        TimeLine timeLine;
-        QRect target, source;
-        bool direction, wasD, grouping, switching;
-        int totalTime, distance;
-    };
+private:
+    QRect calculateNextMove();
+    QPoint calculatePointTarget(const QPoint &a, const QPoint &b);
+    WindowMotionManager motionManager;
+    EffectWindow* inMove;
+    EffectWindow* notMoving;
+    TimeLine timeLine;
+    QRect target, source;
+    bool direction, wasD, grouping, switching;
+    int totalTime, distance;
+};
 
 }
 
