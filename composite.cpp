@@ -247,9 +247,7 @@ void Workspace::finishCompositing()
     effects = NULL;
     delete scene;
     scene = NULL;
-    if (compositeTimer)
-        killTimer(compositeTimer);
-    compositeTimer = 0;
+    compositeTimer.stop();
     mousePollingTimer.stop();
     repaints_region = QRegion();
     for (ClientList::ConstIterator it = clients.constBegin();
@@ -364,9 +362,8 @@ void Workspace::addRepaintFull()
 
 void Workspace::timerEvent(QTimerEvent *te)
 {
-    if (te->timerId() == compositeTimer) {
-        killTimer(compositeTimer);
-        compositeTimer = 0;
+    if (te->timerId() == compositeTimer.timerId()) {
+        compositeTimer.stop();
         performCompositing();
     } else
         QObject::timerEvent(te);
@@ -463,9 +460,6 @@ void Workspace::setCompositeTimer()
     if (!compositing())  // should not really happen, but there may be e.g. some damage events still pending
         return;
 
-    if (compositeTimer)
-        killTimer(compositeTimer);
-
     // interval - "time since last paint completion" - "time we need to paint"
     uint passed = nextPaintReference.msecsTo(QTime::currentTime()) << 10;
     uint delay = fpsInterval;
@@ -477,7 +471,8 @@ void Workspace::setCompositeTimer()
         delay -= ((passed + ((scene->estimatedRenderTime() + vBlankPadding) << 10)) % vBlankInterval);
     } else
         delay = qBound(0, int(delay - passed), 250 << 10);
-    compositeTimer = startTimer(delay >> 10);
+
+    compositeTimer.start(delay >> 10, this);
 }
 
 void Workspace::startMousePolling()
@@ -561,9 +556,7 @@ void Workspace::checkCompositePaintTime(int msec)
                            "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
                            "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects).", shortcut);
         Notify::raise(Notify::CompositingSlow, message);
-        if (compositeTimer)
-            killTimer(compositeTimer);
-        compositeTimer = startTimer(1000);   // so that it doesn't trigger sooner than suspendCompositing()
+        compositeTimer.start(1000, this);   // so that it doesn't trigger sooner than suspendCompositing()
     }
 }
 

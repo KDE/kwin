@@ -1177,7 +1177,7 @@ private:
 
     KSelectionOwner* cm_selection;
     bool compositingSuspended;
-    int compositeTimer;
+    QBasicTimer compositeTimer;
     QTime nextPaintReference;
     QTimer mousePollingTimer;
     uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
@@ -1469,7 +1469,7 @@ inline bool Workspace::hasClient(const Client* c)
 
 inline void Workspace::checkCompositeTimer()
 {
-    if (!compositeTimer)
+    if (!compositeTimer.isActive())
         setCompositeTimer();
 }
 
