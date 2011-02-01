@@ -1178,7 +1178,7 @@ private:
     KSelectionOwner* cm_selection;
     bool compositingSuspended;
     QBasicTimer compositeTimer;
-    QTime nextPaintReference;
+    qint64 nextPaintReference;
     QTimer mousePollingTimer;
     uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
     int xrrRefreshRate; // used only for compositing

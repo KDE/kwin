@@ -196,7 +196,7 @@ void Workspace::setupCompositing()
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     vBlankPadding = 3; // vblank rounding errors... :-(
-    nextPaintReference = QTime::currentTime();
+    nextPaintReference = QDateTime::currentMSecsSinceEpoch();
     checkCompositeTimer();
     composite_paint_times.clear();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
@@ -412,14 +412,15 @@ void Workspace::performCompositing()
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
-    QTime t = QTime::currentTime();
+    QElapsedTimer t;
+    t.start();
     if (scene->waitSyncAvailable()) {
         // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
         scene->paint(repaints, windows);
-        nextPaintReference = QTime::currentTime();
+        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
     } else {
         // no vsyc -> inversion: reset the timer, then paint the scene, this way we can provide a constant framerate
-        nextPaintReference = QTime::currentTime();
+        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
         scene->paint(repaints, windows);
     }
     // reset the roundin error corrective... :-(
@@ -461,7 +462,7 @@ void Workspace::setCompositeTimer()
         return;
 
     // interval - "time since last paint completion" - "time we need to paint"
-    uint passed = nextPaintReference.msecsTo(QTime::currentTime()) << 10;
+    uint passed = (QDateTime::currentMSecsSinceEpoch() - nextPaintReference) << 10;
     uint delay = fpsInterval;
     if (scene->waitSyncAvailable()) {
         if (passed > fpsInterval) {
