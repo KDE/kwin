@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kwinshadereffect.h>
 #include <KStandardDirs>
 
 #include <QMatrix4x4>

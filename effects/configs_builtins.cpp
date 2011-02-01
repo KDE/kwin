@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cube/cubeslide_config.h"
 #include "flipswitch/flipswitch_config.h"
 #include "glide/glide_config.h"
-//#include "invert/invert_config.h"
+#include "invert/invert_config.h"
 #include "lookingglass/lookingglass_config.h"
 #include "magnifier/magnifier_config.h"
 #include "mousemark/mousemark_config.h"
@@ -76,7 +76,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(cubeslide, CubeSlideEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(flipswitch, FlipSwitchEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(glide, GlideEffectConfig)
-//                          KWIN_EFFECT_CONFIG_SINGLE(invert, InvertEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(invert, InvertEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(lookingglass, LookingGlassEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(magnifier, MagnifierEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(mousemark, MouseMarkEffectConfig)
