@@ -237,8 +237,7 @@ namespace Oxygen
         ShadowCache::Key key( void ) const
         {
             ShadowCache::Key key;
-            key.active = isActive() || isForcedActive();
-            key.useOxygenShadows = configuration().useOxygenShadows();
+            key.active = ( isActive() || isForcedActive() ) && configuration().useOxygenShadows();
             key.isShade = isShade();
             key.hasBorder = ( configuration().frameBorder() > Configuration::BorderNone );
             return key;
