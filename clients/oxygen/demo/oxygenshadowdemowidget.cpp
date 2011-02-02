@@ -45,7 +45,7 @@ namespace Oxygen
         if( _drawBackground )
         {
             updateBackgroundPixmap();
-            painter.translate( _shadowSize - 4, _shadowSize - 4 );
+            painter.translate( _shadowSize, _shadowSize  );
             painter.drawPixmap( QPoint(0,0), _backgroundPixmap );
         }
 
@@ -56,7 +56,7 @@ namespace Oxygen
     {
 
         // check if background pixmap needs update
-        QRect backgroundRect( QPoint( 0, 0 ), size() - QSize( 2*(_shadowSize-4), 2*(_shadowSize-4) )  );
+        QRect backgroundRect( QPoint( 0, 0 ), size() - QSize( 2*_shadowSize, 2*_shadowSize )  );
         if( !_backgroundPixmap.isNull() && _backgroundPixmap.size() == backgroundRect.size() )
         { return; }
 

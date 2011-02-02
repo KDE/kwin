@@ -74,7 +74,7 @@ namespace Oxygen
         if( enabled_ && shadowCache_.contains(hash) ) return shadowCache_.object(hash);
 
         // create tileSet otherwise
-        qreal size( shadowSize() );
+        qreal size( shadowSize() + overlap );
         TileSet* tileSet = new TileSet( shadowPixmap( key, key.active ), size, size, size, size, size, size, 1, 1);
         shadowCache_.insert( hash, tileSet );
 
@@ -97,7 +97,7 @@ namespace Oxygen
         if( enabled_ && animatedShadowCache_.contains(hash) ) return animatedShadowCache_.object(hash);
 
         // create shadow and tileset otherwise
-        qreal size( shadowSize() );
+        qreal size( shadowSize() + overlap );
 
         QPixmap shadow( size*2, size*2 );
         shadow.fill( Qt::transparent );
@@ -142,6 +142,12 @@ namespace Oxygen
         qreal size( shadowSize() );
         qreal shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize():0 );
 
+        if( !shadowSize ) return QPixmap();
+
+        // add overlap
+        size += overlap;
+        shadowSize += overlap;
+
         QPixmap shadow = QPixmap( size*2, size*2 );
         shadow.fill( Qt::transparent );
 
@@ -152,147 +158,142 @@ namespace Oxygen
         // some gradients rendering are different at bottom corners if client has no border
         bool hasBorder( key.hasBorder || key.isShade );
 
-        if( shadowSize )
+        if( active )
         {
 
-            if( active )
             {
 
+                // inner (sharp) gradient
+                const qreal gradientSize = qMin( shadowSize, (shadowSize+fixedSize)/2 );
+                const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
+
+                QRadialGradient rg = QRadialGradient( size+12.0*hoffset, size+12.0*voffset, gradientSize );
+                rg.setColorAt(1, Qt::transparent );
+
+                // gaussian shadow is used
+                int nPoints( (10*gradientSize)/fixedSize );
+                Gaussian f( 0.85, 0.17 );
+                QColor c = shadowConfiguration.innerColor();
+                for( int i = 0; i < nPoints; i++ )
                 {
-
-                    // inner (shark) gradient
-                    const qreal gradientSize = qMin( shadowSize, (shadowSize+fixedSize)/2 );
-                    const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
-                    const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
-
-                    QRadialGradient rg = QRadialGradient( size+12.0*hoffset, size+12.0*voffset, gradientSize );
-                    rg.setColorAt(1, Qt::transparent );
-
-                    // gaussian shadow is used
-                    int nPoints( (10*gradientSize)/fixedSize );
-                    Gaussian f( 0.85, 0.17 );
-                    QColor c = shadowConfiguration.innerColor();
-                    for( int i = 0; i < nPoints; i++ )
-                    {
-                        qreal x = qreal(i)/nPoints;
-                        c.setAlphaF( f(x) );
-                        rg.setColorAt( x, c );
-
-                    }
-
-                    p.setBrush( rg );
-                    renderGradient( p, shadow.rect(), rg, hasBorder );
+                    qreal x = qreal(i)/nPoints;
+                    c.setAlphaF( f(x) );
+                    rg.setColorAt( x, c );
 
                 }
 
+                p.setBrush( rg );
+                renderGradient( p, shadow.rect(), rg, hasBorder );
+
+            }
+
+            {
+
+                // outer (spread) gradient
+                const qreal gradientSize = shadowSize;
+                const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
+
+                QRadialGradient rg = QRadialGradient( size+12.0*hoffset, size+12.0*voffset, gradientSize );
+                rg.setColorAt(1, Qt::transparent );
+
+                // gaussian shadow is used
+                int nPoints( (10*gradientSize)/fixedSize );
+                Gaussian f( 0.46, 0.34 );
+                QColor c = shadowConfiguration.outerColor();
+                for( int i = 0; i < nPoints; i++ )
                 {
-
-                    // outer (spread) gradient
-                    const qreal gradientSize = shadowSize;
-                    const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
-                    const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
-
-                    QRadialGradient rg = QRadialGradient( size+12.0*hoffset, size+12.0*voffset, gradientSize );
-                    rg.setColorAt(1, Qt::transparent );
-
-                    // gaussian shadow is used
-                    int nPoints( (10*gradientSize)/fixedSize );
-                    Gaussian f( 0.46, 0.34 );
-                    QColor c = shadowConfiguration.outerColor();
-                    for( int i = 0; i < nPoints; i++ )
-                    {
-                        qreal x = qreal(i)/nPoints;
-                        c.setAlphaF( f(x) );
-                        rg.setColorAt( x, c );
-
-                    }
-
-                    p.setBrush( rg );
-                    p.drawRect( shadow.rect() );
+                    qreal x = qreal(i)/nPoints;
+                    c.setAlphaF( f(x) );
+                    rg.setColorAt( x, c );
 
                 }
 
-            } else {
+                p.setBrush( rg );
+                p.drawRect( shadow.rect() );
 
+            }
+
+        } else {
+
+            {
+                // inner (sharp gradient)
+                const qreal gradientSize = qMin( shadowSize, fixedSize );
+                const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
+
+                QRadialGradient rg = QRadialGradient( size+hoffset, size+voffset, gradientSize );
+                rg.setColorAt(1, Qt::transparent );
+
+                // parabolic shadow is used
+                int nPoints( (10*gradientSize)/fixedSize );
+                Parabolic f( 1.0, 0.22 );
+                QColor c = shadowConfiguration.outerColor();
+                for( int i = 0; i < nPoints; i++ )
                 {
-                    // inner (sharp gradient)
-                    const qreal gradientSize = qMin( shadowSize, fixedSize );
-                    const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
-                    const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
-
-                    QRadialGradient rg = QRadialGradient( size+hoffset, size+voffset, gradientSize );
-                    rg.setColorAt(1, Qt::transparent );
-
-                    // parabolic shadow is used
-                    int nPoints( (10*gradientSize)/fixedSize );
-                    Parabolic f( 1.0, 0.22 );
-                    QColor c = shadowConfiguration.outerColor();
-                    for( int i = 0; i < nPoints; i++ )
-                    {
-                        qreal x = qreal(i)/nPoints;
-                        c.setAlphaF( f(x) );
-                        rg.setColorAt( x, c );
-
-                    }
-
-
-                    p.setBrush( rg );
-                    renderGradient( p, shadow.rect(), rg, hasBorder );
+                    qreal x = qreal(i)/nPoints;
+                    c.setAlphaF( f(x) );
+                    rg.setColorAt( x, c );
 
                 }
 
+
+                p.setBrush( rg );
+                renderGradient( p, shadow.rect(), rg, hasBorder );
+
+            }
+
+            {
+
+                // mid gradient
+                const qreal gradientSize = qMin( shadowSize, (shadowSize+2*fixedSize)/3 );
+                const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
+
+                // gaussian shadow is used
+                QRadialGradient rg = QRadialGradient( size+8.0*hoffset, size+8.0*voffset, gradientSize );
+                rg.setColorAt(1, Qt::transparent );
+
+                int nPoints( (10*gradientSize)/fixedSize );
+                Gaussian f( 0.54, 0.21);
+                QColor c = shadowConfiguration.outerColor();
+                for( int i = 0; i < nPoints; i++ )
                 {
-
-                    // mid gradient
-                    const qreal gradientSize = qMin( shadowSize, (shadowSize+2*fixedSize)/3 );
-                    const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
-                    const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
-
-                    // gaussian shadow is used
-                    QRadialGradient rg = QRadialGradient( size+8.0*hoffset, size+8.0*voffset, gradientSize );
-                    rg.setColorAt(1, Qt::transparent );
-
-                    int nPoints( (10*gradientSize)/fixedSize );
-                    Gaussian f( 0.54, 0.21);
-                    QColor c = shadowConfiguration.outerColor();
-                    for( int i = 0; i < nPoints; i++ )
-                    {
-                        qreal x = qreal(i)/nPoints;
-                        c.setAlphaF( f(x) );
-                        rg.setColorAt( x, c );
-
-                    }
-
-                    p.setBrush( rg );
-                    p.drawRect( shadow.rect() );
+                    qreal x = qreal(i)/nPoints;
+                    c.setAlphaF( f(x) );
+                    rg.setColorAt( x, c );
 
                 }
 
+                p.setBrush( rg );
+                p.drawRect( shadow.rect() );
+
+            }
+
+            {
+
+                // outer (spread) gradient
+                const qreal gradientSize = shadowSize;
+                const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
+
+                // gaussian shadow is used
+                QRadialGradient rg = QRadialGradient( size+20.0*hoffset, size+20.0*voffset, gradientSize );
+                rg.setColorAt(1, Qt::transparent );
+
+                int nPoints( (20*gradientSize)/fixedSize );
+                Gaussian f( 0.155, 0.445);
+                QColor c = shadowConfiguration.outerColor();
+                for( int i = 0; i < nPoints; i++ )
                 {
-
-                    // outer (spread) gradient
-                    const qreal gradientSize = shadowSize;
-                    const qreal hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
-                    const qreal voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
-
-                    // gaussian shadow is used
-                    QRadialGradient rg = QRadialGradient( size+20.0*hoffset, size+20.0*voffset, gradientSize );
-                    rg.setColorAt(1, Qt::transparent );
-
-                    int nPoints( (20*gradientSize)/fixedSize );
-                    Gaussian f( 0.155, 0.445);
-                    QColor c = shadowConfiguration.outerColor();
-                    for( int i = 0; i < nPoints; i++ )
-                    {
-                        qreal x = qreal(i)/nPoints;
-                        c.setAlphaF( f(x) );
-                        rg.setColorAt( x, c );
-                    }
-
-                    p.setBrush( rg );
-                    p.drawRect( shadow.rect() );
-
+                    qreal x = qreal(i)/nPoints;
+                    c.setAlphaF( f(x) );
+                    rg.setColorAt( x, c );
                 }
+
+                p.setBrush( rg );
+                p.drawRect( shadow.rect() );
 
             }
 

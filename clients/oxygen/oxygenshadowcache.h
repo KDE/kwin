@@ -110,11 +110,9 @@ namespace Oxygen
         {
             qreal activeSize( activeShadowConfiguration_.isEnabled() ? activeShadowConfiguration_.shadowSize():0 );
             qreal inactiveSize( inactiveShadowConfiguration_.isEnabled() ? inactiveShadowConfiguration_.shadowSize():0 );
-            qreal size( qMax( activeSize, inactiveSize ) );
 
             // even if shadows are disabled,
-            // you need a minimum size to allow corner rendering
-            return qMax( size, qreal(5.0) );
+            return qMax( activeSize, inactiveSize );
         }
 
         //! Key class to be used into QCache
@@ -241,6 +239,9 @@ namespace Oxygen
 
         //! helper
         DecoHelper& helper_;
+
+        //! defines overlap between shadows and body
+        enum { overlap = 4 };
 
         //! caching enable state
         bool enabled_;
