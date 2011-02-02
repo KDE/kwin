@@ -102,32 +102,26 @@ namespace Oxygen
         _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Inactive, KConfigGroup( &config, "InactiveShadow") ) );
         _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Active, KConfigGroup( &config, "ActiveShadow") ) );
 
-        //QTextStream( stdout ) << "ShadowDemoDialog::reparseConfiguration - shadowSize: " << _cache.shadowSize() << endl;
-
         // pass tileSets to UI
         ShadowCache::Key key;
         key.active = false;
         key.hasBorder = true;
-        key.useOxygenShadows = true;
         ui.inactiveRoundWidget->setTileSet( *_cache.tileSet( key ) );
         ui.inactiveRoundWidget->setShadowSize( _cache.shadowSize() );
 
         key.active = false;
         key.hasBorder = false;
-        key.useOxygenShadows = true;
         ui.inactiveSquareWidget->setTileSet( *_cache.tileSet( key ) );
         ui.inactiveSquareWidget->setShadowSize( _cache.shadowSize() );
         ui.inactiveSquareWidget->setSquare( true );
 
         key.active = true;
         key.hasBorder = true;
-        key.useOxygenShadows = true;
         ui.activeRoundWidget->setTileSet( *_cache.tileSet( key ) );
         ui.activeRoundWidget->setShadowSize( _cache.shadowSize() );
 
         key.active = true;
         key.hasBorder = false;
-        key.useOxygenShadows = true;
         ui.activeSquareWidget->setTileSet( *_cache.tileSet( key ) );
         ui.activeSquareWidget->setShadowSize( _cache.shadowSize() );
         ui.activeSquareWidget->setSquare( true );

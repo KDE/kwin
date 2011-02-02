@@ -136,8 +136,7 @@ namespace Oxygen
 
         // local reference to relevant shadow configuration
         const ShadowConfiguration& shadowConfiguration(
-            active && key.useOxygenShadows ?
-            activeShadowConfiguration_:inactiveShadowConfiguration_ );
+            active ? activeShadowConfiguration_:inactiveShadowConfiguration_ );
 
         static const qreal fixedSize = 25.5;
         qreal size( shadowSize() );
@@ -156,7 +155,7 @@ namespace Oxygen
         if( shadowSize )
         {
 
-            if( active && key.useOxygenShadows )
+            if( active )
             {
 
                 {

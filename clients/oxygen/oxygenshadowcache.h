@@ -128,17 +128,15 @@ namespace Oxygen
             explicit Key( void ):
                 index(0),
                 active(false),
-                useOxygenShadows(false),
                 isShade(false),
                 hasBorder( true )
             {}
 
             //! constructor from int
             Key( int hash ):
-                index( hash>>4 ),
-                active( (hash>>3)&1 ),
-                useOxygenShadows( (hash>>2)&1 ),
-                isShade( (hash>>1)&1 ),
+                index( hash >> 3 ),
+                active( ( hash >> 2 )&1 ),
+                isShade( ( hash >> 1)&1 ),
                 hasBorder( (hash)&1 )
             {}
 
@@ -146,20 +144,16 @@ namespace Oxygen
             int hash( void ) const
             {
 
-                // note this can be optimized because not all of the flag configurations are actually relevant
-                // allocate 3 empty bits for flags
                 return
-                    ( index << 4 ) |
-                    ( active << 3 ) |
-                    (useOxygenShadows << 2 ) |
-                    (isShade<<1) |
-                    (hasBorder);
+                    ( index << 3 ) |
+                    ( active << 2 ) |
+                    ( isShade<< 1 ) |
+                    ( hasBorder );
 
             }
 
             int index;
             bool active;
-            bool useOxygenShadows;
             bool isShade;
             bool hasBorder;
 
