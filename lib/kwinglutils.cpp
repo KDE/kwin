@@ -853,18 +853,18 @@ GLShader::~GLShader()
     }
 }
 
-bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentfile)
+bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentFile)
 {
-    QFile vf(vertexfile);
+    QFile vf(vertexFile);
     if (!vf.open(QIODevice::ReadOnly)) {
-        kError(1212) << "Couldn't open '" << vertexfile << "' for reading!" << endl;
+        kError(1212) << "Couldn't open" << vertexFile << "for reading!" << endl;
         return false;
     }
     const QByteArray vertexSource = vf.readAll();
 
-    QFile ff(fragmentfile);
+    QFile ff(fragmentFile);
     if (!ff.open(QIODevice::ReadOnly)) {
-        kError(1212) << "Couldn't open '" << fragmentfile << "' for reading!" << endl;
+        kError(1212) << "Couldn't open" << fragmentFile << "for reading!" << endl;
         return false;
     }
     const QByteArray fragmentSource = ff.readAll();
@@ -872,107 +872,100 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
     return load(vertexSource, fragmentSource);
 }
 
+bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &source) const
+{
+    GLuint shader = glCreateShader(shaderType);
+
+    // Prepare the source code
+    QByteArray ba;
+#ifdef KWIN_HAVE_OPENGLES
+    ba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
+#endif
+    ba.append(source);
+
+    const char* src = ba.constData();
+    glShaderSource(shader, 1, &src, NULL);
+
+    // Compile the shader
+    glCompileShader(shader);
+
+    // Get the shader info log
+    int maxLength, length;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+    QByteArray log(maxLength, 0);
+    glGetShaderInfoLog(shader, maxLength, &length, log.data());
+
+    // Check the status
+    int status;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+
+    if (status == 0) {
+        const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
+        kError(1212) << "Failed to compile" << typeName << "shader:" << endl << log << endl;
+    } else if (length > 0)
+        kDebug(1212) << "Shader compile log:" << log;
+
+    if (status != 0)
+        glAttachShader(program, shader);
+
+    glDeleteShader(shader);
+    return status != 0;
+}
+
 bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     // Make sure shaders are actually supported
-    if ((!vertexSource.isEmpty() && !vertexShaderSupported()) ||
-            (!fragmentSource.isEmpty() && !fragmentShaderSupported())) {
-        kDebug(1212) << "Shaders not supported";
+    if (!vertexShaderSupported() || !fragmentShaderSupported()) {
+        kError(1212) << "Shaders are not supported";
         return false;
     }
 
-    GLuint vertexshader;
-    GLuint fragmentshader;
-
-    GLsizei logsize, logarraysize;
-    char* log = 0;
-
-    // Create program object
+    // Create the shader program
     mProgram = glCreateProgram();
+
+    // Compile the vertex shader
     if (!vertexSource.isEmpty()) {
-        // Create shader object
-        vertexshader = glCreateShader(GL_VERTEX_SHADER);
-        // Load it
-        QByteArray srcba;
-#ifdef KWIN_HAVE_OPENGLES
-        srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
-#endif
-        srcba.append(vertexSource);
-        const char* src = srcba.data();
-        glShaderSource(vertexshader, 1, &src, NULL);
-        // Compile the shader
-        glCompileShader(vertexshader);
-        // Make sure it compiled correctly
-        int compiled;
-        glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &compiled);
-        // Get info log
-        glGetShaderiv(vertexshader, GL_INFO_LOG_LENGTH, &logarraysize);
-        log = new char[logarraysize];
-        glGetShaderInfoLog(vertexshader, logarraysize, &logsize, log);
-        if (!compiled) {
-            kError(1212) << "Couldn't compile vertex shader! Log:" << endl << log << endl;
-            delete[] log;
+        bool success = compile(mProgram, GL_VERTEX_SHADER, vertexSource);
+
+        if (!success) {
+            glDeleteProgram(mProgram);
+            mProgram = 0;
             return false;
-        } else if (logsize > 0)
-            kDebug(1212) << "Vertex shader compilation log:" << log;
-        // Attach the shader to the program
-        glAttachShader(mProgram, vertexshader);
-        // Delete shader
-        glDeleteShader(vertexshader);
-        delete[] log;
+        }
     }
 
-
+    // Compile the fragment shader
     if (!fragmentSource.isEmpty()) {
-        fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
-        // Load it
-        QByteArray srcba;
-#ifdef KWIN_HAVE_OPENGLES
-        srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
-#endif
-        srcba.append(fragmentSource);
-        const char* src = srcba.data();
-        glShaderSource(fragmentshader, 1, &src, NULL);
-        //glShaderSource(fragmentshader, 1, &fragmentsrc.latin1(), NULL);
-        // Compile the shader
-        glCompileShader(fragmentshader);
-        // Make sure it compiled correctly
-        int compiled;
-        glGetShaderiv(fragmentshader, GL_COMPILE_STATUS, &compiled);
-        // Get info log
-        glGetShaderiv(fragmentshader, GL_INFO_LOG_LENGTH, &logarraysize);
-        log = new char[logarraysize];
-        glGetShaderInfoLog(fragmentshader, logarraysize, &logsize, log);
-        if (!compiled) {
-            kError(1212) << "Couldn't compile fragment shader! Log:" << endl << log << endl;
-            delete[] log;
+        bool success = compile(mProgram, GL_FRAGMENT_SHADER, fragmentSource);
+
+        if (!success) {
+            glDeleteProgram(mProgram);
+            mProgram = 0;
             return false;
-        } else if (logsize > 0)
-            kDebug(1212) << "Fragment shader compilation log:" << log;
-        // Attach the shader to the program
-        glAttachShader(mProgram, fragmentshader);
-        // Delete shader
-        glDeleteShader(fragmentshader);
-        delete[] log;
+        }
     }
 
-
-    // Link the program
     glLinkProgram(mProgram);
-    // Make sure it linked correctly
-    int linked;
-    glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
-    // Get info log
-    glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &logarraysize);
-    log = new char[logarraysize];
-    glGetProgramInfoLog(mProgram, logarraysize, &logsize, log);
-    if (!linked) {
-        kError(1212) << "Couldn't link the program! Log" << endl << log << endl;
-        delete[] log;
+
+    // Get the program info log
+    int maxLength, length;
+    glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &maxLength);
+
+    QByteArray log(maxLength, 0);
+    glGetProgramInfoLog(mProgram, maxLength, &length, log.data());
+
+    // Make sure the program linked successfully
+    int status;
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
+
+    if (status == 0) {
+        kError(1212) << "Failed to link shader:" << endl << log << endl;
+        glDeleteProgram(mProgram);
+        mProgram = 0;
         return false;
-    } else if (logsize > 0)
-        kDebug(1212) << "Shader linking log:" << log;
-    delete[] log;
+    } else if (length > 0)
+        kDebug(1212) << "Shader link log:" << log;
 
     mValid = true;
     return true;

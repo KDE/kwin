@@ -328,6 +328,7 @@ protected:
     GLShader();
     bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
     bool load(const QByteArray &vertexSource, const QByteArray &fragmentSource);
+    bool compile(GLuint program, GLenum shaderType, const QByteArray &sourceCode) const;
     void bind();
     void unbind();
 
