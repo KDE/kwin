@@ -170,14 +170,6 @@ int nearestPowerOfTwo(int x)
     return 1 << last;
 }
 
-void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2)
-{
-    verts << x1 << y1;
-    verts << x1 << y2;
-    verts << x2 << y2;
-    verts << x2 << y1;
-}
-
 void pushMatrix()
 {
 #ifndef KWIN_HAVE_OPENGLES
