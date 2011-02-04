@@ -829,8 +829,8 @@ void GLShader::initStatic()
 }
 
 GLShader::GLShader()
-    : mValid(false)
-    , mProgram(0)
+    : mProgram(0)
+    , mValid(false)
     , mTextureWidth(-1.0f)
     , mTextureHeight(-1.0f)
 {
