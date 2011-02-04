@@ -86,44 +86,6 @@ inline bool KWIN_EXPORT isPowerOfTwo(int x)
 int KWIN_EXPORT nearestPowerOfTwo(int x);
 
 /**
- * Renders quads using given vertices.
- * If texture is not 0, each texture coordinate much have two components (st).
- * If color is not 0, each color much have four components (rgba).
- * Note that texture coordinates must match texture type (normalized/unnormalized
- * for GL_TEXTURE_2D/GL_TEXTURE_ARB).
- *
- * In OpenGL ES this method is a no-op.
- *
- * @param count number of vertices to use.
- * @param dim number of components per vertex coordinate in vertices array.
- * @param stride byte offset of consecutive elements in arrays. If 0, then
- *  arrays must be tighly packed. Stride must be a multiple of sizeof(float)!
- * @deprecated  Use GLVertexBuffer
- * @see GLVertexBuffer
- **/
-KWIN_EXPORT void renderGLGeometry(const QRegion& region, int count,
-                                  const float* vertices, const float* texture = 0, const float* color = 0,
-                                  int dim = 2, int stride = 0);
-/**
- * Same as above, renders without specified region
- * @deprecated  Use GLVertexBuffer
- * @see GLVertexBuffer
- **/
-KWIN_EXPORT void renderGLGeometry(int count,
-                                  const float* vertices, const float* texture = 0, const float* color = 0,
-                                  int dim = 2, int stride = 0);
-
-/**
- * In OpenGL ES this method is a no-op.
- *
- * @deprecated Use GLVertexBuffer
- * @see GLVertexBuffer
- **/
-KWIN_EXPORT void renderGLGeometryImmediate(int count,
-        const float* vertices, const float* texture = 0, const float* color = 0,
-        int dim = 2, int stride = 0);
-
-/**
  * @deprecated Quads are not available in OpenGL ES
  **/
 KWIN_EXPORT void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2);
