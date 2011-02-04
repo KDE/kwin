@@ -249,13 +249,13 @@ public:
 
     static void initStatic();
     static bool NPOTTextureSupported()  {
-        return mNPOTTextureSupported;
+        return sNPOTTextureSupported;
     }
     static bool framebufferObjectSupported()  {
-        return mFramebufferObjectSupported;
+        return sFramebufferObjectSupported;
     }
     static bool saturationSupported()  {
-        return mSaturationSupported;
+        return sSaturationSupported;
     }
 
 protected:
@@ -278,9 +278,9 @@ private:
     GLVertexBuffer* m_vbo;
     QSize m_cachedSize;
 
-    static bool mNPOTTextureSupported;
-    static bool mFramebufferObjectSupported;
-    static bool mSaturationSupported;
+    static bool sNPOTTextureSupported;
+    static bool sFramebufferObjectSupported;
+    static bool sSaturationSupported;
     Q_DISABLE_COPY(GLTexture)
 };
 
@@ -317,10 +317,10 @@ public:
 
     static void initStatic();
     static bool fragmentShaderSupported()  {
-        return mFragmentShaderSupported;
+        return sFragmentShaderSupported;
     }
     static bool vertexShaderSupported()  {
-        return mVertexShaderSupported;
+        return sVertexShaderSupported;
     }
 
 
@@ -336,8 +336,8 @@ protected:
 private:
     unsigned int mProgram;
     bool mValid;
-    static bool mFragmentShaderSupported;
-    static bool mVertexShaderSupported;
+    static bool sFragmentShaderSupported;
+    static bool sVertexShaderSupported;
     float mTextureWidth;
     float mTextureHeight;
     friend class ShaderManager;
@@ -520,7 +520,7 @@ public:
 
     static void initStatic();
     static bool supported()  {
-        return mSupported;
+        return sSupported;
     }
 
 
@@ -529,7 +529,7 @@ protected:
 
 
 private:
-    static bool mSupported;
+    static bool sSupported;
 
     GLTexture* mTexture;
     bool mValid;

@@ -357,9 +357,9 @@ void popMatrix()
 // GLTexture
 //****************************************
 
-bool GLTexture::mNPOTTextureSupported = false;
-bool GLTexture::mFramebufferObjectSupported = false;
-bool GLTexture::mSaturationSupported = false;
+bool GLTexture::sNPOTTextureSupported = false;
+bool GLTexture::sFramebufferObjectSupported = false;
+bool GLTexture::sSaturationSupported = false;
 
 GLTexture::GLTexture()
 {
@@ -432,13 +432,13 @@ void GLTexture::init()
 void GLTexture::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    mNPOTTextureSupported = true;
-    mFramebufferObjectSupported = true;
-    mSaturationSupported = true;
+    sNPOTTextureSupported = true;
+    sFramebufferObjectSupported = true;
+    sSaturationSupported = true;
 #else
-    mNPOTTextureSupported = hasGLExtension("GL_ARB_texture_non_power_of_two");
-    mFramebufferObjectSupported = hasGLExtension("GL_EXT_framebuffer_object");
-    mSaturationSupported = ((hasGLExtension("GL_ARB_texture_env_crossbar")
+    sNPOTTextureSupported = hasGLExtension("GL_ARB_texture_non_power_of_two");
+    sFramebufferObjectSupported = hasGLExtension("GL_EXT_framebuffer_object");
+    sSaturationSupported = ((hasGLExtension("GL_ARB_texture_env_crossbar")
                              && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
                            && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
 #endif
@@ -813,18 +813,18 @@ QImage GLTexture::convertToGLFormat(const QImage& img) const
 // GLShader
 //****************************************
 
-bool GLShader::mFragmentShaderSupported = false;
-bool GLShader::mVertexShaderSupported = false;
+bool GLShader::sFragmentShaderSupported = false;
+bool GLShader::sVertexShaderSupported = false;
 
 void GLShader::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    mFragmentShaderSupported = mVertexShaderSupported = true;
+    sFragmentShaderSupported = sVertexShaderSupported = true;
 #else
-    mFragmentShaderSupported = mVertexShaderSupported =
+    sFragmentShaderSupported = sVertexShaderSupported =
                                    hasGLExtension("GL_ARB_shader_objects") && hasGLExtension("GL_ARB_shading_language_100");
-    mVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
-    mFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
+    sVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
+    sFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
 #endif
 }
 
@@ -1382,14 +1382,14 @@ void ShaderManager::resetShader(ShaderType type)
 }
 
 /***  GLRenderTarget  ***/
-bool GLRenderTarget::mSupported = false;
+bool GLRenderTarget::sSupported = false;
 
 void GLRenderTarget::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    mSupported = true;
+    sSupported = true;
 #else
-    mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
+    sSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
 #endif
 }
 
@@ -1401,7 +1401,7 @@ GLRenderTarget::GLRenderTarget(GLTexture* color)
     mTexture = color;
 
     // Make sure FBO is supported
-    if (mSupported && mTexture && !mTexture->isNull()) {
+    if (sSupported && mTexture && !mTexture->isNull()) {
         initFBO();
     } else
         kError(1212) << "Render targets aren't supported!" << endl;
