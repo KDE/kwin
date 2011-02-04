@@ -86,11 +86,6 @@ inline bool KWIN_EXPORT isPowerOfTwo(int x)
 int KWIN_EXPORT nearestPowerOfTwo(int x);
 
 /**
- * @deprecated Quads are not available in OpenGL ES
- **/
-KWIN_EXPORT void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2);
-
-/**
  * Push a new matrix on the GL matrix stack.
  * In GLES this method is a noop. This method should be preferred over glPushMatrix
  * as it also handles GLES.
