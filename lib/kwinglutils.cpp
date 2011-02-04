@@ -860,23 +860,23 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
         kError(1212) << "Couldn't open '" << vertexfile << "' for reading!" << endl;
         return false;
     }
-    QString vertexsource(vf.readAll());
+    const QByteArray vertexSource = vf.readAll();
 
     QFile ff(fragmentfile);
     if (!ff.open(QIODevice::ReadOnly)) {
         kError(1212) << "Couldn't open '" << fragmentfile << "' for reading!" << endl;
         return false;
     }
-    QString fragsource(ff.readAll());
+    const QByteArray fragmentSource = ff.readAll();
 
-    return load(vertexsource, fragsource);
+    return load(vertexSource, fragmentSource);
 }
 
-bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
+bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     // Make sure shaders are actually supported
-    if ((!vertexsource.isEmpty() && !vertexShaderSupported()) ||
-            (!fragmentsource.isEmpty() && !fragmentShaderSupported())) {
+    if ((!vertexSource.isEmpty() && !vertexShaderSupported()) ||
+            (!fragmentSource.isEmpty() && !fragmentShaderSupported())) {
         kDebug(1212) << "Shaders not supported";
         return false;
     }
@@ -889,7 +889,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
 
     // Create program object
     mProgram = glCreateProgram();
-    if (!vertexsource.isEmpty()) {
+    if (!vertexSource.isEmpty()) {
         // Create shader object
         vertexshader = glCreateShader(GL_VERTEX_SHADER);
         // Load it
@@ -897,7 +897,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
 #ifdef KWIN_HAVE_OPENGLES
         srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
 #endif
-        srcba.append(vertexsource.toLatin1());
+        srcba.append(vertexSource);
         const char* src = srcba.data();
         glShaderSource(vertexshader, 1, &src, NULL);
         // Compile the shader
@@ -923,14 +923,14 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
     }
 
 
-    if (!fragmentsource.isEmpty()) {
+    if (!fragmentSource.isEmpty()) {
         fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
         // Load it
         QByteArray srcba;
 #ifdef KWIN_HAVE_OPENGLES
         srcba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
 #endif
-        srcba.append(fragmentsource.toLatin1());
+        srcba.append(fragmentSource);
         const char* src = srcba.data();
         glShaderSource(fragmentshader, 1, &src, NULL);
         //glShaderSource(fragmentshader, 1, &fragmentsrc.latin1(), NULL);
@@ -1272,7 +1272,7 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
     return shader;
 }
 
-GLShader *ShaderManager::loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource)
+GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     GLShader *shader = new GLShader();
     shader->load(vertexSource, fragmentSource);

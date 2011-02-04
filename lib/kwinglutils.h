@@ -327,7 +327,7 @@ public:
 protected:
     GLShader();
     bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
-    bool load(const QString& vertexsource, const QString& fragmentsource);
+    bool load(const QByteArray &vertexSource, const QByteArray &fragmentSource);
     void bind();
     void unbind();
 
@@ -455,7 +455,7 @@ public:
      * @param fragmentSource The source code of the fragment shader.
      * @return The created shader
      **/
-    GLShader *loadShaderFromCode(const QString &vertexSource, const QString &fragmentSource);
+    GLShader *loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource);
 
     /**
      * @return a pointer to the ShaderManager instance
