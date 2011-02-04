@@ -338,6 +338,7 @@ void LogoutEffect::windowClosed( EffectWindow* w )
 
 void LogoutEffect::windowDeleted( EffectWindow* w )
     {
+    windows.removeAll( w );
     ignoredWindows.removeAll( w );
     if( w == logoutWindow )
         logoutWindow = NULL;
