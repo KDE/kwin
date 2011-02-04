@@ -854,60 +854,96 @@ void GLShader::unbind()
     glUseProgram(0);
 }
 
-int GLShader::uniformLocation(const char* name)
+int GLShader::uniformLocation(const char *name)
 {
     int location = glGetUniformLocation(mProgram, name);
     return location;
 }
 
-bool GLShader::setUniform(const char* name, float value)
+bool GLShader::setUniform(const char *name, float value)
 {
-    int location = uniformLocation(name);
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, int value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, const QVector2D& value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, const QVector3D& value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, const QVector4D& value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, const QMatrix4x4& value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
+bool GLShader::setUniform(const char *name, const QColor& color)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, color);
+}
+
+bool GLShader::setUniform(int location, float value)
+{
     if (location >= 0) {
         glUniform1f(location, value);
     }
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, int value)
+bool GLShader::setUniform(int location, int value)
 {
-    int location = uniformLocation(name);
     if (location >= 0) {
         glUniform1i(location, value);
     }
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, const QVector2D& value)
+bool GLShader::setUniform(int location, const QVector2D &value)
 {
-    const int location = uniformLocation(name);
     if (location >= 0) {
-        glUniform2f(location, value.x(), value.y());
+        glUniform2fv(location, 1, (const GLfloat*)&value);
     }
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, const QVector3D& value)
+bool GLShader::setUniform(int location, const QVector3D &value)
 {
-    const int location = uniformLocation(name);
     if (location >= 0) {
-        glUniform3f(location, value.x(), value.y(), value.z());
+        glUniform3fv(location, 1, (const GLfloat*)&value);
     }
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, const QVector4D& value)
+bool GLShader::setUniform(int location, const QVector4D &value)
 {
-    const int location = uniformLocation(name);
     if (location >= 0) {
-        glUniform4f(location, value.x(), value.y(), value.z(), value.w());
+        glUniform4fv(location, 1, (const GLfloat*)&value);
     }
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, const QMatrix4x4& value)
+bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 {
-    const int location = uniformLocation(name);
     if (location >= 0) {
         GLfloat m[16];
         const qreal *data = value.constData();
@@ -922,9 +958,8 @@ bool GLShader::setUniform(const char* name, const QMatrix4x4& value)
     return (location >= 0);
 }
 
-bool GLShader::setUniform(const char* name, const QColor& color)
+bool GLShader::setUniform(int location, const QColor &color)
 {
-    const int location = uniformLocation(name);
     if (location >= 0) {
         glUniform4f(location, color.redF(), color.greenF(), color.blueF(), color.alphaF());
     }
