@@ -723,7 +723,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     if (!opaque) {
         glEnable(GL_BLEND);
         if (alpha) {
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         } else {
             glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
