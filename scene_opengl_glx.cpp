@@ -640,7 +640,9 @@ void SceneOpenGL::Texture::init()
 void SceneOpenGL::Texture::release()
 {
     if (glxpixmap != None) {
-        glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+        if (!options->glStrictBinding) {
+            glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+        }
         glXDestroyPixmap(display(), glxpixmap);
         glxpixmap = None;
     }
