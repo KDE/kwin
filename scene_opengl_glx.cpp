@@ -653,6 +653,17 @@ void SceneOpenGL::Texture::findTarget()
     unsigned int new_target = 0;
     if (glXQueryDrawable && glxpixmap != None)
         glXQueryDrawable(display(), glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
+    // HACK: this used to be a hack for Xgl.
+    // without this hack the NVIDIA blob aborts when trying to bind a texture from
+    // a pixmap icon
+    if (new_target == 0) {
+        if (NPOTTextureSupported() ||
+            (isPowerOfTwo(mSize.width()) && isPowerOfTwo(mSize.height()))) {
+            new_target = GLX_TEXTURE_2D_EXT;
+        } else {
+            new_target = GLX_TEXTURE_RECTANGLE_EXT;
+        }
+    }
     switch(new_target) {
     case GLX_TEXTURE_2D_EXT:
         mTarget = GL_TEXTURE_2D;
