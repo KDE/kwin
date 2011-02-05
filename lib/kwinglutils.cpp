@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_OPENGL
 #include "kwinglobals.h"
 #include "kwineffects.h"
+#include "kwinglplatform.h"
 
 #include "kdebug.h"
 #include <kstandarddirs.h>
@@ -1182,6 +1183,11 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 
 void ShaderManager::initShaders()
 {
+    // HACK: the generic shaders fail with NVIDIA's blob
+    // temporarily disable them to force kwin on GL 1.x profile
+    if (GLPlatform::instance()->driver() == Driver_NVidia) {
+        return;
+    }
     m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
     if (m_orthoShader->isValid()) {
         pushShader(SimpleShader, true);
