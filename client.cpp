@@ -2148,7 +2148,8 @@ void Client::updateAllowedActions(bool force)
         return;
     // TODO: This could be delayed and compressed - It's only for pagers etc. anyway
     info->setAllowedActions(allowed_actions);
-    // TODO: This should also tell the decoration, so that it can update the buttons
+    if (decoration)
+        decoration->reset(KDecoration::SettingButtons);
 }
 
 void Client::autoRaise()
