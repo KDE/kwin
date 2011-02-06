@@ -587,6 +587,13 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                     glXCopySubBuffer(display(), glxbuffer, r.x(), y, r.width(), r.height());
                 }
             } else {
+                // if a shader is bound, copy pixels results in a black screen
+                // therefore unbind the shader and restore after copying the pixels
+                GLint shader = 0;
+                if (ShaderManager::instance()->isShaderBound()) {
+                   glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+                   glUseProgram(0);
+                }
                 // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
                 glEnable(GL_SCISSOR_TEST);
                 glDrawBuffer(GL_FRONT);
@@ -608,6 +615,10 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                 glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
                 glDrawBuffer(GL_BACK);
                 glDisable(GL_SCISSOR_TEST);
+                // rebind previously bound shader
+                if (ShaderManager::instance()->isShaderBound()) {
+                   glUseProgram(shader);
+                }
             }
         } else {
             waitSync();
