@@ -587,6 +587,13 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                     glXCopySubBuffer(display(), glxbuffer, r.x(), y, r.width(), r.height());
                 }
             } else {
+                // if a shader is bound, copy pixels results in a black screen
+                // therefore unbind the shader and restore after copying the pixels
+                GLint shader = 0;
+                if (ShaderManager::instance()->isShaderBound()) {
+                   glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+                   glUseProgram(0);
+                }
                 // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
                 glEnable(GL_SCISSOR_TEST);
                 glDrawBuffer(GL_FRONT);
@@ -608,6 +615,10 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                 glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
                 glDrawBuffer(GL_BACK);
                 glDisable(GL_SCISSOR_TEST);
+                // rebind previously bound shader
+                if (ShaderManager::instance()->isShaderBound()) {
+                   glUseProgram(shader);
+                }
             }
         } else {
             waitSync();
@@ -640,7 +651,9 @@ void SceneOpenGL::Texture::init()
 void SceneOpenGL::Texture::release()
 {
     if (glxpixmap != None) {
-        glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+        if (!options->glStrictBinding) {
+            glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+        }
         glXDestroyPixmap(display(), glxpixmap);
         glxpixmap = None;
     }
@@ -651,6 +664,17 @@ void SceneOpenGL::Texture::findTarget()
     unsigned int new_target = 0;
     if (glXQueryDrawable && glxpixmap != None)
         glXQueryDrawable(display(), glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
+    // HACK: this used to be a hack for Xgl.
+    // without this hack the NVIDIA blob aborts when trying to bind a texture from
+    // a pixmap icon
+    if (new_target == 0) {
+        if (NPOTTextureSupported() ||
+            (isPowerOfTwo(mSize.width()) && isPowerOfTwo(mSize.height()))) {
+            new_target = GLX_TEXTURE_2D_EXT;
+        } else {
+            new_target = GLX_TEXTURE_RECTANGLE_EXT;
+        }
+    }
     switch(new_target) {
     case GLX_TEXTURE_2D_EXT:
         mTarget = GL_TEXTURE_2D;
