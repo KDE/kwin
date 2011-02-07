@@ -122,6 +122,14 @@ DEF2("Window Quick Tile Left", I18N_NOOP("Quick Tile Window to the Left"),
      0, slotWindowQuickTileLeft());
 DEF2("Window Quick Tile Right", I18N_NOOP("Quick Tile Window to the Right"),
      0, slotWindowQuickTileRight());
+DEF2("Window Quick Tile Top Left", I18N_NOOP("Quick Tile Window to the Top Left"),
+     0, slotWindowQuickTileTopLeft());
+DEF2("Window Quick Tile Bottom Left", I18N_NOOP("Quick Tile Window to the Bottom Left"),
+     0, slotWindowQuickTileBottomLeft());
+DEF2("Window Quick Tile Top Right", I18N_NOOP("Quick Tile Window to the Top Right"),
+     0, slotWindowQuickTileTopRight());
+DEF2("Window Quick Tile Bottom Right", I18N_NOOP("Quick Tile Window to the Bottom Right"),
+     0, slotWindowQuickTileBottomRight());
 DEF2("Switch Window Up", I18N_NOOP("Switch to Window Above"),
      Qt::META + Qt::ALT + Qt::Key_Up, slotSwitchWindowUp());
 DEF2("Switch Window Down", I18N_NOOP("Switch to Window Below"),

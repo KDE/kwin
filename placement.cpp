@@ -700,6 +700,38 @@ void Workspace::slotWindowQuickTileRight()
     active_client->setQuickTileMode(QuickTileRight, true);
 }
 
+void Workspace::slotWindowQuickTileTopLeft()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setQuickTileMode(QuickTileTopLeft, true);
+}
+
+void Workspace::slotWindowQuickTileTopRight()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setQuickTileMode(QuickTileTopRight, true);
+}
+
+void Workspace::slotWindowQuickTileBottomLeft()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setQuickTileMode(QuickTileBottomLeft, true);
+}
+
+void Workspace::slotWindowQuickTileBottomRight()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setQuickTileMode(QuickTileBottomRight, true);
+}
+
 int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) const
 {
     int newx = clientArea(MovementArea, cl).left();
