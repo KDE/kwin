@@ -94,9 +94,10 @@ void initGL()
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
+    while (glversioninfo.count() < 3)
+        glversioninfo << "0";
 #ifndef KWIN_HAVE_OPENGLES
-    glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(),
-                                glversioninfo.count() > 2 ? glversioninfo[2].toInt() : 0);
+    glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 #endif
     // Get list of supported OpenGL extensions
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');

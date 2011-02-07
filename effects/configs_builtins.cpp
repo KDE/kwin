@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "resize/resize_config.h"
 #include "showfps/showfps_config.h"
 #include "thumbnailaside/thumbnailaside_config.h"
+#include "windowgeometry/windowgeometry_config.h"
 #include "zoom/zoom_config.h"
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -67,6 +68,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(showfps, ShowFpsEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(translucency, TranslucencyEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(thumbnailaside, ThumbnailAsideEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(windowgeometry, WindowGeometryConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(zoom, ZoomEffectConfig)
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING

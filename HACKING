@@ -168,35 +168,9 @@ there is e.g. an extensive section related to window management).
 Coding style:
 =============
 
-There are these rules for patches for KWin:
+KWin follows the kdelibs coding style. See: http://techbase.kde.org/Policies/Kdelibs_Coding_Style
 
-- the code should be relatively nice and clean. Seriously. Rationale: Any messy code can be hard to comprehend,
-but if the code is in a window manager it will be twice as difficult.
-
-- unless the functionality of the code is obvious, there should be either at least a short comment explaining
-what it does, or it should be obvious from the commit log. If there's a hack needed, if there's a potentional
-problem, if something is just a temporary fix, say so. Comments like "this clever trick is necessary"
-don't count. See above for rationale. I needed more than two years to understand all of KWin,
-and there were parts I never got and had to rewrite in order to fix a problem with them.
-
-- indentation is 4 spaces, not tabs. Rationale: The code looks like a mess if this is not consistent.
-
-- { and } enclosing a block are aligned with the block, neither with the above level nor there is any
-trailing { (i.e. { and } are indented in the same column like the code they surround). See above for rationale.
-If this feel weird or whatever, put them wherever you want first and when the changes are done, check
-"svn diff" and fix it. If I can handle about half a dozen different formatting styles when working
-on various parts of KDE, this shouldn't be that much work for you (and yes, I've even done
-the "fix-before-submit" thing).
-
-- there is not space before (, i.e. it's "foo(", not "foo (". Rationale: This makes it simpler to grep for functions.
-
-- a null pointer is NULL, not a zero. Not that I really insist on this one, but the only reason for using 0
-is being way too lazy to type. Rationale: NULL says it's a pointer, and with many compilers it actually is a pointer,
-making it possible to detect some mistakes.
-
-That's all. Bonus points if you try to follow the existing coding style in general, but I don't think
-I really care about the rest, as long as these rules are followed. If I find out I care about more,
-I'll add them here.
+The source repository was reformatted with git commit 4fd08556a1702462335f4f1307da663c2c54b2c2
 
 
 Branches:

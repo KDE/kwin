@@ -152,8 +152,10 @@ void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
 {
     if ((mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch))
         thumbnailFrame->setSelection(highlight_area);
-    else
-        thumbnailFrame->setSelection(windows[ selected_window ]->area);
+    else {
+        ItemInfo *info = windows.value(selected_window, 0);
+        thumbnailFrame->setSelection(info ? info->area : QRect());
+    }
     thumbnailFrame->render(region);
 
     if ((mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch)) {
@@ -271,8 +273,9 @@ void BoxSwitchEffect::windowGeometryShapeChanged(EffectWindow* w, const QRect& o
 {
     if (mActivated) {
         if (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode) {
-            if (windows.contains(w) && w->size() != old.size()) {
-                effects->addRepaint(windows[ w ]->area);
+            ItemInfo *info = windows.value( w, 0L );
+            if (info && w->size() != old.size()) {
+                effects->addRepaint(info->area);
             }
         } else {
             if (w->isOnAllDesktops()) {
@@ -357,24 +360,25 @@ void BoxSwitchEffect::tabBoxUpdated()
                         }
                     }
                 }
-                if (windows.contains(selected_window))
-                    effects->addRepaint(windows.value(selected_window)->area);
+                if (ItemInfo *info = windows.value(selected_window, 0))
+                    effects->addRepaint(info->area);
                 selected_window->addRepaintFull();
             }
             setSelectedWindow(effects->currentTabBoxWindow());
-            if (windows.contains(selected_window))
-                effects->addRepaint(windows.value(selected_window)->area);
-            selected_window->addRepaintFull();
+            if (ItemInfo *info = windows.value(selected_window, 0))
+                effects->addRepaint(info->area);
+            if (selected_window) // @Martin can effects->currentTabBoxWindow() be NULL?
+                selected_window->addRepaintFull();
             effects->addRepaint(text_area);
         } else if (mMode != TabBoxWindowsMode && mMode != TabBoxWindowsAlternativeMode) {
             // DesktopMode
-            if (desktops.contains(selected_desktop))
-                effects->addRepaint(desktops.value(selected_desktop)->area);
+            if (ItemInfo *info = desktops.value(selected_desktop, 0))
+                effects->addRepaint(info->area);
             selected_desktop = effects->currentTabBoxDesktop();
             if (!mProxyActivated || mProxyShowText)
                 thumbnailFrame->setText(effects->desktopName(selected_desktop));
-            if (desktops.contains(selected_desktop))
-                effects->addRepaint(desktops.value(selected_desktop)->area);
+            if (ItemInfo *info = desktops.value(selected_desktop, 0))
+                effects->addRepaint(info->area);
             effects->addRepaint(text_area);
             if (effects->currentTabBoxDesktopList() == original_desktops)
                 return;
@@ -476,12 +480,13 @@ void BoxSwitchEffect::windowClosed(EffectWindow* w)
     if (w == selected_window) {
         setSelectedWindow(0);
     }
-    if (windows.contains(w)) {
+    QHash<EffectWindow*, ItemInfo*>::iterator it = windows.find(w);
+    if (it != windows.end()) {
         w->refWindow();
         referrencedWindows.append(w);
         original_windows.removeAll(w);
-        delete windows[ w ];
-        windows.remove(w);
+        delete *it; *it = 0;
+        windows.erase( it );
         effects->addRepaintFull();
     }
 }
@@ -595,11 +600,13 @@ void BoxSwitchEffect::calculateItemSizes()
                 if (!ordered_windows.at(i))
                     continue;
                 EffectWindow* w = ordered_windows.at(i);
-                windows[ w ] = new ItemInfo();
+                ItemInfo *info = windows.value(w, 0);
+                if (!info)
+                    windows[ w ] = info = new ItemInfo();
 
-                windows[ w ]->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
-                windows[ w ]->iconFrame->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-                windows[ w ]->iconFrame->setIcon(w->icon());
+                info->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
+                info->iconFrame->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+                info->iconFrame->setIcon(w->icon());
 
                 float moveIndex = i;
                 if (animation && timeLine.value() < 0.5) {
@@ -610,16 +617,17 @@ void BoxSwitchEffect::calculateItemSizes()
                 }
                 if (ordered_windows.count() % 2 == 0)
                     moveIndex += 0.5;
-                windows[ w ]->area = QRect(frame_area.x() + moveIndex * item_max_size.width() + offset,
-                                           frame_area.y(),
-                                           item_max_size.width(), item_max_size.height());
-                windows[ w ]->clickable = windows[ w ]->area;
+                info->area = QRect(frame_area.x() + moveIndex * item_max_size.width() + offset,
+                                   frame_area.y(),
+                                   item_max_size.width(), item_max_size.height());
+                info->clickable = info->area;
             }
             if (ordered_windows.count() % 2 == 0) {
                 right_window = ordered_windows.last();
             }
             if (!highlight_is_set) {
-                highlight_area = windows[ selected_window ]->area;
+                ItemInfo *info = windows.value(selected_window, 0);
+                highlight_area = info ? info->area : QRect();
                 highlight_is_set = true;
             }
         } else {
@@ -627,41 +635,46 @@ void BoxSwitchEffect::calculateItemSizes()
                 if (!original_windows.at(i))
                     continue;
                 EffectWindow* w = original_windows.at(i);
-                windows[ w ] = new ItemInfo();
+                ItemInfo *info = windows.value(w, 0);
+                if (!info)
+                    windows[ w ] = info = new ItemInfo();
 
-                windows[ w ]->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
-                windows[ w ]->iconFrame->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-                windows[ w ]->iconFrame->setIcon(w->icon());
+                info->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
+                info->iconFrame->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+                info->iconFrame->setIcon(w->icon());
 
-                windows[ w ]->area = QRect(frame_area.x() + i * item_max_size.width(),
-                                           frame_area.y(),
-                                           item_max_size.width(), item_max_size.height());
-                windows[ w ]->clickable = windows[ w ]->area;
+                info->area = QRect(frame_area.x() + i * item_max_size.width(),
+                                   frame_area.y(),
+                                   item_max_size.width(), item_max_size.height());
+                info->clickable = info->area;
             }
         }
     } else {
         desktops.clear();
         for (int i = 0; i < original_desktops.count(); i++) {
             int it = original_desktops.at(i);
-            desktops[ it ] = new ItemInfo();
+            ItemInfo *info = desktops.value( it, 0 );
+            if (!info)
+                desktops[ it ] = info = new ItemInfo();
 
-            desktops[ it ]->area = QRect(frame_area.x() + i * item_max_size.width(),
-                                         frame_area.y(),
-                                         item_max_size.width(), item_max_size.height());
-            desktops[ it ]->clickable = desktops[ it ]->area;
+            info->area = QRect(frame_area.x() + i * item_max_size.width(),
+                               frame_area.y(),
+                               item_max_size.width(), item_max_size.height());
+            info->clickable = info->area;
         }
     }
 }
 
 void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
 {
-    if (!windows.contains(w))
+    ItemInfo *info = windows.value(w, 0);
+    if (!info)
         return;
     WindowPaintData data(w);
 
     setPositionTransformations(data,
-                               windows[ w ]->thumbnail, w,
-                               windows[ w ]->area.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
+                               info->thumbnail, w,
+                               info->area.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                Qt::KeepAspectRatio);
 
     if (animation && (w == edge_window) && (windows.size() % 2 == 1)) {
@@ -698,7 +711,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // paint one part of the thumbnail
         effects->paintWindow(w,
                              PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                             windows[ w ]->thumbnail, data);
+                             info->thumbnail, data);
 
         QRect secondThumbnail;
 
@@ -733,12 +746,12 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
             }
         }
         setPositionTransformations(data,
-                                   windows[ w ]->thumbnail, w,
+                                   info->thumbnail, w,
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->paintWindow(w,
                              PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                             windows[ w ]->thumbnail, data);
+                             info->thumbnail, data);
     } else if ((windows.size() % 2 == 0) && (w == right_window)) {
         // in case of even number of thumbnails:
         // the window on the right is painted one half on left and on half on the right side
@@ -779,7 +792,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         data.quads = leftQuads;
         effects->drawWindow(w,
                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                            windows[ w ]->thumbnail, data);
+                            info->thumbnail, data);
 
         // right quads are painted on left side of frame
         data.quads = rightQuads;
@@ -788,28 +801,28 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                                 (float)item_max_size.width() * 0.5 + animationOffset,
                                 frame_area.y(), item_max_size.width(), item_max_size.height());
         setPositionTransformations(data,
-                                   windows[ w ]->thumbnail, w,
+                                   info->thumbnail, w,
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->drawWindow(w,
                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                            windows[ w ]->thumbnail, data);
+                            info->thumbnail, data);
     } else {
         effects->drawWindow(w,
                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                            windows[ w ]->thumbnail, data);
+                            info->thumbnail, data);
     }
 }
 
 void BoxSwitchEffect::paintDesktopThumbnail(int iDesktop)
 {
-    if (!desktops.contains(iDesktop))
+    ItemInfo *info = desktops.value(iDesktop, 0);
+    if (!info)
         return;
 
     ScreenPaintData data;
     QRect region;
-    QRect r = desktops[ iDesktop ]->area.adjusted(highlight_margin, highlight_margin,
-              -highlight_margin, -highlight_margin);
+    QRect r = info->area.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin);
     QSize size = QSize(displayWidth(), displayHeight());
 
     size.scale(r.size(), Qt::KeepAspectRatio);
@@ -829,7 +842,8 @@ void BoxSwitchEffect::paintDesktopThumbnail(int iDesktop)
 
 void BoxSwitchEffect::paintWindowIcon(EffectWindow* w)
 {
-    if (!windows.contains(w))
+    ItemInfo *info = windows.value(w, 0);
+    if (!info)
         return;
     // Don't render null icons
     if (w->icon().isNull()) {
@@ -838,24 +852,24 @@ void BoxSwitchEffect::paintWindowIcon(EffectWindow* w)
 
     int width = w->icon().width();
     int height = w->icon().height();
-    int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
-    int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
+    int x = info->area.x() + info->area.width() - width - highlight_margin;
+    int y = info->area.y() + info->area.height() - height - highlight_margin;
     if ((windows.size() % 2 == 0)) {
         if (w == right_window) {
             // in case of right window the icon has to be painted on the left side of the frame
-            x = frame_area.x() + windows[ w ]->area.width() * 0.5 - width - highlight_margin;
+            x = frame_area.x() + info->area.width() * 0.5 - width - highlight_margin;
             if (animation) {
                 if (timeLine.value() <= 0.5) {
                     if (direction == Left) {
-                        x -= windows[ w ]->area.width() * timeLine.value();
+                        x -= info->area.width() * timeLine.value();
                         x = qMax(x, frame_area.x());
                     } else
-                        x += windows[ w ]->area.width() * timeLine.value();
+                        x += info->area.width() * timeLine.value();
                 } else {
                     if (direction == Left)
-                        x += windows[ w ]->area.width() * (1.0 - timeLine.value());
+                        x += info->area.width() * (1.0 - timeLine.value());
                     else {
-                        x -= windows[ w ]->area.width() * (1.0 - timeLine.value());
+                        x -= info->area.width() * (1.0 - timeLine.value());
                         x = qMax(x, frame_area.x());
                     }
                 }
@@ -866,20 +880,20 @@ void BoxSwitchEffect::paintWindowIcon(EffectWindow* w)
         if (animation && w == edge_window) {
             if (timeLine.value() < 0.5) {
                 if (direction == Left)
-                    x += windows[ w ]->area.width() * timeLine.value();
+                    x += info->area.width() * timeLine.value();
                 else
-                    x -= windows[ w ]->area.width() * timeLine.value();
+                    x -= info->area.width() * timeLine.value();
             } else {
                 if (direction == Left)
-                    x -= windows[ w ]->area.width() * (1.0 - timeLine.value());
+                    x -= info->area.width() * (1.0 - timeLine.value());
                 else
-                    x += windows[ w ]->area.width() * (1.0 - timeLine.value());
+                    x += info->area.width() * (1.0 - timeLine.value());
             }
         }
     }
 
-    windows[ w ]->iconFrame->setPosition(QPoint(x, y));
-    windows[ w ]->iconFrame->render(infiniteRegion(), 1.0, 0.75);
+    info->iconFrame->setPosition(QPoint(x, y));
+    info->iconFrame->render(infiniteRegion(), 1.0, 0.75);
 }
 
 void* BoxSwitchEffect::proxy()

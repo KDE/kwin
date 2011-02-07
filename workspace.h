@@ -764,6 +764,10 @@ public slots:
     void slotWindowShrinkVertical();
     void slotWindowQuickTileLeft();
     void slotWindowQuickTileRight();
+    void slotWindowQuickTileTopLeft();
+    void slotWindowQuickTileTopRight();
+    void slotWindowQuickTileBottomLeft();
+    void slotWindowQuickTileBottomRight();
 
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();

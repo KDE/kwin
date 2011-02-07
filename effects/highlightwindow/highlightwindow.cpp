@@ -240,6 +240,7 @@ void HighlightWindowEffect::prepareHighlighting()
     foreach (EffectWindow * w, effects->stackingOrder())
     if (!m_windowOpacity.contains(w))    // Just in case we are still finishing from last time
         m_windowOpacity[w] = isInitiallyHidden(w) ? 0.0 : 1.0;
+    m_highlightedWindows.at(0)->addRepaintFull();
 }
 
 void HighlightWindowEffect::finishHighlighting()
@@ -247,6 +248,8 @@ void HighlightWindowEffect::finishHighlighting()
     m_finishing = true;
     m_monitorWindow = NULL;
     m_highlightedWindows.clear();
+    if (!m_windowOpacity.isEmpty())
+        m_windowOpacity.constBegin().key()->addRepaintFull();
 }
 
 } // namespace
