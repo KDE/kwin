@@ -706,6 +706,7 @@ void GLShader::initStatic()
 GLShader::GLShader()
     : mProgram(0)
     , mValid(false)
+    , mLocationsResolved(false)
     , mTextureWidth(-1.0f)
     , mTextureHeight(-1.0f)
 {
@@ -856,10 +857,58 @@ void GLShader::unbind()
     glUseProgram(0);
 }
 
+void GLShader::resolveLocations()
+{
+    if (mLocationsResolved)
+        return;
+
+    mMatrixLocation[TextureMatrix]        = uniformLocation("textureMatrix");
+    mMatrixLocation[ProjectionMatrix]     = uniformLocation("projection");
+    mMatrixLocation[ModelViewMatrix]      = uniformLocation("modelview");
+    mMatrixLocation[WindowTransformation] = uniformLocation("windowTransformation");
+    mMatrixLocation[ScreenTransformation] = uniformLocation("screenTransformation");
+
+    mVec2Location[Offset] = uniformLocation("offset");
+
+    mFloatLocation[Opacity]       = uniformLocation("opacity");
+    mFloatLocation[Brightness]    = uniformLocation("brightness");
+    mFloatLocation[Saturation]    = uniformLocation("saturation");
+    mFloatLocation[TextureWidth]  = uniformLocation("textureWidth");
+    mFloatLocation[TextureHeight] = uniformLocation("textureHeight");
+
+    mIntLocation[AlphaToOne] = uniformLocation("u_forceAlpha");
+
+    mLocationsResolved = true;
+}
+
 int GLShader::uniformLocation(const char *name)
 {
-    int location = glGetUniformLocation(mProgram, name);
+    const int location = glGetUniformLocation(mProgram, name);
     return location;
+}
+
+bool GLShader::setUniform(GLShader::MatrixUniform uniform, const QMatrix4x4 &matrix)
+{
+    resolveLocations();
+    return setUniform(mMatrixLocation[uniform], matrix);
+}
+
+bool GLShader::setUniform(GLShader::Vec2Uniform uniform, const QVector2D &value)
+{
+    resolveLocations();
+    return setUniform(mVec2Location[uniform], value);
+}
+
+bool GLShader::setUniform(GLShader::FloatUniform uniform, float value)
+{
+    resolveLocations();
+    return setUniform(mFloatLocation[uniform], value);
+}
+
+bool GLShader::setUniform(GLShader::IntUniform uniform, int value)
+{
+    resolveLocations();
+    return setUniform(mIntLocation[uniform], value);
 }
 
 bool GLShader::setUniform(const char *name, float value)

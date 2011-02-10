@@ -279,8 +279,42 @@ public:
 
     void setTextureWidth(float width);
     void setTextureHeight(float height);
+
     float textureWidth();
     float textureHeight();
+
+    enum MatrixUniform {
+        TextureMatrix = 0,
+        ProjectionMatrix,
+        ModelViewMatrix,
+        WindowTransformation,
+        ScreenTransformation,
+        MatrixCount
+    };
+
+    enum Vec2Uniform {
+        Offset,
+        Vec2UniformCount
+    };
+
+    enum FloatUniform {
+        Opacity,
+        Brightness,
+        Saturation,
+        TextureWidth,
+        TextureHeight,
+        FloatUniformCount
+    };
+
+    enum IntUniform {
+        AlphaToOne,
+        IntUniformCount
+    };
+
+    bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
+    bool setUniform(Vec2Uniform uniform,   const QVector2D &value);
+    bool setUniform(FloatUniform uniform,  float value);
+    bool setUniform(IntUniform uniform,    int value);
 
     static void initStatic();
     static bool fragmentShaderSupported()  {
@@ -298,15 +332,22 @@ protected:
     bool compile(GLuint program, GLenum shaderType, const QByteArray &sourceCode) const;
     void bind();
     void unbind();
-
+    void resolveLocations();
 
 private:
     unsigned int mProgram;
-    bool mValid;
-    static bool sFragmentShaderSupported;
-    static bool sVertexShaderSupported;
+    bool mValid:1;
+    bool mLocationsResolved:1;
+    int mMatrixLocation[MatrixCount];
+    int mVec2Location[Vec2UniformCount];
+    int mFloatLocation[FloatUniformCount];
+    int mIntLocation[IntUniformCount];
     float mTextureWidth;
     float mTextureHeight;
+
+    static bool sFragmentShaderSupported;
+    static bool sVertexShaderSupported;
+
     friend class ShaderManager;
 };
 
