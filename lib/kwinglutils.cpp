@@ -1283,66 +1283,61 @@ void ShaderManager::initShaders()
 void ShaderManager::resetShader(ShaderType type)
 {
     // resetShader is either called from init or from push, we know that a built-in shader is bound
+    const QMatrix4x4 identity;
+
+    QMatrix4x4 projection;
+    QMatrix4x4 modelView;
+
     GLShader *shader = getBoundShader();
+
     switch(type) {
-    case SimpleShader: {
-        QMatrix4x4 projection;
+    case SimpleShader:
         projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
-        shader->setUniform(GLShader::ProjectionMatrix, projection);
-        shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-        shader->setUniform("debug", 0);
-        shader->setUniform("sample", 0);
-        // TODO: has to become textureSize
-        shader->setUniform(GLShader::TextureWidth, 1.0f);
-        shader->setUniform(GLShader::TextureHeight, 1.0f);
-        // TODO: has to become colorManiuplation
-        shader->setUniform(GLShader::Opacity, 1.0f);
-        shader->setUniform(GLShader::Brightness, 1.0f);
-        shader->setUniform(GLShader::Saturation, 1.0f);
-        shader->setUniform(GLShader::AlphaToOne, 0);
         break;
-    }
+
     case GenericShader: {
-        shader->setUniform("debug", 0);
-        shader->setUniform("sample", 0);
-        QMatrix4x4 projection;
-        float fovy = 60.0f;
+        // Set up the projection matrix
+        float fovy   = 60.0f;
         float aspect = 1.0f;
-        float zNear = 0.1f;
-        float zFar = 100.0f;
-        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-        float ymin = -ymax;
-        float xmin =  ymin * aspect;
-        float xmax = ymax * aspect;
+        float zNear  = 0.1f;
+        float zFar   = 100.0f;
+        float ymax   = zNear * tan(fovy  * M_PI / 360.0f);
+        float ymin   = -ymax;
+        float xmin   =  ymin * aspect;
+        float xmax   = ymax * aspect;
         projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        shader->setUniform(GLShader::ProjectionMatrix, projection);
-        QMatrix4x4 modelview;
+
+        // Set up the model-view matrix
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-        modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
-        shader->setUniform(GLShader::ModelViewMatrix, modelview);
-        const QMatrix4x4 identity;
-        shader->setUniform(GLShader::ScreenTransformation, identity);
-        shader->setUniform(GLShader::WindowTransformation, identity);
-        // TODO: has to become textureSize
-        shader->setUniform(GLShader::TextureWidth, 1.0f);
-        shader->setUniform(GLShader::TextureHeight, 1.0f);
-        // TODO: has to become colorManiuplation
-        shader->setUniform(GLShader::Opacity, 1.0f);
-        shader->setUniform(GLShader::Brightness, 1.0f);
-        shader->setUniform(GLShader::Saturation, 1.0f);
-        shader->setUniform(GLShader::AlphaToOne, 0);
+        modelView.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+        modelView.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
         break;
     }
-    case ColorShader: {
-        QMatrix4x4 projection;
+
+    case ColorShader:
         projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
-        shader->setUniform(GLShader::ProjectionMatrix, projection);
-        shader->setUniform(GLShader::Offset, QVector2D(0, 0));
         shader->setUniform("geometryColor", QVector4D(0, 0, 0, 1));
         break;
     }
-    }
+
+    //shader->setUniform("debug", 0);
+    shader->setUniform("sample", 0);
+
+    shader->setUniform(GLShader::ProjectionMatrix,     projection);
+    shader->setUniform(GLShader::ModelViewMatrix,      modelView);
+    shader->setUniform(GLShader::ScreenTransformation, identity);
+    shader->setUniform(GLShader::WindowTransformation, identity);
+
+    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+
+    shader->setUniform(GLShader::Opacity,    1.0f);
+    shader->setUniform(GLShader::Brightness, 1.0f);
+    shader->setUniform(GLShader::Saturation, 1.0f);
+    shader->setUniform(GLShader::AlphaToOne, 0);
+
+    // TODO: has to become textureSize
+    shader->setUniform(GLShader::TextureWidth,  1.0f);
+    shader->setUniform(GLShader::TextureHeight, 1.0f);
 }
 
 /***  GLRenderTarget  ***/
