@@ -23,7 +23,8 @@ vec2 pix2tex( vec2 pix )
 void main()
 {
     // Original (unscaled) position in pixels
-    vec2 origpos = varyingTexCoords;
+    // ### FIXME: Use a custom vertex shader that outputs the untransformed texcoords
+    vec2 origpos = varyingTexCoords * vec2(textureWidth, textureHeight);
     // Position in pixels on the scaled window
     vec2 pos = origpos * scale;
     // Start/end position of current region
