@@ -324,9 +324,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 m_windowData[w].iconFrame->setPosition(point);
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
-                    data.shader->setUniform("textureWidth", 1.0f);
-                    data.shader->setUniform("textureHeight", 1.0f);
-                    data.shader->setUniform("opacity", (float)(0.9 * data.opacity * m_decalOpacity * 0.75));
+                    data.shader->setUniform(GLShader::TextureWidth, 1.0f);
+                    data.shader->setUniform(GLShader::TextureHeight, 1.0f);
+                    data.shader->setUniform(GLShader::Opacity, 0.9 * data.opacity * m_decalOpacity * 0.75);
                 }
 #endif
                 m_windowData[w].iconFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
@@ -337,9 +337,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 m_windowData[w].textFrame->setPosition(point);
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
-                    data.shader->setUniform("textureWidth", 1.0f);
-                    data.shader->setUniform("textureHeight", 1.0f);
-                    data.shader->setUniform("opacity", (float)(0.9 * data.opacity * m_decalOpacity * 0.75));
+                    data.shader->setUniform(GLShader::TextureWidth, 1.0f);
+                    data.shader->setUniform(GLShader::TextureHeight, 1.0f);
+                    data.shader->setUniform(GLShader::Opacity, 0.9 * data.opacity * m_decalOpacity * 0.75);
                 }
 #endif
                 m_windowData[w].textFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
