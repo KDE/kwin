@@ -173,13 +173,13 @@ void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
         screenTransformation.scale(data.xScale, data.yScale, data.zScale);
         if (useShader) {
             GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-            shader->setUniform("screenTransformation", screenTransformation);
+            shader->setUniform(GLShader::ScreenTransformation, screenTransformation);
         } else {
             pushMatrix(screenTransformation);
         }
     } else if (useShader && ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) || (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS))) {
         GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-        shader->setUniform("screenTransformation", QMatrix4x4());
+        shader->setUniform(GLShader::ScreenTransformation, QMatrix4x4());
     }
     Scene::paintGenericScreen(mask, data);
     if (mask & PAINT_SCREEN_TRANSFORMED) {
@@ -221,7 +221,7 @@ void SceneOpenGL::paintBackground(QRegion region)
     const bool useShader = ShaderManager::instance()->isValid();
     if (useShader) {
         GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-        shader->setUniform("offset", QVector2D(0, 0));
+        shader->setUniform(GLShader::Offset, QVector2D(0, 0));
     }
     vbo->render(GL_TRIANGLES);
     if (useShader) {
@@ -463,7 +463,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
         } else {
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-            data.shader->setUniform("offset", QVector2D(x, y));
+            data.shader->setUniform(GLShader::Offset, QVector2D(x, y));
         }
         sceneShader = true;
     }
@@ -494,7 +494,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             windowTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
         }
         if (data.shader) {
-            data.shader->setUniform("windowTransformation", windowTransformation);
+            data.shader->setUniform(GLShader::WindowTransformation, windowTransformation);
         }
     }
     if (!sceneShader) {
@@ -635,8 +635,8 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     prepareStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
     makeDecorationArrays(quads, rect);
     if (data.shader) {
-        data.shader->setUniform("textureWidth", 1.0f);
-        data.shader->setUniform("textureHeight", 1.0f);
+        data.shader->setUniform(GLShader::TextureWidth, 1.0f);
+        data.shader->setUniform(GLShader::TextureHeight, 1.0f);
     }
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES);
     restoreStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
@@ -729,23 +729,18 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
             glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
     }
-    shader->setUniform("opacity", (float)opacity);
-    shader->setUniform("saturation", (float)saturation);
-    shader->setUniform("brightness", (float)brightness);
-    shader->setUniform("u_forceAlpha", opaque ? 1 : 0);
+    shader->setUniform(GLShader::Opacity,    opacity);
+    shader->setUniform(GLShader::Saturation, saturation);
+    shader->setUniform(GLShader::Brightness, brightness);
+    shader->setUniform(GLShader::AlphaToOne, opaque ? 1 : 0);
 
-    // setting texture width and heiht stored in shader
+    const float texw = shader->textureWidth();
+    const float texh = shader->textureHeight();
+
+    // setting texture width and height stored in shader
     // only set if it is set by an effect that is not negative
-    float texw = shader->textureWidth();
-    if (texw >= 0.0f)
-        shader->setUniform("textureWidth", texw);
-    else
-        shader->setUniform("textureWidth", (float)toplevel->width());
-    float texh = shader->textureHeight();
-    if (texh >= 0.0f)
-        shader->setUniform("textureHeight", texh);
-    else
-        shader->setUniform("textureHeight", (float)toplevel->height());
+    shader->setUniform(GLShader::TextureWidth, texw >= 0.0 ? texw : toplevel->width());
+    shader->setUniform(GLShader::TextureHeight, texh >= 0.0 ? texh : toplevel->height());
 }
 
 void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation)
@@ -925,7 +920,7 @@ void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opa
     if (!opaque) {
         glDisable(GL_BLEND);
     }
-    ShaderManager::instance()->getBoundShader()->setUniform("u_forceAlpha", 0);
+    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::AlphaToOne, 0);
 #ifndef KWIN_HAVE_OPENGLES
     glPopAttrib();  // ENABLE_BIT
 #endif
@@ -1084,13 +1079,14 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
     if (shader) {
         if (sceneShader)
-            shader->setUniform("offset", QVector2D(0, 0));
-        shader->setUniform("saturation", 1.0f);
-        shader->setUniform("brightness", 1.0f);
-        shader->setUniform("u_forceAlpha", 0);
+            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
 
-        shader->setUniform("textureWidth", 1.0f);
-        shader->setUniform("textureHeight", 1.0f);
+        shader->setUniform(GLShader::Saturation, 1.0f);
+        shader->setUniform(GLShader::Brightness, 1.0f);
+        shader->setUniform(GLShader::AlphaToOne, 0);
+
+        shader->setUniform(GLShader::TextureWidth, 1.0f);
+        shader->setUniform(GLShader::TextureHeight, 1.0f);
     }
 
 #ifndef KWIN_HAVE_OPENGLES
@@ -1215,7 +1211,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
 
         if (shader)
-            shader->setUniform("opacity", (float)(opacity * frameOpacity));
+            shader->setUniform(GLShader::Opacity, opacity * frameOpacity);
 #ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f(0.0, 0.0, 0.0, opacity * frameOpacity);
@@ -1224,12 +1220,12 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
         if (sceneShader) {
-            shader->setUniform("offset", QVector2D(pt.x(), pt.y()));
+            shader->setUniform(GLShader::Offset, QVector2D(pt.x(), pt.y()));
         } else {
             QMatrix4x4 translation;
             translation.translate(pt.x(), pt.y());
             if (shader) {
-                shader->setUniform("windowTransformation", translation);
+                shader->setUniform(GLShader::WindowTransformation, translation);
             } else {
                 pushMatrix(translation);
             }
@@ -1237,7 +1233,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_unstyledVBO->render(region, GL_TRIANGLES);
         if (!sceneShader) {
             if (shader) {
-                shader->setUniform("windowTransformation", QMatrix4x4());
+                shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
             } else {
                 popMatrix();
             }
@@ -1248,7 +1244,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             updateTexture();
 
         if (shader)
-            shader->setUniform("opacity", (float)(opacity * frameOpacity));
+            shader->setUniform(GLShader::Opacity, opacity * frameOpacity);
 #ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
@@ -1280,24 +1276,25 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
         if (m_effectFrame->isCrossFade() && m_oldIconTexture) {
             if (shader)
-                shader->setUniform("opacity", (float)opacity *(1.0f - (float)m_effectFrame->crossFadeProgress()));
+                shader->setUniform(GLShader::Opacity,
+                                   opacity * (1.0f - m_effectFrame->crossFadeProgress()));
 #ifndef KWIN_HAVE_OPENGLES
             else
-                glColor4f(1.0, 1.0, 1.0, opacity *(1.0 - m_effectFrame->crossFadeProgress()));
+                glColor4f(1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()));
 #endif
 
             m_oldIconTexture->bind();
             m_oldIconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
             m_oldIconTexture->unbind();
             if (shader)
-                shader->setUniform("opacity", (float)opacity *(float)m_effectFrame->crossFadeProgress());
+                shader->setUniform(GLShader::Opacity, opacity * m_effectFrame->crossFadeProgress());
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
 #endif
         } else {
             if (shader)
-                shader->setUniform("opacity", (float)opacity);
+                shader->setUniform(GLShader::Opacity, opacity);
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity);
@@ -1319,7 +1316,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     if (!m_effectFrame->text().isEmpty()) {
         if (m_effectFrame->isCrossFade() && m_oldTextTexture) {
             if (shader)
-                shader->setUniform("opacity", (float)opacity *(1.0f - (float)m_effectFrame->crossFadeProgress()));
+                shader->setUniform(GLShader::Opacity, opacity * (1.0f - m_effectFrame->crossFadeProgress()));
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity *(1.0 - m_effectFrame->crossFadeProgress()));
@@ -1329,14 +1326,14 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             m_oldTextTexture->render(region, m_effectFrame->geometry());
             m_oldTextTexture->unbind();
             if (shader)
-                shader->setUniform("opacity", (float)opacity *(float)m_effectFrame->crossFadeProgress());
+                shader->setUniform(GLShader::Opacity, opacity * m_effectFrame->crossFadeProgress());
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
 #endif
         } else {
             if (shader)
-                shader->setUniform("opacity", (float)opacity);
+                shader->setUniform(GLShader::Opacity, opacity);
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity);
