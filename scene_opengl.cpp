@@ -1237,7 +1237,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_unstyledVBO->render(region, GL_TRIANGLES);
         if (!sceneShader) {
             if (shader) {
-                shader->setUniform("windowTranslation", QMatrix4x4());
+                shader->setUniform("windowTransformation", QMatrix4x4());
             } else {
                 popMatrix();
             }
