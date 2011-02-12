@@ -713,12 +713,12 @@ GLShader::GLShader()
 }
 
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
+    : mProgram(0)
+    , mValid(false)
+    , mLocationsResolved(false)
+    , mTextureWidth(-1.0f)
+    , mTextureHeight(-1.0f)
 {
-    mValid = false;
-    mProgram = 0;
-    mTextureWidth = -1.0f;
-    mTextureHeight = -1.0f;
-
     loadFromFiles(vertexfile, fragmentfile);
 }
 
