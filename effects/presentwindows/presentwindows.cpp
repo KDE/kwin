@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <limits.h>
 #include <QTimer>
+#include <QVector4D>
 
 namespace KWin
 {
