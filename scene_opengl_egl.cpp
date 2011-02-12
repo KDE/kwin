@@ -174,6 +174,7 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         stacking_order.append(windows[ c ]);
     }
     grabXServer();
+    XSync(display(), false);
     int mask = 0;
     paintScreen(&mask, &damage);   // call generic implementation
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
