@@ -729,10 +729,13 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
             glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
     }
-    shader->setUniform(GLShader::Opacity,    opacity);
-    shader->setUniform(GLShader::Saturation, saturation);
-    shader->setUniform(GLShader::Brightness, brightness);
-    shader->setUniform(GLShader::AlphaToOne, opaque ? 1 : 0);
+
+    const float rgb = brightness * opacity;
+    const float a = opacity;
+
+    shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
+    shader->setUniform(GLShader::Saturation,         saturation);
+    shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
 
     const float texw = shader->textureWidth();
     const float texh = shader->textureHeight();
@@ -1081,8 +1084,8 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         if (sceneShader)
             shader->setUniform(GLShader::Offset, QVector2D(0, 0));
 
+        shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
-        shader->setUniform(GLShader::Brightness, 1.0f);
         shader->setUniform(GLShader::AlphaToOne, 0);
 
         shader->setUniform(GLShader::TextureWidth, 1.0f);
@@ -1210,8 +1213,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             m_unstyledVBO->setData(verts.count() / 2, 2, verts.data(), texCoords.data());
         }
 
-        if (shader)
-            shader->setUniform(GLShader::Opacity, opacity * frameOpacity);
+        if (shader) {
+            const float a = opacity * frameOpacity;
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+        }
 #ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f(0.0, 0.0, 0.0, opacity * frameOpacity);
@@ -1243,8 +1248,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         if (!m_texture)   // Lazy creation
             updateTexture();
 
-        if (shader)
-            shader->setUniform(GLShader::Opacity, opacity * frameOpacity);
+        if (shader) {
+            const float a = opacity * frameOpacity;
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+        }
 #ifndef KWIN_HAVE_OPENGLES
         else
             glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
@@ -1275,9 +1282,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                        m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
 
         if (m_effectFrame->isCrossFade() && m_oldIconTexture) {
-            if (shader)
-                shader->setUniform(GLShader::Opacity,
-                                   opacity * (1.0f - m_effectFrame->crossFadeProgress()));
+            if (shader) {
+                const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()));
@@ -1286,15 +1294,19 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             m_oldIconTexture->bind();
             m_oldIconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
             m_oldIconTexture->unbind();
-            if (shader)
-                shader->setUniform(GLShader::Opacity, opacity * m_effectFrame->crossFadeProgress());
+            if (shader) {
+                const float a = opacity * m_effectFrame->crossFadeProgress();
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
 #endif
         } else {
-            if (shader)
-                shader->setUniform(GLShader::Opacity, opacity);
+            if (shader) {
+                const QVector4D constant(opacity, opacity, opacity, opacity);
+                shader->setUniform(GLShader::ModulationConstant, constant);
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity);
@@ -1315,8 +1327,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     // Render text
     if (!m_effectFrame->text().isEmpty()) {
         if (m_effectFrame->isCrossFade() && m_oldTextTexture) {
-            if (shader)
-                shader->setUniform(GLShader::Opacity, opacity * (1.0f - m_effectFrame->crossFadeProgress()));
+            if (shader) {
+                const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity *(1.0 - m_effectFrame->crossFadeProgress()));
@@ -1325,15 +1339,19 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             m_oldTextTexture->bind();
             m_oldTextTexture->render(region, m_effectFrame->geometry());
             m_oldTextTexture->unbind();
-            if (shader)
-                shader->setUniform(GLShader::Opacity, opacity * m_effectFrame->crossFadeProgress());
+            if (shader) {
+                const float a = opacity * m_effectFrame->crossFadeProgress();
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
 #endif
         } else {
-            if (shader)
-                shader->setUniform(GLShader::Opacity, opacity);
+            if (shader) {
+                const QVector4D constant(opacity, opacity, opacity, opacity);
+                shader->setUniform(GLShader::ModulationConstant, constant);
+            }
 #ifndef KWIN_HAVE_OPENGLES
             else
                 glColor4f(1.0, 1.0, 1.0, opacity);

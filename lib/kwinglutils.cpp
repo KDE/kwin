@@ -870,8 +870,8 @@ void GLShader::resolveLocations()
 
     mVec2Location[Offset] = uniformLocation("offset");
 
-    mFloatLocation[Opacity]       = uniformLocation("opacity");
-    mFloatLocation[Brightness]    = uniformLocation("brightness");
+    mVec4Location[ModulationConstant] = uniformLocation("modulation");
+
     mFloatLocation[Saturation]    = uniformLocation("saturation");
     mFloatLocation[TextureWidth]  = uniformLocation("textureWidth");
     mFloatLocation[TextureHeight] = uniformLocation("textureHeight");
@@ -897,6 +897,12 @@ bool GLShader::setUniform(GLShader::Vec2Uniform uniform, const QVector2D &value)
 {
     resolveLocations();
     return setUniform(mVec2Location[uniform], value);
+}
+
+bool GLShader::setUniform(GLShader::Vec4Uniform uniform, const QVector4D &value)
+{
+    resolveLocations();
+    return setUniform(mVec4Location[uniform], value);
 }
 
 bool GLShader::setUniform(GLShader::FloatUniform uniform, float value)
@@ -1329,9 +1335,8 @@ void ShaderManager::resetShader(ShaderType type)
     shader->setUniform(GLShader::WindowTransformation, identity);
 
     shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+    shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
 
-    shader->setUniform(GLShader::Opacity,    1.0f);
-    shader->setUniform(GLShader::Brightness, 1.0f);
     shader->setUniform(GLShader::Saturation, 1.0f);
     shader->setUniform(GLShader::AlphaToOne, 0);
 

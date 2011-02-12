@@ -297,9 +297,12 @@ public:
         Vec2UniformCount
     };
 
+    enum Vec4Uniform {
+        ModulationConstant,
+        Vec4UniformCount
+    };
+
     enum FloatUniform {
-        Opacity,
-        Brightness,
         Saturation,
         TextureWidth,
         TextureHeight,
@@ -313,6 +316,7 @@ public:
 
     bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
     bool setUniform(Vec2Uniform uniform,   const QVector2D &value);
+    bool setUniform(Vec4Uniform uniform,   const QVector4D &value);
     bool setUniform(FloatUniform uniform,  float value);
     bool setUniform(IntUniform uniform,    int value);
 
@@ -340,6 +344,7 @@ private:
     bool mLocationsResolved:1;
     int mMatrixLocation[MatrixCount];
     int mVec2Location[Vec2UniformCount];
+    int mVec4Location[Vec4UniformCount];
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
     float mTextureWidth;

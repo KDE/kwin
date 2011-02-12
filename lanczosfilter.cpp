@@ -207,6 +207,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
             int sw = width;
             int sh = height;
+
             GLTexture *cachedTexture = static_cast< GLTexture*>(w->data(LanczosCacheRole).value<void*>());
             if (cachedTexture) {
                 if (cachedTexture->width() == tw && cachedTexture->height() == th) {
@@ -214,13 +215,18 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     if (ShaderManager::instance()->isValid()) {
                         glEnable(GL_BLEND);
                         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                        const float rgb = data.brightness * data.opacity;
+                        const float a = data.opacity;
+
                         GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
                         shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-                        shader->setUniform(GLShader::Opacity, data.opacity);
-                        shader->setUniform(GLShader::Brightness, data.brightness);
+                        shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                         shader->setUniform(GLShader::Saturation, data.saturation);
                         shader->setUniform(GLShader::AlphaToOne, 0);
+
                         cachedTexture->render(textureRect, textureRect);
+
                         ShaderManager::instance()->popShader();
                         glDisable(GL_BLEND);
                     } else {
@@ -336,16 +342,22 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             cache->bind();
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th);
             effects->popRenderTarget();
+
             if (ShaderManager::instance()->isValid()) {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                const float rgb = data.brightness * data.opacity;
+                const float a = data.opacity;
+
                 GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
                 shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-                shader->setUniform(GLShader::Opacity, data.opacity);
-                shader->setUniform(GLShader::Brightness, data.brightness);
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                 shader->setUniform(GLShader::Saturation, data.saturation);
                 shader->setUniform(GLShader::AlphaToOne, 0);
+
                 cache->render(textureRect, textureRect);
+
                 ShaderManager::instance()->popShader();
                 glDisable(GL_BLEND);
             } else {
@@ -353,6 +365,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 cache->render(textureRect, textureRect);
                 restoreRenderStates(cache, data.opacity, data.brightness, data.saturation);
             }
+
             cache->unbind();
             w->setData(LanczosCacheRole, QVariant::fromValue(static_cast<void*>(cache)));
 
