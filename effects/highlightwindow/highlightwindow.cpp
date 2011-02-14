@@ -245,7 +245,8 @@ void HighlightWindowEffect::prepareHighlighting()
     foreach( EffectWindow *w, effects->stackingOrder() )
         if( !m_windowOpacity.contains( w )) // Just in case we are still finishing from last time
             m_windowOpacity[w] = isInitiallyHidden( w ) ? 0.0 : 1.0;
-    m_highlightedWindows.at(0)->addRepaintFull();
+    if (!m_highlightedWindows.isEmpty())
+        m_highlightedWindows.at(0)->addRepaintFull();
     }
 
 void HighlightWindowEffect::finishHighlighting()
