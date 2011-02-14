@@ -681,6 +681,10 @@ void TabBoxHandler::createModel(bool partialReset)
     switch(d->config.tabBoxMode()) {
     case TabBoxConfig::ClientTabBox:
         d->clientModel()->createClientList(partialReset);
+        if (d->lastRaisedClient && !stackingOrder().contains(d->lastRaisedClient))
+            d->lastRaisedClient = 0;
+        if (d->lastRaisedClientSucc && !stackingOrder().contains(d->lastRaisedClientSucc))
+            d->lastRaisedClientSucc = 0;
         break;
     case TabBoxConfig::DesktopTabBox:
         d->desktopModel()->createDesktopList();
