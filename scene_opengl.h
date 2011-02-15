@@ -155,6 +155,8 @@ protected:
         DecorationRight,
         DecorationBottom
     };
+
+    QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const;
     void renderQuads(int mask, const QRegion& region, const WindowQuadList& quads);

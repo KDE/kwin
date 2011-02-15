@@ -417,6 +417,38 @@ void SceneOpenGL::Window::pixmapDiscarded()
     texture.release();
 }
 
+QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
+{
+    QMatrix4x4 matrix;
+    matrix.translate(x(), y());
+
+    if (!(mask & PAINT_WINDOW_TRANSFORMED))
+        return matrix;
+
+    matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
+    matrix.scale(data.xScale, data.yScale, data.zScale);
+
+    if (!data.rotation)
+        return matrix;
+
+    // Apply the rotation
+    const qreal xAxis = (data.rotation->axis == RotationData::XAxis ? 1.0 : 0.0);
+    const qreal yAxis = (data.rotation->axis == RotationData::YAxis ? 1.0 : 0.0);
+    const qreal zAxis = (data.rotation->axis == RotationData::ZAxis ? 1.0 : 0.0);
+
+    matrix.translate(data.rotation->xRotationPoint,
+                     data.rotation->yRotationPoint,
+                     data.rotation->zRotationPoint);
+
+    matrix.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
+
+    matrix.translate(-data.rotation->xRotationPoint,
+                     -data.rotation->yRotationPoint,
+                     -data.rotation->zRotationPoint);
+
+    return matrix;
+}
+
 // paint the window
 void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
@@ -448,11 +480,6 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     texture.setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
 
-    // do required transformations
-    int x = toplevel->x();
-    int y = toplevel->y();
-    double z = 0.0;
-
     bool sceneShader = false;
 
     if (!data.shader && ShaderManager::instance()->isValid()) {
@@ -461,43 +488,19 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
         } else {
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-            data.shader->setUniform(GLShader::Offset, QVector2D(x, y));
+            data.shader->setUniform(GLShader::Offset, QVector2D(x(), y()));
         }
         sceneShader = true;
     }
-    QMatrix4x4 windowTransformation;
-    windowTransformation.translate(x, y);
-    if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
-        windowTransformation.translate(data.xTranslate, data.yTranslate, data.zTranslate);
-        if ((mask & PAINT_WINDOW_TRANSFORMED) && (data.xScale != 1 || data.yScale != 1 || data.zScale != 1)) {
-            windowTransformation.scale(data.xScale, data.yScale, data.zScale);
-        }
-        if ((mask & PAINT_WINDOW_TRANSFORMED) && data.rotation) {
-            windowTransformation.translate(data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint);
-            qreal xAxis = 0.0;
-            qreal yAxis = 0.0;
-            qreal zAxis = 0.0;
-            switch(data.rotation->axis) {
-            case RotationData::XAxis:
-                xAxis = 1.0;
-                break;
-            case RotationData::YAxis:
-                yAxis = 1.0;
-                break;
-            case RotationData::ZAxis:
-                zAxis = 1.0;
-                break;
-            }
-            windowTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
-            windowTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
-        }
-        if (data.shader) {
-            data.shader->setUniform(GLShader::WindowTransformation, windowTransformation);
-        }
-    }
-    if (!sceneShader) {
+
+    const QMatrix4x4 windowTransformation = transformation(mask, data);
+
+    if (data.shader)
+        data.shader->setUniform(GLShader::WindowTransformation, windowTransformation);
+
+    if (!sceneShader)
         pushMatrix(windowTransformation);
-    }
+
     region.translate(toplevel->x(), toplevel->y());    // Back to screen coords
 
     WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
