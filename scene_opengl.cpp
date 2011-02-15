@@ -463,11 +463,14 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         if ( mask & PAINT_WINDOW_TRANSLUCENT && opaque )
             return; // Only painting translucent and window is opaque
         }*/
-    // paint only requested areas
-    if (region != infiniteRegion())  // avoid integer overflow
-        region.translate(-x(), -y());
+
+    // Intersect the clip region with the rectangle the window occupies on the screen
+    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+        region &= toplevel->visibleRect();
+
     if (region.isEmpty())
         return;
+
     if (!bindTexture())
         return;
 
@@ -500,8 +503,6 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     if (!sceneShader)
         pushMatrix(windowTransformation);
-
-    region.translate(toplevel->x(), toplevel->y());    // Back to screen coords
 
     WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
 
