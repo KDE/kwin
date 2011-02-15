@@ -438,25 +438,23 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         return;
     if (!bindTexture())
         return;
-    // set texture filter
-    if (options->glSmoothScale != 0) { // default to yes
-        if (mask & PAINT_WINDOW_TRANSFORMED)
-            filter = ImageFilterGood;
-        else if (mask & PAINT_SCREEN_TRANSFORMED)
-            filter = ImageFilterGood;
-        else
-            filter = ImageFilterFast;
-    } else
-        filter = ImageFilterFast;
-    if (filter == ImageFilterGood)
-        texture.setFilter(GL_LINEAR);
+
+    // Update the texture filter
+    if (options->glSmoothScale != 0 &&
+        (mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+        filter = ImageFilterGood;
     else
-        texture.setFilter(GL_NEAREST);
+        filter = ImageFilterFast;
+
+    texture.setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+
     // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
     double z = 0.0;
+
     bool sceneShader = false;
+
     if (!data.shader && ShaderManager::instance()->isValid()) {
         // set the shader for uniform initialising in paint decoration
         if ((mask & PAINT_WINDOW_TRANSFORMED) || (mask & PAINT_SCREEN_TRANSFORMED)) {
