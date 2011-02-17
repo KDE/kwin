@@ -1,4 +1,4 @@
-uniform sampler2D sample;
+uniform sampler2D sampler;
 uniform float textureWidth;
 uniform float textureHeight;
 uniform vec4 u_color;
@@ -7,7 +7,7 @@ varying vec2 varyingTexCoords;
 
 void main()
 {
-    vec4 tex = texture2D(sample, varyingTexCoords);
+    vec4 tex = texture2D(sampler, varyingTexCoords);
     if (tex.a != 1.0) {
         tex = u_color;
     }

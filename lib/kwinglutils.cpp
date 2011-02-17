@@ -1327,7 +1327,7 @@ void ShaderManager::resetShader(ShaderType type)
     }
 
     //shader->setUniform("debug", 0);
-    shader->setUniform("sample", 0);
+    shader->setUniform("sampler", 0);
 
     shader->setUniform(GLShader::ProjectionMatrix,     projection);
     shader->setUniform(GLShader::ModelViewMatrix,      modelView);

@@ -1,4 +1,4 @@
-uniform sampler2D sample;
+uniform sampler2D sampler;
 uniform sampler2D startOffsetTexture;
 uniform sampler2D endOffsetTexture;
 uniform float factor;
@@ -40,7 +40,7 @@ void main()
 #endif
 
     vec2 transformedtexcoord = pix2tex(rstart + dist);
-    vec3 tex = texture2D(sample, transformedtexcoord).rgb;
+    vec3 tex = texture2D(sampler, transformedtexcoord).rgb;
 #if 0
     // ATM we ignore custom opacity values because Fade effect fades out the
     //  window which results in the explosion being way too quick. Once there's

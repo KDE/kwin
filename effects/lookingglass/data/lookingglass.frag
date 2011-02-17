@@ -1,4 +1,4 @@
-uniform sampler2D sample;
+uniform sampler2D sampler;
 uniform vec2 u_cursor;
 uniform float u_zoom;
 uniform float u_radius;
@@ -20,6 +20,6 @@ void main()
 
     texcoord = texcoord/u_textureSize;
     texcoord.t = 1.0 - texcoord.t;
-    gl_FragColor = texture2D(sample, texcoord);
+    gl_FragColor = texture2D(sampler, texcoord);
 }
 

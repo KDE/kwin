@@ -1,4 +1,4 @@
-uniform sampler2D sample;
+uniform sampler2D sampler;
 uniform vec4 modulation;
 uniform float saturation;
 uniform int debug;
@@ -9,7 +9,7 @@ varying vec2 varyingTexCoords;
 //varying vec4 color;
 
 void main() {
-    vec4 tex = texture2D(sample, varyingTexCoords);
+    vec4 tex = texture2D(sampler, varyingTexCoords);
 
     if (u_forceAlpha > 0) {
         tex.a = 1.0;
