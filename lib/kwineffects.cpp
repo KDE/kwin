@@ -1336,9 +1336,4 @@ void EffectFrame::enableCrossFade(bool enable)
     d->crossFading = enable;
 }
 
-QColor EffectFrame::styledTextColor()
-{
-    return Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
-}
-
 } // namespace

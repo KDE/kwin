@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <KAction>
 #include <KActionCollection>
+#include <KLocale>
 
 #include <kwinglutils.h>
 

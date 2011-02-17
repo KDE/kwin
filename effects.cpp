@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kservice.h>
 #include <kservicetypetrader.h>
 #include <kplugininfo.h>
+#include <Plasma/Theme>
 
 #include <assert.h>
 
@@ -1850,6 +1851,11 @@ void EffectFrameImpl::autoResize()
 
     align(geometry);
     setGeometry(geometry);
+}
+
+QColor EffectFrameImpl::styledTextColor()
+{
+    return Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
 }
 
 } // namespace

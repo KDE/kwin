@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Plasma
 {
 class PushButton;
+class FrameSvg;
 }
 
 namespace KWin

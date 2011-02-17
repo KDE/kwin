@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <assert.h>
 #include <math.h>
+#include <KDE/KConfigGroup>
 
 namespace KWin
 {

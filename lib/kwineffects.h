@@ -40,9 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
 
-#include <KDE/Plasma/FrameSvg>
-#include <KDE/Plasma/Theme>
-
 #include <assert.h>
 #include <limits.h>
 
@@ -1795,11 +1792,6 @@ public:
      * @returns The GLShader used for rendering or null if none.
      **/
     virtual GLShader* shader() const = 0;
-
-    /**
-     * The foreground text color as specified by the default Plasma theme.
-     */
-    static QColor styledTextColor();
 
     /**
      * If @p enable is @c true cross fading between icons and text is enabled

@@ -23,6 +23,7 @@
 #include <X11/Xatom.h>
 
 #include <QMatrix4x4>
+#include <KConfigGroup>
 #include <KDebug>
 
 namespace KWin

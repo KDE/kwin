@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QSize>
 #include <QtGui/QPainter>
 // KDE
+#include <KDE/KConfigGroup>
+#include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KIconLoader>
 #include <KDE/KStandardDirs>

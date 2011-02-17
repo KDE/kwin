@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QStack>
 #include <QHash>
+#include <Plasma/FrameSvg>
 
 
 class KService;
@@ -361,6 +362,10 @@ public:
     Plasma::FrameSvg& selectionFrame() {
         return m_selection;
     }
+    /**
+     * The foreground text color as specified by the default Plasma theme.
+     */
+    static QColor styledTextColor();
 
 private Q_SLOTS:
     void plasmaThemeChanged();

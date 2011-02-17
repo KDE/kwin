@@ -32,6 +32,7 @@ class QTimer;
 namespace Plasma
 {
 class PushButton;
+class FrameSvg;
 }
 
 namespace KWin

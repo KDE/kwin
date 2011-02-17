@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
+#include <KDE/KConfigGroup>
+#include <KDE/KLocale>
 
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
