@@ -53,9 +53,12 @@ public:
     virtual void windowAdded(Toplevel*);
     virtual void windowClosed(Toplevel*, Deleted*);
     virtual void windowDeleted(Deleted*);
+
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
+    QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
+
 private:
     bool selectMode();
     bool initTfp();

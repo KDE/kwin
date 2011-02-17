@@ -143,55 +143,56 @@ bool SceneOpenGL::selfCheck()
     return ok;
 }
 
+QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
+{
+    QMatrix4x4 matrix;
+
+    if (!(mask & PAINT_SCREEN_TRANSFORMED))
+        return matrix;
+
+    matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
+    matrix.scale(data.xScale, data.yScale, data.zScale);
+
+    if (!data.rotation)
+        return matrix;
+
+    // Apply the rotation
+    const qreal xAxis = (data.rotation->axis == RotationData::XAxis ? 1.0 : 0.0);
+    const qreal yAxis = (data.rotation->axis == RotationData::YAxis ? 1.0 : 0.0);
+    const qreal zAxis = (data.rotation->axis == RotationData::ZAxis ? 1.0 : 0.0);
+
+    matrix.translate(data.rotation->xRotationPoint,
+                     data.rotation->yRotationPoint,
+                     data.rotation->zRotationPoint);
+
+    matrix.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
+
+    matrix.translate(-data.rotation->xRotationPoint,
+                     -data.rotation->yRotationPoint,
+                     -data.rotation->zRotationPoint);
+
+    return matrix;
+}
+
 void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
 {
-    const bool useShader = ShaderManager::instance()->isValid();
-    if (mask & PAINT_SCREEN_TRANSFORMED) {
-        // apply screen transformations
-        QMatrix4x4 screenTransformation;
-        screenTransformation.translate(data.xTranslate, data.yTranslate, data.zTranslate);
-        if (data.rotation) {
-            screenTransformation.translate(data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint);
-            // translate to rotation point, rotate, translate back
-            qreal xAxis = 0.0;
-            qreal yAxis = 0.0;
-            qreal zAxis = 0.0;
-            switch(data.rotation->axis) {
-            case RotationData::XAxis:
-                xAxis = 1.0;
-                break;
-            case RotationData::YAxis:
-                yAxis = 1.0;
-                break;
-            case RotationData::ZAxis:
-                zAxis = 1.0;
-                break;
-            }
-            screenTransformation.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
-            screenTransformation.translate(-data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint);
-        }
-        screenTransformation.scale(data.xScale, data.yScale, data.zScale);
-        if (useShader) {
-            GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-            shader->setUniform(GLShader::ScreenTransformation, screenTransformation);
-        } else {
-            pushMatrix(screenTransformation);
-        }
-    } else if (useShader && ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) || (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS))) {
-        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-        shader->setUniform(GLShader::ScreenTransformation, QMatrix4x4());
+    ShaderManager *shaderManager = ShaderManager::instance();
+    const bool useShader = shaderManager->isValid();
+    const QMatrix4x4 matrix = transformation(mask, data);
+
+    if (useShader) {
+        GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+        shader->setUniform(GLShader::ScreenTransformation, matrix);
+    } else {
+        pushMatrix(matrix);
     }
+
     Scene::paintGenericScreen(mask, data);
-    if (mask & PAINT_SCREEN_TRANSFORMED) {
-        if (useShader) {
-            ShaderManager::instance()->popShader();
-        } else {
-            popMatrix();
-        }
-    } else if (useShader && ((mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS) ||
-                            (mask & PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS))) {
-        ShaderManager::instance()->popShader();
-    }
+
+    if (useShader)
+        shaderManager->popShader();
+    else
+        popMatrix();
 }
 
 void SceneOpenGL::paintBackground(QRegion region)
