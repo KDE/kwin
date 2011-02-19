@@ -1,0 +1,22 @@
+/** @mainpage KWin Effects Library
+
+<p>
+@ref kwineffects is a library for implementing window transition effect
+plugins for KWin.
+
+@authors
+Lubos Lunak \<l.lunak@kde.org\><br>
+Rivo Laks \<rivolaks@hot.ee\><br>
+Lucas Murray \<lmurray@undefinedfire.com\><br>
+Fredrik Höglund \<fredrik@kde.org\><br>
+Martin Gräßlin \<mgraesslin@kde.org\>
+
+@maintainers
+Martin Gräßlin \<mgraesslin@kde.org\>
+
+@licences
+libkwineffects: @gpl
+
+*/
+
+// DOXYGEN_SET_PROJECT_NAME = KWin Effects Library

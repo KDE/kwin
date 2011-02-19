@@ -43,7 +43,7 @@ if(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
 endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
 
 # for things that are also used by kwin libraries
-configure_file(lib/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib/kwinconfig.h )
+configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
@@ -51,9 +51,9 @@ configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 ########### global ###############
 
 include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/libkwineffects
     ${CMAKE_CURRENT_SOURCE_DIR}/libkdecorations
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
@@ -62,7 +62,7 @@ include_directories(
     )
 
 add_subdirectory( libkdecorations )
-add_subdirectory( lib ) 
+add_subdirectory( libkwineffects )
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
 add_subdirectory( clients )

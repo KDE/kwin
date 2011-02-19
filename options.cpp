@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "compositingprefs.h"
-#include "lib/kwinglplatform.h"
+#include <kwinglplatform.h>
 
 #include <kephal/screens.h>
 

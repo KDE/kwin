@@ -70,8 +70,7 @@ Sources and other compositing managers:
 
 #include <kxerrorhandler.h>
 
-// TODO: use <>
-#include "lib/kwinglplatform.h"
+#include <kwinglplatform.h>
 
 #include "utils.h"
 #include "client.h"

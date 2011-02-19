@@ -52,6 +52,7 @@ endif (X11_Xfixes_FOUND)
 install( FILES
     kwinglobals.h
     kwineffects.h
+    kwinglplatform.h
     kwinglutils.h
     kwinglutils_funcs.h
     kwinxrenderutils.h
