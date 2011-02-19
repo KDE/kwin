@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 
 #include "placement.h"
-#include "lib/kdecoration.h"
+#include <kdecoration.h>
 #include "options.h"
 #include "utils.h"
 

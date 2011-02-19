@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QList>
 
-#include "lib/kdecoration.h"
+#include <kdecoration.h>
 
 namespace KWin
 {

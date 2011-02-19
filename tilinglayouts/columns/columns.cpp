@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "tile.h"
 
-#include "lib/kdecoration.h"
+#include <kdecoration.h>
 
 namespace KWin
 {

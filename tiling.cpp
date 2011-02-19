@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <kwindowinfo.h>
 #include <kwindowsystem.h>
-#include "lib/kdecoration.h"
 
 
 namespace KWin

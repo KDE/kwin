@@ -1,0 +1,19 @@
+/** @mainpage KWin Decoration Library
+
+<p>
+@ref kdecoration is a library for implementing window decoration plugins
+for KWin.
+
+@authors
+Lubos Lunak \<l.lunak@kde.org\><br>
+Sandro Giessl \<sandro@giessl.com\>
+
+@maintainers
+Martin Gräßlin \<mgraesslin@kde.org\>
+
+@licences
+libkdecorations: @bsd
+
+*/
+
+// DOXYGEN_SET_PROJECT_NAME = KWin Decoration Library

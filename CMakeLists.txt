@@ -54,13 +54,14 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/lib
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/libkdecorations
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kephal
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kworkspace
     )
 
-
+add_subdirectory( libkdecorations )
 add_subdirectory( lib ) 
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
