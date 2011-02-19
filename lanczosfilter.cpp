@@ -610,8 +610,7 @@ void LanczosShader::setUniforms()
 bool LanczosShader::init()
 {
     GLPlatform *gl = GLPlatform::instance();
-    if (GLShader::fragmentShaderSupported() &&
-            GLShader::vertexShaderSupported() &&
+    if (gl->supports(GLSL) &&
             GLRenderTarget::supported() &&
             !(gl->isRadeon() && gl->chipClass() < R600)) {
         m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");

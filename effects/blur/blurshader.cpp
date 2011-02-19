@@ -20,6 +20,7 @@
 #include "blurshader.h"
 
 #include <kwineffects.h>
+#include <kwinglplatform.h>
 
 #include <QByteArray>
 #include <QMatrix4x4>
@@ -126,7 +127,7 @@ void GLSLBlurShader::reset()
 
 bool GLSLBlurShader::supported()
 {
-    if (!GLShader::fragmentShaderSupported() || !GLShader::vertexShaderSupported())
+    if (!GLPlatform::instance()->supports(GLSL))
         return false;
 
     (void) glGetError(); // Clear the error state

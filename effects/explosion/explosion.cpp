@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "explosion.h"
 
 #include <kwinglutils.h>
+#include <kwinglplatform.h>
 
 #include <QMatrix4x4>
 
@@ -56,7 +57,7 @@ ExplosionEffect::~ExplosionEffect()
 
 bool ExplosionEffect::supported()
 {
-    return GLShader::fragmentShaderSupported() &&
+    return GLPlatform::instance()->supports(GLSL) &&
            (effects->compositingType() == OpenGLCompositing);
 }
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "invert.h"
 
 #include <kwinglutils.h>
+#include <kwinglplatform.h>
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <klocale.h>
@@ -62,8 +63,7 @@ InvertEffect::~InvertEffect()
 
 bool InvertEffect::supported()
 {
-    return GLRenderTarget::supported() &&
-           GLShader::fragmentShaderSupported() &&
+    return GLPlatform::instance()->supports(GLSL) &&
            (effects->compositingType() == OpenGLCompositing);
 }
 

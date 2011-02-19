@@ -320,15 +320,6 @@ public:
     bool setUniform(FloatUniform uniform,  float value);
     bool setUniform(IntUniform uniform,    int value);
 
-    static void initStatic();
-    static bool fragmentShaderSupported()  {
-        return sFragmentShaderSupported;
-    }
-    static bool vertexShaderSupported()  {
-        return sVertexShaderSupported;
-    }
-
-
 protected:
     GLShader();
     bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
@@ -349,9 +340,6 @@ private:
     int mIntLocation[IntUniformCount];
     float mTextureWidth;
     float mTextureHeight;
-
-    static bool sFragmentShaderSupported;
-    static bool sVertexShaderSupported;
 
     friend class ShaderManager;
 };

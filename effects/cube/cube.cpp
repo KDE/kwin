@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include <kwinglutils.h>
+#include <kwinglplatform.h>
 
 namespace KWin
 {
@@ -258,7 +259,7 @@ CubeEffect::~CubeEffect()
 
 bool CubeEffect::loadShader()
 {
-    if (!(GLShader::fragmentShaderSupported() &&
+    if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGLCompositing)))
         return false;
     QString fragmentshader       =  KGlobal::dirs()->findResource("data", "kwin/cylinder.frag");

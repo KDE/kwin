@@ -106,7 +106,6 @@ void initGL()
     glResolveFunctions();
 
     GLTexture::initStatic();
-    GLShader::initStatic();
     GLRenderTarget::initStatic();
     GLVertexBuffer::initStatic();
 }
@@ -688,21 +687,6 @@ QImage GLTexture::convertToGLFormat(const QImage& img) const
 // GLShader
 //****************************************
 
-bool GLShader::sFragmentShaderSupported = false;
-bool GLShader::sVertexShaderSupported = false;
-
-void GLShader::initStatic()
-{
-#ifdef KWIN_HAVE_OPENGLES
-    sFragmentShaderSupported = sVertexShaderSupported = true;
-#else
-    sFragmentShaderSupported = sVertexShaderSupported =
-                                   hasGLExtension("GL_ARB_shader_objects") && hasGLExtension("GL_ARB_shading_language_100");
-    sVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
-    sFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
-#endif
-}
-
 GLShader::GLShader()
     : mProgram(0)
     , mValid(false)
@@ -792,7 +776,7 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     // Make sure shaders are actually supported
-    if (!vertexShaderSupported() || !fragmentShaderSupported()) {
+    if (!GLPlatform::instance()->supports(GLSL)) {
         kError(1212) << "Shaders are not supported";
         return false;
     }

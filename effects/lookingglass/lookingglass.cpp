@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lookingglass.h"
 
 #include <kwinglutils.h>
+#include <kwinglplatform.h>
 
 #include <kactioncollection.h>
 #include <kaction.h>
@@ -78,7 +79,7 @@ LookingGlassEffect::~LookingGlassEffect()
 bool LookingGlassEffect::supported()
 {
     return GLRenderTarget::supported() &&
-           GLShader::fragmentShaderSupported() &&
+           GLPlatform::instance()->supports(GLSL) &&
            (effects->compositingType() == OpenGLCompositing);
 }
 
