@@ -789,7 +789,7 @@ qint64 GLPlatform::glVersion() const
 
 qint64 GLPlatform::glslVersion() const
 {
-    return m_glVersion;
+    return m_glslVersion;
 }
 
 qint64 GLPlatform::mesaVersion() const
