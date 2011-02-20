@@ -181,7 +181,7 @@ trydefaultlib:
     catalog.replace("kwin3_", "kwin_");
     KGlobal::locale()->insertCatalog(catalog);
     // For KCommonDecoration based clients
-    KGlobal::locale()->insertCatalog("kwin_lib");
+    KGlobal::locale()->insertCatalog("libkdecorations");
     // For clients in kdebase
     KGlobal::locale()->insertCatalog("kwin_clients");
     // For clients in kdeartwork
