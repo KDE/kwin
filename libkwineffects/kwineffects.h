@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QPair>
 #include <QtCore/QRect>
 #include <QtGui/QRegion>
-#include <QtGui/QFont>
 
 #include <QtCore/QVector>
 #include <QtCore/QList>
@@ -46,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class KLibrary;
 class KConfigGroup;
 class KActionCollection;
+class QFont;
 class QKeyEvent;
 
 namespace KWin
