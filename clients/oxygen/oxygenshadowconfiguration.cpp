@@ -27,7 +27,6 @@
 #include "oxygenshadowconfiguration.h"
 
 #include <cassert>
-#include <kdecoration.h>
 
 namespace Oxygen
 {

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenshadowconfiguration.h"
-#include "oxygendecohelper.h"
+#include "oxygenhelper.h"
 
 #include <cmath>
 #include <QtCore/QCache>
@@ -42,7 +42,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        ShadowCache( DecoHelper& );
+        ShadowCache( Helper& );
 
         //! destructor
         virtual ~ShadowCache( void )
@@ -172,7 +172,7 @@ namespace Oxygen
 
         protected:
 
-        DecoHelper& helper( void ) const
+        Helper& helper( void ) const
         { return helper_; }
 
         //! square utility function
@@ -238,7 +238,7 @@ namespace Oxygen
         private:
 
         //! helper
-        DecoHelper& helper_;
+        Helper& helper_;
 
         //! defines overlap between shadows and body
         enum { overlap = 4 };
