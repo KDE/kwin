@@ -41,16 +41,11 @@ namespace OxygenConfig
     static const QString FRAME_BORDER = "FrameBorder";
     static const QString BLEND_COLOR = "BlendColor";
     static const QString SIZE_GRIP_MODE = "SizeGripMode";
-    static const QString USE_DROP_SHADOWS = "UseDropShadows";
-    static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
     static const QString HIDE_TITLEBAR = "HideTitleBar";
     static const QString USE_ANIMATIONS = "UseAnimations";
     static const QString ANIMATE_TITLE_CHANGE = "AnimateTitleChange";
-    static const QString ANIMATIONS_DURATION = "AnimationsDuration";
     static const QString TABS_ENABLED = "TabsEnabled";
     static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
-    static const QString SHADOW_MODE = "ShadowMode";
-    static const QString SHADOW_CACHE_MODE = "ShadowCacheMode";
 }
 
 namespace Oxygen

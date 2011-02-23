@@ -25,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenconfiguration.h"
+#include "oxygenshadowconfiguration.h"
 #include "oxygenexception.h"
 
 #include <QTextStream>

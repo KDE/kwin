@@ -115,33 +115,6 @@ namespace Oxygen
             changed = true;
         }
 
-        // initialize shadow cache
-        switch( defaultConfiguration().shadowCacheMode() )
-        {
-
-            case Configuration::CacheDisabled:
-            {
-                shadowCache_.setEnabled( false );
-                break;
-            }
-
-            default:
-            case Configuration::CacheVariable:
-            {
-                shadowCache_.setEnabled( true );
-                shadowCache_.setMaxIndex( qMin( 256, int( 120*defaultConfiguration().animationsDuration()/1000 ) ) );
-                break;
-            }
-
-            case Configuration::CacheMaximum:
-            {
-                shadowCache_.setEnabled( true );
-                shadowCache_.setMaxIndex( 256 );
-                break;
-            }
-
-        }
-
         // read exceptionsreadConfig
         ExceptionList exceptions( config );
         if( !( exceptions == exceptions_ ) )
@@ -157,25 +130,8 @@ namespace Oxygen
             defaultConfiguration().setUseDropShadows( false );
         }
 
-        // read shadow configurations
-        ShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
-        activeShadowConfiguration.setEnabled( defaultConfiguration().useOxygenShadows() );
-        if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
-        {
-            shadowCache().setShadowConfiguration( activeShadowConfiguration );
-            shadowCache().invalidateCaches();
-            changed = true;
-        }
-
-        // read shadow configurations
-        ShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
-        inactiveShadowConfiguration.setEnabled( defaultConfiguration().useDropShadows() );
-        if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
-        {
-            shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
-            shadowCache().invalidateCaches();
-            changed = true;
-        }
+        // read shadowCache configuration
+        shadowCache().readConfig( config );
 
         return changed;
 
