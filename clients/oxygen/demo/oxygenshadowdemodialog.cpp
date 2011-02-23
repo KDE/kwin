@@ -41,7 +41,7 @@ namespace Oxygen
     //_________________________________________________________
     ShadowDemoDialog::ShadowDemoDialog( QWidget* parent ):
         KDialog( parent ),
-        _helper( "oxygenDeco" ),
+        _helper( "oxygen" ),
         _cache( _helper )
     {
 
