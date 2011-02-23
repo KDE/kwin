@@ -52,7 +52,7 @@ static qint64 parseVersionString(const QByteArray &version)
     while (end < version.length() && (version[end] == '.' || QChar(version[end]).isDigit()))
         end++;
 
-    const QByteArray result = version.mid(start, end);
+    const QByteArray result = version.mid(start, end-start);
     const QList<QByteArray> tokens = result.split('.');
     const qint64 major = tokens.at(0).toInt();
     const qint64 minor = tokens.count() > 1 ? tokens.at(1).toInt() : 0;
@@ -503,7 +503,7 @@ void GLPlatform::detect()
     // Parse the OpenGL version
     const QList<QByteArray> versionTokens = m_version.split(' ');
     if (versionTokens.count() > 0) {
-        const QByteArray version = versionTokens.at(0);
+        const QByteArray version = QByteArray(m_version);
         m_glVersion = parseVersionString(version);
     }
 
@@ -539,11 +539,7 @@ void GLPlatform::detect()
     if (m_supportsGLSL) {
         // Parse the GLSL version
         m_glsl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-        const QList<QByteArray> glslVersionTokens = m_glsl_version.split(' ');
-        if (glslVersionTokens.count() > 0) {
-            const QByteArray version = glslVersionTokens.at(0);
-            m_glslVersion = parseVersionString(version);
-        }
+        m_glslVersion = parseVersionString(m_glsl_version);
     }
 
     m_chipset = "Unknown";
