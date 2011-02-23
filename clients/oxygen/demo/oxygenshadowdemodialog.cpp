@@ -26,8 +26,7 @@
 
 #include "oxygenshadowdemodialog.h"
 #include "oxygenshadowdemodialog.moc"
-#include "../oxygenshadowconfiguration.h"
-#include "oxygenhelper.h"
+#include "oxygenshadowconfiguration.h"
 
 #include <QtGui/QDialogButtonBox>
 #include <QtDBus/QDBusConnection>

@@ -30,8 +30,8 @@
 #include "oxygenconfig.h"
 #include "oxygenconfig.moc"
 
+#include "oxygenshadowconfiguration.h"
 #include "../oxygenconfiguration.h"
-#include "../oxygenshadowconfiguration.h"
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>

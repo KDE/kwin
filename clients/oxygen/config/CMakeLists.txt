@@ -3,7 +3,6 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib ${KDEBASE_WORKSPAC
 
 set(kwin_oxygen_config_PART_SRCS
     ../oxygenconfiguration.cpp
-    ../oxygenshadowconfiguration.cpp
     ../oxygenexception.cpp
     ../oxygenexceptionlist.cpp
     oxygenconfig.cpp

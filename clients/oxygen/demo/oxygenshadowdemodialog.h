@@ -29,7 +29,7 @@
 
 #include "ui_oxygenshadowdemo.h"
 #include "oxygenhelper.h"
-#include "../oxygenshadowcache.h"
+#include "oxygenshadowcache.h"
 
 #include <KDialog>
 #include <QtGui/QCheckBox>
