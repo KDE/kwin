@@ -131,7 +131,7 @@ namespace Oxygen
         }
 
         // read shadowCache configuration
-        shadowCache().readConfig( config );
+        changed |= shadowCache().readConfig( config );
 
         return changed;
 
