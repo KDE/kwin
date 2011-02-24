@@ -100,10 +100,10 @@ namespace Oxygen {
     bool exceptionListChanged( void ) const;
 
     //! user interface
-    ConfigurationUi *userInterface_;
+    ConfigurationUi *ui;
 
     //! kconfiguration object
-    KConfig *configuration_;
+    KConfig *_configuration;
 
   };
 

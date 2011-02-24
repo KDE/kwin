@@ -71,13 +71,13 @@ namespace Oxygen
         typedef std::map< Exception::AttributesMask, QCheckBox*> CheckBoxMap;
 
         //! map mask and checkbox
-        CheckBoxMap checkboxes_;
+        CheckBoxMap _checkBoxes;
 
         //! internal exception
-        Exception exception_;
+        Exception _exception;
 
         //! detection dialog
-        DetectDialog* detectDialog;
+        DetectDialog* _detectDialog;
 
     };
 

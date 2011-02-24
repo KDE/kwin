@@ -36,9 +36,9 @@ namespace Oxygen
 {
 
     //__________________________________________________________
-    ExceptionListWidget::ExceptionListWidget( QWidget* parent, Configuration default_configuration ):
+    ExceptionListWidget::ExceptionListWidget( QWidget* parent, Configuration defaultConfiguration ):
         QWidget( parent ),
-        default_configuration_( default_configuration )
+        _defaultConfiguration( defaultConfiguration )
     {
 
         //! ui
@@ -48,7 +48,7 @@ namespace Oxygen
         ui.exceptionListView->setAllColumnsShowFocus( true );
         ui.exceptionListView->setRootIsDecorated( false );
         ui.exceptionListView->setSortingEnabled( false );
-        ui.exceptionListView->setModel( &_model() );
+        ui.exceptionListView->setModel( &model() );
         ui.exceptionListView->sortByColumn( ExceptionModel::TYPE );
         ui.exceptionListView->setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
 
@@ -59,18 +59,18 @@ namespace Oxygen
         ui.removeButton->setIcon( KIcon( "list-remove", icon_loader ) );
         ui.editButton->setIcon( KIcon( "edit-rename", icon_loader ) );
 
-        connect( ui.addButton, SIGNAL( clicked() ), SLOT( _add() ) );
-        connect( ui.editButton, SIGNAL( clicked() ), SLOT( _edit() ) );
-        connect( ui.removeButton, SIGNAL( clicked() ), SLOT( _remove() ) );
-        connect( ui.moveUpButton, SIGNAL( clicked() ), SLOT( _up() ) );
-        connect( ui.moveDownButton, SIGNAL( clicked() ), SLOT( _down() ) );
+        connect( ui.addButton, SIGNAL( clicked() ), SLOT( add() ) );
+        connect( ui.editButton, SIGNAL( clicked() ), SLOT( edit() ) );
+        connect( ui.removeButton, SIGNAL( clicked() ), SLOT( remove() ) );
+        connect( ui.moveUpButton, SIGNAL( clicked() ), SLOT( up() ) );
+        connect( ui.moveDownButton, SIGNAL( clicked() ), SLOT( down() ) );
 
-        connect( ui.exceptionListView, SIGNAL( activated( const QModelIndex& ) ), SLOT( _edit() ) );
-        connect( ui.exceptionListView, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _toggle( const QModelIndex& ) ) );
-        connect( ui.exceptionListView->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateButtons() ) );
+        connect( ui.exceptionListView, SIGNAL( activated( const QModelIndex& ) ), SLOT( edit() ) );
+        connect( ui.exceptionListView, SIGNAL( clicked( const QModelIndex& ) ), SLOT( toggle( const QModelIndex& ) ) );
+        connect( ui.exceptionListView->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( updateButtons() ) );
 
-        _updateButtons();
-        _resizeColumns();
+        updateButtons();
+        resizeColumns();
 
 
     }
@@ -78,15 +78,15 @@ namespace Oxygen
     //__________________________________________________________
     void ExceptionListWidget::setExceptions( const ExceptionList& exceptions )
     {
-        _model().set( ExceptionModel::List( exceptions.begin(), exceptions.end() ) );
-        _resizeColumns();
+        model().set( ExceptionModel::List( exceptions.begin(), exceptions.end() ) );
+        resizeColumns();
     }
 
     //__________________________________________________________
     ExceptionList ExceptionListWidget::exceptions( void ) const
     {
 
-        ExceptionModel::List exceptions( _model().get() );
+        ExceptionModel::List exceptions( model().get() );
         ExceptionList out;
         for( ExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); ++iter )
         { out.push_back( *iter ); }
@@ -95,58 +95,58 @@ namespace Oxygen
     }
 
     //__________________________________________________________
-    void ExceptionListWidget::_updateButtons( void )
+    void ExceptionListWidget::updateButtons( void )
     {
 
-        bool has_selection( !ui.exceptionListView->selectionModel()->selectedRows().empty() );
-        ui.removeButton->setEnabled( has_selection );
-        ui.editButton->setEnabled( has_selection );
+        bool hasSelection( !ui.exceptionListView->selectionModel()->selectedRows().empty() );
+        ui.removeButton->setEnabled( hasSelection );
+        ui.editButton->setEnabled( hasSelection );
 
-        ui.moveUpButton->setEnabled( has_selection && !ui.exceptionListView->selectionModel()->isRowSelected( 0, QModelIndex() ) );
-        ui.moveDownButton->setEnabled( has_selection && !ui.exceptionListView->selectionModel()->isRowSelected( _model().rowCount()-1, QModelIndex() ) );
+        ui.moveUpButton->setEnabled( hasSelection && !ui.exceptionListView->selectionModel()->isRowSelected( 0, QModelIndex() ) );
+        ui.moveDownButton->setEnabled( hasSelection && !ui.exceptionListView->selectionModel()->isRowSelected( model().rowCount()-1, QModelIndex() ) );
 
     }
 
 
     //_______________________________________________________
-    void ExceptionListWidget::_add( void )
+    void ExceptionListWidget::add( void )
     {
 
         // map dialog
         QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
-        dialog->setException( default_configuration_ );
+        dialog->setException( _defaultConfiguration );
         if( dialog->exec() == QDialog::Rejected ) return;
 
         // retrieve exception and check
         Exception exception( dialog->exception() );
-        if( !_checkException( exception ) ) return;
+        if( !checkException( exception ) ) return;
 
         // create new item
-        _model().add( exception );
+        model().add( exception );
 
         // make sure item is selected
-        QModelIndex index( _model().index( exception ) );
+        QModelIndex index( model().index( exception ) );
         if( index != ui.exceptionListView->selectionModel()->currentIndex() )
         {
             ui.exceptionListView->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
             ui.exceptionListView->selectionModel()->setCurrentIndex( index,  QItemSelectionModel::Current|QItemSelectionModel::Rows );
         }
 
-        _resizeColumns();
+        resizeColumns();
         emit changed();
         return;
 
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_edit( void )
+    void ExceptionListWidget::edit( void )
     {
 
         // retrieve selection
         QModelIndex current( ui.exceptionListView->selectionModel()->currentIndex() );
         if( !current.isValid() ) return;
 
-        Exception& exception( _model().get( current ) );
+        Exception& exception( model().get( current ) );
 
         // create dialog
         QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
@@ -154,48 +154,48 @@ namespace Oxygen
 
         // map dialog
         if( dialog->exec() == QDialog::Rejected ) return;
-        Exception new_exception = dialog->exception();
+        Exception newException = dialog->exception();
 
         // check if exception was changed
-        if( exception == new_exception ) return;
+        if( exception == newException ) return;
 
         // check new exception validity
-        if( !_checkException( new_exception ) ) return;
+        if( !checkException( newException ) ) return;
 
         // asign new exception
-        *&exception = new_exception;
-        _resizeColumns();
+        *&exception = newException;
+        resizeColumns();
         emit changed();
         return;
 
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_remove( void )
+    void ExceptionListWidget::remove( void )
     {
 
         // should use a konfirmation dialog
         if( KMessageBox::questionYesNo( this, i18n("Remove selected exception?") ) == KMessageBox::No ) return;
 
         // remove
-        _model().remove( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
-        _resizeColumns();
+        model().remove( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
+        resizeColumns();
         emit changed();
         return;
 
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_toggle( const QModelIndex& index )
+    void ExceptionListWidget::toggle( const QModelIndex& index )
     {
 
         if( !index.isValid() ) return;
         if( index.column() != ExceptionModel::ENABLED ) return;
 
         // get matching exception
-        Exception& exception( _model().get( index ) );
+        Exception& exception( model().get( index ) );
         exception.setEnabled( !exception.enabled() );
-        _model().add( exception );
+        model().add( exception );
 
         emit changed();
         return;
@@ -203,44 +203,44 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_up( void )
+    void ExceptionListWidget::up( void )
     {
 
-        ExceptionModel::List selection( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
+        ExceptionModel::List selection( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
         if( selection.empty() ) { return; }
 
         // retrieve selected indexes in list and store in model
-        QModelIndexList selected_indexes( ui.exceptionListView->selectionModel()->selectedRows() );
-        ExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
+        QModelIndexList selectedIndices( ui.exceptionListView->selectionModel()->selectedRows() );
+        ExceptionModel::List selectedExceptions( model().get( selectedIndices ) );
 
-        ExceptionModel::List current_exceptions( _model().get() );
-        ExceptionModel::List new_exceptions;
+        ExceptionModel::List currentException( model().get() );
+        ExceptionModel::List newExceptions;
 
-        for( ExceptionModel::List::const_iterator iter = current_exceptions.begin(); iter != current_exceptions.end(); ++iter )
+        for( ExceptionModel::List::const_iterator iter = currentException.begin(); iter != currentException.end(); ++iter )
         {
 
             // check if new list is not empty, current index is selected and last index is not.
             // if yes, move.
             if(
-                !( new_exceptions.empty() ||
-                selected_indexes.indexOf( _model().index( *iter ) ) == -1 ||
-                selected_indexes.indexOf( _model().index( new_exceptions.back() ) ) != -1
+                !( newExceptions.empty() ||
+                selectedIndices.indexOf( model().index( *iter ) ) == -1 ||
+                selectedIndices.indexOf( model().index( newExceptions.back() ) ) != -1
                 ) )
             {
-                Exception last( new_exceptions.back() );
-                new_exceptions.pop_back();
-                new_exceptions.push_back( *iter );
-                new_exceptions.push_back( last );
-            } else new_exceptions.push_back( *iter );
+                Exception last( newExceptions.back() );
+                newExceptions.pop_back();
+                newExceptions.push_back( *iter );
+                newExceptions.push_back( last );
+            } else newExceptions.push_back( *iter );
 
         }
 
-        _model().set( new_exceptions );
+        model().set( newExceptions );
 
         // restore selection
-        ui.exceptionListView->selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        for( ExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
-        { ui.exceptionListView->selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+        ui.exceptionListView->selectionModel()->select( model().index( selectedExceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+        for( ExceptionModel::List::const_iterator iter = selectedExceptions.begin(); iter != selectedExceptions.end(); ++iter )
+        { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
         emit changed();
         return;
@@ -248,46 +248,46 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_down( void )
+    void ExceptionListWidget::down( void )
     {
 
-        ExceptionModel::List selection( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
+        ExceptionModel::List selection( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
         if( selection.empty() )
         { return; }
 
         // retrieve selected indexes in list and store in model
-        QModelIndexList selected_indexes( ui.exceptionListView->selectionModel()->selectedIndexes() );
-        ExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
+        QModelIndexList selectedIndices( ui.exceptionListView->selectionModel()->selectedIndexes() );
+        ExceptionModel::List selectedExceptions( model().get( selectedIndices ) );
 
-        ExceptionModel::List current_exceptions( _model().get() );
-        ExceptionModel::List new_exceptions;
+        ExceptionModel::List currentException( model().get() );
+        ExceptionModel::List newExceptions;
 
-        for( ExceptionModel::List::reverse_iterator iter = current_exceptions.rbegin(); iter != current_exceptions.rend(); ++iter )
+        for( ExceptionModel::List::reverse_iterator iter = currentException.rbegin(); iter != currentException.rend(); ++iter )
         {
 
             // check if new list is not empty, current index is selected and last index is not.
             // if yes, move.
             if(
-                !( new_exceptions.empty() ||
-                selected_indexes.indexOf( _model().index( *iter ) ) == -1 ||
-                selected_indexes.indexOf( _model().index( new_exceptions.back() ) ) != -1
+                !( newExceptions.empty() ||
+                selectedIndices.indexOf( model().index( *iter ) ) == -1 ||
+                selectedIndices.indexOf( model().index( newExceptions.back() ) ) != -1
                 ) )
             {
 
-                Exception last( new_exceptions.back() );
-                new_exceptions.pop_back();
-                new_exceptions.push_back( *iter );
-                new_exceptions.push_back( last );
+                Exception last( newExceptions.back() );
+                newExceptions.pop_back();
+                newExceptions.push_back( *iter );
+                newExceptions.push_back( last );
 
-            } else new_exceptions.push_back( *iter );
+            } else newExceptions.push_back( *iter );
         }
 
-        _model().set( ExceptionModel::List( new_exceptions.rbegin(), new_exceptions.rend() ) );
+        model().set( ExceptionModel::List( newExceptions.rbegin(), newExceptions.rend() ) );
 
         // restore selection
-        ui.exceptionListView->selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        for( ExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
-        { ui.exceptionListView->selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+        ui.exceptionListView->selectionModel()->select( model().index( selectedExceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+        for( ExceptionModel::List::const_iterator iter = selectedExceptions.begin(); iter != selectedExceptions.end(); ++iter )
+        { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
         emit changed();
         return;
@@ -295,7 +295,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    void ExceptionListWidget::_resizeColumns( void ) const
+    void ExceptionListWidget::resizeColumns( void ) const
     {
         ui.exceptionListView->resizeColumnToContents( ExceptionModel::ENABLED );
         ui.exceptionListView->resizeColumnToContents( ExceptionModel::TYPE );
@@ -303,7 +303,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________
-    bool ExceptionListWidget::_checkException( Exception& exception )
+    bool ExceptionListWidget::checkException( Exception& exception )
     {
 
         while( !exception.regExp().isValid() )

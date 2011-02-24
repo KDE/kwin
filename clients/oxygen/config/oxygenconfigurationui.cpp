@@ -40,7 +40,7 @@ namespace Oxygen
   //_________________________________________________________
   ConfigurationUi::ConfigurationUi( QWidget* parent ):
     QWidget( parent ),
-    expertMode_( false )
+    _expertMode( false )
     {
 
     ui.setupUi( this );
@@ -136,18 +136,18 @@ namespace Oxygen
   void ConfigurationUi::toggleExpertMode( bool value )
   {
 
-    expertMode_ = value;
-    ui.animateTitleChange->setVisible( expertMode_ );
-    ui.narrowButtonSpacing->setVisible( expertMode_ );
+    _expertMode = value;
+    ui.animateTitleChange->setVisible( _expertMode );
+    ui.narrowButtonSpacing->setVisible( _expertMode );
 
     // size grip mode
-    ui.sizeGripModeLabel->setVisible( expertMode_ );
-    ui.sizeGripMode->setVisible( expertMode_ );
+    ui.sizeGripModeLabel->setVisible( _expertMode );
+    ui.sizeGripMode->setVisible( _expertMode );
 
     // shadow mode
-    ui.shadowsExpertWidget->setVisible( expertMode_ );
+    ui.shadowsExpertWidget->setVisible( _expertMode );
 
-    if( expertMode_ ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    if( _expertMode ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     else ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 
   }

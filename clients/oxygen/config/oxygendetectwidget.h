@@ -63,7 +63,7 @@ namespace Oxygen
 
         //! window information
         const KWindowInfo& windowInfo() const
-        { return info; }
+        { return _info; }
 
         //! exception type
         Exception::Type exceptionType() const
@@ -102,10 +102,10 @@ namespace Oxygen
         Ui_DetectWidget ui;
 
         //! invisible dialog used to grab mouse
-        KDialog* grabber;
+        KDialog* _grabber;
 
         //! current window information
-        KWindowInfo info;
+        KWindowInfo _info;
 
     };
 

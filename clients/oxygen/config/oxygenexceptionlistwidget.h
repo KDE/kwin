@@ -42,7 +42,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit ExceptionListWidget( QWidget* = 0, Configuration default_configuration = Configuration() );
+        explicit ExceptionListWidget( QWidget* = 0, Configuration defaultConfiguration = Configuration() );
 
         //! set exceptions
         void setExceptions( const ExceptionList& );
@@ -58,49 +58,49 @@ namespace Oxygen
         protected:
 
         //! model
-        const ExceptionModel& _model() const
-        { return model_; }
+        const ExceptionModel& model() const
+        { return _model; }
 
         //! model
-        ExceptionModel& _model()
-        { return model_; }
+        ExceptionModel& model()
+        { return _model; }
 
         protected slots:
 
         //! update button states
-        virtual void _updateButtons( void );
+        virtual void updateButtons( void );
 
         //! add
-        virtual void _add( void );
+        virtual void add( void );
 
         //! edit
-        virtual void _edit( void );
+        virtual void edit( void );
 
         //! remove
-        virtual void _remove( void );
+        virtual void remove( void );
 
         //! toggle
-        virtual void _toggle( const QModelIndex& );
+        virtual void toggle( const QModelIndex& );
 
         //! move up
-        virtual void _up( void );
+        virtual void up( void );
 
         //! move down
-        virtual void _down( void );
+        virtual void down( void );
 
         private:
 
         //! resize columns
-        void _resizeColumns( void ) const;
+        void resizeColumns( void ) const;
 
         //! check exception
-        bool _checkException( Exception& );
+        bool checkException( Exception& );
 
         //! default configuration
-        Configuration default_configuration_;
+        Configuration _defaultConfiguration;
 
         //! model
-        ExceptionModel model_;
+        ExceptionModel _model;
 
         //! ui
         Ui_OxygenExceptionListWidget ui;

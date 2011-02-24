@@ -49,7 +49,7 @@ namespace Oxygen
     //_________________________________________________________
     DetectDialog::DetectDialog( QWidget* parent ):
         KDialog( parent ),
-        grabber( 0 )
+        _grabber( 0 )
     {
 
         // define buttons
@@ -81,18 +81,18 @@ namespace Oxygen
             return;
         }
 
-        info = KWindowSystem::windowInfo( window, -1U, -1U );
-        if( !info.valid())
+        _info = KWindowSystem::windowInfo( window, -1U, -1U );
+        if( !_info.valid())
         {
             emit detectionDone( false );
             return;
         }
 
-        QString wmclass_class = info.windowClassClass();
-        QString wmclass_name = info.windowClassName();
-        QString title = info.name();
+        QString wmClassClass = _info.windowClassClass();
+        QString wmClassName = _info.windowClassName();
+        QString title = _info.name();
 
-        ui.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
+        ui.windowClass->setText( wmClassClass + " (" + wmClassName + ' ' + wmClassClass + ')' );
         ui.windowTitle->setText( title );
         emit detectionDone( exec() == KDialog::Accepted );
 
@@ -107,12 +107,12 @@ namespace Oxygen
         // use a dialog, so that all user input is blocked
         // use WX11BypassWM and moving away so that it's not actually visible
         // grab only mouse, so that keyboard can be used e.g. for switching windows
-        grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
-        grabber->move( -1000, -1000 );
-        grabber->setModal( true );
-        grabber->show();
-        grabber->grabMouse( Qt::CrossCursor );
-        grabber->installEventFilter( this );
+        _grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
+        _grabber->move( -1000, -1000 );
+        _grabber->setModal( true );
+        _grabber->show();
+        _grabber->grabMouse( Qt::CrossCursor );
+        _grabber->installEventFilter( this );
 
     }
 
@@ -120,12 +120,12 @@ namespace Oxygen
     bool DetectDialog::eventFilter( QObject* o, QEvent* e )
     {
         // check object and event type
-        if( o != grabber ) return false;
+        if( o != _grabber ) return false;
         if( e->type() != QEvent::MouseButtonRelease ) return false;
 
-        // delete old grabber
-        delete grabber;
-        grabber = 0;
+        // delete old _grabber
+        delete _grabber;
+        _grabber = 0;
 
         // check button
         if( static_cast< QMouseEvent* >( e )->button() != Qt::LeftButton ) return true;

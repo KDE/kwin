@@ -71,7 +71,7 @@ namespace Oxygen
     private:
 
     //! expert mode
-    bool expertMode_;
+    bool _expertMode;
 
   };
 

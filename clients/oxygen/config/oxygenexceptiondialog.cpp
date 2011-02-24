@@ -36,7 +36,7 @@ namespace Oxygen
     //___________________________________________
     ExceptionDialog::ExceptionDialog( QWidget* parent ):
         KDialog( parent ),
-        detectDialog(0)
+        _detectDialog(0)
     {
 
         // define buttons
@@ -66,7 +66,7 @@ namespace Oxygen
             << Configuration::frameBorderName( Configuration::BorderOversized, true )
             );
         ui.frameBorderComboBox->setEnabled( false );
-        checkboxes_.insert( std::make_pair( Exception::FrameBorder, ui.frameBorderCheckBox ) );
+        _checkBoxes.insert( std::make_pair( Exception::FrameBorder, ui.frameBorderCheckBox ) );
         connect( ui.frameBorderCheckBox, SIGNAL( toggled( bool ) ), ui.frameBorderComboBox, SLOT( setEnabled( bool ) ) );
 
         // blend color
@@ -76,7 +76,7 @@ namespace Oxygen
             << Exception::blendColorName( Exception::BlendFromStyle, true )
             );
         ui.blendColorComboBox->setEnabled( false );
-        checkboxes_.insert( std::make_pair( Exception::BlendColor, ui.blendColorCheckBox ) );
+        _checkBoxes.insert( std::make_pair( Exception::BlendColor, ui.blendColorCheckBox ) );
         connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT( setEnabled( bool ) ) );
 
         // size grip
@@ -85,18 +85,18 @@ namespace Oxygen
             << Configuration::sizeGripModeName( Configuration::SizeGripWhenNeeded, true )
             );
         ui.sizeGripComboBox->setEnabled( false );
-        checkboxes_.insert( std::make_pair( Exception::SizeGripMode, ui.sizeGripCheckBox ) );
+        _checkBoxes.insert( std::make_pair( Exception::SizeGripMode, ui.sizeGripCheckBox ) );
         connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT( setEnabled( bool ) ) );
 
         // outline active window title
         ui.titleOutlineComboBox->insertItems(0, QStringList() << i18nc( "outline window title", "Enabled" ) << i18nc( "outline window title", "Disabled" ) );
         ui.titleOutlineComboBox->setEnabled( false );
-        checkboxes_.insert( std::make_pair( Exception::TitleOutline, ui.titleOutlineCheckBox ) );
+        _checkBoxes.insert( std::make_pair( Exception::TitleOutline, ui.titleOutlineCheckBox ) );
         connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT( setEnabled( bool ) ) );
 
         // separator
         ui.separatorComboBox->setEnabled( false );
-        checkboxes_.insert( std::make_pair( Exception::DrawSeparator, ui.separatorCheckBox ) );
+        _checkBoxes.insert( std::make_pair( Exception::DrawSeparator, ui.separatorCheckBox ) );
         connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT( setEnabled( bool ) ) );
 
     }
@@ -106,7 +106,7 @@ namespace Oxygen
     {
 
         // store exception internally
-        exception_ = exception;
+        _exception = exception;
 
         // type
         ui.exceptionType->setCurrentIndex( ui.exceptionType->findText( exception.typeName( true ) ) );
@@ -119,7 +119,7 @@ namespace Oxygen
         ui.hideTitleBar->setChecked( exception.hideTitleBar() );
 
         // mask
-        for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+        for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
         { iter->second->setChecked( exception.mask() & iter->first ); }
 
     }
@@ -127,7 +127,7 @@ namespace Oxygen
     //___________________________________________
     Exception ExceptionDialog::exception( void ) const
     {
-        Exception exception( exception_ );
+        Exception exception( _exception );
         exception.setType( Exception::type( ui.exceptionType->currentText(), true ) );
         exception.regExp().setPattern( ui.exceptionEditor->text() );
         exception.setFrameBorder( Exception::frameBorder( ui.frameBorderComboBox->currentText(), true ) );
@@ -148,7 +148,7 @@ namespace Oxygen
 
         // mask
         unsigned int mask = Exception::None;
-        for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+        for( CheckBoxMap::const_iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
         { if( iter->second->isChecked() ) mask |= iter->first; }
 
         exception.setMask( mask );
@@ -161,30 +161,30 @@ namespace Oxygen
     {
 
         // create widget
-        if( !detectDialog )
+        if( !_detectDialog )
         {
-            detectDialog = new DetectDialog( this );
-            connect( detectDialog, SIGNAL( detectionDone( bool ) ), SLOT( readWindowProperties( bool ) ) );
+            _detectDialog = new DetectDialog( this );
+            connect( _detectDialog, SIGNAL( detectionDone( bool ) ), SLOT( readWindowProperties( bool ) ) );
         }
 
-        detectDialog->detect(0);
+        _detectDialog->detect(0);
 
     }
 
     //___________________________________________
     void ExceptionDialog::readWindowProperties( bool valid )
     {
-        assert( detectDialog );
+        assert( _detectDialog );
         if( valid )
         {
 
             // type
-            ui.exceptionType->setCurrentIndex( ui.exceptionType->findText( Exception::typeName( detectDialog->exceptionType(), true ) ) );
+            ui.exceptionType->setCurrentIndex( ui.exceptionType->findText( Exception::typeName( _detectDialog->exceptionType(), true ) ) );
 
             // window info
-            const KWindowInfo& info( detectDialog->windowInfo() );
+            const KWindowInfo& info( _detectDialog->windowInfo() );
 
-            switch( detectDialog->exceptionType() )
+            switch( _detectDialog->exceptionType() )
             {
                 case Exception::WindowClassName:
                 ui.exceptionEditor->setText( info.windowClassClass() );
@@ -200,8 +200,8 @@ namespace Oxygen
 
         }
 
-        delete detectDialog;
-        detectDialog = 0;
+        delete _detectDialog;
+        _detectDialog = 0;
 
     }
 
