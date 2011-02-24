@@ -59,8 +59,8 @@ namespace Oxygen
         void reset( void )
         {
             setOpacity(0);
-            contrastPixmap_.reset();
-            pixmap_.reset();
+            _contrastPixmap.reset();
+            _pixmap.reset();
         }
 
         //! initialize
@@ -70,8 +70,8 @@ namespace Oxygen
         void reset( QRect rect, QPixmap pixmap, QPixmap contrast )
         {
             setOpacity(0);
-            contrastPixmap_.reset( rect, contrast );
-            pixmap_.reset( rect, pixmap );
+            _contrastPixmap.reset( rect, contrast );
+            _pixmap.reset( rect, pixmap );
         }
 
         //! set pixmaps
@@ -86,18 +86,18 @@ namespace Oxygen
 
         //! retrieve contrast pixmap
         QPixmap contrastPixmap( void ) const
-        { return contrastPixmap_.currentPixmap(); }
+        { return _contrastPixmap.currentPixmap(); }
 
         //! pixmap
         QPixmap pixmap( void ) const
-        { return pixmap_.currentPixmap(); }
+        { return _pixmap.currentPixmap(); }
 
         //!@name animation
         //@{
 
         //! returns true if animations are locked
         bool isLocked( void ) const
-        { return animationLockTimer_.isActive(); }
+        { return _animationLockTimer.isActive(); }
 
         //! returns true if title transition animation is currently running
         bool isAnimated( void ) const
@@ -105,11 +105,11 @@ namespace Oxygen
 
         //! start lock animation timer
         void lockAnimations( void )
-        { animationLockTimer_.start( lockTime_, this ); }
+        { _animationLockTimer.start( _lockTime, this ); }
 
         //! start lock animation timer
         void unlockAnimations( void )
-        { animationLockTimer_.stop(); }
+        { _animationLockTimer.stop(); }
 
         //! start title transition animation
         void startAnimation( void )
@@ -131,12 +131,12 @@ namespace Oxygen
         //@{
 
         qreal opacity( void ) const
-        { return opacity_; }
+        { return _opacity; }
 
         void setOpacity( qreal value )
         {
-            if( opacity_ == value ) return;
-            opacity_ = value;
+            if( _opacity == value ) return;
+            _opacity = value;
             updatePixmaps();
         }
 
@@ -144,15 +144,15 @@ namespace Oxygen
 
         //! validity
         bool isValid( void ) const
-        { return pixmap_.isValid(); }
+        { return _pixmap.isValid(); }
 
         //! dirty flag
         void setDirty( bool value )
-        { dirty_ = value; }
+        { _dirty = value; }
 
         //! dirty flag
         bool isDirty( void ) const
-        { return dirty_; }
+        { return _dirty; }
 
         signals:
 
@@ -168,7 +168,7 @@ namespace Oxygen
 
         //! animation object
         const Animation::Pointer& animation( void ) const
-        { return animation_; }
+        { return _animation; }
 
         private:
 
@@ -181,24 +181,24 @@ namespace Oxygen
             // reset everything
             void reset( void )
             {
-                startRect_ = endRect_ = QRect();
-                startPixmap_ = endPixmap_ = currentPixmap_ = QPixmap();
+                _startRect = _endRect = QRect();
+                _startPixmap = _endPixmap = _currentPixmap = QPixmap();
             }
 
             //! reset
             void reset( const QRect& rect, QPixmap pixmap )
             {
-                startRect_ = endRect_ = rect;
-                startPixmap_ = endPixmap_ = currentPixmap_ = pixmap;
+                _startRect = _endRect = rect;
+                _startPixmap = _endPixmap = _currentPixmap = pixmap;
             }
 
             // update pixmaps
             void initialize( const QRect& rect, QPixmap pixmap )
             {
-                startRect_ = endRect_;
-                endRect_ = rect;
-                startPixmap_ = currentPixmap_;
-                endPixmap_ = pixmap;
+                _startRect = _endRect;
+                _endRect = rect;
+                _startPixmap = _currentPixmap;
+                _endPixmap = pixmap;
             }
 
             //! update currentPixmap by blending start and end pixmap
@@ -206,11 +206,11 @@ namespace Oxygen
 
             //! current pixmap
             QPixmap currentPixmap( void ) const
-            { return currentPixmap_; }
+            { return _currentPixmap; }
 
             //! validity
             bool isValid( void ) const
-            { return !(endRect_.isNull() || endPixmap_.isNull() ); }
+            { return !(_endRect.isNull() || _endPixmap.isNull() ); }
 
             protected:
 
@@ -220,35 +220,35 @@ namespace Oxygen
             private:
 
             //! animation starting pixmap
-            QPixmap startPixmap_;
+            QPixmap _startPixmap;
 
             //! animation ending pixmap
-            QPixmap endPixmap_;
+            QPixmap _endPixmap;
 
             //! animation current pixmap
-            QPixmap currentPixmap_;
+            QPixmap _currentPixmap;
 
-            QRect startRect_;
-            QRect endRect_;
+            QRect _startRect;
+            QRect _endRect;
 
         };
 
-        bool dirty_;
+        bool _dirty;
 
-        BlendedPixmap contrastPixmap_;
-        BlendedPixmap pixmap_;
+        BlendedPixmap _contrastPixmap;
+        BlendedPixmap _pixmap;
 
         //! lock time (milliseconds
-        static const int lockTime_;
+        static const int _lockTime;
 
         //! timer used to disable animations when triggered too early
-        QBasicTimer animationLockTimer_;
+        QBasicTimer _animationLockTimer;
 
         //! title animation
-        Animation::Pointer animation_;
+        Animation::Pointer _animation;
 
         //! title opacity
-        qreal opacity_;
+        qreal _opacity;
 
     };
 

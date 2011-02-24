@@ -1,5 +1,5 @@
-#ifndef oxygen_h
-#define oxygen_h
+#ifndef oxygenfactory_h
+#define oxygenfactory_h
 
 //////////////////////////////////////////////////////////////////////////////
 // oxygen.h
@@ -101,19 +101,19 @@ namespace Oxygen
 
         //! true if initialized
         virtual bool initialized()
-        { return initialized_; }
+        { return _initialized; }
 
         //! helper
         virtual DecoHelper& helper( void )
-        { return helper_; }
+        { return _helper; }
 
         //! shadow cache
         virtual ShadowCache& shadowCache( void )
-        { return shadowCache_; }
+        { return _shadowCache; }
 
         //! shadow cache
         virtual const ShadowCache& shadowCache( void ) const
-        { return shadowCache_; }
+        { return _shadowCache; }
 
         //! get configuration for a give client
         virtual Configuration configuration( const Client& );
@@ -125,34 +125,34 @@ namespace Oxygen
 
         //! default configuration
         const Configuration& defaultConfiguration( void ) const
-        { return defaultConfiguration_; }
+        { return _defaultConfiguration; }
 
         //! default configuration
         Configuration& defaultConfiguration( void )
-        { return defaultConfiguration_; }
+        { return _defaultConfiguration; }
 
         //! initialization
         void setInitialized( bool value )
-        { initialized_ = value; }
+        { _initialized = value; }
 
         //! set default configuration
         void setDefaultConfiguration( Configuration value )
-        { defaultConfiguration_ = value; }
+        { _defaultConfiguration = value; }
 
         //! initialization flag
-        bool initialized_;
+        bool _initialized;
 
         //! helper
-        DecoHelper helper_;
+        DecoHelper _helper;
 
         //! shadow cache
-        ShadowCache shadowCache_;
+        ShadowCache _shadowCache;
 
         //! default configuration
-        Configuration defaultConfiguration_;
+        Configuration _defaultConfiguration;
 
         //! exceptions
-        ExceptionList exceptions_;
+        ExceptionList _exceptions;
 
     };
 

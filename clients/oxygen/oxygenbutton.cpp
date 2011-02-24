@@ -46,18 +46,18 @@ namespace Oxygen
         const QString& tip,
         ButtonType type):
         KCommonDecorationButton((::ButtonType)type, &parent),
-        client_(parent),
-        helper_( parent.helper() ),
-        type_(type),
-        forceInactive_( false ),
-        glowAnimation_( new Animation( 150, this ) ),
-        glowIntensity_(0)
+        _client(parent),
+        _helper( parent.helper() ),
+        _type(type),
+        _forceInactive( false ),
+        _glowAnimation( new Animation( 150, this ) ),
+        _glowIntensity(0)
     {
         setAutoFillBackground(false);
         setAttribute(Qt::WA_NoSystemBackground);
 
         {
-            unsigned int size( client_.configuration().buttonSize() );
+            unsigned int size( _client.configuration().buttonSize() );
             setFixedSize( size, size );
         }
 
@@ -65,11 +65,11 @@ namespace Oxygen
         setToolTip(tip);
 
         // setup animation
-        glowAnimation_->setStartValue( 0 );
-        glowAnimation_->setEndValue( 1.0 );
-        glowAnimation_->setTargetObject( this );
-        glowAnimation_->setPropertyName( "glowIntensity" );
-        glowAnimation_->setEasingCurve( QEasingCurve::InOutQuad );
+        _glowAnimation->setStartValue( 0 );
+        _glowAnimation->setEndValue( 1.0 );
+        _glowAnimation->setTargetObject( this );
+        _glowAnimation->setPropertyName( "glowIntensity" );
+        _glowAnimation->setEasingCurve( QEasingCurve::InOutQuad );
 
         // setup connections
         reset(0);
@@ -83,31 +83,31 @@ namespace Oxygen
     //_______________________________________________
     QColor Button::buttonDetailColor(const QPalette &palette) const
     {
-        if( client_.glowIsAnimated() && !forceInactive_ && !client_.isForcedActive()) return KColorUtils::mix(
+        if( _client.glowIsAnimated() && !_forceInactive && !_client.isForcedActive()) return KColorUtils::mix(
             buttonDetailColor( palette, false ),
             buttonDetailColor( palette, true ),
-            client_.glowIntensity() );
-        else return buttonDetailColor( palette, isActive() || client_.isForcedActive() );
+            _client.glowIntensity() );
+        else return buttonDetailColor( palette, isActive() || _client.isForcedActive() );
     }
 
     //___________________________________________________
     bool Button::isActive( void ) const
-    { return (!forceInactive_) && client_.isActive(); }
+    { return (!_forceInactive) && _client.isActive(); }
 
     //___________________________________________________
     bool Button::animateButtonHover( void ) const
-    { return client_.useAnimations(); }
+    { return _client.useAnimations(); }
 
     //___________________________________________________
     QSize Button::sizeHint() const
     {
-        unsigned int size( client_.configuration().buttonSize() );
+        unsigned int size( _client.configuration().buttonSize() );
         return QSize( size, size );
     }
 
     //___________________________________________________
     void Button::reset( unsigned long )
-    { glowAnimation_->setDuration( client_.configuration().animationsDuration() ); }
+    { _glowAnimation->setDuration( _client.configuration().animationsDuration() ); }
 
 
     //___________________________________________________
@@ -115,12 +115,12 @@ namespace Oxygen
     {
 
         KCommonDecorationButton::enterEvent(e);
-        if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
+        if (_status != Oxygen::Pressed) _status = Oxygen::Hovered;
         if( animateButtonHover() )
         {
 
-            glowAnimation_->setDirection( Animation::Forward );
-            if( !isAnimated() ) glowAnimation_->start();
+            _glowAnimation->setDirection( Animation::Forward );
+            if( !isAnimated() ) _glowAnimation->start();
 
         } else update();
 
@@ -132,13 +132,13 @@ namespace Oxygen
 
         KCommonDecorationButton::leaveEvent(e);
 
-        if( status_ == Oxygen::Hovered && animateButtonHover() )
+        if( _status == Oxygen::Hovered && animateButtonHover() )
         {
-            glowAnimation_->setDirection( Animation::Backward );
-            if( !isAnimated() ) glowAnimation_->start();
+            _glowAnimation->setDirection( Animation::Backward );
+            if( !isAnimated() ) _glowAnimation->start();
         }
 
-        status_ = Oxygen::Normal;
+        _status = Oxygen::Normal;
         update();
 
     }
@@ -147,9 +147,9 @@ namespace Oxygen
     void Button::mousePressEvent(QMouseEvent *e)
     {
 
-        if( type_ == ButtonMax || e->button() == Qt::LeftButton )
+        if( _type == ButtonMax || e->button() == Qt::LeftButton )
         {
-            status_ = Oxygen::Pressed;
+            _status = Oxygen::Pressed;
             update();
         }
 
@@ -160,7 +160,7 @@ namespace Oxygen
     void Button::mouseReleaseEvent(QMouseEvent *e)
     {
 
-        status_ = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
+        _status = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
         update();
 
         KCommonDecorationButton::mouseReleaseEvent(e);
@@ -170,7 +170,7 @@ namespace Oxygen
     void Button::paintEvent(QPaintEvent *event)
     {
 
-        if( client_.hideTitleBar() ) return;
+        if( _client.hideTitleBar() ) return;
 
         QPainter painter(this);
         painter.setClipRect(this->rect().intersected( event->rect() ) );
@@ -180,30 +180,30 @@ namespace Oxygen
         palette.setCurrentColorGroup( isActive() ? QPalette::Active : QPalette::Inactive);
 
         if(
-            client_.compositingActive() &&
-            !( client_.isMaximized() || type_ == ButtonItemClose || type_ == ButtonItemMenu ) )
+            _client.compositingActive() &&
+            !( _client.isMaximized() || _type == ButtonItemClose || _type == ButtonItemMenu ) )
         { painter.translate( 0, -1 ); }
 
         // translate buttons down if window maximized
-        if( client_.isMaximized() ) painter.translate( 0, 1 );
+        if( _client.isMaximized() ) painter.translate( 0, 1 );
 
         // base button color
-        const QColor bt = ((type_ == ButtonItemClose && forceInactive_ ) ? client_.backgroundPalette( this, palette ):palette).window().color();
+        const QColor bt = ((_type == ButtonItemClose && _forceInactive ) ? _client.backgroundPalette( this, palette ):palette).window().color();
 
         // button icon and glow color depending on glow intensity
-        QColor color = (type_ == ButtonItemClose && forceInactive_ ) ?
-            buttonDetailColor( client_.backgroundPalette( this, palette ) ):
+        QColor color = (_type == ButtonItemClose && _forceInactive ) ?
+            buttonDetailColor( _client.backgroundPalette( this, palette ) ):
             buttonDetailColor( palette );
 
         QColor glow = isCloseButton() ?
-            helper_.viewNegativeTextBrush().brush(palette).color():
-            helper_.viewHoverBrush().brush(palette).color();
+            _helper.viewNegativeTextBrush().brush(palette).color():
+            _helper.viewHoverBrush().brush(palette).color();
 
-        glow = helper_.calcDarkColor( glow );
+        glow = _helper.calcDarkColor( glow );
 
         // decide decoration color
         if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
-        else if( status_ == Oxygen::Hovered  ) color = glow;
+        else if( _status == Oxygen::Hovered  ) color = glow;
 
         if( hasDecoration() )
         {
@@ -211,19 +211,19 @@ namespace Oxygen
             // decide shadow color
             QColor shadow;
             if( isAnimated() ) shadow = KColorUtils::mix( Qt::black, glow, glowIntensity() );
-            else if( status_ == Oxygen::Hovered ) shadow = glow;
+            else if( _status == Oxygen::Hovered ) shadow = glow;
             else shadow = Qt::black;
 
-            qreal scale( (21.0*client_.configuration().buttonSize())/22.0 );
+            qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
 
             // draw shadow
-            painter.drawPixmap( 0, 0, helper_.windecoButtonGlow( shadow, scale ) );
+            painter.drawPixmap( 0, 0, _helper.windecoButtonGlow( shadow, scale ) );
 
             // draw button shape
-            const bool pressed( (status_ == Oxygen::Pressed) ||
+            const bool pressed( (_status == Oxygen::Pressed) ||
                 ( isChecked() && isToggleButton() ) );
 
-            painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, scale ) );
+            painter.drawPixmap(0, 0, _helper.windecoButton(bt, pressed, scale ) );
 
         }
 
@@ -232,7 +232,7 @@ namespace Oxygen
         if( isMenuButton() )
         {
 
-            const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
+            const QPixmap& pixmap( _client.icon().pixmap( _client.configuration().iconScale() ) );
             const double offset = 0.5*(width()-pixmap.width() );
             painter.drawPixmap(offset, offset-1, pixmap );
 
@@ -242,7 +242,7 @@ namespace Oxygen
             qreal width( 1.2 );
 
             painter.setBrush(Qt::NoBrush);
-            painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.setPen(QPen( _helper.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             drawIcon(&painter);
 
             painter.translate(0,-1.5);
@@ -261,7 +261,7 @@ namespace Oxygen
         painter->save();
         painter->setWindow( 0, 0, 22, 22 );
 
-        switch(type_)
+        switch(_type)
         {
 
             case ButtonSticky:
@@ -282,7 +282,7 @@ namespace Oxygen
             break;
 
             case ButtonMax:
-            switch(client_.maximizeMode())
+            switch(_client.maximizeMode())
             {
                 case Client::MaximizeRestore:
                 case Client::MaximizeVertical:

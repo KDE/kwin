@@ -1,5 +1,5 @@
-#ifndef oxygen_deco_helper_h
-#define oxygen_deco_helper_h
+#ifndef oxygendecohelper_h
+#define oxygendecohelper_h
 
 /*
  * Copyright 2008 Long Huynh Huu <long.upcase@googlemail.com>

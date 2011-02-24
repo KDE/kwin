@@ -1,5 +1,5 @@
-#ifndef Button_h
-#define Button_h
+#ifndef oxygenbutton_h
+#define oxygenbutton_h
 
 //////////////////////////////////////////////////////////////////////////////
 // Button.h
@@ -68,12 +68,12 @@ namespace Oxygen
 
         //! button type
         ButtonType type( void ) const
-        { return type_; }
+        { return _type; }
 
         //! set force inactive
         /*! returns true if value was actually changed */
         void setForceInactive( const bool& value )
-        { forceInactive_ = value; }
+        { _forceInactive = value; }
 
         //! configuration reset
         virtual void reset( unsigned long );
@@ -82,13 +82,13 @@ namespace Oxygen
         //@{
         void setGlowIntensity( qreal value )
         {
-            if( glowIntensity_ == value ) return;
-            glowIntensity_ = value;
+            if( _glowIntensity == value ) return;
+            _glowIntensity = value;
             update();
         }
 
         qreal glowIntensity( void ) const
-        { return glowIntensity_; }
+        { return _glowIntensity; }
 
         //@}
 
@@ -120,12 +120,12 @@ namespace Oxygen
         {
             return active ?
                 palette.color(QPalette::Active, QPalette::WindowText):
-                helper_.inactiveTitleBarTextColor( palette );
+                _helper.inactiveTitleBarTextColor( palette );
         }
 
         //! true if animation is in progress
         bool isAnimated( void ) const
-        { return glowAnimation_->isRunning(); }
+        { return _glowAnimation->isRunning(); }
 
         //! true if button is active
         bool isActive( void ) const;
@@ -138,45 +138,45 @@ namespace Oxygen
 
         //! true if button if of menu type
         bool isMenuButton( void ) const
-        { return type_ == ButtonMenu || type_ == ButtonItemMenu; }
+        { return _type == ButtonMenu || _type == ButtonItemMenu; }
 
         //! true if button is of toggle type
         bool isToggleButton( void ) const
-        { return type_ == ButtonSticky || type_ == ButtonAbove || type_ == ButtonBelow; }
+        { return _type == ButtonSticky || _type == ButtonAbove || _type == ButtonBelow; }
 
         //! true if button if of close type
         bool isCloseButton( void ) const
-        { return type_ == ButtonClose || type_ == ButtonItemClose; }
+        { return _type == ButtonClose || _type == ButtonItemClose; }
 
         //! true if button has decoration
         bool hasDecoration( void ) const
-        { return !isMenuButton() && type_ != ButtonItemClose; }
+        { return !isMenuButton() && _type != ButtonItemClose; }
 
         //@}
 
         private:
 
         //! parent client
-        const Client &client_;
+        const Client &_client;
 
         //! helper
-        DecoHelper &helper_;
+        DecoHelper &_helper;
 
         //! button type
-        ButtonType type_;
+        ButtonType _type;
 
         //! button status
-        ButtonState status_;
+        ButtonState _status;
 
         //! true if button should be forced inactive
-        bool forceInactive_;
+        bool _forceInactive;
 
         //! glow animation
-        //Animation::Pointer glowAnimation_;
-        Animation* glowAnimation_;
+        //Animation::Pointer _glowAnimation;
+        Animation* _glowAnimation;
 
         //! glow intensity
-        qreal glowIntensity_;
+        qreal _glowIntensity;
 
 
     };

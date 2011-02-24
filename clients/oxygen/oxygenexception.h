@@ -72,9 +72,9 @@ namespace Oxygen
         //! constructor
         Exception( Configuration configuration = Configuration() ):
             Configuration( configuration ),
-            enabled_( true ),
-            type_( WindowClassName ),
-            mask_( None )
+            _enabled( true ),
+            _type( WindowClassName ),
+            _mask( None )
         {}
 
         //! constructor
@@ -111,10 +111,10 @@ namespace Oxygen
         //@{
 
         bool enabled( void ) const
-        { return enabled_; }
+        { return _enabled; }
 
         void setEnabled( bool enabled )
-        { enabled_ = enabled; }
+        { _enabled = enabled; }
 
         //@}
 
@@ -128,10 +128,10 @@ namespace Oxygen
         { return typeName( type(), translated ); }
 
         virtual Type type( void ) const
-        { return type_; }
+        { return _type; }
 
         virtual void setType( Type value )
-        { type_ = value; }
+        { _type = value; }
 
         //@}
 
@@ -139,10 +139,10 @@ namespace Oxygen
         //@{
 
         virtual QRegExp regExp( void ) const
-        { return regExp_; }
+        { return _regExp; }
 
         virtual QRegExp& regExp( void )
-        { return regExp_; }
+        { return _regExp; }
 
         //@}
 
@@ -151,26 +151,26 @@ namespace Oxygen
         //!@{
 
         unsigned int mask( void ) const
-        { return mask_; }
+        { return _mask; }
 
         void setMask( unsigned int mask )
-        { mask_ = mask; }
+        { _mask = mask; }
 
         //@}
 
         private:
 
         //! enability
-        bool enabled_;
+        bool _enabled;
 
         //! exception type
-        Type type_;
+        Type _type;
 
         //! regular expression to match window caption
-        QRegExp regExp_;
+        QRegExp _regExp;
 
         //! attributes mask
-        unsigned int mask_;
+        unsigned int _mask;
 
     };
 

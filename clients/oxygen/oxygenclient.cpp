@@ -50,16 +50,16 @@ namespace Oxygen
     //___________________________________________
     Client::Client(KDecorationBridge *b, Factory *f):
         KCommonDecorationUnstable(b, f),
-        factory_( f ),
-        sizeGrip_( 0 ),
-        glowAnimation_( new Animation( 200, this ) ),
-        titleAnimationData_( new TitleAnimationData( this ) ),
-        glowIntensity_(0),
-        initialized_( false ),
-        forceActive_( false ),
-        mouseButton_( Qt::NoButton ),
-        itemData_( this ),
-        sourceItem_( -1 )
+        _factory( f ),
+        _sizeGrip( 0 ),
+        _glowAnimation( new Animation( 200, this ) ),
+        _titleAnimationData( new TitleAnimationData( this ) ),
+        _glowIntensity(0),
+        _initialized( false ),
+        _forceActive( false ),
+        _mouseButton( Qt::NoButton ),
+        _itemData( this ),
+        _sourceItem( -1 )
     {}
 
     //___________________________________________
@@ -86,20 +86,20 @@ namespace Oxygen
         widget()->setAcceptDrops( true );
 
         // setup glow animation
-        glowAnimation_->setStartValue( glowBias() );
-        glowAnimation_->setEndValue( 1.0 );
-        glowAnimation_->setTargetObject( this );
-        glowAnimation_->setPropertyName( "glowIntensity" );
-        glowAnimation_->setEasingCurve( QEasingCurve::InOutQuad );
-        connect( glowAnimation_, SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
+        _glowAnimation->setStartValue( glowBias() );
+        _glowAnimation->setEndValue( 1.0 );
+        _glowAnimation->setTargetObject( this );
+        _glowAnimation->setPropertyName( "glowIntensity" );
+        _glowAnimation->setEasingCurve( QEasingCurve::InOutQuad );
+        connect( _glowAnimation, SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
 
 
         // title animation data
-        titleAnimationData_->initialize();
-        connect( titleAnimationData_, SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
+        _titleAnimationData->initialize();
+        connect( _titleAnimationData, SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
 
         // lists
-        connect( itemData_.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
+        connect( _itemData.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
 
         // in case of preview, one wants to make the label used
         // for the central widget transparent. This allows one to have
@@ -115,7 +115,7 @@ namespace Oxygen
 
         }
 
-        initialized_ = true;
+        _initialized = true;
 
         // first reset is needed to store Oxygen configuration
         reset(0);
@@ -128,39 +128,39 @@ namespace Oxygen
         KCommonDecorationUnstable::reset( changed );
 
         // update window mask when compositing is changed
-        if( !initialized_ ) return;
+        if( !_initialized ) return;
         if( changed & SettingCompositing )
         {
             updateWindowShape();
             widget()->update();
         }
 
-        configuration_ = factory_->configuration( *this );
+        _configuration = _factory->configuration( *this );
 
         // animations duration
-        glowAnimation_->setDuration( configuration_.animationsDuration() );
-        titleAnimationData_->setDuration( configuration_.animationsDuration() );
-        itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
-        itemData_.setAnimationsEnabled( useAnimations() );
+        _glowAnimation->setDuration( _configuration.animationsDuration() );
+        _titleAnimationData->setDuration( _configuration.animationsDuration() );
+        _itemData.animation().data()->setDuration( _configuration.animationsDuration() );
+        _itemData.setAnimationsEnabled( useAnimations() );
 
         // reset title transitions
-        titleAnimationData_->reset();
+        _titleAnimationData->reset();
 
         // should also update animations for buttons
         resetButtons();
 
         // also reset tab buttons
-        for( int index = 0; index < itemData_.count(); index++ )
+        for( int index = 0; index < _itemData.count(); index++ )
         {
-            ClientGroupItemData& item( itemData_[index] );
-            if( item.closeButton_ ) { item.closeButton_.data()->reset(0); }
+            ClientGroupItemData& item( _itemData[index] );
+            if( item._closeButton ) { item._closeButton.data()->reset(0); }
         }
 
         // reset tab geometry
-        itemData_.setDirty( true );
+        _itemData.setDirty( true );
 
         // handle size grip
-        if( configuration_.drawSizeGrip() )
+        if( _configuration.drawSizeGrip() )
         {
 
             if( !hasSizeGrip() ) createSizeGrip();
@@ -461,8 +461,8 @@ namespace Oxygen
     void Client::clearTargetItem( void )
     {
 
-        if( itemData_.animationType() == AnimationLeave )
-        { itemData_.setDirty( true ); }
+        if( _itemData.animationType() == AnimationLeave )
+        { _itemData.setDirty( true ); }
 
     }
 
@@ -471,7 +471,7 @@ namespace Oxygen
     {
 
         // make sure items are not animated
-        itemData_.animate( AnimationNone );
+        _itemData.animate( AnimationNone );
 
         // maximum available space
         const QRect titleRect( this->titleRect() );
@@ -480,71 +480,71 @@ namespace Oxygen
         const int items( clientGroupItems().count() );
 
         // make sure item data have the correct number of items
-        while( itemData_.count() < items ) itemData_.push_back( ClientGroupItemData() );
-        while( itemData_.count() > items )
+        while( _itemData.count() < items ) _itemData.push_back( ClientGroupItemData() );
+        while( _itemData.count() > items )
         {
-            if( itemData_.back().closeButton_ ) delete itemData_.back().closeButton_.data();
-            itemData_.pop_back();
+            if( _itemData.back()._closeButton ) delete _itemData.back()._closeButton.data();
+            _itemData.pop_back();
         }
 
-        assert( !itemData_.isEmpty() );
+        assert( !_itemData.isEmpty() );
 
         // create buttons
-        if( itemData_.count() == 1 )
+        if( _itemData.count() == 1 )
         {
 
             // remove button
-            if( itemData_.front().closeButton_ )
-            { delete itemData_.front().closeButton_.data(); }
+            if( _itemData.front()._closeButton )
+            { delete _itemData.front()._closeButton.data(); }
 
             // set active rect
-            itemData_.front().activeRect_ = titleRect.adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
+            _itemData.front()._activeRect = titleRect.adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
 
         } else {
 
             int left( titleRect.left() );
             const int width( titleRect.width()/items );
-            for( int index = 0; index < itemData_.count(); index++ )
+            for( int index = 0; index < _itemData.count(); index++ )
             {
 
-                ClientGroupItemData& item(itemData_[index]);
+                ClientGroupItemData& item(_itemData[index]);
 
                 // make sure button exists
-                if( !item.closeButton_ )
+                if( !item._closeButton )
                 {
-                    item.closeButton_ = ClientGroupItemData::ButtonPointer( new Button( *this, "Close this tab", ButtonItemClose ) );
-                    item.closeButton_.data()->show();
-                    item.closeButton_.data()->installEventFilter( this );
+                    item._closeButton = ClientGroupItemData::ButtonPointer( new Button( *this, "Close this tab", ButtonItemClose ) );
+                    item._closeButton.data()->show();
+                    item._closeButton.data()->installEventFilter( this );
                 }
 
                 // set active rect
                 QRect local(  QPoint( left, titleRect.top() ), QSize( width, titleRect.height() ) );
                 local.adjust( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
-                item.activeRect_ = local;
+                item._activeRect = local;
                 left += width;
 
             }
 
         }
 
-        if( itemData_.count() == 1 )
+        if( _itemData.count() == 1 )
         {
 
-            itemData_.front().reset( defaultTitleRect() );
+            _itemData.front().reset( defaultTitleRect() );
 
         } else {
 
-            for( int index = 0; index < itemData_.count(); index++ )
-            { itemData_[index].reset( itemData_[index].activeRect_ ); }
+            for( int index = 0; index < _itemData.count(); index++ )
+            { _itemData[index].reset( _itemData[index]._activeRect ); }
 
         }
 
         // button activity
-        itemData_.updateButtonActivity( visibleClientGroupItem() );
+        _itemData.updateButtonActivity( visibleClientGroupItem() );
 
         // reset buttons location
-        itemData_.updateButtons( alsoUpdate );
-        itemData_.setDirty( false );
+        _itemData.updateButtons( alsoUpdate );
+        _itemData.setDirty( false );
 
         return;
 
@@ -623,7 +623,7 @@ namespace Oxygen
         const int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
         // make titlebar background darker for tabbed, non-outline window
-        if( ( clientGroupItems().count() >= 2 || itemData_.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
+        if( ( clientGroupItems().count() >= 2 || _itemData.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
         {
 
             const QPoint topLeft( r.topLeft()-position );
@@ -802,35 +802,35 @@ namespace Oxygen
     void Client::renderTitleText( QPainter* painter, const QRect& rect, const QColor& color, const QColor& contrast ) const
     {
 
-        if( !titleAnimationData_->isValid() )
+        if( !_titleAnimationData->isValid() )
         {
             // contrast pixmap
-            titleAnimationData_->reset(
+            _titleAnimationData->reset(
                 rect,
                 renderTitleText( rect, caption(), color ),
                 renderTitleText( rect, caption(), contrast ) );
         }
 
-        if( titleAnimationData_->isDirty() )
+        if( _titleAnimationData->isDirty() )
         {
 
             // clear dirty flags
-            titleAnimationData_->setDirty( false );
+            _titleAnimationData->setDirty( false );
 
             // finish current animation if running
-            if( titleAnimationData_->isAnimated() )
-            { titleAnimationData_->finishAnimation(); }
+            if( _titleAnimationData->isAnimated() )
+            { _titleAnimationData->finishAnimation(); }
 
-            if( !titleAnimationData_->isLocked() )
+            if( !_titleAnimationData->isLocked() )
             {
 
                 // set pixmaps
-                titleAnimationData_->setPixmaps(
+                _titleAnimationData->setPixmaps(
                     rect,
                     renderTitleText( rect, caption(), color ),
                     renderTitleText( rect, caption(), contrast ) );
 
-                titleAnimationData_->startAnimation();
+                _titleAnimationData->startAnimation();
                 renderTitleText( painter, rect, color, contrast );
 
             } else if( !caption().isEmpty() ) {
@@ -842,19 +842,19 @@ namespace Oxygen
             // lock animations (this must be done whether or not
             // animation was actually started, in order to extend locking
             // every time title get changed too rapidly
-            titleAnimationData_->lockAnimations();
+            _titleAnimationData->lockAnimations();
 
-        } else if( titleAnimationData_->isAnimated() ) {
+        } else if( _titleAnimationData->isAnimated() ) {
 
             if( isMaximized() ) painter->translate( 0, 2 );
-            if( !titleAnimationData_->contrastPixmap().isNull() )
+            if( !_titleAnimationData->contrastPixmap().isNull() )
             {
                 painter->translate( 0, 1 );
-                painter->drawPixmap( rect.topLeft(), titleAnimationData_->contrastPixmap() );
+                painter->drawPixmap( rect.topLeft(), _titleAnimationData->contrastPixmap() );
                 painter->translate( 0, -1 );
             }
 
-            painter->drawPixmap( rect.topLeft(), titleAnimationData_->pixmap() );
+            painter->drawPixmap( rect.topLeft(), _titleAnimationData->pixmap() );
 
             if( isMaximized() ) painter->translate( 0, -2 );
 
@@ -916,23 +916,23 @@ namespace Oxygen
     void Client::renderItem( QPainter* painter, int index, const QPalette& palette )
     {
 
-        const ClientGroupItemData& item( itemData_[index] );
+        const ClientGroupItemData& item( _itemData[index] );
 
         // see if tag is active
-        const int itemCount( itemData_.count() );
+        const int itemCount( _itemData.count() );
 
         // check item bounding rect
-        if( !item.boundingRect_.isValid() ) return;
+        if( !item._boundingRect.isValid() ) return;
 
         // create rect in which text is to be drawn
-        QRect textRect( item.boundingRect_.adjusted( 0, layoutMetric( LM_TitleEdgeTop )-1, 0, -1 ) );
+        QRect textRect( item._boundingRect.adjusted( 0, layoutMetric( LM_TitleEdgeTop )-1, 0, -1 ) );
 
         // add extra space needed for title outline
-        if( itemCount > 1 || itemData_.isAnimated() )
+        if( itemCount > 1 || _itemData.isAnimated() )
         { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
         // add extra space for the button
-        if( itemCount > 1 && item.closeButton_ && item.closeButton_.data()->isVisible() )
+        if( itemCount > 1 && item._closeButton && item._closeButton.data()->isVisible() )
         { textRect.adjust( 0, 0, - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
 
         // check if current item is active
@@ -955,14 +955,14 @@ namespace Oxygen
             // no title outline if the window caption is empty
             if( !caption.trimmed().isEmpty() )
             {
-                if( itemData_.isAnimated() ) {
+                if( _itemData.isAnimated() ) {
 
-                    renderTitleOutline( painter, item.boundingRect_, palette );
+                    renderTitleOutline( painter, item._boundingRect, palette );
 
                 } else if( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() ) {
 
                     // adjusts boundingRect accordingly
-                    QRect boundingRect( item.boundingRect_ );
+                    QRect boundingRect( item._boundingRect );
                     boundingRect.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
                     boundingRect.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
 
@@ -976,7 +976,7 @@ namespace Oxygen
         } else if( active ) {
 
             // in multiple tabs render title outline in all cases
-            renderTitleOutline( painter, item.boundingRect_, palette );
+            renderTitleOutline( painter, item._boundingRect, palette );
 
         }
 
@@ -1008,17 +1008,17 @@ namespace Oxygen
         }
 
         // render separators between inactive tabs
-        if( !( active || itemCount == 1 ) && item.closeButton_ && item.closeButton_.data()->isVisible() )
+        if( !( active || itemCount == 1 ) && item._closeButton && item._closeButton.data()->isVisible() )
         {
 
             // separators
             // draw Left separator
             const QColor color( backgroundPalette( widget(), palette ).window().color() );
-            const bool isFirstItem(  index == 0 || (index == 1 && !itemData_[0].boundingRect_.isValid() ) );
-            if( !active && ( ( isFirstItem && buttonsLeftWidth() > 0 ) || itemData_.isTarget( index ) ) )
+            const bool isFirstItem(  index == 0 || (index == 1 && !_itemData[0]._boundingRect.isValid() ) );
+            if( !active && ( ( isFirstItem && buttonsLeftWidth() > 0 ) || _itemData.isTarget( index ) ) )
             {
 
-                const QRect local( item.boundingRect_.topLeft()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
+                const QRect local( item._boundingRect.topLeft()+QPoint(0,2), QSize( 2, item._boundingRect.height()-3 ) );
                 helper().drawSeparator( painter, local, color, Qt::Vertical);
 
             }
@@ -1026,11 +1026,11 @@ namespace Oxygen
             // draw right separator
             if(
                 ( index == itemCount-1 && buttonsRightWidth() > 0 ) ||
-                ( index+1 < itemCount && ( itemData_.isTarget( index+1 ) ||
-                !( index+1 == visibleClientGroupItem() && itemData_[index+1].boundingRect_.isValid() ) ) ) )
+                ( index+1 < itemCount && ( _itemData.isTarget( index+1 ) ||
+                !( index+1 == visibleClientGroupItem() && _itemData[index+1]._boundingRect.isValid() ) ) ) )
             {
 
-                const QRect local( item.boundingRect_.topRight()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
+                const QRect local( item._boundingRect.topRight()+QPoint(0,2), QSize( 2, item._boundingRect.height()-3 ) );
                 helper().drawSeparator( painter, local, color, Qt::Vertical);
 
             }
@@ -1042,12 +1042,12 @@ namespace Oxygen
     //_______________________________________________________________________
     void Client::renderTargetRect( QPainter* p, const QPalette& palette )
     {
-        if( itemData_.targetRect().isNull() || itemData_.isAnimationRunning() ) return;
+        if( _itemData.targetRect().isNull() || _itemData.isAnimationRunning() ) return;
 
         const QColor color = palette.color(QPalette::Highlight);
         p->setPen(KColorUtils::mix(color, palette.color(QPalette::Active, QPalette::WindowText)));
         p->setBrush( helper().alphaColor( color, 0.5 ) );
-        p->drawRect( QRectF(itemData_.targetRect()).adjusted( 4.5, 2.5, -4.5, -2.5 ) );
+        p->drawRect( QRectF(_itemData.targetRect()).adjusted( 4.5, 2.5, -4.5, -2.5 ) );
 
     }
 
@@ -1155,13 +1155,13 @@ namespace Oxygen
     {
 
         KCommonDecorationUnstable::activeChange();
-        itemData_.setDirty( true );
+        _itemData.setDirty( true );
 
         // reset animation
         if( animateActiveChange() )
         {
-            glowAnimation_->setDirection( isActive() ? Animation::Forward : Animation::Backward );
-            if(!glowIsAnimated()) { glowAnimation_->start(); }
+            _glowAnimation->setDirection( isActive() ? Animation::Forward : Animation::Backward );
+            if(!glowIsAnimated()) { _glowAnimation->start(); }
         }
 
         // update size grip so that it gets the right color
@@ -1194,9 +1194,9 @@ namespace Oxygen
     {
 
         KCommonDecorationUnstable::captionChange();
-        itemData_.setDirty( true );
+        _itemData.setDirty( true );
         if( animateTitleChange() )
-        { titleAnimationData_->setDirty( true ); }
+        { _titleAnimationData->setDirty( true ); }
 
     }
 
@@ -1271,7 +1271,7 @@ namespace Oxygen
 
             case QEvent::Show:
             if( widget() == object )
-            { itemData_.setDirty( true ); }
+            { _itemData.setDirty( true ); }
             break;
 
             case QEvent::MouseButtonPress:
@@ -1324,7 +1324,7 @@ namespace Oxygen
     //_________________________________________________________
     void Client::resizeEvent( QResizeEvent* event )
     {
-        itemData_.setDirty( true );
+        _itemData.setDirty( true );
         KCommonDecorationUnstable::resizeEvent( event );
     }
 
@@ -1333,7 +1333,7 @@ namespace Oxygen
     {
 
         // factory
-        if(!( initialized_ && factory_->initialized() ) ) return;
+        if(!( _initialized && _factory->initialized() ) ) return;
 
         // palette
         QPalette palette = widget()->palette();
@@ -1410,7 +1410,7 @@ namespace Oxygen
         this needs to be done before calling RenderWindowBorder
         since some painting in there depend on the clientGroups state
         */
-        if(  itemData_.isDirty() || itemData_.count() != clientGroupItems().count() )
+        if(  _itemData.isDirty() || _itemData.count() != clientGroupItems().count() )
         { updateItemBoundingRects( false ); }
 
         // window background
@@ -1439,14 +1439,14 @@ namespace Oxygen
             painter.setFont( options()->font(isActive(), false) );
 
             // draw ClientGroupItems
-            const int itemCount( itemData_.count() );
+            const int itemCount( _itemData.count() );
             for( int i = 0; i < itemCount; i++ ) renderItem( &painter, i, palette );
 
             // draw target rect
             renderTargetRect( &painter, widget()->palette() );
 
             // separator
-            if( itemCount == 1 && !itemData_.isAnimated() && drawSeparator() )
+            if( itemCount == 1 && !_itemData.isAnimated() && drawSeparator() )
             { renderSeparator(&painter, frame, widget(), color ); }
 
         }
@@ -1459,21 +1459,21 @@ namespace Oxygen
 
         const QPoint point = event->pos();
         if( itemClicked( point ) < 0 ) return false;
-        dragPoint_ = point;
+        _dragPoint = point;
 
-        mouseButton_ = event->button();
+        _mouseButton = event->button();
         bool accepted( false );
-        if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
+        if( buttonToWindowOperation( _mouseButton ) == ClientGroupDragOp )
         {
 
             accepted = true;
 
-        } else if( buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
+        } else if( buttonToWindowOperation( _mouseButton ) == OperationsOp ) {
 
             QPoint point = event->pos();
             int itemClicked( this->itemClicked( point ) );
             displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
-            mouseButton_ = Qt::NoButton;
+            _mouseButton = Qt::NoButton;
             accepted = true; // displayClientMenu can possibly destroy the deco...
 
         }
@@ -1485,8 +1485,8 @@ namespace Oxygen
     {
 
         bool accepted( false );
-        if( mouseButton_ == event->button() &&
-            buttonToWindowOperation( mouseButton_ ) != OperationsOp )
+        if( _mouseButton == event->button() &&
+            buttonToWindowOperation( _mouseButton ) != OperationsOp )
         {
 
             const QPoint point = event->pos();
@@ -1502,7 +1502,7 @@ namespace Oxygen
 
         }
 
-        mouseButton_ = Qt::NoButton;
+        _mouseButton = Qt::NoButton;
         return accepted;
 
     }
@@ -1512,30 +1512,30 @@ namespace Oxygen
     {
 
         // check button and distance to drag point
-        if( hideTitleBar() || mouseButton_ == Qt::NoButton  || ( event->pos() - dragPoint_ ).manhattanLength() <= QApplication::startDragDistance() )
+        if( hideTitleBar() || _mouseButton == Qt::NoButton  || ( event->pos() - _dragPoint ).manhattanLength() <= QApplication::startDragDistance() )
         { return false; }
 
         bool accepted( false );
-        if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
+        if( buttonToWindowOperation( _mouseButton ) == ClientGroupDragOp )
         {
 
             const QPoint point = event->pos();
             const int itemClicked( this->itemClicked( point ) );
             if( itemClicked < 0 ) return false;
 
-            titleAnimationData_->reset();
+            _titleAnimationData->reset();
 
             QDrag *drag = new QDrag( widget() );
             QMimeData *groupData = new QMimeData();
             groupData->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( itemClicked )).toAscii() );
             drag->setMimeData( groupData );
-            sourceItem_ = this->itemClicked( dragPoint_ );
+            _sourceItem = this->itemClicked( _dragPoint );
 
             // get tab geometry
-            QRect geometry( itemData_[itemClicked].boundingRect_ );
+            QRect geometry( _itemData[itemClicked]._boundingRect );
 
             // remove space used for buttons
-            if( itemData_.count() > 1  )
+            if( _itemData.count() > 1  )
             {
 
                 geometry.adjust( 0, 0,  - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 );
@@ -1562,14 +1562,14 @@ namespace Oxygen
 
             drag->setHotSpot( hotSpot );
 
-            dragStartTimer_.start( 50, this );
+            _dragStartTimer.start( 50, this );
             drag->exec( Qt::MoveAction );
 
             // detach tab from window
-            if( drag->target() == 0 && itemData_.count() > 1 )
+            if( drag->target() == 0 && _itemData.count() > 1 )
             {
-                itemData_.setDirty( true );
-                removeFromClientGroup( sourceItem_,
+                _itemData.setDirty( true );
+                removeFromClientGroup( _sourceItem,
                     widget()->frameGeometry().adjusted(
                     layoutMetric( LM_OuterPaddingLeft ),
                     layoutMetric( LM_OuterPaddingTop ),
@@ -1581,7 +1581,7 @@ namespace Oxygen
             }
 
             // reset button
-            mouseButton_ = Qt::NoButton;
+            _mouseButton = Qt::NoButton;
             accepted = true;
 
         }
@@ -1603,13 +1603,13 @@ namespace Oxygen
         {
 
             const QPoint position( event->pos() );
-            itemData_.animate( AnimationEnter, itemClicked( position, true ) );
+            _itemData.animate( AnimationEnter, itemClicked( position, true ) );
 
-        } else if( itemData_.count() > 1 )  {
+        } else if( _itemData.count() > 1 )  {
 
             const QPoint position( event->pos() );
             const int itemClicked( this->itemClicked( position, false ) );
-            itemData_.animate( AnimationEnter|AnimationSameTarget, itemClicked );
+            _itemData.animate( AnimationEnter|AnimationSameTarget, itemClicked );
 
         }
 
@@ -1621,15 +1621,15 @@ namespace Oxygen
     bool Client::dragLeaveEvent( QDragLeaveEvent* )
     {
 
-        if( itemData_.animationType() & AnimationSameTarget )
+        if( _itemData.animationType() & AnimationSameTarget )
         {
 
-            if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
-            itemData_.animate( AnimationLeave|AnimationSameTarget, sourceItem_ );
+            if( _dragStartTimer.isActive() ) _dragStartTimer.stop();
+            _itemData.animate( AnimationLeave|AnimationSameTarget, _sourceItem );
 
-        } else if( itemData_.isAnimated() ) {
+        } else if( _itemData.isAnimated() ) {
 
-            itemData_.animate( AnimationLeave );
+            _itemData.animate( AnimationLeave );
 
         }
 
@@ -1648,15 +1648,15 @@ namespace Oxygen
         {
 
             const QPoint position( event->pos() );
-            itemData_.animate( AnimationMove, itemClicked( position, true ) );
+            _itemData.animate( AnimationMove, itemClicked( position, true ) );
 
-        } else if( itemData_.count() > 1 )  {
+        } else if( _itemData.count() > 1 )  {
 
-            if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
+            if( _dragStartTimer.isActive() ) _dragStartTimer.stop();
 
             const QPoint position( event->pos() );
             const int itemClicked( this->itemClicked( position, false ) );
-            itemData_.animate( AnimationMove|AnimationSameTarget, itemClicked );
+            _itemData.animate( AnimationMove|AnimationSameTarget, itemClicked );
 
         }
 
@@ -1669,7 +1669,7 @@ namespace Oxygen
     {
 
         const QPoint point = event->pos();
-        itemData_.animate( AnimationNone );
+        _itemData.animate( AnimationNone );
 
         const QMimeData *groupData = event->mimeData();
         if( !groupData->hasFormat( clientGroupItemDragMimeType() ) ) return false;
@@ -1677,7 +1677,7 @@ namespace Oxygen
         if( widget() == event->source() )
         {
 
-            const int from = this->itemClicked( dragPoint_ );
+            const int from = this->itemClicked( _dragPoint );
             int itemClicked( this->itemClicked( point, false ) );
 
             if( itemClicked > from )
@@ -1687,7 +1687,7 @@ namespace Oxygen
                 { itemClicked = -1; }
             }
 
-            itemData_.setDirty( true );
+            _itemData.setDirty( true );
             moveItemInClientGroup( from, itemClicked );
             updateTitleRect();
 
@@ -1696,12 +1696,12 @@ namespace Oxygen
             setForceActive( true );
             const int itemClicked( this->itemClicked( point, true ) );
             const long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
-            itemData_.setDirty( true );
+            _itemData.setDirty( true );
             moveItemToClientGroup( source, itemClicked );
 
         }
 
-        titleAnimationData_->reset();
+        _titleAnimationData->reset();
         return true;
 
     }
@@ -1710,16 +1710,16 @@ namespace Oxygen
     void Client::timerEvent( QTimerEvent* event )
     {
 
-        if( event->timerId() != dragStartTimer_.timerId() )
+        if( event->timerId() != _dragStartTimer.timerId() )
         { return KCommonDecorationUnstable::timerEvent( event ); }
 
-        dragStartTimer_.stop();
+        _dragStartTimer.stop();
 
         // do nothing if there is only one tab
-        if( itemData_.count() > 1 )
+        if( _itemData.count() > 1 )
         {
-            itemData_.animate( AnimationMove|AnimationSameTarget, sourceItem_ );
-            itemData_.animate( AnimationLeave|AnimationSameTarget, sourceItem_ );
+            _itemData.animate( AnimationMove|AnimationSameTarget, _sourceItem );
+            _itemData.animate( AnimationLeave|AnimationSameTarget, _sourceItem );
         }
 
     }
@@ -1728,11 +1728,11 @@ namespace Oxygen
     bool Client::closeItem( const Button* button )
     {
 
-        for( int i=0; i <  itemData_.count(); i++ )
+        for( int i=0; i <  _itemData.count(); i++ )
         {
-            if( button == itemData_[i].closeButton_.data() )
+            if( button == _itemData[i]._closeButton.data() )
             {
-                itemData_.setDirty( true );
+                _itemData.setDirty( true );
                 closeClientGroupItem( i );
                 return true;
             }
@@ -1813,7 +1813,7 @@ namespace Oxygen
         assert( !hasSizeGrip() );
         if( ( isResizable() && windowId() != 0 ) || isPreview() )
         {
-            sizeGrip_ = new SizeGrip( this );
+            _sizeGrip = new SizeGrip( this );
             sizeGrip().setVisible( !( isMaximized() || isShade() ) );
         }
 
@@ -1823,8 +1823,8 @@ namespace Oxygen
     void Client::deleteSizeGrip( void )
     {
         assert( hasSizeGrip() );
-        sizeGrip_->deleteLater();
-        sizeGrip_ = 0;
+        _sizeGrip->deleteLater();
+        _sizeGrip = 0;
     }
 
 }

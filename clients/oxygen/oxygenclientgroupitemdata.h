@@ -67,31 +67,31 @@ namespace Oxygen
         //! reset all rects to argument
         void reset( const QRect& rect )
         {
-            refBoundingRect_ = rect;
-            startBoundingRect_ = rect;
-            endBoundingRect_ = rect;
-            boundingRect_ = rect;
+            _refBoundingRect = rect;
+            _startBoundingRect = rect;
+            _endBoundingRect = rect;
+            _boundingRect = rect;
         }
 
         //! tab active rect
-        QRect activeRect_;
+        QRect _activeRect;
 
         //! reference bounding rect
         /*! it is usually identical to activeRect unless there is only one tab in window */
-        QRect refBoundingRect_;
+        QRect _refBoundingRect;
 
         //! tab drawing rect
-        QRect startBoundingRect_;
+        QRect _startBoundingRect;
 
         //! tab drawing rect
-        QRect endBoundingRect_;
+        QRect _endBoundingRect;
 
         //! tab drawing rect
-        QRect boundingRect_;
+        QRect _boundingRect;
 
         //! tab button
         typedef QWeakPointer<Button> ButtonPointer;
-        ButtonPointer closeButton_;
+        ButtonPointer _closeButton;
 
     };
 
@@ -113,11 +113,11 @@ namespace Oxygen
 
         //! dirty state
         void setDirty( const bool& value )
-        { dirty_ = value; }
+        { _dirty = value; }
 
         //! dirty state
         bool isDirty( void ) const
-        { return dirty_; }
+        { return _dirty; }
 
         //! enable animations
         void setAnimationsEnabled( bool value )
@@ -165,7 +165,7 @@ namespace Oxygen
 
         //! return animation object
         virtual const Animation::Pointer& animation() const
-        { return animation_; }
+        { return _animation; }
 
         void setProgress( qreal value )
         {
@@ -187,17 +187,17 @@ namespace Oxygen
         private:
 
         //! client
-        Client& client_;
+        Client& _client;
 
         //! dirty flag
         /* used to trigger update at next paintEvent */
-        bool dirty_;
+        bool _dirty;
 
         //! true if animations are enabled
         bool animationsEnabled_;
 
         //! animation
-        Animation::Pointer animation_;
+        Animation::Pointer _animation;
 
         //! last animation type
         AnimationTypes animationType_;

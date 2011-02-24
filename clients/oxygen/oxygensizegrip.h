@@ -76,7 +76,7 @@ namespace Oxygen
 
         //! client
         Client& client( void ) const
-        { return *client_; }
+        { return *_client; }
 
         //! update position
         void updatePosition( void );
@@ -90,7 +90,7 @@ namespace Oxygen
         };
 
         // oxygen client
-        Client* client_;
+        Client* _client;
 
     };
 

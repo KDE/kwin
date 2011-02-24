@@ -33,14 +33,14 @@ namespace Oxygen
 {
 
     // use 300 milliseconds for animation lock
-    const int TitleAnimationData::lockTime_ = 300;
+    const int TitleAnimationData::_lockTime = 300;
 
     //_________________________________________________________
     TitleAnimationData::TitleAnimationData( QObject* parent ):
         QObject( parent ),
-        dirty_( false ),
-        animation_( new Animation( 200, this ) ),
-        opacity_(0)
+        _dirty( false ),
+        _animation( new Animation( 200, this ) ),
+        _opacity(0)
     {}
 
     //_________________________________________________________
@@ -65,8 +65,8 @@ namespace Oxygen
         if( isAnimated() ) animation().data()->stop();
 
         // update pixmaps
-        contrastPixmap_.initialize( rect, contrast );
-        pixmap_.initialize( rect, pixmap );
+        _contrastPixmap.initialize( rect, contrast );
+        _pixmap.initialize( rect, pixmap );
 
         setOpacity(0);
         updatePixmaps();
@@ -76,8 +76,8 @@ namespace Oxygen
     //_________________________________________________________
     void TitleAnimationData::updatePixmaps( void )
     {
-        contrastPixmap_.blend( opacity() );
-        pixmap_.blend( opacity() );
+        _contrastPixmap.blend( opacity() );
+        _pixmap.blend( opacity() );
         emit pixmapsChanged();
     }
 
@@ -85,7 +85,7 @@ namespace Oxygen
     void TitleAnimationData::timerEvent( QTimerEvent* e )
     {
 
-        if( e->timerId() != animationLockTimer_.timerId() )
+        if( e->timerId() != _animationLockTimer.timerId() )
         { return QObject::timerEvent( e ); }
 
         // unlock
@@ -104,15 +104,15 @@ namespace Oxygen
     void TitleAnimationData::BlendedPixmap::blend( qreal opacity )
     {
 
-        currentPixmap_ = QPixmap( endRect_.size() );
-        currentPixmap_.fill( Qt::transparent );
+        _currentPixmap = QPixmap( _endRect.size() );
+        _currentPixmap.fill( Qt::transparent );
 
-        QPainter painter( &currentPixmap_ );
-        if( opacity < 1 && !startPixmap_.isNull() )
-        { painter.drawPixmap( startRect_.topLeft() - endRect_.topLeft(), fade( startPixmap_, 1.0 - opacity ) ); }
+        QPainter painter( &_currentPixmap );
+        if( opacity < 1 && !_startPixmap.isNull() )
+        { painter.drawPixmap( _startRect.topLeft() - _endRect.topLeft(), fade( _startPixmap, 1.0 - opacity ) ); }
 
-        if( opacity > 0 && !endPixmap_.isNull() )
-        { painter.drawPixmap( QPoint(0,0), fade( endPixmap_, opacity ) ); }
+        if( opacity > 0 && !_endPixmap.isNull() )
+        { painter.drawPixmap( QPoint(0,0), fade( _endPixmap, opacity ) ); }
 
         painter.end();
         return;

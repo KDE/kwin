@@ -43,7 +43,7 @@ namespace Oxygen
     //_____________________________________________
     SizeGrip::SizeGrip( Client* client ):
         QWidget(0),
-        client_( client )
+        _client( client )
     {
 
         setAttribute(Qt::WA_NoSystemBackground );

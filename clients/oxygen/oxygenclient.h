@@ -85,11 +85,11 @@ namespace Oxygen
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
-        { return glowAnimation_->isRunning(); }
+        { return _glowAnimation->isRunning(); }
 
         //! true when decoration is forced active
         bool isForcedActive( void ) const
-        { return forceActive_ && clientGroupItems().count() > 1; }
+        { return _forceActive && clientGroupItems().count() > 1; }
 
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
@@ -132,21 +132,21 @@ namespace Oxygen
 
         //! return associated configuration
         const Configuration& configuration( void ) const
-        { return configuration_; }
+        { return _configuration; }
 
         //!@name glow animation
         //@{
 
         void setGlowIntensity( qreal value )
         {
-            if( glowIntensity_ == value ) return;
-            glowIntensity_ = value;
+            if( _glowIntensity == value ) return;
+            _glowIntensity = value;
             widget()->update();
         }
 
         //! unbiased glow intensity
         qreal glowIntensityUnbiased( void ) const
-        { return glowIntensity_; }
+        { return _glowIntensity; }
 
         //! glow bias
         static qreal glowBias( void )
@@ -155,17 +155,17 @@ namespace Oxygen
         //! true (biased) intensity
         /*! this is needed to have glow go from either 0.2->1 or 0.8->0 depending on the animation direction */
         qreal glowIntensity( void ) const
-        { return glowAnimation_->direction() == Animation::Forward ? glowIntensity_ : glowIntensity_-glowBias(); }
+        { return _glowAnimation->direction() == Animation::Forward ? _glowIntensity : _glowIntensity-glowBias(); }
 
         //@}
 
         //! helper class
         DecoHelper& helper( void ) const
-        { return factory_->helper(); }
+        { return _factory->helper(); }
 
         //! helper class
         ShadowCache& shadowCache( void ) const
-        { return factory_->shadowCache(); }
+        { return _factory->shadowCache(); }
 
         //!@name metrics and color definitions
         //@{
@@ -245,7 +245,7 @@ namespace Oxygen
 
         //! true when decoration is forced active
         void setForceActive( bool value )
-        { forceActive_ = value; }
+        { _forceActive = value; }
 
         //!@name event filters
         //@{
@@ -328,7 +328,7 @@ namespace Oxygen
 
         //! index of item matching point
         int itemClicked( const QPoint& position, bool between = false ) const
-        { return itemData_.itemAt( position , between ); }
+        { return _itemData.itemAt( position , between ); }
 
         //! return pixmap corresponding to a given tab, for dragging
         QPixmap itemDragPixmap( int, const QRect& );
@@ -353,7 +353,7 @@ namespace Oxygen
         {
             return
                 clientGroupItems().count() >= 2 ||
-                itemData_.isAnimated() ||
+                _itemData.isAnimated() ||
                 ( isActive() && configuration().drawTitleOutline() );
         }
 
@@ -390,11 +390,11 @@ namespace Oxygen
 
         // size grip
         bool hasSizeGrip( void ) const
-        { return (bool)sizeGrip_; }
+        { return (bool)_sizeGrip; }
 
         //! size grip
         SizeGrip& sizeGrip( void ) const
-        { return *sizeGrip_; }
+        { return *_sizeGrip; }
 
         //@}
 
@@ -417,47 +417,47 @@ namespace Oxygen
         private:
 
         //! factory
-        Factory* factory_;
+        Factory* _factory;
 
         //! size grip widget
-        SizeGrip* sizeGrip_;
+        SizeGrip* _sizeGrip;
 
         //! configuration
-        Configuration configuration_;
+        Configuration _configuration;
 
         //! glow animation
-        Animation* glowAnimation_;
+        Animation* _glowAnimation;
 
         //! title animation data
-        TitleAnimationData* titleAnimationData_;
+        TitleAnimationData* _titleAnimationData;
 
         //! glow intensity
-        qreal glowIntensity_;
+        qreal _glowIntensity;
 
         //! true when initialized
-        bool initialized_;
+        bool _initialized;
 
         //! true when decoration is forced active
-        bool forceActive_;
+        bool _forceActive;
 
         //! mouse button
-        Qt::MouseButton mouseButton_;
+        Qt::MouseButton _mouseButton;
 
         //! tab bounding rects
-        ClientGroupItemDataList itemData_;
+        ClientGroupItemDataList _itemData;
 
         //! index of tab being dragged if any, -1 otherwise
-        int sourceItem_;
+        int _sourceItem;
 
         //! drag start point
-        QPoint dragPoint_;
+        QPoint _dragPoint;
 
         //! drag start timer.
         /*!
         it is needed to activate animations when this was not done via either
         dragMoveEvent or dragLeaveEvent
         */
-        QBasicTimer dragStartTimer_;
+        QBasicTimer _dragStartTimer;
 
     };
 

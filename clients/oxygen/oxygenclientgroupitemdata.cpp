@@ -37,10 +37,10 @@ namespace Oxygen
     ClientGroupItemDataList::ClientGroupItemDataList( Client* parent ):
         QObject( parent ),
         QList<ClientGroupItemData>(),
-        client_( *parent ),
-        dirty_( false ),
+        _client( *parent ),
+        _dirty( false ),
         animationsEnabled_( true ),
-        animation_( new Animation( 150, this ) ),
+        _animation( new Animation( 150, this ) ),
         animationType_( AnimationNone ),
         progress_(0),
         draggedItem_( NoItem ),
@@ -61,7 +61,7 @@ namespace Oxygen
 
         for( int i=0; i < count(); i++ )
         {
-            QRect rect = at(i).activeRect_;
+            QRect rect = at(i)._activeRect;
             if( between ) rect.translate( -rect.width() / 2, 0 );
             if( rect.adjusted(0,0,0,2).contains( point ) )
             { return i; }
@@ -104,7 +104,7 @@ namespace Oxygen
 
             targetItem_ = target;
             targetRect_ = QRect();
-            QRect titleRect( client_.titleRect() );
+            QRect titleRect( _client.titleRect() );
             int left( titleRect.left() );
             int width = (type&AnimationSameTarget) ?
                 titleRect.width()/count():
@@ -123,24 +123,24 @@ namespace Oxygen
                 ClientGroupItemData& item( ClientGroupItemDataList::operator[](index) );
                 if( index == target )
                 {
-                    targetRect_ = item.refBoundingRect_;
+                    targetRect_ = item._refBoundingRect;
                     targetRect_.setLeft( left );
                     targetRect_.setWidth( width );
                     left+=width;
                 }
 
-                item.startBoundingRect_ = item.boundingRect_;
-                item.endBoundingRect_ = item.refBoundingRect_;
-                item.endBoundingRect_.setLeft( left );
+                item._startBoundingRect = item._boundingRect;
+                item._endBoundingRect = item._refBoundingRect;
+                item._endBoundingRect.setLeft( left );
 
                 if( (type&AnimationSameTarget) && index == draggedItem_ )
                 {
 
-                    item.endBoundingRect_.setWidth( 0 );
+                    item._endBoundingRect.setWidth( 0 );
 
                 } else {
 
-                    item.endBoundingRect_.setWidth( width );
+                    item._endBoundingRect.setWidth( width );
                     left+=width;
 
                 }
@@ -149,7 +149,7 @@ namespace Oxygen
 
             if( targetRect_.isNull() )
             {
-                targetRect_ = back().refBoundingRect_;
+                targetRect_ = back()._refBoundingRect;
                 targetRect_.setLeft( left );
                 targetRect_.setWidth( width );
             }
@@ -171,7 +171,7 @@ namespace Oxygen
                 for( int index = 0; index < count(); index++ )
                 {
                     ClientGroupItemData& item( ClientGroupItemDataList::operator[](index) );
-                    item.boundingRect_ = item.endBoundingRect_;
+                    item._boundingRect = item._endBoundingRect;
                 }
 
                 updateButtons( true );
@@ -196,7 +196,7 @@ namespace Oxygen
                 // do nothing if only one item
                 if( count() <= 1 ) return;
 
-                QRect titleRect( client_.titleRect() );
+                QRect titleRect( _client.titleRect() );
                 int left( titleRect.left() );
                 int width = titleRect.width()/(count()-1);
 
@@ -205,28 +205,28 @@ namespace Oxygen
                 {
 
                     ClientGroupItemData& item( ClientGroupItemDataList::operator[](index) );
-                    item.startBoundingRect_ = item.boundingRect_;
-                    item.endBoundingRect_ = item.refBoundingRect_;
-                    item.endBoundingRect_.setLeft( left );
+                    item._startBoundingRect = item._boundingRect;
+                    item._endBoundingRect = item._refBoundingRect;
+                    item._endBoundingRect.setLeft( left );
                     if( index != target )
                     {
 
                         if( count() <= 2 )
                         {
 
-                            item.endBoundingRect_ = client_.defaultTitleRect( index == client_.visibleClientGroupItem() );
+                            item._endBoundingRect = _client.defaultTitleRect( index == _client.visibleClientGroupItem() );
 
                         } else {
 
 
-                            item.endBoundingRect_.setWidth( width );
+                            item._endBoundingRect.setWidth( width );
                             left+=width;
 
                         }
 
                     } else {
 
-                        item.endBoundingRect_.setWidth( 0 );
+                        item._endBoundingRect.setWidth( 0 );
 
                     }
 
@@ -238,8 +238,8 @@ namespace Oxygen
                 for( int index = 0; index < count(); index++ )
                 {
                     ClientGroupItemData& item( ClientGroupItemDataList::operator[](index) );
-                    item.startBoundingRect_ = item.boundingRect_;
-                    item.endBoundingRect_ = item.refBoundingRect_;
+                    item._startBoundingRect = item._boundingRect;
+                    item._endBoundingRect = item._refBoundingRect;
                 }
 
             }
@@ -267,8 +267,8 @@ namespace Oxygen
         {
 
             const ClientGroupItemData& item( at(index) );
-            if( item.closeButton_ )
-            { item.closeButton_.data()->setForceInactive( index != visibleItem ); }
+            if( item._closeButton )
+            { item._closeButton.data()->setForceInactive( index != visibleItem ); }
 
         }
 
@@ -279,26 +279,26 @@ namespace Oxygen
     {
 
         // move close buttons
-        if( alsoUpdate ) client_.widget()->setUpdatesEnabled( false );
+        if( alsoUpdate ) _client.widget()->setUpdatesEnabled( false );
         for( int index = 0; index < count(); index++ )
         {
 
             const ClientGroupItemData& item( at(index) );
-            if( !item.closeButton_ ) continue;
+            if( !item._closeButton ) continue;
 
-            if( (!item.boundingRect_.isValid()) || ((animationType_ & AnimationSameTarget)&&count()<=2 ) )
+            if( (!item._boundingRect.isValid()) || ((animationType_ & AnimationSameTarget)&&count()<=2 ) )
             {
 
-                item.closeButton_.data()->hide();
+                item._closeButton.data()->hide();
 
             } else {
 
                 QPoint position(
-                    item.boundingRect_.right() - client_.configuration().buttonSize() - client_.layoutMetric(KCommonDecoration::LM_TitleEdgeRight),
-                    item.boundingRect_.top() + client_.layoutMetric( KCommonDecoration::LM_TitleEdgeTop ) );
+                    item._boundingRect.right() - _client.configuration().buttonSize() - _client.layoutMetric(KCommonDecoration::LM_TitleEdgeRight),
+                    item._boundingRect.top() + _client.layoutMetric( KCommonDecoration::LM_TitleEdgeTop ) );
 
-                if( item.closeButton_.data()->isHidden() ) item.closeButton_.data()->show();
-                item.closeButton_.data()->move( position );
+                if( item._closeButton.data()->isHidden() ) item._closeButton.data()->show();
+                item._closeButton.data()->move( position );
 
             }
 
@@ -306,8 +306,8 @@ namespace Oxygen
 
         if( alsoUpdate )
         {
-            client_.widget()->setUpdatesEnabled( true );
-            client_.updateTitleRect();
+            _client.widget()->setUpdatesEnabled( true );
+            _client.updateTitleRect();
         }
 
     }
@@ -321,26 +321,26 @@ namespace Oxygen
         {
 
             // left
-            if( iter->endBoundingRect_.left() == iter->startBoundingRect_.left() )
+            if( iter->_endBoundingRect.left() == iter->_startBoundingRect.left() )
             {
 
-                iter->boundingRect_.setLeft( iter->startBoundingRect_.left() );
+                iter->_boundingRect.setLeft( iter->_startBoundingRect.left() );
 
             } else {
 
-                iter->boundingRect_.setLeft( (1.0-ratio)*iter->startBoundingRect_.left() + ratio*iter->endBoundingRect_.left() );
+                iter->_boundingRect.setLeft( (1.0-ratio)*iter->_startBoundingRect.left() + ratio*iter->_endBoundingRect.left() );
 
             }
 
             // right
-            if( iter->endBoundingRect_.right() == iter->startBoundingRect_.right() )
+            if( iter->_endBoundingRect.right() == iter->_startBoundingRect.right() )
             {
 
-                iter->boundingRect_.setRight( iter->startBoundingRect_.right() );
+                iter->_boundingRect.setRight( iter->_startBoundingRect.right() );
 
             } else {
 
-                iter->boundingRect_.setRight( (1.0-ratio)*iter->startBoundingRect_.right() + ratio*iter->endBoundingRect_.right() );
+                iter->_boundingRect.setRight( (1.0-ratio)*iter->_startBoundingRect.right() + ratio*iter->_endBoundingRect.right() );
 
             }
 

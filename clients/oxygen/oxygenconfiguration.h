@@ -154,22 +154,22 @@ namespace Oxygen
         static Qt::Alignment titleAlignment( QString, bool translated );
 
         virtual Qt::Alignment titleAlignment() const
-        { return titleAlignment_; }
+        { return _titleAlignment; }
 
         virtual QString titleAlignmentName( bool translated ) const
         { return titleAlignmentName( titleAlignment(), translated, centerTitleOnFullWidth() ); }
 
         virtual void setTitleAlignment( Qt::Alignment value )
-        { titleAlignment_ = value; }
+        { _titleAlignment = value; }
 
         virtual void setTitleAlignment( QString value, bool translated )
-        { titleAlignment_ = titleAlignment( value, translated ); }
+        { _titleAlignment = titleAlignment( value, translated ); }
 
         virtual bool centerTitleOnFullWidth( void ) const
-        { return centerTitleOnFullWidth_; }
+        { return _centerTitleOnFullWidth; }
 
         virtual void setCenterTitleOnFullWidth( bool value )
-        { centerTitleOnFullWidth_ = value; }
+        { _centerTitleOnFullWidth = value; }
 
         //@}
 
@@ -181,7 +181,7 @@ namespace Oxygen
         static int iconScale( ButtonSize );
 
         virtual ButtonSize buttonSize( void ) const
-        { return buttonSize_; }
+        { return _buttonSize; }
 
         virtual int iconScale( void ) const
         { return iconScale( buttonSize() ); }
@@ -190,7 +190,7 @@ namespace Oxygen
         { return buttonSizeName( buttonSize(), translated ); }
 
         virtual void setButtonSize( ButtonSize value )
-        { buttonSize_ = value; }
+        { _buttonSize = value; }
 
         virtual bool useNarrowButtonSpacing( void ) const
         { return useNarrowButtonSpacing_; }
@@ -209,10 +209,10 @@ namespace Oxygen
         { return shadowModeName( shadowMode(), translated ); }
 
         void setShadowMode( ShadowMode mode )
-        { shadowMode_ = mode; }
+        { _shadowMode = mode; }
 
         ShadowMode shadowMode( void ) const
-        { return shadowMode_; }
+        { return _shadowMode; }
 
         //@]
 
@@ -227,10 +227,10 @@ namespace Oxygen
         { return shadowCacheModeName( shadowCacheMode(), translated ); }
 
         void setShadowCacheMode( ShadowCacheMode mode )
-        { shadowCacheMode_ = mode; }
+        { _shadowCacheMode = mode; }
 
         ShadowCacheMode shadowCacheMode( void ) const
-        { return shadowCacheMode_; }
+        { return _shadowCacheMode; }
 
         //@]
 
@@ -241,16 +241,16 @@ namespace Oxygen
         static FrameBorder frameBorder( QString, bool translated );
 
         virtual FrameBorder frameBorder() const
-        { return frameBorder_; }
+        { return _frameBorder; }
 
         virtual QString frameBorderName( bool translated ) const
         { return frameBorderName( frameBorder(), translated ); }
 
         virtual void setFrameBorder( FrameBorder value )
-        { frameBorder_ = value; }
+        { _frameBorder = value; }
 
         virtual void setFrameBorder( QString value, bool translated )
-        { frameBorder_ = frameBorder( value, translated ); }
+        { _frameBorder = frameBorder( value, translated ); }
 
         //@}
 
@@ -281,16 +281,16 @@ namespace Oxygen
         static SizeGripMode sizeGripMode( QString, bool translated );
 
         virtual SizeGripMode sizeGripMode( void ) const
-        { return sizeGripMode_; }
+        { return _sizeGripMode; }
 
         virtual QString sizeGripModeName( bool translated ) const
         { return sizeGripModeName( sizeGripMode(), translated ); }
 
         virtual void setSizeGripMode( SizeGripMode value )
-        { sizeGripMode_ = value; }
+        { _sizeGripMode = value; }
 
         virtual void setSizeGripMode( QString value, bool translated )
-        { sizeGripMode_ = sizeGripMode( value, translated ); }
+        { _sizeGripMode = sizeGripMode( value, translated ); }
 
         //! draw size grip
         virtual bool drawSizeGrip( void ) const
@@ -300,131 +300,131 @@ namespace Oxygen
 
         //! separator
         virtual SeparatorMode separatorMode( void ) const
-        { return separatorMode_; }
+        { return _separatorMode; }
 
         //! separator
         virtual void setSeparatorMode( SeparatorMode value )
-        { separatorMode_ = value; }
+        { _separatorMode = value; }
 
         //! title outline
         virtual bool drawTitleOutline( void ) const
-        { return drawTitleOutline_; }
+        { return _drawTitleOutline; }
 
         //! title outline
         virtual void setDrawTitleOutline( bool value )
-        { drawTitleOutline_ = value; }
+        { _drawTitleOutline = value; }
 
         //! hide title bar
         virtual bool hideTitleBar( void ) const
-        { return hideTitleBar_; }
+        { return _hideTitleBar; }
 
         //! hide title bar
         virtual void setHideTitleBar( bool value )
-        { hideTitleBar_ = value; }
+        { _hideTitleBar = value; }
 
         //! drop shadows
         virtual bool useDropShadows( void ) const
-        { return useDropShadows_; }
+        { return _useDropShadows; }
 
         //! drop shadows
         virtual void setUseDropShadows( bool value )
-        { useDropShadows_ = value; }
+        { _useDropShadows = value; }
 
         //! oxygen shadows
         virtual bool useOxygenShadows( void ) const
-        { return useOxygenShadows_; }
+        { return _useOxygenShadows; }
 
         //! oxygen shadows
         virtual void setUseOxygenShadows( bool value )
-        { useOxygenShadows_ = value; }
+        { _useOxygenShadows = value; }
 
         //! animations
         virtual bool useAnimations( void ) const
-        { return useAnimations_; }
+        { return _useAnimations; }
 
         //! animations
         virtual void setUseAnimations( bool value )
-        { useAnimations_ = value; }
+        { _useAnimations = value; }
 
         //! animations
         virtual bool animateTitleChange( void ) const
-        { return animateTitleChange_; }
+        { return _animateTitleChange; }
 
         //! animations
         virtual void setAnimateTitleChange( bool value )
-        { animateTitleChange_ = value; }
+        { _animateTitleChange = value; }
 
         //! animations
         virtual int animationsDuration( void ) const
-        { return animationsDuration_; }
+        { return _animationsDuration; }
 
         //! animations
         virtual void setAnimationsDuration( int value )
-        { animationsDuration_ = value; }
+        { _animationsDuration = value; }
 
         //! tabbing
         virtual bool tabsEnabled( void ) const
-        { return tabsEnabled_; }
+        { return _tabsEnabled; }
 
         //! tabbing
         virtual void setTabsEnabled( bool value )
-        { tabsEnabled_ = value; }
+        { _tabsEnabled = value; }
 
         private:
 
         //! title alignment
-        Qt::Alignment titleAlignment_;
+        Qt::Alignment _titleAlignment;
 
         //! full width alignment (makes sense only for Center alignment
-        bool centerTitleOnFullWidth_;
+        bool _centerTitleOnFullWidth;
 
         //! button size
-        ButtonSize buttonSize_;
+        ButtonSize _buttonSize;
 
         //! blend color
-        FrameBorder frameBorder_;
+        FrameBorder _frameBorder;
 
         //! frame border
         BlendColorType blendColor_;
 
         //! size grip mode
-        SizeGripMode sizeGripMode_;
+        SizeGripMode _sizeGripMode;
 
         //! separator
-        SeparatorMode separatorMode_;
+        SeparatorMode _separatorMode;
 
         //! active window title outline
-        bool drawTitleOutline_;
+        bool _drawTitleOutline;
 
         //! hide titlebar completely (but not window border)
-        bool hideTitleBar_;
+        bool _hideTitleBar;
 
         //! drop shadows
-        bool useDropShadows_;
+        bool _useDropShadows;
 
         //! oxygen shadows
-        bool useOxygenShadows_;
+        bool _useOxygenShadows;
 
         //! animations
-        bool useAnimations_;
+        bool _useAnimations;
 
         //! animations
-        bool animateTitleChange_;
+        bool _animateTitleChange;
 
         //! animations
-        int animationsDuration_;
+        int _animationsDuration;
 
         //! tabbing
-        bool tabsEnabled_;
+        bool _tabsEnabled;
 
         //! narrow button spacing
         bool useNarrowButtonSpacing_;
 
         //! shadow mode
-        ShadowMode shadowMode_;
+        ShadowMode _shadowMode;
 
         //! shadow cache mode
-        ShadowCacheMode shadowCacheMode_;
+        ShadowCacheMode _shadowCacheMode;
 
     };
 
