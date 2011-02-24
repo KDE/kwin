@@ -153,6 +153,7 @@ namespace Oxygen
         configuration.setFrameBorder( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ) );
         configuration.setSizeGripMode( Configuration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ) );
         configuration.setShadowCacheMode( Configuration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ) );
+        configuration.setShadowMode( Configuration::shadowMode( userInterface_->ui.shadowMode->currentText(), true ) );
         configuration.setSeparatorMode( (Oxygen::Configuration::SeparatorMode) userInterface_->ui.separatorMode->currentIndex() );
         configuration.setDrawTitleOutline( userInterface_->ui.titleOutline->isChecked() );
         configuration.setUseDropShadows( userInterface_->shadowConfigurations[1]->isChecked() );
@@ -171,8 +172,6 @@ namespace Oxygen
         userInterface_->ui.exceptions->exceptions().write( *configuration_ );
 
         // write shadow configuration
-        configurationGroup.writeEntry( OxygenConfig::SHADOW_MODE,
-            Configuration::shadowModeName( Configuration::shadowMode( userInterface_->ui.shadowMode->currentText(), true ), false ) );
         saveShadowConfiguration( QPalette::Active, *userInterface_->shadowConfigurations[0] );
         saveShadowConfiguration( QPalette::Inactive, *userInterface_->shadowConfigurations[1] );
 
