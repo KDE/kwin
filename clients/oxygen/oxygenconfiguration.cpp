@@ -40,7 +40,7 @@ namespace Oxygen
         _centerTitleOnFullWidth( true ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderTiny ),
-        blendColor_( BlendFromStyle ),
+        _blendColor( BlendFromStyle ),
         _sizeGripMode( SizeGripWhenNeeded ),
         _separatorMode( SeparatorNever ),
         _drawTitleOutline( false ),
@@ -51,7 +51,7 @@ namespace Oxygen
         _animateTitleChange( true ),
         _animationsDuration( 150 ),
         _tabsEnabled( true ),
-        useNarrowButtonSpacing_( false ),
+        _useNarrowButtonSpacing( false ),
         _shadowMode( OxygenShadows ),
         _shadowCacheMode( CacheVariable )
     {}

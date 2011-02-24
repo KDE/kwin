@@ -193,10 +193,10 @@ namespace Oxygen
         { _buttonSize = value; }
 
         virtual bool useNarrowButtonSpacing( void ) const
-        { return useNarrowButtonSpacing_; }
+        { return _useNarrowButtonSpacing; }
 
         virtual void  setUseNarrowButtonSpacing( bool value )
-        { useNarrowButtonSpacing_ = value; }
+        { _useNarrowButtonSpacing = value; }
 
         //@}
 
@@ -261,16 +261,16 @@ namespace Oxygen
         static BlendColorType blendColor( QString, bool translated );
 
         virtual BlendColorType blendColor( void ) const
-        { return blendColor_; }
+        { return _blendColor; }
 
         virtual QString blendColorName( bool translated ) const
         { return blendColorName( blendColor(), translated ); }
 
         virtual void setBlendColor( BlendColorType value )
-        { blendColor_ = value; }
+        { _blendColor = value; }
 
         virtual void setBlendColor( QString value, bool translated )
-        { blendColor_ = blendColor( value, translated ); }
+        { _blendColor = blendColor( value, translated ); }
 
         //@}
 
@@ -385,7 +385,7 @@ namespace Oxygen
         FrameBorder _frameBorder;
 
         //! frame border
-        BlendColorType blendColor_;
+        BlendColorType _blendColor;
 
         //! size grip mode
         SizeGripMode _sizeGripMode;
@@ -418,7 +418,7 @@ namespace Oxygen
         bool _tabsEnabled;
 
         //! narrow button spacing
-        bool useNarrowButtonSpacing_;
+        bool _useNarrowButtonSpacing;
 
         //! shadow mode
         ShadowMode _shadowMode;
