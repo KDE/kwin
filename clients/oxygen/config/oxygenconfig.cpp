@@ -152,6 +152,7 @@ namespace Oxygen
         configuration.setBlendColor( Configuration::blendColor( userInterface_->ui.blendColor->currentText(), true ) );
         configuration.setFrameBorder( Configuration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ) );
         configuration.setSizeGripMode( Configuration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ) );
+        configuration.setShadowCacheMode( Configuration::shadowCacheMode( userInterface_->ui.shadowCacheMode->currentText(), true ) );
         configuration.setSeparatorMode( (Oxygen::Configuration::SeparatorMode) userInterface_->ui.separatorMode->currentIndex() );
         configuration.setDrawTitleOutline( userInterface_->ui.titleOutline->isChecked() );
         configuration.setUseDropShadows( userInterface_->shadowConfigurations[1]->isChecked() );
