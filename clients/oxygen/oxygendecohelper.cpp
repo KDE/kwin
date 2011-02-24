@@ -32,7 +32,7 @@ namespace Oxygen
     //______________________________________________________________________________
     DecoHelper::DecoHelper(const QByteArray &componentName):
         Helper(componentName),
-        m_debugArea( KDebug::registerArea( "Oxygen (decoration)" ) )
+        _debugArea( KDebug::registerArea( "Oxygen (decoration)" ) )
 
     {}
 
@@ -43,7 +43,7 @@ namespace Oxygen
         Helper::invalidateCaches();
 
         // local caches
-        m_titleBarTextColorCache.clear();
+        _titleBarTextColorCache.clear();
 
     }
 
@@ -51,7 +51,7 @@ namespace Oxygen
     QPixmap DecoHelper::windecoButton(const QColor &color, bool pressed, int size)
     {
         const quint64 key( (quint64(color.rgba()) << 32) | (size << 1) | (int)pressed );
-        QPixmap *pixmap( m_windecoButtonCache.object(key) );
+        QPixmap *pixmap( windecoButtonCache().object(key) );
 
         if( !pixmap )
         {
@@ -97,7 +97,7 @@ namespace Oxygen
                 p.end();
             }
 
-            m_windecoButtonCache.insert( key, pixmap );
+            windecoButtonCache().insert( key, pixmap );
         }
 
         return *pixmap;
@@ -107,7 +107,7 @@ namespace Oxygen
     QPixmap DecoHelper::windecoButtonGlow(const QColor &color, int size)
     {
         const quint64 key( (quint64(color.rgba()) << 32) | size );
-        QPixmap *pixmap( m_windecoButtonGlowCache.object(key) );
+        QPixmap *pixmap( windecoButtonGlowCache().object(key) );
 
         if( !pixmap )
         {
@@ -157,7 +157,7 @@ namespace Oxygen
                 p.drawRect( r );
             }
 
-            m_windecoButtonGlowCache.insert( key, pixmap );
+            windecoButtonGlowCache().insert( key, pixmap );
 
         }
 
@@ -183,7 +183,7 @@ namespace Oxygen
     {
 
         const quint32 key( palette.color(QPalette::Active, QPalette::Window).rgba() );
-        QColor* out( m_titleBarTextColorCache.object( key ) );
+        QColor* out( _titleBarTextColorCache.object( key ) );
         if( !out )
         {
 
@@ -193,7 +193,7 @@ namespace Oxygen
             const QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
             const QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
             out = new QColor( reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4)))) );
-            m_titleBarTextColorCache.insert( key, out );
+            _titleBarTextColorCache.insert( key, out );
         }
 
         return *out;
