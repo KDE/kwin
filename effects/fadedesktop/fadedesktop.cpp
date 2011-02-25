@@ -30,6 +30,7 @@ KWIN_EFFECT(fadedesktop, FadeDesktopEffect)
 FadeDesktopEffect::FadeDesktopEffect()
     : m_fading(false)
 {
+    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int)));
     m_timeline.setCurveShape(TimeLine::LinearCurve);
     reconfigure(ReconfigureAll);
 }
@@ -88,7 +89,7 @@ void FadeDesktopEffect::paintWindow(EffectWindow *w, int mask, QRegion region, W
     effects->paintWindow(w, mask, region, data);
 }
 
-void FadeDesktopEffect::desktopChanged(int old)
+void FadeDesktopEffect::slotDesktopChanged(int old)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;

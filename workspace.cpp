@@ -1463,8 +1463,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     if (old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1)
         desktop_change_osd->desktopChanged(old_desktop);
 
-    if (effects != NULL && old_desktop != 0 && old_desktop != new_desktop)
-        static_cast<EffectsHandlerImpl*>(effects)->desktopChanged(old_desktop);
     if (compositing())
         addRepaintFull();
 

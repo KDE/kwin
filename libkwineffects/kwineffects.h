@@ -455,7 +455,6 @@ public:
     virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
     virtual void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void desktopChanged(int old);
     virtual void windowDamaged(EffectWindow* w, const QRect& r);
     virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos,
@@ -832,6 +831,14 @@ public:
      **/
     static KConfigGroup effectConfig(const QString& effectname);
 
+Q_SIGNALS:
+    /**
+     * Signal emitted when the current desktop changed.
+     * @param oldDesktop The previously current desktop
+     * @param newDesktop The new current desktop
+     * @since 4.7
+     **/
+    void desktopChanged(int oldDesktop, int newDesktop);
 
 protected:
     QVector< EffectPair > loaded_effects;

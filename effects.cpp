@@ -95,6 +95,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , mouse_poll_ref_count(0)
     , current_paint_effectframe(0)
 {
+    Workspace *ws = Workspace::self();
+    connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
     reconfigure();
 }
 
@@ -334,10 +336,12 @@ void EffectsHandlerImpl::clientGroupItemRemoved(EffectWindow* c, EffectWindow* g
     ep.second->clientGroupItemRemoved(c, group);
 }
 
-void EffectsHandlerImpl::desktopChanged(int old)
+void EffectsHandlerImpl::slotDesktopChanged(int old)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->desktopChanged(old);
+    const int newDesktop = Workspace::self()->currentDesktop();
+    if (old != 0 && newDesktop != old) {
+        emit desktopChanged(old, newDesktop);
+    }
 }
 
 void EffectsHandlerImpl::windowDamaged(EffectWindow* w, const QRect& r)

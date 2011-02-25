@@ -179,10 +179,6 @@ void Effect::propertyNotify(EffectWindow* , long)
 {
 }
 
-void Effect::desktopChanged(int)
-{
-}
-
 void Effect::windowDamaged(EffectWindow*, const QRect&)
 {
 }

@@ -31,6 +31,7 @@ KWIN_EFFECT(slide, SlideEffect)
 SlideEffect::SlideEffect()
     : slide(false)
 {
+    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
     mTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
     reconfigure(ReconfigureAll);
 }
@@ -168,7 +169,7 @@ QRect SlideEffect::desktopRect(int desktop) const
     return rect;
 }
 
-void SlideEffect::desktopChanged(int old)
+void SlideEffect::slotDesktopChanged(int old, int current)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -198,7 +199,7 @@ void SlideEffect::desktopChanged(int old)
             currentRegion |= (currentRegion & QRect(w, 0, w, h)).translated(-w, 0);
             currentRegion |= (currentRegion & QRect(0, h, w, h)).translated(0, -h);
         }
-        QRect rect = desktopRect(effects->currentDesktop());
+        QRect rect = desktopRect(current);
         if (currentRegion.contains(rect)) {
             // current position is in new current desktop (e.g. quickly changing back),
             // don't do full progress

@@ -40,7 +40,10 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void desktopChanged(int old);
+
+private Q_SLOTS:
+    void slotDesktopChanged(int old, int current);
+
 private:
     QRect desktopRect(int desktop) const;
     TimeLine mTimeLine;

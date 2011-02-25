@@ -38,6 +38,7 @@ CubeSlideEffect::CubeSlideEffect()
     , desktopChangedWhileMoving(false)
     , progressRestriction(0.0f)
 {
+    connect(effects, SIGNAL(desktopChanged(int, int)), this, SLOT(slotDesktopChanged(int, int)));
     reconfigure(ReconfigureAll);
 }
 
@@ -417,7 +418,7 @@ void CubeSlideEffect::postPaintScreen()
     }
 }
 
-void CubeSlideEffect::desktopChanged(int old)
+void CubeSlideEffect::slotDesktopChanged(int old, int current)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -499,10 +500,10 @@ void CubeSlideEffect::desktopChanged(int old)
         }
     } else {
         // ignore pager layout
-        int left = old - effects->currentDesktop();
+        int left = old - current;
         if (left < 0)
             left = effects->numberOfDesktops() + left;
-        int right = effects->currentDesktop() - old;
+        int right = current - old;
         if (right < 0)
             right = effects->numberOfDesktops() + right;
         if (left < right) {

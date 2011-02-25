@@ -41,10 +41,13 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void desktopChanged(int old);
     virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
 
     static bool supported();
+
+private Q_SLOTS:
+    void slotDesktopChanged(int old, int current);
+
 private:
     enum RotationDirection {
         Left,

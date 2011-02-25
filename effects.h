@@ -38,6 +38,7 @@ namespace KWin
 
 class EffectsHandlerImpl : public EffectsHandler
 {
+    Q_OBJECT
 public:
     EffectsHandlerImpl(CompositingType type);
     virtual ~EffectsHandlerImpl();
@@ -165,7 +166,6 @@ public:
     void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
     void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
-    void desktopChanged(int old);
     void windowDamaged(EffectWindow* w, const QRect& r);
     void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     void tabBoxAdded(int mode);
@@ -190,6 +190,9 @@ public:
     QStringList listOfEffects() const;
 
     QList<EffectWindow*> elevatedWindows() const;
+
+protected Q_SLOTS:
+    void slotDesktopChanged(int old);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);
