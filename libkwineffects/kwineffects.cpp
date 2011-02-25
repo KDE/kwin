@@ -1337,3 +1337,5 @@ void EffectFrame::enableCrossFade(bool enable)
 }
 
 } // namespace
+
+#include "kwineffects.moc"

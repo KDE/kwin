@@ -27,7 +27,7 @@ namespace KWin
 {
 
 class MagnifierEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:

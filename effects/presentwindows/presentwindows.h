@@ -63,7 +63,7 @@ private:
  *  letting the user select active window.
  **/
 class PresentWindowsEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 private:

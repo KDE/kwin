@@ -263,8 +263,9 @@ QRect infiniteRegion()
  *  is called for every window which the screen method is usually called just
  *  once.
  **/
-class KWIN_EXPORT Effect
+class KWIN_EXPORT Effect : public QObject
 {
+    Q_OBJECT
 public:
     /** Flags controlling how painting is done. */
     // TODO: is that ok here?
@@ -579,8 +580,9 @@ public:
  *  desktop or create a special input window to receive mouse and keyboard
  *  events.
  **/
-class KWIN_EXPORT EffectsHandler
+class KWIN_EXPORT EffectsHandler : public QObject
 {
+    Q_OBJECT
     friend class Effect;
 public:
     EffectsHandler(CompositingType type);

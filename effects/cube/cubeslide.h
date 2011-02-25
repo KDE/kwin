@@ -31,6 +31,7 @@ namespace KWin
 class CubeSlideEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     CubeSlideEffect();
     ~CubeSlideEffect();

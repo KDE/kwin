@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class WindowGeometry : public QObject, public Effect
+class WindowGeometry : public Effect
 {
     Q_OBJECT
 public:

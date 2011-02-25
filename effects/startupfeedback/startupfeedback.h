@@ -30,7 +30,7 @@ namespace KWin
 class GLTexture;
 
 class StartupFeedbackEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:

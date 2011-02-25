@@ -32,7 +32,7 @@ class GLTexture;
 class XRenderPicture;
 
 class ZoomEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:

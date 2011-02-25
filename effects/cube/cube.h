@@ -34,7 +34,7 @@ namespace KWin
 {
 
 class CubeEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:

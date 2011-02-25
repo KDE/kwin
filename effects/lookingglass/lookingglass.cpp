@@ -43,8 +43,7 @@ KWIN_EFFECT_SUPPORTED(lookingglass, LookingGlassEffect::supported())
 
 
 LookingGlassEffect::LookingGlassEffect()
-    : QObject()
-    , zoom(1.0f)
+    : zoom(1.0f)
     , target_zoom(1.0f)
     , polling(false)
     , m_texture(NULL)

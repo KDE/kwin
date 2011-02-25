@@ -33,7 +33,7 @@ class GLShader;
  * Inverts desktop's colors
  **/
 class InvertEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
