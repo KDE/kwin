@@ -98,6 +98,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(c, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedClass(QKeySequence)));
     shortcutClass = c->globalShortcut();
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -357,7 +358,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 //-----------------------------------------------------------------------------
 // User interaction
 
-void PresentWindowsEffect::windowAdded(EffectWindow *w)
+void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
 {
     if (!m_activated)
         return;

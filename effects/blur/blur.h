@@ -33,6 +33,7 @@ class BlurShader;
 
 class BlurEffect : public KWin::Effect
 {
+    Q_OBJECT
 public:
     BlurEffect();
     ~BlurEffect();
@@ -40,11 +41,13 @@ public:
     static bool supported();
 
     void reconfigure(ReconfigureFlags flags);
-    void windowAdded(EffectWindow *w);
     void propertyNotify(EffectWindow *w, long atom);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
 
 private:
     QRect expand(const QRect &rect) const;

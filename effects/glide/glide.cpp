@@ -37,6 +37,7 @@ static const int IsGlideWindow = 0x22A982D4;
 GlideEffect::GlideEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 bool GlideEffect::supported()
@@ -159,7 +160,7 @@ void GlideEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void GlideEffect::windowAdded(EffectWindow* w)
+void GlideEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!isGlideWindow(w))
         return;

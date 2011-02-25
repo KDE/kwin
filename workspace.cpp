@@ -564,8 +564,6 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
     return c;
 }
 
@@ -581,8 +579,7 @@ Unmanaged* Workspace::createUnmanaged(Window w)
     addUnmanaged(c, Allowed);
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
+    emit unmanagedAdded(c);
     return c;
 }
 

@@ -36,6 +36,7 @@ static const int IsSheetWindow = 0x22A982D5;
 SheetEffect::SheetEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 bool SheetEffect::supported()
@@ -117,7 +118,7 @@ void SheetEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void SheetEffect::windowAdded(EffectWindow* w)
+void SheetEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!isSheetWindow(w))
         return;

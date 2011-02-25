@@ -32,6 +32,7 @@ namespace KWin
 
 class DashboardEffect : public KWin::Effect
 {
+    Q_OBJECT
 public:
     DashboardEffect();
     ~DashboardEffect();
@@ -42,8 +43,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual void unpropagate();
     virtual void windowActivated(EffectWindow *w);
-    virtual void windowAdded(EffectWindow* c);
     virtual void windowClosed(EffectWindow* c);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
 private:
     bool blur;
     bool isDashboard(EffectWindow* w);

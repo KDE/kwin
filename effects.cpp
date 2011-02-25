@@ -97,6 +97,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
 {
     Workspace *ws = Workspace::self();
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
+    connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
+    connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     reconfigure();
 }
 
@@ -281,10 +283,14 @@ void EffectsHandlerImpl::windowOpacityChanged(EffectWindow* c, double old_opacit
     ep.second->windowOpacityChanged(c, old_opacity);
 }
 
-void EffectsHandlerImpl::windowAdded(EffectWindow* c)
+void EffectsHandlerImpl::slotClientAdded(Client *c)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowAdded(c);
+    emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
+{
+    emit windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::windowDeleted(EffectWindow* c)

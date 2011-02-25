@@ -25,6 +25,12 @@ namespace KWin
 
 KWIN_EFFECT(scalein, ScaleInEffect)
 
+ScaleInEffect::ScaleInEffect()
+    : Effect()
+{
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+}
+
 void ScaleInEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (!mTimeLineWindows.isEmpty())
@@ -73,7 +79,7 @@ void ScaleInEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void ScaleInEffect::windowAdded(EffectWindow* c)
+void ScaleInEffect::slotWindowAdded(EffectWindow* c)
 {
     if (c->isOnCurrentDesktop()) {
         mTimeLineWindows[ c ].setDuration(animationTime(250));

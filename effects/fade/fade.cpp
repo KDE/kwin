@@ -30,6 +30,7 @@ KWIN_EFFECT(fade, FadeEffect)
 FadeEffect::FadeEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 void FadeEffect::reconfigure(ReconfigureFlags)
@@ -153,7 +154,7 @@ void FadeEffect::windowOpacityChanged(EffectWindow* w, double old_opacity)
     w->addRepaintFull();
 }
 
-void FadeEffect::windowAdded(EffectWindow* w)
+void FadeEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!fadeWindows || !isFadeWindow(w))
         return;

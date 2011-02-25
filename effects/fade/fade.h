@@ -29,6 +29,7 @@ namespace KWin
 class FadeEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     FadeEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -38,11 +39,13 @@ public:
 
     // TODO react also on virtual desktop changes
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    virtual void windowAdded(EffectWindow* c);
     virtual void windowClosed(EffectWindow* c);
     virtual void windowDeleted(EffectWindow* c);
 
     bool isFadeWindow(EffectWindow* w);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
 private:
     class WindowInfo;
     QHash< const EffectWindow*, WindowInfo > windows;

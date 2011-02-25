@@ -35,6 +35,7 @@ class GLTexture;
 class LogoutEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     LogoutEffect();
     ~LogoutEffect();
@@ -43,10 +44,11 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowAdded(EffectWindow* w);
     virtual void windowClosed(EffectWindow* w);
     virtual void windowDeleted(EffectWindow* w);
     virtual void propertyNotify(EffectWindow* w, long a);
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* w);
 private:
     bool isLogoutDialog(EffectWindow* w);
     double progress; // 0-1

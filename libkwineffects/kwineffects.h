@@ -445,7 +445,6 @@ public:
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    virtual void windowAdded(EffectWindow* c);
     virtual void windowClosed(EffectWindow* c);
     virtual void windowDeleted(EffectWindow* c);
     virtual void windowActivated(EffectWindow* c);
@@ -839,6 +838,12 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void desktopChanged(int oldDesktop, int newDesktop);
+    /**
+     * Signal emitted when a new window has been added to the Workspace.
+     * @param w The added window
+     * @since 4.7
+     **/
+    void windowAdded(EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;

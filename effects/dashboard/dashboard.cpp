@@ -35,6 +35,7 @@ DashboardEffect::DashboardEffect()
 
     // read settings
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 DashboardEffect::~DashboardEffect()
@@ -171,7 +172,7 @@ void DashboardEffect::windowActivated(EffectWindow *w)
     }
 }
 
-void DashboardEffect::windowAdded(EffectWindow* w)
+void DashboardEffect::slotWindowAdded(EffectWindow* w)
 {
     propertyNotify(w, atom);
 

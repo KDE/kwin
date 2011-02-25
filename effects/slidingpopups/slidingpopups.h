@@ -30,6 +30,7 @@ namespace KWin
 class SlidingPopupsEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect();
@@ -38,10 +39,12 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
     // TODO react also on virtual desktop changes
-    virtual void windowAdded(EffectWindow* c);
     virtual void windowClosed(EffectWindow* c);
     virtual void windowDeleted(EffectWindow* c);
     virtual void propertyNotify(EffectWindow* w, long a);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *c);
 private:
     enum Position {
         West = 0,

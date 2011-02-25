@@ -24,6 +24,7 @@ struct ParameterSet;
  **/
 class WobblyWindowsEffect : public Effect
 {
+    Q_OBJECT
 public:
 
     WobblyWindowsEffect();
@@ -35,7 +36,6 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
     virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
-    virtual void windowAdded(EffectWindow* w);
     virtual void windowClosed(EffectWindow* w);
 
     // Wobbly model parameters
@@ -57,6 +57,9 @@ public:
     };
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
 
 private:
 

@@ -910,6 +910,7 @@ signals:
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);
     void groupAdded(KWin::Group*);
+    void unmanagedAdded(KWin::Unmanaged*);
 
 private:
     void init();

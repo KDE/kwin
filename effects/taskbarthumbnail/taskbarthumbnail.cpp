@@ -43,6 +43,7 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -118,7 +119,7 @@ void TaskbarThumbnailEffect::windowDamaged(EffectWindow* w, const QRect& damage)
         effects->addRepaint(thumb.rect.translated(window->pos()));
 }
 
-void TaskbarThumbnailEffect::windowAdded(EffectWindow* w)
+void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
 {
     propertyNotify(w, atom);   // read initial value
 }

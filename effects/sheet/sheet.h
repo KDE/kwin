@@ -30,6 +30,7 @@ namespace KWin
 class SheetEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SheetEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -38,11 +39,13 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowAdded(EffectWindow* c);
     virtual void windowClosed(EffectWindow* c);
     virtual void windowDeleted(EffectWindow* c);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
 private:
     class WindowInfo;
     typedef QMap< const EffectWindow*, WindowInfo > InfoMap;

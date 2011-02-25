@@ -47,7 +47,6 @@ public:
     virtual void tabBoxAdded(int mode);
     virtual void tabBoxClosed();
     virtual void tabBoxUpdated();
-    virtual void windowAdded(EffectWindow* w);
     virtual void windowClosed(EffectWindow* w);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
@@ -58,6 +57,7 @@ private Q_SLOTS:
     void toggleActiveAllDesktops();
     void globalShortcutChangedCurrent(QKeySequence shortcut);
     void globalShortcutChangedAll(QKeySequence shortcut);
+    void slotWindowAdded(EffectWindow* w);
 
 private:
     class ItemInfo;

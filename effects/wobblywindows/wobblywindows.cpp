@@ -165,6 +165,7 @@ KWIN_EFFECT_SUPPORTED(wobblywindows, WobblyWindowsEffect::supported())
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -460,7 +461,7 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
     }
 }
 
-void WobblyWindowsEffect::windowAdded(EffectWindow* w)
+void WobblyWindowsEffect::slotWindowAdded(EffectWindow* w)
 {
     if (m_openEffectEnabled && w->data(WindowAddedGrabRole).value<void*>() != this) {
         if (windows.contains(w)) {

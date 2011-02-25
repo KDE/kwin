@@ -60,6 +60,7 @@ LogoutEffect::LogoutEffect()
     blurTarget = NULL;
 #endif
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 LogoutEffect::~LogoutEffect()
@@ -292,7 +293,7 @@ void LogoutEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void LogoutEffect::windowAdded(EffectWindow* w)
+void LogoutEffect::slotWindowAdded(EffectWindow* w)
 {
     if (isLogoutDialog(w)) {
         logoutWindow = w;

@@ -57,6 +57,7 @@ BlurEffect::BlurEffect()
     } else {
         XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
     }
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 BlurEffect::~BlurEffect()
@@ -106,7 +107,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         w->setData(WindowBlurBehindRole, region);
 }
 
-void BlurEffect::windowAdded(EffectWindow *w)
+void BlurEffect::slotWindowAdded(EffectWindow *w)
 {
     updateBlurRegion(w);
 }

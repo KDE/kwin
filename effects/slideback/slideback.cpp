@@ -33,6 +33,7 @@ SlideBackEffect::SlideBackEffect()
     updateStackingOrder();
     disabled = false;
     unminimizedWindow = NULL;
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -287,7 +288,7 @@ void SlideBackEffect::windowDeleted(EffectWindow* w)
     }
 }
 
-void SlideBackEffect::windowAdded(KWin::EffectWindow* w)
+void SlideBackEffect::slotWindowAdded(EffectWindow *w)
 {
     Q_UNUSED(w);
     updateStackingOrder();

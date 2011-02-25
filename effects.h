@@ -36,6 +36,9 @@ class KService;
 namespace KWin
 {
 
+class Client;
+class Unmanaged;
+
 class EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
@@ -157,7 +160,6 @@ public:
     void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    void windowAdded(EffectWindow* c);
     void windowClosed(EffectWindow* c);
     void windowDeleted(EffectWindow* c);
     void windowActivated(EffectWindow* c);
@@ -193,6 +195,8 @@ public:
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old);
+    void slotClientAdded(KWin::Client *c);
+    void slotUnmanagedAdded(KWin::Unmanaged *u);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

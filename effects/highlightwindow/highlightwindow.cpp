@@ -38,6 +38,7 @@ HighlightWindowEffect::HighlightWindowEffect()
     // Announce support by creating a dummy version on the root window
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), m_atom, m_atom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -103,7 +104,7 @@ void HighlightWindowEffect::paintWindow(EffectWindow* w, int mask, QRegion regio
     effects->paintWindow(w, mask, region, data);
 }
 
-void HighlightWindowEffect::windowAdded(EffectWindow* w)
+void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!m_highlightedWindows.isEmpty()) {
         // The effect is activated thus we need to add it to the opacity hash

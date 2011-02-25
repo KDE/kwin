@@ -30,6 +30,7 @@ namespace KWin
 class SlideBackEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SlideBackEffect();
 
@@ -43,11 +44,13 @@ public:
     virtual void postPaintScreen();
 
     virtual void windowDeleted(EffectWindow* w);
-    virtual void windowAdded(EffectWindow* w);
     virtual void windowUnminimized(EffectWindow* w);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
 
     virtual void tabBoxClosed();
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
 
 private:
 

@@ -73,6 +73,7 @@ DesktopGridEffect::DesktopGridEffect()
     shortcut = a->globalShortcut();
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 
     // Load all other configuration details
     reconfigure(ReconfigureAll);
@@ -368,7 +369,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 //-----------------------------------------------------------------------------
 // User interaction
 
-void DesktopGridEffect::windowAdded(EffectWindow* w)
+void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!activated)
         return;

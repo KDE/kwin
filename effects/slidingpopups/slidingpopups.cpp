@@ -38,6 +38,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), mAtom, mAtom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
@@ -131,7 +132,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
     }
 }
 
-void SlidingPopupsEffect::windowAdded(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
     propertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {

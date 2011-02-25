@@ -69,6 +69,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_shortcutAll = b->globalShortcut();
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()
@@ -576,7 +577,7 @@ void FlipSwitchEffect::tabBoxUpdated()
 // Window adding/removing handling
 //*************************************************************
 
-void FlipSwitchEffect::windowAdded(EffectWindow* w)
+void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
 {
     if (m_active && isSelectableWindow(w)) {
         m_windows[ w ] = new ItemInfo();
