@@ -89,39 +89,16 @@ void Workspace::setupCompositing()
 #ifdef KWIN_HAVE_COMPOSITING
     if (scene != NULL)
         return;
-    if (!options->useCompositing && getenv("KWIN_COMPOSE") == NULL) {
-        kDebug(1212) << "Compositing is turned off in options or disabled";
-        return;
-    } else if (compositingSuspended) {
+    if (compositingSuspended) {
         kDebug(1212) << "Compositing is suspended";
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
         kError(1212) << "Compositing is not possible";
         return;
     }
-    CompositingType type = options->compositingMode;
-    if (getenv("KWIN_COMPOSE")) {
-        char c = getenv("KWIN_COMPOSE")[ 0 ];
-        switch(c) {
-        case 'O':
-            kDebug(1212) << "Compositing forced to OpenGL mode by environment variable";
-            type = OpenGLCompositing;
-            break;
-        case 'X':
-            kDebug(1212) << "Compositing forced to XRender mode by environment variable";
-            type = XRenderCompositing;
-            break;
-        case 'N':
-            if (getenv("KDE_FAILSAFE"))
-                kDebug(1212) << "Compositing disabled forcefully by KDE failsafe mode";
-            else
-                kDebug(1212) << "Compositing disabled forcefully by environment variable";
-            return; // Return not break
-        default:
-            kDebug(1212) << "Unknown KWIN_COMPOSE mode set, ignoring";
-            break;
-        }
-    }
+
+    if (!options->compositingInitialized)
+        options->reloadCompositingSettings(true);
 
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
@@ -129,7 +106,7 @@ void Workspace::setupCompositing()
     connect(cm_selection, SIGNAL(lostOwnership()), SLOT(lostCMSelection()));
     cm_selection->claim(true);   // force claiming
 
-    switch(type) {
+    switch(options->compositingMode) {
         /*case 'B':
             kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
@@ -295,7 +272,7 @@ void Workspace::toggleCompositing()
         QString shortcut, message;
         if (KAction* action = qobject_cast<KAction*>(keys->action("Suspend Compositing")))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
-        if (!shortcut.isEmpty() && options->useCompositing) {
+        if (!shortcut.isEmpty()) {
             // display notification only if there is the shortcut
             message = i18n("Desktop effects have been suspended by another application.<br/>"
                            "You can resume using the '%1' shortcut.", shortcut);

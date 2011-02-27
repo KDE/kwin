@@ -98,6 +98,7 @@ Options::Options()
     : electric_borders(0)
     , electric_border_delay(0)
 {
+    compositingInitialized = false;
     updateSettings();
 }
 
@@ -264,39 +265,67 @@ FIXME: we have no mac style menu implementation in kwin anymore, so this just br
 // KDE4 this probably needs to be done manually in clients
 
     // Driver-specific config detection
+    compositingInitialized = false;
     reloadCompositingSettings();
 
     return changed;
 }
 
-void Options::reloadCompositingSettings()
+void Options::reloadCompositingSettings(bool force)
 {
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup config(_config, "Compositing");
-
-    // do not even detect compositing preferences if explicitly disabled
-    bool environmentForce = false;
-    if (getenv("KWIN_COMPOSE")) {
-        // if compositing is enforced by the environment variable, the preferences have to be read
-        const char c = getenv("KWIN_COMPOSE")[ 0 ];
-        if (c == 'X' || c == 'O')
-            environmentForce = true;
-    }
-    if (config.hasKey("Enabled") && !config.readEntry("Enabled", true) && !environmentForce) {
-        useCompositing = false;
-        return;
-    }
-    // Compositing settings
-    CompositingPrefs prefs;
-    prefs.detect();
-
-    useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
 
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if (compositingBackend == "XRender")
         compositingMode = XRenderCompositing;
     else
         compositingMode = OpenGLCompositing;
+
+    useCompositing = false;
+    if (const char *c = getenv("KWIN_COMPOSE")) {
+        switch(c[0]) {
+        case 'O':
+            kDebug(1212) << "Compositing forced to OpenGL mode by environment variable";
+            compositingMode = OpenGLCompositing;
+            useCompositing = true;
+            break;
+        case 'X':
+            kDebug(1212) << "Compositing forced to XRender mode by environment variable";
+            compositingMode = XRenderCompositing;
+            useCompositing = true;
+            break;
+        case 'N':
+            if (getenv("KDE_FAILSAFE"))
+                kDebug(1212) << "Compositing disabled forcefully by KDE failsafe mode";
+            else
+                kDebug(1212) << "Compositing disabled forcefully by environment variable";
+            compositingMode = NoCompositing;
+            break;
+        default:
+            kDebug(1212) << "Unknown KWIN_COMPOSE mode set, ignoring";
+            break;
+        }
+    }
+
+    if (compositingMode == NoCompositing)
+        return; // do not even detect compositing preferences if explicitly disabled
+
+    // it's either enforced by env or by initial resume from "suspend" or we check the settings
+    useCompositing = useCompositing || force || config.readEntry("Enabled", true);
+
+    if (!useCompositing)
+        return; // not enforced or necessary and not "enabled" by setting
+
+    // from now on we've an initial setup and don't have to reload settigns on compositing activation
+    // see Workspace::setupCompositing(), composite.cpp
+    compositingInitialized = true;
+
+    // Compositing settings
+    CompositingPrefs prefs;
+    prefs.detect();
+
+    useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
     disableCompositingChecks = config.readEntry("DisableChecks", false);
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering());
     glVSync = config.readEntry("GLVSync", prefs.enableVSync());

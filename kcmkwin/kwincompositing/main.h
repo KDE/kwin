@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ktimerdialog.h"
 
 class KPluginSelector;
+class KActionCollection;
 class QLabel;
 
 namespace KWin
@@ -55,7 +56,6 @@ public:
     virtual QString quickHelp() const;
 
 public slots:
-    virtual void compositingEnabled(bool enabled);
     virtual void showConfirmDialog(bool reinitCompositing);
     void currentTabChanged(int tab);
 
@@ -74,10 +74,10 @@ public slots:
     void checkLoadedEffects();
     void configChanged(bool reinitCompositing);
     void initEffectSelector();
-    void setupCompositingState(bool active, bool enabled = true);
 
 private slots:
     void toogleSmoothScaleUi(int compositingType);
+    void toggleEffectShortcutChanged(const QKeySequence &seq);
 
 private:
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
@@ -90,8 +90,7 @@ private:
     KTemporaryFile mTmpConfigFile;
     KSharedConfigPtr mTmpConfig;
     bool m_showConfirmDialog;
-
-    OrgKdeKWinInterface* kwinInterface;
+    KActionCollection* m_actionCollection;
 };
 
 } // namespace

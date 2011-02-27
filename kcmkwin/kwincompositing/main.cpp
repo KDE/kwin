@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_interface.h"
 
 #include <kaboutdata.h>
+#include <kaction.h>
+#include <kactioncollection.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -74,13 +76,10 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     : KCModule(KWinCompositingConfigFactory::componentData(), parent)
     , mKWinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_showConfirmDialog(false)
-    , kwinInterface(NULL)
 {
     KGlobal::locale()->insertCatalog("kwin_effects");
     ui.setupUi(this);
     layout()->setMargin(0);
-    ui.verticalSpacer->changeSize(20, KDialog::groupSpacingHint());
-    ui.verticalSpacer_2->changeSize(20, KDialog::groupSpacingHint());
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
 
@@ -101,9 +100,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 #define XRENDER_INDEX -1
 #endif
 
-    kwinInterface = new OrgKdeKWinInterface("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-
-    connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -128,8 +124,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(ui.compositingStateButton, SIGNAL(clicked(bool)), kwinInterface, SLOT(toggleCompositing()));
-    connect(kwinInterface, SIGNAL(compositingToggled(bool)), this, SLOT(setupCompositingState(bool)));
 
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
@@ -137,6 +131,16 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     // changes.
     mTmpConfigFile.open();
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
+
+    // toggle effects shortcut button stuff - /HAS/ to happen before load!
+    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    m_actionCollection->setConfigGroup("Suspend Compositing");
+    m_actionCollection->setConfigGlobal(true);
+
+    KAction* a = static_cast<KAction*>(m_actionCollection->addAction( "Suspend Compositing" ));
+    a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_F12 ));
+    connect(ui.toggleEffectsShortcut, SIGNAL(keySequenceChanged(const QKeySequence&)), this, SLOT(toggleEffectShortcutChanged(const QKeySequence&)));
 
     // NOTICE: this is intended to workaround broken GL implementations that successfully segfault on glXQuery :-(
     KConfigGroup unsafeConfig(mKWinConfig, "Compositing");
@@ -158,7 +162,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
         ui.useCompositing->setEnabled(false);
         ui.useCompositing->setChecked(false);
-        compositingEnabled(false);
 
         QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
         text += "<br>";
@@ -166,8 +169,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.statusTitleWidget->setText(text);
         ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
         ui.statusTitleWidget->show();
-
-        setupCompositingState(false, false);
     }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
@@ -225,14 +226,6 @@ void KWinCompositingConfig::reparseConfiguration(const QByteArray& conf)
     KSettings::Dispatcher::reparseConfiguration(conf);
 }
 
-void KWinCompositingConfig::compositingEnabled(bool enabled)
-{
-    // Enable the other configuration tabs only when compositing is enabled.
-    ui.compositingOptionsContainer->setEnabled(enabled);
-    ui.tabWidget->setTabEnabled(1, enabled);
-    ui.tabWidget->setTabEnabled(2, enabled);
-}
-
 void KWinCompositingConfig::showConfirmDialog(bool reinitCompositing)
 {
     bool revert = false;
@@ -252,7 +245,6 @@ void KWinCompositingConfig::showConfirmDialog(bool reinitCompositing)
             revert = true;
         else {
             // compositing is enabled now
-            setupCompositingState(kwinInterface->compositingActive());
             checkLoadedEffects();
         }
     }
@@ -315,6 +307,12 @@ void KWinCompositingConfig::loadGeneralTab()
     KConfigGroup config(mKWinConfig, "Compositing");
     bool enabled = config.readEntry("Enabled", mDefaultPrefs.recommendCompositing());
     ui.useCompositing->setChecked(enabled);
+
+    // this works by global shortcut magics - it will pick the current sc
+    // but the constructor line that adds the default alt+shift+f12 gsc is IMPORTANT!
+    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action("Suspend Compositing")))
+        ui.toggleEffectsShortcut->setKeySequence(a->globalShortcut().primary());
+
     ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3));
 
     // Load effect settings
@@ -356,52 +354,21 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.desktopSwitchingCombo->setCurrentIndex(2);
     if (effectEnabled("fadedesktop", effectconfig))
         ui.desktopSwitchingCombo->setCurrentIndex(3);
-
-    if (enabled)
-        setupCompositingState(kwinInterface->compositingActive());
-    else
-        setupCompositingState(false, false);
 }
 
-void KWinCompositingConfig::setupCompositingState(bool active, bool enabled)
-{
-    if (!qgetenv("KDE_FAILSAFE").isNull())
-        enabled = false;
-    // compositing state
-    QString stateIcon;
-    QString stateText;
-    QString stateButtonText;
-    if (enabled) {
-        // check if compositing is active or suspended
-        if (active) {
-            stateIcon = QString("dialog-ok-apply");
-            stateText = i18n("Desktop effects are active");
-            stateButtonText = i18n("Suspend Desktop Effects");
-        } else {
-            stateIcon = QString("dialog-cancel");
-            stateText = i18n("Desktop effects are temporarily disabled");
-            stateButtonText = i18n("Resume Desktop Effects");
-        }
-    } else {
-        // compositing is disabled
-        stateIcon = QString("dialog-cancel");
-        stateText = i18n("Desktop effects are disabled");
-        stateButtonText = i18n("Resume Desktop Effects");
-    }
-    const int iconSize = (QApplication::fontMetrics().height() > 24) ? 32 : 22;
-    ui.compositingStateIcon->setPixmap(KIcon(stateIcon).pixmap(iconSize, iconSize));
-    ui.compositingStateLabel->setText(stateText);
-    ui.compositingStateButton->setText(stateButtonText);
-    ui.compositingStateIcon->setEnabled(enabled);
-    ui.compositingStateLabel->setEnabled(enabled);
-    ui.compositingStateButton->setEnabled(enabled);
-}
 
 void KWinCompositingConfig::toogleSmoothScaleUi(int compositingType)
 {
     ui.glScaleFilter->setVisible(compositingType == OPENGL_INDEX);
     ui.xrScaleFilter->setVisible(compositingType == XRENDER_INDEX);
     ui.scaleMethodLabel->setBuddy(compositingType == XRENDER_INDEX ? ui.xrScaleFilter : ui.glScaleFilter);
+}
+
+void KWinCompositingConfig::toggleEffectShortcutChanged(const QKeySequence &seq)
+{
+    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action("Suspend Compositing")))
+        a->setGlobalShortcut(KShortcut(seq), KAction::ActiveShortcut, KAction::NoAutoloading);
+    m_actionCollection->writeSettings();
 }
 
 bool KWinCompositingConfig::effectEnabled(const QString& effect, const KConfigGroup& cfg) const
@@ -467,16 +434,8 @@ void KWinCompositingConfig::saveGeneralTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
     // Check if any critical settings that need confirmation have changed
-    if (ui.useCompositing->isChecked() &&
-            ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.recommendCompositing()))
-        m_showConfirmDialog = true;
-
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
     config.writeEntry("AnimationSpeed", ui.animationSpeedCombo->currentIndex());
-
-    // disable the compositing state if compositing was turned off
-    if (!ui.useCompositing->isChecked())
-        setupCompositingState(false, false);
 
     // Save effects
     KConfigGroup effectconfig(mTmpConfig, "Plugins");

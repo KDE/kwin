@@ -363,9 +363,10 @@ public:
 
     //----------------------
     // Compositing settings
-
+    void reloadCompositingSettings(bool force = false);
     CompositingType compositingMode;
     bool useCompositing; // Separate to mode so the user can toggle
+    bool compositingInitialized;
 
     // General preferences
     HiddenPreviews hiddenPreviews;
@@ -431,7 +432,6 @@ private:
     int animationSpeed; // 0 - instant, 5 - very slow
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta);
-    void reloadCompositingSettings();
 };
 
 extern Options* options;

@@ -87,7 +87,7 @@ namespace KWin
 // Scene
 //****************************************
 
-Scene* scene;
+Scene* scene = 0;
 
 Scene::Scene(Workspace* ws)
     : wspace(ws)
