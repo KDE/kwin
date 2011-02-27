@@ -40,12 +40,11 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowDeleted(EffectWindow* c);
-
     static bool supported();
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
     void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
 
 private:
     class WindowInfo;

@@ -47,6 +47,7 @@ ExplosionEffect::ExplosionEffect() : Effect()
     mValid = true;
     mInited = false;
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 ExplosionEffect::~ExplosionEffect()
@@ -194,7 +195,7 @@ void ExplosionEffect::slotWindowClosed(EffectWindow* c)
     }
 }
 
-void ExplosionEffect::windowDeleted(EffectWindow* c)
+void ExplosionEffect::slotWindowDeleted(EffectWindow* c)
 {
     mWindows.remove(c);
 }

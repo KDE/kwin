@@ -33,6 +33,7 @@ FallApartEffect::FallApartEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 void FallApartEffect::reconfigure(ReconfigureFlags)
@@ -154,7 +155,7 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
     c->refWindow();
 }
 
-void FallApartEffect::windowDeleted(EffectWindow* c)
+void FallApartEffect::slotWindowDeleted(EffectWindow* c)
 {
     windows.remove(c);
 }

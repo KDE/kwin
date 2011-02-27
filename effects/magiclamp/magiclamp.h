@@ -29,6 +29,7 @@ namespace KWin
 class MagicLampEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     MagicLampEffect();
 
@@ -38,11 +39,13 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
 
-    virtual void windowDeleted(EffectWindow* c);
     virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowDeleted(EffectWindow *w);
 
 private:
     QHash< EffectWindow*, TimeLine > mTimeLineWindows;

@@ -75,6 +75,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 
     // Load all other configuration details
     reconfigure(ReconfigureAll);
@@ -425,7 +426,7 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
     effects->addRepaintFull();
 }
 
-void DesktopGridEffect::windowDeleted(EffectWindow* w)
+void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
 {
     for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
             it != m_desktopButtonsViews.end(); ++it) {

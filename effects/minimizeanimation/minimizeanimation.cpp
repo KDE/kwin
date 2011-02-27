@@ -28,6 +28,7 @@ KWIN_EFFECT(minimizeanimation, MinimizeAnimationEffect)
 MinimizeAnimationEffect::MinimizeAnimationEffect()
 {
     mActiveAnimations = 0;
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 
@@ -108,7 +109,7 @@ void MinimizeAnimationEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void MinimizeAnimationEffect::windowDeleted(EffectWindow* w)
+void MinimizeAnimationEffect::slotWindowDeleted(EffectWindow* w)
 {
     mTimeLineWindows.remove(w);
 }

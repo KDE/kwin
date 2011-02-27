@@ -100,6 +100,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
+    connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
     // connect all clients
     foreach (Client *c, ws->clientList()) {
         connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
@@ -303,11 +304,10 @@ void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
     emit windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::windowDeleted(EffectWindow* c)
+void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowDeleted(c);
-    elevated_windows.removeAll(c);
+    emit windowDeleted(d->effectWindow());
+    elevated_windows.removeAll(d->effectWindow());
 }
 
 void EffectsHandlerImpl::slotClientClosed(Client *c)

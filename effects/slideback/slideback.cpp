@@ -35,6 +35,7 @@ SlideBackEffect::SlideBackEffect()
     unminimizedWindow = NULL;
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -278,7 +279,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void SlideBackEffect::windowDeleted(EffectWindow* w)
+void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
 {
     usableOldStackingOrder.removeAll(w);
     oldStackingOrder.removeAll(w);

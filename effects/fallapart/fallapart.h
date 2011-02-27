@@ -37,10 +37,10 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
-    virtual void windowDeleted(EffectWindow* c);
 
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
 
 private:
     QHash< const EffectWindow*, double > windows;

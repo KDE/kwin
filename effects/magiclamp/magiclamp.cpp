@@ -34,6 +34,7 @@ MagicLampEffect::MagicLampEffect()
 {
     mActiveAnimations = 0;
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 bool MagicLampEffect::supported()
@@ -321,7 +322,7 @@ void MagicLampEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void MagicLampEffect::windowDeleted(EffectWindow* w)
+void MagicLampEffect::slotWindowDeleted(EffectWindow* w)
 {
     mTimeLineWindows.remove(w);
 }

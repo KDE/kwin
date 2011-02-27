@@ -62,6 +62,7 @@ LogoutEffect::LogoutEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 LogoutEffect::~LogoutEffect()
@@ -318,7 +319,7 @@ void LogoutEffect::slotWindowClosed(EffectWindow* w)
     }
 }
 
-void LogoutEffect::windowDeleted(EffectWindow* w)
+void LogoutEffect::slotWindowDeleted(EffectWindow* w)
 {
     windows.removeAll(w);
     ignoredWindows.removeAll(w);

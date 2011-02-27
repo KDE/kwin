@@ -40,6 +40,7 @@ HighlightWindowEffect::HighlightWindowEffect()
     XChangeProperty(display(), rootWindow(), m_atom, m_atom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -123,7 +124,7 @@ void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
         finishHighlighting();
 }
 
-void HighlightWindowEffect::windowDeleted(EffectWindow* w)
+void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
 {
     m_windowOpacity.remove(w);
 }

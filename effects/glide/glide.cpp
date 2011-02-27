@@ -39,6 +39,7 @@ GlideEffect::GlideEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 bool GlideEffect::supported()
@@ -202,7 +203,7 @@ void GlideEffect::slotWindowClosed(EffectWindow* w)
     w->addRepaintFull();
 }
 
-void GlideEffect::windowDeleted(EffectWindow* w)
+void GlideEffect::slotWindowDeleted(EffectWindow* w)
 {
     windows.remove(w);
 }

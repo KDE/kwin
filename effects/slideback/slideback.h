@@ -41,7 +41,6 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
 
-    virtual void windowDeleted(EffectWindow* w);
     virtual void windowUnminimized(EffectWindow* w);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
 
@@ -50,6 +49,7 @@ public:
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowActivated(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
 
 private:
 

@@ -445,7 +445,6 @@ public:
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    virtual void windowDeleted(EffectWindow* c);
     virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
@@ -857,6 +856,18 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowActivated(EffectWindow *w);
+    /**
+     * Signal emitted when a window is deleted.
+     * This means that a closed window is not referenced any more.
+     * An effect bookkeeping the closed windows should connect to this
+     * signal to clean up the internal references.
+     * @param w The window which is going to be deleted.
+     * @see EffectWindow::refWindow
+     * @see EffectWindow::unrefWindow
+     * @see windowClosed
+     * @since 4.7
+     **/
+    void windowDeleted(EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;

@@ -100,6 +100,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -404,7 +405,7 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
     rearrangeWindows();
 }
 
-void PresentWindowsEffect::windowDeleted(EffectWindow *w)
+void PresentWindowsEffect::slotWindowDeleted(EffectWindow *w)
 {
     if (!m_windowData.contains(w))
         return;

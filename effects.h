@@ -37,6 +37,7 @@ namespace KWin
 {
 
 class Client;
+class Deleted;
 class Unmanaged;
 
 class EffectsHandlerImpl : public EffectsHandler
@@ -160,7 +161,6 @@ public:
     void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    void windowDeleted(EffectWindow* c);
     void windowMinimized(EffectWindow* c);
     void windowUnminimized(EffectWindow* c);
     void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
@@ -198,6 +198,7 @@ protected Q_SLOTS:
     void slotClientClosed(KWin::Client *c);
     void slotUnmanagedClosed(KWin::Unmanaged *u);
     void slotClientActivated(KWin::Client *c);
+    void slotDeletedRemoved(KWin::Deleted *d);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

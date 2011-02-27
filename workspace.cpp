@@ -725,8 +725,7 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
     assert(deleted.contains(c));
     if (scene)
         scene->windowDeleted(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowDeleted(c->effectWindow());
+    emit deletedRemoved(c);
     deleted.removeAll(c);
     x_stacking_dirty = true;
 }

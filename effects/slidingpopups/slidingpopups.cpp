@@ -40,6 +40,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     XChangeProperty(display(), rootWindow(), mAtom, mAtom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
@@ -165,7 +166,7 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
     }
 }
 
-void SlidingPopupsEffect::windowDeleted(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
 {
     mAppearingWindows.remove(w);
     mDisappearingWindows.remove(w);

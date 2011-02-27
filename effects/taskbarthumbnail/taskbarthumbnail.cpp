@@ -44,6 +44,7 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -124,7 +125,7 @@ void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
     propertyNotify(w, atom);   // read initial value
 }
 
-void TaskbarThumbnailEffect::windowDeleted(EffectWindow* w)
+void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
 {
     thumbnails.remove(w);
 }

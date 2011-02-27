@@ -39,11 +39,11 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void windowDamaged(EffectWindow* w, const QRect& damage);
-    virtual void windowDeleted(EffectWindow* w);
     virtual void propertyNotify(EffectWindow* w, long atom);
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
 private:
     struct Data {
         Window window; // thumbnail of this window

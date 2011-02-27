@@ -39,13 +39,13 @@ public:
 
     // TODO react also on virtual desktop changes
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    virtual void windowDeleted(EffectWindow* c);
 
     bool isFadeWindow(EffectWindow* w);
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
     void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
 private:
     class WindowInfo;
     QHash< const EffectWindow*, WindowInfo > windows;

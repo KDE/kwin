@@ -36,6 +36,7 @@ DimInactiveEffect::DimInactiveEffect()
     active = effects->activeWindow();
     previousActive = NULL;
     connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 void DimInactiveEffect::reconfigure(ReconfigureFlags)
@@ -100,7 +101,7 @@ bool DimInactiveEffect::dimWindow(const EffectWindow* w) const
     return true; // dim the rest
 }
 
-void DimInactiveEffect::windowDeleted(EffectWindow* w)
+void DimInactiveEffect::slotWindowDeleted(EffectWindow* w)
 {
     if (w == previousActive)
         previousActive = NULL;

@@ -44,11 +44,11 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowDeleted(EffectWindow* w);
     virtual void propertyNotify(EffectWindow* w, long a);
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* w);
     void slotWindowClosed(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
 private:
     bool isLogoutDialog(EffectWindow* w);
     double progress; // 0-1

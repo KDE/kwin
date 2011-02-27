@@ -131,10 +131,6 @@ void Effect::windowOpacityChanged(EffectWindow*, double)
 {
 }
 
-void Effect::windowDeleted(EffectWindow*)
-{
-}
-
 void Effect::windowMinimized(EffectWindow*)
 {
 }

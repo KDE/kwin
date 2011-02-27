@@ -38,10 +38,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowDeleted(EffectWindow* w);
 
 public Q_SLOTS:
     void slotWindowActivated(EffectWindow* c);
+    void slotWindowDeleted(EffectWindow *w);
 
 private:
     bool dimWindow(const EffectWindow* w) const;

@@ -924,6 +924,7 @@ signals:
     void clientActivated(KWin::Client*);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
+    void deletedRemoved(KWin::Deleted*);
 
 private:
     void init();
