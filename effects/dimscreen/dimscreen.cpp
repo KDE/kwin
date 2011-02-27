@@ -32,6 +32,7 @@ DimScreenEffect::DimScreenEffect()
     , deactivateAnimation(false)
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
 }
 
 DimScreenEffect::~DimScreenEffect()
@@ -84,7 +85,7 @@ void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
     effects->paintWindow(w, mask, region, data);
 }
 
-void DimScreenEffect::windowActivated(EffectWindow *w)
+void DimScreenEffect::slotWindowActivated(EffectWindow *w)
 {
     if (!w) return;
     QStringList check;

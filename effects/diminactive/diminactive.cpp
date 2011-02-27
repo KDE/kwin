@@ -35,6 +35,7 @@ DimInactiveEffect::DimInactiveEffect()
     previousActiveTimeline.setDuration(animationTime(250));
     active = effects->activeWindow();
     previousActive = NULL;
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
 }
 
 void DimInactiveEffect::reconfigure(ReconfigureFlags)
@@ -105,7 +106,7 @@ void DimInactiveEffect::windowDeleted(EffectWindow* w)
         previousActive = NULL;
 }
 
-void DimInactiveEffect::windowActivated(EffectWindow* w)
+void DimInactiveEffect::slotWindowActivated(EffectWindow* w)
 {
     if (active != NULL) {
         previousActive = active;

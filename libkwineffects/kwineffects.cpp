@@ -135,10 +135,6 @@ void Effect::windowDeleted(EffectWindow*)
 {
 }
 
-void Effect::windowActivated(EffectWindow*)
-{
-}
-
 void Effect::windowMinimized(EffectWindow*)
 {
 }

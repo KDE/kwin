@@ -161,7 +161,6 @@ public:
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     void windowOpacityChanged(EffectWindow* c, double old_opacity);
     void windowDeleted(EffectWindow* c);
-    void windowActivated(EffectWindow* c);
     void windowMinimized(EffectWindow* c);
     void windowUnminimized(EffectWindow* c);
     void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
@@ -198,6 +197,7 @@ protected Q_SLOTS:
     void slotUnmanagedAdded(KWin::Unmanaged *u);
     void slotClientClosed(KWin::Client *c);
     void slotUnmanagedClosed(KWin::Unmanaged *u);
+    void slotClientActivated(KWin::Client *c);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

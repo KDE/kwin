@@ -29,6 +29,7 @@ namespace KWin
 class DimScreenEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     DimScreenEffect();
     ~DimScreenEffect();
@@ -37,7 +38,9 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
-    virtual void windowActivated(EffectWindow *w);
+
+public Q_SLOTS:
+    void slotWindowActivated(EffectWindow *w);
 
 private:
     bool mActivated;

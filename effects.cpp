@@ -99,6 +99,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
+    connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     // connect all clients
     foreach (Client *c, ws->clientList()) {
         connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
@@ -319,10 +320,9 @@ void EffectsHandlerImpl::slotUnmanagedClosed(Unmanaged* u)
     emit windowClosed(u->effectWindow());
 }
 
-void EffectsHandlerImpl::windowActivated(EffectWindow* c)
+void EffectsHandlerImpl::slotClientActivated(KWin::Client *c)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowActivated(c);
+    emit windowActivated(c ? c->effectWindow() : NULL);
 }
 
 void EffectsHandlerImpl::windowMinimized(EffectWindow* c)

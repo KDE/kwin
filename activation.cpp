@@ -229,11 +229,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     if (active_client == c)
         return;
 
-    if (c != 0) {
-        emit clientActivated(c);
-        c->sl_activated();
-    }
-
     if (active_popup && active_popup_client != c && set_active_client_recursion == 0)
         closeActivePopup();
     StackingUpdatesBlocker blocker(this);
@@ -264,8 +259,11 @@ void Workspace::setActiveClient(Client* c, allowed_t)
 
     rootInfo->setActiveWindow(active_client ? active_client->window() : 0);
     updateColormap();
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowActivated(active_client ? active_client->effectWindow() : NULL);
+
+    emit clientActivated(active_client);
+    if (active_client) {
+        active_client->sl_activated();
+    }
 
     if (tilingEnabled())
         notifyTilingWindowActivated(active_client);

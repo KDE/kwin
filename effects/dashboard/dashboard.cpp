@@ -37,6 +37,7 @@ DashboardEffect::DashboardEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
 }
 
 DashboardEffect::~DashboardEffect()
@@ -149,7 +150,7 @@ bool DashboardEffect::isDashboard(EffectWindow *w)
     }
 }
 
-void DashboardEffect::windowActivated(EffectWindow *w)
+void DashboardEffect::slotWindowActivated(EffectWindow *w)
 {
     if (!w)
         return;

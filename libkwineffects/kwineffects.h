@@ -446,7 +446,6 @@ public:
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
     virtual void windowDeleted(EffectWindow* c);
-    virtual void windowActivated(EffectWindow* c);
     virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
@@ -852,6 +851,12 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowClosed(EffectWindow *w);
+    /**
+     * Signal emitted when a window get's activated.
+     * @param w The new active window, or @c NULL if there is no active window.
+     * @since 4.7
+     **/
+    void windowActivated(EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;

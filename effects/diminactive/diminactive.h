@@ -32,13 +32,17 @@ namespace KWin
 class DimInactiveEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     DimInactiveEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void windowDeleted(EffectWindow* w);
-    virtual void windowActivated(EffectWindow* c);
+
+public Q_SLOTS:
+    void slotWindowActivated(EffectWindow* c);
+
 private:
     bool dimWindow(const EffectWindow* w) const;
     TimeLine timeline;

@@ -29,6 +29,7 @@ DialogParentEffect::DialogParentEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
 }
 
 void DialogParentEffect::reconfigure(ReconfigureFlags)
@@ -80,7 +81,7 @@ void DialogParentEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void DialogParentEffect::windowActivated(EffectWindow* w)
+void DialogParentEffect::slotWindowActivated(EffectWindow* w)
 {
     // If this window is a dialog, we need to repaint it's parent window, so
     //  that the effect could be run for it

@@ -34,6 +34,7 @@ SlideBackEffect::SlideBackEffect()
     disabled = false;
     unminimizedWindow = NULL;
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -41,7 +42,7 @@ static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
     return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
 }
 
-void SlideBackEffect::windowActivated(EffectWindow* w)
+void SlideBackEffect::slotWindowActivated(EffectWindow* w)
 {
     if (w == NULL || w->keepAbove()) { // plasma popups, yakuake etc...
         return;
@@ -194,7 +195,7 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
             }
         }
         // Finally call windowActivated in case a already active window is raised.
-        windowActivated(w);
+        slotWindowActivated(w);
     }
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
