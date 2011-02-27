@@ -61,6 +61,7 @@ LogoutEffect::LogoutEffect()
 #endif
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 LogoutEffect::~LogoutEffect()
@@ -307,7 +308,7 @@ void LogoutEffect::slotWindowAdded(EffectWindow* w)
         ignoredWindows.append(w);
 }
 
-void LogoutEffect::windowClosed(EffectWindow* w)
+void LogoutEffect::slotWindowClosed(EffectWindow* w)
 {
     if (w == logoutWindow) {
         logoutWindowClosed = true;

@@ -102,7 +102,6 @@ public:
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
 
     // User interaction
-    virtual void windowClosed(EffectWindow *w);
     virtual void windowDeleted(EffectWindow *w);
     virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual bool borderActivated(ElectricBorder border);
@@ -161,6 +160,7 @@ public slots:
     void globalShortcutChangedClass(const QKeySequence& seq);
     // EffectsHandler
     void slotWindowAdded(EffectWindow *w);
+    void slotWindowClosed(EffectWindow *w);
 
 private slots:
     void closeWindow();

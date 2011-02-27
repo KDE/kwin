@@ -38,6 +38,7 @@ GlideEffect::GlideEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 bool GlideEffect::supported()
@@ -180,7 +181,7 @@ void GlideEffect::slotWindowAdded(EffectWindow* w)
     w->addRepaintFull();
 }
 
-void GlideEffect::windowClosed(EffectWindow* w)
+void GlideEffect::slotWindowClosed(EffectWindow* w)
 {
     if (!isGlideWindow(w))
         return;

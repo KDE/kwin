@@ -38,6 +38,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_T));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     reconfigure(ReconfigureAll);
 }
 
@@ -87,7 +88,7 @@ void ThumbnailAsideEffect::windowGeometryShapeChanged(EffectWindow* w, const QRe
     }
 }
 
-void ThumbnailAsideEffect::windowClosed(EffectWindow* w)
+void ThumbnailAsideEffect::slotWindowClosed(EffectWindow* w)
 {
     removeThumbnail(w);
 }

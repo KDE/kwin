@@ -31,6 +31,7 @@ FadeEffect::FadeEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 void FadeEffect::reconfigure(ReconfigureFlags)
@@ -162,7 +163,7 @@ void FadeEffect::slotWindowAdded(EffectWindow* w)
     w->addRepaintFull();
 }
 
-void FadeEffect::windowClosed(EffectWindow* w)
+void FadeEffect::slotWindowClosed(EffectWindow* w)
 {
     if (!fadeWindows || !isFadeWindow(w))
         return;

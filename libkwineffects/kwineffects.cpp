@@ -131,10 +131,6 @@ void Effect::windowOpacityChanged(EffectWindow*, double)
 {
 }
 
-void Effect::windowClosed(EffectWindow*)
-{
-}
-
 void Effect::windowDeleted(EffectWindow*)
 {
 }

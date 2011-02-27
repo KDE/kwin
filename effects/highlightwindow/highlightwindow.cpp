@@ -39,6 +39,7 @@ HighlightWindowEffect::HighlightWindowEffect()
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), m_atom, m_atom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -116,7 +117,7 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
     propertyNotify(w, m_atom);   // Check initial value
 }
 
-void HighlightWindowEffect::windowClosed(EffectWindow* w)
+void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_monitorWindow == w)   // The monitoring window was destroyed
         finishHighlighting();

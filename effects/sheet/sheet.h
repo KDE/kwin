@@ -39,13 +39,13 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowClosed(EffectWindow* c);
     virtual void windowDeleted(EffectWindow* c);
 
     static bool supported();
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
 private:
     class WindowInfo;
     typedef QMap< const EffectWindow*, WindowInfo > InfoMap;

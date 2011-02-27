@@ -180,6 +180,19 @@ public:
     void reserveElectricBorderActions(bool reserve);
     void reserveElectricBorderSwitching(bool reserve);
 
+    /**
+     * @return List of clients currently managed by Workspace
+     **/
+    const ClientList &clientList() const {
+        return clients;
+    }
+    /**
+     * @return List of unmanaged "clients" currently registered in Workspace
+     **/
+    const UnmanagedList &unmanagedList() const {
+        return unmanaged;
+    }
+
     //-------------------------------------------------
     // Tiling
 public:

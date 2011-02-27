@@ -45,9 +45,9 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void windowDamaged(EffectWindow* w, const QRect& damage);
     virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
-    virtual void windowClosed(EffectWindow* w);
 private slots:
     void toggleCurrentThumbnail();
+    void slotWindowClosed(EffectWindow *w);
 private:
     void addThumbnail(EffectWindow* w);
     void removeThumbnail(EffectWindow* w);

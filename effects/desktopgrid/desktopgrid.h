@@ -71,7 +71,6 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowClosed(EffectWindow* w);
     virtual void windowDeleted(EffectWindow* w);
     virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
@@ -89,6 +88,7 @@ private slots:
     void slotAddDesktop();
     void slotRemoveDesktop();
     void slotWindowAdded(EffectWindow* w);
+    void slotWindowClosed(EffectWindow *w);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;

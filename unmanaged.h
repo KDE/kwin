@@ -46,6 +46,8 @@ public:
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
+Q_SIGNALS:
+    void unmanagedClosed(KWin::Unmanaged*);
 private:
     virtual ~Unmanaged(); // use release()
     // handlers for X11 events

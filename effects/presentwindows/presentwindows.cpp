@@ -99,6 +99,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     shortcutClass = c->globalShortcut();
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -385,7 +386,7 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
     }
 }
 
-void PresentWindowsEffect::windowClosed(EffectWindow *w)
+void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 {
     if (m_managerWindow == w)
         m_managerWindow = NULL;

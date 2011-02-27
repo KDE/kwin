@@ -70,6 +70,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()
@@ -584,7 +585,7 @@ void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
     }
 }
 
-void FlipSwitchEffect::windowClosed(EffectWindow* w)
+void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_active && m_windows.contains(w)) {
         m_windows.remove(w);

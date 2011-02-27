@@ -46,6 +46,7 @@ ExplosionEffect::ExplosionEffect() : Effect()
     mActiveAnimations = 0;
     mValid = true;
     mInited = false;
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 ExplosionEffect::~ExplosionEffect()
@@ -180,7 +181,7 @@ void ExplosionEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void ExplosionEffect::windowClosed(EffectWindow* c)
+void ExplosionEffect::slotWindowClosed(EffectWindow* c)
 {
     const void* e = c->data(WindowClosedGrabRole).value<void*>();
     if (e && e != this)

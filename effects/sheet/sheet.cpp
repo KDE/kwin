@@ -37,6 +37,7 @@ SheetEffect::SheetEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 bool SheetEffect::supported()
@@ -141,7 +142,7 @@ void SheetEffect::slotWindowAdded(EffectWindow* w)
     w->addRepaintFull();
 }
 
-void SheetEffect::windowClosed(EffectWindow* w)
+void SheetEffect::slotWindowClosed(EffectWindow* w)
 {
     if (!isSheetWindow(w))
         return;

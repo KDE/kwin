@@ -494,6 +494,7 @@ signals:
     void maximizeSet(QPair<bool, bool>);
     void s_activated();
     void s_fullScreenSet(bool, bool);
+    void clientClosed(KWin::Client*);
 
     // To make workspace-client calls, a few slots are also
     // required

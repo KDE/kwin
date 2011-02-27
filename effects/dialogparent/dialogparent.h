@@ -37,6 +37,7 @@ namespace KWin
 class DialogParentEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     DialogParentEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -45,9 +46,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowClosed(EffectWindow* c);
     virtual void windowActivated(EffectWindow* c);
 
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *c);
 protected:
     bool hasModalWindow(EffectWindow* t);
 private:

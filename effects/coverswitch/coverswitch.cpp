@@ -70,6 +70,7 @@ CoverSwitchEffect::CoverSwitchEffect()
 
     const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -981,7 +982,7 @@ void CoverSwitchEffect::abort()
     captionFrame->free();
 }
 
-void CoverSwitchEffect::windowClosed(EffectWindow* c)
+void CoverSwitchEffect::slotWindowClosed(EffectWindow* c)
 {
     // if the list is not empty, the effect is active
     if (!currentWindowList.isEmpty()) {

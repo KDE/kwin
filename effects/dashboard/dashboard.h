@@ -43,10 +43,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual void unpropagate();
     virtual void windowActivated(EffectWindow *w);
-    virtual void windowClosed(EffectWindow* c);
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
 private:
     bool blur;
     bool isDashboard(EffectWindow* w);

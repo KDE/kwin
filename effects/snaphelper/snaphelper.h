@@ -29,6 +29,7 @@ namespace KWin
 class SnapHelperEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SnapHelperEffect();
     ~SnapHelperEffect();
@@ -37,10 +38,12 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
-    virtual void windowClosed(EffectWindow* w);
     virtual void windowUserMovedResized(EffectWindow* w, bool first, bool last);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *w);
 
 private:
     bool m_active;

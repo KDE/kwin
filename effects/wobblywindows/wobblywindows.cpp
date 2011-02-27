@@ -166,6 +166,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -477,7 +478,7 @@ void WobblyWindowsEffect::slotWindowAdded(EffectWindow* w)
     }
 }
 
-void WobblyWindowsEffect::windowClosed(EffectWindow* w)
+void WobblyWindowsEffect::slotWindowClosed(EffectWindow* w)
 {
     if (windows.contains(w)) {
         WindowWobblyInfos& wwi = windows[w];

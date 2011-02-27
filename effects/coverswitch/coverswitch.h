@@ -36,6 +36,7 @@ namespace KWin
 class CoverSwitchEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     CoverSwitchEffect();
     ~CoverSwitchEffect();
@@ -49,9 +50,12 @@ public:
     virtual void tabBoxClosed();
     virtual void tabBoxUpdated();
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void windowClosed(EffectWindow* c);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *c);
+
 private:
     void paintScene(EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,
                     bool reflectedWindows = false);

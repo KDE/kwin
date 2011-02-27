@@ -28,6 +28,7 @@ KWIN_EFFECT(dialogparent, DialogParentEffect)
 DialogParentEffect::DialogParentEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 void DialogParentEffect::reconfigure(ReconfigureFlags)
@@ -92,7 +93,7 @@ void DialogParentEffect::windowActivated(EffectWindow* w)
     }
 }
 
-void DialogParentEffect::windowClosed(EffectWindow* w)
+void DialogParentEffect::slotWindowClosed(EffectWindow* w)
 {
     // If this window is a dialog, we need to repaint it's parent window, so
     //  that the effect could be run for it

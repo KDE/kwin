@@ -30,13 +30,17 @@ namespace KWin
 class LoginEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     LoginEffect();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowClosed(EffectWindow* w);
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *w);
+
 private:
     bool isLoginSplash(EffectWindow* w);
     double progress; // 0-1

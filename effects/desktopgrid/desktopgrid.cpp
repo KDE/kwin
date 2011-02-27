@@ -74,6 +74,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 
     // Load all other configuration details
     reconfigure(ReconfigureAll);
@@ -391,7 +392,7 @@ void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
     effects->addRepaintFull();
 }
 
-void DesktopGridEffect::windowClosed(EffectWindow* w)
+void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
 {
     if (!activated && timeline.value() == 0)
         return;

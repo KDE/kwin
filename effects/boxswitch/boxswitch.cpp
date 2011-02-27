@@ -57,6 +57,7 @@ BoxSwitchEffect::BoxSwitchEffect()
 
     highlight_margin = 10;
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 BoxSwitchEffect::~BoxSwitchEffect()
@@ -475,7 +476,7 @@ void BoxSwitchEffect::setSelectedWindow(EffectWindow* w)
     }
 }
 
-void BoxSwitchEffect::windowClosed(EffectWindow* w)
+void BoxSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
     if (w == selected_window) {
         setSelectedWindow(0);

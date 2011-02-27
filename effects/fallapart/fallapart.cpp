@@ -32,6 +32,7 @@ KWIN_EFFECT(fallapart, FallApartEffect)
 FallApartEffect::FallApartEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 void FallApartEffect::reconfigure(ReconfigureFlags)
@@ -142,7 +143,7 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
     return true;
 }
 
-void FallApartEffect::windowClosed(EffectWindow* c)
+void FallApartEffect::slotWindowClosed(EffectWindow* c)
 {
     if (!isRealWindow(c))
         return;

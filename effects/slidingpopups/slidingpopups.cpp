@@ -39,6 +39,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), mAtom, mAtom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
@@ -147,7 +148,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
     }
 }
 
-void SlidingPopupsEffect::windowClosed(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 {
     propertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {

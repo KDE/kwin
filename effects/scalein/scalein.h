@@ -37,9 +37,9 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
     // TODO react also on virtual desktop changes
-    virtual void windowClosed(EffectWindow* c);
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
 private:
     bool isScaleWindow(EffectWindow* w);
     QHash< const EffectWindow*, TimeLine > mTimeLineWindows;

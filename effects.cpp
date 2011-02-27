@@ -99,6 +99,13 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
+    // connect all clients
+    foreach (Client *c, ws->clientList()) {
+        connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
+    }
+    foreach (Unmanaged *u, ws->unmanagedList()) {
+        connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
+    }
     reconfigure();
 }
 
@@ -285,11 +292,13 @@ void EffectsHandlerImpl::windowOpacityChanged(EffectWindow* c, double old_opacit
 
 void EffectsHandlerImpl::slotClientAdded(Client *c)
 {
+    connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
     emit windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
 {
+    connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
     emit windowAdded(u->effectWindow());
 }
 
@@ -300,10 +309,14 @@ void EffectsHandlerImpl::windowDeleted(EffectWindow* c)
     elevated_windows.removeAll(c);
 }
 
-void EffectsHandlerImpl::windowClosed(EffectWindow* c)
+void EffectsHandlerImpl::slotClientClosed(Client *c)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowClosed(c);
+    emit windowClosed(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedClosed(Unmanaged* u)
+{
+    emit windowClosed(u->effectWindow());
 }
 
 void EffectsHandlerImpl::windowActivated(EffectWindow* c)

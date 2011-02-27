@@ -31,6 +31,7 @@ LoginEffect::LoginEffect()
     : progress(1.0)
     , login_window(NULL)
 {
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 void LoginEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -72,7 +73,7 @@ void LoginEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void LoginEffect::windowClosed(EffectWindow* w)
+void LoginEffect::slotWindowClosed(EffectWindow* w)
 {
     if (isLoginSplash(w)) {
         if (login_window)

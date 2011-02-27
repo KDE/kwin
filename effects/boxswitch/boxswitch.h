@@ -41,6 +41,7 @@ namespace KWin
 class BoxSwitchEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     BoxSwitchEffect();
     ~BoxSwitchEffect();
@@ -57,10 +58,13 @@ public:
     virtual void tabBoxAdded(int mode);
     virtual void tabBoxClosed();
     virtual void tabBoxUpdated();
-    virtual void windowClosed(EffectWindow* w);
     virtual void* proxy();
     void activateFromProxy(int mode, bool animate, bool showText, float positioningFactor);
     void paintWindowsBox(const QRegion& region);
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow* w);
+
 private:
     class ItemInfo;
     void setActive();

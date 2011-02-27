@@ -29,6 +29,7 @@ ScaleInEffect::ScaleInEffect()
     : Effect()
 {
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 void ScaleInEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -88,7 +89,7 @@ void ScaleInEffect::slotWindowAdded(EffectWindow* c)
     }
 }
 
-void ScaleInEffect::windowClosed(EffectWindow* c)
+void ScaleInEffect::slotWindowClosed(EffectWindow* c)
 {
     mTimeLineWindows.remove(c);
 }
