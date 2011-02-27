@@ -78,6 +78,7 @@ Comment[sr@latin]=Pomoćni efekat za odziv pri pokretanju
 Comment[sv]=Hjälpeffekt för gensvar vid programstart
 Comment[th]=ลูกเล่นที่จะแสดงเพื่อรอการเริ่มการทำงานของโปรแกรม
 Comment[uk]=Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску
+Comment[wa]=Efet aidant pol ritoû d' enondaedje
 Comment[x-test]=xxHelper effect for startup feedbackxx
 Comment[zh_TW]=啟動回饋效果
 Icon=preferences-system-windows-effect-startupfeedback
