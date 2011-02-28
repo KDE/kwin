@@ -29,6 +29,7 @@ namespace KWin
 class ResizeEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     ResizeEffect();
     ~ResizeEffect();
@@ -39,8 +40,10 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void reconfigure(ReconfigureFlags);
-    virtual void windowUserMovedResized(EffectWindow *w, bool first, bool last);
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
+
+public Q_SLOTS:
+    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
 
 private:
     enum Feature { TextureScale = 1 << 0, Outline = 1 << 1 };

@@ -36,6 +36,7 @@ SnapHelperEffect::SnapHelperEffect()
     m_timeline.setCurveShape(TimeLine::LinearCurve);
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
 
     /*if ( effects->compositingType() == XRenderCompositing )
         {
@@ -196,7 +197,7 @@ void SnapHelperEffect::slotWindowClosed(EffectWindow* w)
     }
 }
 
-void SnapHelperEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void SnapHelperEffect::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
     if (first && !last && w->isMovable()) {
         m_active = true;

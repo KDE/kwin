@@ -33,12 +33,12 @@ class TranslucencyEffect
 public:
     TranslucencyEffect();
     virtual void reconfigure(ReconfigureFlags);
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
 public Q_SLOTS:
     void slotWindowActivated(EffectWindow* w);
+    void slotWindowUserMovedResized(EffectWindow *c, bool first, bool last);
 
 private:
     bool isInactive(const EffectWindow *w) const;

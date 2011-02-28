@@ -35,7 +35,6 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
 
     // Wobbly model parameters
     void setStiffness(qreal stiffness);
@@ -60,6 +59,7 @@ public:
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
+    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
 
 private:
 

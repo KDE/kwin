@@ -60,6 +60,7 @@ WindowGeometry::WindowGeometry()
     a->setText(i18n("Toggle window geometry display (effect only)"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
 }
 
 WindowGeometry::~WindowGeometry()
@@ -89,7 +90,7 @@ void WindowGeometry::toggle()
     iAmActivated = !iAmActivated;
 }
 
-void WindowGeometry::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void WindowGeometry::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
     if (first && last)  // "maximized"
         return;

@@ -41,6 +41,7 @@ ResizeEffect::ResizeEffect()
     , m_resizeWindow(0)
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
 }
 
 ResizeEffect::~ResizeEffect()
@@ -145,7 +146,7 @@ void ResizeEffect::reconfigure(ReconfigureFlags)
         m_features |= Outline;
 }
 
-void ResizeEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void ResizeEffect::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
     if (first && last) {
         // not interested in maximized

@@ -158,7 +158,6 @@ public:
 
     // internal (used by kwin core or compositing code)
     void startPaint();
-    void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     void windowOpacityChanged(EffectWindow* c, double old_opacity);
     void windowMinimized(EffectWindow* c);
@@ -191,6 +190,9 @@ public:
 
     QList<EffectWindow*> elevatedWindows() const;
 
+public Q_SLOTS:
+    void slotWindowUserMovedResized(EffectWindow* c, bool first, bool last);
+
 protected Q_SLOTS:
     void slotDesktopChanged(int old);
     void slotClientAdded(KWin::Client *c);
@@ -199,6 +201,7 @@ protected Q_SLOTS:
     void slotUnmanagedClosed(KWin::Unmanaged *u);
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
+    void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

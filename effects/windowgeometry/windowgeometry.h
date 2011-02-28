@@ -38,11 +38,11 @@ public:
     }
     void reconfigure(ReconfigureFlags);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    void windowUserMovedResized(EffectWindow* w, bool first, bool last);
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
 private slots:
     void toggle();
+    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
 private:
     EffectWindow *myResizeWindow;
     EffectFrame *myMeasure[3];

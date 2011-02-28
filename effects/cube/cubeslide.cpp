@@ -39,6 +39,7 @@ CubeSlideEffect::CubeSlideEffect()
     , progressRestriction(0.0f)
 {
     connect(effects, SIGNAL(desktopChanged(int, int)), this, SLOT(slotDesktopChanged(int, int)));
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
     reconfigure(ReconfigureAll);
 }
 
@@ -529,7 +530,7 @@ void CubeSlideEffect::slotDesktopChanged(int old, int current)
     }
 }
 
-void CubeSlideEffect::windowUserMovedResized(EffectWindow* c, bool first, bool last)
+void CubeSlideEffect::slotWindowUserMovedResized(EffectWindow* c, bool first, bool last)
 {
     if (!useWindowMoving)
         return;

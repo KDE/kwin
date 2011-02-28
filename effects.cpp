@@ -104,6 +104,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     // connect all clients
     foreach (Client *c, ws->clientList()) {
         connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
+        connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
     }
     foreach (Unmanaged *u, ws->unmanagedList()) {
         connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
@@ -270,10 +271,14 @@ void EffectsHandlerImpl::startPaint()
     assert(current_transform == 0);
 }
 
-void EffectsHandlerImpl::windowUserMovedResized(EffectWindow* c, bool first, bool last)
+void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowUserMovedResized(c, first, last);
+    emit windowUserMovedResized(c->effectWindow(), true, true);
+}
+
+void EffectsHandlerImpl::slotWindowUserMovedResized(EffectWindow* c, bool first, bool last)
+{
+    emit windowUserMovedResized(c, first, last);
 }
 
 void EffectsHandlerImpl::windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry)
@@ -295,6 +300,7 @@ void EffectsHandlerImpl::windowOpacityChanged(EffectWindow* c, double old_opacit
 void EffectsHandlerImpl::slotClientAdded(Client *c)
 {
     connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
+    connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
     emit windowAdded(c->effectWindow());
 }
 

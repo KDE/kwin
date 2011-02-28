@@ -38,12 +38,12 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
-    virtual void windowUserMovedResized(EffectWindow* w, bool first, bool last);
 
     static bool supported();
 
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *w);
+    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
 
 private:
     bool m_active;

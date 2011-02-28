@@ -167,6 +167,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -358,7 +359,7 @@ void WobblyWindowsEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void WobblyWindowsEffect::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
     if (!m_moveEffectEnabled || w->isSpecialWindow())
         return;

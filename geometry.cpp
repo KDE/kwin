@@ -2092,8 +2092,7 @@ void Client::setMaximize(bool vertically, bool horizontally)
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, true);
+    emit clientMaximizedStateChanged(this, max_mode);
 
     // Update states of all other windows in this group
     if (clientGroup())
@@ -2645,7 +2644,7 @@ bool Client::startMoveResize()
     }
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, false);
+        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), true, false);
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
@@ -2757,7 +2756,7 @@ void Client::finishMoveResize(bool cancel)
 
     Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
     if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, true);
+        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), false, true);
 }
 
 void Client::leaveMoveResize()
@@ -3148,7 +3147,7 @@ void Client::performMoveResize()
     }
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->windowMoveResizeGeometryUpdate(effectWindow(), moveResizeGeom);
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, false);
+        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), false, false);
     }
 }
 

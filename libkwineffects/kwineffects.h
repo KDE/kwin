@@ -440,8 +440,6 @@ public:
      **/
     virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
 
-    /** called when moved/resized or once after it's finished */
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
@@ -868,6 +866,14 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowDeleted(EffectWindow *w);
+    /** Signal emitted when window moved/resized or once after it's finished.
+     * If both @p first and @p last are true, @p w got maximized/restored.
+     * @param w The window which is being moved or resized
+     * @param first @c true if first change
+     * @param last @c true if last change, that is move/resize finished.
+     * @since 4.7
+     **/
+    void windowUserMovedResized(EffectWindow *w, bool first, bool last);
 
 protected:
     QVector< EffectPair > loaded_effects;

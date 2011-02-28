@@ -35,6 +35,7 @@ TranslucencyEffect::TranslucencyEffect()
     reconfigure(ReconfigureAll);
     active = effects->activeWindow();
     connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
 }
 
 void TranslucencyEffect::reconfigure(ReconfigureFlags)
@@ -176,7 +177,7 @@ bool TranslucencyEffect::isInactive(const EffectWindow* w) const
     return true;
 }
 
-void TranslucencyEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void TranslucencyEffect::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
     if (moveresize != 1.0 && (first || last)) {
         moveresize_timeline.setProgress(0.0);
