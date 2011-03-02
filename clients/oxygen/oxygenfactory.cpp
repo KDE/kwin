@@ -52,6 +52,12 @@ namespace Oxygen
     {
         readConfig();
         setInitialized( true );
+
+        // background pixmap
+        QPixmap pixmap;
+        pixmap.load( "/home/hpereira/Pictures/Wallpapers/window.ornate.png" );
+        helper().setBackgroundPixmap( pixmap );
+
     }
 
     //___________________________________________________
