@@ -52,12 +52,6 @@ namespace Oxygen
     {
         readConfig();
         setInitialized( true );
-
-        // background pixmap
-        QPixmap pixmap;
-        pixmap.load( "/home/hpereira/Pictures/Wallpapers/window.ornate.png" );
-        helper().setBackgroundPixmap( pixmap );
-
     }
 
     //___________________________________________________
@@ -140,6 +134,12 @@ namespace Oxygen
         changed |= shadowCache().readConfig( config );
         if( changed )
         { helper().setBackgroundPixmapOffset( QPoint( shadowCache().shadowSize(), 0 ) ); }
+
+        // background pixmap
+        {
+            KConfigGroup group( config.group("Common") );
+            helper().setBackgroundPixmap( group.readEntry( "BackgroundPixmap", "" ) );
+        }
 
         return changed;
 
