@@ -36,15 +36,15 @@ WindowGeometry::WindowGeometry()
     iAmActivated = true;
     iAmActive = false;
     myResizeWindow = 0L;
-    myResizeString =   i18nc("Window geometry display, %1 and %2 are the new size,"
-                             " %3 and %4 are pixel increments - avoid reformatting or suffixes like 'px'",
-                             "Width: %1 (%3)\nHeight: %2 (%4)");
-    myCoordString[0] = i18nc("Window geometry display, %1 and %2 are the cartesian x and y coordinates"
-                             " - avoid reformatting or suffixes like 'px'",
-                             "X: %1\nY: %2");
-    myCoordString[1] = i18nc("Window geometry display, %1 and %2 are the cartesian x and y coordinates,"
-                             " %3 and %4 are the resp. increments - avoid reformatting or suffixes like 'px'",
-                             "X: %1 (%3)\nY: %2 (%4)");
+#define myResizeString "Window geometry display, %1 and %2 are the new size," \
+                       " %3 and %4 are pixel increments - avoid reformatting or suffixes like 'px'", \
+                       "Width: %1 (%3)\nHeight: %2 (%4)"
+#define myCoordString_0 "Window geometry display, %1 and %2 are the cartesian x and y coordinates" \
+                        " - avoid reformatting or suffixes like 'px'", \
+                        "X: %1\nY: %2"
+#define myCoordString_1 "Window geometry display, %1 and %2 are the cartesian x and y coordinates," \
+                        " %3 and %4 are the resp. increments - avoid reformatting or suffixes like 'px'", \
+                        "X: %1 (%3)\nY: %2 (%4)"
     reconfigure(ReconfigureAll);
     QFont fnt; fnt.setBold(true); fnt.setPointSize(12);
     for (int i = 0; i < 3; ++i) {
@@ -137,9 +137,9 @@ void WindowGeometry::windowMoveResizeGeometryUpdate(EffectWindow* w, const QRect
 
         // upper left ----------------------
         if (w->isUserResize())
-            myMeasure[0]->setText(myCoordString[1].arg(r.x()).arg(r.y()).arg(number(dx)).arg(number(dy)));
+            myMeasure[0]->setText( i18nc(myCoordString_1, r.x(), r.y(), number(dx), number(dy) ) );
         else
-            myMeasure[0]->setText(myCoordString[0].arg(r.x()).arg(r.y()));
+            myMeasure[0]->setText( i18nc(myCoordString_0, r.x(), r.y() ) );
         myMeasure[0]->setPosition(geometry.topLeft());
 
         // center ----------------------
@@ -148,23 +148,21 @@ void WindowGeometry::windowMoveResizeGeometryUpdate(EffectWindow* w, const QRect
             dx = r.width() - r2.width();
             dy = r.height() - r2.height();
 
-            // TODO: i hate this. anyone got a nice idea to invoke the stringbuilder or otherwise avoid
-            // dogslow QString::arg() system here?
-            myMeasure[1]->setText(myResizeString.arg(r.width()).arg(r.height()).arg(number(dx)).arg(number(dy)));
+            myMeasure[1]->setText( i18nc(myResizeString, r.width(), r.height(), number(dx), number(dy) ) );
 
             // calc width for bottomright element, superfluous otherwise
             dx = r.right() - r2.right();
             dy = r.bottom() - r2.bottom();
         } else
-            myMeasure[1]->setText(myCoordString[0].arg(number(dx)).arg(number(dy)));
+            myMeasure[1]->setText( i18nc(myCoordString_0, number(dx), number(dy) ) );
 
         myMeasure[1]->setPosition(geometry.center());
 
         // lower right ----------------------
         if (w->isUserResize())
-            myMeasure[2]->setText(myCoordString[1].arg(r.right()).arg(r.bottom()).arg(number(dx)).arg(number(dy)));
+            myMeasure[2]->setText( i18nc(myCoordString_1, r.right(), r.bottom(), number(dx), number(dy) ) );
         else
-            myMeasure[2]->setText(myCoordString[0].arg(r.right()).arg(r.bottom()));
+            myMeasure[2]->setText( i18nc(myCoordString_0, r.right(), r.bottom() ) );
         myMeasure[2]->setPosition(geometry.bottomRight());
 
         effects->addRepaint(geometry.adjusted(-20, -20, 20, 20));
