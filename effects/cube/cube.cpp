@@ -1438,7 +1438,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (reflectionPainting) {
                 shader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
             } else {
-                shader->setUniform("screenTransformation", m_rotationMatrix * origMatrix);
+                shader->setUniform("screenTransformation", origMatrix*m_rotationMatrix);
             }
         }
     }
