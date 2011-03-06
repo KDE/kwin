@@ -922,6 +922,7 @@ Q_SIGNALS:
 signals:
     void desktopPresenceChanged(KWin::Client*, int);
     void currentDesktopChanged(int);
+    void numberDesktopsChanged(int oldNumberOfDesktops);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);

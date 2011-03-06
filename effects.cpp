@@ -102,6 +102,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
+    connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
     connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
@@ -495,12 +496,6 @@ void EffectsHandlerImpl::propertyNotify(EffectWindow* c, long atom)
         return;
     foreach (const EffectPair & ep, loaded_effects)
     ep.second->propertyNotify(c, atom);
-}
-
-void EffectsHandlerImpl::numberDesktopsChanged(int old)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->numberDesktopsChanged(old);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)

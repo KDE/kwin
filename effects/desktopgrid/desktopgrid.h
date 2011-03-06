@@ -75,7 +75,6 @@ public:
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual bool borderActivated(ElectricBorder border);
-    virtual void numberDesktopsChanged(int old);
 
     enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
@@ -89,6 +88,7 @@ private slots:
     void slotWindowAdded(EffectWindow* w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
+    void slotNumberDesktopsChanged(int old);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;

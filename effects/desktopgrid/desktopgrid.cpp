@@ -76,6 +76,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(numberDesktopsChanged(int)), this, SLOT(slotNumberDesktopsChanged(int)));
 
     // Load all other configuration details
     reconfigure(ReconfigureAll);
@@ -1259,7 +1260,7 @@ void DesktopGridEffect::slotRemoveDesktop()
     effects->setNumberOfDesktops(effects->numberOfDesktops() - 1);
 }
 
-void DesktopGridEffect::numberDesktopsChanged(int old)
+void DesktopGridEffect::slotNumberDesktopsChanged(int old)
 {
     if (!activated)
         return;

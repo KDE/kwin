@@ -263,10 +263,6 @@ double Effect::animationTime(int defaultTime)
     return qMax(defaultTime * effects->animationTimeFactor(), 1.);
 }
 
-void Effect::numberDesktopsChanged(int)
-{
-}
-
 //****************************************
 // EffectsHandler
 //****************************************

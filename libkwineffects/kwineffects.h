@@ -463,13 +463,6 @@ public:
 
     virtual bool borderActivated(ElectricBorder border);
 
-    /**
-    * called when the number of currently existing desktops is changed.
-    * @param old The previous number of desktops in used.
-    * @see EffectsHandler::numberOfDesktops.
-    */
-    virtual void numberDesktopsChanged(int old);
-
     static int displayWidth();
     static int displayHeight();
     static QPoint cursorPos();
@@ -826,6 +819,13 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void desktopChanged(int oldDesktop, int newDesktop);
+    /**
+    * Signal emitted when the number of currently existing desktops is changed.
+    * @param old The previous number of desktops in used.
+    * @see EffectsHandler::numberOfDesktops.
+    * @since 4.7
+    */
+    void numberDesktopsChanged(int old);
     /**
      * Signal emitted when a new window has been added to the Workspace.
      * @param w The added window

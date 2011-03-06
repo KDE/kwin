@@ -171,7 +171,6 @@ public:
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
     void propertyNotify(EffectWindow* c, long atom);
-    void numberDesktopsChanged(int old);
 
     bool loadEffect(const QString& name);
     void toggleEffect(const QString& name);
