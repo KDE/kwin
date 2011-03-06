@@ -45,7 +45,7 @@ KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(bool custom
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default | KDialog::Reset);
     enableButton(KDialog::Reset, false);
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget(m_ui);
+    m_ui->buttonPositionWidget->setEnabled(customPositions);
 
     QWidget* main = new QWidget(this);
     main->setLayout(layout);
