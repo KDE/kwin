@@ -461,10 +461,6 @@ public:
      */
     virtual void propertyNotify(EffectWindow* w, long atom);
 
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void tabBoxKeyEvent(QKeyEvent* event);
     virtual bool borderActivated(ElectricBorder border);
 
     /**
@@ -891,6 +887,45 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowUnminimized(EffectWindow *w);
+    /**
+     * Signal emitted when a tabbox is added.
+     * An effect who wants to replace the tabbox with itself should use @link refTabBox.
+     * @param mode The TabBoxMode.
+     * @see refTabBox
+     * @see tabBoxClosed
+     * @see tabBoxUpdated
+     * @see tabBoxKeyEvent
+     * @since 4.7
+     **/
+    void tabBoxAdded(int mode);
+    /**
+     * Signal emitted when the TabBox was closed by KWin core.
+     * An effect which referenced the TabBox should use @link unrefTabBox to unref again.
+     * @see unrefTabBox
+     * @see tabBoxAdded
+     * @since 4.7
+     **/
+    void tabBoxClosed();
+    /**
+     * Signal emitted when the selected TabBox window changed or the TabBox List changed.
+     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * @see refTabBox
+     * @see currentTabBoxWindowList
+     * @see currentTabBoxDesktopList
+     * @see currentTabBoxWindow
+     * @see currentTabBoxDesktop
+     * @since 4.7
+     **/
+    void tabBoxUpdated();
+    /**
+     * Signal emitted when a key event, which is not handled by TabBox directly is, happens while
+     * TabBox is active. An effect might use the key event to e.g. change the selected window.
+     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * @param event The key event not handled by TabBox directly
+     * @see refTabBox
+     * @since 4.7
+     **/
+    void tabBoxKeyEvent(QKeyEvent* event);
 
 protected:
     QVector< EffectPair > loaded_effects;

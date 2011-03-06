@@ -103,6 +103,9 @@ CubeEffect::CubeEffect()
     m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
 
     reconfigure(ReconfigureAll);
 }
@@ -1969,7 +1972,7 @@ void CubeEffect::windowInputMouseEvent(Window w, QEvent* e)
     }
 }
 
-void CubeEffect::tabBoxAdded(int mode)
+void CubeEffect::slotTabBoxAdded(int mode)
 {
     if (activated)
         return;
@@ -1983,7 +1986,7 @@ void CubeEffect::tabBoxAdded(int mode)
     }
 }
 
-void CubeEffect::tabBoxUpdated()
+void CubeEffect::slotTabBoxUpdated()
 {
     if (activated) {
         rotateToDesktop(effects->currentTabBoxDesktop());
@@ -1991,7 +1994,7 @@ void CubeEffect::tabBoxUpdated()
     }
 }
 
-void CubeEffect::tabBoxClosed()
+void CubeEffect::slotTabBoxClosed()
 {
     if (activated) {
         effects->unrefTabBox();

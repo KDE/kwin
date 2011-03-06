@@ -71,6 +71,9 @@ CoverSwitchEffect::CoverSwitchEffect()
     const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
 }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -527,7 +530,7 @@ void CoverSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
     effects->paintWindow(w, mask, region, data);
 }
 
-void CoverSwitchEffect::tabBoxAdded(int mode)
+void CoverSwitchEffect::slotTabBoxAdded(int mode)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -590,7 +593,7 @@ void CoverSwitchEffect::tabBoxAdded(int mode)
     }
 }
 
-void CoverSwitchEffect::tabBoxClosed()
+void CoverSwitchEffect::slotTabBoxClosed()
 {
     if (mActivated) {
         if (animateStop) {
@@ -612,7 +615,7 @@ void CoverSwitchEffect::tabBoxClosed()
     }
 }
 
-void CoverSwitchEffect::tabBoxUpdated()
+void CoverSwitchEffect::slotTabBoxUpdated()
 {
     if (mActivated) {
         if (animateSwitch && currentWindowList.count() > 1) {

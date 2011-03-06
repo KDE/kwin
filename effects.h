@@ -164,10 +164,6 @@ public:
     void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
     void windowDamaged(EffectWindow* w, const QRect& r);
     void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
-    void tabBoxAdded(int mode);
-    void tabBoxClosed();
-    void tabBoxUpdated();
-    void tabBoxKeyEvent(QKeyEvent* event);
     bool borderActivated(ElectricBorder border);
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,

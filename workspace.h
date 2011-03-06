@@ -385,6 +385,9 @@ public:
     void refTabBox();
     void unrefTabBox();
     void closeTabBox(bool abort = false);
+    TabBox::TabBox *tabBox() const {
+        return tab_box;
+    }
 
     // Tabbing
     void addClientGroup(ClientGroup* group);

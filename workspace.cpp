@@ -217,6 +217,8 @@ Workspace::Workspace(bool restore)
                 );
 
     Extensions::init();
+    // need to create the tabbox before compositing scene is setup
+    tab_box = new TabBox::TabBox(this);
     setupCompositing();
 
     // Compatibility
@@ -235,7 +237,6 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
     initShortcuts();
-    tab_box = new TabBox::TabBox(this);
     desktop_change_osd = new DesktopChangeOSD(this);
 
     init();

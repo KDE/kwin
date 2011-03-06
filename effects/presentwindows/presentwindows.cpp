@@ -101,6 +101,10 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -662,7 +666,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
 //-----------------------------------------------------------------------------
 // Tab box
 
-void PresentWindowsEffect::tabBoxAdded(int mode)
+void PresentWindowsEffect::slotTabBoxAdded(int mode)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -680,7 +684,7 @@ void PresentWindowsEffect::tabBoxAdded(int mode)
     }
 }
 
-void PresentWindowsEffect::tabBoxClosed()
+void PresentWindowsEffect::slotTabBoxClosed()
 {
     if (m_activated) {
         effects->unrefTabBox();
@@ -689,13 +693,13 @@ void PresentWindowsEffect::tabBoxClosed()
     }
 }
 
-void PresentWindowsEffect::tabBoxUpdated()
+void PresentWindowsEffect::slotTabBoxUpdated()
 {
     if (m_activated)
         setHighlightedWindow(effects->currentTabBoxWindow());
 }
 
-void PresentWindowsEffect::tabBoxKeyEvent(QKeyEvent* event)
+void PresentWindowsEffect::slotTabBoxKeyEvent(QKeyEvent* event)
 {
     if (!m_activated)
         return;

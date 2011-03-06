@@ -58,6 +58,9 @@ BoxSwitchEffect::BoxSwitchEffect()
     highlight_margin = 10;
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
 }
 
 BoxSwitchEffect::~BoxSwitchEffect()
@@ -289,7 +292,7 @@ void BoxSwitchEffect::windowGeometryShapeChanged(EffectWindow* w, const QRect& o
     }
 }
 
-void BoxSwitchEffect::tabBoxAdded(int mode)
+void BoxSwitchEffect::slotTabBoxAdded(int mode)
 {
     if (!mActivated) {
         if ((mode == TabBoxWindowsMode && primaryTabBox) ||
@@ -315,13 +318,13 @@ void BoxSwitchEffect::tabBoxAdded(int mode)
     }
 }
 
-void BoxSwitchEffect::tabBoxClosed()
+void BoxSwitchEffect::slotTabBoxClosed()
 {
     if (mActivated)
         setInactive();
 }
 
-void BoxSwitchEffect::tabBoxUpdated()
+void BoxSwitchEffect::slotTabBoxUpdated()
 {
     if (mActivated) {
         if ((mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode)

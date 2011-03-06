@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "unmanaged.h"
+#include "tabbox.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -101,6 +102,10 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
+    connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
+    connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
+    connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
+    connect(ws->tabBox(), SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
     // connect all clients
     foreach (Client *c, ws->clientList()) {
         setupClientConnections(c);
@@ -398,30 +403,6 @@ void EffectsHandlerImpl::windowGeometryShapeChanged(EffectWindow* w, const QRect
         return;     // in some functions that may still call this
     foreach (const EffectPair & ep, loaded_effects)
     ep.second->windowGeometryShapeChanged(w, old);
-}
-
-void EffectsHandlerImpl::tabBoxAdded(int mode)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxAdded(mode);
-}
-
-void EffectsHandlerImpl::tabBoxClosed()
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxClosed();
-}
-
-void EffectsHandlerImpl::tabBoxUpdated()
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxUpdated();
-}
-
-void EffectsHandlerImpl::tabBoxKeyEvent(QKeyEvent* event)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxKeyEvent(event);
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)

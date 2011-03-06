@@ -71,6 +71,9 @@ FlipSwitchEffect::FlipSwitchEffect()
     connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()
@@ -510,7 +513,7 @@ void FlipSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Wi
 //*************************************************************
 // Tabbox handling
 //*************************************************************
-void FlipSwitchEffect::tabBoxAdded(int mode)
+void FlipSwitchEffect::slotTabBoxAdded(int mode)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -525,7 +528,7 @@ void FlipSwitchEffect::tabBoxAdded(int mode)
     }
 }
 
-void FlipSwitchEffect::tabBoxClosed()
+void FlipSwitchEffect::slotTabBoxClosed()
 {
     if (m_active) {
         setActive(false, TabboxMode);
@@ -533,7 +536,7 @@ void FlipSwitchEffect::tabBoxClosed()
     }
 }
 
-void FlipSwitchEffect::tabBoxUpdated()
+void FlipSwitchEffect::slotTabBoxUpdated()
 {
     if (m_active && !m_stop) {
         if (!effects->currentTabBoxWindowList().isEmpty()) {

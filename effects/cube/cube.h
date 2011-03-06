@@ -51,9 +51,6 @@ public:
     virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
                               Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxUpdated();
-    virtual void tabBoxClosed();
 
     // proxy functions
     virtual void* proxy();
@@ -70,6 +67,9 @@ private slots:
     void cubeShortcutChanged(const QKeySequence& seq);
     void cylinderShortcutChanged(const QKeySequence& seq);
     void sphereShortcutChanged(const QKeySequence& seq);
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxUpdated();
+    void slotTabBoxClosed();
 private:
     enum RotationDirection {
         Left,

@@ -353,8 +353,7 @@ void TabBox::reset(bool partial_reset)
         break;
     }
 
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+    emit tabBoxUpdated();
 }
 
 /*!
@@ -363,9 +362,7 @@ void TabBox::reset(bool partial_reset)
 void TabBox::nextPrev(bool next)
 {
     setCurrentIndex(m_tabBox->nextPrev(next), false);
-
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+    emit tabBoxUpdated();
 }
 
 
@@ -448,8 +445,9 @@ void TabBox::TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
         return;
     m_index = index;
     m_tabBox->setCurrentIndex(index);
-    if (effects && notifyEffects)
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+    if (notifyEffects) {
+        emit tabBoxUpdated();
+    }
 }
 
 /*!
@@ -458,8 +456,7 @@ void TabBox::TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
 */
 void TabBox::show()
 {
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxAdded(m_tabBoxMode);
+    emit tabBoxAdded(m_tabBoxMode);
     if (isDisplayed()) {
         m_isShown = false;
         return;
@@ -480,8 +477,7 @@ void TabBox::hide(bool abort)
         m_isShown = false;
         unrefDisplay();
     }
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxClosed();
+    emit tabBoxClosed();
     if (isDisplayed())
         kDebug(1212) << "Tab box was not properly closed by an effect";
     m_index = QModelIndex();
@@ -620,10 +616,9 @@ void TabBox::handleMouseEvent(XEvent* e)
 
 void TabBox::TabBox::grabbedKeyEvent(QKeyEvent* event)
 {
+    emit tabBoxKeyEvent(event);
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
-        if (effects)
-            static_cast<EffectsHandlerImpl*>(effects)->tabBoxKeyEvent(event);
         return;
     }
     setCurrentIndex(m_tabBox->grabbedKeyEvent(event));

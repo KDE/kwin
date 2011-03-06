@@ -126,6 +126,12 @@ public:
 public slots:
     void show();
 
+signals:
+    void tabBoxAdded(int);
+    void tabBoxClosed();
+    void tabBoxUpdated();
+    void tabBoxKeyEvent(QKeyEvent*);
+
 private:
     void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
     void loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig);

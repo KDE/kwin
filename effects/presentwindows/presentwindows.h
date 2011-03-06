@@ -107,12 +107,6 @@ public:
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
 
-    // Tab box
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void tabBoxKeyEvent(QKeyEvent* event);
-
     // atoms
     virtual void propertyNotify(EffectWindow* w, long atom);
 
@@ -161,6 +155,11 @@ public slots:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
+    // Tab box
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxClosed();
+    void slotTabBoxUpdated();
+    void slotTabBoxKeyEvent(QKeyEvent* event);
 
 private slots:
     void closeWindow();
