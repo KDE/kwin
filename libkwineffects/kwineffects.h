@@ -442,7 +442,6 @@ public:
 
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
     virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
@@ -874,6 +873,14 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowUserMovedResized(EffectWindow *w, bool first, bool last);
+    /**
+     * Signal emitted when the windows opacity is changed.
+     * @param w The window whose opacity level is changed.
+     * @param oldOpacity The previous opacity level
+     * @param newOpacity The new opacity level
+     * @since 4.7
+     **/
+    void windowOpacityChanged(EffectWindow *w, qreal oldOpacity, qreal newOpacity);
 
 protected:
     QVector< EffectPair > loaded_effects;

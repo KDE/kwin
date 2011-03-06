@@ -105,9 +105,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     foreach (Client *c, ws->clientList()) {
         connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
         connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
+        connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     }
     foreach (Unmanaged *u, ws->unmanagedList()) {
         connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
+        connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     }
     reconfigure();
 }
@@ -287,26 +289,26 @@ void EffectsHandlerImpl::windowMoveResizeGeometryUpdate(EffectWindow* c, const Q
     ep.second->windowMoveResizeGeometryUpdate(c, geometry);
 }
 
-void EffectsHandlerImpl::windowOpacityChanged(EffectWindow* c, double old_opacity)
+void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 {
-    if (!c)
+    if (t->opacity() == oldOpacity) {
         return;
-    if (static_cast<EffectWindowImpl*>(c)->window()->opacity() == old_opacity)
-        return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowOpacityChanged(c, old_opacity);
+    }
+    emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
 }
 
 void EffectsHandlerImpl::slotClientAdded(Client *c)
 {
     connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
     connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
+    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     emit windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
 {
     connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
+    connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     emit windowAdded(u->effectWindow());
 }
 

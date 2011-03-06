@@ -576,9 +576,8 @@ bool Client::windowEvent(XEvent* e)
         if (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
             if (compositing()) {
                 addRepaintFull();
+                emit opacityChanged(this, old_opacity);
                 scene->windowOpacityChanged(this);
-                if (effects)
-                    static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
                 NETWinInfo2 i(display(), frameId(), rootWindow(), 0);
@@ -1613,9 +1612,8 @@ bool Unmanaged::windowEvent(XEvent* e)
     if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
         if (compositing()) {
             addRepaintFull();
+            emit opacityChanged(this, old_opacity);
             scene->windowOpacityChanged(this);
-            if (effects)
-                static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
         }
     }
     switch(e->type) {

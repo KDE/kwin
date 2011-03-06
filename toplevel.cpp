@@ -318,9 +318,8 @@ void Toplevel::setOpacity(double new_opacity)
     info->setOpacity(static_cast< unsigned long >(new_opacity * 0xffffffff));
     if (compositing()) {
         addRepaintFull();
+        emit opacityChanged(this, old_opacity);
         scene->windowOpacityChanged(this);
-        if (effects)
-            static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
     }
 }
 

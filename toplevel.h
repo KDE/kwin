@@ -135,6 +135,9 @@ public:
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
 
+signals:
+    void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
+
 protected:
     virtual ~Toplevel();
     void setWindowHandles(Window client, Window frame);
