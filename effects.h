@@ -206,6 +206,8 @@ protected Q_SLOTS:
 protected:
     KLibrary* findEffectLibrary(KService* service);
     void effectsChanged();
+    void setupClientConnections(KWin::Client *c);
+    void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     Effect* keyboard_grab_effect;
     QStack<GLRenderTarget*> render_targets;
