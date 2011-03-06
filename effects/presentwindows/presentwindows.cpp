@@ -400,6 +400,13 @@ void PresentWindowsEffect::windowClosed(EffectWindow *w)
         return; // don't rearrange
     }
     rearrangeWindows();
+
+    foreach (EffectWindow * w, m_motionManager.managedWindows()) {
+       DataHash::iterator winData = m_windowData.find( w );
+        if (winData != m_windowData.end() && !winData->deleted)
+           return; // found one that is not deleted? then we go on
+    }
+    setActive(false);     //else no need to keep this open
 }
 
 void PresentWindowsEffect::windowDeleted(EffectWindow *w)
