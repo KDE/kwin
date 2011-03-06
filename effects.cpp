@@ -106,6 +106,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
         connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
         connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
         connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
+        connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     }
     foreach (Unmanaged *u, ws->unmanagedList()) {
         connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
@@ -302,6 +303,7 @@ void EffectsHandlerImpl::slotClientAdded(Client *c)
     connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
     connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
+    connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     emit windowAdded(c->effectWindow());
 }
 
@@ -333,10 +335,12 @@ void EffectsHandlerImpl::slotClientActivated(KWin::Client *c)
     emit windowActivated(c ? c->effectWindow() : NULL);
 }
 
-void EffectsHandlerImpl::windowMinimized(EffectWindow* c)
+void EffectsHandlerImpl::slotClientMinimized(Client *c, bool animate)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowMinimized(c);
+    // TODO: notify effects even if it should not animate?
+    if (animate) {
+        emit windowMinimized(c->effectWindow());
+    }
 }
 
 void EffectsHandlerImpl::windowUnminimized(EffectWindow* c)

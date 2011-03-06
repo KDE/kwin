@@ -35,6 +35,7 @@ MagicLampEffect::MagicLampEffect()
     mActiveAnimations = 0;
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowMinimized(EffectWindow*)), this, SLOT(slotWindowMinimized(EffectWindow*)));
 }
 
 bool MagicLampEffect::supported()
@@ -327,7 +328,7 @@ void MagicLampEffect::slotWindowDeleted(EffectWindow* w)
     mTimeLineWindows.remove(w);
 }
 
-void MagicLampEffect::windowMinimized(EffectWindow* w)
+void MagicLampEffect::slotWindowMinimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;

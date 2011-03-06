@@ -442,7 +442,6 @@ public:
 
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
@@ -881,6 +880,12 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowOpacityChanged(EffectWindow *w, qreal oldOpacity, qreal newOpacity);
+    /**
+     * Signal emitted when a window got minimized.
+     * @param w The window which was minimized
+     * @since 4.7
+     **/
+    void windowMinimized(EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;

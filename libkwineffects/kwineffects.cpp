@@ -123,10 +123,6 @@ void Effect::windowMoveResizeGeometryUpdate(EffectWindow* , const QRect&)
 {
 }
 
-void Effect::windowMinimized(EffectWindow*)
-{
-}
-
 void Effect::windowUnminimized(EffectWindow*)
 {
 }

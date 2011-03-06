@@ -39,13 +39,13 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
 
-    virtual void windowMinimized(EffectWindow* c);
     virtual void windowUnminimized(EffectWindow* c);
 
     static bool supported();
 
 public Q_SLOTS:
     void slotWindowDeleted(EffectWindow *w);
+    void slotWindowMinimized(EffectWindow *w);
 
 private:
     QHash< EffectWindow*, TimeLine > mTimeLineWindows;

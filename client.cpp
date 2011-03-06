@@ -898,8 +898,8 @@ void Client::minimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
-    if (effects && !avoid_animation)   // TODO: Shouldn't it tell effects at least about the change?
-        static_cast<EffectsHandlerImpl*>(effects)->windowMinimized(effectWindow());
+    // TODO: merge signal with s_minimized
+    emit clientMinimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);
