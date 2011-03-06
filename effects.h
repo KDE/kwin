@@ -159,9 +159,6 @@ public:
     // internal (used by kwin core or compositing code)
     void startPaint();
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
-    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
-    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
     void windowDamaged(EffectWindow* w, const QRect& r);
     void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     bool borderActivated(ElectricBorder border);
@@ -184,6 +181,9 @@ public:
 
 public Q_SLOTS:
     void slotWindowUserMovedResized(EffectWindow* c, bool first, bool last);
+    void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old);

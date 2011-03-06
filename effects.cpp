@@ -364,22 +364,19 @@ void EffectsHandlerImpl::slotClientUnminimized(Client* c, bool animate)
     }
 }
 
-void EffectsHandlerImpl::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+void EffectsHandlerImpl::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemSwitched(from, to);
+    emit clientGroupItemSwitched(from, to);
 }
 
-void EffectsHandlerImpl::clientGroupItemAdded(EffectWindow* from, EffectWindow* to)
+void EffectsHandlerImpl::slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemAdded(from, to);
+    emit clientGroupItemAdded(from, to);
 }
 
-void EffectsHandlerImpl::clientGroupItemRemoved(EffectWindow* c, EffectWindow* group)
+void EffectsHandlerImpl::slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemRemoved(c, group);
+    emit clientGroupItemRemoved(c, group);
 }
 
 void EffectsHandlerImpl::slotDesktopChanged(int old)

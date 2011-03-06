@@ -123,18 +123,6 @@ void Effect::windowMoveResizeGeometryUpdate(EffectWindow* , const QRect&)
 {
 }
 
-void Effect::clientGroupItemSwitched(EffectWindow*, EffectWindow*)
-{
-}
-
-void Effect::clientGroupItemAdded(EffectWindow*, EffectWindow*)
-{
-}
-
-void Effect::clientGroupItemRemoved(EffectWindow*, EffectWindow*)
-{
-}
-
 void Effect::windowInputMouseEvent(Window, QEvent*)
 {
 }

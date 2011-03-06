@@ -37,6 +37,7 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
+    connect(effects, SIGNAL(clientGroupItemSwitched(EffectWindow*,EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(EffectWindow*,EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -309,7 +310,7 @@ void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
     }
 }
 
-void SlideBackEffect::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+void SlideBackEffect::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
 {
     clientItemShown = to;
     clientItemHidden = from;

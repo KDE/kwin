@@ -442,9 +442,6 @@ public:
 
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
-    virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
-    virtual void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void windowDamaged(EffectWindow* w, const QRect& r);
     virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
@@ -926,6 +923,9 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void tabBoxKeyEvent(QKeyEvent* event);
+    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
+    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
 
 protected:
     QVector< EffectPair > loaded_effects;
