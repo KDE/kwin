@@ -442,7 +442,6 @@ public:
 
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    virtual void windowUnminimized(EffectWindow* c);
     virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
     virtual void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
@@ -886,6 +885,12 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowMinimized(EffectWindow *w);
+    /**
+     * Signal emitted when a window got unminimized.
+     * @param w The window which was unminimized
+     * @since 4.7
+     **/
+    void windowUnminimized(EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;

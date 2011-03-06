@@ -36,6 +36,7 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -296,7 +297,7 @@ void SlideBackEffect::slotWindowAdded(EffectWindow *w)
     updateStackingOrder();
 }
 
-void SlideBackEffect::windowUnminimized(EffectWindow* w)
+void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
 {
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
     // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not

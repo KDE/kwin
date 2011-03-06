@@ -159,7 +159,6 @@ public:
     // internal (used by kwin core or compositing code)
     void startPaint();
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    void windowUnminimized(EffectWindow* c);
     void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
     void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
@@ -202,6 +201,7 @@ protected Q_SLOTS:
     void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientMinimized(KWin::Client *c, bool animate);
+    void slotClientUnminimized(KWin::Client *c, bool animate);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

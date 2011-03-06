@@ -123,10 +123,6 @@ void Effect::windowMoveResizeGeometryUpdate(EffectWindow* , const QRect&)
 {
 }
 
-void Effect::windowUnminimized(EffectWindow*)
-{
-}
-
 void Effect::clientGroupItemSwitched(EffectWindow*, EffectWindow*)
 {
 }

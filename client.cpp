@@ -928,8 +928,7 @@ void Client::unminimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateAllTiles();
-    if (effects && !avoid_animation)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUnminimized(effectWindow());
+    emit clientUnminimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);

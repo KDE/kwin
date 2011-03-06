@@ -30,6 +30,7 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
     mActiveAnimations = 0;
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(windowMinimized(EffectWindow*)), this, SLOT(slotWindowMinimized(EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
 }
 
 
@@ -125,7 +126,7 @@ void MinimizeAnimationEffect::slotWindowMinimized(EffectWindow* w)
     timeline.setProgress(0.0f);
 }
 
-void MinimizeAnimationEffect::windowUnminimized(EffectWindow* w)
+void MinimizeAnimationEffect::slotWindowUnminimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;

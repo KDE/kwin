@@ -497,6 +497,7 @@ signals:
     void clientClosed(KWin::Client*);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
     void clientMinimized(KWin::Client* client, bool animate);
+    void clientUnminimized(KWin::Client* client, bool animate);
 
     // To make workspace-client calls, a few slots are also
     // required
