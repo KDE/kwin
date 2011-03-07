@@ -430,6 +430,8 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
 
 void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
 {
+    if (w == windowMove)
+        windowMove = 0;
     for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
             it != m_desktopButtonsViews.end(); ++it) {
         if (it.value() && it.value() == w) {
