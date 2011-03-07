@@ -26,11 +26,14 @@ DEALINGS IN THE SOFTWARE.
 #include <kapplication.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kauth.h>
+#include <kdebug.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
 #include <QProcess>
 #include <signal.h>
+#include <errno.h>
 
 int main(int argc, char* argv[])
 {
@@ -75,8 +78,20 @@ int main(int argc, char* argv[])
             QStringList lst;
             lst << hostname << "kill" << QString::number(pid);
             QProcess::startDetached("xon", lst);
-        } else
-            ::kill(pid, SIGKILL);
-        XKillClient(QX11Info::display(), id);
+        } else {
+            if (::kill(pid, SIGKILL) && errno == EPERM) {
+                KAuth::Action killer("org.kde.ksysguard.processlisthelper.sendsignal");
+                killer.setHelperID("org.kde.ksysguard.processlisthelper");
+                killer.addArgument("pid0", pid);
+                killer.addArgument("pidcount", 1);
+                killer.addArgument("signal", SIGKILL);
+                if (killer.isValid()) {
+                    kDebug(1212) << "Using KAuth to kill pid: " << pid;
+                    killer.execute();
+                } else {
+                    kDebug(1212) << "KWin process killer action not valid";
+                }
+            }
+        }
     }
 }
