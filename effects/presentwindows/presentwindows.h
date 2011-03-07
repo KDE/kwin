@@ -74,8 +74,6 @@ private:
         bool referenced;
         double opacity;
         double highlight;
-        int slot;
-        int slot_distance;
         EffectFrame* textFrame;
         EffectFrame* iconFrame;
     };
@@ -185,8 +183,6 @@ protected:
     inline int heightForWidth(EffectWindow *w, int width) {
         return int((width / double(w->width())) * w->height());
     }
-    void assignSlots(EffectWindowList windowlist, const QRect &area, int columns, int rows);
-    void getBestAssignments(EffectWindowList windowlist);
     bool isOverlappingAny(EffectWindow *w, const QHash<EffectWindow*, QRect> &targets, const QRegion &border);
 
     // Filter box
