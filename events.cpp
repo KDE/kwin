@@ -1334,55 +1334,32 @@ static bool waitingMotionEvent()
 // Checks if the mouse cursor is near the edge of the screen and if so activates quick tiling or maximization
 void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
+
+    QuickTileMode mode = QuickTileNone;
     foreach (Kephal::Screen * screen, Kephal::Screens::self()->screens()) {
-        if (screen->geom().contains(QPoint(xroot, yroot))) {
-            if (options->electricBorderTiling() &&
-                    xroot <= screen->geom().x() + 20 &&
-                    yroot > screen->geom().y() + screen->geom().height() / 4 &&
-                    yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot <= screen->geom().x() + 20 &&
-                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricTopLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot <= screen->geom().x() + 20 &&
-                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricBottomLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot > screen->geom().y() + screen->geom().height() / 4 &&
-                      yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricTopRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricBottomRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderMaximize() &&
-                      yroot <= screen->geom().y() + 5 && isMaximizable()) {
-                setElectricBorderMode(ElectricMaximizeMode);
-                setElectricBorderMaximizing(true);
-                return;
-            }
+
+        const QRect &area = screen->geom();
+        if (!area.contains(QPoint(xroot, yroot)))
+            continue;
+
+        if (options->electricBorderTiling()) {
+        if (xroot <= screen->geom().x() + 20)
+            mode |= QuickTileLeft;
+        else if (xroot >= area.x() + area.width() - 20)
+            mode |= QuickTileRight;
         }
+
+        if (mode != QuickTileNone) {
+            if (yroot <= area.y() + area.height() / 4)
+                mode |= QuickTileTop;
+            else if (yroot >= area.y() + area.height() - area.height() / 4)
+                mode |= QuickTileBottom;
+        } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable())
+            mode = QuickTileMaximize;
+        break; // no point in checking other screens to contain this... "point"...
     }
-    setElectricBorderMaximizing(false);
+    setElectricBorderMode(mode);
+    setElectricBorderMaximizing(mode != QuickTileNone);
 }
 
 // return value matters only when filtering events before decoration gets them

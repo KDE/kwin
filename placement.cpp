@@ -705,7 +705,7 @@ void Workspace::slotWindowQuickTileTopLeft()
     if (!active_client) {
         return;
     }
-    active_client->setQuickTileMode(QuickTileTopLeft, true);
+    active_client->setQuickTileMode(QuickTileTop|QuickTileLeft, true);
 }
 
 void Workspace::slotWindowQuickTileTopRight()
@@ -713,7 +713,7 @@ void Workspace::slotWindowQuickTileTopRight()
     if (!active_client) {
         return;
     }
-    active_client->setQuickTileMode(QuickTileTopRight, true);
+    active_client->setQuickTileMode(QuickTileTop|QuickTileRight, true);
 }
 
 void Workspace::slotWindowQuickTileBottomLeft()
@@ -721,7 +721,7 @@ void Workspace::slotWindowQuickTileBottomLeft()
     if (!active_client) {
         return;
     }
-    active_client->setQuickTileMode(QuickTileBottomLeft, true);
+    active_client->setQuickTileMode(QuickTileBottom|QuickTileLeft, true);
 }
 
 void Workspace::slotWindowQuickTileBottomRight()
@@ -729,7 +729,7 @@ void Workspace::slotWindowQuickTileBottomRight()
     if (!active_client) {
         return;
     }
-    active_client->setQuickTileMode(QuickTileBottomRight, true);
+    active_client->setQuickTileMode(QuickTileBottom|QuickTileRight, true);
 }
 
 int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) const

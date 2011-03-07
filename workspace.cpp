@@ -2441,7 +2441,7 @@ void Workspace::showElectricBorderWindowOutline()
     if (!movingClient)
         return;
     // code copied from TabBox::updateOutline() in tabbox.cpp
-    QRect c = movingClient->electricBorderMaximizeGeometry();
+    QRect c = movingClient->electricBorderMaximizeGeometry(cursorPos(), currentDesktop());
     // left/right parts are between top/bottom, they don't reach as far as the corners
     XMoveResizeWindow(QX11Info::display(), outline_left, c.x(), c.y() + 5, 5, c.height() - 10);
     XMoveResizeWindow(QX11Info::display(), outline_right, c.x() + c.width() - 5, c.y() + 5, 5, c.height() - 10);
