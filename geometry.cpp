@@ -2143,10 +2143,17 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     if (!adjust && !(old_mode & MaximizeVertical)) {
         geom_restore.setTop(y());
         geom_restore.setHeight(height());
+        // we can fall from maximize to tiled
+        // TODO unify quicktiling and regular maximization
+        geom_pretile.setTop(y());
+        geom_pretile.setHeight(height());
     }
     if (!adjust && !(old_mode & MaximizeHorizontal)) {
         geom_restore.setLeft(x());
         geom_restore.setWidth(width());
+        // see above
+        geom_pretile.setLeft(x());
+        geom_pretile.setWidth(width());
     }
 
     if (!adjust) {
