@@ -1024,7 +1024,6 @@ void Client::setShade(ShadeMode mode)
         if (isActive())
             workspace()->requestFocus(this);
     }
-    checkMaximizeGeometry();
     info->setState(isShade() ? NET::Shaded : 0, NET::Shaded);
     info->setState(isShown(false) ? 0 : NET::Hidden, NET::Hidden);
     discardWindowPixmap();

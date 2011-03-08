@@ -1595,8 +1595,14 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
 
 void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
-    if (maximizeMode() == MaximizeFull)   // bugs #158974, #252314
-        return; // "maximized" is a user setting -> we do not allow the client to resize itself away from this & against the user wish
+    // "maximized" is a user setting -> we do not allow the client to resize itself
+    // away from this & against the users explicit wish
+    if (maximizeMode() & MaximizeVertical)
+        value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
+    if (maximizeMode() & MaximizeHorizontal)
+        value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+    if (!(value_mask & (CWX|CWWidth|CWY|CWHeight)))
+        return; // nothing to (left) to do for use - bugs #158974, #252314
 
     if (gravity == 0)   // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
@@ -1796,7 +1802,7 @@ bool Client::isResizable() const
     if (isSpecialWindow() || isSplash() || isToolbar())
         return false;
     if (maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows())
-        return false;
+        return isMove();  // for quick tiling - maxmode will be unset if we tile
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
 
@@ -1900,7 +1906,6 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
 
     // keep track of old maximize mode
     // to detect changes
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -1984,7 +1989,6 @@ void Client::plainResize(int w, int h, ForceGeometry_t force, bool emitJs)
 
     sendSyntheticConfigureNotify();
     updateWindowRules();
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -2031,7 +2035,6 @@ void Client::move(int x, int y, ForceGeometry_t force)
     XMoveWindow(display(), frameId(), x, y);
     sendSyntheticConfigureNotify();
     updateWindowRules();
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -2137,11 +2140,11 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         setNoBorder(app_noborder || max_mode == MaximizeFull);
 
     // save sizes for restoring, if maximalizing
-    if (!adjust && !(y() == clientArea.top() && height() == clientArea.height())) {
+    if (!adjust && !(old_mode & MaximizeVertical)) {
         geom_restore.setTop(y());
         geom_restore.setHeight(height());
     }
-    if (!adjust && !(x() == clientArea.left() && width() == clientArea.width())) {
+    if (!adjust && !(old_mode & MaximizeHorizontal)) {
         geom_restore.setLeft(x());
         geom_restore.setWidth(width());
     }
@@ -2296,38 +2299,6 @@ void Client::resetMaximize()
         setGeometry(geometry(), ForceGeometrySet);
     if (decoration != NULL)
         decoration->maximizeChange();
-}
-
-void Client::checkMaximizeGeometry()
-{
-    // when adding new bail-out conditions here, checkMaximizeGeometry() needs to be called
-    // when after the condition is no longer true
-    if (isShade())
-        return;
-    if (isMove() || isResize())  // this is because of the option to disallow moving/resizing of max-ed windows
-        return;
-    // Just in case.
-    static int recursion_protection = 0;
-    if (recursion_protection > 3) {
-        kWarning(1212) << "Check maximize overflow - you loose!" ;
-        kWarning(1212) << kBacktrace() ;
-        return;
-    }
-    ++recursion_protection;
-    QRect max_area = workspace()->clientArea(MaximizeArea, this);
-    if (geometry() == max_area) {
-        if (max_mode != MaximizeFull)
-            maximize(MaximizeFull);
-    } else if (x() == max_area.left() && width() == max_area.width()) {
-        if (max_mode != MaximizeHorizontal)
-            maximize(MaximizeHorizontal);
-    } else if (y() == max_area.top() && height() == max_area.height()) {
-        if (max_mode != MaximizeVertical)
-            maximize(MaximizeVertical);
-    } else if (max_mode != MaximizeRestore) {
-        resetMaximize(); // not maximize( MaximizeRestore ), that'd change geometry - this is called from setGeometry()
-    }
-    --recursion_protection;
 }
 
 bool Client::isFullScreenable(bool fullscreen_hack) const
@@ -2610,8 +2581,8 @@ bool Client::startMoveResize()
                          double(moveOffset.y()) / double(before.height()) * double(geom_restore.height())
                      );
     }
-    if (maximizeMode() != MaximizeRestore)
-        resetMaximize(); // TODO: I have no idea what this does... Is it needed?
+//     if (maximizeMode() != MaximizeRestore)
+//         resetMaximize(); // TODO: I have no idea what this does... Is it needed?
     if (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter) { // Cannot use isMove() yet
         // Exit quick tile mode when the user attempts to move a tiled window
         const QRect before = geometry();
@@ -2752,7 +2723,6 @@ void Client::finishMoveResize(bool cancel)
         electricMaximizing = false;
         workspace()->hideElectricBorderWindowOutline();
     }
-    checkMaximizeGeometry();
 // FRAME    update();
 
     Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
@@ -3238,7 +3208,6 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (maximizeMode() == MaximizeFull) {
         setMaximize(false, false);
-        checkMaximizeGeometry();
 
         QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
 

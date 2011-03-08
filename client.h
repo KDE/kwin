@@ -506,7 +506,6 @@ private:
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
     void changeMaximize(bool horizontal, bool vertical, bool adjust);
-    void checkMaximizeGeometry();
     int checkFullScreenHack(const QRect& geom) const;   // 0 - None, 1 - One xinerama screen, 2 - Full area
     void updateFullScreenHack(const QRect& geom);
     void getWmNormalHints();
