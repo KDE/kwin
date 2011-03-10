@@ -329,6 +329,8 @@ QRegion SceneOpenGL::Texture::optimizeBindDamage(const QRegion& reg, int limit)
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
                                 int depth)
 {
+    if (pix == None)
+        return false;
     return load(pix, size, depth,
                 QRegion(0, 0, size.width(), size.height()));
 }

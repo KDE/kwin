@@ -232,6 +232,10 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     Q_UNUSED(size)
     Q_UNUSED(depth)
     Q_UNUSED(region)
+
+    if (pix == None)
+        return false;
+
     if (mTexture == None) {
         createTexture();
         bind();
@@ -245,6 +249,12 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
         };
         EGLImageKHR image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
                                               (EGLClientBuffer)pix, attribs);
+
+        if (EGL_NO_IMAGE_KHR == image) {
+            kDebug(1212) << "failed to create egl image";
+            unbind();
+            return false;
+        }
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
         eglDestroyImageKHR(dpy, image);
         unbind();
