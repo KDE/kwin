@@ -498,6 +498,7 @@ signals:
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);
+    void clientGeometryShapeChanged(KWin::Client* client, const QRect& old);
 
     // To make workspace-client calls, a few slots are also
     // required

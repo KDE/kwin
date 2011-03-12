@@ -1913,8 +1913,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
         discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+        emit clientGeometryShapeChanged(this, geom_before_block);
     }
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
@@ -1991,8 +1990,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force, bool emitJs)
     discardWindowPixmap();
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+    emit clientGeometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
     addWorkspaceRepaint(deco_rect);

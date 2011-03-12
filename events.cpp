@@ -1636,8 +1636,7 @@ bool Unmanaged::windowEvent(XEvent* e)
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
             if (scene != NULL)
                 scene->windowGeometryShapeChanged(this);
-            if (effects != NULL)
-                static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+            emit unmanagedGeometryShapeChanged(this, geometry());
         }
 #ifdef HAVE_XDAMAGE
         if (e->type == Extensions::damageNotifyEvent())
@@ -1672,8 +1671,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
             discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), old);
+        emit unmanagedGeometryShapeChanged(this, old);
     }
 }
 

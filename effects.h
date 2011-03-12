@@ -160,7 +160,6 @@ public:
     void startPaint();
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     void windowDamaged(EffectWindow* w, const QRect& r);
-    void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     bool borderActivated(ElectricBorder border);
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
@@ -197,6 +196,8 @@ protected Q_SLOTS:
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientMinimized(KWin::Client *c, bool animate);
     void slotClientUnminimized(KWin::Client *c, bool animate);
+    void slotClientGeometryShapeChanged(KWin::Client *c, const QRect &old);
+    void slotUnmanagedGeometryShapeChanged(KWin::Unmanaged *u, const QRect &old);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

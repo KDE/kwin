@@ -139,10 +139,6 @@ void Effect::windowDamaged(EffectWindow*, const QRect&)
 {
 }
 
-void Effect::windowGeometryShapeChanged(EffectWindow*, const QRect&)
-{
-}
-
 bool Effect::borderActivated(ElectricBorder)
 {
     return false;

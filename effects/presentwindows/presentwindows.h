@@ -102,7 +102,6 @@ public:
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
 
     // User interaction
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual bool borderActivated(ElectricBorder border);
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -155,6 +154,7 @@ public slots:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
+    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
     // Tab box
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();

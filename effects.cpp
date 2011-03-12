@@ -134,12 +134,14 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
+    connect(c, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), this, SLOT(slotClientGeometryShapeChanged(KWin::Client*,QRect)));
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
 {
     connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
     connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
+    connect(u, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), this, SLOT(slotUnmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)));
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -395,12 +397,22 @@ void EffectsHandlerImpl::windowDamaged(EffectWindow* w, const QRect& r)
     ep.second->windowDamaged(w, r);
 }
 
-void EffectsHandlerImpl::windowGeometryShapeChanged(EffectWindow* w, const QRect& old)
+void EffectsHandlerImpl::slotClientGeometryShapeChanged(Client* c, const QRect& old)
 {
-    if (w == NULL)   // during late cleanup effectWindow() may be already NULL
-        return;     // in some functions that may still call this
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowGeometryShapeChanged(w, old);
+    // during late cleanup effectWindow() may be already NULL
+    // in some functions that may still call this
+    if (c == NULL || c->effectWindow() == NULL)
+        return;
+    emit windowGeometryShapeChanged(c->effectWindow(), old);
+}
+
+void EffectsHandlerImpl::slotUnmanagedGeometryShapeChanged(Unmanaged* u, const QRect& old)
+{
+    // during late cleanup effectWindow() may be already NULL
+    // in some functions that may still call this
+    if (u == NULL || u->effectWindow() == NULL)
+        return;
+    emit windowGeometryShapeChanged(u->effectWindow(), old);
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)

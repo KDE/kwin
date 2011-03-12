@@ -444,7 +444,6 @@ public:
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void windowDamaged(EffectWindow* w, const QRect& r);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
@@ -856,14 +855,29 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowDeleted(EffectWindow *w);
-    /** Signal emitted when window moved/resized or once after it's finished.
+    /**
+     * Signal emitted when window moved/resized or once after it's finished.
      * If both @p first and @p last are true, @p w got maximized/restored.
+     * This signal is emitted during user interaction and not when the window
+     * changes it's size itself. The latter case triggers the windowGeometryShapeChanged signal.
      * @param w The window which is being moved or resized
      * @param first @c true if first change
      * @param last @c true if last change, that is move/resize finished.
+     * @see windowGeometryShapeChanged
      * @since 4.7
      **/
     void windowUserMovedResized(EffectWindow *w, bool first, bool last);
+    /**
+     * Signal emitted when the geometry or shape of a window changed.
+     * This is caused if the window changes geometry without user interaction.
+     * E.g. the decoration is changed. This is in opposite to windowUserMovedResized
+     * which is caused by direct user interaction.
+     * @param w The window whose geometry changed
+     * @param old The previous geometry
+     * @see windowUserMovedResized
+     * @since 4.7
+     **/
+    void windowGeometryShapeChanged(EffectWindow *w, const QRect &old);
     /**
      * Signal emitted when the windows opacity is changed.
      * @param w The window whose opacity level is changed.

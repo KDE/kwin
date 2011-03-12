@@ -366,8 +366,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
             discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        emit clientGeometryShapeChanged(this, oldgeom);
     } else
         destroyDecoration();
     if (check_workspace_pos)
@@ -396,8 +395,9 @@ void Client::destroyDecoration()
             discardWindowPixmap();
         if (scene != NULL && !deleting)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL && !deleting)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        if (!deleting) {
+            emit clientGeometryShapeChanged(this, oldgeom);
+        }
     }
 }
 
@@ -739,8 +739,7 @@ void Client::updateShape()
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
 }
 
 static Window shape_helper_window = None;
@@ -818,8 +817,7 @@ void Client::setMask(const QRegion& reg, int mode)
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
     updateShape();
 }
 

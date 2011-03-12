@@ -44,10 +44,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void windowDamaged(EffectWindow* w, const QRect& damage);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
 private slots:
     void toggleCurrentThumbnail();
     void slotWindowClosed(EffectWindow *w);
+    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
 private:
     void addThumbnail(EffectWindow* w);
     void removeThumbnail(EffectWindow* w);
