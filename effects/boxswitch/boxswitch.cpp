@@ -62,6 +62,7 @@ BoxSwitchEffect::BoxSwitchEffect()
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
     connect(effects, SIGNAL(windowGeometryShapeChanged(EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
 }
 
 BoxSwitchEffect::~BoxSwitchEffect()
@@ -255,7 +256,7 @@ void BoxSwitchEffect::windowInputMouseEvent(Window w, QEvent* e)
     }
 }
 
-void BoxSwitchEffect::windowDamaged(EffectWindow* w, const QRect& damage)
+void BoxSwitchEffect::slotWindowDamaged(EffectWindow* w, const QRect& damage)
 {
     Q_UNUSED(damage);
     if (mActivated) {

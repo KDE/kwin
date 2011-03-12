@@ -45,6 +45,7 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -110,7 +111,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
     }
 } // End of function
 
-void TaskbarThumbnailEffect::windowDamaged(EffectWindow* w, const QRect& damage)
+void TaskbarThumbnailEffect::slotWindowDamaged(EffectWindow* w, const QRect& damage)
 {
     Q_UNUSED(damage);
     // Update the thumbnail if the window was damaged

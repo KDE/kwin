@@ -135,10 +135,6 @@ void Effect::propertyNotify(EffectWindow* , long)
 {
 }
 
-void Effect::windowDamaged(EffectWindow*, const QRect&)
-{
-}
-
 bool Effect::borderActivated(ElectricBorder)
 {
     return false;

@@ -825,7 +825,7 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     r &= rect();
     damage_region += r;
     repaints_region += r;
-    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged(effectWindow(), r);
+    emit damaged(this, r);
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
@@ -845,7 +845,7 @@ void Toplevel::addDamageFull()
         return;
     damage_region = rect();
     repaints_region = rect();
-    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged(effectWindow(), rect());
+    emit damaged(this, rect());
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);

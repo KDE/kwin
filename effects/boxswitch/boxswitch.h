@@ -53,7 +53,6 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void windowDamaged(EffectWindow* w, const QRect& damage);
     virtual void* proxy();
     void activateFromProxy(int mode, bool animate, bool showText, float positioningFactor);
     void paintWindowsBox(const QRegion& region);
@@ -64,6 +63,7 @@ public Q_SLOTS:
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
     void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void slotWindowDamaged(EffectWindow* w, const QRect& damage);
 
 private:
     class ItemInfo;

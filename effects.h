@@ -159,7 +159,6 @@ public:
     // internal (used by kwin core or compositing code)
     void startPaint();
     void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    void windowDamaged(EffectWindow* w, const QRect& r);
     bool borderActivated(ElectricBorder border);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
@@ -195,6 +194,7 @@ protected Q_SLOTS:
     void slotClientUnminimized(KWin::Client *c, bool animate);
     void slotClientGeometryShapeChanged(KWin::Client *c, const QRect &old);
     void slotUnmanagedGeometryShapeChanged(KWin::Unmanaged *u, const QRect &old);
+    void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

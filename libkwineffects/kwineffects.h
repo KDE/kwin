@@ -443,7 +443,6 @@ public:
     /** called when the geometry changed during moving/resizing. */
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void windowDamaged(EffectWindow* w, const QRect& r);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     /**
      Receives events registered for using EffectsHandler::registerPropertyType().
@@ -895,6 +894,14 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void windowUnminimized(EffectWindow *w);
+    /**
+     * Signal emitted when an area of a window is scheduled for repainting.
+     * Use this signal in an effect if another area needs to be synced as well.
+     * @param w The window which is scheduled for repainting
+     * @param r The damaged rect
+     * @since 4.7
+     **/
+    void windowDamaged(EffectWindow *w, const QRect &r);
     /**
      * Signal emitted when a tabbox is added.
      * An effect who wants to replace the tabbox with itself should use @link refTabBox.

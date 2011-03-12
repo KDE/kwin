@@ -137,6 +137,7 @@ public:
 
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
+    void damaged(KWin::Toplevel* toplevel, const QRect& damage);
 
 protected:
     virtual ~Toplevel();

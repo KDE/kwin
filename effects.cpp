@@ -137,6 +137,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), this, SLOT(slotClientGeometryShapeChanged(KWin::Client*,QRect)));
+    connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -144,6 +145,7 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
     connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(u, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), this, SLOT(slotUnmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)));
+    connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -391,12 +393,9 @@ void EffectsHandlerImpl::slotDesktopChanged(int old)
     }
 }
 
-void EffectsHandlerImpl::windowDamaged(EffectWindow* w, const QRect& r)
+void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
 {
-    if (w == NULL)
-        return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowDamaged(w, r);
+    emit windowDamaged(t->effectWindow(), r);
 }
 
 void EffectsHandlerImpl::slotClientGeometryShapeChanged(Client* c, const QRect& old)
