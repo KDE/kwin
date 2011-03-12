@@ -103,6 +103,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
     connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
+    connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
     connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
@@ -433,14 +435,6 @@ bool EffectsHandlerImpl::borderActivated(ElectricBorder border)
     if (ep.second->borderActivated(border))
         ret = true; // bail out or tell all?
     return ret;
-}
-
-void EffectsHandlerImpl::mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->mouseChanged(pos, oldpos, buttons, oldbuttons, modifiers, oldmodifiers);
 }
 
 bool EffectsHandlerImpl::grabKeyboard(Effect* effect)

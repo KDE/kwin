@@ -48,8 +48,6 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
-                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
 
     // proxy functions
@@ -70,6 +68,8 @@ private slots:
     void slotTabBoxAdded(int mode);
     void slotTabBoxUpdated();
     void slotTabBoxClosed();
+    void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private:
     enum RotationDirection {
         Left,

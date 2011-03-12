@@ -42,9 +42,6 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
-    virtual void mouseChanged(const QPoint& pos, const QPoint& old,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private slots:
     void zoomIn();
     void zoomOut();
@@ -57,6 +54,9 @@ private slots:
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
     void focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight);
+    void slotMouseChanged(const QPoint& pos, const QPoint& old,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private:
     void showCursor();
     void hideCursor();

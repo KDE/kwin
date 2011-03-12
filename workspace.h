@@ -929,6 +929,9 @@ signals:
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
     void init();

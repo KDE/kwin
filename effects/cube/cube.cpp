@@ -106,6 +106,8 @@ CubeEffect::CubeEffect()
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
 
     reconfigure(ReconfigureAll);
 }
@@ -1868,7 +1870,7 @@ void CubeEffect::setActive(bool active)
     }
 }
 
-void CubeEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
                               Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (!activated)

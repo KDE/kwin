@@ -59,6 +59,8 @@ TrackMouseEffect::TrackMouseEffect()
     action->setGlobalShortcut(KShortcut());
 
     connect(action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 }
 
@@ -169,7 +171,7 @@ void TrackMouseEffect::toggle()
         effects->addRepaint(starRect(i));
 }
 
-void TrackMouseEffect::mouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
+void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
                                     Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
     if (modifier != 0 && modifiers == modifier) {

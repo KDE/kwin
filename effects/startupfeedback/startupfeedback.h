@@ -41,7 +41,6 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
-    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
     static bool supported();
 
@@ -49,6 +48,7 @@ private Q_SLOTS:
     void gotNewStartup(const KStartupInfoId& id, const KStartupInfoData& data);
     void gotRemoveStartup(const KStartupInfoId& id, const KStartupInfoData& data);
     void gotStartupChange(const KStartupInfoId& id, const KStartupInfoData& data);
+    void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
     enum FeedbackType {

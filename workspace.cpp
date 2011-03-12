@@ -2857,10 +2857,11 @@ void Workspace::checkCursorPos()
     QPoint last = last_cursor_pos;
     int lastb = last_buttons;
     cursorPos(); // Update if needed
-    if (last != last_cursor_pos || lastb != last_buttons)
-        static_cast<EffectsHandlerImpl*>(effects)->mouseChanged(cursorPos(), last,
-                x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
-                x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    if (last != last_cursor_pos || lastb != last_buttons) {
+        emit mouseChanged(last_cursor_pos, last,
+            x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
+            x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    }
 }
 
 int Workspace::indexOfClientGroup(ClientGroup* group)

@@ -53,6 +53,8 @@ MouseMarkEffect::MouseMarkEffect()
     a->setText(i18n("Clear Last Mouse Mark"));
     a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
     arrow_start = NULL_POINT;
     effects->startMousePolling(); // We require it to detect activation as well
@@ -117,7 +119,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
 #endif
 }
 
-void MouseMarkEffect::mouseChanged(const QPoint& pos, const QPoint&,
+void MouseMarkEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
                                    Qt::MouseButtons, Qt::MouseButtons,
                                    Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {

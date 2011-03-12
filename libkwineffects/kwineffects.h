@@ -444,9 +444,6 @@ public:
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void windowDamaged(EffectWindow* w, const QRect& r);
-    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     /**
      Receives events registered for using EffectsHandler::registerPropertyType().
@@ -940,6 +937,22 @@ Q_SIGNALS:
     void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
     void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
+    /**
+     * Signal emitted when mouse changed.
+     * If an effect needs to get updated mouse positions, it needs to first call @link startMousePolling.
+     * For a fullscreen effect it is better to use an input window and react on @link windowInputMouseEvent.
+     * @param pos The new mouse position
+     * @param oldpos The previously mouse position
+     * @param buttons The pressed mouse buttons
+     * @param oldbuttons The previously pressed mouse buttons
+     * @param modifiers Pressed keyboard modifiers
+     * @param oldmodifiers Previously pressed keyboard modifiers.
+     * @see startMousePolling
+     * @since 4.7
+     **/
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 protected:
     QVector< EffectPair > loaded_effects;

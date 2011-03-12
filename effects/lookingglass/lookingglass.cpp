@@ -64,6 +64,8 @@ LookingGlassEffect::LookingGlassEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 }
 
@@ -214,7 +216,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void LookingGlassEffect::mouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
+void LookingGlassEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
                                       Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (pos != old && m_enabled) {

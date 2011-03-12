@@ -144,11 +144,6 @@ bool Effect::borderActivated(ElectricBorder)
     return false;
 }
 
-void Effect::mouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
-                          Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
-{
-}
-
 void Effect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     effects->prePaintScreen(data, time);
