@@ -39,12 +39,12 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
     // TODO react also on virtual desktop changes
-    virtual void propertyNotify(EffectWindow* w, long a);
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *c);
     void slotWindowClosed(EffectWindow *c);
     void slotWindowDeleted(EffectWindow *w);
+    void slotPropertyNotify(EffectWindow *w, long a);
 private:
     enum Position {
         West = 0,

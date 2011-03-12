@@ -105,6 +105,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
     connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
     connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
@@ -138,6 +139,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), this, SLOT(slotClientGeometryShapeChanged(KWin::Client*,QRect)));
     connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
+    connect(c, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -146,6 +148,7 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(u, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), this, SLOT(slotUnmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)));
     connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
+    connect(u, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -492,12 +495,18 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
     return keyboard_grab_effect != NULL;
 }
 
-void EffectsHandlerImpl::propertyNotify(EffectWindow* c, long atom)
+void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
 {
     if (!registered_atoms.contains(atom))
         return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->propertyNotify(c, atom);
+    emit propertyNotify(t->effectWindow(), atom);
+}
+
+void EffectsHandlerImpl::slotPropertyNotify(long int atom)
+{
+    if (!registered_atoms.contains(atom))
+        return;
+    emit propertyNotify(NULL, atom);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)

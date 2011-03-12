@@ -106,9 +106,6 @@ public:
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
 
-    // atoms
-    virtual void propertyNotify(EffectWindow* w, long atom);
-
     enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
     enum PresentWindowsMode {
         ModeAllDesktops, // Shows windows of all desktops
@@ -160,6 +157,8 @@ public slots:
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
     void slotTabBoxKeyEvent(QKeyEvent* event);
+    // atoms
+    void slotPropertyNotify(EffectWindow* w, long atom);
 
 private slots:
     void closeWindow();

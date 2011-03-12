@@ -932,6 +932,7 @@ signals:
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void propertyNotify(long a);
 
 private:
     void init();

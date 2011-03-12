@@ -162,7 +162,6 @@ public:
     bool borderActivated(ElectricBorder border);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
-    void propertyNotify(EffectWindow* c, long atom);
 
     bool loadEffect(const QString& name);
     void toggleEffect(const QString& name);
@@ -195,6 +194,8 @@ protected Q_SLOTS:
     void slotClientGeometryShapeChanged(KWin::Client *c, const QRect &old);
     void slotUnmanagedGeometryShapeChanged(KWin::Unmanaged *u, const QRect &old);
     void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
+    void slotPropertyNotify(KWin::Toplevel *t, long atom);
+    void slotPropertyNotify(long atom);
 
 protected:
     KLibrary* findEffectLibrary(KService* service);

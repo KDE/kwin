@@ -46,6 +46,7 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -123,7 +124,7 @@ void TaskbarThumbnailEffect::slotWindowDamaged(EffectWindow* w, const QRect& dam
 
 void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
 {
-    propertyNotify(w, atom);   // read initial value
+    slotPropertyNotify(w, atom);   // read initial value
 }
 
 void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
@@ -131,7 +132,7 @@ void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
     thumbnails.remove(w);
 }
 
-void TaskbarThumbnailEffect::propertyNotify(EffectWindow* w, long a)
+void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != atom)
         return;

@@ -63,6 +63,7 @@ LogoutEffect::LogoutEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 LogoutEffect::~LogoutEffect()
@@ -366,7 +367,7 @@ void LogoutEffect::renderVignetting()
 }
 #endif
 
-void LogoutEffect::propertyNotify(EffectWindow* w, long a)
+void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (w || a != logoutAtom)
         return; // Not our atom

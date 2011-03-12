@@ -41,6 +41,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
@@ -136,7 +137,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
-    propertyNotify(w, mAtom);
+    slotPropertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
         mAppearingWindows[ w ].setDuration(mWindowsData[ w ].fadeInDuration);
         mAppearingWindows[ w ].setProgress(0.0);
@@ -151,7 +152,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 
 void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 {
-    propertyNotify(w, mAtom);
+    slotPropertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {
         w->refWindow();
         mAppearingWindows.remove(w);
@@ -174,7 +175,7 @@ void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
     effects->addRepaint(w->geometry());
 }
 
-void SlidingPopupsEffect::propertyNotify(EffectWindow* w, long a)
+void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != mAtom)
         return;

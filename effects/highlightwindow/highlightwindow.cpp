@@ -41,6 +41,7 @@ HighlightWindowEffect::HighlightWindowEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -115,7 +116,7 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
         else
             m_windowOpacity[w] = 1.0;
     }
-    propertyNotify(w, m_atom);   // Check initial value
+    slotPropertyNotify(w, m_atom);   // Check initial value
 }
 
 void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
@@ -129,7 +130,7 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
     m_windowOpacity.remove(w);
 }
 
-void HighlightWindowEffect::propertyNotify(EffectWindow* w, long a)
+void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (a != m_atom)
         return; // Not our atom

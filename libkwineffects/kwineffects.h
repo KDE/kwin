@@ -444,14 +444,6 @@ public:
     virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    /**
-     Receives events registered for using EffectsHandler::registerPropertyType().
-     Use readProperty() to get the property data.
-     Note that the property may be already set on the window, so doing the same
-     processing from windowAdded() (e.g. simply calling propertyNotify() from it)
-     is usually needed.
-     */
-    virtual void propertyNotify(EffectWindow* w, long atom);
 
     virtual bool borderActivated(ElectricBorder border);
 
@@ -960,6 +952,17 @@ Q_SIGNALS:
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    /**
+     * Receives events registered for using @link registerPropertyType.
+     * Use readProperty() to get the property data.
+     * Note that the property may be already set on the window, so doing the same
+     * processing from windowAdded() (e.g. simply calling propertyNotify() from it)
+     * is usually needed.
+     * @param w The window whose property changed, is @c null if it is a root window property
+     * @param atom The property
+     * @since 4.7
+     */
+    void propertyNotify(EffectWindow* w, long atom);
 
 protected:
     QVector< EffectPair > loaded_effects;

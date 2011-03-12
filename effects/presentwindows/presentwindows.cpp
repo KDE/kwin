@@ -106,6 +106,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
     connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -741,7 +742,7 @@ void PresentWindowsEffect::slotTabBoxKeyEvent(QKeyEvent* event)
 
 //-----------------------------------------------------------------------------
 // Atom handling
-void PresentWindowsEffect::propertyNotify(EffectWindow* w, long a)
+void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || (a != m_atomDesktop && a != m_atomWindows))
         return; // Not our atom
