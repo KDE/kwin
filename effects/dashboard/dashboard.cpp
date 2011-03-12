@@ -176,8 +176,6 @@ void DashboardEffect::slotWindowActivated(EffectWindow *w)
 
 void DashboardEffect::slotWindowAdded(EffectWindow* w)
 {
-    propertyNotify(w, atom);
-
     if (isDashboard(w)) {
         // Tell other windowAdded() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -192,8 +190,6 @@ void DashboardEffect::slotWindowAdded(EffectWindow* w)
 
 void DashboardEffect::slotWindowClosed(EffectWindow* w)
 {
-    propertyNotify(w, atom);
-
     if (isDashboard(w)) {
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
