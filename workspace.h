@@ -310,15 +310,6 @@ public:
      */
     int desktopToLeft(int id = 0, bool wrap = true) const;
 
-    /**
-     * @returns Whether or not the layout is allowed to be modified by the user.
-     */
-    bool isDesktopLayoutDynamic() const;
-    /**
-     * Sets whether or not this layout can be modified by the user.
-     */
-    void setDesktopLayoutDynamicity(bool dynamicity);
-
 private:
     int desktopCount_;
     QSize desktopGridSize_;
@@ -326,7 +317,6 @@ private:
     int currentDesktop_;
     QString activity_;
     QStringList allActivities_;
-    bool desktopLayoutDynamicity_;
 
     KActivityController activityController_;
 
@@ -1307,16 +1297,6 @@ inline int Workspace::currentDesktop() const
 inline int Workspace::desktopAtCoords(QPoint coords) const
 {
     return desktopGrid_[coords.y() * desktopGridSize_.width() + coords.x()];
-}
-
-inline bool Workspace::isDesktopLayoutDynamic() const
-{
-    return desktopLayoutDynamicity_;
-}
-
-inline void Workspace::setDesktopLayoutDynamicity(bool dynamicity)
-{
-    desktopLayoutDynamicity_ = dynamicity;
 }
 
 //---------------------------------------------------------

@@ -83,7 +83,6 @@ public:
     virtual int desktopToRight(int desktop = 0, bool wrap = true) const;
     virtual int desktopBelow(int desktop = 0, bool wrap = true) const;
     virtual int desktopToLeft(int desktop = 0, bool wrap = true) const;
-    virtual bool isDesktopLayoutDynamic() const;
     virtual QString desktopName(int desktop) const;
     virtual bool optionRollOverDesktops() const;
 

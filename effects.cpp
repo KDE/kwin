@@ -677,11 +677,6 @@ int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
     return Workspace::self()->desktopToLeft(desktop, wrap);
 }
 
-bool EffectsHandlerImpl::isDesktopLayoutDynamic() const
-{
-    return Workspace::self()->isDesktopLayoutDynamic();
-}
-
 QString EffectsHandlerImpl::desktopName(int desktop) const
 {
     return Workspace::self()->desktopName(desktop);

@@ -100,7 +100,6 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
-    , desktopLayoutDynamicity_(false)
     , tilingEnabled_(false)
     // Unsorted
     , active_popup(NULL)

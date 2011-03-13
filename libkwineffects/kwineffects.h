@@ -663,10 +663,6 @@ public:
      * right of the layout if @a wrap is set. If @a id is not set use the current one.
      */
     virtual int desktopToLeft(int desktop = 0, bool wrap = true) const = 0;
-    /**
-     * @returns Whether or not the desktop layout is allowed to be modified by the user.
-     */
-    virtual bool isDesktopLayoutDynamic() const = 0;
     virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 
