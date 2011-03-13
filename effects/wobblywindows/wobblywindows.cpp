@@ -168,6 +168,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
+    connect(effects, SIGNAL(windowMaximizedStateChanged(EffectWindow*,bool,bool)), this, SLOT(slotWindowMaximizeStateChanged(EffectWindow*,bool,bool)));
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -390,6 +391,24 @@ void WobblyWindowsEffect::slotWindowUserMovedResized(EffectWindow* w, bool first
     }
 }
 
+void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical)
+{
+    if (!m_moveEffectEnabled || w->isSpecialWindow())
+        return;
+
+    if (m_moveWobble && m_resizeWobble) {
+        stepMovedResized(w);
+    }
+
+    if (windows.contains(w)) {
+        WindowWobblyInfos& wwi = windows[w];
+        QRect rect = w->geometry();
+        if (rect.y() != wwi.resize_original_rect.y()) wwi.can_wobble_top = true;
+        if (rect.x() != wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
+        if (rect.right() != wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
+        if (rect.bottom() != wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
+    }
+}
 
 void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
 {

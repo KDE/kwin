@@ -60,6 +60,7 @@ public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical);
 
 private:
 

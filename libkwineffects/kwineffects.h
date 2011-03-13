@@ -856,6 +856,19 @@ Q_SIGNALS:
      **/
     void windowUserMovedResized(EffectWindow *w, bool first, bool last);
     /**
+     * Signal emitted when the maximized state of the window @p w changed.
+     * A window can be in one of four states:
+     * @li restored: both @p horizontal and @p vertical are @c false
+     * @li horizontally maximized: @p horizontal is @c true and @p vertical is @c false
+     * @li vertically maximized: @p horizontal is @c false and @p vertical is @c true
+     * @li completely maximized: both @p horizontal and @p vertical are @C true
+     * @param w The window whose maximized state changed
+     * @param horizontal If @c true maximized horizontally
+     * @param vertical If @c true maximized vertically
+     * @since 4.7
+     **/
+    void windowMaximizedStateChanged(EffectWindow *w, bool horizontal, bool vertical);
+    /**
      * Signal emitted when the geometry or shape of a window changed.
      * This is caused if the window changes geometry without user interaction.
      * E.g. the decoration is changed. This is in opposite to windowUserMovedResized

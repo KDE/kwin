@@ -302,7 +302,25 @@ void EffectsHandlerImpl::startPaint()
 
 void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
 {
-    emit windowUserMovedResized(c->effectWindow(), true, true);
+    bool horizontal = false;
+    bool vertical = false;
+    switch (maxMode) {
+    case KDecorationDefines::MaximizeHorizontal:
+        horizontal = true;
+        break;
+    case KDecorationDefines::MaximizeVertical:
+        vertical = true;
+        break;
+    case KDecorationDefines::MaximizeFull:
+        horizontal = true;
+        vertical = true;
+        break;
+    case KDecorationDefines::MaximizeRestore: // fall through
+    default:
+        // default - nothing to do
+        break;
+    }
+    emit windowMaximizedStateChanged(c->effectWindow(), horizontal, vertical);
 }
 
 void EffectsHandlerImpl::slotWindowUserMovedResized(EffectWindow* c, bool first, bool last)
