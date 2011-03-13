@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
-#include "effects.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #include "tabbox.h"

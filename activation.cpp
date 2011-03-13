@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "group.h"
 #include "rules.h"
-#include "effects.h"
 #include <QX11Info>
 
 namespace KWin

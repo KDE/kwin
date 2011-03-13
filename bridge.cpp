@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "options.h"
-#include "effects.h"
 
 #include <kconfiggroup.h>
 
