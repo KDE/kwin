@@ -59,7 +59,9 @@ public:
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
-    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void slotWindowStartUserMovedResized(EffectWindow *w);
+    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
     void slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical);
 
 private:

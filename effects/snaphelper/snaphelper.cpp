@@ -36,7 +36,8 @@ SnapHelperEffect::SnapHelperEffect()
     m_timeline.setCurveShape(TimeLine::LinearCurve);
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
-    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
+    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
 
     /*if ( effects->compositingType() == XRenderCompositing )
         {
@@ -197,14 +198,22 @@ void SnapHelperEffect::slotWindowClosed(EffectWindow* w)
     }
 }
 
-void SnapHelperEffect::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
+void SnapHelperEffect::slotWindowStartUserMovedResized(EffectWindow *w)
 {
-    if (first && !last && w->isMovable()) {
+    if (w->isMovable()) {
         m_active = true;
         m_window = w;
         effects->addRepaintFull();
-    } else if (last)
+    }
+}
+
+void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
+{
+    Q_UNUSED(w)
+    if (m_active) {
         m_active = false;
+        effects->addRepaintFull();
+    }
 }
 
 } // namespace

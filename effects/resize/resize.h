@@ -40,10 +40,11 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void reconfigure(ReconfigureFlags);
-    virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
 public Q_SLOTS:
-    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void slotWindowStartUserMovedResized(EffectWindow *w);
+    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
 
 private:
     enum Feature { TextureScale = 1 << 0, Outline = 1 << 1 };

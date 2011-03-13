@@ -2641,8 +2641,7 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
     }
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), true, false);
+    emit clientStartUserMovedResized(this);
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
@@ -2753,8 +2752,7 @@ void Client::finishMoveResize(bool cancel)
 // FRAME    update();
 
     Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), false, true);
+    emit clientFinishUserMovedResized(this);
 }
 
 void Client::leaveMoveResize()
@@ -3143,10 +3141,7 @@ void Client::performMoveResize()
             setGeometry(moveResizeGeom);
         positionGeometryTip();
     }
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowMoveResizeGeometryUpdate(effectWindow(), moveResizeGeom);
-        static_cast<EffectsHandlerImpl*>(effects)->slotWindowUserMovedResized(effectWindow(), false, false);
-    }
+    emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
 void Client::syncTimeout()

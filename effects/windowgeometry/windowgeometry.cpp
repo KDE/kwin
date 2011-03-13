@@ -60,7 +60,9 @@ WindowGeometry::WindowGeometry()
     a->setText(i18n("Toggle window geometry display (effect only)"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
-    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
+    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*,QRect)));
 }
 
 WindowGeometry::~WindowGeometry()
@@ -90,27 +92,25 @@ void WindowGeometry::toggle()
     iAmActivated = !iAmActivated;
 }
 
-void WindowGeometry::slotWindowUserMovedResized(EffectWindow* w, bool first, bool last)
+void WindowGeometry::slotWindowStartUserMovedResized(EffectWindow *w)
 {
-    if (first && last)  // "maximized"
+    if (!iAmActivated)
+        return;
+    if (w->isUserResize() && !iHandleResizes)
+        return;
+    if (w->isUserMove() && !iHandleMoves)
         return;
 
-    if (first) {
-        if (!iAmActivated)
-            return;
-        if (w->isUserResize() && !iHandleResizes)
-            return;
-        if (w->isUserMove() && !iHandleMoves)
-            return;
+    iAmActive = true;
+    myResizeWindow = w;
+    myOriginalGeometry = w->geometry();
+    myCurrentGeometry = w->geometry();
+    effects->addRepaint(myCurrentGeometry.adjusted(-20, -20, 20, 20));
+}
 
-        iAmActive = true;
-        myResizeWindow = w;
-        myOriginalGeometry = w->geometry();
-        myCurrentGeometry = w->geometry();
-        effects->addRepaint(myCurrentGeometry.adjusted(-20, -20, 20, 20));
-    }
-
-    if (iAmActive && w == myResizeWindow && last) {
+void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
+{
+    if (iAmActive && w == myResizeWindow) {
         iAmActive = false;
         myResizeWindow = 0L;
         effects->addRepaint(myCurrentGeometry.adjusted(-20, -20, 20, 20));
@@ -125,7 +125,7 @@ static inline QString number(int n)
 }
 
 
-void WindowGeometry::windowMoveResizeGeometryUpdate(EffectWindow* w, const QRect& geometry)
+void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry)
 {
     if (iAmActivated && iAmActive && w == myResizeWindow) {
         myCurrentGeometry = geometry;

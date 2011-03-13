@@ -46,7 +46,8 @@ public:
 
 private Q_SLOTS:
     void slotDesktopChanged(int old, int current);
-    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void slotWindowStepUserMovedResized(EffectWindow *w);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
 
 private:
     enum RotationDirection {

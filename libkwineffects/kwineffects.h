@@ -440,8 +440,6 @@ public:
      **/
     virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
 
-    /** called when the geometry changed during moving/resizing. */
-    virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
@@ -844,17 +842,46 @@ Q_SIGNALS:
      **/
     void windowDeleted(EffectWindow *w);
     /**
-     * Signal emitted when window moved/resized or once after it's finished.
-     * If both @p first and @p last are true, @p w got maximized/restored.
-     * This signal is emitted during user interaction and not when the window
-     * changes it's size itself. The latter case triggers the windowGeometryShapeChanged signal.
-     * @param w The window which is being moved or resized
-     * @param first @c true if first change
-     * @param last @c true if last change, that is move/resize finished.
-     * @see windowGeometryShapeChanged
+     * Signal emitted when a user begins a window move or resize operation.
+     * To figure out whether the user resizes or moves the window use
+     * @link EffectWindow::isUserMove or @link EffectWindow::isUserResize.
+     * Whenever the geometry is updated the signal @link windowStepUserMovedResized
+     * is emitted with the current geometry.
+     * The move/resize operation ends with the signal @link windowFinishUserMovedResized.
+     * Only one window can be moved/resized by the user at the same time!
+     * @param w The window which is being moved/resized
+     * @see windowStepUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @see EffectWindow::isUserMove
+     * @see EffectWindow::isUserResize
      * @since 4.7
      **/
-    void windowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void windowStartUserMovedResized(EffectWindow *w);
+    /**
+     * Signal emitted during a move/resize operation when the user changed the geometry.
+     * Please note: KWin supports two operation modes. In one mode all changes are applied
+     * instantly. This means the window's geometry matches the passed in @p geometry. In the
+     * other mode the geometry is changed after the user ended the move/resize mode.
+     * The @p geometry differs from the window's geometry. Also the window's pixmap still has
+     * the same size as before. Depending what the effect wants to do it would be recommended
+     * to scale/translate the window.
+     * @param w The window which is being moved/resized
+     * @param geometry The geometry of the window in the current move/resize step.
+     * @see windowStartUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @see EffectWindow::isUserMove
+     * @see EffectWindow::isUserResize
+     * @since 4.7
+     **/
+    void windowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    /**
+     * Signal emitted when the user finishes move/resize of window @p w.
+     * @param w The window which has been moved/resized
+     * @see windowStartUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @since 4.7
+     **/
+    void windowFinishUserMovedResized(EffectWindow *w);
     /**
      * Signal emitted when the maximized state of the window @p w changed.
      * A window can be in one of four states:

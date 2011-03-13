@@ -119,10 +119,6 @@ void* Effect::proxy()
     return NULL;
 }
 
-void Effect::windowMoveResizeGeometryUpdate(EffectWindow* , const QRect&)
-{
-}
-
 void Effect::windowInputMouseEvent(Window, QEvent*)
 {
 }

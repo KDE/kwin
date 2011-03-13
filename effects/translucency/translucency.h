@@ -38,7 +38,7 @@ public:
 
 public Q_SLOTS:
     void slotWindowActivated(EffectWindow* w);
-    void slotWindowUserMovedResized(EffectWindow *c, bool first, bool last);
+    void slotWindowStartStopUserMovedResized(EffectWindow *w);
 
 private:
     bool isInactive(const EffectWindow *w) const;

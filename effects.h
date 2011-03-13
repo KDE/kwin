@@ -158,7 +158,6 @@ public:
 
     // internal (used by kwin core or compositing code)
     void startPaint();
-    void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
     bool borderActivated(ElectricBorder border);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
@@ -174,7 +173,6 @@ public:
     QList<EffectWindow*> elevatedWindows() const;
 
 public Q_SLOTS:
-    void slotWindowUserMovedResized(EffectWindow* c, bool first, bool last);
     void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     void slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to);
     void slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
@@ -188,6 +186,9 @@ protected Q_SLOTS:
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
     void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);
+    void slotClientStartUserMovedResized(KWin::Client *c);
+    void slotClientStepUserMovedResized(KWin::Client *c, const QRect &geometry);
+    void slotClientFinishUserMovedResized(KWin::Client *c);
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientMinimized(KWin::Client *c, bool animate);
     void slotClientUnminimized(KWin::Client *c, bool animate);

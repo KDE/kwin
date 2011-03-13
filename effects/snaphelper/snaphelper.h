@@ -43,7 +43,8 @@ public:
 
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *w);
-    void slotWindowUserMovedResized(EffectWindow *w, bool first, bool last);
+    void slotWindowStartUserMovedResized(EffectWindow *w);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
 
 private:
     bool m_active;

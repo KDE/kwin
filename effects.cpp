@@ -134,6 +134,9 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
     connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
     connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
+    connect(c, SIGNAL(clientStartUserMovedResized(KWin::Client*)), this, SLOT(slotClientStartUserMovedResized(KWin::Client*)));
+    connect(c, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), this, SLOT(slotClientStepUserMovedResized(KWin::Client*,QRect)));
+    connect(c, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), this, SLOT(slotClientFinishUserMovedResized(KWin::Client*)));
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
@@ -323,15 +326,19 @@ void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines
     emit windowMaximizedStateChanged(c->effectWindow(), horizontal, vertical);
 }
 
-void EffectsHandlerImpl::slotWindowUserMovedResized(EffectWindow* c, bool first, bool last)
+void EffectsHandlerImpl::slotClientStartUserMovedResized(Client *c)
 {
-    emit windowUserMovedResized(c, first, last);
+    emit windowStartUserMovedResized(c->effectWindow());
 }
 
-void EffectsHandlerImpl::windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry)
+void EffectsHandlerImpl::slotClientFinishUserMovedResized(Client *c)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowMoveResizeGeometryUpdate(c, geometry);
+    emit windowFinishUserMovedResized(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotClientStepUserMovedResized(Client* c, const QRect& geometry)
+{
+    emit windowStepUserMovedResized(c->effectWindow(), geometry);
 }
 
 void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)

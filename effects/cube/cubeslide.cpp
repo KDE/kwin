@@ -39,7 +39,8 @@ CubeSlideEffect::CubeSlideEffect()
     , progressRestriction(0.0f)
 {
     connect(effects, SIGNAL(desktopChanged(int, int)), this, SLOT(slotDesktopChanged(int, int)));
-    connect(effects, SIGNAL(windowUserMovedResized(EffectWindow*,bool,bool)), this, SLOT(slotWindowUserMovedResized(EffectWindow*,bool,bool)));
+    connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
     reconfigure(ReconfigureAll);
 }
 
@@ -530,40 +531,12 @@ void CubeSlideEffect::slotDesktopChanged(int old, int current)
     }
 }
 
-void CubeSlideEffect::slotWindowUserMovedResized(EffectWindow* c, bool first, bool last)
+void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
 {
     if (!useWindowMoving)
         return;
-    if ((first && last) || c->isUserResize())
+    if (w->isUserResize())
         return;
-    if (last) {
-        if (!desktopChangedWhileMoving) {
-            if (slideRotations.isEmpty())
-                return;
-            const RotationDirection direction = slideRotations.dequeue();
-            switch(direction) {
-            case Left:
-                slideRotations.enqueue(Right);
-                break;
-            case Right:
-                slideRotations.enqueue(Left);
-                break;
-            case Upwards:
-                slideRotations.enqueue(Downwards);
-                break;
-            case Downwards:
-                slideRotations.enqueue(Upwards);
-                break;
-            default:
-                break; // impossible
-            }
-            timeLine.setProgress(1.0 - timeLine.progress());
-        }
-        desktopChangedWhileMoving = false;
-        windowMoving = false;
-        effects->addRepaintFull();
-        return;
-    }
     const QPoint cursor = effects->cursorPos();
     const int horizontal = displayWidth() * 0.1;
     const int vertical = displayHeight() * 0.1;
@@ -593,6 +566,39 @@ void CubeSlideEffect::slotWindowUserMovedResized(EffectWindow* c, bool first, bo
         effects->setActiveFullScreenEffect(0);
         effects->addRepaintFull();
     }
+}
+
+void CubeSlideEffect::slotWindowFinishUserMovedResized(EffectWindow* w)
+{
+    if (!useWindowMoving)
+        return;
+    if (w->isUserResize())
+        return;
+    if (!desktopChangedWhileMoving) {
+        if (slideRotations.isEmpty())
+            return;
+        const RotationDirection direction = slideRotations.dequeue();
+        switch(direction) {
+        case Left:
+            slideRotations.enqueue(Right);
+            break;
+        case Right:
+            slideRotations.enqueue(Left);
+            break;
+        case Upwards:
+            slideRotations.enqueue(Downwards);
+            break;
+        case Downwards:
+            slideRotations.enqueue(Upwards);
+            break;
+        default:
+            break; // impossible
+        }
+        timeLine.setProgress(1.0 - timeLine.progress());
+    }
+    desktopChangedWhileMoving = false;
+    windowMoving = false;
+    effects->addRepaintFull();
 }
 
 void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection direction)
