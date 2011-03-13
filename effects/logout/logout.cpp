@@ -195,7 +195,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (blurSupported && progress > 0.0)
-        effects->pushRenderTarget(blurTarget);
+        GLRenderTarget::pushRenderTarget(blurTarget);
 #endif
     effects->paintScreen(mask, region, data);
 
@@ -208,7 +208,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 // is set as it may still be even if it wasn't rendered.
                 renderVignetting();
         } else {
-            GLRenderTarget* target = effects->popRenderTarget();
+            GLRenderTarget* target = GLRenderTarget::popRenderTarget();
             assert(target == blurTarget);
             Q_UNUSED(target);
 

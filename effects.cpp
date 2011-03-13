@@ -784,36 +784,6 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
     return NULL;
 }
 
-void EffectsHandlerImpl::pushRenderTarget(GLRenderTarget* target)
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    target->enable();
-    render_targets.push(target);
-#endif
-}
-
-GLRenderTarget* EffectsHandlerImpl::popRenderTarget()
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    GLRenderTarget* ret = render_targets.pop();
-    ret->disable();
-    if (!render_targets.isEmpty())
-        render_targets.top()->enable();
-    return ret;
-#else
-    return 0;
-#endif
-}
-
-bool EffectsHandlerImpl::isRenderTargetBound()
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    return !render_targets.isEmpty();
-#else
-    return false;
-#endif
-}
-
 void EffectsHandlerImpl::addRepaintFull()
 {
     Workspace::self()->addRepaintFull();

@@ -273,7 +273,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
                         r.width(), r.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
-    effects->pushRenderTarget(target);
+    GLRenderTarget::pushRenderTarget(target);
 
     shader->bind();
     shader->setDirection(Qt::Horizontal);
@@ -293,7 +293,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     drawRegion(expanded);
 
-    effects->popRenderTarget();
+    GLRenderTarget::popRenderTarget();
     scratch.unbind();
     scratch.discard();
 

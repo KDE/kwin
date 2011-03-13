@@ -523,6 +523,9 @@ public:
     static bool supported()  {
         return sSupported;
     }
+    static void pushRenderTarget(GLRenderTarget *target);
+    static GLRenderTarget *popRenderTarget();
+    static bool isRenderTargetBound();
 
 
 protected:
@@ -531,6 +534,7 @@ protected:
 
 private:
     static bool sSupported;
+    static QStack<GLRenderTarget*> s_renderTargets;
 
     GLTexture* mTexture;
     bool mValid;

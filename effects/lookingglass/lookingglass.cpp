@@ -210,7 +210,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     if (m_valid && m_enabled) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
-        effects->pushRenderTarget(m_fbo);
+        GLRenderTarget::pushRenderTarget(m_fbo);
     }
 
     effects->prePaintScreen(data, time);
@@ -231,7 +231,7 @@ void LookingGlassEffect::postPaintScreen()
     effects->postPaintScreen();
     if (m_valid && m_enabled) {
         // Disable render texture
-        GLRenderTarget* target = effects->popRenderTarget();
+        GLRenderTarget* target = GLRenderTarget::popRenderTarget();
         assert(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();

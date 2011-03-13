@@ -111,10 +111,6 @@ public:
     virtual void setActiveFullScreenEffect(Effect* e);
     virtual Effect* activeFullScreenEffect() const;
 
-    virtual void pushRenderTarget(GLRenderTarget* target);
-    virtual GLRenderTarget* popRenderTarget();
-    virtual bool isRenderTargetBound();
-
     virtual void addRepaintFull();
     virtual void addRepaint(const QRect& r);
     virtual void addRepaint(const QRegion& r);
@@ -202,7 +198,6 @@ protected:
     void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     Effect* keyboard_grab_effect;
-    QStack<GLRenderTarget*> render_targets;
     Effect* fullscreen_effect;
     QList<EffectWindow*> elevated_windows;
     QMultiMap< int, EffectPair > effect_order;

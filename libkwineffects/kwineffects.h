@@ -700,10 +700,6 @@ public:
     virtual void setActiveFullScreenEffect(Effect* e) = 0;
     virtual Effect* activeFullScreenEffect() const = 0;
 
-    virtual void pushRenderTarget(GLRenderTarget* target) = 0;
-    virtual GLRenderTarget* popRenderTarget() = 0;
-    virtual bool isRenderTargetBound() = 0;
-
     /**
      * Schedules the entire workspace to be repainted next time.
      * If you call it during painting (including prepaint) then it does not

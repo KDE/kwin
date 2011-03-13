@@ -256,7 +256,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
             // Bind the offscreen FBO and draw the window on it unscaled
             updateOffscreenSurfaces();
-            effects->pushRenderTarget(m_offscreenTarget);
+            GLRenderTarget::pushRenderTarget(m_offscreenTarget);
 
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -341,7 +341,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             cache->setWrapMode(GL_CLAMP_TO_EDGE);
             cache->bind();
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th);
-            effects->popRenderTarget();
+            GLRenderTarget::popRenderTarget();
 
             if (ShaderManager::instance()->isValid()) {
                 glEnable(GL_BLEND);
