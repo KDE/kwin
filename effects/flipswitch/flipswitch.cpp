@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QKeyEvent>
 #include <QMatrix4x4>
 #include <kconfiggroup.h>
 

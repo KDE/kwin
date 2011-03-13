@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Plasma/FrameSvg>
 #include <Plasma/PushButton>
 #include <Plasma/WindowEffects>
+#include <netwm_def.h>
 
 #include <math.h>
 #include <assert.h>

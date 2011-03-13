@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <QFont>
 #include <QMatrix4x4>
+#include <QMouseEvent>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>
