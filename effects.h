@@ -84,8 +84,6 @@ public:
     virtual int desktopBelow(int desktop = 0, bool wrap = true) const;
     virtual int desktopToLeft(int desktop = 0, bool wrap = true) const;
     virtual bool isDesktopLayoutDynamic() const;
-    virtual int addDesktop(QPoint coords);
-    virtual void deleteDesktop(int id);
     virtual QString desktopName(int desktop) const;
     virtual bool optionRollOverDesktops() const;
 

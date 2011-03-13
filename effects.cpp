@@ -682,16 +682,6 @@ bool EffectsHandlerImpl::isDesktopLayoutDynamic() const
     return Workspace::self()->isDesktopLayoutDynamic();
 }
 
-int EffectsHandlerImpl::addDesktop(QPoint coords)
-{
-    return Workspace::self()->addDesktop(coords);
-}
-
-void EffectsHandlerImpl::deleteDesktop(int id)
-{
-    Workspace::self()->deleteDesktop(id);
-}
-
 QString EffectsHandlerImpl::desktopName(int desktop) const
 {
     return Workspace::self()->desktopName(desktop);

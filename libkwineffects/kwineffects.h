@@ -667,16 +667,6 @@ public:
      * @returns Whether or not the desktop layout is allowed to be modified by the user.
      */
     virtual bool isDesktopLayoutDynamic() const = 0;
-    /**
-     * Create new desktop at the point @a coords
-     * @returns The ID of the created desktop
-     */
-    virtual int addDesktop(QPoint coords) = 0;
-    /**
-     * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
-     * was deleted will have their IDs' decremented.
-     */
-    virtual void deleteDesktop(int id) = 0;
     virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 

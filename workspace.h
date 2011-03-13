@@ -318,16 +318,6 @@ public:
      * Sets whether or not this layout can be modified by the user.
      */
     void setDesktopLayoutDynamicity(bool dynamicity);
-    /**
-     * Create new desktop at the point @a coords
-     * @returns The ID of the created desktop
-     */
-    int addDesktop(QPoint coords);
-    /**
-     * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
-     * was deleted will have their IDs' decremented.
-     */
-    void deleteDesktop(int id);
 
 private:
     int desktopCount_;
