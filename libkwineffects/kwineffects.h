@@ -219,9 +219,11 @@ QRect infiniteRegion()
  * This is the base class for all effects. By reimplementing virtual methods
  *  of this class, you can customize how the windows are painted.
  *
- * The virtual methods of this class can broadly be divided into two
- *  categories: the methods used for painting and those you can use to be
- *  notified and react to certain events, e.g. that a window was closed.
+ * The virtual methods are used for painting and need to be implemented for
+ * custom painting.
+ *
+ * In order to react to state changes (e.g. a window gets closed) the effect
+ * should provide slots for the signals emitted by the EffectsHandler.
  *
  * @section Chaining
  * Most methods of this class are called in chain style. This means that when
