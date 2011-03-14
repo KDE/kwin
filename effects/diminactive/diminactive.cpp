@@ -51,17 +51,17 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags)
 
 void DimInactiveEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    double oldValue = timeline.value();
+    double oldValue = timeline.currentValue();
     if (effects->activeFullScreenEffect())
-        timeline.removeTime(time);
+        timeline.setCurrentTime(timeline.currentTime() - time);
     else
-        timeline.addTime(time);
-    if (oldValue != timeline.value())
+        timeline.setCurrentTime(timeline.currentTime() + time);
+    if (oldValue != timeline.currentValue())
         effects->addRepaintFull();
     if (previousActive) {
         // We are fading out the previous window
         previousActive->addRepaintFull();
-        previousActiveTimeline.addTime(time);
+        previousActiveTimeline.setCurrentTime(previousActiveTimeline.currentTime() + time);
     }
     effects->prePaintScreen(data, time);
 }
@@ -71,11 +71,11 @@ void DimInactiveEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
     if (dimWindow(w) || w == previousActive) {
         double previous = 1.0;
         if (w == previousActive)
-            previous = previousActiveTimeline.value();
-        if (previousActiveTimeline.value() == 1.0)
+            previous = previousActiveTimeline.currentValue();
+        if (previousActiveTimeline.currentValue() == 1.0)
             previousActive = NULL;
-        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous);
-        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous);
+        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous);
+        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous);
     }
     effects->paintWindow(w, mask, region, data);
 }
@@ -111,7 +111,7 @@ void DimInactiveEffect::slotWindowActivated(EffectWindow* w)
 {
     if (active != NULL) {
         previousActive = active;
-        previousActiveTimeline.setProgress(0.0);
+        previousActiveTimeline.setCurrentTime(0);
         if (!dimWindow(previousActive))
             previousActive = NULL;
 

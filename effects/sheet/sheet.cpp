@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sheet.h"
 
 #include <kconfiggroup.h>
+#include <QtCore/QTimeLine>
 
 // Effect is based on fade effect by Philip Falkner
 
@@ -67,9 +68,9 @@ void SheetEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
     if (info != windows.end()) {
         data.setTransformed();
         if (info->added)
-            info->timeLine.addTime(screenTime);
+            info->timeLine->setCurrentTime(info->timeLine->currentTime() + screenTime);
         else if (info->closed) {
-            info->timeLine.removeTime(screenTime);
+            info->timeLine->setCurrentTime(info->timeLine->currentTime() - screenTime);
             if (info->deleted)
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         }
@@ -87,7 +88,7 @@ void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
 {
     InfoMap::const_iterator info = windows.constFind(w);
     if (info != windows.constEnd()) {
-        const double progress = info->timeLine.value();
+        const double progress = info->timeLine->currentValue();
         RotationData rot;
         rot.axis = RotationData::XAxis;
         rot.angle = 60.0 * (1.0 - progress);
@@ -103,10 +104,10 @@ void SheetEffect::postPaintWindow(EffectWindow* w)
 {
     InfoMap::iterator info = windows.find(w);
     if (info != windows.end()) {
-        if (info->added && info->timeLine.value() == 1.0) {
+        if (info->added && info->timeLine->currentValue() == 1.0) {
             windows.remove(w);
             effects->addRepaintFull();
-        } else if (info->closed && info->timeLine.value() == 0.0) {
+        } else if (info->closed && info->timeLine->currentValue() == 0.0) {
             info->closed = false;
             if (info->deleted) {
                 windows.remove(w);
@@ -131,7 +132,8 @@ void SheetEffect::slotWindowAdded(EffectWindow* w)
     info->added = true;
     info->closed = false;
     info->deleted = false;
-    info->timeLine.setDuration(duration);
+    delete info->timeLine;
+    info->timeLine = new QTimeLine(duration);
     const EffectWindowList stack = effects->stackingOrder();
     // find parent
     foreach (EffectWindow * window, stack) {
@@ -155,8 +157,9 @@ void SheetEffect::slotWindowClosed(EffectWindow* w)
     info->added = false;
     info->closed = true;
     info->deleted = true;
-    info->timeLine.setDuration(duration);
-    info->timeLine.setProgress(1.0);
+    delete info->timeLine;
+    info->timeLine = new QTimeLine(duration);
+    info->timeLine->setCurrentTime(duration);
 
     bool found = false;
     // find parent
@@ -181,6 +184,20 @@ void SheetEffect::slotWindowDeleted(EffectWindow* w)
 bool SheetEffect::isSheetWindow(EffectWindow* w)
 {
     return (w->isModal() || w->data(IsSheetWindow).toBool());
+}
+
+SheetEffect::WindowInfo::WindowInfo()
+    : deleted(false)
+    , added(false)
+    , closed(false)
+    , timeLine(0)
+    , parentY(0)
+{
+}
+
+SheetEffect::WindowInfo::~WindowInfo()
+{
+    delete timeLine;
 }
 
 } // namespace

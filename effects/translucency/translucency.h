@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TRANSLUCENCY_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -59,8 +60,8 @@ private:
     EffectWindow* previous;
     EffectWindow* active;
 
-    TimeLine moveresize_timeline;
-    TimeLine activeinactive_timeline;
+    QTimeLine moveresize_timeline;
+    QTimeLine activeinactive_timeline;
 };
 
 } // namespace

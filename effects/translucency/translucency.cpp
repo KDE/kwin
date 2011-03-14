@@ -58,9 +58,9 @@ void TranslucencyEffect::reconfigure(ReconfigureFlags)
         popupmenus = menus;
         tornoffmenus = menus;
     }
-    moveresize_timeline.setCurveShape(TimeLine::EaseOutCurve);
+    moveresize_timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     moveresize_timeline.setDuration(animationTime(conf, "Duration", 800));
-    activeinactive_timeline.setCurveShape(TimeLine::EaseInOutCurve);
+    activeinactive_timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     activeinactive_timeline.setDuration(animationTime(conf, "Duration", 800));
 
     // Repaint the screen just in case the user changed the inactive opacity
@@ -69,8 +69,8 @@ void TranslucencyEffect::reconfigure(ReconfigureFlags)
 
 void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    moveresize_timeline.addTime(time);
-    activeinactive_timeline.addTime(time);
+    moveresize_timeline.setCurrentTime(moveresize_timeline.currentTime() + time);
+    activeinactive_timeline.setCurrentTime(activeinactive_timeline.currentTime() + time);
 
     if (decoration != 1.0 && w->hasDecoration()) {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
@@ -111,15 +111,15 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
         data.opacity *= inactive;
 
         if (w == previous) {
-            data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.value())));
-            if (activeinactive_timeline.value() < 1.0)
+            data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.currentValue())));
+            if (activeinactive_timeline.currentValue() < 1.0)
                 w->addRepaintFull();
         }
     } else {
         // Fading in
         if (!isInactive(w) && !w->isDesktop()) {
-            data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.value()));
-            if (activeinactive_timeline.value() < 1.0)
+            data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.currentValue()));
+            if (activeinactive_timeline.currentValue() < 1.0)
                 w->addRepaintFull();
         }
         // decoration and dialogs
@@ -130,7 +130,7 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
 
         // Handling moving and resizing
         if (moveresize != 1.0 && !w->isDesktop() && !w->isDock()) {
-            double progress = moveresize_timeline.value();
+            double progress = moveresize_timeline.currentValue();
             if (w->isUserMove() || w->isUserResize()) {
                 // Fading to translucent
                 data.opacity *= (moveresize + ((1.0 - moveresize) * (1.0 - progress)));
@@ -181,7 +181,7 @@ bool TranslucencyEffect::isInactive(const EffectWindow* w) const
 void TranslucencyEffect::slotWindowStartStopUserMovedResized(EffectWindow* w)
 {
     if (moveresize != 1.0) {
-        moveresize_timeline.setProgress(0.0);
+        moveresize_timeline.setCurrentTime(0);
         w->addRepaintFull();
     }
 }
@@ -189,7 +189,7 @@ void TranslucencyEffect::slotWindowStartStopUserMovedResized(EffectWindow* w)
 void TranslucencyEffect::slotWindowActivated(EffectWindow* w)
 {
     if (inactive != 1.0) {
-        activeinactive_timeline.setProgress(0.0);
+        activeinactive_timeline.setCurrentTime(0);
         if (NULL != active && active != w) {
             if ((NULL == w || w->group() != active->group()) &&
                     NULL != active->group()) {

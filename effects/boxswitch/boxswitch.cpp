@@ -77,9 +77,9 @@ void BoxSwitchEffect::reconfigure(ReconfigureFlags)
     color_highlight = KColorScheme(QPalette::Active, KColorScheme::Selection).background().color();
     color_highlight.setAlphaF(0.9);
     activeTimeLine.setDuration(animationTime(250));
-    activeTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    activeTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(animationTime(150));
-    timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     KConfigGroup conf = effects->effectConfig("BoxSwitch");
 
     bg_opacity = conf.readEntry("BackgroundOpacity", 25) / 100.0;
@@ -92,7 +92,7 @@ void BoxSwitchEffect::reconfigure(ReconfigureFlags)
 
 void BoxSwitchEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (activeTimeLine.value() != 0.0 && !mProxyActivated) {
+    if (activeTimeLine.currentValue() != 0.0 && !mProxyActivated) {
         if (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode) {
             if (windows.contains(w)) {
                 if (w == selected_window)
@@ -116,17 +116,17 @@ void BoxSwitchEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
 void BoxSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (mActivated)
-        activeTimeLine.addTime(time);
+        activeTimeLine.setCurrentTime(activeTimeLine.currentTime() + time);
     else {
-        activeTimeLine.removeTime(time);
-        if (activeTimeLine.value() == 0.0) {
+        activeTimeLine.setCurrentTime(activeTimeLine.currentTime() - time);
+        if (activeTimeLine.currentValue() == 0.0) {
             // No longer need the window data
             qDeleteAll(windows);
             windows.clear();
         }
     }
     if (mActivated && animation) {
-        timeLine.addTime(time);
+        timeLine.setCurrentTime(timeLine.currentTime() + time);
         calculateItemSizes();
     }
     effects->prePaintScreen(data, time);
@@ -184,13 +184,13 @@ void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
 
 void BoxSwitchEffect::postPaintScreen()
 {
-    if (mActivated && activeTimeLine.value() != 1.0)
+    if (mActivated && activeTimeLine.currentValue() != 1.0)
         effects->addRepaintFull();
-    if (!mActivated && activeTimeLine.value() != 0.0)
+    if (!mActivated && activeTimeLine.currentValue() != 0.0)
         effects->addRepaintFull();
     if (mActivated && animation) {
-        if (timeLine.value() == 1.0) {
-            timeLine.setProgress(0.0);
+        if (timeLine.currentValue() == 1.0) {
+            timeLine.setCurrentTime(0);
             animation = false;
             if (!scheduled_directions.isEmpty()) {
                 direction = scheduled_directions.dequeue();
@@ -209,13 +209,13 @@ void BoxSwitchEffect::postPaintScreen()
 void BoxSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (((mActivated && (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode))
-            || (!mActivated && activeTimeLine.value() != 0.0)) && !mProxyActivated) {
+            || (!mActivated && activeTimeLine.currentValue() != 0.0)) && !mProxyActivated) {
         if (windows.contains(w) && w != selected_window) {
             if (w->isMinimized() || !w->isOnCurrentDesktop())
                 // TODO: When deactivating minimized windows are not painted at all
-                data.opacity *= activeTimeLine.value() * bg_opacity;
+                data.opacity *= activeTimeLine.currentValue() * bg_opacity;
             else
-                data.opacity *= 1.0 - activeTimeLine.value() * (1.0 - bg_opacity);
+                data.opacity *= 1.0 - activeTimeLine.currentValue() * (1.0 - bg_opacity);
         }
     }
     effects->paintWindow(w, mask, region, data);
@@ -579,7 +579,7 @@ void BoxSwitchEffect::calculateItemSizes()
                     ordered_windows.append(w);
                 }
             }
-            if (animation && timeLine.value() < 0.5) {
+            if (animation && timeLine.currentValue() < 0.5) {
                 if (direction == Left) {
                     EffectWindow* w = ordered_windows.takeLast();
                     edge_window = w;
@@ -589,7 +589,7 @@ void BoxSwitchEffect::calculateItemSizes()
                     edge_window = w;
                     ordered_windows.append(w);
                 }
-            } else if (animation && timeLine.value() >= 0.5) {
+            } else if (animation && timeLine.currentValue() >= 0.5) {
                 if (animation && direction == Left)
                     edge_window = ordered_windows.last();
                 if (animation && direction == Right)
@@ -598,9 +598,9 @@ void BoxSwitchEffect::calculateItemSizes()
             int offset = 0;
             if (animation) {
                 if (direction == Left)
-                    offset = (float)item_max_size.width() * (1.0 - timeLine.value());
+                    offset = (float)item_max_size.width() * (1.0 - timeLine.currentValue());
                 else
-                    offset = -(float)item_max_size.width() * (1.0 - timeLine.value());
+                    offset = -(float)item_max_size.width() * (1.0 - timeLine.currentValue());
             }
             for (int i = 0; i < ordered_windows.count(); i++) {
                 if (!ordered_windows.at(i))
@@ -615,7 +615,7 @@ void BoxSwitchEffect::calculateItemSizes()
                 info->iconFrame->setIcon(w->icon());
 
                 float moveIndex = i;
-                if (animation && timeLine.value() < 0.5) {
+                if (animation && timeLine.currentValue() < 0.5) {
                     if (direction == Left)
                         moveIndex--;
                     else
@@ -688,9 +688,9 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // the window which has to change the side will be split and painted on both sides of the edge
         double splitPoint = 0.0;
         if (direction == Left) {
-            splitPoint = w->geometry().width() * timeLine.value();
+            splitPoint = w->geometry().width() * timeLine.currentValue();
         } else {
-            splitPoint = w->geometry().width() - w->geometry().width() * timeLine.value();
+            splitPoint = w->geometry().width() - w->geometry().width() * timeLine.currentValue();
         }
         data.quads = data.quads.splitAtX(splitPoint);
         WindowQuadList left_quads;
@@ -702,7 +702,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                 right_quads << quad;
         }
         // the base position of the window is changed after half of the animation
-        if (timeLine.value() < 0.5) {
+        if (timeLine.currentValue() < 0.5) {
             if (direction == Left)
                 data.quads = left_quads;
             else
@@ -724,30 +724,30 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // paint the second part of the thumbnail:
         // the other window quads are needed and a new rect for transformation has to be calculated
         if (direction == Left) {
-            if (timeLine.value() < 0.5) {
+            if (timeLine.currentValue() < 0.5) {
                 data.quads = right_quads;
                 secondThumbnail = QRect(frame_area.x() + frame_area.width() -
-                                        (float)item_max_size.width() * timeLine.value(),
+                                        (float)item_max_size.width() * timeLine.currentValue(),
                                         frame_area.y(), item_max_size.width(), item_max_size.height());
             } else {
                 data.quads = left_quads;
-                secondThumbnail = QRect(frame_area.x() - (float)item_max_size.width() * timeLine.value(),
+                secondThumbnail = QRect(frame_area.x() - (float)item_max_size.width() * timeLine.currentValue(),
                                         frame_area.y(), item_max_size.width(), item_max_size.height());
                 if (right_window)
                     secondThumbnail = QRect(frame_area.x() -
-                                            (float)item_max_size.width() * (timeLine.value() - 0.5),
+                                            (float)item_max_size.width() * (timeLine.currentValue() - 0.5),
                                             frame_area.y(), item_max_size.width(), item_max_size.height());
             }
         } else {
-            if (timeLine.value() < 0.5) {
+            if (timeLine.currentValue() < 0.5) {
                 data.quads = left_quads;
                 secondThumbnail = QRect(frame_area.x() -
-                                        (float)item_max_size.width() * (1.0 - timeLine.value()),
+                                        (float)item_max_size.width() * (1.0 - timeLine.currentValue()),
                                         frame_area.y(), item_max_size.width(), item_max_size.height());
             } else {
                 data.quads = right_quads;
                 secondThumbnail = QRect(frame_area.x() + frame_area.width() -
-                                        (float)item_max_size.width() * (1.0 - timeLine.value()),
+                                        (float)item_max_size.width() * (1.0 - timeLine.currentValue()),
                                         frame_area.y(), item_max_size.width(), item_max_size.height());
             }
         }
@@ -763,25 +763,25 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // the window on the right is painted one half on left and on half on the right side
         float animationOffset = 0.0f;
         double splitPoint = w->geometry().width() * 0.5;
-        if (animation && timeLine.value() <= 0.5) {
+        if (animation && timeLine.currentValue() <= 0.5) {
             // in case of animation the right window has only to be split during first half of animation
             if (direction == Left) {
-                splitPoint += w->geometry().width() * timeLine.value();
-                animationOffset = -(float)item_max_size.width() * timeLine.value();
+                splitPoint += w->geometry().width() * timeLine.currentValue();
+                animationOffset = -(float)item_max_size.width() * timeLine.currentValue();
             } else {
-                splitPoint -= w->geometry().width() * timeLine.value();
-                animationOffset = (float)item_max_size.width() * timeLine.value();
+                splitPoint -= w->geometry().width() * timeLine.currentValue();
+                animationOffset = (float)item_max_size.width() * timeLine.currentValue();
             }
         }
-        if (animation && timeLine.value() > 0.5) {
+        if (animation && timeLine.currentValue() > 0.5) {
             // at half of animation a different window has become the right window
             // we have to adjust the splitting again
             if (direction == Left) {
-                splitPoint -= w->geometry().width() * (1.0 - timeLine.value());
-                animationOffset = (float)item_max_size.width() * (1.0 - timeLine.value());
+                splitPoint -= w->geometry().width() * (1.0 - timeLine.currentValue());
+                animationOffset = (float)item_max_size.width() * (1.0 - timeLine.currentValue());
             } else {
-                splitPoint += w->geometry().width() * (1.0 - timeLine.value());
-                animationOffset = -(float)item_max_size.width() * (1.0 - timeLine.value());
+                splitPoint += w->geometry().width() * (1.0 - timeLine.currentValue());
+                animationOffset = -(float)item_max_size.width() * (1.0 - timeLine.currentValue());
             }
         }
         data.quads = data.quads.splitAtX(splitPoint);
@@ -865,17 +865,17 @@ void BoxSwitchEffect::paintWindowIcon(EffectWindow* w)
             // in case of right window the icon has to be painted on the left side of the frame
             x = frame_area.x() + info->area.width() * 0.5 - width - highlight_margin;
             if (animation) {
-                if (timeLine.value() <= 0.5) {
+                if (timeLine.currentValue() <= 0.5) {
                     if (direction == Left) {
-                        x -= info->area.width() * timeLine.value();
+                        x -= info->area.width() * timeLine.currentValue();
                         x = qMax(x, frame_area.x());
                     } else
-                        x += info->area.width() * timeLine.value();
+                        x += info->area.width() * timeLine.currentValue();
                 } else {
                     if (direction == Left)
-                        x += info->area.width() * (1.0 - timeLine.value());
+                        x += info->area.width() * (1.0 - timeLine.currentValue());
                     else {
-                        x -= info->area.width() * (1.0 - timeLine.value());
+                        x -= info->area.width() * (1.0 - timeLine.currentValue());
                         x = qMax(x, frame_area.x());
                     }
                 }
@@ -884,16 +884,16 @@ void BoxSwitchEffect::paintWindowIcon(EffectWindow* w)
     } else {
         // during animation the icon of the edge window has to change position
         if (animation && w == edge_window) {
-            if (timeLine.value() < 0.5) {
+            if (timeLine.currentValue() < 0.5) {
                 if (direction == Left)
-                    x += info->area.width() * timeLine.value();
+                    x += info->area.width() * timeLine.currentValue();
                 else
-                    x -= info->area.width() * timeLine.value();
+                    x -= info->area.width() * timeLine.currentValue();
             } else {
                 if (direction == Left)
-                    x -= info->area.width() * (1.0 - timeLine.value());
+                    x -= info->area.width() * (1.0 - timeLine.currentValue());
                 else
-                    x += info->area.width() * (1.0 - timeLine.value());
+                    x += info->area.width() * (1.0 - timeLine.currentValue());
             }
         }
     }

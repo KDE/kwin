@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
@@ -42,7 +44,7 @@ public Q_SLOTS:
     void slotWindowClosed(EffectWindow *c);
 private:
     bool isScaleWindow(EffectWindow* w);
-    QHash< const EffectWindow*, TimeLine > mTimeLineWindows;
+    QHash< const EffectWindow*, QTimeLine* > mTimeLineWindows;
 };
 
 } // namespace

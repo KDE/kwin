@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <QObject>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -46,7 +47,7 @@ private Q_SLOTS:
 
 private:
     QRect desktopRect(int desktop) const;
-    TimeLine mTimeLine;
+    QTimeLine mTimeLine;
     int painting_desktop;
     bool slide;
     QPoint slide_start_pos;

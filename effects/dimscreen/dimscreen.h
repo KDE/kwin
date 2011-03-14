@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DIMSCREEN_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -46,7 +47,7 @@ private:
     bool mActivated;
     bool activateAnimation;
     bool deactivateAnimation;
-    TimeLine timeline;
+    QTimeLine timeline;
     EffectWindow* window;
 };
 

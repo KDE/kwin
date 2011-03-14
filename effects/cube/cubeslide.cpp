@@ -57,7 +57,7 @@ void CubeSlideEffect::reconfigure(ReconfigureFlags)
 {
     KConfigGroup conf = effects->effectConfig("CubeSlide");
     rotationDuration = animationTime(conf, "RotationDuration", 500);
-    timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);
     dontSlidePanels = conf.readEntry("DontSlidePanels", true);
     dontSlideStickyWindows = conf.readEntry("DontSlideStickyWindows", false);
@@ -69,9 +69,9 @@ void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (!slideRotations.empty()) {
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
-        timeLine.addTime(time);
-        if (windowMoving && timeLine.progress() > progressRestriction)
-            timeLine.setProgress(progressRestriction);
+        timeLine.setCurrentTime(timeLine.currentTime() + time);
+        if (windowMoving && timeLine.currentTime() > progressRestriction * (qreal)timeLine.duration())
+            timeLine.setCurrentTime(progressRestriction * (qreal)timeLine.duration());
         if (dontSlidePanels)
             panels.clear();
         stickyWindows.clear();
@@ -143,8 +143,8 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
             if (secondDesktop == 0)
                 secondDesktop = effects->numberOfDesktops();
         }
-        firstFaceRot.angle = 90.0f * timeLine.value();
-        secondFaceRot.angle = -90.0f * (1.0f - timeLine.value());
+        firstFaceRot.angle = 90.0f * timeLine.currentValue();
+        secondFaceRot.angle = -90.0f * (1.0f - timeLine.currentValue());
         break;
     case Right:
         firstFaceRot.axis = RotationData::YAxis;
@@ -156,23 +156,23 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
             if (secondDesktop > effects->numberOfDesktops())
                 secondDesktop = 1;
         }
-        firstFaceRot.angle = -90.0f * timeLine.value();
-        secondFaceRot.angle = 90.0f * (1.0f - timeLine.value());
+        firstFaceRot.angle = -90.0f * timeLine.currentValue();
+        secondFaceRot.angle = 90.0f * (1.0f - timeLine.currentValue());
         break;
     case Upwards:
         firstFaceRot.axis = RotationData::XAxis;
         secondFaceRot.axis = RotationData::XAxis;
         secondDesktop = effects->desktopAbove(front_desktop, true);
-        firstFaceRot.angle = -90.0f * timeLine.value();
-        secondFaceRot.angle = 90.0f * (1.0f - timeLine.value());
+        firstFaceRot.angle = -90.0f * timeLine.currentValue();
+        secondFaceRot.angle = 90.0f * (1.0f - timeLine.currentValue());
         point = rect.height() / 2 * tan(45.0f * M_PI / 180.0f);
         break;
     case Downwards:
         firstFaceRot.axis = RotationData::XAxis;
         secondFaceRot.axis = RotationData::XAxis;
         secondDesktop = effects->desktopBelow(front_desktop, true);
-        firstFaceRot.angle = 90.0f * timeLine.value();
-        secondFaceRot.angle = -90.0f * (1.0f - timeLine.value());
+        firstFaceRot.angle = 90.0f * timeLine.currentValue();
+        secondFaceRot.angle = -90.0f * (1.0f - timeLine.currentValue());
         point = rect.height() / 2 * tan(45.0f * M_PI / 180.0f);
         break;
     default:
@@ -361,9 +361,9 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 data.quads = new_quads;
             }
             if (firstDesktop)
-                data.opacity *= timeLine.value();
+                data.opacity *= timeLine.currentValue();
             else
-                data.opacity *= (1.0 - timeLine.value());
+                data.opacity *= (1.0 - timeLine.currentValue());
         }
     }
     effects->paintWindow(w, mask, region, data);
@@ -373,7 +373,7 @@ void CubeSlideEffect::postPaintScreen()
 {
     effects->postPaintScreen();
     if (!slideRotations.empty()) {
-        if (timeLine.value() == 1.0) {
+        if (timeLine.currentValue() == 1.0) {
             RotationDirection direction = slideRotations.dequeue();
             switch(direction) {
             case Left:
@@ -401,11 +401,11 @@ void CubeSlideEffect::postPaintScreen()
                 front_desktop = effects->desktopBelow(front_desktop, true);
                 break;
             }
-            timeLine.setProgress(0.0);
+            timeLine.setCurrentTime(0);
             if (slideRotations.count() == 1)
-                timeLine.setCurveShape(TimeLine::EaseOutCurve);
+                timeLine.setCurveShape(QTimeLine::EaseOutCurve);
             else
-                timeLine.setCurveShape(TimeLine::LinearCurve);
+                timeLine.setCurveShape(QTimeLine::LinearCurve);
             if (slideRotations.empty()) {
                 foreach (EffectWindow * w, panels)
                 w->setData(WindowForceBlurRole, QVariant(false));
@@ -521,11 +521,11 @@ void CubeSlideEffect::slotDesktopChanged(int old, int current)
     timeLine.setDuration((float)rotationDuration / (float)slideRotations.count());
     if (activate) {
         if (slideRotations.count() == 1)
-            timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+            timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         else
-            timeLine.setCurveShape(TimeLine::EaseInCurve);
+            timeLine.setCurveShape(QTimeLine::EaseInCurve);
         effects->setActiveFullScreenEffect(this);
-        timeLine.setProgress(0.0);
+        timeLine.setCurrentTime(0);
         front_desktop = old;
         effects->addRepaintFull();
     }
@@ -560,7 +560,7 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
         // not in one of the areas
         windowMoving = false;
         desktopChangedWhileMoving = false;
-        timeLine.setProgress(0.0);
+        timeLine.setCurrentTime(0);
         if (!slideRotations.isEmpty())
             slideRotations.clear();
         effects->setActiveFullScreenEffect(0);
@@ -594,7 +594,7 @@ void CubeSlideEffect::slotWindowFinishUserMovedResized(EffectWindow* w)
         default:
             break; // impossible
         }
-        timeLine.setProgress(1.0 - timeLine.progress());
+        timeLine.setCurrentTime(timeLine.duration() - timeLine.currentTime());
     }
     desktopChangedWhileMoving = false;
     windowMoving = false;
@@ -610,7 +610,7 @@ void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection dire
     front_desktop = effects->currentDesktop();
     if (slideRotations.isEmpty()) {
         slideRotations.enqueue(direction);
-        timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+        timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         windowMoving = true;
         effects->setActiveFullScreenEffect(this);
     }

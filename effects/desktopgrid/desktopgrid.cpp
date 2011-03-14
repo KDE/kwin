@@ -107,7 +107,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     }
 
     zoomDuration = animationTime(conf, "ZoomDuration", 300);
-    timeline.setCurveShape(TimeLine::EaseInOutCurve);
+    timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     timeline.setDuration(zoomDuration);
 
     border = conf.readEntry("BorderWidth", 10);
@@ -122,16 +122,16 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
 
 void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (timeline.value() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
+    if (timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
         if (activated)
-            timeline.addTime(time);
+            timeline.setCurrentTime(timeline.currentTime() + time);
         else
-            timeline.removeTime(time);
+            timeline.setCurrentTime(timeline.currentTime() - time);
         for (int i = 0; i < effects->numberOfDesktops(); i++) {
             if (i == highlightedDesktop - 1)
-                hoverTimeline[i].addTime(time);
+                hoverTimeline[i]->setCurrentTime(hoverTimeline[i]->currentTime() + time);
             else
-                hoverTimeline[i].removeTime(time);
+                hoverTimeline[i]->setCurrentTime(hoverTimeline[i]->currentTime() - time);
         }
         if (isUsingPresentWindows()) {
             QList<WindowMotionManager>::iterator i;
@@ -140,9 +140,9 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         }
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if (timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows()))
+        if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows()))
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        if (!activated && timeline.value() == 0 && !(isUsingPresentWindows() && isMotionManagerMovingWindows()))
+        if (!activated && timeline.currentValue() == 0 && !(isUsingPresentWindows() && isMotionManagerMovingWindows()))
             finish();
     }
     effects->prePaintScreen(data, time);
@@ -150,7 +150,7 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (timeline.value() == 0 && !isUsingPresentWindows()) {
+    if (timeline.currentValue() == 0 && !isUsingPresentWindows()) {
         effects->paintScreen(mask, region, data);
         return;
     }
@@ -172,7 +172,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         }
         if (it.value()) {
             WindowPaintData d(it.value());
-            d.opacity *= timeline.value();
+            d.opacity *= timeline.currentValue();
             effects->drawWindow(it.value(), PAINT_WINDOW_TRANSLUCENT,
                                 infiniteRegion(), d);
         }
@@ -215,7 +215,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 else
                     y = textArea.center().y();
                 frame->setPosition(QPoint(x, y));
-                frame->render(region, timeline.value(), 0.7);
+                frame->render(region, timeline.currentValue(), 0.7);
                 ++desktop;
             }
         }
@@ -224,13 +224,13 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
 
 void DesktopGridEffect::postPaintScreen()
 {
-    if (activated ? timeline.value() != 1 : timeline.value() != 0)
+    if (activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0)
         effects->addRepaintFull(); // Repaint during zoom
     if (isUsingPresentWindows() && isMotionManagerMovingWindows())
         effects->addRepaintFull();
     if (activated) {
         for (int i = 0; i < effects->numberOfDesktops(); i++) {
-            if (hoverTimeline[i].value() != 0.0 && hoverTimeline[i].value() != 1.0) {
+            if (hoverTimeline[i]->currentValue() != 0.0 && hoverTimeline[i]->currentValue() != 1.0) {
                 // Repaint during soft highlighting
                 effects->addRepaintFull();
                 break;
@@ -245,7 +245,7 @@ void DesktopGridEffect::postPaintScreen()
 
 void DesktopGridEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
+    if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
         if (w->isOnDesktop(paintingDesktop)) {
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
             if (w->isMinimized() && isUsingPresentWindows())
@@ -274,7 +274,7 @@ void DesktopGridEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data
 
 void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
+    if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
         if (isUsingPresentWindows() && w == windowMove && wasWindowMove) {
             return; // will be painted on top of all other windows
         }
@@ -286,7 +286,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
         // Don't change brightness of windows on all desktops as this causes flickering
         if (!w->isOnAllDesktops() || w->isDesktop())
-            data.brightness *= 1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1].value()));
+            data.brightness *= 1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue()));
 
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
@@ -326,7 +326,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             d.quads = screenQuads;
 
             QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
-            double progress = timeline.value();
+            double progress = timeline.currentValue();
             d.xScale = interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->geometry().width(), progress);
             d.yScale = interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->geometry().height(), progress);
             d.xTranslate += qRound(newPos.x() - w->x());
@@ -334,10 +334,10 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
             if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
                 // fade out panels if present windows is used
-                d.opacity *= (1.0 - timeline.value());
+                d.opacity *= (1.0 - timeline.currentValue());
             }
             if (isUsingPresentWindows() && w->isMinimized()) {
-                d.opacity *= timeline.value();
+                d.opacity *= timeline.currentValue();
             }
 
             if (effects->compositingType() == XRenderCompositing) {
@@ -355,7 +355,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                 effects->paintWindow(w, mask, region, d);
             } else {
                 PaintClipper pc(effects->clientArea(ScreenArea, screen, 0));
-                if (w->isDesktop() && timeline.value() == 1.0) {
+                if (w->isDesktop() && timeline.currentValue() == 1.0) {
                     // desktop windows are not in a motion manager and can always be rendered with
                     // lanczos sampling except for animations
                     mask |= PAINT_WINDOW_LANCZOS;
@@ -397,7 +397,7 @@ void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
 
 void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
 {
-    if (!activated && timeline.value() == 0)
+    if (!activated && timeline.currentValue() == 0)
         return;
     if (w == windowMove) {
         effects->setElevatedWindow(windowMove, false);
@@ -465,7 +465,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
     if ((e->type() != QEvent::MouseMove
             && e->type() != QEvent::MouseButtonPress
             && e->type() != QEvent::MouseButtonRelease)
-            || timeline.value() != 1)  // Block user input during animations
+            || timeline.currentValue() != 1)  // Block user input during animations
         return;
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
     for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
@@ -668,7 +668,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
 
 void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
 {
-    if (timeline.value() != 1)   // Block user input during animations
+    if (timeline.currentValue() != 1)   // Block user input during animations
         return;
     if (windowMove != NULL)
         return;
@@ -757,7 +757,7 @@ QPointF DesktopGridEffect::scalePos(const QPoint& pos, int desktop, int screen) 
         desktopCell.setY((desktop - 1) % gridSize.height() + 1);
     }
 
-    double progress = timeline.value();
+    double progress = timeline.currentValue();
     QPointF point(
         interpolate(
             (
@@ -793,7 +793,7 @@ QPoint DesktopGridEffect::unscalePos(const QPoint& pos, int* desktop) const
     int screen = effects->screenNumber(pos);
     QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
-    //double progress = timeline.value();
+    //double progress = timeline.currentValue();
     double scaledX = /*interpolate(
         ( pos.x() - screenGeom.x() + unscaledBorder[screen] / 2.0 ) / ( screenGeom.width() + unscaledBorder[screen] ) + activeCell.x() - 1,*/
         (pos.x() - scaledOffset[screen].x() + double(border) / 2.0) / (scaledSize[screen].width() + border)/*,
@@ -841,7 +841,7 @@ int DesktopGridEffect::posToDesktop(const QPoint& pos) const
     int screen = effects->screenNumber(pos);
     QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
-    //double progress = timeline.value();
+    //double progress = timeline.currentValue();
     double scaledX = /*interpolate(
         ( pos.x() - screenGeom.x() + unscaledBorder[screen] / 2.0 ) / ( screenGeom.width() + unscaledBorder[screen] ) + activeCell.x() - 1,*/
         (pos.x() - scaledOffset[screen].x() + double(border) / 2.0) / (scaledSize[screen].width() + border)/*,
@@ -1031,7 +1031,7 @@ void DesktopGridEffect::setActive(bool active)
         return; // Already in that state
 
     activated = active;
-    if (activated && timeline.value() == 0)
+    if (activated && timeline.currentValue() == 0)
         setup();
     if (!activated) {
         if (isUsingPresentWindows()) {
@@ -1060,13 +1060,14 @@ void DesktopGridEffect::setup()
     setHighlightedDesktop(effects->currentDesktop());
 
     // Soft highlighting
+    qDeleteAll(hoverTimeline);
     hoverTimeline.clear();
     for (int i = 0; i < effects->numberOfDesktops(); i++) {
-        TimeLine newTimeline(animationTime(zoomDuration));
-        newTimeline.setCurveShape(TimeLine::EaseInOutCurve);
+        QTimeLine *newTimeline = new QTimeLine(animationTime(zoomDuration), this);
+        newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
         hoverTimeline.append(newTimeline);
     }
-    hoverTimeline[effects->currentDesktop() - 1].setProgress(1.0);
+    hoverTimeline[effects->currentDesktop() - 1]->setCurrentTime(hoverTimeline[effects->currentDesktop() - 1]->duration());
 
     // Create desktop name textures if enabled
     if (desktopNameAlignment) {
@@ -1284,8 +1285,8 @@ void DesktopGridEffect::desktopsAdded(int old)
     const int desktop = effects->numberOfDesktops();
     for (int i = old; i <= effects->numberOfDesktops(); i++) {
         // add a timeline for the new desktop
-        TimeLine newTimeline(animationTime(zoomDuration));
-        newTimeline.setCurveShape(TimeLine::EaseInOutCurve);
+        QTimeLine *newTimeline = new QTimeLine(animationTime(zoomDuration), this);
+        newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
         hoverTimeline.append(newTimeline);
     }
 
@@ -1329,7 +1330,7 @@ void DesktopGridEffect::desktopsRemoved(int old)
 {
     const int desktop = effects->numberOfDesktops();
     for (int i = desktop; i < old; i++) {
-        hoverTimeline.removeLast();
+        delete hoverTimeline.takeLast();
         if (desktopNameAlignment) {
             delete desktopNames.last();
             desktopNames.removeLast();

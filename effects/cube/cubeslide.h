@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <QQueue>
 #include <QSet>
+#include <QTimeLine>
 
 namespace KWin
 {
@@ -63,7 +64,7 @@ private:
     int painting_desktop;
     int other_desktop;
     bool firstDesktop;
-    TimeLine timeLine;
+    QTimeLine timeLine;
     QQueue<RotationDirection> slideRotations;
     QSet<EffectWindow*> panels;
     QSet<EffectWindow*> stickyWindows;

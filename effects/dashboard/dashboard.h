@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DASHBOARD_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <Plasma/WindowEffects>
@@ -54,7 +55,7 @@ private:
     bool retransformWindow;
     bool activateAnimation;
     bool deactivateAnimation;
-    TimeLine timeline;
+    QTimeLine timeline;
     long atom;
     QString brightness;
     double brightnessDelta;

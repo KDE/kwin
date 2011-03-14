@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "minimizeanimation.h"
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -37,20 +38,21 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
 void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
 
-    QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
+    QHash< EffectWindow*, QTimeLine* >::iterator entry = mTimeLineWindows.begin();
     bool erase = false;
     while (entry != mTimeLineWindows.end()) {
-        TimeLine &timeline = entry.value();
+        QTimeLine *timeline = entry.value();
         if (entry.key()->isMinimized()) {
-            timeline.addTime(time);
-            erase = (timeline.progress() >= 1.0f);
+            timeline->setCurrentTime(timeline->currentTime() + time);
+            erase = (timeline->currentValue() >= 1.0f);
         } else {
-            timeline.removeTime(time);
-            erase = (timeline.progress() <= 0.0f);
+            timeline->setCurrentTime(timeline->currentTime() - time);
+            erase = (timeline->currentValue() <= 0.0f);
         }
-        if (erase)
+        if (erase) {
+            delete timeline;
             entry = mTimeLineWindows.erase(entry);
-        else
+        } else
             ++entry;
     }
 
@@ -78,10 +80,10 @@ void MinimizeAnimationEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData
 
 void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    QHash< EffectWindow*, TimeLine >::const_iterator entry = mTimeLineWindows.constFind(w);
+    QHash< EffectWindow*, QTimeLine* >::const_iterator entry = mTimeLineWindows.constFind(w);
     if (entry != mTimeLineWindows.constEnd()) {
         // 0 = not minimized, 1 = fully minimized
-        double progress = entry->value();
+        double progress = entry.value()->currentValue();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -113,27 +115,37 @@ void MinimizeAnimationEffect::postPaintScreen()
 
 void MinimizeAnimationEffect::slotWindowDeleted(EffectWindow* w)
 {
-    mTimeLineWindows.remove(w);
+    delete mTimeLineWindows.take(w);
 }
 
 void MinimizeAnimationEffect::slotWindowMinimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    TimeLine &timeline = mTimeLineWindows[w];
-    timeline.setCurveShape(TimeLine::EaseInCurve);
-    timeline.setDuration(animationTime(250));
-    timeline.setProgress(0.0f);
+    QTimeLine *timeline;
+    if (mTimeLineWindows.contains(w)) {
+        timeline = mTimeLineWindows[w];
+    } else {
+        timeline = new QTimeLine(animationTime(250), this);
+        mTimeLineWindows.insert(w, timeline);
+    }
+    timeline->setCurveShape(QTimeLine::EaseInCurve);
+    timeline->setCurrentTime(0.0);
 }
 
 void MinimizeAnimationEffect::slotWindowUnminimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    TimeLine &timeline = mTimeLineWindows[w];
-    timeline.setCurveShape(TimeLine::EaseOutCurve);
-    timeline.setDuration(animationTime(250));
-    timeline.setProgress(1.0f);
+    QTimeLine *timeline;
+    if (mTimeLineWindows.contains(w)) {
+        timeline = mTimeLineWindows[w];
+    } else {
+        timeline = new QTimeLine(animationTime(250), this);
+        mTimeLineWindows.insert(w, timeline);
+    }
+    timeline->setCurveShape(QTimeLine::EaseInOutCurve);
+    timeline->setCurrentTime(timeline->duration());
 }
 
 } // namespace

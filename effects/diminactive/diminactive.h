@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Include with base class for effects.
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 
 namespace KWin
@@ -45,10 +46,10 @@ public Q_SLOTS:
 
 private:
     bool dimWindow(const EffectWindow* w) const;
-    TimeLine timeline;
+    QTimeLine timeline;
     EffectWindow* active;
     EffectWindow* previousActive;
-    TimeLine previousActiveTimeline;
+    QTimeLine previousActiveTimeline;
     int dim_strength; // reduce saturation and brightness by this percentage
     bool dim_panels; // do/don't dim also all panels
     bool dim_desktop; // do/don't dim the desktop

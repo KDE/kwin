@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
@@ -57,16 +59,12 @@ private:
 class SheetEffect::WindowInfo
 {
 public:
-    WindowInfo()
-        : deleted(false)
-        , added(false)
-        , closed(false)
-        , parentY(0) {
-    }
+    WindowInfo();
+    ~WindowInfo();
     bool deleted;
     bool added;
     bool closed;
-    TimeLine timeLine;
+    QTimeLine *timeLine;
     int parentY;
 };
 

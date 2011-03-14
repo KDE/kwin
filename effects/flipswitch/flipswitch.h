@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <KShortcut>
 #include <QQueue>
+#include <QTimeLine>
 
 class KShortcut;
 
@@ -76,9 +77,9 @@ private:
     void adjustWindowMultiScreen(const EffectWindow *w, WindowPaintData& data);
     QQueue< SwitchingDirection> m_scheduledDirections;
     EffectWindow* m_selectedWindow;
-    TimeLine m_timeLine;
-    TimeLine m_startStopTimeLine;
-    TimeLine::CurveShape m_currentAnimationShape;
+    QTimeLine m_timeLine;
+    QTimeLine m_startStopTimeLine;
+    QTimeLine::CurveShape m_currentAnimationShape;
     QRect m_screenArea;
     int m_activeScreen;
     bool m_active;

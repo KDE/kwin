@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+#include <QTimeLine>
 #include <QFont>
 #include <QQueue>
 
@@ -106,8 +107,8 @@ private:
     int painting_desktop;
 
     bool mAnimateSwitch;
-    TimeLine activeTimeLine;
-    TimeLine timeLine;
+    QTimeLine activeTimeLine;
+    QTimeLine timeLine;
     bool animation;
     QRect highlight_area;
     bool highlight_is_set;

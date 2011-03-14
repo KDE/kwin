@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QQueue>
 #include <QMatrix4x4>
+#include <QTimeLine>
 #include "cube_inside.h"
 #include "cube_proxy.h"
 
@@ -119,8 +120,8 @@ private:
     bool verticalRotating;
     bool desktopChangedWhileRotating;
     bool paintCaps;
-    TimeLine timeLine;
-    TimeLine verticalTimeLine;
+    QTimeLine timeLine;
+    QTimeLine verticalTimeLine;
     RotationDirection rotationDirection;
     RotationDirection verticalRotationDirection;
     VerticalRotationPosition verticalPosition;
@@ -133,7 +134,7 @@ private:
     GLTexture* capTexture;
     float manualAngle;
     float manualVerticalAngle;
-    TimeLine::CurveShape currentShape;
+    QTimeLine::CurveShape currentShape;
     bool start;
     bool stop;
     bool reflectionPainting;

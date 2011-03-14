@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+#include <QTimeLine>
 #include <QQueue>
 
 #include <kwineffects.h>
@@ -78,7 +79,7 @@ private:
     int animationDuration;
     bool stopRequested;
     bool startRequested;
-    TimeLine timeLine;
+    QTimeLine timeLine;
     QRect area;
     Window input;
     float zPosition;

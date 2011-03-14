@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "scalein.h"
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -42,12 +43,12 @@ void ScaleInEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void ScaleInEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
     if (mTimeLineWindows.contains(w)) {
-        mTimeLineWindows[ w ].setCurveShape(TimeLine::EaseOutCurve);
-        mTimeLineWindows[ w ].addTime(time);
-        if (mTimeLineWindows[ w ].value() < 1)
+        mTimeLineWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
+        mTimeLineWindows[ w ]->setCurrentTime(mTimeLineWindows[ w ]->currentTime() + time);
+        if (mTimeLineWindows[ w ]->currentValue() < 1)
             data.setTransformed();
         else
-            mTimeLineWindows.remove(w);
+            delete mTimeLineWindows.take(w);
     }
     effects->prePaintWindow(w, data, time);
 }
@@ -55,11 +56,12 @@ void ScaleInEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, in
 void ScaleInEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (mTimeLineWindows.contains(w) && isScaleWindow(w)) {
-        data.opacity *= mTimeLineWindows[ w ].value();
-        data.xScale *= mTimeLineWindows[ w ].value();
-        data.yScale *= mTimeLineWindows[ w ].value();
-        data.xTranslate += int(w->width() / 2 * (1 - mTimeLineWindows[ w ].value()));
-        data.yTranslate += int(w->height() / 2 * (1 - mTimeLineWindows[ w ].value()));
+        const qreal value = mTimeLineWindows[ w ]->currentValue();
+        data.opacity *= value;
+        data.xScale *= value;
+        data.yScale *= value;
+        data.xTranslate += int(w->width() / 2 * (1 - value));
+        data.yTranslate += int(w->height() / 2 * (1 - value));
     }
     effects->paintWindow(w, mask, region, data);
 }
@@ -83,15 +85,14 @@ void ScaleInEffect::postPaintWindow(EffectWindow* w)
 void ScaleInEffect::slotWindowAdded(EffectWindow* c)
 {
     if (c->isOnCurrentDesktop()) {
-        mTimeLineWindows[ c ].setDuration(animationTime(250));
-        mTimeLineWindows[ c ].setProgress(0.0);
+        mTimeLineWindows.insert(c, new QTimeLine(animationTime(250), this));
         c->addRepaintFull();
     }
 }
 
 void ScaleInEffect::slotWindowClosed(EffectWindow* c)
 {
-    mTimeLineWindows.remove(c);
+    delete mTimeLineWindows.take(c);
 }
 
 } // namespace

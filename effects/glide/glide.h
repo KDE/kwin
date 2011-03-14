@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
@@ -67,16 +69,14 @@ private:
 class GlideEffect::WindowInfo
 {
 public:
-    WindowInfo()
-        : deleted(false)
-        , added(false)
-        , closed(false) { }
+    WindowInfo();
     ~WindowInfo() {
+        delete timeLine;
     }
     bool deleted;
     bool added;
     bool closed;
-    TimeLine timeLine;
+    QTimeLine *timeLine;
 };
 
 } // namespace

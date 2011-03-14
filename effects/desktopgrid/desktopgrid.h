@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kshortcut.h>
 #include <QObject>
+#include <QtCore/QTimeLine>
 #include <QtGui/QGraphicsView>
 
 namespace Plasma
@@ -119,7 +120,7 @@ private:
     int customLayoutRows;
 
     bool activated;
-    TimeLine timeline;
+    QTimeLine timeline;
     int paintingDesktop;
     int highlightedDesktop;
     Window input;
@@ -130,7 +131,7 @@ private:
     QPoint dragStartPos;
 
     // Soft highlighting
-    QList<TimeLine> hoverTimeline;
+    QList<QTimeLine*> hoverTimeline;
 
     QList< EffectFrame* > desktopNames;
 

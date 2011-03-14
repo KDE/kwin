@@ -83,14 +83,14 @@ void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         saturationDelta = (1 - (saturation.toDouble() / 100));
 
         // dashboard active, transform other windows
-        data.brightness *= (1 - (brightnessDelta * timeline.value()));
-        data.saturation *= (1 - (saturationDelta * timeline.value()));
+        data.brightness *= (1 - (brightnessDelta * timeline.currentValue()));
+        data.saturation *= (1 - (saturationDelta * timeline.currentValue()));
     }
 
     else if (transformWindow && (w == window) && w->isManaged()) {
         // transform dashboard
-        if ((timeline.value() * 2) <= 1) {
-            data.opacity *= timeline.value() * 2;
+        if ((timeline.currentValue() * 2) <= 1) {
+            data.opacity *= timeline.currentValue() * 2;
         } else {
             data.opacity *= 1;
         }
@@ -103,9 +103,9 @@ void DashboardEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (transformWindow) {
         if (activateAnimation)
-            timeline.addTime(time);
+            timeline.setCurrentTime(timeline.currentTime() + time);
         if (deactivateAnimation)
-            timeline.removeTime(time);
+            timeline.setCurrentTime(timeline.currentTime() - time);
     }
     effects->prePaintScreen(data, time);
 }
@@ -121,14 +121,14 @@ void DashboardEffect::postPaintScreen()
         }
 
         if (activateAnimation) {
-            if (timeline.value() == 1.0)
+            if (timeline.currentValue() == 1.0)
                 activateAnimation = false;
 
             effects->addRepaintFull();
         }
 
         if (deactivateAnimation) {
-            if (timeline.value() == 0.0) {
+            if (timeline.currentValue() == 0.0) {
                 deactivateAnimation = false;
                 transformWindow = false;
                 effects->setActiveFullScreenEffect(0);
@@ -182,7 +182,7 @@ void DashboardEffect::slotWindowAdded(EffectWindow* w)
 
         activateAnimation = true;
         deactivateAnimation = false;
-        timeline.setProgress(0.0);
+        timeline.setCurrentTime(0);
 
         w->addRepaintFull();
     }

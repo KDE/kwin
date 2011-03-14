@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SNAPHELPER_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -49,7 +50,7 @@ public Q_SLOTS:
 private:
     bool m_active;
     EffectWindow* m_window;
-    TimeLine m_timeline;
+    QTimeLine m_timeline;
     //GC m_gc;
 };
 

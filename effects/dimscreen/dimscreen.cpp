@@ -47,30 +47,30 @@ void DimScreenEffect::reconfigure(ReconfigureFlags)
 void DimScreenEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (mActivated && activateAnimation && !effects->activeFullScreenEffect())
-        timeline.addTime(time);
+        timeline.setCurrentTime(timeline.currentTime() + time);
     if (mActivated && deactivateAnimation)
-        timeline.removeTime(time);
+        timeline.setCurrentTime(timeline.currentTime() - time);
     if (mActivated && effects->activeFullScreenEffect())
-        timeline.removeTime(time);
-    if (mActivated && !activateAnimation && !deactivateAnimation && !effects->activeFullScreenEffect() && timeline.value() != 1.0)
-        timeline.addTime(time);
+        timeline.setCurrentTime(timeline.currentTime() - time);
+    if (mActivated && !activateAnimation && !deactivateAnimation && !effects->activeFullScreenEffect() && timeline.currentValue() != 1.0)
+        timeline.setCurrentTime(timeline.currentTime() + time);
     effects->prePaintScreen(data, time);
 }
 
 void DimScreenEffect::postPaintScreen()
 {
     if (mActivated) {
-        if (activateAnimation && timeline.value() == 1.0) {
+        if (activateAnimation && timeline.currentValue() == 1.0) {
             activateAnimation = false;
             effects->addRepaintFull();
         }
-        if (deactivateAnimation && timeline.value() == 0.0) {
+        if (deactivateAnimation && timeline.currentValue() == 0.0) {
             deactivateAnimation = false;
             mActivated = false;
             effects->addRepaintFull();
         }
         // still animating
-        if (timeline.value() > 0.0 && timeline.value() < 1.0)
+        if (timeline.currentValue() > 0.0 && timeline.currentValue() < 1.0)
             effects->addRepaintFull();
     }
     effects->postPaintScreen();
@@ -79,8 +79,8 @@ void DimScreenEffect::postPaintScreen()
 void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (mActivated && (w != window) && w->isManaged()) {
-        data.brightness *= (1.0 - 0.33 * timeline.value());
-        data.saturation *= (1.0 - 0.33 * timeline.value());
+        data.brightness *= (1.0 - 0.33 * timeline.currentValue());
+        data.saturation *= (1.0 - 0.33 * timeline.currentValue());
     }
     effects->paintWindow(w, mask, region, data);
 }

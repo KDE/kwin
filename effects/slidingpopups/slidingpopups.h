@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
@@ -60,8 +62,8 @@ private:
         int fadeOutDuration;
     };
     long mAtom;
-    QHash< const EffectWindow*, TimeLine > mAppearingWindows;
-    QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
+    QHash< const EffectWindow*, QTimeLine* > mAppearingWindows;
+    QHash< const EffectWindow*, QTimeLine* > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
     int mFadeInTime;
     int mFadeOutTime;
