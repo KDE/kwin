@@ -131,16 +131,6 @@ bool BlurEffect::supported()
         if (displayWidth() > maxTexSize || displayHeight() > maxTexSize)
             supported = false;
     }
-
-    if (supported) {
-        // check the blacklist
-        KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
-        KConfigGroup blacklist = config->group("Blacklist").group("Blur");
-        if (effects->checkDriverBlacklist(blacklist)) {
-            kDebug() << "Blur effect disabled by driver blacklist";
-            supported = false;
-        }
-    }
     return supported;
 }
 

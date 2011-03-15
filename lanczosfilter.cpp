@@ -67,13 +67,6 @@ void LanczosFilter::init()
     if (config->group("Compositing").readEntry("GLTextureFilter", 2) != 2)
         return; // disabled by config
 
-    // check the blacklist
-    KConfigGroup blacklist = config->group("Blacklist").group("Lanczos");
-    if (effects->checkDriverBlacklist(blacklist)) {
-        kDebug() << "Lanczos Filter disabled by driver blacklist";
-        return;
-    }
-
     // The lanczos filter is reported to be broken with the Intel driver and Mesa 7.10
     GLPlatform *gl = GLPlatform::instance();
     if (gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(7, 10))

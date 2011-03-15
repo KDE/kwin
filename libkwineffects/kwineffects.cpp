@@ -305,40 +305,6 @@ KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
     return kwinconfig->group("Effect-" + effectname);
 }
 
-bool EffectsHandler::checkDriverBlacklist(const KConfigGroup& blacklist)
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (effects->compositingType() == OpenGLCompositing) {
-        QString vendor   = QString((const char*)glGetString(GL_VENDOR));
-        QString renderer = QString((const char*)glGetString(GL_RENDERER));
-        QString version  = QString((const char*)glGetString(GL_VERSION));
-        foreach (const QString & key, blacklist.keyList()) {
-            // the key is a word in the renderer string or vendor referrencing the vendor in case of mesa
-            // e.g. "Intel" or "Ati"
-            if (renderer.contains(key, Qt::CaseInsensitive) || vendor.contains(key, Qt::CaseInsensitive)) {
-                // the value for current key contains a string list of driver versions which have to be blacklisted
-                QStringList versions = blacklist.readEntry< QStringList >(key, QStringList());
-                foreach (const QString & entry, versions) {
-                    QStringList parts = entry.split(":-:");
-                    if (parts.size() != 2) {
-                        continue;
-                    }
-                    if (renderer.contains(parts[0], Qt::CaseInsensitive) &&
-                            version.contains(parts[1], Qt::CaseInsensitive)) {
-                        // the version matches the renderer string - this driver is blacklisted, return
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
-#else
-    return false;
-#endif
-}
-
-
 EffectsHandler* effects = 0;
 
 

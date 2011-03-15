@@ -742,17 +742,6 @@ public:
     virtual bool decorationSupportsBlurBehind() const = 0;
 
     /**
-     * Checks if the driver is on given blacklist.
-     * The format of the blacklist is driver identifier as key (e.g. Intel) with a list of
-     * concrete driver render strings as the values. The renderer string consists of GL_RENDERER
-     * and GL_VERSION separated by colon dash colon. E.g.: GeForce 9400M/PCI/SSE2:-:3.2.0 NVIDIA 195.36.24
-     * This method is only used for OpenGL compositing. If not using OpenGL it will return false.
-     * @returns true if the driver is blacklisted, false otherwise
-     * @since 4.5
-     */
-    bool checkDriverBlacklist(const KConfigGroup& blacklist);
-
-    /**
      * Creates a new frame object. If the frame does not have a static size
      * then it will be located at @a position with @a alignment. A
      * non-static frame will automatically adjust its size to fit the contents.
