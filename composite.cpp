@@ -403,8 +403,6 @@ void Workspace::performCompositing()
     foreach (Toplevel * c, windows) {
         // This could be possibly optimized WRT obscuring, but that'd need being already
         // past prePaint() phase - probably not worth it.
-        // TODO I think effects->transformWindowDamage() doesn't need to be called here,
-        // pre-paint will extend painted window areas as necessary.
         repaints_region |= c->repaints().translated(c->pos());
         repaints_region |= c->decorationPendingRegion();
         c->resetRepaints(c->decorationRect());
@@ -899,10 +897,7 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
     if (!compositing())
         return;
-    if (effectWindow() == NULL)   // TODO - this can happen during window destruction
-        return workspace()->addRepaint(r2);
-    QRect r = effects->transformWindowDamage(effectWindow(), r2);
-    workspace()->addRepaint(r);
+    workspace()->addRepaint(r2);
 }
 
 bool Toplevel::updateUnredirectedState()

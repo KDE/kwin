@@ -300,7 +300,6 @@ void EffectsHandlerImpl::startPaint()
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 }
 
 void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
@@ -1010,7 +1009,6 @@ bool EffectsHandlerImpl::loadEffect(const QString& name)
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 
     if (!name.startsWith(QLatin1String("kwin4_effect_")))
         kWarning(1212) << "Effect names usually have kwin4_effect_ prefix" ;
@@ -1105,7 +1103,6 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
         if (it.value().first == name) {

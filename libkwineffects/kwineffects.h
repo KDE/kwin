@@ -431,14 +431,6 @@ public:
      **/
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
 
-    /**
-     * This function is used e.g. by the shadow effect which adds area around windows
-     * that needs to be painted as well - e.g. when a window is hidden and the workspace needs
-     * to be repainted at that area, shadow's transformWindowDamage() adds the shadow area
-     * to it, so that it is repainted as well.
-     **/
-    virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
-
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
@@ -557,7 +549,6 @@ public:
     virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity) = 0;
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) = 0;
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList) = 0;
-    virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
     // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
     // covering the whole screen is created and all mouse events will be intercepted by it.
     // The effect's windowInputMouseEvent() will get called with such events.
@@ -983,7 +974,6 @@ protected:
     int current_paint_window;
     int current_draw_window;
     int current_build_quads;
-    int current_transform;
     CompositingType compositing_type;
 };
 

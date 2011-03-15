@@ -182,11 +182,6 @@ void Effect::buildQuads(EffectWindow* w, WindowQuadList& quadList)
     effects->buildQuads(w, quadList);
 }
 
-QRect Effect::transformWindowDamage(EffectWindow* w, const QRect& r)
-{
-    return effects->transformWindowDamage(w, r);
-}
-
 void Effect::setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                         const QRect& r, Qt::AspectRatioMode aspect)
 {
@@ -239,7 +234,6 @@ EffectsHandler::EffectsHandler(CompositingType type)
     , current_paint_window(0)
     , current_draw_window(0)
     , current_build_quads(0)
-    , current_transform(0)
     , compositing_type(type)
 {
     if (compositing_type == NoCompositing)
@@ -251,16 +245,6 @@ EffectsHandler::~EffectsHandler()
 {
     // All effects should already be unloaded by Impl dtor
     assert(loaded_effects.count() == 0);
-}
-
-QRect EffectsHandler::transformWindowDamage(EffectWindow* w, const QRect& r)
-{
-    if (current_transform < loaded_effects.size()) {
-        QRect rr = loaded_effects[current_transform++].second->transformWindowDamage(w, r);
-        --current_transform;
-        return rr;
-    } else
-        return r;
 }
 
 Window EffectsHandler::createInputWindow(Effect* e, const QRect& r, const QCursor& cursor)
