@@ -291,11 +291,11 @@ void SceneXrender::flushBuffer(int mask, QRegion damage)
         XFixesSetPictureClipRegion(display(), buffer, 0, 0, None);
         XRenderComposite(display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
         XFixesSetPictureClipRegion(display(), front, 0, 0, None);
-        XFlush(display());
+        XSync(display(), false);
     } else {
         // copy composed buffer to the root window
         XRenderComposite(display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
-        XFlush(display());
+        XSync(display(), false);
     }
 }
 
