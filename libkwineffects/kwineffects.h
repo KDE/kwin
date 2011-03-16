@@ -4,6 +4,7 @@
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
