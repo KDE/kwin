@@ -23,12 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <QObject>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
 
 class FadeDesktopEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -38,11 +39,13 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
-    virtual void desktopChanged(int old);
+
+private Q_SLOTS:
+    void slotDesktopChanged(int old);
 
 private:
     bool m_fading;
-    TimeLine m_timeline;
+    QTimeLine m_timeline;
     int m_oldDesktop;
 };
 

@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Plasma/FrameSvg>
 #include <Plasma/PushButton>
 #include <Plasma/WindowEffects>
+#include <netwm_def.h>
 
 #include <math.h>
 #include <assert.h>
@@ -98,6 +99,15 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(c, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedClass(QKeySequence)));
     shortcutClass = c->globalShortcut();
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowGeometryShapeChanged(EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -357,7 +367,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 //-----------------------------------------------------------------------------
 // User interaction
 
-void PresentWindowsEffect::windowAdded(EffectWindow *w)
+void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
 {
     if (!m_activated)
         return;
@@ -384,7 +394,7 @@ void PresentWindowsEffect::windowAdded(EffectWindow *w)
     }
 }
 
-void PresentWindowsEffect::windowClosed(EffectWindow *w)
+void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 {
     if (m_managerWindow == w)
         m_managerWindow = NULL;
@@ -409,7 +419,7 @@ void PresentWindowsEffect::windowClosed(EffectWindow *w)
     setActive(false);     //else no need to keep this open
 }
 
-void PresentWindowsEffect::windowDeleted(EffectWindow *w)
+void PresentWindowsEffect::slotWindowDeleted(EffectWindow *w)
 {
     if (!m_windowData.contains(w))
         return;
@@ -419,7 +429,7 @@ void PresentWindowsEffect::windowDeleted(EffectWindow *w)
     m_motionManager.unmanage(w);
 }
 
-void PresentWindowsEffect::windowGeometryShapeChanged(EffectWindow* w, const QRect& old)
+void PresentWindowsEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
 {
     Q_UNUSED(old)
     if (!m_activated)
@@ -666,7 +676,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
 //-----------------------------------------------------------------------------
 // Tab box
 
-void PresentWindowsEffect::tabBoxAdded(int mode)
+void PresentWindowsEffect::slotTabBoxAdded(int mode)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -684,7 +694,7 @@ void PresentWindowsEffect::tabBoxAdded(int mode)
     }
 }
 
-void PresentWindowsEffect::tabBoxClosed()
+void PresentWindowsEffect::slotTabBoxClosed()
 {
     if (m_activated) {
         effects->unrefTabBox();
@@ -693,13 +703,13 @@ void PresentWindowsEffect::tabBoxClosed()
     }
 }
 
-void PresentWindowsEffect::tabBoxUpdated()
+void PresentWindowsEffect::slotTabBoxUpdated()
 {
     if (m_activated)
         setHighlightedWindow(effects->currentTabBoxWindow());
 }
 
-void PresentWindowsEffect::tabBoxKeyEvent(QKeyEvent* event)
+void PresentWindowsEffect::slotTabBoxKeyEvent(QKeyEvent* event)
 {
     if (!m_activated)
         return;
@@ -740,7 +750,7 @@ void PresentWindowsEffect::tabBoxKeyEvent(QKeyEvent* event)
 
 //-----------------------------------------------------------------------------
 // Atom handling
-void PresentWindowsEffect::propertyNotify(EffectWindow* w, long a)
+void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || (a != m_atomDesktop && a != m_atomWindows))
         return; // Not our atom

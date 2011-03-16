@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kshortcut.h>
 #include <QObject>
+#include <QtCore/QTimeLine>
 #include <QtGui/QGraphicsView>
 
 namespace Plasma
@@ -59,7 +60,7 @@ private:
 };
 
 class DesktopGridEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -71,14 +72,9 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowClosed(EffectWindow* w);
-    virtual void windowDeleted(EffectWindow* w);
-    virtual void windowAdded(EffectWindow* w);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual bool borderActivated(ElectricBorder border);
-    virtual void numberDesktopsChanged(int old);
 
     enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
@@ -89,6 +85,11 @@ private slots:
     void globalShortcutChanged(const QKeySequence& seq);
     void slotAddDesktop();
     void slotRemoveDesktop();
+    void slotWindowAdded(EffectWindow* w);
+    void slotWindowClosed(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotNumberDesktopsChanged(int old);
+    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;
@@ -119,7 +120,7 @@ private:
     int customLayoutRows;
 
     bool activated;
-    TimeLine timeline;
+    QTimeLine timeline;
     int paintingDesktop;
     int highlightedDesktop;
     Window input;
@@ -130,7 +131,7 @@ private:
     QPoint dragStartPos;
 
     // Soft highlighting
-    QList<TimeLine> hoverTimeline;
+    QList<QTimeLine*> hoverTimeline;
 
     QList< EffectFrame* > desktopNames;
 

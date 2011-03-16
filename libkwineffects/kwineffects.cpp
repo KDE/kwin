@@ -119,54 +119,6 @@ void* Effect::proxy()
     return NULL;
 }
 
-void Effect::windowUserMovedResized(EffectWindow* , bool, bool)
-{
-}
-
-void Effect::windowMoveResizeGeometryUpdate(EffectWindow* , const QRect&)
-{
-}
-
-void Effect::windowOpacityChanged(EffectWindow*, double)
-{
-}
-
-void Effect::windowAdded(EffectWindow*)
-{
-}
-
-void Effect::windowClosed(EffectWindow*)
-{
-}
-
-void Effect::windowDeleted(EffectWindow*)
-{
-}
-
-void Effect::windowActivated(EffectWindow*)
-{
-}
-
-void Effect::windowMinimized(EffectWindow*)
-{
-}
-
-void Effect::windowUnminimized(EffectWindow*)
-{
-}
-
-void Effect::clientGroupItemSwitched(EffectWindow*, EffectWindow*)
-{
-}
-
-void Effect::clientGroupItemAdded(EffectWindow*, EffectWindow*)
-{
-}
-
-void Effect::clientGroupItemRemoved(EffectWindow*, EffectWindow*)
-{
-}
-
 void Effect::windowInputMouseEvent(Window, QEvent*)
 {
 }
@@ -175,46 +127,9 @@ void Effect::grabbedKeyboardEvent(QKeyEvent*)
 {
 }
 
-void Effect::propertyNotify(EffectWindow* , long)
-{
-}
-
-void Effect::desktopChanged(int)
-{
-}
-
-void Effect::windowDamaged(EffectWindow*, const QRect&)
-{
-}
-
-void Effect::windowGeometryShapeChanged(EffectWindow*, const QRect&)
-{
-}
-
-void Effect::tabBoxAdded(int)
-{
-}
-
-void Effect::tabBoxClosed()
-{
-}
-
-void Effect::tabBoxUpdated()
-{
-}
-
-void Effect::tabBoxKeyEvent(QKeyEvent*)
-{
-}
-
 bool Effect::borderActivated(ElectricBorder)
 {
     return false;
-}
-
-void Effect::mouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
-                          Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
-{
 }
 
 void Effect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -267,11 +182,6 @@ void Effect::buildQuads(EffectWindow* w, WindowQuadList& quadList)
     effects->buildQuads(w, quadList);
 }
 
-QRect Effect::transformWindowDamage(EffectWindow* w, const QRect& r)
-{
-    return effects->transformWindowDamage(w, r);
-}
-
 void Effect::setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                         const QRect& r, Qt::AspectRatioMode aspect)
 {
@@ -315,10 +225,6 @@ double Effect::animationTime(int defaultTime)
     return qMax(defaultTime * effects->animationTimeFactor(), 1.);
 }
 
-void Effect::numberDesktopsChanged(int)
-{
-}
-
 //****************************************
 // EffectsHandler
 //****************************************
@@ -328,7 +234,6 @@ EffectsHandler::EffectsHandler(CompositingType type)
     , current_paint_window(0)
     , current_draw_window(0)
     , current_build_quads(0)
-    , current_transform(0)
     , compositing_type(type)
 {
     if (compositing_type == NoCompositing)
@@ -340,16 +245,6 @@ EffectsHandler::~EffectsHandler()
 {
     // All effects should already be unloaded by Impl dtor
     assert(loaded_effects.count() == 0);
-}
-
-QRect EffectsHandler::transformWindowDamage(EffectWindow* w, const QRect& r)
-{
-    if (current_transform < loaded_effects.size()) {
-        QRect rr = loaded_effects[current_transform++].second->transformWindowDamage(w, r);
-        --current_transform;
-        return rr;
-    } else
-        return r;
 }
 
 Window EffectsHandler::createInputWindow(Effect* e, const QRect& r, const QCursor& cursor)
@@ -393,40 +288,6 @@ KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
     KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig("kwinrc", KConfig::NoGlobals);
     return kwinconfig->group("Effect-" + effectname);
 }
-
-bool EffectsHandler::checkDriverBlacklist(const KConfigGroup& blacklist)
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (effects->compositingType() == OpenGLCompositing) {
-        QString vendor   = QString((const char*)glGetString(GL_VENDOR));
-        QString renderer = QString((const char*)glGetString(GL_RENDERER));
-        QString version  = QString((const char*)glGetString(GL_VERSION));
-        foreach (const QString & key, blacklist.keyList()) {
-            // the key is a word in the renderer string or vendor referrencing the vendor in case of mesa
-            // e.g. "Intel" or "Ati"
-            if (renderer.contains(key, Qt::CaseInsensitive) || vendor.contains(key, Qt::CaseInsensitive)) {
-                // the value for current key contains a string list of driver versions which have to be blacklisted
-                QStringList versions = blacklist.readEntry< QStringList >(key, QStringList());
-                foreach (const QString & entry, versions) {
-                    QStringList parts = entry.split(":-:");
-                    if (parts.size() != 2) {
-                        continue;
-                    }
-                    if (renderer.contains(parts[0], Qt::CaseInsensitive) &&
-                            version.contains(parts[1], Qt::CaseInsensitive)) {
-                        // the version matches the renderer string - this driver is blacklisted, return
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
-#else
-    return false;
-#endif
-}
-
 
 EffectsHandler* effects = 0;
 
@@ -833,7 +694,7 @@ PaintClipper::Iterator::Iterator()
 #ifndef KWIN_HAVE_OPENGLES
         glPushAttrib(GL_SCISSOR_BIT);
 #endif
-        if (!effects->isRenderTargetBound())
+        if (!GLRenderTarget::isRenderTargetBound())
             glEnable(GL_SCISSOR_TEST);
         data->rects = paintArea().rects();
         data->index = -1;
@@ -853,7 +714,7 @@ PaintClipper::Iterator::~Iterator()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (clip() && effects->compositingType() == OpenGLCompositing) {
-        if (!effects->isRenderTargetBound())
+        if (!GLRenderTarget::isRenderTargetBound())
             glDisable(GL_SCISSOR_TEST);
 #ifndef KWIN_HAVE_OPENGLES
         glPopAttrib();
@@ -886,7 +747,7 @@ void PaintClipper::Iterator::next()
 {
     data->index++;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (clip() && effects->compositingType() == OpenGLCompositing && !effects->isRenderTargetBound() && data->index < data->rects.count()) {
+    if (clip() && effects->compositingType() == OpenGLCompositing && !GLRenderTarget::isRenderTargetBound() && data->index < data->rects.count()) {
         const QRect& r = data->rects[ data->index ];
         // Scissor rect has to be given in OpenGL coords
         glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
@@ -908,126 +769,6 @@ QRect PaintClipper::Iterator::boundingRect() const
 #endif
     abort();
     return infiniteRegion();
-}
-
-
-/***************************************************************
- TimeLine
-***************************************************************/
-
-TimeLine::TimeLine(const int duration)
-{
-    m_Time = 0;
-    m_Duration = duration;
-    m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1); // (avoid QTimeLine warning)
-    m_TimeLine->setFrameRange(0, m_Duration);
-    setCurveShape(EaseInCurve);
-}
-
-TimeLine::TimeLine(const TimeLine &other)
-{
-    m_Time = other.m_Time;
-    m_Duration = other.m_Duration;
-    m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1);
-    m_TimeLine->setFrameRange(0, m_Duration);
-    setCurveShape(other.m_CurveShape);
-    if (m_Duration != 0)
-        setProgress(m_Progress);
-}
-
-TimeLine::~TimeLine()
-{
-    delete m_TimeLine;
-}
-
-int TimeLine::duration() const
-{
-    return m_Duration;
-}
-
-void TimeLine::setDuration(const int msec)
-{
-    m_Duration = msec;
-    m_TimeLine->setDuration(m_Duration);
-    m_TimeLine->setFrameRange(0, m_Duration);
-}
-
-double TimeLine::value() const
-{
-    Q_ASSERT(m_Duration != 0);
-    return valueForTime(m_Time);
-}
-
-double TimeLine::valueForTime(const int msec) const
-{
-    Q_ASSERT(m_Duration != 0);
-    // Catch non QTimeLine CurveShapes here, (but there are none right now)
-
-
-    // else use QTimeLine ...
-    return m_TimeLine->valueForTime(msec);
-}
-
-void TimeLine::addTime(const int msec)
-{
-    Q_ASSERT(m_Duration != 0);
-    m_Time = qMin(m_Duration, m_Time + msec);
-    m_Progress = (double)m_Time / m_Duration;
-}
-
-void TimeLine::removeTime(const int msec)
-{
-    Q_ASSERT(m_Duration != 0);
-    m_Time = qMax(0, m_Time - msec);
-    m_Progress = (double)m_Time / m_Duration;
-}
-
-void TimeLine::setProgress(const double progress)
-{
-    Q_ASSERT(m_Duration != 0);
-    m_Progress = progress;
-    m_Time = qRound(m_Duration * progress);
-}
-
-double TimeLine::progress() const
-{
-    Q_ASSERT(m_Duration != 0);
-    return m_Progress;
-}
-
-int TimeLine::time() const
-{
-    Q_ASSERT(m_Duration != 0);
-    return m_Time;
-}
-
-void TimeLine::addProgress(const double progress)
-{
-    Q_ASSERT(m_Duration != 0);
-    m_Progress += progress;
-    m_Time = (int)(m_Duration * m_Progress);
-}
-
-void TimeLine::setCurveShape(CurveShape curveShape)
-{
-    switch(curveShape) {
-    case EaseInCurve:
-        m_TimeLine->setCurveShape(QTimeLine::EaseInCurve);
-        break;
-    case EaseOutCurve:
-        m_TimeLine->setCurveShape(QTimeLine::EaseOutCurve);
-        break;
-    case EaseInOutCurve:
-        m_TimeLine->setCurveShape(QTimeLine::EaseInOutCurve);
-        break;
-    case LinearCurve:
-        m_TimeLine->setCurveShape(QTimeLine::LinearCurve);
-        break;
-    case SineCurve:
-        m_TimeLine->setCurveShape(QTimeLine::SineCurve);
-        break;
-    }
-    m_CurveShape = curveShape;
 }
 
 /***************************************************************
@@ -1337,3 +1078,5 @@ void EffectFrame::enableCrossFade(bool enable)
 }
 
 } // namespace
+
+#include "kwineffects.moc"

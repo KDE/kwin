@@ -33,8 +33,11 @@ SnapHelperEffect::SnapHelperEffect()
     : m_active(false)
     , m_window(NULL)
 {
-    m_timeline.setCurveShape(TimeLine::LinearCurve);
+    m_timeline.setCurveShape(QTimeLine::LinearCurve);
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
 
     /*if ( effects->compositingType() == XRenderCompositing )
         {
@@ -63,12 +66,12 @@ bool SnapHelperEffect::supported()
 
 void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    double oldValue = m_timeline.value();
+    double oldValue = m_timeline.currentValue();
     if (m_active)
-        m_timeline.addTime(time);
+        m_timeline.setCurrentTime(m_timeline.currentTime() + time);
     else
-        m_timeline.removeTime(time);
-    if (oldValue != m_timeline.value())
+        m_timeline.setCurrentTime(m_timeline.currentTime() - time);
+    if (oldValue != m_timeline.currentValue())
         effects->addRepaintFull();
     effects->prePaintScreen(data, time);
 }
@@ -76,7 +79,7 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 void SnapHelperEffect::postPaintScreen()
 {
     effects->postPaintScreen();
-    if (m_timeline.value() != 0.0) {
+    if (m_timeline.currentValue() != 0.0) {
         // Display the guide
         if (effects->compositingType() == OpenGLCompositing) {
 #ifndef KWIN_HAVE_OPENGLES
@@ -95,7 +98,7 @@ void SnapHelperEffect::postPaintScreen()
             color.setRedF(0.5);
             color.setGreenF(0.5);
             color.setBlueF(0.5);
-            color.setAlphaF(m_timeline.value() * 0.5);
+            color.setAlphaF(m_timeline.currentValue() * 0.5);
             vbo->setColor(color);
             glLineWidth(4.0);
             QVector<float> verts;
@@ -187,7 +190,7 @@ void SnapHelperEffect::postPaintScreen()
     }
 }
 
-void SnapHelperEffect::windowClosed(EffectWindow* w)
+void SnapHelperEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_window == w) {
         m_window->refWindow();
@@ -195,14 +198,22 @@ void SnapHelperEffect::windowClosed(EffectWindow* w)
     }
 }
 
-void SnapHelperEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void SnapHelperEffect::slotWindowStartUserMovedResized(EffectWindow *w)
 {
-    if (first && !last && w->isMovable()) {
+    if (w->isMovable()) {
         m_active = true;
         m_window = w;
         effects->addRepaintFull();
-    } else if (last)
+    }
+}
+
+void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
+{
+    Q_UNUSED(w)
+    if (m_active) {
         m_active = false;
+        effects->addRepaintFull();
+    }
 }
 
 } // namespace

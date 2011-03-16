@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "unmanaged.h"
+#include "tabbox.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -95,6 +97,27 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , mouse_poll_ref_count(0)
     , current_paint_effectframe(0)
 {
+    Workspace *ws = Workspace::self();
+    connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
+    connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
+    connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
+    connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
+    connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
+    connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
+    connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
+    connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
+    connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
+    connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
+    connect(ws->tabBox(), SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
+    // connect all clients
+    foreach (Client *c, ws->clientList()) {
+        setupClientConnections(c);
+    }
+    foreach (Unmanaged *u, ws->unmanagedList()) {
+        setupUnmanagedConnections(u);
+    }
     reconfigure();
 }
 
@@ -106,6 +129,30 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
     unloadEffect(ep.first);
     foreach (const InputWindowPair & pos, input_windows)
     XDestroyWindow(display(), pos.second);
+}
+
+void EffectsHandlerImpl::setupClientConnections(Client* c)
+{
+    connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
+    connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
+    connect(c, SIGNAL(clientStartUserMovedResized(KWin::Client*)), this, SLOT(slotClientStartUserMovedResized(KWin::Client*)));
+    connect(c, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), this, SLOT(slotClientStepUserMovedResized(KWin::Client*,QRect)));
+    connect(c, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), this, SLOT(slotClientFinishUserMovedResized(KWin::Client*)));
+    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
+    connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
+    connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
+    connect(c, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), this, SLOT(slotClientGeometryShapeChanged(KWin::Client*,QRect)));
+    connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
+    connect(c, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
+}
+
+void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
+{
+    connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
+    connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
+    connect(u, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), this, SLOT(slotUnmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)));
+    connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
+    connect(u, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -254,130 +301,147 @@ void EffectsHandlerImpl::startPaint()
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 }
 
-void EffectsHandlerImpl::windowUserMovedResized(EffectWindow* c, bool first, bool last)
+void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowUserMovedResized(c, first, last);
+    bool horizontal = false;
+    bool vertical = false;
+    switch (maxMode) {
+    case KDecorationDefines::MaximizeHorizontal:
+        horizontal = true;
+        break;
+    case KDecorationDefines::MaximizeVertical:
+        vertical = true;
+        break;
+    case KDecorationDefines::MaximizeFull:
+        horizontal = true;
+        vertical = true;
+        break;
+    case KDecorationDefines::MaximizeRestore: // fall through
+    default:
+        // default - nothing to do
+        break;
+    }
+    emit windowMaximizedStateChanged(c->effectWindow(), horizontal, vertical);
 }
 
-void EffectsHandlerImpl::windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry)
+void EffectsHandlerImpl::slotClientStartUserMovedResized(Client *c)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowMoveResizeGeometryUpdate(c, geometry);
+    emit windowStartUserMovedResized(c->effectWindow());
 }
 
-void EffectsHandlerImpl::windowOpacityChanged(EffectWindow* c, double old_opacity)
+void EffectsHandlerImpl::slotClientFinishUserMovedResized(Client *c)
 {
-    if (!c)
+    emit windowFinishUserMovedResized(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotClientStepUserMovedResized(Client* c, const QRect& geometry)
+{
+    emit windowStepUserMovedResized(c->effectWindow(), geometry);
+}
+
+void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
+{
+    if (t->opacity() == oldOpacity) {
         return;
-    if (static_cast<EffectWindowImpl*>(c)->window()->opacity() == old_opacity)
+    }
+    emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
+}
+
+void EffectsHandlerImpl::slotClientAdded(Client *c)
+{
+    setupClientConnections(c);
+    emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
+{
+    setupUnmanagedConnections(u);
+    emit windowAdded(u->effectWindow());
+}
+
+void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
+{
+    emit windowDeleted(d->effectWindow());
+    elevated_windows.removeAll(d->effectWindow());
+}
+
+void EffectsHandlerImpl::slotClientClosed(Client *c)
+{
+    emit windowClosed(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedClosed(Unmanaged* u)
+{
+    emit windowClosed(u->effectWindow());
+}
+
+void EffectsHandlerImpl::slotClientActivated(KWin::Client *c)
+{
+    emit windowActivated(c ? c->effectWindow() : NULL);
+}
+
+void EffectsHandlerImpl::slotClientMinimized(Client *c, bool animate)
+{
+    // TODO: notify effects even if it should not animate?
+    if (animate) {
+        emit windowMinimized(c->effectWindow());
+    }
+}
+
+void EffectsHandlerImpl::slotClientUnminimized(Client* c, bool animate)
+{
+    // TODO: notify effects even if it should not animate?
+    if (animate) {
+        emit windowUnminimized(c->effectWindow());
+    }
+}
+
+void EffectsHandlerImpl::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+{
+    emit clientGroupItemSwitched(from, to);
+}
+
+void EffectsHandlerImpl::slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to)
+{
+    emit clientGroupItemAdded(from, to);
+}
+
+void EffectsHandlerImpl::slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group)
+{
+    emit clientGroupItemRemoved(c, group);
+}
+
+void EffectsHandlerImpl::slotDesktopChanged(int old)
+{
+    const int newDesktop = Workspace::self()->currentDesktop();
+    if (old != 0 && newDesktop != old) {
+        emit desktopChanged(old, newDesktop);
+    }
+}
+
+void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
+{
+    emit windowDamaged(t->effectWindow(), r);
+}
+
+void EffectsHandlerImpl::slotClientGeometryShapeChanged(Client* c, const QRect& old)
+{
+    // during late cleanup effectWindow() may be already NULL
+    // in some functions that may still call this
+    if (c == NULL || c->effectWindow() == NULL)
         return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowOpacityChanged(c, old_opacity);
+    emit windowGeometryShapeChanged(c->effectWindow(), old);
 }
 
-void EffectsHandlerImpl::windowAdded(EffectWindow* c)
+void EffectsHandlerImpl::slotUnmanagedGeometryShapeChanged(Unmanaged* u, const QRect& old)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowAdded(c);
-}
-
-void EffectsHandlerImpl::windowDeleted(EffectWindow* c)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowDeleted(c);
-    elevated_windows.removeAll(c);
-}
-
-void EffectsHandlerImpl::windowClosed(EffectWindow* c)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowClosed(c);
-}
-
-void EffectsHandlerImpl::windowActivated(EffectWindow* c)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowActivated(c);
-}
-
-void EffectsHandlerImpl::windowMinimized(EffectWindow* c)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowMinimized(c);
-}
-
-void EffectsHandlerImpl::windowUnminimized(EffectWindow* c)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowUnminimized(c);
-}
-
-void EffectsHandlerImpl::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemSwitched(from, to);
-}
-
-void EffectsHandlerImpl::clientGroupItemAdded(EffectWindow* from, EffectWindow* to)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemAdded(from, to);
-}
-
-void EffectsHandlerImpl::clientGroupItemRemoved(EffectWindow* c, EffectWindow* group)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->clientGroupItemRemoved(c, group);
-}
-
-void EffectsHandlerImpl::desktopChanged(int old)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->desktopChanged(old);
-}
-
-void EffectsHandlerImpl::windowDamaged(EffectWindow* w, const QRect& r)
-{
-    if (w == NULL)
+    // during late cleanup effectWindow() may be already NULL
+    // in some functions that may still call this
+    if (u == NULL || u->effectWindow() == NULL)
         return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowDamaged(w, r);
-}
-
-void EffectsHandlerImpl::windowGeometryShapeChanged(EffectWindow* w, const QRect& old)
-{
-    if (w == NULL)   // during late cleanup effectWindow() may be already NULL
-        return;     // in some functions that may still call this
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->windowGeometryShapeChanged(w, old);
-}
-
-void EffectsHandlerImpl::tabBoxAdded(int mode)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxAdded(mode);
-}
-
-void EffectsHandlerImpl::tabBoxClosed()
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxClosed();
-}
-
-void EffectsHandlerImpl::tabBoxUpdated()
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxUpdated();
-}
-
-void EffectsHandlerImpl::tabBoxKeyEvent(QKeyEvent* event)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->tabBoxKeyEvent(event);
+    emit windowGeometryShapeChanged(u->effectWindow(), old);
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
@@ -398,14 +462,6 @@ bool EffectsHandlerImpl::borderActivated(ElectricBorder border)
     if (ep.second->borderActivated(border))
         ret = true; // bail out or tell all?
     return ret;
-}
-
-void EffectsHandlerImpl::mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
-{
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->mouseChanged(pos, oldpos, buttons, oldbuttons, modifiers, oldmodifiers);
 }
 
 bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
@@ -464,18 +520,18 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
     return keyboard_grab_effect != NULL;
 }
 
-void EffectsHandlerImpl::propertyNotify(EffectWindow* c, long atom)
+void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
 {
     if (!registered_atoms.contains(atom))
         return;
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->propertyNotify(c, atom);
+    emit propertyNotify(t->effectWindow(), atom);
 }
 
-void EffectsHandlerImpl::numberDesktopsChanged(int old)
+void EffectsHandlerImpl::slotPropertyNotify(long int atom)
 {
-    foreach (const EffectPair & ep, loaded_effects)
-    ep.second->numberDesktopsChanged(old);
+    if (!registered_atoms.contains(atom))
+        return;
+    emit propertyNotify(NULL, atom);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)
@@ -621,21 +677,6 @@ int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
     return Workspace::self()->desktopToLeft(desktop, wrap);
 }
 
-bool EffectsHandlerImpl::isDesktopLayoutDynamic() const
-{
-    return Workspace::self()->isDesktopLayoutDynamic();
-}
-
-int EffectsHandlerImpl::addDesktop(QPoint coords)
-{
-    return Workspace::self()->addDesktop(coords);
-}
-
-void EffectsHandlerImpl::deleteDesktop(int id)
-{
-    Workspace::self()->deleteDesktop(id);
-}
-
 QString EffectsHandlerImpl::desktopName(int desktop) const
 {
     return Workspace::self()->desktopName(desktop);
@@ -741,36 +782,6 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
     if (Client* c = Workspace::self()->currentTabBoxClient())
         return c->effectWindow();
     return NULL;
-}
-
-void EffectsHandlerImpl::pushRenderTarget(GLRenderTarget* target)
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    target->enable();
-    render_targets.push(target);
-#endif
-}
-
-GLRenderTarget* EffectsHandlerImpl::popRenderTarget()
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    GLRenderTarget* ret = render_targets.pop();
-    ret->disable();
-    if (!render_targets.isEmpty())
-        render_targets.top()->enable();
-    return ret;
-#else
-    return 0;
-#endif
-}
-
-bool EffectsHandlerImpl::isRenderTargetBound()
-{
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    return !render_targets.isEmpty();
-#else
-    return false;
-#endif
 }
 
 void EffectsHandlerImpl::addRepaintFull()
@@ -999,7 +1010,6 @@ bool EffectsHandlerImpl::loadEffect(const QString& name)
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 
     if (!name.startsWith(QLatin1String("kwin4_effect_")))
         kWarning(1212) << "Effect names usually have kwin4_effect_ prefix" ;
@@ -1094,7 +1104,6 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
     assert(current_paint_window == 0);
     assert(current_draw_window == 0);
     assert(current_build_quads == 0);
-    assert(current_transform == 0);
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
         if (it.value().first == name) {

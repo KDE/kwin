@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SNAPHELPER_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -29,6 +30,7 @@ namespace KWin
 class SnapHelperEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SnapHelperEffect();
     ~SnapHelperEffect();
@@ -37,15 +39,18 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
-    virtual void windowClosed(EffectWindow* w);
-    virtual void windowUserMovedResized(EffectWindow* w, bool first, bool last);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *w);
+    void slotWindowStartUserMovedResized(EffectWindow *w);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
 
 private:
     bool m_active;
     EffectWindow* m_window;
-    TimeLine m_timeline;
+    QTimeLine m_timeline;
     //GC m_gc;
 };
 

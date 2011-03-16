@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
-#include "effects.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #include "tabbox.h"
@@ -234,8 +233,8 @@ void Client::releaseWindow(bool on_shutdown)
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+    emit clientClosed(this);
+    if (scene) {
         scene->windowClosed(this, del);
     }
     finishCompositing();
@@ -302,8 +301,8 @@ void Client::destroyClient()
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+    emit clientClosed(this);
+    if (scene) {
         scene->windowClosed(this, del);
     }
     finishCompositing();
@@ -366,8 +365,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
             discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        emit clientGeometryShapeChanged(this, oldgeom);
     } else
         destroyDecoration();
     if (check_workspace_pos)
@@ -396,8 +394,9 @@ void Client::destroyDecoration()
             discardWindowPixmap();
         if (scene != NULL && !deleting)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL && !deleting)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        if (!deleting) {
+            emit clientGeometryShapeChanged(this, oldgeom);
+        }
     }
 }
 
@@ -739,8 +738,7 @@ void Client::updateShape()
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
 }
 
 static Window shape_helper_window = None;
@@ -818,8 +816,7 @@ void Client::setMask(const QRegion& reg, int mode)
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
     updateShape();
 }
 
@@ -898,8 +895,8 @@ void Client::minimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
-    if (effects && !avoid_animation)   // TODO: Shouldn't it tell effects at least about the change?
-        static_cast<EffectsHandlerImpl*>(effects)->windowMinimized(effectWindow());
+    // TODO: merge signal with s_minimized
+    emit clientMinimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);
@@ -928,8 +925,7 @@ void Client::unminimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateAllTiles();
-    if (effects && !avoid_animation)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUnminimized(effectWindow());
+    emit clientUnminimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);

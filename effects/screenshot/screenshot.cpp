@@ -102,7 +102,7 @@ void ScreenShotEffect::postPaintScreen()
             d.yTranslate = -m_scheduledScreenshot->y() - top;
             // render window into offscreen texture
             int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
-            effects->pushRenderTarget(target);
+            GLRenderTarget::pushRenderTarget(target);
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -110,7 +110,7 @@ void ScreenShotEffect::postPaintScreen()
             // copy content from framebuffer into image
             QImage img(QSize(width, height), QImage::Format_ARGB32);
             glReadPixels(0, offscreenTexture->height() - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
-            effects->popRenderTarget();
+            GLRenderTarget::popRenderTarget();
             ScreenShotEffect::convertFromGLImage(img, width, height);
             if (m_type & INCLUDE_CURSOR) {
                 grabPointerImage(img, m_scheduledScreenshot->x() + left, m_scheduledScreenshot->y() + top);

@@ -100,7 +100,6 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
-    , desktopLayoutDynamicity_(false)
     , tilingEnabled_(false)
     // Unsorted
     , active_popup(NULL)
@@ -218,6 +217,8 @@ Workspace::Workspace(bool restore)
 
     Extensions::init();
     compositingSuspended = !options->useCompositing;
+    // need to create the tabbox before compositing scene is setup
+    tab_box = new TabBox::TabBox(this);
     setupCompositing();
 
     // Compatibility
@@ -236,7 +237,6 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
     initShortcuts();
-    tab_box = new TabBox::TabBox(this);
     desktop_change_osd = new DesktopChangeOSD(this);
 
     init();
@@ -565,8 +565,6 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
     return c;
 }
 
@@ -582,8 +580,7 @@ Unmanaged* Workspace::createUnmanaged(Window w)
     addUnmanaged(c, Allowed);
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
+    emit unmanagedAdded(c);
     return c;
 }
 
@@ -729,8 +726,7 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
     assert(deleted.contains(c));
     if (scene)
         scene->windowDeleted(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowDeleted(c->effectWindow());
+    emit deletedRemoved(c);
     deleted.removeAll(c);
     x_stacking_dirty = true;
 }
@@ -1464,8 +1460,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     if (old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1)
         desktop_change_osd->desktopChanged(old_desktop);
 
-    if (effects != NULL && old_desktop != 0 && old_desktop != new_desktop)
-        static_cast<EffectsHandlerImpl*>(effects)->desktopChanged(old_desktop);
     if (compositing())
         addRepaintFull();
 
@@ -1692,9 +1686,7 @@ void Workspace::setNumberOfDesktops(int n)
 
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
-    // inform effects
-    if (effects)
-        static_cast< EffectsHandlerImpl* >(effects)->numberDesktopsChanged(old_number_of_desktops);
+    emit numberDesktopsChanged(old_number_of_desktops);
 }
 
 /**
@@ -2865,10 +2857,11 @@ void Workspace::checkCursorPos()
     QPoint last = last_cursor_pos;
     int lastb = last_buttons;
     cursorPos(); // Update if needed
-    if (last != last_cursor_pos || lastb != last_buttons)
-        static_cast<EffectsHandlerImpl*>(effects)->mouseChanged(cursorPos(), last,
-                x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
-                x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    if (last != last_cursor_pos || lastb != last_buttons) {
+        emit mouseChanged(last_cursor_pos, last,
+            x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
+            x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    }
 }
 
 int Workspace::indexOfClientGroup(ClientGroup* group)

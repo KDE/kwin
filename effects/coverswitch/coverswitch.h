@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+#include <QTimeLine>
 #include <QQueue>
 
 #include <kwineffects.h>
@@ -36,6 +37,7 @@ namespace KWin
 class CoverSwitchEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     CoverSwitchEffect();
     ~CoverSwitchEffect();
@@ -45,13 +47,16 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void windowClosed(EffectWindow* c);
 
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow *c);
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxClosed();
+    void slotTabBoxUpdated();
+
 private:
     void paintScene(EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,
                     bool reflectedWindows = false);
@@ -74,7 +79,7 @@ private:
     int animationDuration;
     bool stopRequested;
     bool startRequested;
-    TimeLine timeLine;
+    QTimeLine timeLine;
     QRect area;
     Window input;
     float zPosition;

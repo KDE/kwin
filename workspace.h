@@ -180,6 +180,19 @@ public:
     void reserveElectricBorderActions(bool reserve);
     void reserveElectricBorderSwitching(bool reserve);
 
+    /**
+     * @return List of clients currently managed by Workspace
+     **/
+    const ClientList &clientList() const {
+        return clients;
+    }
+    /**
+     * @return List of unmanaged "clients" currently registered in Workspace
+     **/
+    const UnmanagedList &unmanagedList() const {
+        return unmanaged;
+    }
+
     //-------------------------------------------------
     // Tiling
 public:
@@ -297,25 +310,6 @@ public:
      */
     int desktopToLeft(int id = 0, bool wrap = true) const;
 
-    /**
-     * @returns Whether or not the layout is allowed to be modified by the user.
-     */
-    bool isDesktopLayoutDynamic() const;
-    /**
-     * Sets whether or not this layout can be modified by the user.
-     */
-    void setDesktopLayoutDynamicity(bool dynamicity);
-    /**
-     * Create new desktop at the point @a coords
-     * @returns The ID of the created desktop
-     */
-    int addDesktop(QPoint coords);
-    /**
-     * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
-     * was deleted will have their IDs' decremented.
-     */
-    void deleteDesktop(int id);
-
 private:
     int desktopCount_;
     QSize desktopGridSize_;
@@ -323,7 +317,6 @@ private:
     int currentDesktop_;
     QString activity_;
     QStringList allActivities_;
-    bool desktopLayoutDynamicity_;
 
     KActivityController activityController_;
 
@@ -372,6 +365,9 @@ public:
     void refTabBox();
     void unrefTabBox();
     void closeTabBox(bool abort = false);
+    TabBox::TabBox *tabBox() const {
+        return tab_box;
+    }
 
     // Tabbing
     void addClientGroup(ClientGroup* group);
@@ -906,10 +902,17 @@ Q_SIGNALS:
 signals:
     void desktopPresenceChanged(KWin::Client*, int);
     void currentDesktopChanged(int);
+    void numberDesktopsChanged(int oldNumberOfDesktops);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);
     void groupAdded(KWin::Group*);
+    void unmanagedAdded(KWin::Unmanaged*);
+    void deletedRemoved(KWin::Deleted*);
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void propertyNotify(long a);
 
 private:
     void init();
@@ -1294,16 +1297,6 @@ inline int Workspace::currentDesktop() const
 inline int Workspace::desktopAtCoords(QPoint coords) const
 {
     return desktopGrid_[coords.y() * desktopGridSize_.width() + coords.x()];
-}
-
-inline bool Workspace::isDesktopLayoutDynamic() const
-{
-    return desktopLayoutDynamicity_;
-}
-
-inline void Workspace::setDesktopLayoutDynamicity(bool dynamicity)
-{
-    desktopLayoutDynamicity_ = dynamicity;
 }
 
 //---------------------------------------------------------

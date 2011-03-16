@@ -4,6 +4,7 @@
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kwinglobals.h>
-#include "kdecoration.h"
 
 #include <QtCore/QPair>
+#include <QtCore/QSet>
 #include <QtCore/QRect>
 #include <QtGui/QRegion>
 
@@ -34,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QList>
 #include <QtCore/QHash>
 #include <QtCore/QStack>
-#include <QtCore/QTimeLine>
 
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
@@ -57,9 +57,7 @@ class EffectFrame;
 class EffectFramePrivate;
 class Effect;
 class WindowQuad;
-class GLRenderTarget;
 class GLShader;
-class GLTexture;
 class XRenderPicture;
 class RotationData;
 class WindowQuadList;
@@ -221,9 +219,11 @@ QRect infiniteRegion()
  * This is the base class for all effects. By reimplementing virtual methods
  *  of this class, you can customize how the windows are painted.
  *
- * The virtual methods of this class can broadly be divided into two
- *  categories: the methods used for painting and those you can use to be
- *  notified and react to certain events, e.g. that a window was closed.
+ * The virtual methods are used for painting and need to be implemented for
+ * custom painting.
+ *
+ * In order to react to state changes (e.g. a window gets closed) the effect
+ * should provide slots for the signals emitted by the EffectsHandler.
  *
  * @section Chaining
  * Most methods of this class are called in chain style. This means that when
@@ -263,8 +263,9 @@ QRect infiniteRegion()
  *  is called for every window which the screen method is usually called just
  *  once.
  **/
-class KWIN_EXPORT Effect
+class KWIN_EXPORT Effect : public QObject
 {
+    Q_OBJECT
 public:
     /** Flags controlling how painting is done. */
     // TODO: is that ok here?
@@ -431,57 +432,10 @@ public:
      **/
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
 
-    /**
-     * This function is used e.g. by the shadow effect which adds area around windows
-     * that needs to be painted as well - e.g. when a window is hidden and the workspace needs
-     * to be repainted at that area, shadow's transformWindowDamage() adds the shadow area
-     * to it, so that it is repainted as well.
-     **/
-    virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
-
-    /** called when moved/resized or once after it's finished */
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
-    /** called when the geometry changed during moving/resizing. */
-    virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    virtual void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
-    virtual void windowDeleted(EffectWindow* c);
-    virtual void windowActivated(EffectWindow* c);
-    virtual void windowMinimized(EffectWindow* c);
-    virtual void windowUnminimized(EffectWindow* c);
-    virtual void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
-    virtual void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
-    virtual void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void desktopChanged(int old);
-    virtual void windowDamaged(EffectWindow* w, const QRect& r);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
-    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    /**
-     Receives events registered for using EffectsHandler::registerPropertyType().
-     Use readProperty() to get the property data.
-     Note that the property may be already set on the window, so doing the same
-     processing from windowAdded() (e.g. simply calling propertyNotify() from it)
-     is usually needed.
-     */
-    virtual void propertyNotify(EffectWindow* w, long atom);
 
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void tabBoxKeyEvent(QKeyEvent* event);
     virtual bool borderActivated(ElectricBorder border);
-
-    /**
-    * called when the number of currently existing desktops is changed.
-    * @param old The previous number of desktops in used.
-    * @see EffectsHandler::numberOfDesktops.
-    */
-    virtual void numberDesktopsChanged(int old);
 
     static int displayWidth();
     static int displayHeight();
@@ -579,8 +533,9 @@ public:
  *  desktop or create a special input window to receive mouse and keyboard
  *  events.
  **/
-class KWIN_EXPORT EffectsHandler
+class KWIN_EXPORT EffectsHandler : public QObject
 {
+    Q_OBJECT
     friend class Effect;
 public:
     EffectsHandler(CompositingType type);
@@ -595,7 +550,6 @@ public:
     virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity) = 0;
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) = 0;
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList) = 0;
-    virtual QRect transformWindowDamage(EffectWindow* w, const QRect& r);
     // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
     // covering the whole screen is created and all mouse events will be intercepted by it.
     // The effect's windowInputMouseEvent() will get called with such events.
@@ -700,20 +654,6 @@ public:
      * right of the layout if @a wrap is set. If @a id is not set use the current one.
      */
     virtual int desktopToLeft(int desktop = 0, bool wrap = true) const = 0;
-    /**
-     * @returns Whether or not the desktop layout is allowed to be modified by the user.
-     */
-    virtual bool isDesktopLayoutDynamic() const = 0;
-    /**
-     * Create new desktop at the point @a coords
-     * @returns The ID of the created desktop
-     */
-    virtual int addDesktop(QPoint coords) = 0;
-    /**
-     * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
-     * was deleted will have their IDs' decremented.
-     */
-    virtual void deleteDesktop(int id) = 0;
     virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 
@@ -750,10 +690,6 @@ public:
 
     virtual void setActiveFullScreenEffect(Effect* e) = 0;
     virtual Effect* activeFullScreenEffect() const = 0;
-
-    virtual void pushRenderTarget(GLRenderTarget* target) = 0;
-    virtual GLRenderTarget* popRenderTarget() = 0;
-    virtual bool isRenderTargetBound() = 0;
 
     /**
      * Schedules the entire workspace to be repainted next time.
@@ -798,17 +734,6 @@ public:
     virtual bool decorationSupportsBlurBehind() const = 0;
 
     /**
-     * Checks if the driver is on given blacklist.
-     * The format of the blacklist is driver identifier as key (e.g. Intel) with a list of
-     * concrete driver render strings as the values. The renderer string consists of GL_RENDERER
-     * and GL_VERSION separated by colon dash colon. E.g.: GeForce 9400M/PCI/SSE2:-:3.2.0 NVIDIA 195.36.24
-     * This method is only used for OpenGL compositing. If not using OpenGL it will return false.
-     * @returns true if the driver is blacklisted, false otherwise
-     * @since 4.5
-     */
-    bool checkDriverBlacklist(const KConfigGroup& blacklist);
-
-    /**
      * Creates a new frame object. If the frame does not have a static size
      * then it will be located at @a position with @a alignment. A
      * non-static frame will automatically adjust its size to fit the contents.
@@ -830,6 +755,216 @@ public:
      **/
     static KConfigGroup effectConfig(const QString& effectname);
 
+Q_SIGNALS:
+    /**
+     * Signal emitted when the current desktop changed.
+     * @param oldDesktop The previously current desktop
+     * @param newDesktop The new current desktop
+     * @since 4.7
+     **/
+    void desktopChanged(int oldDesktop, int newDesktop);
+    /**
+    * Signal emitted when the number of currently existing desktops is changed.
+    * @param old The previous number of desktops in used.
+    * @see EffectsHandler::numberOfDesktops.
+    * @since 4.7
+    */
+    void numberDesktopsChanged(int old);
+    /**
+     * Signal emitted when a new window has been added to the Workspace.
+     * @param w The added window
+     * @since 4.7
+     **/
+    void windowAdded(EffectWindow *w);
+    /**
+     * Signal emitted when a window is being removed from the Workspace.
+     * An effect which wants to animate the window closing should connect
+     * to this signal and reference the window by using
+     * @link EffectWindow::refWindow
+     * @param w The window which is being closed
+     * @since 4.7
+     **/
+    void windowClosed(EffectWindow *w);
+    /**
+     * Signal emitted when a window get's activated.
+     * @param w The new active window, or @c NULL if there is no active window.
+     * @since 4.7
+     **/
+    void windowActivated(EffectWindow *w);
+    /**
+     * Signal emitted when a window is deleted.
+     * This means that a closed window is not referenced any more.
+     * An effect bookkeeping the closed windows should connect to this
+     * signal to clean up the internal references.
+     * @param w The window which is going to be deleted.
+     * @see EffectWindow::refWindow
+     * @see EffectWindow::unrefWindow
+     * @see windowClosed
+     * @since 4.7
+     **/
+    void windowDeleted(EffectWindow *w);
+    /**
+     * Signal emitted when a user begins a window move or resize operation.
+     * To figure out whether the user resizes or moves the window use
+     * @link EffectWindow::isUserMove or @link EffectWindow::isUserResize.
+     * Whenever the geometry is updated the signal @link windowStepUserMovedResized
+     * is emitted with the current geometry.
+     * The move/resize operation ends with the signal @link windowFinishUserMovedResized.
+     * Only one window can be moved/resized by the user at the same time!
+     * @param w The window which is being moved/resized
+     * @see windowStepUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @see EffectWindow::isUserMove
+     * @see EffectWindow::isUserResize
+     * @since 4.7
+     **/
+    void windowStartUserMovedResized(EffectWindow *w);
+    /**
+     * Signal emitted during a move/resize operation when the user changed the geometry.
+     * Please note: KWin supports two operation modes. In one mode all changes are applied
+     * instantly. This means the window's geometry matches the passed in @p geometry. In the
+     * other mode the geometry is changed after the user ended the move/resize mode.
+     * The @p geometry differs from the window's geometry. Also the window's pixmap still has
+     * the same size as before. Depending what the effect wants to do it would be recommended
+     * to scale/translate the window.
+     * @param w The window which is being moved/resized
+     * @param geometry The geometry of the window in the current move/resize step.
+     * @see windowStartUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @see EffectWindow::isUserMove
+     * @see EffectWindow::isUserResize
+     * @since 4.7
+     **/
+    void windowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    /**
+     * Signal emitted when the user finishes move/resize of window @p w.
+     * @param w The window which has been moved/resized
+     * @see windowStartUserMovedResized
+     * @see windowFinishUserMovedResized
+     * @since 4.7
+     **/
+    void windowFinishUserMovedResized(EffectWindow *w);
+    /**
+     * Signal emitted when the maximized state of the window @p w changed.
+     * A window can be in one of four states:
+     * @li restored: both @p horizontal and @p vertical are @c false
+     * @li horizontally maximized: @p horizontal is @c true and @p vertical is @c false
+     * @li vertically maximized: @p horizontal is @c false and @p vertical is @c true
+     * @li completely maximized: both @p horizontal and @p vertical are @C true
+     * @param w The window whose maximized state changed
+     * @param horizontal If @c true maximized horizontally
+     * @param vertical If @c true maximized vertically
+     * @since 4.7
+     **/
+    void windowMaximizedStateChanged(EffectWindow *w, bool horizontal, bool vertical);
+    /**
+     * Signal emitted when the geometry or shape of a window changed.
+     * This is caused if the window changes geometry without user interaction.
+     * E.g. the decoration is changed. This is in opposite to windowUserMovedResized
+     * which is caused by direct user interaction.
+     * @param w The window whose geometry changed
+     * @param old The previous geometry
+     * @see windowUserMovedResized
+     * @since 4.7
+     **/
+    void windowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    /**
+     * Signal emitted when the windows opacity is changed.
+     * @param w The window whose opacity level is changed.
+     * @param oldOpacity The previous opacity level
+     * @param newOpacity The new opacity level
+     * @since 4.7
+     **/
+    void windowOpacityChanged(EffectWindow *w, qreal oldOpacity, qreal newOpacity);
+    /**
+     * Signal emitted when a window got minimized.
+     * @param w The window which was minimized
+     * @since 4.7
+     **/
+    void windowMinimized(EffectWindow *w);
+    /**
+     * Signal emitted when a window got unminimized.
+     * @param w The window which was unminimized
+     * @since 4.7
+     **/
+    void windowUnminimized(EffectWindow *w);
+    /**
+     * Signal emitted when an area of a window is scheduled for repainting.
+     * Use this signal in an effect if another area needs to be synced as well.
+     * @param w The window which is scheduled for repainting
+     * @param r The damaged rect
+     * @since 4.7
+     **/
+    void windowDamaged(EffectWindow *w, const QRect &r);
+    /**
+     * Signal emitted when a tabbox is added.
+     * An effect who wants to replace the tabbox with itself should use @link refTabBox.
+     * @param mode The TabBoxMode.
+     * @see refTabBox
+     * @see tabBoxClosed
+     * @see tabBoxUpdated
+     * @see tabBoxKeyEvent
+     * @since 4.7
+     **/
+    void tabBoxAdded(int mode);
+    /**
+     * Signal emitted when the TabBox was closed by KWin core.
+     * An effect which referenced the TabBox should use @link unrefTabBox to unref again.
+     * @see unrefTabBox
+     * @see tabBoxAdded
+     * @since 4.7
+     **/
+    void tabBoxClosed();
+    /**
+     * Signal emitted when the selected TabBox window changed or the TabBox List changed.
+     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * @see refTabBox
+     * @see currentTabBoxWindowList
+     * @see currentTabBoxDesktopList
+     * @see currentTabBoxWindow
+     * @see currentTabBoxDesktop
+     * @since 4.7
+     **/
+    void tabBoxUpdated();
+    /**
+     * Signal emitted when a key event, which is not handled by TabBox directly is, happens while
+     * TabBox is active. An effect might use the key event to e.g. change the selected window.
+     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * @param event The key event not handled by TabBox directly
+     * @see refTabBox
+     * @since 4.7
+     **/
+    void tabBoxKeyEvent(QKeyEvent* event);
+    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
+    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
+    /**
+     * Signal emitted when mouse changed.
+     * If an effect needs to get updated mouse positions, it needs to first call @link startMousePolling.
+     * For a fullscreen effect it is better to use an input window and react on @link windowInputMouseEvent.
+     * @param pos The new mouse position
+     * @param oldpos The previously mouse position
+     * @param buttons The pressed mouse buttons
+     * @param oldbuttons The previously pressed mouse buttons
+     * @param modifiers Pressed keyboard modifiers
+     * @param oldmodifiers Previously pressed keyboard modifiers.
+     * @see startMousePolling
+     * @since 4.7
+     **/
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    /**
+     * Receives events registered for using @link registerPropertyType.
+     * Use readProperty() to get the property data.
+     * Note that the property may be already set on the window, so doing the same
+     * processing from windowAdded() (e.g. simply calling propertyNotify() from it)
+     * is usually needed.
+     * @param w The window whose property changed, is @c null if it is a root window property
+     * @param atom The property
+     * @since 4.7
+     */
+    void propertyNotify(EffectWindow* w, long atom);
 
 protected:
     QVector< EffectPair > loaded_effects;
@@ -840,7 +975,6 @@ protected:
     int current_paint_window;
     int current_draw_window;
     int current_build_quads;
-    int current_transform;
     CompositingType compositing_type;
 };
 
@@ -1311,160 +1445,6 @@ public:
 private:
     QRegion area;
     static QStack< QRegion >* areas;
-};
-
-
-/**
- * @short Wrapper class for using timelines in KWin effects.
- *
- * This class provides an easy and specialized interface for
- * effects that want a non-linear timeline. Currently, most
- * it does is wrapping QTimeLine. In the future, this class
- * could help using physics animations in KWin.
- *
- * KWin effects will usually use this feature by keeping one
- * TimeLine per animation, for example per effect (when only
- * one animation is done by the effect) or per windows (in
- * the case that multiple animations can take place at the
- * same time (such as minizing multiple windows with a short
- * time offset. Increasing the internal time state of the
- * TimeLine is done either by changing the 'current' time in
- * the TimeLine, which is an int value between 0 and the
- * duration set (defaulting to 250msec). The current time
- * can also be changed by setting the 'progress' of the
- * TimeLine, a double between 0.0 and 1.0. setProgress(),
- * addProgress(), addTime(), removeTime() can all be used to
- * manipulate the 'current' time (and at the same time
- * progress) of the TimeLine.
- *
- * The internal state of the TimeLine is determined by the
- * duration of the TimeLine, int in milliseconds, defaulting.
- * the 'current' time and the current 'progress' are
- * interchangeable, both determine the x-axis of a graph
- * of a TimeLine. The value() returned represents the y-axis
- * in this graph.
- *
- * m_TimeLine.setProgress(0.5) would change the 'current'
- * time of a default TimeLine to 125 msec. m_TimeLine.value()
- * would then return the progress value (a double between 0.0
- * and 1.0), which can be lower than 0.5 in case the animation
- * should start slowly, such as for the EaseInCurve.
- * In KWin effect, the prePaintWindow() or prePaintScreen()
- * methods have int time as one of their arguments. This int
- * can be used to increase the 'current' time in the TimeLine.
- * The double the is subsequently returned by value() (usually
- * in paintWindow() or paintScreen() methods can then be used
- * to manipulate windows, or their positions.
- */
-class KWIN_EXPORT TimeLine
-{
-
-    //Q_ENUMS( CurveShape ) // Requires Q_OBJECT
-
-public:
-    /**
-     * The CurveShape describes the relationship between time
-     * and values. We can pass some of them through to QTimeLine
-     * but also invent our own ones.
-     */
-    enum CurveShape {
-        EaseInCurve = 0,
-        EaseOutCurve,
-        EaseInOutCurve,
-        LinearCurve,
-        SineCurve
-    };
-
-    /**
-     * Creates a TimeLine and computes the progress data. Usually, for larger
-     * animations you want to choose values more towards 300 milliseconds.
-     * For small animations, values around 150 milliseconds are sensible.
-     * Note that duration 0 is not valid.
-     */
-    explicit TimeLine(const int duration = 0);
-
-    /**
-     * Creates a copy of the TimeLine so we can have the state copied
-     * as well.
-     */
-    TimeLine(const TimeLine &other);
-    /**
-     * Cleans up.
-     */
-    ~TimeLine();
-    /**
-     * Returns the duration of the timeline in msec.
-     */
-    int duration() const;
-    /**
-     * Set the duration of the TimeLine.
-     */
-    void setDuration(const int msec);
-    /**
-     * Returns the Value at the time set, this method will
-     * usually be used to get the progress in the paintWindow()
-     * and related methods. The value represents the y-axis' value
-     * corresponding to the current progress (or time) set by
-     * setProgress(), addProgress(), addTime(), removeTime()
-     */
-    double value() const;
-    /**
-     * Returns the Value at the time provided, this method will
-     * usually be used to get the progress in the paintWindow()
-     * and related methods, the y value of the current state x.
-     */
-    double valueForTime(const int msec) const;
-    /**
-     * Returns the current time of the TimeLine, between 0 and duration()
-     * The value returned is equivalent to the x-axis on a curve.
-     */
-    int time() const;
-    /**
-     * Returns the progress of the TimeLine, between 0.0 and 1.0.
-     * The value returned is equivalent to the y-axis on a curve.
-     */
-    double progress() const;
-    /**
-     * Increases the internal progress accounting of the timeline.
-     */
-    void addProgress(const double progress);
-    /**
-     * Increases the internal counter, this is usually done in
-     * prePaintWindow().
-     */
-    void addTime(const int msec);
-    /**
-     * Decreases the internal counter, this is usually done in
-     * prePaintWindow(). This function comes handy for reverse
-     * animations.
-     */
-    void removeTime(const int msec);
-    /**
-     * Set the time to progress * duration. This will change the
-     * internal time in the TimeLine. It's usually used in
-     * prePaintWindow() or prePaintScreen() so the value()
-     * taken in paint* is increased.
-     */
-    void setProgress(const double progress);
-    /**
-     * Set the CurveShape. The CurveShape describes the relation
-     * between the value and the time. progress is between 0 and 1
-     * It's used as input for the timeline, the x axis of the curve.
-     */
-    void setCurveShape(CurveShape curveShape);
-    /**
-     * Set the CurveShape. The CurveShape describes the relation
-     * between the value and the time.
-     */
-    //void setCurveShape(CurveShape curveShape);
-
-private:
-    QTimeLine* m_TimeLine;
-    int m_Time;
-    double m_Progress;
-    int m_Duration;
-    CurveShape m_CurveShape;
-    //Q_DISABLE_COPY(TimeLine)
 };
 
 /**

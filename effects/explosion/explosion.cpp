@@ -46,6 +46,8 @@ ExplosionEffect::ExplosionEffect() : Effect()
     mActiveAnimations = 0;
     mValid = true;
     mInited = false;
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 ExplosionEffect::~ExplosionEffect()
@@ -180,7 +182,7 @@ void ExplosionEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void ExplosionEffect::windowClosed(EffectWindow* c)
+void ExplosionEffect::slotWindowClosed(EffectWindow* c)
 {
     const void* e = c->data(WindowClosedGrabRole).value<void*>();
     if (e && e != this)
@@ -193,7 +195,7 @@ void ExplosionEffect::windowClosed(EffectWindow* c)
     }
 }
 
-void ExplosionEffect::windowDeleted(EffectWindow* c)
+void ExplosionEffect::slotWindowDeleted(EffectWindow* c)
 {
     mWindows.remove(c);
 }

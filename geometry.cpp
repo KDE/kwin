@@ -1918,8 +1918,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
         discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+        emit clientGeometryShapeChanged(this, geom_before_block);
     }
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
@@ -1995,8 +1994,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force, bool emitJs)
     discardWindowPixmap();
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+    emit clientGeometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
     addWorkspaceRepaint(deco_rect);
@@ -2095,8 +2093,7 @@ void Client::setMaximize(bool vertically, bool horizontally)
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, true);
+    emit clientMaximizedStateChanged(this, max_mode);
 
     // Update states of all other windows in this group
     if (clientGroup())
@@ -2615,8 +2612,7 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
     }
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, false);
+    emit clientStartUserMovedResized(this);
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
@@ -2692,8 +2688,7 @@ void Client::finishMoveResize(bool cancel)
 // FRAME    update();
 
     Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, true);
+    emit clientFinishUserMovedResized(this);
 }
 
 void Client::leaveMoveResize()
@@ -3082,10 +3077,7 @@ void Client::performMoveResize()
             setGeometry(moveResizeGeom);
         positionGeometryTip();
     }
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowMoveResizeGeometryUpdate(effectWindow(), moveResizeGeom);
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, false);
-    }
+    emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
 void Client::syncTimeout()

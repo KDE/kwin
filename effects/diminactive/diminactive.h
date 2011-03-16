@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Include with base class for effects.
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 
 namespace KWin
@@ -32,19 +33,23 @@ namespace KWin
 class DimInactiveEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     DimInactiveEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowDeleted(EffectWindow* w);
-    virtual void windowActivated(EffectWindow* c);
+
+public Q_SLOTS:
+    void slotWindowActivated(EffectWindow* c);
+    void slotWindowDeleted(EffectWindow *w);
+
 private:
     bool dimWindow(const EffectWindow* w) const;
-    TimeLine timeline;
+    QTimeLine timeline;
     EffectWindow* active;
     EffectWindow* previousActive;
-    TimeLine previousActiveTimeline;
+    QTimeLine previousActiveTimeline;
     int dim_strength; // reduce saturation and brightness by this percentage
     bool dim_panels; // do/don't dim also all panels
     bool dim_desktop; // do/don't dim the desktop

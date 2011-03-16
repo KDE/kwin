@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glide.h"
 
 #include <kconfiggroup.h>
+#include <QtCore/QTimeLine>
 
 // Effect is based on fade effect by Philip Falkner
 
@@ -37,6 +38,9 @@ static const int IsGlideWindow = 0x22A982D4;
 GlideEffect::GlideEffect()
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
 }
 
 bool GlideEffect::supported()
@@ -65,9 +69,9 @@ void GlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
     if (info != windows.end()) {
         data.setTransformed();
         if (info->added)
-            info->timeLine.addTime(time);
+            info->timeLine->setCurrentTime(info->timeLine->currentTime() + time);
         else if (info->closed) {
-            info->timeLine.removeTime(time);
+            info->timeLine->setCurrentTime(info->timeLine->currentTime() - time);
             if (info->deleted)
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         }
@@ -85,7 +89,7 @@ void GlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
 {
     InfoHash::const_iterator info = windows.constFind(w);
     if (info != windows.constEnd()) {
-        const double progress = info->timeLine.value();
+        const double progress = info->timeLine->currentValue();
         RotationData rot;
         rot.axis = RotationData::XAxis;
         rot.angle = angle * (1 - progress);
@@ -117,7 +121,7 @@ void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data)
     InfoHash::const_iterator info = windows.constFind(w);
     if (info == windows.constEnd())
         return;
-    const double progress = info->timeLine.value();
+    const double progress = info->timeLine->currentValue();
     data.xScale *= progress;
     data.yScale *= progress;
     data.zScale *= progress;
@@ -130,7 +134,7 @@ void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data)
     InfoHash::const_iterator info = windows.constFind(w);
     if (info == windows.constEnd())
         return;
-    const double progress = info->timeLine.value();
+    const double progress = info->timeLine->currentValue();
     data.xScale *= (2 - progress);
     data.yScale *= (2 - progress);
     data.zScale *= (2 - progress);
@@ -142,10 +146,10 @@ void GlideEffect::postPaintWindow(EffectWindow* w)
 {
     InfoHash::iterator info = windows.find(w);
     if (info != windows.end()) {
-        if (info->added && info->timeLine.value() == 1.0) {
+        if (info->added && info->timeLine->currentValue() == 1.0) {
             windows.remove(w);
             effects->addRepaintFull();
-        } else if (info->closed && info->timeLine.value() == 0.0) {
+        } else if (info->closed && info->timeLine->currentValue() == 0.0) {
             info->closed = false;
             if (info->deleted) {
                 windows.remove(w);
@@ -159,7 +163,7 @@ void GlideEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void GlideEffect::windowAdded(EffectWindow* w)
+void GlideEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!isGlideWindow(w))
         return;
@@ -174,12 +178,13 @@ void GlideEffect::windowAdded(EffectWindow* w)
     info->added = true;
     info->closed = false;
     info->deleted = false;
-    info->timeLine.setDuration(duration);
-    info->timeLine.setCurveShape(TimeLine::EaseOutCurve);
+    delete info->timeLine;
+    info->timeLine = new QTimeLine(duration);
+    info->timeLine->setCurveShape(QTimeLine::EaseOutCurve);
     w->addRepaintFull();
 }
 
-void GlideEffect::windowClosed(EffectWindow* w)
+void GlideEffect::slotWindowClosed(EffectWindow* w)
 {
     if (!isGlideWindow(w))
         return;
@@ -194,13 +199,14 @@ void GlideEffect::windowClosed(EffectWindow* w)
     info->added = false;
     info->closed = true;
     info->deleted = true;
-    info->timeLine.setDuration(duration);
-    info->timeLine.setCurveShape(TimeLine::EaseInCurve);
-    info->timeLine.setProgress(1.0);
+    delete info->timeLine;
+    info->timeLine = new QTimeLine(duration);
+    info->timeLine->setCurveShape(QTimeLine::EaseInCurve);
+    info->timeLine->setCurrentTime(info->timeLine->duration());
     w->addRepaintFull();
 }
 
-void GlideEffect::windowDeleted(EffectWindow* w)
+void GlideEffect::slotWindowDeleted(EffectWindow* w)
 {
     windows.remove(w);
 }
@@ -219,4 +225,13 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
         return false;
     return true;
 }
+
+GlideEffect::WindowInfo::WindowInfo()
+    : deleted(false)
+    , added(false)
+    , closed(false)
+    , timeLine(0)
+{
+}
+
 } // namespace

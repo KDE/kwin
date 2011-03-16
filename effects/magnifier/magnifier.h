@@ -27,7 +27,7 @@ namespace KWin
 {
 
 class MagnifierEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -36,13 +36,13 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
-    virtual void mouseChanged(const QPoint& pos, const QPoint& old,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private slots:
     void zoomIn();
     void zoomOut();
     void toggle();
+    void slotMouseChanged(const QPoint& pos, const QPoint& old,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private:
     QRect magnifierArea(QPoint pos = cursorPos()) const;
     double zoom;

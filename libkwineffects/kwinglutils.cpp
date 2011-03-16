@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006-2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1324,6 +1325,7 @@ void ShaderManager::resetShader(ShaderType type)
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::sSupported = false;
+QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 
 void GLRenderTarget::initStatic()
 {
@@ -1332,6 +1334,26 @@ void GLRenderTarget::initStatic()
 #else
     sSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
 #endif
+}
+
+bool GLRenderTarget::isRenderTargetBound()
+{
+    return !s_renderTargets.isEmpty();
+}
+
+void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
+{
+    target->enable();
+    s_renderTargets.push(target);
+}
+
+GLRenderTarget* GLRenderTarget::popRenderTarget()
+{
+    GLRenderTarget* ret = s_renderTargets.pop();
+    ret->disable();
+    if (!s_renderTargets.isEmpty())
+        s_renderTargets.top()->enable();
+    return ret;
 }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)

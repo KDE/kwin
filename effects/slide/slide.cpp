@@ -31,7 +31,8 @@ KWIN_EFFECT(slide, SlideEffect)
 SlideEffect::SlideEffect()
     : slide(false)
 {
-    mTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
+    mTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     reconfigure(ReconfigureAll);
 }
 
@@ -43,15 +44,15 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (slide) {
-        mTimeLine.addTime(time);
+        mTimeLine.setCurrentTime(mTimeLine.currentTime() + time);
 
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if (mTimeLine.value() != 1)
+        if (mTimeLine.currentValue() != 1)
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         else {
             slide = false;
-            mTimeLine.setProgress(0);
+            mTimeLine.setCurrentTime(0);
             effects->setActiveFullScreenEffect(NULL);
         }
     }
@@ -76,7 +77,7 @@ void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
 
 void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (mTimeLine.value() == 0) {
+    if (mTimeLine.currentValue() == 0) {
         effects->paintScreen(mask, region, data);
         return;
     }
@@ -103,7 +104,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         if (diffPos.y() < 0 && abs(diffPos.y()) > h / 2)
             diffPos.setY(diffPos.y() + h);
     }
-    QPoint currentPos = slide_start_pos + mTimeLine.value() * diffPos;
+    QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
     QSize displaySize(displayWidth(), displayHeight());
     QRegion currentRegion = QRect(currentPos, displaySize);
     if (effects->optionRollOverDesktops()) {
@@ -168,7 +169,7 @@ QRect SlideEffect::desktopRect(int desktop) const
     return rect;
 }
 
-void SlideEffect::desktopChanged(int old)
+void SlideEffect::slotDesktopChanged(int old, int current)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -190,7 +191,7 @@ void SlideEffect::desktopChanged(int old)
             if (diffPos.y() < 0 && abs(diffPos.y()) > h / 2)
                 diffPos.setY(diffPos.y() + h);
         }
-        QPoint currentPos = slide_start_pos + mTimeLine.value() * diffPos;
+        QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
         QRegion currentRegion = QRect(currentPos, QSize(displayWidth(), displayHeight()));
         if (effects->optionRollOverDesktops()) {
             currentRegion |= (currentRegion & QRect(-w, 0, w, h)).translated(w, 0);
@@ -198,30 +199,30 @@ void SlideEffect::desktopChanged(int old)
             currentRegion |= (currentRegion & QRect(w, 0, w, h)).translated(-w, 0);
             currentRegion |= (currentRegion & QRect(0, h, w, h)).translated(0, -h);
         }
-        QRect rect = desktopRect(effects->currentDesktop());
+        QRect rect = desktopRect(current);
         if (currentRegion.contains(rect)) {
             // current position is in new current desktop (e.g. quickly changing back),
             // don't do full progress
             if (abs(currentPos.x() - rect.x()) > abs(currentPos.y() - rect.y()))
-                mTimeLine.setProgress(1 - abs(currentPos.x() - rect.x()) / double(displayWidth()));
+                mTimeLine.setCurrentTime((1.0 - abs(currentPos.x() - rect.x()) / double(displayWidth()))*(qreal)mTimeLine.currentValue());
             else
-                mTimeLine.setProgress(1 - abs(currentPos.y() - rect.y()) / double(displayHeight()));
+                mTimeLine.setCurrentTime((1.0 - abs(currentPos.y() - rect.y()) / double(displayHeight()))*(qreal)mTimeLine.currentValue());
         } else // current position is not on current desktop, do full progress
-            mTimeLine.setProgress(0);
+            mTimeLine.setCurrentTime(0);
         diffPos = rect.topLeft() - currentPos;
-        if (mTimeLine.value() <= 0) {
+        if (mTimeLine.currentValue() <= 0) {
             // Compute starting point for this new move (given current and end positions)
-            slide_start_pos = rect.topLeft() - diffPos * 1 / (1 - mTimeLine.value());
+            slide_start_pos = rect.topLeft() - diffPos * 1 / (1 - mTimeLine.currentValue());
         } else {
             // at the end, stop
             slide = false;
-            mTimeLine.setProgress(0);
+            mTimeLine.setCurrentTime(0);
             effects->setActiveFullScreenEffect(NULL);
         }
     } else {
         if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
             return;
-        mTimeLine.setProgress(0);
+        mTimeLine.setCurrentTime(0);
         slide_start_pos = desktopRect(old).topLeft();
         slide = true;
         effects->setActiveFullScreenEffect(this);

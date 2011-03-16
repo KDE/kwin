@@ -25,12 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <QQueue>
 #include <QSet>
+#include <QTimeLine>
 
 namespace KWin
 {
 class CubeSlideEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     CubeSlideEffect();
     ~CubeSlideEffect();
@@ -40,10 +42,14 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void desktopChanged(int old);
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
 
     static bool supported();
+
+private Q_SLOTS:
+    void slotDesktopChanged(int old, int current);
+    void slotWindowStepUserMovedResized(EffectWindow *w);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
+
 private:
     enum RotationDirection {
         Left,
@@ -58,7 +64,7 @@ private:
     int painting_desktop;
     int other_desktop;
     bool firstDesktop;
-    TimeLine timeLine;
+    QTimeLine timeLine;
     QQueue<RotationDirection> slideRotations;
     QSet<EffectWindow*> panels;
     QSet<EffectWindow*> stickyWindows;

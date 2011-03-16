@@ -493,6 +493,14 @@ signals:
     void maximizeSet(QPair<bool, bool>);
     void s_activated();
     void s_fullScreenSet(bool, bool);
+    void clientClosed(KWin::Client*);
+    void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
+    void clientMinimized(KWin::Client* client, bool animate);
+    void clientUnminimized(KWin::Client* client, bool animate);
+    void clientGeometryShapeChanged(KWin::Client* client, const QRect& old);
+    void clientStartUserMovedResized(KWin::Client*);
+    void clientStepUserMovedResized(KWin::Client *, const QRect&);
+    void clientFinishUserMovedResized(KWin::Client*);
 
     // To make workspace-client calls, a few slots are also
     // required

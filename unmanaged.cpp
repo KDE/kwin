@@ -81,8 +81,8 @@ bool Unmanaged::track(Window w)
 void Unmanaged::release()
 {
     Deleted* del = Deleted::create(this);
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+    emit unmanagedClosed(this);
+    if (scene) {
         scene->windowClosed(this, del);
     }
     finishCompositing();

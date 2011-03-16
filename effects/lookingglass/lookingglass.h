@@ -37,7 +37,7 @@ class GLVertexBuffer;
 /**
  * Enhanced magnifier
  **/
-class LookingGlassEffect : public QObject, public Effect
+class LookingGlassEffect : public Effect
 {
     Q_OBJECT
 public:
@@ -45,9 +45,6 @@ public:
     virtual ~LookingGlassEffect();
 
     virtual void reconfigure(ReconfigureFlags);
-    virtual void mouseChanged(const QPoint& pos, const QPoint& old,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void postPaintScreen();
@@ -58,6 +55,9 @@ public slots:
     void toggle();
     void zoomIn();
     void zoomOut();
+    void slotMouseChanged(const QPoint& pos, const QPoint& old,
+                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
     bool loadData();
