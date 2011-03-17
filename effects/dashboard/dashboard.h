@@ -57,11 +57,11 @@ private:
     bool deactivateAnimation;
     QTimeLine timeline;
     long atom;
-    QString brightness;
+    qreal brightness;
     double brightnessDelta;
-    QString saturation;
+    qreal saturation;
     double saturationDelta;
-    QString duration;
+    int duration;
     EffectWindow* window;
 };
 

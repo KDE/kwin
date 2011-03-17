@@ -47,14 +47,14 @@ void DashboardEffectConfig::load()
     KCModule::load();
     KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
 
-    QString brightness = config.readEntry("Brightness", "5");
-    ui.brightness->setValue(brightness.toInt());
+    const int brightness = config.readEntry<int>("Brightness", 50);
+    ui.brightness->setValue(brightness);
 
-    QString saturation = config.readEntry("Saturation", "5");
-    ui.saturation->setValue(saturation.toInt());
+    const int saturation = config.readEntry<int>("Saturation", 50);
+    ui.saturation->setValue(saturation);
 
-    QString duration = config.readEntry("Duration", "500");
-    ui.duration->setValue(duration.toInt());
+    const int duration = config.readEntry("Duration", 500);
+    ui.duration->setValue(duration);
 
     bool blur = config.readEntry("Blur", false);
     ui.blur->setChecked(blur);

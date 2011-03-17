@@ -67,20 +67,20 @@ void DashboardEffect::reconfigure(ReconfigureFlags)
     // read settings again
     KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
 
-    brightness = config.readEntry("Brightness", "50");
-    saturation = config.readEntry("Saturation", "50");
-    duration = config.readEntry("Duration", "500");
+    brightness = qreal(config.readEntry<int>("Brightness", 50)) / 100.0;
+    saturation = qreal(config.readEntry<int>("Saturation", 50)) / 100.0;
+    duration = config.readEntry<int>("Duration", 500);
 
     blur = config.readEntry("Blur", false);
 
-    timeline.setDuration(animationTime(duration.toInt()));
+    timeline.setDuration(animationTime(duration));
 }
 
 void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (transformWindow && (w != window) && w->isManaged() && !isDashboard(w)) {
-        brightnessDelta = (1 - (brightness.toDouble() / 100));
-        saturationDelta = (1 - (saturation.toDouble() / 100));
+        brightnessDelta = 1.0 - brightness;
+        saturationDelta = 1.0 - saturation;
 
         // dashboard active, transform other windows
         data.brightness *= (1 - (brightnessDelta * timeline.currentValue()));
