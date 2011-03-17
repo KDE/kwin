@@ -30,10 +30,10 @@ DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList
 {
     ui.setupUi(this);
 
-    connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(valueChanged(int)));
+    connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(changed()));
 
     load();
 }
@@ -77,12 +77,6 @@ void DashboardEffectConfig::save()
 
     emit changed(false);
     EffectsHandler::sendReloadMessage("dashboard");
-}
-
-void DashboardEffectConfig::valueChanged(int value)
-{
-    Q_UNUSED(value)
-    emit changed(true);
 }
 
 void DashboardEffectConfig::defaults()
