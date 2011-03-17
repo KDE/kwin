@@ -81,6 +81,10 @@ void DashboardEffectConfig::save()
 
 void DashboardEffectConfig::defaults()
 {
+    ui.brightness->setValue(50);
+    ui.saturation->setValue(50);
+    ui.duration->setValue(500);
+    ui.blur->setChecked(false);
     emit changed(true);
 }
 
