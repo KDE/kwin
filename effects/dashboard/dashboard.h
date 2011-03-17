@@ -58,9 +58,7 @@ private:
     QTimeLine timeline;
     long atom;
     qreal brightness;
-    double brightnessDelta;
     qreal saturation;
-    double saturationDelta;
     int duration;
     EffectWindow* window;
 };

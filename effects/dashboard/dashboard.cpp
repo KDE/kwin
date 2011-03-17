@@ -79,12 +79,9 @@ void DashboardEffect::reconfigure(ReconfigureFlags)
 void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (transformWindow && (w != window) && w->isManaged() && !isDashboard(w)) {
-        brightnessDelta = 1.0 - brightness;
-        saturationDelta = 1.0 - saturation;
-
         // dashboard active, transform other windows
-        data.brightness *= (1 - (brightnessDelta * timeline.currentValue()));
-        data.saturation *= (1 - (saturationDelta * timeline.currentValue()));
+        data.brightness *= (1 - ((1.0 - brightness) * timeline.currentValue()));
+        data.saturation *= (1 - ((1.0 - saturation) * timeline.currentValue()));
     }
 
     else if (transformWindow && (w == window) && w->isManaged()) {
