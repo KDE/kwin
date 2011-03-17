@@ -29,6 +29,8 @@ DashboardEffect::DashboardEffect()
     : transformWindow(false)
     , activateAnimation(false)
     , deactivateAnimation(false)
+    , retransformWindow(false)
+    , window(NULL)
 {
     // propagate that the effect is loaded
     propagate();
@@ -114,6 +116,7 @@ void DashboardEffect::postPaintScreen()
             retransformWindow = false;
             transformWindow = false;
             effects->addRepaintFull();
+            window = NULL;
             effects->setActiveFullScreenEffect(0);
         }
 
@@ -128,6 +131,7 @@ void DashboardEffect::postPaintScreen()
             if (timeline.currentValue() == 0.0) {
                 deactivateAnimation = false;
                 transformWindow = false;
+                window = NULL;
                 effects->setActiveFullScreenEffect(0);
             }
 
