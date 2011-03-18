@@ -126,8 +126,24 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 {
-    if (mAppearingWindows.contains(w) || mDisappearingWindows.contains(w))
+    if (mAppearingWindows.contains(w) || mDisappearingWindows.contains(w)) {
         w->addRepaintFull(); // trigger next animation repaint
+        const int start = mWindowsData[ w ].start;
+        switch(mWindowsData[ w ].from) {
+        case West:
+            effects->addRepaint(QRect(start, w->y(), w->x(), w->height()));
+            break;
+        case North:
+            effects->addRepaint(QRect(w->x(), start, w->width(), w->y()));
+            break;
+        case East:
+            effects->addRepaint(QRect(w->x() + w->width(), w->y(), displayWidth() - w->x() - w->width() - start, w->height()));
+            break;
+        case South:
+        default:
+            effects->addRepaint(QRect(w->x(), w->y()+w->height(), w->width(), displayHeight() - w->y() - w->height() - start));
+        }
+    }
     effects->postPaintWindow(w);
     if (mDisappearingWindows.contains(w) && mDisappearingWindows[ w ]->currentValue() >= 1) {
         delete mDisappearingWindows.take(w);
