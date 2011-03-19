@@ -31,9 +31,6 @@ KWIN_EFFECT(slidingpopups, SlidingPopupsEffect)
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
-    KConfigGroup conf = effects->effectConfig("SlidingPopups");
-    mFadeInTime = animationTime(conf, "SlideInTime", 250);
-    mFadeOutTime = animationTime(conf, "SlideOutTime", 250);
     mAtom = XInternAtom(display(), "_KDE_SLIDE", False);
     effects->registerPropertyType(mAtom, true);
     // TODO hackish way to announce support, make better after 4.0
@@ -43,12 +40,37 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
+    reconfigure(ReconfigureAll);
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
 {
     XDeleteProperty(display(), rootWindow(), mAtom);
     effects->registerPropertyType(mAtom, false);
+}
+
+void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
+{
+    Q_UNUSED(flags)
+    KConfigGroup conf = effects->effectConfig("SlidingPopups");
+    mFadeInTime = animationTime(conf, "SlideInTime", 250);
+    mFadeOutTime = animationTime(conf, "SlideOutTime", 250);
+    QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
+    while (it != mAppearingWindows.end()) {
+        it.value()->setDuration(animationTime(mFadeInTime));
+        it++;
+    }
+    it = mDisappearingWindows.begin();
+    while (it != mDisappearingWindows.end()) {
+        it.value()->setDuration(animationTime(mFadeOutTime));
+        it++;
+    }
+    QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
+    while (wIt != mWindowsData.end()) {
+        wIt.value().fadeInDuration = mFadeInTime;
+        wIt.value().fadeOutDuration = mFadeOutTime;
+        wIt++;
+    }
 }
 
 void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)

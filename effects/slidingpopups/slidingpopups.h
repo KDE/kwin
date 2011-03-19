@@ -40,6 +40,7 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
+    virtual void reconfigure(ReconfigureFlags flags);
     // TODO react also on virtual desktop changes
 
 public Q_SLOTS:
