@@ -53,8 +53,8 @@ protected:
     bool hasModalWindow(EffectWindow* t);
 private:
     // The progress of the fading.
-    QHash<EffectWindow*, double> effectStrength;
-    double changeTime;
+    QMap<EffectWindow*, float> effectStrength;
+    float changeTime;
 };
 
 } // namespace
