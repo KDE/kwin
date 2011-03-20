@@ -404,6 +404,7 @@ public:
     void toggleEffect(const QString& name);
     void reconfigureEffect(const QString& name);
     void unloadEffect(const QString& name);
+    void updateCompositeBlocking(Client* c = NULL);
 
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
@@ -1016,7 +1017,7 @@ private:
     friend class StackingUpdatesBlocker;
 
     KSelectionOwner* cm_selection;
-    bool compositingSuspended;
+    bool compositingSuspended, compositingBlocked;
     QBasicTimer compositeTimer;
     qint64 nextPaintReference;
     QTimer mousePollingTimer;

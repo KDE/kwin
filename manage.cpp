@@ -591,6 +591,8 @@ bool Client::manage(Window w, bool isMapped)
     workspace()->discardUsedWindowRules(this, false);   // Remove ApplyNow rules
     updateWindowRules(); // Was blocked while !isManaged()
 
+    updateCompositeBlocking(true);
+
     // TODO: there's a small problem here - isManaged() depends on the mapping state,
     // but this client is not yet in Workspace's client list at this point, will
     // be only done in addClient()

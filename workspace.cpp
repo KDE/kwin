@@ -151,6 +151,7 @@ Workspace::Workspace(bool restore)
     , forced_global_mouse_grab(false)
     , cm_selection(NULL)
     , compositingSuspended(false)
+    , compositingBlocked(false)
     , xrrRefreshRate(0)
     , overlay(None)
     , overlay_visible(true)
@@ -700,6 +701,8 @@ void Workspace::removeClient(Client* c, allowed_t)
         cancelDelayFocus();
 
     updateStackingOrder(true);
+
+    updateCompositeBlocking();
 
     if (tab_grab)
         tab_box->reset(true);

@@ -281,6 +281,32 @@ void Workspace::toggleCompositing()
     }
 }
 
+void Workspace::updateCompositeBlocking(Client *c)
+{
+    if (c) { // if c == 0 we just check if we can resume
+        if (c->isBlockingCompositing()) {
+            compositingBlocked = true;
+            suspendCompositing(true);
+        }
+    }
+    else if (compositingBlocked) {  // lost a client and we're blocked - can we resume?
+        // NOTICE do NOT check for "compositingSuspended" or "!compositing()"
+        // only "resume" if it was really disabled for a block
+        bool resume = true;
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+            if ((*it)->isBlockingCompositing()) {
+                resume = false;
+                break;
+            }
+        }
+        if (resume) { // do NOT attempt to call suspendCompositing(false); from within the eventchain!
+            compositingBlocked = false;
+            if (compositingSuspended)
+                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+        }
+    }
+}
+
 void Workspace::suspendCompositing()
 {
     suspendCompositing(true);

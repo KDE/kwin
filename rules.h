@@ -75,6 +75,7 @@ public:
     bool checkKeepBelow(bool below, bool init = false) const;
     bool checkFullScreen(bool fs, bool init = false) const;
     bool checkNoBorder(bool noborder, bool init = false) const;
+    bool checkBlockCompositing(bool block) const;
     int checkFSP(int fsp) const;
     bool checkAcceptFocus(bool focus) const;
     Options::MoveResizeMode checkMoveResizeMode(Options::MoveResizeMode mode) const;
@@ -132,6 +133,7 @@ public:
     bool applyKeepBelow(bool& below, bool init) const;
     bool applyFullScreen(bool& fs, bool init) const;
     bool applyNoBorder(bool& noborder, bool init) const;
+    bool applyBlockCompositing(bool& block) const;
     bool applyFSP(int& fsp) const;
     bool applyAcceptFocus(bool& focus) const;
     bool applyMoveResizeMode(Options::MoveResizeMode& mode) const;
@@ -244,6 +246,8 @@ private:
     SetRule fullscreenrule;
     bool noborder;
     SetRule noborderrule;
+    bool blockcompositing;
+    ForceRule blockcompositingrule;
     int fsplevel;
     ForceRule fsplevelrule;
     bool acceptfocus;

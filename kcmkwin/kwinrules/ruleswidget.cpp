@@ -115,6 +115,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(maxsize, force);
     SETUP(strictgeometry, force);
     SETUP(disableglobalshortcuts, force);
+    SETUP(blockcompositing, force);
     int i;
     for (i = 1;
             i <= KWindowSystem::numberOfDesktops();
@@ -171,6 +172,7 @@ UPDATE_ENABLE_SLOT(minsize)
 UPDATE_ENABLE_SLOT(maxsize)
 UPDATE_ENABLE_SLOT(strictgeometry)
 UPDATE_ENABLE_SLOT(disableglobalshortcuts)
+UPDATE_ENABLE_SLOT(blockcompositing)
 
 #undef UPDATE_ENABLE_SLOT
 
@@ -450,6 +452,7 @@ void RulesWidget::setRules(Rules* rules)
     LINEEDIT_FORCE_RULE(maxsize, sizeToStr);
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
+    CHECKBOX_FORCE_RULE(blockcompositing,);
 }
 
 #undef GENERIC_RULE
@@ -544,6 +547,7 @@ Rules* RulesWidget::rules() const
     LINEEDIT_FORCE_RULE(maxsize, strToSize);
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
+    CHECKBOX_FORCE_RULE(blockcompositing,);
     return rules;
 }
 
@@ -662,6 +666,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     LINEEDIT_PREFILL(maxsize, sizeToStr, info.frameGeometry().size());
     //CHECKBOX_PREFILL( strictgeometry, );
     //CHECKBOX_PREFILL( disableglobalshortcuts, );
+    //CHECKBOX_PREFILL( blockcompositing, );
 }
 
 #undef GENERIC_PREFILL
