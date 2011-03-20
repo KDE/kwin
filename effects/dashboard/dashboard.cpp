@@ -164,6 +164,7 @@ void DashboardEffect::slotWindowActivated(EffectWindow *w)
 
         if (blur) {
             w->setData(WindowBlurBehindRole, w->geometry());
+            w->setData(WindowForceBlurRole, QVariant(true));
         }
 
         effects->addRepaintFull();
