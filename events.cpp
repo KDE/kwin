@@ -1666,6 +1666,8 @@ void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
             getWmClientLeader();
         else if (e->atom == atoms->wm_window_role)
             getWindowRole();
+        else if (e->atom == atoms->kde_net_wm_shadow)
+            getShadow();
         break;
     }
     emit propertyNotify(this, e->atom);

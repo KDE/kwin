@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
+#include "shadow.h"
 
 #include <kephal/screens.h>
 
@@ -492,6 +493,9 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
             ret += makeQuads(WindowQuadDecoration, left);
             ret += makeQuads(WindowQuadDecoration, right);
         }
+    }
+    if (toplevel->hasShadow()) {
+        ret << toplevel->shadow()->shadowQuads();
     }
     effects->buildQuads(static_cast<Client*>(toplevel)->effectWindow(), ret);
     cached_quad_list = new WindowQuadList(ret);

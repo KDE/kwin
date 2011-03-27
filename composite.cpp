@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_basic.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "shadow.h"
 #include "compositingprefs.h"
 #include "notifications.h"
 
@@ -383,6 +384,9 @@ void Workspace::performCompositing()
         repaints_region |= c->repaints().translated(c->pos());
         repaints_region |= c->decorationPendingRegion();
         c->resetRepaints(c->decorationRect());
+        if (c->hasShadow()) {
+            c->resetRepaints(c->shadow()->shadowRegion().boundingRect());
+        }
     }
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
@@ -665,6 +669,7 @@ void Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl();
     effect_window->setWindow(this);
+    getShadow();
     unredirect = false;
     workspace()->checkUnredirect(true);
 #endif
@@ -685,6 +690,10 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
+    if (hasShadow()) {
+        delete m_shadow;
+        m_shadow = NULL;
+    }
 #endif
 }
 
@@ -857,6 +866,9 @@ void Toplevel::addRepaint(int x, int y, int w, int h)
 void Toplevel::addRepaintFull()
 {
     repaints_region = rect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 
@@ -947,6 +959,9 @@ bool Client::shouldUnredirect() const
 void Client::addRepaintFull()
 {
     repaints_region = decorationRect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 
@@ -990,6 +1005,9 @@ bool Deleted::shouldUnredirect() const
 void Deleted::addRepaintFull()
 {
     repaints_region = decorationRect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 

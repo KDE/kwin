@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "client.h"
 #include "effects.h"
+#include "shadow.h"
 
 namespace KWin
 {
@@ -33,6 +34,7 @@ Toplevel::Toplevel(Workspace* ws)
     : vis(NULL)
     , info(NULL)
     , ready_for_painting(true)
+    , m_shadow(NULL)
     , client(None)
     , frame(None)
     , wspace(ws)
@@ -131,6 +133,11 @@ void Toplevel::copyToDeleted(Toplevel* c)
     // this needs to be done already here, otherwise 'c' could very likely
     // call discardWindowPixmap() in something called during cleanup
     c->window_pix = None;
+    if (c->hasShadow()) {
+        m_shadow = c->m_shadow;
+        c->m_shadow->setParent(this);
+        c->m_shadow = NULL;
+    }
 }
 
 // before being deleted, remove references to everything that's now
@@ -142,6 +149,9 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleRect() const
 {
+    if (hasShadow()) {
+        return shadow()->shadowRegion().boundingRect().translated(geometry().topLeft());
+    }
     return geometry();
 }
 
@@ -348,6 +358,24 @@ bool Toplevel::isOnScreen(int screen) const
     return workspace()->screenGeometry(screen).intersects(geometry());
 }
 
+void Toplevel::getShadow()
+{
+    if (hasShadow()) {
+        m_shadow->updateShadow();
+    } else {
+        m_shadow = Shadow::createShadow(this);
+    }
+}
+
+bool Toplevel::hasShadow() const
+{
+    return m_shadow != NULL;
+}
+
+Shadow *Toplevel::shadow() const
+{
+    return m_shadow;
+}
 
 } // namespace
 

@@ -174,6 +174,15 @@ enum WindowQuadType {
     WindowQuadError, // for the stupid default ctor
     WindowQuadContents,
     WindowQuadDecoration,
+    // Shadow Quad types
+    WindowQuadShadowTop,
+    WindowQuadShadowTopRight,
+    WindowQuadShadowRight,
+    WindowQuadShadowBottomRight,
+    WindowQuadShadowBottom,
+    WindowQuadShadowBottomLeft,
+    WindowQuadShadowLeft,
+    WindowQuadShadowTopLeft,
     EFFECT_QUAD_TYPE_START = 100 ///< @internal
 };
 

@@ -44,6 +44,7 @@ namespace KWin
 
 class Workspace;
 class EffectWindowImpl;
+class Shadow;
 
 class Toplevel
     : public QObject, public KDecorationDefines
@@ -135,6 +136,21 @@ public:
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
 
+    /**
+     * @returns Whether the Toplevel has a Shadow or not
+     * @see shadow
+     **/
+    bool hasShadow() const;
+    /**
+     * Returns the pointer to the Toplevel's Shadow. A Shadow
+     * is only available if Compositing is enabled and the corresponding X window
+     * has the Shadow property set.
+     * If a shadow is available @link hasShadow returns @c true.
+     * @returns The Shadow belonging to this Toplevel, may be @c NULL.
+     * @see hasShadow
+     **/
+    Shadow *shadow() const;
+
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
@@ -157,6 +173,11 @@ protected:
     void getWmClientMachine();
     void getResourceClass();
     void getWindowRole();
+    /**
+     * Updates the Shadow associated with this Toplevel from X11 Property.
+     * Call this method when the Property changes or Compositing is started.
+     **/
+    void getShadow();
     virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
@@ -169,6 +190,7 @@ protected:
     NETWinInfo2* info;
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
+    Shadow *m_shadow;
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);

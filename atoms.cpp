@@ -114,6 +114,9 @@ Atoms::Atoms()
     atoms[n] = &net_wm_sync_request;
     names[n++] = (char*) "_NET_WM_SYNC_REQUEST";
 
+    atoms[n] = &kde_net_wm_shadow;
+    names[n++] = (char*) "_KDE_NET_WM_SHADOW";
+
     assert(n <= max);
 
     XInternAtoms(display(), names, n, false, atoms_return);
