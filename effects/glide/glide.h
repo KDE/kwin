@@ -70,9 +70,7 @@ class GlideEffect::WindowInfo
 {
 public:
     WindowInfo();
-    ~WindowInfo() {
-        delete timeLine;
-    }
+    ~WindowInfo();
     bool deleted;
     bool added;
     bool closed;
