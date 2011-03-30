@@ -680,6 +680,10 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
     prepareStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
+    if (data.shader) {
+        data.shader->setUniform(GLShader::TextureWidth, 1.0f);
+        data.shader->setUniform(GLShader::TextureHeight, 1.0f);
+    }
     renderQuads(0, region, quads);
     restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
     texture->unbind();
