@@ -83,7 +83,8 @@ QVector< long > Shadow::readX11ShadowProperty(WId id)
 void Shadow::init(const QVector< long > &data)
 {
     for (int i=0; i<ShadowElementsCount; ++i) {
-        m_shadowElements[i] = QPixmap::fromX11Pixmap(data[i]);
+        QPixmap pix = QPixmap::fromX11Pixmap(data[i]);
+        m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
     }
     m_topOffset = data[ShadowElementsCount];
     m_rightOffset = data[ShadowElementsCount+1];
