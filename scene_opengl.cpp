@@ -687,6 +687,13 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
     renderQuads(0, region, quads);
     restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
     texture->unbind();
+#ifndef KWIN_HAVE_OPENGLES
+    if (static_cast<SceneOpenGL*>(scene)->debug) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        renderQuads(0, region, quads);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+#endif
 }
 
 void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const
