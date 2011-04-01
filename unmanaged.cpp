@@ -92,7 +92,7 @@ void Unmanaged::release()
             XShapeSelectInput(display(), window(), NoEventMask);
         XSelectInput(display(), window(), NoEventMask);
     }
-    addWorkspaceRepaint(geometry());
+    addWorkspaceRepaint(visibleRect());
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteUnmanaged(this, Allowed);

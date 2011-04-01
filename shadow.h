@@ -85,6 +85,13 @@ public:
      **/
     static Shadow *createShadow(Toplevel *toplevel);
 
+    /**
+     * Reparents the shadow to @p toplevel.
+     * Used when a window is deleted.
+     * @param toplevel The new parent
+     **/
+    void setToplevel(Toplevel *toplevel);
+
 protected:
     Shadow(Toplevel *toplevel);
     enum ShadowElements {

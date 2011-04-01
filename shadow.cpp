@@ -171,4 +171,10 @@ bool Shadow::updateShadow()
     return true;
 }
 
+void Shadow::setToplevel(Toplevel *topLevel)
+{
+    m_topLevel = topLevel;
+    setParent(topLevel);
+}
+
 } // namespace

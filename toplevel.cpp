@@ -135,8 +135,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     c->window_pix = None;
     if (c->hasShadow()) {
         m_shadow = c->m_shadow;
-        c->m_shadow->setParent(this);
-        c->m_shadow = NULL;
+        m_shadow->setToplevel(this);
     }
 }
 
@@ -145,6 +144,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
 void Toplevel::disownDataPassedToDeleted()
 {
     info = NULL;
+    m_shadow = NULL;
 }
 
 QRect Toplevel::visibleRect() const

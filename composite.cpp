@@ -690,10 +690,6 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
-    if (hasShadow()) {
-        delete m_shadow;
-        m_shadow = NULL;
-    }
 #endif
 }
 
