@@ -364,6 +364,7 @@ void Toplevel::getShadow()
         m_shadow->updateShadow();
     } else {
         m_shadow = Shadow::createShadow(this);
+        addRepaintFull();
     }
 }
 
