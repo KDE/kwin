@@ -124,7 +124,7 @@ protected:
 
 private:
     static QVector<long> readX11ShadowProperty(WId id);
-    void init(const QVector<long> &data);
+    bool init(const QVector<long> &data);
     Toplevel *m_topLevel;
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];

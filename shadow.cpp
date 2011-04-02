@@ -52,7 +52,10 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
 #endif
         }
         if (shadow) {
-            shadow->init(data);
+            if (!shadow->init(data)) {
+                delete shadow;
+                return NULL;
+            }
         }
         return shadow;
     } else {
@@ -80,10 +83,13 @@ QVector< long > Shadow::readX11ShadowProperty(WId id)
     return ret;
 }
 
-void Shadow::init(const QVector< long > &data)
+bool Shadow::init(const QVector< long > &data)
 {
     for (int i=0; i<ShadowElementsCount; ++i) {
         QPixmap pix = QPixmap::fromX11Pixmap(data[i]);
+        if (pix.isNull()) {
+            return false;
+        }
         m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
     }
     m_topOffset = data[ShadowElementsCount];
@@ -97,6 +103,7 @@ void Shadow::init(const QVector< long > &data)
     const QRect leftRect(- m_leftOffset, - m_topOffset, m_leftOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
     m_shadowRegion = QRegion(topRect).united(rightRect).united(bottomRect).united(leftRect);
     buildQuads();
+    return true;
 }
 
 void Shadow::buildQuads()
