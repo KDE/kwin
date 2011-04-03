@@ -591,6 +591,8 @@ void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
 
 void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
+    if (m_selectedWindow == w)
+        m_selectedWindow = 0;
     if (m_active && m_windows.contains(w)) {
         m_windows.remove(w);
     }

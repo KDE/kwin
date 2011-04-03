@@ -988,6 +988,8 @@ void CoverSwitchEffect::abort()
 
 void CoverSwitchEffect::slotWindowClosed(EffectWindow* c)
 {
+    if (c == selected_window)
+        selected_window = 0;
     // if the list is not empty, the effect is active
     if (!currentWindowList.isEmpty()) {
         c->refWindow();
