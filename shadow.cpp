@@ -127,6 +127,14 @@ void Shadow::buildQuads()
     const QRect bottomLeftRect(QPoint(0, 0), m_shadowElements[ShadowElementBottomLeft].size());
     const QRect leftRect(QPoint(0, 0), m_shadowElements[ShadowElementLeft].size());
     const QRect topLeftRect(QPoint(0, 0), m_shadowElements[ShadowElementTopLeft].size());
+    if ((leftRect.width() - m_leftOffset > m_topLevel->width()) ||
+        (rightRect.width() - m_rightOffset > m_topLevel->width()) ||
+        (topRect.height() - m_topOffset > m_topLevel->height()) ||
+        (bottomRect.height() - m_bottomOffset > m_topLevel->height())) {
+        // if our shadow is bigger than the window, we don't render the shadow
+        m_shadowRegion = QRegion();
+        return;
+    }
     WindowQuad topLeftQuad(WindowQuadShadowTopLeft);
     topLeftQuad[ 0 ] = WindowVertex(-m_leftOffset, -m_topOffset, 0.0, 0.0);
     topLeftQuad[ 1 ] = WindowVertex(-m_leftOffset + topLeftRect.width(), -m_topOffset, 1.0, 0.0);
