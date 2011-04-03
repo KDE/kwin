@@ -92,6 +92,9 @@ public:
      **/
     void setToplevel(Toplevel *toplevel);
 
+public Q_SLOTS:
+    void geometryChanged();
+
 protected:
     Shadow(Toplevel *toplevel);
     enum ShadowElements {
@@ -121,6 +124,7 @@ protected:
         return m_leftOffset;
     };
     virtual void buildQuads();
+    void updateShadowRegion();
 
 private:
     static QVector<long> readX11ShadowProperty(WId id);
@@ -136,6 +140,7 @@ private:
     // caches
     QRegion m_shadowRegion;
     WindowQuadList m_shadowQuads;
+    QSize m_cachedSize;
 };
 
 }

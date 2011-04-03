@@ -31,7 +31,9 @@ namespace KWin
 
 Shadow::Shadow(Toplevel *toplevel)
     : m_topLevel(toplevel)
+    , m_cachedSize(toplevel->geometry().size())
 {
+    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
 }
 
 Shadow::~Shadow()
@@ -99,14 +101,18 @@ bool Shadow::init(const QVector< long > &data)
     m_rightOffset = data[ShadowElementsCount+1];
     m_bottomOffset = data[ShadowElementsCount+2];
     m_leftOffset = data[ShadowElementsCount+3];
-    // prepare shadow region
+    updateShadowRegion();
+    buildQuads();
+    return true;
+}
+
+void Shadow::updateShadowRegion()
+{
     const QRect topRect(0, - m_topOffset, m_topLevel->width(), m_topOffset);
     const QRect rightRect(m_topLevel->width(), - m_topOffset, m_rightOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
     const QRect bottomRect(0, m_topLevel->height(), m_topLevel->width(), m_bottomOffset);
     const QRect leftRect(- m_leftOffset, - m_topOffset, m_leftOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
     m_shadowRegion = QRegion(topRect).united(rightRect).united(bottomRect).united(leftRect);
-    buildQuads();
-    return true;
 }
 
 void Shadow::buildQuads()
@@ -184,6 +190,16 @@ bool Shadow::updateShadow()
 void Shadow::setToplevel(Toplevel *topLevel)
 {
     m_topLevel = topLevel;
+    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
+}
+void Shadow::geometryChanged()
+{
+    if (m_cachedSize == m_topLevel->geometry().size()) {
+        return;
+    }
+    m_cachedSize = m_topLevel->geometry().size();
+    updateShadowRegion();
+    buildQuads();
 }
 
 } // namespace

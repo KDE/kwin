@@ -162,6 +162,7 @@ signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
     void propertyNotify(KWin::Toplevel* toplevel, long a);
+    void geometryChanged();
 
 protected:
     virtual ~Toplevel();

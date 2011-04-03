@@ -194,6 +194,10 @@ Client::Client(Workspace* ws)
     ready_for_painting = false; // wait for first damage or sync reply
 #endif
 
+    connect(this, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+
     // SELI TODO: Initialize xsizehints??
 }
 
