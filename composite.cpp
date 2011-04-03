@@ -669,7 +669,6 @@ void Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl();
     effect_window->setWindow(this);
-    getShadow();
     unredirect = false;
     workspace()->checkUnredirect(true);
 #endif
