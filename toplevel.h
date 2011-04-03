@@ -135,6 +135,7 @@ public:
     QRegion damage() const;
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
+    const EffectWindowImpl* effectWindow() const;
 
     /**
      * @returns Whether the Toplevel has a Shadow or not
@@ -149,7 +150,13 @@ public:
      * @returns The Shadow belonging to this Toplevel, may be @c NULL.
      * @see hasShadow
      **/
-    Shadow *shadow() const;
+    const Shadow *shadow() const;
+    Shadow *shadow();
+    /**
+     * Updates the Shadow associated with this Toplevel from X11 Property.
+     * Call this method when the Property changes or Compositing is started.
+     **/
+    void getShadow();
 
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
@@ -173,11 +180,6 @@ protected:
     void getWmClientMachine();
     void getResourceClass();
     void getWindowRole();
-    /**
-     * Updates the Shadow associated with this Toplevel from X11 Property.
-     * Call this method when the Property changes or Compositing is started.
-     **/
-    void getShadow();
     virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
@@ -190,7 +192,6 @@ protected:
     NETWinInfo2* info;
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
-    Shadow *m_shadow;
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);
@@ -410,6 +411,12 @@ inline bool Toplevel::hasAlpha() const
 
 inline
 EffectWindowImpl* Toplevel::effectWindow()
+{
+    return effect_window;
+}
+
+inline
+const EffectWindowImpl* Toplevel::effectWindow() const
 {
     return effect_window;
 }

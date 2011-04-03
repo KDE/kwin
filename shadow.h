@@ -52,7 +52,7 @@ public:
     /**
      * @return Region of the shadow.
      **/
-    const QRegion &shadowRegion() {
+    const QRegion &shadowRegion() const {
         return m_shadowRegion;
     };
     /**

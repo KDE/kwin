@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 // kwin
 #include "atoms.h"
+#include "effects.h"
 #include "toplevel.h"
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "scene_opengl.h"
@@ -29,8 +30,7 @@ namespace KWin
 {
 
 Shadow::Shadow(Toplevel *toplevel)
-    : QObject(toplevel)
-    , m_topLevel(toplevel)
+    : m_topLevel(toplevel)
 {
 }
 
@@ -55,6 +55,9 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
             if (!shadow->init(data)) {
                 delete shadow;
                 return NULL;
+            }
+            if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
+                toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
             }
         }
         return shadow;
@@ -181,7 +184,6 @@ bool Shadow::updateShadow()
 void Shadow::setToplevel(Toplevel *topLevel)
 {
     m_topLevel = topLevel;
-    setParent(topLevel);
 }
 
 } // namespace

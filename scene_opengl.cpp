@@ -235,6 +235,8 @@ void SceneOpenGL::windowAdded(Toplevel* c)
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
     c->effectWindow()->setSceneWindow(windows[ c ]);
+    c->getShadow();
+    windows[ c ]->updateShadow(c->shadow());
 }
 
 void SceneOpenGL::windowClosed(Toplevel* c, Deleted* deleted)
@@ -244,6 +246,9 @@ void SceneOpenGL::windowClosed(Toplevel* c, Deleted* deleted)
         // replace c with deleted
         Window* w = windows.take(c);
         w->updateToplevel(deleted);
+        if (w->shadow()) {
+            w->shadow()->setToplevel(deleted);
+        }
         windows[ deleted ] = w;
     } else {
         delete windows.take(c);
@@ -513,7 +518,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     vbo->reset();
 
     // shadow
-    if (toplevel->hasShadow()) {
+    if (m_shadow) {
         paintShadow(WindowQuadShadowTop, region, data);
         paintShadow(WindowQuadShadowTopRight, region, data);
         paintShadow(WindowQuadShadowRight, region, data);
@@ -669,7 +674,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
 void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data)
 {
     WindowQuadList quads = data.quads.select(type);
-    Texture *texture = static_cast<SceneOpenGLShadow*>(toplevel->shadow())->textureForQuadType(type);
+    Texture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->textureForQuadType(type);
     if (!texture) {
         return;
     }

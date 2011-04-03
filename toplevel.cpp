@@ -34,7 +34,6 @@ Toplevel::Toplevel(Workspace* ws)
     : vis(NULL)
     , info(NULL)
     , ready_for_painting(true)
-    , m_shadow(NULL)
     , client(None)
     , frame(None)
     , wspace(ws)
@@ -133,10 +132,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     // this needs to be done already here, otherwise 'c' could very likely
     // call discardWindowPixmap() in something called during cleanup
     c->window_pix = None;
-    if (c->hasShadow()) {
-        m_shadow = c->m_shadow;
-        m_shadow->setToplevel(this);
-    }
 }
 
 // before being deleted, remove references to everything that's now
@@ -144,7 +139,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
 void Toplevel::disownDataPassedToDeleted()
 {
     info = NULL;
-    m_shadow = NULL;
 }
 
 QRect Toplevel::visibleRect() const
@@ -361,21 +355,37 @@ bool Toplevel::isOnScreen(int screen) const
 void Toplevel::getShadow()
 {
     if (hasShadow()) {
-        m_shadow->updateShadow();
+        effectWindow()->sceneWindow()->shadow()->updateShadow();
     } else {
-        m_shadow = Shadow::createShadow(this);
+        Shadow::createShadow(this);
         addRepaintFull();
     }
 }
 
 bool Toplevel::hasShadow() const
 {
-    return m_shadow != NULL;
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow() != NULL;
+    }
+    return false;
 }
 
-Shadow *Toplevel::shadow() const
+Shadow *Toplevel::shadow()
 {
-    return m_shadow;
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow();
+    } else {
+        return NULL;
+    }
+}
+
+const Shadow *Toplevel::shadow() const
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow();
+    } else {
+        return NULL;
+    }
 }
 
 } // namespace

@@ -353,6 +353,7 @@ QRegion Scene::selfCheckRegion() const
 Scene::Window::Window(Toplevel * c)
     : toplevel(c)
     , filter(ImageFilterFast)
+    , m_shadow(NULL)
     , disable_painting(0)
     , shape_valid(false)
     , cached_quad_list(NULL)
@@ -362,6 +363,7 @@ Scene::Window::Window(Toplevel * c)
 Scene::Window::~Window()
 {
     delete cached_quad_list;
+    delete m_shadow;
 }
 
 void Scene::Window::discardShape()
@@ -494,8 +496,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
             ret += makeQuads(WindowQuadDecoration, right);
         }
     }
-    if (toplevel->hasShadow()) {
-        ret << toplevel->shadow()->shadowQuads();
+    if (m_shadow) {
+        ret << m_shadow->shadowQuads();
     }
     effects->buildQuads(static_cast<Client*>(toplevel)->effectWindow(), ret);
     cached_quad_list = new WindowQuadList(ret);
