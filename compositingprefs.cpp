@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglobals.h"
 #include "kwinglplatform.h"
 
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kxerrorhandler.h>
 #include <klocale.h>
 #include <kdeversion.h>
+#include <ksharedconfig.h>
 #include <kstandarddirs.h>
 
 #include <qprocess.h>
@@ -52,8 +54,21 @@ bool CompositingPrefs::recommendCompositing() const
     return mRecommendCompositing;
 }
 
+bool CompositingPrefs::openGlIsBroken()
+{
+    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
+    return KConfigGroup(config, "Compositing").readEntry("OpenGLIsUnsafe", false);
+}
+
 bool CompositingPrefs::compositingPossible()
 {
+    // first off, check whether we figured that we'll crash on detection because of a buggy driver
+    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
+    KConfigGroup gl_workaround_group(config, "Compositing");
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
+        gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
+        return false;
+
 #ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
     if (!Extensions::compositeAvailable()) {
@@ -85,6 +100,17 @@ bool CompositingPrefs::compositingPossible()
 QString CompositingPrefs::compositingNotPossibleReason()
 {
 #ifdef KWIN_HAVE_COMPOSITING
+    // first off, check whether we figured that we'll crash on detection because of a buggy driver
+    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
+    KConfigGroup gl_workaround_group(config, "Compositing");
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
+        gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
+        return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
+                    "This was most likely due to a driver bug."
+                    "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
+                    "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>"
+                    "<p>Alternatively, you might want to use the XRender backend instead.</p>");
+
     Extensions::init();
     if (!Extensions::compositeAvailable() || !Extensions::damageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
@@ -111,9 +137,18 @@ QString CompositingPrefs::compositingNotPossibleReason()
 
 void CompositingPrefs::detect()
 {
-    if (!compositingPossible()) {
+    if (!compositingPossible() || openGlIsBroken()) {
         return;
     }
+
+    // NOTICE: this is intended to workaround broken GL implementations that successfully segfault
+    // on glXQuery :-(
+    // we tag GL as unsafe. It *must* be reset before every return, and in case we "unexpectedly"
+    // end (aka "segfaulted") we know that we shall not try again
+    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
+    KConfigGroup gl_workaround_config = KConfigGroup(config, "Compositing");
+    gl_workaround_config.writeEntry("OpenGLIsUnsafe", true);
+    gl_workaround_config.sync();
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifdef KWIN_HAVE_OPENGLES
@@ -153,6 +188,8 @@ void CompositingPrefs::detect()
     }
     if (!Extensions::glxAvailable()) {
         kDebug(1212) << "No GLX available";
+        gl_workaround_config.writeEntry("OpenGLIsUnsafe", false);
+        gl_workaround_config.sync();
         return;
     }
     int glxmajor, glxminor;
@@ -177,6 +214,8 @@ void CompositingPrefs::detect()
         glXMakeCurrent(display(), olddrawable, oldcontext);
     deleteGLXContext();
 #endif
+    gl_workaround_config.writeEntry("OpenGLIsUnsafe", false);
+    gl_workaround_config.sync();
 #endif
 }
 

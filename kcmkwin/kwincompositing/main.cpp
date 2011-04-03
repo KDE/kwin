@@ -82,6 +82,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     layout()->setMargin(0);
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
+    ui.rearmGlSupport->hide();
 
     // For future use
     (void) I18N_NOOP("Use GLSL shaders");
@@ -102,6 +103,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 
+    connect(ui.rearmGlSupportButton, SIGNAL(clicked()), this, SLOT(rearmGlSupport()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectWinManagement, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectAnimations, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -143,34 +145,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     a->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_F12 ));
     connect(ui.toggleEffectsShortcut, SIGNAL(keySequenceChanged(const QKeySequence&)), this, SLOT(toggleEffectShortcutChanged(const QKeySequence&)));
 
-    // NOTICE: this is intended to workaround broken GL implementations that successfully segfault on glXQuery :-(
-    KConfigGroup unsafeConfig(mKWinConfig, "Compositing");
-    const bool glUnsafe = unsafeConfig.readEntry("OpenGLIsUnsafe", false);
-    if (!glUnsafe && CompositingPrefs::compositingPossible()) {
-        unsafeConfig.writeEntry("OpenGLIsUnsafe", true);
-        unsafeConfig.sync();
-
-        // Driver-specific config detection
-        mDefaultPrefs.detect();
-        initEffectSelector();
-        // Initialize the user interface with the config loaded from kwinrc.
-        load();
-
-        unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
-        unsafeConfig.sync();
-    } else {
-        // TODO: Add a "force recheck" button that removes the "OpenGLInUnsafe" flag
-
-        ui.useCompositing->setEnabled(false);
-        ui.useCompositing->setChecked(false);
-
-        QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
-        text += "<br>";
-        text += CompositingPrefs::compositingNotPossibleReason();
-        ui.statusTitleWidget->setText(text);
-        ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
-        ui.statusTitleWidget->show();
-    }
+    // Initialize the user interface with the config loaded from kwinrc.
+    load();
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
                                        ki18n("KWin Desktop Effects Configuration Module"),
@@ -357,12 +333,27 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.desktopSwitchingCombo->setCurrentIndex(3);
 }
 
+void KWinCompositingConfig::rearmGlSupport()
+{
+    // rearm config
+    KConfigGroup gl_workaround_config = KConfigGroup(mKWinConfig, "Compositing");
+    gl_workaround_config.writeEntry("OpenGLIsUnsafe", false);
+    gl_workaround_config.sync();
+
+    // save last changes
+    save();
+
+    // Initialize the user interface with the config loaded from kwinrc.
+    load();
+}
+
 
 void KWinCompositingConfig::toogleSmoothScaleUi(int compositingType)
 {
     ui.glScaleFilter->setVisible(compositingType == OPENGL_INDEX);
     ui.xrScaleFilter->setVisible(compositingType == XRENDER_INDEX);
     ui.scaleMethodLabel->setBuddy(compositingType == XRENDER_INDEX ? ui.xrScaleFilter : ui.glScaleFilter);
+    ui.glGroup->setEnabled(compositingType == OPENGL_INDEX);
 }
 
 void KWinCompositingConfig::toggleEffectShortcutChanged(const QKeySequence &seq)
@@ -413,9 +404,33 @@ void KWinCompositingConfig::loadAdvancedTab()
     toogleSmoothScaleUi(ui.compositingType->currentIndex());
 }
 
+void KWinCompositingConfig::updateStatusUI(bool compositingIsPossible)
+{
+    if (compositingIsPossible) {
+        ui.compositingOptionsContainer->show();
+        ui.statusTitleWidget->hide();
+        ui.rearmGlSupport->hide();
+
+        // Driver-specific config detection
+        mDefaultPrefs.detect();
+    }
+    else {
+        ui.compositingOptionsContainer->hide();
+        QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
+        text += "<hr>";
+        text += CompositingPrefs::compositingNotPossibleReason();
+        ui.statusTitleWidget->setText(text);
+        ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
+        ui.statusTitleWidget->show();
+        ui.rearmGlSupport->setVisible(CompositingPrefs::openGlIsBroken());
+    }
+}
+
 void KWinCompositingConfig::load()
 {
+    initEffectSelector();
     mKWinConfig->reparseConfiguration();
+    updateStatusUI(CompositingPrefs::compositingPossible());
 
     // Copy Plugins group to temp config file
     QMap<QString, QString> entries = mKWinConfig->entryMap("Plugins");
@@ -537,7 +552,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
     KConfigGroup config(mKWinConfig, "Compositing");
 
     if (config.readEntry("Backend", "OpenGL")
-            != ((ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender")
+            != ((ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender")
             || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
             != ui.glDirect->isChecked()
             || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
@@ -568,6 +583,20 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
 void KWinCompositingConfig::save()
 {
+    if (ui.compositingType->currentIndex() == OPENGL_INDEX &&
+        CompositingPrefs::openGlIsBroken() && !ui.rearmGlSupport->isVisible())
+    {
+        KConfigGroup config(mKWinConfig, "Compositing");
+        QString oldBackend = config.readEntry("Backend", "OpenGL");
+        config.writeEntry("Backend", "OpenGL");
+        config.sync();
+        updateStatusUI(false);
+        config.writeEntry("Backend", oldBackend);
+        config.sync();
+        ui.tabWidget->setCurrentIndex(0);
+        return;
+    }
+
     // Save current config. We'll use this for restoring in case something goes wrong.
     KConfigGroup config(mKWinConfig, "Compositing");
     mPreviousConfig = config.entryMap();
@@ -659,10 +688,15 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
 {
     // Send signal to kwin
     mKWinConfig->sync();
+
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
                            reinitCompositing ? "reinitCompositing" : "reloadConfig");
     QDBusConnection::sessionBus().send(message);
+
+    // maybe it's ok now?
+    if (reinitCompositing && !ui.compositingOptionsContainer->isVisible())
+        load();
 
     // HACK: We can't just do this here, due to the asynchronous nature of signals.
     // We also can't change reinitCompositing into a message (which would allow

@@ -120,8 +120,7 @@ void Workspace::setupCompositing()
         KSharedConfigPtr unsafeConfigPtr(KSharedConfig::openConfig("kwinrc"));
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         if (unsafeConfig.readEntry("OpenGLIsUnsafe", false))
-            kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use, "
-                           "falling back to XRender.";
+            kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
             unsafeConfig.writeEntry("OpenGLIsUnsafe", true);
             unsafeConfig.sync();

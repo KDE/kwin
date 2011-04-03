@@ -39,6 +39,7 @@ public:
 
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
+    static bool openGlIsBroken();
     bool recommendCompositing() const;
     bool enableVSync() const  {
         return mEnableVSync;
