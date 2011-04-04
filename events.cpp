@@ -1642,7 +1642,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
     QRect newgeom(e->x, e->y, e->width, e->height);
     if (newgeom != geom) {
-        addWorkspaceRepaint(geometry());  // damage old area
+        addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = geom;
         geom = newgeom;
         addRepaintFull();
