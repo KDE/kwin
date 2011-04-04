@@ -41,6 +41,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QTimerEvent>
 
+#include <X11/Xdefs.h>
 
 namespace Oxygen
 {
@@ -398,6 +399,9 @@ namespace Oxygen
 
         //@}
 
+        //! remove shadow hint
+        void removeShadowHint( void );
+
         protected slots:
 
         //! set target item to -1
@@ -458,6 +462,9 @@ namespace Oxygen
         dragMoveEvent or dragLeaveEvent
         */
         QBasicTimer _dragStartTimer;
+
+        //! shadow atom
+        Atom _shadowAtom;
 
     };
 
