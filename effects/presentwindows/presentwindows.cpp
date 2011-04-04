@@ -316,7 +316,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
 void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (m_activated || m_motionManager.areWindowsMoving()) {
-        DataHash::const_iterator winData = m_windowData.find(w);
+        DataHash::const_iterator winData = m_windowData.constFind(w);
         if (winData == m_windowData.constEnd() || (w->isDock() && m_showPanel)) {
             // in case the panel should be shown just display it without any changes
             effects->paintWindow(w, mask, region, data);
@@ -484,7 +484,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     EffectWindowList windows = m_motionManager.managedWindows();
     bool hovering = false;
     for (int i = 0; i < windows.size(); ++i) {
-        DataHash::const_iterator winData = m_windowData.find(windows.at(i));
+        DataHash::const_iterator winData = m_windowData.constFind(windows.at(i));
         if (winData == m_windowData.constEnd())
             continue;
         if (m_motionManager.transformedGeometry(windows.at(i)).contains(cursorPos()) &&
