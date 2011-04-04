@@ -295,6 +295,8 @@ public:
 
     virtual void setupCompositing();
     virtual void finishCompositing();
+    inline bool isBlockingCompositing() { return blocks_compositing; }
+    void updateCompositeBlocking(bool readProperty = false);
 
     QString caption(bool full = true) const;
     void updateCaption();
@@ -647,6 +649,7 @@ private:
     uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
+    bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();
     void readIcons();

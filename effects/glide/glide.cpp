@@ -234,4 +234,9 @@ GlideEffect::WindowInfo::WindowInfo()
 {
 }
 
+GlideEffect::WindowInfo::~WindowInfo()
+{
+    delete timeLine;
+}
+
 } // namespace

@@ -89,6 +89,7 @@ private slots:
     void updateEnablestrictgeometry();
     void updateEnableshortcut();
     void updateEnabledisableglobalshortcuts();
+    void updateEnableblockcompositing();
     // internal
     void detected(bool);
 private:

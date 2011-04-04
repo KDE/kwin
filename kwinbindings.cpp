@@ -25,27 +25,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Some shortcuts have Tarzan-speech like names, they need extra
 // normal human descriptions with DEF2() the others can use DEF()
+// new DEF3 allows to pass data to the action, replacing the %1 argument in the name
+
 #ifndef NOSLOTS
-# define DEF2( name, descr, key, fnSlot )                           \
-    a = actionCollection->addAction( name );                         \
-    a->setText( i18n(descr) );                                       \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));  \
-    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
-# define DEF( name, key, fnSlot )                                   \
-    a = actionCollection->addAction( name );                         \
-    a->setText( i18n(name) );                                        \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));  \
-    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
+#define KWIN_CONNECT(_FNSLOT_) connect(a, SIGNAL(triggered(bool)), SLOT(_FNSLOT_));
 #else
-# define DEF2( name, descr, key, fnSlot )                           \
-    a = actionCollection->addAction( name );                         \
-    a->setText( i18n(descr) );                                       \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));
-# define DEF( name, key, fnSlot )                                   \
-    a = actionCollection->addAction( name );                         \
-    a->setText( i18n(name) );                                        \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));
+#define KWIN_CONNECT(_FNSLOT_) /*noop*/
 #endif
+
+#define DEF2( name, descr, key, fnSlot )                            \
+    a = actionCollection->addAction( name );                        \
+    a->setText( i18n(descr) );                                      \
+    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
+    KWIN_CONNECT(fnSlot)
+
+#define DEF4( name, descr, key, fnSlot, value )                     \
+    DEF2(name, descr, key, fnSlot)                                  \
+    a->setData(value);
+
+#define DEF( name, key, fnSlot )                                    \
+    DEF2(name, name, key, fnSlot)
+
+#define DEF3( name, key, fnSlot, value )                            \
+    a = actionCollection->addAction( QString(name).arg(value) );    \
+    a->setText( i18n(name, value) );                                \
+    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
+    a->setData(value);                                              \
+    KWIN_CONNECT(fnSlot)
+
 
 a = actionCollection->addAction("Program:kwin");
 a->setText(i18n("System"));
@@ -143,79 +150,44 @@ a = actionCollection->addAction("Group:Window Desktop");
 a->setText(i18n("Window & Desktop"));
 DEF2("Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
      0, slotWindowOnAllDesktops());
-DEF(I18N_NOOP("Window to Desktop 1"),              0, slotWindowToDesktop1());
-DEF(I18N_NOOP("Window to Desktop 2"),              0, slotWindowToDesktop2());
-DEF(I18N_NOOP("Window to Desktop 3"),              0, slotWindowToDesktop3());
-DEF(I18N_NOOP("Window to Desktop 4"),              0, slotWindowToDesktop4());
-DEF(I18N_NOOP("Window to Desktop 5"),              0, slotWindowToDesktop5());
-DEF(I18N_NOOP("Window to Desktop 6"),              0, slotWindowToDesktop6());
-DEF(I18N_NOOP("Window to Desktop 7"),              0, slotWindowToDesktop7());
-DEF(I18N_NOOP("Window to Desktop 8"),              0, slotWindowToDesktop8());
-DEF(I18N_NOOP("Window to Desktop 9"),              0, slotWindowToDesktop9());
-DEF(I18N_NOOP("Window to Desktop 10"),             0, slotWindowToDesktop10());
-DEF(I18N_NOOP("Window to Desktop 11"),             0, slotWindowToDesktop11());
-DEF(I18N_NOOP("Window to Desktop 12"),             0, slotWindowToDesktop12());
-DEF(I18N_NOOP("Window to Desktop 13"),             0, slotWindowToDesktop13());
-DEF(I18N_NOOP("Window to Desktop 14"),             0, slotWindowToDesktop14());
-DEF(I18N_NOOP("Window to Desktop 15"),             0, slotWindowToDesktop15());
-DEF(I18N_NOOP("Window to Desktop 16"),             0, slotWindowToDesktop16());
-DEF(I18N_NOOP("Window to Desktop 17"),             0, slotWindowToDesktop17());
-DEF(I18N_NOOP("Window to Desktop 18"),             0, slotWindowToDesktop18());
-DEF(I18N_NOOP("Window to Desktop 19"),             0, slotWindowToDesktop19());
-DEF(I18N_NOOP("Window to Desktop 20"),             0, slotWindowToDesktop20());
+
+for (int i = 1; i < 21; ++i) {
+    DEF3(I18N_NOOP("Window to Desktop %1"),        0, slotWindowToDesktop(), i);
+}
 DEF(I18N_NOOP("Window to Next Desktop"),           0, slotWindowToNextDesktop());
 DEF(I18N_NOOP("Window to Previous Desktop"),       0, slotWindowToPreviousDesktop());
 DEF(I18N_NOOP("Window One Desktop to the Right"),  0, slotWindowToDesktopRight());
 DEF(I18N_NOOP("Window One Desktop to the Left"),   0, slotWindowToDesktopLeft());
 DEF(I18N_NOOP("Window One Desktop Up"),            0, slotWindowToDesktopUp());
 DEF(I18N_NOOP("Window One Desktop Down"),          0, slotWindowToDesktopDown());
-DEF(I18N_NOOP("Window to Screen 0"),               0, slotWindowToScreen0());
-DEF(I18N_NOOP("Window to Screen 1"),               0, slotWindowToScreen1());
-DEF(I18N_NOOP("Window to Screen 2"),               0, slotWindowToScreen2());
-DEF(I18N_NOOP("Window to Screen 3"),               0, slotWindowToScreen3());
-DEF(I18N_NOOP("Window to Screen 4"),               0, slotWindowToScreen4());
-DEF(I18N_NOOP("Window to Screen 5"),               0, slotWindowToScreen5());
-DEF(I18N_NOOP("Window to Screen 6"),               0, slotWindowToScreen6());
-DEF(I18N_NOOP("Window to Screen 7"),               0, slotWindowToScreen7());
+
+for (int i = 0; i < 8; ++i) {
+    DEF3(I18N_NOOP("Window to Screen %1"),         0, slotWindowToScreen(), i);
+}
 DEF(I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen());
 DEF(I18N_NOOP("Show Desktop"),                     0, slotToggleShowDesktop());
 
 a = actionCollection->addAction("Group:Desktop Switching");
 a->setText(i18n("Desktop Switching"));
-DEF(I18N_NOOP("Switch to Desktop 1"),              Qt::CTRL + Qt::Key_F1, slotSwitchToDesktop1());
-DEF(I18N_NOOP("Switch to Desktop 2"),              Qt::CTRL + Qt::Key_F2, slotSwitchToDesktop2());
-DEF(I18N_NOOP("Switch to Desktop 3"),              Qt::CTRL + Qt::Key_F3, slotSwitchToDesktop3());
-DEF(I18N_NOOP("Switch to Desktop 4"),              Qt::CTRL + Qt::Key_F4, slotSwitchToDesktop4());
-DEF(I18N_NOOP("Switch to Desktop 5"),              0, slotSwitchToDesktop5());
-DEF(I18N_NOOP("Switch to Desktop 6"),              0, slotSwitchToDesktop6());
-DEF(I18N_NOOP("Switch to Desktop 7"),              0, slotSwitchToDesktop7());
-DEF(I18N_NOOP("Switch to Desktop 8"),              0, slotSwitchToDesktop8());
-DEF(I18N_NOOP("Switch to Desktop 9"),              0, slotSwitchToDesktop9());
-DEF(I18N_NOOP("Switch to Desktop 10"),             0, slotSwitchToDesktop10());
-DEF(I18N_NOOP("Switch to Desktop 11"),             0, slotSwitchToDesktop11());
-DEF(I18N_NOOP("Switch to Desktop 12"),             0, slotSwitchToDesktop12());
-DEF(I18N_NOOP("Switch to Desktop 13"),             0, slotSwitchToDesktop13());
-DEF(I18N_NOOP("Switch to Desktop 14"),             0, slotSwitchToDesktop14());
-DEF(I18N_NOOP("Switch to Desktop 15"),             0, slotSwitchToDesktop15());
-DEF(I18N_NOOP("Switch to Desktop 16"),             0, slotSwitchToDesktop16());
-DEF(I18N_NOOP("Switch to Desktop 17"),             0, slotSwitchToDesktop17());
-DEF(I18N_NOOP("Switch to Desktop 18"),             0, slotSwitchToDesktop18());
-DEF(I18N_NOOP("Switch to Desktop 19"),             0, slotSwitchToDesktop19());
-DEF(I18N_NOOP("Switch to Desktop 20"),             0, slotSwitchToDesktop20());
+DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F1,   slotSwitchToDesktop(), 1);
+DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F2,   slotSwitchToDesktop(), 2);
+DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F3,   slotSwitchToDesktop(), 3);
+DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F4,   slotSwitchToDesktop(), 4);
+for (int i = 5; i < 21; ++i) {
+    DEF3(I18N_NOOP("Switch to Desktop %1"),        0, slotSwitchToDesktop(), i);
+}
+
 DEF(I18N_NOOP("Switch to Next Desktop"),           0, slotSwitchDesktopNext());
 DEF(I18N_NOOP("Switch to Previous Desktop"),       0, slotSwitchDesktopPrevious());
 DEF(I18N_NOOP("Switch One Desktop to the Right"),  0, slotSwitchDesktopRight());
 DEF(I18N_NOOP("Switch One Desktop to the Left"),   0, slotSwitchDesktopLeft());
 DEF(I18N_NOOP("Switch One Desktop Up"),            0, slotSwitchDesktopUp());
 DEF(I18N_NOOP("Switch One Desktop Down"),          0, slotSwitchDesktopDown());
-DEF(I18N_NOOP("Switch to Screen 0"),               0, slotSwitchToScreen0());
-DEF(I18N_NOOP("Switch to Screen 1"),               0, slotSwitchToScreen1());
-DEF(I18N_NOOP("Switch to Screen 2"),               0, slotSwitchToScreen2());
-DEF(I18N_NOOP("Switch to Screen 3"),               0, slotSwitchToScreen3());
-DEF(I18N_NOOP("Switch to Screen 4"),               0, slotSwitchToScreen4());
-DEF(I18N_NOOP("Switch to Screen 5"),               0, slotSwitchToScreen5());
-DEF(I18N_NOOP("Switch to Screen 6"),               0, slotSwitchToScreen6());
-DEF(I18N_NOOP("Switch to Screen 7"),               0, slotSwitchToScreen7());
+
+for (int i = 0; i < 8; ++i) {
+    DEF3(I18N_NOOP("Switch to Screen %1"),         0, slotSwitchToScreen(), i);
+}
+
 DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen());
 
 a = actionCollection->addAction("Group:Miscellaneous");

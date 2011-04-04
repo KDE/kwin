@@ -151,6 +151,7 @@ Workspace::Workspace(bool restore)
     , forced_global_mouse_grab(false)
     , cm_selection(NULL)
     , compositingSuspended(false)
+    , compositingBlocked(false)
     , xrrRefreshRate(0)
     , overlay(None)
     , overlay_visible(true)
@@ -702,6 +703,8 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateStackingOrder(true);
 
+    updateCompositeBlocking();
+
     if (tab_grab)
         tab_box->reset(true);
 
@@ -1170,20 +1173,8 @@ void Workspace::loadDesktopSettings()
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
     KConfigGroup group(c, groupname);
-
-    int n = group.readEntry("Number", 4);
-    desktopCount_ = n;
-    workarea.clear();
-    workarea.resize(n + 1);
-    restrictedmovearea.clear();
-    restrictedmovearea.resize(n + 1);
-    oldrestrictedmovearea.clear();
-    oldrestrictedmovearea.resize(n + 1);
-    screenarea.clear();
-    rootInfo->setNumberOfDesktops(n);
-    desktop_focus_chain.resize(n);
-    // Make it +1, so that it can be accessed as [1..numberofdesktops]
-    focus_chain.resize(n + 1);
+    const int n = group.readEntry("Number", 4);
+    setNumberOfDesktops(n);
     for (int i = 1; i <= n; i++) {
         QString s = group.readEntry(QString("Name_%1").arg(i), i18n("Desktop %1", i));
         rootInfo->setDesktopName(i, s.toUtf8().data());
@@ -1643,40 +1634,33 @@ void Workspace::setNumberOfDesktops(int n)
     desktopCount_ = n;
     updateDesktopLayout(); // Make sure the layout is still valid
 
-    if (currentDesktop() > numberOfDesktops())
-        setCurrentDesktop(numberOfDesktops());
+    if (currentDesktop() > n)
+        setCurrentDesktop(n);
 
-    // If increasing the number, do the resizing now, otherwise
-    // after the moving of windows to still existing desktops
-    if (old_number_of_desktops < numberOfDesktops()) {
-        rootInfo->setNumberOfDesktops(numberOfDesktops());
-        NETPoint* viewports = new NETPoint[numberOfDesktops()];
-        rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
-        delete[] viewports;
-        updateClientArea(true);
-        focus_chain.resize(numberOfDesktops() + 1);
-    }
-
-    // If the number of desktops decreased, move all windows
-    // that would be hidden to the last visible desktop
+    // move all windows that would be hidden to the last visible desktop
     if (old_number_of_desktops > numberOfDesktops()) {
-        for (ClientList::ConstIterator it = clients.constBegin();
-                it != clients.constEnd();
-                ++it)
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
             if (!(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops())
                 sendClientToDesktop(*it, numberOfDesktops(), true);
-        // TODO: Tile should have a method allClients, push them into other tiles
+            // TODO: Tile should have a method allClients, push them into other tiles
+        }
     }
-    if (old_number_of_desktops > numberOfDesktops()) {
-        rootInfo->setNumberOfDesktops(numberOfDesktops());
-        NETPoint* viewports = new NETPoint[numberOfDesktops()];
-        rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
-        delete[] viewports;
-        updateClientArea(true);
-        focus_chain.resize(numberOfDesktops() + 1);
-    }
+    rootInfo->setNumberOfDesktops(n);
+    NETPoint* viewports = new NETPoint[n];
+    rootInfo->setDesktopViewport(n, *viewports);
+    delete[] viewports;
+    updateClientArea(true);
 
-    saveDesktopSettings();
+    // Make it +1, so that it can be accessed as [1..numberofdesktops]
+    focus_chain.resize(n + 1);
+
+    workarea.clear();
+    workarea.resize(n + 1);
+    restrictedmovearea.clear();
+    restrictedmovearea.resize(n + 1);
+    oldrestrictedmovearea.clear();
+    oldrestrictedmovearea.resize(n + 1);
+    screenarea.clear();
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize(n);
@@ -1687,6 +1671,8 @@ void Workspace::setNumberOfDesktops(int n)
 
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
+
+    saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);
 }
 
@@ -1697,6 +1683,8 @@ void Workspace::setNumberOfDesktops(int n)
  */
 void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 {
+    if (desk < 1 || desk > numberOfDesktops())
+        return;
     int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
     c->setDesktop(desk);

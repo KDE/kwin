@@ -870,6 +870,8 @@ void Client::propertyNotifyEvent(XPropertyEvent* e)
             getSyncCounter();
         else if (e->atom == atoms->activities)
             checkActivities();
+        else if (e->atom == atoms->kde_net_wm_block_compositing)
+            updateCompositeBlocking(true);
         break;
     }
 }

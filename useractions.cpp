@@ -1166,14 +1166,30 @@ void Workspace::slotSwitchDesktopDown()
     setCurrentDesktop(desktop);
 }
 
-void Workspace::slotSwitchToDesktop(int i)
+static int senderValue(QObject *sender)
 {
-    setCurrentDesktop(i);
+    QAction *act = qobject_cast<QAction*>(sender);
+    bool ok = false; int i = -1;
+    if (act)
+        i = act->data().toUInt(&ok);
+    if (ok)
+        return i;
+    return -1;
+}
+
+void Workspace::slotSwitchToDesktop()
+{
+    const int i = senderValue(sender());
+    if (i > 0)
+        setCurrentDesktop(i);
 }
 
 
-void Workspace::slotWindowToDesktop(int i)
+void Workspace::slotWindowToDesktop()
 {
+    const int i = senderValue(sender());
+    if (i < 1)
+        return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (i >= 1 && i <= numberOfDesktops() && c
             && !c->isDesktop()
@@ -1182,18 +1198,23 @@ void Workspace::slotWindowToDesktop(int i)
         sendClientToDesktop(c, i, true);
 }
 
-void Workspace::slotSwitchToScreen(int i)
+void Workspace::slotSwitchToScreen()
 {
-    setCurrentScreen(i);
+    const int i = senderValue(sender());
+    if (i > -1)
+        setCurrentScreen(i);
 }
 
 void Workspace::slotSwitchToNextScreen()
 {
-    slotSwitchToScreen((activeScreen() + 1) % numScreens());
+    setCurrentScreen((activeScreen() + 1) % numScreens());
 }
 
-void Workspace::slotWindowToScreen(int i)
+void Workspace::slotWindowToScreen()
 {
+    const int i = senderValue(sender());
+    if (i < 0)
+        return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (i >= 0 && i <= numScreens() && c
             && !c->isDesktop()

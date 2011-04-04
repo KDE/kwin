@@ -95,6 +95,7 @@ Client::Client(Workspace* ws)
     , transient_for (NULL)
     , transient_for_id(None)
     , original_transient_for_id(None)
+    , blocks_compositing(false)
     , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
@@ -2112,6 +2113,20 @@ void Client::updateCursor()
         XChangeActivePointerGrab(display(),
                                  ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
                                  cursor.handle(), xTime());
+}
+
+void Client::updateCompositeBlocking(bool readProperty)
+{
+    const bool usedToBlock = blocks_compositing;
+    if (readProperty) {
+        const unsigned long properties[2] = {0, NET::WM2BlockCompositing};
+        NETWinInfo2 i(QX11Info::display(), window(), rootWindow(), properties, 2);
+        blocks_compositing = rules()->checkBlockCompositing(i.isBlockingCompositing());
+    }
+    else
+        blocks_compositing = rules()->checkBlockCompositing(blocks_compositing);
+    if (usedToBlock != blocks_compositing)
+        workspace()->updateCompositeBlocking(blocks_compositing ? this : 0);
 }
 
 Client::Position Client::mousePosition(const QPoint& p) const

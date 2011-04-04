@@ -66,6 +66,7 @@ Rules::Rules()
     , belowrule(UnusedSetRule)
     , fullscreenrule(UnusedSetRule)
     , noborderrule(UnusedSetRule)
+    , blockcompositingrule(UnusedForceRule)
     , fsplevelrule(UnusedForceRule)
     , acceptfocusrule(UnusedForceRule)
     , moveresizemoderule(UnusedForceRule)
@@ -173,6 +174,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     READ_SET_RULE(below, , false);
     READ_SET_RULE(fullscreen, , false);
     READ_SET_RULE(noborder, , false);
+    READ_FORCE_RULE(blockcompositing, , false);
     READ_FORCE_RULE(fsplevel, limit0to4, 0); // fsp is 0-4
     READ_FORCE_RULE(acceptfocus, , false);
     READ_FORCE_RULE(moveresizemode, Options::stringToMoveResizeMode, QString());
@@ -262,6 +264,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_SET_RULE(below,);
     WRITE_SET_RULE(fullscreen,);
     WRITE_SET_RULE(noborder,);
+    WRITE_FORCE_RULE(blockcompositing,);
     WRITE_FORCE_RULE(fsplevel,);
     WRITE_FORCE_RULE(acceptfocus,);
     WRITE_FORCE_RULE(moveresizemode, Options::moveResizeModeToString);
@@ -303,6 +306,7 @@ bool Rules::isEmpty() const
            && belowrule == UnusedSetRule
            && fullscreenrule == UnusedSetRule
            && noborderrule == UnusedSetRule
+           && blockcompositingrule == UnusedForceRule
            && fsplevelrule == UnusedForceRule
            && acceptfocusrule == UnusedForceRule
            && moveresizemoderule == UnusedForceRule
@@ -612,6 +616,7 @@ APPLY_RULE(above, KeepAbove, bool)
 APPLY_RULE(below, KeepBelow, bool)
 APPLY_RULE(fullscreen, FullScreen, bool)
 APPLY_RULE(noborder, NoBorder, bool)
+APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
 APPLY_FORCE_RULE(fsplevel, FSP, int)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
 APPLY_FORCE_RULE(moveresizemode, MoveResizeMode, Options::MoveResizeMode)
@@ -678,6 +683,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(below);
     DISCARD_USED_SET_RULE(fullscreen);
     DISCARD_USED_SET_RULE(noborder);
+    DISCARD_USED_FORCE_RULE(blockcompositing);
     DISCARD_USED_FORCE_RULE(fsplevel);
     DISCARD_USED_FORCE_RULE(acceptfocus);
     DISCARD_USED_FORCE_RULE(moveresizemode);
@@ -801,6 +807,7 @@ CHECK_RULE(KeepAbove, bool)
 CHECK_RULE(KeepBelow, bool)
 CHECK_RULE(FullScreen, bool)
 CHECK_RULE(NoBorder, bool)
+CHECK_FORCE_RULE(BlockCompositing, bool)
 CHECK_FORCE_RULE(FSP, int)
 CHECK_FORCE_RULE(AcceptFocus, bool)
 CHECK_FORCE_RULE(MoveResizeMode, Options::MoveResizeMode)

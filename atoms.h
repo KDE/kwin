@@ -60,6 +60,7 @@ public:
     Atom kde_net_wm_frame_strut;
     Atom net_wm_sync_request_counter;
     Atom net_wm_sync_request;
+    Atom kde_net_wm_block_compositing;
     Atom kde_net_wm_shadow;
 };
 
