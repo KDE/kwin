@@ -2014,6 +2014,26 @@ bool Workspace::keyPressMouseEmulation(XKeyEvent& ev)
     case XK_KP_Down:
         pos.ry() += delta;
         break;
+    case XK_Home:
+    case XK_KP_Home:
+        pos.rx() -= delta;
+        pos.ry() -= delta;
+        break;
+    case XK_Page_Up:
+    case XK_KP_Page_Up:
+        pos.rx() += delta;
+        pos.ry() -= delta;
+        break;
+    case XK_Page_Down:
+    case XK_KP_Page_Down:
+        pos.rx() += delta;
+        pos.ry() += delta;
+        break;
+    case XK_End:
+    case XK_KP_End:
+        pos.rx() -= delta;
+        pos.ry() += delta;
+        break;
     case XK_F1:
         if (!mouse_emulation_state)
             mouse_emulation_window = getMouseEmulationWindow();
