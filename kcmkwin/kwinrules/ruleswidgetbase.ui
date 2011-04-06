@@ -6,28 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>685</width>
-    <height>462</height>
+    <width>547</width>
+    <height>517</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="1">
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="TabPage1">
       <attribute name="title">
-       <string>&amp;Window</string>
+       <string>&amp;Window matching</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0" colspan="4">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
         <widget class="QLabel" name="textLabel1">
          <property name="text">
           <string>De&amp;scription:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -37,13 +37,16 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="4">
+       <item row="0" column="1" colspan="4">
         <widget class="KLineEdit" name="description"/>
        </item>
-       <item row="2" column="0" colspan="4">
+       <item row="4" column="0">
         <widget class="QLabel" name="textLabel2">
          <property name="text">
-          <string>Window &amp;class (application type):</string>
+          <string>Window &amp;class (application):</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -53,17 +56,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="3">
-        <widget class="KLineEdit" name="wmclass"/>
-       </item>
-       <item row="3" column="3">
-        <widget class="QCheckBox" name="whole_wmclass">
-         <property name="text">
-          <string>Match w&amp;hole window class</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
+       <item row="4" column="1">
         <widget class="KComboBox" name="wmclass_match">
          <item>
           <property name="text">
@@ -87,7 +80,10 @@
          </item>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="4" column="2" colspan="2">
+        <widget class="KLineEdit" name="wmclass"/>
+       </item>
+       <item row="4" column="4">
         <widget class="KPushButton" name="edit_reg_wmclass">
          <property name="enabled">
           <bool>false</bool>
@@ -100,10 +96,20 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="4">
+       <item row="5" column="2" colspan="3">
+        <widget class="QCheckBox" name="whole_wmclass">
+         <property name="text">
+          <string>Match w&amp;hole window class</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
         <widget class="QLabel" name="textLabel3">
          <property name="text">
           <string>Window &amp;role:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -113,10 +119,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0" colspan="4">
-        <widget class="KLineEdit" name="role"/>
-       </item>
-       <item row="7" column="0">
+       <item row="6" column="1">
         <widget class="KComboBox" name="role_match">
          <item>
           <property name="text">
@@ -140,7 +143,10 @@
          </item>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="6" column="2" colspan="2">
+        <widget class="KLineEdit" name="role"/>
+       </item>
+       <item row="6" column="4">
         <widget class="KPushButton" name="edit_reg_role">
          <property name="enabled">
           <bool>false</bool>
@@ -150,7 +156,204 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0" colspan="4">
+       <item row="8" column="0" rowspan="2">
+        <widget class="QLabel" name="textLabel4">
+         <property name="text">
+          <string>Window &amp;types:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="buddy">
+          <cstring>types</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="textLabel5">
+         <property name="text">
+          <string>Window t&amp;itle:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="buddy">
+          <cstring>title</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="KComboBox" name="title_match">
+         <item>
+          <property name="text">
+           <string>Unimportant</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Exact Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Substring Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Regular Expression</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="10" column="4">
+        <widget class="KPushButton" name="edit_reg_title">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="textLabel6">
+         <property name="text">
+          <string>Extra role:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="buddy">
+          <cstring>extra</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="KComboBox" name="extra_match">
+         <item>
+          <property name="text">
+           <string>Unimportant</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Exact Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Substring Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Regular Expression</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="11" column="4">
+        <widget class="KPushButton" name="edit_reg_extra">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="textLabel7">
+         <property name="text">
+          <string>&amp;Machine (hostname):</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="buddy">
+          <cstring>machine</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="KComboBox" name="machine_match">
+         <item>
+          <property name="text">
+           <string>Unimportant</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Exact Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Substring Match</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Regular Expression</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="12" column="4">
+        <widget class="KPushButton" name="edit_reg_machine">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0" colspan="5">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="12" column="2" colspan="2">
+        <widget class="KLineEdit" name="machine"/>
+       </item>
+       <item row="11" column="2" colspan="2">
+        <widget class="KLineEdit" name="extra"/>
+       </item>
+       <item row="10" column="2" colspan="2">
+        <widget class="KLineEdit" name="title"/>
+       </item>
+       <item row="2" column="0" colspan="5">
         <layout class="QHBoxLayout">
          <item>
           <spacer name="horizontalSpacer_6">
@@ -173,6 +376,16 @@
           </widget>
          </item>
          <item>
+          <widget class="QSpinBox" name="detection_delay">
+           <property name="suffix">
+            <string>s delay</string>
+           </property>
+           <property name="maximum">
+            <number>30</number>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -187,13 +400,10 @@
          </item>
         </layout>
        </item>
-       <item row="10" column="2">
-        <spacer>
+       <item row="3" column="0" colspan="5">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -203,63 +413,71 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="2">
-        <spacer name="horizontalSpacer_4">
+       <item row="1" column="0" colspan="5">
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item row="7" column="2">
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="8" column="1" rowspan="2" colspan="3">
+        <widget class="QListWidget" name="types">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="0" colspan="4">
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="TabPage2">
-      <attribute name="title">
-       <string>Window &amp;Extra</string>
-      </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0" colspan="3">
-        <widget class="QLabel" name="textLabel4">
-         <property name="text">
-          <string>Window &amp;types:</string>
-         </property>
-         <property name="wordWrap">
+         <property name="autoFillBackground">
           <bool>false</bool>
          </property>
-         <property name="buddy">
-          <cstring>types</cstring>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="3">
-        <widget class="QListWidget" name="types">
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="autoScroll">
+          <bool>true</bool>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::NoDragDrop</enum>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>false</bool>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="movement">
+          <enum>QListView::Static</enum>
+         </property>
+         <property name="flow">
+          <enum>QListView::TopToBottom</enum>
+         </property>
+         <property name="isWrapping" stdset="0">
+          <bool>true</bool>
+         </property>
+         <property name="resizeMode">
+          <enum>QListView::Adjust</enum>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="viewMode">
+          <enum>QListView::ListMode</enum>
+         </property>
+         <property name="uniformItemSizes">
+          <bool>true</bool>
          </property>
          <item>
           <property name="text">
@@ -303,7 +521,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Override Type</string>
+           <string>Unmanaged Window</string>
           </property>
          </item>
          <item>
@@ -313,279 +531,21 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="0" colspan="3">
-        <widget class="QLabel" name="textLabel5">
-         <property name="text">
-          <string>Window t&amp;itle:</string>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-         <property name="buddy">
-          <cstring>title</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="3">
-        <widget class="KLineEdit" name="title"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="KComboBox" name="title_match">
-         <item>
-          <property name="text">
-           <string>Unimportant</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Exact Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Substring Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Regular Expression</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="KPushButton" name="edit_reg_title">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Edit</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="3">
-        <widget class="QLabel" name="textLabel6">
-         <property name="text">
-          <string>Extra role:</string>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-         <property name="buddy">
-          <cstring>extra</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0" colspan="3">
-        <widget class="KLineEdit" name="extra"/>
-       </item>
-       <item row="7" column="0">
-        <widget class="KComboBox" name="extra_match">
-         <item>
-          <property name="text">
-           <string>Unimportant</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Exact Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Substring Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Regular Expression</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="KPushButton" name="edit_reg_extra">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Edit</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0" colspan="3">
-        <widget class="QLabel" name="textLabel7">
-         <property name="text">
-          <string>&amp;Machine (hostname):</string>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-         <property name="buddy">
-          <cstring>machine</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="3">
-        <widget class="KLineEdit" name="machine"/>
-       </item>
-       <item row="10" column="0">
-        <widget class="KComboBox" name="machine_match">
-         <item>
-          <property name="text">
-           <string>Unimportant</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Exact Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Substring Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Regular Expression</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="KPushButton" name="edit_reg_machine">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Edit</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <spacer name="horizontalSpacer">
+       <item row="7" column="0" colspan="5">
+        <widget class="Line" name="line_13">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="7" column="2">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="10" column="2">
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="11" column="1">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="TabPage3">
       <attribute name="title">
-       <string>&amp;Geometry</string>
+       <string>&amp;Size &amp;&amp; Position</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="1" column="1">
-        <widget class="KComboBox" name="rule_size">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="KRestrictedLine" name="size">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="enable_size">
-         <property name="text">
-          <string>&amp;Size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="1">
         <widget class="QCheckBox" name="enable_position">
          <property name="text">
           <string>&amp;Position</string>
@@ -593,16 +553,6 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="KRestrictedLine" name="position">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
         <widget class="KComboBox" name="rule_position">
          <property name="enabled">
           <bool>false</bool>
@@ -639,18 +589,28 @@
          </item>
         </widget>
        </item>
-       <item row="3" column="2">
-        <widget class="QCheckBox" name="maximizevert">
+       <item row="0" column="3" colspan="4">
+        <widget class="KRestrictedLine" name="position">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text">
-          <string/>
+         <property name="placeholderText">
+          <string>x,y</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="KComboBox" name="rule_maximizehoriz">
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="enable_size">
+         <property name="text">
+          <string>&amp;Size</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="KComboBox" name="rule_size">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -686,78 +646,48 @@
          </item>
         </widget>
        </item>
-       <item row="4" column="2">
-        <widget class="QCheckBox" name="fullscreen">
+       <item row="1" column="3" colspan="4">
+        <widget class="KRestrictedLine" name="size">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text">
-          <string/>
+         <property name="placeholderText">
+          <string>width,height</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="2" column="1" rowspan="3" colspan="6">
+        <widget class="Line" name="line_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" rowspan="2">
         <widget class="QCheckBox" name="enable_maximizehoriz">
          <property name="text">
           <string>Maximized &amp;horizontally</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QCheckBox" name="maximizehoriz">
+       <item row="5" column="3" rowspan="2" colspan="4">
+        <widget class="YesNoBox" name="maximizehoriz" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="enable_maximizevert">
          <property name="text">
-          <string/>
+          <string>Maximized &amp;vertically</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="KComboBox" name="rule_fullscreen">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="enable_fullscreen">
-         <property name="text">
-          <string>&amp;Fullscreen</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
+       <item row="7" column="2">
         <widget class="KComboBox" name="rule_maximizevert">
          <property name="enabled">
           <bool>false</bool>
@@ -794,14 +724,42 @@
          </item>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="enable_maximizevert">
-         <property name="text">
-          <string>Maximized &amp;vertically</string>
+       <item row="7" column="3" colspan="4">
+        <widget class="YesNoBox" name="maximizevert" native="true">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="8" column="1" rowspan="3" colspan="6">
+        <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_fullscreen">
+         <property name="text">
+          <string>&amp;Fullscreen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="3" rowspan="2" colspan="4">
+        <widget class="YesNoBox" name="fullscreen" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="enable_desktop">
+         <property name="text">
+          <string>&amp;Desktop</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="2">
         <widget class="KComboBox" name="rule_desktop">
          <property name="enabled">
           <bool>false</bool>
@@ -838,39 +796,43 @@
          </item>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="13" column="3" colspan="4">
         <widget class="KComboBox" name="desktop">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="enable_desktop">
-         <property name="text">
-          <string>&amp;Desktop</string>
+       <item row="14" column="1" rowspan="3" colspan="6">
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="17" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_minimize">
+         <property name="text">
+          <string>M&amp;inimized</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="3" rowspan="2" colspan="4">
+        <widget class="YesNoBox" name="minimize" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1">
         <widget class="QCheckBox" name="enable_shade">
          <property name="text">
           <string>Sh&amp;aded</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="2">
-        <widget class="QCheckBox" name="shade">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="KComboBox" name="rule_minimize">
+       <item row="19" column="2">
+        <widget class="KComboBox" name="rule_shade">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -906,24 +868,31 @@
          </item>
         </widget>
        </item>
-       <item row="6" column="2">
-        <widget class="QCheckBox" name="minimize">
+       <item row="19" column="3" colspan="4">
+        <widget class="YesNoBox" name="shade" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text">
+        </widget>
+       </item>
+       <item row="20" column="1" rowspan="2" colspan="6">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="1">
+        <widget class="QCheckBox" name="enable_placement">
+         <property name="toolTip">
           <string/>
          </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QCheckBox" name="enable_minimize">
          <property name="text">
-          <string>M&amp;inimized</string>
+          <string>Initial p&amp;lacement</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="21" column="2" rowspan="2">
         <widget class="KComboBox" name="rule_placement">
          <property name="enabled">
           <bool>false</bool>
@@ -945,7 +914,7 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="2">
+       <item row="21" column="3" rowspan="2" colspan="4">
         <widget class="KComboBox" name="placement">
          <property name="enabled">
           <bool>false</bool>
@@ -1002,14 +971,105 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QCheckBox" name="enable_placement">
+       <item row="23" column="1">
+        <widget class="QCheckBox" name="enable_ignoreposition">
+         <property name="toolTip">
+          <string>Windows can ask to appear in a certain position.
+By default this overrides the placement strategy
+what might be nasty if the client abuses the feature
+to unconditionally popup in the middle of your screen.</string>
+         </property>
          <property name="text">
-          <string>P&amp;lacement</string>
+          <string>Ignore requested &amp;geometry</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="23" column="2">
+        <widget class="KComboBox" name="rule_ignoreposition">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="23" column="3" colspan="4">
+        <widget class="YesNoBox" name="ignoreposition" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1" colspan="6">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="1" rowspan="4">
+        <widget class="QCheckBox" name="enable_maxsize">
+         <property name="text">
+          <string>M&amp;aximum size</string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="2" rowspan="4">
+        <widget class="KComboBox" name="rule_maxsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="27" column="3" rowspan="4" colspan="4">
+        <widget class="KRestrictedLine" name="maxsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="placeholderText">
+          <string>width,height</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="3" rowspan="2" colspan="4">
+        <widget class="YesNoBox" name="strictgeometry" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="2">
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -1025,8 +1085,8 @@
          </property>
         </spacer>
        </item>
-       <item row="7" column="1">
-        <widget class="KComboBox" name="rule_shade">
+       <item row="5" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_maximizehoriz">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1053,6 +1113,190 @@
          <item>
           <property name="text">
            <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="11" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_fullscreen">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="17" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_minimize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="25" column="3" rowspan="2" colspan="4">
+        <widget class="KRestrictedLine" name="minsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="placeholderText">
+          <string>width,height</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_minsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="25" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_minsize">
+         <property name="text">
+          <string>M&amp;inimum size</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="7" rowspan="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="12" column="0" rowspan="2">
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="31" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_strictgeometry">
+         <property name="toolTip">
+          <string>Eg. terminals or video players can ask to keep a certain aspect ratio
+or only grow by values larger than one
+(eg. by the dimensions of one character).
+This may be pointless and the restriction prevents arbitrary dimensions
+like your complete screen area.</string>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Obey geometry restrictions</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="31" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_strictgeometry">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
           </property>
          </item>
          <item>
@@ -1066,467 +1310,17 @@
      </widget>
      <widget class="QWidget" name="TabPage4">
       <attribute name="title">
-       <string>&amp;Preferences</string>
+       <string>&amp;Arrangement &amp;&amp; Access</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="1">
         <widget class="QCheckBox" name="enable_above">
          <property name="text">
           <string>Keep &amp;above</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="enable_below">
-         <property name="text">
-          <string>Keep &amp;below</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="enable_skiptaskbar">
-         <property name="text">
-          <string>Skip &amp;taskbar</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QCheckBox" name="enable_noborder">
-         <property name="text">
-          <string>&amp;No border</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QCheckBox" name="enable_acceptfocus">
-         <property name="text">
-          <string>Accept &amp;focus</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QCheckBox" name="enable_closeable">
-         <property name="text">
-          <string>&amp;Closeable</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QCheckBox" name="enable_autogroup">
-         <property name="text">
-          <string>Autogroup with &amp;identical</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QCheckBox" name="enable_autogroupfg">
-         <property name="text">
-          <string>Autog&amp;roup in foreground</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QCheckBox" name="enable_autogroupid">
-         <property name="text">
-          <string>Autogroup by I&amp;D</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QCheckBox" name="enable_opacityactive">
-         <property name="text">
-          <string>A&amp;ctive opacity in %</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="KComboBox" name="rule_opacityactive">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="11" column="2" colspan="2">
-        <widget class="KRestrictedLine" name="opacityactive">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QCheckBox" name="above">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QCheckBox" name="below">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QCheckBox" name="noborder">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QCheckBox" name="skiptaskbar">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QCheckBox" name="skippager">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <widget class="QCheckBox" name="acceptfocus">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="2">
-        <widget class="QCheckBox" name="closeable">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
-        <widget class="QCheckBox" name="autogroup">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="2">
-        <widget class="QCheckBox" name="autogroupfg">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="2">
-        <widget class="KLineEdit" name="autogroupid">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="KComboBox" name="rule_autogroupid">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="KComboBox" name="rule_autogroupfg">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="KComboBox" name="rule_autogroup">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="KComboBox" name="rule_closeable">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="KComboBox" name="rule_acceptfocus">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="KComboBox" name="rule_skippager">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="KComboBox" name="rule_skiptaskbar">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="KComboBox" name="rule_noborder">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="KComboBox" name="rule_below">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="0" column="1">
+       <item row="0" column="2" colspan="2">
         <widget class="KComboBox" name="rule_above">
          <property name="enabled">
           <bool>false</bool>
@@ -1563,73 +1357,22 @@
          </item>
         </widget>
        </item>
-       <item row="15" column="1">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>80</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="12" column="1">
-        <widget class="KComboBox" name="rule_opacityinactive">
+       <item row="0" column="4" colspan="3">
+        <widget class="YesNoBox" name="above" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
         </widget>
        </item>
-       <item row="12" column="2" colspan="2">
-        <widget class="KRestrictedLine" name="opacityinactive">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QCheckBox" name="enable_opacityinactive">
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="enable_below">
          <property name="text">
-          <string>I&amp;nactive opacity in %</string>
+          <string>Keep &amp;below</string>
          </property>
         </widget>
        </item>
-       <item row="14" column="0">
-        <widget class="QCheckBox" name="enable_shortcut">
-         <property name="text">
-          <string>Shortcut</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="KComboBox" name="rule_shortcut">
+       <item row="1" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_below">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1665,28 +1408,140 @@
          </item>
         </widget>
        </item>
-       <item row="14" column="5">
-        <widget class="QPushButton" name="shortcut_edit">
-         <property name="text">
-          <string>Edit...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="2" colspan="3">
-        <widget class="KRestrictedLine" name="shortcut">
+       <item row="1" column="4" colspan="3">
+        <widget class="YesNoBox" name="below" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="13" column="0">
+       <item row="2" column="1" rowspan="3" colspan="6">
+        <widget class="Line" name="line_11">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="enable_autogroup">
+         <property name="text">
+          <string>Autogroup with &amp;identical</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="enable_autogroupfg">
+         <property name="text">
+          <string>Autog&amp;roup in foreground</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_autogroupfg">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="4" colspan="3">
+        <widget class="YesNoBox" name="autogroupfg" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="enable_autogroupid">
+         <property name="text">
+          <string>Autogroup by I&amp;D</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_autogroupid">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="4" colspan="3">
+        <widget class="KLineEdit" name="autogroupid">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" rowspan="3">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="8" column="1" colspan="6">
+        <widget class="Line" name="line_12">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="7" rowspan="3">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="9" column="1">
         <widget class="QCheckBox" name="enable_tilingoption">
          <property name="text">
           <string>T&amp;iling</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="9" column="2" colspan="2">
         <widget class="KComboBox" name="rule_tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -1708,7 +1563,7 @@
          </item>
         </widget>
        </item>
-       <item row="13" column="2">
+       <item row="9" column="4" colspan="3">
         <widget class="KComboBox" name="tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -1725,21 +1580,138 @@
          </item>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="11" column="0" colspan="8">
+        <widget class="Line" name="line_14">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="4" colspan="3">
+        <widget class="YesNoBox" name="skiptaskbar" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="enable_skiptaskbar">
+         <property name="toolTip">
+          <string>Window shall (not) appear in the taskbar.</string>
+         </property>
+         <property name="text">
+          <string>Skip &amp;taskbar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_skiptaskbar">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="15" column="1">
         <widget class="QCheckBox" name="enable_skippager">
+         <property name="toolTip">
+          <string>Window shall (not) appear in the manager for virtual desktops</string>
+         </property>
          <property name="text">
           <string>Skip pa&amp;ger</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="15" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_skippager">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="15" column="4" colspan="3">
+        <widget class="YesNoBox" name="skippager" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
         <widget class="QCheckBox" name="enable_skipswitcher">
+         <property name="toolTip">
+          <string>Window shall (not) appear in the Alt+Tab list</string>
+         </property>
          <property name="text">
           <string>Skip &amp;switcher</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="16" column="2" colspan="2">
         <widget class="KComboBox" name="rule_skipswitcher">
          <property name="enabled">
           <bool>false</bool>
@@ -1776,32 +1748,138 @@
          </item>
         </widget>
        </item>
-       <item row="5" column="2">
-        <widget class="QCheckBox" name="skipswitcher">
+       <item row="16" column="4" colspan="3">
+        <widget class="YesNoBox" name="skipswitcher" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
+        </widget>
+       </item>
+       <item row="17" column="1" colspan="6">
+        <widget class="Line" name="line_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="1">
+        <widget class="QCheckBox" name="enable_shortcut">
          <property name="text">
+          <string>Shortcut</string>
+         </property>
+         <property name="shortcut">
           <string/>
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="TabPage5">
-      <attribute name="title">
-       <string>W&amp;orkarounds</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="enable_fsplevel">
-         <property name="text">
-          <string>&amp;Focus stealing prevention</string>
+       <item row="18" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_shortcut">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="18" column="4" colspan="2">
+        <widget class="KRestrictedLine" name="shortcut">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="KComboBox" name="rule_fsplevel">
+       <item row="18" column="6">
+        <widget class="QPushButton" name="shortcut_edit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0" colspan="8">
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="10" column="2">
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="13" column="2">
+        <spacer name="verticalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="4" colspan="3">
+        <widget class="YesNoBox" name="autogroup" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="2" colspan="2">
+        <widget class="KComboBox" name="rule_autogroup">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1822,47 +1900,211 @@
          </item>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="KComboBox" name="fsplevel">
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Appearance &amp;&amp; &amp;Fixes</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="enable_noborder">
+         <property name="text">
+          <string>&amp;No titlebar and frame</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_noborder">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
           <property name="text">
-           <string comment="no focus stealing prevention">None</string>
+           <string>Do Not Affect</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Low</string>
+           <string>Apply Initially</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Normal</string>
+           <string>Remember</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>High</string>
+           <string>Force</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Extreme</string>
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
           </property>
          </item>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="1" column="1" rowspan="2" colspan="7">
+        <widget class="Line" name="line_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="enable_opacityactive">
+         <property name="text">
+          <string>A&amp;ctive opacity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2" rowspan="2" colspan="3">
+        <widget class="KComboBox" name="rule_opacityactive">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="5" colspan="3">
+        <widget class="QSpinBox" name="opacityactive">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="enable_opacityinactive">
+         <property name="text">
+          <string>I&amp;nactive opacity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_opacityinactive">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="5" colspan="3">
+        <widget class="QSpinBox" name="opacityinactive">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1" rowspan="2" colspan="7">
+        <widget class="Line" name="line_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
         <widget class="QCheckBox" name="enable_moveresizemode">
          <property name="text">
           <string>&amp;Moving/resizing</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="KComboBox" name="rule_moveresizemode">
+       <item row="11" column="3">
+        <spacer name="verticalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="12" column="0" rowspan="3">
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="13" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_acceptfocus">
+         <property name="toolTip">
+          <string>Windows may prevent to get the focus (activate) when being clicked.
+On the other hand you might wish to prevent a window
+from getting focussed on a mouseclick.</string>
+         </property>
+         <property name="text">
+          <string>Accept &amp;focus</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="2" rowspan="2" colspan="3">
+        <widget class="KComboBox" name="rule_acceptfocus">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1883,31 +2125,84 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="3">
-        <widget class="KComboBox" name="moveresizemode">
+       <item row="13" column="5" rowspan="2" colspan="3">
+        <widget class="YesNoBox" name="acceptfocus" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QCheckBox" name="enable_disableglobalshortcuts">
+         <property name="toolTip">
+          <string>When used, a window will receive
+all keyboard inputs while it is active, including Alt+Tab etc.
+This is especially interesting for emulators or virtual machines.
+
+Be warned:
+you won't be able to Alt+Tab out of the window
+nor use any other global shortcut (such as Alt+F2 to show KRunner)
+while it's active!</string>
+         </property>
+         <property name="text">
+          <string>Ignore global shortcuts</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_disableglobalshortcuts">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <item>
           <property name="text">
-           <string>Opaque</string>
+           <string>Do Not Affect</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Transparent</string>
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
           </property>
          </item>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="16" column="1" rowspan="3" colspan="7">
+        <widget class="Line" name="line_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="5" rowspan="2" colspan="3">
+        <widget class="YesNoBox" name="closeable" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_closeable">
+         <property name="text">
+          <string>&amp;Closeable</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="1">
         <widget class="QCheckBox" name="enable_type">
          <property name="text">
           <string>Window &amp;type</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="21" column="2" colspan="3">
         <widget class="KComboBox" name="rule_type">
          <property name="enabled">
           <bool>false</bool>
@@ -1929,7 +2224,7 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="3">
+       <item row="21" column="5" colspan="3">
         <widget class="KComboBox" name="type">
          <property name="enabled">
           <bool>false</bool>
@@ -1976,225 +2271,157 @@
          </item>
          <item>
           <property name="text">
-           <string>Override Type</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Standalone Menubar</string>
           </property>
          </item>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="enable_ignoreposition">
-         <property name="text">
-          <string>Ignore requested &amp;geometry</string>
+       <item row="22" column="1" rowspan="3" colspan="7">
+        <widget class="Line" name="line_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="KComboBox" name="rule_ignoreposition">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QCheckBox" name="ignoreposition">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="enable_minsize">
-         <property name="text">
-          <string>M&amp;inimum size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="KComboBox" name="rule_minsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="3">
-        <widget class="KRestrictedLine" name="minsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="enable_maxsize">
-         <property name="text">
-          <string>M&amp;aximum size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="KComboBox" name="rule_maxsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="KRestrictedLine" name="maxsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QCheckBox" name="enable_strictgeometry">
-         <property name="text">
-          <string>Strictly obey geometry</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="KComboBox" name="rule_strictgeometry">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="6" column="3">
-        <widget class="QCheckBox" name="strictgeometry">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QCheckBox" name="enable_disableglobalshortcuts">
-         <property name="text">
-          <string>Block global shortcuts</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="KComboBox" name="rule_disableglobalshortcuts">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="3">
-        <widget class="QCheckBox" name="disableglobalshortcuts">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
+       <item row="25" column="1" rowspan="2">
         <widget class="QCheckBox" name="enable_blockcompositing">
          <property name="text">
           <string>Block compositing</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="25" column="5" rowspan="2" colspan="3">
+        <widget class="YesNoBox" name="blockcompositing" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="2" colspan="2">
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="15" column="5" colspan="3">
+        <widget class="YesNoBox" name="disableglobalshortcuts" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="8" rowspan="3">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="10" column="0" colspan="9">
+        <widget class="Line" name="line_15">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="3">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="8" column="5" colspan="3">
+        <widget class="KComboBox" name="moveresizemode">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Opaque</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Transparent</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="8" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_moveresizemode">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="5" colspan="3">
+        <widget class="YesNoBox" name="noborder" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="2" rowspan="2" colspan="3">
+        <widget class="KComboBox" name="rule_closeable">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="25" column="2" rowspan="2" colspan="3">
         <widget class="KComboBox" name="rule_blockcompositing">
          <property name="enabled">
           <bool>false</bool>
@@ -2216,28 +2443,73 @@
          </item>
         </widget>
        </item>
-       <item row="8" column="3">
-        <widget class="QCheckBox" name="blockcompositing">
-         <property name="text">
-          <string/>
+       <item row="12" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_fsplevel">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item row="9" column="2">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="12" column="5" colspan="3">
+        <widget class="KComboBox" name="fsplevel">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
+         <item>
+          <property name="text">
+           <string comment="no focus stealing prevention">None</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Low</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Normal</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>High</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Extreme</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="enable_fsplevel">
+         <property name="toolTip">
+          <string>KWin tries to prevent windows from taking the focus
+(&quot;activate&quot;) while you're working in another window,
+but this may sometimes fail or superact.
+&quot;None&quot; will unconditionally allow this window to get the focus while
+&quot;Extreme&quot; will completely prevent it from taking the focus.</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>160</height>
-          </size>
+         <property name="text">
+          <string>&amp;Focus stealing prevention</string>
          </property>
-        </spacer>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -2266,27 +2538,31 @@
    <extends>KLineEdit</extends>
    <header>krestrictedline.h</header>
   </customwidget>
+  <customwidget>
+   <class>YesNoBox</class>
+   <extends>QWidget</extends>
+   <header>yesnobox.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tabs</tabstop>
-  <tabstop>description</tabstop>
-  <tabstop>wmclass</tabstop>
-  <tabstop>whole_wmclass</tabstop>
-  <tabstop>wmclass_match</tabstop>
-  <tabstop>edit_reg_wmclass</tabstop>
-  <tabstop>role</tabstop>
-  <tabstop>role_match</tabstop>
-  <tabstop>edit_reg_role</tabstop>
   <tabstop>detect</tabstop>
+  <tabstop>wmclass_match</tabstop>
+  <tabstop>wmclass</tabstop>
+  <tabstop>edit_reg_wmclass</tabstop>
+  <tabstop>whole_wmclass</tabstop>
+  <tabstop>role_match</tabstop>
+  <tabstop>role</tabstop>
+  <tabstop>edit_reg_role</tabstop>
   <tabstop>types</tabstop>
-  <tabstop>title</tabstop>
   <tabstop>title_match</tabstop>
+  <tabstop>title</tabstop>
   <tabstop>edit_reg_title</tabstop>
-  <tabstop>extra</tabstop>
   <tabstop>extra_match</tabstop>
+  <tabstop>extra</tabstop>
   <tabstop>edit_reg_extra</tabstop>
-  <tabstop>machine</tabstop>
   <tabstop>machine_match</tabstop>
+  <tabstop>machine</tabstop>
   <tabstop>edit_reg_machine</tabstop>
   <tabstop>enable_position</tabstop>
   <tabstop>rule_position</tabstop>
@@ -2295,96 +2571,41 @@
   <tabstop>rule_size</tabstop>
   <tabstop>size</tabstop>
   <tabstop>enable_maximizehoriz</tabstop>
-  <tabstop>rule_maximizehoriz</tabstop>
-  <tabstop>maximizehoriz</tabstop>
   <tabstop>enable_maximizevert</tabstop>
   <tabstop>rule_maximizevert</tabstop>
-  <tabstop>maximizevert</tabstop>
   <tabstop>enable_fullscreen</tabstop>
-  <tabstop>rule_fullscreen</tabstop>
-  <tabstop>fullscreen</tabstop>
   <tabstop>enable_desktop</tabstop>
   <tabstop>rule_desktop</tabstop>
   <tabstop>desktop</tabstop>
   <tabstop>enable_minimize</tabstop>
-  <tabstop>rule_minimize</tabstop>
-  <tabstop>minimize</tabstop>
   <tabstop>enable_shade</tabstop>
   <tabstop>rule_shade</tabstop>
-  <tabstop>shade</tabstop>
   <tabstop>enable_placement</tabstop>
   <tabstop>rule_placement</tabstop>
   <tabstop>placement</tabstop>
+  <tabstop>enable_ignoreposition</tabstop>
+  <tabstop>rule_ignoreposition</tabstop>
+  <tabstop>enable_maxsize</tabstop>
+  <tabstop>rule_maxsize</tabstop>
+  <tabstop>maxsize</tabstop>
   <tabstop>enable_above</tabstop>
   <tabstop>rule_above</tabstop>
-  <tabstop>above</tabstop>
   <tabstop>enable_below</tabstop>
   <tabstop>rule_below</tabstop>
-  <tabstop>below</tabstop>
+  <tabstop>enable_autogroup</tabstop>
+  <tabstop>enable_autogroupfg</tabstop>
+  <tabstop>rule_autogroupfg</tabstop>
+  <tabstop>enable_autogroupid</tabstop>
+  <tabstop>rule_autogroupid</tabstop>
+  <tabstop>enable_tilingoption</tabstop>
   <tabstop>enable_noborder</tabstop>
   <tabstop>rule_noborder</tabstop>
-  <tabstop>noborder</tabstop>
-  <tabstop>enable_skiptaskbar</tabstop>
-  <tabstop>rule_skiptaskbar</tabstop>
-  <tabstop>skiptaskbar</tabstop>
-  <tabstop>enable_skippager</tabstop>
-  <tabstop>rule_skippager</tabstop>
-  <tabstop>skippager</tabstop>
-  <tabstop>enable_skipswitcher</tabstop>
-  <tabstop>rule_skipswitcher</tabstop>
-  <tabstop>skipswitcher</tabstop>
-  <tabstop>enable_closeable</tabstop>
-  <tabstop>rule_closeable</tabstop>
-  <tabstop>closeable</tabstop>
-  <tabstop>enable_autogroup</tabstop>
-  <tabstop>rule_autogroup</tabstop>
-  <tabstop>autogroup</tabstop>
   <tabstop>enable_opacityactive</tabstop>
-  <tabstop>rule_opacityactive</tabstop>
   <tabstop>opacityactive</tabstop>
   <tabstop>enable_opacityinactive</tabstop>
   <tabstop>rule_opacityinactive</tabstop>
   <tabstop>opacityinactive</tabstop>
-  <tabstop>enable_tilingoption</tabstop>
-  <tabstop>rule_tilingoption</tabstop>
-  <tabstop>tilingoption</tabstop>
-  <tabstop>enable_shortcut</tabstop>
-  <tabstop>rule_shortcut</tabstop>
-  <tabstop>shortcut</tabstop>
-  <tabstop>shortcut_edit</tabstop>
-  <tabstop>enable_fsplevel</tabstop>
-  <tabstop>rule_fsplevel</tabstop>
-  <tabstop>fsplevel</tabstop>
-  <tabstop>enable_moveresizemode</tabstop>
-  <tabstop>rule_moveresizemode</tabstop>
-  <tabstop>moveresizemode</tabstop>
-  <tabstop>enable_type</tabstop>
-  <tabstop>rule_type</tabstop>
-  <tabstop>type</tabstop>
-  <tabstop>enable_ignoreposition</tabstop>
-  <tabstop>rule_ignoreposition</tabstop>
-  <tabstop>ignoreposition</tabstop>
-  <tabstop>enable_minsize</tabstop>
-  <tabstop>rule_minsize</tabstop>
-  <tabstop>minsize</tabstop>
-  <tabstop>enable_maxsize</tabstop>
-  <tabstop>rule_maxsize</tabstop>
-  <tabstop>maxsize</tabstop>
-  <tabstop>enable_strictgeometry</tabstop>
-  <tabstop>rule_strictgeometry</tabstop>
-  <tabstop>strictgeometry</tabstop>
-  <tabstop>enable_disableglobalshortcuts</tabstop>
-  <tabstop>rule_disableglobalshortcuts</tabstop>
-  <tabstop>disableglobalshortcuts</tabstop>
-  <tabstop>enable_autogroupfg</tabstop>
-  <tabstop>enable_autogroupid</tabstop>
-  <tabstop>autogroupfg</tabstop>
-  <tabstop>autogroupid</tabstop>
-  <tabstop>rule_autogroupid</tabstop>
-  <tabstop>rule_autogroupfg</tabstop>
-  <tabstop>enable_acceptfocus</tabstop>
-  <tabstop>rule_acceptfocus</tabstop>
-  <tabstop>acceptfocus</tabstop>
+  <tabstop>description</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -2395,8 +2616,8 @@
    <slot>detectClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>247</x>
+     <y>89</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -2411,8 +2632,8 @@
    <slot>wmclassMatchChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>164</x>
+     <y>134</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -2427,72 +2648,8 @@
    <slot>roleMatchChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>title_match</sender>
-   <signal>activated(int)</signal>
-   <receiver>KWin::RulesWidgetBase</receiver>
-   <slot>titleMatchChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>extra_match</sender>
-   <signal>activated(int)</signal>
-   <receiver>KWin::RulesWidgetBase</receiver>
-   <slot>extraMatchChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>machine_match</sender>
-   <signal>activated(int)</signal>
-   <receiver>KWin::RulesWidgetBase</receiver>
-   <slot>machineMatchChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shortcut_edit</sender>
-   <signal>clicked()</signal>
-   <receiver>KWin::RulesWidgetBase</receiver>
-   <slot>shortcutEditClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>164</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>

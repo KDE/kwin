@@ -30,6 +30,7 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QByteArray>
+#include <QTimer>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -58,10 +59,10 @@ DetectDialog::DetectDialog(QWidget* parent, const char* name)
     setMainWidget(widget);
 }
 
-void DetectDialog::detect(WId window)
+void DetectDialog::detect(WId window, int secs)
 {
     if (window == 0)
-        selectWindow();
+        QTimer::singleShot(secs*1000, this, SLOT(selectWindow()));
     else
         readWindow(window);
 }
@@ -117,6 +118,10 @@ void DetectDialog::executeDialog()
     widget->title_label->setText(title);
     widget->extrarole_label->setText(extrarole);
     widget->machine_label->setText(machine);
+    widget->adjustSize();
+    adjustSize();
+    if (width() < 4*height()/3)
+        resize(4*height()/3, height());
     emit detectionDone(exec() == KDialog::Accepted);
 }
 

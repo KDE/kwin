@@ -331,7 +331,12 @@ static Options::MoveResizeMode comboToMoveResize(int val)
 
 static int typeToCombo(NET::WindowType type)
 {
-    if (type < NET::Normal || type > NET::Splash)
+    if (type < NET::Normal || type > NET::Splash ||
+        type == NET::Override) // The user must NOT set a window to be unmanaged.
+                               // This case is not handled in KWin and will lead to segfaults.
+                               // Even iff it was supported, it would mean to allow the user to shoot himself
+                               // since an unmanaged window has to manage itself, what is probably not the case when the hint is not set.
+                               // Rule opportunity might be a relict from the Motif Hint window times of KDE1
         return 0; // Normal
     static const int conv[] = {
         0, // Normal
@@ -340,7 +345,7 @@ static int typeToCombo(NET::WindowType type)
         4, // Toolbar
         5, // Menu
         1, // Dialog
-        8, // Override
+        8, // Override - ignored.
         9, // TopMenu
         2, // Utility
         6  // Splash
@@ -359,7 +364,6 @@ static NET::WindowType comboToType(int val)
         NET::Menu,
         NET::Splash,
         NET::Desktop,
-        NET::Override,
         NET::TopMenu
     };
     return conv[ val ];
@@ -387,6 +391,7 @@ static NET::WindowType comboToType(int val)
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setChecked, setChecked( false ))
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setText, setText( "" ))
 #define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setCurrentIndex, setCurrentIndex( 0 ))
+#define SPINBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setValue, setValue(0))
 
 void RulesWidget::setRules(Rules* rules)
 {
@@ -440,8 +445,8 @@ void RulesWidget::setRules(Rules* rules)
     CHECKBOX_FORCE_RULE(autogroup,);
     CHECKBOX_FORCE_RULE(autogroupfg,);
     LINEEDIT_FORCE_RULE(autogroupid,);
-    LINEEDIT_FORCE_RULE(opacityactive, intToStr);
-    LINEEDIT_FORCE_RULE(opacityinactive, intToStr);
+    SPINBOX_FORCE_RULE(opacityactive,);
+    SPINBOX_FORCE_RULE(opacityinactive,);
     COMBOBOX_FORCE_RULE(tilingoption, tilingToCombo);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
@@ -462,6 +467,7 @@ void RulesWidget::setRules(Rules* rules)
 #undef CHECKBOX_FORCE_RULE
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE
+#undef SPINBOX_FORCE_RULE
 
 #define GENERIC_RULE( var, func, Type, type, uimethod ) \
     if ( enable_##var->isChecked() && rule_##var->currentIndex() >= 0) \
@@ -478,6 +484,7 @@ void RulesWidget::setRules(Rules* rules)
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, isChecked )
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, text )
 #define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, currentIndex )
+#define SPINBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, value)
 
 Rules* RulesWidget::rules() const
 {
@@ -535,8 +542,8 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE(autogroup,);
     CHECKBOX_FORCE_RULE(autogroupfg,);
     LINEEDIT_FORCE_RULE(autogroupid,);
-    LINEEDIT_FORCE_RULE(opacityactive, strToInt);
-    LINEEDIT_FORCE_RULE(opacityinactive, strToInt);
+    SPINBOX_FORCE_RULE(opacityactive,);
+    SPINBOX_FORCE_RULE(opacityinactive,);
     COMBOBOX_FORCE_RULE(tilingoption, comboToTiling);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
@@ -558,6 +565,7 @@ Rules* RulesWidget::rules() const
 #undef CHECKBOX_FORCE_RULE
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE
+#undef SPINBOX_FORCE_RULE
 
 #define STRING_MATCH_COMBO( type ) \
     void RulesWidget::type##MatchChanged() \
@@ -579,7 +587,7 @@ void RulesWidget::detectClicked()
     assert(detect_dlg == NULL);
     detect_dlg = new DetectDialog;
     connect(detect_dlg, SIGNAL(detectionDone(bool)), this, SLOT(detected(bool)));
-    detect_dlg->detect(0);
+    detect_dlg->detect(0, Ui::RulesWidgetBase::detection_delay->value());
 }
 
 void RulesWidget::detected(bool ok)
@@ -630,6 +638,7 @@ void RulesWidget::detected(bool ok)
 #define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
 #define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
 #define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentIndex )
+#define SPINBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setValue )
 
 void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
 {
@@ -654,8 +663,8 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     //CHECKBOX_PREFILL( autogroup, );
     //CHECKBOX_PREFILL( autogroupfg, );
     //LINEEDIT_PREFILL( autogroupid, );
-    LINEEDIT_PREFILL(opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
-    LINEEDIT_PREFILL(opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
+    SPINBOX_PREFILL(opacityactive, , 100 /*get the actual opacity somehow*/);
+    SPINBOX_PREFILL(opacityinactive, , 100 /*get the actual opacity somehow*/);
     COMBOBOX_PREFILL(tilingoption, tilingToCombo, 0);
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
@@ -673,6 +682,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
 #undef CHECKBOX_PREFILL
 #undef LINEEDIT_PREFILL
 #undef COMBOBOX_PREFILL
+#undef SPINBOX_PREFILL
 
 bool RulesWidget::finalCheck()
 {

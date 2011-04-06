@@ -47,7 +47,7 @@ class DetectDialog
     Q_OBJECT
 public:
     explicit DetectDialog(QWidget* parent = NULL, const char* name = NULL);
-    void detect(WId window);
+    void detect(WId window, int secs = 0);
     QByteArray selectedClass() const;
     bool selectedWholeClass() const;
     QByteArray selectedRole() const;
@@ -61,8 +61,9 @@ signals:
     void detectionDone(bool);
 protected:
     virtual bool eventFilter(QObject* o, QEvent* e);
-private:
+private slots:
     void selectWindow();
+private:
     void readWindow(WId window);
     void executeDialog();
     WId findWindow();
