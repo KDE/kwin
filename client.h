@@ -401,11 +401,7 @@ public:
     bool decorationPixmapRequiresRepaint();
     void ensureDecorationPixmapsPainted();
 
-    QRect decorationRect() const {
-        return (decoration && decoration->widget()) ?
-               decoration->widget()->rect().translated(-padding_left, -padding_top) :
-               QRect(0, 0, width(), height());
-    }
+    QRect decorationRect() const;
 
     QRect transparentRect() const;
 
@@ -967,7 +963,7 @@ inline QSize Client::clientSize() const
 
 inline QRect Client::visibleRect() const
 {
-    return geometry().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
+    return Toplevel::visibleRect().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
 }
 
 inline void Client::setGeometry(const QRect& r, ForceGeometry_t force, bool emitJs)

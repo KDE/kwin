@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
+#include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #include "tabbox.h"
@@ -2237,6 +2238,17 @@ void Client::checkActivities()
 void Client::setSessionInteract(bool needed)
 {
     needsSessionInteract = needed;
+}
+
+QRect Client::decorationRect() const
+{
+    if (decoration && decoration->widget()) {
+        return decoration->widget()->rect().translated(-padding_left, -padding_top);
+    } else if (hasShadow()) {
+        return shadow()->shadowRegion().boundingRect();
+    } else {
+        return QRect(0, 0, width(), height());
+    }
 }
 
 } // namespace
