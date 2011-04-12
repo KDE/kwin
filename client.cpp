@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
+#include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #include "tabbox.h"
@@ -194,6 +195,10 @@ Client::Client(Workspace* ws)
 #if defined(HAVE_XSYNC) || defined(HAVE_XDAMAGE)
     ready_for_painting = false; // wait for first damage or sync reply
 #endif
+
+    connect(this, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -2233,6 +2238,17 @@ void Client::checkActivities()
 void Client::setSessionInteract(bool needed)
 {
     needsSessionInteract = needed;
+}
+
+QRect Client::decorationRect() const
+{
+    if (decoration && decoration->widget()) {
+        return decoration->widget()->rect().translated(-padding_left, -padding_top);
+    } else if (hasShadow()) {
+        return shadow()->shadowRegion().boundingRect();
+    } else {
+        return QRect(0, 0, width(), height());
+    }
 }
 
 } // namespace

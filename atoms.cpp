@@ -117,6 +117,9 @@ Atoms::Atoms()
     atoms[n] = &kde_net_wm_block_compositing;
     names[n++] = (char*) "_KDE_NET_WM_BLOCK_COMPOSITING";
 
+    atoms[n] = &kde_net_wm_shadow;
+    names[n++] = (char*) "_KDE_NET_WM_SHADOW";
+
     assert(n <= max);
 
     XInternAtoms(display(), names, n, false, atoms_return);

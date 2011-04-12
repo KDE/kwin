@@ -32,6 +32,7 @@ namespace KWin
 Unmanaged::Unmanaged(Workspace* ws)
     : Toplevel(ws)
 {
+    connect(this, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), SIGNAL(geometryChanged()));
 }
 
 Unmanaged::~Unmanaged()
@@ -92,7 +93,7 @@ void Unmanaged::release()
             XShapeSelectInput(display(), window(), NoEventMask);
         XSelectInput(display(), window(), NoEventMask);
     }
-    addWorkspaceRepaint(geometry());
+    addWorkspaceRepaint(del->visibleRect());
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteUnmanaged(this, Allowed);

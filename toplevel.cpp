@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "client.h"
 #include "effects.h"
+#include "shadow.h"
 
 namespace KWin
 {
@@ -142,6 +143,9 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleRect() const
 {
+    if (hasShadow()) {
+        return shadow()->shadowRegion().boundingRect().translated(geometry().topLeft());
+    }
     return geometry();
 }
 
@@ -348,6 +352,41 @@ bool Toplevel::isOnScreen(int screen) const
     return workspace()->screenGeometry(screen).intersects(geometry());
 }
 
+void Toplevel::getShadow()
+{
+    if (hasShadow()) {
+        effectWindow()->sceneWindow()->shadow()->updateShadow();
+    } else {
+        Shadow::createShadow(this);
+        addRepaintFull();
+    }
+}
+
+bool Toplevel::hasShadow() const
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow() != NULL;
+    }
+    return false;
+}
+
+Shadow *Toplevel::shadow()
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow();
+    } else {
+        return NULL;
+    }
+}
+
+const Shadow *Toplevel::shadow() const
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->shadow();
+    } else {
+        return NULL;
+    }
+}
 
 } // namespace
 

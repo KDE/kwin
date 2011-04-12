@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 Based on glcompmgr code by Felix Bellaby.
 Using code from Compiz and Beryl.
@@ -234,6 +235,8 @@ void SceneOpenGL::windowAdded(Toplevel* c)
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
     c->effectWindow()->setSceneWindow(windows[ c ]);
+    c->getShadow();
+    windows[ c ]->updateShadow(c->shadow());
 }
 
 void SceneOpenGL::windowClosed(Toplevel* c, Deleted* deleted)
@@ -243,6 +246,9 @@ void SceneOpenGL::windowClosed(Toplevel* c, Deleted* deleted)
         // replace c with deleted
         Window* w = windows.take(c);
         w->updateToplevel(deleted);
+        if (w->shadow()) {
+            w->shadow()->setToplevel(deleted);
+        }
         windows[ deleted ] = w;
     } else {
         delete windows.take(c);
@@ -511,6 +517,17 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
 
+    // shadow
+    if (m_shadow) {
+        paintShadow(WindowQuadShadowTop, region, data);
+        paintShadow(WindowQuadShadowTopRight, region, data);
+        paintShadow(WindowQuadShadowRight, region, data);
+        paintShadow(WindowQuadShadowBottomRight, region, data);
+        paintShadow(WindowQuadShadowBottom, region, data);
+        paintShadow(WindowQuadShadowBottomLeft, region, data);
+        paintShadow(WindowQuadShadowLeft, region, data);
+        paintShadow(WindowQuadShadowTopLeft, region, data);
+    }
     // decorations
     Client *client = dynamic_cast<Client*>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
@@ -654,6 +671,36 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
 #endif
 }
 
+void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data)
+{
+    WindowQuadList quads = data.quads.select(type);
+    Texture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->textureForQuadType(type);
+    if (!texture) {
+        return;
+    }
+    if (filter == ImageFilterGood)
+        texture->setFilter(GL_LINEAR);
+    else
+        texture->setFilter(GL_NEAREST);
+    texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    texture->bind();
+    prepareStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
+    if (data.shader) {
+        data.shader->setUniform(GLShader::TextureWidth, 1.0f);
+        data.shader->setUniform(GLShader::TextureHeight, 1.0f);
+    }
+    renderQuads(0, region, quads);
+    restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
+    texture->unbind();
+#ifndef KWIN_HAVE_OPENGLES
+    if (static_cast<SceneOpenGL*>(scene)->debug) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        renderQuads(0, region, quads);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+#endif
+}
+
 void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const
 {
     QVector<float> vertices;
@@ -710,8 +757,38 @@ void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double
 {
     if (shader)
         prepareShaderRenderStates(type, opacity, brightness, saturation, shader);
-    else
-        prepareRenderStates(type, opacity, brightness, saturation);
+    else {
+        Texture *tex = NULL;
+        switch(type) {
+        case Content:
+            tex = &texture;
+            break;
+        case DecorationTop:
+            tex = &topTexture;
+            break;
+        case DecorationLeft:
+            tex = &leftTexture;
+            break;
+        case DecorationRight:
+            tex = &rightTexture;
+            break;
+        case DecorationBottom:
+            tex = &bottomTexture;
+            break;
+        default:
+            return;
+        }
+        prepareStates(type, opacity, brightness, saturation, shader, tex);
+    }
+}
+
+void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture)
+{
+    if (shader) {
+        prepareShaderRenderStates(type, opacity, brightness, saturation, shader);
+    } else {
+        prepareRenderStates(type, opacity, brightness, saturation, texture);
+    }
 }
 
 void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
@@ -750,45 +827,23 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     shader->setUniform(GLShader::TextureHeight, texh >= 0.0 ? texh : toplevel->height());
 }
 
-void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation)
+void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex)
 {
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(type)
     Q_UNUSED(opacity)
     Q_UNUSED(brightness)
     Q_UNUSED(saturation)
+    Q_UNUSED(tex)
 #else
-    Texture* tex;
     bool alpha = false;
     bool opaque = true;
-    switch(type) {
-    case Content:
-        tex = &texture;
+    if (type == Content) {
         alpha = toplevel->hasAlpha();
         opaque = isOpaque() && opacity == 1.0;
-        break;
-    case DecorationTop:
-        tex = &topTexture;
+    } else {
         alpha = true;
         opaque = false;
-        break;
-    case DecorationLeft:
-        tex = &leftTexture;
-        alpha = true;
-        opaque = false;
-        break;
-    case DecorationRight:
-        tex = &rightTexture;
-        alpha = true;
-        opaque = false;
-        break;
-    case DecorationBottom:
-        tex = &bottomTexture;
-        alpha = true;
-        opaque = false;
-        break;
-    default:
-        return;
     }
     // setup blending of transparent windows
     glPushAttrib(GL_ENABLE_BIT);
@@ -912,8 +967,38 @@ void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double
 {
     if (shader)
         restoreShaderRenderStates(type, opacity, brightness, saturation, shader);
-    else
-        restoreRenderStates(type, opacity, brightness, saturation);
+    else {
+        Texture *tex = NULL;
+        switch(type) {
+        case Content:
+            tex = &texture;
+            break;
+        case DecorationTop:
+            tex = &topTexture;
+            break;
+        case DecorationLeft:
+            tex = &leftTexture;
+            break;
+        case DecorationRight:
+            tex = &rightTexture;
+            break;
+        case DecorationBottom:
+            tex = &bottomTexture;
+            break;
+        default:
+            return;
+        }
+        restoreStates(type, opacity, brightness, saturation, shader, tex);
+    }
+}
+
+void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture)
+{
+    if (shader) {
+        restoreShaderRenderStates(type, opacity, brightness, saturation, shader);
+    } else {
+        restoreRenderStates(type, opacity, brightness, saturation, texture);
+    }
 }
 
 void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
@@ -933,34 +1018,15 @@ void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opa
 #endif
 }
 
-void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, double brightness, double saturation)
+void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex)
 {
-#ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(type)
+#ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(opacity)
     Q_UNUSED(brightness)
     Q_UNUSED(saturation)
+    Q_UNUSED(tex)
 #else
-    Texture* tex;
-    switch(type) {
-    case Content:
-        tex = &texture;
-        break;
-    case DecorationTop:
-        tex = &topTexture;
-        break;
-    case DecorationLeft:
-        tex = &leftTexture;
-        break;
-    case DecorationRight:
-        tex = &rightTexture;
-        break;
-    case DecorationBottom:
-        tex = &bottomTexture;
-        break;
-    default:
-        return;
-    }
     if (opacity != 1.0 || saturation != 1.0 || brightness != 1.0f) {
         if (saturation != 1.0 && tex->saturationSupported()) {
             glActiveTexture(GL_TEXTURE3);
@@ -1447,6 +1513,78 @@ void SceneOpenGL::EffectFrame::cleanup()
     m_unstyledTexture = NULL;
     delete m_unstyledPixmap;
     m_unstyledPixmap = NULL;
+}
+
+//****************************************
+// SceneOpenGL::Shadow
+//****************************************
+SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
+    : Shadow(toplevel)
+{
+}
+
+SceneOpenGLShadow::~SceneOpenGLShadow()
+{
+    for (int i=0; i<ShadowElementsCount; ++i) {
+        m_shadowTextures[i].discard();
+    }
+}
+
+SceneOpenGL::Texture *SceneOpenGLShadow::textureForQuadType(WindowQuadType type)
+{
+    SceneOpenGL::Texture *texture = NULL;
+    QPixmap pixmap;
+    switch (type) {
+    case WindowQuadShadowTop:
+        texture = &m_shadowTextures[ShadowElementTop];
+        pixmap = shadowPixmap(ShadowElementTop);
+        break;
+    case WindowQuadShadowTopRight:
+        texture = &m_shadowTextures[ShadowElementTopRight];
+        pixmap = shadowPixmap(ShadowElementTopRight);
+        break;
+    case WindowQuadShadowRight:
+        texture = &m_shadowTextures[ShadowElementRight];
+        pixmap = shadowPixmap(ShadowElementRight);
+        break;
+    case WindowQuadShadowBottomRight:
+        texture = &m_shadowTextures[ShadowElementBottomRight];
+        pixmap = shadowPixmap(ShadowElementBottomRight);
+        break;
+    case WindowQuadShadowBottom:
+        texture = &m_shadowTextures[ShadowElementBottom];
+        pixmap = shadowPixmap(ShadowElementBottom);
+        break;
+    case WindowQuadShadowBottomLeft:
+        texture = &m_shadowTextures[ShadowElementBottomLeft];
+        pixmap = shadowPixmap(ShadowElementBottomLeft);
+        break;
+    case WindowQuadShadowLeft:
+        texture = &m_shadowTextures[ShadowElementLeft];
+        pixmap = shadowPixmap(ShadowElementLeft);
+        break;
+    case WindowQuadShadowTopLeft:
+        texture = &m_shadowTextures[ShadowElementTopLeft];
+        pixmap = shadowPixmap(ShadowElementTopLeft);
+        break;
+    default:
+        // nothing
+        break;
+    }
+    if (texture) {
+        if (texture->texture() != None) {
+            glBindTexture(texture->target(), texture->texture());
+        } else if (!pixmap.isNull()) {
+            const bool success = texture->load(pixmap.handle(), pixmap.size(), pixmap.depth());
+            if (!success) {
+                kDebug(1212) << "Failed to bind shadow pixmap";
+                return NULL;
+            }
+        } else {
+            return NULL;
+        }
+    }
+    return texture;
 }
 
 } // namespace
