@@ -1649,7 +1649,6 @@ void Workspace::setNumberOfDesktops(int n)
     NETPoint* viewports = new NETPoint[n];
     rootInfo->setDesktopViewport(n, *viewports);
     delete[] viewports;
-    updateClientArea(true);
 
     // Make it +1, so that it can be accessed as [1..numberofdesktops]
     focus_chain.resize(n + 1);
@@ -1661,6 +1660,8 @@ void Workspace::setNumberOfDesktops(int n)
     oldrestrictedmovearea.clear();
     oldrestrictedmovearea.resize(n + 1);
     screenarea.clear();
+
+    updateClientArea(true);
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize(n);
