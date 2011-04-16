@@ -583,10 +583,16 @@ namespace Oxygen
 
         } else {
 
-            const int offset = layoutMetric( LM_OuterPaddingTop );
+            int offset = layoutMetric( LM_OuterPaddingTop );
 
+            // radial gradient positionning
             int height = 64 - Configuration::ButtonDefault;
             if( !hideTitleBar() ) height += configuration().buttonSize();
+            if( isMaximized() )
+            {
+                offset -= 3;
+                height -= 3;
+            }
 
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
