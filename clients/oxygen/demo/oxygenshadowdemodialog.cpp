@@ -89,7 +89,6 @@ namespace Oxygen
 
     }
 
-
     //_________________________________________________________
     void ShadowDemoDialog::reparseConfiguration( void )
     {
