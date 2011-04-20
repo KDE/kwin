@@ -132,8 +132,6 @@ namespace Oxygen
 
         // read shadowCache configuration
         changed |= shadowCache().readConfig( config );
-        if( changed )
-        { helper().setBackgroundPixmapOffset( QPoint( shadowCache().shadowSize(), 0 ) ); }
 
         // background pixmap
         {

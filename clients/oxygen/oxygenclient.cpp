@@ -594,6 +594,11 @@ namespace Oxygen
                 height -= 3;
             }
 
+            // background pixmap
+            QPoint backgroundPixmapOffset( layoutMetric( LM_OuterPaddingLeft ) + layoutMetric( LM_BorderLeft ), 0 );
+            if( isMaximized() ) backgroundPixmapOffset += QPoint( 0, 3 );
+            helper().setBackgroundPixmapOffset( backgroundPixmapOffset );
+
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
 
