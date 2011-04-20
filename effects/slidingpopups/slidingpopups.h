@@ -24,12 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
 class SlidingPopupsEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect();
@@ -37,11 +40,14 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
+    virtual void reconfigure(ReconfigureFlags flags);
     // TODO react also on virtual desktop changes
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
-    virtual void windowDeleted(EffectWindow* c);
-    virtual void propertyNotify(EffectWindow* w, long a);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *c);
+    void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotPropertyNotify(EffectWindow *w, long a);
 private:
     enum Position {
         West = 0,
@@ -57,8 +63,8 @@ private:
         int fadeOutDuration;
     };
     long mAtom;
-    QHash< const EffectWindow*, TimeLine > mAppearingWindows;
-    QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
+    QHash< const EffectWindow*, QTimeLine* > mAppearingWindows;
+    QHash< const EffectWindow*, QTimeLine* > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
     int mFadeInTime;
     int mFadeOutTime;

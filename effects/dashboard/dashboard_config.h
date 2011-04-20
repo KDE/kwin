@@ -43,9 +43,6 @@ private:
     long net_wm_dashboard;
     ::Ui::DashboardEffectConfig ui;
 
-private slots:
-    void valueChanged(int value);
-
 };
 
 } // namespace KWin

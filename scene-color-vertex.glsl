@@ -6,5 +6,5 @@ uniform vec2 offset;
 attribute vec4 vertex;
 
 void main() {
-    gl_Position = vec4(vertex.xy + offset, vertex.zw) * projection;
+    gl_Position = projection*vec4(vertex.xy + offset, vertex.zw);
 }

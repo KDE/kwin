@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <KShortcut>
 #include <QQueue>
+#include <QTimeLine>
 
 class KShortcut;
 
@@ -31,7 +32,7 @@ namespace KWin
 {
 
 class FlipSwitchEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -44,11 +45,6 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void windowAdded(EffectWindow* w);
-    virtual void windowClosed(EffectWindow* w);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
@@ -58,6 +54,11 @@ private Q_SLOTS:
     void toggleActiveAllDesktops();
     void globalShortcutChangedCurrent(QKeySequence shortcut);
     void globalShortcutChangedAll(QKeySequence shortcut);
+    void slotWindowAdded(EffectWindow* w);
+    void slotWindowClosed(EffectWindow *w);
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxClosed();
+    void slotTabBoxUpdated();
 
 private:
     class ItemInfo;
@@ -76,9 +77,9 @@ private:
     void adjustWindowMultiScreen(const EffectWindow *w, WindowPaintData& data);
     QQueue< SwitchingDirection> m_scheduledDirections;
     EffectWindow* m_selectedWindow;
-    TimeLine m_timeLine;
-    TimeLine m_startStopTimeLine;
-    TimeLine::CurveShape m_currentAnimationShape;
+    QTimeLine m_timeLine;
+    QTimeLine m_startStopTimeLine;
+    QTimeLine::CurveShape m_currentAnimationShape;
     QRect m_screenArea;
     int m_activeScreen;
     bool m_active;

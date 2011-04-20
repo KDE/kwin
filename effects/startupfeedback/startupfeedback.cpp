@@ -89,6 +89,8 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId, KStartupInfoData)));
     connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId, KStartupInfoData)));
     connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId, KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId, KStartupInfoData)));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 }
 
@@ -258,7 +260,7 @@ void StartupFeedbackEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void StartupFeedbackEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+void StartupFeedbackEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
         Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
 {
     Q_UNUSED(pos)

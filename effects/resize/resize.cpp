@@ -41,6 +41,9 @@ ResizeEffect::ResizeEffect()
     , m_resizeWindow(0)
 {
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
 }
 
 ResizeEffect::~ResizeEffect()
@@ -145,29 +148,29 @@ void ResizeEffect::reconfigure(ReconfigureFlags)
         m_features |= Outline;
 }
 
-void ResizeEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
+void ResizeEffect::slotWindowStartUserMovedResized(EffectWindow *w)
 {
-    if (first && last) {
-        // not interested in maximized
-        return;
-    }
-    if (first && w->isUserResize() && !w->isUserMove()) {
+    if (w->isUserResize() && !w->isUserMove()) {
         m_active = true;
         m_resizeWindow = w;
         m_originalGeometry = w->geometry();
         m_currentGeometry = w->geometry();
         w->addRepaintFull();
     }
-    if (m_active && w == m_resizeWindow && last) {
+}
+
+void ResizeEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
+{
+    if (m_active && w == m_resizeWindow) {
         m_active = false;
         m_resizeWindow = NULL;
         effects->addRepaintFull();
     }
 }
 
-void ResizeEffect::windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry)
+void ResizeEffect::slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry)
 {
-    if (m_active && c == m_resizeWindow) {
+    if (m_active && w == m_resizeWindow) {
         m_currentGeometry = geometry;
         effects->addRepaintFull();
     }

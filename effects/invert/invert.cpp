@@ -54,6 +54,7 @@ InvertEffect::InvertEffect()
     b->setText(i18n("Toggle Invert Effect on Window"));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleWindow()));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
 InvertEffect::~InvertEffect()
@@ -140,7 +141,7 @@ void InvertEffect::paintEffectFrame(KWin::EffectFrame* frame, QRegion region, do
     }
 }
 
-void InvertEffect::windowClosed(EffectWindow* w)
+void InvertEffect::slotWindowClosed(EffectWindow* w)
 {
     m_windows.removeOne(w);
 }

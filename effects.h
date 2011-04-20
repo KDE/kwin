@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,8 +37,13 @@ class KService;
 namespace KWin
 {
 
+class Client;
+class Deleted;
+class Unmanaged;
+
 class EffectsHandlerImpl : public EffectsHandler
 {
+    Q_OBJECT
 public:
     EffectsHandlerImpl(CompositingType type);
     virtual ~EffectsHandlerImpl();
@@ -78,9 +84,6 @@ public:
     virtual int desktopToRight(int desktop = 0, bool wrap = true) const;
     virtual int desktopBelow(int desktop = 0, bool wrap = true) const;
     virtual int desktopToLeft(int desktop = 0, bool wrap = true) const;
-    virtual bool isDesktopLayoutDynamic() const;
-    virtual int addDesktop(QPoint coords);
-    virtual void deleteDesktop(int id);
     virtual QString desktopName(int desktop) const;
     virtual bool optionRollOverDesktops() const;
 
@@ -108,10 +111,6 @@ public:
 
     virtual void setActiveFullScreenEffect(Effect* e);
     virtual Effect* activeFullScreenEffect() const;
-
-    virtual void pushRenderTarget(GLRenderTarget* target);
-    virtual GLRenderTarget* popRenderTarget();
-    virtual bool isRenderTargetBound();
 
     virtual void addRepaintFull();
     virtual void addRepaint(const QRect& r);
@@ -153,33 +152,9 @@ public:
 
     // internal (used by kwin core or compositing code)
     void startPaint();
-    void windowUserMovedResized(EffectWindow* c, bool first, bool last);
-    void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
-    void windowOpacityChanged(EffectWindow* c, double old_opacity);
-    void windowAdded(EffectWindow* c);
-    void windowClosed(EffectWindow* c);
-    void windowDeleted(EffectWindow* c);
-    void windowActivated(EffectWindow* c);
-    void windowMinimized(EffectWindow* c);
-    void windowUnminimized(EffectWindow* c);
-    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
-    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);
-    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
-    void desktopChanged(int old);
-    void windowDamaged(EffectWindow* w, const QRect& r);
-    void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
-    void tabBoxAdded(int mode);
-    void tabBoxClosed();
-    void tabBoxUpdated();
-    void tabBoxKeyEvent(QKeyEvent* event);
     bool borderActivated(ElectricBorder border);
-    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
-    void propertyNotify(EffectWindow* c, long atom);
-    void numberDesktopsChanged(int old);
 
     bool loadEffect(const QString& name);
     void toggleEffect(const QString& name);
@@ -191,12 +166,39 @@ public:
 
     QList<EffectWindow*> elevatedWindows() const;
 
+public Q_SLOTS:
+    void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
+
+protected Q_SLOTS:
+    void slotDesktopChanged(int old);
+    void slotClientAdded(KWin::Client *c);
+    void slotUnmanagedAdded(KWin::Unmanaged *u);
+    void slotClientClosed(KWin::Client *c);
+    void slotUnmanagedClosed(KWin::Unmanaged *u);
+    void slotClientActivated(KWin::Client *c);
+    void slotDeletedRemoved(KWin::Deleted *d);
+    void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);
+    void slotClientStartUserMovedResized(KWin::Client *c);
+    void slotClientStepUserMovedResized(KWin::Client *c, const QRect &geometry);
+    void slotClientFinishUserMovedResized(KWin::Client *c);
+    void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
+    void slotClientMinimized(KWin::Client *c, bool animate);
+    void slotClientUnminimized(KWin::Client *c, bool animate);
+    void slotClientGeometryShapeChanged(KWin::Client *c, const QRect &old);
+    void slotUnmanagedGeometryShapeChanged(KWin::Unmanaged *u, const QRect &old);
+    void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
+    void slotPropertyNotify(KWin::Toplevel *t, long atom);
+    void slotPropertyNotify(long atom);
+
 protected:
     KLibrary* findEffectLibrary(KService* service);
     void effectsChanged();
+    void setupClientConnections(KWin::Client *c);
+    void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     Effect* keyboard_grab_effect;
-    QStack<GLRenderTarget*> render_targets;
     Effect* fullscreen_effect;
     QList<EffectWindow*> elevated_windows;
     QMultiMap< int, EffectPair > effect_order;

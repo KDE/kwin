@@ -51,5 +51,5 @@ void main()
     vec3 diff = (vertex.xyz - transformedVertex.xyz)*timeLine;
     transformedVertex.xyz += diff;
 
-    gl_Position = transformedVertex*(windowTransformation*screenTransformation*modelview)*projection;
+    gl_Position = projection*(modelview*screenTransformation*windowTransformation)*transformedVertex;
 }

@@ -25,12 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
 class GlideEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     GlideEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -39,11 +42,12 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
-    virtual void windowDeleted(EffectWindow* c);
-
     static bool supported();
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
+
 private:
     class WindowInfo;
     typedef QMap< const EffectWindow*, WindowInfo > InfoHash;
@@ -65,16 +69,12 @@ private:
 class GlideEffect::WindowInfo
 {
 public:
-    WindowInfo()
-        : deleted(false)
-        , added(false)
-        , closed(false) { }
-    ~WindowInfo() {
-    }
+    WindowInfo();
+    ~WindowInfo();
     bool deleted;
     bool added;
     bool closed;
-    TimeLine timeLine;
+    QTimeLine *timeLine;
 };
 
 } // namespace

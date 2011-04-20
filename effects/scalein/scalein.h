@@ -23,23 +23,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
 class ScaleInEffect
     : public Effect
 {
+    Q_OBJECT
 public:
+    ScaleInEffect();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
     // TODO react also on virtual desktop changes
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
 private:
     bool isScaleWindow(EffectWindow* w);
-    QHash< const EffectWindow*, TimeLine > mTimeLineWindows;
+    QHash< const EffectWindow*, QTimeLine* > mTimeLineWindows;
 };
 
 } // namespace

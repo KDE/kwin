@@ -60,6 +60,10 @@ LogoutEffect::LogoutEffect()
     blurTarget = NULL;
 #endif
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 LogoutEffect::~LogoutEffect()
@@ -191,7 +195,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (blurSupported && progress > 0.0)
-        effects->pushRenderTarget(blurTarget);
+        GLRenderTarget::pushRenderTarget(blurTarget);
 #endif
     effects->paintScreen(mask, region, data);
 
@@ -204,7 +208,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 // is set as it may still be even if it wasn't rendered.
                 renderVignetting();
         } else {
-            GLRenderTarget* target = effects->popRenderTarget();
+            GLRenderTarget* target = GLRenderTarget::popRenderTarget();
             assert(target == blurTarget);
             Q_UNUSED(target);
 
@@ -292,7 +296,7 @@ void LogoutEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void LogoutEffect::windowAdded(EffectWindow* w)
+void LogoutEffect::slotWindowAdded(EffectWindow* w)
 {
     if (isLogoutDialog(w)) {
         logoutWindow = w;
@@ -306,7 +310,7 @@ void LogoutEffect::windowAdded(EffectWindow* w)
         ignoredWindows.append(w);
 }
 
-void LogoutEffect::windowClosed(EffectWindow* w)
+void LogoutEffect::slotWindowClosed(EffectWindow* w)
 {
     if (w == logoutWindow) {
         logoutWindowClosed = true;
@@ -316,7 +320,7 @@ void LogoutEffect::windowClosed(EffectWindow* w)
     }
 }
 
-void LogoutEffect::windowDeleted(EffectWindow* w)
+void LogoutEffect::slotWindowDeleted(EffectWindow* w)
 {
     windows.removeAll(w);
     ignoredWindows.removeAll(w);
@@ -363,7 +367,7 @@ void LogoutEffect::renderVignetting()
 }
 #endif
 
-void LogoutEffect::propertyNotify(EffectWindow* w, long a)
+void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (w || a != logoutAtom)
         return; // Not our atom

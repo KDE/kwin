@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+#include <QTimeLine>
 #include <QFont>
 #include <QQueue>
 
@@ -41,6 +42,7 @@ namespace KWin
 class BoxSwitchEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     BoxSwitchEffect();
     ~BoxSwitchEffect();
@@ -52,15 +54,18 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void windowDamaged(EffectWindow* w, const QRect& damage);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void windowClosed(EffectWindow* w);
     virtual void* proxy();
     void activateFromProxy(int mode, bool animate, bool showText, float positioningFactor);
     void paintWindowsBox(const QRegion& region);
+
+public Q_SLOTS:
+    void slotWindowClosed(EffectWindow* w);
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxClosed();
+    void slotTabBoxUpdated();
+    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void slotWindowDamaged(EffectWindow* w, const QRect& damage);
+
 private:
     class ItemInfo;
     void setActive();
@@ -102,8 +107,8 @@ private:
     int painting_desktop;
 
     bool mAnimateSwitch;
-    TimeLine activeTimeLine;
-    TimeLine timeLine;
+    QTimeLine activeTimeLine;
+    QTimeLine timeLine;
     bool animation;
     QRect highlight_area;
     bool highlight_is_set;

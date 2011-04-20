@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCENE_OPENGL_H
 
 #include "scene.h"
+#include "shadow.h"
 
 #include "kwinglutils.h"
 
@@ -156,18 +158,22 @@ protected:
         DecorationTop,
         DecorationLeft,
         DecorationRight,
-        DecorationBottom
+        DecorationBottom,
+        Shadow
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
+    void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const;
     void renderQuads(int mask, const QRegion& region, const WindowQuadList& quads);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation);
+    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
+    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
     void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation);
+    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
+    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
     void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
 
 private:
@@ -213,6 +219,31 @@ private:
     static Texture* m_unstyledTexture;
     static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
     static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
+};
+
+/**
+ * @short OpenGL implementation of Shadow.
+ *
+ * This class extends Shadow by the Elements required for OpenGL rendering.
+ * @author Martin Gräßlin <mgraesslin@kde.org>
+ **/
+class SceneOpenGLShadow
+    : public Shadow
+{
+public:
+    SceneOpenGLShadow(Toplevel *toplevel);
+    virtual ~SceneOpenGLShadow();
+
+    /**
+     * Returns the Texture for a specific ShadowQuad. The method takes care of performing
+     * the Texture from Pixmap operation. The calling method can use the returned Texture
+     * directly.
+     * In error case the method returns @c NULL.
+     * @return OpenGL Texture for the Shadow Quad. May be @c NULL.
+     **/
+    SceneOpenGL::Texture *textureForQuadType(WindowQuadType type);
+private:
+    SceneOpenGL::Texture m_shadowTextures[ShadowElementsCount];
 };
 
 } // namespace

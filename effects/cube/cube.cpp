@@ -71,7 +71,7 @@ CubeEffect::CubeEffect()
     , capTexture(NULL)
     , manualAngle(0.0)
     , manualVerticalAngle(0.0)
-    , currentShape(TimeLine::EaseInOutCurve)
+    , currentShape(QTimeLine::EaseInOutCurve)
     , start(false)
     , stop(false)
     , reflectionPainting(false)
@@ -103,6 +103,11 @@ CubeEffect::CubeEffect()
     m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
 
     reconfigure(ReconfigureAll);
 }
@@ -198,10 +203,10 @@ void CubeEffect::loadConfig(QString config)
         }
     }
 
-    timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);
 
-    verticalTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    verticalTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     verticalTimeLine.setDuration(rotationDuration);
 
     // do not connect the shortcut if we use cylinder or sphere
@@ -345,11 +350,11 @@ void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
 
         if (rotating || start || stop) {
-            timeLine.addTime(time);
+            timeLine.setCurrentTime(timeLine.currentTime() + time);
             rotateCube();
         }
         if (verticalRotating) {
-            verticalTimeLine.addTime(time);
+            verticalTimeLine.setCurrentTime(verticalTimeLine.currentTime() + time);
             rotateCube();
         }
     }
@@ -386,9 +391,9 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
         float zTranslate = zPosition + zoom;
         if (start)
-            zTranslate *= timeLine.value();
+            zTranslate *= timeLine.currentValue();
         if (stop)
-            zTranslate *= (1.0 - timeLine.value());
+            zTranslate *= (1.0 - timeLine.currentValue());
         // reflection
         if (reflection && mode != Sphere) {
             // restrict painting the reflections to the current screen
@@ -458,9 +463,9 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             // foreground
             float alpha = 0.7;
             if (start)
-                alpha = 0.3 + 0.4 * timeLine.value();
+                alpha = 0.3 + 0.4 * timeLine.currentValue();
             if (stop)
-                alpha = 0.3 + 0.4 * (1.0 - timeLine.value());
+                alpha = 0.3 + 0.4 * (1.0 - timeLine.currentValue());
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             ShaderManager *shaderManager = ShaderManager::instance();
@@ -553,9 +558,9 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         if (displayDesktopName) {
             double opacity = 1.0;
             if (start)
-                opacity = timeLine.value();
+                opacity = timeLine.currentValue();
             if (stop)
-                opacity = 1.0 - timeLine.value();
+                opacity = 1.0 - timeLine.currentValue();
             QRect screenRect = effects->clientArea(ScreenArea, activeScreen, frontDesktop);
             QRect frameRect = QRect(screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
                                     screenRect.width() * 0.34f, QFontMetrics(desktopNameFont).height());
@@ -576,9 +581,9 @@ void CubeEffect::rotateCube()
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
     if (start)
-        zTranslate *= timeLine.value();
+        zTranslate *= timeLine.currentValue();
     if (stop)
-        zTranslate *= (1.0 - timeLine.value());
+        zTranslate *= (1.0 - timeLine.currentValue());
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
     float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
@@ -619,15 +624,15 @@ void CubeEffect::rotateCube()
             angle = manualVerticalAngle;
         }
         if (verticalRotating) {
-            angle *= verticalTimeLine.value();
+            angle *= verticalTimeLine.currentValue();
             if (verticalPosition == Normal && verticalRotationDirection == Upwards)
-                angle = -90.0 + 90 * verticalTimeLine.value();
+                angle = -90.0 + 90 * verticalTimeLine.currentValue();
             if (verticalPosition == Normal && verticalRotationDirection == Downwards)
-                angle = 90.0 - 90 * verticalTimeLine.value();
-            angle += manualVerticalAngle * (1.0 - verticalTimeLine.value());
+                angle = 90.0 - 90 * verticalTimeLine.currentValue();
+            angle += manualVerticalAngle * (1.0 - verticalTimeLine.currentValue());
         }
         if (stop)
-            angle *= (1.0 - timeLine.value());
+            angle *= (1.0 - timeLine.currentValue());
         m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
         m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
         m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
@@ -646,7 +651,7 @@ void CubeEffect::rotateCube()
             if (tempFrontDesktop > effects->numberOfDesktops())
                 tempFrontDesktop = 1;
         }
-        float rotationAngle = internalCubeAngle * timeLine.value();
+        float rotationAngle = internalCubeAngle * timeLine.currentValue();
         if (rotationAngle > internalCubeAngle * 0.5f) {
             rotationAngle -= internalCubeAngle;
             if (!desktopChangedWhileRotating) {
@@ -669,9 +674,9 @@ void CubeEffect::rotateCube()
             rotationAngle *= -1;
         }
         if (stop)
-            rotationAngle = manualAngle * (1.0 - timeLine.value());
+            rotationAngle = manualAngle * (1.0 - timeLine.currentValue());
         else
-            rotationAngle += manualAngle * (1.0 - timeLine.value());
+            rotationAngle += manualAngle * (1.0 - timeLine.currentValue());
         m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
         m_rotationMatrix.rotate(rotationAngle, 0.0, 1.0, 0.0);
         m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
@@ -685,9 +690,9 @@ void CubeEffect::paintCube(int mask, QRegion region, ScreenPaintData& data)
     cube_painting = true;
     float zTranslate = zPosition + zoom;
     if (start)
-        zTranslate *= timeLine.value();
+        zTranslate *= timeLine.currentValue();
     if (stop)
-        zTranslate *= (1.0 - timeLine.value());
+        zTranslate *= (1.0 - timeLine.currentValue());
 
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
@@ -753,9 +758,9 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         ShaderManager::instance()->pushShader(m_capShader);
         float opacity = cubeOpacity;
         if (start) {
-            opacity *= timeLine.value();
+            opacity *= timeLine.currentValue();
         } else if (stop) {
-            opacity *= (1.0 - timeLine.value());
+            opacity *= (1.0 - timeLine.currentValue());
         }
         m_capShader->setUniform("u_opacity", opacity);
         m_capShader->setUniform("u_mirror", 1);
@@ -1051,28 +1056,28 @@ void CubeEffect::postPaintScreen()
     effects->postPaintScreen();
     if (activated) {
         if (start) {
-            if (timeLine.value() == 1.0) {
+            if (timeLine.currentValue() == 1.0) {
                 start = false;
-                timeLine.setProgress(0.0);
+                timeLine.setCurrentTime(0);
                 // more rotations?
                 if (!rotations.empty()) {
                     rotationDirection = rotations.dequeue();
                     rotating = true;
                     // change the curve shape if current shape is not easeInOut
-                    if (currentShape != TimeLine::EaseInOutCurve) {
+                    if (currentShape != QTimeLine::EaseInOutCurve) {
                         // more rotations follow -> linear curve
                         if (!rotations.empty()) {
-                            currentShape = TimeLine::LinearCurve;
+                            currentShape = QTimeLine::LinearCurve;
                         }
                         // last rotation step -> easeOut curve
                         else {
-                            currentShape = TimeLine::EaseOutCurve;
+                            currentShape = QTimeLine::EaseOutCurve;
                         }
                         timeLine.setCurveShape(currentShape);
                     } else {
                         // if there is at least one more rotation, we can change to easeIn
                         if (!rotations.empty()) {
-                            currentShape = TimeLine::EaseInCurve;
+                            currentShape = QTimeLine::EaseInCurve;
                             timeLine.setCurveShape(currentShape);
                         }
                     }
@@ -1082,10 +1087,10 @@ void CubeEffect::postPaintScreen()
             return; // schedule_close could have been called, start has to finish first
         }
         if (stop) {
-            if (timeLine.value() == 1.0) {
+            if (timeLine.currentValue() == 1.0) {
                 effects->setCurrentDesktop(frontDesktop);
                 stop = false;
-                timeLine.setProgress(0.0);
+                timeLine.setCurrentTime(0);
                 activated = false;
                 // set the new desktop
                 if (keyboard_grab)
@@ -1102,8 +1107,8 @@ void CubeEffect::postPaintScreen()
             effects->addRepaintFull();
         }
         if (rotating || verticalRotating) {
-            if (rotating && timeLine.value() == 1.0) {
-                timeLine.setProgress(0.0);
+            if (rotating && timeLine.currentValue() == 1.0) {
+                timeLine.setCurrentTime(0.0);
                 rotating = false;
                 desktopChangedWhileRotating = false;
                 manualAngle = 0.0;
@@ -1112,33 +1117,33 @@ void CubeEffect::postPaintScreen()
                     rotationDirection = rotations.dequeue();
                     rotating = true;
                     // change the curve shape if current shape is not easeInOut
-                    if (currentShape != TimeLine::EaseInOutCurve) {
+                    if (currentShape != QTimeLine::EaseInOutCurve) {
                         // more rotations follow -> linear curve
                         if (!rotations.empty()) {
-                            currentShape = TimeLine::LinearCurve;
+                            currentShape = QTimeLine::LinearCurve;
                         }
                         // last rotation step -> easeOut curve
                         else {
-                            currentShape = TimeLine::EaseOutCurve;
+                            currentShape = QTimeLine::EaseOutCurve;
                         }
                         timeLine.setCurveShape(currentShape);
                     } else {
                         // if there is at least one more rotation, we can change to easeIn
                         if (!rotations.empty()) {
-                            currentShape = TimeLine::EaseInCurve;
+                            currentShape = QTimeLine::EaseInCurve;
                             timeLine.setCurveShape(currentShape);
                         }
                     }
                 } else {
                     // reset curve shape if there are no more rotations
-                    if (currentShape != TimeLine::EaseInOutCurve) {
-                        currentShape = TimeLine::EaseInOutCurve;
+                    if (currentShape != QTimeLine::EaseInOutCurve) {
+                        currentShape = QTimeLine::EaseInOutCurve;
                         timeLine.setCurveShape(currentShape);
                     }
                 }
             }
-            if (verticalRotating && verticalTimeLine.value() == 1.0) {
-                verticalTimeLine.setProgress(0.0);
+            if (verticalRotating && verticalTimeLine.currentValue() == 1.0) {
+                verticalTimeLine.setCurrentTime(0);
                 verticalRotating = false;
                 manualVerticalAngle = 0.0;
                 // more rotations?
@@ -1262,28 +1267,28 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
         if (start) {
-            opacity = 1.0 - (1.0 - opacity) * timeLine.value();
+            opacity = 1.0 - (1.0 - opacity) * timeLine.currentValue();
             if (reflectionPainting)
-                opacity = 0.5 + (cubeOpacity - 0.5) * timeLine.value();
+                opacity = 0.5 + (cubeOpacity - 0.5) * timeLine.currentValue();
             // fade in windows belonging to different desktops
             if (painting_desktop == effects->currentDesktop() && (!w->isOnDesktop(painting_desktop)))
-                opacity = timeLine.value() * cubeOpacity;
+                opacity = timeLine.currentValue() * cubeOpacity;
         }
         if (stop) {
-            opacity = 1.0 - (1.0 - opacity) * (1.0 - timeLine.value());
+            opacity = 1.0 - (1.0 - opacity) * (1.0 - timeLine.currentValue());
             if (reflectionPainting)
-                opacity = 0.5 + (cubeOpacity - 0.5) * (1.0 - timeLine.value());
+                opacity = 0.5 + (cubeOpacity - 0.5) * (1.0 - timeLine.currentValue());
             // fade out windows belonging to different desktops
             if (painting_desktop == effects->currentDesktop() && (!w->isOnDesktop(painting_desktop)))
-                opacity = cubeOpacity * (1.0 - timeLine.value());
+                opacity = cubeOpacity * (1.0 - timeLine.currentValue());
         }
         // z-Ordering
         if (!w->isDesktop() && !w->isDock() && useZOrdering && !w->isOnAllDesktops()) {
             float zOrdering = (effects->stackingOrder().indexOf(w) + 1) * zOrderingFactor;
             if (start)
-                zOrdering *= timeLine.value();
+                zOrdering *= timeLine.currentValue();
             if (stop)
-                zOrdering *= (1.0 - timeLine.value());
+                zOrdering *= (1.0 - timeLine.currentValue());
             data.zTranslate += zOrdering;
         }
         // check for windows belonging to the previous desktop
@@ -1354,15 +1359,15 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             // we have to change opacity values for fade in/out of windows which are shown on front-desktop
             if (prev_desktop == effects->currentDesktop() && w->x() < rect.x()) {
                 if (start)
-                    opacity = timeLine.value() * cubeOpacity;
+                    opacity = timeLine.currentValue() * cubeOpacity;
                 if (stop)
-                    opacity = cubeOpacity * (1.0 - timeLine.value());
+                    opacity = cubeOpacity * (1.0 - timeLine.currentValue());
             }
             if (next_desktop == effects->currentDesktop() && w->x() + w->width() > rect.x() + rect.width()) {
                 if (start)
-                    opacity = timeLine.value() * cubeOpacity;
+                    opacity = timeLine.currentValue() * cubeOpacity;
                 if (stop)
-                    opacity = cubeOpacity * (1.0 - timeLine.value());
+                    opacity = cubeOpacity * (1.0 - timeLine.currentValue());
             }
         }
         // HACK set opacity to 0.99 in case of fully opaque to ensure that windows are painted in correct sequence
@@ -1417,9 +1422,9 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 cylinderShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
                 float factor = 0.0f;
                 if (start)
-                    factor = 1.0f - timeLine.value();
+                    factor = 1.0f - timeLine.currentValue();
                 if (stop)
-                    factor = timeLine.value();
+                    factor = timeLine.currentValue();
                 cylinderShader->setUniform("timeLine", factor);
                 data.shader = cylinderShader;
             }
@@ -1429,16 +1434,16 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 sphereShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
                 float factor = 0.0f;
                 if (start)
-                    factor = 1.0f - timeLine.value();
+                    factor = 1.0f - timeLine.currentValue();
                 if (stop)
-                    factor = timeLine.value();
+                    factor = timeLine.currentValue();
                 sphereShader->setUniform("timeLine", factor);
                 data.shader = sphereShader;
             }
             if (reflectionPainting) {
                 shader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
             } else {
-                shader->setUniform("screenTransformation", m_rotationMatrix * origMatrix);
+                shader->setUniform("screenTransformation", origMatrix*m_rotationMatrix);
             }
         }
     }
@@ -1808,7 +1813,7 @@ void CubeEffect::rotateToDesktop(int desktop)
     }
     // change timeline curve if more rotations are following
     if (!rotations.empty()) {
-        currentShape = TimeLine::EaseInCurve;
+        currentShape = QTimeLine::EaseInCurve;
         timeLine.setCurveShape(currentShape);
     }
 }
@@ -1865,7 +1870,7 @@ void CubeEffect::setActive(bool active)
     }
 }
 
-void CubeEffect::mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
                               Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (!activated)
@@ -1969,7 +1974,7 @@ void CubeEffect::windowInputMouseEvent(Window w, QEvent* e)
     }
 }
 
-void CubeEffect::tabBoxAdded(int mode)
+void CubeEffect::slotTabBoxAdded(int mode)
 {
     if (activated)
         return;
@@ -1983,7 +1988,7 @@ void CubeEffect::tabBoxAdded(int mode)
     }
 }
 
-void CubeEffect::tabBoxUpdated()
+void CubeEffect::slotTabBoxUpdated()
 {
     if (activated) {
         rotateToDesktop(effects->currentTabBoxDesktop());
@@ -1991,7 +1996,7 @@ void CubeEffect::tabBoxUpdated()
     }
 }
 
-void CubeEffect::tabBoxClosed()
+void CubeEffect::slotTabBoxClosed()
 {
     if (activated) {
         effects->unrefTabBox();

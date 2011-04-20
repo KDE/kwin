@@ -57,8 +57,7 @@ static int nominalCursorSize(int iconSize)
 KWIN_EFFECT(zoom, ZoomEffect)
 
 ZoomEffect::ZoomEffect()
-    : QObject()
-    , Effect()
+    : Effect()
     , zoom(1)
     , target_zoom(1)
     , polling(false)
@@ -119,6 +118,8 @@ ZoomEffect::ZoomEffect()
     timeline.setDuration(350);
     timeline.setFrameRange(0, 100);
     connect(&timeline, SIGNAL(frameChanged(int)), this, SLOT(timelineFrameChanged(int)));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
 
     reconfigure(ReconfigureAll);
 }
@@ -458,7 +459,7 @@ void ZoomEffect::moveMouseToCenter()
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
 
-void ZoomEffect::mouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
+void ZoomEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
                               Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (zoom == 1.0)

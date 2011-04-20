@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006-2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -989,10 +990,8 @@ bool GLShader::setUniform(int location, const QMatrix4x4 &value)
         GLfloat m[16];
         const qreal *data = value.constData();
         // i is column, j is row for m
-        for (int i = 0; i < 4; ++i) {
-            for (int j = 0; j < 4; ++j) {
-                m[i*4+j] = data[j*4+i];
-            }
+        for (int i = 0; i < 16; ++i) {
+            m[i] = data[i];
         }
         glUniformMatrix4fv(location, 1, GL_FALSE, m);
     }
@@ -1048,10 +1047,10 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
     if (location >= 0) {
         GLfloat m[16];
         glGetUniformfv(mProgram, location, m);
-        QMatrix4x4 matrix(m[0], m[1],  m[2], m[3],
-                          m[4], m[5],  m[6], m[7],
-                          m[8], m[9], m[10], m[11],
-                          m[12], m[13], m[14], m[15]);
+        QMatrix4x4 matrix(m[0], m[4], m[8],  m[12],
+                          m[1], m[5], m[9],  m[13],
+                          m[2], m[6], m[10], m[14],
+                          m[3], m[7], m[11], m[15]);
         matrix.optimize();
         return matrix;
     } else {
@@ -1326,6 +1325,7 @@ void ShaderManager::resetShader(ShaderType type)
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::sSupported = false;
+QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 
 void GLRenderTarget::initStatic()
 {
@@ -1334,6 +1334,26 @@ void GLRenderTarget::initStatic()
 #else
     sSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
 #endif
+}
+
+bool GLRenderTarget::isRenderTargetBound()
+{
+    return !s_renderTargets.isEmpty();
+}
+
+void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
+{
+    target->enable();
+    s_renderTargets.push(target);
+}
+
+GLRenderTarget* GLRenderTarget::popRenderTarget()
+{
+    GLRenderTarget* ret = s_renderTargets.pop();
+    ret->disable();
+    if (!s_renderTargets.isEmpty())
+        s_renderTargets.top()->enable();
+    return ret;
 }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)

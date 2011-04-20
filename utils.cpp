@@ -421,6 +421,13 @@ bool isLocalMachine(const QByteArray& host)
             *dot = '\0';
             if (host == hostnamebuf)
                 return true;
+        } else { // e.g. LibreOffice likes to give FQDN, even if gethostname() doesn't include domain
+            QByteArray h = hostnamebuf;
+            if( getdomainname( hostnamebuf, sizeof hostnamebuf ) >= 0 ) {
+                hostnamebuf[sizeof(hostnamebuf)-1] = 0;
+                if( host == h + '.' + QByteArray( hostnamebuf ))
+                    return true;
+            }
         }
     }
     return false;

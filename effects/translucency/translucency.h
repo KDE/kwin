@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TRANSLUCENCY_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -29,13 +30,17 @@ namespace KWin
 class TranslucencyEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     TranslucencyEffect();
     virtual void reconfigure(ReconfigureFlags);
-    virtual void windowUserMovedResized(EffectWindow* c, bool first, bool last);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowActivated(EffectWindow* w);
+
+public Q_SLOTS:
+    void slotWindowActivated(EffectWindow* w);
+    void slotWindowStartStopUserMovedResized(EffectWindow *w);
+
 private:
     bool isInactive(const EffectWindow *w) const;
     bool individualmenuconfig;
@@ -55,8 +60,8 @@ private:
     EffectWindow* previous;
     EffectWindow* active;
 
-    TimeLine moveresize_timeline;
-    TimeLine activeinactive_timeline;
+    QTimeLine moveresize_timeline;
+    QTimeLine activeinactive_timeline;
 };
 
 } // namespace

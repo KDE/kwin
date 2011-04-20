@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_basic.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "shadow.h"
 #include "compositingprefs.h"
 #include "notifications.h"
 
@@ -89,39 +90,16 @@ void Workspace::setupCompositing()
 #ifdef KWIN_HAVE_COMPOSITING
     if (scene != NULL)
         return;
-    if (!options->useCompositing && getenv("KWIN_COMPOSE") == NULL) {
-        kDebug(1212) << "Compositing is turned off in options or disabled";
-        return;
-    } else if (compositingSuspended) {
+    if (compositingSuspended) {
         kDebug(1212) << "Compositing is suspended";
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
         kError(1212) << "Compositing is not possible";
         return;
     }
-    CompositingType type = options->compositingMode;
-    if (getenv("KWIN_COMPOSE")) {
-        char c = getenv("KWIN_COMPOSE")[ 0 ];
-        switch(c) {
-        case 'O':
-            kDebug(1212) << "Compositing forced to OpenGL mode by environment variable";
-            type = OpenGLCompositing;
-            break;
-        case 'X':
-            kDebug(1212) << "Compositing forced to XRender mode by environment variable";
-            type = XRenderCompositing;
-            break;
-        case 'N':
-            if (getenv("KDE_FAILSAFE"))
-                kDebug(1212) << "Compositing disabled forcefully by KDE failsafe mode";
-            else
-                kDebug(1212) << "Compositing disabled forcefully by environment variable";
-            return; // Return not break
-        default:
-            kDebug(1212) << "Unknown KWIN_COMPOSE mode set, ignoring";
-            break;
-        }
-    }
+
+    if (!options->compositingInitialized)
+        options->reloadCompositingSettings(true);
 
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
@@ -129,7 +107,7 @@ void Workspace::setupCompositing()
     connect(cm_selection, SIGNAL(lostOwnership()), SLOT(lostCMSelection()));
     cm_selection->claim(true);   // force claiming
 
-    switch(type) {
+    switch(options->compositingMode) {
         /*case 'B':
             kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
@@ -295,11 +273,37 @@ void Workspace::toggleCompositing()
         QString shortcut, message;
         if (KAction* action = qobject_cast<KAction*>(keys->action("Suspend Compositing")))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
-        if (!shortcut.isEmpty() && options->useCompositing) {
+        if (!shortcut.isEmpty()) {
             // display notification only if there is the shortcut
             message = i18n("Desktop effects have been suspended by another application.<br/>"
                            "You can resume using the '%1' shortcut.", shortcut);
             Notify::raise(Notify::CompositingSuspendedDbus, message);
+        }
+    }
+}
+
+void Workspace::updateCompositeBlocking(Client *c)
+{
+    if (c) { // if c == 0 we just check if we can resume
+        if (c->isBlockingCompositing()) {
+            compositingBlocked = true;
+            suspendCompositing(true);
+        }
+    }
+    else if (compositingBlocked) {  // lost a client and we're blocked - can we resume?
+        // NOTICE do NOT check for "compositingSuspended" or "!compositing()"
+        // only "resume" if it was really disabled for a block
+        bool resume = true;
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+            if ((*it)->isBlockingCompositing()) {
+                resume = false;
+                break;
+            }
+        }
+        if (resume) { // do NOT attempt to call suspendCompositing(false); from within the eventchain!
+            compositingBlocked = false;
+            if (compositingSuspended)
+                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
         }
     }
 }
@@ -403,11 +407,12 @@ void Workspace::performCompositing()
     foreach (Toplevel * c, windows) {
         // This could be possibly optimized WRT obscuring, but that'd need being already
         // past prePaint() phase - probably not worth it.
-        // TODO I think effects->transformWindowDamage() doesn't need to be called here,
-        // pre-paint will extend painted window areas as necessary.
         repaints_region |= c->repaints().translated(c->pos());
         repaints_region |= c->decorationPendingRegion();
         c->resetRepaints(c->decorationRect());
+        if (c->hasShadow()) {
+            c->resetRepaints(c->shadow()->shadowRegion().boundingRect());
+        }
     }
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
@@ -825,7 +830,7 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     r &= rect();
     damage_region += r;
     repaints_region += r;
-    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged(effectWindow(), r);
+    emit damaged(this, r);
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
@@ -845,7 +850,7 @@ void Toplevel::addDamageFull()
         return;
     damage_region = rect();
     repaints_region = rect();
-    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged(effectWindow(), rect());
+    emit damaged(this, rect());
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
@@ -882,6 +887,9 @@ void Toplevel::addRepaint(int x, int y, int w, int h)
 void Toplevel::addRepaintFull()
 {
     repaints_region = rect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 
@@ -899,10 +907,7 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
     if (!compositing())
         return;
-    if (effectWindow() == NULL)   // TODO - this can happen during window destruction
-        return workspace()->addRepaint(r2);
-    QRect r = effects->transformWindowDamage(effectWindow(), r2);
-    workspace()->addRepaint(r);
+    workspace()->addRepaint(r2);
 }
 
 bool Toplevel::updateUnredirectedState()
@@ -975,6 +980,9 @@ bool Client::shouldUnredirect() const
 void Client::addRepaintFull()
 {
     repaints_region = decorationRect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 
@@ -1018,6 +1026,9 @@ bool Deleted::shouldUnredirect() const
 void Deleted::addRepaintFull()
 {
     repaints_region = decorationRect();
+    if (hasShadow()) {
+        repaints_region = repaints_region.united(shadow()->shadowRegion());
+    }
     workspace()->checkCompositeTimer();
 }
 

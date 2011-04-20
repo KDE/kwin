@@ -42,7 +42,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
+#include <QtGui/QX11Info>
 #include <QtCore/QObjectList>
+
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 namespace Oxygen
 {
@@ -59,7 +63,8 @@ namespace Oxygen
         _forceActive( false ),
         _mouseButton( Qt::NoButton ),
         _itemData( this ),
-        _sourceItem( -1 )
+        _sourceItem( -1 ),
+        _shadowAtom( 0 )
     {}
 
     //___________________________________________
@@ -166,6 +171,9 @@ namespace Oxygen
             if( !hasSizeGrip() ) createSizeGrip();
 
         } else if( hasSizeGrip() ) deleteSizeGrip();
+
+        // needs to remove shadow property on window since shadows are handled by the decoration
+        removeShadowHint();
 
     }
 
@@ -575,10 +583,16 @@ namespace Oxygen
 
         } else {
 
-            const int offset = layoutMetric( LM_OuterPaddingTop );
+            int offset = layoutMetric( LM_OuterPaddingTop );
 
+            // radial gradient positionning
             int height = 64 - Configuration::ButtonDefault;
             if( !hideTitleBar() ) height += configuration().buttonSize();
+            if( isMaximized() )
+            {
+                offset -= 3;
+                height -= 3;
+            }
 
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
@@ -1825,6 +1839,20 @@ namespace Oxygen
         assert( hasSizeGrip() );
         _sizeGrip->deleteLater();
         _sizeGrip = 0;
+    }
+
+    //_________________________________________________________________
+    void Client::removeShadowHint( void )
+    {
+
+        // do nothing if no window id
+        if( !windowId() ) return;
+
+        // create atom
+        if( !_shadowAtom )
+        { _shadowAtom = XInternAtom( QX11Info::display(), "_KDE_NET_WM_SHADOW", False); }
+
+        XDeleteProperty(QX11Info::display(), windowId(), _shadowAtom);
     }
 
 }

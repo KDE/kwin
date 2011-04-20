@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QQueue>
 #include <QMatrix4x4>
+#include <QTimeLine>
 #include "cube_inside.h"
 #include "cube_proxy.h"
 
@@ -34,7 +35,7 @@ namespace KWin
 {
 
 class CubeEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -48,12 +49,7 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void mouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
-                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxUpdated();
-    virtual void tabBoxClosed();
 
     // proxy functions
     virtual void* proxy();
@@ -70,6 +66,11 @@ private slots:
     void cubeShortcutChanged(const QKeySequence& seq);
     void cylinderShortcutChanged(const QKeySequence& seq);
     void sphereShortcutChanged(const QKeySequence& seq);
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxUpdated();
+    void slotTabBoxClosed();
+    void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
+                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private:
     enum RotationDirection {
         Left,
@@ -119,8 +120,8 @@ private:
     bool verticalRotating;
     bool desktopChangedWhileRotating;
     bool paintCaps;
-    TimeLine timeLine;
-    TimeLine verticalTimeLine;
+    QTimeLine timeLine;
+    QTimeLine verticalTimeLine;
     RotationDirection rotationDirection;
     RotationDirection verticalRotationDirection;
     VerticalRotationPosition verticalPosition;
@@ -133,7 +134,7 @@ private:
     GLTexture* capTexture;
     float manualAngle;
     float manualVerticalAngle;
-    TimeLine::CurveShape currentShape;
+    QTimeLine::CurveShape currentShape;
     bool start;
     bool stop;
     bool reflectionPainting;

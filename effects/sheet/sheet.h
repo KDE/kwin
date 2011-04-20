@@ -24,12 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+class QTimeLine;
+
 namespace KWin
 {
 
 class SheetEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     SheetEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -38,11 +41,12 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
-    virtual void windowDeleted(EffectWindow* c);
-
     static bool supported();
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
+    void slotWindowDeleted(EffectWindow *w);
 private:
     class WindowInfo;
     typedef QMap< const EffectWindow*, WindowInfo > InfoMap;
@@ -55,16 +59,12 @@ private:
 class SheetEffect::WindowInfo
 {
 public:
-    WindowInfo()
-        : deleted(false)
-        , added(false)
-        , closed(false)
-        , parentY(0) {
-    }
+    WindowInfo();
+    ~WindowInfo();
     bool deleted;
     bool added;
     bool closed;
-    TimeLine timeLine;
+    QTimeLine *timeLine;
     int parentY;
 };
 

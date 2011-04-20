@@ -98,6 +98,7 @@ set(kwin_KDEINIT_SRCS
    events.cpp 
    killwindow.cpp 
    geometrytip.cpp 
+   shadow.cpp
    sm.cpp 
    group.cpp 
    bridge.cpp 

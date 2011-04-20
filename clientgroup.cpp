@@ -110,7 +110,7 @@ void ClientGroup::add(Client* c, int before, bool becomeVisible)
 
     // Notify effects of merge
     if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->clientGroupItemAdded(
+        static_cast<EffectsHandlerImpl*>(effects)->slotClientGroupItemAdded(
             c->effectWindow(), clients_[visible_]->effectWindow());
 
     // Actually remove from old group if required and update
@@ -165,7 +165,7 @@ void ClientGroup::remove(Client* c, const QRect& newGeom, bool toNullGroup)
 
     // Notify effects of removal
     if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->clientGroupItemRemoved(
+        static_cast<EffectsHandlerImpl*>(effects)->slotClientGroupItemRemoved(
             c->effectWindow(), newVisible->effectWindow());
 
     setVisible(newVisible);   // Display new window before removing old one
@@ -258,7 +258,7 @@ void ClientGroup::setVisible(Client* c)
 
     // Notify effects of switch
     if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->clientGroupItemSwitched(
+        static_cast<EffectsHandlerImpl*>(effects)->slotClientGroupItemSwitched(
             clients_[visible_]->effectWindow(), c->effectWindow());
 
     visible_ = indexOfClient(c);

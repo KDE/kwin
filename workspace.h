@@ -180,6 +180,19 @@ public:
     void reserveElectricBorderActions(bool reserve);
     void reserveElectricBorderSwitching(bool reserve);
 
+    /**
+     * @return List of clients currently managed by Workspace
+     **/
+    const ClientList &clientList() const {
+        return clients;
+    }
+    /**
+     * @return List of unmanaged "clients" currently registered in Workspace
+     **/
+    const UnmanagedList &unmanagedList() const {
+        return unmanaged;
+    }
+
     //-------------------------------------------------
     // Tiling
 public:
@@ -297,25 +310,6 @@ public:
      */
     int desktopToLeft(int id = 0, bool wrap = true) const;
 
-    /**
-     * @returns Whether or not the layout is allowed to be modified by the user.
-     */
-    bool isDesktopLayoutDynamic() const;
-    /**
-     * Sets whether or not this layout can be modified by the user.
-     */
-    void setDesktopLayoutDynamicity(bool dynamicity);
-    /**
-     * Create new desktop at the point @a coords
-     * @returns The ID of the created desktop
-     */
-    int addDesktop(QPoint coords);
-    /**
-     * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
-     * was deleted will have their IDs' decremented.
-     */
-    void deleteDesktop(int id);
-
 private:
     int desktopCount_;
     QSize desktopGridSize_;
@@ -323,7 +317,6 @@ private:
     int currentDesktop_;
     QString activity_;
     QStringList allActivities_;
-    bool desktopLayoutDynamicity_;
 
     KActivityController activityController_;
 
@@ -372,6 +365,9 @@ public:
     void refTabBox();
     void unrefTabBox();
     void closeTabBox(bool abort = false);
+    TabBox::TabBox *tabBox() const {
+        return tab_box;
+    }
 
     // Tabbing
     void addClientGroup(ClientGroup* group);
@@ -408,6 +404,7 @@ public:
     void toggleEffect(const QString& name);
     void reconfigureEffect(const QString& name);
     void unloadEffect(const QString& name);
+    void updateCompositeBlocking(Client* c = NULL);
 
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
@@ -567,180 +564,13 @@ public slots:
     void slotSwitchDesktopUp();
     void slotSwitchDesktopDown();
 
-    void slotSwitchToDesktop(int);
-    void slotSwitchToDesktop1() {
-        return slotSwitchToDesktop(1);
-    }
-    void slotSwitchToDesktop2() {
-        return slotSwitchToDesktop(2);
-    }
-    void slotSwitchToDesktop3() {
-        return slotSwitchToDesktop(3);
-    }
-    void slotSwitchToDesktop4() {
-        return slotSwitchToDesktop(4);
-    }
-    void slotSwitchToDesktop5() {
-        return slotSwitchToDesktop(5);
-    }
-    void slotSwitchToDesktop6() {
-        return slotSwitchToDesktop(6);
-    }
-    void slotSwitchToDesktop7() {
-        return slotSwitchToDesktop(7);
-    }
-    void slotSwitchToDesktop8() {
-        return slotSwitchToDesktop(8);
-    }
-    void slotSwitchToDesktop9() {
-        return slotSwitchToDesktop(9);
-    }
-    void slotSwitchToDesktop10() {
-        return slotSwitchToDesktop(10);
-    }
-    void slotSwitchToDesktop11() {
-        return slotSwitchToDesktop(11);
-    }
-    void slotSwitchToDesktop12() {
-        return slotSwitchToDesktop(12);
-    }
-    void slotSwitchToDesktop13() {
-        return slotSwitchToDesktop(13);
-    }
-    void slotSwitchToDesktop14() {
-        return slotSwitchToDesktop(14);
-    }
-    void slotSwitchToDesktop15() {
-        return slotSwitchToDesktop(15);
-    }
-    void slotSwitchToDesktop16() {
-        return slotSwitchToDesktop(16);
-    }
-    void slotSwitchToDesktop17() {
-        return slotSwitchToDesktop(17);
-    }
-    void slotSwitchToDesktop18() {
-        return slotSwitchToDesktop(18);
-    }
-    void slotSwitchToDesktop19() {
-        return slotSwitchToDesktop(19);
-    }
-    void slotSwitchToDesktop20() {
-        return slotSwitchToDesktop(20);
-    }
+    void slotSwitchToDesktop();
     //void slotSwitchToWindow( int );
-    void slotWindowToDesktop(int);
-    void slotWindowToDesktop1() {
-        return slotWindowToDesktop(1);
-    }
-    void slotWindowToDesktop2() {
-        return slotWindowToDesktop(2);
-    }
-    void slotWindowToDesktop3() {
-        return slotWindowToDesktop(3);
-    }
-    void slotWindowToDesktop4() {
-        return slotWindowToDesktop(4);
-    }
-    void slotWindowToDesktop5() {
-        return slotWindowToDesktop(5);
-    }
-    void slotWindowToDesktop6() {
-        return slotWindowToDesktop(6);
-    }
-    void slotWindowToDesktop7() {
-        return slotWindowToDesktop(7);
-    }
-    void slotWindowToDesktop8() {
-        return slotWindowToDesktop(8);
-    }
-    void slotWindowToDesktop9() {
-        return slotWindowToDesktop(9);
-    }
-    void slotWindowToDesktop10() {
-        return slotWindowToDesktop(10);
-    }
-    void slotWindowToDesktop11() {
-        return slotWindowToDesktop(11);
-    }
-    void slotWindowToDesktop12() {
-        return slotWindowToDesktop(12);
-    }
-    void slotWindowToDesktop13() {
-        return slotWindowToDesktop(13);
-    }
-    void slotWindowToDesktop14() {
-        return slotWindowToDesktop(14);
-    }
-    void slotWindowToDesktop15() {
-        return slotWindowToDesktop(15);
-    }
-    void slotWindowToDesktop16() {
-        return slotWindowToDesktop(16);
-    }
-    void slotWindowToDesktop17() {
-        return slotWindowToDesktop(17);
-    }
-    void slotWindowToDesktop18() {
-        return slotWindowToDesktop(18);
-    }
-    void slotWindowToDesktop19() {
-        return slotWindowToDesktop(19);
-    }
-    void slotWindowToDesktop20() {
-        return slotWindowToDesktop(20);
-    }
+    void slotWindowToDesktop();
+
     //void slotWindowToListPosition( int );
-    void slotSwitchToScreen(int);
-    void slotSwitchToScreen0() {
-        return slotSwitchToScreen(0);
-    }
-    void slotSwitchToScreen1() {
-        return slotSwitchToScreen(1);
-    }
-    void slotSwitchToScreen2() {
-        return slotSwitchToScreen(2);
-    }
-    void slotSwitchToScreen3() {
-        return slotSwitchToScreen(3);
-    }
-    void slotSwitchToScreen4() {
-        return slotSwitchToScreen(4);
-    }
-    void slotSwitchToScreen5() {
-        return slotSwitchToScreen(5);
-    }
-    void slotSwitchToScreen6() {
-        return slotSwitchToScreen(6);
-    }
-    void slotSwitchToScreen7() {
-        return slotSwitchToScreen(7);
-    }
-    void slotWindowToScreen(int);
-    void slotWindowToScreen0() {
-        return slotWindowToScreen(0);
-    }
-    void slotWindowToScreen1() {
-        return slotWindowToScreen(1);
-    }
-    void slotWindowToScreen2() {
-        return slotWindowToScreen(2);
-    }
-    void slotWindowToScreen3() {
-        return slotWindowToScreen(3);
-    }
-    void slotWindowToScreen4() {
-        return slotWindowToScreen(4);
-    }
-    void slotWindowToScreen5() {
-        return slotWindowToScreen(5);
-    }
-    void slotWindowToScreen6() {
-        return slotWindowToScreen(6);
-    }
-    void slotWindowToScreen7() {
-        return slotWindowToScreen(7);
-    }
+    void slotSwitchToScreen();
+    void slotWindowToScreen();
     void slotSwitchToNextScreen();
     void slotWindowToNextScreen();
     void slotToggleShowDesktop();
@@ -906,10 +736,17 @@ Q_SIGNALS:
 signals:
     void desktopPresenceChanged(KWin::Client*, int);
     void currentDesktopChanged(int);
+    void numberDesktopsChanged(int oldNumberOfDesktops);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);
     void groupAdded(KWin::Group*);
+    void unmanagedAdded(KWin::Unmanaged*);
+    void deletedRemoved(KWin::Deleted*);
+    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
+                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void propertyNotify(long a);
 
 private:
     void init();
@@ -1180,7 +1017,7 @@ private:
     friend class StackingUpdatesBlocker;
 
     KSelectionOwner* cm_selection;
-    bool compositingSuspended;
+    bool compositingSuspended, compositingBlocked;
     QBasicTimer compositeTimer;
     qint64 nextPaintReference;
     QTimer mousePollingTimer;
@@ -1294,16 +1131,6 @@ inline int Workspace::currentDesktop() const
 inline int Workspace::desktopAtCoords(QPoint coords) const
 {
     return desktopGrid_[coords.y() * desktopGridSize_.width() + coords.x()];
-}
-
-inline bool Workspace::isDesktopLayoutDynamic() const
-{
-    return desktopLayoutDynamicity_;
-}
-
-inline void Workspace::setDesktopLayoutDynamicity(bool dynamicity)
-{
-    desktopLayoutDynamicity_ = dynamicity;
 }
 
 //---------------------------------------------------------

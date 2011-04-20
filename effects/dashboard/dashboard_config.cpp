@@ -30,10 +30,10 @@ DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList
 {
     ui.setupUi(this);
 
-    connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(valueChanged(int)));
+    connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(changed()));
 
     load();
 }
@@ -47,14 +47,14 @@ void DashboardEffectConfig::load()
     KCModule::load();
     KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
 
-    QString brightness = config.readEntry("Brightness", "5");
-    ui.brightness->setValue(brightness.toInt());
+    const int brightness = config.readEntry<int>("Brightness", 50);
+    ui.brightness->setValue(brightness);
 
-    QString saturation = config.readEntry("Saturation", "5");
-    ui.saturation->setValue(saturation.toInt());
+    const int saturation = config.readEntry<int>("Saturation", 50);
+    ui.saturation->setValue(saturation);
 
-    QString duration = config.readEntry("Duration", "500");
-    ui.duration->setValue(duration.toInt());
+    const int duration = config.readEntry("Duration", 500);
+    ui.duration->setValue(duration);
 
     bool blur = config.readEntry("Blur", false);
     ui.blur->setChecked(blur);
@@ -79,14 +79,12 @@ void DashboardEffectConfig::save()
     EffectsHandler::sendReloadMessage("dashboard");
 }
 
-void DashboardEffectConfig::valueChanged(int value)
-{
-    Q_UNUSED(value)
-    emit changed(true);
-}
-
 void DashboardEffectConfig::defaults()
 {
+    ui.brightness->setValue(50);
+    ui.saturation->setValue(50);
+    ui.duration->setValue(500);
+    ui.blur->setChecked(false);
     emit changed(true);
 }
 

@@ -38,6 +38,10 @@ HighlightWindowEffect::HighlightWindowEffect()
     // Announce support by creating a dummy version on the root window
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), m_atom, m_atom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -103,7 +107,7 @@ void HighlightWindowEffect::paintWindow(EffectWindow* w, int mask, QRegion regio
     effects->paintWindow(w, mask, region, data);
 }
 
-void HighlightWindowEffect::windowAdded(EffectWindow* w)
+void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!m_highlightedWindows.isEmpty()) {
         // The effect is activated thus we need to add it to the opacity hash
@@ -112,21 +116,21 @@ void HighlightWindowEffect::windowAdded(EffectWindow* w)
         else
             m_windowOpacity[w] = 1.0;
     }
-    propertyNotify(w, m_atom);   // Check initial value
+    slotPropertyNotify(w, m_atom);   // Check initial value
 }
 
-void HighlightWindowEffect::windowClosed(EffectWindow* w)
+void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_monitorWindow == w)   // The monitoring window was destroyed
         finishHighlighting();
 }
 
-void HighlightWindowEffect::windowDeleted(EffectWindow* w)
+void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
 {
     m_windowOpacity.remove(w);
 }
 
-void HighlightWindowEffect::propertyNotify(EffectWindow* w, long a)
+void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (a != m_atom)
         return; // Not our atom

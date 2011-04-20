@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <KDE/KConfigGroup>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -30,20 +31,46 @@ KWIN_EFFECT(slidingpopups, SlidingPopupsEffect)
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
-    KConfigGroup conf = effects->effectConfig("SlidingPopups");
-    mFadeInTime = animationTime(conf, "SlideInTime", 250);
-    mFadeOutTime = animationTime(conf, "SlideOutTime", 250);
     mAtom = XInternAtom(display(), "_KDE_SLIDE", False);
     effects->registerPropertyType(mAtom, true);
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), mAtom, mAtom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
+    reconfigure(ReconfigureAll);
 }
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
 {
     XDeleteProperty(display(), rootWindow(), mAtom);
     effects->registerPropertyType(mAtom, false);
+}
+
+void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
+{
+    Q_UNUSED(flags)
+    KConfigGroup conf = effects->effectConfig("SlidingPopups");
+    mFadeInTime = animationTime(conf, "SlideInTime", 250);
+    mFadeOutTime = animationTime(conf, "SlideOutTime", 250);
+    QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
+    while (it != mAppearingWindows.end()) {
+        it.value()->setDuration(animationTime(mFadeInTime));
+        it++;
+    }
+    it = mDisappearingWindows.begin();
+    while (it != mDisappearingWindows.end()) {
+        it.value()->setDuration(animationTime(mFadeOutTime));
+        it++;
+    }
+    QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
+    while (wIt != mWindowsData.end()) {
+        wIt.value().fadeInDuration = mFadeInTime;
+        wIt.value().fadeOutDuration = mFadeOutTime;
+        wIt++;
+    }
 }
 
 void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -56,16 +83,16 @@ void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
     if (mAppearingWindows.contains(w)) {
-        mAppearingWindows[ w ].addTime(time);
-        if (mAppearingWindows[ w ].value() < 1)
+        mAppearingWindows[ w ]->setCurrentTime(mAppearingWindows[ w ]->currentTime() + time);
+        if (mAppearingWindows[ w ]->currentValue() < 1)
             data.setTransformed();
         else
-            mAppearingWindows.remove(w);
+            delete mAppearingWindows.take(w);
     } else if (mDisappearingWindows.contains(w)) {
         data.setTransformed();
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
 
-        mDisappearingWindows[ w ].addTime(time);
+        mDisappearingWindows[ w ]->setCurrentTime(mDisappearingWindows[ w ]->currentTime() + time);
     }
     effects->prePaintWindow(w, data, time);
 }
@@ -87,10 +114,10 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
     if (animating) {
         qreal progress;
         if (appearing)
-            progress = 1.0 - mAppearingWindows[ w ].value();
+            progress = 1.0 - mAppearingWindows[ w ]->currentValue();
         else {
             if (mDisappearingWindows.contains(w))
-                progress = mDisappearingWindows[ w ].value();
+                progress = mDisappearingWindows[ w ]->currentValue();
             else
                 progress = 1.0;
         }
@@ -121,23 +148,38 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 {
-    if (mAppearingWindows.contains(w) || mDisappearingWindows.contains(w))
+    if (mAppearingWindows.contains(w) || mDisappearingWindows.contains(w)) {
         w->addRepaintFull(); // trigger next animation repaint
+        const int start = mWindowsData[ w ].start;
+        switch(mWindowsData[ w ].from) {
+        case West:
+            effects->addRepaint(QRect(start, w->y(), w->x(), w->height()));
+            break;
+        case North:
+            effects->addRepaint(QRect(w->x(), start, w->width(), w->y()));
+            break;
+        case East:
+            effects->addRepaint(QRect(w->x() + w->width(), w->y(), displayWidth() - w->x() - w->width() - start, w->height()));
+            break;
+        case South:
+        default:
+            effects->addRepaint(QRect(w->x(), w->y()+w->height(), w->width(), displayHeight() - w->y() - w->height() - start));
+        }
+    }
     effects->postPaintWindow(w);
-    if (mDisappearingWindows.contains(w) && mDisappearingWindows[ w ].value() >= 1) {
-        mDisappearingWindows.remove(w);
+    if (mDisappearingWindows.contains(w) && mDisappearingWindows[ w ]->currentValue() >= 1) {
+        delete mDisappearingWindows.take(w);
         w->unrefWindow();
         effects->addRepaint(w->geometry());
     }
 }
 
-void SlidingPopupsEffect::windowAdded(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
-    propertyNotify(w, mAtom);
+    slotPropertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
-        mAppearingWindows[ w ].setDuration(mWindowsData[ w ].fadeInDuration);
-        mAppearingWindows[ w ].setProgress(0.0);
-        mAppearingWindows[ w ].setCurveShape(TimeLine::EaseOutCurve);
+        mAppearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeInDuration, this));
+        mAppearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
 
         // Tell other windowAdded() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -146,15 +188,14 @@ void SlidingPopupsEffect::windowAdded(EffectWindow* w)
     }
 }
 
-void SlidingPopupsEffect::windowClosed(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 {
-    propertyNotify(w, mAtom);
+    slotPropertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {
         w->refWindow();
-        mAppearingWindows.remove(w);
-        mDisappearingWindows[ w ].setDuration(mWindowsData[ w ].fadeOutDuration);
-        mDisappearingWindows[ w ].setProgress(0.0);
-        mDisappearingWindows[ w ].setCurveShape(TimeLine::EaseOutCurve);
+        delete mAppearingWindows.take(w);
+        mDisappearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeOutDuration, this));
+        mDisappearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
 
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -163,15 +204,15 @@ void SlidingPopupsEffect::windowClosed(EffectWindow* w)
     }
 }
 
-void SlidingPopupsEffect::windowDeleted(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
 {
-    mAppearingWindows.remove(w);
-    mDisappearingWindows.remove(w);
+    delete mAppearingWindows.take(w);
+    delete mDisappearingWindows.take(w);
     mWindowsData.remove(w);
     effects->addRepaint(w->geometry());
 }
 
-void SlidingPopupsEffect::propertyNotify(EffectWindow* w, long a)
+void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != mAtom)
         return;
@@ -180,8 +221,8 @@ void SlidingPopupsEffect::propertyNotify(EffectWindow* w, long a)
 
     if (data.length() < 1) {
         // Property was removed, thus also remove the effect for window
-        mAppearingWindows.remove(w);
-        mDisappearingWindows.remove(w);
+        delete mAppearingWindows.take(w);
+        delete mDisappearingWindows.take(w);
         mWindowsData.remove(w);
         return;
     }

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DASHBOARD_H
 
 #include <kwineffects.h>
+#include <QtCore/QTimeLine>
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <Plasma/WindowEffects>
@@ -32,6 +33,7 @@ namespace KWin
 
 class DashboardEffect : public KWin::Effect
 {
+    Q_OBJECT
 public:
     DashboardEffect();
     ~DashboardEffect();
@@ -41,9 +43,11 @@ public:
     virtual void propagate();
     virtual void reconfigure(ReconfigureFlags);
     virtual void unpropagate();
-    virtual void windowActivated(EffectWindow *w);
-    virtual void windowAdded(EffectWindow* c);
-    virtual void windowClosed(EffectWindow* c);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* c);
+    void slotWindowClosed(EffectWindow *c);
+    void slotWindowActivated(EffectWindow *w);
 private:
     bool blur;
     bool isDashboard(EffectWindow* w);
@@ -51,13 +55,11 @@ private:
     bool retransformWindow;
     bool activateAnimation;
     bool deactivateAnimation;
-    TimeLine timeline;
+    QTimeLine timeline;
     long atom;
-    QString brightness;
-    double brightnessDelta;
-    QString saturation;
-    double saturationDelta;
-    QString duration;
+    qreal brightness;
+    qreal saturation;
+    int duration;
     EffectWindow* window;
 };
 

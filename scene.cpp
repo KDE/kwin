@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
+#include "shadow.h"
 
 #include <kephal/screens.h>
 
@@ -87,7 +88,7 @@ namespace KWin
 // Scene
 //****************************************
 
-Scene* scene;
+Scene* scene = 0;
 
 Scene::Scene(Workspace* ws)
     : wspace(ws)
@@ -352,6 +353,7 @@ QRegion Scene::selfCheckRegion() const
 Scene::Window::Window(Toplevel * c)
     : toplevel(c)
     , filter(ImageFilterFast)
+    , m_shadow(NULL)
     , disable_painting(0)
     , shape_valid(false)
     , cached_quad_list(NULL)
@@ -361,6 +363,7 @@ Scene::Window::Window(Toplevel * c)
 Scene::Window::~Window()
 {
     delete cached_quad_list;
+    delete m_shadow;
 }
 
 void Scene::Window::discardShape()
@@ -492,6 +495,9 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
             ret += makeQuads(WindowQuadDecoration, left);
             ret += makeQuads(WindowQuadDecoration, right);
         }
+    }
+    if (m_shadow) {
+        ret << m_shadow->shadowQuads();
     }
     effects->buildQuads(static_cast<Client*>(toplevel)->effectWindow(), ret);
     cached_quad_list = new WindowQuadList(ret);

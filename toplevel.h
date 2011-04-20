@@ -44,6 +44,7 @@ namespace KWin
 
 class Workspace;
 class EffectWindowImpl;
+class Shadow;
 
 class Toplevel
     : public QObject, public KDecorationDefines
@@ -134,6 +135,34 @@ public:
     QRegion damage() const;
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
+    const EffectWindowImpl* effectWindow() const;
+
+    /**
+     * @returns Whether the Toplevel has a Shadow or not
+     * @see shadow
+     **/
+    bool hasShadow() const;
+    /**
+     * Returns the pointer to the Toplevel's Shadow. A Shadow
+     * is only available if Compositing is enabled and the corresponding X window
+     * has the Shadow property set.
+     * If a shadow is available @link hasShadow returns @c true.
+     * @returns The Shadow belonging to this Toplevel, may be @c NULL.
+     * @see hasShadow
+     **/
+    const Shadow *shadow() const;
+    Shadow *shadow();
+    /**
+     * Updates the Shadow associated with this Toplevel from X11 Property.
+     * Call this method when the Property changes or Compositing is started.
+     **/
+    void getShadow();
+
+signals:
+    void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
+    void damaged(KWin::Toplevel* toplevel, const QRect& damage);
+    void propertyNotify(KWin::Toplevel* toplevel, long a);
+    void geometryChanged();
 
 protected:
     virtual ~Toplevel();
@@ -383,6 +412,12 @@ inline bool Toplevel::hasAlpha() const
 
 inline
 EffectWindowImpl* Toplevel::effectWindow()
+{
+    return effect_window;
+}
+
+inline
+const EffectWindowImpl* Toplevel::effectWindow() const
 {
     return effect_window;
 }

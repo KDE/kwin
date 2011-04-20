@@ -29,6 +29,7 @@ namespace KWin
 class HighlightWindowEffect
     : public Effect
 {
+    Q_OBJECT
 public:
     HighlightWindowEffect();
     virtual ~HighlightWindowEffect();
@@ -36,11 +37,11 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
-    virtual void windowAdded(EffectWindow* w);
-    virtual void windowClosed(EffectWindow* w);
-    virtual void windowDeleted(EffectWindow* w);
-
-    virtual void propertyNotify(EffectWindow* w, long atom);
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow* w);
+    void slotWindowClosed(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotPropertyNotify(EffectWindow* w, long atom);
 
 private:
     void prepareHighlighting();

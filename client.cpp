@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
-#include "effects.h"
+#include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #include "tabbox.h"
@@ -96,6 +96,7 @@ Client::Client(Workspace* ws)
     , transient_for (NULL)
     , transient_for_id(None)
     , original_transient_for_id(None)
+    , blocks_compositing(false)
     , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
@@ -195,6 +196,10 @@ Client::Client(Workspace* ws)
     ready_for_painting = false; // wait for first damage or sync reply
 #endif
 
+    connect(this, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -234,8 +239,8 @@ void Client::releaseWindow(bool on_shutdown)
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+    emit clientClosed(this);
+    if (scene) {
         scene->windowClosed(this, del);
     }
     finishCompositing();
@@ -302,8 +307,8 @@ void Client::destroyClient()
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowClosed(effectWindow());
+    emit clientClosed(this);
+    if (scene) {
         scene->windowClosed(this, del);
     }
     finishCompositing();
@@ -366,8 +371,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
             discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        emit clientGeometryShapeChanged(this, oldgeom);
     } else
         destroyDecoration();
     if (check_workspace_pos)
@@ -396,8 +400,9 @@ void Client::destroyDecoration()
             discardWindowPixmap();
         if (scene != NULL && !deleting)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL && !deleting)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), oldgeom);
+        if (!deleting) {
+            emit clientGeometryShapeChanged(this, oldgeom);
+        }
     }
 }
 
@@ -739,8 +744,7 @@ void Client::updateShape()
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
 }
 
 static Window shape_helper_window = None;
@@ -818,8 +822,7 @@ void Client::setMask(const QRegion& reg, int mode)
     }
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+    emit clientGeometryShapeChanged(this, geometry());
     updateShape();
 }
 
@@ -898,8 +901,8 @@ void Client::minimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
-    if (effects && !avoid_animation)   // TODO: Shouldn't it tell effects at least about the change?
-        static_cast<EffectsHandlerImpl*>(effects)->windowMinimized(effectWindow());
+    // TODO: merge signal with s_minimized
+    emit clientMinimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);
@@ -928,8 +931,7 @@ void Client::unminimize(bool avoid_animation)
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
     workspace()->updateAllTiles();
-    if (effects && !avoid_animation)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUnminimized(effectWindow());
+    emit clientUnminimized(this, !avoid_animation);
 
     // when tiling, request a rearrangement
     workspace()->notifyTilingWindowMinimizeToggled(this);
@@ -1024,7 +1026,6 @@ void Client::setShade(ShadeMode mode)
         if (isActive())
             workspace()->requestFocus(this);
     }
-    checkMaximizeGeometry();
     info->setState(isShade() ? NET::Shaded : 0, NET::Shaded);
     info->setState(isShown(false) ? 0 : NET::Hidden, NET::Hidden);
     discardWindowPixmap();
@@ -2115,6 +2116,20 @@ void Client::updateCursor()
                                  cursor.handle(), xTime());
 }
 
+void Client::updateCompositeBlocking(bool readProperty)
+{
+    const bool usedToBlock = blocks_compositing;
+    if (readProperty) {
+        const unsigned long properties[2] = {0, NET::WM2BlockCompositing};
+        NETWinInfo2 i(QX11Info::display(), window(), rootWindow(), properties, 2);
+        blocks_compositing = rules()->checkBlockCompositing(i.isBlockingCompositing());
+    }
+    else
+        blocks_compositing = rules()->checkBlockCompositing(blocks_compositing);
+    if (usedToBlock != blocks_compositing)
+        workspace()->updateCompositeBlocking(blocks_compositing ? this : 0);
+}
+
 Client::Position Client::mousePosition(const QPoint& p) const
 {
     if (decoration != NULL)
@@ -2223,6 +2238,17 @@ void Client::checkActivities()
 void Client::setSessionInteract(bool needed)
 {
     needsSessionInteract = needed;
+}
+
+QRect Client::decorationRect() const
+{
+    if (decoration && decoration->widget()) {
+        return decoration->widget()->rect().translated(-padding_left, -padding_top);
+    } else if (hasShadow()) {
+        return shadow()->shadowRegion().boundingRect();
+    } else {
+        return QRect(0, 0, width(), height());
+    }
 }
 
 } // namespace

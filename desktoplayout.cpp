@@ -171,17 +171,4 @@ int Workspace::desktopToLeft(int id, bool wrap) const
     }
 }
 
-int Workspace::addDesktop(QPoint coords)
-{
-    // TODO
-    Q_UNUSED(coords);
-    return 0;
-}
-
-void Workspace::deleteDesktop(int id)
-{
-    // TODO
-    Q_UNUSED(id);
-}
-
 } // namespace

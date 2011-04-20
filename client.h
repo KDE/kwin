@@ -258,12 +258,11 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     void keepInArea(QRect area, bool partial = false);
-    void setElectricBorderMode(ElectricMaximizingMode mode);
-    ElectricMaximizingMode electricBorderMode() const;
+    void setElectricBorderMode(QuickTileMode mode);
+    QuickTileMode electricBorderMode() const;
     void setElectricBorderMaximizing(bool maximizing);
     bool isElectricBorderMaximizing() const;
-    QRect electricBorderMaximizeGeometry();
-
+    QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const;
 
     /** Set the quick tile mode ("snap") of this window.
@@ -296,6 +295,8 @@ public:
 
     virtual void setupCompositing();
     virtual void finishCompositing();
+    inline bool isBlockingCompositing() { return blocks_compositing; }
+    void updateCompositeBlocking(bool readProperty = false);
 
     QString caption(bool full = true) const;
     void updateCaption();
@@ -400,11 +401,7 @@ public:
     bool decorationPixmapRequiresRepaint();
     void ensureDecorationPixmapsPainted();
 
-    QRect decorationRect() const {
-        return (decoration && decoration->widget()) ?
-               decoration->widget()->rect().translated(-padding_left, -padding_top) :
-               QRect(0, 0, width(), height());
-    }
+    QRect decorationRect() const;
 
     QRect transparentRect() const;
 
@@ -494,6 +491,14 @@ signals:
     void maximizeSet(QPair<bool, bool>);
     void s_activated();
     void s_fullScreenSet(bool, bool);
+    void clientClosed(KWin::Client*);
+    void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
+    void clientMinimized(KWin::Client* client, bool animate);
+    void clientUnminimized(KWin::Client* client, bool animate);
+    void clientGeometryShapeChanged(KWin::Client* client, const QRect& old);
+    void clientStartUserMovedResized(KWin::Client*);
+    void clientStepUserMovedResized(KWin::Client *, const QRect&);
+    void clientFinishUserMovedResized(KWin::Client*);
 
     // To make workspace-client calls, a few slots are also
     // required
@@ -506,7 +511,6 @@ private:
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
     void changeMaximize(bool horizontal, bool vertical, bool adjust);
-    void checkMaximizeGeometry();
     int checkFullScreenHack(const QRect& geom) const;   // 0 - None, 1 - One xinerama screen, 2 - Full area
     void updateFullScreenHack(const QRect& geom);
     void getWmNormalHints();
@@ -599,7 +603,7 @@ private:
 
     /** The quick tile mode of this window.
      */
-    QuickTileMode quick_tile_mode;
+    int quick_tile_mode;
     QRect geom_pretile;
 
     void readTransient();
@@ -641,6 +645,7 @@ private:
     uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
+    bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();
     void readIcons();
@@ -709,7 +714,7 @@ private:
     TabBox::TabBoxClientImpl* m_tabBoxClient;
 
     bool electricMaximizing;
-    ElectricMaximizingMode electricMode;
+    QuickTileMode electricMode;
 
     friend bool performTransiencyCheck();
     friend class SWrapper::Client;
@@ -958,7 +963,7 @@ inline QSize Client::clientSize() const
 
 inline QRect Client::visibleRect() const
 {
-    return geometry().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
+    return Toplevel::visibleRect().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
 }
 
 inline void Client::setGeometry(const QRect& r, ForceGeometry_t force, bool emitJs)

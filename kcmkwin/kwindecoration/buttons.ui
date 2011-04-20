@@ -11,6 +11,9 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QCheckBox" name="showToolTipsCheckBox">
      <property name="whatsThis">
@@ -32,7 +35,11 @@
     </widget>
    </item>
    <item>
-    <widget class="KWin::ButtonPositionWidget" name="buttonPositionWidget" native="true"/>
+    <widget class="KWin::ButtonPositionWidget" name="buttonPositionWidget" native="true">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -45,5 +52,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>useCustomButtonPositionsCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>buttonPositionWidget</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>39</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>231</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

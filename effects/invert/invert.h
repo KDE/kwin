@@ -33,7 +33,7 @@ class GLShader;
  * Inverts desktop's colors
  **/
 class InvertEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 public:
@@ -44,13 +44,13 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
-    virtual void windowClosed(EffectWindow* w);
 
     static bool supported();
 
 public slots:
     void toggle();
     void toggleWindow();
+    void slotWindowClosed(EffectWindow *w);
 
 protected:
     bool loadData();

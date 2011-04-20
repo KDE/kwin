@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class WindowGeometry : public QObject, public Effect
+class WindowGeometry : public Effect
 {
     Q_OBJECT
 public:
@@ -38,11 +38,12 @@ public:
     }
     void reconfigure(ReconfigureFlags);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    void windowUserMovedResized(EffectWindow* w, bool first, bool last);
-    void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
 private slots:
     void toggle();
+    void slotWindowStartUserMovedResized(EffectWindow *w);
+    void slotWindowFinishUserMovedResized(EffectWindow *w);
+    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
 private:
     EffectWindow *myResizeWindow;
     EffectFrame *myMeasure[3];

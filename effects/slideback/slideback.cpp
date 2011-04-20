@@ -33,6 +33,11 @@ SlideBackEffect::SlideBackEffect()
     updateStackingOrder();
     disabled = false;
     unminimizedWindow = NULL;
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
+    connect(effects, SIGNAL(clientGroupItemSwitched(EffectWindow*,EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(EffectWindow*,EffectWindow*)));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -40,7 +45,7 @@ static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
     return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
 }
 
-void SlideBackEffect::windowActivated(EffectWindow* w)
+void SlideBackEffect::slotWindowActivated(EffectWindow* w)
 {
     if (w == NULL || w->keepAbove()) { // plasma popups, yakuake etc...
         return;
@@ -193,7 +198,7 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
             }
         }
         // Finally call windowActivated in case a already active window is raised.
-        windowActivated(w);
+        slotWindowActivated(w);
     }
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
@@ -276,7 +281,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void SlideBackEffect::windowDeleted(EffectWindow* w)
+void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
 {
     usableOldStackingOrder.removeAll(w);
     oldStackingOrder.removeAll(w);
@@ -287,13 +292,13 @@ void SlideBackEffect::windowDeleted(EffectWindow* w)
     }
 }
 
-void SlideBackEffect::windowAdded(KWin::EffectWindow* w)
+void SlideBackEffect::slotWindowAdded(EffectWindow *w)
 {
     Q_UNUSED(w);
     updateStackingOrder();
 }
 
-void SlideBackEffect::windowUnminimized(EffectWindow* w)
+void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
 {
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
     // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not
@@ -305,7 +310,7 @@ void SlideBackEffect::windowUnminimized(EffectWindow* w)
     }
 }
 
-void SlideBackEffect::clientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+void SlideBackEffect::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
 {
     clientItemShown = to;
     clientItemHidden = from;

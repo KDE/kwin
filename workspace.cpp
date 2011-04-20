@@ -100,7 +100,6 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
-    , desktopLayoutDynamicity_(false)
     , tilingEnabled_(false)
     // Unsorted
     , active_popup(NULL)
@@ -152,6 +151,7 @@ Workspace::Workspace(bool restore)
     , forced_global_mouse_grab(false)
     , cm_selection(NULL)
     , compositingSuspended(false)
+    , compositingBlocked(false)
     , xrrRefreshRate(0)
     , overlay(None)
     , overlay_visible(true)
@@ -217,6 +217,9 @@ Workspace::Workspace(bool restore)
                 );
 
     Extensions::init();
+    compositingSuspended = !options->useCompositing;
+    // need to create the tabbox before compositing scene is setup
+    tab_box = new TabBox::TabBox(this);
     setupCompositing();
 
     // Compatibility
@@ -235,7 +238,6 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
     initShortcuts();
-    tab_box = new TabBox::TabBox(this);
     desktop_change_osd = new DesktopChangeOSD(this);
 
     init();
@@ -334,6 +336,7 @@ void Workspace::init()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
+        NET::WM2KDEShadow |
         0
         ,
         NET::ActionMove |
@@ -564,8 +567,6 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
     return c;
 }
 
@@ -581,8 +582,7 @@ Unmanaged* Workspace::createUnmanaged(Window w)
     addUnmanaged(c, Allowed);
     if (scene)
         scene->windowAdded(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded(c->effectWindow());
+    emit unmanagedAdded(c);
     return c;
 }
 
@@ -703,6 +703,8 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateStackingOrder(true);
 
+    updateCompositeBlocking();
+
     if (tab_grab)
         tab_box->reset(true);
 
@@ -728,8 +730,7 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
     assert(deleted.contains(c));
     if (scene)
         scene->windowDeleted(c);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowDeleted(c->effectWindow());
+    emit deletedRemoved(c);
     deleted.removeAll(c);
     x_stacking_dirty = true;
 }
@@ -1100,7 +1101,7 @@ void Workspace::slotReconfigure()
         updateCurrentTopMenu();
     }
 
-    if (options->useCompositing && !compositingSuspended) {
+    if (!compositingSuspended) {
         setupCompositing();
         if (effects)   // setupCompositing() may fail
             effects->reconfigure();
@@ -1143,7 +1144,6 @@ void Workspace::slotReinitCompositing()
 {
     // Reparse config. Config options will be reloaded by setupCompositing()
     KGlobal::config()->reparseConfiguration();
-    options->updateSettings();
 
     // Update any settings that can be set in the compositing kcm.
     updateElectricBorders();
@@ -1153,6 +1153,7 @@ void Workspace::slotReinitCompositing()
 
     // resume compositing if suspended
     compositingSuspended = false;
+    options->compositingInitialized = false;
     setupCompositing();
     KDecorationFactory* factory = mgr->factory();
     factory->reset(SettingCompositing);
@@ -1172,20 +1173,8 @@ void Workspace::loadDesktopSettings()
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
     KConfigGroup group(c, groupname);
-
-    int n = group.readEntry("Number", 4);
-    desktopCount_ = n;
-    workarea.clear();
-    workarea.resize(n + 1);
-    restrictedmovearea.clear();
-    restrictedmovearea.resize(n + 1);
-    oldrestrictedmovearea.clear();
-    oldrestrictedmovearea.resize(n + 1);
-    screenarea.clear();
-    rootInfo->setNumberOfDesktops(n);
-    desktop_focus_chain.resize(n);
-    // Make it +1, so that it can be accessed as [1..numberofdesktops]
-    focus_chain.resize(n + 1);
+    const int n = group.readEntry("Number", 4);
+    setNumberOfDesktops(n);
     for (int i = 1; i <= n; i++) {
         QString s = group.readEntry(QString("Name_%1").arg(i), i18n("Desktop %1", i));
         rootInfo->setDesktopName(i, s.toUtf8().data());
@@ -1463,8 +1452,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     if (old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1)
         desktop_change_osd->desktopChanged(old_desktop);
 
-    if (effects != NULL && old_desktop != 0 && old_desktop != new_desktop)
-        static_cast<EffectsHandlerImpl*>(effects)->desktopChanged(old_desktop);
     if (compositing())
         addRepaintFull();
 
@@ -1647,40 +1634,34 @@ void Workspace::setNumberOfDesktops(int n)
     desktopCount_ = n;
     updateDesktopLayout(); // Make sure the layout is still valid
 
-    if (currentDesktop() > numberOfDesktops())
-        setCurrentDesktop(numberOfDesktops());
+    if (currentDesktop() > n)
+        setCurrentDesktop(n);
 
-    // If increasing the number, do the resizing now, otherwise
-    // after the moving of windows to still existing desktops
-    if (old_number_of_desktops < numberOfDesktops()) {
-        rootInfo->setNumberOfDesktops(numberOfDesktops());
-        NETPoint* viewports = new NETPoint[numberOfDesktops()];
-        rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
-        delete[] viewports;
-        updateClientArea(true);
-        focus_chain.resize(numberOfDesktops() + 1);
-    }
-
-    // If the number of desktops decreased, move all windows
-    // that would be hidden to the last visible desktop
+    // move all windows that would be hidden to the last visible desktop
     if (old_number_of_desktops > numberOfDesktops()) {
-        for (ClientList::ConstIterator it = clients.constBegin();
-                it != clients.constEnd();
-                ++it)
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
             if (!(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops())
                 sendClientToDesktop(*it, numberOfDesktops(), true);
-        // TODO: Tile should have a method allClients, push them into other tiles
+            // TODO: Tile should have a method allClients, push them into other tiles
+        }
     }
-    if (old_number_of_desktops > numberOfDesktops()) {
-        rootInfo->setNumberOfDesktops(numberOfDesktops());
-        NETPoint* viewports = new NETPoint[numberOfDesktops()];
-        rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
-        delete[] viewports;
-        updateClientArea(true);
-        focus_chain.resize(numberOfDesktops() + 1);
-    }
+    rootInfo->setNumberOfDesktops(n);
+    NETPoint* viewports = new NETPoint[n];
+    rootInfo->setDesktopViewport(n, *viewports);
+    delete[] viewports;
 
-    saveDesktopSettings();
+    // Make it +1, so that it can be accessed as [1..numberofdesktops]
+    focus_chain.resize(n + 1);
+
+    workarea.clear();
+    workarea.resize(n + 1);
+    restrictedmovearea.clear();
+    restrictedmovearea.resize(n + 1);
+    oldrestrictedmovearea.clear();
+    oldrestrictedmovearea.resize(n + 1);
+    screenarea.clear();
+
+    updateClientArea(true);
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize(n);
@@ -1691,9 +1672,9 @@ void Workspace::setNumberOfDesktops(int n)
 
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
-    // inform effects
-    if (effects)
-        static_cast< EffectsHandlerImpl* >(effects)->numberDesktopsChanged(old_number_of_desktops);
+
+    saveDesktopSettings();
+    emit numberDesktopsChanged(old_number_of_desktops);
 }
 
 /**
@@ -1703,6 +1684,8 @@ void Workspace::setNumberOfDesktops(int n)
  */
 void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 {
+    if (desk < 1 || desk > numberOfDesktops())
+        return;
     int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
     c->setDesktop(desk);
@@ -2031,6 +2014,26 @@ bool Workspace::keyPressMouseEmulation(XKeyEvent& ev)
         break;
     case XK_Down:
     case XK_KP_Down:
+        pos.ry() += delta;
+        break;
+    case XK_Home:
+    case XK_KP_Home:
+        pos.rx() -= delta;
+        pos.ry() -= delta;
+        break;
+    case XK_Page_Up:
+    case XK_KP_Page_Up:
+        pos.rx() += delta;
+        pos.ry() -= delta;
+        break;
+    case XK_Page_Down:
+    case XK_KP_Page_Down:
+        pos.rx() += delta;
+        pos.ry() += delta;
+        break;
+    case XK_End:
+    case XK_KP_End:
+        pos.rx() -= delta;
         pos.ry() += delta;
         break;
     case XK_F1:
@@ -2440,7 +2443,7 @@ void Workspace::showElectricBorderWindowOutline()
     if (!movingClient)
         return;
     // code copied from TabBox::updateOutline() in tabbox.cpp
-    QRect c = movingClient->electricBorderMaximizeGeometry();
+    QRect c = movingClient->electricBorderMaximizeGeometry(cursorPos(), currentDesktop());
     // left/right parts are between top/bottom, they don't reach as far as the corners
     XMoveResizeWindow(QX11Info::display(), outline_left, c.x(), c.y() + 5, 5, c.height() - 10);
     XMoveResizeWindow(QX11Info::display(), outline_right, c.x() + c.width() - 5, c.y() + 5, 5, c.height() - 10);
@@ -2864,10 +2867,11 @@ void Workspace::checkCursorPos()
     QPoint last = last_cursor_pos;
     int lastb = last_buttons;
     cursorPos(); // Update if needed
-    if (last != last_cursor_pos || lastb != last_buttons)
-        static_cast<EffectsHandlerImpl*>(effects)->mouseChanged(cursorPos(), last,
-                x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
-                x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    if (last != last_cursor_pos || lastb != last_buttons) {
+        emit mouseChanged(last_cursor_pos, last,
+            x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
+            x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
+    }
 }
 
 int Workspace::indexOfClientGroup(ClientGroup* group)

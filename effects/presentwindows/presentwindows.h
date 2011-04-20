@@ -63,7 +63,7 @@ private:
  *  letting the user select active window.
  **/
 class PresentWindowsEffect
-    : public QObject, public Effect
+    : public Effect
 {
     Q_OBJECT
 private:
@@ -74,8 +74,6 @@ private:
         bool referenced;
         double opacity;
         double highlight;
-        int slot;
-        int slot_distance;
         EffectFrame* textFrame;
         EffectFrame* iconFrame;
     };
@@ -102,22 +100,9 @@ public:
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
 
     // User interaction
-    virtual void windowAdded(EffectWindow *w);
-    virtual void windowClosed(EffectWindow *w);
-    virtual void windowDeleted(EffectWindow *w);
-    virtual void windowGeometryShapeChanged(EffectWindow* w, const QRect& old);
     virtual bool borderActivated(ElectricBorder border);
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
-
-    // Tab box
-    virtual void tabBoxAdded(int mode);
-    virtual void tabBoxClosed();
-    virtual void tabBoxUpdated();
-    virtual void tabBoxKeyEvent(QKeyEvent* event);
-
-    // atoms
-    virtual void propertyNotify(EffectWindow* w, long atom);
 
     enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
     enum PresentWindowsMode {
@@ -160,6 +145,18 @@ public slots:
     void globalShortcutChanged(const QKeySequence& seq);
     void globalShortcutChangedAll(const QKeySequence& seq);
     void globalShortcutChangedClass(const QKeySequence& seq);
+    // EffectsHandler
+    void slotWindowAdded(EffectWindow *w);
+    void slotWindowClosed(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    // Tab box
+    void slotTabBoxAdded(int mode);
+    void slotTabBoxClosed();
+    void slotTabBoxUpdated();
+    void slotTabBoxKeyEvent(QKeyEvent* event);
+    // atoms
+    void slotPropertyNotify(EffectWindow* w, long atom);
 
 private slots:
     void closeWindow();
@@ -186,8 +183,6 @@ protected:
     inline int heightForWidth(EffectWindow *w, int width) {
         return int((width / double(w->width())) * w->height());
     }
-    void assignSlots(EffectWindowList windowlist, const QRect &area, int columns, int rows);
-    void getBestAssignments(EffectWindowList windowlist);
     bool isOverlappingAny(EffectWindow *w, const QHash<EffectWindow*, QRect> &targets, const QRegion &border);
 
     // Filter box

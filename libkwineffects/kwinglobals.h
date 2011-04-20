@@ -69,25 +69,18 @@ enum ElectricBorder {
     ElectricNone
 };
 
-enum ElectricMaximizingMode {
-    ElectricMaximizeMode,
-    ElectricLeftMode,
-    ElectricRightMode,
-    ElectricTopLeftMode,
-    ElectricTopRightMode,
-    ElectricBottomLeftMode,
-    ElectricBottomRightMode
+enum QuickTileFlag {
+    QuickTileNone = 0,
+    QuickTileLeft = 1,
+    QuickTileRight = 1<<1,
+    QuickTileTop = 1<<2,
+    QuickTileBottom = 1<<3,
+    QuickTileHorizontal = QuickTileLeft|QuickTileRight,
+    QuickTileVertical = QuickTileTop|QuickTileBottom,
+    QuickTileMaximize = QuickTileLeft|QuickTileRight|QuickTileTop|QuickTileBottom
 };
 
-enum QuickTileMode {
-    QuickTileNone,
-    QuickTileLeft,
-    QuickTileRight,
-    QuickTileTopLeft,
-    QuickTileTopRight,
-    QuickTileBottomLeft,
-    QuickTileBottomRight
-};
+Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
 // When designing the new system we must keep in mind that we have conditional actions
@@ -201,5 +194,7 @@ private:
 };
 
 } // namespace
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::QuickTileMode)
 
 #endif

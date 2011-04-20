@@ -301,9 +301,9 @@ bool Workspace::workspaceEvent(XEvent * e)
             }
 
         // We want to pass root window property events to effects
-        if (e->type == PropertyNotify && e->xany.window == rootWindow() && effects) {
+        if (e->type == PropertyNotify && e->xany.window == rootWindow()) {
             XPropertyEvent* re = &e->xproperty;
-            static_cast< EffectsHandlerImpl* >(effects)->propertyNotify(NULL, re->atom);
+            emit propertyNotify(re->atom);
         }
     }
     if (movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
@@ -576,9 +576,8 @@ bool Client::windowEvent(XEvent* e)
         if (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
             if (compositing()) {
                 addRepaintFull();
+                emit opacityChanged(this, old_opacity);
                 scene->windowOpacityChanged(this);
-                if (effects)
-                    static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
                 NETWinInfo2 i(display(), frameId(), rootWindow(), 0);
@@ -871,6 +870,8 @@ void Client::propertyNotifyEvent(XPropertyEvent* e)
             getSyncCounter();
         else if (e->atom == atoms->activities)
             checkActivities();
+        else if (e->atom == atoms->kde_net_wm_block_compositing)
+            updateCompositeBlocking(true);
         break;
     }
 }
@@ -1334,55 +1335,32 @@ static bool waitingMotionEvent()
 // Checks if the mouse cursor is near the edge of the screen and if so activates quick tiling or maximization
 void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
+
+    QuickTileMode mode = QuickTileNone;
     foreach (Kephal::Screen * screen, Kephal::Screens::self()->screens()) {
-        if (screen->geom().contains(QPoint(xroot, yroot))) {
-            if (options->electricBorderTiling() &&
-                    xroot <= screen->geom().x() + 20 &&
-                    yroot > screen->geom().y() + screen->geom().height() / 4 &&
-                    yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot <= screen->geom().x() + 20 &&
-                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricTopLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot <= screen->geom().x() + 20 &&
-                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricBottomLeftMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot > screen->geom().y() + screen->geom().height() / 4 &&
-                      yroot < screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot <= screen->geom().y() + screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricTopRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderTiling() &&
-                      xroot >= screen->geom().x() + screen->geom().width() - 20 &&
-                      yroot >= screen->geom().y() + screen->geom().height() - screen->geom().height() / 4) {
-                setElectricBorderMode(ElectricBottomRightMode);
-                setElectricBorderMaximizing(true);
-                return;
-            } else if (options->electricBorderMaximize() &&
-                      yroot <= screen->geom().y() + 5 && isMaximizable()) {
-                setElectricBorderMode(ElectricMaximizeMode);
-                setElectricBorderMaximizing(true);
-                return;
-            }
+
+        const QRect &area = screen->geom();
+        if (!area.contains(QPoint(xroot, yroot)))
+            continue;
+
+        if (options->electricBorderTiling()) {
+        if (xroot <= screen->geom().x() + 20)
+            mode |= QuickTileLeft;
+        else if (xroot >= area.x() + area.width() - 20)
+            mode |= QuickTileRight;
         }
+
+        if (mode != QuickTileNone) {
+            if (yroot <= area.y() + area.height() / 4)
+                mode |= QuickTileTop;
+            else if (yroot >= area.y() + area.height() - area.height() / 4)
+                mode |= QuickTileBottom;
+        } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable())
+            mode = QuickTileMaximize;
+        break; // no point in checking other screens to contain this... "point"...
     }
-    setElectricBorderMaximizing(false);
+    setElectricBorderMode(mode);
+    setElectricBorderMaximizing(mode != QuickTileNone);
 }
 
 // return value matters only when filtering events before decoration gets them
@@ -1613,9 +1591,8 @@ bool Unmanaged::windowEvent(XEvent* e)
     if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
         if (compositing()) {
             addRepaintFull();
+            emit opacityChanged(this, old_opacity);
             scene->windowOpacityChanged(this);
-            if (effects)
-                static_cast<EffectsHandlerImpl*>(effects)->windowOpacityChanged(effectWindow(), old_opacity);
         }
     }
     switch(e->type) {
@@ -1638,8 +1615,7 @@ bool Unmanaged::windowEvent(XEvent* e)
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
             if (scene != NULL)
                 scene->windowGeometryShapeChanged(this);
-            if (effects != NULL)
-                static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geometry());
+            emit unmanagedGeometryShapeChanged(this, geometry());
         }
 #ifdef HAVE_XDAMAGE
         if (e->type == Extensions::damageNotifyEvent())
@@ -1666,7 +1642,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
     QRect newgeom(e->x, e->y, e->width, e->height);
     if (newgeom != geom) {
-        addWorkspaceRepaint(geometry());  // damage old area
+        addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = geom;
         geom = newgeom;
         addRepaintFull();
@@ -1674,8 +1650,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
             discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), old);
+        emit unmanagedGeometryShapeChanged(this, old);
     }
 }
 
@@ -1693,10 +1668,11 @@ void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
             getWmClientLeader();
         else if (e->atom == atoms->wm_window_role)
             getWindowRole();
+        else if (e->atom == atoms->kde_net_wm_shadow)
+            getShadow();
         break;
     }
-    if (effects)
-        static_cast< EffectsHandlerImpl* >(effects)->propertyNotify(effectWindow(), e->atom);
+    emit propertyNotify(this, e->atom);
 }
 
 // ****************************************

@@ -229,7 +229,7 @@ void GLSLBlurShader::init()
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    vec2 center = vec4(texCoord * u_textureMatrix).st;\n\n";
+    stream << "    vec2 center = vec4(u_textureMatrix*texCoord).st;\n\n";
 
     for (int i = 0; i < center; i++)
         stream << "    samplePos" << i << " = center + pixelSize * vec2("
@@ -239,7 +239,7 @@ void GLSLBlurShader::init()
         stream << "    samplePos" << i << " = center + pixelSize * vec2("
                << 1.5 + (i - center - 1) * 2.0 << ");\n";
     stream << "\n";
-    stream << "    gl_Position = vertex * u_modelViewProjectionMatrix;\n";
+    stream << "    gl_Position = u_modelViewProjectionMatrix*vertex;\n";
     stream << "}\n";
     stream.flush();
 

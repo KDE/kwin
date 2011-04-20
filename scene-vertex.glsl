@@ -15,5 +15,5 @@ varying vec2 varyingTexCoords;
 
 void main() {
     varyingTexCoords = texCoord / vec2(textureWidth, textureHeight);
-    gl_Position = vec4(vertex.xy + offset, vertex.zw) * projection;
+    gl_Position = projection*vec4(vertex.xy + offset, vertex.zw);
 }

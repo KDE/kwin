@@ -1595,8 +1595,14 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
 
 void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
-    if (maximizeMode() == MaximizeFull)   // bugs #158974, #252314
-        return; // "maximized" is a user setting -> we do not allow the client to resize itself away from this & against the user wish
+    // "maximized" is a user setting -> we do not allow the client to resize itself
+    // away from this & against the users explicit wish
+    if (maximizeMode() & MaximizeVertical)
+        value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
+    if (maximizeMode() & MaximizeHorizontal)
+        value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+    if (!(value_mask & (CWX|CWWidth|CWY|CWHeight)))
+        return; // nothing to (left) to do for use - bugs #158974, #252314
 
     if (gravity == 0)   // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
@@ -1796,7 +1802,7 @@ bool Client::isResizable() const
     if (isSpecialWindow() || isSplash() || isToolbar())
         return false;
     if (maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows())
-        return false;
+        return isMove();  // for quick tiling - maxmode will be unset if we tile
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
 
@@ -1900,7 +1906,6 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
 
     // keep track of old maximize mode
     // to detect changes
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -1913,8 +1918,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
         discardWindowPixmap();
         if (scene != NULL)
             scene->windowGeometryShapeChanged(this);
-        if (effects != NULL)
-            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+        emit clientGeometryShapeChanged(this, geom_before_block);
     }
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
@@ -1984,15 +1988,13 @@ void Client::plainResize(int w, int h, ForceGeometry_t force, bool emitJs)
 
     sendSyntheticConfigureNotify();
     updateWindowRules();
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
     discardWindowPixmap();
     if (scene != NULL)
         scene->windowGeometryShapeChanged(this);
-    if (effects != NULL)
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged(effectWindow(), geom_before_block);
+    emit clientGeometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
     addWorkspaceRepaint(deco_rect);
@@ -2031,7 +2033,6 @@ void Client::move(int x, int y, ForceGeometry_t force)
     XMoveWindow(display(), frameId(), x, y);
     sendSyntheticConfigureNotify();
     updateWindowRules();
-    checkMaximizeGeometry();
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -2092,8 +2093,7 @@ void Client::setMaximize(bool vertically, bool horizontally)
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, true);
+    emit clientMaximizedStateChanged(this, max_mode);
 
     // Update states of all other windows in this group
     if (clientGroup())
@@ -2137,13 +2137,20 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         setNoBorder(app_noborder || max_mode == MaximizeFull);
 
     // save sizes for restoring, if maximalizing
-    if (!adjust && !(y() == clientArea.top() && height() == clientArea.height())) {
+    if (!adjust && !(old_mode & MaximizeVertical)) {
         geom_restore.setTop(y());
         geom_restore.setHeight(height());
+        // we can fall from maximize to tiled
+        // TODO unify quicktiling and regular maximization
+        geom_pretile.setTop(y());
+        geom_pretile.setHeight(height());
     }
-    if (!adjust && !(x() == clientArea.left() && width() == clientArea.width())) {
+    if (!adjust && !(old_mode & MaximizeHorizontal)) {
         geom_restore.setLeft(x());
         geom_restore.setWidth(width());
+        // see above
+        geom_pretile.setLeft(x());
+        geom_pretile.setWidth(width());
     }
 
     if (!adjust) {
@@ -2296,38 +2303,6 @@ void Client::resetMaximize()
         setGeometry(geometry(), ForceGeometrySet);
     if (decoration != NULL)
         decoration->maximizeChange();
-}
-
-void Client::checkMaximizeGeometry()
-{
-    // when adding new bail-out conditions here, checkMaximizeGeometry() needs to be called
-    // when after the condition is no longer true
-    if (isShade())
-        return;
-    if (isMove() || isResize())  // this is because of the option to disallow moving/resizing of max-ed windows
-        return;
-    // Just in case.
-    static int recursion_protection = 0;
-    if (recursion_protection > 3) {
-        kWarning(1212) << "Check maximize overflow - you loose!" ;
-        kWarning(1212) << kBacktrace() ;
-        return;
-    }
-    ++recursion_protection;
-    QRect max_area = workspace()->clientArea(MaximizeArea, this);
-    if (geometry() == max_area) {
-        if (max_mode != MaximizeFull)
-            maximize(MaximizeFull);
-    } else if (x() == max_area.left() && width() == max_area.width()) {
-        if (max_mode != MaximizeHorizontal)
-            maximize(MaximizeHorizontal);
-    } else if (y() == max_area.top() && height() == max_area.height()) {
-        if (max_mode != MaximizeVertical)
-            maximize(MaximizeVertical);
-    } else if (max_mode != MaximizeRestore) {
-        resetMaximize(); // not maximize( MaximizeRestore ), that'd change geometry - this is called from setGeometry()
-    }
-    --recursion_protection;
 }
 
 bool Client::isFullScreenable(bool fullscreen_hack) const
@@ -2597,31 +2572,24 @@ bool Client::startMoveResize()
         move_resize_grab_window = None;
         return false;
     }
-    if (maximizeMode() == MaximizeFull && options->electricBorderMaximize() &&
-            !options->moveResizeMaximizedWindows()) {
-        // If we have quick maximization enabled then it's safe to automatically restore windows
-        // when starting a move as the user can undo their action by moving the window back to
-        // the top of the screen. When the setting is disabled then doing so is confusing.
+
+    // If we have quick maximization enabled then it's safe to automatically restore windows
+    // when starting a move as the user can undo their action by moving the window back to
+    // the top of the screen. When the setting is disabled then doing so is confusing.
+    if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize() &&
+            !options->moveResizeMaximizedWindows()) ||
+        // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
+        (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
+
         const QRect before = geometry();
-        setMaximize(false, false);
+        setQuickTileMode(QuickTileNone);
         // Move the window so it's under the cursor
         moveOffset = QPoint(
                          double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
                          double(moveOffset.y()) / double(before.height()) * double(geom_restore.height())
                      );
     }
-    if (maximizeMode() != MaximizeRestore)
-        resetMaximize(); // TODO: I have no idea what this does... Is it needed?
-    if (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter) { // Cannot use isMove() yet
-        // Exit quick tile mode when the user attempts to move a tiled window
-        const QRect before = geometry();
-        setQuickTileMode(QuickTileNone);
-        // Move the window so it's under the cursor
-        moveOffset = QPoint(
-                         double(moveOffset.x()) / double(before.width()) * double(geom_pretile.width()),
-                         double(moveOffset.y()) / double(before.height()) * double(geom_pretile.height())
-                     );
-    }
+
     if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
         // Exit quick tile mode when the user attempts to resize a tiled window
         quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
@@ -2644,13 +2612,43 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
     }
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), true, false);
+    emit clientStartUserMovedResized(this);
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
         workspace()->reserveElectricBorderSwitching(true);
     return true;
+}
+
+static ElectricBorder electricBorderFromMode(QuickTileMode mode)
+{
+    // special case, currently maxmizing is done from the electric top corner
+    if (mode == QuickTileMaximize)
+        return ElectricTop;
+
+    // sanitize the mode, ie. simplify "invalid" combinations
+    if ((mode & QuickTileHorizontal) == QuickTileHorizontal)
+        mode &= ~QuickTileHorizontal;
+    if ((mode & QuickTileVertical) == QuickTileVertical)
+        mode &= ~QuickTileVertical;
+
+    if (mode == QuickTileLeft)
+        return ElectricLeft;
+    if (mode == QuickTileRight)
+        return ElectricRight;
+    if (mode == (QuickTileTop|QuickTileLeft))
+        return ElectricTopLeft;
+    if (mode == (QuickTileTop|QuickTileRight))
+        return ElectricTopRight;
+    if (mode == (QuickTileBottom|QuickTileLeft))
+        return ElectricBottomLeft;
+    if (mode == (QuickTileBottom|QuickTileRight))
+        return ElectricBottomRight;
+    if (mode == QuickTileTop)
+        return ElectricTop;
+    if (mode == QuickTileBottom)
+        return ElectricBottom;
+    return ElectricNone;
 }
 
 void Client::finishMoveResize(bool cancel)
@@ -2677,87 +2675,20 @@ void Client::finishMoveResize(bool cancel)
 
     if (isElectricBorderMaximizing()) {
         cancel = true;
-    }
-    if (isElectricBorderMaximizing()) {
-        switch(electricMode) {
-        case ElectricMaximizeMode:
-            if (maximizeMode() == MaximizeFull)
-                setMaximize(false, false);
-            else
-                setMaximize(true, true);
-            workspace()->restoreElectricBorderSize(ElectricTop);
-            break;
-        case ElectricLeftMode:
-            setQuickTileMode(QuickTileLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricRightMode:
-            setQuickTileMode(QuickTileRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        case ElectricTopLeftMode:
-            setQuickTileMode(QuickTileTopLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricTopRightMode:
-            setQuickTileMode(QuickTileTopRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        case ElectricBottomLeftMode:
-            setQuickTileMode(QuickTileBottomLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricBottomRightMode:
-            setQuickTileMode(QuickTileBottomRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        }
+        setQuickTileMode(electricMode);
+        const ElectricBorder border = electricBorderFromMode(electricMode);
+        if (border == ElectricNone)
+            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array acces,\
+                                                                        this should not have happened!";
+        else
+            workspace()->restoreElectricBorderSize(border);
         electricMaximizing = false;
         workspace()->hideElectricBorderWindowOutline();
     }
-    if (isElectricBorderMaximizing()) {
-        switch(electricMode) {
-        case ElectricMaximizeMode:
-            if (maximizeMode() == MaximizeFull)
-                setMaximize(false, false);
-            else
-                setMaximize(true, true);
-            workspace()->restoreElectricBorderSize(ElectricTop);
-            break;
-        case ElectricLeftMode:
-            setQuickTileMode(QuickTileLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricRightMode:
-            setQuickTileMode(QuickTileRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        case ElectricTopLeftMode:
-            setQuickTileMode(QuickTileTopLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricTopRightMode:
-            setQuickTileMode(QuickTileTopRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        case ElectricBottomLeftMode:
-            setQuickTileMode(QuickTileBottomLeft);
-            workspace()->restoreElectricBorderSize(ElectricLeft);
-            break;
-        case ElectricBottomRightMode:
-            setQuickTileMode(QuickTileBottomRight);
-            workspace()->restoreElectricBorderSize(ElectricRight);
-            break;
-        }
-        electricMaximizing = false;
-        workspace()->hideElectricBorderWindowOutline();
-    }
-    checkMaximizeGeometry();
 // FRAME    update();
 
     Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, true);
+    emit clientFinishUserMovedResized(this);
 }
 
 void Client::leaveMoveResize()
@@ -3146,10 +3077,7 @@ void Client::performMoveResize()
             setGeometry(moveResizeGeom);
         positionGeometryTip();
     }
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->windowMoveResizeGeometryUpdate(effectWindow(), moveResizeGeom);
-        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized(effectWindow(), false, false);
-    }
+    emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
 void Client::syncTimeout()
@@ -3160,12 +3088,19 @@ void Client::syncTimeout()
         performMoveResize();
 }
 
-void Client::setElectricBorderMode(ElectricMaximizingMode mode)
+void Client::setElectricBorderMode(QuickTileMode mode)
 {
+    if (mode != QuickTileMaximize) {
+        // sanitize the mode, ie. simplify "invalid" combinations
+        if ((mode & QuickTileHorizontal) == QuickTileHorizontal)
+            mode &= ~QuickTileHorizontal;
+        if ((mode & QuickTileVertical) == QuickTileVertical)
+            mode &= ~QuickTileVertical;
+    }
     electricMode = mode;
 }
 
-ElectricMaximizingMode Client::electricBorderMode() const
+QuickTileMode Client::electricBorderMode() const
 {
     return electricMode;
 }
@@ -3184,48 +3119,25 @@ void Client::setElectricBorderMaximizing(bool maximizing)
         workspace()->hideElectricBorderWindowOutline();
 }
 
-QRect Client::electricBorderMaximizeGeometry()
+QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
 {
-    QRect ret;
-    switch(electricMode) {
-    case ElectricMaximizeMode: {
+    if (electricMode == QuickTileMaximize) {
         if (maximizeMode() == MaximizeFull)
-            ret = geometryRestore();
+            return geometryRestore();
         else
-            ret = workspace()->clientArea(MaximizeArea, cursorPos() , workspace()->currentDesktop());
-        break;
+            return workspace()->clientArea(MaximizeArea, pos, desktop);
     }
-    case ElectricLeftMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos() , workspace()->currentDesktop());
-        ret = QRect(max.x(), max.y(), max.width() / 2, max.height());
-        break;
-    }
-    case ElectricRightMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos() , workspace()->currentDesktop());
-        ret = QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height());
-        break;
-    }
-    case ElectricTopLeftMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos(), workspace()->currentDesktop());
-        ret = QRect(max.x(), max.y(), max.width() / 2, max.height() / 2);
-        break;
-    }
-    case ElectricTopRightMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos(), workspace()->currentDesktop());
-        ret =  QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height() / 2);
-        break;
-    }
-    case ElectricBottomLeftMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos(), workspace()->currentDesktop());
-        ret = QRect(max.x(), max.y() + max.height() / 2, max.width() / 2, max.height() / 2);
-        break;
-    }
-    case ElectricBottomRightMode: {
-        QRect max = workspace()->clientArea(MaximizeArea, cursorPos(), workspace()->currentDesktop());
-        ret = QRect(max.x() + max.width() / 2, max.y() + max.height() / 2, max.width() / 2, max.height() / 2);
-        break;
-    }
-    }
+
+    QRect ret = workspace()->clientArea(MaximizeArea, pos, desktop);
+    if (electricMode & QuickTileLeft)
+        ret.setRight(ret.left()+ret.width()/2);
+    else if (electricMode & QuickTileRight)
+        ret.setLeft(ret.right()-ret.width()/2);
+    if (electricMode & QuickTileTop)
+        ret.setBottom(ret.top()+ret.height()/2);
+    else if (electricMode & QuickTileBottom)
+        ret.setTop(ret.bottom()-ret.height()/2);
+
     return ret;
 }
 
@@ -3235,51 +3147,35 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (!isResizable() && maximizeMode() != MaximizeFull)
         return;
 
+    if (mode == QuickTileMaximize)
+    {
+        quick_tile_mode = QuickTileNone;
+        if (maximizeMode() == MaximizeFull)
+            setMaximize(false, false);
+        else
+        {
+            setMaximize(true, true);
+            quick_tile_mode = QuickTileMaximize;
+        }
+        return;
+    }
+
+    // sanitize the mode, ie. simplify "invalid" combinations
+    if ((mode & QuickTileHorizontal) == QuickTileHorizontal)
+        mode &= ~QuickTileHorizontal;
+    if ((mode & QuickTileVertical) == QuickTileVertical)
+        mode &= ~QuickTileVertical;
+
+    setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
+
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (maximizeMode() == MaximizeFull) {
         setMaximize(false, false);
-        checkMaximizeGeometry();
-
-        QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
-
-        // DUPLICATED BELOW: --------------------------------------------------
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;
-
-        // Do the actual tile.
-        switch(mode) {
-        case QuickTileLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y(), max.width() / 2, max.height()));
-            break;
-        }
-        case QuickTileRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height()));
-            break;
-        }
-        case QuickTileTopLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y(), max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileTopRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileBottomLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y() + max.height() / 2, max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileBottomRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y() + max.height() / 2, max.width() / 2, max.height() / 2));
-            break;
-        }
-        }
+        if (mode != QuickTileNone)
+            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : cursorPos(), desktop()));
         // Store the mode change
         quick_tile_mode = mode;
 
@@ -3288,9 +3184,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     // First, check if the requested tile negates the tile we're in now: move right when left or left when right
     // is the same as explicitly untiling this window, so allow it.
-    if (mode == QuickTileNone ||
-            (quick_tile_mode == QuickTileLeft && mode == QuickTileRight) ||
-            (quick_tile_mode == QuickTileRight && mode == QuickTileLeft)) {
+    if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
         // Untiling, so just restore geometry, and we're done.
         setGeometry(geom_pretile);
         checkWorkspacePosition(); // Just in case it's a different screen
@@ -3339,46 +3233,13 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
             // Store geometry first, so we can go out of this tile later.
             geom_pretile = geometry();
 
-        // DUPLICATED ABOVE: --------------------------------------------------
-
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;
-
-        // Do the actual tile.
-        switch(mode) {
-        case QuickTileLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y(), max.width() / 2, max.height()));
-            break;
-        }
-        case QuickTileRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height()));
-            break;
-        }
-        case QuickTileTopLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y(), max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileTopRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y(), max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileBottomLeft: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x(), max.y() + max.height() / 2, max.width() / 2, max.height() / 2));
-            break;
-        }
-        case QuickTileBottomRight: {
-            QRect max = workspace()->clientArea(MaximizeArea, whichScreen, desktop());
-            setGeometry(QRect(max.x() + max.width() / 2, max.y() + max.height() / 2, max.width() / 2, max.height() / 2));
-            break;
-        }
-        }
+        if (mode != QuickTileNone)
+            setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()));
         // Store the mode change
         quick_tile_mode = mode;
+
     }
 }
 

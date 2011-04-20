@@ -38,6 +38,9 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_T));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowGeometryShapeChanged(EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
     reconfigure(ReconfigureAll);
 }
 
@@ -66,7 +69,7 @@ void ThumbnailAsideEffect::paintScreen(int mask, QRegion region, ScreenPaintData
     }
 }
 
-void ThumbnailAsideEffect::windowDamaged(EffectWindow* w, const QRect&)
+void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow* w, const QRect&)
 {
     foreach (const Data & d, windows) {
         if (d.window == w)
@@ -74,7 +77,7 @@ void ThumbnailAsideEffect::windowDamaged(EffectWindow* w, const QRect&)
     }
 }
 
-void ThumbnailAsideEffect::windowGeometryShapeChanged(EffectWindow* w, const QRect& old)
+void ThumbnailAsideEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
 {
     foreach (const Data & d, windows) {
         if (d.window == w) {
@@ -87,7 +90,7 @@ void ThumbnailAsideEffect::windowGeometryShapeChanged(EffectWindow* w, const QRe
     }
 }
 
-void ThumbnailAsideEffect::windowClosed(EffectWindow* w)
+void ThumbnailAsideEffect::slotWindowClosed(EffectWindow* w)
 {
     removeThumbnail(w);
 }

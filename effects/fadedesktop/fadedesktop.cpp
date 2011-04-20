@@ -30,7 +30,8 @@ KWIN_EFFECT(fadedesktop, FadeDesktopEffect)
 FadeDesktopEffect::FadeDesktopEffect()
     : m_fading(false)
 {
-    m_timeline.setCurveShape(TimeLine::LinearCurve);
+    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int)));
+    m_timeline.setCurveShape(QTimeLine::LinearCurve);
     reconfigure(ReconfigureAll);
 }
 
@@ -42,15 +43,15 @@ void FadeDesktopEffect::reconfigure(ReconfigureFlags)
 void FadeDesktopEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
     if (m_fading) {
-        m_timeline.addTime(time);
+        m_timeline.setCurrentTime(m_timeline.currentTime() + time);
 
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if (m_timeline.value() != 1.0)
+        if (m_timeline.currentValue() != 1.0)
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         else {
             m_fading = false;
-            m_timeline.setProgress(0.0);
+            m_timeline.setCurrentTime(0);
             foreach (EffectWindow * w, effects->stackingOrder()) {
                 w->setData(WindowForceBlurRole, QVariant(false));
             }
@@ -81,14 +82,14 @@ void FadeDesktopEffect::paintWindow(EffectWindow *w, int mask, QRegion region, W
 {
     if (m_fading && !(w->isOnCurrentDesktop() && w->isOnDesktop(m_oldDesktop))) {
         if (w->isOnDesktop(m_oldDesktop))
-            data.opacity *= 1 - m_timeline.value();
+            data.opacity *= 1 - m_timeline.currentValue();
         else
-            data.opacity *= m_timeline.value();
+            data.opacity *= m_timeline.currentValue();
     }
     effects->paintWindow(w, mask, region, data);
 }
 
-void FadeDesktopEffect::desktopChanged(int old)
+void FadeDesktopEffect::slotDesktopChanged(int old)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -97,7 +98,7 @@ void FadeDesktopEffect::desktopChanged(int old)
 
     effects->setActiveFullScreenEffect(this);
     m_fading = true;
-    m_timeline.setProgress(0);
+    m_timeline.setCurrentTime(0);
     m_oldDesktop = old;
     foreach (EffectWindow * w, effects->stackingOrder()) {
         w->setData(WindowForceBlurRole, QVariant(true));

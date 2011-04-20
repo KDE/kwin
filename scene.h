@@ -35,6 +35,7 @@ class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
 class LanczosFilter;
+class Shadow;
 
 // The base class for compositing backends.
 class Scene
@@ -210,10 +211,14 @@ public:
     // creates initial quad list for the window
     virtual WindowQuadList buildQuads(bool force = false) const;
     void suspendUnredirect(bool suspend);
+    void updateShadow(Shadow* shadow);
+    const Shadow* shadow() const;
+    Shadow* shadow();
 protected:
     WindowQuadList makeQuads(WindowQuadType type, const QRegion& reg) const;
     Toplevel* toplevel;
     ImageFilterType filter;
+    Shadow *m_shadow;
 private:
     int disable_painting;
     mutable QRegion shape_region;
@@ -317,6 +322,24 @@ inline
 void Scene::Window::suspendUnredirect(bool suspend)
 {
     toplevel->suspendUnredirect(suspend);
+}
+
+inline
+void Scene::Window::updateShadow(Shadow* shadow)
+{
+    m_shadow = shadow;
+}
+
+inline
+const Shadow* Scene::Window::shadow() const
+{
+    return m_shadow;
+}
+
+inline
+Shadow* Scene::Window::shadow()
+{
+    return m_shadow;
 }
 
 } // namespace

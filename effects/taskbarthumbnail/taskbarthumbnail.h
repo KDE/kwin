@@ -29,18 +29,21 @@ namespace KWin
 {
 
 class TaskbarThumbnailEffect
-    : public QObject, public Effect
+    : public Effect
 {
+    Q_OBJECT
 public:
     TaskbarThumbnailEffect();
     virtual ~TaskbarThumbnailEffect();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowDamaged(EffectWindow* w, const QRect& damage);
-    virtual void windowAdded(EffectWindow* w);
-    virtual void windowDeleted(EffectWindow* w);
-    virtual void propertyNotify(EffectWindow* w, long atom);
+
+public Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowDamaged(EffectWindow* w, const QRect& damage);
+    void slotPropertyNotify(EffectWindow *w, long atom);
 private:
     struct Data {
         Window window; // thumbnail of this window

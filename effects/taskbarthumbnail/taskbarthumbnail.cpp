@@ -43,6 +43,10 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -108,7 +112,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
     }
 } // End of function
 
-void TaskbarThumbnailEffect::windowDamaged(EffectWindow* w, const QRect& damage)
+void TaskbarThumbnailEffect::slotWindowDamaged(EffectWindow* w, const QRect& damage)
 {
     Q_UNUSED(damage);
     // Update the thumbnail if the window was damaged
@@ -118,17 +122,17 @@ void TaskbarThumbnailEffect::windowDamaged(EffectWindow* w, const QRect& damage)
         effects->addRepaint(thumb.rect.translated(window->pos()));
 }
 
-void TaskbarThumbnailEffect::windowAdded(EffectWindow* w)
+void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
 {
-    propertyNotify(w, atom);   // read initial value
+    slotPropertyNotify(w, atom);   // read initial value
 }
 
-void TaskbarThumbnailEffect::windowDeleted(EffectWindow* w)
+void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
 {
     thumbnails.remove(w);
 }
 
-void TaskbarThumbnailEffect::propertyNotify(EffectWindow* w, long a)
+void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != atom)
         return;

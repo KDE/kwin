@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QKeyEvent>
 #include <QMatrix4x4>
 #include <kconfiggroup.h>
 
@@ -40,7 +41,7 @@ KWIN_EFFECT(flipswitch, FlipSwitchEffect)
 KWIN_EFFECT_SUPPORTED(flipswitch, FlipSwitchEffect::supported())
 
 FlipSwitchEffect::FlipSwitchEffect()
-    : m_currentAnimationShape(TimeLine::EaseInOutCurve)
+    : m_currentAnimationShape(QTimeLine::EaseInOutCurve)
     , m_active(false)
     , m_start(false)
     , m_stop(false)
@@ -69,6 +70,11 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_shortcutAll = b->globalShortcut();
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
+    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()
@@ -129,11 +135,11 @@ void FlipSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     if (m_active) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         if (m_start)
-            m_startStopTimeLine.addTime(time);
+            m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() + time);
         if (m_stop && m_scheduledDirections.isEmpty())
-            m_startStopTimeLine.removeTime(time);
+            m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() - time);
         if (m_animation)
-            m_timeLine.addTime(time);
+            m_timeLine.setCurrentTime(m_timeLine.currentTime() + time);
     }
     effects->prePaintScreen(data, time);
 }
@@ -286,7 +292,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         int winMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         RotationData rot;
         rot.axis = RotationData::YAxis;
-        rot.angle = m_angle * m_startStopTimeLine.value();
+        rot.angle = m_angle * m_startStopTimeLine.currentValue();
         // fade in/out one window at the end of the stack during animation
         if (m_animation && !m_scheduledDirections.isEmpty()) {
             EffectWindow* w = m_flipOrderedWindows.last();
@@ -297,17 +303,17 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 data.saturation = m_windows[ w ]->saturation;
                 int distance = tempList.count() - 1;
                 float zDistance = 500.0f;
-                data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.value();
-                data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.value();
-                data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.value();
+                data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.currentValue();
+                data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue();
+                data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.currentValue();
 
-                data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.value();
-                data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.value();
-                data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.value();
+                data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue();
+                data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue();
+                data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.currentValue();
                 if (m_scheduledDirections.head() == DirectionForward)
-                    data.opacity *= 0.8 * m_timeLine.value();
+                    data.opacity *= 0.8 * m_timeLine.currentValue();
                 else
-                    data.opacity *= 0.8 * (1.0 - m_timeLine.value());
+                    data.opacity *= 0.8 * (1.0 - m_timeLine.currentValue());
 
                 if (effects->numScreens() > 1) {
                     adjustWindowMultiScreen(w, data);
@@ -343,31 +349,31 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             if (!m_scheduledDirections.isEmpty() && m_scheduledDirections.head() == DirectionBackward) {
                 if (w == m_flipOrderedWindows.last()) {
                     distance = -1;
-                    data.opacity *= m_timeLine.value();
+                    data.opacity *= m_timeLine.currentValue();
                 }
             }
             float zDistance = 500.0f;
-            data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.value();
-            data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.value();
-            data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.value();
+            data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.currentValue();
+            data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue();
+            data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.currentValue();
 
-            data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.value();
-            data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.value();
-            data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.value();
+            data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue();
+            data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue();
+            data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.currentValue();
             if (m_animation && !m_scheduledDirections.isEmpty()) {
                 if (m_scheduledDirections.head() == DirectionForward) {
-                    data.xTranslate += (m_screenArea.width() * 0.25f) * m_timeLine.value();
-                    data.yTranslate += (m_screenArea.height() * 0.10f) * m_timeLine.value();
-                    data.zTranslate += zDistance * m_timeLine.value();
+                    data.xTranslate += (m_screenArea.width() * 0.25f) * m_timeLine.currentValue();
+                    data.yTranslate += (m_screenArea.height() * 0.10f) * m_timeLine.currentValue();
+                    data.zTranslate += zDistance * m_timeLine.currentValue();
                     if (distance == 0)
-                        data.opacity *= (1.0 - m_timeLine.value());
+                        data.opacity *= (1.0 - m_timeLine.currentValue());
                 } else {
-                    data.xTranslate -= (m_screenArea.width() * 0.25f) * m_timeLine.value();
-                    data.yTranslate -= (m_screenArea.height() * 0.10f) * m_timeLine.value();
-                    data.zTranslate -= zDistance * m_timeLine.value();
+                    data.xTranslate -= (m_screenArea.width() * 0.25f) * m_timeLine.currentValue();
+                    data.yTranslate -= (m_screenArea.height() * 0.10f) * m_timeLine.currentValue();
+                    data.zTranslate -= zDistance * m_timeLine.currentValue();
                 }
             }
-            data.opacity *= (0.8 + 0.2 * (1.0 - m_startStopTimeLine.value()));
+            data.opacity *= (0.8 + 0.2 * (1.0 - m_startStopTimeLine.currentValue()));
             if (effects->numScreens() > 1) {
                 adjustWindowMultiScreen(w, data);
             }
@@ -396,9 +402,9 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         if (m_windowTitle) {
             // Render the caption frame
             if (m_animation) {
-                m_captionFrame->setCrossFadeProgress(m_timeLine.value());
+                m_captionFrame->setCrossFadeProgress(m_timeLine.currentValue());
             }
-            m_captionFrame->render(region, m_startStopTimeLine.value());
+            m_captionFrame->render(region, m_startStopTimeLine.currentValue());
         }
     }
 }
@@ -406,22 +412,22 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
 void FlipSwitchEffect::postPaintScreen()
 {
     if (m_active) {
-        if (m_start && m_startStopTimeLine.value() == 1.0f) {
+        if (m_start && m_startStopTimeLine.currentValue() == 1.0f) {
             m_start = false;
             if (!m_scheduledDirections.isEmpty()) {
                 m_animation = true;
-                m_timeLine.setProgress(0.0f);
+                m_timeLine.setCurrentTime(0);
                 if (m_scheduledDirections.count() == 1) {
-                    m_currentAnimationShape = TimeLine::EaseOutCurve;
+                    m_currentAnimationShape = QTimeLine::EaseOutCurve;
                     m_timeLine.setCurveShape(m_currentAnimationShape);
                 } else {
-                    m_currentAnimationShape = TimeLine::LinearCurve;
+                    m_currentAnimationShape = QTimeLine::LinearCurve;
                     m_timeLine.setCurveShape(m_currentAnimationShape);
                 }
             }
             effects->addRepaintFull();
         }
-        if (m_stop && m_startStopTimeLine.value() == 0.0f) {
+        if (m_stop && m_startStopTimeLine.currentValue() == 0.0f) {
             m_stop = false;
             m_active = false;
             m_captionFrame->free();
@@ -430,8 +436,8 @@ void FlipSwitchEffect::postPaintScreen()
             qDeleteAll(m_windows);
             m_windows.clear();
         }
-        if (m_animation && m_timeLine.value() == 1.0f) {
-            m_timeLine.setProgress(0.0f);
+        if (m_animation && m_timeLine.currentValue() == 1.0f) {
+            m_timeLine.setCurrentTime(0);
             m_scheduledDirections.dequeue();
             if (m_scheduledDirections.isEmpty()) {
                 m_animation = false;
@@ -439,11 +445,11 @@ void FlipSwitchEffect::postPaintScreen()
             } else {
                 if (m_scheduledDirections.count() == 1) {
                     if (m_stop)
-                        m_currentAnimationShape = TimeLine::LinearCurve;
+                        m_currentAnimationShape = QTimeLine::LinearCurve;
                     else
-                        m_currentAnimationShape = TimeLine::EaseOutCurve;
+                        m_currentAnimationShape = QTimeLine::EaseOutCurve;
                 } else {
-                    m_currentAnimationShape = TimeLine::LinearCurve;
+                    m_currentAnimationShape = QTimeLine::LinearCurve;
                 }
                 m_timeLine.setCurveShape(m_currentAnimationShape);
             }
@@ -491,7 +497,7 @@ void FlipSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Wi
         }
         if ((m_start || m_stop) && !m_windows.contains(w)) {
             // fade out all windows not in window list
-            data.opacity *= (1.0 - m_startStopTimeLine.value());
+            data.opacity *= (1.0 - m_startStopTimeLine.currentValue());
             effects->paintWindow(w, mask, region, data);
             return;
         }
@@ -508,7 +514,7 @@ void FlipSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Wi
 //*************************************************************
 // Tabbox handling
 //*************************************************************
-void FlipSwitchEffect::tabBoxAdded(int mode)
+void FlipSwitchEffect::slotTabBoxAdded(int mode)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -523,7 +529,7 @@ void FlipSwitchEffect::tabBoxAdded(int mode)
     }
 }
 
-void FlipSwitchEffect::tabBoxClosed()
+void FlipSwitchEffect::slotTabBoxClosed()
 {
     if (m_active) {
         setActive(false, TabboxMode);
@@ -531,7 +537,7 @@ void FlipSwitchEffect::tabBoxClosed()
     }
 }
 
-void FlipSwitchEffect::tabBoxUpdated()
+void FlipSwitchEffect::slotTabBoxUpdated()
 {
     if (m_active && !m_stop) {
         if (!effects->currentTabBoxWindowList().isEmpty()) {
@@ -576,15 +582,17 @@ void FlipSwitchEffect::tabBoxUpdated()
 // Window adding/removing handling
 //*************************************************************
 
-void FlipSwitchEffect::windowAdded(EffectWindow* w)
+void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
 {
     if (m_active && isSelectableWindow(w)) {
         m_windows[ w ] = new ItemInfo();
     }
 }
 
-void FlipSwitchEffect::windowClosed(EffectWindow* w)
+void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
+    if (m_selectedWindow == w)
+        m_selectedWindow = 0;
     if (m_active && m_windows.contains(w)) {
         m_windows.remove(w);
     }
@@ -621,7 +629,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         effects->setActiveFullScreenEffect(this);
         m_active = true;
         m_start = true;
-        m_startStopTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+        m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         m_activeScreen = effects->activeScreen();
         m_screenArea = effects->clientArea(ScreenArea, m_activeScreen, effects->currentDesktop());
 
@@ -668,16 +676,16 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         }
         m_stop = true;
         if (m_animation) {
-            m_startStopTimeLine.setCurveShape(TimeLine::EaseOutCurve);
+            m_startStopTimeLine.setCurveShape(QTimeLine::EaseOutCurve);
             if (m_scheduledDirections.count() == 1) {
-                if (m_currentAnimationShape == TimeLine::EaseInOutCurve)
-                    m_currentAnimationShape = TimeLine::EaseInCurve;
-                else if (m_currentAnimationShape == TimeLine::EaseOutCurve)
-                    m_currentAnimationShape = TimeLine::LinearCurve;
+                if (m_currentAnimationShape == QTimeLine::EaseInOutCurve)
+                    m_currentAnimationShape = QTimeLine::EaseInCurve;
+                else if (m_currentAnimationShape == QTimeLine::EaseOutCurve)
+                    m_currentAnimationShape = QTimeLine::LinearCurve;
                 m_timeLine.setCurveShape(m_currentAnimationShape);
             }
         } else
-            m_startStopTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+            m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         if (mode != TabboxMode)
             effects->destroyInputWindow(m_input);
         if (m_hasKeyboardGrab) {
@@ -762,14 +770,14 @@ void FlipSwitchEffect::scheduleAnimation(const SwitchingDirection& direction, in
 {
     if (m_start) {
         // start is still active so change the shape to have a nice transition
-        m_startStopTimeLine.setCurveShape(TimeLine::EaseInCurve);
+        m_startStopTimeLine.setCurveShape(QTimeLine::EaseInCurve);
     }
     if (!m_animation && !m_start) {
         m_animation = true;
         m_scheduledDirections.enqueue(direction);
         distance--;
         // reset shape just to make sure
-        m_currentAnimationShape = TimeLine::EaseInOutCurve;
+        m_currentAnimationShape = QTimeLine::EaseInOutCurve;
         m_timeLine.setCurveShape(m_currentAnimationShape);
     }
     for (int i = 0; i < distance; i++) {
@@ -784,13 +792,13 @@ void FlipSwitchEffect::scheduleAnimation(const SwitchingDirection& direction, in
         }
     }
     if (m_scheduledDirections.count() > 1) {
-        TimeLine::CurveShape newShape = TimeLine::EaseInOutCurve;
+        QTimeLine::CurveShape newShape = QTimeLine::EaseInOutCurve;
         switch(m_currentAnimationShape) {
-        case TimeLine::EaseInOutCurve:
-            newShape = TimeLine::EaseInCurve;
+        case QTimeLine::EaseInOutCurve:
+            newShape = QTimeLine::EaseInCurve;
             break;
-        case TimeLine::EaseOutCurve:
-            newShape = TimeLine::LinearCurve;
+        case QTimeLine::EaseOutCurve:
+            newShape = QTimeLine::LinearCurve;
             break;
         default:
             newShape = m_currentAnimationShape;

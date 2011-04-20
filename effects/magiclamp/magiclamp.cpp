@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magiclamp.h"
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
+#include <QtCore/QTimeLine>
 
 namespace KWin
 {
@@ -34,6 +35,9 @@ MagicLampEffect::MagicLampEffect()
 {
     mActiveAnimations = 0;
     reconfigure(ReconfigureAll);
+    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+    connect(effects, SIGNAL(windowMinimized(EffectWindow*)), this, SLOT(slotWindowMinimized(EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
 }
 
 bool MagicLampEffect::supported()
@@ -61,20 +65,21 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
 void MagicLampEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
 
-    QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
+    QHash< EffectWindow*, QTimeLine* >::iterator entry = mTimeLineWindows.begin();
     bool erase = false;
     while (entry != mTimeLineWindows.end()) {
-        TimeLine &timeline = entry.value();
+        QTimeLine *timeline = entry.value();
         if (entry.key()->isMinimized()) {
-            timeline.addTime(time);
-            erase = (timeline.progress() >= 1.0f);
+            timeline->setCurrentTime(timeline->currentTime() + time);
+            erase = (timeline->currentValue() >= 1.0f);
         } else {
-            timeline.removeTime(time);
-            erase = (timeline.progress() <= 0.0f);
+            timeline->setCurrentTime(timeline->currentTime() - time);
+            erase = (timeline->currentValue() <= 0.0f);
         }
-        if (erase)
+        if (erase) {
+            delete timeline;
             entry = mTimeLineWindows.erase(entry);
-        else
+        } else
             ++entry;
     }
 
@@ -105,7 +110,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 {
     if (mTimeLineWindows.contains(w)) {
         // 0 = not minimized, 1 = fully minimized
-        float progress = mTimeLineWindows[w].value();
+        float progress = mTimeLineWindows[w]->currentValue();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -321,27 +326,31 @@ void MagicLampEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void MagicLampEffect::windowDeleted(EffectWindow* w)
+void MagicLampEffect::slotWindowDeleted(EffectWindow* w)
 {
-    mTimeLineWindows.remove(w);
+    delete mTimeLineWindows.take(w);
 }
 
-void MagicLampEffect::windowMinimized(EffectWindow* w)
+void MagicLampEffect::slotWindowMinimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration(mAnimationDuration);
-    mTimeLineWindows[w].setProgress(0.0f);
+    if (!mTimeLineWindows.contains(w)) {
+        mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
+        mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
+    }
+    mTimeLineWindows[w]->setCurrentTime(0);
 }
 
-void MagicLampEffect::windowUnminimized(EffectWindow* w)
+void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration(mAnimationDuration);
-    mTimeLineWindows[w].setProgress(1.0f);
+    if (!mTimeLineWindows.contains(w)) {
+        mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
+        mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
+    }
+    mTimeLineWindows[w]->setCurrentTime(mAnimationDuration);
 }
 
 } // namespace
