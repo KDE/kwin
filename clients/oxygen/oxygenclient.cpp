@@ -605,9 +605,9 @@ namespace Oxygen
 
         }
 
-
+        // background pixmap
+        if( helper().hasBackgroundPixmap( windowId() ) )
         {
-            // background pixmap
             int offset = layoutMetric( LM_OuterPaddingTop );
 
             // radial gradient positionning
