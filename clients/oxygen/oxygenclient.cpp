@@ -143,9 +143,9 @@ namespace Oxygen
         _configuration = _factory->configuration( *this );
 
         // animations duration
-        _glowAnimation->setDuration( _configuration.animationsDuration() );
-        _titleAnimationData->setDuration( _configuration.animationsDuration() );
-        _itemData.animation().data()->setDuration( _configuration.animationsDuration() );
+        _glowAnimation->setDuration( configuration().animationsDuration() );
+        _titleAnimationData->setDuration( configuration().animationsDuration() );
+        _itemData.animation().data()->setDuration( configuration().animationsDuration() );
         _itemData.setAnimationsEnabled( useAnimations() );
 
         // reset title transitions
@@ -165,7 +165,7 @@ namespace Oxygen
         _itemData.setDirty( true );
 
         // handle size grip
-        if( _configuration.drawSizeGrip() )
+        if( configuration().drawSizeGrip() )
         {
 
             if( !hasSizeGrip() ) createSizeGrip();
@@ -594,11 +594,6 @@ namespace Oxygen
                 offset -= 3;
                 height -= 3;
             }
-
-            // background pixmap
-            QPoint backgroundPixmapOffset( layoutMetric( LM_OuterPaddingLeft ) + layoutMetric( LM_BorderLeft ), 0 );
-            if( isMaximized() ) backgroundPixmapOffset += QPoint( 0, 3 );
-            helper().setBackgroundPixmapOffset( backgroundPixmapOffset );
 
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
