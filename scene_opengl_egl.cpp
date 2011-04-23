@@ -99,6 +99,8 @@ bool SceneOpenGL::initRenderingContext()
     if (!wspace->createOverlay()) {
         kError(1212) << "Could not get overlay window";
         return false;
+    } else {
+        wspace->setupOverlay(None);
     }
     surface = eglCreateWindowSurface(dpy, config, wspace->overlayWindow(), 0);
 
