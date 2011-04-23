@@ -2163,7 +2163,10 @@ void Client::updateAllowedActions(bool force)
         return;
     // TODO: This could be delayed and compressed - It's only for pagers etc. anyway
     info->setAllowedActions(allowed_actions);
-    if (decoration)
+
+    // ONLY if relevant features have changed (and the window didn't just get/loose moveresize for maximization state changes)
+    const unsigned long relevant = ~(NET::ActionMove|NET::ActionResize);
+    if (decoration && (allowed_actions & relevant) != (old_allowed_actions & relevant))
         decoration->reset(KDecoration::SettingButtons);
 }
 
