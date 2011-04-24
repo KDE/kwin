@@ -125,7 +125,7 @@ private:
     int highlightedDesktop;
     Window input;
     bool keyboardGrab;
-    bool wasWindowMove, wasDesktopMove;
+    bool wasWindowMove, wasDesktopMove, isValidMove;
     EffectWindow* windowMove;
     QPoint windowMoveDiff;
     QPoint dragStartPos;
