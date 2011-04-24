@@ -1096,7 +1096,7 @@ void DesktopGridEffect::setup()
                 WindowMotionManager manager;
                 foreach (EffectWindow * w, effects->stackingOrder()) {
                     if (w->isOnDesktop(i) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                            w->visibleInClientGroup() && !w->isSkipSwitcher()) {
+                            w->visibleInClientGroup() && !w->isSkipSwitcher() && w->isOnCurrentActivity()) {
                         manager.manage(w);
                     }
                 }
