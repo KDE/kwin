@@ -1082,6 +1082,7 @@ SceneOpenGL::EffectFrame::~EffectFrame()
 
 void SceneOpenGL::EffectFrame::free()
 {
+    glFlush();
     delete m_texture;
     m_texture = NULL;
     delete m_textTexture;
