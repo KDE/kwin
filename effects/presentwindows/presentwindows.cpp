@@ -1615,6 +1615,8 @@ void PresentWindowsEffect::updateFilterFrame()
 
 bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
 {
+    if (!w->isOnCurrentActivity())
+        return false;
     if (w->isSpecialWindow() || w->isUtility())
         return false;
     if (w->isDeleted())

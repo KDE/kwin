@@ -68,6 +68,7 @@ public:
     virtual void windowToScreen(EffectWindow* w, int screen);
     virtual void setShowingDesktop(bool showing);
 
+    virtual QString currentActivity() const;
     virtual int currentDesktop() const;
     virtual int numberOfDesktops() const;
     virtual void setCurrentDesktop(int desktop);
@@ -224,6 +225,9 @@ public:
     virtual void refWindow();
     virtual void unrefWindow();
     virtual bool isDeleted() const;
+
+    virtual bool isOnActivity(QString id) const;
+    virtual bool isOnAllActivities() const;
 
     virtual bool isOnAllDesktops() const;
     virtual int desktop() const; // prefer isOnXXX()

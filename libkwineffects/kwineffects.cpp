@@ -304,6 +304,11 @@ EffectWindow::~EffectWindow()
 {
 }
 
+bool EffectWindow::isOnCurrentActivity() const
+{
+    return isOnActivity(effects->currentActivity());
+}
+
 bool EffectWindow::isOnCurrentDesktop() const
 {
     return isOnDesktop(effects->currentDesktop());

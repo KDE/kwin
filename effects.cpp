@@ -596,6 +596,10 @@ void EffectsHandlerImpl::setShowingDesktop(bool showing)
     Workspace::self()->setShowingDesktop(showing);
 }
 
+QString EffectsHandlerImpl::currentActivity() const
+{
+    return Workspace::self()->currentActivity();
+}
 
 int EffectsHandlerImpl::currentDesktop() const
 {
@@ -1207,6 +1211,16 @@ void EffectWindowImpl::addRepaintFull()
 int EffectWindowImpl::desktop() const
 {
     return toplevel->desktop();
+}
+
+bool EffectWindowImpl::isOnActivity(QString activity) const
+{
+    return toplevel->isOnActivity(activity);
+}
+
+bool EffectWindowImpl::isOnAllActivities() const
+{
+    return toplevel->isOnAllActivities();
 }
 
 bool EffectWindowImpl::isOnAllDesktops() const
