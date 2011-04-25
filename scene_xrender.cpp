@@ -667,9 +667,42 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         xform.matrix[0][0] = XDoubleToFixed(1.0 / xscale);
         xform.matrix[1][1] = XDoubleToFixed(1.0 / yscale);
 
+        // transform the shape for clipping in paintTransformedScreen()
+        QVector<QRect> rects = transformed_shape.rects();
+        for (int i = 0;
+                i < rects.count();
+                ++i) {
+            QRect& r = rects[ i ];
+            r = QRect(int(r.x() * xscale), int(r.y() * yscale),
+                      int(r.width() * xscale), int(r.height() * yscale));
+        }
+        transformed_shape.setRects(rects.constData(), rects.count());
+    }
+
+    transformed_shape.translate(mapToScreen(mask, data, QPoint(0, 0)));
+    PaintClipper pcreg(region);   // clip by the region to paint
+    PaintClipper pc(transformed_shape);   // clip by window's shape
+
+    // In order to obtain a pixel perfect rescaling
+    // we need to blit the window content togheter with
+    // decorations in a temporary pixmap and scale
+    // the temporary pixmap at the end.
+    // We should do this only if there is scaling and
+    // the window has border
+    // This solves a number of glitches and on top of this
+    // it optimizes painting quite a bit
+    bool blitInTempPixmap = false;
+    if (scaled
+        && ((client && !client->noBorder())
+        || (deleted && !deleted->noBorder()))) {
+        blitInTempPixmap = true;
+    }
+
+    if (!blitInTempPixmap) {
         XRenderSetPictureTransform(display(), pic, &xform);
-        if (filter == ImageFilterGood)
-            XRenderSetPictureFilter(display(), pic, const_cast< char* >("good"), NULL, 0);
+        if (filter == ImageFilterGood) {
+            XRenderSetPictureFilter(display(), pic, const_cast<char*>("good"), NULL, 0);
+        }
 
         // This is needed to avoid hitting a fallback in the radeon driver.
         // The Render specification states that sampling pixels outside the
@@ -685,25 +718,11 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             attr.repeat = RepeatPad;
             XRenderChangePicture(display(), pic, CPRepeat, &attr);
         }
-
-        // transform the shape for clipping in paintTransformedScreen()
-        QVector< QRect > rects = transformed_shape.rects();
-        for (int i = 0;
-                i < rects.count();
-                ++i) {
-            QRect& r = rects[ i ];
-            r = QRect(int(r.x() * xscale), int(r.y() * yscale),
-                      int(r.width() * xscale), int(r.height() * yscale));
-        }
-        transformed_shape.setRects(rects.constData(), rects.count());
     }
-
-    transformed_shape.translate(mapToScreen(mask, data, QPoint(0, 0)));
-    PaintClipper pcreg(region);   // clip by the region to paint
-    PaintClipper pc(transformed_shape);   // clip by window's shape
     for (PaintClipper::Iterator iterator;
             !iterator.isDone();
             iterator.next()) {
+        QRect decorationRect;
         if (client || deleted) {
             bool noBorder = true;
             const QPixmap *left = NULL;
@@ -711,7 +730,6 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             const QPixmap *right = NULL;
             const QPixmap *bottom = NULL;
             QRect tr, lr, rr, br;
-            QRect decorationRect;
             if (client && !client->noBorder()) {
                 noBorder = client->noBorder();
                 client->ensureDecorationPixmapsPainted();
@@ -752,24 +770,26 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
                     XRenderComposite(dpy, PictOpOver, bottom->x11PictureHandle(), alpha, buffer,
                                      0, 0, 0, 0, br.x(), br.y(), br.width(), br.height());
                 } else {
-                    const QRect r = mapToScreen(mask, data, decorationRect);
                     prepareTempPixmap(left, top, right, bottom);
-                    XRenderSetPictureTransform(dpy, temp_pixmap->x11PictureHandle(), &xform);
-                    XRenderComposite(dpy, PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,
-                                     0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
-                    XRenderSetPictureTransform(dpy, temp_pixmap->x11PictureHandle(), &identity);
+                    // Will blit later
                 }
             }
         }
         if (!(mask & PAINT_DECORATION_ONLY)) {
             // Paint the window contents
             if (opaque) {
-                XRenderComposite(display(), PictOpSrc, pic, None, buffer, cr.x() * xscale, cr.y() * yscale,
-                                 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                if (blitInTempPixmap) {
+                    XRenderComposite(display(), PictOpSrc, pic, None, temp_pixmap->x11PictureHandle(), cr.x(), cr.y(), 0, 0, cr.x()-decorationRect.left(), cr.y()-decorationRect.top(), cr.width(), cr.height());
+                } else {
+                    XRenderComposite(display(), PictOpSrc, pic, None, buffer, cr.x() * xscale, cr.y() * yscale, 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                }
             } else {
                 Picture alpha = alphaMask(data.opacity);
-                XRenderComposite(display(), PictOpOver, pic, alpha, buffer, cr.x() * xscale, cr.y() * yscale,
-                                 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                if (blitInTempPixmap) {
+                    XRenderComposite(display(), PictOpSrc, pic, alpha, temp_pixmap->x11PictureHandle(), cr.x(), cr.y(), 0, 0, cr.x()-decorationRect.left(), cr.y()-decorationRect.top(), cr.width(), cr.height());
+                } else {
+                    XRenderComposite(display(), PictOpOver, pic, alpha, buffer, cr.x() * xscale, cr.y() * yscale, 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                }
                 transformed_shape = QRegion();
             }
         }
@@ -777,13 +797,25 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         if (data.brightness < 1.0) {
             // fake brightness change by overlaying black
             XRenderColor col = { 0, 0, 0, 0xffff *(1 - data.brightness) * data.opacity };
-            XRenderFillRectangle(display(), PictOpOver, buffer, &col, wr.x(), wr.y(), wr.width(), wr.height());
+            if (blitInTempPixmap) {
+                XRenderFillRectangle(display(), PictOpOver, temp_pixmap->x11PictureHandle(), &col, -decorationRect.left(), -decorationRect.top(), width(), height());
+            } else {
+                XRenderFillRectangle(display(), PictOpOver, buffer, &col, wr.x(), wr.y(), wr.width(), wr.height());
+            }
+        }
+        if (blitInTempPixmap) {
+            const QRect r = mapToScreen(mask, data, decorationRect);
+            XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &xform);
+            XRenderSetPictureFilter(display(), temp_pixmap->x11PictureHandle(), const_cast<char*>("good"), NULL, 0);
+            XRenderComposite(display(), PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,
+                         0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
+            XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &identity);
         }
     }
-    if (scaled) {
+    if (scaled && !blitInTempPixmap) {
         XRenderSetPictureTransform(display(), pic, &identity);
         if (filter == ImageFilterGood)
-            XRenderSetPictureFilter(display(), pic, const_cast< char* >("fast"), NULL, 0);
+            XRenderSetPictureFilter(display(), pic, const_cast<char*>("fast"), NULL, 0);
         if (!window()->hasAlpha()) {
             attr.repeat = RepeatNone;
             XRenderChangePicture(display(), pic, CPRepeat, &attr);
