@@ -105,6 +105,10 @@ enum TabBoxMode {
     TabBoxWindowsAlternativeMode // Secondary window switching mode
 };
 
+enum KWinOption {
+    CloseButtonCorner
+};
+
 inline
 KWIN_EXPORT Display* display()
 {

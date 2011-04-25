@@ -151,6 +151,8 @@ public:
 
     virtual EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const;
 
+    virtual QVariant kwinOption(KWinOption kwopt);
+
     // internal (used by kwin core or compositing code)
     void startPaint();
     bool borderActivated(ElectricBorder border);

@@ -46,8 +46,9 @@ public:
     void windowInputMouseEvent(QMouseEvent* e);
     virtual void drawBackground(QPainter* painter, const QRectF& rect);
 
-    void delayedShow();
-    void hide();
+    void disarm();
+public slots:
+    void arm();
 
 Q_SIGNALS:
     void close();
@@ -55,7 +56,7 @@ Q_SIGNALS:
 private:
     Plasma::PushButton* m_closeButton;
     Plasma::FrameSvg* m_frame;
-    QTimer* m_delayedShowTimer;
+    QTimer* m_armTimer;
 };
 
 /**
@@ -160,6 +161,7 @@ public slots:
 
 private slots:
     void closeWindow();
+    void elevateCloseWindow();
 
 protected:
     // Window rearranging
@@ -265,6 +267,7 @@ private:
 
     CloseWindowView* m_closeView;
     EffectWindow* m_closeWindow;
+    Qt::Corner m_closeButtonCorner;
 
     // drag to close
     QPoint m_dragStart;

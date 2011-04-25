@@ -431,6 +431,7 @@ public:
     bool rulesUpdatesDisabled() const;
 
     bool hasDecorationShadows() const;
+    Qt::Corner decorationCloseButtonCorner();
     bool decorationHasAlpha() const;
     bool decorationSupportsClientGrouping() const; // Returns true if the decoration supports tabs.
     bool decorationSupportsFrameOverlap() const;
@@ -1167,6 +1168,14 @@ inline bool Workspace::hasDecorationShadows() const
         return false;
     }
     return mgr->factory()->supports(AbilityProvidesShadow);
+}
+
+inline Qt::Corner Workspace::decorationCloseButtonCorner()
+{
+    if (!hasDecorationPlugin()) {
+        return Qt::TopRightCorner;
+    }
+    return mgr->factory()->closeButtonCorner();
 }
 
 inline bool Workspace::decorationHasAlpha() const

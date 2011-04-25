@@ -28,12 +28,21 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecorationbridge.h"
 
-KDecorationFactory::KDecorationFactory()
+class KDecorationFactoryPrivate {
+public:
+    KDecorationFactoryPrivate() {
+        closeButtonCorner = (Qt::Corner)0;
+    }
+    Qt::Corner closeButtonCorner;
+};
+
+KDecorationFactory::KDecorationFactory() : d(new KDecorationFactoryPrivate)
 {
 }
 
 KDecorationFactory::~KDecorationFactory()
 {
+    delete d;
     assert(_decorations.count() == 0);
 }
 
@@ -54,6 +63,18 @@ QList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
 bool KDecorationFactory::exists(const KDecoration* deco) const
 {
     return _decorations.contains(const_cast< KDecoration* >(deco));
+}
+
+Qt::Corner KDecorationFactory::closeButtonCorner()
+{
+    if (d->closeButtonCorner)
+        return d->closeButtonCorner;
+    return options()->titleButtonsLeft().contains('X') ? Qt::TopLeftCorner : Qt::TopRightCorner;
+}
+
+void KDecorationFactory::setCloseButtonCorner(Qt::Corner cnr)
+{
+    d->closeButtonCorner = cnr;
 }
 
 void KDecorationFactory::addDecoration(KDecoration* deco)

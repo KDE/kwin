@@ -88,6 +88,21 @@ public:
      * after such actions.
      */
     bool exists(const KDecoration* deco) const;
+
+    /**
+     * Set & get the position of the close button - most decorations don't have to call this ever.
+     *
+     * By default, the legacy position indicated by the options (top left or top right) will be
+     * returned.
+     * Only if you need to provide a bottom corner or your decoration does not respect those
+     * settings you will have to specify the exact corner (eg. used by the "present windows"
+     * closer)
+     *
+     * @since 4.8
+     */
+    Qt::Corner closeButtonCorner();
+    void setCloseButtonCorner(Qt::Corner cnr);
+
     /**
      * @internal
      */
