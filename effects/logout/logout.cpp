@@ -322,8 +322,10 @@ void LogoutEffect::slotWindowClosed(EffectWindow* w)
 
 void LogoutEffect::slotWindowDeleted(EffectWindow* w)
 {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     windows.removeAll(w);
     ignoredWindows.removeAll(w);
+#endif
     if (w == logoutWindow)
         logoutWindow = NULL;
 }
