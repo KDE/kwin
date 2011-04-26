@@ -1173,7 +1173,7 @@ void Workspace::loadDesktopSettings()
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
     KConfigGroup group(c, groupname);
-    const int n = group.readEntry("Number", 4);
+    const int n = group.readEntry("Number", 1);
     setNumberOfDesktops(n);
     for (int i = 1; i <= n; i++) {
         QString s = group.readEntry(QString("Name_%1").arg(i), i18n("Desktop %1", i));
