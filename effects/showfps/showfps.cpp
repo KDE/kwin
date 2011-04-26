@@ -465,8 +465,7 @@ void ShowFpsEffect::paintFPSText(int fps)
     painter.setFont(textFont);
     painter.setPen(textColor);
     painter.drawText(QRect(0, 0, 100, 100), textAlign, QString::number(fps));
-    if (fpsText)
-        delete fpsText;
+    delete fpsText;
     fpsText = new GLTexture(im);
     fpsText->bind();
     if (ShaderManager::instance()->isValid()) {
