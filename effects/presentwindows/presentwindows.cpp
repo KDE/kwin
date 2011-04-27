@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcolorscheme.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
+#include <kglobalsettings.h>
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <kwinglutils.h>
@@ -63,6 +64,10 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_highlightedWindow(NULL)
     , m_filterFrame(effects->effectFrame(EffectFrameStyled, false))
     , m_closeView(NULL)
+    , m_dragInProgress(false)
+    , m_dragWindow(NULL)
+    , m_highlightedDropTarget(NULL)
+    , m_dragToClose(false)
 {
     m_atomDesktop = XInternAtom(display(), "_KDE_PRESENT_WINDOWS_DESKTOP", False);
     m_atomWindows = XInternAtom(display(), "_KDE_PRESENT_WINDOWS_GROUP", False);
@@ -168,6 +173,7 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_leftButtonDesktop = (DesktopMouseAction)conf.readEntry("LeftButtonDesktop", (int)DesktopExitAction);
     m_middleButtonDesktop = (DesktopMouseAction)conf.readEntry("MiddleButtonDesktop", (int)DesktopNoAction);
     m_rightButtonDesktop = (DesktopMouseAction)conf.readEntry("RightButtonDesktop", (int)DesktopNoAction);
+    m_dragToClose = conf.readEntry("DragToClose", false);
 }
 
 void* PresentWindowsEffect::proxy()
@@ -212,6 +218,10 @@ void PresentWindowsEffect::paintScreen(int mask, QRegion region, ScreenPaintData
     // Display the filter box
     if (!m_windowFilter.isEmpty())
         m_filterFrame->render(region);
+    // Display drop targets
+    for (int i=0; i<m_dropTargets.size(); ++i) {
+        m_dropTargets.at(i)->render();
+    }
 }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -332,6 +342,11 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 
             if (!m_motionManager.areWindowsMoving()) {
                 mask |= PAINT_WINDOW_LANCZOS;
+            }
+            if (m_dragInProgress && m_dragWindow == w) {
+                QPoint diff = cursorPos() - m_dragStart;
+                data.xTranslate += diff.x();
+                data.yTranslate += diff.y();
             }
             effects->paintWindow(w, mask, region, data);
 
@@ -490,7 +505,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
         if (m_motionManager.transformedGeometry(windows.at(i)).contains(cursorPos()) &&
                 winData->visible && !winData->deleted) {
             hovering = true;
-            if (windows.at(i) && m_highlightedWindow != windows.at(i))
+            if (windows.at(i) && m_highlightedWindow != windows.at(i) && !m_dragInProgress)
                 setHighlightedWindow(windows.at(i));
             break;
         }
@@ -500,34 +515,101 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     else
         m_closeView->hide();
 
-    if (e->type() != QEvent::MouseButtonPress)
-        return;
-
-    if (me->button() == Qt::LeftButton) {
-        if (hovering) {
-            // mouse is hovering above a window - use MouseActionsWindow
-            mouseActionWindow(m_leftButtonWindow);
-        } else {
-            // mouse is hovering above desktop - use MouseActionsDesktop
-            mouseActionDesktop(m_leftButtonDesktop);
+    if (e->type() == QEvent::MouseButtonRelease) {
+        if (me->button() == Qt::LeftButton) {
+            if (m_dragInProgress && m_dragWindow) {
+                // handle drop
+                for (int i=0; i<m_dropTargets.size(); ++i) {
+                    if (m_dropTargets.at(i)->geometry().contains(me->pos())) {
+                        m_dragWindow->closeWindow();
+                        break;
+                    }
+                }
+                effects->setElevatedWindow(m_dragWindow, false);
+                m_dragInProgress = false;
+                m_dragWindow = NULL;
+                if (m_highlightedDropTarget) {
+                    KIcon icon("user-trash");
+                    m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+                    m_highlightedDropTarget = NULL;
+                }
+                effects->addRepaintFull();
+                XDefineCursor(display(), m_input, QCursor(Qt::PointingHandCursor).handle());
+                return;
+            }
+            if (hovering) {
+                // mouse is hovering above a window - use MouseActionsWindow
+                mouseActionWindow(m_leftButtonWindow);
+            } else {
+                // mouse is hovering above desktop - use MouseActionsDesktop
+                mouseActionDesktop(m_leftButtonDesktop);
+            }
         }
-    }
-    if (me->button() == Qt::MidButton) {
-        if (hovering) {
-            // mouse is hovering above a window - use MouseActionsWindow
-            mouseActionWindow(m_middleButtonWindow);
-        } else {
-            // mouse is hovering above desktop - use MouseActionsDesktop
-            mouseActionDesktop(m_middleButtonDesktop);
+        if (me->button() == Qt::MidButton) {
+            if (hovering) {
+                // mouse is hovering above a window - use MouseActionsWindow
+                mouseActionWindow(m_middleButtonWindow);
+            } else {
+                // mouse is hovering above desktop - use MouseActionsDesktop
+                mouseActionDesktop(m_middleButtonDesktop);
+            }
         }
+        if (me->button() == Qt::RightButton) {
+            if (hovering) {
+                // mouse is hovering above a window - use MouseActionsWindow
+                mouseActionWindow(m_rightButtonWindow);
+            } else {
+                // mouse is hovering above desktop - use MouseActionsDesktop
+                mouseActionDesktop(m_rightButtonDesktop);
+            }
+        }
+        // reset dragging state
+        effects->setElevatedWindow(m_dragWindow, false);
+        m_dragInProgress = false;
+        m_dragWindow = NULL;
+        if (m_highlightedDropTarget) {
+            effects->addRepaint(m_highlightedDropTarget->geometry());
+            KIcon icon("user-trash");
+            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+            m_highlightedDropTarget = NULL;
+        }
+        XDefineCursor(display(), m_input, QCursor(Qt::PointingHandCursor).handle());
+    } else if (e->type() == QEvent::MouseButtonPress && me->button() == Qt::LeftButton && hovering && m_dragToClose) {
+        m_dragStart = me->pos();
+        m_dragWindow = m_highlightedWindow;
+        m_dragInProgress = false;
+        m_highlightedDropTarget = NULL;
+        effects->setElevatedWindow(m_dragWindow, true);
+        effects->addRepaintFull();
     }
-    if (me->button() == Qt::RightButton) {
-        if (hovering) {
-            // mouse is hovering above a window - use MouseActionsWindow
-            mouseActionWindow(m_rightButtonWindow);
-        } else {
-            // mouse is hovering above desktop - use MouseActionsDesktop
-            mouseActionDesktop(m_rightButtonDesktop);
+    if (e->type() == QEvent::MouseMove && m_dragWindow) {
+        if ((me->pos() - m_dragStart).manhattanLength() > KGlobalSettings::dndEventDelay() && !m_dragInProgress) {
+            m_dragInProgress = true;
+            XDefineCursor(display(), m_input, QCursor(Qt::ForbiddenCursor).handle());
+        }
+        if (!m_dragInProgress) {
+            return;
+        }
+        effects->addRepaintFull();
+        EffectFrame *target = NULL;
+        foreach(EffectFrame *frame, m_dropTargets) {
+            if (frame->geometry().contains(me->pos())) {
+                target = frame;
+                break;
+            }
+        }
+        if (target && !m_highlightedDropTarget) {
+            m_highlightedDropTarget = target;
+            KIcon icon("user-trash");
+            effects->addRepaint(m_highlightedDropTarget->geometry());
+            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Active));
+            XDefineCursor(display(), m_input, QCursor(Qt::DragMoveCursor).handle());
+        } else if (!target && m_highlightedDropTarget) {
+            KIcon icon("user-trash");
+            effects->addRepaint(m_highlightedDropTarget->geometry());
+            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+            m_highlightedDropTarget = NULL;
+            XDefineCursor(display(), m_input, QCursor(Qt::ForbiddenCursor).handle());
         }
     }
 }
@@ -1545,8 +1627,18 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         effects->setActiveFullScreenEffect(this);
 
         m_gridSizes.clear();
-        for (int i = 0; i < effects->numScreens(); ++i)
+        for (int i = 0; i < effects->numScreens(); ++i) {
             m_gridSizes.append(GridSize());
+            if (m_dragToClose) {
+                const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
+                EffectFrame *frame = effects->effectFrame(EffectFrameNone, false);
+                KIcon icon("user-trash");
+                frame->setIcon(icon.pixmap(QSize(128, 128)));
+                frame->setPosition(QPoint(screenRect.x() + screenRect.width(), screenRect.y()));
+                frame->setAlignment(Qt::AlignRight | Qt::AlignTop);
+                m_dropTargets.append(frame);
+            }
+        }
 
         rearrangeWindows();
         if (m_tabBoxEnabled)
@@ -1575,6 +1667,9 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         }
         delete m_closeView;
         m_closeView = 0;
+        while (!m_dropTargets.empty()) {
+            delete m_dropTargets.takeFirst();
+        }
 
         // Move all windows back to their original position
         foreach (EffectWindow * w, m_motionManager.managedWindows())

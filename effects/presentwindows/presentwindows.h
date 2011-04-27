@@ -265,6 +265,14 @@ private:
 
     CloseWindowView* m_closeView;
     EffectWindow* m_closeWindow;
+
+    // drag to close
+    QPoint m_dragStart;
+    bool m_dragInProgress;
+    EffectWindow *m_dragWindow;
+    QList<EffectFrame*> m_dropTargets;
+    EffectFrame *m_highlightedDropTarget;
+    bool m_dragToClose;
 };
 
 } // namespace
