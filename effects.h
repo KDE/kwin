@@ -345,7 +345,7 @@ public:
     virtual void setPosition(const QPoint& point);
     virtual const QString& text() const;
     virtual void setText(const QString& text);
-    EffectFrameStyle style() const {
+    virtual EffectFrameStyle style() const {
         return m_style;
     };
     Plasma::FrameSvg& frame() {

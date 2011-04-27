@@ -1793,6 +1793,11 @@ public:
     virtual GLShader* shader() const = 0;
 
     /**
+     * @returns The style of this EffectFrame.
+     **/
+    virtual EffectFrameStyle style() const = 0;
+
+    /**
      * If @p enable is @c true cross fading between icons and text is enabled
      * By default disabled. Use setCrossFadeProgress to cross fade.
      * Cross Fading is currently only available if OpenGL is used.
