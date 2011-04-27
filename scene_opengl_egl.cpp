@@ -69,6 +69,7 @@ SceneOpenGL::~SceneOpenGL()
     foreach (Window * w, windows)
     delete w;
     // do cleanup after initBuffer()
+    cleanupGL();
     eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroyContext(dpy, ctx);
     eglDestroySurface(dpy, surface);

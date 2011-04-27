@@ -111,6 +111,11 @@ void initGL()
     GLVertexBuffer::initStatic();
 }
 
+void cleanupGL()
+{
+    ShaderManager::cleanup();
+}
+
 bool hasGLVersion(int major, int minor, int release)
 {
     return glVersion >= MAKE_GL_VERSION(major, minor, release);
@@ -1074,6 +1079,7 @@ ShaderManager *ShaderManager::instance()
 void ShaderManager::cleanup()
 {
     delete s_shaderManager;
+    s_shaderManager = NULL;
 }
 
 ShaderManager::ShaderManager()

@@ -142,6 +142,7 @@ SceneOpenGL::~SceneOpenGL()
     foreach (Window * w, windows)
     delete w;
     // do cleanup after initBuffer()
+    cleanupGL();
     glXMakeCurrent(display(), None, NULL);
     glXDestroyContext(display(), ctxbuffer);
     if (wspace->overlayWindow()) {

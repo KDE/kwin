@@ -62,6 +62,8 @@ void KWIN_EXPORT initGLX();
 void KWIN_EXPORT initGL();
 // Initializes EGL function pointers
 void KWIN_EXPORT initEGL();
+// Cleans up all resources hold by the GL Context
+void KWIN_EXPORT cleanupGL();
 
 // Number of supported texture units
 extern KWIN_EXPORT int glTextureUnitsCount;
