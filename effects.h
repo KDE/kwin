@@ -171,6 +171,8 @@ public Q_SLOTS:
     void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
     void slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to);
     void slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
+    void slotShowOutline(const QRect &geometry);
+    void slotHideOutline();
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old);

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "outline.h"
+#include "effects.h"
 #include <QtCore/QRect>
 #include <QtGui/QX11Info>
 #include <QtGui/QPainter>
@@ -43,11 +44,19 @@ Outline::~Outline()
 
 void Outline::show()
 {
+    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
+        static_cast<EffectsHandlerImpl*>(effects)->slotShowOutline(m_outlineGeometry);
+        return; // done by effect
+    }
     showWithX();
 }
 
 void Outline::hide()
 {
+    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
+        static_cast<EffectsHandlerImpl*>(effects)->slotHideOutline();
+        return; // done by effect
+    }
     hideWithX();
 }
 

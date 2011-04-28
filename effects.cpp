@@ -1159,6 +1159,16 @@ EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool static
     return new EffectFrameImpl(style, staticSize, position, alignment);
 }
 
+void EffectsHandlerImpl::slotShowOutline(const QRect& geometry)
+{
+    emit showOutline(geometry);
+}
+
+void EffectsHandlerImpl::slotHideOutline()
+{
+    emit hideOutline();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************
