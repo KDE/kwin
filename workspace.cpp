@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "placement.h"
 #include "notifications.h"
+#include "outline.h"
 #include "group.h"
 #include "rules.h"
 #include "kwinadaptor.h"
@@ -239,6 +240,7 @@ Workspace::Workspace(bool restore)
     client_keys = new KActionCollection(this);
     initShortcuts();
     desktop_change_osd = new DesktopChangeOSD(this);
+    m_outline = new Outline();
 
     init();
 
@@ -515,6 +517,7 @@ Workspace::~Workspace()
         (*it)->release();
     delete tab_box;
     delete desktop_change_osd;
+    delete m_outline;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
@@ -2438,94 +2441,6 @@ bool Workspace::electricBorderEvent(XEvent* e)
     return false;
 }
 
-void Workspace::showElectricBorderWindowOutline()
-{
-    if (!movingClient)
-        return;
-    // code copied from TabBox::updateOutline() in tabbox.cpp
-    QRect c = movingClient->electricBorderMaximizeGeometry(cursorPos(), currentDesktop());
-    // left/right parts are between top/bottom, they don't reach as far as the corners
-    XMoveResizeWindow(QX11Info::display(), outline_left, c.x(), c.y() + 5, 5, c.height() - 10);
-    XMoveResizeWindow(QX11Info::display(), outline_right, c.x() + c.width() - 5, c.y() + 5, 5, c.height() - 10);
-    XMoveResizeWindow(QX11Info::display(), outline_top, c.x(), c.y(), c.width(), 5);
-    XMoveResizeWindow(QX11Info::display(), outline_bottom, c.x(), c.y() + c.height() - 5, c.width(), 5);
-    {
-        QPixmap pix(5, c.height() - 10);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(0, 0, 0, pix.height() - 1);
-        p.drawLine(4, 0, 4, pix.height() - 1);
-        p.setPen(Qt::gray);
-        p.drawLine(1, 0, 1, pix.height() - 1);
-        p.drawLine(3, 0, 3, pix.height() - 1);
-        p.setPen(Qt::black);
-        p.drawLine(2, 0, 2, pix.height() - 1);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outline_left, pix.handle());
-        XSetWindowBackgroundPixmap(QX11Info::display(), outline_right, pix.handle());
-    }
-    {
-        QPixmap pix(c.width(), 5);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(0, 0, pix.width() - 1 - 0, 0);
-        p.drawLine(4, 4, pix.width() - 1 - 4, 4);
-        p.drawLine(0, 0, 0, 4);
-        p.drawLine(pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4);
-        p.setPen(Qt::gray);
-        p.drawLine(1, 1, pix.width() - 1 - 1, 1);
-        p.drawLine(3, 3, pix.width() - 1 - 3, 3);
-        p.drawLine(1, 1, 1, 4);
-        p.drawLine(3, 3, 3, 4);
-        p.drawLine(pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4);
-        p.drawLine(pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4);
-        p.setPen(Qt::black);
-        p.drawLine(2, 2, pix.width() - 1 - 2, 2);
-        p.drawLine(2, 2, 2, 4);
-        p.drawLine(pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outline_top, pix.handle());
-    }
-    {
-        QPixmap pix(c.width(), 5);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(4, 0, pix.width() - 1 - 4, 0);
-        p.drawLine(0, 4, pix.width() - 1 - 0, 4);
-        p.drawLine(0, 4, 0, 0);
-        p.drawLine(pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0);
-        p.setPen(Qt::gray);
-        p.drawLine(3, 1, pix.width() - 1 - 3, 1);
-        p.drawLine(1, 3, pix.width() - 1 - 1, 3);
-        p.drawLine(3, 1, 3, 0);
-        p.drawLine(1, 3, 1, 0);
-        p.drawLine(pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0);
-        p.drawLine(pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0);
-        p.setPen(Qt::black);
-        p.drawLine(2, 2, pix.width() - 1 - 2, 2);
-        p.drawLine(2, 0, 2, 2);
-        p.drawLine(pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outline_bottom, pix.handle());
-    }
-    XClearWindow(QX11Info::display(), outline_left);
-    XClearWindow(QX11Info::display(), outline_right);
-    XClearWindow(QX11Info::display(), outline_top);
-    XClearWindow(QX11Info::display(), outline_bottom);
-    XMapWindow(QX11Info::display(), outline_left);
-    XMapWindow(QX11Info::display(), outline_right);
-    XMapWindow(QX11Info::display(), outline_top);
-    XMapWindow(QX11Info::display(), outline_bottom);
-}
-
-void Workspace::hideElectricBorderWindowOutline()
-{
-    XUnmapWindow(QX11Info::display(), outline_left);
-    XUnmapWindow(QX11Info::display(), outline_right);
-    XUnmapWindow(QX11Info::display(), outline_top);
-    XUnmapWindow(QX11Info::display(), outline_bottom);
-}
-
 //-----------------------------------------------------------------------------
 // Top menu
 
@@ -2939,6 +2854,11 @@ Client* Workspace::findSimilarClient(Client* c)
     }
 
     return found;
+}
+
+Outline* Workspace::outline()
+{
+    return m_outline;
 }
 
 } // namespace

@@ -58,6 +58,9 @@ public:
     virtual void restack(TabBoxClient *c, TabBoxClient *under);
     virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const;
     virtual TabBoxClient* desktopClient() const;
+    virtual void hideOutline();
+    virtual void showOutline(const QRect &outline);
+    virtual QVector< Window > outlineWindowIds() const;
 };
 
 class TabBoxClientImpl : public TabBoxClient

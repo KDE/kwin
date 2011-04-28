@@ -94,6 +94,7 @@ set(kwin_KDEINIT_SRCS
    tabbox/tabboxview.cpp 
    desktopchangeosd.cpp 
    options.cpp 
+   outline.cpp
    plugins.cpp 
    events.cpp 
    killwindow.cpp 

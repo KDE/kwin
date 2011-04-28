@@ -68,6 +68,7 @@ class Tile;
 class TilingLayout;
 class ClientGroup;
 class DesktopChangeOSD;
+class Outline;
 class RootInfo;
 class PluginMgr;
 class Placement;
@@ -219,6 +220,8 @@ public:
 
     Position supportedTilingResizeMode(Client *c, Position currentMode);
 
+    Outline* outline();
+
     //-------------------------------------------------
     // Desktop layout
 
@@ -326,6 +329,8 @@ private:
     // virtual desktops so that we can quickly index them
     // without having to remember to subtract one.
     QVector<TilingLayout *> tilingLayouts;
+
+    Outline* m_outline;
 
     //-------------------------------------------------
     // Unsorted
@@ -549,8 +554,6 @@ public:
     void stopMousePolling();
 
     void raiseElectricBorderWindows();
-    void showElectricBorderWindowOutline();
-    void hideElectricBorderWindowOutline();
 
 public slots:
     void addRepaintFull();

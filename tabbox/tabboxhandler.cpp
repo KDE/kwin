@@ -58,10 +58,6 @@ public:
     */
     void updateOutline();
     /**
-    * Hides the currently shown outline.
-    */
-    void hideOutline();
-    /**
     * Updates the current highlight window state
     */
     void updateHighlightWindows();
@@ -122,10 +118,6 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
     delete view;
-    XDestroyWindow(QX11Info::display(), outlineLeft);
-    XDestroyWindow(QX11Info::display(), outlineRight);
-    XDestroyWindow(QX11Info::display(), outlineTop);
-    XDestroyWindow(QX11Info::display(), outlineBottom);
 }
 
 ClientModel* TabBoxHandlerPrivate::clientModel() const
@@ -144,91 +136,12 @@ void TabBoxHandlerPrivate::updateOutline()
         return;
 //     if ( c == NULL || !m_isShown || !c->isShown( true ) || !c->isOnCurrentDesktop())
     if (!isShown || view->clientModel()->data(index, ClientModel::EmptyRole).toBool()) {
-        hideOutline();
+        q->hideOutline();
         return;
     }
     TabBoxClient* c = static_cast< TabBoxClient* >(
                           view->clientModel()->data(index, ClientModel::ClientRole).value<void *>());
-    // left/right parts are between top/bottom, they don't reach as far as the corners
-    XMoveResizeWindow(QX11Info::display(), outlineLeft, c->x(), c->y() + 5, 5, c->height() - 10);
-    XMoveResizeWindow(QX11Info::display(), outlineRight, c->x() + c->width() - 5, c->y() + 5, 5, c->height() - 10);
-    XMoveResizeWindow(QX11Info::display(), outlineTop, c->x(), c->y(), c->width(), 5);
-    XMoveResizeWindow(QX11Info::display(), outlineBottom, c->x(), c->y() + c->height() - 5, c->width(), 5);
-    {
-        QPixmap pix(5, c->height() - 10);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(0, 0, 0, pix.height() - 1);
-        p.drawLine(4, 0, 4, pix.height() - 1);
-        p.setPen(Qt::gray);
-        p.drawLine(1, 0, 1, pix.height() - 1);
-        p.drawLine(3, 0, 3, pix.height() - 1);
-        p.setPen(Qt::black);
-        p.drawLine(2, 0, 2, pix.height() - 1);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outlineLeft, pix.handle());
-        XSetWindowBackgroundPixmap(QX11Info::display(), outlineRight, pix.handle());
-    }
-    {
-        QPixmap pix(c->width(), 5);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(0, 0, pix.width() - 1 - 0, 0);
-        p.drawLine(4, 4, pix.width() - 1 - 4, 4);
-        p.drawLine(0, 0, 0, 4);
-        p.drawLine(pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4);
-        p.setPen(Qt::gray);
-        p.drawLine(1, 1, pix.width() - 1 - 1, 1);
-        p.drawLine(3, 3, pix.width() - 1 - 3, 3);
-        p.drawLine(1, 1, 1, 4);
-        p.drawLine(3, 3, 3, 4);
-        p.drawLine(pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4);
-        p.drawLine(pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4);
-        p.setPen(Qt::black);
-        p.drawLine(2, 2, pix.width() - 1 - 2, 2);
-        p.drawLine(2, 2, 2, 4);
-        p.drawLine(pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outlineTop, pix.handle());
-    }
-    {
-        QPixmap pix(c->width(), 5);
-        QPainter p(&pix);
-        p.setPen(Qt::white);
-        p.drawLine(4, 0, pix.width() - 1 - 4, 0);
-        p.drawLine(0, 4, pix.width() - 1 - 0, 4);
-        p.drawLine(0, 4, 0, 0);
-        p.drawLine(pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0);
-        p.setPen(Qt::gray);
-        p.drawLine(3, 1, pix.width() - 1 - 3, 1);
-        p.drawLine(1, 3, pix.width() - 1 - 1, 3);
-        p.drawLine(3, 1, 3, 0);
-        p.drawLine(1, 3, 1, 0);
-        p.drawLine(pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0);
-        p.drawLine(pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0);
-        p.setPen(Qt::black);
-        p.drawLine(2, 2, pix.width() - 1 - 2, 2);
-        p.drawLine(2, 0, 2, 2);
-        p.drawLine(pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2);
-        p.end();
-        XSetWindowBackgroundPixmap(QX11Info::display(), outlineBottom, pix.handle());
-    }
-    XClearWindow(QX11Info::display(), outlineLeft);
-    XClearWindow(QX11Info::display(), outlineRight);
-    XClearWindow(QX11Info::display(), outlineTop);
-    XClearWindow(QX11Info::display(), outlineBottom);
-    XMapWindow(QX11Info::display(), outlineLeft);
-    XMapWindow(QX11Info::display(), outlineRight);
-    XMapWindow(QX11Info::display(), outlineTop);
-    XMapWindow(QX11Info::display(), outlineBottom);
-}
-
-void TabBoxHandlerPrivate::hideOutline()
-{
-    XUnmapWindow(QX11Info::display(), outlineLeft);
-    XUnmapWindow(QX11Info::display(), outlineRight);
-    XUnmapWindow(QX11Info::display(), outlineTop);
-    XUnmapWindow(QX11Info::display(), outlineBottom);
+    q->showOutline(QRect(c->x(), c->y(), c->width(), c->height()));
 }
 
 void TabBoxHandlerPrivate::updateHighlightWindows()
@@ -269,11 +182,11 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     }
     data[ 0 ] = currentClient ? currentClient->window() : 0L;
     if (config.isShowOutline()) {
-        data.resize(6);
-        data[ 2 ] = outlineLeft;
-        data[ 3 ] = outlineTop;
-        data[ 4 ] = outlineRight;
-        data[ 5 ] = outlineBottom;
+        QVector<Window> outlineWindows = q->outlineWindowIds();
+        data.resize(2+outlineWindows.size());
+        for (int i=0; i<outlineWindows.size(); ++i) {
+            data[2+i] = outlineWindows[i];
+        }
     }
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
     XChangeProperty(dpy, wId, atom, atom, 32, PropModeReplace,
@@ -492,7 +405,7 @@ void TabBoxHandler::hide(bool abort)
         d->endHighlightWindows(abort);
     }
     if (d->config.isShowOutline()) {
-        d->hideOutline();
+        hideOutline();
     }
     d->view->hide();
 }

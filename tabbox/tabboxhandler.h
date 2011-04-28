@@ -312,6 +312,27 @@ public:
     */
     QWidget* tabBoxView() const;
 
+protected:
+    /**
+     * Show the outline of the current selected window
+     * @param outline The geometry of the window the outline will be shown
+     * @since 4.7
+     **/
+    virtual void showOutline(const QRect &outline) = 0;
+
+    /**
+     * Hide previously shown outline
+     * @since 4.7
+     **/
+    virtual void hideOutline() = 0;
+
+    /**
+     * Return outline window ids
+     * @return The outline window ids given in the order left, top, right, bottom
+     * @since 4.7
+     **/
+    virtual QVector<Window> outlineWindowIds() const = 0;
+
 signals:
     /**
     * This signal is fired when the TabBoxConfig changes
@@ -320,6 +341,7 @@ signals:
     void configChanged();
 
 private:
+    friend class TabBoxHandlerPrivate;
     TabBoxHandlerPrivate* d;
 };
 

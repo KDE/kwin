@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kephal/screens.h>
 #include <KDE/KGlobalSettings>
+#include "outline.h"
 
 namespace KWin
 {
@@ -2683,7 +2684,7 @@ void Client::finishMoveResize(bool cancel)
         else
             workspace()->restoreElectricBorderSize(border);
         electricMaximizing = false;
-        workspace()->hideElectricBorderWindowOutline();
+        workspace()->outline()->hide();
     }
 // FRAME    update();
 
@@ -3114,9 +3115,9 @@ void Client::setElectricBorderMaximizing(bool maximizing)
 {
     electricMaximizing = maximizing;
     if (maximizing)
-        workspace()->showElectricBorderWindowOutline();
+        workspace()->outline()->show(electricBorderMaximizeGeometry(cursorPos(), desktop()));
     else
-        workspace()->hideElectricBorderWindowOutline();
+        workspace()->outline()->hide();
 }
 
 QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
