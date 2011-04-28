@@ -65,7 +65,11 @@ add_subdirectory( libkdecorations )
 add_subdirectory( libkwineffects )
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
-add_subdirectory( clients )
+
+OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+if( KWIN_BUILD_DECORATIONS )
+    add_subdirectory( clients )
+endif( KWIN_BUILD_DECORATIONS )
 add_subdirectory( data )
 
 if( KWIN_HAVE_COMPOSITING )
