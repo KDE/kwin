@@ -188,20 +188,23 @@ namespace Oxygen
         if( _client.isMaximized() ) painter.translate( 0, 1 );
 
         // base button color
-        QColor bt;
-        if( _type == ButtonItemClose && _forceInactive ) bt = _client.backgroundPalette( this, palette ).window().color();
-        else bt = palette.button().color();
+        QColor base;
+        if( _type == ButtonItemClose && _forceInactive ) base = _client.backgroundPalette( this, palette ).window().color();
+        else if( _type == ButtonItemClose ) base = palette.window().color();
+        else base = palette.button().color();
 
-        // button icon and glow color depending on glow intensity
+        // text color
         QColor color = (_type == ButtonItemClose && _forceInactive ) ?
             buttonDetailColor( _client.backgroundPalette( this, palette ) ):
             buttonDetailColor( palette );
 
+        // glow color
         QColor glow = isCloseButton() ?
             _helper.viewNegativeTextBrush().brush(palette).color():
             _helper.viewHoverBrush().brush(palette).color();
 
-        glow = _helper.calcDarkColor( glow );
+        // shadow color
+        QColor shadow = _helper.calcShadowColor( base );
 
         // decide decoration color
         if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
@@ -211,10 +214,9 @@ namespace Oxygen
         {
 
             // decide shadow color
-            QColor shadow;
-            if( isAnimated() ) shadow = KColorUtils::mix( Qt::black, glow, glowIntensity() );
+            if( isAnimated() ) shadow = KColorUtils::mix( shadow, glow, glowIntensity() );
             else if( _status == Oxygen::Hovered ) shadow = glow;
-            else shadow = Qt::black;
+            shadow = _helper.calcDarkColor( shadow );
 
             qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
 
@@ -225,7 +227,7 @@ namespace Oxygen
             const bool pressed( (_status == Oxygen::Pressed) ||
                 ( isChecked() && isToggleButton() ) );
 
-            painter.drawPixmap(0, 0, _helper.windecoButton(bt, pressed, scale ) );
+            painter.drawPixmap(0, 0, _helper.windecoButton( base, pressed, scale ) );
 
         }
 
@@ -243,10 +245,12 @@ namespace Oxygen
             painter.setRenderHints(QPainter::Antialiasing);
             qreal width( 1.2 );
 
+            // contrast
             painter.setBrush(Qt::NoBrush);
-            painter.setPen(QPen( _helper.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.setPen(QPen( _helper.calcLightColor( base ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             drawIcon(&painter);
 
+            // main
             painter.translate(0,-1.5);
             painter.setBrush(Qt::NoBrush);
             painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
