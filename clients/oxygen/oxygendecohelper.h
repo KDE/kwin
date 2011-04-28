@@ -60,6 +60,9 @@ namespace Oxygen
         //! title bar text color
         const QColor& inactiveTitleBarTextColor( const QPalette& );
 
+        //! button text color
+        const QColor& inactiveButtonTextColor( const QPalette& );
+
         protected:
 
         //! reduce contrast between two colors
@@ -72,6 +75,9 @@ namespace Oxygen
 
         //! titleBar text color cache
         ColorCache _titleBarTextColorCache;
+
+        //! button text color cache
+        ColorCache _buttonTextColorCache;
 
 
     };

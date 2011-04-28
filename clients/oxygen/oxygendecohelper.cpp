@@ -44,6 +44,7 @@ namespace Oxygen
 
         // local caches
         _titleBarTextColorCache.clear();
+        _buttonTextColorCache.clear();
 
     }
 
@@ -194,6 +195,28 @@ namespace Oxygen
             const QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
             out = new QColor( reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4)))) );
             _titleBarTextColorCache.insert( key, out );
+        }
+
+        return *out;
+    }
+
+
+    //______________________________________________________________________________
+    const QColor& DecoHelper::inactiveButtonTextColor( const QPalette& palette )
+    {
+
+        const quint32 key( palette.color(QPalette::Active, QPalette::Window).rgba() );
+        QColor* out( _buttonTextColorCache.object( key ) );
+        if( !out )
+        {
+
+            // todo: reimplement cache
+            const QColor ab = palette.color(QPalette::Active, QPalette::Button);
+            const QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
+            const QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
+            const QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
+            out = new QColor( reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4)))) );
+            _buttonTextColorCache.insert( key, out );
         }
 
         return *out;

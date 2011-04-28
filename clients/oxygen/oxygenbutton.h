@@ -118,9 +118,21 @@ namespace Oxygen
         //! color
         QColor buttonDetailColor(const QPalette& palette, bool active ) const
         {
-            return active ?
-                palette.color(QPalette::Active, QPalette::WindowText):
-                _helper.inactiveTitleBarTextColor( palette );
+            if( _type == ButtonItemClose )
+            {
+
+                return active ?
+                    palette.color(QPalette::Active, QPalette::WindowText ):
+                    _helper.inactiveTitleBarTextColor( palette );
+
+            } else {
+
+                return active ?
+                    palette.color(QPalette::Active, QPalette::ButtonText ):
+                    _helper.inactiveButtonTextColor( palette );
+
+            }
+
         }
 
         //! true if animation is in progress

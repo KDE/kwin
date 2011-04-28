@@ -188,7 +188,9 @@ namespace Oxygen
         if( _client.isMaximized() ) painter.translate( 0, 1 );
 
         // base button color
-        const QColor bt = ((_type == ButtonItemClose && _forceInactive ) ? _client.backgroundPalette( this, palette ):palette).window().color();
+        QColor bt;
+        if( _type == ButtonItemClose && _forceInactive ) bt = _client.backgroundPalette( this, palette ).window().color();
+        else bt = palette.button().color();
 
         // button icon and glow color depending on glow intensity
         QColor color = (_type == ButtonItemClose && _forceInactive ) ?
