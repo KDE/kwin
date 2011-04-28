@@ -695,7 +695,7 @@ void Client::resizeDecoration(const QSize& s)
 
 bool Client::noBorder() const
 {
-    return noborder || isFullScreen();
+    return !workspace()->hasDecorationPlugin() || noborder || isFullScreen();
 }
 
 bool Client::userCanSetNoBorder() const

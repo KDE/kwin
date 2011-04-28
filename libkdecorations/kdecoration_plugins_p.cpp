@@ -101,9 +101,13 @@ KDecoration* KDecorationPlugins::createDecoration(KDecorationBridge* bridge)
 // returns true if plugin was loaded successfully
 bool KDecorationPlugins::loadPlugin(QString nameStr)
 {
+    KConfigGroup group(config, QString("Style"));
     if (nameStr.isEmpty()) {
-        KConfigGroup group(config, QString("Style"));
         nameStr = group.readEntry("PluginLib", defaultPlugin);
+    }
+    if (group.readEntry<bool>("NoPlugin", false)) {
+        error(i18n("Loading of window decoration plugin library disabled in configuration."));
+        return false;
     }
 
     KLibrary *oldLibrary = library;

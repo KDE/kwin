@@ -90,6 +90,7 @@ public:
     bool workspaceEvent(QEvent*);
 
     KDecoration* createDecoration(KDecorationBridge* bridge);
+    bool hasDecorationPlugin() const;
 
     bool hasClient(const Client*);
 
@@ -1307,28 +1308,51 @@ inline void Workspace::checkCompositeTimer()
         setCompositeTimer();
 }
 
+inline bool Workspace::hasDecorationPlugin() const
+{
+    if (!mgr) {
+        return false;
+    }
+    return !mgr->hasNoDecoration();
+}
+
 inline bool Workspace::hasDecorationShadows() const
 {
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
     return mgr->factory()->supports(AbilityProvidesShadow);
 }
 
 inline bool Workspace::decorationHasAlpha() const
 {
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
     return mgr->factory()->supports(AbilityUsesAlphaChannel);
 }
 
 inline bool Workspace::decorationSupportsClientGrouping() const
 {
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
     return mgr->factory()->supports(AbilityClientGrouping);
 }
 
 inline bool Workspace::decorationSupportsFrameOverlap() const
 {
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
     return mgr->factory()->supports(AbilityExtendIntoClientArea);
 }
 
 inline bool Workspace::decorationSupportsBlurBehind() const
 {
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
     return mgr->factory()->supports(AbilityUsesBlurBehind);
 }
 

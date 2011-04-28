@@ -355,7 +355,7 @@ void Workspace::init()
         ,
     };
 
-    if (mgr->factory()->supports(AbilityExtendIntoClientArea))
+    if (hasDecorationPlugin() && mgr->factory()->supports(AbilityExtendIntoClientArea))
         protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
     QX11Info info;
@@ -1058,7 +1058,7 @@ void Workspace::slotReconfigure()
     forEachClient(CheckIgnoreFocusStealingProcedure());
     updateToolWindows(true);
 
-    if (mgr->reset(changed)) {
+    if (hasDecorationPlugin() && mgr->reset(changed)) {
         // Decorations need to be recreated
 
         // This actually seems to make things worse now
@@ -1140,7 +1140,11 @@ void Workspace::slotReconfigure()
     }
     // just so that we reset windows in the right manner, 'activate' the current active window
     notifyTilingWindowActivated(activeClient());
-    rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
+    if (hasDecorationPlugin()) {
+        rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
+    } else {
+        rootInfo->setSupported(NET::WM2FrameOverlap, false);
+    }
 }
 
 void Workspace::slotReinitCompositing()
@@ -1158,8 +1162,10 @@ void Workspace::slotReinitCompositing()
     compositingSuspended = false;
     options->compositingInitialized = false;
     setupCompositing();
-    KDecorationFactory* factory = mgr->factory();
-    factory->reset(SettingCompositing);
+    if (hasDecorationPlugin()) {
+        KDecorationFactory* factory = mgr->factory();
+        factory->reset(SettingCompositing);
+    }
 
     if (effects) { // setupCompositing() may fail
         effects->reconfigure();
@@ -2539,6 +2545,9 @@ int Workspace::topMenuHeight() const
 
 KDecoration* Workspace::createDecoration(KDecorationBridge* bridge)
 {
+    if (!hasDecorationPlugin()) {
+        return NULL;
+    }
     return mgr->createDecoration(bridge);
 }
 
@@ -2548,8 +2557,11 @@ KDecoration* Workspace::createDecoration(KDecorationBridge* bridge)
  */
 QList<int> Workspace::decorationSupportedColors() const
 {
-    KDecorationFactory* factory = mgr->factory();
     QList<int> ret;
+    if (!hasDecorationPlugin()) {
+        return ret;
+    }
+    KDecorationFactory* factory = mgr->factory();
     for (Ability ab = ABILITYCOLOR_FIRST;
             ab < ABILITYCOLOR_END;
             ab = static_cast<Ability>(ab + 1))

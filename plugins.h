@@ -33,8 +33,15 @@ class PluginMgr
 public:
     PluginMgr();
     virtual bool provides(Requirement);
+    /**
+     * @returns @c true if there is no decoration plugin.
+     **/
+    bool hasNoDecoration() const;
 protected:
     virtual void error(const QString& error_msg);
+private:
+    void setNoDecoration(bool noDecoration);
+    bool m_noDecoration;
 };
 
 } // namespace
