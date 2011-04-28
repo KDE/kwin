@@ -419,6 +419,9 @@ void SceneXrender::windowClosed(Toplevel* c, Deleted* deleted)
         // replace c with deleted
         Window* w = windows.take(c);
         w->updateToplevel(deleted);
+        if (w->shadow()) {
+            w->shadow()->setToplevel(deleted);
+        }
         windows[ deleted ] = w;
     } else {
         delete windows.take(c);
@@ -438,6 +441,8 @@ void SceneXrender::windowAdded(Toplevel* c)
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
     c->effectWindow()->setSceneWindow(windows[ c ]);
+    c->getShadow();
+    windows[ c ]->updateShadow(c->shadow());
 }
 
 //****************************************
@@ -719,6 +724,38 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             XRenderChangePicture(display(), pic, CPRepeat, &attr);
         }
     }
+
+    //shadow
+    if (m_shadow) {
+        QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
+        SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
+        m_xrenderShadow->layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
+        if (!scaled) {
+            stlr = mapToScreen(mask, data, stlr);
+            str = mapToScreen(mask, data, str);
+            strr = mapToScreen(mask, data, strr);
+            srr = mapToScreen(mask, data, srr);
+            sbrr = mapToScreen(mask, data, sbrr);
+            sbr = mapToScreen(mask, data, sbr);
+            sblr = mapToScreen(mask, data, sblr);
+            slr = mapToScreen(mask, data, slr);
+
+            Picture alpha = alphaMask(data.opacity);
+
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTopLeft), alpha, buffer, 0, 0, 0, 0, stlr.x(), stlr.y(), stlr.width(), stlr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTop), alpha, buffer, 0, 0, 0, 0, str.x(), str.y(), str.width(), str.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTopRight), alpha, buffer, 0, 0, 0, 0, strr.x(), strr.y(), strr.width(), strr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowLeft), alpha, buffer, 0, 0, 0, 0, slr.x(), slr.y(), slr.width(), slr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowRight), alpha, buffer, 0, 0, 0, 0, srr.x(), srr.y(), srr.width(), srr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottomLeft), alpha, buffer, 0, 0, 0, 0, sblr.x(), sblr.y(), sblr.width(), sblr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottom), alpha, buffer, 0, 0, 0, 0, sbr.x(), sbr.y(), sbr.width(), sbr.height());
+            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottomRight), alpha, buffer, 0, 0, 0, 0, sbrr.x(), sbrr.y(), sbrr.width(), sbrr.height());
+
+        } else {
+            //FIXME: At the moment shadows are not painted for scaled windows
+        }
+    }
+
     for (PaintClipper::Iterator iterator;
             !iterator.isDone();
             iterator.next()) {
@@ -980,6 +1017,86 @@ void SceneXrender::EffectFrame::updateTextPicture()
     p.drawText(rect, m_effectFrame->alignment(), text);
     p.end();
     m_textPicture = new XRenderPicture(pixmap);
+}
+
+SceneXRenderShadow::SceneXRenderShadow(Toplevel *toplevel)
+    :Shadow(toplevel)
+{
+}
+
+SceneXRenderShadow::~SceneXRenderShadow()
+{
+}
+
+Qt::HANDLE SceneXRenderShadow::x11ShadowPictureHandle(WindowQuadType type)
+{
+    switch (type) {
+    case WindowQuadShadowTopRight:
+        return resizedShadowPixmap(ShadowElementTopRight).x11PictureHandle();
+    case WindowQuadShadowTop:
+        return resizedShadowPixmap(ShadowElementTop).x11PictureHandle();
+    case WindowQuadShadowTopLeft:
+        return resizedShadowPixmap(ShadowElementTopLeft).x11PictureHandle();
+    case WindowQuadShadowLeft:
+        return resizedShadowPixmap(ShadowElementLeft).x11PictureHandle();
+    case WindowQuadShadowBottomLeft:
+        return resizedShadowPixmap(ShadowElementBottomLeft).x11PictureHandle();
+    case WindowQuadShadowBottom:
+        return resizedShadowPixmap(ShadowElementBottom).x11PictureHandle();
+    case WindowQuadShadowBottomRight:
+        return resizedShadowPixmap(ShadowElementBottomRight).x11PictureHandle();
+    case WindowQuadShadowRight:
+        return resizedShadowPixmap(ShadowElementRight).x11PictureHandle();
+    default:
+        return 0;
+    }
+}
+
+void SceneXRenderShadow::layoutShadowRects(QRect& top, QRect& topRight,
+                                           QRect& right, QRect& bottomRight,
+                                           QRect& bottom, QRect& bottomLeft,
+                                           QRect& left, QRect& topLeft)
+{
+    WindowQuadList quads = shadowQuads();
+
+    if (quads.count() == 0) {
+        return;
+    }
+
+    WindowQuad topQuad = quads.select(WindowQuadShadowTop)[0];
+    WindowQuad topRightQuad = quads.select(WindowQuadShadowTopRight)[0];
+    WindowQuad topLeftQuad = quads.select(WindowQuadShadowTopLeft)[0];
+    WindowQuad leftQuad = quads.select(WindowQuadShadowLeft)[0];
+    WindowQuad rightQuad = quads.select(WindowQuadShadowRight)[0];
+    WindowQuad bottomQuad = quads.select(WindowQuadShadowBottom)[0];
+    WindowQuad bottomRightQuad = quads.select(WindowQuadShadowBottomRight)[0];
+    WindowQuad bottomLeftQuad = quads.select(WindowQuadShadowBottomLeft)[0];
+
+    top = QRect(topQuad.left(), topQuad.top(), (topQuad.right()-topQuad.left()), (topQuad.bottom()-topQuad.top()));
+    topLeft = QRect(topLeftQuad.left(), topLeftQuad.top(), (topLeftQuad.right()-topLeftQuad.left()), (topLeftQuad.bottom()-topLeftQuad.top()));
+    topRight = QRect(topRightQuad.left(), topRightQuad.top(), (topRightQuad.right()-topRightQuad.left()), (topRightQuad.bottom()-topRightQuad.top()));
+    left = QRect(leftQuad.left(), leftQuad.top(), (leftQuad.right()-leftQuad.left()), (leftQuad.bottom()-leftQuad.top()));
+    right = QRect(rightQuad.left(), rightQuad.top(), (rightQuad.right()-rightQuad.left()), (rightQuad.bottom()-rightQuad.top()));
+    bottom = QRect(bottomQuad.left(), bottomQuad.top(), (bottomQuad.right()-bottomQuad.left()), (bottomQuad.bottom()-bottomQuad.top()));
+    bottomLeft = QRect(bottomLeftQuad.left(), bottomLeftQuad.top(), (bottomLeftQuad.right()-bottomLeftQuad.left()), (bottomLeftQuad.bottom()-bottomLeftQuad.top()));
+    bottomRight = QRect(bottomRightQuad.left(), bottomRightQuad.top(), (bottomRightQuad.right()-bottomRightQuad.left()), (bottomRightQuad.bottom()-bottomRightQuad.top()));
+}
+
+void SceneXRenderShadow::buildQuads()
+{
+    Shadow::buildQuads();
+
+    QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
+    layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
+
+    m_resizedElements[ShadowElementTop] = shadowPixmap(ShadowElementTop).scaled(str.size());
+    m_resizedElements[ShadowElementTopLeft] = shadowPixmap(ShadowElementTopLeft).scaled(stlr.size());
+    m_resizedElements[ShadowElementTopRight] = shadowPixmap(ShadowElementTopRight).scaled(strr.size());
+    m_resizedElements[ShadowElementLeft] = shadowPixmap(ShadowElementLeft).scaled(slr.size());
+    m_resizedElements[ShadowElementRight] = shadowPixmap(ShadowElementRight).scaled(srr.size());
+    m_resizedElements[ShadowElementBottom] = shadowPixmap(ShadowElementBottom).scaled(sbr.size());
+    m_resizedElements[ShadowElementBottomLeft] = shadowPixmap(ShadowElementBottomLeft).scaled(sblr.size());
+    m_resizedElements[ShadowElementBottomRight] = shadowPixmap(ShadowElementBottomRight).scaled(sbrr.size());
 }
 
 } // namespace

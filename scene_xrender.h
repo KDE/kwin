@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-workspace.h>
 
 #include "scene.h"
+#include "shadow.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
@@ -137,6 +138,37 @@ void SceneXrender::Window::setTransformedShape(const QRegion& shape)
 {
     transformed_shape = shape;
 }
+
+/**
+ * @short XRender implementation of Shadow.
+ *
+ * This class extends Shadow by the elements required for XRender rendering.
+ * @author Jacopo De Simoi <wilderkde@gmail.org>
+ **/
+
+class SceneXRenderShadow
+    : public Shadow
+{
+public:
+    SceneXRenderShadow(Toplevel *toplevel);
+    virtual ~SceneXRenderShadow();
+
+    Qt::HANDLE x11ShadowPictureHandle(WindowQuadType);
+    void layoutShadowRects(QRect& top, QRect& topRight,
+                           QRect& right, QRect& bottomRight,
+                           QRect& bottom, QRect& bottomLeft,
+                           QRect& Left, QRect& topLeft);
+
+    const QPixmap &resizedShadowPixmap(ShadowElements element) const {
+        return m_resizedElements[element];
+    };
+
+protected:
+    virtual void buildQuads();
+
+private:
+    QPixmap m_resizedElements[ShadowElementsCount];
+};
 
 } // namespace
 

@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "scene_opengl.h"
 #endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#include "scene_xrender.h"
+#endif
 
 namespace KWin
 {
@@ -52,7 +55,12 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
             shadow = new SceneOpenGLShadow(toplevel);
 #endif
+        } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+            shadow = new SceneXRenderShadow(toplevel);
+#endif
         }
+
         if (shadow) {
             if (!shadow->init(data)) {
                 delete shadow;
