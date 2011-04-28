@@ -852,13 +852,6 @@ void WindowMotionManager::manage(EffectWindow *w)
 
 void WindowMotionManager::unmanage(EffectWindow *w)
 {
-    /// superflous, see below
-//     if (!m_managedWindows.contains(w))
-//         return;
-    /// this makes no sense?!
-//     QPointF diffT = m_managedWindows[ w ].translation.distance();
-//     QPointF diffS = m_managedWindows[ w ].scale.distance();
-
     m_movingWindowsSet.remove(w);
     m_managedWindows.remove(w);
 }
