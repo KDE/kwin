@@ -89,6 +89,12 @@ DesktopGridEffect::~DesktopGridEffect()
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border);
     }
+    QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
+    while (i != m_desktopButtonsViews.end()) {
+        DesktopButtonsView *view = i.key();
+        i = m_desktopButtonsViews.erase(i);
+        view->deleteLater();
+    }
 }
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
