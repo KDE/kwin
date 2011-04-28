@@ -613,6 +613,12 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         if ( mask & PAINT_WINDOW_TRANSLUCENT && opaque )
             return; // Only painting translucent and window is opaque
         }*/
+    // Intersect the clip region with the rectangle the window occupies on the screen
+    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+        region &= toplevel->visibleRect();
+
+    if (region.isEmpty())
+        return;
     Picture pic = picture(); // get XRender picture
     if (pic == None)   // The render format can be null for GL and/or Xv visuals
         return;
