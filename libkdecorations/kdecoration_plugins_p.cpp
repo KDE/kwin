@@ -105,9 +105,6 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
         KConfigGroup group(config, QString("Style"));
         nameStr = group.readEntry("PluginLib", defaultPlugin);
     }
-    // make sure people can switch between HEAD and kwin_iii branch
-    if (nameStr.startsWith(QLatin1String("kwin_")))
-        nameStr = "kwin3_" + nameStr.mid(5);
 
     KLibrary *oldLibrary = library;
     KDecorationFactory* oldFactory = fact;
