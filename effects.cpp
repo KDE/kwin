@@ -1651,12 +1651,12 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     if (m_style == EffectFrameStyled) {
         m_frame.setImagePath("widgets/background");
         m_frame.setCacheAllRenderedFrames(true);
-        m_selection.setImagePath("widgets/viewitem");
-        m_selection.setElementPrefix("hover");
-        m_selection.setCacheAllRenderedFrames(true);
-        m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
         connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
     }
+    m_selection.setImagePath("widgets/viewitem");
+    m_selection.setElementPrefix("hover");
+    m_selection.setCacheAllRenderedFrames(true);
+    m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
     if (effects->compositingType() == OpenGLCompositing) {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING

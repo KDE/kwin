@@ -1333,18 +1333,26 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_texture->render(region, m_effectFrame->geometry().adjusted(-left, -top, right, bottom));
         m_texture->unbind();
 
-        if (!m_effectFrame->selection().isNull()) {
-            if (!m_selectionTexture) { // Lazy creation
-                QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
-                m_selectionTexture = new Texture(pixmap.handle(), pixmap.size(), pixmap.depth());
-                m_selectionTexture->setYInverted(true);
-            }
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            m_selectionTexture->bind();
-            m_selectionTexture->render(region, m_effectFrame->selection());
-            m_selectionTexture->unbind();
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    if (!m_effectFrame->selection().isNull()) {
+        if (!m_selectionTexture) { // Lazy creation
+            QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
+            m_selectionTexture = new Texture(pixmap.handle(), pixmap.size(), pixmap.depth());
+            m_selectionTexture->setYInverted(true);
         }
+        if (shader) {
+            const float a = opacity * frameOpacity;
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+        }
+#ifndef KWIN_HAVE_OPENGLES
+        else
+            glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
+#endif
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        m_selectionTexture->bind();
+        m_selectionTexture->render(region, m_effectFrame->selection());
+        m_selectionTexture->unbind();
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Render icon

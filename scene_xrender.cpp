@@ -904,14 +904,14 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         XRenderComposite(display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
                          0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
 
-        if (!m_effectFrame->selection().isNull()) {
-            if (!m_selectionPicture) { // Lazy creation
-                m_selectionPicture = new XRenderPicture(m_effectFrame->selectionFrame().framePixmap());
-            }
-            geom = m_effectFrame->selection();
-            XRenderComposite(display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
-                             0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+    }
+    if (!m_effectFrame->selection().isNull()) {
+        if (!m_selectionPicture) { // Lazy creation
+            m_selectionPicture = new XRenderPicture(m_effectFrame->selectionFrame().framePixmap());
         }
+        const QRect geom = m_effectFrame->selection();
+        XRenderComposite(display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
+                            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
     }
 
     XRenderPicture fill = xRenderBlendPicture(opacity);

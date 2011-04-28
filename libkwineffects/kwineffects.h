@@ -1778,7 +1778,6 @@ public:
     /**
      * Sets the geometry of a selection.
      * To remove the selection set a null rect.
-     * This is only available if the an styled EffectFrame is used.
      * @param selection The geometry of the selection in screen coordinates.
      **/
     virtual void setSelection(const QRect& selection) = 0;
