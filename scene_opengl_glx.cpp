@@ -70,6 +70,10 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         return; // error
     }
+    if (GLPlatform::instance()->isMesaDriver() && GLPlatform::instance()->mesaVersion() < kVersionNumber(7, 10)) {
+        kError(1212) << "KWin requires at least Mesa 7.10 for OpenGL compositing.";
+        return;
+    }
     if (db)
         glDrawBuffer(GL_BACK);
     // Check whether certain features are supported
