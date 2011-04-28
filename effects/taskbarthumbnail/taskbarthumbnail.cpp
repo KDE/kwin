@@ -136,6 +136,9 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != atom)
         return;
+    foreach (const Data & thumb, thumbnails.values(w)) {
+        effects->addRepaint(thumb.rect);
+    }
     thumbnails.remove(w);
     QByteArray data = w->readProperty(atom, atom, 32);
     if (data.length() < 1)
@@ -156,6 +159,7 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
         data.window = d[ pos ];
         data.rect = QRect(d[ pos + 1 ], d[ pos + 2 ], d[ pos + 3 ], d[ pos + 4 ]);
         thumbnails.insert(w, data);
+        effects->addRepaint(data.rect);
         pos += size;
     }
 }
