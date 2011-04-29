@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kdebug.h"
 #include <kstandarddirs.h>
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
 
 #include <QPixmap>
 #include <QImage>
@@ -57,6 +59,7 @@ static int eglVersion;
 static QStringList glExtensions;
 static QStringList glxExtensions;
 static QStringList eglExtension;
+static bool legacyGl;
 
 int glTextureUnitsCount;
 
@@ -97,7 +100,12 @@ void initGL()
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
     while (glversioninfo.count() < 3)
         glversioninfo << "0";
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGLES
+    legacyGl = false;
+#else
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig("kwinrc", KConfig::NoGlobals);
+    KConfigGroup config(kwinconfig, "Compositing");
+    legacyGl = config.readEntry<bool>("GLLegacy", false);
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 #endif
     // Get list of supported OpenGL extensions
@@ -1228,6 +1236,10 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 
 void ShaderManager::initShaders()
 {
+    if (legacyGl) {
+        kDebug(1212) << "OpenGL Shaders disabled by config option";
+        return;
+    }
     m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
     if (m_orthoShader->isValid()) {
         pushShader(SimpleShader, true);
