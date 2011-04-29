@@ -1416,6 +1416,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         }
         if (shader) {
             origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+            GLShader *currentShader = shader;
             if (mode == Cylinder) {
                 shaderManager->pushShader(cylinderShader);
                 cylinderShader->setUniform("xCoord", (float)w->x());
@@ -1427,6 +1428,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     factor = timeLine.currentValue();
                 cylinderShader->setUniform("timeLine", factor);
                 data.shader = cylinderShader;
+                currentShader = cylinderShader;
             }
             if (mode == Sphere) {
                 shaderManager->pushShader(sphereShader);
@@ -1439,11 +1441,12 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     factor = timeLine.currentValue();
                 sphereShader->setUniform("timeLine", factor);
                 data.shader = sphereShader;
+                currentShader = sphereShader;
             }
             if (reflectionPainting) {
-                shader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
+                currentShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
             } else {
-                shader->setUniform("screenTransformation", m_rotationMatrix*origMatrix);
+                currentShader->setUniform("screenTransformation", m_rotationMatrix*origMatrix);
             }
         }
     }
