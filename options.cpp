@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "options.h"
+#include "config-kwin.h"
 
 #ifndef KCMRULES
 
@@ -148,7 +149,11 @@ unsigned long Options::updateSettings()
     xineramaMaximizeEnabled = config.readEntry("XineramaMaximizeEnabled", true);
     xineramaFullscreenEnabled = config.readEntry("XineramaFullscreenEnabled", true);
 
+#ifdef KWIN_BUILD_DECORATIONS
     placement = Placement::policyFromString(config.readEntry("Placement"), true);
+#else
+    placement = Placement::Maximizing;
+#endif
     xineramaPlacementScreen = qBound(-1, config.readEntry("XineramaPlacementScreen", -1),
                                      Kephal::ScreenUtils::numScreens() - 1);
 
