@@ -42,6 +42,8 @@ if(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
   include_directories(${OPENGLES_INCLUDE_DIR})
 endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
 
+OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
@@ -66,7 +68,6 @@ add_subdirectory( libkwineffects )
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
 
-OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 if( KWIN_BUILD_DECORATIONS )
     add_subdirectory( clients )
 endif( KWIN_BUILD_DECORATIONS )
