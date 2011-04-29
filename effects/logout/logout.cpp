@@ -215,6 +215,12 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             //--------------------------
             // Render the screen effect
 
+            // HACK: the GL code is still OpenGL 1, so we have to unbind the shader.
+            GLint shader = 0;
+            if (ShaderManager::instance()->isShaderBound()) {
+                glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+                glUseProgram(0);
+            }
             glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
 
             // Unmodified base image
@@ -255,6 +261,10 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             renderVignetting();
 
             glPopAttrib();
+            // HACK: rebind previously bound shader
+            if (ShaderManager::instance()->isShaderBound()) {
+                glUseProgram(shader);
+            }
 
             //--------------------------
 
