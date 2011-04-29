@@ -129,6 +129,8 @@ bool GLSLBlurShader::supported()
 {
     if (!GLPlatform::instance()->supports(GLSL))
         return false;
+    if (!ShaderManager::instance()->isValid())
+        return false;
 
     (void) glGetError(); // Clear the error state
 
