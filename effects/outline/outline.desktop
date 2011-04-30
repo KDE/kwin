@@ -1,7 +1,15 @@
 [Desktop Entry]
 Name=Outline
+Name[ia]=Profilo
+Name[pt]=Contorno
+Name[uk]=Контур
+Name[x-test]=xxOutlinexx
 Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
+Comment[ia]=Effecto de adjuta pro render un profilo
+Comment[pt]=Efeito auxiliar para desenhar um contorno
+Comment[uk]=Допоміжний ефект показу контуру
+Comment[x-test]=xxHelper effect to render an outlinexx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
