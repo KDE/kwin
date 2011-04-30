@@ -60,7 +60,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return; // error
     // Initialize OpenGL
     initGL();
-    if (QString((const char*)glGetString(GL_RENDERER)) == "Software Rasterizer") {
+    GLPlatform *glPlatform = GLPlatform::instance();
+    if (glPlatform->driver() == Driver_Swrast || glPlatform->driver() == Driver_Softpipe) {
         kError(1212) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
         QTimer::singleShot(0, Workspace::self(), SLOT(fallbackToXRenderCompositing()));
         return;
@@ -70,7 +71,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         return; // error
     }
-    if (GLPlatform::instance()->isMesaDriver() && GLPlatform::instance()->mesaVersion() < kVersionNumber(7, 10)) {
+    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(7, 10)) {
         kError(1212) << "KWin requires at least Mesa 7.10 for OpenGL compositing.";
         return;
     }
