@@ -1503,14 +1503,32 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                         }
                     }
                 }
+                bool capShader = false;
+                if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+                    capShader = true;
+                    ShaderManager::instance()->pushShader(m_capShader);
+                    m_capShader->setUniform("u_mirror", 0);
+                    m_capShader->setUniform("u_untextured", 1);
+                    if (reflectionPainting) {
+                        m_capShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
+                    } else {
+                        m_capShader->setUniform("screenTransformation", m_rotationMatrix * origMatrix);
+                    }
+                    m_capShader->setUniform("windowTransformation", QMatrix4x4());
+                }
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 QColor color = capColor;
                 capColor.setAlphaF(cubeOpacity);
-                // TODO: use sphere and cylinder shaders
                 vbo->setColor(color);
                 vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
-                vbo->render(GL_TRIANGLES);
+                if (!capShader || mode == Cube) {
+                    // TODO: use sphere and cylinder shaders
+                    vbo->render(GL_TRIANGLES);
+                }
+                if (capShader) {
+                    ShaderManager::instance()->popShader();
+                }
                 glDisable(GL_BLEND);
 #ifndef KWIN_HAVE_OPENGLES
                 glPopAttrib();
