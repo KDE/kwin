@@ -730,10 +730,10 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
-    ClientList list = Workspace::self()->stackingOrder();
+    ToplevelList list = Workspace::self()->xStackingOrder();
     EffectWindowList ret;
-    foreach (Client * c, list)
-    ret.append(effectWindow(c));
+    foreach (Toplevel *w, list)
+        ret.append(effectWindow(w));
     return ret;
 }
 
