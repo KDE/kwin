@@ -27,9 +27,9 @@ KWIN_EFFECT(dashboard, DashboardEffect)
 
 DashboardEffect::DashboardEffect()
     : transformWindow(false)
+    , retransformWindow(false)
     , activateAnimation(false)
     , deactivateAnimation(false)
-    , retransformWindow(false)
     , window(NULL)
 {
     // propagate that the effect is loaded
