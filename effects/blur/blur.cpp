@@ -23,6 +23,7 @@
 #include <X11/Xatom.h>
 
 #include <QMatrix4x4>
+#include <QLinkedList>
 #include <KConfigGroup>
 #include <KDebug>
 
@@ -216,13 +217,92 @@ void BlurEffect::drawRegion(const QRegion &region)
     vbo->render(GL_TRIANGLES);
 }
 
-void BlurEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    // Force the scene to call paintGenericScreen() so the windows are painted bottom -> top
-    if (!effects->activeFullScreenEffect())
-        mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    EffectWindowList windows = effects->stackingOrder();
+    QLinkedList<QRegion> blurRegions;
+    bool checkDecos = effects->decorationsHaveAlpha() && effects->decorationSupportsBlurBehind();
+    bool clipChanged = false;
 
-    effects->paintScreen(mask, region, data);
+    effects->prePaintScreen(data, time);
+
+    // If the whole screen will be repainted anyway, there is no point in
+    // adding to the paint region.
+    if (data.mask & (PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_TRANSFORMED))
+        return;
+
+    if (effects->activeFullScreenEffect())
+        return;
+
+    // Walk the window list top->bottom and check if the paint region is fully
+    // contained within opaque windows and doesn't intersect any blurred region.
+    QRegion paint = data.paint;
+    for (int i = windows.count() - 1; i >= 0; --i) {
+        EffectWindow *window = windows.at(i);
+        if (!window->isPaintingEnabled())
+            continue;
+
+        if (!window->hasAlpha()) {
+            paint -= window->contentsRect();
+            if (paint.isEmpty())
+                break;
+        }
+
+        // The window decoration is treated as an object below the window
+        // contents, so check it after the contents.
+        if (window->hasAlpha() || (checkDecos && window->hasDecoration())) {
+            QRegion r = blurRegion(window);
+            if (r.isEmpty())
+                continue;
+
+            r = expand(r.translated(window->geometry().topLeft()));
+            if (r.intersects(paint))
+                break;
+        }
+    }
+
+    if (paint.isEmpty())
+        return;
+
+    // Walk the list again bottom->top and expand the paint region when
+    // it intersects a blurred region.
+    foreach (EffectWindow *window, windows) {
+        if (!window->isPaintingEnabled())
+            continue;
+
+        if (!window->hasAlpha() && !(checkDecos && window->hasDecoration()))
+            continue;
+
+        QRegion r = blurRegion(window);
+        if (r.isEmpty())
+            continue;
+
+        r = expand(r.translated(window->geometry().topLeft()));
+
+        // We can't do a partial repaint of a blurred region
+        if (r.intersects(data.paint)) {
+            data.paint += r;
+            clipChanged = true;
+        } else
+            blurRegions.append(r);
+    }
+
+    while (clipChanged) {
+        clipChanged = false;
+        QMutableLinkedListIterator<QRegion> i(blurRegions);
+        while (i.hasNext()) {
+            const QRegion r = i.next();
+            if (!r.intersects(data.paint))
+                continue;
+
+            data.paint += r;
+            clipChanged = true;
+            i.remove();
+        }
+    }
+
+    // Force the scene to call paintGenericScreen() so the windows are painted bottom -> top
+    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
 }
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)

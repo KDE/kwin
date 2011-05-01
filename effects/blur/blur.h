@@ -43,7 +43,7 @@ public:
     static bool enabledByDefault();
 
     void reconfigure(ReconfigureFlags flags);
-    void paintScreen(int mask, QRegion region, ScreenPaintData &data);
+    void prePaintScreen(ScreenPrePaintData &data, int time);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
