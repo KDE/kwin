@@ -249,12 +249,12 @@ namespace Oxygen
         {
 
             if( hideTitleBar() ) mask = QRegion();
-            else if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame, 1, 1, 1, 0 );
+            else if( compositingActive() ) mask = QRegion();
             else mask = helper().roundedMask( frame, 1, 1, 1, 0 );
 
         } else {
 
-            if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame );
+            if( compositingActive() ) mask = QRegion();
             else mask = helper().roundedMask( frame );
 
         }

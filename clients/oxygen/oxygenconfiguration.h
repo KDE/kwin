@@ -95,13 +95,6 @@ namespace Oxygen
             SizeGripWhenNeeded
         };
 
-        //! shadow mode
-        enum ShadowMode {
-            OxygenShadows,
-            KWinShadows,
-            NoShadows
-        };
-
         //! shadow cache mode
         enum ShadowCacheMode {
             //! no shadow cache
@@ -199,23 +192,6 @@ namespace Oxygen
         { _useNarrowButtonSpacing = value; }
 
         //@}
-
-        //!@name shadow mode
-        //@{
-        static QString shadowModeName( ShadowMode, bool translated );
-        static ShadowMode shadowMode( QString, bool translated );
-
-        QString shadowModeName( bool translated ) const
-        { return shadowModeName( shadowMode(), translated ); }
-
-        void setShadowMode( ShadowMode mode )
-        { _shadowMode = mode; }
-
-        ShadowMode shadowMode( void ) const
-        { return _shadowMode; }
-
-        //@]
-
 
         //!@name shadow mode cache mode
         //@{
@@ -419,9 +395,6 @@ namespace Oxygen
 
         //! narrow button spacing
         bool _useNarrowButtonSpacing;
-
-        //! shadow mode
-        ShadowMode _shadowMode;
 
         //! shadow cache mode
         ShadowCacheMode _shadowCacheMode;

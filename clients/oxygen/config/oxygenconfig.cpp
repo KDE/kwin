@@ -115,7 +115,6 @@ namespace Oxygen
         else if( ui->ui.blendColor->currentIndex() != ui->ui.blendColor->findText( configuration.blendColorName( true ) ) ) modified = true;
         else if( ui->ui.frameBorder->currentIndex() != ui->ui.frameBorder->findText( configuration.frameBorderName( true ) ) ) modified = true;
         else if( ui->ui.sizeGripMode->currentIndex() != ui->ui.sizeGripMode->findText( configuration.sizeGripModeName( true ) ) ) modified = true;
-        else if( ui->ui.shadowMode->currentIndex() != ui->ui.shadowMode->findText( configuration.shadowModeName( true ) ) ) modified = true;
         else if( ui->ui.shadowCacheMode->currentIndex() != ui->ui.shadowCacheMode->findText( configuration.shadowCacheModeName( true ) ) ) modified = true;
 
         else if( ui->ui.separatorMode->currentIndex() != configuration.separatorMode() ) modified = true;
@@ -153,7 +152,6 @@ namespace Oxygen
         configuration.setFrameBorder( Configuration::frameBorder( ui->ui.frameBorder->currentText(), true ) );
         configuration.setSizeGripMode( Configuration::sizeGripMode( ui->ui.sizeGripMode->currentText(), true ) );
         configuration.setShadowCacheMode( Configuration::shadowCacheMode( ui->ui.shadowCacheMode->currentText(), true ) );
-        configuration.setShadowMode( Configuration::shadowMode( ui->ui.shadowMode->currentText(), true ) );
         configuration.setSeparatorMode( (Oxygen::Configuration::SeparatorMode) ui->ui.separatorMode->currentIndex() );
         configuration.setDrawTitleOutline( ui->ui.titleOutline->isChecked() );
         configuration.setUseDropShadows( ui->shadowConfigurations[1]->isChecked() );
@@ -241,7 +239,6 @@ namespace Oxygen
         ui->ui.useAnimations->setChecked( configuration.useAnimations() );
         ui->ui.animateTitleChange->setChecked( configuration.animateTitleChange() );
         ui->ui.narrowButtonSpacing->setChecked( configuration.useNarrowButtonSpacing() );
-        ui->ui.shadowMode->setCurrentIndex( ui->ui.shadowMode->findText( configuration.shadowModeName( true ) ) );
         ui->ui.shadowCacheMode->setCurrentIndex( ui->ui.shadowCacheMode->findText( configuration.shadowCacheModeName( true ) ) );
     }
 

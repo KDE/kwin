@@ -58,11 +58,6 @@ namespace Oxygen
     //! toggle expert mode
     void toggleExpertMode( bool );
 
-    protected slots:
-
-    //! shadow mode changed
-    void shadowModeChanged( int );
-
     signals:
 
     //! emmited when changed
