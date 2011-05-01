@@ -162,10 +162,18 @@ void EffectsHandlerImpl::reconfigure()
 
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     QStringList effectsToBeLoaded;
+    QStringList checkDefault;
+
     // First unload necessary effects
     foreach (const KService::Ptr & service, offers) {
         KPluginInfo plugininfo(service);
         plugininfo.load(conf);
+
+        if (plugininfo.isPluginEnabledByDefault()) {
+            const QString key = plugininfo.pluginName() + QString::fromLatin1("Enabled");
+            if (!conf.hasKey(key))
+                checkDefault.append(plugininfo.pluginName());
+        }
 
         bool isloaded = isEffectLoaded(plugininfo.pluginName());
         bool shouldbeloaded = plugininfo.isPluginEnabled();
@@ -178,8 +186,8 @@ void EffectsHandlerImpl::reconfigure()
     // Then load those that should be loaded
     foreach (const QString & effectName, effectsToBeLoaded) {
         if (!isEffectLoaded(effectName)) {
-            loadEffect(effectName);
-            newLoaded.append(effectName);
+            if (loadEffect(effectName, checkDefault.contains(effectName)))
+                newLoaded.append(effectName);
         }
     }
     foreach (const EffectPair & ep, loaded_effects) {
@@ -1007,7 +1015,7 @@ QStringList EffectsHandlerImpl::listOfEffects() const
     return listOfModules;
 }
 
-bool EffectsHandlerImpl::loadEffect(const QString& name)
+bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 {
     Workspace::self()->addRepaintFull();
     assert(current_paint_screen == 0);
@@ -1059,10 +1067,16 @@ bool EffectsHandlerImpl::loadEffect(const QString& name)
         kWarning(1212) << "Effect " << name << " requires unsupported API version " << version;
         return false;
     }
-    QString supported_symbol = "effect_supported_" + name;
+
+    const QString enabledByDefault_symbol = "effect_enabledbydefault_" + name;
+    KLibrary::void_function_ptr enabledByDefault_func = library->resolveFunction(enabledByDefault_symbol.toAscii().data());
+
+    const QString supported_symbol = "effect_supported_" + name;
     KLibrary::void_function_ptr supported_func = library->resolveFunction(supported_symbol.toAscii().data());
-    QString create_symbol = "effect_create_" + name;
+
+    const QString create_symbol = "effect_create_" + name;
     KLibrary::void_function_ptr create_func = library->resolveFunction(create_symbol.toAscii().data());
+
     if (supported_func) {
         typedef bool (*t_supportedfunc)();
         t_supportedfunc supported = reinterpret_cast<t_supportedfunc>(supported_func);
@@ -1072,11 +1086,23 @@ bool EffectsHandlerImpl::loadEffect(const QString& name)
             return false;
         }
     }
+
+    if (checkDefault && enabledByDefault_func) {
+        typedef bool (*t_enabledByDefaultfunc)();
+        t_enabledByDefaultfunc enabledByDefault = reinterpret_cast<t_enabledByDefaultfunc>(enabledByDefault_func);
+
+        if (!enabledByDefault()) {
+            library->unload();
+            return false;
+        }
+    }
+
     if (!create_func) {
         kError(1212) << "EffectsHandler::loadEffect : effect_create function not found" << endl;
         library->unload();
         return false;
     }
+
     typedef Effect*(*t_createfunc)();
     t_createfunc create = reinterpret_cast<t_createfunc>(create_func);
 

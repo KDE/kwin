@@ -157,7 +157,7 @@ public:
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
 
-    bool loadEffect(const QString& name);
+    bool loadEffect(const QString& name, bool checkDefault = false);
     void toggleEffect(const QString& name);
     void unloadEffect(const QString& name);
     void reconfigureEffect(const QString& name);

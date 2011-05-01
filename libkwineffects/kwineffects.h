@@ -497,6 +497,7 @@ public:
         KWIN_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
         KWIN_EXPORT int effect_version_kwin4_effect_##name() { return KWIN_EFFECT_API_VERSION; } \
     }
+
 /**
  * Defines the function used to check whether an effect is supported
  * E.g.  KWIN_EFFECT_SUPPORTED( flames, MyFlameEffect::supported() )
@@ -505,6 +506,25 @@ public:
     extern "C" { \
         KWIN_EXPORT bool effect_supported_kwin4_effect_##name() { return function; } \
     }
+
+/**
+ * Defines the function used to check whether an effect should be enabled by default
+ *
+ * This function provides a way for an effect to override the default at runtime,
+ * e.g. based on the capabilities of the hardware.
+ *
+ * This function is optional; the effect doesn't have to provide it.
+ *
+ * Note that this function is only called if the supported() function returns true,
+ * and if X-KDE-PluginInfo-EnabledByDefault is set to true in the .desktop file.
+ *
+ * Example:  KWIN_EFFECT_ENABLEDBYDEFAULT(flames, MyFlameEffect::enabledByDefault())
+ **/
+#define KWIN_EFFECT_ENABLEDBYDEFAULT(name, function) \
+    extern "C" { \
+        KWIN_EXPORT bool effect_enabledbydefault_kwin4_effect_##name() { return function; } \
+    }
+
 /**
  * Defines the function used to retrieve an effect's config widget
  * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
