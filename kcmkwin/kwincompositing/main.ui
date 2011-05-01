@@ -610,13 +610,24 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2">
+          <item row="2" column="0" colspan="2">
            <widget class="QCheckBox" name="glVSync">
             <property name="text">
              <string>Use VSync</string>
             </property>
             <property name="checked">
              <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="glShaders">
+            <property name="toolTip">
+             <string>If enabled all rendering will be perfomed with Shaders written in the OpenGL Shading Language.
+On legacy hardware disabling Shaders can improve the performance.</string>
+            </property>
+            <property name="text">
+             <string>Use OpenGL 2 Shaders</string>
             </property>
            </widget>
           </item>

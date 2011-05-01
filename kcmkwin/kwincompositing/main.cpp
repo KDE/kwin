@@ -124,6 +124,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.glShaders, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
@@ -407,6 +408,7 @@ void KWinCompositingConfig::loadAdvancedTab()
 
     ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering()));
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
+    ui.glShaders->setChecked(!config.readEntry<bool>("GLLegacy", false));
 
     toogleSmoothScaleUi(ui.compositingType->currentIndex());
 }
@@ -539,7 +541,8 @@ bool KWinCompositingConfig::saveAdvancedTab()
             || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
             != ui.glDirect->isChecked()
             || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
-            || config.readEntry("DisableChecks", false) != ui.disableChecks->isChecked()) {
+            || config.readEntry("DisableChecks", false) != ui.disableChecks->isChecked()
+            || config.readEntry<bool>("GLLegacy", false) == ui.glShaders->isChecked()) {
         m_showConfirmDialog = true;
         advancedChanged = true;
     } else if (config.readEntry("HiddenPreviews", 5) != hps[ ui.windowThumbnails->currentIndex()]
@@ -557,6 +560,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
     config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
+    config.writeEntry("GLLegacy", !ui.glShaders->isChecked());
 
 
     return advancedChanged;
@@ -690,6 +694,7 @@ void KWinCompositingConfig::defaults()
     ui.glScaleFilter->setCurrentIndex(2);
     ui.glDirect->setChecked(mDefaultPrefs.enableDirectRendering());
     ui.glVSync->setChecked(mDefaultPrefs.enableVSync());
+    ui.glShaders->setChecked(true);
 }
 
 QString KWinCompositingConfig::quickHelp() const
