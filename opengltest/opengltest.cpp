@@ -81,16 +81,9 @@ int main(int argc, char *argv[])
     if ((major == 1 && minor < 3) && !strstr(glxExtensions, "GLX_EXT_texture_from_pixmap"))
         return 1;
 
-    // Assume that direct rendering works with DRI2 drivers
-    const GLubyte *renderer = glGetString(GL_RENDERER);
-    if (strstr((const char *)renderer, "DRI2"))
-        return 0;
-
-    // The Intel driver doesn't have DRI2 in the renderer string
-    if (strstr((const char *)renderer, "GEM"))
-        return 0;
-
-    if (strstr((const char *)renderer, "Gallium"))
+    // Assume that all Mesa drivers support direct rendering
+    const GLubyte *version = glGetString(GL_VERSION);
+    if (strstr((const char *)version, "Mesa"))
         return 0;
 
     // Direct contexts also work with the NVidia driver
