@@ -28,8 +28,10 @@
 
 namespace KWin
 {
+
 KWIN_EFFECT(blur, BlurEffect)
 KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
+KWIN_EFFECT_ENABLEDBYDEFAULT(blur, BlurEffect::enabledByDefault())
 
 
 BlurEffect::BlurEffect()
@@ -117,6 +119,16 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
     if (w && atom == net_wm_blur_region)
         updateBlurRegion(w);
+}
+
+bool BlurEffect::enabledByDefault()
+{
+    GLPlatform *gl = GLPlatform::instance();
+
+    if (gl->isIntel())
+        return false;
+
+    return true;
 }
 
 bool BlurEffect::supported()

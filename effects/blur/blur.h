@@ -21,6 +21,7 @@
 #define BLUR_H
 
 #include <kwineffects.h>
+#include <kwinglplatform.h>
 #include <kwinglutils.h>
 
 #include <QVector>
@@ -39,6 +40,7 @@ public:
     ~BlurEffect();
 
     static bool supported();
+    static bool enabledByDefault();
 
     void reconfigure(ReconfigureFlags flags);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
