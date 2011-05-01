@@ -770,6 +770,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
             m_capShader->setUniform("screenTransformation", m_rotationMatrix);
         }
         m_capShader->setUniform("windowTransformation", capMatrix);
+        m_capShader->setUniform("u_untextured", texturedCaps ? 0 : 1);
         if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
             capTexture->bind();
         }
