@@ -623,7 +623,7 @@ p, li { white-space: pre-wrap; }
           <item row="1" column="0">
            <widget class="QCheckBox" name="glShaders">
             <property name="toolTip">
-             <string>If enabled all rendering will be perfomed with Shaders written in the OpenGL Shading Language.
+             <string>If enabled all rendering will be performed with Shaders written in the OpenGL Shading Language.
 On legacy hardware disabling Shaders can improve the performance.</string>
             </property>
             <property name="text">
