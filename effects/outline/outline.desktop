@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Outline
+Name[et]=Kontuur
 Name[ia]=Profilo
 Name[nl]=Omlijning
 Name[pt]=Contorno
@@ -10,6 +11,7 @@ Name[uk]=Контур
 Name[x-test]=xxOutlinexx
 Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
+Comment[et]=Abiefekt kontuuri renderdamiseks
 Comment[ia]=Effecto de adjuta pro render un profilo
 Comment[nl]=Effect van hulp bij weergeven van omlijning
 Comment[pt]=Efeito auxiliar para desenhar um contorno
