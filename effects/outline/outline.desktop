@@ -9,6 +9,7 @@ Name[ro]=Contur
 Name[sv]=Kontur
 Name[uk]=Контур
 Name[x-test]=xxOutlinexx
+Name[zh_TW]=輪廓
 Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
 Comment[et]=Abiefekt kontuuri renderdamiseks
@@ -20,6 +21,7 @@ Comment[ro]=Efect ajutător pentru desenarea unui contur
 Comment[sv]=Hjälpeffekt för att återge en kontur
 Comment[uk]=Допоміжний ефект показу контуру
 Comment[x-test]=xxHelper effect to render an outlinexx
+Comment[zh_TW]=繪製輪廓的效果
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
