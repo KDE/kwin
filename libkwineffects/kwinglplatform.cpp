@@ -632,9 +632,14 @@ void GLPlatform::detect()
             m_driver = Driver_Nouveau;
         }
 
-        else if (m_chipset == "softpipe" || m_chipset == "llvmpipe") {
-            // Vendor: VMware, Inc.
-            // TODO
+        // softpipe
+        else if (m_vendor == "VMware, Inc." && m_chipset == "softpipe" ) {
+            m_driver = Driver_Softpipe;
+        }
+
+        // llvmpipe
+        else if (m_vendor == "VMware, Inc." && m_chipset == "llvmpipe") {
+            m_driver = Driver_Llvmpipe;
         }
     }
 
@@ -712,6 +717,11 @@ void GLPlatform::detect()
     // Loose binding is broken with Gallium drivers in Mesa 7.10
     if (isGalliumDriver() && mesaVersion() >= kVersionNumber(7, 10))
         m_looseBinding = false;
+
+    if (isSoftwareEmulation()) {
+        // Software emulation does not provide GLSL
+        m_limitedGLSL = m_supportsGLSL = false;
+    }
 }
 
 static void print(const QString &label, const QString &setting)
@@ -849,6 +859,11 @@ bool GLPlatform::isNvidia() const
 bool GLPlatform::isIntel() const
 {
     return m_chipClass >= I8XX && m_chipClass <= UnknownIntel;
+}
+
+bool GLPlatform::isSoftwareEmulation() const
+{
+    return m_driver == Driver_Softpipe || m_driver == Driver_Swrast || m_driver == Driver_Llvmpipe;
 }
 
 } // namespace KWin

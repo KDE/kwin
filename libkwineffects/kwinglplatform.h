@@ -238,6 +238,12 @@ public:
      */
     bool isIntel() const;
 
+    /**
+     * @returns @c true if OpenGL is emulated in software.
+     * @since 4.7
+     **/
+    bool isSoftwareEmulation() const;
+
 private:
     GLPlatform();
 
