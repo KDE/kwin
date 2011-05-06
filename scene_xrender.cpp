@@ -732,7 +732,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     }
 
     //shadow
-    if (m_shadow) {
+    if (m_shadow && !(mask & PAINT_DECORATION_ONLY)) {
         QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
         SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
         m_xrenderShadow->layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
