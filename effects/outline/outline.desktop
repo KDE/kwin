@@ -2,6 +2,7 @@
 Name=Outline
 Name[et]=Kontuur
 Name[ia]=Profilo
+Name[km]=គ្រោង
 Name[nl]=Omlijning
 Name[pt]=Contorno
 Name[pt_BR]=Contorno
@@ -14,6 +15,7 @@ Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
 Comment[et]=Abiefekt kontuuri renderdamiseks
 Comment[ia]=Effecto de adjuta pro render un profilo
+Comment[km]=បែបផែន​កម្មវិធី​​ជំនួយ​ ដើម្បី​បង្ហាញ​គ្រោង
 Comment[nl]=Effect van hulp bij weergeven van omlijning
 Comment[pt]=Efeito auxiliar para desenhar um contorno
 Comment[pt_BR]=Efeito auxiliar para desenhar um contorno
