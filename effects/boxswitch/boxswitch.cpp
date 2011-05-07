@@ -547,6 +547,10 @@ void BoxSwitchEffect::calculateItemSizes()
         qDeleteAll(windows);
         windows.clear();
         if ((mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch)) {
+            if (original_windows.isEmpty()) {
+                // can happen when last window is closed.
+                return;
+            }
             int index = original_windows.indexOf(effects->currentTabBoxWindow());
             int leftIndex = index;
             int rightIndex = index + 1;
