@@ -255,7 +255,7 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
             if (r.isEmpty())
                 continue;
 
-            r = expand(r.translated(window->geometry().topLeft()));
+            r = expand(r.translated(window->pos()));
             if (r.intersects(paint))
                 break;
         }
@@ -277,7 +277,7 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
         if (r.isEmpty())
             continue;
 
-        r = expand(r.translated(window->geometry().topLeft()));
+        r = expand(r.translated(window->pos()));
 
         // We can't do a partial repaint of a blurred region
         if (r.intersects(data.paint)) {
@@ -318,7 +318,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     const QVariant forceBlur = w->data(WindowForceBlurRole);
     if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool()))
             && hasAlpha && !w->isDesktop() && !transformed)
-        shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
+        shape = blurRegion(w).translated(w->pos()) & screen;
 
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect())) {
         doBlur(shape, screen, data.opacity * data.contents_opacity);
