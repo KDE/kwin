@@ -243,7 +243,7 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
             continue;
 
         if (!window->hasAlpha()) {
-            paint -= window->contentsRect();
+            paint -= window->contentsRect().translated(window->pos());
             if (paint.isEmpty())
                 break;
         }
