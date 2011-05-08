@@ -56,6 +56,9 @@ namespace KWin
 // Workspace
 //********************************************
 
+extern int screen_number;
+extern bool is_multihead;
+
 /*!
   Resizes the workspace after an XRANDR screen size change
  */
@@ -236,6 +239,7 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
+
 QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
@@ -243,48 +247,81 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     if (screen == -1)
         screen = activeScreen();
 
-    QRect sarea = (!screenarea.isEmpty()
+    QRect sarea, warea;
+
+    if (is_multihead) {
+        sarea = (!screenarea.isEmpty()
                    && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
-                  ? screenarea[ desktop ][ screen ]
-                  : Kephal::ScreenUtils::screenGeometry(screen);
-    QRect warea = workarea[ desktop ].isNull()
-                  ? Kephal::ScreenUtils::desktopGeometry()
-                  : workarea[ desktop ];
+                  ? screenarea[ desktop ][ screen_number ]
+                  : Kephal::ScreenUtils::screenGeometry(screen_number);
+        warea = workarea[ desktop ].isNull()
+                ? Kephal::ScreenUtils::screenGeometry(screen_number)
+                : workarea[ desktop ];
+    } else {
+        sarea = (!screenarea.isEmpty()
+                && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
+                ? screenarea[ desktop ][ screen ]
+                : Kephal::ScreenUtils::screenGeometry(screen);
+        warea = workarea[ desktop ].isNull()
+                ? Kephal::ScreenUtils::desktopGeometry()
+                : workarea[ desktop ];
+    }
+
     switch(opt) {
     case MaximizeArea:
-        if (options->xineramaMaximizeEnabled)
+        if (is_multihead)
+            return sarea;
+        else if (options->xineramaMaximizeEnabled)
             return sarea;
         else
             return warea;
     case MaximizeFullArea:
-        if (options->xineramaMaximizeEnabled)
+        if (is_multihead)
+            return Kephal::ScreenUtils::screenGeometry(screen_number);
+        else if (options->xineramaMaximizeEnabled)
             return Kephal::ScreenUtils::screenGeometry(screen);
         else
             return Kephal::ScreenUtils::desktopGeometry();
     case FullScreenArea:
-        if (options->xineramaFullscreenEnabled)
+        if (is_multihead)
+            return Kephal::ScreenUtils::screenGeometry(screen_number);
+        else if (options->xineramaFullscreenEnabled)
             return Kephal::ScreenUtils::screenGeometry(screen);
         else
             return Kephal::ScreenUtils::desktopGeometry();
     case PlacementArea:
-        if (options->xineramaPlacementEnabled)
+        if (is_multihead)
+            return sarea;
+        else if (options->xineramaPlacementEnabled)
             return sarea;
         else
             return warea;
     case MovementArea:
-        if (options->xineramaMovementEnabled)
+        if (is_multihead)
+            return Kephal::ScreenUtils::screenGeometry(screen_number);
+        else if (options->xineramaMovementEnabled)
             return Kephal::ScreenUtils::screenGeometry(screen);
         else
             return Kephal::ScreenUtils::desktopGeometry();
     case WorkArea:
-        return warea;
+        if (is_multihead)
+            return sarea;
+        else
+            return warea;
     case FullArea:
-        return Kephal::ScreenUtils::desktopGeometry();
+        if (is_multihead)
+            return Kephal::ScreenUtils::screenGeometry(screen_number);
+        else
+            return Kephal::ScreenUtils::desktopGeometry();
     case ScreenArea:
-        return Kephal::ScreenUtils::screenGeometry(screen);
+        if (is_multihead)
+            return Kephal::ScreenUtils::screenGeometry(screen_number);
+        else
+            return Kephal::ScreenUtils::screenGeometry(screen);
     }
     abort();
 }
+
 
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {
