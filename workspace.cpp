@@ -1173,8 +1173,10 @@ void Workspace::slotReinitCompositing()
     }
 }
 
+static bool _loading_desktop_settings = false;
 void Workspace::loadDesktopSettings()
 {
+    _loading_desktop_settings = true;
     KSharedConfig::Ptr c = KGlobal::config();
     QString groupname;
     if (screen_number == 0)
@@ -1189,10 +1191,13 @@ void Workspace::loadDesktopSettings()
         rootInfo->setDesktopName(i, s.toUtf8().data());
         desktop_focus_chain[i-1] = i;
     }
+    _loading_desktop_settings = false;
 }
 
 void Workspace::saveDesktopSettings()
 {
+    if (_loading_desktop_settings)
+        return;
     KSharedConfig::Ptr c = KGlobal::config();
     QString groupname;
     if (screen_number == 0)
