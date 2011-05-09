@@ -732,7 +732,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     }
 
     //shadow
-    if (m_shadow && !(mask & PAINT_DECORATION_ONLY)) {
+    if (m_shadow && !(m_shadow->shadowRegion().isEmpty()) && !(mask & PAINT_DECORATION_ONLY)) {
         QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
         SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
         m_xrenderShadow->layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
@@ -1091,6 +1091,10 @@ void SceneXRenderShadow::layoutShadowRects(QRect& top, QRect& topRight,
 void SceneXRenderShadow::buildQuads()
 {
     Shadow::buildQuads();
+
+    if (shadowQuads().count() == 0) {
+        return;
+    }
 
     QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
     layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
