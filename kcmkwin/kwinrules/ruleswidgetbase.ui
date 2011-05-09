@@ -2096,7 +2096,7 @@ like your complete screen area.</string>
          <property name="toolTip">
           <string>Windows may prevent to get the focus (activate) when being clicked.
 On the other hand you might wish to prevent a window
-from getting focussed on a mouseclick.</string>
+from getting focused on a mouse click.</string>
          </property>
          <property name="text">
           <string>Accept &amp;focus</string>
