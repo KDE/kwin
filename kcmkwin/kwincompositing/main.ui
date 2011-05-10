@@ -473,17 +473,17 @@
             </property>
             <item>
              <property name="text">
-              <string extracomment="A window thumbnail requires to have the corresponding window mapped. To have thumbnails at all time, windows are not unmapped. This can break window minimization as it is modelled as unmapping of windows.">Always (Breaks minimization)</string>
+              <string comment="A window thumbnail requires to have the corresponding window mapped. To have thumbnails at all time, windows are not unmapped. This can break window minimization as it is modelled as unmapping of windows.">Always (Breaks minimization)</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string extracomment="Windows are not unmapped if the window is somewhere visible on any of the virtual desktops.">Only for Shown Windows</string>
+              <string comment="Windows are not unmapped if the window is somewhere visible on any of the virtual desktops.">Only for Shown Windows</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string extracomment="Windows are unmapped as they are requested. This can lead to not having updated thumbnials for windows on other desktops.">Never</string>
+              <string comment="Windows are unmapped as they are requested. This can lead to not having updated thumbnials for windows on other desktops.">Never</string>
              </property>
             </item>
            </widget>
