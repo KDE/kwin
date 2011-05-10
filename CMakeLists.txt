@@ -44,6 +44,7 @@ endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
 
 OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
+OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
