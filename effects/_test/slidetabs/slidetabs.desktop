@@ -61,6 +61,7 @@ Type=Service
 Comment=Slide windows when switching or grouping tabs.
 Comment[ar]=أزْلِق النوافذ عند تبديل أو تجميع الألسنة
 Comment[ast]=Esliza les ventanes al camudar o agrupar llingüetes.
+Comment[bs]=Prozori klizaju pri prebacivanju ili grupisanju jezičaka.
 Comment[ca]=Desplaça les finestres quan es canviïn o s'agrupin pestanyes.
 Comment[ca@valencia]=Desplaça les finestres quan es canvien o s'agrupen pestanyes.
 Comment[cs]=Sklouzne okna při přepínání nebo seskupování karet

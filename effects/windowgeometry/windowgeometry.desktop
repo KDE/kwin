@@ -44,6 +44,7 @@ Name[uk]=Розміри вікна
 Name[x-test]=xxWindowGeometryxx
 Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
+Comment[bs]=Prikaz geometrije prozora pri premještanju i preuveličavanju
 Comment[ca]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[ca@valencia]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[cs]=Zobrazit geometrii okna při přesunu/změně velikosti

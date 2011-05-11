@@ -72,6 +72,7 @@ Comment=Darkens the entire screen when requesting root privileges
 Comment[ar]=يعتم كامل الشاشة عند طلب صلاحيات الجذر
 Comment[ast]=Oscurez la pantalla completa cuando se requieran privilexos de root
 Comment[bg]=Екранът потъмнява при необходимост от администраторски права 
+Comment[bs]=Zatamnjuje cio ekran pri traženju korenih ovlašćenja
 Comment[ca]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
 Comment[ca@valencia]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
 Comment[cs]=Ztmaví obrazovku, pokud jsou vyžadována oprávnění administrátora systému
