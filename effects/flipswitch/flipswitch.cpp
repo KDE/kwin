@@ -587,8 +587,12 @@ void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_selectedWindow == w)
         m_selectedWindow = 0;
-    if (m_active && m_windows.contains(w)) {
-        m_windows.remove(w);
+    if (m_active) {
+        QHash< const EffectWindow*, ItemInfo* >::iterator it = m_windows.find(w);
+        if (it != m_windows.end()) {
+            delete *it;
+            m_windows.erase(it);
+        }
     }
 }
 
