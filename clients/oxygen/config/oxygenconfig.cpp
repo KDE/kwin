@@ -70,7 +70,6 @@ namespace Oxygen
 
     }
 
-
     //_______________________________________________________________________
     Config::~Config()
     {
@@ -180,7 +179,6 @@ namespace Oxygen
         QDBusConnection::sessionBus().send(message);
 
     }
-
 
     //_______________________________________________________________________
     void Config::saveShadowConfiguration( QPalette::ColorGroup colorGroup, const ShadowConfigurationUi& ui ) const
