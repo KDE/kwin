@@ -582,17 +582,25 @@ void Client::resizeDecorationPixmaps()
     QRect lr, rr, tr, br;
     layoutDecorationRects(lr, tr, rr, br, DecorationRelative);
 
-    if (decorationPixmapTop.size() != tr.size())
-        decorationPixmapTop = QPixmap(tr.size());
+    if (decorationPixmapTop.size() != tr.size()) {
+        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), tr.width(), tr.height(), 32);
+        decorationPixmapTop = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+    }
 
-    if (decorationPixmapBottom.size() != br.size())
-        decorationPixmapBottom = QPixmap(br.size());
+    if (decorationPixmapBottom.size() != br.size()) {
+        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), br.width(), br.height(), 32);
+        decorationPixmapBottom = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+    }
 
-    if (decorationPixmapLeft.size() != lr.size())
-        decorationPixmapLeft = QPixmap(lr.size());
+    if (decorationPixmapLeft.size() != lr.size()) {
+        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), lr.width(), lr.height(), 32);
+        decorationPixmapLeft = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+    }
 
-    if (decorationPixmapRight.size() != rr.size())
-        decorationPixmapRight = QPixmap(rr.size());
+    if (decorationPixmapRight.size() != rr.size()) {
+        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), rr.width(), rr.height(), 32);
+        decorationPixmapRight = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+    }
 
 #ifdef HAVE_XRENDER
     if (Extensions::renderAvailable()) {

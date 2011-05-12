@@ -106,13 +106,10 @@ class SceneOpenGL::Texture
 {
 public:
     Texture();
-    Texture(const Pixmap& pix, const QSize& size, int depth);
+    Texture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
     virtual ~Texture();
 
     using GLTexture::load;
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth,
-                      QRegion region);
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth);
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
@@ -124,9 +121,13 @@ public:
     }
 
 protected:
+    Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();
     QRegion optimizeBindDamage(const QRegion& reg, int limit);
     void createTexture();
+    virtual bool load(const Pixmap& pix, const QSize& size, int depth,
+                      QRegion region);
+    virtual bool load(const Pixmap& pix, const QSize& size, int depth);
 
 private:
     void init();
@@ -134,6 +135,8 @@ private:
 #ifndef KWIN_HAVE_OPENGLES
     GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
 #endif
+
+    friend class SceneOpenGL::Window;
 };
 
 class SceneOpenGL::Window

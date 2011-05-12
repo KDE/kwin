@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 
 #include <QtGui/QPainter>
+#include <QtGui/QPaintEngine>
 
 namespace KWin
 {
@@ -190,6 +191,12 @@ void SceneXrender::selfCheckSetup()
     img.setPixel(1, 1, QColor(Qt::black).rgb());
     img.setPixel(2, 1, QColor(Qt::white).rgb());
     QPixmap pix = QPixmap::fromImage(img);
+    if (pix.handle() == 0) {
+        Pixmap xPix = XCreatePixmap(display(), rootWindow(), pix.width(), pix.height(), DefaultDepth(display(), DefaultScreen(display())));
+        pix = QPixmap::fromX11Pixmap(xPix);
+        QPainter p(&pix);
+        p.drawImage(QPoint(0, 0), img);
+    }
     foreach (const QPoint & p, selfCheckPoints()) {
         XSetWindowAttributes wa;
         wa.override_redirect = True;
@@ -585,6 +592,10 @@ void SceneXrender::Window::prepareTempPixmap(const QPixmap *left, const QPixmap 
         temp_pixmap = new QPixmap(r.width(), r.height());
     else if (temp_pixmap->width() < r.width() || temp_pixmap->height() < r.height())
         *temp_pixmap = QPixmap(r.width(), r.height());
+    if (temp_pixmap->paintEngine()->type() != QPaintEngine::X11 || temp_pixmap->handle() == 0) {
+        Pixmap pix = XCreatePixmap(display(), rootWindow(), temp_pixmap->width(), temp_pixmap->height(), DefaultDepth(display(), DefaultScreen(display())));
+        *temp_pixmap = QPixmap::fromX11Pixmap(pix);
+    }
 
     temp_pixmap->fill(Qt::transparent);
 

@@ -404,10 +404,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         }
     }
 
-    // KWin only works properly with Qt's native X11 backend; override any compile-time
-    // or command line settings to raster or OpenGL.
-    QApplication::setGraphicsSystem("native");
-
     Display* dpy = XOpenDisplay(NULL);
     if (!dpy) {
         fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",

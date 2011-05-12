@@ -690,9 +690,9 @@ QImage GLTexture::convertToGLFormat(const QImage& img) const
     // Copied from Qt's QGLWidget::convertToGLFormat()
     QImage res(img.size(), QImage::Format_ARGB32);
 #ifdef KWIN_HAVE_OPENGLES
-    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_RGBA);
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32_Premultiplied), GL_RGBA);
 #else
-    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_BGRA);
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32_Premultiplied), GL_BGRA);
 #endif
     return res;
 }

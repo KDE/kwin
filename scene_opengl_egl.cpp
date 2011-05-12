@@ -258,6 +258,7 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
         eglDestroyImageKHR(dpy, image);
         unbind();
         checkGLError("load texture");
+        setYInverted(true);
     }
     return true;
 }

@@ -92,6 +92,7 @@ Sources and other compositing managers:
 #include <QVector2D>
 #include <QVector4D>
 #include <QMatrix4x4>
+#include <QPaintEngine>
 
 namespace KWin
 {
@@ -278,6 +279,13 @@ SceneOpenGL::Texture::Texture(const Pixmap& pix, const QSize& size, int depth) :
     load(pix, size, depth);
 }
 
+SceneOpenGL::Texture::Texture(const QPixmap& pix, GLenum target)
+    : GLTexture()
+{
+    init();
+    load(pix, target);
+}
+
 SceneOpenGL::Texture::~Texture()
 {
     discard();
@@ -329,9 +337,15 @@ bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
 
 bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 {
-    Q_UNUSED(target);   // SceneOpenGL::Texture::findTarget() detects the target
     if (pixmap.isNull())
         return false;
+
+    // Checking whether QPixmap comes with its own X11 Pixmap
+    if (pixmap.paintEngine()->type() != QPaintEngine::X11 || pixmap.handle() == 0) {
+        return GLTexture::load(pixmap.toImage(), target);
+    }
+
+    // use the X11 pixmap provided by Qt
     return load(pixmap.handle(), pixmap.size(), pixmap.depth());
 }
 
@@ -618,7 +632,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
         // texture doesn't need updating, just bind it
         glBindTexture(decorationTexture->target(), decorationTexture->texture());
     } else if (!decoration->isNull()) {
-        bool success = decorationTexture->load(decoration->handle(), decoration->size(), decoration->depth());
+        bool success = decorationTexture->load(*decoration);
         if (!success) {
             kDebug(1212) << "Failed to bind decoartion";
             return;
@@ -1316,8 +1330,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     if (!m_effectFrame->selection().isNull()) {
         if (!m_selectionTexture) { // Lazy creation
             QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
-            m_selectionTexture = new Texture(pixmap.handle(), pixmap.size(), pixmap.depth());
-            m_selectionTexture->setYInverted(true);
+            m_selectionTexture = new Texture(pixmap);
         }
         if (shader) {
             const float a = opacity * frameOpacity;
@@ -1372,10 +1385,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
 
         if (!m_iconTexture) { // lazy creation
-            m_iconTexture = new Texture(m_effectFrame->icon().handle(),
-                                        m_effectFrame->icon().size(),
-                                        m_effectFrame->icon().depth());
-            m_iconTexture->setYInverted(true);
+            m_iconTexture = new Texture(m_effectFrame->icon());
         }
         m_iconTexture->bind();
         m_iconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
@@ -1437,8 +1447,7 @@ void SceneOpenGL::EffectFrame::updateTexture()
     delete m_texture;
     if (m_effectFrame->style() == EffectFrameStyled) {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
-        m_texture = new Texture(pixmap.handle(), pixmap.size(), pixmap.depth());
-        m_texture->setYInverted(true);
+        m_texture = new Texture(pixmap);
     }
 }
 
@@ -1472,8 +1481,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         p.setPen(Qt::white);
     p.drawText(rect, m_effectFrame->alignment(), text);
     p.end();
-    m_textTexture = new Texture(m_textPixmap->handle(), m_textPixmap->size(), m_textPixmap->depth());
-    m_textTexture->setYInverted(true);
+    m_textTexture = new Texture(*m_textPixmap);
 }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
@@ -1491,8 +1499,7 @@ void SceneOpenGL::EffectFrame::updateUnstyledTexture()
     p.drawEllipse(m_unstyledPixmap->rect());
     p.end();
 #undef CS
-    m_unstyledTexture = new Texture(m_unstyledPixmap->handle(), m_unstyledPixmap->size(), m_unstyledPixmap->depth());
-    m_unstyledTexture->setYInverted(true);
+    m_unstyledTexture = new Texture(*m_unstyledPixmap);
 }
 
 void SceneOpenGL::EffectFrame::cleanup()
@@ -1563,7 +1570,7 @@ SceneOpenGL::Texture *SceneOpenGLShadow::textureForQuadType(WindowQuadType type)
         if (texture->texture() != None) {
             glBindTexture(texture->target(), texture->texture());
         } else if (!pixmap.isNull()) {
-            const bool success = texture->load(pixmap.handle(), pixmap.size(), pixmap.depth());
+            const bool success = texture->load(pixmap);
             if (!success) {
                 kDebug(1212) << "Failed to bind shadow pixmap";
                 return NULL;
