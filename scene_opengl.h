@@ -70,9 +70,6 @@ private:
     bool initDrawableConfigs();
     void waitSync();
     void flushBuffer(int mask, QRegion damage);
-    bool selfCheck();
-    void selfCheckSetup();
-    bool selfCheckFinish();
     GC gcroot;
     class FBConfigInfo
     {
@@ -101,7 +98,6 @@ private:
 #endif
     QHash< Toplevel*, Window* > windows;
     bool init_ok;
-    bool selfCheckDone;
     bool debug;
 };
 

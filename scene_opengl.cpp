@@ -122,27 +122,6 @@ bool SceneOpenGL::selectMode()
     return true;
 }
 
-// Test if compositing actually _really_ works, by creating a texture from a testing
-// window, drawing it on the screen, reading the contents back and comparing. This
-// should test whether compositing really works.
-// This function does the whole selfcheck, it can be done also in two parts
-// during actual drawing (to avoid flicker, see selfCheck() call from the ctor).
-bool SceneOpenGL::selfCheck()
-{
-    QRegion reg = selfCheckRegion();
-    if (wspace->overlayWindow()) {
-        // avoid covering the whole screen too soon
-        wspace->setOverlayShape(reg);
-        wspace->showOverlay();
-    }
-    selfCheckSetup();
-    flushBuffer(PAINT_SCREEN_REGION, reg);
-    bool ok = selfCheckFinish();
-    if (wspace->overlayWindow())
-        wspace->hideOverlay();
-    return ok;
-}
-
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
 {
     QMatrix4x4 matrix;

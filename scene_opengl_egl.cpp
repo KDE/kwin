@@ -30,7 +30,6 @@ EGLContext ctx;
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
-    , selfCheckDone(true)
 {
     if (!initRenderingContext())
         return;
@@ -163,17 +162,6 @@ bool SceneOpenGL::initBufferConfigs()
 bool SceneOpenGL::initDrawableConfigs()
 {
     return false;
-}
-
-void SceneOpenGL::selfCheckSetup()
-{
-    // not used in EGL
-}
-
-bool SceneOpenGL::selfCheckFinish()
-{
-    // not used in EGL
-    return true;
 }
 
 // the entry function for painting

@@ -38,7 +38,6 @@ GLXDrawable SceneOpenGL::last_pixmap = None;
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
-    , selfCheckDone(false)
 {
     if (!Extensions::glxAvailable()) {
         kDebug(1212) << "No glx extensions available";
@@ -121,18 +120,6 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         kError(1212) << "OpenGL compositing setup failed";
         return; // error
     }
-// selfcheck is broken (see Bug 253357)
-#if 0
-    // Do self-check immediatelly during compositing setup only when it's not KWin startup
-    // at the same time (in other words, only when activating compositing using the kcm).
-    // Currently selfcheck causes bad flicker (due to X mapping the overlay window
-    // for too long?) which looks bad during KDE startup.
-    if (!initting) {
-        if (!selfCheck())
-            return;
-        selfCheckDone = true;
-    }
-#endif
     kDebug(1212) << "DB:" << db << ", Direct:" << bool(glXIsDirect(display(), ctxbuffer)) << endl;
     init_ok = true;
 }
@@ -450,80 +437,6 @@ bool SceneOpenGL::initDrawableConfigs()
     return true;
 }
 
-void SceneOpenGL::selfCheckSetup()
-{
-    KXErrorHandler err;
-    QImage img(selfCheckWidth(), selfCheckHeight(), QImage::Format_RGB32);
-    img.setPixel(0, 0, QColor(Qt::red).rgb());
-    img.setPixel(1, 0, QColor(Qt::green).rgb());
-    img.setPixel(2, 0, QColor(Qt::blue).rgb());
-    img.setPixel(0, 1, QColor(Qt::white).rgb());
-    img.setPixel(1, 1, QColor(Qt::black).rgb());
-    img.setPixel(2, 1, QColor(Qt::white).rgb());
-    QPixmap pix = QPixmap::fromImage(img);
-    foreach (const QPoint & p, selfCheckPoints()) {
-        XSetWindowAttributes wa;
-        wa.override_redirect = True;
-        ::Window window = XCreateWindow(display(), rootWindow(), 0, 0, selfCheckWidth(), selfCheckHeight(),
-                                        0, QX11Info::appDepth(), CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa);
-        XSetWindowBackgroundPixmap(display(), window, pix.handle());
-        XClearWindow(display(), window);
-        XMapWindow(display(), window);
-        // move the window one down to where the result will be rendered too, just in case
-        // the render would fail completely and eventual check would try to read this window's contents
-        XMoveWindow(display(), window, p.x() + 1, p.y());
-        XCompositeRedirectWindow(display(), window, CompositeRedirectAutomatic);
-        Pixmap wpix = XCompositeNameWindowPixmap(display(), window);
-        glXWaitX();
-        Texture texture;
-        texture.load(wpix, QSize(selfCheckWidth(), selfCheckHeight()), QX11Info::appDepth());
-        texture.bind();
-        QRect rect(p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
-        texture.render(infiniteRegion(), rect);
-        texture.unbind();
-        glXWaitGL();
-        XFreePixmap(display(), wpix);
-        XDestroyWindow(display(), window);
-    }
-    err.error(true);   // just sync and discard
-}
-
-bool SceneOpenGL::selfCheckFinish()
-{
-    glXWaitGL();
-    KXErrorHandler err;
-    bool ok = true;
-    foreach (const QPoint & p, selfCheckPoints()) {
-        QPixmap pix = QPixmap::grabWindow(rootWindow(), p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
-        QImage img = pix.toImage();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 1 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 1 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 1 )).name();
-        if (img.pixel(0, 0) != QColor(Qt::red).rgb()
-                || img.pixel(1, 0) != QColor(Qt::green).rgb()
-                || img.pixel(2, 0) != QColor(Qt::blue).rgb()
-                || img.pixel(0, 1) != QColor(Qt::white).rgb()
-                || img.pixel(1, 1) != QColor(Qt::black).rgb()
-                || img.pixel(2, 1) != QColor(Qt::white).rgb()) {
-            kError(1212) << "OpenGL compositing self-check failed, disabling compositing.";
-            ok = false;
-            break;
-        }
-    }
-    if (err.error(true))
-        ok = false;
-    if (ok)
-        kDebug(1212) << "OpenGL compositing self-check passed.";
-    if (!ok && options->disableCompositingChecks) {
-        kWarning(1212) << "Compositing checks disabled, proceeding regardless of self-check failure.";
-        return true;
-    }
-    return ok;
-}
-
 // the entry function for painting
 void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
@@ -547,22 +460,8 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if (wspace->overlayWindow())  // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
-// selfcheck is broken (see Bug 253357)
-#if 0
-    if (!selfCheckDone) {
-        selfCheckSetup();
-        damage |= selfCheckRegion();
-    }
-#endif
     lastRenderTime = t.elapsed();
     flushBuffer(mask, damage);
-#if 0
-    if (!selfCheckDone) {
-        if (!selfCheckFinish())
-            QTimer::singleShot(0, Workspace::self(), SLOT(finishCompositing()));
-        selfCheckDone = true;
-    }
-#endif
     // do cleanup
     stacking_order.clear();
     checkGLError("PostPaint");
