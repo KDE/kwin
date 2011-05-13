@@ -119,9 +119,17 @@ void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
 
 static inline QString number(int n)
 {
-    if (n >= 0)
-        return  '+' + QString::number(n);
-    return QString::number(n); // "-" is auto-applied
+    QString sign;
+    if (n >= 0) {
+        sign = KGlobal::locale()->positiveSign();
+        if (sign.isEmpty()) sign = "+";
+    }
+    else {
+        n = -n;
+        sign = KGlobal::locale()->negativeSign();
+        if (sign.isEmpty()) sign = "-";
+    }
+    return  sign + QString::number(n);
 }
 
 
