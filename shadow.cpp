@@ -100,7 +100,7 @@ bool Shadow::init(const QVector< long > &data)
 {
     for (int i=0; i<ShadowElementsCount; ++i) {
         QPixmap pix = QPixmap::fromX11Pixmap(data[i]);
-        if (pix.isNull()) {
+        if (pix.isNull() || pix.depth() != 32) {
             return false;
         }
         m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
