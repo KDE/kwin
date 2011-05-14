@@ -103,7 +103,7 @@ bool Shadow::init(const QVector< long > &data)
         if (pix.isNull() || pix.depth() != 32) {
             return false;
         }
-        m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
+        m_shadowElements[i] = pix;
     }
     m_topOffset = data[ShadowElementsCount];
     m_rightOffset = data[ShadowElementsCount+1];
