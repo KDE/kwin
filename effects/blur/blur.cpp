@@ -310,6 +310,12 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     if (!target->valid() || !shader->isValid())
         return false;
 
+    // Don't blur anything if we're painting top-to-bottom
+    if (!(mask & (PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS |
+                  PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS |
+                  PAINT_SCREEN_TRANSFORMED)))
+        return false;
+
     if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool())
         return false;
 
