@@ -305,23 +305,40 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
 }
 
-void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    if (!target->valid() || !shader->isValid())
+        return false;
+
+    if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool())
+        return false;
+
+    if (w->isDesktop())
+        return false;
+
     bool scaled = !qFuzzyCompare(data.xScale, 1.0) && !qFuzzyCompare(data.yScale, 1.0);
     bool translated = data.xTranslate || data.yTranslate;
-    bool transformed = scaled || translated || mask & PAINT_WINDOW_TRANSFORMED;
-    bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha() && effects->decorationSupportsBlurBehind());
-    bool valid = target->valid() && shader->isValid();
 
-    QRegion shape;
-    const QVariant forceBlur = w->data(WindowForceBlurRole);
-    if ((!effects->activeFullScreenEffect() || (forceBlur.isValid() && forceBlur.toBool()))
-            && hasAlpha && !w->isDesktop() && !transformed)
-        shape = blurRegion(w).translated(w->pos()) & screen;
+    if (scaled || translated || (mask & PAINT_WINDOW_TRANSFORMED))
+        return false;
 
-    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect())) {
-        doBlur(shape, screen, data.opacity * data.contents_opacity);
+    bool blurBehindDecos = effects->decorationsHaveAlpha() &&
+                effects->decorationSupportsBlurBehind();
+
+    if (!w->hasAlpha() && !(blurBehindDecos && w->hasDecoration()))
+        return false;
+
+    return true;
+}
+
+void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (shouldBlur(w, mask, data)) {
+        const QRect screen(0, 0, displayWidth(), displayHeight());
+        const QRegion shape = blurRegion(w).translated(w->pos()) & screen;
+
+        if (!shape.isEmpty() && region.intersects(shape.boundingRect()))
+            doBlur(shape, screen, data.opacity * data.contents_opacity);
     }
 
     // Draw the window over the blurred area
