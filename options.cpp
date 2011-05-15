@@ -349,7 +349,7 @@ void Options::reloadCompositingSettings(bool force)
     else if (hps == 6)
         hiddenPreviews = HiddenPreviewsAlways;
 
-    unredirectFullscreen = config.readEntry("UnredirectFullscreen", true);
+    unredirectFullscreen = config.readEntry("UnredirectFullscreen", false);
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", 3), 6);
 }
 

@@ -392,7 +392,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     else // shown, or default
         ui.windowThumbnails->setCurrentIndex(1);
     ui.disableChecks->setChecked(config.readEntry("DisableChecks", false));
-    ui.unredirectFullscreen->setChecked(config.readEntry("UnredirectFullscreen", true));
+    ui.unredirectFullscreen->setChecked(config.readEntry("UnredirectFullscreen", false));
 
     ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
     ui.glScaleFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 2));
@@ -723,7 +723,7 @@ void KWinCompositingConfig::defaults()
     ui.compositingType->setCurrentIndex(0);
     ui.windowThumbnails->setCurrentIndex(1);
     ui.disableChecks->setChecked(false);
-    ui.unredirectFullscreen->setChecked(true);
+    ui.unredirectFullscreen->setChecked(false);
     ui.xrScaleFilter->setCurrentIndex(0);
     ui.glScaleFilter->setCurrentIndex(2);
     ui.glDirect->setChecked(mDefaultPrefs.enableDirectRendering());
