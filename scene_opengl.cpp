@@ -345,6 +345,8 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
         return GLTexture::load(pixmap.toImage(), target);
     }
 
+    y_inverted = true;
+
     // use the X11 pixmap provided by Qt
     return load(pixmap.handle(), pixmap.size(), pixmap.depth());
 }
@@ -647,7 +649,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     decorationTexture->bind();
 
     prepareStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
-    makeDecorationArrays(quads, rect);
+    makeDecorationArrays(quads, rect, decorationTexture->getYInverted());
     if (data.shader) {
         data.shader->setUniform(GLShader::TextureWidth, 1.0f);
         data.shader->setUniform(GLShader::TextureHeight, 1.0f);
@@ -694,7 +696,7 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
 #endif
 }
 
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const
+void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect& rect, bool y_inverted) const
 {
     QVector<float> vertices;
     QVector<float> texcoords;
@@ -716,18 +718,33 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
         vertices << quad[ 1 ].x();
         vertices << quad[ 1 ].y();
 
-        texcoords << (float)(quad.originalRight() - rect.x()) / width;
-        texcoords << (float)(quad.originalTop() - rect.y()) / height;
-        texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-        texcoords << (float)(quad.originalTop() - rect.y()) / height;
-        texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-        texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-        texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-        texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-        texcoords << (float)(quad.originalRight() - rect.x()) / width;
-        texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-        texcoords << (float)(quad.originalRight() - rect.x()) / width;
-        texcoords << (float)(quad.originalTop() - rect.y()) / height;
+        if (y_inverted) {
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << (float)(quad.originalTop() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << (float)(quad.originalTop() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << (float)(quad.originalTop() - rect.y()) / height;
+        } else {
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
+            texcoords << (float)(quad.originalRight() - rect.x()) / width;
+            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
+        }
     }
     GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.data(), texcoords.data());
 }

@@ -120,6 +120,10 @@ public:
         y_inverted = inverted;
     }
 
+    bool getYInverted() const {
+        return y_inverted;
+    }
+
 protected:
     Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();
@@ -164,7 +168,7 @@ protected:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
     void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
-    void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const;
+    void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect, bool y_inverted) const;
     void renderQuads(int mask, const QRegion& region, const WindowQuadList& quads);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
