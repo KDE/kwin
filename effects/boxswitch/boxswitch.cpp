@@ -272,6 +272,10 @@ void BoxSwitchEffect::slotWindowDamaged(EffectWindow* w, const QRect& damage)
                 effects->addRepaint(desktops[ w->desktop()]->area);
             }
         }
+#ifdef KWIN_HAVE_OPENGLES
+        // without full repaints, blur effect flickers on GLES, see BUG 272688
+        effects->addRepaintFull();
+#endif
     }
 }
 
