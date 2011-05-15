@@ -1038,6 +1038,7 @@ private:
     bool forceUnredirectCheck;
     QList< int > composite_paint_times;
     QTimer compositeResetTimer; // for compressing composite resets
+    bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
 
 private:
     friend bool performTransiencyCheck();

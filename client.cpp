@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QDateTime>
 #include <QProcess>
+#include <QPaintEngine>
 #include <unistd.h>
 #include <kstandarddirs.h>
 #include <QWhatsThis>
@@ -131,6 +132,7 @@ Client::Client(Workspace* ws)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
+    , m_responsibleForDecoPixmap(false)
 {
     // TODO: Do all as initialization
 
@@ -395,6 +397,13 @@ void Client::destroyDecoration()
         move(grav);
         delete paintRedirector;
         paintRedirector = NULL;
+        if (m_responsibleForDecoPixmap) {
+            XFreePixmap(display(), decorationPixmapTop.handle());
+            XFreePixmap(display(), decorationPixmapBottom.handle());
+            XFreePixmap(display(), decorationPixmapLeft.handle());
+            XFreePixmap(display(), decorationPixmapRight.handle());
+            m_responsibleForDecoPixmap = false;
+        }
         decorationPixmapLeft = decorationPixmapRight = decorationPixmapTop = decorationPixmapBottom = QPixmap();
         if (compositing())
             discardWindowPixmap();
@@ -583,23 +592,79 @@ void Client::resizeDecorationPixmaps()
     layoutDecorationRects(lr, tr, rr, br, DecorationRelative);
 
     if (decorationPixmapTop.size() != tr.size()) {
-        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), tr.width(), tr.height(), 32);
-        decorationPixmapTop = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+        if (m_responsibleForDecoPixmap && !decorationPixmapTop.isNull() &&
+              decorationPixmapTop.paintEngine()->type() == QPaintEngine::X11) {
+            XFreePixmap(display(), decorationPixmapTop.handle());
+        }
+
+        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+            decorationPixmapTop = QPixmap(tr.size());
+            m_responsibleForDecoPixmap = false;
+        } else {
+            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
+                                        tr.size().width(), tr.height(),
+                                        32);
+            decorationPixmapTop = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+            decorationPixmapTop.fill(Qt::transparent);
+            m_responsibleForDecoPixmap= true;
+        }
     }
 
     if (decorationPixmapBottom.size() != br.size()) {
-        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), br.width(), br.height(), 32);
-        decorationPixmapBottom = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+        if (m_responsibleForDecoPixmap && !decorationPixmapBottom.isNull() &&
+              decorationPixmapBottom.paintEngine()->type() == QPaintEngine::X11) {
+            XFreePixmap(display(), decorationPixmapBottom.handle());
+        }
+
+        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+            decorationPixmapBottom = QPixmap(br.size());
+            m_responsibleForDecoPixmap = false;
+        } else {
+            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
+                                        br.size().width(), br.height(),
+                                        32);
+            decorationPixmapBottom = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+            decorationPixmapBottom.fill(Qt::transparent);
+            m_responsibleForDecoPixmap = true;
+        }
     }
 
     if (decorationPixmapLeft.size() != lr.size()) {
-        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), lr.width(), lr.height(), 32);
-        decorationPixmapLeft = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+        if (m_responsibleForDecoPixmap && !decorationPixmapLeft.isNull() &&
+              decorationPixmapLeft.paintEngine()->type() == QPaintEngine::X11) {
+            XFreePixmap(display(), decorationPixmapLeft.handle());
+        }
+
+        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+            decorationPixmapLeft = QPixmap(lr.size());
+            m_responsibleForDecoPixmap = false;
+        } else {
+            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
+                                        lr.size().width(), lr.height(),
+                                        32);
+            decorationPixmapLeft = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+            decorationPixmapLeft.fill(Qt::transparent);
+            m_responsibleForDecoPixmap = true;
+        }
     }
 
     if (decorationPixmapRight.size() != rr.size()) {
-        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), rr.width(), rr.height(), 32);
-        decorationPixmapRight = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+        if (m_responsibleForDecoPixmap && !decorationPixmapRight.isNull() &&
+              decorationPixmapRight.paintEngine()->type() == QPaintEngine::X11) {
+            XFreePixmap(display(), decorationPixmapRight.handle());
+        }
+
+        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+            decorationPixmapRight = QPixmap(rr.size());
+            m_responsibleForDecoPixmap = false;
+        } else {
+            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
+                                        rr.size().width(), rr.height(),
+                                        32);
+            decorationPixmapRight = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+            decorationPixmapRight.fill(Qt::transparent);
+            m_responsibleForDecoPixmap = true;
+        }
     }
 
 #ifdef HAVE_XRENDER

@@ -160,6 +160,7 @@ Workspace::Workspace(bool restore)
     , transSlider(NULL)
     , transButton(NULL)
     , forceUnredirectCheck(true)
+    , m_finishingCompositing(false)
 {
     (void) new KWinAdaptor(this);
 

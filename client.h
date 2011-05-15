@@ -710,6 +710,8 @@ private:
     friend class GeometryUpdatesBlocker;
     QTimer* demandAttentionKNotifyTimer;
     QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
+    // we (instead of Qt) initialize the Pixmaps, and have to free them
+    bool m_responsibleForDecoPixmap;
     PaintRedirector* paintRedirector;
     TabBox::TabBoxClientImpl* m_tabBoxClient;
 

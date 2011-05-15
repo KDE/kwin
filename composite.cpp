@@ -202,6 +202,7 @@ void Workspace::finishCompositing()
 #ifdef KWIN_HAVE_COMPOSITING
     if (scene == NULL)
         return;
+    m_finishingCompositing = true;
     delete cm_selection;
     foreach (Client * c, clients)
     scene->windowClosed(c, NULL);
@@ -240,6 +241,7 @@ void Workspace::finishCompositing()
     // discard all Deleted windows (#152914)
     while (!deleted.isEmpty())
         deleted.first()->discard(Allowed);
+    m_finishingCompositing = false;
 #endif
 }
 
@@ -639,7 +641,7 @@ void Workspace::destroyOverlay()
 
 bool Workspace::compositingActive()
 {
-    return compositing();
+    return !m_finishingCompositing && compositing();
 }
 
 // force is needed when the list of windows changes (e.g. a window goes away)
@@ -951,13 +953,14 @@ void Client::setupCompositing()
 {
     Toplevel::setupCompositing();
     updateVisibility(); // for internalKeep()
+    updateDecoration(true, true);
 }
 
 void Client::finishCompositing()
 {
     Toplevel::finishCompositing();
     updateVisibility();
-    triggerDecorationRepaint();
+    updateDecoration(true, true);
 }
 
 bool Client::shouldUnredirect() const
