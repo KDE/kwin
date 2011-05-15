@@ -471,16 +471,6 @@ void Workspace::init()
     if (new_active_client != NULL)
         activateClient(new_active_client);
 
-    // outline windows for electric border maximize window mode
-    outline_left = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                 CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_right = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                  CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_top = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_bottom = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                   CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-
     // Enable/disable tiling
     setTilingEnabled(options->tilingOn);
 
@@ -523,12 +513,6 @@ Workspace::~Workspace()
 
     writeWindowRules();
     KGlobal::config()->sync();
-
-    // destroy outline windows for electric border maximize window mode
-    XDestroyWindow(QX11Info::display(), outline_left);
-    XDestroyWindow(QX11Info::display(), outline_right);
-    XDestroyWindow(QX11Info::display(), outline_top);
-    XDestroyWindow(QX11Info::display(), outline_bottom);
 
     delete rootInfo;
     delete supportWindow;
