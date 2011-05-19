@@ -431,6 +431,10 @@ void EffectsHandlerImpl::slotDesktopChanged(int old)
 
 void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
 {
+    if (!t->effectWindow()) {
+        // can happen during tear down of window
+        return;
+    }
     emit windowDamaged(t->effectWindow(), r);
 }
 
