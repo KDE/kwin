@@ -341,7 +341,7 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
         return false;
 
     // Checking whether QPixmap comes with its own X11 Pixmap
-    if (pixmap.paintEngine()->type() != QPaintEngine::X11 || pixmap.handle() == 0) {
+    if (pixmap.paintEngine() == 0 || pixmap.paintEngine()->type() != QPaintEngine::X11 || pixmap.handle() == 0) {
         return GLTexture::load(pixmap.toImage(), target);
     }
 
