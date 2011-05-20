@@ -345,7 +345,7 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
             bottom = qMax(bottom, data.quads[i].bottom());
         }
         m_updateRegion = m_updateRegion.united(QRect(w->x() + left, w->y() + top,
-                                               right - left, bottom - top));
+                                               right - left + 2, bottom - top + 2));
     }
 
     // Call the next effect.
