@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Outline
 Name[bs]=Kontura
+Name[da]=Omrids
 Name[et]=Kontuur
 Name[ia]=Profilo
 Name[km]=គ្រោង
@@ -16,6 +17,7 @@ Name[zh_TW]=輪廓
 Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
 Comment[bs]=Pomoćni efekt za crtanje konture
+Comment[da]=Hjælpeeffekt til at rendere et omrids
 Comment[et]=Abiefekt kontuuri renderdamiseks
 Comment[ia]=Effecto de adjuta pro render un profilo
 Comment[km]=បែបផែន​កម្មវិធី​​ជំនួយ​ ដើម្បី​បង្ហាញ​គ្រោង
