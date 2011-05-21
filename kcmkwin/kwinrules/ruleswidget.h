@@ -81,7 +81,6 @@ private slots:
     void updateEnabletilingoption();
     // workarounds tab
     void updateEnablefsplevel();
-    void updateEnablemoveresizemode();
     void updateEnabletype();
     void updateEnableignoreposition();
     void updateEnableminsize();

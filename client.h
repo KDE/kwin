@@ -439,11 +439,6 @@ private:
     Position mousePosition(const QPoint&) const;
     void updateCursor();
 
-    // Transparent stuff
-    void drawbound(const QRect& geom);
-    void clearbound();
-    void doDrawbound(const QRect& geom, bool clear);
-
     // Handlers for X11 events
     bool mapRequestEvent(XMapRequestEvent* e);
     void unmapNotifyEvent(XUnmapEvent* e);
@@ -581,7 +576,6 @@ private:
     QStringList activityList;
     bool buttonDown;
     bool moveResizeMode;
-    bool move_faked_activity;
     Window move_resize_grab_window;
     bool move_resize_has_keyboard_grab;
     bool unrestrictedMoveResize;

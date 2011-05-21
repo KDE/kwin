@@ -626,32 +626,6 @@ void Workspace::clientAttentionChanged(Client* c, bool set)
         attention_chain.removeAll(c);
 }
 
-// This is used when a client should be shown active immediately after requestFocus(),
-// without waiting for the matching FocusIn that will really make the window the active one.
-// Used only in special cases, e.g. for MouseActivateRaiseandMove with transparent windows,
-bool Workspace::fakeRequestedActivity(Client* c)
-{
-    if (should_get_focus.count() > 0 && should_get_focus.last() == c) {
-        if (c->isActive())
-            return false;
-        c->setActive(true);
-        return true;
-    }
-    return false;
-}
-
-void Workspace::unfakeActivity(Client* c)
-{
-    if (should_get_focus.count() > 0 && should_get_focus.last() == c) {
-        // TODO this will cause flicker, and probably is not needed
-        if (last_active_client != NULL)
-            last_active_client->setActive(true);
-        else
-            c->setActive(false);
-    }
-}
-
-
 //********************************************
 // Client
 //********************************************

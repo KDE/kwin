@@ -114,8 +114,6 @@ unsigned long Options::updateSettings()
     changed |= KDecorationOptions::updateSettings(_config.data());   // read decoration settings
 
     KConfigGroup config(_config, "Windows");
-    moveMode = stringToMoveResizeMode(config.readEntry("MoveMode", "Opaque"));
-    resizeMode = stringToMoveResizeMode(config.readEntry("ResizeMode", "Opaque"));
     show_geometry_tip = config.readEntry("GeometryTip", false);
 
     QString val;
@@ -509,16 +507,6 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int de
     }
 }
 #endif
-
-Options::MoveResizeMode Options::stringToMoveResizeMode(const QString& s)
-{
-    return s == "Opaque" ? Opaque : Transparent;
-}
-
-const char* Options::moveResizeModeToString(MoveResizeMode mode)
-{
-    return mode == Opaque ? "Opaque" : "Transparent";
-}
 
 double Options::animationTimeFactor() const
 {

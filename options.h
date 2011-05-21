@@ -149,17 +149,6 @@ public:
     // number, or -1 = active screen (Workspace::activeScreen())
     int xineramaPlacementScreen;
 
-    /**
-       MoveResizeMode, either Tranparent or Opaque.
-     */
-    enum MoveResizeMode { Transparent, Opaque };
-
-    MoveResizeMode resizeMode;
-    MoveResizeMode moveMode;
-
-    static MoveResizeMode stringToMoveResizeMode(const QString& s);
-    static const char* moveResizeModeToString(MoveResizeMode mode);
-
     Placement::Policy placement;
 
     bool focusPolicyIsReasonable() {

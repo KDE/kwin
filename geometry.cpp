@@ -2505,52 +2505,7 @@ void Client::updateFullScreenHack(const QRect& geom)
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
 }
 
-static QRect*       visible_bound  = 0;
 static GeometryTip* geometryTip    = 0;
-
-void Client::drawbound(const QRect& geom)
-{
-    assert(visible_bound == NULL);
-    visible_bound = new QRect(geom);
-    doDrawbound(*visible_bound, false);
-}
-
-void Client::clearbound()
-{
-    if (visible_bound == NULL)
-        return;
-    doDrawbound(*visible_bound, true);
-    delete visible_bound;
-    visible_bound = 0;
-}
-
-void Client::doDrawbound(const QRect& geom, bool clear)
-{
-    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize))
-        return; // done by effect
-    if (decoration != NULL && decoration->drawbound(geom, clear))
-        return; // done by decoration
-    XGCValues xgc;
-    xgc.function = GXxor;
-    xgc.foreground = WhitePixel(display(), DefaultScreen(display()));
-    xgc.line_width = 5;
-    xgc.subwindow_mode = IncludeInferiors;
-    GC gc = XCreateGC(display(), DefaultRootWindow(display()),
-                      GCFunction | GCForeground | GCLineWidth | GCSubwindowMode, &xgc);
-    // the line is 5 pixel thick, so compensate for the extra two pixels
-    // on outside (#88657)
-    QRect g = geom;
-    if (g.width() > 5) {
-        g.setLeft(g.left() + 2);
-        g.setRight(g.right() - 2);
-    }
-    if (g.height() > 5) {
-        g.setTop(g.top() + 2);
-        g.setBottom(g.bottom() - 2);
-    }
-    XDrawRectangle(display(), DefaultRootWindow(display()), gc, g.x(), g.y(), g.width(), g.height());
-    XFreeGC(display(), gc);
-}
 
 void Client::positionGeometryTip()
 {
@@ -2560,10 +2515,7 @@ void Client::positionGeometryTip()
         return; // some effect paints this for us
     if (options->showGeometryTip()) {
         if (!geometryTip) {
-            // save under is not necessary with opaque, and seem to make things slower
-            bool save_under = (isMove() && rules()->checkMoveResizeMode(options->moveMode) != Options::Opaque)
-                              || (isResize() && rules()->checkMoveResizeMode(options->resizeMode) != Options::Opaque);
-            geometryTip = new GeometryTip(&xSizeHint, save_under);
+            geometryTip = new GeometryTip(&xSizeHint, false);
         }
         QRect wgeom(moveResizeGeom);   // position of the frame, size of the window itself
         wgeom.setWidth(wgeom.width() - (width() - clientSize().width()));
@@ -2576,17 +2528,6 @@ void Client::positionGeometryTip()
         geometryTip->raise();
     }
 }
-
-class EatAllPaintEvents
-    : public QObject
-{
-protected:
-    virtual bool eventFilter(QObject* o, QEvent* e) {
-        return e->type() == QEvent::Paint && o != geometryTip;
-    }
-};
-
-static EatAllPaintEvents* eater = 0;
 
 bool Client::startMoveResize()
 {
@@ -2643,18 +2584,6 @@ bool Client::startMoveResize()
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
-    if ((isMove() && rules()->checkMoveResizeMode(options->moveMode) != Options::Opaque)
-            || (isResize() && rules()->checkMoveResizeMode(options->resizeMode) != Options::Opaque)) {
-        grabXServer();
-        kapp->sendPostedEvents();
-        // we have server grab -> nothing should cause paint events
-        // unfortunately, that's not completely true, Qt may generate
-        // paint events on some widgets due to FocusIn(?)
-        // eat them, otherwise XOR painting will be broken (#58054)
-        // paint events for the geometrytip need to be allowed, though
-        eater = new EatAllPaintEvents;
-// not needed anymore?        kapp->installEventFilter( eater );
-    }
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     emit clientStartUserMovedResized(this);
     if (options->electricBorders() == Options::ElectricMoveOnly ||
@@ -2737,15 +2666,11 @@ void Client::finishMoveResize(bool cancel)
 
 void Client::leaveMoveResize()
 {
-    clearbound();
     if (geometryTip) {
         geometryTip->hide();
         delete geometryTip;
         geometryTip = NULL;
     }
-    if ((isMove() && rules()->checkMoveResizeMode(options->moveMode) != Options::Opaque)
-            || (isResize() && rules()->checkMoveResizeMode(options->resizeMode) != Options::Opaque))
-        ungrabXServer();
     if (move_resize_has_keyboard_grab)
         ungrabXKeyboard();
     move_resize_has_keyboard_grab = false;
@@ -2753,12 +2678,7 @@ void Client::leaveMoveResize()
     XDestroyWindow(display(), move_resize_grab_window);
     move_resize_grab_window = None;
     workspace()->setClientIsMoving(0);
-    if (move_faked_activity)
-        workspace()->unfakeActivity(this);
-    move_faked_activity = false;
     moveResizeMode = false;
-    delete eater;
-    eater = 0;
     delete sync_timeout;
     sync_timeout = NULL;
     if (options->electricBorders() == Options::ElectricMoveOnly ||
@@ -3093,16 +3013,8 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
 void Client::performMoveResize()
 {
-    bool haveResizeEffect = false;
-    bool transparent = false;
-    if (isResize()) {
-        haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
-        transparent = haveResizeEffect || rules()->checkMoveResizeMode(options->resizeMode) != Options::Opaque;
-    } else if (isMove())
-        transparent = rules()->checkMoveResizeMode(options->moveMode) != Options::Opaque;
-
 #ifdef HAVE_XSYNC
-    if (isResize() && !transparent && sync_counter != None && !sync_resize_pending) {
+    if (isResize() && sync_counter != None && !sync_resize_pending) {
         sync_timeout = new QTimer(this);
         connect(sync_timeout, SIGNAL(timeout()), SLOT(syncTimeout()));
         sync_timeout->setSingleShot(true);
@@ -3110,17 +3022,9 @@ void Client::performMoveResize()
         sendSyncRequest();
     }
 #endif
-    if (transparent) {
-        if (!haveResizeEffect)
-            clearbound();  // it's necessary to move the geometry tip when there's no outline
-        positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
-        if (!haveResizeEffect)
-            drawbound(moveResizeGeom);   // they overlap; the paint event will come after this,
-    } else {
-        if (!workspace()->tilingEnabled())
-            setGeometry(moveResizeGeom);
-        positionGeometryTip();
-    }
+    if (!workspace()->tilingEnabled())
+        setGeometry(moveResizeGeom);
+    positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 

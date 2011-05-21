@@ -140,8 +140,6 @@ public:
     void restoreFocus();
     void gotFocusIn(const Client*);
     void setShouldGetFocus(Client*);
-    bool fakeRequestedActivity(Client* c);
-    void unfakeActivity(Client* c);
     bool activateNextClient(Client* c);
     bool focusChangeEnabled() {
         return block_focus == 0;

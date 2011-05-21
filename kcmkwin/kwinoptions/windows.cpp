@@ -48,8 +48,6 @@
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
 #define KWIN_PLACEMENT             "Placement"
-#define KWIN_MOVE                  "MoveMode"
-#define KWIN_RESIZE_OPAQUE         "ResizeMode"
 #define KWIN_GEOMETRY              "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
@@ -935,18 +933,6 @@ KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponen
     QBoxLayout *bLay = new QVBoxLayout;
     wLay->addLayout(bLay);
 
-    opaque = new QCheckBox(i18n("Di&splay content in moving windows"), windowsBox);
-    bLay->addWidget(opaque);
-    opaque->setWhatsThis(i18n("Enable this option if you want a window's content to be fully shown"
-                              " while moving it, instead of just showing a window 'skeleton'. The result may not be satisfying"
-                              " on slow machines without graphic acceleration."));
-
-    resizeOpaqueOn = new QCheckBox(i18n("Display content in &resizing windows"), windowsBox);
-    bLay->addWidget(resizeOpaqueOn);
-    resizeOpaqueOn->setWhatsThis(i18n("Enable this option if you want a window's content to be shown"
-                                      " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
-                                      " on slow machines."));
-
     geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
     bLay->addWidget(geometryTipOn);
     geometryTipOn->setWhatsThis(i18n("Enable this option if you want a window's geometry to be displayed"
@@ -1039,8 +1025,6 @@ KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponen
     load();
 
     // Any changes goes to slotChanged()
-    connect(opaque, SIGNAL(clicked()), SLOT(changed()));
-    connect(resizeOpaqueOn, SIGNAL(clicked()), SLOT(changed()));
     connect(geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
     connect(moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -1057,16 +1041,6 @@ KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponen
     slotCntrSnapChanged(CntrSnap->value());
 }
 
-int KMovingConfig::getMove()
-{
-    return (opaque->isChecked()) ? OPAQUE : TRANSPARENT;
-}
-
-void KMovingConfig::setMove(int trans)
-{
-    opaque->setChecked(trans == OPAQUE);
-}
-
 void KMovingConfig::setGeometryTip(bool showGeometryTip)
 {
     geometryTipOn->setChecked(showGeometryTip);
@@ -1075,16 +1049,6 @@ void KMovingConfig::setGeometryTip(bool showGeometryTip)
 bool KMovingConfig::getGeometryTip()
 {
     return geometryTipOn->isChecked();
-}
-
-int KMovingConfig::getResizeOpaque()
-{
-    return (resizeOpaqueOn->isChecked()) ? RESIZE_OPAQUE : RESIZE_TRANSPARENT;
-}
-
-void KMovingConfig::setResizeOpaque(int opaque)
-{
-    resizeOpaqueOn->setChecked(opaque == RESIZE_OPAQUE);
 }
 
 void KMovingConfig::setMoveResizeMaximized(bool a)
@@ -1122,19 +1086,6 @@ void KMovingConfig::load(void)
 
     KConfigGroup cg(config, "Windows");
 
-    key = cg.readEntry(KWIN_MOVE, "Opaque");
-    if (key == "Transparent")
-        setMove(TRANSPARENT);
-    else if (key == "Opaque")
-        setMove(OPAQUE);
-
-    // DF: please keep the default consistent with kwin (options.cpp line 145)
-    key = cg.readEntry(KWIN_RESIZE_OPAQUE, "Opaque");
-    if (key == "Opaque")
-        setResizeOpaque(RESIZE_OPAQUE);
-    else if (key == "Transparent")
-        setResizeOpaque(RESIZE_TRANSPARENT);
-
     //KS 10Jan2003 - Geometry Tip during window move/resize
     bool showGeomTip = cg.readEntry(KWIN_GEOMETRY, false);
     setGeometryTip(showGeomTip);
@@ -1169,20 +1120,6 @@ void KMovingConfig::save(void)
 
     KConfigGroup cg(config, "Windows");
 
-    v = getMove();
-    if (v == TRANSPARENT)
-        cg.writeEntry(KWIN_MOVE, "Transparent");
-    else
-        cg.writeEntry(KWIN_MOVE, "Opaque");
-
-    cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
-
-    v = getResizeOpaque();
-    if (v == RESIZE_OPAQUE)
-        cg.writeEntry(KWIN_RESIZE_OPAQUE, "Opaque");
-    else
-        cg.writeEntry(KWIN_RESIZE_OPAQUE, "Transparent");
-
     cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, moveResizeMaximized->isChecked());
 
 
@@ -1205,8 +1142,6 @@ void KMovingConfig::save(void)
 
 void KMovingConfig::defaults()
 {
-    setMove(OPAQUE);
-    setResizeOpaque(RESIZE_TRANSPARENT);
     setGeometryTip(false);
     setMoveResizeMaximized(false);
 
