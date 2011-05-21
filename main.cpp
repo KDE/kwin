@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <KComboBox>
 #include <QVBoxLayout>
+#include <kworkspace.h>
 
 #include <ksmserver_interface.h>
 
@@ -403,6 +404,8 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
             break;
         }
     }
+
+    KWorkSpace::trimMalloc();
 
     Display* dpy = XOpenDisplay(NULL);
     if (!dpy) {
