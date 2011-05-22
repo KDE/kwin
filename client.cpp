@@ -128,11 +128,11 @@ Client::Client(Workspace* ws)
     , padding_bottom(0)
     , sm_stacking_order(-1)
     , demandAttentionKNotifyTimer(NULL)
+    , m_responsibleForDecoPixmap(false)
     , paintRedirector(0)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
-    , m_responsibleForDecoPixmap(false)
 {
     // TODO: Do all as initialization
 
@@ -1824,7 +1824,7 @@ void Client::setCaption(const QString& _s, bool force)
             info->setVisibleIconName("");
         } else if (!cap_suffix.isEmpty() && !cap_iconic.isEmpty())
             // Keep the same suffix in iconic name if it's set
-            info->setVisibleIconName((cap_iconic + cap_suffix).toUtf8());
+            info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
 
         if (isManaged() && decoration != NULL) {
             if (client_group)
@@ -1851,7 +1851,7 @@ void Client::fetchIconicName()
         cap_iconic = s;
         if (!cap_suffix.isEmpty()) {
             if (!cap_iconic.isEmpty())  // Keep the same suffix in iconic name if it's set
-                info->setVisibleIconName((s + cap_suffix).toUtf8());
+                info->setVisibleIconName(QString(s + cap_suffix).toUtf8());
             else if (was_set)
                 info->setVisibleIconName("");
         }

@@ -45,7 +45,7 @@ PluginMgr::PluginMgr()
 
 void PluginMgr::error(const QString &error_msg)
 {
-    qWarning("%s", (i18n("KWin: ") + error_msg).toLocal8Bit().data());
+    qWarning("%s", QString(i18n("KWin: ") + error_msg).toLocal8Bit().data());
 
     setNoDecoration(true);
 }
