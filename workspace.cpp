@@ -1683,7 +1683,7 @@ void Workspace::setNumberOfDesktops(int n)
  */
 void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 {
-    if (desk < 1 || desk > numberOfDesktops())
+    if ((desk < 1 && desk != NET::OnAllDesktops) || desk > numberOfDesktops())
         return;
     int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
