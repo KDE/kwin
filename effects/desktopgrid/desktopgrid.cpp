@@ -312,7 +312,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                     screenQuads.append(quad);
                     transformedGeo = manager.transformedGeometry(w);
                     quadsAdded = true;
-                    if (!manager.areWindowsMoving())
+                    if (!manager.areWindowsMoving() && timeline.currentValue() == 1.0)
                         mask |= PAINT_WINDOW_LANCZOS;
                 } else if (w->screen() != screen)
                     quadsAdded = true; // we don't want parts of overlapping windows on the other screen
