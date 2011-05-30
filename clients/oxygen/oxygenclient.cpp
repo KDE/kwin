@@ -1385,7 +1385,7 @@ namespace Oxygen
         QColor color = palette.window().color();
 
         // draw shadows
-        if( compositingActive() && shadowCache().shadowSize() > 0 )
+        if( compositingActive() && shadowCache().shadowSize() > 0 && !isMaximized() )
         {
 
             TileSet *tileSet( 0 );
