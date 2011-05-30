@@ -371,7 +371,8 @@ namespace Oxygen
             case LM_OuterPaddingRight:
             case LM_OuterPaddingTop:
             case LM_OuterPaddingBottom:
-            return shadowCache().shadowSize();
+            if( maximized ) return 0;
+            else return shadowCache().shadowSize();
 
             default:
             return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
