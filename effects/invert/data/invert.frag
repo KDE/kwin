@@ -23,6 +23,7 @@ void main()
 
     tex *= modulation;
     tex.rgb = vec3(1.0) - tex.rgb;
+    tex.rgb *= tex.a;
 
     gl_FragColor = tex;
 }
