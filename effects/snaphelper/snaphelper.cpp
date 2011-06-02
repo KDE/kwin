@@ -183,7 +183,7 @@ void SnapHelperEffect::postPaintScreen()
                 XDrawSegments( display(), effects->xrenderBufferPicture(), m_gc, segments, 6 );
                 }
             }*/
-    } else if (m_window) {
+    } else if (m_window && !m_active) {
         if (m_window->isDeleted())
             m_window->unrefWindow();
         m_window = NULL;
