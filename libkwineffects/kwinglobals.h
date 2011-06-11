@@ -171,6 +171,9 @@ public:
     static bool syncAvailable() {
         return has_sync;
     }
+    static bool nonNativePixmaps() {
+        return non_native_pixmaps;
+    }
     static int syncAlarmNotifyEvent();
     static void fillExtensionsData(const char**& extensions, int& nextensions, int*&majors, int*& error_bases);
 private:
@@ -191,6 +194,7 @@ private:
     static int data_nextensions;
     static int data_opcodes[ 32 ];
     static int data_error_bases[ 32 ];
+    static bool non_native_pixmaps;
 };
 
 } // namespace

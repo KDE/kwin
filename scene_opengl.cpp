@@ -92,7 +92,6 @@ Sources and other compositing managers:
 #include <QVector2D>
 #include <QVector4D>
 #include <QMatrix4x4>
-#include <QPaintEngine>
 
 namespace KWin
 {
@@ -341,7 +340,7 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
         return false;
 
     // Checking whether QPixmap comes with its own X11 Pixmap
-    if (pixmap.paintEngine() == 0 || pixmap.paintEngine()->type() != QPaintEngine::X11 || pixmap.handle() == 0) {
+    if (Extensions::nonNativePixmaps()) {
         return GLTexture::load(pixmap.toImage(), target);
     }
 
@@ -1347,21 +1346,24 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     if (!m_effectFrame->selection().isNull()) {
         if (!m_selectionTexture) { // Lazy creation
             QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
-            m_selectionTexture = new Texture(pixmap);
+            if (!pixmap.isNull())
+                m_selectionTexture = new Texture(pixmap);
         }
-        if (shader) {
-            const float a = opacity * frameOpacity;
-            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+        if (m_selectionTexture) {
+            if (shader) {
+                const float a = opacity * frameOpacity;
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            }
+    #ifndef KWIN_HAVE_OPENGLES
+            else
+                glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
+    #endif
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            m_selectionTexture->bind();
+            m_selectionTexture->render(region, m_effectFrame->selection());
+            m_selectionTexture->unbind();
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
-#ifndef KWIN_HAVE_OPENGLES
-        else
-            glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
-#endif
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        m_selectionTexture->bind();
-        m_selectionTexture->render(region, m_effectFrame->selection());
-        m_selectionTexture->unbind();
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     // Render icon
@@ -1462,6 +1464,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 void SceneOpenGL::EffectFrame::updateTexture()
 {
     delete m_texture;
+    m_texture = 0L;
     if (m_effectFrame->style() == EffectFrameStyled) {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
         m_texture = new Texture(pixmap);
@@ -1471,7 +1474,9 @@ void SceneOpenGL::EffectFrame::updateTexture()
 void SceneOpenGL::EffectFrame::updateTextTexture()
 {
     delete m_textTexture;
+    m_textTexture = 0L;
     delete m_textPixmap;
+    m_textPixmap = 0L;
 
     if (m_effectFrame->text().isEmpty())
         return;
@@ -1504,7 +1509,9 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
 {
     delete m_unstyledTexture;
+    m_unstyledTexture = 0L;
     delete m_unstyledPixmap;
+    m_unstyledPixmap = 0L;
     // Based off circle() from kwinxrenderutils.cpp
 #define CS 8
     m_unstyledPixmap = new QPixmap(2 * CS, 2 * CS);

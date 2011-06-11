@@ -53,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 
 #include <QtGui/QPainter>
-#include <QtGui/QPaintEngine>
 
 namespace KWin
 {
@@ -191,9 +190,11 @@ void SceneXrender::selfCheckSetup()
     img.setPixel(1, 1, QColor(Qt::black).rgb());
     img.setPixel(2, 1, QColor(Qt::white).rgb());
     QPixmap pix = QPixmap::fromImage(img);
+    bool mustFreePix = false;
     if (pix.handle() == 0) {
+        mustFreePix = true;
         Pixmap xPix = XCreatePixmap(display(), rootWindow(), pix.width(), pix.height(), DefaultDepth(display(), DefaultScreen(display())));
-        pix = QPixmap::fromX11Pixmap(xPix);
+        pix = QPixmap::fromX11Pixmap(xPix, QPixmap::ExplicitlyShared);
         QPainter p(&pix);
         p.drawImage(QPoint(0, 0), img);
     }
@@ -221,6 +222,8 @@ void SceneXrender::selfCheckSetup()
         XFreePixmap(display(), wpix);
         XDestroyWindow(display(), window);
     }
+    if (mustFreePix)
+        XFreePixmap(display(), pix.handle());
     err.error(true);   // just sync and discard
 }
 
@@ -588,11 +591,13 @@ void SceneXrender::Window::prepareTempPixmap(const QPixmap *left, const QPixmap 
 {
     const QRect r = static_cast<Client*>(toplevel)->decorationRect();
 
+    if (temp_pixmap && Extensions::nonNativePixmaps())
+        XFreePixmap(display(), temp_pixmap->handle());   // The picture owns the pixmap now
     if (!temp_pixmap)
         temp_pixmap = new QPixmap(r.width(), r.height());
     else if (temp_pixmap->width() < r.width() || temp_pixmap->height() < r.height())
         *temp_pixmap = QPixmap(r.width(), r.height());
-    if (temp_pixmap->paintEngine()->type() != QPaintEngine::X11 || temp_pixmap->handle() == 0) {
+    if (Extensions::nonNativePixmaps()) {
         Pixmap pix = XCreatePixmap(display(), rootWindow(), temp_pixmap->width(), temp_pixmap->height(), DefaultDepth(display(), DefaultScreen(display())));
         *temp_pixmap = QPixmap::fromX11Pixmap(pix);
     }
@@ -952,20 +957,25 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         if (!m_picture) { // Lazy creation
             updatePicture();
         }
-        qreal left, top, right, bottom;
-        m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
-        QRect geom = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
-        XRenderComposite(display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
-                         0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
-
+        if (m_picture) {
+            qreal left, top, right, bottom;
+            m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
+            QRect geom = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
+            XRenderComposite(display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
+                                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+        }
     }
     if (!m_effectFrame->selection().isNull()) {
         if (!m_selectionPicture) { // Lazy creation
-            m_selectionPicture = new XRenderPicture(m_effectFrame->selectionFrame().framePixmap());
+            const QPixmap pix = m_effectFrame->selectionFrame().framePixmap();
+            if (!pix.isNull()) // don't try if there's no content
+                m_selectionPicture = new XRenderPicture(m_effectFrame->selectionFrame().framePixmap());
         }
-        const QRect geom = m_effectFrame->selection();
-        XRenderComposite(display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
-                            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+        if (m_selectionPicture) {
+            const QRect geom = m_effectFrame->selection();
+            XRenderComposite(display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
+                                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+        }
     }
 
     XRenderPicture fill = xRenderBlendPicture(opacity);
@@ -995,14 +1005,19 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
 void SceneXrender::EffectFrame::updatePicture()
 {
     delete m_picture;
-    if (m_effectFrame->style() == EffectFrameStyled)
-        m_picture = new XRenderPicture(m_effectFrame->frame().framePixmap());
+    m_picture = 0L;
+    if (m_effectFrame->style() == EffectFrameStyled) {
+        const QPixmap pix = m_effectFrame->frame().framePixmap();
+        if (!pix.isNull())
+            m_picture = new XRenderPicture(pix);
+    }
 }
 
 void SceneXrender::EffectFrame::updateTextPicture()
 {
     // Mostly copied from SceneOpenGL::EffectFrame::updateTextTexture() above
     delete m_textPicture;
+    m_textPicture = 0L;
 
     if (m_effectFrame->text().isEmpty()) {
         return;

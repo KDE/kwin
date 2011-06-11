@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglobals.h"
 
+#include <QPainter>
+#include <QPaintEngine>
+#include <QPixmap>
+
 #include <config-workspace.h>
 #include <config-X11.h>
 
@@ -67,6 +71,7 @@ int Extensions::render_version = 0;
 bool Extensions::has_glx = false;
 bool Extensions::has_sync = false;
 int Extensions::sync_event_base = 0;
+bool Extensions::non_native_pixmaps = false;
 // for fillExtensionsData()
 const char* Extensions::data_extensions[ 32 ];
 int Extensions::data_nextensions;
@@ -158,6 +163,10 @@ void Extensions::init()
         }
     }
 #endif
+    QPixmap pix(1,1);
+    QPainter p(&pix);
+    non_native_pixmaps = p.paintEngine()->type() != QPaintEngine::X11;
+    p.end();
     kDebug(1212) << "Extensions: shape: 0x" << QString::number(shape_version, 16)
                  << " composite: 0x" << QString::number(composite_version, 16)
                  << " render: 0x" << QString::number(render_version, 16)
