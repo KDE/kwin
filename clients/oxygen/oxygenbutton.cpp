@@ -223,10 +223,14 @@ namespace Oxygen
             // draw shadow
             painter.drawPixmap( 0, 0, _helper.windecoButtonGlow( shadow, scale ) );
 
-            // draw button shape
-            const bool pressed( (_status == Oxygen::Pressed) ||
-                ( isChecked() && isToggleButton() ) );
+            // decide on pressed state
+            const bool pressed(
+                (_status == Oxygen::Pressed) ||
+                ( _type == ButtonSticky && _client.isOnAllDesktops()  ) ||
+                ( _type == ButtonAbove && _client.keepAbove() ) ||
+                ( _type == ButtonBelow && _client.keepBelow() ) );
 
+            // draw button shape
             painter.drawPixmap(0, 0, _helper.windecoButton( base, pressed, scale ) );
 
         }
