@@ -37,6 +37,7 @@ namespace KWin
 class SceneXrender
     : public Scene
 {
+    Q_OBJECT
 public:
     class EffectFrame;
     SceneXrender(Workspace* ws);

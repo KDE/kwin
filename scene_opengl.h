@@ -39,6 +39,7 @@ namespace KWin
 class SceneOpenGL
     : public Scene
 {
+    Q_OBJECT
 public:
     class EffectFrame;
     class Texture;

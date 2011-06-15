@@ -38,8 +38,9 @@ class LanczosFilter;
 class Shadow;
 
 // The base class for compositing backends.
-class Scene
+class Scene : public QObject
 {
+    Q_OBJECT
 public:
     Scene(Workspace* ws);
     virtual ~Scene() = 0;

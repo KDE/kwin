@@ -91,7 +91,8 @@ namespace KWin
 Scene* scene = 0;
 
 Scene::Scene(Workspace* ws)
-    : wspace(ws)
+    : QObject(ws)
+    , wspace(ws)
     , has_waitSync(false)
     , lanczos_filter(new LanczosFilter())
 {
