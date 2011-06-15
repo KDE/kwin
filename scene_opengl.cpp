@@ -213,6 +213,7 @@ void SceneOpenGL::windowAdded(Toplevel* c)
 {
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
+    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     c->effectWindow()->setSceneWindow(windows[ c ]);
     c->getShadow();
     windows[ c ]->updateShadow(c->shadow());
@@ -251,7 +252,7 @@ void SceneOpenGL::windowGeometryShapeChanged(Toplevel* c)
     w->checkTextureSize();
 }
 
-void SceneOpenGL::windowOpacityChanged(Toplevel*)
+void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
 {
 #if 0 // not really needed, windows are painted on every repaint
     // and opacity is used when applying texture, not when

@@ -59,8 +59,6 @@ public:
 
     // shape/size of a window changed
     virtual void windowGeometryShapeChanged(Toplevel*) = 0;
-    // opacity of a window changed
-    virtual void windowOpacityChanged(Toplevel*) = 0;
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
     // a window has been closed
@@ -101,6 +99,9 @@ public:
     bool waitSyncAvailable() {
         return has_waitSync;
     }
+protected Q_SLOTS:
+    // opacity of a window changed
+    virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
 protected:
     // shared implementation, starts painting the screen
     void paintScreen(int* mask, QRegion* region);

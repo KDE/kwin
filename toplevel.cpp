@@ -323,7 +323,6 @@ void Toplevel::setOpacity(double new_opacity)
     if (compositing()) {
         addRepaintFull();
         emit opacityChanged(this, old_opacity);
-        scene->windowOpacityChanged(this);
     }
 }
 
