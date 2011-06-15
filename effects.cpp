@@ -351,7 +351,7 @@ void EffectsHandlerImpl::slotClientStepUserMovedResized(Client* c, const QRect& 
 
 void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 {
-    if (t->opacity() == oldOpacity) {
+    if (t->opacity() == oldOpacity || !t->effectWindow()) {
         return;
     }
     emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
