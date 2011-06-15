@@ -375,9 +375,15 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
         // wallpaper
         if (wallpaper) {
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+            }
             wallpaper->bind();
             wallpaper->render(region, rect);
             wallpaper->unbind();
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->popShader();
+            }
         }
 
 #ifndef KWIN_HAVE_OPENGLES
