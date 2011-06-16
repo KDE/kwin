@@ -26,8 +26,6 @@ uniform float height;
 uniform float cubeAngle;
 uniform vec2 u_offset;
 uniform float timeLine;
-uniform float textureWidth;
-uniform float textureHeight;
 
 attribute vec4 vertex;
 attribute vec2 texCoord;
@@ -36,7 +34,7 @@ varying vec2 varyingTexCoords;
 
 void main()
 {
-    varyingTexCoords = texCoord / vec2(textureWidth, textureHeight);
+    varyingTexCoords = texCoord;
     vec4 transformedVertex = vertex;
     transformedVertex.x = transformedVertex.x - width;
     transformedVertex.y = transformedVertex.y - height;

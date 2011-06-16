@@ -280,12 +280,6 @@ public:
      **/
     QMatrix4x4 getUniformMatrix4x4(const char* name);
 
-    void setTextureWidth(float width);
-    void setTextureHeight(float height);
-
-    float textureWidth();
-    float textureHeight();
-
     enum MatrixUniform {
         TextureMatrix = 0,
         ProjectionMatrix,
@@ -307,8 +301,6 @@ public:
 
     enum FloatUniform {
         Saturation,
-        TextureWidth,
-        TextureHeight,
         FloatUniformCount
     };
 
@@ -341,8 +333,6 @@ private:
     int mVec4Location[Vec4UniformCount];
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
-    float mTextureWidth;
-    float mTextureHeight;
 
     friend class ShaderManager;
 };

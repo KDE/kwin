@@ -1,7 +1,5 @@
 uniform sampler2D sampler;
 uniform vec4 modulation;
-uniform float textureWidth;
-uniform float textureHeight;
 uniform float saturation;
 uniform int u_forceAlpha;
 

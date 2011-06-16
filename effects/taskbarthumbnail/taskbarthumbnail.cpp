@@ -91,17 +91,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
             if (effects->compositingType() == KWin::OpenGLCompositing) {
                 if (data.shader) {
-                    // there is a shader - update texture width and height
-                    int texw = thumbw->width();
-                    int texh = thumbw->height();
-                    if (!GLTexture::NPOTTextureSupported()) {
-                        kWarning(1212) << "NPOT textures not supported, wasting some memory" ;
-                        texw = nearestPowerOfTwo(texw);
-                        texh = nearestPowerOfTwo(texh);
-                    }
                     thumbData.shader = data.shader;
-                    thumbData.shader->setTextureWidth((float)texw);
-                    thumbData.shader->setTextureHeight((float)texh);
                 }
             } // if ( effects->compositingType() == KWin::OpenGLCompositing )
 #endif

@@ -585,16 +585,14 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     // paint the content
     if (!(mask & PAINT_DECORATION_ONLY)) {
         texture.bind();
-        texture.enableUnnormalizedTexCoords();
         prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-        renderQuads(mask, region, data.quads.select(WindowQuadContents));
+        renderQuads(mask, region, data.quads.select(WindowQuadContents), toplevel->size(), texture.getYInverted());
         restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-        texture.disableUnnormalizedTexCoords();
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (static_cast<SceneOpenGL*>(scene)->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, data.quads.select(WindowQuadContents));
+            renderQuads(mask, region, data.quads.select(WindowQuadContents), toplevel->size(), texture.getYInverted());
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
@@ -649,10 +647,6 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
 
     prepareStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
     makeDecorationArrays(quads, rect, decorationTexture->getYInverted());
-    if (data.shader) {
-        data.shader->setUniform(GLShader::TextureWidth, 1.0f);
-        data.shader->setUniform(GLShader::TextureHeight, 1.0f);
-    }
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES);
     restoreStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
     decorationTexture->unbind();
@@ -679,17 +673,13 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
     prepareStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
-    if (data.shader) {
-        data.shader->setUniform(GLShader::TextureWidth, 1.0f);
-        data.shader->setUniform(GLShader::TextureHeight, 1.0f);
-    }
-    renderQuads(0, region, quads);
+    renderQuads(0, region, quads, QSizeF(1.0, 1.0), texture->getYInverted());
     restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(0, region, quads);
+        renderQuads(0, region, quads, QSizeF(1.0, 1.0), texture->getYInverted());
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 #endif
@@ -748,14 +738,14 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
     GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.data(), texcoords.data());
 }
 
-void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads)
+void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads, const QSizeF &size, bool yInverted)
 {
     if (quads.isEmpty())
         return;
     // Render geometry
     float* vertices;
     float* texcoords;
-    quads.makeArrays(&vertices, &texcoords);
+    quads.makeArrays(&vertices, &texcoords, size, yInverted);
     GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices, texcoords);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES);
     delete[] vertices;
@@ -826,14 +816,6 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation,         saturation);
     shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
-
-    const float texw = shader->textureWidth();
-    const float texh = shader->textureHeight();
-
-    // setting texture width and height stored in shader
-    // only set if it is set by an effect that is not negative
-    shader->setUniform(GLShader::TextureWidth, texw >= 0.0 ? texw : toplevel->width());
-    shader->setUniform(GLShader::TextureHeight, texh >= 0.0 ? texh : toplevel->height());
 }
 
 void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex)
@@ -1167,9 +1149,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
         shader->setUniform(GLShader::AlphaToOne, 0);
-
-        shader->setUniform(GLShader::TextureWidth, 1.0f);
-        shader->setUniform(GLShader::TextureHeight, 1.0f);
     }
 
 #ifndef KWIN_HAVE_OPENGLES

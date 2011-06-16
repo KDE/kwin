@@ -358,8 +358,6 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
-                    data.shader->setUniform(GLShader::TextureWidth, 1.0f);
-                    data.shader->setUniform(GLShader::TextureHeight, 1.0f);
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
 #endif
@@ -372,8 +370,6 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
-                    data.shader->setUniform(GLShader::TextureWidth, 1.0f);
-                    data.shader->setUniform(GLShader::TextureHeight, 1.0f);
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
 #endif

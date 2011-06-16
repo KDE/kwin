@@ -1,6 +1,4 @@
 uniform sampler2D sampler;
-uniform float textureWidth;
-uniform float textureHeight;
 uniform vec4 u_color;
 
 varying vec2 varyingTexCoords;

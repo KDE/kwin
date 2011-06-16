@@ -1332,7 +1332,7 @@ public:
     WindowQuadList select(WindowQuadType type) const;
     WindowQuadList filterOut(WindowQuadType type) const;
     bool smoothNeeded() const;
-    void makeArrays(float** vertices, float** texcoords) const;
+    void makeArrays(float** vertices, float** texcoords, const QSizeF &size, bool yInverted) const;
     bool isTransformed() const;
 };
 

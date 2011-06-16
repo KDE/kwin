@@ -458,8 +458,6 @@ void GLTexture::render(QRegion region, const QRect& rect)
         GLShader *shader = ShaderManager::instance()->getBoundShader();
         shader->setUniform(GLShader::Offset, QVector2D(rect.x(), rect.y()));
         shader->setUniform(GLShader::WindowTransformation, translation);
-        shader->setUniform(GLShader::TextureWidth, 1.0f);
-        shader->setUniform(GLShader::TextureHeight, 1.0f);
     } else {
         pushMatrix(translation);
     }
@@ -705,8 +703,6 @@ GLShader::GLShader()
     : mProgram(0)
     , mValid(false)
     , mLocationsResolved(false)
-    , mTextureWidth(-1.0f)
-    , mTextureHeight(-1.0f)
 {
 }
 
@@ -714,8 +710,6 @@ GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     : mProgram(0)
     , mValid(false)
     , mLocationsResolved(false)
-    , mTextureWidth(-1.0f)
-    , mTextureHeight(-1.0f)
 {
     loadFromFiles(vertexfile, fragmentfile);
 }
@@ -871,8 +865,6 @@ void GLShader::resolveLocations()
     mVec4Location[ModulationConstant] = uniformLocation("modulation");
 
     mFloatLocation[Saturation]    = uniformLocation("saturation");
-    mFloatLocation[TextureWidth]  = uniformLocation("textureWidth");
-    mFloatLocation[TextureHeight] = uniformLocation("textureHeight");
 
     mIntLocation[AlphaToOne] = uniformLocation("u_forceAlpha");
 
@@ -1032,26 +1024,6 @@ bool GLShader::setAttribute(const char* name, float value)
         glVertexAttrib1f(location, value);
     }
     return (location >= 0);
-}
-
-void GLShader::setTextureHeight(float height)
-{
-    mTextureHeight = height;
-}
-
-void GLShader::setTextureWidth(float width)
-{
-    mTextureWidth = width;
-}
-
-float GLShader::textureHeight()
-{
-    return mTextureHeight;
-}
-
-float GLShader::textureWidth()
-{
-    return mTextureWidth;
 }
 
 QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
@@ -1335,10 +1307,6 @@ void ShaderManager::resetShader(ShaderType type)
 
     shader->setUniform(GLShader::Saturation, 1.0f);
     shader->setUniform(GLShader::AlphaToOne, 0);
-
-    // TODO: has to become textureSize
-    shader->setUniform(GLShader::TextureWidth,  1.0f);
-    shader->setUniform(GLShader::TextureHeight, 1.0f);
 }
 
 /***  GLRenderTarget  ***/

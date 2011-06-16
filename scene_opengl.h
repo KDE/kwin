@@ -169,7 +169,7 @@ protected:
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
     void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect, bool y_inverted) const;
-    void renderQuads(int mask, const QRegion& region, const WindowQuadList& quads);
+    void renderQuads(int, const QRegion& region, const KWin::WindowQuadList& quads, const QSizeF& size, bool yInverted);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
     void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);

@@ -25,8 +25,6 @@ uniform float width;
 uniform float cubeAngle;
 uniform float xCoord;
 uniform float timeLine;
-uniform float textureWidth;
-uniform float textureHeight;
 
 attribute vec4 vertex;
 attribute vec2 texCoord;
@@ -35,7 +33,7 @@ varying vec2 varyingTexCoords;
 
 void main()
 {
-    varyingTexCoords = texCoord / vec2(textureWidth, textureHeight);
+    varyingTexCoords = texCoord;
     vec4 transformedVertex = vec4(vertex.x - ( width - xCoord ), vertex.yzw);
     float radian = radians(cubeAngle);
     float radius = (width)*tan(radian);
