@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 
 #include <QMatrix4x4>
+#include <QVector2D>
 
 #include <KStandardDirs>
 #include <kdebug.h>
@@ -152,6 +153,7 @@ void ExplosionEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         mShader->setUniform("screenTransformation", screenTransformation);
         mShader->setUniform("factor", (float)mWindows[w]);
         mShader->setUniform("scale", (float)scale);
+        mShader->setUniform("windowSize", QVector2D(w->width(), w->height()));
         glActiveTexture(GL_TEXTURE4);
         mStartOffsetTex->bind();
         glActiveTexture(GL_TEXTURE5);
