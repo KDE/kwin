@@ -38,6 +38,7 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
     connect(effects, SIGNAL(clientGroupItemSwitched(EffectWindow*,EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(EffectWindow*,EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -316,7 +317,7 @@ void SlideBackEffect::slotClientGroupItemSwitched(EffectWindow* from, EffectWind
     clientItemHidden = from;
 }
 
-void SlideBackEffect::tabBoxClosed()
+void SlideBackEffect::slotTabBoxClosed()
 {
     disabled = true;
 }
