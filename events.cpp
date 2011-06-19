@@ -1599,9 +1599,7 @@ bool Unmanaged::windowEvent(XEvent* e)
             detectShape(window());
             addRepaintFull();
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
-            if (scene != NULL)
-                scene->windowGeometryShapeChanged(this);
-            emit unmanagedGeometryShapeChanged(this, geometry());
+            emit geometryShapeChanged(this, geometry());
         }
 #ifdef HAVE_XDAMAGE
         if (e->type == Extensions::damageNotifyEvent())
@@ -1634,9 +1632,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
         addRepaintFull();
         if (old.size() != geom.size())
             discardWindowPixmap();
-        if (scene != NULL)
-            scene->windowGeometryShapeChanged(this);
-        emit unmanagedGeometryShapeChanged(this, old);
+        emit geometryShapeChanged(this, old);
     }
 }
 

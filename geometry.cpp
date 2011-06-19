@@ -1897,9 +1897,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
     //   which can happen when untabbing maximized windows
     if (resized) {
         discardWindowPixmap();
-        if (scene != NULL)
-            scene->windowGeometryShapeChanged(this);
-        emit clientGeometryShapeChanged(this, geom_before_block);
+        emit geometryShapeChanged(this, geom_before_block);
     }
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
@@ -1973,9 +1971,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force, bool emitJs)
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
     discardWindowPixmap();
-    if (scene != NULL)
-        scene->windowGeometryShapeChanged(this);
-    emit clientGeometryShapeChanged(this, geom_before_block);
+    emit geometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
     addWorkspaceRepaint(deco_rect);

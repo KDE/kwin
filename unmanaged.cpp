@@ -32,7 +32,7 @@ namespace KWin
 Unmanaged::Unmanaged(Workspace* ws)
     : Toplevel(ws)
 {
-    connect(this, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel* ,QRect)), SIGNAL(geometryChanged()));
 }
 
 Unmanaged::~Unmanaged()

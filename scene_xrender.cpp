@@ -289,7 +289,7 @@ void SceneXrender::paintBackground(QRegion region)
     }
 }
 
-void SceneXrender::windowGeometryShapeChanged(Toplevel* c)
+void SceneXrender::windowGeometryShapeChanged(KWin::Toplevel* c)
 {
     if (!windows.contains(c))    // this is ok, shape is not valid by default
         return;
@@ -336,6 +336,7 @@ void SceneXrender::windowAdded(Toplevel* c)
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
+    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     c->effectWindow()->setSceneWindow(windows[ c ]);
     c->getShadow();
     windows[ c ]->updateShadow(c->shadow());

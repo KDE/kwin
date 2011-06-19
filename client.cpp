@@ -201,7 +201,7 @@ Client::Client(Workspace* ws)
     ready_for_painting = false; // wait for first damage or sync reply
 #endif
 
-    connect(this, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
 
@@ -376,9 +376,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         resizeDecorationPixmaps();
         if (compositing())
             discardWindowPixmap();
-        if (scene != NULL)
-            scene->windowGeometryShapeChanged(this);
-        emit clientGeometryShapeChanged(this, oldgeom);
+        emit geometryShapeChanged(this, oldgeom);
     } else
         destroyDecoration();
     if (check_workspace_pos)
@@ -412,10 +410,8 @@ void Client::destroyDecoration()
         decorationPixmapLeft = decorationPixmapRight = decorationPixmapTop = decorationPixmapBottom = QPixmap();
         if (compositing())
             discardWindowPixmap();
-        if (scene != NULL && !deleting)
-            scene->windowGeometryShapeChanged(this);
         if (!deleting) {
-            emit clientGeometryShapeChanged(this, oldgeom);
+            emit geometryShapeChanged(this, oldgeom);
         }
     }
 }
@@ -789,9 +785,7 @@ void Client::updateShape()
         addRepaintFull();
         addWorkspaceRepaint(visibleRect());   // In case shape change removes part of this window
     }
-    if (scene != NULL)
-        scene->windowGeometryShapeChanged(this);
-    emit clientGeometryShapeChanged(this, geometry());
+    emit geometryShapeChanged(this, geometry());
 }
 
 static Window shape_helper_window = None;
@@ -867,9 +861,7 @@ void Client::setMask(const QRegion& reg, int mode)
         XShapeCombineShape(display(), frameId(), ShapeBounding, 0, 0,
                            shape_helper_window, ShapeBounding, ShapeSet);
     }
-    if (scene != NULL)
-        scene->windowGeometryShapeChanged(this);
-    emit clientGeometryShapeChanged(this, geometry());
+    emit geometryShapeChanged(this, geometry());
     updateShape();
 }
 

@@ -162,6 +162,7 @@ signals:
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
     void propertyNotify(KWin::Toplevel* toplevel, long a);
     void geometryChanged();
+    void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
 
 protected:
     virtual ~Toplevel();

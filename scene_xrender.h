@@ -47,7 +47,6 @@ public:
         return XRenderCompositing;
     }
     virtual void paint(QRegion damage, ToplevelList windows);
-    virtual void windowGeometryShapeChanged(Toplevel*);
     virtual void windowAdded(Toplevel*);
     virtual void windowClosed(Toplevel*, Deleted*);
     virtual void windowDeleted(Deleted*);
@@ -57,6 +56,7 @@ protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
 protected Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
+    virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
 private:
     void paintTransformedScreen(int mask);
     void createBuffer();

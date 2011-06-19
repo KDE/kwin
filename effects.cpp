@@ -146,7 +146,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
-    connect(c, SIGNAL(clientGeometryShapeChanged(KWin::Client*,QRect)), this, SLOT(slotClientGeometryShapeChanged(KWin::Client*,QRect)));
+    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
     connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
     connect(c, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
 }
@@ -155,7 +155,7 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
 {
     connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
     connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
-    connect(u, SIGNAL(unmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)), this, SLOT(slotUnmanagedGeometryShapeChanged(KWin::Unmanaged*,QRect)));
+    connect(u, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
     connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
     connect(u, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
 }
@@ -443,22 +443,13 @@ void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
     emit windowDamaged(t->effectWindow(), r);
 }
 
-void EffectsHandlerImpl::slotClientGeometryShapeChanged(Client* c, const QRect& old)
+void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel* t, const QRect& old)
 {
     // during late cleanup effectWindow() may be already NULL
     // in some functions that may still call this
-    if (c == NULL || c->effectWindow() == NULL)
+    if (t == NULL || t->effectWindow() == NULL)
         return;
-    emit windowGeometryShapeChanged(c->effectWindow(), old);
-}
-
-void EffectsHandlerImpl::slotUnmanagedGeometryShapeChanged(Unmanaged* u, const QRect& old)
-{
-    // during late cleanup effectWindow() may be already NULL
-    // in some functions that may still call this
-    if (u == NULL || u->effectWindow() == NULL)
-        return;
-    emit windowGeometryShapeChanged(u->effectWindow(), old);
+    emit windowGeometryShapeChanged(t->effectWindow(), old);
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)

@@ -189,8 +189,7 @@ protected Q_SLOTS:
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientMinimized(KWin::Client *c, bool animate);
     void slotClientUnminimized(KWin::Client *c, bool animate);
-    void slotClientGeometryShapeChanged(KWin::Client *c, const QRect &old);
-    void slotUnmanagedGeometryShapeChanged(KWin::Unmanaged *u, const QRect &old);
+    void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
     void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
     void slotPropertyNotify(KWin::Toplevel *t, long atom);
     void slotPropertyNotify(long atom);
