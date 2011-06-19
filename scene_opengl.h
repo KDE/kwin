@@ -59,7 +59,7 @@ protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
-protected Q_SLOTS:
+public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
 private:

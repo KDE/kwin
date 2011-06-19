@@ -97,7 +97,7 @@ public:
     bool waitSyncAvailable() {
         return has_waitSync;
     }
-protected Q_SLOTS:
+public Q_SLOTS:
     // opacity of a window changed
     virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
     // shape/size of a window changed
