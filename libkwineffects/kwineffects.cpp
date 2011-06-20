@@ -905,8 +905,8 @@ void WindowMotionManager::calculate(int time)
         else {
             // Still moving
             trans->calculate(time);
-            const short fx = trans->target().x() <= window->x() ? -1 : 1;
-            const short fy = trans->target().y() <= window->y() ? -1 : 1;
+            const short fx = trans->target().x() <= trans->startValue().x() ? -1 : 1;
+            const short fy = trans->target().y() <= trans->startValue().y() ? -1 : 1;
             if (trans->distance().x()*fx/0.5 < 1.0 && trans->velocity().x()*fx/0.2 < 1.0 &&
                 trans->distance().y()*fy/0.5 < 1.0 && trans->velocity().y()*fy/0.2 < 1.0) {
                 // Hide tiny oscillations

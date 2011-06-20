@@ -214,9 +214,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
 {
     if (motionManager.isManaging(w)) {
         if (destinationList.contains(w)) {
-            // has window reched its destination?
-            if ((qAbs(motionManager.transformedGeometry(w).x() - destinationList[w].x()) < 1) &&
-                    (qAbs(motionManager.transformedGeometry(w).y() - destinationList[w].y()) < 1)) {
+            if (!motionManager.isWindowMoving(w)) { // has window reched its destination?
                 // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
@@ -258,8 +256,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
             }
         } else {
             // is window back at its original position?
-            if ((qAbs(motionManager.transformedGeometry(w).x() - w->geometry().x()) < 1) &&
-                    (qAbs(motionManager.transformedGeometry(w).y() - w->geometry().y()) < 1)) {
+            if (!motionManager.isWindowMoving(w)) {
                 motionManager.unmanage(w);
                 effects->addRepaintFull();
             }
