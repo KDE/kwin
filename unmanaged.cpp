@@ -82,10 +82,7 @@ bool Unmanaged::track(Window w)
 void Unmanaged::release()
 {
     Deleted* del = Deleted::create(this);
-    emit unmanagedClosed(this);
-    if (scene) {
-        scene->windowClosed(this, del);
-    }
+    emit windowClosed(this, del);
     finishCompositing();
     workspace()->removeUnmanaged(this, Allowed);
     if (!QWidget::find(window())) { // don't affect our own windows

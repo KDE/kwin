@@ -246,10 +246,7 @@ void Client::releaseWindow(bool on_shutdown)
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    emit clientClosed(this);
-    if (scene) {
-        scene->windowClosed(this, del);
-    }
+    emit windowClosed(this, del);
     finishCompositing();
     workspace()->discardUsedWindowRules(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
@@ -314,10 +311,7 @@ void Client::destroyClient()
     assert(!deleting);
     deleting = true;
     Deleted* del = Deleted::create(this);
-    emit clientClosed(this);
-    if (scene) {
-        scene->windowClosed(this, del);
-    }
+    emit windowClosed(this, del);
     finishCompositing();
     workspace()->discardUsedWindowRules(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());

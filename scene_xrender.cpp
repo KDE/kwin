@@ -337,6 +337,7 @@ void SceneXrender::windowAdded(Toplevel* c)
     windows[ c ] = new Window(c);
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
+    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     c->effectWindow()->setSceneWindow(windows[ c ]);
     c->getShadow();
     windows[ c ]->updateShadow(c->shadow());

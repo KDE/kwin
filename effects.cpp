@@ -138,7 +138,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
-    connect(c, SIGNAL(clientClosed(KWin::Client*)), this, SLOT(slotClientClosed(KWin::Client*)));
+    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), this, SLOT(slotWindowClosed(KWin::Toplevel*)));
     connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
     connect(c, SIGNAL(clientStartUserMovedResized(KWin::Client*)), this, SLOT(slotClientStartUserMovedResized(KWin::Client*)));
     connect(c, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), this, SLOT(slotClientStepUserMovedResized(KWin::Client*,QRect)));
@@ -153,7 +153,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
 {
-    connect(u, SIGNAL(unmanagedClosed(KWin::Unmanaged*)), this, SLOT(slotUnmanagedClosed(KWin::Unmanaged*)));
+    connect(u, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), this, SLOT(slotWindowClosed(KWin::Toplevel*)));
     connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(u, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
     connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
@@ -380,14 +380,9 @@ void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
     elevated_windows.removeAll(d->effectWindow());
 }
 
-void EffectsHandlerImpl::slotClientClosed(Client *c)
+void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c)
 {
     emit windowClosed(c->effectWindow());
-}
-
-void EffectsHandlerImpl::slotUnmanagedClosed(Unmanaged* u)
-{
-    emit windowClosed(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotClientActivated(KWin::Client *c)

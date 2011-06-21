@@ -178,8 +178,7 @@ protected Q_SLOTS:
     void slotDesktopChanged(int old);
     void slotClientAdded(KWin::Client *c);
     void slotUnmanagedAdded(KWin::Unmanaged *u);
-    void slotClientClosed(KWin::Client *c);
-    void slotUnmanagedClosed(KWin::Unmanaged *u);
+    void slotWindowClosed(KWin::Toplevel *c);
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
     void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);

@@ -163,6 +163,7 @@ signals:
     void propertyNotify(KWin::Toplevel* toplevel, long a);
     void geometryChanged();
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
+    void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
 
 protected:
     virtual ~Toplevel();

@@ -486,7 +486,6 @@ signals:
     void maximizeSet(QPair<bool, bool>);
     void s_activated();
     void s_fullScreenSet(bool, bool);
-    void clientClosed(KWin::Client*);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);
