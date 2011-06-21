@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "notifications.h"
 #include "rules.h"
-#include "scene.h"
 #include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
