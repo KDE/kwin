@@ -52,7 +52,6 @@ public:
     }
     virtual void paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
-    virtual void windowClosed(Toplevel*, Deleted*);
     virtual void windowDeleted(Deleted*);
 
 protected:
@@ -62,6 +61,7 @@ protected:
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
+    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
     bool selectMode();
     bool initTfp();

@@ -307,7 +307,7 @@ void SceneXrender::windowOpacityChanged(KWin::Toplevel* c)
     w->discardAlpha();
 }
 
-void SceneXrender::windowClosed(Toplevel* c, Deleted* deleted)
+void SceneXrender::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
 {
     assert(windows.contains(c));
     if (deleted != NULL) {

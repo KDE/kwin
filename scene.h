@@ -59,8 +59,6 @@ public:
 
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
-    // a window has been closed
-    virtual void windowClosed(Toplevel*, Deleted*) = 0;
     // a window has been destroyed
     virtual void windowDeleted(Deleted*) = 0;
     // Flags controlling how painting is done.
@@ -102,6 +100,8 @@ public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
     // shape/size of a window changed
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c) = 0;
+    // a window has been closed
+    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted) = 0;
 protected:
     // shared implementation, starts painting the screen
     void paintScreen(int* mask, QRegion* region);

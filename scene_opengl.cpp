@@ -220,7 +220,7 @@ void SceneOpenGL::windowAdded(Toplevel* c)
     windows[ c ]->updateShadow(c->shadow());
 }
 
-void SceneOpenGL::windowClosed(Toplevel* c, Deleted* deleted)
+void SceneOpenGL::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
 {
     assert(windows.contains(c));
     if (deleted != NULL) {
