@@ -5,6 +5,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwinglobals.cpp
     kwineffects.cpp
     kwinglutils.cpp
+    kwingltexture.cpp
     kwinglutils_funcs.cpp
     kwinglplatform.cpp
     kwinxrenderutils.cpp
@@ -55,6 +56,7 @@ install( FILES
     kwinglplatform.h
     kwinglutils.h
     kwinglutils_funcs.h
+    kwingltexture.h
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
