@@ -166,13 +166,14 @@ bool GLTexture::load(const QImage& image, GLenum target)
 #endif
     setFilter(GL_LINEAR);
     mSize = img.size();
-    y_inverted = false;
+    y_inverted = true;
 
     img = convertToGLFormat(img);
 
     setDirty();
-    if (isNull())
+    if (isNull()) {
         glGenTextures(1, &mTexture);
+    }
     bind();
 #ifdef KWIN_HAVE_OPENGLES
     // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
@@ -347,81 +348,64 @@ void GLTexture::enableFilter()
     }
 }
 
-static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum texture_format)
-{
-#ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(texture_format)
-#endif
-    // Copied from Qt
-    Q_ASSERT(dst.size() == img.size());
-    Q_ASSERT(dst.depth() == 32);
-    Q_ASSERT(img.depth() == 32);
-
-    const int width = img.width();
-    const int height = img.height();
-    const uint *p = (const uint*) img.scanLine(img.height() - 1);
-    uint *q = (uint*) dst.scanLine(0);
-
-#ifndef KWIN_HAVE_OPENGLES
-    if (texture_format == GL_BGRA) {
-        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-            // mirror + swizzle
-            for (int i = 0; i < height; ++i) {
-                const uint *end = p + width;
-                while (p < end) {
-                    *q = ((*p << 24) & 0xff000000)
-                         | ((*p >> 24) & 0x000000ff)
-                         | ((*p << 8) & 0x00ff0000)
-                         | ((*p >> 8) & 0x0000ff00);
-                    p++;
-                    q++;
-                }
-                p -= 2 * width;
-            }
-        } else {
-            const uint bytesPerLine = img.bytesPerLine();
-            for (int i = 0; i < height; ++i) {
-                memcpy(q, p, bytesPerLine);
-                q += width;
-                p -= width;
-            }
-        }
-    } else {
-#endif
-        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-            for (int i = 0; i < height; ++i) {
-                const uint *end = p + width;
-                while (p < end) {
-                    *q = (*p << 8) | ((*p >> 24) & 0xFF);
-                    p++;
-                    q++;
-                }
-                p -= 2 * width;
-            }
-        } else {
-            for (int i = 0; i < height; ++i) {
-                const uint *end = p + width;
-                while (p < end) {
-                    *q = ((*p << 16) & 0xff0000) | ((*p >> 16) & 0xff) | (*p & 0xff00ff00);
-                    p++;
-                    q++;
-                }
-                p -= 2 * width;
-            }
-        }
-#ifndef KWIN_HAVE_OPENGLES
-    }
-#endif
-}
-
 QImage GLTexture::convertToGLFormat(const QImage& img) const
 {
     // Copied from Qt's QGLWidget::convertToGLFormat()
-    QImage res(img.size(), QImage::Format_ARGB32);
+    QImage res;
 #ifdef KWIN_HAVE_OPENGLES
-    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32_Premultiplied), GL_RGBA);
+    res = QImage(img.size(), QImage::Format_ARGB32);
+    QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+
+    const int width = img.width();
+    const int height = img.height();
+    const uint32_t *p = (const uint32_t*) imgARGB32.scanLine(0);
+    uint32_t *q = (uint32_t*) res.scanLine(0);
+
+    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
+        for (int i = 0; i < height; ++i) {
+            const uint32_t *end = p + width;
+            while (p < end) {
+                *q = (*p << 8) | ((*p >> 24) & 0xFF);
+                p++;
+                q++;
+            }
+        }
+    } else {
+        // GL_BGRA -> GL_RGBA
+        for (int i = 0; i < height; ++i) {
+            const uint32_t *end = p + width;
+            while (p < end) {
+                *q = ((*p << 16) & 0xff0000) | ((*p >> 16) & 0xff) | (*p & 0xff00ff00);
+                p++;
+                q++;
+            }
+        }
+    }
 #else
-    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32_Premultiplied), GL_BGRA);
+    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
+        res = QImage(img.size(), QImage::Format_ARGB32);
+        QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+
+        const int width = img.width();
+        const int height = img.height();
+        const uint32_t *p = (const uint32_t*) imgARGB32.scanLine(0);
+        uint32_t *q = (uint32_t*) res.scanLine(0);
+
+        // swizzle
+        for (int i = 0; i < height; ++i) {
+            const uint32_t *end = p + width;
+            while (p < end) {
+                *q = ((*p << 24) & 0xff000000)
+                     | ((*p >> 24) & 0x000000ff)
+                     | ((*p << 8) & 0x00ff0000)
+                     | ((*p >> 8) & 0x0000ff00);
+                p++;
+                q++;
+            }
+        }
+    } else {
+        res = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    }
 #endif
     return res;
 }
