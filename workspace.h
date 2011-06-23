@@ -549,6 +549,9 @@ public:
     void stopMousePolling();
 
     void raiseElectricBorderWindows();
+    Client* getMovingClient() {
+        return movingClient;
+    }
 
 public slots:
     void addRepaintFull();

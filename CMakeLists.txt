@@ -131,6 +131,7 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    desktoplayout.cpp
    paintredirector.cpp
+   screenedge.cpp
    tile.cpp
    tiling.cpp
    tilinglayout.cpp
