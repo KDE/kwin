@@ -167,16 +167,16 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
-    void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
+    void paintShadow(const QRegion &region, const WindowPaintData &data);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
-    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, Texture* tex, bool normalized = false);
+    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized = false);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
-    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
+    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
+    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
     void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
-    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
+    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
+    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
     void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
 
 private:
@@ -237,16 +237,14 @@ public:
     SceneOpenGLShadow(Toplevel *toplevel);
     virtual ~SceneOpenGLShadow();
 
-    /**
-     * Returns the Texture for a specific ShadowQuad. The method takes care of performing
-     * the Texture from Pixmap operation. The calling method can use the returned Texture
-     * directly.
-     * In error case the method returns @c NULL.
-     * @return OpenGL Texture for the Shadow Quad. May be @c NULL.
-     **/
-    SceneOpenGL::Texture *textureForQuadType(WindowQuadType type);
+    GLTexture *shadowTexture() {
+        return m_texture;
+    }
+protected:
+    virtual void buildQuads();
+    virtual bool prepareBackend();
 private:
-    SceneOpenGL::Texture m_shadowTextures[ShadowElementsCount];
+    GLTexture *m_texture;
 };
 
 } // namespace

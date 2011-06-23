@@ -110,6 +110,9 @@ bool Shadow::init(const QVector< long > &data)
     m_bottomOffset = data[ShadowElementsCount+2];
     m_leftOffset = data[ShadowElementsCount+3];
     updateShadowRegion();
+    if (!prepareBackend()) {
+        return false;
+    }
     buildQuads();
     return true;
 }

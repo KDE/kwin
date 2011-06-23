@@ -150,6 +150,10 @@ public:
     int height() const {
         return mSize.height();    /// @since 4.5
     }
+    /**
+     * @since 4.7
+     **/
+    bool isYInverted() const;
 
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);

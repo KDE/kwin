@@ -695,6 +695,11 @@ QImage GLTexture::convertToGLFormat(const QImage& img) const
     return res;
 }
 
+bool GLTexture::isYInverted() const
+{
+    return y_inverted;
+}
+
 //****************************************
 // GLShader
 //****************************************
