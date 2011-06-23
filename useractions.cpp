@@ -943,8 +943,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         workspace()->raiseClient(this);
         workspace()->requestFocus(this);
         workspace()->setActiveScreenMouse(globalPos);
-        if (options->moveMode == Options::Transparent && isMovableAcrossScreens())
-            move_faked_activity = workspace()->fakeRequestedActivity(this);
         // fallthrough
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {

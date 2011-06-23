@@ -91,7 +91,6 @@ Client::Client(Workspace* ws)
     , wrapper(None)
     , decoration(NULL)
     , bridge(new Bridge(this))
-    , move_faked_activity(false)
     , move_resize_grab_window(None)
     , move_resize_has_keyboard_grab(false)
     , transient_for (NULL)
@@ -501,8 +500,7 @@ void Client::repaintDecorationPending()
         const QRegion r = paintRedirector->scheduledRepaintRegion();
         if (!r.isEmpty())
             Workspace::self()->addRepaint(r.translated(x() - padding_left, y() - padding_top));
-    } else
-        ensureDecorationPixmapsPainted();
+    }
 }
 
 bool Client::decorationPixmapRequiresRepaint()
@@ -515,7 +513,7 @@ bool Client::decorationPixmapRequiresRepaint()
 
 void Client::ensureDecorationPixmapsPainted()
 {
-    if (!paintRedirector)
+    if (!paintRedirector || !compositing())
         return;
 
     QRegion r = paintRedirector->pendingRegion();
@@ -532,42 +530,7 @@ void Client::ensureDecorationPixmapsPainted()
     repaintDecorationPixmap(decorationPixmapTop, tr, p, r);
     repaintDecorationPixmap(decorationPixmapBottom, br, p, r);
 
-    if (!compositing()) {
-        // Blit the pixmaps to the frame window
-        layoutDecorationRects(lr, tr, rr, br, WindowRelative);
-#ifdef HAVE_XRENDER
-        if (Extensions::renderAvailable()) {
-            XRenderPictFormat* format = XRenderFindVisualFormat(display(), visual());
-            XRenderPictureAttributes pa;
-            pa.subwindow_mode = IncludeInferiors;
-            Picture pic = XRenderCreatePicture(display(), frameId(), format, CPSubwindowMode, &pa);
-            XRenderComposite(display(), PictOpSrc, decorationPixmapLeft.x11PictureHandle(), None, pic,
-                             0, 0, 0, 0, lr.x(), lr.y(), lr.width(), lr.height());
-            XRenderComposite(display(), PictOpSrc, decorationPixmapRight.x11PictureHandle(), None, pic,
-                             0, 0, 0, 0, rr.x(), rr.y(), rr.width(), rr.height());
-            XRenderComposite(display(), PictOpSrc, decorationPixmapTop.x11PictureHandle(), None, pic,
-                             0, 0, 0, 0, tr.x(), tr.y(), tr.width(), tr.height());
-            XRenderComposite(display(), PictOpSrc, decorationPixmapBottom.x11PictureHandle(), None, pic,
-                             0, 0, 0, 0, br.x(), br.y(), br.width(), br.height());
-            XRenderFreePicture(display(), pic);   // TODO don't recreate pictures all the time?
-        } else
-#endif
-        {
-            XGCValues values;
-            values.subwindow_mode = IncludeInferiors;
-            GC gc = XCreateGC(display(), rootWindow(), GCSubwindowMode, &values);
-            XCopyArea(display(), decorationPixmapLeft.handle(), frameId(), gc, 0, 0,
-                      lr.width(), lr.height(), lr.x(), lr.y());
-            XCopyArea(display(), decorationPixmapRight.handle(), frameId(), gc, 0, 0,
-                      rr.width(), rr.height(), rr.x(), rr.y());
-            XCopyArea(display(), decorationPixmapTop.handle(), frameId(), gc, 0, 0,
-                      tr.width(), tr.height(), tr.x(), tr.y());
-            XCopyArea(display(), decorationPixmapBottom.handle(), frameId(), gc, 0, 0,
-                      br.width(), br.height(), br.x(), br.y());
-            XFreeGC(display(), gc);
-        }
-    } else
-        XSync(display(), false);
+    XSync(display(), false);
 }
 
 void Client::repaintDecorationPixmap(QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg)
@@ -588,6 +551,11 @@ void Client::repaintDecorationPixmap(QPixmap& pix, const QRect& r, const QPixmap
 
 void Client::resizeDecorationPixmaps()
 {
+    if (!compositing()) {
+        // compositing disabled - we render directly on screen
+        triggerDecorationRepaint();
+        return;
+    }
     QRect lr, rr, tr, br;
     layoutDecorationRects(lr, tr, rr, br, DecorationRelative);
 

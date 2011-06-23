@@ -731,32 +731,15 @@ Q_SIGNALS:
 
 public:
     /**
-     * This function may be reimplemented to provide custom bound drawing
-     * for transparent moving or resizing of the window.
-     * @a False should be returned if the default implementation should be used.
-     * Note that if you e.g. paint the outline using a 5 pixels wide line,
-     * you should compensate for the 2 pixels that would make the window
-     * look larger.
-     * It is the decoration's responsibility to do the painting, using
-     * e.g. code like:
-     * @code
-     *     Display* dpy = QX11Info::display();
-     *     XGCValues xgc;
-     *     xgc.function = GXxor;
-     *     xgc.foreground = WhitePixel( dpy, DefaultScreen( dpy ));
-     *     xgc.line_width = width;
-     *     xgc.subwindow_mode = IncludeInferiors;
-     *     GC gc = XCreateGC( dpy, DefaultRootWindow( dpy ),
-     *         GCFunction | GCForeground | GCLineWidth | GCSubwindowMode, &xgc );
-     *     XDrawRectangle( dpy, DefaultRootWindow( dpy ), gc, r.x(), r.y(), r.width(), r.height());
-     *     XFreeGC( dpy, gc );
-     * @endcode
+     * This method is not any more invoked from KWin core since version 4.8.
+     * There is no need to implement it.
      *
      * @param geom  The geometry at this the bound should be drawn
      * @param clear @a true if the bound should be cleared (when doing the usual XOR
      *              painting this argument can be simply ignored)
      *
      * @see geometry()
+     * @deprecated
      */
     virtual bool drawbound(const QRect& geom, bool clear);
     /**

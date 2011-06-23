@@ -140,8 +140,6 @@ public:
     void restoreFocus();
     void gotFocusIn(const Client*);
     void setShouldGetFocus(Client*);
-    bool fakeRequestedActivity(Client* c);
-    void unfakeActivity(Client* c);
     bool activateNextClient(Client* c);
     bool focusChangeEnabled() {
         return block_focus == 0;
@@ -645,7 +643,6 @@ public slots:
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
 
-    void slotMouseEmulation();
     void slotDisableGlobalShortcuts();
 
     void slotSettingsChanged(int category);
@@ -730,7 +727,6 @@ private slots:
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
 
 protected:
-    bool keyPressMouseEmulation(XKeyEvent& ev);
     void timerEvent(QTimerEvent *te);
 
 Q_SIGNALS:
@@ -813,11 +809,6 @@ private:
     // Desktop names and number of desktops
     void loadDesktopSettings();
     void saveDesktopSettings();
-
-    // Mouse emulation
-    WId getMouseEmulationWindow();
-    enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
-    unsigned int sendFakedMouseEvent(const QPoint& pos, WId win, MouseEmulation type, int button, unsigned int state);   // returns the new state
 
     void tabBoxKeyPress(int key);
     void tabBoxKeyRelease(const XKeyEvent& ev);
@@ -919,9 +910,6 @@ private:
     KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
     KShortcut cutWalkThroughGroupWindows, cutWalkThroughGroupWindowsReverse;
     KShortcut cutWalkThroughWindowsAlternative, cutWalkThroughWindowsAlternativeReverse;
-    bool mouse_emulation;
-    unsigned int mouse_emulation_state;
-    WId mouse_emulation_window;
     int block_focus;
 
     TabBox::TabBox* tab_box;

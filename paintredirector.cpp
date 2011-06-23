@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qevent.h>
 #include <qpainter.h>
 #include <qmath.h>
+#include "utils.h"
 
 namespace KWin
 {
@@ -83,6 +84,9 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
         break;
     }
     case QEvent::Paint: {
+        if (!compositing()) {
+            return false;
+        }
         if (!recursionCheck) {
             QPaintEvent* pe = static_cast< QPaintEvent* >(e);
             QWidget* w = static_cast< QWidget* >(o);

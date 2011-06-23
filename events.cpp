@@ -221,10 +221,6 @@ void RootInfo::changeShowingDesktop(bool showing)
  */
 bool Workspace::workspaceEvent(XEvent * e)
 {
-    if (mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease)) {
-        mouse_emulation = false;
-        ungrabXKeyboard();
-    }
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (e->type == KeyPress || e->type == KeyRelease))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
@@ -410,14 +406,6 @@ bool Workspace::workspaceEvent(XEvent * e)
         }
         break;
     }
-    case KeyPress:
-        if (mouse_emulation)
-            return keyPressMouseEmulation(e->xkey);
-        break;
-    case KeyRelease:
-        if (mouse_emulation)
-            return false;
-        break;
     case FocusIn:
         if (e->xfocus.window == rootWindow()
                 && (e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot)) {

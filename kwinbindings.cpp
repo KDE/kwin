@@ -192,7 +192,6 @@ DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen());
 
 a = actionCollection->addAction("Group:Miscellaneous");
 a->setText(i18n("Miscellaneous"));
-DEF(I18N_NOOP("Mouse Emulation"),                  Qt::ALT + Qt::Key_F12, slotMouseEmulation());
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow());
 DEF(I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());
