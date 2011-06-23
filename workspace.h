@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
+#include "screenedge.h"
 #include "sm.h"
 
 #include <X11/Xlib.h>
@@ -220,6 +221,7 @@ public:
     Position supportedTilingResizeMode(Client *c, Position currentMode);
 
     Outline* outline();
+    ScreenEdge* screenEdge();
 
     //-------------------------------------------------
     // Desktop layout
@@ -330,6 +332,7 @@ private:
     QVector<TilingLayout *> tilingLayouts;
 
     Outline* m_outline;
+    ScreenEdge m_screenEdge;
 
     //-------------------------------------------------
     // Unsorted
