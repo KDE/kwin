@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "screenedge.h"
 #include "unmanaged.h"
 #include "tabbox.h"
 #include "workspace.h"
@@ -869,7 +870,7 @@ Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int
 
     // Raise electric border windows above the input windows
     // so they can still be triggered.
-    Workspace::self()->raiseElectricBorderWindows();
+    Workspace::self()->screenEdge()->raiseElectricBorderWindows();
 
     return win;
 }
@@ -940,7 +941,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     delete[] wins;
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
-    Workspace::self()->raiseElectricBorderWindows();
+    Workspace::self()->screenEdge()->raiseElectricBorderWindows();
 }
 
 QPoint EffectsHandlerImpl::cursorPos() const
@@ -950,22 +951,22 @@ QPoint EffectsHandlerImpl::cursorPos() const
 
 void EffectsHandlerImpl::checkElectricBorder(const QPoint &pos, Time time)
 {
-    Workspace::self()->checkElectricBorder(pos, time);
+    Workspace::self()->screenEdge()->checkElectricBorder(pos, time);
 }
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border)
 {
-    Workspace::self()->reserveElectricBorder(border);
+    Workspace::self()->screenEdge()->reserveElectricBorder(border);
 }
 
 void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border)
 {
-    Workspace::self()->unreserveElectricBorder(border);
+    Workspace::self()->screenEdge()->unreserveElectricBorder(border);
 }
 
 void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve)
 {
-    Workspace::self()->reserveElectricBorderSwitching(reserve);
+    Workspace::self()->screenEdge()->reserveElectricBorderSwitching(reserve);
 }
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()

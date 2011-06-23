@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "unmanaged.h"
 #include "scene.h"
+#include "screenedge.h"
 #include "effects.h"
 
 #include <QWhatsThis>
@@ -376,7 +377,7 @@ bool Workspace::workspaceEvent(XEvent * e)
             if (w)
                 QWhatsThis::leaveWhatsThisMode();
         }
-        if (electricBorderEvent(e))
+        if (m_screenEdge.electricBorderEvent(e))
             return true;
         break;
     }
@@ -428,7 +429,7 @@ bool Workspace::workspaceEvent(XEvent * e)
     case FocusOut:
         return true; // always eat these, they would tell Qt that KWin is the active app
     case ClientMessage:
-        if (electricBorderEvent(e))
+        if (m_screenEdge.electricBorderEvent(e))
             return true;
         break;
     case Expose:

@@ -28,8 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_SCREENEDGE_H
 #define KWIN_SCREENEDGE_H
-#include <QObject>
+#include <QtCore/QObject>
 #include "kwinglobals.h"
+
 
 namespace KWin {
 
@@ -52,11 +53,11 @@ public:
     void reserveElectricBorderActions(bool reserve);
     void reserveElectricBorderSwitching(bool reserve);
     void raiseElectricBorderWindows();
-private Q_SLOTS:
-    void updateElectricBorders();
-private:
     void destroyElectricBorders();
     bool electricBorderEvent(XEvent * e);
+public Q_SLOTS:
+    void updateElectricBorders();
+private:
     void electricBorderSwitchDesktop(ElectricBorder border, const QPoint& pos);
 
     ElectricBorder electric_current_border;

@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
+#include "screenedge.h"
 #include "effects.h"
 #include <QPainter>
 #include <QVarLengthArray>
@@ -71,8 +72,8 @@ void Workspace::desktopResized()
     rootInfo->setDesktopGeometry(-1, desktop_geometry);
 
     updateClientArea();
-    destroyElectricBorders();
-    updateElectricBorders();
+    m_screenEdge.destroyElectricBorders();
+    m_screenEdge.updateElectricBorders();
     if (compositing())
         compositeResetTimer.start(0);
 }
@@ -2526,7 +2527,7 @@ bool Client::startMoveResize()
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
-        workspace()->reserveElectricBorderSwitching(true);
+        workspace()->screenEdge()->reserveElectricBorderSwitching(true);
     return true;
 }
 
@@ -2591,7 +2592,7 @@ void Client::finishMoveResize(bool cancel)
             kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array acces,\
                                                                         this should not have happened!";
         else
-            workspace()->restoreElectricBorderSize(border);
+            workspace()->screenEdge()->restoreElectricBorderSize(border);
         electricMaximizing = false;
         workspace()->outline()->hide();
     }
@@ -2621,7 +2622,7 @@ void Client::leaveMoveResize()
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
-        workspace()->reserveElectricBorderSwitching(false);
+        workspace()->screenEdge()->reserveElectricBorderSwitching(false);
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -2944,7 +2945,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     if (isMove()) {
         workspace()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
-        workspace()->checkElectricBorder(globalPos, xTime());
+        workspace()->screenEdge()->checkElectricBorder(globalPos, xTime());
     }
 }
 

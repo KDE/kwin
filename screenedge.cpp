@@ -49,6 +49,10 @@ namespace KWin {
 ScreenEdge::ScreenEdge()
     : QObject(NULL)
 {
+    for (int i = 0; i < ELECTRIC_COUNT; ++i) {
+        electric_reserved[i] = 0;
+        electric_windows[i] = None;
+    }
 }
 
 ScreenEdge::~ScreenEdge()

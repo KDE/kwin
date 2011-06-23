@@ -79,6 +79,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "client.h"
 #include "workspace.h"
+#include "screenedge.h"
 #include "tabbox.h"
 #include "group.h"
 #include "rules.h"
@@ -158,8 +159,8 @@ void Workspace::propagateClients(bool propagate_new_clients)
     for (int i = 0;
             i < ELECTRIC_COUNT;
             ++i)
-        if (electric_windows[ i ] != None)
-            new_stack[ pos++ ] = electric_windows[ i ];
+        if (m_screenEdge.electricWindows()[ i ] != None)
+            new_stack[ pos++ ] = m_screenEdge.electricWindows()[ i ];
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
         if (stacking_order.at(i)->hiddenPreview()) {
             continue;
