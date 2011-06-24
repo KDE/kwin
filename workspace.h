@@ -819,7 +819,6 @@ private:
 
     bool windowRepaintsPending() const;
     void setCompositeTimer();
-    void checkCompositePaintTime(int msec);
 
     QVector<int> desktop_focus_chain;
 
@@ -1007,7 +1006,6 @@ private:
     QPushButton* transButton;
     QTimer unredirectTimer;
     bool forceUnredirectCheck;
-    QList< int > composite_paint_times;
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
 

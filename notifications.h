@@ -57,7 +57,6 @@ public:
         ResizeEnd,
         DemandAttentionCurrent,
         DemandAttentionOther,
-        CompositingSlow,
         CompositingSuspendedDbus,
         TilingLayoutChanged,
         DesktopChange = 100
