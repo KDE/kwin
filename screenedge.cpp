@@ -375,4 +375,16 @@ void ScreenEdge::raiseElectricBorderWindows()
     XRestackWindows(display(), windows, pos);
     delete [] windows;
 }
+
+QVector< Window* >* ScreenEdge::screenEdgeWindows()
+{
+    QVector< Window* >* screenEdgeWindows = new QVector< Window* >();
+    for (int i = 0; i <= ELECTRIC_COUNT; ++i) {
+        if (electric_windows[i] != None) {
+            screenEdgeWindows->append((Window*)electric_windows[i]);
+        }
+    }
+    return screenEdgeWindows;
+}
 } //namespace
+

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCREENEDGE_H
 #define KWIN_SCREENEDGE_H
 #include <QtCore/QObject>
+#include <QtCore/QVector>
 #include "kwinglobals.h"
 
 
@@ -55,6 +56,7 @@ public:
     void raiseElectricBorderWindows();
     void destroyElectricBorders();
     bool electricBorderEvent(XEvent * e);
+    QVector< Window* >* screenEdgeWindows();
 public Q_SLOTS:
     void updateElectricBorders();
 private:
