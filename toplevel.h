@@ -79,7 +79,6 @@ public:
     bool isDesktop() const;
     bool isDock() const;
     bool isToolbar() const;
-    bool isTopMenu() const;
     bool isMenu() const;
     bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
     bool isDialog() const;
@@ -313,14 +312,9 @@ inline bool Toplevel::isDock() const
     return windowType() == NET::Dock;
 }
 
-inline bool Toplevel::isTopMenu() const
-{
-    return windowType() == NET::TopMenu;
-}
-
 inline bool Toplevel::isMenu() const
 {
-    return windowType() == NET::Menu && !isTopMenu(); // because of backwards comp.
+    return windowType() == NET::Menu;
 }
 
 inline bool Toplevel::isToolbar() const

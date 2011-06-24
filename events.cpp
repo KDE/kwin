@@ -542,8 +542,6 @@ bool Client::windowEvent(XEvent* e)
             fetchIconicName();
         if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut) != 0
                 || (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut) != 0) {
-            if (isTopMenu())   // the fallback mode of KMenuBar may alter the strut
-                checkWorkspacePosition();  // restore it
             workspace()->updateClientArea();
         }
         if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
@@ -696,8 +694,6 @@ bool Client::mapRequestEvent(XMapRequestEvent* e)
             return false;
         return true; // no messing with frame etc.
     }
-    if (isTopMenu() && workspace()->managingTopMenus())
-        return true; // kwin controls these
     // also copied in clientMessage()
     if (isMinimized())
         unminimize();
@@ -747,8 +743,6 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
         return; // ignore frame/wrapper
     // WM_STATE
     if (e->message_type == atoms->kde_wm_change_state) {
-        if (isTopMenu() && workspace()->managingTopMenus())
-            return; // kwin controls these
         bool avoid_animation = (e->data.l[ 1 ]);
         if (e->data.l[ 0 ] == IconicState)
             minimize();
@@ -766,8 +760,6 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
             }
         }
     } else if (e->message_type == atoms->wm_change_state) {
-        if (isTopMenu() && workspace()->managingTopMenus())
-            return; // kwin controls these
         if (e->data.l[0] == IconicState)
             minimize();
         return;
@@ -790,8 +782,7 @@ void Client::configureRequestEvent(XConfigureRequestEvent* e)
         sendSyntheticConfigureNotify();
         return;
     }
-    if (isSplash()  // no manipulations with splashscreens either
-            || isTopMenu()) { // topmenus neither
+    if (isSplash()) {  // no manipulations with splashscreens either
         sendSyntheticConfigureNotify();
         return;
     }
@@ -887,7 +878,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
             return;
 
         if (options->autoRaise && !isDesktop() &&
-                !isDock() && !isTopMenu() && workspace()->focusChangeEnabled() &&
+                !isDock() && workspace()->focusChangeEnabled() &&
                 workspace()->topClientOnDesktop(workspace()->currentDesktop(),
                                                 options->separateScreenFocus ? screen() : -1) != this) {
             delete autoRaiseTimer;
@@ -898,7 +889,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         }
 
         QPoint currentPos(e->x_root, e->y_root);
-        if (options->focusPolicy != Options::FocusStrictlyUnderMouse && (isDesktop() || isDock() || isTopMenu()))
+        if (options->focusPolicy != Options::FocusStrictlyUnderMouse && (isDesktop() || isDock()))
             return;
         // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
         // change came because of window changes (e.g. closing a window) - #92290

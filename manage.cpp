@@ -485,9 +485,6 @@ bool Client::manage(Window w, bool isMapped)
     user_time = readUserTimeMapTimestamp(asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session);
     group()->updateUserTime(user_time);   // And do what Client::updateUserTime() does
 
-    if (isTopMenu())  // They're shown in Workspace::addClient() if their mainwindow
-        hideClient(true);   // Is the active one
-
     // This should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
     XLowerWindow(display(), frameId());

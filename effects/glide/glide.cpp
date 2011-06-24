@@ -220,7 +220,7 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
     if (w->hasDecoration())
         return true;
     if (!w->isManaged() || w->isMenu() ||  w->isNotification() || w->isDesktop() ||
-            w->isDock() ||  w->isSplash() || w->isTopMenu() || w->isToolbar() ||
+            w->isDock() ||  w->isSplash() || w->isToolbar() ||
             w->windowClass() == "dashboard dashboard")
         return false;
     return true;

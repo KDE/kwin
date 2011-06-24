@@ -266,7 +266,6 @@ public:
     virtual bool isDesktop() const;
     virtual bool isDock() const;
     virtual bool isToolbar() const;
-    virtual bool isTopMenu() const;
     virtual bool isMenu() const;
     virtual bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
     virtual bool isSpecialWindow() const;

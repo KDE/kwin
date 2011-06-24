@@ -254,15 +254,6 @@ unsigned long Options::updateSettings()
     // and not kstyle tooltips and vise-versa, we don't read the
     // "EffectNoTooltip" setting from kdeglobals.
 
-#if 0
-FIXME: we have no mac style menu implementation in kwin anymore, so this just breaks
-    things for people!
-    KConfig _globalConfig("kdeglobals");
-    KConfigGroup globalConfig(&_globalConfig, "KDE");
-    topmenus = globalConfig.readEntry("macStyle", false);
-#else
-    topmenus = false;
-#endif
 
 //    QToolTip::setGloballyEnabled( d->show_tooltips );
 // KDE4 this probably needs to be done manually in clients

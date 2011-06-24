@@ -1136,11 +1136,6 @@ public:
      */
     virtual bool isToolbar() const = 0;
     /**
-     * Returns whether the window is standalone menubar (AKA macmenu).
-     * This window type is a KDE extension.
-     */
-    virtual bool isTopMenu() const = 0;
-    /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */

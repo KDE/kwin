@@ -247,7 +247,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     }
     pending_take_activity = NULL;
 
-    updateCurrentTopMenu();
     updateToolWindows(false);
     if (c)
         disableGlobalShortcutsForClient(c->rules()->checkDisableGlobalShortcuts(false));
@@ -359,7 +358,7 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         }
         cancelDelayFocus();
     }
-    if (!(flags & ActivityFocusForce) && (c->isTopMenu() || c->isDock() || c->isSplash()))
+    if (!(flags & ActivityFocusForce) && (c->isDock() || c->isSplash()))
         flags &= ~ActivityFocus; // toplevel menus and dock windows don't take focus if not forced
     if (c->isShade()) {
         if (c->wantsInput() && (flags & ActivityFocus)) {
@@ -710,9 +709,9 @@ void Client::demandAttentionKNotify()
 
 // TODO I probably shouldn't be lazy here and do it without the macro, so that people can read it
 KWIN_COMPARE_PREDICATE(SameApplicationActiveHackPredicate, Client, const Client*,
-                       // ignore already existing splashes, toolbars, utilities, menus and topmenus,
+                       // ignore already existing splashes, toolbars, utilities and menus,
                        // as the app may show those before the main window
-                       !cl->isSplash() && !cl->isToolbar() && !cl->isTopMenu() && !cl->isUtility() && !cl->isMenu()
+                       !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
                        && Client::belongToSameApplication(cl, value, true) && cl != value);
 
 Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,

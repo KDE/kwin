@@ -383,8 +383,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
             if ((*it)->isModal())
                 continue; // there's no reason to hide modal dialogs with the main client
             // but to keep them to eg. watch progress or whatever
-            if (!(*it)->isMinimized()
-                    && !(*it)->isTopMenu()) { // topmenus are not minimized, they're hidden
+            if (!(*it)->isMinimized()) {
                 (*it)->minimize();
                 updateMinimizedOfTransients((*it));
             }
@@ -398,8 +397,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
         for (ClientList::ConstIterator it = c->transients().constBegin();
                 it != c->transients().constEnd();
                 ++it) {
-            if ((*it)->isMinimized()
-                    && !(*it)->isTopMenu()) {
+            if ((*it)->isMinimized()) {
                 (*it)->unminimize();
                 updateMinimizedOfTransients((*it));
             }
@@ -633,8 +631,6 @@ void Client::setTransient(Window new_transient_for_id)
             transient_for->addTransient(this);
         } // checkGroup() will check 'check_active_modal'
         checkGroup(NULL, true);   // force, because transiency has changed
-        if (isTopMenu())
-            workspace()->updateCurrentTopMenu();
         workspace()->updateClientLayer(this);
         workspace()->resetUpdateToolWindowsTimer();
     }

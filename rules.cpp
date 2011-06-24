@@ -821,8 +821,6 @@ void Client::setupWindowRules(bool ignore_temporary)
 {
     client_rules = workspace()->findWindowRules(this, ignore_temporary);
     // check only after getting the rules, because there may be a rule forcing window type
-    if (isTopMenu())  // TODO cannot have restrictions
-        client_rules = WindowRules();
 }
 
 // Applies Force, ForceTemporarily and ApplyNow rules

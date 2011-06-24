@@ -1191,8 +1191,7 @@ void Workspace::slotWindowToDesktop()
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (i >= 1 && i <= numberOfDesktops() && c
             && !c->isDesktop()
-            && !c->isDock()
-            && !c->isTopMenu())
+            && !c->isDock())
         sendClientToDesktop(c, i, true);
 }
 
@@ -1216,8 +1215,7 @@ void Workspace::slotWindowToScreen()
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (i >= 0 && i <= numScreens() && c
             && !c->isDesktop()
-            && !c->isDock()
-            && !c->isTopMenu()) {
+            && !c->isDock()) {
         sendClientToScreen(c, i);
     }
 }
@@ -1227,8 +1225,7 @@ void Workspace::slotWindowToNextScreen()
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (c
             && !c->isDesktop()
-            && !c->isDock()
-            && !c->isTopMenu()) {
+            && !c->isDock()) {
         sendClientToScreen(c, (c->screen() + 1) % numScreens());
     }
 }
@@ -1380,7 +1377,7 @@ void Workspace::windowToNextDesktop(Client* c)
     if (d > numberOfDesktops())
         d = 1;
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1401,7 +1398,7 @@ void Workspace::windowToPreviousDesktop(Client* c)
     if (d <= 0)
         d = numberOfDesktops();
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1415,7 +1412,7 @@ void Workspace::slotWindowToDesktopRight()
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1429,7 +1426,7 @@ void Workspace::slotWindowToDesktopLeft()
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1443,7 +1440,7 @@ void Workspace::slotWindowToDesktopUp()
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1457,7 +1454,7 @@ void Workspace::slotWindowToDesktopDown()
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
-            && !c->isDock() && !c->isTopMenu()) {
+            && !c->isDock()) {
         setClientIsMoving(c);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
@@ -1657,8 +1654,7 @@ void Workspace::showWindowMenu(const QRect &pos, Client* cl)
     if (active_popup_client != NULL)   // recursion
         return;
     if (cl->isDesktop()
-            || cl->isDock()
-            || cl->isTopMenu())
+            || cl->isDock())
         return;
 
     active_popup_client = cl;

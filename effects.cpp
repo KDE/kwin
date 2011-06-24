@@ -592,14 +592,14 @@ void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool sna
 void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 {
     Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(w)->window());
-    if (cl && !cl->isDesktop() && !cl->isDock() && !cl->isTopMenu())
+    if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
 }
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
     Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(w)->window());
-    if (cl && !cl->isDesktop() && !cl->isDock() && !cl->isTopMenu())
+    if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToScreen(cl, screen);
 }
 
@@ -1472,11 +1472,6 @@ bool EffectWindowImpl::isDock() const
 bool EffectWindowImpl::isToolbar() const
 {
     return toplevel->isToolbar();
-}
-
-bool EffectWindowImpl::isTopMenu() const
-{
-    return toplevel->isTopMenu();
 }
 
 bool EffectWindowImpl::isMenu() const

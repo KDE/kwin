@@ -165,17 +165,6 @@ void Workspace::updateClientArea(bool force)
             kDebug(1212) << "new_sarea: " << new_sareas[ i ][ iS ];
     }
 #endif
-    // TODO topmenu update for screenarea changes?
-    if (topmenu_space != NULL) {
-        QRect topmenu_area = desktopArea;
-        topmenu_area.setTop(topMenuHeight());
-        for (int i = 1;
-                i <= numberOfDesktops();
-                ++i) {
-            new_wareas[ i ] = new_wareas[ i ].intersected(topmenu_area);
-            new_rmoveareas[ i ] += StrutRect(topmenu_area);
-        }
-    }
 
     bool changed = force;
 
@@ -212,7 +201,6 @@ void Workspace::updateClientArea(bool force)
             rootInfo->setWorkArea(i, r);
         }
 
-        updateTopMenuGeometry();
         for (ClientList::ConstIterator it = clients.constBegin();
                 it != clients.constEnd();
                 ++it)
@@ -800,40 +788,6 @@ void Workspace::unclutterDesktop()
     }
 }
 
-
-void Workspace::updateTopMenuGeometry(Client* c)
-{
-    if (!managingTopMenus())
-        return;
-    if (c != NULL) {
-        XEvent ev;
-        ev.xclient.display = display();
-        ev.xclient.type = ClientMessage;
-        ev.xclient.window = c->window();
-        static Atom msg_type_atom = XInternAtom(display(), "_KDE_TOPMENU_MINSIZE", False);
-        ev.xclient.message_type = msg_type_atom;
-        ev.xclient.format = 32;
-        ev.xclient.data.l[0] = xTime();
-        ev.xclient.data.l[1] = topmenu_space->width();
-        ev.xclient.data.l[2] = topmenu_space->height();
-        ev.xclient.data.l[3] = 0;
-        ev.xclient.data.l[4] = 0;
-        XSendEvent(display(), c->window(), False, NoEventMask, &ev);
-        KWindowSystem::setStrut(c->window(), 0, 0, topmenu_height, 0);   // so that kicker etc. know
-        c->checkWorkspacePosition();
-        return;
-    }
-    // c == NULL - update all, including topmenu_space
-    QRect area;
-    area = clientArea(MaximizeFullArea, QPoint(0, 0), 1);     // HACK desktop ?
-    area.setHeight(topMenuHeight());
-    topmenu_space->setGeometry(area);
-    for (ClientList::ConstIterator it = topmenus.constBegin();
-            it != topmenus.constEnd();
-            ++it)
-        updateTopMenuGeometry(*it);
-}
-
 // When kwin crashes, windows will not be gravitated back to their original position
 // and will remain offset by the size of the decoration. So when restarting, fix this
 // (the property with the size of the frame remains on the window after the crash).
@@ -889,9 +843,6 @@ void Client::keepInArea(QRect area, bool partial)
 QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) const
 {
     QRect r = area;
-    // topmenu area is reserved in updateClientArea()
-    if (isTopMenu())
-        return r;
     NETExtendedStrut str = strut();
     QRect stareaL = QRect(
                         0,
@@ -1073,20 +1024,6 @@ void Client::checkWorkspacePosition()
     }
     if (isDock())
         return;
-    if (isTopMenu()) {
-        if (workspace()->managingTopMenus()) {
-            QRect area;
-            ClientList mainclients = mainClients();
-            if (mainclients.count() == 1)
-                area = workspace()->clientArea(MaximizeFullArea, mainclients.first());
-            else
-                area = workspace()->clientArea(MaximizeFullArea, QPoint(0, 0), desktop());
-            area.setHeight(workspace()->topMenuHeight());
-//            kDebug(1212) << "TOPMENU size adjust: " << area << ":" << this;
-            setGeometry(area);
-        }
-        return;
-    }
 
     if (maximizeMode() != MaximizeRestore)
         // TODO update geom_restore?

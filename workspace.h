@@ -512,10 +512,6 @@ public:
     bool wasUserInteraction() const;
     bool sessionSaving() const;
 
-    bool managingTopMenus() const;
-    int topMenuHeight() const;
-    void updateCurrentTopMenu();
-
     int packPositionLeft(const Client* cl, int oldx, bool left_edge) const;
     int packPositionRight(const Client* cl, int oldx, bool right_edge) const;
     int packPositionUp(const Client* cl, int oldy, bool top_edge) const;
@@ -702,8 +698,6 @@ private slots:
     void configureWM();
     void desktopResized();
     void slotUpdateToolWindows();
-    void lostTopMenuSelection();
-    void lostTopMenuOwner();
     void delayFocus();
     void gotTemporaryRulesMessage(const QString&);
     void cleanupTemporaryRules();
@@ -787,10 +781,6 @@ private:
     bool allowFullClientRaising(const Client* c, Time timestamp);
     bool keepTransientAbove(const Client* mainwindow, const Client* transient);
     void blockStackingUpdates(bool block);
-    void addTopMenu(Client* c);
-    void removeTopMenu(Client* c);
-    void setupTopMenuHandling();
-    void updateTopMenuGeometry(Client* c = NULL);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(Window w, const XWindowAttributes& attr);
 
@@ -994,13 +984,6 @@ private:
     QVector<StrutRects> oldrestrictedmovearea;
     QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
 
-    bool managing_topmenus;
-    KSelectionOwner* topmenu_selection;
-    KSelectionWatcher* topmenu_watcher;
-    ClientList topmenus; // Doesn't own them
-    mutable int topmenu_height;
-    QWidget* topmenu_space;
-
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
     bool blocked_propagating_new_clients; // Propagate also new clients after enabling stacking updates?
@@ -1174,11 +1157,6 @@ inline void Workspace::setWasUserInteraction()
 inline bool Workspace::wasUserInteraction() const
 {
     return was_user_interaction;
-}
-
-inline bool Workspace::managingTopMenus() const
-{
-    return managing_topmenus;
 }
 
 inline void Workspace::sessionSaveStarted()

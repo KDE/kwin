@@ -2109,7 +2109,7 @@ bool Client::wantsInput() const
 bool Client::isSpecialWindow() const
 {
     // TODO
-    return isDesktop() || isDock() || isSplash() || isTopMenu() || isToolbar();
+    return isDesktop() || isDock() || isSplash() || isToolbar();
 }
 
 /**
