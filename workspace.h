@@ -174,13 +174,6 @@ public:
     void clientHidden(Client*);
     void clientAttentionChanged(Client* c, bool set);
 
-    void checkElectricBorder(const QPoint& pos, Time time);
-    void restoreElectricBorderSize(ElectricBorder border);
-    void reserveElectricBorder(ElectricBorder border);
-    void unreserveElectricBorder(ElectricBorder border);
-    void reserveElectricBorderActions(bool reserve);
-    void reserveElectricBorderSwitching(bool reserve);
-
     /**
      * @return List of clients currently managed by Workspace
      **/
@@ -551,7 +544,6 @@ public:
     void startMousePolling();
     void stopMousePolling();
 
-    void raiseElectricBorderWindows();
     Client* getMovingClient() {
         return movingClient;
     }
@@ -717,7 +709,6 @@ private slots:
     void performCompositing();
     void performMousePoll();
     void lostCMSelection();
-    void updateElectricBorders();
     void resetCursorPosTime();
     void delayedCheckUnredirect();
 
@@ -808,11 +799,6 @@ private:
 
     void tabBoxKeyPress(int key);
     void tabBoxKeyRelease(const XKeyEvent& ev);
-
-    // Electric borders
-    void destroyElectricBorders();
-    bool electricBorderEvent(XEvent * e);
-    void electricBorderSwitchDesktop(ElectricBorder border, const QPoint& pos);
 
     //---------------------------------------------------------------------
 
@@ -967,18 +953,6 @@ private:
     bool workspaceInit;
 
     KStartupInfo* startup;
-
-    ElectricBorder electric_current_border;
-    Window electric_windows[ELECTRIC_COUNT];
-    int electricLeft;
-    int electricRight;
-    int electricTop;
-    int electricBottom;
-    Time electric_time_first;
-    Time electric_time_last;
-    Time electric_time_last_trigger;
-    QPoint electric_push_point;
-    int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
     Placement* initPositioning;
 

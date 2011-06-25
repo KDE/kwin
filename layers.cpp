@@ -197,27 +197,6 @@ void Workspace::propagateClients(bool propagate_new_clients)
     x_stacking_dirty = true;
 }
 
-/**
- * Raise electric border windows to the real top of the screen. We only need
- * to do this if an effect input window is active.
- */
-void Workspace::raiseElectricBorderWindows()
-{
-    Window* windows = new Window[ 8 ]; // There are up to 8 borders
-    int pos = 0;
-    for (int i = 0; i < ELECTRIC_COUNT; ++i)
-        if (electric_windows[ i ] != None)
-            windows[ pos++ ] = electric_windows[ i ];
-    if (!pos) {
-        delete [] windows;
-        return; // No borders at all
-    }
-    XRaiseWindow(display(), windows[ 0 ]);
-    XRestackWindows(display(), windows, pos);
-    delete [] windows;
-}
-
-
 /*!
   Returns topmost visible client. Windows on the dock, the desktop
   or of any other special kind are excluded. Also if the window
