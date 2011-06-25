@@ -47,6 +47,7 @@ class ScreenEdge : QObject {
 public:
     ScreenEdge();
     ~ScreenEdge();
+    void init();
     void checkElectricBorder(const QPoint& pos, Time now);
     void restoreElectricBorderSize(ElectricBorder border);
     void reserveElectricBorder(ElectricBorder border);

@@ -59,6 +59,15 @@ ScreenEdge::~ScreenEdge()
 {
 }
 
+void ScreenEdge::init()
+{
+    reserveElectricBorderActions(true);
+    if (options->electricBorders() == Options::ElectricAlways) {
+        reserveElectricBorderSwitching(true);
+    }
+    updateElectricBorders();
+}
+
 void ScreenEdge::updateElectricBorders()
 {
     electric_time_first = xTime();

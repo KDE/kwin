@@ -247,10 +247,6 @@ Workspace::Workspace(bool restore)
 
 void Workspace::init()
 {
-    m_screenEdge.reserveElectricBorderActions(true);
-    if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveElectricBorderSwitching(true);
-    m_screenEdge.updateElectricBorders();
     m_screenEdge.init();
 
     // Not used yet
