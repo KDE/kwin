@@ -93,7 +93,6 @@ Scene* scene = 0;
 Scene::Scene(Workspace* ws)
     : wspace(ws)
     , has_waitSync(false)
-    , selfCheckDone(false)
     , lanczos_filter(new LanczosFilter())
 {
 }
@@ -319,31 +318,6 @@ void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, Windo
         lanczos_filter->performPaint(w, mask, region, data);
     else
         w->sceneWindow()->performPaint(mask, region, data);
-}
-
-QList< QPoint > Scene::selfCheckPoints() const
-{
-    QList< QPoint > ret;
-    // Use Kephal directly, we're interested in "real" screens, not depending on our config.
-    // TODO: Does Kephal allow fake screens as well? We cannot use QDesktopWidget as it will cause a crash if
-    //       the number of screens is different to what Kephal returns.
-    for (int screen = 0;
-            screen < Kephal::ScreenUtils::numScreens();
-            ++screen) {
-        // test top-left and bottom-right of every screen
-        ret.append(Kephal::ScreenUtils::screenGeometry(screen).topLeft());
-        ret.append(Kephal::ScreenUtils::screenGeometry(screen).bottomRight() + QPoint(-3 + 1, -2 + 1)
-                   + QPoint(-1, 0));   // intentionally moved one up, since the source windows will be one down
-    }
-    return ret;
-}
-
-QRegion Scene::selfCheckRegion() const
-{
-    QRegion reg;
-    foreach (const QPoint & p, selfCheckPoints())
-    reg |= QRect(p, QSize(selfCheckWidth(), selfCheckHeight()));
-    return reg;
 }
 
 //****************************************

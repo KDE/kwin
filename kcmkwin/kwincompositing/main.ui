@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>544</width>
+    <width>552</width>
     <height>523</height>
    </rect>
   </property>
@@ -551,13 +551,6 @@
              <string>XRender</string>
             </property>
            </item>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="disableChecks">
-           <property name="text">
-            <string>Disable functionality checks</string>
-           </property>
           </widget>
          </item>
         </layout>

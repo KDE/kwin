@@ -119,7 +119,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(toogleSmoothScaleUi(int)));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
-    connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.unredirectFullscreen , SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.xrScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -391,7 +390,6 @@ void KWinCompositingConfig::loadAdvancedTab()
         ui.windowThumbnails->setCurrentIndex(2);
     else // shown, or default
         ui.windowThumbnails->setCurrentIndex(1);
-    ui.disableChecks->setChecked(config.readEntry("DisableChecks", false));
     ui.unredirectFullscreen->setChecked(config.readEntry("UnredirectFullscreen", false));
 
     ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
@@ -556,7 +554,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
             || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
             != ui.glDirect->isChecked()
             || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
-            || config.readEntry("DisableChecks", false) != ui.disableChecks->isChecked()
             || config.readEntry<bool>("GLLegacy", false) == ui.glShaders->isChecked()) {
         m_showConfirmDialog = true;
         advancedChanged = true;
@@ -567,7 +564,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender");
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex()]);
-    config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
     config.writeEntry("UnredirectFullscreen", ui.unredirectFullscreen->isChecked());
 
     config.writeEntry("XRenderSmoothScale", ui.xrScaleFilter->currentIndex() == 1);
@@ -722,7 +718,6 @@ void KWinCompositingConfig::defaults()
 
     ui.compositingType->setCurrentIndex(0);
     ui.windowThumbnails->setCurrentIndex(1);
-    ui.disableChecks->setChecked(false);
     ui.unredirectFullscreen->setChecked(false);
     ui.xrScaleFilter->setCurrentIndex(0);
     ui.glScaleFilter->setCurrentIndex(2);

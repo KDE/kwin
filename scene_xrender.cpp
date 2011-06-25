@@ -125,11 +125,6 @@ SceneXrender::SceneXrender(Workspace* ws)
         kError(1212) << "XRender compositing setup failed";
         return;
     }
-    if (!initting) { // see comment for opengl version
-        if (!selfCheck())
-            return;
-        selfCheckDone = true;
-    }
     init_ok = true;
 }
 
@@ -162,107 +157,6 @@ void SceneXrender::createBuffer()
     XFreePixmap(display(), pixmap);   // The picture owns the pixmap now
 }
 
-// Just like SceneOpenGL::selfCheck()
-bool SceneXrender::selfCheck()
-{
-    QRegion reg = selfCheckRegion();
-    if (wspace->overlayWindow()) {
-        // avoid covering the whole screen too soon
-        wspace->setOverlayShape(reg);
-        wspace->showOverlay();
-    }
-    selfCheckSetup();
-    flushBuffer(PAINT_SCREEN_REGION, reg);
-    bool ok = selfCheckFinish();
-    if (wspace->overlayWindow())
-        wspace->hideOverlay();
-    return ok;
-}
-
-void SceneXrender::selfCheckSetup()
-{
-    KXErrorHandler err;
-    QImage img(selfCheckWidth(), selfCheckHeight(), QImage::Format_RGB32);
-    img.setPixel(0, 0, QColor(Qt::red).rgb());
-    img.setPixel(1, 0, QColor(Qt::green).rgb());
-    img.setPixel(2, 0, QColor(Qt::blue).rgb());
-    img.setPixel(0, 1, QColor(Qt::white).rgb());
-    img.setPixel(1, 1, QColor(Qt::black).rgb());
-    img.setPixel(2, 1, QColor(Qt::white).rgb());
-    QPixmap pix = QPixmap::fromImage(img);
-    bool mustFreePix = false;
-    if (pix.handle() == 0) {
-        mustFreePix = true;
-        Pixmap xPix = XCreatePixmap(display(), rootWindow(), pix.width(), pix.height(), DefaultDepth(display(), DefaultScreen(display())));
-        pix = QPixmap::fromX11Pixmap(xPix, QPixmap::ExplicitlyShared);
-        QPainter p(&pix);
-        p.drawImage(QPoint(0, 0), img);
-    }
-    foreach (const QPoint & p, selfCheckPoints()) {
-        XSetWindowAttributes wa;
-        wa.override_redirect = True;
-        ::Window window = XCreateWindow(display(), rootWindow(), 0, 0, selfCheckWidth(), selfCheckHeight(),
-                                        0, QX11Info::appDepth(), CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa);
-        XSetWindowBackgroundPixmap(display(), window, pix.handle());
-        XClearWindow(display(), window);
-        XMapWindow(display(), window);
-        // move the window one down to where the result will be rendered too, just in case
-        // the render would fail completely and eventual check would try to read this window's contents
-        XMoveWindow(display(), window, p.x() + 1, p.y());
-        XCompositeRedirectWindow(display(), window, CompositeRedirectAutomatic);
-        Pixmap wpix = XCompositeNameWindowPixmap(display(), window);
-        XWindowAttributes attrs;
-        XGetWindowAttributes(display(), window, &attrs);
-        XRenderPictFormat* format = XRenderFindVisualFormat(display(), attrs.visual);
-        Picture pic = XRenderCreatePicture(display(), wpix, format, 0, 0);
-        QRect rect(p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
-        XRenderComposite(display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
-                         rect.x(), rect.y(), rect.width(), rect.height());
-        XRenderFreePicture(display(), pic);
-        XFreePixmap(display(), wpix);
-        XDestroyWindow(display(), window);
-    }
-    if (mustFreePix)
-        XFreePixmap(display(), pix.handle());
-    err.error(true);   // just sync and discard
-}
-
-bool SceneXrender::selfCheckFinish()
-{
-    KXErrorHandler err;
-    bool ok = true;
-    foreach (const QPoint & p, selfCheckPoints()) {
-        QPixmap pix = QPixmap::grabWindow(rootWindow(), p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
-        QImage img = pix.toImage();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 1 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 1 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 1 )).name();
-        if (img.pixel(0, 0) != QColor(Qt::red).rgb()
-                || img.pixel(1, 0) != QColor(Qt::green).rgb()
-                || img.pixel(2, 0) != QColor(Qt::blue).rgb()
-                || img.pixel(0, 1) != QColor(Qt::white).rgb()
-                || img.pixel(1, 1) != QColor(Qt::black).rgb()
-                || img.pixel(2, 1) != QColor(Qt::white).rgb()) {
-            kError(1212) << "XRender compositing self-check failed, disabling compositing.";
-            ok = false;
-            break;
-        }
-    }
-    if (err.error(true))
-        ok = false;
-    if (ok)
-        kDebug(1212) << "XRender compositing self-check passed.";
-    if (!ok && options->disableCompositingChecks) {
-        kWarning(1212) << "Compositing checks disabled, proceeding regardless of self-check failure.";
-        return true;
-    }
-    return ok;
-}
-
-
 // the entry point for painting
 void SceneXrender::paint(QRegion damage, ToplevelList toplevels)
 {
@@ -275,17 +169,8 @@ void SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     paintScreen(&mask, &damage);
     if (wspace->overlayWindow())  // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
-    if (!selfCheckDone) {
-        selfCheckSetup();
-        damage |= selfCheckRegion();
-    }
     lastRenderTime = t.elapsed();
     flushBuffer(mask, damage);
-    if (!selfCheckDone) {
-        if (!selfCheckFinish())
-            QTimer::singleShot(0, Workspace::self(), SLOT(finishCompositing()));
-        selfCheckDone = true;
-    }
     // do cleanup
     stacking_order.clear();
 }

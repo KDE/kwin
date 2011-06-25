@@ -320,7 +320,6 @@ void Options::reloadCompositingSettings(bool force)
     prefs.detect();
 
     useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
-    disableCompositingChecks = config.readEntry("DisableChecks", false);
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering());
     glVSync = config.readEntry("GLVSync", prefs.enableVSync());
     glSmoothScale = qBound(-1, config.readEntry("GLTextureFilter", 2), 2);
