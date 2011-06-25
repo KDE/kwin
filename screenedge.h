@@ -56,7 +56,7 @@ public:
     void raiseElectricBorderWindows();
     void destroyElectricBorders();
     bool electricBorderEvent(XEvent * e);
-    QVector< Window* >* screenEdgeWindows();
+    const QVector< Window* >& screenEdgeWindows();
 public Q_SLOTS:
     void updateElectricBorders();
 private:

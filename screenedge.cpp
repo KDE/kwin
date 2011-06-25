@@ -376,7 +376,7 @@ void ScreenEdge::raiseElectricBorderWindows()
     delete [] windows;
 }
 
-QVector< Window* >* ScreenEdge::screenEdgeWindows()
+const QVector< Window* >& ScreenEdge::screenEdgeWindows()
 {
     QVector< Window* >* screenEdgeWindows = new QVector< Window* >();
     for (int i = 0; i <= ELECTRIC_COUNT; ++i) {
@@ -384,7 +384,7 @@ QVector< Window* >* ScreenEdge::screenEdgeWindows()
             screenEdgeWindows->append((Window*)electric_windows[i]);
         }
     }
-    return screenEdgeWindows;
+    return *screenEdgeWindows;
 }
 } //namespace
 

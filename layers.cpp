@@ -148,34 +148,28 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     // restack the windows according to the stacking order
     // 1 - supportWindow, 1 - topmenu_space, 8 - electric borders
-    Window* new_stack = new Window[ stacking_order.count() + 1 + 1 + 8 ];
-    int pos = 0;
+    QVector<Window*> newWindowStack;
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
     // but it was lowered after kwin startup. Stacking all clients below
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
-    new_stack[ pos++ ] = supportWindow->winId();
-    for (int i = 0;
-            i < ELECTRIC_COUNT;
-            ++i)
-        if (m_screenEdge.electricWindows()[ i ] != None)
-            new_stack[ pos++ ] = m_screenEdge.electricWindows()[ i ];
+    newWindowStack << (Window*)supportWindow->winId();
+    newWindowStack << m_screenEdge.screenEdgeWindows();
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
         if (stacking_order.at(i)->hiddenPreview()) {
             continue;
-	}
-        new_stack[ pos++ ] = stacking_order.at(i)->frameId();
+        }
+        newWindowStack << (Window*)stacking_order.at(i)->frameId();
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(new_stack[ 0 ] == supportWindow->winId());
-    XRestackWindows(display(), new_stack, pos);
-    delete [] new_stack;
+    assert(newWindowStack.at(0) == (Window*)supportWindow->winId());
+    XRestackWindows(display(), (Window*)newWindowStack.data(), newWindowStack.count());
 
+    int pos = 0;
     if (propagate_new_clients) {
         cl = new Window[ desktops.count() + clients.count()];
-        pos = 0;
         // TODO this is still not completely in the map order
         for (ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
             cl[pos++] = (*it)->window();
