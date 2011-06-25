@@ -63,17 +63,17 @@ public Q_SLOTS:
 private:
     void electricBorderSwitchDesktop(ElectricBorder border, const QPoint& pos);
 
-    ElectricBorder electric_current_border;
-    Window electric_windows[ELECTRIC_COUNT];
-    int electricLeft;
-    int electricRight;
-    int electricTop;
-    int electricBottom;
-    Time electric_time_first;
-    Time electric_time_last;
-    Time electric_time_last_trigger;
-    QPoint electric_push_point;
-    int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
+    ElectricBorder m_currentScreenEdge;
+    Window m_screenEdgeWindows[ELECTRIC_COUNT];
+    int m_screenEdgeLeft;
+    int m_screenEdgeRight;
+    int m_screenEdgeTop;
+    int m_screenEdgeBottom;
+    Time m_screenEdgeTimeFirst;
+    Time m_screenEdgeTimeLast;
+    Time m_screenEdgeTimeLastTrigger;
+    QPoint m_screenEdgePushPoint;
+    int m_screenEdgeReserved[ELECTRIC_COUNT]; // Corners/edges used by something
 };
 }
 #endif // KWIN_SCREENEDGE_H

@@ -50,8 +50,8 @@ ScreenEdge::ScreenEdge()
     : QObject(NULL)
 {
     for (int i = 0; i < ELECTRIC_COUNT; ++i) {
-        electric_reserved[i] = 0;
-        electric_windows[i] = None;
+        m_screenEdgeReserved[i] = 0;
+        m_screenEdgeWindows[i] = None;
     }
 }
 
@@ -70,24 +70,24 @@ void ScreenEdge::init()
 
 void ScreenEdge::updateElectricBorders()
 {
-    electric_time_first = xTime();
-    electric_time_last = xTime();
-    electric_time_last_trigger = xTime();
-    electric_current_border = ElectricNone;
+    m_screenEdgeTimeFirst = xTime();
+    m_screenEdgeTimeLast = xTime();
+    m_screenEdgeTimeLastTrigger = xTime();
+    m_currentScreenEdge = ElectricNone;
     QRect r = Kephal::ScreenUtils::desktopGeometry();
-    electricTop = r.top();
-    electricBottom = r.bottom();
-    electricLeft = r.left();
-    electricRight = r.right();
+    m_screenEdgeTop = r.top();
+    m_screenEdgeBottom = r.bottom();
+    m_screenEdgeLeft = r.left();
+    m_screenEdgeRight = r.right();
 
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (electric_reserved[pos] == 0) {
-            if (electric_windows[pos] != None)
-                XDestroyWindow(display(), electric_windows[pos]);
-            electric_windows[pos] = None;
+        if (m_screenEdgeReserved[pos] == 0) {
+            if (m_screenEdgeWindows[pos] != None)
+                XDestroyWindow(display(), m_screenEdgeWindows[pos]);
+            m_screenEdgeWindows[pos] = None;
             continue;
         }
-        if (electric_windows[pos] != None)
+        if (m_screenEdgeWindows[pos] != None)
             continue;
         XSetWindowAttributes attributes;
         attributes.override_redirect = True;
@@ -103,14 +103,14 @@ void ScreenEdge::updateElectricBorders()
             { r.left(), r.top() + 1, 1, r.height() - 2 },
             { r.left(), r.top(), 1, 1 }
         };
-        electric_windows[pos] = XCreateWindow(display(), rootWindow(),
+        m_screenEdgeWindows[pos] = XCreateWindow(display(), rootWindow(),
                                               xywh[pos][0], xywh[pos][1], xywh[pos][2], xywh[pos][3],
                                               0, CopyFromParent, InputOnly, CopyFromParent, valuemask, &attributes);
-        XMapWindow(display(), electric_windows[pos]);
+        XMapWindow(display(), m_screenEdgeWindows[pos]);
 
         // Set XdndAware on the windows, so that DND enter events are received (#86998)
         Atom version = 4; // XDND version
-        XChangeProperty(display(), electric_windows[pos], atoms->xdnd_aware, XA_ATOM,
+        XChangeProperty(display(), m_screenEdgeWindows[pos], atoms->xdnd_aware, XA_ATOM,
                         32, PropModeReplace, (unsigned char*)(&version), 1);
     }
 }
@@ -118,15 +118,15 @@ void ScreenEdge::updateElectricBorders()
 void ScreenEdge::destroyElectricBorders()
 {
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (electric_windows[pos] != None)
-            XDestroyWindow(display(), electric_windows[pos]);
-        electric_windows[pos] = None;
+        if (m_screenEdgeWindows[pos] != None)
+            XDestroyWindow(display(), m_screenEdgeWindows[pos]);
+        m_screenEdgeWindows[pos] = None;
     }
 }
 
 void ScreenEdge::restoreElectricBorderSize(ElectricBorder border)
 {
-    if (electric_windows[border] == None)
+    if (m_screenEdgeWindows[border] == None)
         return;
     QRect r = Kephal::ScreenUtils::desktopGeometry();
     int xywh[ELECTRIC_COUNT][4] = {
@@ -139,7 +139,7 @@ void ScreenEdge::restoreElectricBorderSize(ElectricBorder border)
         { r.left(), r.top() + 1, 1, r.height() - 2 },
         { r.left(), r.top(), 1, 1 }
     };
-    XMoveResizeWindow(display(), electric_windows[border],
+    XMoveResizeWindow(display(), m_screenEdgeWindows[border],
                       xywh[border][0], xywh[border][1], xywh[border][2], xywh[border][3]);
 }
 
@@ -167,7 +167,7 @@ void ScreenEdge::reserveElectricBorder(ElectricBorder border)
 {
     if (border == ElectricNone)
         return;
-    if (electric_reserved[border]++ == 0)
+    if (m_screenEdgeReserved[border]++ == 0)
         QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
 }
 
@@ -175,22 +175,22 @@ void ScreenEdge::unreserveElectricBorder(ElectricBorder border)
 {
     if (border == ElectricNone)
         return;
-    assert(electric_reserved[border] > 0);
-    if (--electric_reserved[border] == 0)
+    assert(m_screenEdgeReserved[border] > 0);
+    if (--m_screenEdgeReserved[border] == 0)
         QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
 }
 
 void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
 {
-    if ((pos.x() != electricLeft) &&
-            (pos.x() != electricRight) &&
-            (pos.y() != electricTop) &&
-            (pos.y() != electricBottom))
+    if ((pos.x() != m_screenEdgeLeft) &&
+            (pos.x() != m_screenEdgeRight) &&
+            (pos.y() != m_screenEdgeTop) &&
+            (pos.y() != m_screenEdgeBottom))
         return;
 
     bool have_borders = false;
     for (int i = 0; i < ELECTRIC_COUNT; ++i)
-        if (electric_windows[i] != None)
+        if (m_screenEdgeWindows[i] != None)
             have_borders = true;
     if (!have_borders)
         return;
@@ -202,41 +202,41 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
     int pushback_pixels = options->electricBorderPushbackPixels();
 
     ElectricBorder border;
-    if (pos.x() == electricLeft && pos.y() == electricTop)
+    if (pos.x() == m_screenEdgeLeft && pos.y() == m_screenEdgeTop)
         border = ElectricTopLeft;
-    else if (pos.x() == electricRight && pos.y() == electricTop)
+    else if (pos.x() == m_screenEdgeRight && pos.y() == m_screenEdgeTop)
         border = ElectricTopRight;
-    else if (pos.x() == electricLeft && pos.y() == electricBottom)
+    else if (pos.x() == m_screenEdgeLeft && pos.y() == m_screenEdgeBottom)
         border = ElectricBottomLeft;
-    else if (pos.x() == electricRight && pos.y() == electricBottom)
+    else if (pos.x() == m_screenEdgeRight && pos.y() == m_screenEdgeBottom)
         border = ElectricBottomRight;
-    else if (pos.x() == electricLeft)
+    else if (pos.x() == m_screenEdgeLeft)
         border = ElectricLeft;
-    else if (pos.x() == electricRight)
+    else if (pos.x() == m_screenEdgeRight)
         border = ElectricRight;
-    else if (pos.y() == electricTop)
+    else if (pos.y() == m_screenEdgeTop)
         border = ElectricTop;
-    else if (pos.y() == electricBottom)
+    else if (pos.y() == m_screenEdgeBottom)
         border = ElectricBottom;
     else
         abort();
 
-    if (electric_windows[border] == None)
+    if (m_screenEdgeWindows[border] == None)
         return;
 
     if (pushback_pixels == 0) {
         // no pushback so we have to activate at once
-        electric_time_last = now;
+        m_screenEdgeTimeLast = now;
     }
-    if ((electric_current_border == border) &&
-            (timestampDiff(electric_time_last, now) < treshold_reset) &&
-            (timestampDiff(electric_time_last_trigger, now) > treshold_trigger) &&
-            ((pos - electric_push_point).manhattanLength() < distance_reset)) {
-        electric_time_last = now;
+    if ((m_currentScreenEdge == border) &&
+            (timestampDiff(m_screenEdgeTimeLast, now) < treshold_reset) &&
+            (timestampDiff(m_screenEdgeTimeLastTrigger, now) > treshold_trigger) &&
+            ((pos - m_screenEdgePushPoint).manhattanLength() < distance_reset)) {
+        m_screenEdgeTimeLast = now;
 
-        if (timestampDiff(electric_time_first, now) > treshold_set) {
-            electric_current_border = ElectricNone;
-            electric_time_last_trigger = now;
+        if (timestampDiff(m_screenEdgeTimeFirst, now) > treshold_set) {
+            m_currentScreenEdge = ElectricNone;
+            m_screenEdgeTimeLastTrigger = now;
             if (Workspace::self()->getMovingClient()) {
                 // If moving a client or have force doing the desktop switch
                 if (options->electricBorders() != Options::ElectricDisabled)
@@ -282,10 +282,10 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
             }
         }
     } else {
-        electric_current_border = border;
-        electric_time_first = now;
-        electric_time_last = now;
-        electric_push_point = pos;
+        m_currentScreenEdge = border;
+        m_screenEdgeTimeFirst = now;
+        m_screenEdgeTimeLast = now;
+        m_screenEdgePushPoint = pos;
     }
 
     // Reset the pointer to find out whether the user is really pushing
@@ -346,7 +346,7 @@ bool ScreenEdge::electricBorderEvent(XEvent* e)
 {
     if (e->type == EnterNotify) {
         for (int i = 0; i < ELECTRIC_COUNT; ++i)
-            if (electric_windows[i] != None && e->xcrossing.window == electric_windows[i]) {
+            if (m_screenEdgeWindows[i] != None && e->xcrossing.window == m_screenEdgeWindows[i]) {
                 // The user entered an electric border
                 checkElectricBorder(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), e->xcrossing.time);
                 return true;
@@ -355,7 +355,7 @@ bool ScreenEdge::electricBorderEvent(XEvent* e)
     if (e->type == ClientMessage) {
         if (e->xclient.message_type == atoms->xdnd_position) {
             for (int i = 0; i < ELECTRIC_COUNT; ++i)
-                if (electric_windows[i] != None && e->xclient.window == electric_windows[i]) {
+                if (m_screenEdgeWindows[i] != None && e->xclient.window == m_screenEdgeWindows[i]) {
                     updateXTime();
                     checkElectricBorder(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime());
                     return true;
@@ -374,8 +374,8 @@ void ScreenEdge::raiseElectricBorderWindows()
     Window* windows = new Window[ 8 ]; // There are up to 8 borders
     int pos = 0;
     for (int i = 0; i < ELECTRIC_COUNT; ++i)
-        if (electric_windows[ i ] != None)
-            windows[ pos++ ] = electric_windows[ i ];
+        if (m_screenEdgeWindows[ i ] != None)
+            windows[ pos++ ] = m_screenEdgeWindows[ i ];
     if (!pos) {
         delete [] windows;
         return; // No borders at all
@@ -389,8 +389,8 @@ const QVector< Window* >& ScreenEdge::screenEdgeWindows()
 {
     QVector< Window* >* screenEdgeWindows = new QVector< Window* >();
     for (int i = 0; i <= ELECTRIC_COUNT; ++i) {
-        if (electric_windows[i] != None) {
-            screenEdgeWindows->append((Window*)electric_windows[i]);
+        if (m_screenEdgeWindows[i] != None) {
+            screenEdgeWindows->append((Window*)m_screenEdgeWindows[i]);
         }
     }
     return *screenEdgeWindows;
