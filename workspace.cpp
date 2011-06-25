@@ -121,8 +121,6 @@ Workspace::Workspace(bool restore)
     , block_showing_desktop(0)
     , was_user_interaction(false)
     , session_saving(false)
-    , control_grab(false)
-    , tab_grab(false)
     , block_focus(0)
     , tab_box(0)
     , desktop_change_osd(0)
@@ -211,7 +209,7 @@ Workspace::Workspace(bool restore)
     Extensions::init();
     compositingSuspended = !options->useCompositing;
     // need to create the tabbox before compositing scene is setup
-    tab_box = new TabBox::TabBox(this);
+    tab_box = new TabBox::TabBox();
     setupCompositing();
 
     // Compatibility
@@ -589,7 +587,7 @@ void Workspace::addClient(Client* c, allowed_t)
     if (c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows(true);
     checkNonExistentClients();
-    if (tab_grab)
+    if (tabBox()->isGrabbed())
         tab_box->reset(true);
 }
 
@@ -621,7 +619,7 @@ void Workspace::removeClient(Client* c, allowed_t)
     if (c->isNormalWindow())
         Notify::raise(Notify::Delete);
 
-    if (tab_grab && tab_box->currentClient() == c)
+    if (tabBox()->isGrabbed() && tabBox()->currentClient() == c)
         tab_box->nextPrev(true);
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
@@ -658,7 +656,7 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateCompositeBlocking();
 
-    if (tab_grab)
+    if (tabBox()->isGrabbed())
         tab_box->reset(true);
 
     updateClientArea();
@@ -890,7 +888,7 @@ void Workspace::slotSettingsChanged(int category)
 {
     kDebug(1212) << "Workspace::slotSettingsChanged()";
     if (category == KGlobalSettings::SETTINGS_SHORTCUTS)
-        readShortcuts();
+        discardPopup();
 }
 
 /**
@@ -915,7 +913,7 @@ void Workspace::slotReconfigure()
     tab_box->reconfigure();
     desktop_change_osd->reconfigure();
     initPositioning->reinitCascading(0);
-    readShortcuts();
+    discardPopup();
     forEachClient(CheckIgnoreFocusStealingProcedure());
     updateToolWindows(true);
 

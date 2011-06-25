@@ -752,18 +752,28 @@ void EffectsHandlerImpl::setElevatedWindow(EffectWindow* w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
     if (Client* c = dynamic_cast< Client* >(static_cast< EffectWindowImpl* >(w)->window()))
-        Workspace::self()->setTabBoxClient(c);
+        if (Workspace::self()->hasTabBox()) {
+            Workspace::self()->tabBox()->setCurrentClient(c);
+        }
 }
 
 void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 {
-    Workspace::self()->setTabBoxDesktop(desktop);
+    if (Workspace::self()->hasTabBox()) {
+        Workspace::self()->tabBox()->setCurrentDesktop(desktop);
+    }
+
 }
 
 EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
     EffectWindowList ret;
-    ClientList clients = Workspace::self()->currentTabBoxClientList();
+    ClientList clients;
+    if (Workspace::self()->hasTabBox()) {
+        clients = Workspace::self()->tabBox()->currentClientList();
+    } else {
+        clients = ClientList();
+    }
     foreach (Client * c, clients)
     ret.append(c->effectWindow());
     return ret;
@@ -771,33 +781,47 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 
 void EffectsHandlerImpl::refTabBox()
 {
-    Workspace::self()->refTabBox();
+    if (Workspace::self()->hasTabBox()) {
+        Workspace::self()->tabBox()->reference();
+    }
 }
 
 void EffectsHandlerImpl::unrefTabBox()
 {
-    Workspace::self()->unrefTabBox();
+    if (Workspace::self()->hasTabBox()) {
+        Workspace::self()->tabBox()->unreference();
+    }
 }
 
 void EffectsHandlerImpl::closeTabBox()
 {
-    Workspace::self()->closeTabBox();
+    if (Workspace::self()->hasTabBox()) {
+        Workspace::self()->tabBox()->close();
+    }
 }
 
 QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 {
-    return Workspace::self()->currentTabBoxDesktopList();
+    if (Workspace::self()->hasTabBox()) {
+        return Workspace::self()->tabBox()->currentDesktopList();
+    }
+    return QList< int >();
 }
 
 int EffectsHandlerImpl::currentTabBoxDesktop() const
 {
-    return Workspace::self()->currentTabBoxDesktop();
+    if (Workspace::self()->hasTabBox()) {
+        return Workspace::self()->tabBox()->currentDesktop();
+    }
+    return -1;
 }
 
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 {
-    if (Client* c = Workspace::self()->currentTabBoxClient())
+    if (Workspace::self()->hasTabBox()) {
+        if (Client* c = Workspace::self()->tabBox()->currentClient())
         return c->effectWindow();
+    }
     return NULL;
 }
 

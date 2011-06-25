@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sm.h"
 
 #include <X11/Xlib.h>
+#include "tabbox.h"
 
 // TODO: Cleanup the order of things in this .h file
 
@@ -348,25 +349,26 @@ public:
     }
 
     // Tab box
-    Client* currentTabBoxClient() const;
-    ClientList currentTabBoxClientList() const;
-    int currentTabBoxDesktop() const;
-    QList<int> currentTabBoxDesktopList() const;
-    void setTabBoxClient(Client*);
-    void setTabBoxDesktop(int);
-    Client* nextClientFocusChain(Client*) const;
-    Client* previousClientFocusChain(Client*) const;
-    Client* nextClientStatic(Client*) const;
-    Client* previousClientStatic(Client*) const;
-    int nextDesktopFocusChain(int iDesktop) const;
-    int previousDesktopFocusChain(int iDesktop) const;
-    int nextDesktopStatic(int iDesktop) const;
-    int previousDesktopStatic(int iDesktop) const;
-    void refTabBox();
-    void unrefTabBox();
-    void closeTabBox(bool abort = false);
     TabBox::TabBox *tabBox() const {
         return tab_box;
+    }
+    bool hasTabBox() const {
+      return tab_box != NULL;
+    }
+    const QVector<int> &desktopFocusChain() const {
+        return desktop_focus_chain;
+    }
+    const ClientList &globalFocusChain() const {
+        return global_focus_chain;
+    }
+    KActionCollection* actionCollection() const {
+        return keys;
+    }
+    KActionCollection* disableShortcutsKeys() const {
+        return disable_shortcuts_keys;
+    }
+    KActionCollection* clientKeys() const {
+        return client_keys;
     }
 
     // Tabbing
@@ -595,26 +597,6 @@ public slots:
     void slotWindowQuickTileBottomLeft();
     void slotWindowQuickTileBottomRight();
 
-    void slotWalkThroughDesktops();
-    void slotWalkBackThroughDesktops();
-    void slotWalkThroughDesktopList();
-    void slotWalkBackThroughDesktopList();
-    void slotWalkThroughWindows();
-    void slotWalkBackThroughWindows();
-    void slotWalkThroughWindowsAlternative();
-    void slotWalkBackThroughWindowsAlternative();
-
-    void slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabLeftKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabRightKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-
     void slotSwitchWindowUp();
     void slotSwitchWindowDown();
     void slotSwitchWindowRight();
@@ -742,7 +724,6 @@ signals:
 private:
     void init();
     void initShortcuts();
-    void readShortcuts();
     void initDesktopPopup();
     void initActivityPopup();
     void discardPopup();
@@ -756,20 +737,6 @@ private:
         DirectionWest
     };
     void switchWindow(Direction direction);
-    bool startKDEWalkThroughWindows(TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    bool startWalkThroughDesktops(TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
-    bool startWalkThroughDesktops();
-    bool startWalkThroughDesktopList();
-    void navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    void KDEWalkThroughWindows(bool forward);
-    void CDEWalkThroughWindows(bool forward);
-    void walkThroughDesktops(bool forward);
-    void KDEOneStepThroughWindows(bool forward, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    void oneStepThroughDesktops(bool forward, TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
-    void oneStepThroughDesktops(bool forward);
-    void oneStepThroughDesktopList(bool forward);
-    bool establishTabBoxGrab();
-    void removeTabBoxGrab();
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
     ClientList constrainedStackingOrder();
@@ -796,9 +763,6 @@ private:
     // Desktop names and number of desktops
     void loadDesktopSettings();
     void saveDesktopSettings();
-
-    void tabBoxKeyPress(int key);
-    void tabBoxKeyRelease(const XKeyEvent& ev);
 
     //---------------------------------------------------------------------
 
@@ -881,16 +845,6 @@ private:
     int session_active_client;
     int session_desktop;
 
-    bool control_grab;
-    bool tab_grab;
-    //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
-    //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
-    //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
-    KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
-    KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
-    KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
-    KShortcut cutWalkThroughGroupWindows, cutWalkThroughGroupWindowsReverse;
-    KShortcut cutWalkThroughWindowsAlternative, cutWalkThroughWindowsAlternativeReverse;
     int block_focus;
 
     TabBox::TabBox* tab_box;
@@ -909,6 +863,7 @@ private:
 
     KActionCollection* keys;
     KActionCollection* client_keys;
+    KActionCollection* disable_shortcuts_keys;
     QAction* mResizeOpAction;
     QAction* mMoveOpAction;
     QAction* mMaximizeOpAction;
@@ -924,7 +879,6 @@ private:
     QAction* mCloseGroup; // Close all clients in the group
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
-    KActionCollection* disable_shortcuts_keys;
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 

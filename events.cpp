@@ -242,7 +242,7 @@ bool Workspace::workspaceEvent(XEvent * e)
         was_user_interaction = true;
         // fallthrough
     case MotionNotify:
-        if (tab_grab || control_grab) {
+        if (tabBox()->isGrabbed()) {
             tab_box->handleMouseEvent(e);
             return true;
         }
@@ -258,16 +258,16 @@ bool Workspace::workspaceEvent(XEvent * e)
             movingClient->keyPressEvent(keyQt);
             return true;
         }
-        if (tab_grab || control_grab) {
-            tabBoxKeyPress(keyQt);
+        if (tabBox()->isGrabbed()) {
+            tabBox()->keyPress(keyQt);
             return true;
         }
         break;
     }
     case KeyRelease:
         was_user_interaction = true;
-        if (tab_grab || control_grab) {
-            tabBoxKeyRelease(e->xkey);
+        if (tabBox()->isGrabbed()) {
+            tabBox()->keyRelease(e->xkey);
             return true;
         }
         break;

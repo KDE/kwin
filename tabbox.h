@@ -38,11 +38,11 @@ class Client;
 namespace TabBox
 {
 class TabBoxConfig;
-
+class TabBox;
 class TabBoxHandlerImpl : public TabBoxHandler
 {
 public:
-    TabBoxHandlerImpl();
+    TabBoxHandlerImpl(TabBox* tabBox);
     virtual ~TabBoxHandlerImpl();
 
     virtual int activeScreen() const;
@@ -61,6 +61,9 @@ public:
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
     virtual QVector< Window > outlineWindowIds() const;
+
+private:
+    TabBox* m_tabBox;
 };
 
 class TabBoxClientImpl : public TabBoxClient
@@ -93,7 +96,7 @@ class TabBox : public QObject
 {
     Q_OBJECT
 public:
-    TabBox(Workspace *ws);
+    TabBox();
     ~TabBox();
 
     Client* currentClient();
@@ -115,19 +118,75 @@ public:
     void delayedShow();
     void hide(bool abort = false);
 
-    void refDisplay();
-    void unrefDisplay();
-    bool isDisplayed() const;
+    /*!
+    Increase the reference count, preventing the default tabbox from showing.
+
+    \sa unreference(), isDisplayed()
+    */
+    void reference() {
+        ++m_displayRefcount;
+    }
+    /*!
+    Decrease the reference count.  Only when the reference count is 0 will
+    the default tab box be shown.
+    */
+    void unreference() {
+        --m_displayRefcount;
+    }
+    /*!
+    Returns whether the tab box is being displayed, either natively or by an
+    effect.
+
+    \sa reference(), unreference()
+    */
+    bool isDisplayed() const {
+        return m_displayRefcount > 0;
+    };
 
     void handleMouseEvent(XEvent*);
     void grabbedKeyEvent(QKeyEvent* event);
 
-    Workspace* workspace() const;
-
     void reconfigure();
+
+    bool isGrabbed() const {
+        return m_tabGrab || m_desktopGrab;
+    };
+
+    void initShortcuts(KActionCollection* keys);
+
+    Client* nextClientFocusChain(Client*) const;
+    Client* previousClientFocusChain(Client*) const;
+    Client* nextClientStatic(Client*) const;
+    Client* previousClientStatic(Client*) const;
+    int nextDesktopFocusChain(int iDesktop) const;
+    int previousDesktopFocusChain(int iDesktop) const;
+    int nextDesktopStatic(int iDesktop) const;
+    int previousDesktopStatic(int iDesktop) const;
+    void close(bool abort = false);
+    void keyPress(int key);
+    void keyRelease(const XKeyEvent& ev);
 
 public slots:
     void show();
+    void slotWalkThroughDesktops();
+    void slotWalkBackThroughDesktops();
+    void slotWalkThroughDesktopList();
+    void slotWalkBackThroughDesktopList();
+    void slotWalkThroughWindows();
+    void slotWalkBackThroughWindows();
+    void slotWalkThroughWindowsAlternative();
+    void slotWalkBackThroughWindowsAlternative();
+
+    void slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq);
+    void slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq);
+    void slotWalkThroughWindowsKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq);
+    void slotMoveToTabLeftKeyChanged(const QKeySequence& seq);
+    void slotMoveToTabRightKeyChanged(const QKeySequence& seq);
+    void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
 
 signals:
     void tabBoxAdded(int);
@@ -139,16 +198,31 @@ private:
     void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
     void loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig);
 
+    bool startKDEWalkThroughWindows(TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    bool startWalkThroughDesktops(TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
+    bool startWalkThroughDesktops();
+    bool startWalkThroughDesktopList();
+    void navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    void KDEWalkThroughWindows(bool forward);
+    void CDEWalkThroughWindows(bool forward);
+    void walkThroughDesktops(bool forward);
+    void KDEOneStepThroughWindows(bool forward, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    void oneStepThroughDesktops(bool forward, TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
+    void oneStepThroughDesktops(bool forward);
+    void oneStepThroughDesktopList(bool forward);
+    bool establishTabBoxGrab();
+    void removeTabBoxGrab();
+    void modalActionsSwitch(bool enabled);
+
 private:
-    Workspace* wspace;
     TabBoxMode m_tabBoxMode;
     QModelIndex m_index;
     TabBoxHandlerImpl* m_tabBox;
     bool m_delayShow;
     int m_delayShowTime;
 
-    QTimer delayedShowTimer;
-    int display_refcount;
+    QTimer m_delayedShowTimer;
+    int m_displayRefcount;
 
     TabBoxConfig m_defaultConfig;
     TabBoxConfig m_alternativeConfig;
@@ -157,39 +231,15 @@ private:
     // false if an effect has referenced the tabbox
     // true if tabbox is active (independent on showTabbox setting)
     bool m_isShown;
+    bool m_desktopGrab;
+    bool m_tabGrab;
+    KShortcut m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse;
+    KShortcut m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse;
+    KShortcut m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
+    KShortcut m_cutWalkThroughGroupWindows, m_cutWalkThroughGroupWindowsReverse;
+    KShortcut m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse;
+    bool m_forcedGlobalMouseGrab;
 };
-
-/*!
-  Returns the tab box' workspace
- */
-inline Workspace* TabBox::workspace() const
-{
-    return wspace;
-}
-
-/*!
-  Increase the reference count, preventing the default tabbox from showing.
-
-  \sa unrefDisplay(), isDisplayed()
- */
-inline void TabBox::refDisplay()
-{
-    ++display_refcount;
-}
-
-/*!
-  Returns whether the tab box is being displayed, either natively or by an
-  effect.
-
-  \sa refDisplay(), unrefDisplay()
- */
-inline bool TabBox::isDisplayed() const
-{
-    return display_refcount > 0;
-}
-
 } // namespace TabBox
-
 } // namespace
-
 #endif

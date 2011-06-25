@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include "outline.h"
+#include <kaction.h>
 
 // specify externals before namespace
 
@@ -57,8 +58,9 @@ extern QPixmap* kwin_get_menu_pix_hack();
 namespace TabBox
 {
 
-TabBoxHandlerImpl::TabBoxHandlerImpl()
+TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
     : TabBoxHandler()
+    , m_tabBox(tabBox)
 {
 }
 
@@ -93,7 +95,7 @@ QString TabBoxHandlerImpl::desktopName(int desktop) const
 TabBoxClient* TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) const
 {
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
-        Client* next = Workspace::self()->nextClientFocusChain(c->client());
+        Client* next = Workspace::self()->tabBox()->nextClientFocusChain(c->client());
         if (next)
             return next->tabBoxClient();
     }
@@ -102,7 +104,7 @@ TabBoxClient* TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) cons
 
 int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
 {
-    return Workspace::self()->nextDesktopFocusChain(desktop);
+    return m_tabBox->nextDesktopFocusChain(desktop);
 }
 
 int TabBoxHandlerImpl::numberOfDesktops() const
@@ -272,10 +274,12 @@ int TabBoxClientImpl::height() const
 /*********************************************************
 * TabBox
 *********************************************************/
-TabBox::TabBox(Workspace *ws)
+TabBox::TabBox()
     : QObject()
-    , wspace(ws)
-    , display_refcount(0)
+    , m_displayRefcount(0)
+    , m_forcedGlobalMouseGrab(false)
+    , m_desktopGrab(false)
+    , m_tabGrab(false)
 {
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
@@ -303,19 +307,40 @@ TabBox::TabBox(Workspace *ws)
     m_desktopListConfig.setShowDesktop(false);
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
-    m_tabBox = new TabBoxHandlerImpl();
+    m_tabBox = new TabBoxHandlerImpl(this);
     m_tabBox->setConfig(m_defaultConfig);
 
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     reconfigure();
-    connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
+    connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
 }
 
 TabBox::~TabBox()
 {
 }
 
+void TabBox::initShortcuts(KActionCollection* keys)
+{
+    KAction *a = NULL;
+    #define KEY( name, key, fnSlot, shortcut, shortcutSlot )                    \
+    a = keys->addAction( name );                                                \
+    a->setText( i18n(name) );                                                   \
+    shortcut = KShortcut(key);                                                  \
+    qobject_cast<KAction*>( a )->setGlobalShortcut(shortcut);                   \
+    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));                          \
+    connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), SLOT(shortcutSlot));
+
+    KEY(I18N_NOOP("Walk Through Windows"),                 Qt::ALT + Qt::Key_Tab, slotWalkThroughWindows(), m_cutWalkThroughWindows, slotWalkThroughWindowsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT + Qt::SHIFT + Qt::Key_Backtab, slotWalkBackThroughWindows(), m_cutWalkThroughWindowsReverse, slotWalkBackThroughWindowsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternative, slotWalkThroughWindowsAlternativeKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternativeReverse, slotWalkBackThroughWindowsAlternativeKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops(), m_cutWalkThroughDesktops, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Desktops (Reverse)"),      0, slotWalkBackThroughDesktops(), m_cutWalkThroughDesktopsReverse, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Desktop List"),            0, slotWalkThroughDesktopList(), m_cutWalkThroughDesktopList, slotWalkThroughDesktopListKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Desktop List (Reverse)"),  0, slotWalkBackThroughDesktopList(), m_cutWalkThroughDesktopListReverse, slotWalkBackThroughDesktopListKeyChanged(QKeySequence))
+    #undef KEY
+}
 
 /*!
   Sets the current mode to \a mode, either TabBoxDesktopListMode or TabBoxWindowsMode
@@ -351,8 +376,8 @@ void TabBox::reset(bool partial_reset)
     case TabBoxConfig::ClientTabBox:
         m_tabBox->createModel(partial_reset);
         if (!partial_reset) {
-            if (workspace()->activeClient())
-                setCurrentClient(workspace()->activeClient());
+            if (Workspace::self()->activeClient())
+                setCurrentClient(Workspace::self()->activeClient());
             // it's possible that the active client is not part of the model
             // in that case the index is invalid
             if (!m_index.isValid())
@@ -366,7 +391,7 @@ void TabBox::reset(bool partial_reset)
         m_tabBox->createModel();
 
         if (!partial_reset)
-            setCurrentDesktop(workspace()->currentDesktop());
+            setCurrentDesktop(Workspace::self()->currentDesktop());
         break;
     }
 
@@ -382,7 +407,6 @@ void TabBox::nextPrev(bool next)
     emit tabBoxUpdated();
 }
 
-
 /*!
   Returns the currently displayed client ( only works in TabBoxWindowsMode ).
   Returns 0 if no client is displayed.
@@ -390,7 +414,7 @@ void TabBox::nextPrev(bool next)
 Client* TabBox::currentClient()
 {
     if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_index))) {
-        if (!workspace()->hasClient(client->client()))
+        if (!Workspace::self()->hasClient(client->client()))
             return NULL;
         return client->client();
     } else
@@ -413,7 +437,6 @@ ClientList TabBox::currentClientList()
     return ret;
 }
 
-
 /*!
   Returns the currently displayed virtual desktop ( only works in
   TabBoxDesktopListMode )
@@ -424,7 +447,6 @@ int TabBox::currentDesktop()
     return m_tabBox->desktop(m_index);
 }
 
-
 /*!
   Returns the list of desktops potentially displayed ( only works in
   TabBoxDesktopListMode )
@@ -434,7 +456,6 @@ QList< int > TabBox::currentDesktopList()
 {
     return m_tabBox->desktopList();
 }
-
 
 /*!
   Change the currently selected client, and notify the effects.
@@ -478,21 +499,20 @@ void TabBox::show()
         m_isShown = false;
         return;
     }
-    refDisplay();
+    reference();
     m_isShown = true;
     m_tabBox->show();
 }
-
 
 /*!
   Notify effects that the tab box is being hidden.
 */
 void TabBox::hide(bool abort)
 {
-    delayedShowTimer.stop();
+    m_delayedShowTimer.stop();
     if (m_isShown) {
         m_isShown = false;
-        unrefDisplay();
+        unreference();
     }
     emit tabBoxClosed();
     if (isDisplayed())
@@ -503,16 +523,6 @@ void TabBox::hide(bool abort)
     XEvent otherEvent;
     while (XCheckTypedEvent(display(), EnterNotify, &otherEvent))
         ;
-}
-
-
-/*!
-  Decrease the reference count.  Only when the reference count is 0 will
-  the default tab box be shown.
- */
-void TabBox::unrefDisplay()
-{
-    --display_refcount;
 }
 
 void TabBox::reconfigure()
@@ -578,7 +588,7 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
  */
 void TabBox::delayedShow()
 {
-    if (isDisplayed() || delayedShowTimer.isActive())
+    if (isDisplayed() || m_delayedShowTimer.isActive())
         // already called show - no need to call it twice
         return;
 
@@ -587,8 +597,8 @@ void TabBox::delayedShow()
         return;
     }
 
-    delayedShowTimer.setSingleShot(true);
-    delayedShowTimer.start(m_delayShowTime);
+    m_delayedShowTimer.setSingleShot(true);
+    m_delayedShowTimer.start(m_delayShowTime);
 }
 
 
@@ -607,7 +617,7 @@ void TabBox::handleMouseEvent(XEvent* e)
     if ((!m_isShown && isDisplayed())
             || (!m_tabBox->containsPos(pos) &&
                 (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3))) {
-        workspace()->closeTabBox();  // click outside closes tab
+        close();  // click outside closes tab
         return;
     }
 
@@ -616,7 +626,7 @@ void TabBox::handleMouseEvent(XEvent* e)
         index = m_tabBox->indexAt(pos);
         if (e->xbutton.button == Button2 && index.isValid()) {
             if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(index))) {
-                if (workspace()->hasClient(client->client())) {
+                if (Workspace::self()->hasClient(client->client())) {
                     client->client()->closeWindow();
                     return;
                 }
@@ -631,7 +641,7 @@ void TabBox::handleMouseEvent(XEvent* e)
         setCurrentIndex(index);
 }
 
-void TabBox::TabBox::grabbedKeyEvent(QKeyEvent* event)
+void TabBox::grabbedKeyEvent(QKeyEvent* event)
 {
     emit tabBoxKeyEvent(event);
     if (!m_isShown && isDisplayed()) {
@@ -641,21 +651,10 @@ void TabBox::TabBox::grabbedKeyEvent(QKeyEvent* event)
     setCurrentIndex(m_tabBox->grabbedKeyEvent(event));
 }
 
-} // namespace TabBox
-
-
-//*******************************
-// Workspace
-//*******************************
-
-
 /*!
   Handles alt-tab / control-tab
  */
-
-static
-bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms)
-{
+static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) {
     char keymap[32];
 
     kDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
@@ -692,8 +691,7 @@ bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms)
     return bAll;
 }
 
-static bool areModKeysDepressed(const QKeySequence& seq)
-{
+static bool areModKeysDepressed(const QKeySequence& seq) {
     uint rgKeySyms[10];
     int nKeySyms = 0;
     if (seq.isEmpty())
@@ -733,9 +731,9 @@ static bool areModKeysDepressed(const KShortcut& cut)
     return false;
 }
 
-void Workspace::navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode)
+void TabBox::navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode)
 {
-    if (tab_grab || control_grab)
+    if (isGrabbed())
         return;
     if (!options->focusPolicyIsReasonable()) {
         //ungrabXKeyboard(); // need that because of accelerator raw mode
@@ -752,31 +750,31 @@ void Workspace::navigatingThroughWindows(bool forward, const KShortcut& shortcut
     }
 }
 
-void Workspace::slotWalkThroughWindows()
+void TabBox::slotWalkThroughWindows()
 {
-    navigatingThroughWindows(true, cutWalkThroughWindows, TabBoxWindowsMode);
+    navigatingThroughWindows(true, m_cutWalkThroughWindows, TabBoxWindowsMode);
 }
 
-void Workspace::slotWalkBackThroughWindows()
+void TabBox::slotWalkBackThroughWindows()
 {
-    navigatingThroughWindows(false, cutWalkThroughWindowsReverse, TabBoxWindowsMode);
+    navigatingThroughWindows(false, m_cutWalkThroughWindowsReverse, TabBoxWindowsMode);
 }
 
-void Workspace::slotWalkThroughWindowsAlternative()
+void TabBox::slotWalkThroughWindowsAlternative()
 {
-    navigatingThroughWindows(true, cutWalkThroughWindowsAlternative, TabBoxWindowsAlternativeMode);
+    navigatingThroughWindows(true, m_cutWalkThroughWindowsAlternative, TabBoxWindowsAlternativeMode);
 }
 
-void Workspace::slotWalkBackThroughWindowsAlternative()
+void TabBox::slotWalkBackThroughWindowsAlternative()
 {
-    navigatingThroughWindows(false, cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode);
+    navigatingThroughWindows(false, m_cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode);
 }
 
-void Workspace::slotWalkThroughDesktops()
+void TabBox::slotWalkThroughDesktops()
 {
-    if (tab_grab || control_grab)
+    if (isGrabbed())
         return;
-    if (areModKeysDepressed(cutWalkThroughDesktops)) {
+    if (areModKeysDepressed(m_cutWalkThroughDesktops)) {
         if (startWalkThroughDesktops())
             walkThroughDesktops(true);
     } else {
@@ -784,11 +782,11 @@ void Workspace::slotWalkThroughDesktops()
     }
 }
 
-void Workspace::slotWalkBackThroughDesktops()
+void TabBox::slotWalkBackThroughDesktops()
 {
-    if (tab_grab || control_grab)
+    if (isGrabbed())
         return;
-    if (areModKeysDepressed(cutWalkThroughDesktopsReverse)) {
+    if (areModKeysDepressed(m_cutWalkThroughDesktopsReverse)) {
         if (startWalkThroughDesktops())
             walkThroughDesktops(false);
     } else {
@@ -796,11 +794,11 @@ void Workspace::slotWalkBackThroughDesktops()
     }
 }
 
-void Workspace::slotWalkThroughDesktopList()
+void TabBox::slotWalkThroughDesktopList()
 {
-    if (tab_grab || control_grab)
+    if (isGrabbed())
         return;
-    if (areModKeysDepressed(cutWalkThroughDesktopList)) {
+    if (areModKeysDepressed(m_cutWalkThroughDesktopList)) {
         if (startWalkThroughDesktopList())
             walkThroughDesktops(true);
     } else {
@@ -808,11 +806,11 @@ void Workspace::slotWalkThroughDesktopList()
     }
 }
 
-void Workspace::slotWalkBackThroughDesktopList()
+void TabBox::slotWalkBackThroughDesktopList()
 {
-    if (tab_grab || control_grab)
+    if (isGrabbed())
         return;
-    if (areModKeysDepressed(cutWalkThroughDesktopListReverse)) {
+    if (areModKeysDepressed(m_cutWalkThroughDesktopListReverse)) {
         if (startWalkThroughDesktopList())
             walkThroughDesktops(false);
     } else {
@@ -820,121 +818,121 @@ void Workspace::slotWalkBackThroughDesktopList()
     }
 }
 
-void Workspace::slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughDesktops = KShortcut(seq);
+    m_cutWalkThroughDesktops = KShortcut(seq);
 }
 
-void Workspace::slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughDesktopsReverse = KShortcut(seq);
+    m_cutWalkThroughDesktopsReverse = KShortcut(seq);
 }
 
-void Workspace::slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughDesktopList = KShortcut(seq);
+    m_cutWalkThroughDesktopList = KShortcut(seq);
 }
 
-void Workspace::slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughDesktopListReverse = KShortcut(seq);
+    m_cutWalkThroughDesktopListReverse = KShortcut(seq);
 }
 
-void Workspace::slotWalkThroughWindowsKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkThroughWindowsKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughWindows = KShortcut(seq);
+    m_cutWalkThroughWindows = KShortcut(seq);
 }
 
-void Workspace::slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughWindowsReverse = KShortcut(seq);
+    m_cutWalkThroughWindowsReverse = KShortcut(seq);
 }
 
-void Workspace::slotMoveToTabLeftKeyChanged(const QKeySequence& seq)
+void TabBox::slotMoveToTabLeftKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughGroupWindows = KShortcut(seq);
+    m_cutWalkThroughGroupWindows = KShortcut(seq);
 }
-void Workspace::slotMoveToTabRightKeyChanged(const QKeySequence& seq)
+void TabBox::slotMoveToTabRightKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughGroupWindowsReverse = KShortcut(seq);
-}
-
-void Workspace::slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
-{
-    cutWalkThroughWindowsAlternative = KShortcut(seq);
+    m_cutWalkThroughGroupWindowsReverse = KShortcut(seq);
 }
 
-void Workspace::slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
+void TabBox::slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
 {
-    cutWalkThroughWindowsAlternativeReverse = KShortcut(seq);
+    m_cutWalkThroughWindowsAlternative = KShortcut(seq);
 }
 
-void Workspace::modalActionsSwitch(bool enabled)
+void TabBox::slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
+{
+    m_cutWalkThroughWindowsAlternativeReverse = KShortcut(seq);
+}
+
+void TabBox::modalActionsSwitch(bool enabled)
 {
     QList<KActionCollection*> collections;
-    collections.append(keys);
-    collections.append(disable_shortcuts_keys);
-    collections.append(client_keys);
+    collections.append(Workspace::self()->actionCollection());
+    collections.append(Workspace::self()->disableShortcutsKeys());
+    collections.append(Workspace::self()->clientKeys());
     foreach (KActionCollection * collection, collections)
     foreach (QAction * action, collection->actions())
     action->setEnabled(enabled);
 }
 
-bool Workspace::startKDEWalkThroughWindows(TabBoxMode mode)
+bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
 {
     if (!establishTabBoxGrab())
         return false;
-    tab_grab = true;
+    m_tabGrab = true;
     modalActionsSwitch(false);
-    tab_box->setMode(mode);
-    tab_box->reset();
+    setMode(mode);
+    reset();
     return true;
 }
 
-bool Workspace::startWalkThroughDesktops(TabBoxMode mode)
+bool TabBox::startWalkThroughDesktops(TabBoxMode mode)
 {
     if (!establishTabBoxGrab())
         return false;
-    control_grab = true;
+    m_desktopGrab = true;
     modalActionsSwitch(false);
-    tab_box->setMode(mode);
-    tab_box->reset();
+    setMode(mode);
+    reset();
     return true;
 }
 
-bool Workspace::startWalkThroughDesktops()
+bool TabBox::startWalkThroughDesktops()
 {
     return startWalkThroughDesktops(TabBoxDesktopMode);
 }
 
-bool Workspace::startWalkThroughDesktopList()
+bool TabBox::startWalkThroughDesktopList()
 {
     return startWalkThroughDesktops(TabBoxDesktopListMode);
 }
 
-void Workspace::KDEWalkThroughWindows(bool forward)
+void TabBox::KDEWalkThroughWindows(bool forward)
 {
-    tab_box->nextPrev(forward);
-    tab_box->delayedShow();
+    nextPrev(forward);
+    delayedShow();
 }
 
-void Workspace::walkThroughDesktops(bool forward)
+void TabBox::walkThroughDesktops(bool forward)
 {
-    tab_box->nextPrev(forward);
-    tab_box->delayedShow();
+    nextPrev(forward);
+    delayedShow();
 }
 
-void Workspace::CDEWalkThroughWindows(bool forward)
+void TabBox::CDEWalkThroughWindows(bool forward)
 {
     Client* c = NULL;
 // this function find the first suitable client for unreasonable focus
 // policies - the topmost one, with some exceptions (can't be keepabove/below,
 // otherwise it gets stuck on them)
-    Q_ASSERT(block_stacking_updates == 0);
-    for (int i = stacking_order.size() - 1;
+//     Q_ASSERT(Workspace::self()->block_stacking_updates == 0);
+    for (int i = Workspace::self()->stackingOrder().size() - 1;
             i >= 0 ;
             --i) {
-        Client* it = stacking_order.at(i);
+        Client* it = Workspace::self()->stackingOrder().at(i);
         if (it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
                 && it->isShown(false) && it->wantsTabFocus()
                 && !it->keepAbove() && !it->keepBelow()) {
@@ -966,46 +964,46 @@ void Workspace::CDEWalkThroughWindows(bool forward)
              nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() || !nc->isOnCurrentActivity()));
     if (nc) {
         if (c && c != nc)
-            lowerClient(c);
+            Workspace::self()->lowerClient(c);
         if (options->focusPolicyIsReasonable()) {
-            activateClient(nc);
+            Workspace::self()->activateClient(nc);
             if (nc->isShade() && options->shadeHover)
                 nc->setShade(ShadeActivated);
         } else {
             if (!nc->isOnDesktop(currentDesktop()))
                 setCurrentDesktop(nc->desktop());
-            raiseClient(nc);
+            Workspace::self()->raiseClient(nc);
         }
     }
 }
 
-void Workspace::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
+void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
 {
-    tab_box->setMode(mode);
-    tab_box->reset();
-    tab_box->nextPrev(forward);
-    if (Client* c = tab_box->currentClient()) {
-        activateClient(c);
+    setMode(mode);
+    reset();
+    nextPrev(forward);
+    if (Client* c = currentClient()) {
+        Workspace::self()->activateClient(c);
         if (c->isShade() && options->shadeHover)
             c->setShade(ShadeActivated);
     }
 }
 
-void Workspace::oneStepThroughDesktops(bool forward, TabBoxMode mode)
+void TabBox::oneStepThroughDesktops(bool forward, TabBoxMode mode)
 {
-    tab_box->setMode(mode);
-    tab_box->reset();
-    tab_box->nextPrev(forward);
-    if (tab_box->currentDesktop() != -1)
-        setCurrentDesktop(tab_box->currentDesktop());
+    setMode(mode);
+    reset();
+    nextPrev(forward);
+    if (currentDesktop() != -1)
+        setCurrentDesktop(currentDesktop());
 }
 
-void Workspace::oneStepThroughDesktops(bool forward)
+void TabBox::oneStepThroughDesktops(bool forward)
 {
     oneStepThroughDesktops(forward, TabBoxDesktopMode);
 }
 
-void Workspace::oneStepThroughDesktopList(bool forward)
+void TabBox::oneStepThroughDesktopList(bool forward)
 {
     oneStepThroughDesktops(forward, TabBoxDesktopListMode);
 }
@@ -1013,20 +1011,20 @@ void Workspace::oneStepThroughDesktopList(bool forward)
 /*!
   Handles holding alt-tab / control-tab
  */
-void Workspace::tabBoxKeyPress(int keyQt)
+void TabBox::keyPress(int keyQt)
 {
     bool forward = false;
     bool backward = false;
 
-    if (tab_grab) {
+    if (m_tabGrab) {
         KShortcut forwardShortcut;
         KShortcut backwardShortcut;
-        if (tab_box->mode() == TabBoxWindowsMode) {
-            forwardShortcut = cutWalkThroughWindows;
-            backwardShortcut = cutWalkThroughWindowsReverse;
+        if (mode() == TabBoxWindowsMode) {
+            forwardShortcut = m_cutWalkThroughWindows;
+            backwardShortcut = m_cutWalkThroughWindowsReverse;
         } else {
-            forwardShortcut = cutWalkThroughWindowsAlternative;
-            backwardShortcut = cutWalkThroughWindowsAlternativeReverse;
+            forwardShortcut = m_cutWalkThroughWindowsAlternative;
+            backwardShortcut = m_cutWalkThroughWindowsAlternativeReverse;
         }
         forward = forwardShortcut.contains(keyQt);
         backward = backwardShortcut.contains(keyQt);
@@ -1035,52 +1033,40 @@ void Workspace::tabBoxKeyPress(int keyQt)
                         << " or " << backwardShortcut.toString() << endl;
             KDEWalkThroughWindows(forward);
         }
-    } else if (control_grab) {
-        forward = cutWalkThroughDesktops.contains(keyQt) ||
-                  cutWalkThroughDesktopList.contains(keyQt);
-        backward = cutWalkThroughDesktopsReverse.contains(keyQt) ||
-                   cutWalkThroughDesktopListReverse.contains(keyQt);
+    } else if (m_desktopGrab) {
+        forward = m_cutWalkThroughDesktops.contains(keyQt) ||
+                  m_cutWalkThroughDesktopList.contains(keyQt);
+        backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
+                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
         if (forward || backward)
             walkThroughDesktops(forward);
     }
 
-    if (control_grab || tab_grab) {
+    if (m_desktopGrab || m_tabGrab) {
         if (((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape)
                 && !(forward || backward)) {
             // if Escape is part of the shortcut, don't cancel
-            closeTabBox(true);
+            close(true);
         } else if (!(forward || backward)) {
             QKeyEvent* event = new QKeyEvent(QEvent::KeyPress, keyQt & ~Qt::KeyboardModifierMask, Qt::NoModifier);
-            tab_box->grabbedKeyEvent(event);
+            grabbedKeyEvent(event);
         }
     }
 }
 
-void Workspace::refTabBox()
-{
-    if (tab_box)
-        tab_box->refDisplay();
-}
-
-void Workspace::unrefTabBox()
-{
-    if (tab_box)
-        tab_box->unrefDisplay();
-}
-
-void Workspace::closeTabBox(bool abort)
+void TabBox::close(bool abort)
 {
     removeTabBoxGrab();
-    tab_box->hide(abort);
+    hide(abort);
     modalActionsSwitch(true);
-    tab_grab = false;
-    control_grab = false;
+    m_tabGrab = false;
+    m_desktopGrab = false;
 }
 
 /*!
   Handles alt-tab / control-tab releasing
  */
-void Workspace::tabBoxKeyRelease(const XKeyEvent& ev)
+void TabBox::keyRelease(const XKeyEvent& ev)
 {
     unsigned int mk = ev.state &
                       (KKeyServer::modXShift() |
@@ -1113,66 +1099,67 @@ void Workspace::tabBoxKeyRelease(const XKeyEvent& ev)
     }
     if (!release)
         return;
-    if (tab_grab) {
-        bool old_control_grab = control_grab;
-        Client* c = tab_box->currentClient();
-        closeTabBox();
-        control_grab = old_control_grab;
+    if (m_tabGrab) {
+        bool old_control_grab = m_desktopGrab;
+        Client* c = currentClient();
+        close();
+        m_desktopGrab = old_control_grab;
         if (c) {
-            activateClient(c);
+            Workspace::self()->activateClient(c);
             if (c->isShade() && options->shadeHover)
                 c->setShade(ShadeActivated);
             if (c->isDesktop())
-                setShowingDesktop(!showingDesktop());
+                Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
         }
     }
-    if (control_grab) {
-        bool old_tab_grab = tab_grab;
-        int desktop = tab_box->currentDesktop();
-        closeTabBox();
-        tab_grab = old_tab_grab;
+    if (m_desktopGrab) {
+        bool old_tab_grab = m_tabGrab;
+        int desktop = currentDesktop();
+        close();
+        m_tabGrab = old_tab_grab;
         if (desktop != -1) {
             setCurrentDesktop(desktop);
         }
     }
 }
 
-
-int Workspace::nextDesktopFocusChain(int iDesktop) const
+int TabBox::nextDesktopFocusChain(int iDesktop) const
 {
-    int i = desktop_focus_chain.indexOf(iDesktop);
-    if (i >= 0 && i + 1 < (int)desktop_focus_chain.size())
-        return desktop_focus_chain[i+1];
-    else if (desktop_focus_chain.size() > 0)
-        return desktop_focus_chain[ 0 ];
+    const QVector<int> &desktopFocusChain = Workspace::self()->desktopFocusChain();
+    int i = desktopFocusChain.indexOf(iDesktop);
+    if (i >= 0 && i + 1 < desktopFocusChain.size())
+        return desktopFocusChain[i+1];
+    else if (desktopFocusChain.size() > 0)
+        return desktopFocusChain[ 0 ];
     else
         return 1;
 }
 
-int Workspace::previousDesktopFocusChain(int iDesktop) const
+int TabBox::previousDesktopFocusChain(int iDesktop) const
 {
-    int i = desktop_focus_chain.indexOf(iDesktop);
+    const QVector<int> &desktopFocusChain = Workspace::self()->desktopFocusChain();
+    int i = desktopFocusChain.indexOf(iDesktop);
     if (i - 1 >= 0)
-        return desktop_focus_chain[i-1];
-    else if (desktop_focus_chain.size() > 0)
-        return desktop_focus_chain[desktop_focus_chain.size()-1];
+        return desktopFocusChain[i-1];
+    else if (desktopFocusChain.size() > 0)
+        return desktopFocusChain[desktopFocusChain.size()-1];
     else
-        return numberOfDesktops();
+        return Workspace::self()->numberOfDesktops();
 }
 
-int Workspace::nextDesktopStatic(int iDesktop) const
+int TabBox::nextDesktopStatic(int iDesktop) const
 {
     int i = ++iDesktop;
-    if (i > numberOfDesktops())
+    if (i > Workspace::self()->numberOfDesktops())
         i = 1;
     return i;
 }
 
-int Workspace::previousDesktopStatic(int iDesktop) const
+int TabBox::previousDesktopStatic(int iDesktop) const
 {
     int i = --iDesktop;
     if (i < 1)
-        i = numberOfDesktops();
+        i = Workspace::self()->numberOfDesktops();
     return i;
 }
 
@@ -1180,110 +1167,73 @@ int Workspace::previousDesktopStatic(int iDesktop) const
   auxiliary functions to travers all clients according to the focus
   order. Useful for kwms Alt-tab feature.
 */
-Client* Workspace::nextClientFocusChain(Client* c) const
+Client* TabBox::nextClientFocusChain(Client* c) const
 {
-    if (global_focus_chain.isEmpty())
+    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
+    if (globalFocusChain.isEmpty())
         return 0;
-    int pos = global_focus_chain.indexOf(c);
+    int pos = globalFocusChain.indexOf(c);
     if (pos == -1)
-        return global_focus_chain.last();
+        return globalFocusChain.last();
     if (pos == 0)
-        return global_focus_chain.last();
+        return globalFocusChain.last();
     pos--;
-    return global_focus_chain[ pos ];
+    return globalFocusChain[ pos ];
 }
 
 /*!
   auxiliary functions to travers all clients according to the focus
   order. Useful for kwms Alt-tab feature.
 */
-Client* Workspace::previousClientFocusChain(Client* c) const
+Client* TabBox::previousClientFocusChain(Client* c) const
 {
-    if (global_focus_chain.isEmpty())
+    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
+    if (globalFocusChain.isEmpty())
         return 0;
-    int pos = global_focus_chain.indexOf(c);
+    int pos = globalFocusChain.indexOf(c);
     if (pos == -1)
-        return global_focus_chain.first();
+        return globalFocusChain.first();
     pos++;
-    if (pos == global_focus_chain.count())
-        return global_focus_chain.first();
-    return global_focus_chain[ pos ];
+    if (pos == globalFocusChain.count())
+        return globalFocusChain.first();
+    return globalFocusChain[ pos ];
 }
 
 /*!
   auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
-Client* Workspace::nextClientStatic(Client* c) const
+Client* TabBox::nextClientStatic(Client* c) const
 {
-    if (!c || clients.isEmpty())
+    if (!c || Workspace::self()->clientList().isEmpty())
         return 0;
-    int pos = clients.indexOf(c);
+    int pos = Workspace::self()->clientList().indexOf(c);
     if (pos == -1)
-        return clients.first();
+        return Workspace::self()->clientList().first();
     ++pos;
-    if (pos == clients.count())
-        return clients.first();
-    return clients[ pos ];
+    if (pos == Workspace::self()->clientList().count())
+        return Workspace::self()->clientList().first();
+    return Workspace::self()->clientList()[ pos ];
 }
+
 /*!
   auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
-Client* Workspace::previousClientStatic(Client* c) const
+Client* TabBox::previousClientStatic(Client* c) const
 {
-    if (!c || clients.isEmpty())
+    if (!c || Workspace::self()->clientList().isEmpty())
         return 0;
-    int pos = clients.indexOf(c);
+    int pos = Workspace::self()->clientList().indexOf(c);
     if (pos == -1)
-        return clients.last();
+        return Workspace::self()->clientList().last();
     if (pos == 0)
-        return clients.last();
+        return Workspace::self()->clientList().last();
     --pos;
-    return clients[ pos ];
+    return Workspace::self()->clientList()[ pos ];
 }
 
-Client* Workspace::currentTabBoxClient() const
-{
-    if (!tab_box)
-        return 0;
-    return tab_box->currentClient();
-}
-
-ClientList Workspace::currentTabBoxClientList() const
-{
-    if (!tab_box)
-        return ClientList();
-    return tab_box->currentClientList();
-}
-
-int Workspace::currentTabBoxDesktop() const
-{
-    if (!tab_box)
-        return -1;
-    return tab_box->currentDesktop();
-}
-
-QList< int > Workspace::currentTabBoxDesktopList() const
-{
-    if (!tab_box)
-        return QList< int >();
-    return tab_box->currentDesktopList();
-}
-
-void Workspace::setTabBoxClient(Client* c)
-{
-    if (tab_box)
-        tab_box->setCurrentClient(c);
-}
-
-void Workspace::setTabBoxDesktop(int iDesktop)
-{
-    if (tab_box)
-        tab_box->setCurrentDesktop(iDesktop);
-}
-
-bool Workspace::establishTabBoxGrab()
+bool TabBox::establishTabBoxGrab()
 {
     if (!grabXKeyboard())
         return false;
@@ -1292,22 +1242,22 @@ bool Workspace::establishTabBoxGrab()
     // in order to catch MouseRelease events and close the tabbox (#67416).
     // All clients already have passive grabs in their wrapper windows, so check only
     // the active client, which may not have it.
-    assert(!forced_global_mouse_grab);
-    forced_global_mouse_grab = true;
-    if (active_client != NULL)
-        active_client->updateMouseGrab();
+    assert(!m_forcedGlobalMouseGrab);
+    m_forcedGlobalMouseGrab = true;
+    if (Workspace::self()->activeClient() != NULL)
+        Workspace::self()->activeClient()->updateMouseGrab();
     return true;
 }
 
-void Workspace::removeTabBoxGrab()
+void TabBox::removeTabBoxGrab()
 {
     ungrabXKeyboard();
-    assert(forced_global_mouse_grab);
-    forced_global_mouse_grab = false;
-    if (active_client != NULL)
-        active_client->updateMouseGrab();
+    assert(m_forcedGlobalMouseGrab);
+    m_forcedGlobalMouseGrab = false;
+    if (Workspace::self()->activeClient() != NULL)
+        Workspace::self()->activeClient()->updateMouseGrab();
 }
-
+} // namespace TabBox
 } // namespace
 
 #include "tabbox.moc"
