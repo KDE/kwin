@@ -260,14 +260,10 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         }
 
         if (reflection) {
-            // restrict painting the reflections to the current screen
-            QRegion clip = QRegion(area);
-            PaintClipper::push(clip);
             // no reflections during start and stop animation
             // except when using a shader
             if ((!start && !stop) || ShaderManager::instance()->isValid())
                 paintScene(frontWindow, leftWindows, rightWindows, true);
-            PaintClipper::pop(clip);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #ifndef KWIN_HAVE_OPENGLES
