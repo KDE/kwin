@@ -711,11 +711,6 @@ PaintClipper::Iterator::Iterator()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (clip() && effects->compositingType() == OpenGLCompositing) {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_SCISSOR_BIT);
-#endif
-        if (!GLRenderTarget::isRenderTargetBound())
-            glEnable(GL_SCISSOR_TEST);
         data->rects = paintArea().rects();
         data->index = -1;
         next(); // move to the first one
@@ -732,15 +727,6 @@ PaintClipper::Iterator::Iterator()
 
 PaintClipper::Iterator::~Iterator()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (clip() && effects->compositingType() == OpenGLCompositing) {
-        if (!GLRenderTarget::isRenderTargetBound())
-            glDisable(GL_SCISSOR_TEST);
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
-    }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (clip() && effects->compositingType() == XRenderCompositing)
         XFixesSetPictureClipRegion(display(), effects->xrenderBufferPicture(), 0, 0, None);
@@ -766,13 +752,6 @@ bool PaintClipper::Iterator::isDone()
 void PaintClipper::Iterator::next()
 {
     data->index++;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (clip() && effects->compositingType() == OpenGLCompositing && !GLRenderTarget::isRenderTargetBound() && data->index < data->rects.count()) {
-        const QRect& r = data->rects[ data->index ];
-        // Scissor rect has to be given in OpenGL coords
-        glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-    }
-#endif
 }
 
 QRect PaintClipper::Iterator::boundingRect() const
