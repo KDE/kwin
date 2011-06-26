@@ -665,6 +665,9 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
     quads.append(data.quads.select(WindowQuadShadowBottom));
     quads.append(data.quads.select(WindowQuadShadowBottomLeft));
     quads.append(data.quads.select(WindowQuadShadowLeft));
+    if (quads.isEmpty()) {
+        return;
+    }
     GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
     if (!texture) {
         return;
