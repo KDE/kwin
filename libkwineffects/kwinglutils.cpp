@@ -1073,9 +1073,9 @@ GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode)
 {
 #ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
 #else
+    Q_UNUSED(region)
     // Enable arrays
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(dimension, GL_FLOAT, 0, legacyVertices.constData());
@@ -1088,15 +1088,7 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode)
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     }
 
-    // Clip using scissoring
-    if (region != infiniteRegion()) {
-        PaintClipper pc(region);
-        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
-            glDrawArrays(primitiveMode, 0, numberVertices);
-        }
-    } else {
-        glDrawArrays(primitiveMode, 0, numberVertices);
-    }
+    glDrawArrays(primitiveMode, 0, numberVertices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     if (!legacyTexCoords.isEmpty()) {
@@ -1107,6 +1099,7 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode)
 
 void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitiveMode)
 {
+    Q_UNUSED(region)
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     GLint vertexAttrib = shader->attributeLocation("vertex");
     GLint texAttrib = shader->attributeLocation("texCoord");
@@ -1128,15 +1121,7 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
         glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
     }
 
-    // Clip using scissoring
-    if (region != infiniteRegion()) {
-        PaintClipper pc(region);
-        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
-            glDrawArrays(primitiveMode, 0, numberVertices);
-        }
-    } else {
-        glDrawArrays(primitiveMode, 0, numberVertices);
-    }
+    glDrawArrays(primitiveMode, 0, numberVertices);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -1149,9 +1134,9 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
 void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primitiveMode)
 {
 #ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
 #else
+    Q_UNUSED(region)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, buffers[ 0 ]);
@@ -1165,14 +1150,7 @@ void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primi
     }
 
     // Clip using scissoring
-    if (region != infiniteRegion()) {
-        PaintClipper pc(region);
-        for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
-            glDrawArrays(primitiveMode, 0, numberVertices);
-        }
-    } else {
-        glDrawArrays(primitiveMode, 0, numberVertices);
-    }
+    glDrawArrays(primitiveMode, 0, numberVertices);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 

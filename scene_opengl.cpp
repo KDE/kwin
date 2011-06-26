@@ -476,6 +476,49 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (region.isEmpty())
         return;
 
+    if (region != infiniteRegion() && !(mask & PAINT_WINDOW_TRANSFORMED)) {
+        WindowQuadList quads;
+        const QRegion filterRegion = region.translated(-x(), -y());
+        const QRectF bounding = QRectF(filterRegion.boundingRect());
+        // first step: split all quads according to the bounding rect
+        foreach (const WindowQuad &quad, data.quads) {
+            const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
+            // case 1: completely contains
+            if (bounding.contains(quadRect)) {
+                quads << quad;
+                continue;
+            }
+            // case 2: intersection
+            if (bounding.intersects(quadRect)) {
+                const QRectF intersected = bounding.intersected(quadRect);
+                quads << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
+            }
+        }
+        if (filterRegion.numRects() > 1) {
+            // second step: split all quads in bounding rect with the actual rects in the region
+            WindowQuadList tempList;
+            foreach (const WindowQuad &quad, quads) {
+                foreach (const QRect &r, filterRegion.rects()) {
+                    const QRectF rf(r);
+                    const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
+                    // case 1: completely contains, include and do not check other rects
+                    if (rf.contains(quadRect)) {
+                        tempList << quad;
+                        break;
+                    }
+                    // case 2: intersection
+                    if (rf.intersects(quadRect)) {
+                        const QRectF intersected = rf.intersected(quadRect);
+                        tempList << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
+                    }
+                }
+            }
+            data.quads = tempList;
+        } else {
+            data.quads = quads;
+        }
+    }
+
     if (!bindTexture())
         return;
 
