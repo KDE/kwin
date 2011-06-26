@@ -402,10 +402,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             zTranslate *= (1.0 - timeLine.currentValue());
         // reflection
         if (reflection && mode != Sphere) {
-            // restrict painting the reflections to the current screen
-            PaintClipper::push(QRegion(rect));
             // we can use a huge scale factor (needed to calculate the rearground vertices)
-            // as we restrict with a PaintClipper painting on the current screen
             float scaleFactor = 1000000 * tan(60.0 * M_PI / 360.0f) / rect.height();
             m_reflectionMatrix.setToIdentity();
             m_reflectionMatrix.scale(1.0, -1.0, 1.0);
@@ -522,7 +519,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #endif
             }
             glDisable(GL_BLEND);
-            PaintClipper::pop(QRegion(rect));
         }
         glEnable(GL_CULL_FACE);
         // caps
