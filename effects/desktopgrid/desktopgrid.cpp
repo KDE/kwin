@@ -200,7 +200,6 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
     if (desktopNameAlignment) {
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
-            PaintClipper pc(screenGeom);   // TODO: Doesn't work in XRender for some reason?
             int desktop = 1;
             foreach (EffectFrame * frame, desktopNames) {
                 QPointF posTL(scalePos(screenGeom.topLeft(), desktop, screen));
@@ -361,13 +360,12 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                 PaintClipper pc(effects->clientArea(ScreenArea, screen, 0) & QRect(screenPos, screenSize));
                 effects->paintWindow(w, mask, region, d);
             } else {
-                PaintClipper pc(effects->clientArea(ScreenArea, screen, 0));
                 if (w->isDesktop() && timeline.currentValue() == 1.0) {
                     // desktop windows are not in a motion manager and can always be rendered with
                     // lanczos sampling except for animations
                     mask |= PAINT_WINDOW_LANCZOS;
                 }
-                effects->paintWindow(w, mask, region, d);
+                effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
             }
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
             if (w->isDesktop())
