@@ -68,44 +68,6 @@ public:
     virtual void bind();
     virtual void unbind();
     void render(QRegion region, const QRect& rect);
-    /**
-     * Set up texture transformation matrix to automatically map unnormalized
-     * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
-     * to OpenGL coordinates. Automatically adjusts for different texture
-     * types. This can be done only for one texture at a time, repeated
-     * calls for the same texture are allowed though, requiring the same
-     * amount of calls to disableUnnormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void enableUnnormalizedTexCoords();
-    /**
-     * Disables transformation set up using enableUnnormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void disableUnnormalizedTexCoords();
-    /**
-     * Set up texture transformation matrix to automatically map normalized
-     * texture coordinates (i.e. 0 to 1, 0 to 1, (0,0) is bottom-left)
-     * to OpenGL coordinates. Automatically adjusts for different texture
-     * types. This can be done only for one texture at a time, repeated
-     * calls for the same texture are allowed though, requiring the same
-     * amount of calls to disableNormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void enableNormalizedTexCoords();
-    /**
-     * Disables transformation set up using enableNormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void disableNormalizedTexCoords();
 
     GLuint texture() const;
     GLenum target() const;
