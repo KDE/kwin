@@ -34,6 +34,7 @@ namespace KWin
 {
 
 KWIN_EFFECT(magnifier, MagnifierEffect)
+KWIN_EFFECT_SUPPORTED(magnifier, MagnifierEffect::supported())
 
 const int FRAME_WIDTH = 5;
 
@@ -53,6 +54,11 @@ MagnifierEffect::MagnifierEffect()
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
+}
+
+bool MagnifierEffect::supported()
+{
+    return effects->compositingType() == OpenGLCompositing;
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
