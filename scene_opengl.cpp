@@ -476,11 +476,15 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (region.isEmpty())
         return;
 
-    if (region != infiniteRegion() && !(mask & PAINT_WINDOW_TRANSFORMED)) {
+    if (region != infiniteRegion()) {
         WindowQuadList quads;
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
         foreach (const WindowQuad &quad, data.quads) {
+            if (quad.isTransformed()) {
+                quads << quad;
+                continue;
+            }
             foreach (const QRect &r, filterRegion.rects()) {
                 const QRectF rf(r);
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
