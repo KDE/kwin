@@ -35,32 +35,88 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-//-----------------------------------------------------------------------------
-// Electric Borders
-//-----------------------------------------------------------------------------
-// Electric Border Window management. Electric borders allow a user to change
-// the virtual desktop or activate another features by moving the mouse pointer
-// to the borders or corners. Technically this is done with input only windows.
-//-----------------------------------------------------------------------------
+/**
+ * @short This class is used to handle the screen edges
+ * Screen Edge Window management. Screen Edges allow a user to change the virtual
+ * desktop or activate other features by moving the mouse pointer to the borders or
+ * corners of the screen. Technically this is done with input only windows.
+ *
+ * @author Arthur Arlt
+ * @since 4.8
+ */
 class ScreenEdge : QObject {
     Q_OBJECT
 public:
     ScreenEdge();
     ~ScreenEdge();
+    /**
+     * Initialize the screen edges.
+     */
     void init();
+    /**
+     * Check, if a screen edge is entered and trigger the appropriate action
+     * if one is enabled for the current region and the timeout is satisfied
+     * @param pos the position of the mouse pointer
+     * @param now the time when the function is called
+     */
     void check(const QPoint& pos, Time now);
+    /**
+     * Restore the size of the specified screen edges
+     * @param border the screen edge to restore the size of
+     */
     void restoreSize(ElectricBorder border);
+    /**
+     * Mark the specified screen edge as reserved in m_screenEdgeReserved
+     * @param border the screen edge to mark as reserved
+     */
     void reserve(ElectricBorder border);
+    /**
+     * Mark the specified screen edge as unreserved in m_screenEdgeReserved
+     * @param border the screen edge to mark as unreserved
+     */
     void unreserve(ElectricBorder border);
+    /**
+     * Reserve actions for screen edges, if reserve is true. Unreserve otherwise.
+     * @param reserve indicated weather actions should be reserved or unreseved
+     */
     void reserveActions(bool isToReserve);
+    /**
+     * Reserve desktop switching for screen edges, if reserve is true. Unreserve otherwise.
+     * @param reserve indicated weather desktop switching should be reserved or unreseved
+     */
     void reserveDesktopSwitching(bool isToReserve);
+    /**
+     * Raise electric border windows to the real top of the screen. We only need
+     * to do this if an effect input window is active.
+     */
     void raiseWindows();
+    /**
+     * Destroy all existing screen edge windows
+     */
     void destroy();
+    /**
+    * Called when the user entered an electric border with the mouse.
+    * It may switch to another virtual desktop.
+    * @param e the X event which is passed to this method.
+    */
     bool isEntered(XEvent * e);
+    /**
+     * Returns a QVector of all existing screen edge windows
+     * @return all existing screen edge windows in a QVector
+     */
     const QVector< Window* >& windows();
 public Q_SLOTS:
+    /**
+     * Update the screen edge windows. Add new ones if the user specified
+     * a new action or enabled desktop switching. Remove, if user deleted
+     * actions or disabled desktop switching.
+     */
     void update();
 private:
+    /**
+     * Switch the desktop if desktop switching is enabled and a screen edge
+     * is entered to trigger this action.
+     */
     void switchDesktop(ElectricBorder border, const QPoint& pos);
 
     ElectricBorder m_currentScreenEdge;

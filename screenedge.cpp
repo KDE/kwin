@@ -338,10 +338,6 @@ void ScreenEdge::switchDesktop(ElectricBorder border, const QPoint& _pos)
         QCursor::setPos(pos);
 }
 
-/**
- * Called when the user entered an electric border with the mouse.
- * It may switch to another virtual desktop.
- */
 bool ScreenEdge::isEntered(XEvent* e)
 {
     if (e->type == EnterNotify) {
@@ -365,10 +361,6 @@ bool ScreenEdge::isEntered(XEvent* e)
     return false;
 }
 
-/**
- * Raise electric border windows to the real top of the screen. We only need
- * to do this if an effect input window is active.
- */
 void ScreenEdge::raiseWindows()
 {
     Window* windows = new Window[ 8 ]; // There are up to 8 borders
