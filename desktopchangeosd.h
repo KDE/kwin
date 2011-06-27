@@ -65,12 +65,12 @@ private:
 
 class DesktopChangeOSD : public QGraphicsView
 {
+    Q_OBJECT
 public:
     DesktopChangeOSD(Workspace* ws);
     ~DesktopChangeOSD();
 
     void reconfigure();
-    void desktopChanged(int old);
     void numberDesktopsChanged();
 
     inline Plasma::FrameSvg* itemFrame() {
@@ -95,6 +95,9 @@ private:
     bool m_show;
     int m_delayTime;
     bool m_textOnly;
+
+private Q_SLOTS:
+    void desktopChanged(int old);
 };
 
 class DesktopChangeItem : public QObject, public QGraphicsItem

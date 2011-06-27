@@ -1330,10 +1330,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     //    s += QString::number( desktop_focus_chain[i] ) + ", ";
     //kDebug( 1212 ) << s << "}\n";
 
-    // Not for the very first time, only if something changed and there are more than 1 desktops
-    if (old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1)
-        desktop_change_osd->desktopChanged(old_desktop);
-
     if (compositing())
         addRepaintFull();
 
