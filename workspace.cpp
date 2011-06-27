@@ -903,9 +903,9 @@ void Workspace::slotReconfigure()
     kDebug(1212) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
-    m_screenEdge.reserveElectricBorderActions(false);
+    m_screenEdge.reserveActions(false);
     if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveElectricBorderSwitching(false);
+        m_screenEdge.reserveDesktopSwitching(false);
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
@@ -945,10 +945,10 @@ void Workspace::slotReconfigure()
         c->triggerDecorationRepaint();
     }
 
-    m_screenEdge.reserveElectricBorderActions(true);
+    m_screenEdge.reserveActions(true);
     if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveElectricBorderSwitching(true);
-    m_screenEdge.updateElectricBorders();
+        m_screenEdge.reserveDesktopSwitching(true);
+    m_screenEdge.update();
 
     if (!compositingSuspended) {
         setupCompositing();
@@ -999,7 +999,7 @@ void Workspace::slotReinitCompositing()
     KGlobal::config()->reparseConfiguration();
 
     // Update any settings that can be set in the compositing kcm.
-    m_screenEdge.updateElectricBorders();
+    m_screenEdge.update();
 
     // Restart compositing
     finishCompositing();

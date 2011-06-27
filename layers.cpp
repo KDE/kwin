@@ -155,7 +155,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
     newWindowStack << (Window*)supportWindow->winId();
-    newWindowStack << m_screenEdge.screenEdgeWindows();
+    newWindowStack << m_screenEdge.windows();
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
         if (stacking_order.at(i)->hiddenPreview()) {
             continue;

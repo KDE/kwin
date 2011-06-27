@@ -61,14 +61,14 @@ ScreenEdge::~ScreenEdge()
 
 void ScreenEdge::init()
 {
-    reserveElectricBorderActions(true);
+    reserveActions(true);
     if (options->electricBorders() == Options::ElectricAlways) {
-        reserveElectricBorderSwitching(true);
+        reserveDesktopSwitching(true);
     }
-    updateElectricBorders();
+    update();
 }
 
-void ScreenEdge::updateElectricBorders()
+void ScreenEdge::update()
 {
     m_screenEdgeTimeFirst = xTime();
     m_screenEdgeTimeLast = xTime();
@@ -115,7 +115,7 @@ void ScreenEdge::updateElectricBorders()
     }
 }
 
-void ScreenEdge::destroyElectricBorders()
+void ScreenEdge::destroy()
 {
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
         if (m_screenEdgeWindows[pos] != None)
@@ -124,7 +124,7 @@ void ScreenEdge::destroyElectricBorders()
     }
 }
 
-void ScreenEdge::restoreElectricBorderSize(ElectricBorder border)
+void ScreenEdge::restoreSize(ElectricBorder border)
 {
     if (m_screenEdgeWindows[border] == None)
         return;
@@ -143,44 +143,44 @@ void ScreenEdge::restoreElectricBorderSize(ElectricBorder border)
                       xywh[border][0], xywh[border][1], xywh[border][2], xywh[border][3]);
 }
 
-void ScreenEdge::reserveElectricBorderActions(bool reserve)
+void ScreenEdge::reserveActions(bool isToReserve)
 {
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos)
         if (options->electricBorderAction(static_cast<ElectricBorder>(pos))) {
-            if (reserve)
-                reserveElectricBorder(static_cast<ElectricBorder>(pos));
+            if (isToReserve)
+                reserve(static_cast<ElectricBorder>(pos));
             else
-                unreserveElectricBorder(static_cast<ElectricBorder>(pos));
+                unreserve(static_cast<ElectricBorder>(pos));
         }
 }
 
-void ScreenEdge::reserveElectricBorderSwitching(bool reserve)
+void ScreenEdge::reserveDesktopSwitching(bool isToReserve)
 {
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos)
-        if (reserve)
-            reserveElectricBorder(static_cast<ElectricBorder>(pos));
+        if (isToReserve)
+            reserve(static_cast<ElectricBorder>(pos));
         else
-            unreserveElectricBorder(static_cast<ElectricBorder>(pos));
+            unreserve(static_cast<ElectricBorder>(pos));
 }
 
-void ScreenEdge::reserveElectricBorder(ElectricBorder border)
+void ScreenEdge::reserve(ElectricBorder border)
 {
     if (border == ElectricNone)
         return;
     if (m_screenEdgeReserved[border]++ == 0)
-        QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
+        QTimer::singleShot(0, this, SLOT(update()));
 }
 
-void ScreenEdge::unreserveElectricBorder(ElectricBorder border)
+void ScreenEdge::unreserve(ElectricBorder border)
 {
     if (border == ElectricNone)
         return;
     assert(m_screenEdgeReserved[border] > 0);
     if (--m_screenEdgeReserved[border] == 0)
-        QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
+        QTimer::singleShot(0, this, SLOT(update()));
 }
 
-void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
+void ScreenEdge::check(const QPoint& pos, Time now)
 {
     if ((pos.x() != m_screenEdgeLeft) &&
             (pos.x() != m_screenEdgeRight) &&
@@ -240,7 +240,7 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
             if (Workspace::self()->getMovingClient()) {
                 // If moving a client or have force doing the desktop switch
                 if (options->electricBorders() != Options::ElectricDisabled)
-                    electricBorderSwitchDesktop(border, pos);
+                    switchDesktop(border, pos);
                 return; // Don't reset cursor position
             } else {
                 if (options->electricBorders() == Options::ElectricAlways &&
@@ -248,7 +248,7 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
                          border == ElectricBottom || border == ElectricLeft)) {
                     // If desktop switching is always enabled don't apply it to the corners if
                     // an effect is applied to it (We will check that later).
-                    electricBorderSwitchDesktop(border, pos);
+                    switchDesktop(border, pos);
                     return; // Don't reset cursor position
                 }
                 switch(options->electricBorderAction(border)) {
@@ -274,7 +274,7 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
                     if (effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated(border))
                         {} // Handled by effects
                     else {
-                        electricBorderSwitchDesktop(border, pos);
+                        switchDesktop(border, pos);
                         return; // Don't reset cursor position
                     }
                 }
@@ -311,7 +311,7 @@ void ScreenEdge::checkElectricBorder(const QPoint& pos, Time now)
     QCursor::setPos(pos.x() + xdiff[border], pos.y() + ydiff[border]);
 }
 
-void ScreenEdge::electricBorderSwitchDesktop(ElectricBorder border, const QPoint& _pos)
+void ScreenEdge::switchDesktop(ElectricBorder border, const QPoint& _pos)
 {
     QPoint pos = _pos;
     int desk = Workspace::self()->currentDesktop();
@@ -342,13 +342,13 @@ void ScreenEdge::electricBorderSwitchDesktop(ElectricBorder border, const QPoint
  * Called when the user entered an electric border with the mouse.
  * It may switch to another virtual desktop.
  */
-bool ScreenEdge::electricBorderEvent(XEvent* e)
+bool ScreenEdge::isEntered(XEvent* e)
 {
     if (e->type == EnterNotify) {
         for (int i = 0; i < ELECTRIC_COUNT; ++i)
             if (m_screenEdgeWindows[i] != None && e->xcrossing.window == m_screenEdgeWindows[i]) {
                 // The user entered an electric border
-                checkElectricBorder(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), e->xcrossing.time);
+                check(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), e->xcrossing.time);
                 return true;
             }
     }
@@ -357,7 +357,7 @@ bool ScreenEdge::electricBorderEvent(XEvent* e)
             for (int i = 0; i < ELECTRIC_COUNT; ++i)
                 if (m_screenEdgeWindows[i] != None && e->xclient.window == m_screenEdgeWindows[i]) {
                     updateXTime();
-                    checkElectricBorder(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime());
+                    check(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime());
                     return true;
                 }
         }
@@ -369,7 +369,7 @@ bool ScreenEdge::electricBorderEvent(XEvent* e)
  * Raise electric border windows to the real top of the screen. We only need
  * to do this if an effect input window is active.
  */
-void ScreenEdge::raiseElectricBorderWindows()
+void ScreenEdge::raiseWindows()
 {
     Window* windows = new Window[ 8 ]; // There are up to 8 borders
     int pos = 0;
@@ -385,7 +385,7 @@ void ScreenEdge::raiseElectricBorderWindows()
     delete [] windows;
 }
 
-const QVector< Window* >& ScreenEdge::screenEdgeWindows()
+const QVector< Window* >& ScreenEdge::windows()
 {
     QVector< Window* >* screenEdgeWindows = new QVector< Window* >();
     for (int i = 0; i <= ELECTRIC_COUNT; ++i) {

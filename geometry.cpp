@@ -72,8 +72,8 @@ void Workspace::desktopResized()
     rootInfo->setDesktopGeometry(-1, desktop_geometry);
 
     updateClientArea();
-    m_screenEdge.destroyElectricBorders();
-    m_screenEdge.updateElectricBorders();
+    m_screenEdge.destroy();
+    m_screenEdge.update();
     if (compositing())
         compositeResetTimer.start(0);
 }
@@ -2527,7 +2527,7 @@ bool Client::startMoveResize()
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
-        workspace()->screenEdge()->reserveElectricBorderSwitching(true);
+        workspace()->screenEdge()->reserveDesktopSwitching(true);
     return true;
 }
 
@@ -2592,7 +2592,7 @@ void Client::finishMoveResize(bool cancel)
             kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array acces,\
                                                                         this should not have happened!";
         else
-            workspace()->screenEdge()->restoreElectricBorderSize(border);
+            workspace()->screenEdge()->restoreSize(border);
         electricMaximizing = false;
         workspace()->outline()->hide();
     }
@@ -2622,7 +2622,7 @@ void Client::leaveMoveResize()
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
             options->electricBorderTiling())
-        workspace()->screenEdge()->reserveElectricBorderSwitching(false);
+        workspace()->screenEdge()->reserveDesktopSwitching(false);
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -2945,7 +2945,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     if (isMove()) {
         workspace()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
-        workspace()->screenEdge()->checkElectricBorder(globalPos, xTime());
+        workspace()->screenEdge()->check(globalPos, xTime());
     }
 }
 

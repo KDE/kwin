@@ -870,7 +870,7 @@ Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int
 
     // Raise electric border windows above the input windows
     // so they can still be triggered.
-    Workspace::self()->screenEdge()->raiseElectricBorderWindows();
+    Workspace::self()->screenEdge()->raiseWindows();
 
     return win;
 }
@@ -941,7 +941,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     delete[] wins;
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
-    Workspace::self()->screenEdge()->raiseElectricBorderWindows();
+    Workspace::self()->screenEdge()->raiseWindows();
 }
 
 QPoint EffectsHandlerImpl::cursorPos() const
@@ -951,22 +951,22 @@ QPoint EffectsHandlerImpl::cursorPos() const
 
 void EffectsHandlerImpl::checkElectricBorder(const QPoint &pos, Time time)
 {
-    Workspace::self()->screenEdge()->checkElectricBorder(pos, time);
+    Workspace::self()->screenEdge()->check(pos, time);
 }
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border)
 {
-    Workspace::self()->screenEdge()->reserveElectricBorder(border);
+    Workspace::self()->screenEdge()->reserve(border);
 }
 
 void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border)
 {
-    Workspace::self()->screenEdge()->unreserveElectricBorder(border);
+    Workspace::self()->screenEdge()->unreserve(border);
 }
 
 void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve)
 {
-    Workspace::self()->screenEdge()->reserveElectricBorderSwitching(reserve);
+    Workspace::self()->screenEdge()->reserveDesktopSwitching(reserve);
 }
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()

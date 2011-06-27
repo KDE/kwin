@@ -48,20 +48,20 @@ public:
     ScreenEdge();
     ~ScreenEdge();
     void init();
-    void checkElectricBorder(const QPoint& pos, Time now);
-    void restoreElectricBorderSize(ElectricBorder border);
-    void reserveElectricBorder(ElectricBorder border);
-    void unreserveElectricBorder(ElectricBorder border);
-    void reserveElectricBorderActions(bool reserve);
-    void reserveElectricBorderSwitching(bool reserve);
-    void raiseElectricBorderWindows();
-    void destroyElectricBorders();
-    bool electricBorderEvent(XEvent * e);
-    const QVector< Window* >& screenEdgeWindows();
+    void check(const QPoint& pos, Time now);
+    void restoreSize(ElectricBorder border);
+    void reserve(ElectricBorder border);
+    void unreserve(ElectricBorder border);
+    void reserveActions(bool isToReserve);
+    void reserveDesktopSwitching(bool isToReserve);
+    void raiseWindows();
+    void destroy();
+    bool isEntered(XEvent * e);
+    const QVector< Window* >& windows();
 public Q_SLOTS:
-    void updateElectricBorders();
+    void update();
 private:
-    void electricBorderSwitchDesktop(ElectricBorder border, const QPoint& pos);
+    void switchDesktop(ElectricBorder border, const QPoint& pos);
 
     ElectricBorder m_currentScreenEdge;
     Window m_screenEdgeWindows[ELECTRIC_COUNT];
