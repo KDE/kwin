@@ -1370,14 +1370,46 @@ namespace Oxygen
         // factory
         if(!( _initialized && _factory->initialized() ) ) return;
 
+        if( compositingActive() )
+        {
+            QPainter painter(widget());
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setClipRegion( event->region() );
+            paint( painter );
+        } else {
+
+            QPixmap pixmap( widget()->size() );
+            {
+                QPainter painter( &pixmap );
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setClipRegion( event->region() );
+                paint( painter );
+            }
+
+            QPainter painter( widget() );
+            painter.setClipRegion( event->region() );
+            painter.drawPixmap( QPoint(), pixmap );
+
+            // update buttons
+            QList<Button*> buttons( widget()->findChildren<Button*>() );
+            foreach( Button* button, buttons )
+            {
+                if( event->rect().intersects( button->geometry() ) )
+                { button->update(); }
+            }
+        }
+
+
+
+    }
+
+    //_________________________________________________________
+    void Client::paint( QPainter& painter )
+    {
+
         // palette
         QPalette palette = widget()->palette();
         palette.setCurrentColorGroup( (isActive() ) ? QPalette::Active : QPalette::Inactive );
-
-        // painter
-        QPainter painter(widget());
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setClipRegion( event->region() );
 
         // define frame
         QRect frame = widget()->rect();

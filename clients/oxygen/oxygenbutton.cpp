@@ -175,23 +175,36 @@ namespace Oxygen
         if( _client.compositingActive() )
         {
             QPainter painter( this );
-            painter.setClipRect( event->rect() );
+            painter.setRenderHints(QPainter::Antialiasing);
+            painter.setClipRegion( event->region() );
             paint( painter );
 
         } else {
 
+            // create temporary pixmap to avoid flicker
             QPixmap pixmap( size() );
             {
 
+                // create painter
                 QPainter painter( &pixmap );
                 painter.setRenderHints(QPainter::Antialiasing);
-                parentWidget()->render( &painter, QPoint(), geometry(), QWidget::DrawWindowBackground );
+                painter.setClipRect( this->rect().intersected( event->rect() ) );
+
+                // render parent background
+                // parentWidget()->render( &painter, QPoint(), geometry(), QWidget::DrawWindowBackground );
+
+                painter.save();
+                painter.translate( -geometry().topLeft() );
+                _client.paint( painter );
+                painter.restore();
+
+                // render buttons
                 paint( painter );
 
             }
 
             QPainter painter(this);
-            painter.setClipRect( event->rect() );
+            painter.setClipRegion( event->region() );
             painter.drawPixmap( QPoint(), pixmap );
 
         }
@@ -287,6 +300,8 @@ namespace Oxygen
             drawIcon(&painter);
 
         }
+
+        painter.restore();
 
     }
 

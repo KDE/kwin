@@ -225,6 +225,8 @@ namespace Oxygen
         //! resize event
         virtual void resizeEvent(QResizeEvent *e);
 
+        virtual void paint( QPainter& );
+
         public slots:
 
         //! triggers widget update in titleRect only

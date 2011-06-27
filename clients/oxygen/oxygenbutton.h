@@ -172,7 +172,7 @@ namespace Oxygen
         private:
 
         //! parent client
-        const Client &_client;
+        Client &_client;
 
         //! helper
         DecoHelper &_helper;
