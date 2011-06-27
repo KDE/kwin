@@ -109,6 +109,9 @@ namespace Oxygen
         //! paint
         void paintEvent(QPaintEvent* );
 
+        //! paint
+        void paint(QPainter& );
+
         //! draw icon
         void drawIcon(QPainter*);
 

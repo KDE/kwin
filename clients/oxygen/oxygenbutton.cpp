@@ -172,9 +172,35 @@ namespace Oxygen
 
         if( _client.hideTitleBar() ) return;
 
-        QPainter painter(this);
-        painter.setClipRect(this->rect().intersected( event->rect() ) );
-        painter.setRenderHints(QPainter::Antialiasing);
+        if( _client.compositingActive() )
+        {
+            QPainter painter( this );
+            painter.setClipRect( event->rect() );
+            paint( painter );
+
+        } else {
+
+            QPixmap pixmap( size() );
+            {
+
+                QPainter painter( &pixmap );
+                painter.setRenderHints(QPainter::Antialiasing);
+                parentWidget()->render( &painter, QPoint(), geometry(), QWidget::DrawWindowBackground );
+                paint( painter );
+
+            }
+
+            QPainter painter(this);
+            painter.setClipRect( event->rect() );
+            painter.drawPixmap( QPoint(), pixmap );
+
+        }
+
+    }
+
+    //___________________________________________________
+    void Button::paint( QPainter& painter )
+    {
 
         QPalette palette( this->palette() );
         palette.setCurrentColorGroup( isActive() ? QPalette::Active : QPalette::Inactive);
