@@ -48,10 +48,10 @@ namespace KWin {
 
 ScreenEdge::ScreenEdge()
     : QObject(NULL)
+    , m_screenEdgeWindows(ELECTRIC_COUNT, None)
 {
     for (int i = 0; i < ELECTRIC_COUNT; ++i) {
         m_screenEdgeReserved[i] = 0;
-        m_screenEdgeWindows[i] = None;
     }
 }
 
@@ -377,15 +377,9 @@ void ScreenEdge::raiseWindows()
     delete [] windows;
 }
 
-const QVector< Window* >& ScreenEdge::windows()
+const QVector< Window >& ScreenEdge::windows()
 {
-    QVector< Window* >* screenEdgeWindows = new QVector< Window* >();
-    for (int i = 0; i <= ELECTRIC_COUNT; ++i) {
-        if (m_screenEdgeWindows[i] != None) {
-            screenEdgeWindows->append((Window*)m_screenEdgeWindows[i]);
-        }
-    }
-    return *screenEdgeWindows;
+    return m_screenEdgeWindows;
 }
 } //namespace
 

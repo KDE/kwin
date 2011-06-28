@@ -104,7 +104,7 @@ public:
      * Returns a QVector of all existing screen edge windows
      * @return all existing screen edge windows in a QVector
      */
-    const QVector< Window* >& windows();
+    const QVector< Window >& windows();
 public Q_SLOTS:
     /**
      * Update the screen edge windows. Add new ones if the user specified
@@ -119,8 +119,8 @@ private:
      */
     void switchDesktop(ElectricBorder border, const QPoint& pos);
 
+    QVector< Window > m_screenEdgeWindows;
     ElectricBorder m_currentScreenEdge;
-    Window m_screenEdgeWindows[ELECTRIC_COUNT];
     int m_screenEdgeLeft;
     int m_screenEdgeRight;
     int m_screenEdgeTop;
