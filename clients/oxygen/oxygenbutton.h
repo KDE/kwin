@@ -95,31 +95,31 @@ namespace Oxygen
         protected:
 
         //! press event
-        void mousePressEvent(QMouseEvent* );
+        void mousePressEvent( QMouseEvent* );
 
         //! release event
-        void mouseReleaseEvent(QMouseEvent* );
+        void mouseReleaseEvent( QMouseEvent* );
 
         //! enter event
         void enterEvent( QEvent* );
 
         //! leave event
-        void leaveEvent(QEvent* );
+        void leaveEvent( QEvent* );
 
         //! paint
-        void paintEvent(QPaintEvent* );
+        void paintEvent( QPaintEvent* );
 
         //! paint
         void paint(QPainter& );
 
         //! draw icon
-        void drawIcon(QPainter*);
+        void drawIcon( QPainter* );
 
         //! color
-        QColor buttonDetailColor(const QPalette& ) const;
+        QColor buttonDetailColor( const QPalette& ) const;
 
         //! color
-        QColor buttonDetailColor(const QPalette& palette, bool active ) const
+        QColor buttonDetailColor( const QPalette& palette, bool active ) const
         {
             if( _type == ButtonItemClose )
             {

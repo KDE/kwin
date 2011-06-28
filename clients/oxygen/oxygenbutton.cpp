@@ -111,11 +111,11 @@ namespace Oxygen
 
 
     //___________________________________________________
-    void Button::enterEvent(QEvent *e)
+    void Button::enterEvent( QEvent* event )
     {
 
-        KCommonDecorationButton::enterEvent(e);
-        if (_status != Oxygen::Pressed) _status = Oxygen::Hovered;
+        KCommonDecorationButton::enterEvent( event );
+        if( _status != Oxygen::Pressed ) _status = Oxygen::Hovered;
         if( animateButtonHover() )
         {
 
@@ -127,10 +127,10 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::leaveEvent(QEvent *e)
+    void Button::leaveEvent( QEvent* event )
     {
 
-        KCommonDecorationButton::leaveEvent(e);
+        KCommonDecorationButton::leaveEvent( event );
 
         if( _status == Oxygen::Hovered && animateButtonHover() )
         {
@@ -144,30 +144,30 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::mousePressEvent(QMouseEvent *e)
+    void Button::mousePressEvent( QMouseEvent* event )
     {
 
-        if( _type == ButtonMax || e->button() == Qt::LeftButton )
+        if( _type == ButtonMax || event->button() == Qt::LeftButton )
         {
             _status = Oxygen::Pressed;
             update();
         }
 
-        KCommonDecorationButton::mousePressEvent(e);
+        KCommonDecorationButton::mousePressEvent( event );
     }
 
     //___________________________________________________
-    void Button::mouseReleaseEvent(QMouseEvent *e)
+    void Button::mouseReleaseEvent( QMouseEvent* event )
     {
 
-        _status = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
+        _status = ( rect().contains( event->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
         update();
 
-        KCommonDecorationButton::mouseReleaseEvent(e);
+        KCommonDecorationButton::mouseReleaseEvent( event );
     }
 
     //___________________________________________________
-    void Button::paintEvent(QPaintEvent *event)
+    void Button::paintEvent( QPaintEvent* event )
     {
 
         if( _client.hideTitleBar() ) return;
@@ -306,7 +306,7 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::drawIcon(QPainter *painter)
+    void Button::drawIcon( QPainter* painter )
     {
 
         painter->save();
