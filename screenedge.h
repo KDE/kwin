@@ -120,6 +120,7 @@ private:
     void switchDesktop(ElectricBorder border, const QPoint& pos);
 
     QVector< Window > m_screenEdgeWindows;
+    QVector< int > m_screenEdgeReserved; // Corners/edges used by something
     ElectricBorder m_currentScreenEdge;
     int m_screenEdgeLeft;
     int m_screenEdgeRight;
@@ -129,7 +130,6 @@ private:
     Time m_screenEdgeTimeLast;
     Time m_screenEdgeTimeLastTrigger;
     QPoint m_screenEdgePushPoint;
-    int m_screenEdgeReserved[ELECTRIC_COUNT]; // Corners/edges used by something
 };
 }
 #endif // KWIN_SCREENEDGE_H
