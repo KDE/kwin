@@ -223,9 +223,10 @@ namespace Oxygen
         virtual bool eventFilter( QObject*, QEvent* );
 
         //! resize event
-        virtual void resizeEvent(QResizeEvent *e);
+        virtual void resizeEvent( QResizeEvent* );
 
-        virtual void paint( QPainter& );
+        //! paint background to painter
+        void paintBackground( QPainter& ) const;
 
         public slots:
 
@@ -255,6 +256,9 @@ namespace Oxygen
 
         //! paint
         virtual void paintEvent( QPaintEvent* );
+
+        //! render full decoration to provided painter
+        virtual void paint( QPainter& );
 
         //! mouse press event
         virtual bool mousePressEvent( QMouseEvent* );
@@ -424,6 +428,9 @@ namespace Oxygen
 
         //! factory
         Factory* _factory;
+
+        //! backing store pixmap (when compositing is not active)
+        QPixmap _pixmap;
 
         //! size grip widget
         SizeGrip* _sizeGrip;

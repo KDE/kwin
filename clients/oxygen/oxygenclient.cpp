@@ -1359,8 +1359,23 @@ namespace Oxygen
     //_________________________________________________________
     void Client::resizeEvent( QResizeEvent* event )
     {
+
+        // prepare item data updates
         _itemData.setDirty( true );
+
+        // resize backing store pixmap
+        if( !compositingActive() )
+        { _pixmap = QPixmap( event->size() ); }
+
+        // base class implementation
         KCommonDecorationUnstable::resizeEvent( event );
+    }
+
+    //_________________________________________________________
+    void Client::paintBackground( QPainter& painter ) const
+    {
+        if( !compositingActive() )
+        { painter.drawPixmap( QPoint(), _pixmap ); }
     }
 
     //_________________________________________________________
@@ -1372,15 +1387,17 @@ namespace Oxygen
 
         if( compositingActive() )
         {
+
             QPainter painter(widget());
             painter.setRenderHint(QPainter::Antialiasing);
             painter.setClipRegion( event->region() );
             paint( painter );
+
         } else {
 
-            QPixmap pixmap( widget()->size() );
             {
-                QPainter painter( &pixmap );
+                // update backing store pixmap
+                QPainter painter( &_pixmap );
                 painter.setRenderHint(QPainter::Antialiasing);
                 painter.setClipRegion( event->region() );
                 paint( painter );
@@ -1388,7 +1405,7 @@ namespace Oxygen
 
             QPainter painter( widget() );
             painter.setClipRegion( event->region() );
-            painter.drawPixmap( QPoint(), pixmap );
+            painter.drawPixmap( QPoint(), _pixmap );
 
             // update buttons
             QList<Button*> buttons( widget()->findChildren<Button*>() );
@@ -1397,6 +1414,7 @@ namespace Oxygen
                 if( event->rect().intersects( button->geometry() ) )
                 { button->update(); }
             }
+
         }
 
 

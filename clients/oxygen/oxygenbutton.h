@@ -106,10 +106,13 @@ namespace Oxygen
         //! leave event
         void leaveEvent( QEvent* );
 
+        //! resize event
+        void resizeEvent( QResizeEvent* );
+
         //! paint
         void paintEvent( QPaintEvent* );
 
-        //! paint
+        //! render buttn to provided painter
         void paint(QPainter& );
 
         //! draw icon
@@ -172,10 +175,13 @@ namespace Oxygen
         private:
 
         //! parent client
-        Client &_client;
+        const Client &_client;
 
         //! helper
         DecoHelper &_helper;
+
+        //! backing store pixmap (when compositing is not active)
+        QPixmap _pixmap;
 
         //! button type
         ButtonType _type;

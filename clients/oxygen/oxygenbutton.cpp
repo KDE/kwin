@@ -111,7 +111,7 @@ namespace Oxygen
 
 
     //___________________________________________________
-    void Button::enterEvent( QEvent* event )
+    void Button::enterEvent( QEvent *event )
     {
 
         KCommonDecorationButton::enterEvent( event );
@@ -127,7 +127,7 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::leaveEvent( QEvent* event )
+    void Button::leaveEvent( QEvent *event )
     {
 
         KCommonDecorationButton::leaveEvent( event );
@@ -144,7 +144,7 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::mousePressEvent( QMouseEvent* event )
+    void Button::mousePressEvent( QMouseEvent *event )
     {
 
         if( _type == ButtonMax || event->button() == Qt::LeftButton )
@@ -167,7 +167,20 @@ namespace Oxygen
     }
 
     //___________________________________________________
-    void Button::paintEvent( QPaintEvent* event )
+    void Button::resizeEvent( QResizeEvent *event )
+    {
+
+        // resize backing store pixmap
+        if( !_client.compositingActive() )
+        { _pixmap = QPixmap( event->size() ); }
+
+        // base class implementation
+        KCommonDecorationButton::resizeEvent( event );
+
+    }
+
+    //___________________________________________________
+    void Button::paintEvent(QPaintEvent *event)
     {
 
         if( _client.hideTitleBar() ) return;
@@ -181,31 +194,26 @@ namespace Oxygen
 
         } else {
 
-            // create temporary pixmap to avoid flicker
-            QPixmap pixmap( size() );
             {
 
                 // create painter
-                QPainter painter( &pixmap );
+                QPainter painter( &_pixmap );
                 painter.setRenderHints(QPainter::Antialiasing);
                 painter.setClipRect( this->rect().intersected( event->rect() ) );
 
                 // render parent background
-                // parentWidget()->render( &painter, QPoint(), geometry(), QWidget::DrawWindowBackground );
-
-                painter.save();
                 painter.translate( -geometry().topLeft() );
-                _client.paint( painter );
-                painter.restore();
+                _client.paintBackground( painter );
 
                 // render buttons
+                painter.translate( geometry().topLeft() );
                 paint( painter );
 
             }
 
             QPainter painter(this);
             painter.setClipRegion( event->region() );
-            painter.drawPixmap( QPoint(), pixmap );
+            painter.drawPixmap( QPoint(), _pixmap );
 
         }
 
