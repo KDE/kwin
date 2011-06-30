@@ -28,7 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_opengl.h"
 #include "screenedge.h"
 #include "unmanaged.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -108,10 +110,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
+#ifdef KWIN_BUILD_TABBOX
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
     connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
     connect(ws->tabBox(), SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
+#endif
     // connect all clients
     foreach (Client *c, ws->clientList()) {
         setupClientConnections(c);
@@ -751,22 +755,28 @@ void EffectsHandlerImpl::setElevatedWindow(EffectWindow* w, bool set)
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
-    if (Client* c = dynamic_cast< Client* >(static_cast< EffectWindowImpl* >(w)->window()))
+#ifdef KWIN_BUILD_TABBOX
+    if (Client* c = dynamic_cast< Client* >(static_cast< EffectWindowImpl* >(w)->window())) {
+
         if (Workspace::self()->hasTabBox()) {
             Workspace::self()->tabBox()->setCurrentClient(c);
         }
+    }
+#endif
 }
 
 void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         Workspace::self()->tabBox()->setCurrentDesktop(desktop);
     }
-
+#endif
 }
 
 EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
+#ifdef KWIN_BUILD_TABBOX
     EffectWindowList ret;
     ClientList clients;
     if (Workspace::self()->hasTabBox()) {
@@ -777,51 +787,66 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
     foreach (Client * c, clients)
     ret.append(c->effectWindow());
     return ret;
+#else
+    return EffectWindowList;
+#endif
 }
 
 void EffectsHandlerImpl::refTabBox()
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         Workspace::self()->tabBox()->reference();
     }
+#endif
 }
 
 void EffectsHandlerImpl::unrefTabBox()
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         Workspace::self()->tabBox()->unreference();
     }
+#endif
 }
 
 void EffectsHandlerImpl::closeTabBox()
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         Workspace::self()->tabBox()->close();
     }
+#endif
 }
 
 QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         return Workspace::self()->tabBox()->currentDesktopList();
     }
+#endif
     return QList< int >();
 }
 
 int EffectsHandlerImpl::currentTabBoxDesktop() const
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         return Workspace::self()->tabBox()->currentDesktop();
     }
+#endif
     return -1;
 }
 
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 {
+#ifdef KWIN_BUILD_TABBOX
     if (Workspace::self()->hasTabBox()) {
         if (Client* c = Workspace::self()->tabBox()->currentClient())
         return c->effectWindow();
     }
+#endif
     return NULL;
 }
 

@@ -45,6 +45,7 @@ endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
 OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
+OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
@@ -92,15 +93,6 @@ set(kwin_KDEINIT_SRCS
    utils.cpp 
    layers.cpp 
    main.cpp 
-   tabbox.cpp
-   tabbox/clientitemdelegate.cpp 
-   tabbox/clientmodel.cpp 
-   tabbox/desktopitemdelegate.cpp 
-   tabbox/desktopmodel.cpp 
-   tabbox/itemlayoutconfig.cpp 
-   tabbox/tabboxconfig.cpp 
-   tabbox/tabboxhandler.cpp 
-   tabbox/tabboxview.cpp 
    desktopchangeosd.cpp 
    options.cpp 
    outline.cpp
@@ -161,6 +153,21 @@ set(kwin_KDEINIT_SRCS
    # floating
    tilinglayouts/floating/floating.cpp
    )
+
+if(KWIN_BUILD_TABBOX)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        tabbox.cpp
+        tabbox/clientitemdelegate.cpp
+        tabbox/clientmodel.cpp
+        tabbox/desktopitemdelegate.cpp
+        tabbox/desktopmodel.cpp
+        tabbox/itemlayoutconfig.cpp
+        tabbox/tabboxconfig.cpp
+        tabbox/tabboxhandler.cpp
+        tabbox/tabboxview.cpp
+  )
+endif(KWIN_BUILD_TABBOX)
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 

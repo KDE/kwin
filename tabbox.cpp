@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KDE/KAction>
 #include <KDebug>
 #include <KLocale>
 #include <kkeyserver.h>
@@ -46,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include "outline.h"
-#include <kaction.h>
 
 // specify externals before namespace
 
@@ -274,8 +274,8 @@ int TabBoxClientImpl::height() const
 /*********************************************************
 * TabBox
 *********************************************************/
-TabBox::TabBox()
-    : QObject()
+TabBox::TabBox(QObject *parent)
+    : QObject(parent)
     , m_displayRefcount(0)
     , m_forcedGlobalMouseGrab(false)
     , m_desktopGrab(false)

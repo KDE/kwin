@@ -48,7 +48,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -187,9 +189,11 @@ Client::Client(Workspace* ws)
     //Client to workspace connections require that each
     //client constructed be connected to the workspace wrapper
 
+#ifdef KWIN_BUILD_TABBOX
     // TabBoxClient
     m_tabBoxClient = new TabBox::TabBoxClientImpl();
     m_tabBoxClient->setClient(this);
+#endif
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
     client_size = QSize(100, 100);
@@ -222,7 +226,9 @@ Client::~Client()
     assert(block_geometry_updates == 0);
     assert(!check_active_modal);
     delete bridge;
+#ifdef KWIN_BUILD_TABBOX
     delete m_tabBoxClient;
+#endif
     delete scriptCache;
 }
 

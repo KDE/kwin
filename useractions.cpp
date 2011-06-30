@@ -53,7 +53,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 
 #include "killwindow.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 
 namespace KWin
 {
@@ -557,9 +559,11 @@ void Workspace::initShortcuts()
     //disable_shortcuts_keys->disableBlocking( true );
 #define IN_KWIN
 #include "kwinbindings.cpp"
+#ifdef KWIN_BUILD_TABBOX
     if (tab_box) {
         tab_box->initShortcuts(actionCollection);
     }
+#endif
     discardPopup(); // so that it's recreated next time
 }
 

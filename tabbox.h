@@ -96,7 +96,7 @@ class TabBox : public QObject
 {
     Q_OBJECT
 public:
-    TabBox();
+    TabBox(QObject *parent = NULL);
     ~TabBox();
 
     Client* currentClient();

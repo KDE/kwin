@@ -30,7 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 #include "atoms.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 #include "group.h"
 #include "rules.h"
 #include "unmanaged.h"
@@ -242,10 +244,12 @@ bool Workspace::workspaceEvent(XEvent * e)
         was_user_interaction = true;
         // fallthrough
     case MotionNotify:
+#ifdef KWIN_BUILD_TABBOX
         if (tabBox()->isGrabbed()) {
             tab_box->handleMouseEvent(e);
             return true;
         }
+#endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
             return true;
         break;
@@ -258,18 +262,22 @@ bool Workspace::workspaceEvent(XEvent * e)
             movingClient->keyPressEvent(keyQt);
             return true;
         }
+#ifdef KWIN_BUILD_TABBOX
         if (tabBox()->isGrabbed()) {
             tabBox()->keyPress(keyQt);
             return true;
         }
+#endif
         break;
     }
     case KeyRelease:
         was_user_interaction = true;
+#ifdef KWIN_BUILD_TABBOX
         if (tabBox()->isGrabbed()) {
             tabBox()->keyRelease(e->xkey);
             return true;
         }
+#endif
         break;
     case ConfigureNotify:
         if (e->xconfigure.event == rootWindow())

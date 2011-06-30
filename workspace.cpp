@@ -45,7 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "tile.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 #include "desktopchangeosd.h"
 #include "atoms.h"
 #include "placement.h"
@@ -122,7 +124,9 @@ Workspace::Workspace(bool restore)
     , was_user_interaction(false)
     , session_saving(false)
     , block_focus(0)
+#ifdef KWIN_BUILD_TABBOX
     , tab_box(0)
+#endif
     , desktop_change_osd(0)
     , popup(0)
     , advanced_popup(0)
@@ -208,8 +212,10 @@ Workspace::Workspace(bool restore)
 
     Extensions::init();
     compositingSuspended = !options->useCompositing;
+#ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
-    tab_box = new TabBox::TabBox();
+    tab_box = new TabBox::TabBox(this);
+#endif
     setupCompositing();
 
     // Compatibility
@@ -476,7 +482,6 @@ Workspace::~Workspace()
             it != unmanaged.constEnd();
             ++it)
         (*it)->release();
-    delete tab_box;
     delete desktop_change_osd;
     delete m_outline;
     discardPopup();
@@ -587,8 +592,10 @@ void Workspace::addClient(Client* c, allowed_t)
     if (c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows(true);
     checkNonExistentClients();
+#ifdef KWIN_BUILD_TABBOX
     if (tabBox()->isGrabbed())
         tab_box->reset(true);
+#endif
 }
 
 void Workspace::addUnmanaged(Unmanaged* c, allowed_t)
@@ -619,8 +626,10 @@ void Workspace::removeClient(Client* c, allowed_t)
     if (c->isNormalWindow())
         Notify::raise(Notify::Delete);
 
+#ifdef KWIN_BUILD_TABBOX
     if (tabBox()->isGrabbed() && tabBox()->currentClient() == c)
         tab_box->nextPrev(true);
+#endif
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
     if (tilingEnabled() && tilingLayouts.value(c->desktop())) {
@@ -656,8 +665,10 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateCompositeBlocking();
 
+#ifdef KWIN_BUILD_TABBOX
     if (tabBox()->isGrabbed())
         tab_box->reset(true);
+#endif
 
     updateClientArea();
 }
@@ -910,7 +921,9 @@ void Workspace::slotReconfigure()
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
 
+#ifdef KWIN_BUILD_TABBOX
     tab_box->reconfigure();
+#endif
     desktop_change_osd->reconfigure();
     initPositioning->reinitCascading(0);
     discardPopup();
@@ -1080,7 +1093,11 @@ QStringList Workspace::configModules(bool controlCenter)
         args << "kwinoptions";
     else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
         args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing" << "kwintabbox" << "kwinscreenedges";
+             << "kwinrules" << "kwincompositing"
+#ifdef KWIN_BUILD_TABBOX
+             << "kwintabbox"
+#endif
+             << "kwinscreenedges";
     return args;
 }
 
@@ -2081,6 +2098,21 @@ ScreenEdge* Workspace::screenEdge()
     return &m_screenEdge;
 }
 
+bool Workspace::hasTabBox() const
+{
+#ifdef KWIN_BUILD_TABBOX
+    return (tab_box != NULL);
+#else
+    return false;
+#endif
+}
+
+#ifdef KWIN_BUILD_TABBOX
+TabBox::TabBox* Workspace::tabBox() const
+{
+    return tab_box;
+}
+#endif
 
 } // namespace
 

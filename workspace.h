@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sm.h"
 
 #include <X11/Xlib.h>
-#include "tabbox.h"
 
 // TODO: Cleanup the order of things in this .h file
 
@@ -60,10 +59,12 @@ class QPushButton;
 namespace KWin
 {
 
+#ifdef KWIN_BUILD_TABBOX
 namespace TabBox
 {
 class TabBox;
 }
+#endif
 
 class Client;
 class Tile;
@@ -349,12 +350,11 @@ public:
     }
 
     // Tab box
-    TabBox::TabBox *tabBox() const {
-        return tab_box;
-    }
-    bool hasTabBox() const {
-      return tab_box != NULL;
-    }
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox() const;
+#endif
+    bool hasTabBox() const;
+
     const QVector<int> &desktopFocusChain() const {
         return desktop_focus_chain;
     }
@@ -847,7 +847,9 @@ private:
 
     int block_focus;
 
+#ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox* tab_box;
+#endif
     DesktopChangeOSD* desktop_change_osd;
 
     QMenu* popup;
