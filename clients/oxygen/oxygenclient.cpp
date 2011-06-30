@@ -602,7 +602,7 @@ namespace Oxygen
         }
 
         // background pixmap
-        if( helper().hasBackgroundPixmap( windowId() ) )
+        if( isPreview() || helper().hasBackgroundPixmap( windowId() ) )
         {
             int offset = layoutMetric( LM_OuterPaddingTop );
 
