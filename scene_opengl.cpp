@@ -586,13 +586,13 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (!(mask & PAINT_DECORATION_ONLY)) {
         texture.bind();
         prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-        renderQuads(mask, region, data.quads.select(WindowQuadContents), toplevel->size(), texture.getYInverted());
+        renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
         restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (static_cast<SceneOpenGL*>(scene)->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, data.quads.select(WindowQuadContents), toplevel->size(), texture.getYInverted());
+            renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
@@ -673,13 +673,13 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
     prepareStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
-    renderQuads(0, region, quads, QSizeF(1.0, 1.0), texture->getYInverted());
+    renderQuads(0, region, quads, texture, true);
     restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(0, region, quads, QSizeF(1.0, 1.0), texture->getYInverted());
+        renderQuads(0, region, quads, texture);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 #endif
@@ -738,14 +738,25 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
     GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.data(), texcoords.data());
 }
 
-void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads, const QSizeF &size, bool yInverted)
+void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads, Texture *tex, bool normalized)
 {
     if (quads.isEmpty())
         return;
     // Render geometry
     float* vertices;
     float* texcoords;
-    quads.makeArrays(&vertices, &texcoords, size, yInverted);
+    QSizeF size(tex->size());
+    if (normalized) {
+        size.setWidth(1.0);
+        size.setHeight(1.0);
+    }
+#ifndef KWIN_HAVE_OPENGLES
+    if (tex->target() == GL_TEXTURE_RECTANGLE_ARB) {
+        size.setWidth(1.0);
+        size.setHeight(1.0);
+    }
+#endif
+    quads.makeArrays(&vertices, &texcoords, size, tex->getYInverted());
     GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices, texcoords);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES);
     delete[] vertices;
