@@ -119,16 +119,32 @@ namespace Oxygen
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
     connect( ui.useAnimations, SIGNAL( toggled( bool ) ), ui.animateTitleChange, SLOT( setEnabled( bool ) ) );
+    connect( ui._expertModeButton, SIGNAL( pressed( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
 
-    toggleExpertMode( false );
+    ui._expertModeButton->setIcon( KIcon("configure") );
+
+    toggleExpertModeInternal( false );
 
   }
 
   //_________________________________________________________
   void ConfigurationUi::toggleExpertMode( bool value )
   {
+    ui._expertModeContainer->hide();
+    toggleExpertModeInternal( value );
+  }
 
+  //_________________________________________________________
+  void ConfigurationUi::toggleExpertModeInternal( bool value )
+  {
+
+    // store value
     _expertMode = value;
+
+    // update button text
+    ui._expertModeButton->setText( _expertMode ? i18n( "Hide Advanced Configuration Options" ):i18n( "Show Advanced Configuration Options" ) );
+
+    ui.tabsEnabled->setVisible( _expertMode );
     ui.animateTitleChange->setVisible( _expertMode );
     ui.narrowButtonSpacing->setVisible( _expertMode );
 

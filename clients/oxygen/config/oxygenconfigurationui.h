@@ -58,6 +58,15 @@ namespace Oxygen
     //! toggle expert mode
     void toggleExpertMode( bool );
 
+    protected slots:
+
+    //! toggle expert mode
+    void toggleExpertModeInternal( void )
+    { toggleExpertModeInternal( !_expertMode ); }
+
+    //! toggle expert mode
+    void toggleExpertModeInternal( bool );
+
     signals:
 
     //! emmited when changed
