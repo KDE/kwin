@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QtDebug>
 #include <QtGui/QX11Info>
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
@@ -168,27 +169,17 @@ void ZoomEffect::recreateTexture()
     QString theme = mousecfg.readEntry("cursorTheme", QString());
     QString size  = mousecfg.readEntry("cursorSize", QString());
 
-    // try to find the to the theme-name matching cursor-directory.
-    QByteArray themePath;
-    foreach (const QString & baseDir, QString(XcursorLibraryPath()).split(':', QString::SkipEmptyParts)) {
-        QDir dir(baseDir);
-        if (!dir.exists()) continue;
-        if (!theme.isEmpty() && dir.cd(theme)) {
-            themePath = QFile::encodeName(dir.absolutePath());
-            break; // theme found, job is done and we can abort the search now
-        }
-        if (dir.cd("default")) // default is better then nothing, so keep it as backup
-            themePath = QFile::encodeName(dir.absolutePath());
-    }
-
     // fetch a reasonable size for the cursor-theme image
     bool ok;
     int iconSize = size.toInt(&ok);
     if (!ok)
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
+    iconSize = nominalCursorSize(iconSize);
 
     // load the cursor-theme image from the Xcursor-library
-    XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", themePath, nominalCursorSize(iconSize));
+    XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", theme.toLocal8Bit(), iconSize);
+    if (!ximg) // default is better then nothing, so keep it as backup
+        ximg = XcursorLibraryLoadImage("left_ptr", "default", iconSize);
     if (ximg) {
         // turn the XcursorImage into a QImage that will be used to create the GLTexture/XRenderPicture.
         imageWidth = ximg->width;
@@ -203,6 +194,10 @@ void ZoomEffect::recreateTexture()
             xrenderPicture = new XRenderPicture(QPixmap::fromImage(img));
 #endif
         XcursorImageDestroy(ximg);
+    }
+    else {
+        qDebug() << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
+        mouseTracking = MouseTrackingProportional;
     }
 }
 
@@ -253,6 +248,15 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
     effects->prePaintScreen(data, time);
 }
+
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+static XTransform xrenderIdentity = {{
+    { XDoubleToFixed( 1.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ) },
+    { XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ), XDoubleToFixed( 0.0 ) },
+    { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
+}};
+#endif
 
 void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
@@ -323,6 +327,15 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
         // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
         // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
+        int w = imageWidth;
+        int h = imageHeight;
+        if (mousePointer == MousePointerScale) {
+            w *= zoom;
+            h *= zoom;
+        }
+        QPoint p = QCursor::pos();
+        QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
+
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if (texture) {
 #ifndef KWIN_HAVE_OPENGLES
@@ -331,14 +344,6 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             texture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            int w = imageWidth;
-            int h = imageHeight;
-            if (mousePointer == MousePointerScale) {
-                w *= zoom;
-                h *= zoom;
-            }
-            QPoint p = QCursor::pos();
-            QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
             texture->render(region, rect);
             texture->unbind();
             glDisable(GL_BLEND);
@@ -349,9 +354,18 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (xrenderPicture) {
-            QPoint p = QCursor::pos();
-            QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, imageWidth, imageHeight);
+            if (mousePointer == MousePointerScale) {
+                XRenderSetPictureFilter(display(), *xrenderPicture, const_cast<char*>("good"), NULL, 0);
+                XTransform xform = {{
+                    { XDoubleToFixed( 1.0 / zoom ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ) },
+                    { XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 / zoom ), XDoubleToFixed( 0.0 ) },
+                    { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
+                }};
+                XRenderSetPictureTransform( display(), *xrenderPicture, &xform );
+            }
             XRenderComposite(display(), PictOpOver, *xrenderPicture, None, effects->xrenderBufferPicture(), 0, 0, 0, 0, rect.x(), rect.y(), rect.width(), rect.height());
+            if (mousePointer == MousePointerScale)
+                XRenderSetPictureTransform( display(), *xrenderPicture, &xrenderIdentity );
         }
 #endif
     }
