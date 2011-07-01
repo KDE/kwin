@@ -646,7 +646,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     decorationTexture->bind();
 
     prepareStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
-    makeDecorationArrays(quads, rect, decorationTexture->getYInverted());
+    makeDecorationArrays(quads, rect, decorationTexture);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES);
     restoreStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
     decorationTexture->unbind();
@@ -685,14 +685,20 @@ void SceneOpenGL::Window::paintShadow(WindowQuadType type, const QRegion &region
 #endif
 }
 
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect& rect, bool y_inverted) const
+void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const
 {
     QVector<float> vertices;
     QVector<float> texcoords;
     vertices.reserve(quads.count() * 6 * 2);
     texcoords.reserve(quads.count() * 6 * 2);
-    float width = rect.width();
-    float height = rect.height();
+    float width = tex->size().width();
+    float height = tex->size().height();
+#ifndef KWIN_HAVE_OPENGLES
+    if (tex->target() == GL_TEXTURE_RECTANGLE_ARB) {
+        width = 1.0;
+        height = 1.0;
+    }
+#endif
     foreach (const WindowQuad & quad, quads) {
         vertices << quad[ 1 ].x();
         vertices << quad[ 1 ].y();
@@ -707,7 +713,7 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
         vertices << quad[ 1 ].x();
         vertices << quad[ 1 ].y();
 
-        if (y_inverted) {
+        if (tex->getYInverted()) {
             texcoords << (float)(quad.originalRight() - rect.x()) / width;
             texcoords << (float)(quad.originalTop() - rect.y()) / height;
             texcoords << (float)(quad.originalLeft() - rect.x()) / width;

@@ -168,7 +168,7 @@ protected:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
     void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
-    void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect, bool y_inverted) const;
+    void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, Texture* tex, bool normalized = false);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
