@@ -353,11 +353,18 @@ bool Toplevel::isOnScreen(int screen) const
 
 void Toplevel::getShadow()
 {
+    QRect dirtyRect;  // old & new shadow region
     if (hasShadow()) {
+        dirtyRect = shadow()->shadowRegion().boundingRect();
         effectWindow()->sceneWindow()->shadow()->updateShadow();
     } else {
         Shadow::createShadow(this);
-        addRepaintFull();
+    }
+    if (hasShadow())
+        dirtyRect |= shadow()->shadowRegion().boundingRect();
+    if (dirtyRect.isValid()) {
+        dirtyRect.translate(pos());
+        workspace()->addRepaint(dirtyRect);
     }
 }
 

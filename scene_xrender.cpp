@@ -554,6 +554,9 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     else
         transformed_shape = shape();
 
+    if (toplevel->hasShadow())
+        transformed_shape |= toplevel->shadow()->shadowRegion();
+
     XTransform xform = {{
             { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
             { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
@@ -636,11 +639,13 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         }
     }
 
-    //shadow
-    if (m_shadow && !(m_shadow->shadowRegion().isEmpty()) && !(mask & PAINT_DECORATION_ONLY)) {
-        QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
-        SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
+    QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
+    Picture shadowAlpha;
+    SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
+    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty() && (isOpaque() || !(mask & PAINT_DECORATION_ONLY));
+    if (wantShadow) {
         m_xrenderShadow->layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
+        shadowAlpha = alphaMask(data.opacity);
         if (!scaled) {
             stlr = mapToScreen(mask, data, stlr);
             str = mapToScreen(mask, data, str);
@@ -650,26 +655,36 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             sbr = mapToScreen(mask, data, sbr);
             sblr = mapToScreen(mask, data, sblr);
             slr = mapToScreen(mask, data, slr);
-
-            Picture alpha = alphaMask(data.opacity);
-
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTopLeft), alpha, buffer, 0, 0, 0, 0, stlr.x(), stlr.y(), stlr.width(), stlr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTop), alpha, buffer, 0, 0, 0, 0, str.x(), str.y(), str.width(), str.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowTopRight), alpha, buffer, 0, 0, 0, 0, strr.x(), strr.y(), strr.width(), strr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowLeft), alpha, buffer, 0, 0, 0, 0, slr.x(), slr.y(), slr.width(), slr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowRight), alpha, buffer, 0, 0, 0, 0, srr.x(), srr.y(), srr.width(), srr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottomLeft), alpha, buffer, 0, 0, 0, 0, sblr.x(), sblr.y(), sblr.width(), sblr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottom), alpha, buffer, 0, 0, 0, 0, sbr.x(), sbr.y(), sbr.width(), sbr.height());
-            XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadowBottomRight), alpha, buffer, 0, 0, 0, 0, sbrr.x(), sbrr.y(), sbrr.width(), sbrr.height());
-
-        } else {
-            //FIXME: At the moment shadows are not painted for scaled windows
         }
+        // else TODO
     }
 
     for (PaintClipper::Iterator iterator;
             !iterator.isDone();
             iterator.next()) {
+
+#define RENDER_SHADOW_TILE(_TILE_, _RECT_) \
+XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(WindowQuadShadow##_TILE_), \
+                 shadowAlpha, buffer, 0, 0, 0, 0, _RECT_.x(), _RECT_.y(), _RECT_.width(), _RECT_.height())
+
+        //shadow
+        if (wantShadow) {
+            if (!scaled) {
+                RENDER_SHADOW_TILE(TopLeft, stlr);
+                RENDER_SHADOW_TILE(Top, str);
+                RENDER_SHADOW_TILE(TopRight, strr);
+                RENDER_SHADOW_TILE(Left, slr);
+                RENDER_SHADOW_TILE(Right, srr);
+                RENDER_SHADOW_TILE(BottomLeft, sblr);
+                RENDER_SHADOW_TILE(Bottom, sbr);
+                RENDER_SHADOW_TILE(BottomRight, sbrr);
+            } else {
+                //FIXME: At the moment shadows are not painted for scaled windows
+            }
+        }
+
+#undef RENDER_SHADOW_TILE
+
         QRect decorationRect;
         if (client || deleted) {
             bool noBorder = true;
