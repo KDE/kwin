@@ -469,22 +469,14 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             return; // Only painting translucent and window is opaque
         }*/
 
-    // Intersect the clip region with the rectangle the window occupies on the screen
-    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
-        region &= toplevel->visibleRect();
-
     if (region.isEmpty())
         return;
 
-    if (region != infiniteRegion()) {
+    if (region != infiniteRegion() && !(mask & PAINT_WINDOW_TRANSFORMED)) {
         WindowQuadList quads;
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
         foreach (const WindowQuad &quad, data.quads) {
-            if (quad.isTransformed()) {
-                quads << quad;
-                continue;
-            }
             foreach (const QRect &r, filterRegion.rects()) {
                 const QRectF rf(r);
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
