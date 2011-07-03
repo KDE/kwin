@@ -752,7 +752,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
             } else if (stop) {
                 data.opacity *= 1.0 - timeLine.currentValue();
             }
-            effects->paintWindow(w,
+            effects->drawWindow(w,
                                  PAINT_WINDOW_TRANSFORMED,
                                  infiniteRegion(), data);
             shader->setUniform("screenTransformation", origMatrix);
