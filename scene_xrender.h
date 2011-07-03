@@ -162,6 +162,9 @@ public:
 
 protected:
     virtual void buildQuads();
+    virtual bool prepareBackend() {
+        return true;
+    };
 
 private:
     QPixmap m_resizedElements[ShadowElementsCount];
