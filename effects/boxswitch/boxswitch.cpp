@@ -724,7 +724,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
 
         // paint one part of the thumbnail
         effects->paintWindow(w,
-                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                              info->thumbnail, data);
 
         QRect secondThumbnail;
@@ -764,7 +764,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->paintWindow(w,
-                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                              info->thumbnail, data);
     } else if ((windows.size() % 2 == 0) && (w == right_window)) {
         // in case of even number of thumbnails:
@@ -805,7 +805,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // left quads are painted on right side of frame
         data.quads = leftQuads;
         effects->drawWindow(w,
-                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                             info->thumbnail, data);
 
         // right quads are painted on left side of frame
@@ -819,7 +819,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->drawWindow(w,
-                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                             info->thumbnail, data);
     } else {
         effects->drawWindow(w,
