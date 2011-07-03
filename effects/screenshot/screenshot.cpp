@@ -118,9 +118,10 @@ void ScreenShotEffect::postPaintScreen()
             m_lastScreenshot = QPixmap::fromImage(img);
             if (m_lastScreenshot.handle() == 0) {
                 Pixmap xpix = XCreatePixmap(display(), rootWindow(), m_lastScreenshot.width(),
-                                            m_lastScreenshot.height(), XDefaultDepth(display(), QX11Info::appScreen()));
+                                            m_lastScreenshot.height(), 32);
                 m_lastScreenshot = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
                 QPainter p(&m_lastScreenshot);
+                p.setCompositionMode(QPainter::CompositionMode_Source);
                 p.drawImage(QPoint(0, 0), img);
             }
             emit screenshotCreated(m_lastScreenshot.handle());
