@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "kwinadaptor.h"
 #include "unmanaged.h"
-#include "scene.h"
 #include "deleted.h"
 #include "effects.h"
 #include "screenedge.h"

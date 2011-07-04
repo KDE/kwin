@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "rules.h"
 #include "unmanaged.h"
-#include "scene.h"
 #include "screenedge.h"
 #include "effects.h"
 
