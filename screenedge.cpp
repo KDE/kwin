@@ -352,7 +352,7 @@ bool ScreenEdge::isEntered(XEvent* e)
     return false;
 }
 
-void ScreenEdge::raiseWindows()
+void ScreenEdge::ensureOnTop()
 {
     Window* windows = new Window[ 8 ]; // There are up to 8 borders
     int pos = 0;

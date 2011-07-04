@@ -89,7 +89,7 @@ public:
      * Raise electric border windows to the real top of the screen. We only need
      * to do this if an effect input window is active.
      */
-    void raiseWindows();
+    void ensureOnTop();
     /**
     * Called when the user entered an electric border with the mouse.
     * It may switch to another virtual desktop.

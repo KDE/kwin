@@ -870,7 +870,7 @@ Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int
 
     // Raise electric border windows above the input windows
     // so they can still be triggered.
-    Workspace::self()->screenEdge()->raiseWindows();
+    Workspace::self()->screenEdge()->ensureOnTop();
 
     return win;
 }
@@ -941,7 +941,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     delete[] wins;
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
-    Workspace::self()->screenEdge()->raiseWindows();
+    Workspace::self()->screenEdge()->ensureOnTop();
 }
 
 QPoint EffectsHandlerImpl::cursorPos() const
