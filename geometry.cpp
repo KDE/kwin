@@ -72,8 +72,7 @@ void Workspace::desktopResized()
     rootInfo->setDesktopGeometry(-1, desktop_geometry);
 
     updateClientArea();
-    m_screenEdge.destroy();
-    m_screenEdge.update();
+    m_screenEdge.update(true);
     if (compositing())
         compositeResetTimer.start(0);
 }

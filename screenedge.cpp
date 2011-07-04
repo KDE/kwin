@@ -66,7 +66,7 @@ void ScreenEdge::init()
     update();
 }
 
-void ScreenEdge::update()
+void ScreenEdge::update(bool force)
 {
     m_screenEdgeTimeFirst = xTime();
     m_screenEdgeTimeLast = xTime();
@@ -79,10 +79,12 @@ void ScreenEdge::update()
     m_screenEdgeRight = r.right();
 
     for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (m_screenEdgeReserved[pos] == 0) {
+        if (force || m_screenEdgeReserved[pos] == 0) {
             if (m_screenEdgeWindows[pos] != None)
                 XDestroyWindow(display(), m_screenEdgeWindows[pos]);
             m_screenEdgeWindows[pos] = None;
+        }
+        if (m_screenEdgeReserved[pos] == 0) {
             continue;
         }
         if (m_screenEdgeWindows[pos] != None)
@@ -110,15 +112,6 @@ void ScreenEdge::update()
         Atom version = 4; // XDND version
         XChangeProperty(display(), m_screenEdgeWindows[pos], atoms->xdnd_aware, XA_ATOM,
                         32, PropModeReplace, (unsigned char*)(&version), 1);
-    }
-}
-
-void ScreenEdge::destroy()
-{
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (m_screenEdgeWindows[pos] != None)
-            XDestroyWindow(display(), m_screenEdgeWindows[pos]);
-        m_screenEdgeWindows[pos] = None;
     }
 }
 

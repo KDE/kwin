@@ -91,10 +91,6 @@ public:
      */
     void raiseWindows();
     /**
-     * Destroy all existing screen edge windows
-     */
-    void destroy();
-    /**
     * Called when the user entered an electric border with the mouse.
     * It may switch to another virtual desktop.
     * @param e the X event which is passed to this method.
@@ -111,7 +107,7 @@ public Q_SLOTS:
      * a new action or enabled desktop switching. Remove, if user deleted
      * actions or disabled desktop switching.
      */
-    void update();
+    void update(bool force=false);
 private:
     /**
      * Switch the desktop if desktop switching is enabled and a screen edge
