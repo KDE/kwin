@@ -121,10 +121,6 @@ public:
         y_inverted = inverted;
     }
 
-    bool getYInverted() const {
-        return y_inverted;
-    }
-
 protected:
     Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();

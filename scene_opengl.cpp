@@ -738,7 +738,7 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
         vertices << quad[ 1 ].x();
         vertices << quad[ 1 ].y();
 
-        if (tex->getYInverted()) {
+        if (tex->isYInverted()) {
             texcoords << (float)(quad.originalRight() - rect.x()) / width;
             texcoords << (float)(quad.originalTop() - rect.y()) / height;
             texcoords << (float)(quad.originalLeft() - rect.x()) / width;
