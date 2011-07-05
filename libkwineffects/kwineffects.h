@@ -739,7 +739,6 @@ public:
 
     CompositingType compositingType() const;
     virtual unsigned long xrenderBufferPicture() = 0;
-    bool saturationSupported() const;
     virtual void reconfigure() = 0;
 
     /**
