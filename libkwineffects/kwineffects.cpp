@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwineffects.h"
 
-#include "kwinglutils.h"
 #include "kwinxrenderutils.h"
 
 #include <QtDBus/QtDBus>
