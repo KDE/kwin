@@ -774,7 +774,7 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
     ret.append(c->effectWindow());
     return ret;
 #else
-    return EffectWindowList;
+    return EffectWindowList();
 #endif
 }
 
