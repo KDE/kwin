@@ -118,7 +118,8 @@ set(kwin_KDEINIT_SRCS
    group.cpp 
    bridge.cpp 
    manage.cpp 
-   notifications.cpp 
+   notifications.cpp
+   overlaywindow.cpp
    activation.cpp 
    useractions.cpp 
    geometry.cpp 

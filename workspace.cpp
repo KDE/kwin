@@ -59,6 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
+#include "overlaywindow.h"
 #include "tilinglayout.h"
 
 #include "scripting/scripting.h"
@@ -149,9 +150,6 @@ Workspace::Workspace(bool restore)
     , compositingSuspended(false)
     , compositingBlocked(false)
     , xrrRefreshRate(0)
-    , overlay(None)
-    , overlay_visible(true)
-    , overlay_shown(false)
     , transSlider(NULL)
     , transButton(NULL)
     , forceUnredirectCheck(true)
@@ -532,7 +530,7 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
 Unmanaged* Workspace::createUnmanaged(Window w)
 {
-    if (w == overlay)
+    if (w == scene->overlayWindow()->window())
         return NULL;
     Unmanaged* c = new Unmanaged(this);
     if (!c->track(w)) {

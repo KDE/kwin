@@ -77,6 +77,7 @@ Sources and other compositing managers:
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "overlaywindow.h"
 
 #include <math.h>
 

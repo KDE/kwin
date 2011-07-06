@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "overlaywindow.h"
 #include "kwinxrenderutils.h"
 
 #include <X11/extensions/Xcomposite.h>
@@ -99,16 +100,16 @@ SceneXrender::SceneXrender(Workspace* ws)
         return;
     }
     KXErrorHandler xerr;
-    if (wspace->createOverlay()) {
-        wspace->setupOverlay(None);
+    if (m_overlayWindow->create()) {
+        m_overlayWindow->setup(None);
         XWindowAttributes attrs;
-        XGetWindowAttributes(display(), wspace->overlayWindow(), &attrs);
+        XGetWindowAttributes(display(), m_overlayWindow->window(), &attrs);
         format = XRenderFindVisualFormat(display(), attrs.visual);
         if (format == NULL) {
             kError(1212) << "Failed to find XRender format for overlay window";
             return;
         }
-        front = XRenderCreatePicture(display(), wspace->overlayWindow(), format, 0, NULL);
+        front = XRenderCreatePicture(display(), m_overlayWindow->window(), format, 0, NULL);
     } else {
         // create XRender picture for the root window
         format = XRenderFindVisualFormat(display(), DefaultVisual(display(), DefaultScreen(display())));
@@ -132,13 +133,13 @@ SceneXrender::~SceneXrender()
 {
     if (!init_ok) {
         // TODO this probably needs to clean up whatever has been created until the failure
-        wspace->destroyOverlay();
+        m_overlayWindow->destroy();
         return;
     }
     XRenderFreePicture(display(), front);
     XRenderFreePicture(display(), buffer);
     buffer = None;
-    wspace->destroyOverlay();
+    m_overlayWindow->destroy();
     foreach (Window * w, windows)
     delete w;
 }
@@ -167,8 +168,8 @@ void SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     }
     int mask = 0;
     paintScreen(&mask, &damage);
-    if (wspace->overlayWindow())  // show the window only after the first pass, since
-        wspace->showOverlay();   // that pass may take long
+    if (m_overlayWindow->window())  // show the window only after the first pass, since
+        m_overlayWindow->show();   // that pass may take long
     lastRenderTime = t.elapsed();
     flushBuffer(mask, damage);
     // do cleanup

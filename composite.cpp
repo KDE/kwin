@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
+#include "overlaywindow.h"
 #include "scene.h"
 #include "scene_basic.h"
 #include "scene_xrender.h"
@@ -379,7 +380,7 @@ void Workspace::performCompositing()
 {
 #ifdef KWIN_HAVE_COMPOSITING
     if (((repaints_region.isEmpty() && !windowRepaintsPending())  // no damage
-            || !overlay_visible)) { // nothing is visible anyway
+            || !scene->overlayWindow()->isVisible())) { // nothing is visible anyway
         vBlankPadding += 3;
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
@@ -492,94 +493,6 @@ void Workspace::stopMousePolling()
     mousePollingTimer.stop();
 }
 
-bool Workspace::createOverlay()
-{
-    assert(overlay == None);
-    if (!Extensions::compositeOverlayAvailable())
-        return false;
-    if (!Extensions::shapeInputAvailable())  // needed in setupOverlay()
-        return false;
-#ifdef HAVE_XCOMPOSITE_OVERLAY
-    overlay = XCompositeGetOverlayWindow(display(), rootWindow());
-    if (overlay == None)
-        return false;
-    XResizeWindow(display(), overlay, displayWidth(), displayHeight());
-    return true;
-#else
-    return false;
-#endif
-}
-
-void Workspace::setupOverlay(Window w)
-{
-    assert(overlay != None);
-    assert(Extensions::shapeInputAvailable());
-    XSetWindowBackgroundPixmap(display(), overlay, None);
-    overlay_shape = QRegion();
-    setOverlayShape(QRect(0, 0, displayWidth(), displayHeight()));
-    if (w != None) {
-        XSetWindowBackgroundPixmap(display(), w, None);
-        XShapeCombineRectangles(display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
-    }
-    XSelectInput(display(), overlay, VisibilityChangeMask);
-}
-
-void Workspace::showOverlay()
-{
-    assert(overlay != None);
-    if (overlay_shown)
-        return;
-    XMapSubwindows(display(), overlay);
-    XMapWindow(display(), overlay);
-    overlay_shown = true;
-}
-
-void Workspace::hideOverlay()
-{
-    assert(overlay != None);
-    XUnmapWindow(display(), overlay);
-    overlay_shown = false;
-    setOverlayShape(QRect(0, 0, displayWidth(), displayHeight()));
-}
-
-void Workspace::setOverlayShape(const QRegion& reg)
-{
-    // Avoid setting the same shape again, it causes flicker (apparently it is not a no-op
-    // and triggers something).
-    if (reg == overlay_shape)
-        return;
-    QVector< QRect > rects = reg.rects();
-    XRectangle* xrects = new XRectangle[ rects.count()];
-    for (int i = 0;
-            i < rects.count();
-            ++i) {
-        xrects[ i ].x = rects[ i ].x();
-        xrects[ i ].y = rects[ i ].y();
-        xrects[ i ].width = rects[ i ].width();
-        xrects[ i ].height = rects[ i ].height();
-    }
-    XShapeCombineRectangles(display(), overlay, ShapeBounding, 0, 0,
-                            xrects, rects.count(), ShapeSet, Unsorted);
-    delete[] xrects;
-    XShapeCombineRectangles(display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
-    overlay_shape = reg;
-}
-
-void Workspace::destroyOverlay()
-{
-    if (overlay == None)
-        return;
-    // reset the overlay shape
-    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
-    XShapeCombineRectangles(display(), overlay, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted);
-    XShapeCombineRectangles(display(), overlay, ShapeInput, 0, 0, &rec, 1, ShapeSet, Unsorted);
-#ifdef HAVE_XCOMPOSITE_OVERLAY
-    XCompositeReleaseOverlayWindow(display(), overlay);
-#endif
-    overlay = None;
-    overlay_shown = false;
-}
-
 bool Workspace::compositingActive()
 {
     return !m_finishingCompositing && compositing();
@@ -588,7 +501,7 @@ bool Workspace::compositingActive()
 // force is needed when the list of windows changes (e.g. a window goes away)
 void Workspace::checkUnredirect(bool force)
 {
-    if (!compositing() || overlay == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
         return;
     if (force)
         forceUnredirectCheck = true;
@@ -598,7 +511,7 @@ void Workspace::checkUnredirect(bool force)
 
 void Workspace::delayedCheckUnredirect()
 {
-    if (!compositing() || overlay == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
@@ -621,7 +534,7 @@ void Workspace::delayedCheckUnredirect()
         if (c->unredirected())
             reg -= c->geometry();
     }
-    setOverlayShape(reg);
+    scene->overlayWindow()->setShape(reg);
 }
 
 //****************************************

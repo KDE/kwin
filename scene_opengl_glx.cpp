@@ -128,7 +128,7 @@ SceneOpenGL::~SceneOpenGL()
 {
     if (!init_ok) {
         // TODO this probably needs to clean up whatever has been created until the failure
-        wspace->destroyOverlay();
+        m_overlayWindow->destroy();
         return;
     }
     foreach (Window * w, windows)
@@ -137,11 +137,11 @@ SceneOpenGL::~SceneOpenGL()
     cleanupGL();
     glXMakeCurrent(display(), None, NULL);
     glXDestroyContext(display(), ctxbuffer);
-    if (wspace->overlayWindow()) {
+    if (m_overlayWindow->window()) {
         if (hasGLXVersion(1, 3))
             glXDestroyWindow(display(), glxbuffer);
         XDestroyWindow(display(), buffer);
-        wspace->destroyOverlay();
+        m_overlayWindow->destroy();
     } else {
         glXDestroyPixmap(display(), glxbuffer);
         XFreeGC(display(), gcroot);
@@ -196,19 +196,19 @@ bool SceneOpenGL::initBuffer()
 {
     if (!initBufferConfigs())
         return false;
-    if (fbcbuffer_db != NULL && wspace->createOverlay()) {
+    if (fbcbuffer_db != NULL && m_overlayWindow->create()) {
         // we have overlay, try to create double-buffered window in it
         fbcbuffer = fbcbuffer_db;
         XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbcbuffer);
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
-        buffer = XCreateWindow(display(), wspace->overlayWindow(), 0, 0, displayWidth(), displayHeight(),
+        buffer = XCreateWindow(display(), m_overlayWindow->window(), 0, 0, displayWidth(), displayHeight(),
                                0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
         if (hasGLXVersion(1, 3))
             glxbuffer = glXCreateWindow(display(), fbcbuffer, buffer, NULL);
         else
             glxbuffer = buffer;
-        wspace->setupOverlay(buffer);
+        m_overlayWindow->setup(buffer);
         db = true;
         XFree(visual);
     } else if (fbcbuffer_nondb != NULL) {
@@ -458,8 +458,8 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 #endif
     glPopMatrix();
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
-    if (wspace->overlayWindow())  // show the window only after the first pass, since
-        wspace->showOverlay();   // that pass may take long
+    if (m_overlayWindow->window())  // show the window only after the first pass, since
+        m_overlayWindow->show();   // that pass may take long
     lastRenderTime = t.elapsed();
     flushBuffer(mask, damage);
     // do cleanup

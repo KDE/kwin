@@ -35,6 +35,7 @@ class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
 class LanczosFilter;
+class OverlayWindow;
 class Shadow;
 
 // The base class for compositing backends.
@@ -95,6 +96,7 @@ public:
     bool waitSyncAvailable() {
         return has_waitSync;
     }
+    OverlayWindow* overlayWindow();
 public Q_SLOTS:
     // opacity of a window changed
     virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
@@ -152,6 +154,7 @@ protected:
     Workspace* wspace;
     bool has_waitSync;
     LanczosFilter* lanczos_filter;
+    OverlayWindow* m_overlayWindow;
 };
 
 // The base class for windows representations in composite backends

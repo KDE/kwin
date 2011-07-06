@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
+#include "overlaywindow.h"
 #include "shadow.h"
 
 #include <kephal/screens.h>
@@ -95,12 +96,14 @@ Scene::Scene(Workspace* ws)
     , wspace(ws)
     , has_waitSync(false)
     , lanczos_filter(new LanczosFilter())
+    , m_overlayWindow(new OverlayWindow())
 {
 }
 
 Scene::~Scene()
 {
     delete lanczos_filter;
+    delete m_overlayWindow;
 }
 
 // returns mask and possibly modified region
@@ -319,6 +322,11 @@ void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, Windo
         lanczos_filter->performPaint(w, mask, region, data);
     else
         w->sceneWindow()->performPaint(mask, region, data);
+}
+
+OverlayWindow* Scene::overlayWindow()
+{
+    return m_overlayWindow;
 }
 
 //****************************************
