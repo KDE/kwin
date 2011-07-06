@@ -404,16 +404,6 @@ void Workspace::performCompositing()
     if (c->readyForPainting())
         windows.append(c);
 #endif
-    foreach (Toplevel * c, windows) {
-        // This could be possibly optimized WRT obscuring, but that'd need being already
-        // past prePaint() phase - probably not worth it.
-        repaints_region |= c->repaints().translated(c->pos());
-        repaints_region |= c->decorationPendingRegion();
-        c->resetRepaints(c->decorationRect());
-        if (c->hasShadow()) {
-            c->resetRepaints(c->shadow()->shadowRegion().boundingRect());
-        }
-    }
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();

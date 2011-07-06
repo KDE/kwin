@@ -136,6 +136,7 @@ protected:
         Window* window;
         QRegion region;
         QRegion clip;
+        QRegion painted_1stpass;
         int mask;
         WindowQuadList quads;
     };
