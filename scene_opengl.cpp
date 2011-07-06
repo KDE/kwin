@@ -623,8 +623,6 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
 void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco)
 {
-    if (quads.isEmpty())
-        return;
     SceneOpenGL::Texture* decorationTexture;
     switch(decorationType) {
     case DecorationTop:
@@ -653,6 +651,16 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
         }
     } else
         return;
+
+    // We have to update the texture although we do not paint anything.
+    // This is especially needed if we draw the opaque part of the window
+    // and the decoration in two different passes (as we in Scene::paintSimpleWindow do).
+    // Otherwise we run into the situation that in the first pass there are some
+    // pending decoration repaints but we dont paint the decoration and in the
+    // second pass it's the other way around.
+    if (quads.isEmpty())
+        return;
+
     if (filter == ImageFilterGood)
         decorationTexture->setFilter(GL_LINEAR);
     else
