@@ -115,8 +115,10 @@ Comment[sr@latin]=Posivljuje površ pri pojavi instrument-table Plasme
 Comment[sv]=Försvaga skrivbordet när Plasmas instrumentpanel visas
 Comment[th]=ลดความอิ่มสีของพื้นที่ทำงาน เมื่อมีการแสดงแดชบอร์ดของพลาสมา
 Comment[tr]=Plasma kontrol paneli gösterilirken masaüstünü solgunlaştır
+Comment[ug]=پىلازما تىزگىن تاختىنى كۆرسەتكەندە ئۈستەلئۈستىنى سۇسلاشتۇر
 Comment[uk]=Зменшення насиченості кольорів стільниці під час показу панелі приладів Плазми
 Comment[x-test]=xxDesaturate the desktop when displaying the Plasma dashboardxx
+Comment[zh_CN]=显示离子部件板时降低桌面饱和度
 Comment[zh_TW]=顯示 Plasma 資訊看板時將桌面淡化
 
 Type=Service

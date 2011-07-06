@@ -98,8 +98,10 @@ Comment[sr@latin]=Upisuje snimak aktivnog prozora u domaću fasciklu
 Comment[sv]=Sparar en skärmbild av det aktiva fönstret i hemkatalogen
 Comment[th]=บันทึกการจับภาพหน้าจอของหน้าต่างที่ทำงานอยู่ไปเก็บไว้ในไดเรกทอรีพื้นที่ส่วนตัว
 Comment[tr]=Etkin pencerenin ekran görüntüsünü ev dizinine kaydeder
+Comment[ug]=ئاكتىپ كۆزنەكنىڭ ئېكران كەسمىسىنى ماكان مۇندەرىجىسىگە ساقلايدۇ
 Comment[uk]=Зберігає знімок активного вікна до домашнього каталогу
 Comment[x-test]=xxSaves screenshot of active window into the home directoryxx
+Comment[zh_CN]=将活动窗口的截图保存到主目录
 Comment[zh_TW]=將目前作用中視窗的快照儲存到家目錄中
 
 Type=Service
