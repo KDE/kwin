@@ -4,6 +4,15 @@ OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+
+if(KWIN_PLASMA_ACTIVE)
+    set(KWIN_BUILD_DECORATIONS OFF)
+    set(KWIN_BUILD_KCMS OFF)
+    set(KWIN_BUILD_TABBOX OFF)
+    set(KWIN_MOBILE_EFFECTS ON)
+    set(KWIN_BUILD_WITH_OPENGLES ON)
+endif(KWIN_PLASMA_ACTIVE)
 
 # KWIN_HAVE_COMPOSITING - whether any compositing support is available
 if( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
