@@ -1758,7 +1758,9 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
         m_sceneFrame = new SceneOpenGL::EffectFrame(this);
 #endif
     } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         m_sceneFrame = new SceneXrender::EffectFrame(this);
+#endif
     } else {
         // that should not happen and will definitely crash!
         m_sceneFrame = NULL;
