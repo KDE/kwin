@@ -79,7 +79,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "client.h"
 #include "workspace.h"
-#include "screenedge.h"
 #include "tabbox.h"
 #include "group.h"
 #include "rules.h"
@@ -155,12 +154,14 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
     newWindowStack << (Window*)supportWindow->winId();
+#ifdef KWIN_BUILD_SCREENEDGES
     QVectorIterator<Window> it(m_screenEdge.windows());
     while (it.hasNext()) {
         if ((Window)it.next() != None) {
             newWindowStack << (Window*)&it;
         }
     }
+#endif
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
         if (stacking_order.at(i)->hiddenPreview()) {
             continue;

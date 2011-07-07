@@ -4,12 +4,14 @@ OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_TABBOX OFF)
+    set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_MOBILE_EFFECTS ON)
     set(KWIN_BUILD_WITH_OPENGLES ON)
 endif(KWIN_PLASMA_ACTIVE)
@@ -132,7 +134,6 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    desktoplayout.cpp
    paintredirector.cpp
-   screenedge.cpp
    tile.cpp
    tiling.cpp
    tilinglayout.cpp
@@ -177,6 +178,13 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxview.cpp
   )
 endif(KWIN_BUILD_TABBOX)
+
+if(KWIN_BUILD_SCREENEDGES)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        screenedge.cpp
+    )
+endif(KWIN_BUILD_SCREENEDGES)
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 

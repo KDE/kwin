@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "rules.h"
 #include "unmanaged.h"
-#include "screenedge.h"
 #include "effects.h"
 
 #include <QWhatsThis>
@@ -384,8 +383,10 @@ bool Workspace::workspaceEvent(XEvent * e)
             if (w)
                 QWhatsThis::leaveWhatsThisMode();
         }
+#ifdef KWIN_BUILD_SCREENEDGES
         if (m_screenEdge.isEntered(e))
             return true;
+#endif
         break;
     }
     case LeaveNotify: {
@@ -436,8 +437,10 @@ bool Workspace::workspaceEvent(XEvent * e)
     case FocusOut:
         return true; // always eat these, they would tell Qt that KWin is the active app
     case ClientMessage:
+#ifdef KWIN_BUILD_SCREENEDGES
         if (m_screenEdge.isEntered(e))
             return true;
+#endif
         break;
     case Expose:
         if (compositing()

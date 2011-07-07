@@ -59,7 +59,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
-#include "screenedge.h"
 #include "tilinglayout.h"
 
 #include "scripting/scripting.h"
@@ -250,7 +249,9 @@ Workspace::Workspace(bool restore)
 
 void Workspace::init()
 {
+#ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.init();
+#endif
 
     // Not used yet
     //topDock = 0L;
@@ -911,9 +912,11 @@ void Workspace::slotReconfigure()
     kDebug(1212) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
+#ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.reserveActions(false);
     if (options->electricBorders() == Options::ElectricAlways)
         m_screenEdge.reserveDesktopSwitching(false);
+#endif
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
@@ -955,10 +958,12 @@ void Workspace::slotReconfigure()
         c->triggerDecorationRepaint();
     }
 
+#ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.reserveActions(true);
     if (options->electricBorders() == Options::ElectricAlways)
         m_screenEdge.reserveDesktopSwitching(true);
     m_screenEdge.update();
+#endif
 
     if (!compositingSuspended) {
         setupCompositing();
@@ -1009,7 +1014,9 @@ void Workspace::slotReinitCompositing()
     KGlobal::config()->reparseConfiguration();
 
     // Update any settings that can be set in the compositing kcm.
+#ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.update();
+#endif
 
     // Restart compositing
     finishCompositing();
@@ -1096,7 +1103,10 @@ QStringList Workspace::configModules(bool controlCenter)
 #ifdef KWIN_BUILD_TABBOX
              << "kwintabbox"
 #endif
-             << "kwinscreenedges";
+#ifdef KWIN_BUILD_SCREENEDGES
+             << "kwinscreenedges"
+#endif
+             ;
     return args;
 }
 
@@ -2092,10 +2102,12 @@ Outline* Workspace::outline()
     return m_outline;
 }
 
+#ifdef KWIN_BUILD_SCREENEDGES
 ScreenEdge* Workspace::screenEdge()
 {
     return &m_screenEdge;
 }
+#endif
 
 bool Workspace::hasTabBox() const
 {
