@@ -747,6 +747,8 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
             Workspace::self()->tabBox()->setCurrentClient(c);
         }
     }
+#else
+    Q_UNUSED(w)
 #endif
 }
 
@@ -756,6 +758,8 @@ void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
     if (Workspace::self()->hasTabBox()) {
         Workspace::self()->tabBox()->setCurrentDesktop(desktop);
     }
+#else
+    Q_UNUSED(desktop)
 #endif
 }
 
