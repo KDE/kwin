@@ -209,6 +209,7 @@ private:
     Damage damage_handle;
 #endif
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
+    float damageRatio;
     bool is_shape;
     EffectWindowImpl* effect_window;
     QByteArray resource_name;

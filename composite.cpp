@@ -620,44 +620,51 @@ typedef union {
     XDamageNotifyEvent de;
 } EventUnion;
 
+static QVector<QRect> damageRects;
+
 void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    QRegion damage(e->area.x, e->area.y, e->area.width, e->area.height);
+    if (damageRatio == 1.0) // we know that we're completely damaged, no need to tell us again
+        return;
+
+    const float area = rect().width()*rect().height();
+    damageRects.reserve(16);
+    damageRects.clear();
+    damageRects << QRect(e->area.x, e->area.y, e->area.width, e->area.height);
+
+    // we can not easily say anything about the overall ratio since the new rects may intersect the present
+    float newDamageRatio = damageRects.last().width()*damageRects.last().height() / area;
+
     // compress
-    int cnt = 1;
     while (XPending(display())) {
         EventUnion e2;
         if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent()
                 && e2.e.xany.window == frameId()) {
             XNextEvent(display(), &e2.e);
-            if (cnt > 200) {
-                // If there are way too many damage events in the queue, just discard them
+            if (damageRatio >= 0.8 || newDamageRatio > 0.8 || damageRects.count() > 15) {
+                // If there are too many damage events in the queue, just discard them
                 // and damage the whole window. Otherwise the X server can just overload
                 // us with a flood of damage events. Should be probably optimized
                 // in the X server, as this is rather lame.
-                damage = rect();
+                newDamageRatio = 1.0;
+                damageRects.clear();
                 continue;
             }
-            QRect r(e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height);
-            ++cnt;
-            // If there are too many damaged rectangles, increase them
-            // to be multiples of 100x100 px grid, since QRegion get quite
-            // slow with many rectangles, and there is little to gain by using
-            // many small rectangles (rather the opposite, several large should
-            // be often faster).
-            if (cnt > 50) {
-                r.setLeft(r.left() / 100 * 100);
-                r.setRight((r.right() + 99) / 100 * 100);
-                r.setTop(r.top() / 100 * 100);
-                r.setBottom((r.bottom() + 99) / 100 * 100);
-            }
-            damage += r;
+            damageRects << QRect(e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height);
+            newDamageRatio += damageRects.last().width()*damageRects.last().height() / area;
             continue;
         }
         break;
     }
-    foreach (const QRect & r, damage.rects())
-    addDamage(r);
+
+
+    if ((damageRects.count() == 1 && damageRects.last() == rect()) ||
+        (damageRects.isEmpty() && newDamageRatio == 1.0)) {
+        addDamageFull();
+    } else {
+        foreach (const QRect &r, damageRects)
+            addDamage(r);
+    }
 }
 
 void Client::damageNotifyEvent(XDamageNotifyEvent* e)
@@ -686,6 +693,10 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     // may be a damage event coming with size larger than the current window size
     r &= rect();
     damage_region += r;
+    int damageArea = 0;
+    foreach (const QRect &r2, damage_region.rects())
+        damageArea += r2.width()*r2.height();
+    damageRatio = float(damageArea) / float(rect().width()*rect().height());
     repaints_region += r;
     emit damaged(this, r);
     // discard lanczos texture
@@ -707,6 +718,7 @@ void Toplevel::addDamageFull()
         return;
     damage_region = rect();
     repaints_region = rect();
+    damageRatio = 1.0;
     emit damaged(this, rect());
     // discard lanczos texture
     if (effect_window) {
@@ -724,6 +736,10 @@ void Toplevel::addDamageFull()
 void Toplevel::resetDamage(const QRect& r)
 {
     damage_region -= r;
+    int damageArea = 0;
+    foreach (const QRect &r2, damage_region.rects())
+        damageArea += r2.width()*r2.height();
+    damageRatio = float(damageArea) / float(rect().width()*rect().height());
 }
 
 void Toplevel::addRepaint(const QRect& r)
