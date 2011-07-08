@@ -277,9 +277,9 @@ int TabBoxClientImpl::height() const
 TabBox::TabBox(QObject *parent)
     : QObject(parent)
     , m_displayRefcount(0)
-    , m_forcedGlobalMouseGrab(false)
     , m_desktopGrab(false)
     , m_tabGrab(false)
+    , m_forcedGlobalMouseGrab(false)
 {
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
