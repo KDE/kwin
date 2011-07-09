@@ -2,6 +2,7 @@
 Name=Outline
 Name[bs]=Kontura
 Name[ca]=Contorn
+Name[ca@valencia]=Contorn
 Name[cs]=Obrys
 Name[da]=Omrids
 Name[de]=Umriss
@@ -37,6 +38,7 @@ Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
 Comment[bs]=Pomoćni efekt za crtanje konture
 Comment[ca]=Efecte auxiliar per dibuixar un contorn
+Comment[ca@valencia]=Efecte auxiliar per dibuixar un contorn
 Comment[cs]=Pomocný efekt pro vykreslení obrysu
 Comment[da]=Hjælpeeffekt til at rendere et omrids
 Comment[de]=Hilfseffekt, der einen Umriss zeichnet
