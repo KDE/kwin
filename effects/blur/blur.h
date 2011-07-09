@@ -44,6 +44,7 @@ public:
 
     void reconfigure(ReconfigureFlags flags);
     void prePaintScreen(ScreenPrePaintData &data, int time);
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
@@ -66,6 +67,8 @@ private:
     GLRenderTarget *target;
     GLTexture *tex;
     long net_wm_blur_region;
+    QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
+    QRegion m_currentBlur; // keeps track of the currently blured area (from bottom to top)
 };
 
 } // namespace KWin

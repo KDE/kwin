@@ -34,7 +34,6 @@ KWIN_EFFECT(blur, BlurEffect)
 KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
 KWIN_EFFECT_ENABLEDBYDEFAULT(blur, BlurEffect::enabledByDefault())
 
-
 BlurEffect::BlurEffect()
 {
     shader = BlurShader::create();
@@ -157,11 +156,9 @@ QRegion BlurEffect::expand(const QRegion &region) const
 {
     QRegion expanded;
 
-    if (region.rectCount() < 20) {
-        foreach (const QRect & rect, region.rects())
+    foreach (const QRect & rect, region.rects()) {
         expanded += expand(rect);
-    } else
-        expanded += expand(region.boundingRect());
+    }
 
     return expanded;
 }
@@ -223,97 +220,63 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     QLinkedList<QRegion> blurRegions;
     bool checkDecos = effects->decorationsHaveAlpha() && effects->decorationSupportsBlurBehind();
     bool clipChanged = false;
+    m_damagedArea = QRegion();
+    m_currentBlur = QRegion();
 
     effects->prePaintScreen(data, time);
+}
 
-    // If the whole screen will be repainted anyway, there is no point in
-    // adding to the paint region.
-    if (data.mask & (PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_TRANSFORMED))
+void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    // this effect relies on prePaintWindow being called in the bottom to top order
+
+    effects->prePaintWindow(w, data, time);
+
+    if (!w->isPaintingEnabled()) {
         return;
-
-    if (effects->activeFullScreenEffect())
-        return;
-
-    // Walk the window list top->bottom and check if the paint region is fully
-    // contained within opaque windows and doesn't intersect any blurred region.
-    QRegion paint = data.paint;
-    for (int i = windows.count() - 1; i >= 0; --i) {
-        EffectWindow *window = windows.at(i);
-        if (!window->isPaintingEnabled())
-            continue;
-
-        if (!window->hasAlpha()) {
-            paint -= window->contentsRect().translated(window->pos());
-            if (paint.isEmpty())
-                break;
-        }
-
-        // The window decoration is treated as an object below the window
-        // contents, so check it after the contents.
-        if (window->hasAlpha() || (checkDecos && window->hasDecoration())) {
-            QRegion r = blurRegion(window);
-            if (r.isEmpty())
-                continue;
-
-            r = expand(r.translated(window->pos()));
-            if (r.intersects(paint))
-                break;
-        }
     }
 
-    if (paint.isEmpty())
-        return;
-
-    // Walk the list again bottom->top and expand the paint region when
-    // it intersects a blurred region.
-    foreach (EffectWindow *window, windows) {
-        if (!window->isPaintingEnabled())
-            continue;
-
-        if (!window->hasAlpha() && !(checkDecos && window->hasDecoration()))
-            continue;
-
-        QRegion r = blurRegion(window);
-        if (r.isEmpty())
-            continue;
-
-        r = expand(r.translated(window->pos()));
-
-        // We can't do a partial repaint of a blurred region
-        if (r.intersects(data.paint)) {
-            data.paint += r;
-            clipChanged = true;
-        } else
-            blurRegions.append(r);
+    // to blur an area partially we have to shrink the opaque area of a window
+    QRegion newClip;
+    const QRegion oldClip = data.clip;
+    const int radius = shader->radius();
+    foreach (const QRect& rect, data.clip.rects()) {
+        newClip |= rect.adjusted(radius,radius,-radius,-radius);
     }
+    data.clip = newClip;
 
-    while (clipChanged) {
-        clipChanged = false;
-        QMutableLinkedListIterator<QRegion> i(blurRegions);
-        while (i.hasNext()) {
-            const QRegion r = i.next();
-            if (!r.intersects(data.paint))
-                continue;
+    // we dont have to blur a region we dont see
+    m_currentBlur -= newClip;
+    // if we have to paint a non-opaque part of this window that intersects with the
+    // currently blurred region we have to redraw the whole region
+    if ((data.paint-oldClip).intersects(m_currentBlur)) {
+        data.paint |= m_currentBlur;
+    }
+    // TODO: make m_currentBlur a list of connected regions
 
-            data.paint += r;
-            clipChanged = true;
-            i.remove();
+    // in case this window has regions to be blurred
+    const QRegion blurArea = blurRegion(w).translated(w->pos());
+    const QRegion expandedBlur = expand(blurArea);
+    // if this window or an window underneath the blurred area is damaged we have to
+    // blur everything
+    if (m_damagedArea.intersects(blurArea) || data.paint.intersects(blurArea)) {
+        data.paint |= expandedBlur;
+        // we have to check again whether we do not damage an already blurred area
+        if (expandedBlur.intersects(m_currentBlur)) {
+            data.paint |= m_currentBlur;
         }
     }
+    m_currentBlur |= expandedBlur;
 
-    // Force the scene to call paintGenericScreen() so the windows are painted bottom -> top
-    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
+    // we dont consider damaged areas which are occluded and are not
+    // explicitly damaged by this window
+    m_damagedArea -= data.clip;
+    m_damagedArea |= data.paint;
 }
 
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
     if (!target->valid() || !shader->isValid())
-        return false;
-
-    // Don't blur anything if we're painting top-to-bottom
-    if (!(mask & (PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS |
-                  PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS |
-                  PAINT_SCREEN_TRANSFORMED)))
         return false;
 
     if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool())
@@ -341,7 +304,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 {
     if (shouldBlur(w, mask, data)) {
         const QRect screen(0, 0, displayWidth(), displayHeight());
-        const QRegion shape = blurRegion(w).translated(w->pos()) & screen;
+        const QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
         if (!shape.isEmpty() && region.intersects(shape.boundingRect()))
             doBlur(shape, screen, data.opacity * data.contents_opacity);
