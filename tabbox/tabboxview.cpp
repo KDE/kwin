@@ -49,8 +49,10 @@ namespace KWin
 namespace TabBox
 {
 
-TabBoxView::TabBoxView(QWidget* parent)
+TabBoxView::TabBoxView(ClientModel *clientModel, DesktopModel *desktopModel, QWidget* parent)
     : QWidget(parent)
+    , m_clientModel(clientModel)
+    , m_desktopModel(desktopModel)
     , m_previewUpdate(false)
 {
     setWindowFlags(Qt::X11BypassWindowManagerHint);
@@ -58,8 +60,6 @@ TabBoxView::TabBoxView(QWidget* parent)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    m_clientModel = new ClientModel(this);
-    m_desktopModel = new DesktopModel(this);
     m_delegate = new ClientItemDelegate(this);
     m_additionalClientDelegate = new ClientItemDelegate(this);
     m_additionalClientDelegate->setShowSelection(false);

@@ -64,7 +64,7 @@ class TabBoxView : public QWidget
     Q_OBJECT
     Q_PROPERTY(QRect selectedItem READ selectedItem WRITE setSelectedItem)
 public:
-    TabBoxView(QWidget* parent = 0);
+    TabBoxView(ClientModel *clientModel, DesktopModel *desktopModel, QWidget* parent = 0);
     ~TabBoxView();
     virtual void paintEvent(QPaintEvent* e);
     virtual bool event(QEvent* event);
