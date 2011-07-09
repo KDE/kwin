@@ -75,10 +75,6 @@ public:
     TabBoxConfig config;
     TabBoxView* view;
     QModelIndex index;
-    Window outlineLeft;
-    Window outlineRight;
-    Window outlineTop;
-    Window outlineBottom;
     /**
     * Indicates if the tabbox is shown.
     * Used to determine if the outline has to be updated, etc.
@@ -96,16 +92,6 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     lastRaisedClientSucc = 0;
     config = TabBoxConfig();
     view = new TabBoxView();
-    XSetWindowAttributes attr;
-    attr.override_redirect = 1;
-    outlineLeft = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outlineRight = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                 CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outlineTop = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                               CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outlineBottom = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                  CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
 
     // load the layouts
     parseConfig(KStandardDirs::locate("data", "kwin/DefaultTabBoxLayouts.xml"));
