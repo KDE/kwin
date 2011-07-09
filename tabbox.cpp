@@ -280,6 +280,7 @@ TabBox::TabBox(QObject *parent)
     , m_desktopGrab(false)
     , m_tabGrab(false)
     , m_forcedGlobalMouseGrab(false)
+    , m_ready(false)
 {
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
@@ -308,16 +309,21 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
     m_tabBox = new TabBoxHandlerImpl(this);
-    m_tabBox->setConfig(m_defaultConfig);
-
+    connect(m_tabBox, SIGNAL(ready()), SLOT(handlerReady()));
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
-    reconfigure();
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
 }
 
 TabBox::~TabBox()
 {
+}
+
+void TabBox::handlerReady()
+{
+    m_tabBox->setConfig(m_defaultConfig);
+    reconfigure();
+    m_ready = true;
 }
 
 void TabBox::initShortcuts(KActionCollection* keys)
@@ -752,26 +758,41 @@ void TabBox::navigatingThroughWindows(bool forward, const KShortcut& shortcut, T
 
 void TabBox::slotWalkThroughWindows()
 {
+    if (!m_ready){
+        return;
+    }
     navigatingThroughWindows(true, m_cutWalkThroughWindows, TabBoxWindowsMode);
 }
 
 void TabBox::slotWalkBackThroughWindows()
 {
+    if (!m_ready){
+        return;
+    }
     navigatingThroughWindows(false, m_cutWalkThroughWindowsReverse, TabBoxWindowsMode);
 }
 
 void TabBox::slotWalkThroughWindowsAlternative()
 {
+    if (!m_ready){
+        return;
+    }
     navigatingThroughWindows(true, m_cutWalkThroughWindowsAlternative, TabBoxWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkBackThroughWindowsAlternative()
 {
+    if (!m_ready){
+        return;
+    }
     navigatingThroughWindows(false, m_cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkThroughDesktops()
 {
+    if (!m_ready){
+        return;
+    }
     if (isGrabbed())
         return;
     if (areModKeysDepressed(m_cutWalkThroughDesktops)) {
@@ -784,6 +805,9 @@ void TabBox::slotWalkThroughDesktops()
 
 void TabBox::slotWalkBackThroughDesktops()
 {
+    if (!m_ready){
+        return;
+    }
     if (isGrabbed())
         return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopsReverse)) {
@@ -796,6 +820,9 @@ void TabBox::slotWalkBackThroughDesktops()
 
 void TabBox::slotWalkThroughDesktopList()
 {
+    if (!m_ready){
+        return;
+    }
     if (isGrabbed())
         return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopList)) {
@@ -808,6 +835,9 @@ void TabBox::slotWalkThroughDesktopList()
 
 void TabBox::slotWalkBackThroughDesktopList()
 {
+    if (!m_ready){
+        return;
+    }
     if (isGrabbed())
         return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopListReverse)) {

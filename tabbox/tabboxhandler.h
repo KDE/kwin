@@ -339,6 +339,7 @@ signals:
     * @see setConfig
     */
     void configChanged();
+    void ready();
 
 private:
     friend class TabBoxHandlerPrivate;

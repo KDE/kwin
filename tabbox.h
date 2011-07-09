@@ -188,6 +188,8 @@ public slots:
     void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
     void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
 
+    void handlerReady();
+
 signals:
     void tabBoxAdded(int);
     void tabBoxClosed();
@@ -239,6 +241,7 @@ private:
     KShortcut m_cutWalkThroughGroupWindows, m_cutWalkThroughGroupWindowsReverse;
     KShortcut m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse;
     bool m_forcedGlobalMouseGrab;
+    bool m_ready; // indicates whether the config is completely loaded
 };
 } // namespace TabBox
 } // namespace

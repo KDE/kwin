@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabboxview.h"
 // Qt
 #include <qdom.h>
+#include <QtCore/QtConcurrentRun>
+#include <QtCore/QFutureWatcher>
 #include <QFile>
 #include <QKeyEvent>
 #include <QModelIndex>
@@ -94,11 +96,10 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     view = new TabBoxView();
 
     // load the layouts
-    parseConfig(KStandardDirs::locate("data", "kwin/DefaultTabBoxLayouts.xml"));
-    view->clientDelegate()->setConfig(tabBoxLayouts.value("Default"));
-    view->additionalClientDelegate()->setConfig(tabBoxLayouts.value("Text"));
-    view->desktopDelegate()->setConfig(tabBoxLayouts.value("Desktop"));
-    view->desktopDelegate()->setLayouts(tabBoxLayouts);
+    QFuture< void> future = QtConcurrent::run(this, &TabBoxHandlerPrivate::parseConfig, KStandardDirs::locate("data", "kwin/DefaultTabBoxLayouts.xml"));
+    QFutureWatcher< void > *watcher = new QFutureWatcher< void >(q);
+    watcher->setFuture(future);
+    q->connect(watcher, SIGNAL(finished()), q, SIGNAL(ready()));
 }
 
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
@@ -325,6 +326,10 @@ void TabBoxHandlerPrivate::parseConfig(const QString& fileName)
             tabBoxLayouts.insert(layoutName, currentLayout);
         }
     } // for loop layouts
+    view->clientDelegate()->setConfig(tabBoxLayouts.value("Default"));
+    view->additionalClientDelegate()->setConfig(tabBoxLayouts.value("Text"));
+    view->desktopDelegate()->setConfig(tabBoxLayouts.value("Desktop"));
+    view->desktopDelegate()->setLayouts(tabBoxLayouts);
 }
 
 /***********************************************
