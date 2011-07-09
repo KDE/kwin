@@ -530,7 +530,7 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
 Unmanaged* Workspace::createUnmanaged(Window w)
 {
-    if (w == scene->overlayWindow()->window())
+    if (compositing() && w == scene->overlayWindow()->window())
         return NULL;
     Unmanaged* c = new Unmanaged(this);
     if (!c->track(w)) {
