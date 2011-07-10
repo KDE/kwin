@@ -30,7 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/workspaceproxy.h"
+#endif
 
 #include <kapplication.h>
 #include <kglobal.h>
@@ -2063,6 +2065,7 @@ void Client::maximize(MaximizeMode m)
  */
 void Client::setMaximize(bool vertically, bool horizontally)
 {
+#ifdef KWIN_BUILD_SCRIPTING
     //Scripting call. Does not use a signal/slot mechanism
     //as ensuring connections was a bit difficult between
     //so many clients and the workspace
@@ -2070,6 +2073,7 @@ void Client::setMaximize(bool vertically, bool horizontally)
     if (ws_wrap != 0) {
         ws_wrap->sl_clientMaximizeSet(this, QPair<bool, bool>(vertically, horizontally));
     }
+#endif
 
     emit maximizeSet(QPair<bool, bool>(vertically, horizontally));
 
@@ -2357,10 +2361,12 @@ void Client::setFullScreen(bool set, bool user)
     updateWindowRules();
     workspace()->checkUnredirect();
 
+#ifdef KWIN_BUILD_SCRIPTING
     SWrapper::WorkspaceProxy* ws_object = SWrapper::WorkspaceProxy::instance();
     if (ws_object != 0) {
         ws_object->sl_clientFullScreenSet(this, set, user);
     }
+#endif
 
     emit s_fullScreenSet(set, user);
 }

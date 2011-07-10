@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 #include <QScriptEngine>
-#include "./../client.h"
-#include "./../clientgroup.h"
+#include "client.h"
+#include "clientgroup.h"
 
 namespace SWrapper
 {

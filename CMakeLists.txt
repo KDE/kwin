@@ -5,6 +5,7 @@ OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
+OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
@@ -13,6 +14,7 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_TABBOX OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
+    set(KWIN_BUILD_SCRIPTING OFF)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
     set(KWIN_MOBILE_EFFECTS ON)
     set(KWIN_BUILD_WITH_OPENGLES ON)
@@ -142,18 +144,6 @@ set(kwin_KDEINIT_SRCS
    tilinglayout.cpp
    tilinglayoutfactory.cpp
 
-   #load the scripting related functions
-   scripting/scripting.cpp
-   scripting/workspace.cpp
-   scripting/client.cpp
-   scripting/meta.cpp
-   scripting/toplevel.cpp
-   scripting/windowinfo.cpp
-   scripting/s_clientgroup.cpp
-   scripting/workspaceproxy.cpp
-   scripting/chelate.cpp
-   scripting/timer.cpp
-
    # tiling layouts
    # spiral
    #tilinglayouts/spiral/spiralfactory.cpp
@@ -166,6 +156,22 @@ set(kwin_KDEINIT_SRCS
    # floating
    tilinglayouts/floating/floating.cpp
    )
+
+if(KWIN_BUILD_SCRIPTING)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        scripting/scripting.cpp
+        scripting/workspace.cpp
+        scripting/client.cpp
+        scripting/meta.cpp
+        scripting/toplevel.cpp
+        scripting/windowinfo.cpp
+        scripting/s_clientgroup.cpp
+        scripting/workspaceproxy.cpp
+        scripting/chelate.cpp
+        scripting/timer.cpp
+    )
+endif(KWIN_BUILD_SCRIPTING)
 
 if(KWIN_BUILD_TABBOX)
     set(
@@ -198,7 +204,11 @@ qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTSCRIPT_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+
+if(KWIN_BUILD_SCRIPTING)
+    target_link_libraries(kdeinit_kwin ${QT_QTSCRIPT_LIBRARY})
+endif(KWIN_BUILD_SCRIPTING)
 
 if(KWIN_BUILD_TABBOX)
     target_link_libraries(kdeinit_kwin ${QT_QTXML_LIBRARY})

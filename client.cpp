@@ -34,9 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <signal.h>
 
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/client.h"
 #include "scripting/scripting.h"
 #include "scripting/workspaceproxy.h"
+#endif
 
 #include "bridge.h"
 #include "group.h"
@@ -136,7 +138,9 @@ Client::Client(Workspace* ws)
 {
     // TODO: Do all as initialization
 
+#ifdef KWIN_BUILD_SCRIPTING
     scriptCache = new QHash<QScriptEngine*, ClientResolution>();
+#endif
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
@@ -228,7 +232,9 @@ Client::~Client()
 #ifdef KWIN_BUILD_TABBOX
     delete m_tabBoxClient;
 #endif
+#ifdef KWIN_BUILD_SCRIPTING
     delete scriptCache;
+#endif
 }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly
@@ -915,6 +921,7 @@ void Client::minimize(bool avoid_animation)
     if (!isMinimizable() || isMinimized())
         return;
 
+#ifdef KWIN_BUILD_SCRIPTING
     //Scripting call. Does not use a signal/slot mechanism
     //as ensuring connections was a bit difficult between
     //so many clients and the workspace
@@ -922,6 +929,7 @@ void Client::minimize(bool avoid_animation)
     if (ws_wrap != 0) {
         ws_wrap->sl_clientMinimized(this);
     }
+#endif
 
     emit s_minimized();
 
@@ -950,10 +958,12 @@ void Client::unminimize(bool avoid_animation)
     if (!isMinimized())
         return;
 
+#ifdef KWIN_BUILD_SCRIPTING
     SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
     if (ws_wrap != 0) {
         ws_wrap->sl_clientUnminimized(this);
     }
+#endif
 
     emit s_unminimized();
 

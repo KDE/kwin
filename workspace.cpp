@@ -62,7 +62,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "tilinglayout.h"
 
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
+#endif
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>

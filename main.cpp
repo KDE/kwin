@@ -42,7 +42,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <QMessageBox>
 #include <QEvent>
+
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
+#endif
 
 #include <kdialog.h>
 #include <kstandarddirs.h>
@@ -469,7 +472,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     args.add("lock", ki18n("Disable configuration options"));
     args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
     args.add("crashes <n>", ki18n("Indicate that KWin has recently crashed n times"));
+#ifdef KWIN_BUILD_SCRIPTING
     args.add("noscript", ki18n("Load the script testing dialog"));
+#endif
     KCmdLineArgs::addCmdLineOptions(args);
 
     if (KDE_signal(SIGTERM, KWin::sighandler) == SIG_IGN)
@@ -489,7 +494,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup("kwin");
     KWin::Application a;
+#ifdef KWIN_BUILD_SCRIPTING
     KWin::Scripting scripting;
+#endif
 
     ksmserver.resumeStartup("kwin");
     KWin::SessionManager weAreIndeed;
@@ -512,7 +519,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         appname, QDBusConnectionInterface::DontQueueService);
 
     KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
+#ifdef KWIN_BUILD_SCRIPTING
     scripting.start();
+#endif
 
     return a.exec();
 }
