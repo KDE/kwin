@@ -1013,7 +1013,7 @@ bool Client::hasOffscreenXineramaStrut() const
     return !region.isEmpty();
 }
 
-void Client::checkWorkspacePosition()
+void Client::checkWorkspacePosition(const QRect &geo)
 {
     if (isDesktop())
         return;
@@ -1026,9 +1026,16 @@ void Client::checkWorkspacePosition()
     if (isDock())
         return;
 
-    if (maximizeMode() != MaximizeRestore)
+    if (maximizeMode() != MaximizeRestore) {
         // TODO update geom_restore?
         changeMaximize(false, false, true);   // adjust size
+        return;
+    }
+
+    if (quick_tile_mode != QuickTileNone) {
+        setGeometry(electricBorderMaximizeGeometry(geometry().center(), desktop()));
+        return;
+    }
 
     if (!isShade()) { // TODO
         // this can be true only if this window was mapped before KWin
@@ -1048,7 +1055,7 @@ void Client::checkWorkspacePosition()
         int oldBottomMax = screenArea.y() + screenArea.height();
         int oldLeftMax = screenArea.x();
         int topMax = INT_MIN, rightMax = INT_MAX, bottomMax = INT_MAX, leftMax = INT_MIN;
-        QRect newGeom = geometry();
+        QRect newGeom = geo.isValid() ? geo : geometry();
         const QRect& newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
         const QRect& newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
 
@@ -3077,8 +3084,8 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
         // Untiling, so just restore geometry, and we're done.
         setGeometry(geom_pretile);
-        checkWorkspacePosition(); // Just in case it's a different screen
         quick_tile_mode = QuickTileNone;
+        checkWorkspacePosition(); // Just in case it's a different screen
         return;
     } else {
         QPoint whichScreen = keyboard ? geometry().center() : cursorPos();

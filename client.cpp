@@ -373,7 +373,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
     } else
         destroyDecoration();
     if (check_workspace_pos)
-        checkWorkspacePosition();
+        checkWorkspacePosition(oldgeom);
     blockGeometryUpdates(false);
     if (!noBorder())
         decoration->widget()->show();
@@ -441,8 +441,9 @@ bool Client::checkBorderSizes(bool also_resize)
     border_top = new_top;
     border_bottom = new_bottom;
     move(calculateGravitation(false));
+    QRect oldgeom = geometry();
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
-    checkWorkspacePosition();
+    checkWorkspacePosition(oldgeom);
     return true;
 }
 
