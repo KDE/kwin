@@ -198,7 +198,11 @@ qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} ${QT_QTSCRIPT_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTSCRIPT_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+
+if(KWIN_BUILD_TABBOX)
+    target_link_libraries(kdeinit_kwin ${QT_QTXML_LIBRARY})
+endif(KWIN_BUILD_TABBOX)
 
 if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
   add_subdirectory(opengltest)
