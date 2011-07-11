@@ -37,8 +37,6 @@ PaintRedirector::PaintRedirector(QWidget* w)
     : widget(w)
     , recursionCheck(false)
 {
-    timer.setSingleShot(true);
-    connect(&timer, SIGNAL(timeout()), SIGNAL(paintPending()));
     added(w);
 }
 
@@ -92,7 +90,7 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
             QWidget* w = static_cast< QWidget* >(o);
             pending |= pe->region().translated(w->mapTo(widget, QPoint(0, 0)));
             scheduled = pending;
-            timer.start(0);
+            emit paintPending();
             return true; // filter out
         }
     }
