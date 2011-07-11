@@ -69,9 +69,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
-#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
-#define HAVE_XCOMPOSITE_OVERLAY
-#endif
 #endif
 #ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
