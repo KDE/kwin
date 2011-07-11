@@ -4,6 +4,7 @@ OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+OPTION(KWIN_BUILD_DESKTOPCHANGEOSD "Enable building of KWin DesktopChangeOSD funtionality" ON)
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
@@ -13,6 +14,7 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_TABBOX OFF)
+    set(KWIN_BUILD_DESKTOPCHANGEOSD OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_BUILD_SCRIPTING OFF)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
@@ -108,7 +110,6 @@ set(kwin_KDEINIT_SRCS
    utils.cpp 
    layers.cpp 
    main.cpp 
-   desktopchangeosd.cpp 
    options.cpp 
    outline.cpp
    plugins.cpp 
@@ -187,6 +188,12 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxview.cpp
   )
 endif(KWIN_BUILD_TABBOX)
+
+if(KWIN_BUILD_DESKTOPCHANGEOSD)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        desktopchangeosd.cpp
+    )
+endif(KWIN_BUILD_DESKTOPCHANGEOSD)
 
 if(KWIN_BUILD_SCREENEDGES)
     set(

@@ -48,7 +48,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
 #include "desktopchangeosd.h"
+#endif
 #include "atoms.h"
 #include "placement.h"
 #include "notifications.h"
@@ -128,7 +130,9 @@ Workspace::Workspace(bool restore)
 #ifdef KWIN_BUILD_TABBOX
     , tab_box(0)
 #endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     , desktop_change_osd(0)
+#endif
     , popup(0)
     , advanced_popup(0)
     , trans_popup(0)
@@ -232,7 +236,9 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
     initShortcuts();
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     desktop_change_osd = new DesktopChangeOSD(this);
+#endif
     m_outline = new Outline();
 
     init();
@@ -354,7 +360,9 @@ void Workspace::init()
 
     loadDesktopSettings();
     updateDesktopLayout();
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     desktop_change_osd->numberDesktopsChanged();
+#endif
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
@@ -482,7 +490,9 @@ Workspace::~Workspace()
             it != unmanaged.constEnd();
             ++it)
         (*it)->release();
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     delete desktop_change_osd;
+#endif
     delete m_outline;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
@@ -926,7 +936,9 @@ void Workspace::slotReconfigure()
 #ifdef KWIN_BUILD_TABBOX
     tab_box->reconfigure();
 #endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     desktop_change_osd->reconfigure();
+#endif
     initPositioning->reinitCascading(0);
     discardPopup();
     forEachClient(CheckIgnoreFocusStealingProcedure());
@@ -1546,8 +1558,10 @@ void Workspace::setNumberOfDesktops(int n)
 
     tilingLayouts.resize(numberOfDesktops() + 1);
 
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
+#endif
 
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);
