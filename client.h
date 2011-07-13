@@ -419,7 +419,6 @@ public:
         WindowRelative      // Relative to the top left corner of the window
     };
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
-    virtual void addRepaintFull();
 
     TabBox::TabBoxClientImpl* tabBoxClient() const {
         return m_tabBoxClient;

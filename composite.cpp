@@ -750,10 +750,7 @@ void Toplevel::addRepaint(int x, int y, int w, int h)
 
 void Toplevel::addRepaintFull()
 {
-    repaints_region = rect();
-    if (hasShadow()) {
-        repaints_region = repaints_region.united(shadow()->shadowRegion());
-    }
+    repaints_region = decorationRect();
     workspace()->checkCompositeTimer();
 }
 
@@ -842,11 +839,6 @@ bool Client::shouldUnredirect() const
     return false;
 }
 
-void Client::addRepaintFull()
-{
-    repaints_region = decorationRect();
-    workspace()->checkCompositeTimer();
-}
 
 //****************************************
 // Unmanaged
@@ -885,10 +877,5 @@ bool Deleted::shouldUnredirect() const
     return false;
 }
 
-void Deleted::addRepaintFull()
-{
-    repaints_region = decorationRect();
-    workspace()->checkCompositeTimer();
-}
 
 } // namespace

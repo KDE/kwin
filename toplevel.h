@@ -285,11 +285,6 @@ inline QRect Toplevel::rect() const
     return QRect(0, 0, width(), height());
 }
 
-inline QRect Toplevel::decorationRect() const
-{
-    return rect();
-}
-
 inline QRegion Toplevel::decorationPendingRegion() const
 {
     return QRegion();

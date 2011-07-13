@@ -57,7 +57,6 @@ public:
         return no_border;
     }
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    virtual void addRepaintFull(); // in composite.cpp
     QRect decorationRect() const;
 protected:
     virtual void debug(QDebug& stream) const;

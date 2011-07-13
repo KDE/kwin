@@ -98,6 +98,14 @@ QDebug& operator<<(QDebug& stream, const ConstToplevelList& list)
     return stream;
 }
 
+QRect Toplevel::decorationRect() const
+{
+    QRect r(rect());
+    if (hasShadow())
+        r |= shadow()->shadowRegion().boundingRect();
+    return r;
+}
+
 void Toplevel::detectShape(Window id)
 {
     is_shape = Extensions::hasShape(id);

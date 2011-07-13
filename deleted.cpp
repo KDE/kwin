@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
+#include "shadow.h"
 
 namespace KWin
 {
@@ -139,7 +140,11 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
 
 QRect Deleted::decorationRect() const
 {
-    return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
+    QRect r(rect());
+    r.adjust(-padding_left, -padding_top, padding_top, padding_bottom);
+    if (hasShadow())
+        r |= shadow()->shadowRegion().boundingRect();
+    return r;
 }
 
 QRect Deleted::transparentRect() const
