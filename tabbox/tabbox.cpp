@@ -313,6 +313,7 @@ TabBox::TabBox(QObject *parent)
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
+    connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
 }
 
 TabBox::~TabBox()

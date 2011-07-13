@@ -930,9 +930,6 @@ void Workspace::slotReconfigure()
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
 
-#ifdef KWIN_BUILD_TABBOX
-    tab_box->reconfigure();
-#endif
     emit configChanged();
     initPositioning->reinitCascading(0);
     discardPopup();

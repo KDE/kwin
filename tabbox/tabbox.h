@@ -146,8 +146,6 @@ public:
     void handleMouseEvent(XEvent*);
     void grabbedKeyEvent(QKeyEvent* event);
 
-    void reconfigure();
-
     bool isGrabbed() const {
         return m_tabGrab || m_desktopGrab;
     };
@@ -215,6 +213,9 @@ private:
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     void modalActionsSwitch(bool enabled);
+
+private Q_SLOTS:
+    void reconfigure();
 
 private:
     TabBoxMode m_tabBoxMode;
