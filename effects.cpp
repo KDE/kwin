@@ -1271,11 +1271,13 @@ EffectWindowImpl::EffectWindowImpl() : EffectWindow()
 
 EffectWindowImpl::~EffectWindowImpl()
 {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QVariant cachedTextureVariant = data(LanczosCacheRole);
     if (cachedTextureVariant.isValid()) {
         GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
         delete cachedTexture;
     }
+#endif
 }
 
 bool EffectWindowImpl::isPaintingEnabled()
