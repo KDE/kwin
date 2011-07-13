@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "tile.h"
 #include "workspace.h"
+#include "tiling/tiling.h"
 
 namespace KWin
 {
@@ -194,7 +195,7 @@ void TilingLayout::reconfigureTiling()
 
     foreach (Client * c, workspace()->stackingOrder()) {
         if (c->rules()->checkTilingOption(0) == 1)
-            workspace()->createTile(c);
+            workspace()->tiling()->createTile(c);
     }
 
 }

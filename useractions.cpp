@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "tile.h"
 #include "tilinglayout.h"
+#include "tiling/tiling.h"
 
 #include "kactivityinfo.h"
 
@@ -198,7 +199,7 @@ QMenu* Workspace::clientPopup()
         // then hide it
         mTilingStateOpAction->setVisible(false);
         // actions for window tiling
-        if (tilingEnabled()) {
+        if (m_tiling->tilingEnabled()) {
             kaction = qobject_cast<KAction*>(keys->action("Toggle Floating"));
             mTilingStateOpAction->setCheckable(true);
             mTilingStateOpAction->setData(Options::ToggleClientTiledStateOp);
@@ -289,15 +290,15 @@ void Workspace::clientPopupAboutToShow()
     mMinimizeOpAction->setEnabled(active_popup_client->isMinimizable());
     mCloseOpAction->setEnabled(active_popup_client->isCloseable());
 
-    if (tilingEnabled()) {
+    if (m_tiling->tilingEnabled()) {
         int desktop = active_popup_client->desktop();
-        if (tilingLayouts.value(desktop)) {
-            Tile *t = tilingLayouts[desktop]->findTile(active_popup_client);
+        if (m_tiling->getTilingLayouts().value(desktop)) {
+            Tile *t = m_tiling->getTilingLayouts()[desktop]->findTile(active_popup_client);
             if (t)
                 mTilingStateOpAction->setChecked(t->floating());
         }
     }
-    mTilingStateOpAction->setVisible(tilingEnabled());
+    mTilingStateOpAction->setVisible(m_tiling->tilingEnabled());
 
     delete switch_to_tab_popup;
     switch_to_tab_popup = 0;
@@ -661,12 +662,12 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         return;
 
     // Allows us to float a window when it is maximized, if it is tiled.
-    if (tilingEnabled()
+    if (m_tiling->tilingEnabled()
             && (op == Options::MaximizeOp
                 || op == Options::HMaximizeOp
                 || op == Options::VMaximizeOp
                 || op == Options::RestoreOp)) {
-        notifyTilingWindowMaximized(c, op);
+        m_tiling->notifyTilingWindowMaximized(c, op);
     }
 
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp)
@@ -780,8 +781,8 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         c->clientGroup()->closeAll();
     case Options::ToggleClientTiledStateOp: {
         int desktop = c->desktop();
-        if (tilingLayouts.value(desktop)) {
-            tilingLayouts[desktop]->toggleFloatTile(c);
+        if (m_tiling->getTilingLayouts().value(desktop)) {
+            m_tiling->getTilingLayouts()[desktop]->toggleFloatTile(c);
         }
     }
     }

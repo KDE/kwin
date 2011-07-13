@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Nikhil Marathe <nsm.nikhil@gmail.com>
+Copyright (C) 2011 Arthur Arlt <a.arlt@stud.uni-heidelberg.de>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,30 +19,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-// all the tiling related code that is extensions to existing KWin classes
-// Includes Workspace for now
+#include <tiling/tiling.h>
 
-#include "client.h"
-#include "workspace.h"
-#include "tile.h"
-#include "tilinglayout.h"
-#include "tilinglayoutfactory.h"
-
-#include <knotification.h>
 #include <klocale.h>
+#include <knotification.h>
 #include <kwindowinfo.h>
 #include <kwindowsystem.h>
 
+#include "tile.h"
+#include "tilinglayout.h"
+#include "tilinglayoutfactory.h"
+#include "workspace.h"
 
-namespace KWin
+namespace KWin {
+Tiling::Tiling(KWin::Workspace* w)
+    : QObject(w)
+    , m_workspace(w)
+    , tilingEnabled_(false)
 {
+}
 
-bool Workspace::tilingEnabled() const
+Tiling::~Tiling()
+{
+}
+
+bool Tiling::tilingEnabled() const
 {
     return tilingEnabled_;
 }
 
-void Workspace::setTilingEnabled(bool tiling)
+void Tiling::setTilingEnabled(bool tiling)
 {
     if (tilingEnabled() == tiling) return;
 
@@ -56,8 +63,8 @@ void Workspace::setTilingEnabled(bool tiling)
     options->tilingRaisePolicy = config.readEntry("TilingRaisePolicy", 0);
 
     if (tilingEnabled_) {
-        tilingLayouts.resize(numberOfDesktops() + 1);
-        foreach (Client * c, stackingOrder()) {
+        tilingLayouts.resize(Workspace::self()->numberOfDesktops() + 1);
+        foreach (Client * c, Workspace::self()->stackingOrder()) {
             createTile(c);
         }
     } else {
@@ -66,7 +73,7 @@ void Workspace::setTilingEnabled(bool tiling)
     }
 }
 
-void Workspace::slotToggleTiling()
+void Tiling::slotToggleTiling()
 {
     if (tilingEnabled()) {
         setTilingEnabled(false);
@@ -79,7 +86,7 @@ void Workspace::slotToggleTiling()
     }
 }
 
-void Workspace::createTile(Client *c)
+void Tiling::createTile(Client* c)
 {
     if (c == NULL)
         return;
@@ -90,28 +97,27 @@ void Workspace::createTile(Client *c)
     if (!tilingEnabled() || !tileable(c))
         return;
 
-    Tile *t = new Tile(c, clientArea(PlacementArea, c));
+    Tile *t = new Tile(c, Workspace::self()->clientArea(PlacementArea, c));
     if (!tileable(c)) {
         kDebug(1212) << c->caption() << "is not tileable";
         t->floatTile();
     }
 
     if (!tilingLayouts.value(c->desktop())) {
-        tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout(TilingLayoutFactory::DefaultLayout, this);
+        tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout(TilingLayoutFactory::DefaultLayout, m_workspace);
     }
     tilingLayouts[c->desktop()]->addTile(t);
     tilingLayouts[c->desktop()]->commit();
 }
 
-void Workspace::removeTile(Client *c)
+void Tiling::removeTile(Client *c)
 {
     if (tilingLayouts[ c->desktop()])
         tilingLayouts[ c->desktop()]->removeTile(c);
 }
 
-bool Workspace::tileable(Client *c)
+bool Tiling::tileable(Client* c)
 {
-
     kDebug(1212) << c->caption();
     KWindowInfo info = KWindowSystem::windowInfo(c->window(), -1U, NET::WM2WindowClass);
     kDebug(1212) << "WINDOW CLASS IS " << info.windowClassClass();
@@ -134,21 +140,21 @@ bool Workspace::tileable(Client *c)
     return true;
 }
 
-void Workspace::belowCursor()
+void Tiling::belowCursor()
 {
     // TODO
 }
 
-Tile* Workspace::getNiceTile() const
+Tile* Tiling::getNiceTile() const
 {
     if (!tilingEnabled()) return NULL;
-    if (!tilingLayouts.value(activeClient()->desktop())) return NULL;
+    if (!tilingLayouts.value(m_workspace->activeClient()->desktop())) return NULL;
 
-    return tilingLayouts[ activeClient()->desktop()]->findTile(activeClient());
+    return tilingLayouts[ m_workspace->activeClient()->desktop()]->findTile(m_workspace->activeClient());
     // TODO
 }
 
-void Workspace::updateAllTiles()
+void Tiling::updateAllTiles()
 {
     foreach (TilingLayout * t, tilingLayouts) {
         if (!t) continue;
@@ -159,14 +165,14 @@ void Workspace::updateAllTiles()
 /*
  * Resize the neighbouring clients to close any gaps
  */
-void Workspace::notifyTilingWindowResize(Client *c, const QRect &moveResizeGeom, const QRect &orig)
+void Tiling::notifyTilingWindowResize(Client *c, const QRect &moveResizeGeom, const QRect &orig)
 {
     if (tilingLayouts.value(c->desktop()) == NULL)
         return;
     tilingLayouts[ c->desktop()]->clientResized(c, moveResizeGeom, orig);
 }
 
-void Workspace::notifyTilingWindowMove(Client *c, const QRect &moveResizeGeom, const QRect &orig)
+void Tiling::notifyTilingWindowMove(Client *c, const QRect &moveResizeGeom, const QRect &orig)
 {
     if (tilingLayouts.value(c->desktop()) == NULL) {
         return;
@@ -175,7 +181,7 @@ void Workspace::notifyTilingWindowMove(Client *c, const QRect &moveResizeGeom, c
     updateAllTiles();
 }
 
-void Workspace::notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled)
+void Tiling::notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled)
 {
     if (canceled)
         notifyTilingWindowResize(c, orig, moveResizeGeom);
@@ -183,7 +189,7 @@ void Workspace::notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeG
         notifyTilingWindowResize(c, moveResizeGeom, orig);
 }
 
-void Workspace::notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled)
+void Tiling::notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled)
 {
     if (canceled)
         notifyTilingWindowMove(c, orig, moveResizeGeom);
@@ -191,9 +197,9 @@ void Workspace::notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeo
         notifyTilingWindowMove(c, moveResizeGeom, orig);
 }
 
-void Workspace::notifyTilingWindowDesktopChanged(Client *c, int old_desktop)
+void Tiling::notifyTilingWindowDesktopChanged(Client *c, int old_desktop)
 {
-    if (c->desktop() < 1 || c->desktop() > numberOfDesktops())
+    if (c->desktop() < 1 || c->desktop() > m_workspace->numberOfDesktops())
         return;
 
     if (tilingLayouts.value(old_desktop)) {
@@ -201,7 +207,7 @@ void Workspace::notifyTilingWindowDesktopChanged(Client *c, int old_desktop)
 
         // TODO: copied from createTile(), move this into separate method?
         if (!tilingLayouts.value(c->desktop())) {
-            tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout(TilingLayoutFactory::DefaultLayout, this);
+            tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout(TilingLayoutFactory::DefaultLayout, m_workspace);
         }
 
         if (t)
@@ -215,7 +221,7 @@ void Workspace::notifyTilingWindowDesktopChanged(Client *c, int old_desktop)
 /*
  * Implements the 3 raising modes in Window Behaviour -> Advanced
  */
-void Workspace::notifyTilingWindowActivated(Client *c)
+void Tiling::notifyTilingWindowActivated(Client *c)
 {
     if (c == NULL)
         return;
@@ -226,7 +232,7 @@ void Workspace::notifyTilingWindowActivated(Client *c)
     if (tilingLayouts.value(c->desktop())) {
         QList<Tile *> tiles = tilingLayouts[ c->desktop()]->tiles();
 
-        StackingUpdatesBlocker blocker(this);
+        StackingUpdatesBlocker blocker(m_workspace);
 
         Tile *tile_to_raise = tilingLayouts[ c->desktop()]->findTile(c);
 
@@ -243,24 +249,24 @@ void Workspace::notifyTilingWindowActivated(Client *c)
 
         foreach (Tile * t, tiles) {
             if (t->floating() == raise_floating && t != tile_to_raise)
-                raiseClient(t->client());
+                m_workspace->raiseClient(t->client());
         }
         // raise the current tile last so that it ends up on top
         // but only if it supposed to be raised, required to support tilingRaisePolicy
         kDebug(1212) << "Raise floating? " << raise_floating << "to raise is floating?" << tile_to_raise->floating();
         if (tile_to_raise->floating() == raise_floating)
-            raiseClient(tile_to_raise->client());
+            m_workspace->raiseClient(tile_to_raise->client());
     }
 }
 
-void Workspace::notifyTilingWindowMinimizeToggled(Client *c)
+void Tiling::notifyTilingWindowMinimizeToggled(Client *c)
 {
     if (tilingLayouts.value(c->desktop())) {
         tilingLayouts[ c->desktop()]->clientMinimizeToggled(c);
     }
 }
 
-void Workspace::notifyTilingWindowMaximized(Client *c, Options::WindowOperation op)
+void Tiling::notifyTilingWindowMaximized(Client *c, Options::WindowOperation op)
 {
     if (tilingLayouts.value(c->desktop())) {
         Tile *t = tilingLayouts[ c->desktop()]->findTile(c);
@@ -291,7 +297,7 @@ void Workspace::notifyTilingWindowMaximized(Client *c, Options::WindowOperation 
     }
 }
 
-Tile* Workspace::findAdjacentTile(Tile *ref, int d)
+Tile* Tiling::findAdjacentTile(Tile *ref, int d)
 {
     QRect reference = ref->geometry();
     QPoint origin = reference.center();
@@ -346,17 +352,17 @@ Tile* Workspace::findAdjacentTile(Tile *ref, int d)
     return closest;
 }
 
-void Workspace::focusTile(int d)
+void Tiling::focusTile(int d)
 {
     Tile *t = getNiceTile();
     if (t) {
         Tile *adj = findAdjacentTile(t, d);
         if (adj)
-            activateClient(adj->client());
+            m_workspace->activateClient(adj->client());
     }
 }
 
-void Workspace::moveTile(int d)
+void Tiling::moveTile(int d)
 {
     Tile *t = getNiceTile();
     if (t) {
@@ -366,75 +372,75 @@ void Workspace::moveTile(int d)
     }
 }
 
-void Workspace::slotFocusTileLeft()
+void Tiling::slotFocusTileLeft()
 {
     focusTile(Tile::Left);
 }
 
-void Workspace::slotFocusTileRight()
+void Tiling::slotFocusTileRight()
 {
     focusTile(Tile::Right);
 }
 
-void Workspace::slotFocusTileTop()
+void Tiling::slotFocusTileTop()
 {
     focusTile(Tile::Top);
 }
 
-void Workspace::slotFocusTileBottom()
+void Tiling::slotFocusTileBottom()
 {
     focusTile(Tile::Bottom);
 }
 
-void Workspace::slotMoveTileLeft()
+void Tiling::slotMoveTileLeft()
 {
     moveTile(Tile::Left);
 }
 
-void Workspace::slotMoveTileRight()
+void Tiling::slotMoveTileRight()
 {
     moveTile(Tile::Right);
 }
 
-void Workspace::slotMoveTileTop()
+void Tiling::slotMoveTileTop()
 {
     moveTile(Tile::Top);
 }
 
-void Workspace::slotMoveTileBottom()
+void Tiling::slotMoveTileBottom()
 {
     moveTile(Tile::Bottom);
 }
 
-void Workspace::slotToggleFloating()
+void Tiling::slotToggleFloating()
 {
-    Client *c = activeClient();
+    Client *c = m_workspace->activeClient();
     if (tilingLayouts.value(c->desktop())) {
         tilingLayouts[ c->desktop()]->toggleFloatTile(c);
     }
 }
 
-void Workspace::slotNextTileLayout()
+void Tiling::slotNextTileLayout()
 {
-    if (tilingLayouts.value(currentDesktop())) {
+    if (tilingLayouts.value(m_workspace->currentDesktop())) {
 
-        tilingLayouts.replace(currentDesktop(), TilingLayoutFactory::nextLayout(tilingLayouts[currentDesktop()]));
+        tilingLayouts.replace(m_workspace->currentDesktop(), TilingLayoutFactory::nextLayout(tilingLayouts[m_workspace->currentDesktop()]));
 
-        tilingLayouts[currentDesktop()]->commit();
+        tilingLayouts[m_workspace->currentDesktop()]->commit();
     }
 }
 
-void Workspace::slotPreviousTileLayout()
+void Tiling::slotPreviousTileLayout()
 {
-    if (tilingLayouts.value(currentDesktop())) {
+    if (tilingLayouts.value(m_workspace->currentDesktop())) {
 
-        tilingLayouts.replace(currentDesktop(), TilingLayoutFactory::previousLayout(tilingLayouts[currentDesktop()]));
+        tilingLayouts.replace(m_workspace->currentDesktop(), TilingLayoutFactory::previousLayout(tilingLayouts[m_workspace->currentDesktop()]));
 
-        tilingLayouts[currentDesktop()]->commit();
+        tilingLayouts[m_workspace->currentDesktop()]->commit();
     }
 }
 
-KDecorationDefines::Position Workspace::supportedTilingResizeMode(Client *c, KDecorationDefines::Position currentMode)
+KDecorationDefines::Position Tiling::supportedTilingResizeMode(Client *c, KDecorationDefines::Position currentMode)
 {
     if (tilingLayouts.value(c->desktop())) {
         return tilingLayouts[c->desktop()]->resizeMode(c, currentMode);
@@ -442,7 +448,7 @@ KDecorationDefines::Position Workspace::supportedTilingResizeMode(Client *c, KDe
     return currentMode;
 }
 
-void Workspace::dumpTiles() const
+void Tiling::dumpTiles() const
 {
     foreach (TilingLayout * t, tilingLayouts) {
         if (!t) {
@@ -455,5 +461,10 @@ void Workspace::dumpTiles() const
         }
     }
 }
-} // namespace
 
+QVector< TilingLayout* >& Tiling::getTilingLayouts()
+{
+    return tilingLayouts;
+}
+
+}

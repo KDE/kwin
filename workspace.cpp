@@ -63,6 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "tilinglayout.h"
+#include "tiling/tiling.h"
 
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
@@ -107,7 +108,6 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
-    , tilingEnabled_(false)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
@@ -235,11 +235,14 @@ Workspace::Workspace(bool restore)
     );
 
     client_keys = new KActionCollection(this);
-    initShortcuts();
+
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     desktop_change_osd = new DesktopChangeOSD(this);
 #endif
     m_outline = new Outline();
+    m_tiling = new Tiling(this);
+
+    initShortcuts();
 
     init();
 
@@ -488,7 +491,7 @@ void Workspace::init()
         activateClient(new_active_client);
 
     // Enable/disable tiling
-    setTilingEnabled(options->tilingOn);
+    m_tiling->setTilingEnabled(options->tilingOn);
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
@@ -525,6 +528,7 @@ Workspace::~Workspace()
     delete desktop_change_osd;
 #endif
     delete m_outline;
+    delete m_tiling;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
@@ -562,9 +566,9 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     }
     addClient(c, Allowed);
 
-    tilingLayouts.resize(numberOfDesktops() + 1);
+    m_tiling->getTilingLayouts().resize(numberOfDesktops() + 1);
+    m_tiling->createTile(c);
 
-    createTile(c);
     return c;
 }
 
@@ -668,8 +672,8 @@ void Workspace::removeClient(Client* c, allowed_t)
 #endif
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
-    if (tilingEnabled() && tilingLayouts.value(c->desktop())) {
-        removeTile(c);
+    if (m_tiling->tilingEnabled() && m_tiling->getTilingLayouts().value(c->desktop())) {
+        m_tiling->removeTile(c);
     }
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
@@ -1027,13 +1031,13 @@ void Workspace::slotReconfigure()
         }
     }
 
-    setTilingEnabled(options->tilingOn);
-    foreach (TilingLayout * layout, tilingLayouts) {
+    m_tiling->setTilingEnabled(options->tilingOn);
+    foreach (TilingLayout * layout, m_tiling->getTilingLayouts()) {
         if (layout)
             layout->reconfigureTiling();
     }
     // just so that we reset windows in the right manner, 'activate' the current active window
-    notifyTilingWindowActivated(activeClient());
+    m_tiling->notifyTilingWindowActivated(activeClient());
     if (hasDecorationPlugin()) {
         rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
     } else {
@@ -1296,8 +1300,8 @@ bool Workspace::setCurrentDesktop(int new_desktop)
         if (movingClient && !movingClient->isOnDesktop(new_desktop)) {
             int old_desktop = movingClient->desktop();
             movingClient->setDesktop(new_desktop);
-            if (tilingEnabled()) {
-                notifyTilingWindowDesktopChanged(movingClient, old_desktop);
+            if (m_tiling->tilingEnabled()) {
+                m_tiling->notifyTilingWindowDesktopChanged(movingClient, old_desktop);
             }
         }
 
@@ -1577,7 +1581,7 @@ void Workspace::setNumberOfDesktops(int n)
     for (int i = 0; i < int(desktop_focus_chain.size()); i++)
         desktop_focus_chain[i] = i + 1;
 
-    tilingLayouts.resize(numberOfDesktops() + 1);
+    m_tiling->getTilingLayouts().resize(numberOfDesktops() + 1);
 
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);
@@ -1611,7 +1615,7 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
     } else
         raiseClient(c);
 
-    notifyTilingWindowDesktopChanged(c, old_desktop);
+    m_tiling->notifyTilingWindowDesktopChanged(c, old_desktop);
 
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -2150,6 +2154,47 @@ TabBox::TabBox* Workspace::tabBox() const
     return tab_box;
 }
 #endif
+
+Tiling* Workspace::tiling()
+{
+    return m_tiling;
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::toggleTiling()
+{
+    if (m_tiling) {
+        m_tiling->slotToggleTiling();
+    }
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::nextTileLayout()
+{
+    if (m_tiling) {
+        m_tiling->slotNextTileLayout();
+    }
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::previousTileLayout()
+{
+    if (m_tiling) {
+        m_tiling->slotPreviousTileLayout();
+    }
+}
+
+void Workspace::dumpTiles() const {
+    if (m_tiling) {
+        m_tiling->dumpTiles();
+    }
+}
 
 } // namespace
 

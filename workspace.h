@@ -74,6 +74,7 @@ class TabBox;
 
 class Client;
 class Tile;
+class Tiling;
 class TilingLayout;
 class ClientGroup;
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
@@ -197,31 +198,7 @@ public:
         return unmanaged;
     }
 
-    //-------------------------------------------------
-    // Tiling
-public:
-    bool tilingEnabled() const;
-    void setTilingEnabled(bool tiling);
-    bool tileable(Client *c);
-    void createTile(Client *c);
-    // updates geometry of tiles on all desktops,
-    // this rearranges the tiles.
-    void updateAllTiles();
-
-    // The notification functions are called from
-    // various points in existing code so that
-    // tiling can take any action if required.
-    // They are defined in tiling.cpp
-    void notifyTilingWindowResize(Client *c, const QRect &moveResizeGeom, const QRect &orig);
-    void notifyTilingWindowMove(Client *c, const QRect &moveResizeGeom, const QRect &orig);
-    void notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
-    void notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
-    void notifyTilingWindowDesktopChanged(Client *c, int old_desktop);
-    void notifyTilingWindowActivated(Client *c);
-    void notifyTilingWindowMinimizeToggled(Client *c);
-    void notifyTilingWindowMaximized(Client *c, WindowOperation op);
-
-    Position supportedTilingResizeMode(Client *c, Position currentMode);
+    Tiling* tiling();
 
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -329,14 +306,10 @@ private:
 
     KActivityController activityController_;
 
-    bool tilingEnabled_;
-    // Each tilingLayout is for one virtual desktop.
-    // The length is always one more than the number of
-    // virtual desktops so that we can quickly index them
-    // without having to remember to subtract one.
-    QVector<TilingLayout *> tilingLayouts;
+    Tiling* m_tiling;
 
     Outline* m_outline;
+
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge m_screenEdge;
 #endif
@@ -640,25 +613,6 @@ public slots:
     void suspendCompositing();
     void suspendCompositing(bool suspend);
 
-    // user actions, usually bound to shortcuts
-    // and also provided through the D-BUS interface.
-    void slotToggleTiling();
-    void slotToggleFloating();
-    void slotNextTileLayout();
-    void slotPreviousTileLayout();
-
-    // Changes the focused client
-    void slotFocusTileLeft();
-    void slotFocusTileRight();
-    void slotFocusTileTop();
-    void slotFocusTileBottom();
-    // swaps active and adjacent client.
-    void slotMoveTileLeft();
-    void slotMoveTileRight();
-    void slotMoveTileTop();
-    void slotMoveTileBottom();
-    void belowCursor();
-
     // NOTE: debug method
     void dumpTiles() const;
 
@@ -804,16 +758,6 @@ private:
     static const char* windowTypeToTxt(NET::WindowType type);
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
-
-    // try to get a decent tile, either the one with
-    // focus or the one below the mouse.
-    Tile* getNiceTile() const;
-    void removeTile(Client *c);
-    // int, and not Tile::Direction because
-    // we are using a forward declaration for Tile
-    Tile* findAdjacentTile(Tile *ref, int d);
-    void focusTile(int d);
-    void moveTile(int d);
 
     Client* active_client;
     Client* last_active_client;
@@ -1261,30 +1205,6 @@ inline void Workspace::addClientGroup(ClientGroup* group)
 inline void Workspace::removeClientGroup(ClientGroup* group)
 {
     clientGroups.removeAll(group);
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::toggleTiling()
-{
-    slotToggleTiling();
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::nextTileLayout()
-{
-    slotNextTileLayout();
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::previousTileLayout()
-{
-    slotPreviousTileLayout();
 }
 
 } // namespace

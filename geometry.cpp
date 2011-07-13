@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kephal/screens.h>
 #include <KDE/KGlobalSettings>
 #include "outline.h"
+#include "tiling/tiling.h"
 
 namespace KWin
 {
@@ -2032,7 +2033,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
-    workspace()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
+    workspace()->tiling()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
     // client itself is not damaged
     const QRect deco_rect = decorationRect().translated(geom.x(), geom.y());
     addWorkspaceRepaint(deco_rect_before_block);
@@ -2590,11 +2591,11 @@ void Client::finishMoveResize(bool cancel)
 
     leaveMoveResize();
 
-    if (workspace()->tilingEnabled()) {
+    if (workspace()->tiling()->tilingEnabled()) {
         if (wasResize)
-            workspace()->notifyTilingWindowResizeDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
+            workspace()->tiling()->notifyTilingWindowResizeDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
         else if (wasMove)
-            workspace()->notifyTilingWindowMoveDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
+            workspace()->tiling()->notifyTilingWindowMoveDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
     } else {
         if (cancel)
             setGeometry(initialMoveResizeGeom);
@@ -2763,8 +2764,8 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     bool update = false;
     if (isResize()) {
         // query layout for supported resize mode
-        if (workspace()->tilingEnabled()) {
-            mode = workspace()->supportedTilingResizeMode(this, mode);
+        if (workspace()->tiling()->tilingEnabled()) {
+            mode = workspace()->tiling()->supportedTilingResizeMode(this, mode);
         }
         // first resize (without checking constrains), then snap, then check bounds, then check constrains
         QRect orig = initialMoveResizeGeom;
@@ -2801,7 +2802,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         case PositionCenter:
             // exception for tiling
             // Center means no resizing allowed
-            if (workspace()->tilingEnabled()) {
+            if (workspace()->tiling()->tilingEnabled()) {
                 finishMoveResize(false);
                 buttonDown = false;
                 return;
@@ -2810,7 +2811,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             abort();
             break;
         }
-        workspace()->notifyTilingWindowResize(this, moveResizeGeom, initialMoveResizeGeom);
+        workspace()->tiling()->notifyTilingWindowResize(this, moveResizeGeom, initialMoveResizeGeom);
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize(this, moveResizeGeom, mode);
 
@@ -2968,7 +2969,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         performMoveResize();
 
     if (isMove()) {
-        workspace()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
+        workspace()->tiling()->notifyTilingWindowMove(this, moveResizeGeom, initialMoveResizeGeom);
 #ifdef KWIN_BUILD_SCREENEDGES
         workspace()->screenEdge()->check(globalPos, xTime());
 #endif
@@ -2986,7 +2987,7 @@ void Client::performMoveResize()
         sendSyncRequest();
     }
 #endif
-    if (!workspace()->tilingEnabled())
+    if (!workspace()->tiling()->tilingEnabled())
         setGeometry(moveResizeGeom);
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
