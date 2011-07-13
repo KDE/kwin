@@ -64,6 +64,7 @@ DesktopChangeOSD::DesktopChangeOSD(Workspace* ws)
     m_delayedHideTimer.setSingleShot(true);
     connect(&m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()));
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(desktopChanged(int)));
+    connect(ws, SIGNAL(numberDesktopsChanged(int)), this, SLOT(numberDesktopsChanged()));
 
     m_scene = new QGraphicsScene(0);
     setScene(m_scene);

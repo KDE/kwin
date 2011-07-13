@@ -360,9 +360,6 @@ void Workspace::init()
 
     loadDesktopSettings();
     updateDesktopLayout();
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    desktop_change_osd->numberDesktopsChanged();
-#endif
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
@@ -1557,11 +1554,6 @@ void Workspace::setNumberOfDesktops(int n)
         desktop_focus_chain[i] = i + 1;
 
     tilingLayouts.resize(numberOfDesktops() + 1);
-
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    // reset the desktop change osd
-    desktop_change_osd->numberDesktopsChanged();
-#endif
 
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);
