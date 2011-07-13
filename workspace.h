@@ -718,6 +718,7 @@ signals:
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void propertyNotify(long a);
+    void configChanged();
 
 private:
     void init();

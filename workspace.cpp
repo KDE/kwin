@@ -933,9 +933,7 @@ void Workspace::slotReconfigure()
 #ifdef KWIN_BUILD_TABBOX
     tab_box->reconfigure();
 #endif
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    desktop_change_osd->reconfigure();
-#endif
+    emit configChanged();
     initPositioning->reinitCascading(0);
     discardPopup();
     forEachClient(CheckIgnoreFocusStealingProcedure());

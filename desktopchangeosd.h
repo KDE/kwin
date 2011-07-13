@@ -70,8 +70,6 @@ public:
     DesktopChangeOSD(Workspace* ws);
     ~DesktopChangeOSD();
 
-    void reconfigure();
-
     inline Plasma::FrameSvg* itemFrame() {
         return &m_item_frame;
     };
@@ -98,6 +96,7 @@ private:
 private Q_SLOTS:
     void desktopChanged(int old);
     void numberDesktopsChanged();
+    void reconfigure();
 };
 
 class DesktopChangeItem : public QObject, public QGraphicsItem
