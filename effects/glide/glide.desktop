@@ -2,6 +2,7 @@
 Name=Glide
 Name[ar]=الطيران
 Name[ast]=Glide
+Name[bg]=Приплъзване
 Name[bs]=Uletanje
 Name[ca]=Lliscament
 Name[ca@valencia]=Lliscament
@@ -59,6 +60,7 @@ Icon=preferences-system-windows-effect-sheet
 Comment=Windows Glide Effect as they are open and closed
 Comment[ar]=تأثير الطيران للنوافذ عند فتحها أو غلقها
 Comment[ast]=Efeutos Glide cuando s'abren y zarren ventanes
+Comment[bg]=Създава ефект на приплъзване при отваряне и затваряне на прозорците
 Comment[bs]=Prozori ulijeću pri otvaranju i izlijeću pri zatvaranju
 Comment[ca]=Provoca un efecte de lliscament quan s'obren i es tanquen
 Comment[ca@valencia]=Provoca un efecte de lliscament quan s'obren i es tanquen

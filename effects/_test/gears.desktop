@@ -2,6 +2,7 @@
 Name=Cube Gears
 Name[ar]=تروس المكعب
 Name[ast]=Cubu con ruedes dentaes
+Name[bg]=Зъбни колела в куб
 Name[bs]=Kocka sa zupčanicima
 Name[ca]=Engranatges cúbics
 Name[ca@valencia]=Engranatges cúbics
@@ -65,6 +66,7 @@ Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
 Comment[ar]=يعرض تروساً داخل المكعب
 Comment[ast]=Amosar ruedes dentaes dientro del cubu
+Comment[bg]=Показване на зъбни колела в страните на куб
 Comment[bs]=Prikaz zupčanika unutar kocke
 Comment[ca]=Visualitza els engranatges dins d'un cub
 Comment[ca@valencia]=Visualitza els engranatges dins d'un cub

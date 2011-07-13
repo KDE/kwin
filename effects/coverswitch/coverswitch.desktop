@@ -2,7 +2,7 @@
 Name=Cover Switch
 Name[ar]=تبديل الأغلفة
 Name[ast]=Escoyeta de ventana en mou carátula
-Name[bg]=Превключване между прозорци
+Name[bg]=Прелистване на страници
 Name[bn]=আবরণ বদল
 Name[bs]=Protočno prebacivanje
 Name[ca]=Canvi de capa
@@ -72,6 +72,7 @@ Icon=preferences-system-windows-effect-coverswitch
 Comment=Display a Cover Flow effect for the alt+tab window switcher
 Comment[ar]=يعرض تأثير تتابع الأغلفة في مبدل النوافذ alt+tab 
 Comment[ast]=Amuesa un efeutu de cover flow nel conmutador de ventanes alt+tab
+Comment[bg]=Eфект "Прелистване на страници" при превключване на прозорците (Alt+Tab)
 Comment[bs]=Efekat „proticanja omotâ“ pri prebacivanju prozora Alt+Tab‑om
 Comment[ca]=Mostra un efecte de capes en el commutador de finestres amb alt+tab
 Comment[ca@valencia]=Mostra un efecte de capes en el commutador de finestres amb alt+tab

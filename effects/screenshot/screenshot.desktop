@@ -57,6 +57,7 @@ Name[zh_TW]=螢幕快照
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
 Comment[ast]=Guarda una captura de la ventana activa na carpeta personal
+Comment[bg]=Запазване снимка на активния прозорец в домашната директория
 Comment[bs]=Upisuje snimak aktivnog prozora u domaću fasciklu
 Comment[ca]=Desa una captura de pantalla de la finestra activa en el directori personal
 Comment[ca@valencia]=Alça una captura de pantalla de la finestra activa en el directori personal

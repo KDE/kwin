@@ -2,6 +2,7 @@
 Name=Slide Tabs
 Name[ar]=ألسنة منزلقة
 Name[ast]=Eslizar llingüetes
+Name[bg]=Приплъзване на подпрозорците
 Name[bs]=Jezičci sa klizanjem
 Name[ca]=Pestanyes desplaçant-se
 Name[ca@valencia]=Pestanyes desplaçant-se
@@ -64,6 +65,7 @@ Type=Service
 Comment=Slide windows when switching or grouping tabs.
 Comment[ar]=أزْلِق النوافذ عند تبديل أو تجميع الألسنة
 Comment[ast]=Esliza les ventanes al camudar o agrupar llingüetes.
+Comment[bg]=Приплъзване при превключване или групиране на подпрозорците
 Comment[bs]=Prozori klizaju pri prebacivanju ili grupisanju jezičaka.
 Comment[ca]=Desplaça les finestres quan es canviïn o s'agrupin pestanyes.
 Comment[ca@valencia]=Desplaça les finestres quan es canvien o s'agrupen pestanyes.

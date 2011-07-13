@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Startup Feedback
 Name[ast]=Notificación d'aniciu
+Name[bg]=Видимо стартиране
 Name[bs]=Odziv pri pokretanju
 Name[ca]=Reacció en iniciar
 Name[ca@valencia]=Reacció en iniciar
@@ -51,6 +52,7 @@ Name[zh_CN]=启动反馈
 Name[zh_TW]=程式啟動回饋
 Comment=Helper effect for startup feedback
 Comment[ast]=Efeutu de notificación d'aniciu
+Comment[bg]=Ефект при стартиране на приложение
 Comment[bs]=Pomoćni efekat za odziv pri pokretanju
 Comment[ca]=Efecte auxiliar de reacció en iniciar
 Comment[ca@valencia]=Efecte auxiliar de reacció en iniciar

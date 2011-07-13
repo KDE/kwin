@@ -2,6 +2,7 @@
 Name=Sliding popups
 Name[ar]=المنبثقات المنزلقة
 Name[ast]=Ventanes emerxentes eslizantes
+Name[bg]=Плъзгащи се диалогови прозорци
 Name[bs]=Klizajući iskakači
 Name[ca]=Missatges emergents desplaçant-se
 Name[ca@valencia]=Missatges emergents desplaçant-se
@@ -64,6 +65,7 @@ Type=Service
 Comment=Sliding animation for Plasma popups
 Comment[ar]=حركة انزلاق لمنبثقات بلازما
 Comment[ast]=Animación eslizante pa ventanes emerxentes de Plasma
+Comment[bg]=Анимация с плъзгане за диалоговите прозорци в Plasma
 Comment[bs]=Animirano klizanje za plazma iskakače
 Comment[ca]=Animació de desplaçament pels missatges emergents del Plasma
 Comment[ca@valencia]=Animació de desplaçament pels missatges emergents del Plasma
