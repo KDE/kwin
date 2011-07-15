@@ -176,7 +176,7 @@ endif(KWIN_BUILD_SCRIPTING)
 if(KWIN_BUILD_TABBOX)
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        tabbox.cpp
+        tabbox/tabbox.cpp
         tabbox/clientitemdelegate.cpp
         tabbox/clientmodel.cpp
         tabbox/desktopitemdelegate.cpp
