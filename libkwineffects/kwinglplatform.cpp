@@ -173,8 +173,8 @@ static ChipClass detectRadeonClass(const QString &chipset)
         chipset.contains("REDWOOD")   ||
         chipset.contains("JUNIPER")   ||
         chipset.contains("CYPRESS")   ||
-        chipset.contains("PALM")      ||
-        chipset.contains("HEMLOCK"))
+        chipset.contains("HEMLOCK")   ||
+        chipset.contains("PALM"))
         return Evergreen;
 
     if (chipset.contains("BARTS") ||
