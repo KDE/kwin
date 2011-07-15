@@ -108,78 +108,78 @@ static ChipClass detectRadeonClass(const QString &chipset)
         return UnknownRadeon;
 
     if (chipset.contains("R100")  ||
-            chipset.contains("RV100") ||
-            chipset.contains("RS100"))
+        chipset.contains("RV100") ||
+        chipset.contains("RS100"))
         return R100;
 
     if (chipset.contains("RV200") ||
-            chipset.contains("RS200") ||
-            chipset.contains("R200")  ||
-            chipset.contains("RV250") ||
-            chipset.contains("RS300") ||
-            chipset.contains("RV280"))
+        chipset.contains("RS200") ||
+        chipset.contains("R200")  ||
+        chipset.contains("RV250") ||
+        chipset.contains("RS300") ||
+        chipset.contains("RV280"))
         return R200;
 
     if (chipset.contains("R300")  ||
-            chipset.contains("R350")  ||
-            chipset.contains("R360")  ||
-            chipset.contains("RV350") ||
-            chipset.contains("RV370") ||
-            chipset.contains("RV380"))
+        chipset.contains("R350")  ||
+        chipset.contains("R360")  ||
+        chipset.contains("RV350") ||
+        chipset.contains("RV370") ||
+        chipset.contains("RV380"))
         return R300;
 
     if (chipset.contains("R420")  ||
-            chipset.contains("R423")  ||
-            chipset.contains("R430")  ||
-            chipset.contains("R480")  ||
-            chipset.contains("R481")  ||
-            chipset.contains("RV410") ||
-            chipset.contains("RS400") ||
-            chipset.contains("RC410") ||
-            chipset.contains("RS480") ||
-            chipset.contains("RS482") ||
-            chipset.contains("RS600") ||
-            chipset.contains("RS690") ||
-            chipset.contains("RS740"))
+        chipset.contains("R423")  ||
+        chipset.contains("R430")  ||
+        chipset.contains("R480")  ||
+        chipset.contains("R481")  ||
+        chipset.contains("RV410") ||
+        chipset.contains("RS400") ||
+        chipset.contains("RC410") ||
+        chipset.contains("RS480") ||
+        chipset.contains("RS482") ||
+        chipset.contains("RS600") ||
+        chipset.contains("RS690") ||
+        chipset.contains("RS740"))
         return R400;
 
     if (chipset.contains("RV515") ||
-            chipset.contains("R520")  ||
-            chipset.contains("RV530") ||
-            chipset.contains("R580")  ||
-            chipset.contains("RV560") ||
-            chipset.contains("RV570"))
+        chipset.contains("R520")  ||
+        chipset.contains("RV530") ||
+        chipset.contains("R580")  ||
+        chipset.contains("RV560") ||
+        chipset.contains("RV570"))
         return R500;
 
     if (chipset.contains("R600")  ||
-            chipset.contains("RV610") ||
-            chipset.contains("RV630") ||
-            chipset.contains("RV670") ||
-            chipset.contains("RV620") ||
-            chipset.contains("RV635") ||
-            chipset.contains("RS780") ||
-            chipset.contains("RS880"))
+        chipset.contains("RV610") ||
+        chipset.contains("RV630") ||
+        chipset.contains("RV670") ||
+        chipset.contains("RV620") ||
+        chipset.contains("RV635") ||
+        chipset.contains("RS780") ||
+        chipset.contains("RS880"))
         return R600;
 
     if (chipset.contains("R700")  ||
-            chipset.contains("RV770") ||
-            chipset.contains("RV730") ||
-            chipset.contains("RV710") ||
-            chipset.contains("RV740"))
+        chipset.contains("RV770") ||
+        chipset.contains("RV730") ||
+        chipset.contains("RV710") ||
+        chipset.contains("RV740"))
         return R700;
 
     if (chipset.contains("EVERGREEN") ||  // Not an actual chipset, but returned by R600G in 7.9
-            chipset.contains("CEDAR")     ||
-            chipset.contains("REDWOOD")   ||
-            chipset.contains("JUNIPER")   ||
-            chipset.contains("CYPRESS")   ||
-            chipset.contains("PALM")      ||
-            chipset.contains("HEMLOCK"))
+        chipset.contains("CEDAR")     ||
+        chipset.contains("REDWOOD")   ||
+        chipset.contains("JUNIPER")   ||
+        chipset.contains("CYPRESS")   ||
+        chipset.contains("PALM")      ||
+        chipset.contains("HEMLOCK"))
         return Evergreen;
 
     if (chipset.contains("BARTS") ||
-            chipset.contains("TURKS") ||
-            chipset.contains("CAICOS"))
+        chipset.contains("TURKS") ||
+        chipset.contains("CAICOS"))
         return NorthernIslands;
 
     QString name = extract(chipset, "HD [0-9]{4}"); // HD followed by a space and 4 digits
