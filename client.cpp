@@ -500,8 +500,9 @@ void Client::repaintDecorationPending()
         // The scene will update the decoration pixmaps in the next painting pass
         // if it has not been already repainted before
         const QRegion r = paintRedirector->scheduledRepaintRegion();
-        if (!r.isEmpty())
-            Workspace::self()->addRepaint(r.translated(x() - padding_left, y() - padding_top));
+        if (!r.isEmpty()) {
+            addRepaint(r.translated(-padding_left,-padding_top));
+        }
     }
 }
 

@@ -124,6 +124,7 @@ public:
     bool unredirected() const;
     void suspendUnredirect(bool suspend);
     void addRepaint(const QRect& r);
+    void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
     virtual void addRepaintFull();
     // these call workspace->addRepaint(), but first transform the damage if needed

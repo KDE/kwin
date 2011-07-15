@@ -748,6 +748,14 @@ void Toplevel::addRepaint(int x, int y, int w, int h)
     workspace()->checkCompositeTimer();
 }
 
+void Toplevel::addRepaint(const QRegion& r)
+{
+    if (!compositing())
+        return;
+    repaints_region += r;
+    workspace()->checkCompositeTimer();
+}
+
 void Toplevel::addRepaintFull()
 {
     repaints_region = decorationRect();
