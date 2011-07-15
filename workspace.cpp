@@ -566,7 +566,6 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     }
     addClient(c, Allowed);
 
-    m_tiling->getTilingLayouts().resize(numberOfDesktops() + 1);
     m_tiling->createTile(c);
 
     return c;
@@ -672,9 +671,6 @@ void Workspace::removeClient(Client* c, allowed_t)
 #endif
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
-    if (m_tiling->tilingEnabled() && m_tiling->getTilingLayouts().value(c->desktop())) {
-        m_tiling->removeTile(c);
-    }
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
     desktops.removeAll(c);
@@ -1580,8 +1576,6 @@ void Workspace::setNumberOfDesktops(int n)
     desktop_focus_chain.resize(n);
     for (int i = 0; i < int(desktop_focus_chain.size()); i++)
         desktop_focus_chain[i] = i + 1;
-
-    m_tiling->getTilingLayouts().resize(numberOfDesktops() + 1);
 
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);

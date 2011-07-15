@@ -41,12 +41,10 @@ public:
     bool tilingEnabled() const;
     void setTilingEnabled(bool tiling);
     bool tileable(Client *c);
-    void createTile(Client *c);
-    void removeTile(Client *c);
     // updates geometry of tiles on all desktops,
     // this rearranges the tiles.
     void updateAllTiles();
-    QVector< TilingLayout* >& getTilingLayouts();
+    const QVector< TilingLayout* >& getTilingLayouts() const;
 
     // The notification functions are called from
     // various points in existing code so that
@@ -64,6 +62,8 @@ public:
     KDecorationDefines::Position supportedTilingResizeMode(Client *c, KDecorationDefines::Position currentMode);
 
 public Q_SLOTS:
+    void createTile(KWin::Client *c);
+    void removeTile(KWin::Client *c);
     // user actions, usually bound to shortcuts
     // and also provided through the D-BUS interface.
     void slotToggleTiling();
@@ -102,6 +102,8 @@ private:
     // virtual desktops so that we can quickly index them
     // without having to remember to subtract one.
     QVector<TilingLayout *> tilingLayouts;
+private Q_SLOTS:
+    void slotResizeTilingLayouts();
 };
 }
 

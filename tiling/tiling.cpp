@@ -63,11 +63,18 @@ void Tiling::setTilingEnabled(bool tiling)
     options->tilingRaisePolicy = config.readEntry("TilingRaisePolicy", 0);
 
     if (tilingEnabled_) {
+        connect(m_workspace, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(createTile(KWin::Client*)));
+        connect(m_workspace, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotResizeTilingLayouts()));
+        connect(m_workspace, SIGNAL(numberDesktopsChanged(int)), this, SLOT(slotResizeTilingLayouts()));
+        connect(m_workspace, SIGNAL(clientRemoved(KWin::Client*)), this, SLOT(removeTile(KWin::Client*)));
         tilingLayouts.resize(Workspace::self()->numberOfDesktops() + 1);
         foreach (Client * c, Workspace::self()->stackingOrder()) {
             createTile(c);
         }
     } else {
+        disconnect(m_workspace, SIGNAL(clientAdded(KWin::Client*)));
+        disconnect(m_workspace, SIGNAL(numberDesktopsChanged(int)));
+        disconnect(m_workspace, SIGNAL(clientRemoved(KWin::Client*)));
         qDeleteAll(tilingLayouts);
         tilingLayouts.clear();
     }
@@ -112,6 +119,9 @@ void Tiling::createTile(Client* c)
 
 void Tiling::removeTile(Client *c)
 {
+    if (!tilingLayouts.value(c->desktop())) {
+        return;
+    }
     if (tilingLayouts[ c->desktop()])
         tilingLayouts[ c->desktop()]->removeTile(c);
 }
@@ -462,9 +472,14 @@ void Tiling::dumpTiles() const
     }
 }
 
-QVector< TilingLayout* >& Tiling::getTilingLayouts()
+const QVector< TilingLayout* >& Tiling::getTilingLayouts() const
 {
     return tilingLayouts;
+}
+
+void Tiling::slotResizeTilingLayouts()
+{
+    tilingLayouts.resize(m_workspace->numberOfDesktops() + 1);
 }
 
 }
