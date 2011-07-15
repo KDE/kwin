@@ -177,9 +177,12 @@ static ChipClass detectRadeonClass(const QString &chipset)
         chipset.contains("PALM"))
         return Evergreen;
 
-    if (chipset.contains("BARTS") ||
-        chipset.contains("TURKS") ||
-        chipset.contains("CAICOS"))
+    if (chipset.contains("SUMO")   ||
+        chipset.contains("SUMO2")  ||
+        chipset.contains("BARTS")  ||
+        chipset.contains("TURKS")  ||
+        chipset.contains("CAICOS") ||
+        chipset.contains("CAYMAN"))
         return NorthernIslands;
 
     QString name = extract(chipset, "HD [0-9]{4}"); // HD followed by a space and 4 digits
@@ -619,9 +622,12 @@ void GLPlatform::detect()
                  m_renderer.contains("HEMLOCK")   ||
                  m_renderer.contains("PALM")      ||
                  m_renderer.contains("EVERGREEN") ||
+                 m_renderer.contains("SUMO")      ||
+                 m_renderer.contains("SUMO2")     ||
                  m_renderer.contains("BARTS")     ||
                  m_renderer.contains("TURKS")     ||
-                 m_renderer.contains("CAICOS"))) {
+                 m_renderer.contains("CAICOS")    ||
+                 m_renderer.contains("CAYMAN"))) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
         }
