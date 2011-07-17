@@ -95,18 +95,6 @@ namespace Oxygen
             SizeGripWhenNeeded
         };
 
-        //! shadow cache mode
-        enum ShadowCacheMode {
-            //! no shadow cache
-            CacheDisabled,
-
-            //! shadow cache depends on animation duration
-            CacheVariable,
-
-            //! shadow cache has maximum size
-            CacheMaximum
-        };
-
         //! decide when separator is to be drawn
         enum SeparatorMode {
 
@@ -192,23 +180,6 @@ namespace Oxygen
         { _useNarrowButtonSpacing = value; }
 
         //@}
-
-        //!@name shadow mode cache mode
-        //@{
-
-        static QString shadowCacheModeName( ShadowCacheMode, bool translated );
-        static ShadowCacheMode shadowCacheMode( QString, bool translated );
-
-        QString shadowCacheModeName( bool translated ) const
-        { return shadowCacheModeName( shadowCacheMode(), translated ); }
-
-        void setShadowCacheMode( ShadowCacheMode mode )
-        { _shadowCacheMode = mode; }
-
-        ShadowCacheMode shadowCacheMode( void ) const
-        { return _shadowCacheMode; }
-
-        //@]
 
         //!@name frame border
         //@{
@@ -395,9 +366,6 @@ namespace Oxygen
 
         //! narrow button spacing
         bool _useNarrowButtonSpacing;
-
-        //! shadow cache mode
-        ShadowCacheMode _shadowCacheMode;
 
     };
 

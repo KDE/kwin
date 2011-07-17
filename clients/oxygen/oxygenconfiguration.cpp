@@ -51,8 +51,7 @@ namespace Oxygen
         _animateTitleChange( true ),
         _animationsDuration( 150 ),
         _tabsEnabled( true ),
-        _useNarrowButtonSpacing( false ),
-        _shadowCacheMode( CacheVariable )
+        _useNarrowButtonSpacing( false )
     {}
 
     //__________________________________________________
@@ -148,10 +147,6 @@ namespace Oxygen
             OxygenConfig::NARROW_BUTTON_SPACING,
             defaultConfiguration.useNarrowButtonSpacing() ) );
 
-        // shadow cache mode
-        setShadowCacheMode( shadowCacheMode( group.readEntry(
-            OxygenConfig::SHADOW_CACHE_MODE, defaultConfiguration.shadowCacheModeName( false ) ), false ) );
-
     }
 
     //__________________________________________________
@@ -195,7 +190,6 @@ namespace Oxygen
         if( animationsDuration() != defaultConfiguration.animationsDuration() ) group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
         if( tabsEnabled() != defaultConfiguration.tabsEnabled() ) group.writeEntry( OxygenConfig::TABS_ENABLED, tabsEnabled() );
         if( useNarrowButtonSpacing() != defaultConfiguration.useNarrowButtonSpacing() ) group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
-        if( shadowCacheMode() != defaultConfiguration.shadowCacheMode() ) group.writeEntry( OxygenConfig::SHADOW_CACHE_MODE, shadowCacheModeName( false ) );
 
     }
 
@@ -379,34 +373,8 @@ namespace Oxygen
             animateTitleChange() == other.animateTitleChange() &&
             animationsDuration() == other.animationsDuration() &&
             tabsEnabled() == other.tabsEnabled() &&
-            useNarrowButtonSpacing() == other.useNarrowButtonSpacing() &&
-            shadowCacheMode() == other.shadowCacheMode();
+            useNarrowButtonSpacing() == other.useNarrowButtonSpacing();
 
-    }
-
-    //__________________________________________________
-    QString Configuration::shadowCacheModeName( ShadowCacheMode value, bool translated )
-    {
-        QString out;
-        switch( value )
-        {
-            case CacheDisabled: out = translated ? i18n( "Disabled" ):"Disabled"; break;
-            case CacheVariable: out = translated ? i18n( "Variable" ):"Variable"; break;
-            case CacheMaximum: out = translated ? i18n( "Maximum" ):"Maximum"; break;
-            default: return Configuration().shadowCacheModeName( translated );
-        }
-
-        return out;
-
-    }
-
-    //__________________________________________________
-    Configuration::ShadowCacheMode Configuration::shadowCacheMode( QString value, bool translated )
-    {
-        if( value == shadowCacheModeName( CacheDisabled, translated ) ) return CacheDisabled;
-        else if( value == shadowCacheModeName( CacheVariable, translated ) ) return CacheVariable;
-        else if( value == shadowCacheModeName( CacheMaximum, translated ) ) return CacheMaximum;
-        else return Configuration().shadowCacheMode();
     }
 
 }

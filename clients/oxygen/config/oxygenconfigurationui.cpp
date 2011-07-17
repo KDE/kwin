@@ -86,16 +86,10 @@ namespace Oxygen
       << Configuration::sizeGripModeName( Configuration::SizeGripWhenNeeded, true )
       );
 
-    ui.shadowCacheMode->insertItems(0, QStringList()
-        << Configuration::shadowCacheModeName( Configuration::CacheDisabled, true )
-        << Configuration::shadowCacheModeName( Configuration::CacheVariable, true )
-        << Configuration::shadowCacheModeName( Configuration::CacheMaximum, true ) );
-
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
 
     // connections
-    connect( ui.shadowCacheMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.separatorMode, SLOT( setDisabled( bool ) ) );
 
     connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
@@ -151,9 +145,6 @@ namespace Oxygen
     // size grip mode
     ui.sizeGripModeLabel->setVisible( _expertMode );
     ui.sizeGripMode->setVisible( _expertMode );
-
-    // shadow mode
-    ui.shadowsExpertWidget->setVisible( _expertMode );
 
     if( _expertMode ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     else ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
