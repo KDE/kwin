@@ -871,6 +871,7 @@ void ShaderManager::resetShader(ShaderType type)
 bool GLRenderTarget::sSupported = false;
 bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
+QSize GLRenderTarget::s_oldViewport;
 
 void GLRenderTarget::initStatic()
 {
@@ -895,6 +896,12 @@ bool GLRenderTarget::blitSupported()
 
 void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
 {
+    if (s_renderTargets.isEmpty()) {
+        GLint params[4];
+        glGetIntegerv(GL_VIEWPORT, params);
+        s_oldViewport = QSize(params[2], params[3]);
+    }
+
     target->enable();
     s_renderTargets.push(target);
 }
@@ -903,12 +910,15 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
 {
     GLRenderTarget* ret = s_renderTargets.pop();
     ret->disable();
-    if (!s_renderTargets.isEmpty())
+    if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->enable();
+    } else if (!s_oldViewport.isEmpty()) {
+        glViewport (0, 0, s_oldViewport.width(), s_oldViewport.height());
+    }
     return ret;
 }
 
-GLRenderTarget::GLRenderTarget(GLTexture* color)
+GLRenderTarget::GLRenderTarget(const GLTexture& color)
 {
     // Reset variables
     mValid = false;
@@ -916,7 +926,7 @@ GLRenderTarget::GLRenderTarget(GLTexture* color)
     mTexture = color;
 
     // Make sure FBO is supported
-    if (sSupported && mTexture && !mTexture->isNull()) {
+    if (sSupported && !mTexture.isNull()) {
         initFBO();
     } else
         kError(1212) << "Render targets aren't supported!" << endl;
@@ -937,7 +947,8 @@ bool GLRenderTarget::enable()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
-    mTexture->setDirty();
+    glViewport(0, 0, mTexture.width(), mTexture.height());
+    mTexture.setDirty();
 
     return true;
 }
@@ -950,7 +961,7 @@ bool GLRenderTarget::disable()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    mTexture->setDirty();
+    mTexture.setDirty();
 
     return true;
 }
@@ -1017,7 +1028,7 @@ void GLRenderTarget::initFBO()
 #endif
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           mTexture->target(), mTexture->texture(), 0);
+                           mTexture.target(), mTexture.texture(), 0);
 
 #if DEBUG_GLRENDERTARGET
     if ((err = glGetError()) != GL_NO_ERROR) {
@@ -1055,15 +1066,29 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     const QRect s = source.isNull() ? QRect(0, 0, displayWidth(), displayHeight()) : source;
-    const QRect d = destination.isNull() ? QRect(0, 0, mTexture->width(), mTexture->height()) : destination;
+    const QRect d = destination.isNull() ? QRect(0, 0, mTexture.width(), mTexture.height()) : destination;
 
     glBlitFramebuffer(s.x(), displayHeight() - s.y() - s.height(), s.x() + s.width(), displayHeight() - s.y(),
-                      d.x(), mTexture->height() - d.y() - d.height(), d.x() + d.width(), mTexture->height() - d.y(),
+                      d.x(), mTexture.height() - d.y() - d.height(), d.x() + d.width(), mTexture.height() - d.y(),
                       GL_COLOR_BUFFER_BIT, filter);
     GLRenderTarget::popRenderTarget();
 #endif
 }
 
+void GLRenderTarget::attachTexture(const GLTexture& target)
+{
+    if (!mValid || mTexture.texture() == target.texture()) {
+        return;
+    }
+
+    pushRenderTarget(this);
+
+    mTexture = target;
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           mTexture.target(), mTexture.texture(), 0);
+
+    popRenderTarget();
+}
 
 //*********************************
 // GLVertexBufferPrivate

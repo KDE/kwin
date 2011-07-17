@@ -178,6 +178,14 @@ void GLSLBlurShader::setTextureMatrix(const QMatrix4x4 &matrix)
     shader->setUniform("u_textureMatrix", matrix);
 }
 
+void GLSLBlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
+{
+    if (!isValid()) {
+        return;
+    }
+    shader->setUniform("u_modelViewProjectionMatrix", matrix);
+}
+
 void GLSLBlurShader::bind()
 {
     if (!isValid())

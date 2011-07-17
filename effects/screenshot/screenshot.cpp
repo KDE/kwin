@@ -65,7 +65,7 @@ void ScreenShotEffect::postPaintScreen()
         GLTexture* offscreenTexture = new GLTexture(w, h);
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        GLRenderTarget* target = new GLRenderTarget(offscreenTexture);
+        GLRenderTarget* target = new GLRenderTarget(*offscreenTexture);
         if (target->valid()) {
             WindowPaintData d(m_scheduledScreenshot);
             double left = 0;
@@ -184,7 +184,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
     return QString();
 #else
     GLTexture tex(geometry.width(), geometry.height());
-    GLRenderTarget target(&tex);
+    GLRenderTarget target(tex);
     target.blitFromFramebuffer(geometry);
     // copy content from framebuffer into image
     tex.bind();

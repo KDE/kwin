@@ -93,7 +93,7 @@ void LanczosFilter::updateOffscreenSurfaces()
         m_offscreenTex = new GLTexture(w, h);
         m_offscreenTex->setFilter(GL_LINEAR);
         m_offscreenTex->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget = new GLRenderTarget(m_offscreenTex);
+        m_offscreenTarget = new GLRenderTarget(*m_offscreenTex);
     }
 }
 
