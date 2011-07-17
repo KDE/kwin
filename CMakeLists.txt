@@ -213,21 +213,40 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
-
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
 
 if(KWIN_BUILD_SCRIPTING)
-    target_link_libraries(kdeinit_kwin ${QT_QTSCRIPT_LIBRARY})
+    set(kwinLibs ${kwinLibs} ${QT_QTSCRIPT_LIBRARY})
 endif(KWIN_BUILD_SCRIPTING)
 
 if(KWIN_BUILD_TABBOX)
-    target_link_libraries(kdeinit_kwin ${QT_QTXML_LIBRARY})
+    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY})
 endif(KWIN_BUILD_TABBOX)
 
-if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
+if (X11_Xrandr_FOUND)
+  set(kwinLibs ${kwinLibs} ${X11_Xrandr_LIB})
+endif (X11_Xrandr_FOUND)
+if (X11_Xcomposite_FOUND)
+  set(kwinLibs ${kwinLibs} ${X11_Xcomposite_LIB})
+endif (X11_Xcomposite_FOUND)
+if (X11_Xdamage_FOUND)
+  set(kwinLibs ${kwinLibs} ${X11_Xdamage_LIB})
+endif (X11_Xdamage_FOUND)
+if (X11_Xrender_FOUND)
+  set(kwinLibs ${kwinLibs} ${X11_Xrender_LIB})
+endif (X11_Xrender_FOUND)
+if (X11_Xfixes_FOUND)
+  set(kwinLibs ${kwinLibs} ${X11_Xfixes_LIB})
+endif (X11_Xfixes_FOUND)
+
+kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
+
+target_link_libraries(kdeinit_kwin ${kwinLibs})
+
+if(OPENGL_FOUND)
+  set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL)
   add_subdirectory(opengltest)
-  target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
+  target_link_libraries(kdeinit_kwin kwinglutils ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
@@ -235,31 +254,18 @@ if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
   endif(DL_LIBRARY)
   # must be after opengl, to be initialized first by the linker
   target_link_libraries(kdeinit_kwin kwinnvidiahack)
-endif(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
-
-if(KWIN_HAVE_OPENGLES_COMPOSITING)
-  target_link_libraries(kdeinit_kwin ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
-endif(KWIN_HAVE_OPENGLES_COMPOSITING)
-
-if (X11_Xrandr_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
-endif (X11_Xrandr_FOUND)
-if (X11_Xcomposite_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
-endif (X11_Xcomposite_FOUND)
-if (X11_Xdamage_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xdamage_LIB})
-endif (X11_Xdamage_FOUND)
-if (X11_Xrender_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xrender_LIB})
-endif (X11_Xrender_FOUND)
-if (X11_Xfixes_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
-endif (X11_Xfixes_FOUND)
+endif(OPENGL_FOUND)
 
 install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+if(OPENGLES_FOUND)
+  kde4_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
+  target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
+  set_target_properties(kdeinit_kwin_gles PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
+  install(TARGETS kdeinit_kwin_gles ${INSTALL_TARGETS_DEFAULT_ARGS} )
+  install(TARGETS kwin_gles         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+endif(OPENGLES_FOUND)
 
 ########### next target ###############
 
