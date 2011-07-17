@@ -34,7 +34,6 @@
 #include <QtGui/QPalette>
 
 #include "oxygenconfigurationui.h"
-#include "../oxygenexceptionlist.h"
 
 namespace Oxygen {
 
