@@ -1296,9 +1296,6 @@ namespace Oxygen
     {
 
         // all dedicated event filtering is here to handle multiple tabs.
-        // if tabs are disabled, do nothing
-        if( !configuration().tabsEnabled() )
-        { return KCommonDecorationUnstable::eventFilter( object, event ); }
 
         bool state = false;
         switch( event->type() )

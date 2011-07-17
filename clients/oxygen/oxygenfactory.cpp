@@ -172,7 +172,7 @@ namespace Oxygen
 
             // tabs
             case AbilityClientGrouping:
-            return defaultConfiguration().tabsEnabled();
+            return true;
 
             // no colors supported at this time
             default:

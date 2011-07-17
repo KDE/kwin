@@ -92,20 +92,13 @@
         <widget class="KComboBox" name="buttonSize"/>
        </item>
        <item row="3" column="0" colspan="3">
-        <widget class="QCheckBox" name="tabsEnabled">
-         <property name="text">
-          <string>Enable window grouping</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="3">
         <widget class="QCheckBox" name="useAnimations">
          <property name="text">
           <string>Enable animations</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="4">
+       <item row="4" column="0" colspan="4">
         <widget class="QCheckBox" name="animateTitleChange">
          <property name="enabled">
           <bool>false</bool>
@@ -115,7 +108,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

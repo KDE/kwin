@@ -104,7 +104,6 @@ namespace Oxygen
     connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
 
-    connect( ui.tabsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.useAnimations, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.animateTitleChange, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
@@ -138,7 +137,6 @@ namespace Oxygen
     // update button text
     ui._expertModeButton->setText( _expertMode ? i18n( "Hide Advanced Configuration Options" ):i18n( "Show Advanced Configuration Options" ) );
 
-    ui.tabsEnabled->setVisible( _expertMode );
     ui.animateTitleChange->setVisible( _expertMode );
     ui.narrowButtonSpacing->setVisible( _expertMode );
 

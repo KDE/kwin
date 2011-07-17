@@ -50,7 +50,6 @@ namespace Oxygen
         _useAnimations( true ),
         _animateTitleChange( true ),
         _animationsDuration( 150 ),
-        _tabsEnabled( true ),
         _useNarrowButtonSpacing( false )
     {}
 
@@ -137,11 +136,6 @@ namespace Oxygen
             OxygenConfig::ANIMATIONS_DURATION,
             defaultConfiguration.animationsDuration() ) );
 
-        // tabbing
-        setTabsEnabled( group.readEntry(
-            OxygenConfig::TABS_ENABLED,
-            defaultConfiguration.tabsEnabled() ) );
-
         // buttonSpacing
         setUseNarrowButtonSpacing( group.readEntry(
             OxygenConfig::NARROW_BUTTON_SPACING,
@@ -188,7 +182,6 @@ namespace Oxygen
         if( useAnimations() != defaultConfiguration.useAnimations() ) group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
         if( animateTitleChange() != defaultConfiguration.animateTitleChange() ) group.writeEntry( OxygenConfig::ANIMATE_TITLE_CHANGE, animateTitleChange() );
         if( animationsDuration() != defaultConfiguration.animationsDuration() ) group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
-        if( tabsEnabled() != defaultConfiguration.tabsEnabled() ) group.writeEntry( OxygenConfig::TABS_ENABLED, tabsEnabled() );
         if( useNarrowButtonSpacing() != defaultConfiguration.useNarrowButtonSpacing() ) group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
 
     }
@@ -372,7 +365,6 @@ namespace Oxygen
             useAnimations() == other.useAnimations() &&
             animateTitleChange() == other.animateTitleChange() &&
             animationsDuration() == other.animationsDuration() &&
-            tabsEnabled() == other.tabsEnabled() &&
             useNarrowButtonSpacing() == other.useNarrowButtonSpacing();
 
     }
