@@ -200,6 +200,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     effects->paintScreen(mask, region, data);
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
     if (effects->compositingType() == KWin::OpenGLCompositing && progress > 0.0) {
         if (!blurSupported) {
             if (!logoutWindowPassed)
@@ -289,6 +290,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         }
     }
 #endif
+#endif
 }
 
 void LogoutEffect::postPaintScreen()
@@ -353,6 +355,7 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 void LogoutEffect::renderVignetting()
 {
+#ifndef KWIN_HAVE_OPENGLES
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
     glEnable(GL_BLEND);   // If not already (Such as when rendered straight to the screen)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -376,6 +379,7 @@ void LogoutEffect::renderVignetting()
         glDisable(GL_SCISSOR_TEST);
     }
     glPopAttrib();
+#endif
 }
 #endif
 
