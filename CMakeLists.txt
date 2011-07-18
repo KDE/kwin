@@ -145,7 +145,6 @@ set(kwin_KDEINIT_SRCS
    desktoplayout.cpp
    paintredirector.cpp
    tile.cpp
-   tiling.cpp
    tilinglayout.cpp
    tilinglayoutfactory.cpp
 
@@ -160,6 +159,8 @@ set(kwin_KDEINIT_SRCS
 
    # floating
    tilinglayouts/floating/floating.cpp
+
+   tiling/tiling.cpp
    )
 
 if(KWIN_BUILD_SCRIPTING)
