@@ -156,14 +156,21 @@ namespace Oxygen
         configuration.setDrawTitleOutline( ui->ui.titleOutline->isChecked() );
         configuration.setUseDropShadows( ui->shadowConfigurations[1]->isChecked() );
         configuration.setUseOxygenShadows( ui->shadowConfigurations[0]->isChecked() );
-        configuration.setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
         configuration.setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
 
         // save into configuration
-        ui->animationConfigWidget()->setConfiguration( configuration );
-        ui->animationConfigWidget()->save();
-        configuration = ui->animationConfigWidget()->configuration();
+        if( ui->expertMode() )
+        {
 
+            ui->animationConfigWidget()->setConfiguration( configuration );
+            ui->animationConfigWidget()->save();
+            configuration = ui->animationConfigWidget()->configuration();
+
+        } else {
+
+            configuration.setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
+
+        }
         // save standard configuration
         KConfigGroup configurationGroup( _configuration, "Windeco");
         configurationGroup.deleteGroup();
