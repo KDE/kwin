@@ -565,6 +565,9 @@ void Workspace::initShortcuts()
         tab_box->initShortcuts(actionCollection);
     }
 #endif
+    if (m_tiling) {
+        m_tiling->initShortcuts(actionCollection);
+    }
     discardPopup(); // so that it's recreated next time
 }
 

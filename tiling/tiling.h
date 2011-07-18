@@ -45,6 +45,7 @@ public:
     // this rearranges the tiles.
     void updateAllTiles();
     const QVector< TilingLayout* >& getTilingLayouts() const;
+    void initShortcuts(KActionCollection* keys);
 
     // The notification functions are called from
     // various points in existing code so that

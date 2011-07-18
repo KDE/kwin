@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwindowinfo.h>
 #include <kwindowsystem.h>
 
+#include <KActionCollection>
+#include <KDE/KAction>
+
 #include "tile.h"
 #include "tilinglayout.h"
 #include "tilinglayoutfactory.h"
@@ -41,6 +44,32 @@ Tiling::Tiling(KWin::Workspace* w)
 
 Tiling::~Tiling()
 {
+}
+
+void Tiling::initShortcuts(KActionCollection* keys){
+    KAction *a = NULL;
+    #define KEY( name, key, fnSlot )                                    \
+    a = keys->addAction( name );                                        \
+    a->setText( i18n( name ) );                                         \
+    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));     \
+    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
+
+    a = keys->addAction("Group:Tiling");
+    a->setText(i18n("Tiling"));
+    KEY(I18N_NOOP("Enable/Disable Tiling"),                    Qt::SHIFT + Qt::ALT + Qt::Key_F11, slotToggleTiling());
+    KEY(I18N_NOOP("Toggle Floating"),              Qt::META + Qt::Key_F, slotToggleFloating());
+
+    KEY(I18N_NOOP("Switch Focus Left") ,   Qt::META + Qt::Key_H, slotFocusTileLeft());
+    KEY(I18N_NOOP("Switch Focus Right") ,   Qt::META + Qt::Key_L, slotFocusTileRight());
+    KEY(I18N_NOOP("Switch Focus Up") ,   Qt::META + Qt::Key_K, slotFocusTileTop());
+    KEY(I18N_NOOP("Switch Focus Down") ,   Qt::META + Qt::Key_J, slotFocusTileBottom());
+    KEY(I18N_NOOP("Move Window Left") ,   Qt::SHIFT + Qt::META + Qt::Key_H, slotMoveTileLeft());
+    KEY(I18N_NOOP("Move Window Right") ,   Qt::SHIFT + Qt::META + Qt::Key_L, slotMoveTileRight());
+    KEY(I18N_NOOP("Move Window Up") ,   Qt::SHIFT + Qt::META + Qt::Key_K, slotMoveTileTop());
+    KEY(I18N_NOOP("Move Window Down") ,   Qt::SHIFT + Qt::META + Qt::Key_J, slotMoveTileBottom());
+    KEY(I18N_NOOP("Next Layout"), Qt::META + Qt::Key_PageDown, slotNextTileLayout());
+    KEY(I18N_NOOP("Previous Layout"), Qt::META + Qt::Key_PageUp, slotPreviousTileLayout());
+
 }
 
 bool Tiling::tilingEnabled() const
@@ -112,6 +141,7 @@ void Tiling::createTile(Client* c)
 
     if (!tilingLayouts.value(c->desktop())) {
         tilingLayouts[c->desktop()] = TilingLayoutFactory::createLayout(TilingLayoutFactory::DefaultLayout, m_workspace);
+        tilingLayouts[c->desktop()]->setParent(this);
     }
     tilingLayouts[c->desktop()]->addTile(t);
     tilingLayouts[c->desktop()]->commit();
