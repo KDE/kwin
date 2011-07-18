@@ -33,8 +33,9 @@ class Workspace;
 class Client;
 class Tile;
 
-class TilingLayout
+class TilingLayout : public QObject
 {
+    Q_OBJECT
 public:
     TilingLayout(Workspace *w);
     virtual ~TilingLayout();
@@ -59,7 +60,6 @@ public:
     void removeTile(Client *c);
     void toggleFloatTile(Client *c);
     void swapTiles(Tile *a, Tile *b);
-    void reconfigureTiling();
 
     /**
      * All tiling layouts do not allow the user to manually
@@ -91,6 +91,9 @@ protected:
     // currently only required by floating layout
     virtual void postAddTile(Tile *t);
     virtual void preRemoveTile(Tile *t);
+
+protected Q_SLOTS:
+    void reconfigureTiling();
 
 private:
     int findTilePos(Client *c) const;

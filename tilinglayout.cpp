@@ -31,8 +31,10 @@ namespace KWin
 {
 
 TilingLayout::TilingLayout(Workspace *w)
-    : m_workspace(w)
+    : QObject()
+    , m_workspace(w)
 {
+    connect(m_workspace, SIGNAL(configChanged()), this, SLOT(reconfigureTiling()));
 }
 
 TilingLayout::~TilingLayout()

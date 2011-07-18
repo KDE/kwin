@@ -505,6 +505,7 @@ Workspace::~Workspace()
 {
     finishCompositing();
     blockStackingUpdates(true);
+    delete m_tiling;
 
     // TODO: grabXServer();
 
@@ -528,7 +529,6 @@ Workspace::~Workspace()
     delete desktop_change_osd;
 #endif
     delete m_outline;
-    delete m_tiling;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
@@ -1028,10 +1028,6 @@ void Workspace::slotReconfigure()
     }
 
     m_tiling->setTilingEnabled(options->tilingOn);
-    foreach (TilingLayout * layout, m_tiling->getTilingLayouts()) {
-        if (layout)
-            layout->reconfigureTiling();
-    }
     // just so that we reset windows in the right manner, 'activate' the current active window
     m_tiling->notifyTilingWindowActivated(activeClient());
     if (hasDecorationPlugin()) {
