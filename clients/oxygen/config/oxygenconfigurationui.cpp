@@ -24,6 +24,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenconfigurationui.h"
+#include "oxygenanimationconfigwidget.h"
 #include "../oxygenconfiguration.h"
 
 #include <kdeversion.h>
@@ -40,7 +41,8 @@ namespace Oxygen
     //_________________________________________________________
     ConfigurationUi::ConfigurationUi( QWidget* parent ):
         QWidget( parent ),
-        _expertMode( false )
+        _expertMode( false ),
+        _animationConfigWidget(0)
     {
 
         ui.setupUi( this );
@@ -114,6 +116,12 @@ namespace Oxygen
 
         ui._expertModeButton->setIcon( KIcon("configure") );
 
+        // animation config widget
+        _animationConfigWidget = new AnimationConfigWidget();
+        _animationConfigWidget->installEventFilter( this );
+        connect( _animationConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( void ) ) );
+        connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT( updateLayout() ) );
+
         toggleExpertModeInternal( false );
 
     }
@@ -135,14 +143,59 @@ namespace Oxygen
         // update button text
         ui._expertModeButton->setText( _expertMode ? i18n( "Hide Advanced Configuration Options" ):i18n( "Show Advanced Configuration Options" ) );
 
+        // narrow button spacing
         ui.narrowButtonSpacing->setVisible( _expertMode );
 
         // size grip mode
         ui.sizeGripModeLabel->setVisible( _expertMode );
         ui.sizeGripMode->setVisible( _expertMode );
 
-        if( _expertMode ) ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        else ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        // 'basic' animations enabled flag
+        ui.animationsEnabled->setVisible( !_expertMode );
+
+        // layout and animations
+        if( _expertMode )
+        {
+
+            // add animationConfigWidget to tabbar if needed
+            if( ui.tabWidget->indexOf( _animationConfigWidget ) < 0 )
+            { ui.tabWidget->insertTab( 1, _animationConfigWidget, i18n( "Animations" ) ); }
+
+            ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+        } else {
+
+            ui.shadowSpacer->changeSize(0,0, QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+
+            if( int index = ui.tabWidget->indexOf( _animationConfigWidget ) >= 0 )
+            { ui.tabWidget->removeTab( index ); }
+
+        }
+
+    }
+
+    //__________________________________________________________________
+    bool ConfigurationUi::eventFilter( QObject* object, QEvent* event )
+    {
+
+        switch( event->type() )
+        {
+            case QEvent::ShowToParent:
+            object->event( event );
+            updateLayout();
+            return true;
+
+            default:
+            return false;
+        }
+    }
+
+    //__________________________________________________________________
+    void ConfigurationUi::updateLayout( void )
+    {
+
+        int delta = _animationConfigWidget->minimumSizeHint().height() - _animationConfigWidget->size().height();
+        window()->setMinimumSize( QSize( window()->minimumSizeHint().width(), window()->size().height() + delta ) );
 
     }
 

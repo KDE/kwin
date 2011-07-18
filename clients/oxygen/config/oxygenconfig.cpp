@@ -30,9 +30,11 @@
 #include "oxygenconfig.h"
 #include "oxygenconfig.moc"
 
+#include "oxygenanimationconfigwidget.h"
 #include "oxygenshadowconfiguration.h"
 #include "../oxygenconfiguration.h"
 
+#include <QtCore/QTextStream>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 
@@ -129,6 +131,9 @@ namespace Oxygen
         // exceptions
         else if( exceptionListChanged() ) modified = true;
 
+        // animations
+        else if( ui->animationConfigWidget()->isChanged() ) modified = true;
+
         // emit relevant signals
         if( modified ) emit changed();
         emit changed( modified );
@@ -153,6 +158,11 @@ namespace Oxygen
         configuration.setUseOxygenShadows( ui->shadowConfigurations[0]->isChecked() );
         configuration.setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
         configuration.setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
+
+        // save into configuration
+        ui->animationConfigWidget()->setConfiguration( configuration );
+        ui->animationConfigWidget()->save();
+        configuration = ui->animationConfigWidget()->configuration();
 
         // save standard configuration
         KConfigGroup configurationGroup( _configuration, "Windeco");
@@ -229,6 +239,10 @@ namespace Oxygen
         ui->shadowConfigurations[1]->setChecked( configuration.useDropShadows() );
         ui->ui.animationsEnabled->setChecked( configuration.animationsEnabled() );
         ui->ui.narrowButtonSpacing->setChecked( configuration.useNarrowButtonSpacing() );
+
+        ui->animationConfigWidget()->setConfiguration( configuration );
+        ui->animationConfigWidget()->load();
+
     }
 
     //_______________________________________________________________________

@@ -38,6 +38,8 @@
 namespace Oxygen
 {
 
+    class AnimationConfigWidget;
+
     //_____________________________________________
     class ConfigurationUi: public QWidget
     {
@@ -49,6 +51,10 @@ namespace Oxygen
         //! constructor
         ConfigurationUi( QWidget* );
 
+        //! destructor
+        virtual ~ConfigurationUi( void )
+        {}
+
         //! ui
         Ui_OxygenConfigurationUI ui;
 
@@ -58,7 +64,18 @@ namespace Oxygen
         //! toggle expert mode
         void toggleExpertMode( bool );
 
-        protected slots:
+        //! expert mode
+        bool expertMode( void ) const
+        { return _expertMode; }
+
+        //! animation config widget
+        AnimationConfigWidget* animationConfigWidget( void ) const
+        { return _animationConfigWidget; }
+
+        //! event filter
+        virtual bool eventFilter( QObject*, QEvent* );
+
+        protected Q_SLOTS:
 
         //! toggle expert mode
         void toggleExpertModeInternal( void )
@@ -67,15 +84,22 @@ namespace Oxygen
         //! toggle expert mode
         void toggleExpertModeInternal( bool );
 
+        //! update layout
+        /*! needed in expert mode to accommodate with animations config widget size changes */
+        void updateLayout( void );
+
         signals:
 
         //! emmited when changed
-        bool changed( void );
+        void changed( void );
 
         private:
 
         //! expert mode
         bool _expertMode;
+
+        //! animation config (expert mode only)
+        AnimationConfigWidget* _animationConfigWidget;
 
     };
 

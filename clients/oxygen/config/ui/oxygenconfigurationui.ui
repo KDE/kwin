@@ -21,9 +21,12 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="KTabWidget" name="ktabwidget">
+    <widget class="KTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">

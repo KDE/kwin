@@ -53,7 +53,7 @@ namespace Oxygen
             i18n("Configure fading transitions when window title is changed" ) ) );
 
         setupItem( layout, _shadowAnimations = new GenericAnimationConfigItem( this,
-            i18n("Shadow and glow transitions" ),
+            i18n("Window active state change transitions" ),
             i18n("Configure fading between window shadow and glow when window's active state is changed" ) ) );
 
         setupItem( layout, _tabAnimations = new GenericAnimationConfigItem( this,
@@ -84,38 +84,38 @@ namespace Oxygen
     void AnimationConfigWidget::load( void )
     {
 
-        animationsEnabled()->setChecked( configuration().animationsEnabled() );
+        animationsEnabled()->setChecked( _configuration.animationsEnabled() );
 
-        _buttonAnimations->setEnabled( configuration().buttonAnimationsEnabled() );
-        _buttonAnimations->setDuration( configuration().buttonAnimationsDuration() );
+        _buttonAnimations->setEnabled( _configuration.buttonAnimationsEnabled() );
+        _buttonAnimations->setDuration( _configuration.buttonAnimationsDuration() );
 
-        _titleAnimations->setEnabled( configuration().titleAnimationsEnabled() );
-        _titleAnimations->setDuration( configuration().titleAnimationsDuration() );
+        _titleAnimations->setEnabled( _configuration.titleAnimationsEnabled() );
+        _titleAnimations->setDuration( _configuration.titleAnimationsDuration() );
 
-        _shadowAnimations->setEnabled( configuration().shadowAnimationsEnabled() );
-        _shadowAnimations->setDuration( configuration().shadowAnimationsDuration() );
+        _shadowAnimations->setEnabled( _configuration.shadowAnimationsEnabled() );
+        _shadowAnimations->setDuration( _configuration.shadowAnimationsDuration() );
 
-        _tabAnimations->setEnabled( configuration().tabAnimationsEnabled() );
-        _tabAnimations->setDuration( configuration().tabAnimationsDuration() );
+        _tabAnimations->setEnabled( _configuration.tabAnimationsEnabled() );
+        _tabAnimations->setDuration( _configuration.tabAnimationsDuration() );
     }
 
     //_______________________________________________
     void AnimationConfigWidget::save( void )
     {
 
-        configuration().setAnimationsEnabled( animationsEnabled()->isChecked() );
+        _configuration.setAnimationsEnabled( animationsEnabled()->isChecked() );
 
-        configuration().setButtonAnimationsEnabled( _buttonAnimations->enabled() );
-        configuration().setButtonAnimationsDuration( _buttonAnimations->duration() );
+        _configuration.setButtonAnimationsEnabled( _buttonAnimations->enabled() );
+        _configuration.setButtonAnimationsDuration( _buttonAnimations->duration() );
 
-        configuration().setTitleAnimationsEnabled( _titleAnimations->enabled() );
-        configuration().setTitleAnimationsDuration( _titleAnimations->duration() );
+        _configuration.setTitleAnimationsEnabled( _titleAnimations->enabled() );
+        _configuration.setTitleAnimationsDuration( _titleAnimations->duration() );
 
-        configuration().setShadowAnimationsEnabled( _shadowAnimations->enabled() );
-        configuration().setShadowAnimationsDuration( _shadowAnimations->duration() );
+        _configuration.setShadowAnimationsEnabled( _shadowAnimations->enabled() );
+        _configuration.setShadowAnimationsDuration( _shadowAnimations->duration() );
 
-        configuration().setTabAnimationsEnabled( _tabAnimations->enabled() );
-        configuration().setTabAnimationsDuration( _tabAnimations->duration() );
+        _configuration.setTabAnimationsEnabled( _tabAnimations->enabled() );
+        _configuration.setTabAnimationsDuration( _tabAnimations->duration() );
 
         setChanged( false );
 
@@ -127,18 +127,18 @@ namespace Oxygen
 
         bool modified( false );
 
-        if( animationsEnabled()->isChecked() != configuration().animationsEnabled() ) modified = true;
-        else if( _buttonAnimations->enabled() != configuration().buttonAnimationsEnabled() ) modified = true;
-        else if( _buttonAnimations->duration() != configuration().buttonAnimationsDuration() ) modified = true;
+        if( animationsEnabled()->isChecked() != _configuration.animationsEnabled() ) modified = true;
+        else if( _buttonAnimations->enabled() != _configuration.buttonAnimationsEnabled() ) modified = true;
+        else if( _buttonAnimations->duration() != _configuration.buttonAnimationsDuration() ) modified = true;
 
-        else if( _titleAnimations->enabled() != configuration().titleAnimationsEnabled() ) modified = true;
-        else if( _titleAnimations->duration() != configuration().titleAnimationsDuration() ) modified = true;
+        else if( _titleAnimations->enabled() != _configuration.titleAnimationsEnabled() ) modified = true;
+        else if( _titleAnimations->duration() != _configuration.titleAnimationsDuration() ) modified = true;
 
-        else if( _shadowAnimations->enabled() != configuration().shadowAnimationsEnabled() ) modified = true;
-        else if( _shadowAnimations->duration() != configuration().shadowAnimationsDuration() ) modified = true;
+        else if( _shadowAnimations->enabled() != _configuration.shadowAnimationsEnabled() ) modified = true;
+        else if( _shadowAnimations->duration() != _configuration.shadowAnimationsDuration() ) modified = true;
 
-        else if( _tabAnimations->enabled() != configuration().tabAnimationsEnabled() ) modified = true;
-        else if( _tabAnimations->duration() != configuration().tabAnimationsDuration() ) modified = true;
+        else if( _tabAnimations->enabled() != _configuration.tabAnimationsEnabled() ) modified = true;
+        else if( _tabAnimations->duration() != _configuration.tabAnimationsDuration() ) modified = true;
 
         setChanged( modified );
 

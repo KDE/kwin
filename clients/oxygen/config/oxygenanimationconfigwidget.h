@@ -71,12 +71,6 @@ namespace Oxygen
         //! check whether configuration is changed and emit appropriate signal if yes
         virtual void updateChanged();
 
-        protected:
-
-        //! configuration
-        Configuration& configuration( void )
-        { return _configuration; }
-
         private:
 
         //! local configuration, needed to handle I/O
