@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 
+// need to call GLTexturePrivate::initStatic()
+#include "kwingltexture_p.h"
+
 #include "kwinglobals.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
@@ -113,7 +116,7 @@ void initGL()
     // handle OpenGL extensions functions
     glResolveFunctions();
 
-    GLTexture::initStatic();
+    GLTexturePrivate::initStatic();
     GLRenderTarget::initStatic();
     GLVertexBuffer::initStatic();
 }

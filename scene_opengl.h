@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include "kwinglutils.h"
+#include "kwingltexture_p.h"
 
 #ifdef HAVE_XSHM
 #include <X11/extensions/XShm.h>
@@ -41,6 +42,7 @@ class SceneOpenGL
 public:
     class EffectFrame;
     class Texture;
+    class TexturePrivate;
     class Window;
     SceneOpenGL(Workspace* ws);
     virtual ~SceneOpenGL();
@@ -100,40 +102,51 @@ private:
     bool debug;
 };
 
+class SceneOpenGL::TexturePrivate
+    : public GLTexturePrivate
+{
+public:
+    TexturePrivate();
+    virtual ~TexturePrivate();
+
+    virtual void bind();
+    virtual void unbind();
+    virtual void release();
+
+#ifndef KWIN_HAVE_OPENGLES
+    GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+#endif
+private:
+    Q_DISABLE_COPY(TexturePrivate)
+};
+
 class SceneOpenGL::Texture
     : public GLTexture
 {
 public:
     Texture();
+    Texture(const Texture& tex);
     Texture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
     virtual ~Texture();
+
+    Texture & operator = (const Texture& tex);
 
     using GLTexture::load;
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
-    virtual void release(); // undo the tfp_mode binding
-    virtual void bind();
-    virtual void unbind();
-    void setYInverted(bool inverted) {
-        y_inverted = inverted;
-    }
 
 protected:
     Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();
-    QRegion optimizeBindDamage(const QRegion& reg, int limit);
-    void createTexture();
     virtual bool load(const Pixmap& pix, const QSize& size, int depth,
                       QRegion region);
     virtual bool load(const Pixmap& pix, const QSize& size, int depth);
 
-private:
-    void init();
+    Texture(TexturePrivate& dd);
 
-#ifndef KWIN_HAVE_OPENGLES
-    GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
-#endif
+private:
+    Q_DECLARE_PRIVATE(Texture);
 
     friend class SceneOpenGL::Window;
 };

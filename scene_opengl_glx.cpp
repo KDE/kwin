@@ -55,6 +55,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return; // error
     // Initialize OpenGL
     initGL();
+
     GLPlatform *glPlatform = GLPlatform::instance();
     if (glPlatform->isSoftwareEmulation()) {
         kError(1212) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
@@ -544,33 +545,38 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
 // SceneOpenGL::Texture
 //****************************************
 
-void SceneOpenGL::Texture::init()
+SceneOpenGL::TexturePrivate::TexturePrivate()
 {
-    glxpixmap = None;
+    m_glxpixmap = None;
 }
 
-void SceneOpenGL::Texture::release()
+SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
-    if (glxpixmap != None) {
+    release();
+}
+
+void SceneOpenGL::TexturePrivate::release()
+{
+    if (m_glxpixmap != None) {
         if (!options->glStrictBinding) {
-            glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+            glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
         }
-        glXDestroyPixmap(display(), glxpixmap);
-        glxpixmap = None;
+        glXDestroyPixmap(display(), m_glxpixmap);
     }
 }
 
 void SceneOpenGL::Texture::findTarget()
 {
+    Q_D(Texture);
     unsigned int new_target = 0;
-    if (glXQueryDrawable && glxpixmap != None)
-        glXQueryDrawable(display(), glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
+    if (glXQueryDrawable && d->m_glxpixmap != None)
+        glXQueryDrawable(display(), d->m_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
     // HACK: this used to be a hack for Xgl.
     // without this hack the NVIDIA blob aborts when trying to bind a texture from
     // a pixmap icon
     if (new_target == 0) {
         if (NPOTTextureSupported() ||
-            (isPowerOfTwo(mSize.width()) && isPowerOfTwo(mSize.height()))) {
+            (isPowerOfTwo(d->m_size.width()) && isPowerOfTwo(d->m_size.height()))) {
             new_target = GLX_TEXTURE_2D_EXT;
         } else {
             new_target = GLX_TEXTURE_RECTANGLE_EXT;
@@ -578,14 +584,14 @@ void SceneOpenGL::Texture::findTarget()
     }
     switch(new_target) {
     case GLX_TEXTURE_2D_EXT:
-        mTarget = GL_TEXTURE_2D;
-        mScale.setWidth(1.0f / mSize.width());
-        mScale.setHeight(1.0f / mSize.height());
+        d->m_target = GL_TEXTURE_2D;
+        d->m_scale.setWidth(1.0f / d->m_size.width());
+        d->m_scale.setHeight(1.0f / d->m_size.height());
         break;
     case GLX_TEXTURE_RECTANGLE_EXT:
-        mTarget = GL_TEXTURE_RECTANGLE_ARB;
-        mScale.setWidth(1.0f);
-        mScale.setHeight(1.0f);
+        d->m_target = GL_TEXTURE_RECTANGLE_ARB;
+        d->m_scale.setWidth(1.0f);
+        d->m_scale.setHeight(1.0f);
         break;
     default:
         abort();
@@ -595,6 +601,10 @@ void SceneOpenGL::Texture::findTarget()
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
                                 int depth, QRegion region)
 {
+    // decrease the reference counter for the old texture
+    d_ptr = new TexturePrivate();
+
+    Q_D(Texture);
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoad1");
 #endif
@@ -606,78 +616,65 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
         return false;
     }
 
-    mSize = size;
-    if (mTexture == None || !region.isEmpty()) {
-        // new texture, or texture contents changed; mipmaps now invalid
-        setDirty();
-    }
+    d->m_size = size;
+    d->m_yInverted = true;
+    // new texture, or texture contents changed; mipmaps now invalid
+    setDirty();
 
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoad2");
 #endif
     // tfp mode, simply bind the pixmap to texture
-    if (mTexture == None)
-        createTexture();
+    glGenTextures(1, &d->m_texture);
     // The GLX pixmap references the contents of the original pixmap, so it doesn't
     // need to be recreated when the contents change.
     // The texture may or may not use the same storage depending on the EXT_tfp
     // implementation. When options->glStrictBinding is true, the texture uses
     // a different storage and needs to be updated with a call to
     // glXBindTexImageEXT() when the contents of the pixmap has changed.
-    if (glxpixmap != None)
-        glBindTexture(mTarget, mTexture);
-    else {
-        int attrs[] = {
-            GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
-            GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
-            None, None, None
-        };
-        // Specifying the texture target explicitly is reported to cause a performance
-        // regression with R300G (see bug #256654).
-        if (GLPlatform::instance()->driver() != Driver_R300G) {
-            if ((fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
-                    (GLTexture::NPOTTextureSupported() ||
-                     (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
-                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-                attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
-            } else if (fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT) {
-                attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-                attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
-            }
+    int attrs[] = {
+        GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
+        GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
+        None, None, None
+    };
+    // Specifying the texture target explicitly is reported to cause a performance
+    // regression with R300G (see bug #256654).
+    if (GLPlatform::instance()->driver() != Driver_R300G) {
+        if ((fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
+                (GLTexture::NPOTTextureSupported() ||
+                  (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
+            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+            attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
+        } else if (fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT) {
+            attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
+            attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
         }
-        glxpixmap = glXCreatePixmap(display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs);
-#ifdef CHECK_GL_ERROR
-        checkGLError("TextureLoadTFP1");
-#endif
-        findTarget();
-        y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
-        can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
-        glBindTexture(mTarget, mTexture);
-#ifdef CHECK_GL_ERROR
-        checkGLError("TextureLoadTFP2");
-#endif
-        if (!options->glStrictBinding)
-            glXBindTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
     }
-    if (options->glStrictBinding)
-        // Mark the texture as damaged so it will be updated on the next call to bind()
-        glXBindTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
+    d->m_glxpixmap = glXCreatePixmap(display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs);
+#ifdef CHECK_GL_ERROR
+    checkGLError("TextureLoadTFP1");
+#endif
+    findTarget();
+    d->m_yInverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
+    d->m_canUseMipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
+    glBindTexture(d->m_target, d->m_texture);
+#ifdef CHECK_GL_ERROR
+    checkGLError("TextureLoadTFP2");
+#endif
+    glXBindTexImageEXT(display(), d->m_glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoad0");
 #endif
     return true;
 }
 
-void SceneOpenGL::Texture::bind()
+void SceneOpenGL::TexturePrivate::bind()
 {
-    glEnable(mTarget);
-    glBindTexture(mTarget, mTexture);
-    // if one of the GLTexture::load functions is called, the glxpixmap doesn't
-    // have to exist
-    if (options->glStrictBinding && glxpixmap) {
-        glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
-        setDirty(); // Mipmaps have to be regenerated after updating the texture
+    GLTexturePrivate::bind();
+    if (options->glStrictBinding && m_glxpixmap) {
+        glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
+        glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
+        m_hasValidMipmaps = false; // Mipmaps have to be regenerated after updating the texture
     }
     enableFilter();
     if (hasGLVersion(1, 4, 0)) {
@@ -686,17 +683,16 @@ void SceneOpenGL::Texture::bind()
     }
 }
 
-void SceneOpenGL::Texture::unbind()
+void SceneOpenGL::TexturePrivate::unbind()
 {
     if (hasGLVersion(1, 4, 0)) {
         glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f);
     }
-    // if one of the GLTexture::load functions is called, the glxpixmap doesn't
-    // have to exist
-    if (options->glStrictBinding && glxpixmap) {
-        glBindTexture(mTarget, mTexture);
-        glXReleaseTexImageEXT(display(), glxpixmap, GLX_FRONT_LEFT_EXT);
+    if (options->glStrictBinding && m_glxpixmap) {
+        glBindTexture(m_target, m_texture);
+        glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
     }
 
-    GLTexture::unbind();
+    GLTexturePrivate::unbind();
 }
+

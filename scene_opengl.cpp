@@ -268,55 +268,43 @@ void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
 // SceneOpenGL::Texture
 //****************************************
 
-SceneOpenGL::Texture::Texture() : GLTexture()
+SceneOpenGL::Texture::Texture() : GLTexture(*new TexturePrivate())
 {
-    init();
 }
 
-SceneOpenGL::Texture::Texture(const Pixmap& pix, const QSize& size, int depth) : GLTexture()
+SceneOpenGL::Texture::Texture(TexturePrivate& dd) : GLTexture(dd)
 {
-    init();
+}
+
+SceneOpenGL::Texture::Texture(const SceneOpenGL::Texture& tex) : GLTexture(*tex.d_ptr)
+{
+}
+
+SceneOpenGL::Texture::Texture(const Pixmap& pix, const QSize& size, int depth)
+    : GLTexture(*new TexturePrivate())
+{
     load(pix, size, depth);
 }
 
 SceneOpenGL::Texture::Texture(const QPixmap& pix, GLenum target)
-    : GLTexture()
+    : GLTexture(*new TexturePrivate())
 {
-    init();
     load(pix, target);
 }
 
 SceneOpenGL::Texture::~Texture()
 {
-    discard();
 }
 
-void SceneOpenGL::Texture::createTexture()
+SceneOpenGL::Texture& SceneOpenGL::Texture::operator = (const SceneOpenGL::Texture& tex)
 {
-    glGenTextures(1, &mTexture);
+    d_ptr = tex.d_ptr;
+    return *this;
 }
 
 void SceneOpenGL::Texture::discard()
 {
-    if (mTexture != None)
-        release();
-    GLTexture::discard();
-}
-
-QRegion SceneOpenGL::Texture::optimizeBindDamage(const QRegion& reg, int limit)
-{
-    if (reg.rects().count() <= 1)
-        return reg;
-    // try to reduce the number of rects, as especially with SHM mode every rect
-    // causes X roundtrip, even for very small areas - so, when the size difference
-    // between all the areas and the bounding rectangle is small, simply use
-    // only the bounding rectangle
-    int size = 0;
-    foreach (const QRect & r, reg.rects())
-    size += r.width() * r.height();
-    if (reg.boundingRect().width() * reg.boundingRect().height() - size < limit)
-        return reg.boundingRect();
-    return reg;
+    d_ptr = new TexturePrivate();
 }
 
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
@@ -337,6 +325,7 @@ bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
 
 bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 {
+    Q_D(Texture);
     if (pixmap.isNull())
         return false;
 
@@ -344,8 +333,6 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
     if (Extensions::nonNativePixmaps()) {
         return GLTexture::load(pixmap.toImage(), target);
     }
-
-    y_inverted = true;
 
     // use the X11 pixmap provided by Qt
     return load(pixmap.handle(), pixmap.size(), pixmap.depth());
@@ -374,9 +361,16 @@ SceneOpenGL::Window::~Window()
 bool SceneOpenGL::Window::bindTexture()
 {
 #ifndef KWIN_HAVE_OPENGLES
-    if (texture.texture() != None && toplevel->damage().isEmpty()) {
-        // texture doesn't need updating, just bind it
-        glBindTexture(texture.target(), texture.texture());
+    if (!texture.isNull()) {
+        if (toplevel->damage().isEmpty()) {
+            // texture doesn't need updating, just bind it
+            glBindTexture(texture.target(), texture.texture());
+        } else {
+            // bind() updates the texture automatically e.g. in case the glx pixmap binding
+            // is strict
+            texture.bind();
+            toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
+        }
         return true;
     }
 #endif
@@ -384,8 +378,10 @@ bool SceneOpenGL::Window::bindTexture()
     Pixmap pix = toplevel->windowPixmap();
     if (pix == None)
         return false;
+
     bool success = texture.load(pix, toplevel->size(), toplevel->depth(),
                                 toplevel->damage());
+
     if (success)
         toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
     else
@@ -417,7 +413,7 @@ void SceneOpenGL::Window::checkTextureSize()
 // when the window's composite pixmap is discarded, undo binding it to the texture
 void SceneOpenGL::Window::pixmapDiscarded()
 {
-    texture.release();
+    texture.discard();
 }
 
 QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
@@ -640,7 +636,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     }
     if (decorationTexture->texture() != None && !updateDeco) {
         // texture doesn't need updating, just bind it
-        glBindTexture(decorationTexture->target(), decorationTexture->texture());
+        decorationTexture->bind();
     } else if (!decoration->isNull()) {
         bool success = decorationTexture->load(*decoration);
         if (!success) {

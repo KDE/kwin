@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglobals.h"
 
 #include <QtCore/QSize>
-#include <QtCore/QSharedData>
+#include <QSharedPointer>
+#include <QExplicitlySharedDataPointer>
 
 class QImage;
 class QPixmap;
@@ -37,37 +38,45 @@ namespace KWin
 {
 
 class GLVertexBuffer;
+class GLTexturePrivate;
 
 class KWIN_EXPORT GLTexture
-    : public QSharedData
 {
 public:
     GLTexture();
+    GLTexture(const GLTexture& tex);
     explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     GLTexture(const QString& fileName);
     GLTexture(int width, int height);
     virtual ~GLTexture();
 
+    GLTexture & operator = (const GLTexture& tex);
+
     bool isNull() const;
     QSize size() const;
-    int width() const {
-        return mSize.width();    /// @since 4.5
-    }
-    int height() const {
-        return mSize.height();    /// @since 4.5
-    }
+    int width() const;
+    int height() const;
     /**
      * @since 4.7
      **/
     bool isYInverted() const;
+    /**
+     * @since 4.8
+     **/
+    void setYInverted(bool inverted);
 
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QString& fileName);
     virtual void discard();
-    virtual void bind();
-    virtual void unbind();
+    void bind();
+    void unbind();
+    /**
+     * Release the data which is bound to the texture.
+     * @since 4.8
+     **/
+    void release();
     void render(QRegion region, const QRect& rect);
 
     GLuint texture() const;
@@ -80,41 +89,19 @@ public:
     void setWrapMode(GLenum mode);
     virtual void setDirty();
 
-    static void initStatic();
-    static bool NPOTTextureSupported()  {
-        return sNPOTTextureSupported;
-    }
-    static bool framebufferObjectSupported()  {
-        return sFramebufferObjectSupported;
-    }
-    static bool saturationSupported()  {
-        return sSaturationSupported;
-    }
+    static bool NPOTTextureSupported();
+    static bool framebufferObjectSupported();
+    static bool saturationSupported();
 
 protected:
     void enableFilter();
     QImage convertToGLFormat(const QImage& img) const;
 
-    GLuint mTexture;
-    GLenum mTarget;
-    GLenum mFilter;
-    QSize mSize;
-    QSizeF mScale; // to un-normalize GL_TEXTURE_2D
-    bool y_inverted; // texture has y inverted
-    bool can_use_mipmaps;
-    bool has_valid_mipmaps;
+    QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
+    GLTexture(GLTexturePrivate& dd);
 
 private:
-    void init();
-    int mUnnormalizeActive; // 0 - no, otherwise refcount
-    int mNormalizeActive; // 0 - no, otherwise refcount
-    GLVertexBuffer* m_vbo;
-    QSize m_cachedSize;
-
-    static bool sNPOTTextureSupported;
-    static bool sFramebufferObjectSupported;
-    static bool sSaturationSupported;
-    Q_DISABLE_COPY(GLTexture)
+    Q_DECLARE_PRIVATE(GLTexture);
 };
 
 } // namespace
