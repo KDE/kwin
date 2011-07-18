@@ -1,6 +1,5 @@
 include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
 
-
 set(kwin_oxygen_config_PART_SRCS
     ../oxygenconfiguration.cpp
     ../oxygenexception.cpp
