@@ -88,13 +88,15 @@ namespace Oxygen
         //! move down
         virtual void down( void );
 
-        private:
+        protected:
 
         //! resize columns
         void resizeColumns( void ) const;
 
         //! check exception
         bool checkException( Exception& );
+
+        private:
 
         //! default configuration
         Configuration _defaultConfiguration;
