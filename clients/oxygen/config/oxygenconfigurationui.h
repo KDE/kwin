@@ -38,46 +38,46 @@
 namespace Oxygen
 {
 
-  //_____________________________________________
-  class ConfigurationUi: public QWidget
-  {
+    //_____________________________________________
+    class ConfigurationUi: public QWidget
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
+        public:
 
-    //! constructor
-    ConfigurationUi( QWidget* );
+        //! constructor
+        ConfigurationUi( QWidget* );
 
-    //! ui
-    Ui_OxygenConfigurationUI ui;
+        //! ui
+        Ui_OxygenConfigurationUI ui;
 
-    //! shadow configuration
-    QVector<ShadowConfigurationUi*> shadowConfigurations;
+        //! shadow configuration
+        QVector<ShadowConfigurationUi*> shadowConfigurations;
 
-    //! toggle expert mode
-    void toggleExpertMode( bool );
+        //! toggle expert mode
+        void toggleExpertMode( bool );
 
-    protected slots:
+        protected slots:
 
-    //! toggle expert mode
-    void toggleExpertModeInternal( void )
-    { toggleExpertModeInternal( !_expertMode ); }
+        //! toggle expert mode
+        void toggleExpertModeInternal( void )
+        { toggleExpertModeInternal( !_expertMode ); }
 
-    //! toggle expert mode
-    void toggleExpertModeInternal( bool );
+        //! toggle expert mode
+        void toggleExpertModeInternal( bool );
 
-    signals:
+        signals:
 
-    //! emmited when changed
-    bool changed( void );
+        //! emmited when changed
+        bool changed( void );
 
-    private:
+        private:
 
-    //! expert mode
-    bool _expertMode;
+        //! expert mode
+        bool _expertMode;
 
-  };
+    };
 
 }
 
