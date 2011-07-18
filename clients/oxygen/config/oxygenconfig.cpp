@@ -119,7 +119,6 @@ namespace Oxygen
 
         else if( ui->ui.separatorMode->currentIndex() != configuration.separatorMode() ) modified = true;
         else if( ui->ui.titleOutline->isChecked() !=  configuration.drawTitleOutline() ) modified = true;
-        else if( ui->ui.animationsEnabled->isChecked() !=  configuration.animationsEnabled() ) modified = true;
         else if( ui->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
 
         // shadow configurations
@@ -132,7 +131,8 @@ namespace Oxygen
         else if( exceptionListChanged() ) modified = true;
 
         // animations
-        else if( ui->animationConfigWidget()->isChanged() ) modified = true;
+        else if( !ui->expertMode() && ui->ui.animationsEnabled->isChecked() !=  configuration.animationsEnabled() ) modified = true;
+        else if( ui->expertMode() && ui->animationConfigWidget()->isChanged() ) modified = true;
 
         // emit relevant signals
         if( modified ) emit changed();
