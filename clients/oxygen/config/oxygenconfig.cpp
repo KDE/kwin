@@ -158,7 +158,6 @@ namespace Oxygen
         configuration.setUseOxygenShadows( ui->shadowConfigurations[0]->isChecked() );
         configuration.setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
 
-        // save into configuration
         if( ui->expertMode() )
         {
 
@@ -171,6 +170,7 @@ namespace Oxygen
             configuration.setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
 
         }
+
         // save standard configuration
         KConfigGroup configurationGroup( _configuration, "Windeco");
         configurationGroup.deleteGroup();

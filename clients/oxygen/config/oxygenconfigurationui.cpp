@@ -106,7 +106,6 @@ namespace Oxygen
         connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
 
-        connect( ui.animationsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
@@ -117,6 +116,7 @@ namespace Oxygen
         ui._expertModeButton->setIcon( KIcon("configure") );
 
         // animation config widget
+        connect( ui.animationsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
         _animationConfigWidget = new AnimationConfigWidget();
         _animationConfigWidget->installEventFilter( this );
         connect( _animationConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( void ) ) );
