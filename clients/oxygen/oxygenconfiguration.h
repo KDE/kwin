@@ -42,9 +42,25 @@ namespace OxygenConfig
     static const QString BLEND_COLOR = "BlendColor";
     static const QString SIZE_GRIP_MODE = "SizeGripMode";
     static const QString HIDE_TITLEBAR = "HideTitleBar";
-    static const QString USE_ANIMATIONS = "UseAnimations";
-    static const QString ANIMATE_TITLE_CHANGE = "AnimateTitleChange";
+    static const QString ANIMATIONS_ENABLED = "AnimationsEnabled";
     static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
+
+    //!@name animation flags
+    //@{
+    static const QString BUTTON_ANIMATIONS_ENABLED = "ButtonAnimationsEnabled";
+    static const QString TITLE_ANIMATIONS_ENABLED = "TitleAnimationsEnabled";
+    static const QString SHADOW_ANIMATIONS_ENABLED = "ShadowAnimationsEnabled";
+    static const QString TAB_ANIMATIONS_ENABLED = "TabAnimationsEnabled";
+    //@}
+
+    //!@name animations duration
+    //@{
+    static const QString BUTTON_ANIMATIONS_DURATION = "ButtonAnimationsDuration";
+    static const QString TITLE_ANIMATIONS_DURATION = "TitleAnimationsDuration";
+    static const QString SHADOW_ANIMATIONS_DURATION = "ShadowAnimationsDuration";
+    static const QString TAB_ANIMATIONS_DURATION = "TabAnimationsDuration";
+    //@}
+
 }
 
 namespace Oxygen
@@ -284,29 +300,82 @@ namespace Oxygen
         virtual void setUseOxygenShadows( bool value )
         { _useOxygenShadows = value; }
 
-        //! animations
-        virtual bool useAnimations( void ) const
-        { return _useAnimations; }
+        //!@name animations
+        //@{
 
-        //! animations
-        virtual void setUseAnimations( bool value )
-        { _useAnimations = value; }
+        //! global flag
+        virtual bool animationsEnabled( void ) const
+        { return _animationsEnabled; }
 
-        //! animations
-        virtual bool animateTitleChange( void ) const
-        { return _animateTitleChange; }
+        //! global flag
+        virtual void setAnimationsEnabled( bool value )
+        { _animationsEnabled = value; }
 
-        //! animations
-        virtual void setAnimateTitleChange( bool value )
-        { _animateTitleChange = value; }
+        //! buttons
+        virtual bool buttonAnimationsEnabled( void ) const
+        { return _buttonAnimationsEnabled; }
 
-        //! animations
-        virtual int animationsDuration( void ) const
-        { return _animationsDuration; }
+        //! buttons
+        virtual void setButtonAnimationsEnabled( bool value )
+        { _buttonAnimationsEnabled = value; }
 
-        //! animations
-        virtual void setAnimationsDuration( int value )
-        { _animationsDuration = value; }
+        //! buttons
+        virtual int buttonAnimationsDuration( void ) const
+        { return _buttonAnimationsDuration; }
+
+        //! buttons
+        virtual void setButtonAnimationsDuration( int value )
+        { _buttonAnimationsDuration = value; }
+
+        //! titles
+        virtual bool titleAnimationsEnabled( void ) const
+        { return _titleAnimationsEnabled; }
+
+        //! title
+        virtual void setTitleAnimationsEnabled( bool value )
+        { _titleAnimationsEnabled = value; }
+
+        //! title
+        virtual int titleAnimationsDuration( void ) const
+        { return _titleAnimationsDuration; }
+
+        //! title
+        virtual void setTitleAnimationsDuration( int value )
+        { _titleAnimationsDuration = value; }
+
+        //! shadows
+        virtual bool shadowAnimationsEnabled( void ) const
+        { return _shadowAnimationsEnabled; }
+
+        //! shadows
+        virtual void setShadowAnimationsEnabled( bool value )
+        { _shadowAnimationsEnabled = value; }
+
+        //! shadows
+        virtual int shadowAnimationsDuration( void ) const
+        { return _shadowAnimationsDuration; }
+
+        //! shadows
+        virtual void setShadowAnimationsDuration( int value )
+        { _shadowAnimationsDuration = value; }
+
+        //! tabs
+        virtual bool tabAnimationsEnabled( void ) const
+        { return _tabAnimationsEnabled; }
+
+        //! tabs
+        virtual void setTabAnimationsEnabled( bool value )
+        { _tabAnimationsEnabled = value; }
+
+        //! tabs
+        virtual int tabAnimationsDuration( void ) const
+        { return _tabAnimationsDuration; }
+
+        //! tabs
+        virtual void setTabAnimationsDuration( int value )
+        { _tabAnimationsDuration = value; }
+
+        //@}
 
         private:
 
@@ -343,17 +412,25 @@ namespace Oxygen
         //! oxygen shadows
         bool _useOxygenShadows;
 
-        //! animations
-        bool _useAnimations;
-
-        //! animations
-        bool _animateTitleChange;
-
-        //! animations
-        int _animationsDuration;
-
         //! narrow button spacing
         bool _useNarrowButtonSpacing;
+
+        //!@name animation flags
+        //@{
+        bool _animationsEnabled;
+        bool _buttonAnimationsEnabled;
+        bool _titleAnimationsEnabled;
+        bool _shadowAnimationsEnabled;
+        bool _tabAnimationsEnabled;
+        //@}
+
+        //!@name animation durations
+        //@{
+        int _buttonAnimationsDuration;
+        int _titleAnimationsDuration;
+        int _shadowAnimationsDuration;
+        int _tabAnimationsDuration;
+        //@}
 
     };
 

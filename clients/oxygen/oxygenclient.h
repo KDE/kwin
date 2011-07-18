@@ -79,10 +79,9 @@ namespace Oxygen
         virtual bool isMaximized( void ) const
         { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
 
-
         //! true if animations are used
-        bool useAnimations( void ) const
-        { return configuration().useAnimations(); }
+        bool animationsEnabled( void ) const
+        { return configuration().animationsEnabled(); }
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
@@ -341,15 +340,15 @@ namespace Oxygen
         QPixmap itemDragPixmap( int, const QRect& );
 
         //! return true when activity change are animated
-        bool animateActiveChange( void ) const
-        { return ( useAnimations() && !isPreview() ); }
+        bool shadowAnimationsEnabled( void ) const
+        { return ( animationsEnabled() && configuration().shadowAnimationsEnabled() && !isPreview() ); }
 
         //! return true when activity change are animated
-        bool animateTitleChange( void ) const
+        bool titleAnimationsEnabled( void ) const
         {
             return
-                useAnimations() &&
-                configuration().animateTitleChange() &&
+                animationsEnabled() &&
+                configuration().titleAnimationsEnabled() &&
                 !configuration().drawTitleOutline() &&
                 !hideTitleBar() &&
                 !isPreview();

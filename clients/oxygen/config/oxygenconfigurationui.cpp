@@ -104,14 +104,12 @@ namespace Oxygen
     connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
 
-    connect( ui.useAnimations, SIGNAL(clicked()), SIGNAL(changed()) );
-    connect( ui.animateTitleChange, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui.animationsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
-    connect( ui.useAnimations, SIGNAL( toggled( bool ) ), ui.animateTitleChange, SLOT( setEnabled( bool ) ) );
     connect( ui._expertModeButton, SIGNAL( pressed( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
 
     ui._expertModeButton->setIcon( KIcon("configure") );
@@ -137,7 +135,6 @@ namespace Oxygen
     // update button text
     ui._expertModeButton->setText( _expertMode ? i18n( "Hide Advanced Configuration Options" ):i18n( "Show Advanced Configuration Options" ) );
 
-    ui.animateTitleChange->setVisible( _expertMode );
     ui.narrowButtonSpacing->setVisible( _expertMode );
 
     // size grip mode

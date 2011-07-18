@@ -117,8 +117,7 @@ namespace Oxygen
 
         else if( ui->ui.separatorMode->currentIndex() != configuration.separatorMode() ) modified = true;
         else if( ui->ui.titleOutline->isChecked() !=  configuration.drawTitleOutline() ) modified = true;
-        else if( ui->ui.useAnimations->isChecked() !=  configuration.useAnimations() ) modified = true;
-        else if( ui->ui.animateTitleChange->isChecked() !=  configuration.animateTitleChange() ) modified = true;
+        else if( ui->ui.animationsEnabled->isChecked() !=  configuration.animationsEnabled() ) modified = true;
         else if( ui->ui.narrowButtonSpacing->isChecked() !=  configuration.useNarrowButtonSpacing() ) modified = true;
 
         // shadow configurations
@@ -152,8 +151,7 @@ namespace Oxygen
         configuration.setDrawTitleOutline( ui->ui.titleOutline->isChecked() );
         configuration.setUseDropShadows( ui->shadowConfigurations[1]->isChecked() );
         configuration.setUseOxygenShadows( ui->shadowConfigurations[0]->isChecked() );
-        configuration.setUseAnimations( ui->ui.useAnimations->isChecked() );
-        configuration.setAnimateTitleChange( ui->ui.animateTitleChange->isChecked() );
+        configuration.setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
         configuration.setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
 
         // save standard configuration
@@ -229,8 +227,7 @@ namespace Oxygen
         ui->ui.titleOutline->setChecked( configuration.drawTitleOutline() );
         ui->shadowConfigurations[0]->setChecked( configuration.useOxygenShadows() );
         ui->shadowConfigurations[1]->setChecked( configuration.useDropShadows() );
-        ui->ui.useAnimations->setChecked( configuration.useAnimations() );
-        ui->ui.animateTitleChange->setChecked( configuration.animateTitleChange() );
+        ui->ui.animationsEnabled->setChecked( configuration.animationsEnabled() );
         ui->ui.narrowButtonSpacing->setChecked( configuration.useNarrowButtonSpacing() );
     }
 

@@ -142,11 +142,15 @@ namespace Oxygen
 
         _configuration = _factory->configuration( *this );
 
-        // animations duration
-        _glowAnimation->setDuration( configuration().animationsDuration() );
-        _titleAnimationData->setDuration( configuration().animationsDuration() );
-        _itemData.animation().data()->setDuration( configuration().animationsDuration() );
-        _itemData.setAnimationsEnabled( useAnimations() );
+        // glow animations
+        _glowAnimation->setDuration( configuration().shadowAnimationsDuration() );
+
+        // title transitions
+        _titleAnimationData->setDuration( configuration().titleAnimationsDuration() );
+
+        // tabs
+        _itemData.setAnimationsEnabled( animationsEnabled() && configuration().tabAnimationsEnabled() );
+        _itemData.animation().data()->setDuration( configuration().tabAnimationsDuration() );
 
         // reset title transitions
         _titleAnimationData->reset();
@@ -1193,7 +1197,7 @@ namespace Oxygen
         _itemData.setDirty( true );
 
         // reset animation
-        if( animateActiveChange() )
+        if( shadowAnimationsEnabled() )
         {
             _glowAnimation->setDirection( isActive() ? Animation::Forward : Animation::Backward );
             if(!glowIsAnimated()) { _glowAnimation->start(); }
@@ -1230,7 +1234,7 @@ namespace Oxygen
 
         KCommonDecorationUnstable::captionChange();
         _itemData.setDirty( true );
-        if( animateTitleChange() )
+        if( titleAnimationsEnabled() )
         { _titleAnimationData->setDirty( true ); }
 
     }

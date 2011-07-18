@@ -95,8 +95,8 @@ namespace Oxygen
     { return (!_forceInactive) && _client.isActive(); }
 
     //___________________________________________________
-    bool Button::animateButtonHover( void ) const
-    { return _client.useAnimations(); }
+    bool Button::buttonAnimationsEnabled( void ) const
+    { return _client.animationsEnabled() && _client.configuration().buttonAnimationsEnabled(); }
 
     //___________________________________________________
     QSize Button::sizeHint() const
@@ -107,7 +107,7 @@ namespace Oxygen
 
     //___________________________________________________
     void Button::reset( unsigned long )
-    { _glowAnimation->setDuration( _client.configuration().animationsDuration() ); }
+    { _glowAnimation->setDuration( _client.configuration().buttonAnimationsDuration() ); }
 
 
     //___________________________________________________
@@ -116,7 +116,7 @@ namespace Oxygen
 
         KCommonDecorationButton::enterEvent( event );
         if( _status != Oxygen::Pressed ) _status = Oxygen::Hovered;
-        if( animateButtonHover() )
+        if( buttonAnimationsEnabled() )
         {
 
             _glowAnimation->setDirection( Animation::Forward );
@@ -132,7 +132,7 @@ namespace Oxygen
 
         KCommonDecorationButton::leaveEvent( event );
 
-        if( _status == Oxygen::Hovered && animateButtonHover() )
+        if( _status == Oxygen::Hovered && buttonAnimationsEnabled() )
         {
             _glowAnimation->setDirection( Animation::Backward );
             if( !isAnimated() ) _glowAnimation->start();

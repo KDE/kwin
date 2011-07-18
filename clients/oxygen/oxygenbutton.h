@@ -149,7 +149,7 @@ namespace Oxygen
         bool isActive( void ) const;
 
         //! true if buttons hover are animated
-        bool animateButtonHover( void ) const;
+        bool buttonAnimationsEnabled( void ) const;
 
         //!@name button properties
         //@{
