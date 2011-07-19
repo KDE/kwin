@@ -145,6 +145,10 @@ void Tiling::createTile(Client* c)
     }
     tilingLayouts[c->desktop()]->addTile(t);
     tilingLayouts[c->desktop()]->commit();
+    // if tiling is activated, connect to Client's signals and react with rearrangement when (un)minimizing
+    connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(notifyTilingWindowMinimizeToggled(KWin::Client*)));
+    connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(notifyTilingWindowMinimizeToggled(KWin::Client*)));
+    connect(c, SIGNAL(s_unminimized()), this, SLOT(updateAllTiles()));
 }
 
 void Tiling::removeTile(Client *c)
@@ -299,7 +303,7 @@ void Tiling::notifyTilingWindowActivated(Client *c)
     }
 }
 
-void Tiling::notifyTilingWindowMinimizeToggled(Client *c)
+void Tiling::notifyTilingWindowMinimizeToggled(KWin::Client* c)
 {
     if (tilingLayouts.value(c->desktop())) {
         tilingLayouts[ c->desktop()]->clientMinimizeToggled(c);

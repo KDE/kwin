@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "rules.h"
 #include "shadow.h"
-#include "tiling/tiling.h"
 #include "deleted.h"
 #include "paintredirector.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -951,9 +950,6 @@ void Client::minimize(bool avoid_animation)
     // TODO: merge signal with s_minimized
     emit clientMinimized(this, !avoid_animation);
 
-    // when tiling, request a rearrangement
-    workspace()->tiling()->notifyTilingWindowMinimizeToggled(this);
-
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
@@ -979,11 +975,7 @@ void Client::unminimize(bool avoid_animation)
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
-    workspace()->tiling()->updateAllTiles();
     emit clientUnminimized(this, !avoid_animation);
-
-    // when tiling, request a rearrangement
-    workspace()->tiling()->notifyTilingWindowMinimizeToggled(this);
 
     // Update states of all other windows in this group
     if (clientGroup())

@@ -41,9 +41,6 @@ public:
     bool tilingEnabled() const;
     void setTilingEnabled(bool tiling);
     bool tileable(Client *c);
-    // updates geometry of tiles on all desktops,
-    // this rearranges the tiles.
-    void updateAllTiles();
     const QVector< TilingLayout* >& getTilingLayouts() const;
     void initShortcuts(KActionCollection* keys);
 
@@ -57,7 +54,6 @@ public:
     void notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
     void notifyTilingWindowDesktopChanged(Client *c, int old_desktop);
     void notifyTilingWindowActivated(Client *c);
-    void notifyTilingWindowMinimizeToggled(Client *c);
     void notifyTilingWindowMaximized(Client *c, KDecorationDefines::WindowOperation op);
 
     KDecorationDefines::Position supportedTilingResizeMode(Client *c, KDecorationDefines::Position currentMode);
@@ -105,6 +101,10 @@ private:
     QVector<TilingLayout *> tilingLayouts;
 private Q_SLOTS:
     void slotResizeTilingLayouts();
+    void notifyTilingWindowMinimizeToggled(KWin::Client *c);
+    // updates geometry of tiles on all desktops,
+    // this rearranges the tiles.
+    void updateAllTiles();
 };
 }
 
