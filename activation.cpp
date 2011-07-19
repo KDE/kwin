@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "rules.h"
 #include <QX11Info>
-#include "tiling/tiling.h"
 
 namespace KWin
 {
@@ -263,9 +262,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     if (active_client) {
         active_client->sl_activated();
     }
-
-    if (m_tiling->tilingEnabled())
-        m_tiling->notifyTilingWindowActivated(active_client);
     --set_active_client_recursion;
 }
 

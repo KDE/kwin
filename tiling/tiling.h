@@ -53,7 +53,6 @@ public:
     void notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
     void notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
     void notifyTilingWindowDesktopChanged(Client *c, int old_desktop);
-    void notifyTilingWindowActivated(Client *c);
     void notifyTilingWindowMaximized(Client *c, KDecorationDefines::WindowOperation op);
 
     KDecorationDefines::Position supportedTilingResizeMode(Client *c, KDecorationDefines::Position currentMode);
@@ -82,6 +81,8 @@ public Q_SLOTS:
 
     // NOTE: debug method
     void dumpTiles() const;
+
+    void notifyTilingWindowActivated(KWin::Client *c);
 private:
     // try to get a decent tile, either the one with
     // focus or the one below the mouse.

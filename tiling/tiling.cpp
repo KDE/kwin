@@ -96,6 +96,7 @@ void Tiling::setTilingEnabled(bool tiling)
         connect(m_workspace, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotResizeTilingLayouts()));
         connect(m_workspace, SIGNAL(numberDesktopsChanged(int)), this, SLOT(slotResizeTilingLayouts()));
         connect(m_workspace, SIGNAL(clientRemoved(KWin::Client*)), this, SLOT(removeTile(KWin::Client*)));
+        connect(m_workspace, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(notifyTilingWindowActivated(KWin::Client*)));
         tilingLayouts.resize(Workspace::self()->numberOfDesktops() + 1);
         foreach (Client * c, Workspace::self()->stackingOrder()) {
             createTile(c);
@@ -265,7 +266,7 @@ void Tiling::notifyTilingWindowDesktopChanged(Client *c, int old_desktop)
 /*
  * Implements the 3 raising modes in Window Behaviour -> Advanced
  */
-void Tiling::notifyTilingWindowActivated(Client *c)
+void Tiling::notifyTilingWindowActivated(KWin::Client *c)
 {
     if (c == NULL)
         return;
