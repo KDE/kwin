@@ -80,7 +80,7 @@ bool CompositingPrefs::compositingPossible()
         return false;
     }
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (Extensions::glxAvailable())
+    if (hasGlx())
         return true;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -116,14 +116,14 @@ QString CompositingPrefs::compositingNotPossibleReason()
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
     }
 #if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if (!Extensions::glxAvailable())
+    if (!hasGlx())
         return i18n("GLX/OpenGL are not available and only OpenGL support is compiled.");
 #elif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
     if (!(Extensions::renderAvailable() && Extensions::fixesAvailable()))
         return i18n("XRender/XFixes extensions are not available and only XRender support"
                     " is compiled.");
 #else
-    if (!(Extensions::glxAvailable()
+    if (!(hasGlx()
             || (Extensions::renderAvailable() && Extensions::fixesAvailable()))) {
         return i18n("GLX/OpenGL and XRender/XFixes are not available.");
     }
@@ -133,6 +133,24 @@ QString CompositingPrefs::compositingNotPossibleReason()
     return i18n("Compositing was disabled at compile time.\n"
                 "It is likely Xorg development headers were not installed.");
 #endif
+}
+
+static bool s_glxDetected = false;
+static bool s_hasGlx = false;
+
+bool CompositingPrefs::hasGlx()
+{
+    if (s_glxDetected) {
+        return s_hasGlx;
+    }
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifndef KWIN_HAVE_OPENGLES
+    int event_base, error_base;
+    s_hasGlx = glXQueryExtension(display(), &event_base, &error_base);
+#endif
+#endif
+    s_glxDetected = true;
+    return s_hasGlx;
 }
 
 void CompositingPrefs::detect()
@@ -186,7 +204,7 @@ void CompositingPrefs::detect()
         if (QProcess::execute(opengl_test) != 0)
             setenv("LIBGL_ALWAYS_INDIRECT", "1", true);
     }
-    if (!Extensions::glxAvailable()) {
+    if (!hasGlx()) {
         kDebug(1212) << "No GLX available";
         gl_workaround_config.writeEntry("OpenGLIsUnsafe", false);
         gl_workaround_config.sync();

@@ -49,9 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
 #endif
-#ifdef HAVE_OPENGL
-#include <GL/glx.h>
-#endif
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
@@ -68,7 +65,6 @@ int Extensions::damage_event_base = 0;
 int Extensions::composite_version = 0;
 int Extensions::fixes_version = 0;
 int Extensions::render_version = 0;
-bool Extensions::has_glx = false;
 bool Extensions::has_sync = false;
 int Extensions::sync_event_base = 0;
 bool Extensions::non_native_pixmaps = false;
@@ -145,14 +141,6 @@ void Extensions::init()
         render_version = major * 0x10 + minor;
         addData("RENDER");
     }
-#endif
-    has_glx = false;
-#ifdef HAVE_OPENGL
-#ifndef KWIN_HAVE_OPENGLES
-    has_glx = glXQueryExtension(display(), &event_base, &error_base);
-    if (has_glx)
-        addData("GLX");
-#endif
 #endif
 #ifdef HAVE_XSYNC
     if (XSyncQueryExtension(display(), &sync_event_base, &error_base)) {
