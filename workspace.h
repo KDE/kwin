@@ -73,9 +73,11 @@ class TabBox;
 #endif
 
 class Client;
+#ifdef KWIN_BUILD_TILING
 class Tile;
 class Tiling;
 class TilingLayout;
+#endif
 class ClientGroup;
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
 class DesktopChangeOSD;
@@ -198,7 +200,9 @@ public:
         return unmanaged;
     }
 
+#ifdef KWIN_BUILD_TILING
     Tiling* tiling();
+#endif
 
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -306,10 +310,10 @@ private:
 
     KActivityController activityController_;
 
+#ifdef KWIN_BUILD_TILING
     Tiling* m_tiling;
-
+#endif
     Outline* m_outline;
-
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge m_screenEdge;
 #endif

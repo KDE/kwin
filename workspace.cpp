@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 #include "client.h"
-#include "tile.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -62,9 +61,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#ifdef KWIN_BUILD_TILING
+#include "tile.h"
 #include "tilinglayout.h"
 #include "tiling/tiling.h"
-
+#endif
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
 #endif
@@ -240,7 +241,9 @@ Workspace::Workspace(bool restore)
     desktop_change_osd = new DesktopChangeOSD(this);
 #endif
     m_outline = new Outline();
+#ifdef KWIN_BUILD_TILING
     m_tiling = new Tiling(this);
+#endif
 
     initShortcuts();
 
@@ -490,8 +493,10 @@ void Workspace::init()
     if (new_active_client != NULL)
         activateClient(new_active_client);
 
+#ifdef KWIN_BUILD_TILING
     // Enable/disable tiling
     m_tiling->setTilingEnabled(options->tilingOn);
+#endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
@@ -505,7 +510,9 @@ Workspace::~Workspace()
 {
     finishCompositing();
     blockStackingUpdates(true);
+#ifdef KWIN_BUILD_TILING
     delete m_tiling;
+#endif
 
     // TODO: grabXServer();
 
@@ -1027,9 +1034,11 @@ void Workspace::slotReconfigure()
         }
     }
 
+#ifdef KWIN_BUILD_TILING
     m_tiling->setTilingEnabled(options->tilingOn);
     // just so that we reset windows in the right manner, 'activate' the current active window
     m_tiling->notifyTilingWindowActivated(activeClient());
+#endif
     if (hasDecorationPlugin()) {
         rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
     } else {
@@ -1292,9 +1301,13 @@ bool Workspace::setCurrentDesktop(int new_desktop)
         if (movingClient && !movingClient->isOnDesktop(new_desktop)) {
             int old_desktop = movingClient->desktop();
             movingClient->setDesktop(new_desktop);
+#ifdef KWIN_BUILD_TILING
             if (m_tiling->tilingEnabled()) {
                 m_tiling->notifyTilingWindowDesktopChanged(movingClient, old_desktop);
             }
+#else
+    Q_UNUSED(old_desktop)
+#endif
         }
 
         for (int i = stacking_order.size() - 1; i >= 0 ; --i)
@@ -1605,7 +1618,9 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
     } else
         raiseClient(c);
 
+#ifdef KWIN_BUILD_TILING
     m_tiling->notifyTilingWindowDesktopChanged(c, old_desktop);
+#endif
 
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -2145,19 +2160,23 @@ TabBox::TabBox* Workspace::tabBox() const
 }
 #endif
 
+#ifdef KWIN_BUILD_TILING
 Tiling* Workspace::tiling()
 {
     return m_tiling;
 }
+#endif
 
 /*
  * Called from D-BUS
  */
 void Workspace::toggleTiling()
 {
+#ifdef KWIN_BUILD_TILING
     if (m_tiling) {
         m_tiling->slotToggleTiling();
     }
+#endif
 }
 
 /*
@@ -2165,9 +2184,11 @@ void Workspace::toggleTiling()
  */
 void Workspace::nextTileLayout()
 {
+#ifdef KWIN_BUILD_TILING
     if (m_tiling) {
         m_tiling->slotNextTileLayout();
     }
+#endif
 }
 
 /*
@@ -2175,15 +2196,19 @@ void Workspace::nextTileLayout()
  */
 void Workspace::previousTileLayout()
 {
+#ifdef KWIN_BUILD_TILING
     if (m_tiling) {
         m_tiling->slotPreviousTileLayout();
     }
+#endif
 }
 
 void Workspace::dumpTiles() const {
+#ifdef KWIN_BUILD_TILING
     if (m_tiling) {
         m_tiling->dumpTiles();
     }
+#endif
 }
 
 } // namespace

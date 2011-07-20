@@ -4,6 +4,7 @@ OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+OPTION(KWIN_BUILD_TILING "Enable building of KWin Tiling functionality" ON)
 OPTION(KWIN_BUILD_DESKTOPCHANGEOSD "Enable building of KWin DesktopChangeOSD funtionality" ON)
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
@@ -18,6 +19,7 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_TABBOX OFF)
+    set(KWIN_BUILD_TILING OFF)
     set(KWIN_BUILD_DESKTOPCHANGEOSD OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_BUILD_SCRIPTING OFF)
@@ -144,23 +146,6 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    desktoplayout.cpp
    paintredirector.cpp
-   tile.cpp
-   tilinglayout.cpp
-   tilinglayoutfactory.cpp
-
-   # tiling layouts
-   # spiral
-   #tilinglayouts/spiral/spiralfactory.cpp
-   tilinglayouts/spiral/spiral.cpp
-
-   # columns
-   #tilinglayouts/columns/columnsfactory.cpp
-   tilinglayouts/columns/columns.cpp
-
-   # floating
-   tilinglayouts/floating/floating.cpp
-
-   tiling/tiling.cpp
    )
 
 if(KWIN_BUILD_SCRIPTING)
@@ -193,6 +178,29 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxview.cpp
   )
 endif(KWIN_BUILD_TABBOX)
+
+if(KWIN_BUILD_TILING)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        tile.cpp
+        tilinglayout.cpp
+        tilinglayoutfactory.cpp
+
+        # tiling layouts
+        # spiral
+        #tilinglayouts/spiral/spiralfactory.cpp
+        tilinglayouts/spiral/spiral.cpp
+
+        # columns
+        #tilinglayouts/columns/columnsfactory.cpp
+        tilinglayouts/columns/columns.cpp
+
+        # floating
+        tilinglayouts/floating/floating.cpp
+
+        tiling/tiling.cpp
+   )
+endif(KWIN_BUILD_TILING)
 
 if(KWIN_BUILD_DESKTOPCHANGEOSD)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
