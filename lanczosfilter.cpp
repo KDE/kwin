@@ -61,15 +61,19 @@ void LanczosFilter::init()
         return;
     m_inited = true;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    const bool force = (qstrcmp(qgetenv("KWIN_FORCE_LANCZOS"), "1") == 0);
+    if (force) {
+        kWarning(1212) << "Lanczos Filter forced on by environment variable";
+    }
 
     KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
 
-    if (config->group("Compositing").readEntry("GLTextureFilter", 2) != 2)
+    if (!force && config->group("Compositing").readEntry("GLTextureFilter", 2) != 2)
         return; // disabled by config
 
     // The lanczos filter is reported to be broken with the Intel driver and Mesa 7.10
     GLPlatform *gl = GLPlatform::instance();
-    if (gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(7, 10))
+    if (!force && gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(7, 10))
         return;
 
     m_shader = new LanczosShader(this);
