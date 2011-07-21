@@ -57,7 +57,7 @@ namespace Oxygen
             i18n("Configure fading between window shadow and glow when window's active state is changed" ) ) );
 
         setupItem( layout, _tabAnimations = new GenericAnimationConfigItem( this,
-            i18n("Window grouping transitions" ),
+            i18n("Window grouping animations" ),
             i18n("Configure window titlebar animations when windows are grouped/ungrouped" ) ) );
 
         // add spacers to the first column, previous row to finalize layout
