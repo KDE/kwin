@@ -565,9 +565,6 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     tilingLayouts.resize(numberOfDesktops() + 1);
 
     createTile(c);
-
-    if (scene)
-        scene->windowAdded(c);
     return c;
 }
 
@@ -581,8 +578,6 @@ Unmanaged* Workspace::createUnmanaged(Window w)
         return NULL;
     }
     addUnmanaged(c, Allowed);
-    if (scene)
-        scene->windowAdded(c);
     emit unmanagedAdded(c);
     return c;
 }
