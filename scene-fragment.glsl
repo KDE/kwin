@@ -1,7 +1,6 @@
 uniform sampler2D sampler;
 uniform vec4 modulation;
 uniform float saturation;
-uniform int debug;
 uniform int u_forceAlpha;
 
 varying vec2 varyingTexCoords;
@@ -23,9 +22,9 @@ void main() {
 
     tex *= modulation;
 
-    /*if (debug != 0) {
-        tex.g += 0.5;
-    }*/
+#ifdef KWIN_SHADER_DEBUG
+    tex.g = min(tex.g + 0.5, 1.0);
+#endif
 
     gl_FragColor = tex;
 }
