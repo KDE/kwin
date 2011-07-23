@@ -601,6 +601,8 @@ ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
         s_shaderManager = new ShaderManager();
+        s_shaderManager->initShaders();
+        s_shaderManager->m_inited = true;
     }
     return s_shaderManager;
 }
@@ -619,8 +621,6 @@ ShaderManager::ShaderManager()
     , m_valid(false)
 {
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
-    initShaders();
-    m_inited = true;
 }
 
 ShaderManager::~ShaderManager()
