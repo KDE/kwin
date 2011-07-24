@@ -1093,6 +1093,16 @@ void Workspace::loadDesktopSettings()
         rootInfo->setDesktopName(i, s.toUtf8().data());
         desktop_focus_chain[i-1] = i;
     }
+
+    int rows = group.readEntry<int>("Rows", 2);
+    rows = qBound(1, rows, n);
+    // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
+    int columns = n / rows;
+    if (n % rows > 0) {
+        columns++;
+    }
+    rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+    rootInfo->activate();
     _loading_desktop_settings = false;
 }
 
