@@ -243,14 +243,48 @@ Workspace::Workspace(bool restore)
 
     init();
 
-    connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*, QSize, QSize)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*, QPoint, QPoint)), SLOT(desktopResized()));
+    connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), SLOT(screenAdded(Kephal::Screen*)));
+    connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), SLOT(screenRemoved(int)));
+    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*, QSize, QSize)), SLOT(screenResized(Kephal::Screen*, QSize, QSize)));
+    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*, QPoint, QPoint)), SLOT(screenMoved(Kephal::Screen*, QPoint, QPoint)));
 
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
     connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));
     connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(activityAdded(QString)));
+
+    connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
+    screenChangedTimer.setSingleShot(true);
+    screenChangedTimer.setInterval(100);
+}
+
+void Workspace::screenChangeTimeout()
+{
+    kDebug() << "It is time to call desktopResized";
+    desktopResized();
+}
+
+void Workspace::screenAdded(Kephal::Screen* screen)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenRemoved(int screen)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenResized(Kephal::Screen* screen, QSize old, QSize newSize)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenMoved(Kephal::Screen* screen, QPoint old, QPoint newPos)
+{
+    kDebug();
+    screenChangedTimer.start();
 }
 
 void Workspace::init()
