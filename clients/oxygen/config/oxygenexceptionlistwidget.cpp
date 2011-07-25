@@ -27,7 +27,7 @@
 #include "oxygenexceptionlistwidget.moc"
 #include "oxygenexceptiondialog.h"
 
-#include <QtCore/QWeakPointer>
+#include <QtCore/QSharedPointer>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -113,14 +113,13 @@ namespace Oxygen
     {
 
         // map dialog
-        QWeakPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
-        dialog.data()->setException( _defaultConfiguration );
-        if( dialog.data()->exec() == QDialog::Rejected || !dialog ) return;
+        QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
+        dialog->setException( _defaultConfiguration );
+        if( dialog->exec() == QDialog::Rejected ) return;
 
         // retrieve exception and check
-        Exception exception( dialog.data()->exception() );
+        Exception exception( dialog->exception() );
         if( !checkException( exception ) ) return;
-        delete dialog.data();
 
         // create new item
         model().add( exception );
@@ -150,13 +149,12 @@ namespace Oxygen
         Exception& exception( model().get( current ) );
 
         // create dialog
-        QWeakPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
-        dialog.data()->setException( exception );
+        QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
+        dialog->setException( exception );
 
         // map dialog
-        if( dialog.data()->exec() == QDialog::Rejected || !dialog ) return;
-        Exception newException = dialog.data()->exception();
-        delete dialog.data();
+        if( dialog->exec() == QDialog::Rejected ) return;
+        Exception newException = dialog->exception();
 
         // check if exception was changed
         if( exception == newException ) return;
@@ -312,11 +310,10 @@ namespace Oxygen
         {
 
             KMessageBox::error( this, i18n("Regular Expression syntax is incorrect") );
-            QWeakPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
-            dialog.data()->setException( exception );
-            if( dialog.data()->exec() == QDialog::Rejected || !dialog ) return false;
-            exception = dialog.data()->exception();
-            delete dialog.data();
+            QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
+            dialog->setException( exception );
+            if( dialog->exec() == QDialog::Rejected ) return false;
+            exception = dialog->exception();
 
         }
 
