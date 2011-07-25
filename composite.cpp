@@ -182,12 +182,6 @@ void Workspace::setupCompositing()
     c->setupCompositing();
     foreach (Unmanaged * c, unmanaged)
     c->setupCompositing();
-    foreach (Client * c, clients)
-    scene->windowAdded(c);
-    foreach (Client * c, desktops)
-    scene->windowAdded(c);
-    foreach (Unmanaged * c, unmanaged)
-    scene->windowAdded(c);
     discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
 #else
     kDebug(1212) << "Compositing was not available at compile time";
@@ -541,6 +535,7 @@ void Toplevel::setupCompositing()
     effect_window->setWindow(this);
     unredirect = false;
     workspace()->checkUnredirect(true);
+    scene->windowAdded(this);
 #endif
 }
 

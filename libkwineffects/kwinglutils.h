@@ -289,6 +289,13 @@ public:
      * @return @c true if the built-in shaders are valid, @c false otherwise
      **/
     bool isValid() const;
+    /**
+     * Is @c true if the environment variable KWIN_GL_DEBUG is set to 1.
+     * In that case shaders are compiled with KWIN_SHADER_DEBUG defined.
+     * @returns @c true if shaders are compiled with debug information
+     * @since 4.8
+     **/
+    bool isShaderDebug() const;
 
     /**
      * Binds the shader of specified @p type.
@@ -363,6 +370,7 @@ private:
     GLShader *m_colorShader;
     bool m_inited;
     bool m_valid;
+    bool m_debug;
     static ShaderManager *s_shaderManager;
 };
 

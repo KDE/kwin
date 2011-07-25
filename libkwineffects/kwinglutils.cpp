@@ -295,6 +295,9 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 #ifdef KWIN_HAVE_OPENGLES
     ba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
 #endif
+    if (ShaderManager::instance()->isShaderDebug()) {
+        ba.append("#define KWIN_SHADER_DEBUG 1\n");
+    }
     ba.append(source);
 
     const char* src = ba.constData();
@@ -598,6 +601,8 @@ ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
         s_shaderManager = new ShaderManager();
+        s_shaderManager->initShaders();
+        s_shaderManager->m_inited = true;
     }
     return s_shaderManager;
 }
@@ -615,8 +620,7 @@ ShaderManager::ShaderManager()
     , m_inited(false)
     , m_valid(false)
 {
-    initShaders();
-    m_inited = true;
+    m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
 }
 
 ShaderManager::~ShaderManager()
@@ -646,6 +650,11 @@ bool ShaderManager::isShaderBound() const
 bool ShaderManager::isValid() const
 {
     return m_valid;
+}
+
+bool ShaderManager::isShaderDebug() const
+{
+    return m_debug;
 }
 
 GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
@@ -840,7 +849,6 @@ void ShaderManager::resetShader(ShaderType type)
         break;
     }
 
-    //shader->setUniform("debug", 0);
     shader->setUniform("sampler", 0);
 
     shader->setUniform(GLShader::ProjectionMatrix,     projection);
