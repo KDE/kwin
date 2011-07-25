@@ -8,7 +8,11 @@ OPTION(KWIN_BUILD_DESKTOPCHANGEOSD "Enable building of KWin DesktopChangeOSD fun
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
-OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+if(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
+   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+else(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
+   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
+endif(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
 
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
