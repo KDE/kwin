@@ -123,7 +123,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.glScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.xrScaleFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
-    connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glShaders, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
@@ -395,7 +394,6 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
     ui.glScaleFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 2));
 
-    ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering()));
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
     ui.glShaders->setChecked(!config.readEntry<bool>("GLLegacy", false));
 
@@ -551,8 +549,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
     if (config.readEntry("Backend", "OpenGL")
             != ((ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender")
-            || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
-            != ui.glDirect->isChecked()
             || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
             || config.readEntry<bool>("GLLegacy", false) == ui.glShaders->isChecked()) {
         m_showConfirmDialog = true;
@@ -569,7 +565,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("XRenderSmoothScale", ui.xrScaleFilter->currentIndex() == 1);
     config.writeEntry("GLTextureFilter", ui.glScaleFilter->currentIndex());
 
-    config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
     config.writeEntry("GLLegacy", !ui.glShaders->isChecked());
 
@@ -721,7 +716,6 @@ void KWinCompositingConfig::defaults()
     ui.unredirectFullscreen->setChecked(false);
     ui.xrScaleFilter->setCurrentIndex(0);
     ui.glScaleFilter->setCurrentIndex(2);
-    ui.glDirect->setChecked(mDefaultPrefs.enableDirectRendering());
     ui.glVSync->setChecked(mDefaultPrefs.enableVSync());
     ui.glShaders->setChecked(true);
 }

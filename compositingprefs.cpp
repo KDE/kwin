@@ -192,7 +192,8 @@ void CompositingPrefs::detect()
     }
 #else
     // HACK: This is needed for AIGLX
-    if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") != 0) {
+    const bool forceIndirect = qstrcmp(qgetenv("LIBGL_ALWAYS_INDIRECT"), "1") == 0;
+    if (!forceIndirect && qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") != 0) {
         // Start an external helper program that initializes GLX and returns
         // 0 if we can use direct rendering, and 1 otherwise.
         // The reason we have to use an external program is that after GLX
@@ -201,8 +202,14 @@ void CompositingPrefs::detect()
         // Direct rendering is preferred, since not all OpenGL extensions are
         // available with indirect rendering.
         const QString opengl_test = KStandardDirs::findExe("kwin_opengl_test");
-        if (QProcess::execute(opengl_test) != 0)
+        if (QProcess::execute(opengl_test) != 0) {
+            mEnableDirectRendering = false;
             setenv("LIBGL_ALWAYS_INDIRECT", "1", true);
+        } else {
+            mEnableDirectRendering = true;
+        }
+    } else {
+        mEnableDirectRendering = !forceIndirect;
     }
     if (!hasGlx()) {
         kDebug(1212) << "No GLX available";
