@@ -63,11 +63,6 @@ macro( KWIN4_EFFECT_LINK_XRENDER name )
     endif( KWIN_HAVE_XRENDER_COMPOSITING )
 endmacro( KWIN4_EFFECT_LINK_XRENDER )
 
-# Make sure we can see our libraries
-include_directories(
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
-    )
-
 # Install the KWin/Effect service type
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
