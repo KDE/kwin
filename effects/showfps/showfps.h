@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTime>
 
 #include <kwineffects.h>
-#include <kwinglutils.h>
 
 
 namespace KWin
 {
+class GLTexture;
 
 class ShowFpsEffect
     : public Effect

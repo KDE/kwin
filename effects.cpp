@@ -1040,6 +1040,11 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 KLibrary* EffectsHandlerImpl::findEffectLibrary(KService* service)
 {
     QString libname = service->library();
+#ifdef KWIN_HAVE_OPENGLES
+    if (libname.startsWith("kwin4_effect_")) {
+        libname.replace("kwin4_effect_", "kwin4_effect_gles_");
+    }
+#endif
     KLibrary* library = new KLibrary(libname);
     if (!library) {
         kError(1212) << "couldn't open library for effect '" <<

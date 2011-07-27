@@ -39,10 +39,6 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
 {
-    if (!Extensions::glxAvailable()) {
-        kDebug(1212) << "No glx extensions available";
-        return; // error
-    }
     initGLX();
     // check for FBConfig support
     if (!hasGLExtension("GLX_SGIX_fbconfig") || !glXGetFBConfigAttrib || !glXGetFBConfigs ||

@@ -3,15 +3,31 @@ kde4_no_enable_final(kwineffects)
 
 # Uncomment to have the test effects built as well
 #add_subdirectory( _test )
+macro( KWIN4_ADD_EFFECT_BACKEND name )
+    kde4_add_plugin( ${name} ${ARGN} )
+    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB})
+endmacro( KWIN4_ADD_EFFECT_BACKEND )
 
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
-    kde4_add_plugin( kwin4_effect_${name} ${ARGN} )
-    target_link_libraries( kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} kephal ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB})
-    if (X11_Xfixes_FOUND)
-        target_link_libraries(kwin4_effect_${name} ${X11_Xfixes_LIB})
-    endif (X11_Xfixes_FOUND)
-    install( TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+    if(OPENGL_FOUND OR NOT(OPENGL_FOUND AND OPENGLES_FOUND))
+        # OpenGL or neither OpenGL nor OpenGL ES - default set
+        KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
+        if(OPENGL_FOUND)
+            target_link_libraries(kwin4_effect_${name} kwinglutils)
+            set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL)
+        endif(OPENGL_FOUND)
+        install( TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+    endif(OPENGL_FOUND OR NOT(OPENGL_FOUND AND OPENGLES_FOUND))
+
+
+    if(OPENGLES_FOUND)
+        KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_gles_${name} ${ARGN})
+        # OpenGL ES gets into a different library
+        target_link_libraries(kwin4_effect_gles_${name} kwinglesutils)
+        set_target_properties(kwin4_effect_gles_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
+        install( TARGETS kwin4_effect_gles_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+    endif(OPENGLES_FOUND)
 endmacro( KWIN4_ADD_EFFECT )
 
 macro( KWIN4_ADD_EFFECT_CONFIG name )
@@ -28,20 +44,21 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
 
     kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
     kde4_add_plugin( kcm_kwin4_effect_${name} ${kwin4_effect_src} )
-    target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} kephal )
+    target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
 endmacro( KWIN4_ADD_EFFECT_CONFIG )
 
 macro( KWIN4_EFFECT_LINK_XRENDER name )
     if( KWIN_HAVE_XRENDER_COMPOSITING )
-        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} kephal )
+        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} )
+
+        # if building for OpenGL and OpenGL ES we have two targets
+        # TODO: if building for OpenGL ES we should not build XRender support
+        if(OPENGLES_FOUND)
+            target_link_libraries( kwin4_effect_gles_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} )
+        endif(OPENGLES_FOUND)
     endif( KWIN_HAVE_XRENDER_COMPOSITING )
 endmacro( KWIN4_EFFECT_LINK_XRENDER )
-
-# Make sure we can see our libraries
-include_directories(
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
-    )
 
 # Install the KWin/Effect service type
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )

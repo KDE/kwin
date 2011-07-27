@@ -122,6 +122,14 @@ void Workspace::setupCompositing()
         else {
             unsafeConfig.writeEntry("OpenGLIsUnsafe", true);
             unsafeConfig.sync();
+#ifndef KWIN_HAVE_OPENGLES
+            if (!CompositingPrefs::hasGlx()) {
+                unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
+                unsafeConfig.sync();
+                kDebug(1212) << "No glx extensions available";
+                break;
+            }
+#endif
 
             scene = new SceneOpenGL(this);
 
