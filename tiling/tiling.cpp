@@ -29,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KDE/KAction>
 
-#include "tile.h"
-#include "tilinglayout.h"
+#include "tiling/tile.h"
+#include "tiling/tilinglayout.h"
 #include "tilinglayoutfactory.h"
 #include "workspace.h"
 

@@ -182,23 +182,20 @@ endif(KWIN_BUILD_TABBOX)
 if(KWIN_BUILD_TILING)
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        tile.cpp
-        tilinglayout.cpp
+        tiling/tile.cpp
+        tiling/tiling.cpp
+        tiling/tilinglayout.cpp
         tilinglayoutfactory.cpp
 
         # tiling layouts
         # spiral
-        #tilinglayouts/spiral/spiralfactory.cpp
         tilinglayouts/spiral/spiral.cpp
 
         # columns
-        #tilinglayouts/columns/columnsfactory.cpp
         tilinglayouts/columns/columns.cpp
 
         # floating
         tilinglayouts/floating/floating.cpp
-
-        tiling/tiling.cpp
    )
 endif(KWIN_BUILD_TILING)
 

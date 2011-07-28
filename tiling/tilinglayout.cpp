@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include "tilinglayout.h"
+#include "tiling/tilinglayout.h"
 
 #include <QCursor>
 
 #include "client.h"
-#include "tile.h"
+#include "tiling/tile.h"
 #include "workspace.h"
 #include "tiling/tiling.h"
 

@@ -62,8 +62,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #ifdef KWIN_BUILD_TILING
-#include "tile.h"
-#include "tilinglayout.h"
+#include "tiling/tile.h"
+#include "tiling/tilinglayout.h"
 #include "tiling/tiling.h"
 #endif
 #ifdef KWIN_BUILD_SCRIPTING
