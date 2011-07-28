@@ -88,10 +88,10 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
 
     if (phase == SMSavePhase2 || phase == SMSavePhase2Full) {
 #ifdef KWIN_BUILD_TILING
-        cg.writeEntry("tiling", m_tiling->tilingEnabled());
-        if (m_tiling->tilingEnabled()) {
+        cg.writeEntry("tiling", m_tiling->isEnabled());
+        if (m_tiling->isEnabled()) {
             kDebug(1212) << "Tiling was ON";
-            m_tiling->setTilingEnabled(false);
+            m_tiling->setEnabled(false);
         }
 #endif
     }
@@ -279,7 +279,7 @@ void Workspace::loadSessionInfo()
     KConfigGroup cg(kapp->sessionConfig(), "Session");
 
 #ifdef KWIN_BUILD_TILING
-    m_tiling->setTilingEnabled(cg.readEntry("tiling", false));
+    m_tiling->setEnabled(cg.readEntry("tiling", false));
 #endif
 
     addSessionInfo(cg);

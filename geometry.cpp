@@ -2596,7 +2596,7 @@ void Client::finishMoveResize(bool cancel)
     leaveMoveResize();
 
 #ifdef KWIN_BUILD_TILING
-    if (workspace()->tiling()->tilingEnabled()) {
+    if (workspace()->tiling()->isEnabled()) {
         if (wasResize)
             workspace()->tiling()->notifyTilingWindowResizeDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
         else if (wasMove)
@@ -2778,7 +2778,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (isResize()) {
 #ifdef KWIN_BUILD_TILING
         // query layout for supported resize mode
-        if (workspace()->tiling()->tilingEnabled()) {
+        if (workspace()->tiling()->isEnabled()) {
             mode = workspace()->tiling()->supportedTilingResizeMode(this, mode);
         }
 #endif
@@ -2818,7 +2818,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 #ifdef KWIN_BUILD_TILING
             // exception for tiling
             // Center means no resizing allowed
-            if (workspace()->tiling()->tilingEnabled()) {
+            if (workspace()->tiling()->isEnabled()) {
                 finishMoveResize(false);
                 buttonDown = false;
                 return;
@@ -3009,7 +3009,7 @@ void Client::performMoveResize()
     }
 #endif
 #ifdef KWIN_BUILD_TILING
-    if (!workspace()->tiling()->tilingEnabled())
+    if (!workspace()->tiling()->isEnabled())
         setGeometry(moveResizeGeom);
 #endif
     positionGeometryTip();

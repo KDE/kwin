@@ -202,7 +202,7 @@ QMenu* Workspace::clientPopup()
         mTilingStateOpAction->setVisible(false);
 #ifdef KWIN_BUILD_TILING
         // actions for window tiling
-        if (m_tiling->tilingEnabled()) {
+        if (m_tiling->isEnabled()) {
             kaction = qobject_cast<KAction*>(keys->action("Toggle Floating"));
             mTilingStateOpAction->setCheckable(true);
             mTilingStateOpAction->setData(Options::ToggleClientTiledStateOp);
@@ -295,15 +295,15 @@ void Workspace::clientPopupAboutToShow()
     mCloseOpAction->setEnabled(active_popup_client->isCloseable());
 
 #ifdef KWIN_BUILD_TILING
-    if (m_tiling->tilingEnabled()) {
+    if (m_tiling->isEnabled()) {
         int desktop = active_popup_client->desktop();
-        if (m_tiling->getTilingLayouts().value(desktop)) {
-            Tile *t = m_tiling->getTilingLayouts()[desktop]->findTile(active_popup_client);
+        if (m_tiling->tilingLayouts().value(desktop)) {
+            Tile *t = m_tiling->tilingLayouts()[desktop]->findTile(active_popup_client);
             if (t)
                 mTilingStateOpAction->setChecked(t->floating());
         }
     }
-    mTilingStateOpAction->setVisible(m_tiling->tilingEnabled());
+    mTilingStateOpAction->setVisible(m_tiling->isEnabled());
 #endif
     delete switch_to_tab_popup;
     switch_to_tab_popup = 0;
@@ -672,7 +672,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         return;
 #ifdef KWIN_BUILD_TILING
     // Allows us to float a window when it is maximized, if it is tiled.
-    if (m_tiling->tilingEnabled()
+    if (m_tiling->isEnabled()
             && (op == Options::MaximizeOp
                 || op == Options::HMaximizeOp
                 || op == Options::VMaximizeOp
@@ -792,8 +792,8 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
     case Options::ToggleClientTiledStateOp: {
 #ifdef KWIN_BUILD_TILING
         int desktop = c->desktop();
-        if (m_tiling->getTilingLayouts().value(desktop)) {
-            m_tiling->getTilingLayouts()[desktop]->toggleFloatTile(c);
+        if (m_tiling->tilingLayouts().value(desktop)) {
+            m_tiling->tilingLayouts()[desktop]->toggleFloatTile(c);
         }
 #endif
     }

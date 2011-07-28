@@ -495,7 +495,7 @@ void Workspace::init()
 
 #ifdef KWIN_BUILD_TILING
     // Enable/disable tiling
-    m_tiling->setTilingEnabled(options->tilingOn);
+    m_tiling->setEnabled(options->tilingOn);
 #endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
@@ -1035,7 +1035,7 @@ void Workspace::slotReconfigure()
     }
 
 #ifdef KWIN_BUILD_TILING
-    m_tiling->setTilingEnabled(options->tilingOn);
+    m_tiling->setEnabled(options->tilingOn);
     // just so that we reset windows in the right manner, 'activate' the current active window
     m_tiling->notifyTilingWindowActivated(activeClient());
 #endif
@@ -1302,7 +1302,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
             int old_desktop = movingClient->desktop();
             movingClient->setDesktop(new_desktop);
 #ifdef KWIN_BUILD_TILING
-            if (m_tiling->tilingEnabled()) {
+            if (m_tiling->isEnabled()) {
                 m_tiling->notifyTilingWindowDesktopChanged(movingClient, old_desktop);
             }
 #else

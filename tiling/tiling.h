@@ -38,10 +38,10 @@ class Tiling : public QObject {
 public:
     Tiling(Workspace *w);
     ~Tiling();
-    bool tilingEnabled() const;
-    void setTilingEnabled(bool tiling);
+    bool isEnabled() const;
+    void setEnabled(bool tiling);
     bool tileable(Client *c);
-    const QVector< TilingLayout* >& getTilingLayouts() const;
+    const QVector< TilingLayout* >& tilingLayouts() const;
     void initShortcuts(KActionCollection* keys);
 
     // The notification functions are called from
@@ -94,12 +94,12 @@ private:
     void moveTile(int d);
 
     Workspace* m_workspace;
-    bool tilingEnabled_;
+    bool m_enabled;
     // Each tilingLayout is for one virtual desktop.
     // The length is always one more than the number of
     // virtual desktops so that we can quickly index them
     // without having to remember to subtract one.
-    QVector<TilingLayout *> tilingLayouts;
+    QVector<TilingLayout *> m_tilingLayouts;
 private Q_SLOTS:
     void slotResizeTilingLayouts();
     void notifyTilingWindowMinimizeToggled(KWin::Client *c);
