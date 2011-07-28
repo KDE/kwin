@@ -18,20 +18,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include "tilinglayout.h"
+#include "tiling/tilinglayout.h"
 
 #include <QCursor>
 
 #include "client.h"
-#include "tile.h"
+#include "tiling/tile.h"
 #include "workspace.h"
+#include "tiling/tiling.h"
 
 namespace KWin
 {
 
 TilingLayout::TilingLayout(Workspace *w)
-    : m_workspace(w)
+    : QObject()
+    , m_workspace(w)
 {
+    connect(m_workspace, SIGNAL(configChanged()), this, SLOT(reconfigureTiling()));
 }
 
 TilingLayout::~TilingLayout()
@@ -194,7 +197,7 @@ void TilingLayout::reconfigureTiling()
 
     foreach (Client * c, workspace()->stackingOrder()) {
         if (c->rules()->checkTilingOption(0) == 1)
-            workspace()->createTile(c);
+            workspace()->tiling()->createTile(c);
     }
 
 }

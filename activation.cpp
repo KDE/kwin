@@ -262,9 +262,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     if (active_client) {
         active_client->sl_activated();
     }
-
-    if (tilingEnabled())
-        notifyTilingWindowActivated(active_client);
     --set_active_client_recursion;
 }
 

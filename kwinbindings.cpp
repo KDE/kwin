@@ -188,22 +188,6 @@ DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_
 DEF(I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());
 
-a = actionCollection->addAction("Group:Tiling");
-a->setText(i18n("Tiling"));
-DEF(I18N_NOOP("Enable/Disable Tiling"),                    Qt::SHIFT + Qt::ALT + Qt::Key_F11, slotToggleTiling());
-DEF(I18N_NOOP("Toggle Floating"),              Qt::META + Qt::Key_F, slotToggleFloating());
-
-DEF(I18N_NOOP("Switch Focus Left") ,   Qt::META + Qt::Key_H, slotFocusTileLeft());
-DEF(I18N_NOOP("Switch Focus Right") ,   Qt::META + Qt::Key_L, slotFocusTileRight());
-DEF(I18N_NOOP("Switch Focus Up") ,   Qt::META + Qt::Key_K, slotFocusTileTop());
-DEF(I18N_NOOP("Switch Focus Down") ,   Qt::META + Qt::Key_J, slotFocusTileBottom());
-DEF(I18N_NOOP("Move Window Left") ,   Qt::SHIFT + Qt::META + Qt::Key_H, slotMoveTileLeft());
-DEF(I18N_NOOP("Move Window Right") ,   Qt::SHIFT + Qt::META + Qt::Key_L, slotMoveTileRight());
-DEF(I18N_NOOP("Move Window Up") ,   Qt::SHIFT + Qt::META + Qt::Key_K, slotMoveTileTop());
-DEF(I18N_NOOP("Move Window Down") ,   Qt::SHIFT + Qt::META + Qt::Key_J, slotMoveTileBottom());
-DEF(I18N_NOOP("Next Layout"), Qt::META + Qt::Key_PageDown, slotNextTileLayout());
-DEF(I18N_NOOP("Previous Layout"), Qt::META + Qt::Key_PageUp, slotPreviousTileLayout());
-
 #undef DEF
 #undef DEF2
 

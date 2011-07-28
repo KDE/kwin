@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 
 #include "notifications.h"
-#include "tile.h"
+#include "tiling/tile.h"
 #include "client.h"
 
 #include "tilinglayouts/spiral/spiral.h"

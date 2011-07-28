@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "workspace.h"
+#include "tiling/tiling.h"
 
 namespace KWin
 {
@@ -95,7 +96,7 @@ void Tile::floatTile()
     restorePreviousGeometry();
 
     commit();
-    client()->workspace()->notifyTilingWindowActivated(client());
+    client()->workspace()->tiling()->notifyTilingWindowActivated(client());
     // TODO: notify layout manager
 }
 

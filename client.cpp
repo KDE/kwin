@@ -950,9 +950,6 @@ void Client::minimize(bool avoid_animation)
     // TODO: merge signal with s_minimized
     emit clientMinimized(this, !avoid_animation);
 
-    // when tiling, request a rearrangement
-    workspace()->notifyTilingWindowMinimizeToggled(this);
-
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
@@ -978,11 +975,7 @@ void Client::unminimize(bool avoid_animation)
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules();
-    workspace()->updateAllTiles();
     emit clientUnminimized(this, !avoid_animation);
-
-    // when tiling, request a rearrangement
-    workspace()->notifyTilingWindowMinimizeToggled(this);
 
     // Update states of all other windows in this group
     if (clientGroup())

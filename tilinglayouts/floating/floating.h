@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Qt>
 #include <QSet>
 
-#include "tilinglayout.h"
-#include "tile.h"
+#include "tiling/tilinglayout.h"
+#include "tiling/tile.h"
 
 namespace KWin
 {

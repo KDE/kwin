@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "columns.h"
 
 #include "client.h"
-#include "tile.h"
+#include "tiling/tile.h"
 
 #include <kdecoration.h>
 

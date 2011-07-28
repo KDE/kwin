@@ -30,8 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
-#include "tile.h"
-#include "tilinglayout.h"
+#ifdef KWIN_BUILD_TILING
+#include "tiling/tile.h"
+#include "tiling/tilinglayout.h"
+#include "tiling/tiling.h"
+#endif
 
 #include "kactivityinfo.h"
 
@@ -197,14 +200,16 @@ QMenu* Workspace::clientPopup()
         mTilingStateOpAction = popup->addAction(i18nc("When in tiling mode, toggle's the window's floating/tiled state", "&Float Window"));
         // then hide it
         mTilingStateOpAction->setVisible(false);
+#ifdef KWIN_BUILD_TILING
         // actions for window tiling
-        if (tilingEnabled()) {
+        if (m_tiling->isEnabled()) {
             kaction = qobject_cast<KAction*>(keys->action("Toggle Floating"));
             mTilingStateOpAction->setCheckable(true);
             mTilingStateOpAction->setData(Options::ToggleClientTiledStateOp);
             if (kaction != 0)
                 mTilingStateOpAction->setShortcut(kaction->globalShortcut().primary());
         }
+#endif
 
         popup->addSeparator();
 
@@ -289,16 +294,17 @@ void Workspace::clientPopupAboutToShow()
     mMinimizeOpAction->setEnabled(active_popup_client->isMinimizable());
     mCloseOpAction->setEnabled(active_popup_client->isCloseable());
 
-    if (tilingEnabled()) {
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling->isEnabled()) {
         int desktop = active_popup_client->desktop();
-        if (tilingLayouts.value(desktop)) {
-            Tile *t = tilingLayouts[desktop]->findTile(active_popup_client);
+        if (m_tiling->tilingLayouts().value(desktop)) {
+            Tile *t = m_tiling->tilingLayouts()[desktop]->findTile(active_popup_client);
             if (t)
                 mTilingStateOpAction->setChecked(t->floating());
         }
     }
-    mTilingStateOpAction->setVisible(tilingEnabled());
-
+    mTilingStateOpAction->setVisible(m_tiling->isEnabled());
+#endif
     delete switch_to_tab_popup;
     switch_to_tab_popup = 0;
     delete add_tabs_popup;
@@ -564,6 +570,11 @@ void Workspace::initShortcuts()
         tab_box->initShortcuts(actionCollection);
     }
 #endif
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling) {
+        m_tiling->initShortcuts(actionCollection);
+    }
+#endif
     discardPopup(); // so that it's recreated next time
 }
 
@@ -659,16 +670,16 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
 {
     if (!c)
         return;
-
+#ifdef KWIN_BUILD_TILING
     // Allows us to float a window when it is maximized, if it is tiled.
-    if (tilingEnabled()
+    if (m_tiling->isEnabled()
             && (op == Options::MaximizeOp
                 || op == Options::HMaximizeOp
                 || op == Options::VMaximizeOp
                 || op == Options::RestoreOp)) {
-        notifyTilingWindowMaximized(c, op);
+        m_tiling->notifyTilingWindowMaximized(c, op);
     }
-
+#endif
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp)
         QCursor::setPos(c->geometry().center());
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp)
@@ -779,10 +790,12 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
     case Options::CloseClientGroupOp:
         c->clientGroup()->closeAll();
     case Options::ToggleClientTiledStateOp: {
+#ifdef KWIN_BUILD_TILING
         int desktop = c->desktop();
-        if (tilingLayouts.value(desktop)) {
-            tilingLayouts[desktop]->toggleFloatTile(c);
+        if (m_tiling->tilingLayouts().value(desktop)) {
+            m_tiling->tilingLayouts()[desktop]->toggleFloatTile(c);
         }
+#endif
     }
     }
 }
