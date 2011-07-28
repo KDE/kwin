@@ -2354,8 +2354,10 @@ void Client::setFullScreen(bool set, bool user)
     set = rules()->checkFullScreen(set);
     setShade(ShadeNone);
     bool was_fs = isFullScreen();
-    if (!was_fs)
+    if (!was_fs) {
         geom_fs_restore = geometry();
+        m_screenNum = workspace()->activeScreen();
+    }
     fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
     if (was_fs == isFullScreen())
         return;
@@ -2372,10 +2374,26 @@ void Client::setFullScreen(bool set, bool user)
         else
             setGeometry(workspace()->clientArea(FullScreenArea, this));
     else {
-        if (!geom_fs_restore.isNull())
+        if (!geom_fs_restore.isNull()) {
+            //adapt geom_fs_restore to the current screen geometry if needed
+            const int newScreen = workspace()->activeScreen();
+            if (options->xineramaFullscreenEnabled && (newScreen != m_screenNum)) {
+                const QRect oldGeom = workspace()->screenGeometry(m_screenNum);
+                const QRect newGeom = workspace()->screenGeometry(newScreen);
+                if (oldGeom.isValid()) {
+                    const QPoint dist = geom_fs_restore.topLeft() - oldGeom.topLeft();
+                    geom_fs_restore.moveTopLeft(newGeom.topLeft() + dist);
+
+                    //make sure that the client is still visible
+                    if (!newGeom.intersects(geom_fs_restore)) {
+                        geom_fs_restore.moveTopLeft(newGeom.topLeft());
+                    }
+                }
+            }
             setGeometry(QRect(geom_fs_restore.topLeft(), adjustedSize(geom_fs_restore.size())));
+            checkWorkspacePosition();
         // TODO isShaded() ?
-        else {
+        } else {
             // does this ever happen?
             setGeometry(workspace()->clientArea(MaximizeArea, this));
         }

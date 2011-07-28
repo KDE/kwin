@@ -643,6 +643,7 @@ private:
     uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
+    int m_screenNum;
     bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();
