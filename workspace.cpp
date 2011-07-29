@@ -193,6 +193,10 @@ Workspace::Workspace(bool restore)
 
     delayFocusTimer = 0;
 
+#ifdef KWIN_BUILD_TILING
+    m_tiling = new Tiling(this);
+#endif
+
     if (restore)
         loadSessionInfo();
 
@@ -241,9 +245,6 @@ Workspace::Workspace(bool restore)
     desktop_change_osd = new DesktopChangeOSD(this);
 #endif
     m_outline = new Outline();
-#ifdef KWIN_BUILD_TILING
-    m_tiling = new Tiling(this);
-#endif
 
     initShortcuts();
 
