@@ -775,7 +775,6 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
 {
     if (frontWindow == NULL)
         return;
-    float distance = 0.0;
     bool specialHandlingForward = false;
     WindowPaintData data(frontWindow);
     data.xTranslate = area.width() * 0.5 - frontWindow->geometry().x() - frontWindow->geometry().width() * 0.5;
@@ -788,7 +787,8 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
         rightWindows = 1;
     }
     if (animation) {
-        if (direction == Right) {
+      float distance = 0.0;
+      if (direction == Right) {
             // move to right
             distance = -frontWindow->geometry().width() * 0.5f + area.width() * 0.5f +
                        (((float)displayWidth() * 0.5 * scaleFactor) - (float)area.width() * 0.5f) / rightWindows;
