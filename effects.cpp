@@ -1124,6 +1124,7 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
     KLibrary::void_function_ptr version_func = library->resolveFunction(version_symbol.toAscii());
     if (version_func == NULL) {
         kWarning(1212) << "Effect " << name << " does not provide required API version, ignoring.";
+	delete library;
         return false;
     }
     typedef int (*t_versionfunc)();
@@ -1134,6 +1135,7 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
             || (version >> 8) != KWIN_EFFECT_API_VERSION_MAJOR
             || (KWIN_EFFECT_API_VERSION_MAJOR == 0 && version != KWIN_EFFECT_API_VERSION)) {
         kWarning(1212) << "Effect " << name << " requires unsupported API version " << version;
+        delete library;
         return false;
     }
 
