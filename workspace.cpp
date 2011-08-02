@@ -573,9 +573,9 @@ Client* Workspace::createClient(Window w, bool is_mapped)
         return NULL;
     }
     addClient(c, Allowed);
-
+#ifdef KWIN_BUILD_TILING
     m_tiling->createTile(c);
-
+#endif
     return c;
 }
 
