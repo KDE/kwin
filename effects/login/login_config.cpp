@@ -54,7 +54,7 @@ void LoginEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Login");
-    m_ui->fadetoblackBox->setChecked(conf.readEntry<bool>("FadeToBlack", true));
+    m_ui->fadetoblackBox->setChecked(conf.readEntry<bool>("FadeToBlack", false));
 
     emit changed(false);
 }

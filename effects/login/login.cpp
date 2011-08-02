@@ -90,7 +90,7 @@ void LoginEffect::postPaintScreen()
 void LoginEffect::reconfigure(ReconfigureFlags)
 {
     KConfigGroup conf = effects->effectConfig("Login");
-    m_fadeToBlack = (conf.readEntry("FadeToBlack", true));
+    m_fadeToBlack = (conf.readEntry("FadeToBlack", false));
 }
 
 void LoginEffect::slotWindowClosed(EffectWindow* w)
