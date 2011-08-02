@@ -58,18 +58,18 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeInTime));
-        it++;
+        ++it;
     }
     it = mDisappearingWindows.begin();
     while (it != mDisappearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeOutTime));
-        it++;
+        ++it;
     }
     QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
     while (wIt != mWindowsData.end()) {
         wIt.value().fadeInDuration = mFadeInTime;
         wIt.value().fadeOutDuration = mFadeOutTime;
-        wIt++;
+        ++wIt;
     }
 }
 

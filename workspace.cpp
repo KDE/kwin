@@ -989,7 +989,7 @@ void Workspace::slotReconfigure()
         // If the new decoration doesn't supports tabs then ungroup clients
         if (!decorationSupportsClientGrouping()) {
             QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
-            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); i++)
+            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); ++i)
                 (*i)->removeAll();
         }
         mgr->destroyPreviousPlugin();

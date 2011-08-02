@@ -236,7 +236,7 @@ void PresentWindowsEffect::postPaintScreen()
         while (i != m_windowData.end()) {
             delete i.value().textFrame;
             delete i.value().iconFrame;
-            i++;
+            ++i;
         }
         m_windowData.clear();
 

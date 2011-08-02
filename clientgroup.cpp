@@ -270,7 +270,7 @@ void ClientGroup::setVisible(Client* c)
 
 void ClientGroup::updateStates(Client* main, Client* only)
 {
-    for (ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); i++)
+    for (ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i)
         if ((*i) != main && (!only || (*i) == only)) {
             if ((*i)->isMinimized() != main->isMinimized()) {
                 if (main->isMinimized())

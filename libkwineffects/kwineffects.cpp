@@ -847,7 +847,7 @@ void WindowMotionManager::calculate(int time)
         // Just skip it completely if the user wants no animation
         m_movingWindowsSet.clear();
         QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-        for (; it != m_managedWindows.end(); it++) {
+        for (; it != m_managedWindows.end(); ++it) {
             WindowMotion *motion = &it.value();
             motion->translation.finish();
             motion->scale.finish();
@@ -855,7 +855,7 @@ void WindowMotionManager::calculate(int time)
     }
 
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-    for (; it != m_managedWindows.end(); it++) {
+    for (; it != m_managedWindows.end(); ++it) {
         WindowMotion *motion = &it.value();
         EffectWindow *window = it.key();
         int stopped = 0;
@@ -904,7 +904,7 @@ void WindowMotionManager::calculate(int time)
 void WindowMotionManager::reset()
 {
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-    for (; it != m_managedWindows.end(); it++) {
+    for (; it != m_managedWindows.end(); ++it) {
         WindowMotion *motion = &it.value();
         EffectWindow *window = it.key();
         motion->translation.setTarget(window->pos());
