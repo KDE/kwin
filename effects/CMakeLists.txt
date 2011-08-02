@@ -5,7 +5,7 @@ kde4_no_enable_final(kwineffects)
 #add_subdirectory( _test )
 macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
-    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB})
+    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES})
 endmacro( KWIN4_ADD_EFFECT_BACKEND )
 
 # Adds effect plugin with given name. Sources are given after the name
@@ -50,12 +50,12 @@ endmacro( KWIN4_ADD_EFFECT_CONFIG )
 
 macro( KWIN4_EFFECT_LINK_XRENDER name )
     if( KWIN_HAVE_XRENDER_COMPOSITING )
-        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} )
+        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} )
 
         # if building for OpenGL and OpenGL ES we have two targets
         # TODO: if building for OpenGL ES we should not build XRender support
         if(OPENGLES_FOUND)
-            target_link_libraries( kwin4_effect_gles_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} )
+            target_link_libraries( kwin4_effect_gles_${name} ${X11_Xrender_LIB} )
         endif(OPENGLES_FOUND)
     endif( KWIN_HAVE_XRENDER_COMPOSITING )
 endmacro( KWIN4_EFFECT_LINK_XRENDER )
