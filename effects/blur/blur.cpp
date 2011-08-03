@@ -245,7 +245,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
     data.clip = newClip;
 
-    // we dont have to blur a region we dont see
+    // we don't have to blur a region we don't see
     m_currentBlur -= newClip;
     // if we have to paint a non-opaque part of this window that intersects with the
     // currently blurred region we have to redraw the whole region
@@ -268,7 +268,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
     m_currentBlur |= expandedBlur;
 
-    // we dont consider damaged areas which are occluded and are not
+    // we don't consider damaged areas which are occluded and are not
     // explicitly damaged by this window
     m_damagedArea -= data.clip;
     m_damagedArea |= data.paint;

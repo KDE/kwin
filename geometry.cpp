@@ -2631,7 +2631,7 @@ void Client::finishMoveResize(bool cancel)
         setQuickTileMode(electricMode);
         const ElectricBorder border = electricBorderFromMode(electricMode);
         if (border == ElectricNone)
-            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array acces,\
+            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array access,\
                                                                         this should not have happened!";
 #ifdef KWIN_BUILD_SCREENEDGES
         else
