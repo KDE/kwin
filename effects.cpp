@@ -1041,7 +1041,7 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary(KService* service)
 {
     QString libname = service->library();
 #ifdef KWIN_HAVE_OPENGLES
-    if (libname.startsWith("kwin4_effect_")) {
+    if (libname.startsWith(QLatin1String("kwin4_effect_"))) {
         libname.replace("kwin4_effect_", "kwin4_effect_gles_");
     }
 #endif
