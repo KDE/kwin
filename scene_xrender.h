@@ -86,7 +86,7 @@ private:
     Picture alphaMask(double opacity);
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
-    void prepareTempPixmap(const QPixmap *left, const QPixmap *top, const QPixmap *right, const QPixmap *bottom);
+    void prepareTempPixmap();
     Picture _picture;
     XRenderPictFormat* format;
     Picture alpha;

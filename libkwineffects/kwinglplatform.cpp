@@ -675,6 +675,10 @@ void GLPlatform::detect()
             m_driverVersion = 0;
     }
 
+    else if (m_renderer == "Software Rasterizer") {
+        m_driver = Driver_Swrast;
+    }
+
 
     // Driver/GPU specific features
     // ====================================================

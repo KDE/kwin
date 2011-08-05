@@ -193,13 +193,13 @@ void GLSLBlurShader::unbind()
 
 int GLSLBlurShader::maxKernelSize() const
 {
-    int value;
 #ifdef KWIN_HAVE_OPENGLES
     // GL_MAX_VARYING_FLOATS not available in GLES
     // querying for GL_MAX_VARYING_VECTORS crashes on nouveau
     // using the minimum value of 8
     return 8 * 2;
 #else
+    int value;
     glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
     // Maximum number of vec4 varyings * 2
     // The code generator will pack two vec2's into each vec4.

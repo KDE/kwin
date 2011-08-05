@@ -67,7 +67,6 @@ Sources and other compositing managers:
 */
 
 #include "scene_opengl.h"
-#include "kwinglplatform.h"
 
 #include <kxerrorhandler.h>
 
@@ -657,7 +656,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     // This is especially needed if we draw the opaque part of the window
     // and the decoration in two different passes (as we in Scene::paintSimpleWindow do).
     // Otherwise we run into the situation that in the first pass there are some
-    // pending decoration repaints but we dont paint the decoration and in the
+    // pending decoration repaints but we don't paint the decoration and in the
     // second pass it's the other way around.
     if (quads.isEmpty())
         return;

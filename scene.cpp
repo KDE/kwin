@@ -324,7 +324,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
             // Clip out the client area, so we only draw the rest in the next pass
             data->region -= data->clip;
-            // if prePaintWindow didnt change the clipping area we only have to paint
+            // if prePaintWindow didn't change the clipping area we only have to paint
             // the decoration
             if (data-> clip == data.key()->clientShape().translated(data.key()->x(), data.key()->y())) {
                 data->mask |= PAINT_DECORATION_ONLY;

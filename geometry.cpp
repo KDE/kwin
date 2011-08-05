@@ -1034,6 +1034,10 @@ void Client::checkWorkspacePosition(const QRect &geo)
     if (maximizeMode() != MaximizeRestore) {
         // TODO update geom_restore?
         changeMaximize(false, false, true);   // adjust size
+        const QRect &screenArea = workspace()->clientArea(ScreenArea, this);
+        QRect geom = geometry();
+        checkOffscreenPosition(geom, screenArea);
+        setGeometry(geom);
         return;
     }
 
@@ -1157,20 +1161,24 @@ void Client::checkWorkspacePosition(const QRect &geo)
                                   newGeom.x() + newGeom.width() - 1));
         }
 
-        if (newGeom.x() > screenArea.right()) {
-            int screenWidth = screenArea.width();
-            newGeom.moveLeft(screenWidth - (screenWidth / 4));
-        }
-        if (newGeom.y() > screenArea.bottom()) {
-            int screenHeight = screenArea.height();
-            newGeom.moveBottom(screenHeight - (screenHeight / 4));
-        }
-
+        checkOffscreenPosition(newGeom, screenArea);
         // Obey size hints. TODO: We really should make sure it stays in the right place
         newGeom.setSize(adjustedSize(newGeom.size()));
 
         if (newGeom != geometry())
             setGeometry(newGeom);
+    }
+}
+
+void Client::checkOffscreenPosition(QRect& geom, const QRect& screenArea)
+{
+    if (geom.x() > screenArea.right()) {
+        int screenWidth = screenArea.width();
+        geom.moveLeft(screenWidth - (screenWidth / 4));
+    }
+    if (geom.y() > screenArea.bottom()) {
+        int screenHeight = screenArea.height();
+        geom.moveBottom(screenHeight - (screenHeight / 4));
     }
 }
 
@@ -2623,7 +2631,7 @@ void Client::finishMoveResize(bool cancel)
         setQuickTileMode(electricMode);
         const ElectricBorder border = electricBorderFromMode(electricMode);
         if (border == ElectricNone)
-            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array acces,\
+            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array access,\
                                                                         this should not have happened!";
 #ifdef KWIN_BUILD_SCREENEDGES
         else

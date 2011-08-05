@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
+#include <KDE/KConfigGroup>
+
 namespace KWin
 {
 
@@ -31,6 +33,7 @@ LoginEffect::LoginEffect()
     : progress(1.0)
     , login_window(NULL)
 {
+    reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
 }
 
@@ -61,8 +64,19 @@ void LoginEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
 
 void LoginEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (w == login_window && progress != 1.0)
-        data.opacity *= (1.0 - progress);
+    if (w == login_window) {
+        if (m_fadeToBlack) {
+            if (progress < 0.5)
+                data.brightness *= (1.0 - progress * 2);
+            if (progress >= 0.5) {
+                data.opacity *= (1.0 - (progress - 0.5) * 2);
+                data.brightness = 0;
+            }
+        } else if (progress < 1.0) {
+            data.opacity *= (1.0 - progress);
+        }
+    }
+    
     effects->paintWindow(w, mask, region, data);
 }
 
@@ -73,6 +87,12 @@ void LoginEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
+void LoginEffect::reconfigure(ReconfigureFlags)
+{
+    KConfigGroup conf = effects->effectConfig("Login");
+    m_fadeToBlack = (conf.readEntry("FadeToBlack", false));
+}
+
 void LoginEffect::slotWindowClosed(EffectWindow* w)
 {
     if (isLoginSplash(w)) {
@@ -81,6 +101,7 @@ void LoginEffect::slotWindowClosed(EffectWindow* w)
         login_window = w;
         login_window->refWindow();
         progress = 0.0;
+
         effects->addRepaintFull();
     }
 }

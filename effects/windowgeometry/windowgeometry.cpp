@@ -122,12 +122,12 @@ static inline QString number(int n)
     QString sign;
     if (n >= 0) {
         sign = KGlobal::locale()->positiveSign();
-        if (sign.isEmpty()) sign = "+";
+        if (sign.isEmpty()) sign = '+';
     }
     else {
         n = -n;
         sign = KGlobal::locale()->negativeSign();
-        if (sign.isEmpty()) sign = "-";
+        if (sign.isEmpty()) sign = '-';
     }
     return  sign + QString::number(n);
 }

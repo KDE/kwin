@@ -384,8 +384,9 @@ static NET::WindowType comboToType(int val)
 void RulesWidget::setRules(Rules* rules)
 {
     Rules tmp;
-    if (rules == NULL)
-        rules = &tmp; // empty
+
+    Q_ASSERT( rules );
+
     description->setText(rules->description);
     wmclass->setText(rules->wmclass);
     whole_wmclass->setChecked(rules->wmclasscomplete);

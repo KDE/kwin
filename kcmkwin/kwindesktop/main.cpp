@@ -76,11 +76,6 @@ void KWinDesktopConfig::init()
     m_ui->desktopNames->setMaxDesktops(maxDesktops);
     m_ui->desktopNames->numberChanged(defaultDesktops);
 
-    // number of rows are still missing in Plasma - hide them for now
-    // TODO: bring them back when trunk is open and bug Plasma devs ;-)
-    m_ui->label->hide();
-    m_ui->rowsSpinBox->hide();
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
@@ -210,12 +205,14 @@ void KWinDesktopConfig::init()
         //number of desktops widgets
         m_ui->numberLabel->setEnabled(false);
         m_ui->numberSpinBox->setEnabled(false);
+        m_ui->rowsSpinBox->setEnabled(false);
     } else {
         KConfigGroup cfgGroup(m_config.data(), groupname.constData());
         if (cfgGroup.isEntryImmutable("Number")) {
             //number of desktops widgets
             m_ui->numberLabel->setEnabled(false);
             m_ui->numberSpinBox->setEnabled(false);
+            m_ui->rowsSpinBox->setEnabled(false);
         }
     }
     // End check for immutable
@@ -246,6 +243,8 @@ void KWinDesktopConfig::defaults()
 
     m_ui->wrapAroundBox->setChecked(true);
 
+    m_ui->rowsSpinBox->setValue(2);
+
     m_editor->allDefault();
 
     emit changed(true);
@@ -259,13 +258,15 @@ void KWinDesktopConfig::load()
 
 #ifdef Q_WS_X11
     // get number of desktops
-    NETRootInfo info(QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames);
+    unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
+    NETRootInfo info(QX11Info::display(), properties, 2);
 
     for (int i = 1; i <= maxDesktops; i++) {
         QString name = QString::fromUtf8(info.desktopName(i));
         m_desktopNames << name;
         m_ui->desktopNames->setName(i, name);
     }
+    m_ui->rowsSpinBox->setValue(info.desktopLayoutColumnsRows().height());
 #endif
 
     // Popup info
@@ -306,7 +307,8 @@ void KWinDesktopConfig::save()
 {
     // TODO: plasma stuff
 #ifdef Q_WS_X11
-    NETRootInfo info(QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames);
+    unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
+    NETRootInfo info(QX11Info::display(), properties, 2);
     // set desktop names
     for (int i = 1; i <= maxDesktops; i++) {
         QString desktopName = m_desktopNames[ i -1 ];
@@ -316,10 +318,30 @@ void KWinDesktopConfig::save()
         info.activate();
     }
     // set number of desktops
-    info.setNumberOfDesktops(m_ui->numberSpinBox->value());
+    const int numberDesktops = m_ui->numberSpinBox->value();
+    info.setNumberOfDesktops(numberDesktops);
+    info.activate();
+    int rows =m_ui->rowsSpinBox->value();
+    rows = qBound(1, rows, numberDesktops);
+    // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
+    int columns = numberDesktops / rows;
+    if (numberDesktops % rows > 0) {
+        columns++;
+    }
+    info.setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
     info.activate();
 
     XSync(QX11Info::display(), false);
+
+    // save the desktops
+    QString groupname;
+    const int screenNumber = DefaultScreen(QX11Info::display());
+    if (screenNumber == 0)
+        groupname = "Desktops";
+    else
+        groupname.sprintf("Desktops-screen-%d", screenNumber);
+    KConfigGroup group(m_config, groupname);
+    group.writeEntry("Rows", rows);
 #endif
 
     // Popup info

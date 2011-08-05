@@ -153,10 +153,10 @@ Comment[zh_TW]=登入時平順地淡入桌面
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
-X-KDE-PluginInfo-Author=Lubos Lunak
-X-KDE-PluginInfo-Email=l.lunak@kde.org
+X-KDE-PluginInfo-Author=Lubos Lunak, Kai Uwe Broulik
+X-KDE-PluginInfo-Email=l.lunak@kde.org, kde@privat.broulik.de
 X-KDE-PluginInfo-Name=kwin4_effect_login
-X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Version=0.1.1
 X-KDE-PluginInfo-Category=Appearance
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL

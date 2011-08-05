@@ -771,17 +771,7 @@ p, li { white-space: pre-wrap; }
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0" colspan="2">
-           <widget class="QCheckBox" name="glDirect">
-            <property name="text">
-             <string>Enable direct rendering</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="2">
+          <item row="1" column="0" colspan="2">
            <widget class="QCheckBox" name="glVSync">
             <property name="text">
              <string>Use VSync</string>
@@ -791,7 +781,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="0" column="0">
            <widget class="QCheckBox" name="glShaders">
             <property name="toolTip">
              <string>If enabled all rendering will be performed with Shaders written in the OpenGL Shading Language.

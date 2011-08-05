@@ -193,6 +193,10 @@ Workspace::Workspace(bool restore)
 
     delayFocusTimer = 0;
 
+#ifdef KWIN_BUILD_TILING
+    m_tiling = new Tiling(this);
+#endif
+
     if (restore)
         loadSessionInfo();
 
@@ -241,9 +245,6 @@ Workspace::Workspace(bool restore)
     desktop_change_osd = new DesktopChangeOSD(this);
 #endif
     m_outline = new Outline();
-#ifdef KWIN_BUILD_TILING
-    m_tiling = new Tiling(this);
-#endif
 
     initShortcuts();
 
@@ -572,9 +573,9 @@ Client* Workspace::createClient(Window w, bool is_mapped)
         return NULL;
     }
     addClient(c, Allowed);
-
+#ifdef KWIN_BUILD_TILING
     m_tiling->createTile(c);
-
+#endif
     return c;
 }
 
@@ -988,7 +989,7 @@ void Workspace::slotReconfigure()
         // If the new decoration doesn't supports tabs then ungroup clients
         if (!decorationSupportsClientGrouping()) {
             QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
-            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); i++)
+            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); ++i)
                 (*i)->removeAll();
         }
         mgr->destroyPreviousPlugin();
@@ -1092,6 +1093,16 @@ void Workspace::loadDesktopSettings()
         rootInfo->setDesktopName(i, s.toUtf8().data());
         desktop_focus_chain[i-1] = i;
     }
+
+    int rows = group.readEntry<int>("Rows", 2);
+    rows = qBound(1, rows, n);
+    // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
+    int columns = n / rows;
+    if (n % rows > 0) {
+        columns++;
+    }
+    rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+    rootInfo->activate();
     _loading_desktop_settings = false;
 }
 

@@ -424,7 +424,7 @@ void Workspace::groupTabPopupAboutToShow()
         return;
     add_tabs_popup->clear();
     int index = 0;
-    for (QList<ClientGroup*>::const_iterator i = clientGroups.constBegin(); i != clientGroups.constEnd(); i++, index++) {
+    for (QList<ClientGroup*>::const_iterator i = clientGroups.constBegin(); i != clientGroups.constEnd(); ++i, index++) {
         if (!(*i)->contains(active_popup_client)) {
             QAction* action = add_tabs_popup->addAction((*i)->visible()->caption());
             action->setData(index);
