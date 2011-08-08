@@ -261,7 +261,7 @@ if(OPENGL_FOUND)
   # must be after opengl, to be initialized first by the linker
   target_link_libraries(kdeinit_kwin kwinnvidiahack)
 elseif(OPENGLES_FOUND)
-  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
+  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
 endif(OPENGL_FOUND)
 
@@ -270,7 +270,7 @@ install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 if(OPENGLES_FOUND)
   kde4_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
-  target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
+  target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kdeinit_kwin_gles PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
   install(TARGETS kdeinit_kwin_gles ${INSTALL_TARGETS_DEFAULT_ARGS} )
   install(TARGETS kwin_gles         ${INSTALL_TARGETS_DEFAULT_ARGS} )
