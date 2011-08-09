@@ -1259,10 +1259,9 @@ EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool static
 
 QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 {
-    switch (kwopt)
-    {
-        case CloseButtonCorner:
-            return Workspace::self()->decorationCloseButtonCorner();
+    switch (kwopt) {
+    case CloseButtonCorner:
+        return Workspace::self()->decorationCloseButtonCorner();
     }
     return QVariant(); // an invalid one
 }
