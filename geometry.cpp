@@ -1834,19 +1834,6 @@ bool Client::isMaximizable() const
         if (!isMovable() || !isResizable() || isToolbar())  // SELI isToolbar() ?
             return false;
     }
-    if (maximizeMode() != MaximizeRestore)
-        return true;
-    QSize max = maxSize();
-#if 0
-    if (max.width() < 32767 || max.height() < 32767)   // sizes are 16bit with X
-        return false;
-#else
-    // apparently there are enough apps which specify some arbitrary value
-    // for their maximum size just for the fun of it
-    QSize areasize = workspace()->clientArea(MaximizeArea, this).size();
-    if (max.width() < areasize.width() || max.height() < areasize.height())
-        return false;
-#endif
     return true;
 }
 
@@ -2284,6 +2271,12 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         }
         QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax);
         QRect r = QRect(clientArea.topLeft(), adjSize);
+        if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
+            if (isElectricBorderMaximizing())
+                r.moveLeft(qMax(clientArea.x(), QCursor::pos().x() - r.width()/2));
+            else
+                r.moveCenter(clientArea.center());
+        }
         setGeometry(r, geom_mode);
         info->setState(NET::Max, NET::Max);
         break;
@@ -2548,18 +2541,18 @@ bool Client::startMoveResize()
     // If we have quick maximization enabled then it's safe to automatically restore windows
     // when starting a move as the user can undo their action by moving the window back to
     // the top of the screen. When the setting is disabled then doing so is confusing.
-    if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize() &&
-            !options->moveResizeMaximizedWindows()) ||
+    if (maximizeMode() == MaximizeFull && options->moveResizeMaximizedWindows()) {
+        // allow move resize, but unset maximization state
+        geom_restore = geom_pretile = geometry(); // "restore" to current geometry
+        setMaximize(false, false);
+    } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
+               (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
         // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
-        (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
-
         const QRect before = geometry();
         setQuickTileMode(QuickTileNone);
         // Move the window so it's under the cursor
-        moveOffset = QPoint(
-                         double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
-                         double(moveOffset.y()) / double(before.height()) * double(geom_restore.height())
-                     );
+        moveOffset = QPoint(double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
+                            double(moveOffset.y()) / double(before.height()) * double(geom_restore.height()));
     }
 
     if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
@@ -2962,8 +2955,17 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
             int screen = workspace()->screenNumber(globalPos);
-            moveResizeGeom = workspace()->clientArea(
-                                 isFullScreen() ? FullScreenArea : MaximizeArea, screen, 0);
+            if (isFullScreen())
+                moveResizeGeom = workspace()->clientArea(FullScreenArea, screen, 0);
+            else {
+                moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
+                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizemodeMax);
+                if (adjSize != moveResizeGeom.size()) {
+                    QRect r(moveResizeGeom);
+                    moveResizeGeom.setSize(adjSize);
+                    moveResizeGeom.moveCenter(r.center());
+                }
+            }
         } else {
             // first move, then snap, then check bounds
             moveResizeGeom.moveTopLeft(topleft);
