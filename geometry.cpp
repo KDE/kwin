@@ -3074,13 +3074,13 @@ QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
 
     QRect ret = workspace()->clientArea(MaximizeArea, pos, desktop);
     if (electricMode & QuickTileLeft)
-        ret.setRight(ret.left()+ret.width()/2);
+        ret.setRight(ret.left()+ret.width()/2 - 1);
     else if (electricMode & QuickTileRight)
-        ret.setLeft(ret.right()-ret.width()/2);
+        ret.setLeft(ret.right()-(ret.width()-ret.width()/2) + 1);
     if (electricMode & QuickTileTop)
-        ret.setBottom(ret.top()+ret.height()/2);
+        ret.setBottom(ret.top()+ret.height()/2 - 1);
     else if (electricMode & QuickTileBottom)
-        ret.setTop(ret.bottom()-ret.height()/2);
+        ret.setTop(ret.bottom()-(ret.height()-ret.height()/2) + 1);
 
     return ret;
 }
