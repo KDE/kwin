@@ -535,6 +535,7 @@ void Toplevel::setupCompositing()
 #ifdef KWIN_HAVE_COMPOSITING
     if (!compositing())
         return;
+    damageRatio = 0.0;
     if (damage_handle != None)
         return;
     damage_handle = XDamageCreate(display(), frameId(), XDamageReportRawRectangles);
@@ -550,6 +551,7 @@ void Toplevel::setupCompositing()
 void Toplevel::finishCompositing()
 {
 #ifdef KWIN_HAVE_COMPOSITING
+    damageRatio = 0.0;
     if (damage_handle == None)
         return;
     workspace()->checkUnredirect(true);
@@ -567,6 +569,7 @@ void Toplevel::finishCompositing()
 
 void Toplevel::discardWindowPixmap()
 {
+    damageRatio = 0.0;
     addDamageFull();
     if (window_pix == None)
         return;
