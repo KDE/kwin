@@ -143,9 +143,3 @@ if( NOT KWIN_MOBILE_EFFECTS )
     KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
 endif( NOT KWIN_MOBILE_EFFECTS )
 KWIN4_EFFECT_LINK_XRENDER( builtins )
-
-# Install global data files
-install( FILES
-    _data/circle-edgy.png
-    _data/circle.png
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
