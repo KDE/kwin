@@ -69,7 +69,6 @@ bool CompositingPrefs::compositingPossible()
         gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
         return false;
 
-#ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
     if (!Extensions::compositeAvailable()) {
         kDebug(1212) << "No composite extension available";
@@ -92,14 +91,10 @@ bool CompositingPrefs::compositingPossible()
 #endif
     kDebug(1212) << "No OpenGL or XRender/XFixes support";
     return false;
-#else
-    return false;
-#endif
 }
 
 QString CompositingPrefs::compositingNotPossibleReason()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
     KConfigGroup gl_workaround_group(config, "Compositing");
@@ -129,10 +124,6 @@ QString CompositingPrefs::compositingNotPossibleReason()
     }
 #endif
     return QString();
-#else
-    return i18n("Compositing was disabled at compile time.\n"
-                "It is likely Xorg development headers were not installed.");
-#endif
 }
 
 static bool s_glxDetected = false;

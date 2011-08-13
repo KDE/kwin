@@ -85,7 +85,6 @@ extern int currentRefreshRate();
 
 void Workspace::setupCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (scene != NULL)
         return;
     if (compositingSuspended) {
@@ -154,11 +153,7 @@ void Workspace::setupCompositing()
         break;
 #endif
     default:
-#ifndef KWIN_HAVE_COMPOSITING
-        kDebug(1212) << "Compositing was not available at compile time";
-#else
         kDebug(1212) << "No compositing enabled";
-#endif
         delete cm_selection;
         return;
     }
@@ -191,14 +186,10 @@ void Workspace::setupCompositing()
     foreach (Unmanaged * c, unmanaged)
     c->setupCompositing();
     discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
-#else
-    kDebug(1212) << "Compositing was not available at compile time";
-#endif
 }
 
 void Workspace::finishCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (scene == NULL)
         return;
     m_finishingCompositing = true;
@@ -241,7 +232,6 @@ void Workspace::finishCompositing()
     while (!deleted.isEmpty())
         deleted.first()->discard(Allowed);
     m_finishingCompositing = false;
-#endif
 }
 
 // OpenGL self-check failed, fallback to XRender
@@ -377,7 +367,6 @@ void Workspace::timerEvent(QTimerEvent *te)
 
 void Workspace::performCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (((repaints_region.isEmpty() && !windowRepaintsPending())  // no damage
             || !scene->overlayWindow()->isVisible())) { // nothing is visible anyway
         vBlankPadding += 3;
@@ -427,7 +416,6 @@ void Workspace::performCompositing()
     // checkCompositeTime() would restart it again somewhen later, called from functions that
     // would again add something pending.
     checkCompositeTimer();
-#endif
 }
 
 void Workspace::performMousePoll()
@@ -532,7 +520,6 @@ void Workspace::delayedCheckUnredirect()
 
 void Toplevel::setupCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (!compositing())
         return;
     damageRatio = 0.0;
@@ -545,12 +532,10 @@ void Toplevel::setupCompositing()
     unredirect = false;
     workspace()->checkUnredirect(true);
     scene->windowAdded(this);
-#endif
 }
 
 void Toplevel::finishCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     damageRatio = 0.0;
     if (damage_handle == None)
         return;
@@ -564,7 +549,6 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
-#endif
 }
 
 void Toplevel::discardWindowPixmap()
@@ -581,7 +565,6 @@ void Toplevel::discardWindowPixmap()
 
 Pixmap Toplevel::createWindowPixmap()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     assert(compositing());
     if (unredirected())
         return None;
@@ -600,9 +583,6 @@ Pixmap Toplevel::createWindowPixmap()
     }
     ungrabXServer();
     return pix;
-#else
-    return None;
-#endif
 }
 
 #ifdef HAVE_XDAMAGE

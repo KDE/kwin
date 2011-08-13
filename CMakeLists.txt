@@ -28,36 +28,19 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_WITH_OPENGLES ON)
 endif(KWIN_PLASMA_ACTIVE)
 
-# KWIN_HAVE_COMPOSITING - whether any compositing support is available
-if( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
-    set( KWIN_HAVE_COMPOSITING 1 )
-endif( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
+# KWIN_HAVE_OPENGL_COMPOSITING - always have either OpenGL or OpenGL ES
+set( KWIN_HAVE_OPENGL_COMPOSITING 1 )
 
-# KWIN_HAVE_OPENGL_COMPOSITING - whether OpenGL-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
-    set( KWIN_HAVE_OPENGL_COMPOSITING 1 )
-endif( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
-
-# KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND AND KWIN_BUILD_XRENDER_COMPOSITING )
+# KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
+if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
-endif( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND AND KWIN_BUILD_XRENDER_COMPOSITING )
+endif( KWIN_BUILD_XRENDER_COMPOSITING )
 
 # KWIN_HAVE_OPENGLES_COMPOSITING - whether OpenGL ES-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES)
-    set( KWIN_HAVE_OPENGL_COMPOSITING 1)
+if( OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES)
     set( KWIN_HAVE_OPENGLES_COMPOSITING 1 )
     message("Compiling KWin for mobile.")
-endif( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES )
-
-# safety
-if( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-    # ok
-else( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-    set( KWIN_HAVE_COMPOSITING ) # unset
-endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-
-macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "X11 Compositing support"  "http://www.x.org/" FALSE "" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support")
+endif( OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES )
 
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 macro_bool_to_01( KWIN_HAVE_OPENGLES_COMPOSITING KWIN_HAVE_OPENGLES )
@@ -101,9 +84,7 @@ if( KWIN_BUILD_DECORATIONS )
 endif( KWIN_BUILD_DECORATIONS )
 add_subdirectory( data )
 
-if( KWIN_HAVE_COMPOSITING )
 add_subdirectory( effects )
-endif( KWIN_HAVE_COMPOSITING )
 
 ########### next target ###############
 
