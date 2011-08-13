@@ -41,10 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kephal/screens.h>
 
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
-
 
 #endif
 
@@ -74,13 +71,11 @@ int currentRefreshRate()
         }
     }
 #endif
-#ifdef HAVE_XRANDR
     else if (Extensions::randrAvailable()) {
         XRRScreenConfiguration *config = XRRGetScreenInfo(display(), rootWindow());
         rate = XRRConfigCurrentRate(config);
         XRRFreeScreenConfigInfo(config);
     }
-#endif
 
     // 0Hz or less is invalid, so we fallback to a default rate
     if (rate <= 0)

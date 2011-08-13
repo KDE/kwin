@@ -200,9 +200,7 @@ Client::Client(Workspace* ws)
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
     client_size = QSize(100, 100);
-#if defined(HAVE_XSYNC) || defined(HAVE_XDAMAGE)
     ready_for_painting = false; // wait for first damage or sync reply
-#endif
 
     connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));

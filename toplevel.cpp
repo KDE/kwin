@@ -38,9 +38,7 @@ Toplevel::Toplevel(Workspace* ws)
     , frame(None)
     , wspace(ws)
     , window_pix(None)
-#ifdef HAVE_XDAMAGE
     , damage_handle(None)
-#endif
     , is_shape(false)
     , effect_window(NULL)
     , wmClientLeaderWin(0)
@@ -51,9 +49,7 @@ Toplevel::Toplevel(Workspace* ws)
 
 Toplevel::~Toplevel()
 {
-#ifdef HAVE_XDAMAGE
     assert(damage_handle == None);
-#endif
     discardWindowPixmap();
     delete info;
 }
@@ -123,9 +119,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     wspace = c->wspace;
     window_pix = c->window_pix;
     ready_for_painting = c->ready_for_painting;
-#ifdef HAVE_XDAMAGE
     damage_handle = None;
-#endif
     damage_region = c->damage_region;
     repaints_region = c->repaints_region;
     is_shape = c->is_shape;

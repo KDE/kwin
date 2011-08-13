@@ -30,11 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
-#ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
 #if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
 #define HAVE_XCOMPOSITE_OVERLAY
-#endif
 #endif
 
 namespace KWin {

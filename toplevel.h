@@ -33,9 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "workspace.h"
 
-#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
 
 class NETWinInfo2;
 
@@ -171,9 +169,7 @@ protected:
     void setWindowHandles(Window client, Window frame);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(XPropertyEvent* e);
-#ifdef HAVE_XDAMAGE
     virtual void damageNotifyEvent(XDamageNotifyEvent* e);
-#endif
     Pixmap createWindowPixmap();
     void discardWindowPixmap();
     void addDamage(const QRect& r);
@@ -206,9 +202,7 @@ private:
     Window frame;
     Workspace* wspace;
     Pixmap window_pix;
-#ifdef HAVE_XDAMAGE
     Damage damage_handle;
-#endif
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
     float damageRatio;
     bool is_shape;

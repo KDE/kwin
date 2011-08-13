@@ -67,12 +67,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
-#ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
-#endif
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
 
 namespace KWin
 {
@@ -583,7 +579,6 @@ Pixmap Toplevel::createWindowPixmap()
     return pix;
 }
 
-#ifdef HAVE_XDAMAGE
 // We must specify that the two events are a union so the compiler doesn't
 // complain about strict aliasing rules.
 typedef union {
@@ -648,7 +643,6 @@ void Client::damageNotifyEvent(XDamageNotifyEvent* e)
     ready_for_painting = true; // no sync at all, consider done now
 #endif
 }
-#endif
 
 void Toplevel::addDamage(const QRect& r)
 {
@@ -767,16 +761,12 @@ bool Toplevel::updateUnredirectedState()
     if (should && !unredirect) {
         unredirect = true;
         kDebug(1212) << "Unredirecting:" << this;
-#ifdef HAVE_XCOMPOSITE
         XCompositeUnredirectWindow(display(), frameId(), CompositeRedirectManual);
-#endif
         return true;
     } else if (!should && unredirect) {
         unredirect = false;
         kDebug(1212) << "Redirecting:" << this;
-#ifdef HAVE_XCOMPOSITE
         XCompositeRedirectWindow(display(), frameId(), CompositeRedirectManual);
-#endif
         discardWindowPixmap();
         return true;
     }

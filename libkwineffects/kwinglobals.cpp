@@ -34,21 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 
-#ifdef HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
-#endif
-#ifdef HAVE_XFIXES
 #include <X11/extensions/Xfixes.h>
-#endif
-#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
-#ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
-#endif
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
@@ -97,7 +87,6 @@ void Extensions::init()
             addData("SHAPE");
         }
     }
-#ifdef HAVE_XRANDR
     has_randr = XRRQueryExtension(display(), &randr_event_base, &error_base);
     if (has_randr) {
         int major, minor;
@@ -105,43 +94,30 @@ void Extensions::init()
         has_randr = (major > 1 || (major == 1 && minor >= 1));
         addData("RANDR");
     }
-#else
-    has_randr = false;
-#endif
-#ifdef HAVE_XDAMAGE
     has_damage = XDamageQueryExtension(display(), &damage_event_base, &error_base);
     if (has_damage)
         addData("DAMAGE");
-#else
-    has_damage = false;
-#endif
     composite_version = 0;
-#ifdef HAVE_XCOMPOSITE
     if (XCompositeQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XCompositeQueryVersion(display(), &major, &minor);
         composite_version = major * 0x10 + minor;
         addData("Composite");
     }
-#endif
     fixes_version = 0;
-#ifdef HAVE_XFIXES
     if (XFixesQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XFixesQueryVersion(display(), &major, &minor);
         fixes_version = major * 0x10 + minor;
         addData("XFIXES");
     }
-#endif
     render_version = 0;
-#ifdef HAVE_XRENDER
     if (XRenderQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XRenderQueryVersion(display(), &major, &minor);
         render_version = major * 0x10 + minor;
         addData("RENDER");
     }
-#endif
 #ifdef HAVE_XSYNC
     if (XSyncQueryExtension(display(), &sync_event_base, &error_base)) {
         int major = 0, minor = 0;
@@ -195,20 +171,12 @@ bool Extensions::shapeInputAvailable()
 
 int Extensions::randrNotifyEvent()
 {
-#ifdef HAVE_XRANDR
     return randr_event_base + RRScreenChangeNotify;
-#else
-    return 0;
-#endif
 }
 
 int Extensions::damageNotifyEvent()
 {
-#ifdef HAVE_XDAMAGE
     return damage_event_base + XDamageNotify;
-#else
-    return 0;
-#endif
 }
 
 bool Extensions::compositeOverlayAvailable()

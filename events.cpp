@@ -45,12 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 
 #include <X11/extensions/shape.h>
+#include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
-
-#ifdef HAVE_XRANDR
-#include <X11/extensions/Xrandr.h>
-#endif
 
 #include <kephal/screens.h>
 
@@ -464,9 +461,7 @@ bool Workspace::workspaceEvent(XEvent * e)
         break;
     default:
         if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
-#ifdef HAVE_XRANDR
             XRRUpdateConfiguration(e);
-#endif
             if (compositing()) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
@@ -673,10 +668,8 @@ bool Client::windowEvent(XEvent* e)
             }
         }
         if (e->xany.window == frameId()) {
-#ifdef HAVE_XDAMAGE
             if (e->type == Extensions::damageNotifyEvent())
                 damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
-#endif
         }
         break;
     }
@@ -1604,10 +1597,8 @@ bool Unmanaged::windowEvent(XEvent* e)
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
             emit geometryShapeChanged(this, geometry());
         }
-#ifdef HAVE_XDAMAGE
         if (e->type == Extensions::damageNotifyEvent())
             damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
-#endif
         break;
     }
     }
