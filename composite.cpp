@@ -373,22 +373,20 @@ void Workspace::performCompositing()
     }
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
-    foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
+    foreach (EffectWindow *c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
         Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
         windows.removeAll(t);
         windows.append(t);
     }
-#if 0
+
     // skip windows that are not yet ready for being painted
-    ToplevelList tmp = windows;
-    windows.clear();
-    // There is a bug somewhere that prevents this from working properly (#160393), but additionally
+    // TODO ?
     // this cannot be used so carelessly - needs protections against broken clients, the window
     // should not get focus before it's displayed, handle unredirected windows properly and so on.
-    foreach (Toplevel * c, tmp)
-    if (c->readyForPainting())
-        windows.append(c);
-#endif
+    foreach (Toplevel *t, windows)
+        if (!t->readyForPainting())
+            windows.removeAll(t);
+
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
@@ -635,13 +633,16 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 
 void Client::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    Toplevel::damageNotifyEvent(e);
 #ifdef HAVE_XSYNC
-    if (sync_counter == None)   // cannot detect complete redraw, consider done now
+    if (syncRequest.isPending && isResize())
+        return;
+    if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
         ready_for_painting = true;
 #else
-    ready_for_painting = true; // no sync at all, consider done now
+    ready_for_painting = true;
 #endif
+
+    Toplevel::damageNotifyEvent(e);
 }
 
 void Toplevel::addDamage(const QRect& r)

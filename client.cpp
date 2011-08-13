@@ -114,12 +114,6 @@ Client::Client(Workspace* ws)
     , block_geometry_updates(0)
     , pending_geometry_update(PendingGeometryNone)
     , shade_geometry_change(false)
-#ifdef HAVE_XSYNC
-    , sync_counter(None)
-    , sync_alarm(None)
-#endif
-    , sync_timeout(NULL)
-    , sync_resize_pending(false)
     , border_left(0)
     , border_right(0)
     , border_top(0)
@@ -140,6 +134,11 @@ Client::Client(Workspace* ws)
 
 #ifdef KWIN_BUILD_SCRIPTING
     scriptCache = new QHash<QScriptEngine*, ClientResolution>();
+#endif
+#ifdef HAVE_XSYNC
+    syncRequest.counter = syncRequest.alarm = None;
+    syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
+    syncRequest.isPending = false;
 #endif
 
     // Set the initial mapping state
@@ -216,8 +215,8 @@ Client::~Client()
 {
     //SWrapper::Client::clientRelease(this);
 #ifdef HAVE_XSYNC
-    if (sync_alarm != None)
-        XSyncDestroyAlarm(display(), sync_alarm);
+    if (syncRequest.alarm != None)
+        XSyncDestroyAlarm(display(), syncRequest.alarm);
 #endif
     assert(!moveResizeMode);
     assert(client == None);
@@ -2037,19 +2036,19 @@ void Client::getSyncCounter()
                                  0, 1, false, XA_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet);
 
     if (ret == Success && formatRet == 32) {
-        sync_counter = *(long*)(propRet);
-        XSyncIntToValue(&sync_counter_value, 0);
+        syncRequest.counter = *(long*)(propRet);
+        XSyncIntToValue(&syncRequest.value, 0);
         XSyncValue zero;
         XSyncIntToValue(&zero, 0);
-        XSyncSetCounter(display(), sync_counter, zero);
-        if (sync_alarm == None) {
+        XSyncSetCounter(display(), syncRequest.counter, zero);
+        if (syncRequest.alarm == None) {
             XSyncAlarmAttributes attrs;
-            attrs.trigger.counter = sync_counter;
+            attrs.trigger.counter = syncRequest.counter;
             attrs.trigger.value_type = XSyncRelative;
             attrs.trigger.test_type = XSyncPositiveTransition;
             XSyncIntToValue(&attrs.trigger.wait_value, 1);
             XSyncIntToValue(&attrs.delta, 1);
-            sync_alarm = XSyncCreateAlarm(display(),
+            syncRequest.alarm = XSyncCreateAlarm(display(),
                                           XSyncCACounter | XSyncCAValueType | XSyncCATestType | XSyncCADelta | XSyncCAValue,
                                           &attrs);
         }
@@ -2066,8 +2065,17 @@ void Client::getSyncCounter()
 void Client::sendSyncRequest()
 {
 #ifdef HAVE_XSYNC
-    if (sync_counter == None)
-        return;
+    if (syncRequest.counter == None || syncRequest.isPending)
+        return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
+
+    if (!syncRequest.failsafeTimeout) {
+        syncRequest.failsafeTimeout = new QTimer(this);
+        connect(syncRequest.failsafeTimeout, SIGNAL(timeout()), SLOT(removeSyncSupport()));
+        syncRequest.failsafeTimeout->setSingleShot(true);
+    }
+    // if there's no response within 10 seconds, sth. went wrong and we remove XSYNC support from this client.
+    // see events.cpp Client::syncEvent()
+    syncRequest.failsafeTimeout->start(ready_for_painting ? 10000 : 1000);
 
     // We increment before the notify so that after the notify
     // syncCounterSerial will equal the value we are expecting
@@ -2076,7 +2084,7 @@ void Client::sendSyncRequest()
     XSyncValue one;
     XSyncIntToValue(&one, 1);
 #undef XSyncValueAdd // It causes a warning :-/
-    XSyncValueAdd(&sync_counter_value, sync_counter_value, one, &overflow);
+    XSyncValueAdd(&syncRequest.value, syncRequest.value, one, &overflow);
 
     // Send the message to client
     XEvent ev;
@@ -2086,12 +2094,26 @@ void Client::sendSyncRequest()
     ev.xclient.message_type = atoms->wm_protocols;
     ev.xclient.data.l[0] = atoms->net_wm_sync_request;
     ev.xclient.data.l[1] = xTime();
-    ev.xclient.data.l[2] = XSyncValueLow32(sync_counter_value);
-    ev.xclient.data.l[3] = XSyncValueHigh32(sync_counter_value);
+    ev.xclient.data.l[2] = XSyncValueLow32(syncRequest.value);
+    ev.xclient.data.l[3] = XSyncValueHigh32(syncRequest.value);
     ev.xclient.data.l[4] = 0;
+    syncRequest.isPending = true;
     XSendEvent(display(), window(), False, NoEventMask, &ev);
     XSync(display(), false);
 #endif
+}
+
+void Client::removeSyncSupport()
+{
+    if (!ready_for_painting) {
+        ready_for_painting = true;
+        addRepaintFull();
+        return;
+    }
+    syncRequest.isPending = false;
+    syncRequest.counter = syncRequest.alarm = None;
+    delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
+    syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
 }
 
 bool Client::wantsTabFocus() const

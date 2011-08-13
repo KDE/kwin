@@ -1893,7 +1893,10 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
             QSize cs = clientSize();
             XMoveResizeWindow(display(), wrapperId(), clientPos().x(), clientPos().y(),
                               cs.width(), cs.height());
-            XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
+#ifdef HAVE_XSYNC
+            if (!isResize() || syncRequest.counter == None)
+#endif
+                XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
         }
         updateShape();
     } else
@@ -2678,8 +2681,8 @@ void Client::leaveMoveResize()
     move_resize_grab_window = None;
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
-    delete sync_timeout;
-    sync_timeout = NULL;
+    delete syncRequest.timeout;
+    syncRequest.timeout = NULL;
 #ifdef KWIN_BUILD_SCREENEDGES
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
@@ -2760,6 +2763,9 @@ void Client::delayedMoveResize()
 
 void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 {
+    if (syncRequest.isPending && isResize())
+        return; // we're still waiting for the client or the timeout
+
     if ((mode == PositionCenter && !isMovableAcrossScreens())
             || (mode != PositionCenter && (isShade() || !isResizable())))
         return;
@@ -3011,14 +3017,21 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     } else
         abort();
 
-    if (isResize()) {
-        if (sync_timeout != NULL) {
-            sync_resize_pending = true;
-            return;
-        }
-    }
+    if (!update)
+        return;
 
-    if (update)
+#ifdef HAVE_XSYNC
+    if (isResize() && syncRequest.counter != None) {
+        if (!syncRequest.timeout) {
+            syncRequest.timeout = new QTimer(this);
+            connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
+            syncRequest.timeout->setSingleShot(true);
+        }
+        syncRequest.timeout->start(250);
+        sendSyncRequest();
+        XMoveResizeWindow(display(), window(), 0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
+    } else
+#endif
         performMoveResize();
 
     if (isMove()) {
@@ -3033,29 +3046,16 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
 void Client::performMoveResize()
 {
-#ifdef HAVE_XSYNC
-    if (isResize() && sync_counter != None && !sync_resize_pending) {
-        sync_timeout = new QTimer(this);
-        connect(sync_timeout, SIGNAL(timeout()), SLOT(syncTimeout()));
-        sync_timeout->setSingleShot(true);
-        sync_timeout->start(500);
-        sendSyncRequest();
-    }
-#endif
 #ifdef KWIN_BUILD_TILING
     if (!workspace()->tiling()->isEnabled())
+#endif
         setGeometry(moveResizeGeom);
+#ifdef HAVE_XSYNC
+    if (isResize() && syncRequest.counter != None)
+        addRepaintFull();
 #endif
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
-}
-
-void Client::syncTimeout()
-{
-    sync_timeout->deleteLater();
-    sync_timeout = NULL;
-    if (sync_resize_pending)
-        performMoveResize();
 }
 
 void Client::setElectricBorderMode(QuickTileMode mode)
