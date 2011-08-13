@@ -21,9 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLPLATFORM_H
 #define KWIN_GLPLATFORM_H
 
-#include <kwinconfig.h> // KWIN_HAVE_OPENGL
-
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils_funcs.h>
 
 #include <QSet>
@@ -282,6 +279,5 @@ inline GLPlatform *GLPlatform::instance()
 
 } // namespace KWin
 
-#endif // KWIN_HAVE_OPENGL
 #endif // KWIN_GLPLATFORM_H
 

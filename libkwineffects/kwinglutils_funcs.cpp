@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     if ( !function ) \
         function = (function ## _func)getProcAddress( #backup );
 
-#ifdef KWIN_HAVE_OPENGL
 #ifndef KWIN_HAVE_OPENGLES
 
 namespace KWin
@@ -315,5 +314,4 @@ void glResolveFunctions()
 }
 
 } // namespace
-#endif
 #endif

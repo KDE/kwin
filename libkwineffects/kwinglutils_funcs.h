@@ -25,10 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EXPORT KDE_EXPORT
 
-#include <kwinconfig.h> // KWIN_HAVE_OPENGL
-
-#ifdef KWIN_HAVE_OPENGL
-
 #ifndef KWIN_HAVE_OPENGLES
 
 // gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
@@ -400,8 +396,6 @@ typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
 extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
 } // namespace
-
-#endif
 
 #endif
 

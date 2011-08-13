@@ -22,9 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-#include <kwinconfig.h> // KWIN_HAVE_OPENGL
-
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils_funcs.h>
 
 #include <QtGui/QPixmap>
@@ -536,8 +533,6 @@ private:
 };
 
 } // namespace
-
-#endif
 
 /** @} */
 

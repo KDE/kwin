@@ -36,11 +36,10 @@ if(OPENGL_FOUND OR OPENGLES_FOUND)
 
     if(OPENGLES_FOUND)
         KWIN4_ADD_GLUTILS_BACKEND(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})
-        set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
+        set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGLES)
     endif(OPENGLES_FOUND)
     if(OPENGL_FOUND)
         KWIN4_ADD_GLUTILS_BACKEND(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
-        set_target_properties(kwinglutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL)
 
         target_link_libraries(kwinglutils ${OPENGL_gl_LIBRARY})
         target_link_libraries(kwinglutils LINK_INTERFACE_LIBRARIES ${OPENGL_gl_LIBRARY})

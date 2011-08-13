@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 
-#ifdef KWIN_HAVE_OPENGL
 #include "kwinglobals.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
@@ -1290,5 +1289,3 @@ GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 }
 
 } // namespace
-
-#endif

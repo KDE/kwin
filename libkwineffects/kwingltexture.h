@@ -22,10 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLTEXTURE_H
 #define KWIN_GLTEXTURE_H
 
-#include "kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "kwinglobals.h"
-
-#ifdef KWIN_HAVE_OPENGL
 
 #include <QtCore/QSize>
 #include <QtCore/QSharedData>
@@ -121,9 +118,6 @@ private:
 };
 
 } // namespace
-
-
-#endif
 
 /** @} */
 

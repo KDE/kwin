@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 
-#ifdef KWIN_HAVE_OPENGL
-
 #include "kwinglplatform.h"
 #include "kwineffects.h"
 #include "kwinglutils_funcs.h"
@@ -416,5 +414,3 @@ bool GLTexture::isYInverted() const
 }
 
 } // namespace KWin
-
-#endif

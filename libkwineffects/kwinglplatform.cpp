@@ -33,8 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <iomanip>
 #include <ios>
 
-#ifdef KWIN_HAVE_OPENGL
-
 namespace KWin
 {
 
@@ -877,6 +875,4 @@ bool GLPlatform::isSoftwareEmulation() const
 }
 
 } // namespace KWin
-
-#endif // KWIN_HAVE_OPENGL
 
