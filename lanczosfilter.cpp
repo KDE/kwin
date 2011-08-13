@@ -22,10 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lanczosfilter.h"
 #include "effects.h"
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
-#endif
 
 #include <kwineffects.h>
 #include <KDE/KGlobalSettings>
@@ -38,21 +36,17 @@ namespace KWin
 
 LanczosFilter::LanczosFilter(QObject* parent)
     : QObject(parent)
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , m_offscreenTex(0)
     , m_offscreenTarget(0)
     , m_shader(0)
-#endif
     , m_inited(false)
 {
 }
 
 LanczosFilter::~LanczosFilter()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_offscreenTarget;
     delete m_offscreenTex;
-#endif
 }
 
 void LanczosFilter::init()
@@ -60,7 +54,6 @@ void LanczosFilter::init()
     if (m_inited)
         return;
     m_inited = true;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     const bool force = (qstrcmp(qgetenv("KWIN_FORCE_LANCZOS"), "1") == 0);
     if (force) {
         kWarning(1212) << "Lanczos Filter forced on by environment variable";
@@ -81,13 +74,11 @@ void LanczosFilter::init()
         delete m_shader;
         m_shader = 0;
     }
-#endif
 }
 
 
 void LanczosFilter::updateOffscreenSurfaces()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     int w = displayWidth();
     int h = displayHeight();
     if (!GLTexture::NPOTTextureSupported()) {
@@ -104,7 +95,6 @@ void LanczosFilter::updateOffscreenSurfaces()
         m_offscreenTex->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTarget = new GLRenderTarget(m_offscreenTex);
     }
-#endif
 }
 
 static float sinc(float x)
@@ -123,7 +113,6 @@ static float lanczos(float x, float a)
     return sinc(x) * sinc(x / a);
 }
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 void LanczosShader::createKernel(float delta, int *size)
 {
     const float a = 2.0;
@@ -163,11 +152,9 @@ void LanczosShader::createOffsets(int count, float width, Qt::Orientation direct
                        QVector2D(i / width, 0) : QVector2D(0, i / width);
     }
 }
-#endif
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (effects->compositingType() == KWin::OpenGLCompositing && (data.xScale < 0.9 || data.yScale < 0.9) &&
             KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
         if (!m_inited)
@@ -371,13 +358,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             return;
         }
     } // if ( effects->compositingType() == KWin::OpenGLCompositing )
-#endif
     w->sceneWindow()->performPaint(mask, region, data);
 } // End of function
 
 void LanczosFilter::timerEvent(QTimerEvent *event)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (event->timerId() == m_timer.timerId()) {
         m_timer.stop();
 
@@ -395,12 +380,10 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
             }
         }
     }
-#endif
 }
 
 void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     const bool alpha = true;
     // setup blending of transparent windows
@@ -509,12 +492,10 @@ void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double b
         }
     }
 #endif
-#endif
 }
 
 void LanczosFilter::restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     if (opacity != 1.0 || saturation != 1.0 || brightness != 1.0f) {
         if (saturation != 1.0 && tex->saturationSupported()) {
@@ -532,13 +513,11 @@ void LanczosFilter::restoreRenderStates(GLTexture* tex, double opacity, double b
 
     glPopAttrib();  // ENABLE_BIT
 #endif
-#endif
 }
 
 /************************************************
 * LanczosShader
 ************************************************/
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 LanczosShader::LanczosShader(QObject* parent)
     : QObject(parent)
     , m_shader(0)
@@ -690,7 +669,6 @@ bool LanczosShader::init()
     return true;
 #endif
 }
-#endif
 
 } // namespace
 

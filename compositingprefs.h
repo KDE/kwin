@@ -80,7 +80,6 @@ private:
     bool mEnableDirectRendering;
     bool mStrictBinding;
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifdef KWIN_HAVE_OPENGLES
     EGLDisplay mEGLDisplay;
     EGLContext mEGLContext;
@@ -89,7 +88,6 @@ private:
     GLXContext mGLContext;
 #endif
     Window mGLWindow;
-#endif
 };
 
 }

@@ -133,7 +133,6 @@ ZoomEffect::~ZoomEffect()
 
 void ZoomEffect::showCursor()
 {
-#if defined(KWIN_HAVE_OPENGL_COMPOSITING) || defined(KWIN_HAVE_XRENDER_COMPOSITING)
     if (isMouseHidden) {
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
         Display* display = QX11Info::display();
@@ -144,12 +143,10 @@ void ZoomEffect::showCursor()
         xrenderPicture = 0;
         isMouseHidden = false;
     }
-#endif
 }
 
 void ZoomEffect::hideCursor()
 {
-#if defined(KWIN_HAVE_OPENGL_COMPOSITING) || defined(KWIN_HAVE_XRENDER_COMPOSITING)
     if (!isMouseHidden) {
         // try to load the cursor-theme into a OpenGL texture and if successful then hide the mouse-pointer
         recreateTexture();
@@ -159,7 +156,6 @@ void ZoomEffect::hideCursor()
             isMouseHidden = true;
         }
     }
-#endif
 }
 
 void ZoomEffect::recreateTexture()
@@ -185,7 +181,7 @@ void ZoomEffect::recreateTexture()
         imageWidth = ximg->width;
         imageHeight = ximg->height;
         QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
         if (effects->compositingType() == OpenGLCompositing)
             texture = new GLTexture(img);
 #endif
@@ -336,7 +332,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         QPoint p = QCursor::pos();
         QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
         if (texture) {
 #ifndef KWIN_HAVE_OPENGLES
             glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);

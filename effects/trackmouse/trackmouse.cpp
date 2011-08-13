@@ -112,7 +112,6 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (!active)
         return;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (texture) {
 #ifndef KWIN_HAVE_OPENGLES
         glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
@@ -140,7 +139,6 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         glPopAttrib();
 #endif
     }
-#endif
 }
 
 void TrackMouseEffect::postPaintScreen()
@@ -203,14 +201,12 @@ QRect TrackMouseEffect::starRect(int num) const
 
 void TrackMouseEffect::loadTexture()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QString file = KGlobal::dirs()->findResource("appdata", "trackmouse.png");
     if (file.isEmpty())
         return;
     QImage im(file);
     texture = new GLTexture(im);
     textureSize = im.size();
-#endif
 }
 
 } // namespace

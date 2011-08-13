@@ -109,7 +109,6 @@ void Workspace::setupCompositing()
             kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
           break; // don't fall through (this is a testing one) */
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     case OpenGLCompositing: {
         kDebug(1212) << "Initializing OpenGL compositing";
 
@@ -145,7 +144,6 @@ void Workspace::setupCompositing()
         // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
         break;
     }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         kDebug(1212) << "Initializing XRender compositing";
@@ -672,7 +670,6 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     damageRatio = float(damageArea) / float(rect().width()*rect().height());
     repaints_region += r;
     emit damaged(this, r);
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
@@ -683,7 +680,6 @@ void Toplevel::addDamage(int x, int y, int w, int h)
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-#endif
     workspace()->checkCompositeTimer();
 }
 
@@ -695,7 +691,6 @@ void Toplevel::addDamageFull()
     repaints_region = rect();
     damageRatio = 1.0;
     emit damaged(this, rect());
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // discard lanczos texture
     if (effect_window) {
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
@@ -706,7 +701,6 @@ void Toplevel::addDamageFull()
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-#endif
     workspace()->checkCompositeTimer();
 }
 

@@ -89,12 +89,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
 #define OPENGL_INDEX 0
 #define XRENDER_INDEX 1
-#ifndef KWIN_HAVE_OPENGL_COMPOSITING
-    ui.compositingType->removeItem(OPENGL_INDEX);
-    ui.glGroup->setEnabled(false);
-#define OPENGL_INDEX -1
-#define XRENDER_INDEX 0
-#endif
 #ifndef KWIN_HAVE_XRENDER_COMPOSITING
     ui.compositingType->removeItem(XRENDER_INDEX);
     ui.xrenderGroup->setEnabled(false);

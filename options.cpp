@@ -58,7 +58,6 @@ int currentRefreshRate()
     int rate = -1;
     if (options->refreshRate > 0)   // use manually configured refresh rate
         rate = options->refreshRate;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     else if (GLPlatform::instance()->driver() == Driver_NVidia) {
         QProcess nvidia_settings;
@@ -74,7 +73,6 @@ int currentRefreshRate()
                 rate = qRound(frate);
         }
     }
-#endif
 #endif
 #ifdef HAVE_XRANDR
     else if (Extensions::randrAvailable()) {

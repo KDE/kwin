@@ -84,8 +84,6 @@ Sources and other compositing managers:
 // normally only few of them are enabled
 //#define CHECK_GL_ERROR
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
@@ -1734,5 +1732,3 @@ bool SceneOpenGLShadow::prepareBackend()
 }
 
 } // namespace
-
-#endif

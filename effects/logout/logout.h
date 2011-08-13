@@ -62,7 +62,7 @@ private:
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     void renderVignetting();
     int frameDelay;
     bool blurSupported, useBlur;

@@ -28,30 +28,21 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_WITH_OPENGLES ON)
 endif(KWIN_PLASMA_ACTIVE)
 
-# KWIN_HAVE_OPENGL_COMPOSITING - always have either OpenGL or OpenGL ES
-set( KWIN_HAVE_OPENGL_COMPOSITING 1 )
-
 # KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
 if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif( KWIN_BUILD_XRENDER_COMPOSITING )
 
-# KWIN_HAVE_OPENGLES_COMPOSITING - whether OpenGL ES-based compositing support is available
-if( OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES)
-    set( KWIN_HAVE_OPENGLES_COMPOSITING 1 )
-    message("Compiling KWin for mobile.")
-endif( OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES )
-
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
-macro_bool_to_01( KWIN_HAVE_OPENGLES_COMPOSITING KWIN_HAVE_OPENGLES )
+macro_bool_to_01( OPENGLES_FOUND KWIN_HAVE_OPENGLES )
 
 if(OPENGL_FOUND)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
 
-if(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
+if(OPENGLES_FOUND)
   include_directories(${OPENGLES_INCLUDE_DIR})
-endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
+endif(OPENGLES_FOUND)
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
 #endif
 
@@ -88,7 +88,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
             thumbData.opacity *= data.opacity;
             QRect r;
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == KWin::OpenGLCompositing) {
                 if (data.shader) {
                     thumbData.shader = data.shader;

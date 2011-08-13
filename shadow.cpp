@@ -22,9 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "effects.h"
 #include "toplevel.h"
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "scene_opengl.h"
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "scene_xrender.h"
 #endif
@@ -52,9 +50,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!data.isEmpty()) {
         Shadow *shadow = NULL;
         if (effects->compositingType() == OpenGLCompositing) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
             shadow = new SceneOpenGLShadow(toplevel);
-#endif
         } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             shadow = new SceneXRenderShadow(toplevel);

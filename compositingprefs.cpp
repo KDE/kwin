@@ -78,10 +78,8 @@ bool CompositingPrefs::compositingPossible()
         kDebug(1212) << "No damage extension available";
         return false;
     }
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (hasGlx())
         return true;
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (Extensions::renderAvailable() && Extensions::fixesAvailable())
         return true;
@@ -110,13 +108,9 @@ QString CompositingPrefs::compositingNotPossibleReason()
     if (!Extensions::compositeAvailable() || !Extensions::damageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
     }
-#if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
+#if !defined( KWIN_HAVE_XRENDER_COMPOSITING )
     if (!hasGlx())
         return i18n("GLX/OpenGL are not available and only OpenGL support is compiled.");
-#elif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if (!(Extensions::renderAvailable() && Extensions::fixesAvailable()))
-        return i18n("XRender/XFixes extensions are not available and only XRender support"
-                    " is compiled.");
 #else
     if (!(hasGlx()
             || (Extensions::renderAvailable() && Extensions::fixesAvailable()))) {
@@ -134,11 +128,9 @@ bool CompositingPrefs::hasGlx()
     if (s_glxDetected) {
         return s_hasGlx;
     }
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     int event_base, error_base;
     s_hasGlx = glXQueryExtension(display(), &event_base, &error_base);
-#endif
 #endif
     s_glxDetected = true;
     return s_hasGlx;
@@ -159,7 +151,6 @@ void CompositingPrefs::detect()
     gl_workaround_config.writeEntry("OpenGLIsUnsafe", true);
     gl_workaround_config.sync();
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifdef KWIN_HAVE_OPENGLES
     bool haveContext = false;
     bool canDetect = false;
@@ -232,12 +223,10 @@ void CompositingPrefs::detect()
 #endif
     gl_workaround_config.writeEntry("OpenGLIsUnsafe", false);
     gl_workaround_config.sync();
-#endif
 }
 
 bool CompositingPrefs::initGLXContext()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     mGLContext = NULL;
     KXErrorHandler handler;
@@ -282,20 +271,15 @@ bool CompositingPrefs::initGLXContext()
 #else
     return false;
 #endif
-#else
-    return false;
-#endif
 }
 
 void CompositingPrefs::deleteGLXContext()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     if (mGLContext == NULL)
         return;
     glXDestroyContext(display(), mGLContext);
     XDestroyWindow(display(), mGLWindow);
-#endif
 #endif
 }
 
@@ -387,17 +371,14 @@ void CompositingPrefs::deleteEGLContext()
 
 void CompositingPrefs::detectDriverAndVersion()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     GLPlatform *gl = GLPlatform::instance();
     gl->detect();
     gl->printResults();
-#endif
 }
 
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // Always recommend
     mRecommendCompositing = true;
 
@@ -405,7 +386,6 @@ void CompositingPrefs::applyDriverSpecificOptions()
     mStrictBinding = !gl->supports(LooseBinding);
     if (gl->driver() == Driver_Intel)
         mEnableVSync = false;
-#endif
 }
 
 } // namespace

@@ -1288,13 +1288,11 @@ EffectWindowImpl::EffectWindowImpl() : EffectWindow()
 
 EffectWindowImpl::~EffectWindowImpl()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QVariant cachedTextureVariant = data(LanczosCacheRole);
     if (cachedTextureVariant.isValid()) {
         GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
         delete cachedTexture;
     }
-#endif
 }
 
 bool EffectWindowImpl::isPaintingEnabled()
@@ -1773,9 +1771,7 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
     if (effects->compositingType() == OpenGLCompositing) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         m_sceneFrame = new SceneOpenGL::EffectFrame(this);
-#endif
     } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         m_sceneFrame = new SceneXrender::EffectFrame(this);
