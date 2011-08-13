@@ -1810,8 +1810,10 @@ void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
 
 void PresentWindowsEffect::elevateCloseWindow()
 {
+    if (!m_closeView)
+        return;
     if (EffectWindow *cw = effects->findWindow(m_closeView->winId()))
-            effects->setElevatedWindow(cw, true);
+        effects->setElevatedWindow(cw, true);
 }
 
 void PresentWindowsEffect::updateCloseWindow()
