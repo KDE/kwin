@@ -27,40 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_HAVE_OPENGLES
 
-// gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
-// so hide possible global functions
-#define glXQueryDrawable kwinhide_glXQueryDrawable
-#define glXGetFBConfigAttrib kwinhide_glXGetFBConfigAttrib
-#define glXGetVisualFromFBConfig kwinhide_glXGetVisualFromFBConfig
-#define glXDestroyWindow kwinhide_glXDestroyWindow
-#define glXDestroyPixmap kwinhide_glXDestroyPixmap
-#define glXCreateWindow kwinhide_glXCreateWindow
-#define glXCreatePixmap kwinhide_glXCreatePixmap
-#define glXGetFBConfigs kwinhide_glXGetFBConfigs
-#define glXGetProcAddress kwinhide_glXGetProcAddress
-#define glXReleaseTexImageEXT kwinhide_glXReleaseTexImageEXT
-#define glXBindTexImageEXT kwinhide_glXBindTexImageEXT
-#define glXCopySubBuffer kwinhide_glXCopySubBuffer
-#define glXGetVideoSync kwinhide_glXGetVideoSync
-#define glXWaitVideoSync kwinhide_glXWaitVideoSync
-
 #include <GL/gl.h>
 #include <GL/glx.h>
-
-#undef glXQueryDrawable
-#undef glXGetFBConfigAttrib
-#undef glXGetVisualFromFBConfig
-#undef glXDestroyWindow
-#undef glXDestroyPixmap
-#undef glXCreateWindow
-#undef glXCreatePixmap
-#undef glXGetFBConfigs
-#undef glXGetProcAddress
-#undef glXReleaseTexImageEXT
-#undef glXBindTexImageEXT
-#undef glXCopySubBuffer
-#undef glXGetVideoSync
-#undef glXWaitVideoSync
 
 #ifndef GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT
 #define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x8D56
