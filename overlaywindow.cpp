@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/Xcomposite.h>
 #if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
-#define HAVE_XCOMPOSITE_OVERLAY
+#define KWIN_HAVE_XCOMPOSITE_OVERLAY
 #endif
 
 namespace KWin {
@@ -54,7 +54,7 @@ bool OverlayWindow::create()
         return false;
     if (!Extensions::shapeInputAvailable())  // needed in setupOverlay()
         return false;
-#ifdef HAVE_XCOMPOSITE_OVERLAY
+#ifdef KWIN_HAVE_XCOMPOSITE_OVERLAY
     m_window = XCompositeGetOverlayWindow(display(), rootWindow());
     if (m_window == None)
         return false;
@@ -138,7 +138,7 @@ void OverlayWindow::destroy()
     XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
     XShapeCombineRectangles(display(), m_window, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted);
     XShapeCombineRectangles(display(), m_window, ShapeInput, 0, 0, &rec, 1, ShapeSet, Unsorted);
-#ifdef HAVE_XCOMPOSITE_OVERLAY
+#ifdef KWIN_HAVE_XCOMPOSITE_OVERLAY
     XCompositeReleaseOverlayWindow(display(), m_window);
 #endif
     m_window = None;
