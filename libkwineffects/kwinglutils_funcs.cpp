@@ -79,6 +79,7 @@ glFramebufferTexture3D_func glFramebufferTexture3D;
 glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
 glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
 glGenerateMipmap_func glGenerateMipmap;
+glBlitFramebuffer_func glBlitFramebuffer;
 // Shader functions
 glCreateShader_func glCreateShader;
 glShaderSource_func glShaderSource;
@@ -224,6 +225,11 @@ void glResolveFunctions()
         glFramebufferRenderbuffer = NULL;
         glGetFramebufferAttachmentParameteriv = NULL;
         glGenerateMipmap = NULL;
+    }
+    if (hasGLExtension("GL_EXT_framebuffer_blit")) {
+        glBlitFramebuffer = (glBlitFramebuffer_func) getProcAddress("glBlitFramebufferEXT");
+    } else {
+        glBlitFramebuffer = NULL;
     }
     if (hasGLExtension("GL_ARB_shading_language_100") && hasGLExtension("GL_ARB_fragment_shader")) {
         GL_RESOLVE_WITH_EXT(glCreateShader, glCreateShaderObjectARB);

@@ -869,20 +869,28 @@ void ShaderManager::resetShader(ShaderType type)
 
 /***  GLRenderTarget  ***/
 bool GLRenderTarget::sSupported = false;
+bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 
 void GLRenderTarget::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
     sSupported = true;
+    s_blitSupported = false;
 #else
     sSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
+    s_blitSupported = hasGLExtension("GL_EXT_framebuffer_blit");
 #endif
 }
 
 bool GLRenderTarget::isRenderTargetBound()
 {
     return !s_renderTargets.isEmpty();
+}
+
+bool GLRenderTarget::blitSupported()
+{
+    return s_blitSupported;
 }
 
 void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
@@ -1035,6 +1043,25 @@ void GLRenderTarget::initFBO()
     }
 
     mValid = true;
+}
+
+void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter)
+{
+    if (!GLRenderTarget::blitSupported()) {
+        return;
+    }
+#ifndef KWIN_HAVE_OPENGLES
+    GLRenderTarget::pushRenderTarget(this);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    const QRect s = source.isNull() ? QRect(0, 0, displayWidth(), displayHeight()) : source;
+    const QRect d = destination.isNull() ? QRect(0, 0, mTexture->width(), mTexture->height()) : destination;
+
+    glBlitFramebuffer(s.x(), displayHeight() - s.y() - s.height(), s.x() + s.width(), displayHeight() - s.y(),
+                      d.x(), mTexture->height() - d.y() - d.height(), d.x() + d.width(), mTexture->height() - d.y(),
+                      GL_COLOR_BUFFER_BIT, filter);
+    GLRenderTarget::popRenderTarget();
+#endif
 }
 
 

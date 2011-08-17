@@ -232,6 +232,7 @@ typedef void (*glFramebufferTexture3D_func)(GLenum target, GLenum attachment, GL
 typedef void (*glFramebufferRenderbuffer_func)(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
 typedef void (*glGetFramebufferAttachmentParameteriv_func)(GLenum target, GLenum attachment, GLenum pname, GLint *params);
 typedef void (*glGenerateMipmap_func)(GLenum target);
+typedef void (*glBlitFramebuffer_func)(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 extern KWIN_EXPORT glIsRenderbuffer_func glIsRenderbuffer;
 extern KWIN_EXPORT glBindRenderbuffer_func glBindRenderbuffer;
 extern KWIN_EXPORT glDeleteRenderbuffers_func glDeleteRenderbuffers;
@@ -249,6 +250,7 @@ extern KWIN_EXPORT glFramebufferTexture3D_func glFramebufferTexture3D;
 extern KWIN_EXPORT glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
 extern KWIN_EXPORT glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
 extern KWIN_EXPORT glGenerateMipmap_func glGenerateMipmap;
+extern KWIN_EXPORT glBlitFramebuffer_func glBlitFramebuffer;
 // Shader stuff
 typedef GLuint(*glCreateShader_func)(GLenum);
 typedef GLvoid(*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
