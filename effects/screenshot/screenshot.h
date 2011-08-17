@@ -45,12 +45,36 @@ public:
     static void convertFromGLImage(QImage &img, int w, int h);
 public Q_SLOTS:
     Q_SCRIPTABLE void screenshotWindowUnderCursor(int mask = 0);
+    /**
+     * Saves a screenshot of all screen into a file and returns the path to the file.
+     * Functionality requires hardware support, if not available a null string is returned.
+     * @returns Path to stored screenshot, or null string in failure case.
+     **/
+    Q_SCRIPTABLE QString screenshotFullscreen();
+    /**
+     * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
+     * Functionality requires hardware support, if not available a null string is returned.
+     * @param screen Number of screen as numbered by kephal
+     * @returns Path to stored screenshot, or null string in failure case.
+     **/
+    Q_SCRIPTABLE QString screenshotScreen(int screen);
+    /**
+     * Saves a screenshot of the selected geometry into a file and returns the path to the file.
+     * Functionality requires hardware support, if not available a null string is returned.
+     * @param x Left upper x coord of region
+     * @param y Left upper y coord of region
+     * @param width Width of the region to screenshot
+     * @param height Height of the region to screenshot
+     * @returns Path to stored screenshot, or null string in failure case.
+     **/
+    Q_SCRIPTABLE QString screenshotArea(int x, int y, int width, int height);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void screenshotCreated(qulonglong handle);
 
 private:
     void grabPointerImage(QImage& snapshot, int offsetx, int offsety);
+    QString blitScreenshot(const QRect &geometry);
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
     QPixmap m_lastScreenshot;

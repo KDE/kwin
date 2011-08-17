@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenshot.h"
 #include <kwinglutils.h>
 #include <KDE/KDebug>
+#include <KDE/KTemporaryFile>
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QVarLengthArray>
 #include <QtGui/QPainter>
@@ -144,6 +145,63 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
     if (m_scheduledScreenshot) {
         m_scheduledScreenshot->addRepaintFull();
     }
+}
+
+QString ScreenShotEffect::screenshotFullscreen()
+{
+    if (!GLRenderTarget::blitSupported()) {
+        kDebug(1212) << "Framebuffer Blit not supported";
+        return QString();
+    }
+
+    return blitScreenshot(QRect(0, 0, displayWidth(), displayHeight()));
+}
+
+QString ScreenShotEffect::screenshotScreen(int screen)
+{
+    if (!GLRenderTarget::blitSupported()) {
+        kDebug(1212) << "Framebuffer Blit not supported";
+        return QString();
+    }
+
+    return blitScreenshot(effects->clientArea(FullScreenArea, screen, 0));
+}
+
+QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
+{
+    if (!GLRenderTarget::blitSupported()) {
+        kDebug(1212) << "Framebuffer Blit not supported";
+        return QString();
+    }
+
+    return blitScreenshot(QRect(x, y, width, height));
+}
+
+QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
+{
+#ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(geometry)
+    return QString();
+#else
+    GLTexture tex(geometry.width(), geometry.height());
+    GLRenderTarget target(&tex);
+    target.blitFromFramebuffer(geometry);
+    // copy content from framebuffer into image
+    tex.bind();
+    QImage img(geometry.size(), QImage::Format_ARGB32);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+    tex.unbind();
+    ScreenShotEffect::convertFromGLImage(img, geometry.width(), geometry.height());
+    KTemporaryFile temp;
+    temp.setSuffix(".png");
+    temp.setAutoRemove(false);
+    if (!temp.open()) {
+        return QString();
+    }
+    img.save(&temp);
+    temp.close();
+    return temp.fileName();
+#endif
 }
 
 void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offsety)
