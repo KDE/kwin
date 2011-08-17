@@ -67,11 +67,11 @@ namespace Oxygen
         layout->addItem( new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding ), _row, 1, 1, 1 );
         ++_row;
 
-        connect( animationsEnabled(), SIGNAL( toggled( bool ) ), SLOT( updateChanged() ) );
+        connect( animationsEnabled(), SIGNAL(toggled(bool)), SLOT(updateChanged()) );
         foreach( AnimationConfigItem* item, findChildren<AnimationConfigItem*>() )
         {
             item->QWidget::setEnabled( false );
-            connect( animationsEnabled(), SIGNAL( toggled( bool ) ), item, SLOT( setEnabled( bool ) ) );
+            connect( animationsEnabled(), SIGNAL(toggled(bool)), item, SLOT(setEnabled(bool)) );
         }
 
     }

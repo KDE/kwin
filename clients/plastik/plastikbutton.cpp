@@ -56,7 +56,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
 
     animTmr = new QTimer(this);
     animTmr->setSingleShot(true);  // single-shot
-    connect(animTmr, SIGNAL(timeout() ), this, SLOT(animate() ) );
+    connect(animTmr, SIGNAL(timeout()), this, SLOT(animate()) );
     animProgress = 0;
 }
 

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // new DEF3 allows to pass data to the action, replacing the %1 argument in the name
 
 #ifndef NOSLOTS
-#define KWIN_CONNECT(_FNSLOT_) connect(a, SIGNAL(triggered(bool)), SLOT(_FNSLOT_));
+#define KWIN_CONNECT(_FNSLOT_) connect(a,SIGNAL(triggered(bool)),SLOT(_FNSLOT_));
 #else
 #define KWIN_CONNECT(_FNSLOT_) /*noop*/
 #endif

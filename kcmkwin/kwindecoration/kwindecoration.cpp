@@ -89,12 +89,12 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
     readConfig(style);
 
-    connect(m_ui->decorationList->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), SLOT(slotSelectionChanged()));
+    connect(m_ui->decorationList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelectionChanged()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
-    connect(delegate, SIGNAL(regeneratePreview(QModelIndex, QSize)),
-            m_model, SLOT(regeneratePreview(QModelIndex, QSize)));
+    connect(delegate, SIGNAL(regeneratePreview(QModelIndex,QSize)),
+            m_model, SLOT(regeneratePreview(QModelIndex,QSize)));
     connect(m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
 
     KAboutData *about =

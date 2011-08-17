@@ -67,7 +67,7 @@ namespace Oxygen
         ui = new ConfigurationUi( parent );
 
         load( configurationGroup );
-        connect( ui, SIGNAL(changed()), SLOT( updateChanged() ) );
+        connect( ui, SIGNAL(changed()), SLOT(updateChanged()) );
         ui->show();
 
     }

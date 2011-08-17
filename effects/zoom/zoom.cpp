@@ -212,9 +212,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
         enableFocusTracking = _enableFocusTracking;
         if (QDBusConnection::sessionBus().isConnected()) {
             if (enableFocusTracking)
-                QDBusConnection::sessionBus().connect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int, int, int, int, int, int)));
+                QDBusConnection::sessionBus().connect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int,int,int,int,int,int)));
             else
-                QDBusConnection::sessionBus().disconnect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int, int, int, int, int, int)));
+                QDBusConnection::sessionBus().disconnect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int,int,int,int,int,int)));
         }
     }
     // When the focus changes, move the zoom area to the focused location.

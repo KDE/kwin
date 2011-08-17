@@ -96,15 +96,15 @@ namespace Oxygen
         _glowAnimation->setTargetObject( this );
         _glowAnimation->setPropertyName( "glowIntensity" );
         _glowAnimation->setEasingCurve( QEasingCurve::InOutQuad );
-        connect( _glowAnimation, SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
+        connect( _glowAnimation, SIGNAL(finished()), this, SLOT(clearForceActive()) );
 
 
         // title animation data
         _titleAnimationData->initialize();
-        connect( _titleAnimationData, SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
+        connect( _titleAnimationData, SIGNAL(pixmapsChanged()), SLOT(updateTitleRect()) );
 
         // lists
-        connect( _itemData.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
+        connect( _itemData.animation().data(), SIGNAL(finished()), this, SLOT(clearTargetItem()) );
 
         // in case of preview, one wants to make the label used
         // for the central widget transparent. This allows one to have

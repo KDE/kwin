@@ -92,15 +92,15 @@ namespace Oxygen
         shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
 
         // connections
-        connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.separatorMode, SLOT( setDisabled( bool ) ) );
+        connect( ui.titleOutline, SIGNAL(toggled(bool)), ui.separatorMode, SLOT(setDisabled(bool)) );
 
-        connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
-        connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
+        connect( shadowConfigurations[0], SIGNAL(changed()), SIGNAL(changed()) );
+        connect( shadowConfigurations[0], SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
-        connect( shadowConfigurations[1], SIGNAL( changed() ), SIGNAL( changed() ) );
-        connect( shadowConfigurations[1], SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
+        connect( shadowConfigurations[1], SIGNAL(changed()), SIGNAL(changed()) );
+        connect( shadowConfigurations[1], SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
-        connect( ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SIGNAL( changed() ) );
+        connect( ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.buttonSize, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.frameBorder, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
@@ -111,7 +111,7 @@ namespace Oxygen
         connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
-        connect( ui._expertModeButton, SIGNAL( pressed( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
+        connect( ui._expertModeButton, SIGNAL(pressed()), SLOT(toggleExpertModeInternal()) );
 
         ui._expertModeButton->setIcon( KIcon("configure") );
 
@@ -119,8 +119,8 @@ namespace Oxygen
         connect( ui.animationsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
         _animationConfigWidget = new AnimationConfigWidget();
         _animationConfigWidget->installEventFilter( this );
-        connect( _animationConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( void ) ) );
-        connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT( updateLayout() ) );
+        connect( _animationConfigWidget, SIGNAL(changed(bool)), SIGNAL(changed()) );
+        connect( _animationConfigWidget, SIGNAL(layoutChanged()), SLOT(updateLayout()) );
 
         toggleExpertModeInternal( false );
 

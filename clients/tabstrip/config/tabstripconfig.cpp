@@ -45,10 +45,10 @@ TabstripConfig::TabstripConfig( KConfig *c, QWidget *parent )
     config = new KConfig( "tabstriprc" );
     KConfigGroup cg( config, "General" );
     ui = new TabstripConfigDialog( parent );
-    connect( ui->left, SIGNAL( clicked() ), SIGNAL( changed() ) );
-    connect( ui->center, SIGNAL( clicked() ), SIGNAL( changed() ) );
-    connect( ui->right, SIGNAL( clicked() ), SIGNAL( changed() ) );
-    connect( ui->showIcon, SIGNAL( clicked() ), SIGNAL( changed() ) );
+    connect( ui->left, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->center, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->right, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->showIcon, SIGNAL(clicked()), SIGNAL(changed()) );
     load( cg );
     ui->show();
     }

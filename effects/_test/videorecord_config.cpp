@@ -69,7 +69,7 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
                                            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     layout->addWidget(mShortcutEditor);
 
-    connect(saveVideo, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
+    connect(saveVideo, SIGNAL(textChanged(QString)), this, SLOT(changed()));
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
 
     layout->addStretch();

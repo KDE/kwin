@@ -60,7 +60,7 @@ void KWin::Scripting::runScript(KWin::Script* script)
         ((script->engine)->globalObject()).setProperty("ClientGroup", SWrapper::ClientGroup::publishClientGroupClass((script->engine)));
         ((script->engine)->globalObject()).setProperty("chelate", KWin::Chelate::publishChelate(script->engine));
         ((script->engine)->globalObject()).setProperty("ch", KWin::Chelate::publishChelate(script->engine));
-        QObject::connect((script->engine), SIGNAL(signalHandlerException(const QScriptValue&)), this, SLOT(sigException(const QScriptValue&)));
+        QObject::connect((script->engine), SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(script->engine);
 
         if (scriptsDir.exists(script->configFile)) {

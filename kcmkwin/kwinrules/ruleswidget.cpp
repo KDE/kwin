@@ -41,9 +41,9 @@ namespace KWin
 {
 
 #define SETUP( var, type ) \
-    connect( enable_##var, SIGNAL( toggled( bool )), rule_##var, SLOT( setEnabled( bool ))); \
-    connect( enable_##var, SIGNAL( toggled( bool )), this, SLOT( updateEnable##var())); \
-    connect( rule_##var, SIGNAL( activated( int )), this, SLOT( updateEnable##var())); \
+    connect( enable_##var, SIGNAL(toggled(bool)), rule_##var, SLOT(setEnabled(bool))); \
+    connect( enable_##var, SIGNAL(toggled(bool)), this, SLOT(updateEnable##var())); \
+    connect( rule_##var, SIGNAL(activated(int)), this, SLOT(updateEnable##var())); \
     enable_##var->setWhatsThis( enableDesc ); \
     rule_##var->setWhatsThis( type##RuleDesc );
 
@@ -125,7 +125,7 @@ RulesWidget::RulesWidget(QWidget* parent)
 
 #undef SETUP
 
-#define UPDATE_ENABLE_SLOT( var ) \
+#define UPDATE_ENABLE_SLOT(var) \
     void RulesWidget::updateEnable##var() \
     { \
         /* leave the label readable label_##var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 );*/ \

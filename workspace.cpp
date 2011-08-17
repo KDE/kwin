@@ -181,8 +181,8 @@ Workspace::Workspace(bool restore)
     default_colormap = DefaultColormap(display(), info.screen());
     installed_colormap = default_colormap;
 
-    connect(&temporaryRulesMessages, SIGNAL(gotMessage(const QString&)),
-            this, SLOT(gotTemporaryRulesMessage(const QString&)));
+    connect(&temporaryRulesMessages, SIGNAL(gotMessage(QString)),
+            this, SLOT(gotTemporaryRulesMessage(QString)));
     connect(&rulesUpdatedTimer, SIGNAL(timeout()), this, SLOT(writeWindowRules()));
     connect(&unredirectTimer, SIGNAL(timeout()), this, SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), this, SLOT(resetCompositing()));
@@ -252,8 +252,8 @@ Workspace::Workspace(bool restore)
 
     connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), SLOT(screenAdded(Kephal::Screen*)));
     connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), SLOT(screenRemoved(int)));
-    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*, QSize, QSize)), SLOT(screenResized(Kephal::Screen*, QSize, QSize)));
-    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*, QPoint, QPoint)), SLOT(screenMoved(Kephal::Screen*, QPoint, QPoint)));
+    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*,QSize,QSize)), SLOT(screenResized(Kephal::Screen*,QSize,QSize)));
+    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*,QPoint,QPoint)), SLOT(screenMoved(Kephal::Screen*,QPoint,QPoint)));
 
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
     connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));

@@ -86,9 +86,9 @@ StartupFeedbackEffect::StartupFeedbackEffect()
         m_bouncingTextures[i] = 0;
     }
     m_selection->claim(true);
-    connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId, KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId, KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId, KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId, KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId,KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId,KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId,KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId,KStartupInfoData)));
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

@@ -31,8 +31,8 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
     } else {
         SWrapper::WorkspaceProxy* proxy = SWrapper::WorkspaceProxy::instance();
 
-        QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*, int)),
-                         this, SLOT(sl_desktopPresenceChanged(KWin::Client*, int))
+        QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*,int)),
+                         this, SLOT(sl_desktopPresenceChanged(KWin::Client*,int))
                         );
 
         QObject::connect(centralObject, SIGNAL(currentDesktopChanged(int)),
@@ -63,8 +63,8 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
                          this, SLOT(sl_clientUnminimized(KWin::Client*))
                         );
 
-        QObject::connect(proxy, SIGNAL(clientMaximizeSet(KWin::Client*, QPair<bool, bool>)),
-                         this, SLOT(sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>))
+        QObject::connect(proxy, SIGNAL(clientMaximizeSet(KWin::Client*,QPair<bool,bool>)),
+                         this, SLOT(sl_clientMaximizeSet(KWin::Client*,QPair<bool,bool>))
                         );
 
         QObject::connect(proxy, SIGNAL(clientManaging(KWin::Client*)),
@@ -75,12 +75,12 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
                          this, SLOT(sl_killWindowCalled(KWin::Client*))
                         );
 
-        QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*, bool, bool)),
-                         this, SLOT(sl_clientFullScreenSet(KWin::Client*, bool, bool))
+        QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)),
+                         this, SLOT(sl_clientFullScreenSet(KWin::Client*,bool,bool))
                         );
 
-        QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*, bool)),
-                         this, SLOT(sl_clientSetKeepAbove(KWin::Client*, bool))
+        QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*,bool)),
+                         this, SLOT(sl_clientSetKeepAbove(KWin::Client*,bool))
                         );
 
 
