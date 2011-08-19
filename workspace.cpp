@@ -136,7 +136,6 @@ Workspace::Workspace(bool restore)
 #endif
     , popup(0)
     , advanced_popup(0)
-    , trans_popup(0)
     , desk_popup(0)
     , activity_popup(0)
     , add_tabs_popup(0)

@@ -653,7 +653,6 @@ private slots:
     void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
-    void setPopupClientOpacity(QAction* action);
     void setupCompositing();
     void finishCompositing();
     void fallbackToXRenderCompositing();
@@ -816,8 +815,6 @@ private:
 
     QMenu* popup;
     QMenu* advanced_popup;
-    QMenu* trans_popup;
-    QActionGroup* trans_popup_group;
     QMenu* desk_popup;
     QMenu* activity_popup;
     QMenu* add_tabs_popup; // Menu to add the group to other group
