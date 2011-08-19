@@ -334,11 +334,13 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
 bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
+#ifndef KWIN_HAVE_OPENGLES
     // Make sure shaders are actually supported
     if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedGLSL)) {
         kError(1212) << "Shaders are not supported";
         return false;
     }
+#endif
 
     // Create the shader program
     mProgram = glCreateProgram();
