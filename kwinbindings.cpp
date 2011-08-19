@@ -137,6 +137,10 @@ DEF2("Switch Window Right", I18N_NOOP("Switch to Window to the Right"),
      Qt::META + Qt::ALT + Qt::Key_Right, slotSwitchWindowRight());
 DEF2("Switch Window Left", I18N_NOOP("Switch to Window to the Left"),
      Qt::META + Qt::ALT + Qt::Key_Left, slotSwitchWindowLeft());
+DEF2("Increase Opacity", I18N_NOOP("Increase Opacity of Active Window by 5 %"),
+    0, slotIncreaseWindowOpacity());
+DEF2("Decrease Opacity", I18N_NOOP("Decrease Opacity of Active Window by 5 %"),
+    0, slotLowerWindowOpacity());
 
 a = actionCollection->addAction("Group:Window Desktop");
 a->setText(i18n("Window & Desktop"));

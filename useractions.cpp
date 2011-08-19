@@ -254,6 +254,22 @@ void Workspace::setPopupClientOpacity(QAction* action)
     active_popup_client->setOpacity(level / 100.0);
 }
 
+void Workspace::slotIncreaseWindowOpacity()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setOpacity(qMin(active_client->opacity() + 0.05, 1.0));
+}
+
+void Workspace::slotLowerWindowOpacity()
+{
+    if (!active_client) {
+        return;
+    }
+    active_client->setOpacity(qMax(active_client->opacity() - 0.05, 0.05));
+}
+
 /*!
   The client popup menu will become visible soon.
 

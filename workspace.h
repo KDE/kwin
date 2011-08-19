@@ -582,6 +582,9 @@ public slots:
     void slotSwitchWindowRight();
     void slotSwitchWindowLeft();
 
+    void slotIncreaseWindowOpacity();
+    void slotLowerWindowOpacity();
+
     void slotWindowOperations();
     void slotWindowClose();
     void slotWindowMove();
