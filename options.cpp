@@ -399,6 +399,8 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "minimize") return MouseMinimize;
     if (lowerName == "start window tab drag") return MouseClientGroupDrag;
     if (lowerName == "close") return MouseClose;
+    if (lowerName == "increase opacity") return MouseOpacityMore;
+    if (lowerName == "decrease opacity") return MouseOpacityLess;
     if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;
 }

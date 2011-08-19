@@ -489,6 +489,8 @@ const char* const tbl_All[] = {
     "Raise",
     "Lower",
     "Minimize",
+    "Decrease Opacity",
+    "Increase Opacity",
     "Nothing",
     ""
 };
@@ -827,6 +829,8 @@ KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KConfig *_config, c
           << i18n("Raise")
           << i18n("Lower")
           << i18n("Minimize")
+          << i18n("Decrease Opacity")
+          << i18n("Increase Opacity")
           << i18n("Nothing");
 
     combo = new KComboBox(box);
