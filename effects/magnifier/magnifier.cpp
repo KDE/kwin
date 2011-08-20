@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,6 +43,8 @@ MagnifierEffect::MagnifierEffect()
     : zoom(1)
     , target_zoom(1)
     , polling(false)
+    , m_texture(0)
+    , m_fbo(0)
 {
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a;
@@ -56,9 +59,15 @@ MagnifierEffect::MagnifierEffect()
     reconfigure(ReconfigureAll);
 }
 
+MagnifierEffect::~MagnifierEffect()
+{
+    delete m_fbo;
+    delete m_texture;
+}
+
 bool MagnifierEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->compositingType() == OpenGLCompositing && GLRenderTarget::blitSupported();
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -86,21 +95,17 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    ScreenPaintData data2 = data;
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (zoom != 1.0) {
+        // get the right area from the current rendered screen
+        const QRect area = magnifierArea();
+        const QPoint cursor = cursorPos();
+        m_fbo->blitFromFramebuffer(QRect(cursor.x() - (double)area.width() / (zoom*2), cursor.y() - (double)area.height() / (zoom*2),
+                                         (double)area.width() / zoom, (double)area.height() / zoom));
         // paint magnifier
-        QRect area = magnifierArea();
-        PaintClipper::push(area);   // don't allow any painting outside of the area
-        mask |= PAINT_SCREEN_TRANSFORMED;
-        data2.xScale *= zoom;
-        data2.yScale *= zoom;
-        QPoint cursor = cursorPos();
-        // set the position so that the cursor is in the same position in the scaled view
-        data2.xTranslate = - int(cursor.x() * (zoom - 1));
-        data2.yTranslate = - int(cursor.y() * (zoom - 1));
-        effects->paintScreen(mask, region, data2);
-        PaintClipper::pop(area);
+        m_texture->bind();
+        m_texture->render(infiniteRegion(), area);
+        m_texture->unbind();
         QVector<float> verts;
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
         vbo->reset();
@@ -166,6 +171,11 @@ void MagnifierEffect::zoomIn()
         polling = true;
         effects->startMousePolling();
     }
+    if (!m_texture) {
+        m_texture = new GLTexture(magnifier_size);
+        m_texture->setYInverted(false);
+        m_fbo = new GLRenderTarget(m_texture);
+    }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
@@ -178,6 +188,10 @@ void MagnifierEffect::zoomOut()
             polling = false;
             effects->stopMousePolling();
         }
+        delete m_fbo;
+        delete m_texture;
+        m_fbo = NULL;
+        m_texture = NULL;
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -190,12 +204,21 @@ void MagnifierEffect::toggle()
             polling = true;
             effects->startMousePolling();
         }
+        if (!m_texture) {
+            m_texture = new GLTexture(magnifier_size);
+            m_texture->setYInverted(false);
+            m_fbo = new GLRenderTarget(m_texture);
+        }
     } else {
         target_zoom = 1;
         if (polling) {
             polling = false;
             effects->stopMousePolling();
         }
+        delete m_fbo;
+        delete m_texture;
+        m_fbo = NULL;
+        m_texture = NULL;
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
