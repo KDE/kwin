@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QAction>
 #include <QX11Info>
+#include <QtDBus/QDBusConnection>
 // KDE
 #include <KActionCollection>
 #include <KConfig>
@@ -288,6 +289,7 @@ TabBox::TabBox(QObject *parent)
     , m_displayRefcount(0)
     , m_desktopGrab(false)
     , m_tabGrab(false)
+    , m_noModifierGrab(false)
     , m_forcedGlobalMouseGrab(false)
     , m_ready(false)
 {
@@ -323,10 +325,12 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
+    QDBusConnection::sessionBus().registerObject("/TabBox", this, QDBusConnection::ExportScriptableContents);
 }
 
 TabBox::~TabBox()
 {
+    QDBusConnection::sessionBus().unregisterObject("/TabBox");
 }
 
 void TabBox::handlerReady()
@@ -668,6 +672,19 @@ void TabBox::grabbedKeyEvent(QKeyEvent* event)
         // tabbox has been replaced, check effects
         return;
     }
+    if (m_noModifierGrab) {
+        if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Space) {
+            Client* c = currentClient();
+            close();
+            if (c) {
+                Workspace::self()->activateClient(c);
+                if (c->isShade() && options->shadeHover)
+                    c->setShade(ShadeActivated);
+                if (c->isDesktop())
+                    Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
+            }
+        }
+    }
     setCurrentIndex(m_tabBox->grabbedKeyEvent(event));
 }
 
@@ -922,11 +939,27 @@ void TabBox::modalActionsSwitch(bool enabled)
     action->setEnabled(enabled);
 }
 
+void TabBox::start()
+{
+    if (isDisplayed()) {
+        return;
+    }
+    if (!establishTabBoxGrab()) {
+        return;
+    }
+    m_tabGrab = true;
+    m_noModifierGrab = true;
+    setMode(TabBoxWindowsMode);
+    reset();
+    show();
+}
+
 bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
 {
     if (!establishTabBoxGrab())
         return false;
     m_tabGrab = true;
+    m_noModifierGrab = false;
     modalActionsSwitch(false);
     setMode(mode);
     reset();
@@ -938,6 +971,7 @@ bool TabBox::startWalkThroughDesktops(TabBoxMode mode)
     if (!establishTabBoxGrab())
         return false;
     m_desktopGrab = true;
+    m_noModifierGrab = false;
     modalActionsSwitch(false);
     setMode(mode);
     reset();
@@ -1100,11 +1134,15 @@ void TabBox::keyPress(int keyQt)
 
 void TabBox::close(bool abort)
 {
+    if (!isGrabbed()) {
+        return;
+    }
     removeTabBoxGrab();
     hide(abort);
     modalActionsSwitch(true);
     m_tabGrab = false;
     m_desktopGrab = false;
+    m_noModifierGrab = false;
 }
 
 /*!
@@ -1112,6 +1150,9 @@ void TabBox::close(bool abort)
  */
 void TabBox::keyRelease(const XKeyEvent& ev)
 {
+    if (m_noModifierGrab) {
+        return;
+    }
     unsigned int mk = ev.state &
                       (KKeyServer::modXShift() |
                        KKeyServer::modXCtrl() |

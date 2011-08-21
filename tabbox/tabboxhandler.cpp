@@ -586,11 +586,13 @@ QModelIndex TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
         if (column >= model->columnCount())
             column = 0;
         break;
+    case Qt::Key_Backtab:
     case Qt::Key_Up:
         row--;
         if (row < 0)
             row = model->rowCount() - 1;
         break;
+    case Qt::Key_Tab:
     case Qt::Key_Down:
         row++;
         if (row >= model->rowCount())

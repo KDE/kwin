@@ -97,6 +97,7 @@ private:
 class TabBox : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin")
 public:
     TabBox(QObject *parent = NULL);
     ~TabBox();
@@ -162,12 +163,16 @@ public:
     int previousDesktopFocusChain(int iDesktop) const;
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
-    void close(bool abort = false);
     void keyPress(int key);
     void keyRelease(const XKeyEvent& ev);
 
 public slots:
     void show();
+    /**
+     * Only for DBus Interface to start primary KDE Walk through windows.
+     **/
+    Q_SCRIPTABLE void start();
+    Q_SCRIPTABLE void close(bool abort = false);
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
     void slotWalkThroughDesktopList();
@@ -192,7 +197,7 @@ public slots:
 
 signals:
     void tabBoxAdded(int);
-    void tabBoxClosed();
+    Q_SCRIPTABLE void tabBoxClosed();
     void tabBoxUpdated();
     void tabBoxKeyEvent(QKeyEvent*);
 
@@ -237,6 +242,8 @@ private:
     bool m_isShown;
     bool m_desktopGrab;
     bool m_tabGrab;
+    // true if tabbox is in modal mode which does not require holding a modifier
+    bool m_noModifierGrab;
     KShortcut m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse;
     KShortcut m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse;
     KShortcut m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
