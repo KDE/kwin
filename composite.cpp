@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
+#include "composite.h"
 #include "notifications.h"
 
 #include <stdio.h>
@@ -62,6 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QFutureWatcher>
 #include <QMenu>
 #include <QTimerEvent>
+#include <QDateTime>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
@@ -81,7 +83,31 @@ extern int currentRefreshRate();
 // Workspace
 //****************************************
 
-void Workspace::setupCompositing()
+Compositor::Compositor(Workspace* workspace)
+    : QObject(workspace)
+    , compositingSuspended(!options->isUseCompositing())
+    , compositingBlocked(false)
+    , m_xrrRefreshRate(0)
+    , m_workspace(workspace)
+{
+    connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
+    connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(resetCompositing()));
+    connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
+    connect(workspace, SIGNAL(reinitializeCompositing()), SLOT(slotReinitialize()));
+    connect(&mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
+    unredirectTimer.setSingleShot(true);
+    compositeResetTimer.setSingleShot(true);
+    nextPaintReference.invalidate(); // Initialize the timer
+    setupCompositing();
+}
+
+Compositor::~Compositor()
+{
+    finishCompositing();
+}
+
+
+void Compositor::setupCompositing()
 {
     if (scene != NULL)
         return;
@@ -112,7 +138,7 @@ void Workspace::setupCompositing()
     }
 }
 
-void Workspace::slotCompositingOptionsInitialized()
+void Compositor::slotCompositingOptionsInitialized()
 {
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
@@ -141,7 +167,7 @@ void Workspace::slotCompositingOptionsInitialized()
             }
 #endif
 
-            scene = new SceneOpenGL(this);
+            scene = new SceneOpenGL(m_workspace);
 
             // TODO: Add 30 second delay to protect against screen freezes as well
             unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
@@ -159,7 +185,7 @@ void Workspace::slotCompositingOptionsInitialized()
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         kDebug(1212) << "Initializing XRender compositing";
-        scene = new SceneXrender(this);
+        scene = new SceneXrender(m_workspace);
         break;
 #endif
     default:
@@ -175,10 +201,10 @@ void Workspace::slotCompositingOptionsInitialized()
         delete cm_selection;
         return;
     }
-    xrrRefreshRate = KWin::currentRefreshRate();
+    m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = (options->maxFpsInterval() << 10);
     if (scene->waitSyncAvailable()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
-        vBlankInterval = (1000 << 10) / xrrRefreshRate;
+        vBlankInterval = (1000 << 10) / m_xrrRefreshRate;
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
@@ -187,11 +213,11 @@ void Workspace::slotCompositingOptionsInitialized()
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer
     addRepaintFull();
-    foreach (Client * c, clients)
+    foreach (Client * c, m_workspace->clientList())
         c->setupCompositing();
-    foreach (Client * c, desktops)
+    foreach (Client * c,  m_workspace->desktopList())
         c->setupCompositing();
-    foreach (Unmanaged * c, unmanaged)
+    foreach (Unmanaged * c, m_workspace->unmanagedList())
         c->setupCompositing();
 
     // render at least once
@@ -199,27 +225,33 @@ void Workspace::slotCompositingOptionsInitialized()
     performCompositing();
 }
 
-void Workspace::finishCompositing()
+void Compositor::checkCompositeTimer()
+{
+    if (!compositeTimer.isActive())
+        setCompositeTimer();
+}
+
+void Compositor::finishCompositing()
 {
     if (scene == NULL)
         return;
     m_finishingCompositing = true;
     delete cm_selection;
-    foreach (Client * c, clients)
+    foreach (Client * c, m_workspace->clientList())
     scene->windowClosed(c, NULL);
-    foreach (Client * c, desktops)
+    foreach (Client * c, m_workspace->desktopList())
     scene->windowClosed(c, NULL);
-    foreach (Unmanaged * c, unmanaged)
+    foreach (Unmanaged * c, m_workspace->unmanagedList())
     scene->windowClosed(c, NULL);
-    foreach (Deleted * c, deleted)
+    foreach (Deleted * c, m_workspace->deletedList())
     scene->windowDeleted(c);
-    foreach (Client * c, clients)
+    foreach (Client * c, m_workspace->clientList())
     c->finishCompositing();
-    foreach (Client * c, desktops)
+    foreach (Client * c, m_workspace->desktopList())
     c->finishCompositing();
-    foreach (Unmanaged * c, unmanaged)
+    foreach (Unmanaged * c, m_workspace->unmanagedList())
     c->finishCompositing();
-    foreach (Deleted * c, deleted)
+    foreach (Deleted * c, m_workspace->deletedList())
     c->finishCompositing();
     XCompositeUnredirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     delete effects;
@@ -229,8 +261,8 @@ void Workspace::finishCompositing()
     compositeTimer.stop();
     mousePollingTimer.stop();
     repaints_region = QRegion();
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
+    for (ClientList::ConstIterator it = m_workspace->clientList().constBegin();
+            it != m_workspace->clientList().constEnd();
             ++it) {
         // forward all opacity values to the frame in case there'll be other CM running
         if ((*it)->opacity() != 1.0) {
@@ -238,15 +270,14 @@ void Workspace::finishCompositing()
             i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
         }
     }
-    m_userActionsMenu->discard(); // force re-creation of the Alt+F3 popup (opacity option)
     // discard all Deleted windows (#152914)
-    while (!deleted.isEmpty())
-        deleted.first()->discard(Allowed);
+    while (!m_workspace->deletedList().isEmpty())
+        m_workspace->deletedList().first()->discard(Allowed);
     m_finishingCompositing = false;
 }
 
 // OpenGL self-check failed, fallback to XRender
-void Workspace::fallbackToXRenderCompositing()
+void Compositor::fallbackToXRenderCompositing()
 {
     finishCompositing();
     KConfigGroup config(KGlobal::config(), "Compositing");
@@ -254,7 +285,7 @@ void Workspace::fallbackToXRenderCompositing()
     config.writeEntry("GraphicsSystem", "native");
     config.sync();
     if (Extensions::nonNativePixmaps()) { // must restart to change the graphicssystem
-        restartKWin("automatic graphicssystem change for XRender backend");
+        emit signalRestartKWin("automatic graphicssystem change for XRender backend");
         return;
     } else {
         options->setCompositingMode(XRenderCompositing);
@@ -262,26 +293,47 @@ void Workspace::fallbackToXRenderCompositing()
     }
 }
 
-void Workspace::lostCMSelection()
+void Compositor::lostCMSelection()
 {
     kDebug(1212) << "Lost compositing manager selection";
     finishCompositing();
 }
 
+void Compositor::slotConfigChanged()
+{
+    if (!compositingSuspended) {
+        setupCompositing();
+        if (effects)   // setupCompositing() may fail
+            effects->reconfigure();
+        addRepaintFull();
+    } else
+        finishCompositing();
+}
+
+void Compositor::slotReinitialize()
+{
+    // Restart compositing
+    finishCompositing();
+    // resume compositing if suspended
+    compositingSuspended = false;
+    options->setCompositingInitialized(false);
+    setupCompositing();
+}
+
 // for the shortcut
-void Workspace::slotToggleCompositing()
+void Compositor::slotToggleCompositing()
 {
     suspendCompositing(!compositingSuspended);
 }
 
 // for the dbus call
-void Workspace::toggleCompositing()
+void Compositor::toggleCompositing()
 {
     slotToggleCompositing();
     if (compositingSuspended) {
         // when disabled show a shortcut how the user can get back compositing
         QString shortcut, message;
-        if (KAction* action = qobject_cast<KAction*>(keys->action("Suspend Compositing")))
+        if (KAction* action = qobject_cast<KAction*>(m_workspace->actionCollection()->action("Suspend Compositing")))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
         if (!shortcut.isEmpty()) {
             // display notification only if there is the shortcut
@@ -299,7 +351,7 @@ QStringList Workspace::activeEffects() const
     return QStringList();
 }
 
-void Workspace::updateCompositeBlocking(Client *c)
+void Compositor::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
@@ -312,7 +364,7 @@ void Workspace::updateCompositeBlocking(Client *c)
         // NOTICE do NOT check for "compositingSuspended" or "!compositing()"
         // only "resume" if it was really disabled for a block
         bool resume = true;
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+        for (ClientList::ConstIterator it = m_workspace->clientList().constBegin(); it != m_workspace->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
                 resume = false;
                 break;
@@ -326,25 +378,20 @@ void Workspace::updateCompositeBlocking(Client *c)
     }
 }
 
-void Workspace::suspendCompositing()
+void Compositor::suspendCompositing()
 {
     suspendCompositing(true);
 }
 
-void Workspace::suspendCompositing(bool suspend)
+void Compositor::suspendCompositing(bool suspend)
 {
     compositingSuspended = suspend;
     finishCompositing();
     setupCompositing(); // will do nothing if suspended
-    // notify decorations that composition state has changed
-    if (hasDecorationPlugin()) {
-        KDecorationFactory* factory = mgr->factory();
-        factory->reset(SettingCompositing);
-    }
     emit compositingToggled(!compositingSuspended);
 }
 
-void Workspace::resetCompositing()
+void Compositor::resetCompositing()
 {
     if (compositing()) {
         finishCompositing();
@@ -352,7 +399,7 @@ void Workspace::resetCompositing()
     }
 }
 
-void Workspace::addRepaint(int x, int y, int w, int h)
+void Compositor::addRepaint(int x, int y, int w, int h)
 {
     if (!compositing())
         return;
@@ -360,7 +407,7 @@ void Workspace::addRepaint(int x, int y, int w, int h)
     checkCompositeTimer();
 }
 
-void Workspace::addRepaint(const QRect& r)
+void Compositor::addRepaint(const QRect& r)
 {
     if (!compositing())
         return;
@@ -368,7 +415,7 @@ void Workspace::addRepaint(const QRect& r)
     checkCompositeTimer();
 }
 
-void Workspace::addRepaint(const QRegion& r)
+void Compositor::addRepaint(const QRegion& r)
 {
     if (!compositing())
         return;
@@ -376,7 +423,7 @@ void Workspace::addRepaint(const QRegion& r)
     checkCompositeTimer();
 }
 
-void Workspace::addRepaintFull()
+void Compositor::addRepaintFull()
 {
     if (!compositing())
         return;
@@ -384,7 +431,7 @@ void Workspace::addRepaintFull()
     checkCompositeTimer();
 }
 
-void Workspace::timerEvent(QTimerEvent *te)
+void Compositor::timerEvent(QTimerEvent *te)
 {
     if (te->timerId() == compositeTimer.timerId()) {
         compositeTimer.stop();
@@ -394,7 +441,7 @@ void Workspace::timerEvent(QTimerEvent *te)
 }
 
 static bool s_pending = false;
-void Workspace::performCompositing()
+void Compositor::performCompositing()
 {
     if (!scene->overlayWindow()->isVisible())
         return; // nothing is visible anyway
@@ -410,8 +457,8 @@ void Workspace::performCompositing()
     }
     s_pending = pending;
     // create a list of all windows in the stacking order
-    ToplevelList windows = xStackingOrder();
-    foreach (EffectWindow *c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
+    ToplevelList windows = m_workspace->xStackingOrder();
+    foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
         Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
         windows.removeAll(t);
         windows.append(t);
@@ -437,29 +484,34 @@ void Workspace::performCompositing()
     checkCompositeTimer();
 }
 
-void Workspace::performMousePoll()
+void Compositor::performMousePoll()
 {
-    checkCursorPos();
+    m_workspace->checkCursorPos();
 }
 
-bool Workspace::windowRepaintsPending() const
+bool Compositor::windowRepaintsPending() const
 {
-    foreach (Toplevel * c, clients)
+    foreach (Toplevel * c, m_workspace->clientList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, desktops)
+    foreach (Toplevel * c, m_workspace->desktopList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, unmanaged)
+    foreach (Toplevel * c, m_workspace->unmanagedList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, deleted)
+    foreach (Toplevel * c, m_workspace->deletedList())
     if (!c->repaints().isEmpty())
         return true;
     return false;
 }
 
-void Workspace::setCompositeTimer()
+void Compositor::setCompositeResetTimer(int msecs)
+{
+    compositeResetTimer.start(msecs);
+}
+
+void Compositor::setCompositeTimer()
 {
     if (!compositing())  // should not really happen, but there may be e.g. some damage events still pending
         return;
@@ -498,23 +550,23 @@ void Workspace::setCompositeTimer()
     compositeTimer.start(qMin(padding, 250u), this); // force 4fps minimum
 }
 
-void Workspace::startMousePolling()
+void Compositor::startMousePolling()
 {
     mousePollingTimer.start(20);   // 50Hz. TODO: How often do we really need to poll?
 }
 
-void Workspace::stopMousePolling()
+void Compositor::stopMousePolling()
 {
     mousePollingTimer.stop();
 }
 
-bool Workspace::compositingActive()
+bool Compositor::compositingActive()
 {
     return !m_finishingCompositing && compositing();
 }
 
 // force is needed when the list of windows changes (e.g. a window goes away)
-void Workspace::checkUnredirect(bool force)
+void Compositor::checkUnredirect(bool force)
 {
     if (!compositing() || scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
         return;
@@ -524,15 +576,15 @@ void Workspace::checkUnredirect(bool force)
         unredirectTimer.start(0);
 }
 
-void Workspace::delayedCheckUnredirect()
+void Compositor::delayedCheckUnredirect()
 {
     if (!compositing() || scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
-    foreach (Client * c, clients)
+    foreach (Client * c, m_workspace->clientList())
     list.append(c);
-    foreach (Unmanaged * c, unmanaged)
+    foreach (Unmanaged * c, m_workspace->unmanagedList())
     list.append(c);
     foreach (Toplevel * c, list) {
         if (c->updateUnredirectedState())
@@ -552,7 +604,9 @@ void Workspace::delayedCheckUnredirect()
     scene->overlayWindow()->setShape(reg);
 }
 
-
+/*****************************************************
+ * Compositing related D-Bus interface from Workspace
+ ****************************************************/
 bool Workspace::compositingPossible() const
 {
     return CompositingPrefs::compositingPossible();
@@ -605,7 +659,7 @@ bool Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
     unredirect = false;
-    workspace()->checkUnredirect(true);
+    workspace()->compositor()->checkUnredirect(true);
     scene->windowAdded(this);
     return true;
 }
@@ -615,7 +669,7 @@ void Toplevel::finishCompositing()
     damageRatio = 0.0;
     if (damage_handle == None)
         return;
-    workspace()->checkUnredirect(true);
+    workspace()->compositor()->checkUnredirect(true);
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         discardWindowPixmap();
         delete effect_window;
@@ -775,7 +829,7 @@ void Toplevel::addDamage(int x, int y, int w, int h)
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addDamageFull()
@@ -796,7 +850,7 @@ void Toplevel::addDamageFull()
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::resetDamage(const QRect& r)
@@ -814,7 +868,7 @@ void Toplevel::addRepaint(const QRect& r)
         return;
     }
     repaints_region += r;
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addRepaint(int x, int y, int w, int h)
@@ -829,7 +883,7 @@ void Toplevel::addRepaint(const QRegion& r)
         return;
     }
     repaints_region += r;
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addLayerRepaint(const QRect& r)
@@ -838,7 +892,7 @@ void Toplevel::addLayerRepaint(const QRect& r)
         return;
     }
     layer_repaints_region += r;
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addLayerRepaint(int x, int y, int w, int h)
@@ -852,13 +906,13 @@ void Toplevel::addLayerRepaint(const QRegion& r)
     if (!compositing())
         return;
     layer_repaints_region += r;
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addRepaintFull()
 {
     repaints_region = visibleRect().translated(-pos());
-    workspace()->checkCompositeTimer();
+    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::resetRepaints()
@@ -876,7 +930,7 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
     if (!compositing())
         return;
-    workspace()->addRepaint(r2);
+    workspace()->compositor()->addRepaint(r2);
 }
 
 bool Toplevel::updateUnredirectedState()
@@ -904,7 +958,7 @@ void Toplevel::suspendUnredirect(bool suspend)
     if (unredirectSuspend == suspend)
         return;
     unredirectSuspend = suspend;
-    workspace()->checkUnredirect();
+    workspace()->compositor()->checkUnredirect();
 }
 
 //****************************************

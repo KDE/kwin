@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 #include "client.h"
+#include "composite.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -105,7 +106,6 @@ Workspace::Workspace(bool restore)
     , m_screenEdgeOrientation(0)
 #endif
     // Unsorted
-    , m_nextFrameDelay(0)
     , active_popup(NULL)
     , active_popup_client(NULL)
     , temporaryRulesMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL, false)
@@ -140,14 +140,8 @@ Workspace::Workspace(bool restore)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
     , forced_global_mouse_grab(false)
-    , cm_selection(NULL)
-    , compositingSuspended(false)
-    , compositingBlocked(false)
-    , xrrRefreshRate(0)
     , transSlider(NULL)
     , transButton(NULL)
-    , forceUnredirectCheck(true)
-    , m_finishingCompositing(false)
     , m_scripting(NULL)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
@@ -183,11 +177,6 @@ Workspace::Workspace(bool restore)
     connect(&temporaryRulesMessages, SIGNAL(gotMessage(QString)),
             this, SLOT(gotTemporaryRulesMessage(QString)));
     connect(&rulesUpdatedTimer, SIGNAL(timeout()), this, SLOT(writeWindowRules()));
-    connect(&unredirectTimer, SIGNAL(timeout()), this, SLOT(delayedCheckUnredirect()));
-    connect(&compositeResetTimer, SIGNAL(timeout()), this, SLOT(resetCompositing()));
-    unredirectTimer.setSingleShot(true);
-    compositeResetTimer.setSingleShot(true);
-
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     delayFocusTimer = 0;
@@ -212,13 +201,15 @@ Workspace::Workspace(bool restore)
                  ExposureMask
                 );
 
-    compositingSuspended = !options->isUseCompositing();
 #ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
 #endif
 
-    setupCompositing();
+    m_compositor = new Compositor(this);
+    connect(m_compositor, SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
+    connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
+    connect(m_compositor, SIGNAL(signalRestartKWin(QString)), SLOT(slotRestartKwin(QString)));
 
     // Compatibility
     long data = 1;
@@ -398,7 +389,6 @@ void Workspace::init()
 
     connect(&reconfigureTimer, SIGNAL(timeout()), this, SLOT(slotReconfigure()));
     connect(&updateToolWindowsTimer, SIGNAL(timeout()), this, SLOT(slotUpdateToolWindows()));
-    connect(&mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
 
     connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this, SLOT(reconfigure()));
     connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this, SLOT(slotSettingsChanged(int)));
@@ -491,7 +481,7 @@ void Workspace::init()
 
 Workspace::~Workspace()
 {
-    finishCompositing();
+    delete m_compositor;
     blockStackingUpdates(true);
 
     // TODO: grabXServer();
@@ -674,7 +664,9 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateStackingOrder(true);
 
-    updateCompositeBlocking();
+    if (m_compositor) {
+        m_compositor->updateCompositeBlocking();
+    }
 
 #ifdef KWIN_BUILD_TABBOX
     if (tabBox()->isDisplayed())
@@ -920,7 +912,10 @@ bool Workspace::waitForCompositingSetup()
         reconfigureTimer.stop();
         slotReconfigure();
     }
-    return compositingActive();
+    if (m_compositor) {
+        return m_compositor->compositingActive();
+    }
+    return false;
 }
 
 void Workspace::slotSettingsChanged(int category)
@@ -991,15 +986,6 @@ void Workspace::slotReconfigure()
     }
     m_screenEdge.update();
 #endif
-
-    if (!compositingSuspended) {
-        setupCompositing();
-        if (effects)   // setupCompositing() may fail
-            effects->reconfigure();
-        addRepaintFull();
-    } else
-        finishCompositing();
-
     loadWindowRules();
     for (ClientList::Iterator it = clients.begin();
             it != clients.end();
@@ -1028,6 +1014,11 @@ void Workspace::slotReconfigure()
     }
 }
 
+void Workspace::slotRestartKwin(const QString& reason)
+{
+    restartKWin(reason);
+}
+
 void Workspace::restartKWin(const QString &reason)
 {
     kDebug(1212) << "restarting kwin for:" << reason;
@@ -1051,14 +1042,7 @@ void Workspace::slotReinitCompositing()
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.update();
 #endif
-
-    // Restart compositing
-    finishCompositing();
-
-    // resume compositing if suspended
-    compositingSuspended = false;
-    options->setCompositingInitialized(false);
-    setupCompositing();
+    emit reinitializeCompositing();
     if (hasDecorationPlugin()) {
         KDecorationFactory* factory = mgr->factory();
         factory->reset(SettingCompositing);
@@ -1362,8 +1346,8 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     //    s += QString::number( desktop_focus_chain[i] ) + ", ";
     //kDebug( 1212 ) << s << "}\n";
 
-    if (compositing())
-        addRepaintFull();
+    if (compositing() && m_compositor)
+        m_compositor->addRepaintFull();
 
     emit currentDesktopChanged(old_desktop, movingClient);
     return true;
@@ -1574,8 +1558,8 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
     //if ( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
     //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
-    if (compositing())
-        addRepaintFull();
+    if (compositing() && m_compositor)
+        m_compositor->addRepaintFull();
 
 }
 
@@ -2281,6 +2265,43 @@ QString Workspace::supportInformation() const
         support.append("Compositing is not active\n");
     }
     return support;
+}
+
+void Workspace::slotCompositingToggled()
+{
+    // notify decorations that composition state has changed
+    if (hasDecorationPlugin()) {
+        KDecorationFactory* factory = mgr->factory();
+        factory->reset(SettingCompositing);
+    }
+}
+
+/*
+ * Called from D-BUS
+ */
+bool Workspace::compositingActive()
+{
+    if (m_compositor) {
+        return m_compositor->compositingActive();
+    }
+    return false;
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::toggleCompositing()
+{
+    if (m_compositor) {
+        m_compositor->toggleCompositing();
+    }
+}
+
+void Workspace::slotToggleCompositing()
+{
+    if (m_compositor) {
+        m_compositor->slotToggleCompositing();
+    }
 }
 
 } // namespace

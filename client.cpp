@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 
 #include "bridge.h"
+#include "composite.h"
 #include "group.h"
 #include "workspace.h"
 #include "atoms.h"
@@ -612,7 +613,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapTop.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapTop = QPixmap(tr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -631,7 +632,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapBottom.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapBottom = QPixmap(br.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -650,7 +651,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapLeft.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapLeft = QPixmap(lr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -669,7 +670,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapRight.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapRight = QPixmap(rr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -1260,7 +1261,9 @@ void Client::internalShow(allowed_t)
             XMapWindow(display(), inputId());
         updateHiddenPreview();
     }
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 void Client::internalHide(allowed_t)
@@ -1275,7 +1278,9 @@ void Client::internalHide(allowed_t)
         updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 void Client::internalKeep(allowed_t)
@@ -1292,7 +1297,9 @@ void Client::internalKeep(allowed_t)
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 /**
@@ -2332,8 +2339,8 @@ void Client::setBlockingCompositing(bool block)
 {
     const bool usedToBlock = blocks_compositing;
     blocks_compositing = rules()->checkBlockCompositing(block);
-    if (usedToBlock != blocks_compositing) {
-        workspace()->updateCompositeBlocking(blocks_compositing ? this : 0);
+    if (usedToBlock != blocks_compositing && workspace()->compositor()) {
+        workspace()->compositor()->updateCompositeBlocking(blocks_compositing ? this : 0);
         emit blockingCompositingChanged();
     }
 }

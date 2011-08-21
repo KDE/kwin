@@ -51,6 +51,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xatom.h>
 #include <QX11Info>
 
+#include "composite.h"
+
 namespace KWin
 {
 
@@ -442,7 +444,9 @@ bool Workspace::workspaceEvent(XEvent * e)
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
                     || (scene->overlayWindow()->window() != None && e->xexpose.window == scene->overlayWindow()->window()))) { // overlay needs repainting
-            addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+            if (m_compositor) {
+                m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+            }
         }
         break;
     case VisibilityNotify:
@@ -451,21 +455,25 @@ bool Workspace::workspaceEvent(XEvent * e)
             scene->overlayWindow()->setVisibility((e->xvisibility.state != VisibilityFullyObscured));
             if (!was_visible && scene->overlayWindow()->isVisible()) {
                 // hack for #154825
-                addRepaintFull();
-                QTimer::singleShot(2000, this, SLOT(addRepaintFull()));
+                if (m_compositor) {
+                    m_compositor->addRepaintFull();
+                    QTimer::singleShot(2000, m_compositor, SLOT(addRepaintFull()));
+                }
             }
-            checkCompositeTimer();
+            if (m_compositor) {
+                m_compositor->checkCompositeTimer();
+            }
         }
         break;
     default:
         if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
             XRRUpdateConfiguration(e);
-            if (compositing()) {
+            if (compositing() && m_compositor) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
                 // catch refresh rate changes
-                if (xrrRefreshRate != currentRefreshRate())
-                    compositeResetTimer.start(0);
+                if (m_compositor->xrrRefreshRate() != currentRefreshRate())
+                    m_compositor->setCompositeResetTimer(0);
             }
 
         } else if (e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable()) {
