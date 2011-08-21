@@ -939,15 +939,19 @@ void TabBox::modalActionsSwitch(bool enabled)
     action->setEnabled(enabled);
 }
 
-void TabBox::start()
+void TabBox::start(bool modal)
 {
     if (isDisplayed()) {
         return;
     }
-    if (!establishTabBoxGrab()) {
-        return;
+    if (modal) {
+        if (!establishTabBoxGrab()) {
+            return;
+        }
+        m_tabGrab = true;
+    } else {
+        m_tabGrab = false;
     }
-    m_tabGrab = true;
     m_noModifierGrab = true;
     setMode(TabBoxWindowsMode);
     reset();
@@ -1134,10 +1138,9 @@ void TabBox::keyPress(int keyQt)
 
 void TabBox::close(bool abort)
 {
-    if (!isGrabbed()) {
-        return;
+    if (isGrabbed()) {
+        removeTabBoxGrab();
     }
-    removeTabBoxGrab();
     hide(abort);
     modalActionsSwitch(true);
     m_tabGrab = false;
