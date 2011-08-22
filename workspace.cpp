@@ -1338,6 +1338,23 @@ bool Workspace::setCurrentDesktop(int new_desktop)
                 focus_chain[currentDesktop()].contains(active_client) &&
                 active_client->isShown(true) && active_client->isOnCurrentDesktop())
             c = active_client; // The requestFocus below will fail, as the client is already active
+        // from actiavtion.cpp
+        if (!c && options->nextFocusPrefersMouse) {
+            QList<Client*>::const_iterator it = stackingOrder().constEnd();
+            while (it != stackingOrder().constBegin()) {
+                Client *client = *(--it);
+
+                if (!(client->isShown(false) && client->isOnDesktop(new_desktop) &&
+                    client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
+                    continue;
+
+                if (client->geometry().contains(QCursor::pos())) {
+                    if (!client->isDesktop())
+                        c = client;
+                break; // unconditional break  - we do not pass the focus to some client below an unusable one
+                }
+            }
+        }
         if (!c) {
             for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
                 Client* tmp = focus_chain[currentDesktop()].at(i);

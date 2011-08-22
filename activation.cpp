@@ -412,49 +412,77 @@ static inline bool isUsableFocusCandidate(Client *c, Client *prev, bool respectS
 bool Workspace::activateNextClient(Client* c)
 {
     // if 'c' is not the active or the to-become active one, do nothing
-    if (!(c == active_client
-            || (should_get_focus.count() > 0 && c == should_get_focus.last())))
+    if (!(c == active_client || (should_get_focus.count() > 0 && c == should_get_focus.last())))
         return false;
+
     closeActivePopup();
+
     if (c != NULL) {
         if (c == active_client)
             setActiveClient(NULL, Allowed);
         should_get_focus.removeAll(c);
     }
-    if (focusChangeEnabled()) {
-        if (options->focusPolicyIsReasonable()) {
-            // search the focus_chain for a client to transfer focus to,
-            Client* get_focus = NULL;
 
-            // first try to pass the focus to the (former) active clients leader
-            if (c  && (get_focus = c->transientFor()) &&
-                    isUsableFocusCandidate(get_focus, c, options->separateScreenFocus)) {
-                raiseClient(get_focus);   // also raise - we don't know where it came from
-            } else { // nope, ask the focus chain for the next candidate
-                get_focus = NULL; // reset
-                for (int i = focus_chain[ currentDesktop()].size() - 1; i >= 0; --i) {
-                    Client* ci = focus_chain[ currentDesktop()].at(i);
-                    if (isUsableFocusCandidate(ci, c, options->separateScreenFocus)) {
-                        get_focus = ci;
-                        break; // we're done
-                    }
-                }
+    // if blocking focus, move focus to the desktop later if needed
+    // in order to avoid flickering
+    if (!focusChangeEnabled()) {
+        focusToNull();
+        return true;
+    }
+
+    if (!options->focusPolicyIsReasonable())
+        return false;
+
+    Client* get_focus = NULL;
+
+    if (options->nextFocusPrefersMouse) {
+        QList<Client*>::const_iterator it = stackingOrder().constEnd();
+        while (it != stackingOrder().constBegin()) {
+            Client *client = *(--it);
+
+            // rule out clients which are not really visible.
+            // the screen test is rather superflous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
+            if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
+                  client->isOnCurrentActivity() && client->isOnScreen(c ? c->screen() : activeScreen())))
+                continue;
+
+            if (client->geometry().contains(QCursor::pos())) {
+                if (client != c && !client->isDesktop()) // should rather not happen, but it cannot get the focus. rest of usability is tested above
+                    get_focus = client;
+                break; // unconditional break  - we do not pass the focus to some client below an unusable one
             }
 
-            if (get_focus == NULL)   // last chance: focus the desktop
-                get_focus = findDesktop(true, currentDesktop());
+        }
+    }
 
-            if (get_focus != NULL)
-                requestFocus(get_focus);
-            else
-                focusToNull();
-        } else
-            return false;
-    } else
-        // if blocking focus, move focus to the desktop later if needed
-        // in order to avoid flickering
+    if (!get_focus) { // no suitable window under the mouse -> find sth. else
+
+        // first try to pass the focus to the (former) active clients leader
+        if (c  && (get_focus = c->transientFor()) && isUsableFocusCandidate(get_focus, c, options->separateScreenFocus)) {
+            raiseClient(get_focus);   // also raise - we don't know where it came from
+        } else {
+            // nope, ask the focus chain for the next candidate
+            get_focus = NULL; // reset from the inline assignment above
+            for (int i = focus_chain[ currentDesktop()].size() - 1; i >= 0; --i) {
+                Client* ci = focus_chain[ currentDesktop()].at(i);
+                if (isUsableFocusCandidate(ci, c, options->separateScreenFocus)) {
+                    get_focus = ci;
+                    break; // we're done
+                }
+            }
+        }
+    }
+
+    if (get_focus == NULL)   // last chance: focus the desktop
+        get_focus = findDesktop(true, currentDesktop());
+
+    if (get_focus != NULL)
+        requestFocus(get_focus);
+    else
         focusToNull();
+
     return true;
+
 }
 
 void Workspace::setCurrentScreen(int new_screen)

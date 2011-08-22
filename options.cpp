@@ -120,6 +120,8 @@ unsigned long Options::updateSettings()
     else if (val == "FocusStrictlyUnderMouse")
         focusPolicy = FocusStrictlyUnderMouse;
 
+    nextFocusPrefersMouse = config.readEntry("NextFocusPrefersMouse", false);
+
     separateScreenFocus = config.readEntry("SeparateScreenFocus", false);
     activeMouseScreen = config.readEntry("ActiveMouseScreen", focusPolicy != ClickToFocus);
 

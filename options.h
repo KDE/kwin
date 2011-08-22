@@ -79,7 +79,7 @@ public:
      */
     enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStrictlyUnderMouse };
     FocusPolicy focusPolicy;
-
+    bool nextFocusPrefersMouse;
 
     /**
        Whether clicking on a window raises it in FocusFollowsMouse

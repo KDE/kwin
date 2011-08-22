@@ -113,6 +113,8 @@ private:
     KIntNumInput *delayFocus;
     QCheckBox *separateScreenFocus;
     QCheckBox *activeMouseScreen;
+    QWidget *focusNextToMouseContainer;
+    QCheckBox *focusNextToMouse;
 
     KConfig *config;
     bool     standAlone;
