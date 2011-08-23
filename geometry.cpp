@@ -2538,13 +2538,17 @@ bool Client::startMoveResize()
         return false;
     }
 
+    m_formerScreenNum = screen();
+
     // If we have quick maximization enabled then it's safe to automatically restore windows
     // when starting a move as the user can undo their action by moving the window back to
     // the top of the screen. When the setting is disabled then doing so is confusing.
-    if (maximizeMode() == MaximizeFull && options->moveResizeMaximizedWindows()) {
-        // allow move resize, but unset maximization state
-        geom_restore = geom_pretile = geometry(); // "restore" to current geometry
-        setMaximize(false, false);
+    if (maximizeMode() != MaximizeRestore && options->moveResizeMaximizedWindows()) {
+        // allow moveResize, but unset maximization state in resize case
+        if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
+            geom_restore = geom_pretile = geometry(); // "restore" to current geometry
+            setMaximize(false, false);
+        }
     } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
                (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
         // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
@@ -2625,6 +2629,8 @@ void Client::finishMoveResize(bool cancel)
             setGeometry(initialMoveResizeGeom);
         else
             setGeometry(moveResizeGeom);
+        if (maximizeMode() != MaximizeRestore && m_formerScreenNum != screen())
+            checkWorkspacePosition();
     }
 #else
     if (cancel)
@@ -2634,7 +2640,7 @@ void Client::finishMoveResize(bool cancel)
     Q_UNUSED(wasResize);
     Q_UNUSED(wasMove);
 #endif
-    if (cancel)
+    if (cancel) // TODO: this looks like a patch bug - tiling gets the variable and non-tiling acts above
         setGeometry(initialMoveResizeGeom);
 
     if (isElectricBorderMaximizing()) {
