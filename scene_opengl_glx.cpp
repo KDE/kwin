@@ -489,12 +489,17 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                     glXCopySubBuffer(display(), glxbuffer, r.x(), y, r.width(), r.height());
                 }
             } else {
-                // if a shader is bound, copy pixels results in a black screen
+                // if a shader is bound or the texture unit is enabled, copy pixels results in a black screen
                 // therefore unbind the shader and restore after copying the pixels
                 GLint shader = 0;
                 if (ShaderManager::instance()->isShaderBound()) {
-                   glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-                   glUseProgram(0);
+                    glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+                    glUseProgram(0);
+                }
+                bool reenableTexUnit = false;
+                if (glIsEnabled(GL_TEXTURE_2D)) {
+                    glDisable(GL_TEXTURE_2D);
+                    reenableTexUnit = true;
                 }
                 // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
                 glEnable(GL_SCISSOR_TEST);
@@ -517,9 +522,12 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
                 glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
                 glDrawBuffer(GL_BACK);
                 glDisable(GL_SCISSOR_TEST);
+                if (reenableTexUnit) {
+                    glEnable(GL_TEXTURE_2D);
+                }
                 // rebind previously bound shader
                 if (ShaderManager::instance()->isShaderBound()) {
-                   glUseProgram(shader);
+                    glUseProgram(shader);
                 }
             }
         } else {
@@ -562,6 +570,7 @@ void SceneOpenGL::TexturePrivate::release()
             glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
         }
         glXDestroyPixmap(display(), m_glxpixmap);
+        m_glxpixmap = None;
     }
 }
 
@@ -617,7 +626,6 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     }
 
     d->m_size = size;
-    d->m_yInverted = true;
     // new texture, or texture contents changed; mipmaps now invalid
     setDirty();
 

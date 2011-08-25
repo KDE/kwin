@@ -362,13 +362,9 @@ bool SceneOpenGL::Window::bindTexture()
 {
 #ifndef KWIN_HAVE_OPENGLES
     if (!texture.isNull()) {
-        if (toplevel->damage().isEmpty()) {
-            // texture doesn't need updating, just bind it
-            glBindTexture(texture.target(), texture.texture());
-        } else {
-            // bind() updates the texture automatically e.g. in case the glx pixmap binding
-            // is strict
-            texture.bind();
+        if (!toplevel->damage().isEmpty()) {
+            // mipmaps need to be updated
+            texture.setDirty();
             toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
         }
         return true;
