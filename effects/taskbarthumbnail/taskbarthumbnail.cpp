@@ -57,9 +57,6 @@ TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
 
 void TaskbarThumbnailEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (thumbnails.count() > 0) {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
-    }
     effects->prePaintScreen(data, time);
 }
 
@@ -109,7 +106,7 @@ void TaskbarThumbnailEffect::slotWindowDamaged(EffectWindow* w, const QRect& dam
     foreach (EffectWindow * window, thumbnails.uniqueKeys())
     foreach (const Data & thumb, thumbnails.values(window))
     if (w == effects->findWindow(thumb.window))
-        effects->addRepaint(thumb.rect.translated(window->pos()));
+        window->addRepaint(thumb.rect);
 }
 
 void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
@@ -127,7 +124,7 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
     if (!w || a != atom)
         return;
     foreach (const Data & thumb, thumbnails.values(w)) {
-        effects->addRepaint(thumb.rect);
+        w->addRepaint(thumb.rect);
     }
     thumbnails.remove(w);
     QByteArray data = w->readProperty(atom, atom, 32);
@@ -149,7 +146,7 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
         data.window = d[ pos ];
         data.rect = QRect(d[ pos + 1 ], d[ pos + 2 ], d[ pos + 3 ], d[ pos + 4 ]);
         thumbnails.insert(w, data);
-        effects->addRepaint(data.rect);
+        w->addRepaint(data.rect);
         pos += size;
     }
 }
