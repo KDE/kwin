@@ -227,7 +227,7 @@
             <item>
              <widget class="QGroupBox" name="groupBox">
               <property name="title">
-               <string>Simple effect setup</string>
+               <string comment="@title:group a few general options to set up desktop effects">Simple effect setup</string>
               </property>
               <property name="flat">
                <bool>true</bool>
