@@ -1734,14 +1734,14 @@ public:
      * Returns whether or not a specified window is being managed
      * by this manager object.
      */
-    inline bool isManaging(EffectWindow *w) {
+    inline bool isManaging(EffectWindow *w) const {
         return m_managedWindows.contains(w);
     }
     /**
      * Returns whether or not this manager object is actually
      * managing any windows or not.
      */
-    inline bool managingWindows() {
+    inline bool managingWindows() const {
         return !m_managedWindows.empty();
     }
     /**
@@ -1749,14 +1749,14 @@ public:
      * or not. Can be used to see if an effect should be
      * processed and displayed or not.
      */
-    inline bool areWindowsMoving() {
+    inline bool areWindowsMoving() const {
         return !m_movingWindowsSet.isEmpty();
     }
     /**
      * Returns whether a window has reached its targets yet
      * or not.
      */
-    inline bool isWindowMoving(EffectWindow *w) {
+    inline bool isWindowMoving(EffectWindow *w) const {
         return m_movingWindowsSet.contains(w);
     }
 
