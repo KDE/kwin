@@ -226,6 +226,11 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
     return true;
 }
 
+bool GlideEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
+
 GlideEffect::WindowInfo::WindowInfo()
     : deleted(false)
     , added(false)

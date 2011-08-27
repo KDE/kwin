@@ -75,4 +75,9 @@ void OutlineEffect::slotShowOutline(const QRect& geometry)
     effects->addRepaint(geometry);
 }
 
+bool OutlineEffect::isActive() const
+{
+    return m_active;
+}
+
 } // namespace

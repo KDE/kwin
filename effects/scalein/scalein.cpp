@@ -95,4 +95,9 @@ void ScaleInEffect::slotWindowClosed(EffectWindow* c)
     delete mTimeLineWindows.take(c);
 }
 
+bool ScaleInEffect::isActive() const
+{
+    return !mTimeLineWindows.isEmpty();
+}
+
 } // namespace

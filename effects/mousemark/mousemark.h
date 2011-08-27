@@ -36,6 +36,7 @@ public:
     ~MouseMarkEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual bool isActive() const;
 private slots:
     void clear();
     void clearLast();

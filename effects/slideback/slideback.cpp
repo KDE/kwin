@@ -376,4 +376,9 @@ QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
     return modalGroupGeometry;
 }
 
+bool SlideBackEffect::isActive() const
+{
+    return motionManager.managingWindows();
+}
+
 } //Namespace

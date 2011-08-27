@@ -108,4 +108,10 @@ void DimScreenEffect::slotWindowActivated(EffectWindow *w)
         }
     }
 }
+
+bool DimScreenEffect::isActive() const
+{
+    return mActivated;
+}
+
 } // namespace

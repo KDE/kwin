@@ -97,7 +97,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , fullscreen_effect(0)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , mouse_poll_ref_count(0)
-    , current_paint_effectframe(0)
 {
     Workspace *ws = Workspace::self();
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
@@ -203,54 +202,54 @@ void EffectsHandlerImpl::reconfigure()
 // the idea is that effects call this function again which calls the next one
 void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (current_paint_screen < loaded_effects.size()) {
-        loaded_effects[current_paint_screen++].second->prePaintScreen(data, time);
-        --current_paint_screen;
+    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+        (*m_currentPaintScreenIterator++)->prePaintScreen(data, time);
+        --m_currentPaintScreenIterator;
     }
     // no special final code
 }
 
 void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (current_paint_screen < loaded_effects.size()) {
-        loaded_effects[current_paint_screen++].second->paintScreen(mask, region, data);
-        --current_paint_screen;
+    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+        (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
+        --m_currentPaintScreenIterator;
     } else
         scene->finalPaintScreen(mask, region, data);
 }
 
 void EffectsHandlerImpl::postPaintScreen()
 {
-    if (current_paint_screen < loaded_effects.size()) {
-        loaded_effects[current_paint_screen++].second->postPaintScreen();
-        --current_paint_screen;
+    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+        (*m_currentPaintScreenIterator++)->postPaintScreen();
+        --m_currentPaintScreenIterator;
     }
     // no special final code
 }
 
 void EffectsHandlerImpl::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (current_paint_window < loaded_effects.size()) {
-        loaded_effects[current_paint_window++].second->prePaintWindow(w, data, time);
-        --current_paint_window;
+    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+        (*m_currentPaintWindowIterator++)->prePaintWindow(w, data, time);
+        --m_currentPaintWindowIterator;
     }
     // no special final code
 }
 
 void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (current_paint_window < loaded_effects.size()) {
-        loaded_effects[current_paint_window++].second->paintWindow(w, mask, region, data);
-        --current_paint_window;
+    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+        (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
+        --m_currentPaintWindowIterator;
     } else
         scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
 {
-    if (current_paint_effectframe < loaded_effects.size()) {
-        loaded_effects[current_paint_effectframe++].second->paintEffectFrame(frame, region, opacity, frameOpacity);
-        --current_paint_effectframe;
+    if (m_currentPaintEffectFrameIterator != m_activeEffects.end()) {
+        (*m_currentPaintEffectFrameIterator++)->paintEffectFrame(frame, region, opacity, frameOpacity);
+        --m_currentPaintEffectFrameIterator;
     } else {
         const EffectFrameImpl* frameImpl = static_cast<const EffectFrameImpl*>(frame);
         frameImpl->finalRender(region, opacity, frameOpacity);
@@ -259,9 +258,9 @@ void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, do
 
 void EffectsHandlerImpl::postPaintWindow(EffectWindow* w)
 {
-    if (current_paint_window < loaded_effects.size()) {
-        loaded_effects[current_paint_window++].second->postPaintWindow(w);
-        --current_paint_window;
+    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+        (*m_currentPaintWindowIterator++)->postPaintWindow(w);
+        --m_currentPaintWindowIterator;
     }
     // no special final code
 }
@@ -276,18 +275,18 @@ bool EffectsHandlerImpl::provides(Effect::Feature ef)
 
 void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (current_draw_window < loaded_effects.size()) {
-        loaded_effects[current_draw_window++].second->drawWindow(w, mask, region, data);
-        --current_draw_window;
+    if (m_currentDrawWindowIterator != m_activeEffects.end()) {
+        (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
+        --m_currentDrawWindowIterator;
     } else
         scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
 {
-    if (current_build_quads < loaded_effects.size()) {
-        loaded_effects[current_build_quads++].second->buildQuads(w, quadList);
-        --current_build_quads;
+    if (m_currentBuildQuadsIterator != m_activeEffects.end()) {
+        (*m_currentBuildQuadsIterator++)->buildQuads(w, quadList);
+        --m_currentBuildQuadsIterator;
     }
 }
 
@@ -309,10 +308,17 @@ bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 // start another painting pass
 void EffectsHandlerImpl::startPaint()
 {
-    assert(current_paint_screen == 0);
-    assert(current_paint_window == 0);
-    assert(current_draw_window == 0);
-    assert(current_build_quads == 0);
+    m_activeEffects.clear();
+    for(QVector< KWin::EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
+        if (it->second->isActive()) {
+            m_activeEffects << it->second;
+        }
+    }
+    m_currentDrawWindowIterator = m_activeEffects.begin();
+    m_currentPaintWindowIterator = m_activeEffects.begin();
+    m_currentPaintScreenIterator = m_activeEffects.begin();
+    m_currentPaintEffectFrameIterator = m_activeEffects.begin();
+    m_currentBuildQuadsIterator = m_activeEffects.begin();
 }
 
 void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
@@ -1087,10 +1093,6 @@ QStringList EffectsHandlerImpl::listOfEffects() const
 bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 {
     Workspace::self()->addRepaintFull();
-    assert(current_paint_screen == 0);
-    assert(current_paint_window == 0);
-    assert(current_draw_window == 0);
-    assert(current_build_quads == 0);
 
     if (!name.startsWith(QLatin1String("kwin4_effect_")))
         kWarning(1212) << "Effect names usually have kwin4_effect_ prefix" ;
@@ -1201,10 +1203,6 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 void EffectsHandlerImpl::unloadEffect(const QString& name)
 {
     Workspace::self()->addRepaintFull();
-    assert(current_paint_screen == 0);
-    assert(current_paint_window == 0);
-    assert(current_draw_window == 0);
-    assert(current_build_quads == 0);
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
         if (it.value().first == name) {

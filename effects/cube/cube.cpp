@@ -2087,4 +2087,9 @@ void CubeEffect::unregisterCubeInsideEffect(CubeInsideEffect* effect)
     m_cubeInsideEffects.removeAll(effect);
 }
 
+bool CubeEffect::isActive() const
+{
+    return activated;
+}
+
 } // namespace

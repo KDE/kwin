@@ -208,7 +208,14 @@ protected:
     QHash< long, int > registered_atoms;
     int next_window_quad_type;
     int mouse_poll_ref_count;
-    int current_paint_effectframe;
+
+private:
+    QList< Effect* > m_activeEffects;
+    QList< Effect* >::iterator m_currentDrawWindowIterator;
+    QList< Effect* >::iterator m_currentPaintWindowIterator;
+    QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
+    QList< Effect* >::iterator m_currentPaintScreenIterator;
+    QList< Effect* >::iterator m_currentBuildQuadsIterator;
 };
 
 class EffectWindowImpl : public EffectWindow

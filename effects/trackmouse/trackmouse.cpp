@@ -209,4 +209,9 @@ void TrackMouseEffect::loadTexture()
     textureSize = im.size();
 }
 
+bool TrackMouseEffect::isActive() const
+{
+    return active;
+}
+
 } // namespace

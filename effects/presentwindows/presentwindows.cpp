@@ -2043,6 +2043,11 @@ void PresentWindowsEffect::globalShortcutChangedClass(const QKeySequence& seq)
     shortcutClass = KShortcut(seq);
 }
 
+bool PresentWindowsEffect::isActive() const
+{
+    return m_activated || m_motionManager.managingWindows();
+}
+
 /************************************************
 * CloseWindowView
 ************************************************/

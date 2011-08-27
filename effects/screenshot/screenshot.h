@@ -40,6 +40,7 @@ public:
     ScreenShotEffect();
     virtual ~ScreenShotEffect();
     virtual void postPaintScreen();
+    virtual bool isActive() const;
 
     static bool supported();
     static void convertFromGLImage(QImage &img, int w, int h);

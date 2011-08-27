@@ -148,5 +148,10 @@ void MinimizeAnimationEffect::slotWindowUnminimized(EffectWindow* w)
     timeline->setCurrentTime(timeline->duration());
 }
 
+bool MinimizeAnimationEffect::isActive() const
+{
+    return !mTimeLineWindows.isEmpty();
+}
+
 } // namespace
 

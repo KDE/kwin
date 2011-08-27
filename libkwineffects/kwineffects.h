@@ -447,6 +447,23 @@ public:
 
     virtual bool borderActivated(ElectricBorder border);
 
+    /**
+     * Overwrite this method to indicate whether your effect will be doing something in
+     * the next frame to be rendered. If the method returns @c false the effect will be
+     * excluded from the chained methods in the next rendered frame.
+     *
+     * This method is called always directly before the paint loop begins. So it is totally
+     * fine to e.g. react on a window event, issue a repaint to trigger an animation and
+     * change a flag to indicate that this method returns @c true.
+     *
+     * As the method is called each frame, you should not perform complex calculations.
+     * Best use just a boolean flag.
+     *
+     * The default implementation of this method returns @c true.
+     * @since 4.8
+     **/
+    virtual bool isActive() const;
+
     static int displayWidth();
     static int displayHeight();
     static QPoint cursorPos();
@@ -1023,10 +1040,6 @@ protected:
     QHash< QString, KLibrary* > effect_libraries;
     QList< InputWindowPair > input_windows;
     //QHash< QString, EffectFactory* > effect_factories;
-    int current_paint_screen;
-    int current_paint_window;
-    int current_draw_window;
-    int current_build_quads;
     CompositingType compositing_type;
 };
 

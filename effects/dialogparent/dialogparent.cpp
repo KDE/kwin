@@ -95,4 +95,9 @@ void DialogParentEffect::slotWindowClosed(EffectWindow* w)
     effectStrength.remove(w);
 }
 
+bool DialogParentEffect::isActive() const
+{
+    return !effectStrength.isEmpty();
+}
+
 } // namespace

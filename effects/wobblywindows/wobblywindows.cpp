@@ -1218,6 +1218,10 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobbly
     wwi.buffer = tmp;
 }
 
+bool WobblyWindowsEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
 
 } // namespace KWin
 

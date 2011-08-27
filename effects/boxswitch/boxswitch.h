@@ -55,6 +55,7 @@ public:
 
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void* proxy();
+    virtual bool isActive() const;
     void activateFromProxy(int mode, bool animate, bool showText, float positioningFactor);
     void paintWindowsBox(const QRegion& region);
 

@@ -43,6 +43,7 @@ public:
     virtual void propagate();
     virtual void reconfigure(ReconfigureFlags);
     virtual void unpropagate();
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);

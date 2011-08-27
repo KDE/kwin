@@ -258,4 +258,9 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
+bool ScreenShotEffect::isActive() const
+{
+    return m_scheduledScreenshot != NULL;
+}
+
 } // namespace

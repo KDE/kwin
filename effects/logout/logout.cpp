@@ -400,4 +400,9 @@ void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
     canDoPersistent = true;
 }
 
+bool LogoutEffect::isActive() const
+{
+    return progress != 0;
+}
+
 } // namespace

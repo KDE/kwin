@@ -617,4 +617,9 @@ void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection dire
     effects->addRepaintFull();
 }
 
+bool CubeSlideEffect::isActive() const
+{
+    return !slideRotations.isEmpty();
+}
+
 } // namespace

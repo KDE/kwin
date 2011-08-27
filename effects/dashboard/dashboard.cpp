@@ -199,4 +199,9 @@ void DashboardEffect::slotWindowClosed(EffectWindow* w)
     }
 }
 
+bool DashboardEffect::isActive() const
+{
+    return transformWindow;
+}
+
 } // namespace

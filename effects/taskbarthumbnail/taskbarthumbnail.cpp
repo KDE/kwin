@@ -154,4 +154,9 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
     }
 }
 
+bool TaskbarThumbnailEffect::isActive() const
+{
+    return !thumbnails.isEmpty();
+}
+
 } // namespace

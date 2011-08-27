@@ -186,6 +186,11 @@ bool SheetEffect::isSheetWindow(EffectWindow* w)
     return (w->isModal() || w->data(IsSheetWindow).toBool());
 }
 
+bool SheetEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
+
 SheetEffect::WindowInfo::WindowInfo()
     : deleted(false)
     , added(false)

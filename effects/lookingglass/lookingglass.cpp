@@ -247,6 +247,11 @@ void LookingGlassEffect::postPaintScreen()
     }
 }
 
+bool LookingGlassEffect::isActive() const
+{
+    return m_valid && m_enabled;
+}
+
 } // namespace
 
 #include "lookingglass.moc"

@@ -230,6 +230,11 @@ void SlideEffect::slotDesktopChanged(int old, int current)
     effects->addRepaintFull();
 }
 
+bool SlideEffect::isActive() const
+{
+    return slide;
+}
+
 } // namespace
 
 #include "slide.moc"

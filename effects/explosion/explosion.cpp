@@ -202,5 +202,10 @@ void ExplosionEffect::slotWindowDeleted(EffectWindow* c)
     mWindows.remove(c);
 }
 
+bool ExplosionEffect::isActive() const
+{
+    return mActiveAnimations > 0;
+}
+
 } // namespace
 

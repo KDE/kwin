@@ -199,4 +199,9 @@ bool FadeEffect::isFadeWindow(EffectWindow* w)
     return (!w->isDesktop() && !w->isUtility());
 }
 
+bool FadeEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
+
 } // namespace

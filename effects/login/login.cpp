@@ -117,4 +117,9 @@ bool LoginEffect::isLoginSplash(EffectWindow* w)
     return false;
 }
 
+bool LoginEffect::isActive() const
+{
+    return login_window != NULL;
+}
+
 } // namespace

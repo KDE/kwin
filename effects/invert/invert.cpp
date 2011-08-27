@@ -161,6 +161,11 @@ void InvertEffect::toggleWindow()
     effects->activeWindow()->addRepaintFull();
 }
 
+bool InvertEffect::isActive() const
+{
+    return m_valid && (m_allWindows || !m_windows.isEmpty());
+}
+
 } // namespace
 
 #include "invert.moc"

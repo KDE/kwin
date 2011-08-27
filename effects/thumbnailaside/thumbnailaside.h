@@ -48,6 +48,7 @@ private slots:
     void slotWindowClosed(EffectWindow *w);
     void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
     void slotWindowDamaged(EffectWindow* w, const QRect& damage);
+    virtual bool isActive() const;
 private:
     void addThumbnail(EffectWindow* w);
     void removeThumbnail(EffectWindow* w);

@@ -1221,10 +1221,10 @@ void DesktopGridEffect::globalShortcutChanged(const QKeySequence& seq)
     shortcut = KShortcut(seq);
 }
 
-bool DesktopGridEffect::isMotionManagerMovingWindows()
+bool DesktopGridEffect::isMotionManagerMovingWindows() const
 {
     if (isUsingPresentWindows()) {
-        QList<WindowMotionManager>::iterator it;
+        QList<WindowMotionManager>::const_iterator it;
         for (it = m_managers.begin(); it != m_managers.end(); ++it) {
             if ((*it).areWindowsMoving())
                 return true;
@@ -1370,6 +1370,11 @@ void DesktopGridEffect::desktopsRemoved(int old)
 
     // and repaint
     effects->addRepaintFull();
+}
+
+bool DesktopGridEffect::isActive() const
+{
+    return timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows());
 }
 
 /************************************************

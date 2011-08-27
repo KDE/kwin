@@ -417,4 +417,9 @@ QRect StartupFeedbackEffect::feedbackRect() const
     return rect;
 }
 
+bool StartupFeedbackEffect::isActive() const
+{
+    return m_active;
+}
+
 } // namespace

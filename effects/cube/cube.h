@@ -50,6 +50,7 @@ public:
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual bool isActive() const;
 
     // proxy functions
     virtual void* proxy();

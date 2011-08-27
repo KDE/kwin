@@ -246,4 +246,10 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     }
     mWindowsData[ w ] = animData;
 }
+
+bool SlidingPopupsEffect::isActive() const
+{
+    return !mAppearingWindows.isEmpty() || !mDisappearingWindows.isEmpty();
+}
+
 } // namespace

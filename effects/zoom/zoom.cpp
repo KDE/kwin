@@ -492,6 +492,11 @@ void ZoomEffect::focusChanged(int px, int py, int rx, int ry, int rwidth, int rh
     }
 }
 
+bool ZoomEffect::isActive() const
+{
+    return zoom != 1.0 || zoom != target_zoom;
+}
+
 } // namespace
 
 #include "zoom.moc"

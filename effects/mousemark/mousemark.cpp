@@ -186,6 +186,12 @@ MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint ar
     return ret;
 }
 
+bool MouseMarkEffect::isActive() const
+{
+    return !marks.isEmpty() || !drawing.isEmpty();
+}
+
+
 } // namespace
 
 #include "mousemark.moc"

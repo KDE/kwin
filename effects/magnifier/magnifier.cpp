@@ -232,6 +232,11 @@ void MagnifierEffect::slotMouseChanged(const QPoint& pos, const QPoint& old,
         effects->addRepaintFull();
 }
 
+bool MagnifierEffect::isActive() const
+{
+    return zoom != 1.0 || zoom != target_zoom;
+}
+
 } // namespace
 
 #include "magnifier.moc"

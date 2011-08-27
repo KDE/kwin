@@ -178,3 +178,7 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
     }
 }
 
+bool WindowGeometry::isActive() const
+{
+    return iAmActive;
+}

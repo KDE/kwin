@@ -39,6 +39,7 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
+    virtual bool isActive() const;
 
     static bool supported();
 

@@ -39,6 +39,7 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotWindowActivated(EffectWindow *w);

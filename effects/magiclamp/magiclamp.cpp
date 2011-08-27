@@ -353,4 +353,9 @@ void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
     mTimeLineWindows[w]->setCurrentTime(mAnimationDuration);
 }
 
+bool MagicLampEffect::isActive() const
+{
+    return !mTimeLineWindows.isEmpty();
+}
+
 } // namespace

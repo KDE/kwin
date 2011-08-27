@@ -47,6 +47,7 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
+    virtual bool isActive() const;
 
     static bool supported();
 private Q_SLOTS:

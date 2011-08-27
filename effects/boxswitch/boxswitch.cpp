@@ -947,6 +947,11 @@ void BoxSwitchEffect::activateFromProxy(int mode, bool animate, bool showText, f
     }
 }
 
+bool BoxSwitchEffect::isActive() const
+{
+    return mActivated;
+}
+
 BoxSwitchEffect::ItemInfo::ItemInfo()
     : iconFrame(NULL)
 {

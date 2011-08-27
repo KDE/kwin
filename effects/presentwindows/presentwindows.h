@@ -104,6 +104,7 @@ public:
     virtual bool borderActivated(ElectricBorder border);
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
+    virtual bool isActive() const;
 
     enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
     enum PresentWindowsMode {

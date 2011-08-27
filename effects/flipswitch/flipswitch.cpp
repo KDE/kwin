@@ -934,6 +934,11 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
     }
 }
 
+bool FlipSwitchEffect::isActive() const
+{
+    return m_active;
+}
+
 //*************************************************************
 // Item Info
 //*************************************************************

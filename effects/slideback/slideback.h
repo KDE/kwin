@@ -40,6 +40,7 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);

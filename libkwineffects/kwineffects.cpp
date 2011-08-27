@@ -171,6 +171,11 @@ bool Effect::provides(Feature)
     return false;
 }
 
+bool Effect::isActive() const
+{
+    return true;
+}
+
 void Effect::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     effects->drawWindow(w, mask, region, data);
@@ -229,11 +234,7 @@ double Effect::animationTime(int defaultTime)
 //****************************************
 
 EffectsHandler::EffectsHandler(CompositingType type)
-    : current_paint_screen(0)
-    , current_paint_window(0)
-    , current_draw_window(0)
-    , current_build_quads(0)
-    , compositing_type(type)
+    : compositing_type(type)
 {
     if (compositing_type == NoCompositing)
         return;
