@@ -36,6 +36,7 @@ extern "C"
 
 Qt::AlignmentFlag TabstripFactory::titlealign = Qt::AlignCenter;
 bool TabstripFactory::show_icon = true;
+QColor TabstripFactory::outline_color = Qt::white;
 
 TabstripFactory::TabstripFactory()
     {
@@ -88,6 +89,7 @@ bool TabstripFactory::readConfig()
     else if( align == "Right" )
         titlealign = Qt::AlignRight;
     show_icon = cg.readEntry( "ShowIcon", true );
+    outline_color = cg.readEntry( "OutlineColor", QColor( Qt::white ) );
     return ( titlealign != oldalign );
     }
 

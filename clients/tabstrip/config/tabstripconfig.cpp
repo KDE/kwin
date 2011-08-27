@@ -49,6 +49,7 @@ TabstripConfig::TabstripConfig( KConfig *c, QWidget *parent )
     connect( ui->center, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui->right, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui->showIcon, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->outlineColor, SIGNAL(clicked()), SIGNAL(changed()) );
     load( cg );
     ui->show();
     }
@@ -67,6 +68,7 @@ void TabstripConfig::load( KConfigGroup &c )
     ui->center->setChecked( align == "Center" );
     ui->right->setChecked( align == "Right" );
     ui->showIcon->setChecked( c.readEntry( "ShowIcon", true ) );
+    ui->outlineColor->setColor( c.readEntry( "OutlineColor", QColor( Qt::white ) ) );
     }
 
 void TabstripConfig::save( KConfigGroup &c )
@@ -79,6 +81,7 @@ void TabstripConfig::save( KConfigGroup &c )
     else
         c.writeEntry( "TitleAlignment", "Right" );
     c.writeEntry( "ShowIcon", ui->showIcon->isChecked() );
+    c.writeEntry( "OutlineColor", ui->outlineColor->color() );
     config->sync();
     }
 
@@ -88,5 +91,6 @@ void TabstripConfig::defaults()
     ui->center->setChecked( true );
     ui->right->setChecked( false );
     ui->showIcon->setChecked( true );
+    ui->outlineColor->setColor( Qt::white );
     emit changed();
     }

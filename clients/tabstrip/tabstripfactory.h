@@ -37,11 +37,13 @@ class TabstripFactory : public KDecorationFactoryUnstable
         QList< KDecorationDefines::BorderSize > borderSizes() const;
         static Qt::AlignmentFlag titleAlign();
         static bool showIcon();
+        static QColor &outlineColor();
     private:
         bool readConfig();
         bool initialized;
         static Qt::AlignmentFlag titlealign;
         static bool show_icon;
+        static QColor outline_color;
     };
 
 inline Qt::AlignmentFlag TabstripFactory::titleAlign()
@@ -52,6 +54,10 @@ inline Qt::AlignmentFlag TabstripFactory::titleAlign()
 inline bool TabstripFactory::showIcon()
     {
     return show_icon;
+    }
+inline QColor &TabstripFactory::outlineColor()
+    {
+    return outline_color;
     }
 
 #endif
