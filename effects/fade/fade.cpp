@@ -48,9 +48,6 @@ void FadeEffect::reconfigure(ReconfigureFlags)
     windows.clear();
     if (!fadeWindows)
         return;
-    foreach (EffectWindow * w, effects->stackingOrder())
-    if (w && isFadeWindow(w))    // TODO: Apparently w can == NULL here?
-        windows[ w ] = WindowInfo();
 }
 
 void FadeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -86,6 +83,11 @@ void FadeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
             // but only if the total change is less than the
             // maximum possible change
             w->addRepaintFull();
+        } else {
+            if (windows[w].deleted) {
+                w->unrefWindow();
+            }
+            windows.remove(w);
         }
     }
 }
@@ -141,17 +143,17 @@ void FadeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     || windows[ w ].brightness != data.brightness)
                 w->addRepaintFull();
             return;
+        } else {
+            windows.remove(w);
         }
-        windows[ w ].fadeInStep = 0.0;
-        windows[ w ].fadeOutStep = 0.0;
     }
     effects->paintWindow(w, mask, region, data);
 }
 
 void FadeEffect::slotWindowOpacityChanged(EffectWindow* w, qreal old_opacity)
 {
-    if (!windows.contains(w))
-        windows[ w ].opacity = old_opacity;
+    if (!windows.contains(w) || !isFadeWindow(w))
+        return;
     if (windows[ w ].opacity == 1.0)
         windows[ w ].opacity -= 0.1 / fadeOutTime;
     w->addRepaintFull();
