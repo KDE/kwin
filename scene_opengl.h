@@ -146,7 +146,7 @@ protected:
     Texture(TexturePrivate& dd);
 
 private:
-    Q_DECLARE_PRIVATE(Texture);
+    Q_DECLARE_PRIVATE(Texture)
 
     friend class SceneOpenGL::Window;
 };

@@ -101,7 +101,7 @@ protected:
     GLTexture(GLTexturePrivate& dd);
 
 private:
-    Q_DECLARE_PRIVATE(GLTexture);
+    Q_DECLARE_PRIVATE(GLTexture)
 };
 
 } // namespace
