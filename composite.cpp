@@ -586,9 +586,8 @@ static QVector<QRect> damageRects;
 
 void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    if (damageRatio == 1.0) // we know that we're completely damaged, no need to tell us again
-    {   // drop events
-        while (XPending(display())) {
+    if (damageRatio == 1.0) { // we know that we're completely damaged, no need to tell us again
+        while (XPending(display())) { // drop events
             EventUnion e2;
             if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent() &&
                     e2.e.xany.window == frameId()) {
