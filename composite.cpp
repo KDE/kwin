@@ -587,7 +587,19 @@ static QVector<QRect> damageRects;
 void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 {
     if (damageRatio == 1.0) // we know that we're completely damaged, no need to tell us again
+    {   // drop events
+        while (XPending(display())) {
+            EventUnion e2;
+            if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent() &&
+                    e2.e.xany.window == frameId()) {
+                XNextEvent(display(), &e2.e);
+                continue;
+            }
+            break;
+        }
+
         return;
+    }
 
     const float area = rect().width()*rect().height();
     damageRects.reserve(16);
