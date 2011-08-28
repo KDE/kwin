@@ -390,8 +390,6 @@ void Workspace::performCompositing()
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
-    QElapsedTimer t;
-    t.start();
     if (scene->waitSyncAvailable()) {
         // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
         scene->paint(repaints, windows);
