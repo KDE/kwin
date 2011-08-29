@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
-#include <QDateTime>
-
 #include "toplevel.h"
 #include "utils.h"
 #include "kwineffects.h"
@@ -151,11 +149,12 @@ protected:
     // time since last repaint
     int time_diff;
     uint lastRenderTime;
-    QTime last_time;
+    QElapsedTimer last_time;
     Workspace* wspace;
     bool has_waitSync;
     LanczosFilter* lanczos_filter;
     OverlayWindow* m_overlayWindow;
+    QElapsedTimer m_renderTimer;
 };
 
 // The base class for windows representations in composite backends

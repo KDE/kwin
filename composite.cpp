@@ -168,7 +168,7 @@ void Workspace::setupCompositing()
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     vBlankPadding = 3; // vblank rounding errors... :-(
-    nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+    nextPaintReference.restart();
     checkCompositeTimer();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer
@@ -393,10 +393,10 @@ void Workspace::performCompositing()
     if (scene->waitSyncAvailable()) {
         // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
         scene->paint(repaints, windows);
-        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+        nextPaintReference.restart();
     } else {
         // no vsyc -> inversion: reset the timer, then paint the scene, this way we can provide a constant framerate
-        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+        nextPaintReference.restart();
         scene->paint(repaints, windows);
     }
     // reset the roundin error corrective... :-(
@@ -436,7 +436,7 @@ void Workspace::setCompositeTimer()
         return;
 
     // interval - "time since last paint completion" - "time we need to paint"
-    uint passed = (QDateTime::currentMSecsSinceEpoch() - nextPaintReference) << 10;
+    uint passed = nextPaintReference.elapsed() << 10;
     uint delay = fpsInterval;
     if (scene->waitSyncAvailable()) {
         if (passed > fpsInterval) {

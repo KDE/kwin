@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
-#include <QDateTime>
+#include <QElapsedTimer>
 #include <kmanagerselection.h>
 
 #include "kactivitycontroller.h"
@@ -888,7 +888,7 @@ private:
     KSelectionOwner* cm_selection;
     bool compositingSuspended, compositingBlocked;
     QBasicTimer compositeTimer;
-    qint64 nextPaintReference;
+    QElapsedTimer nextPaintReference;
     QTimer mousePollingTimer;
     uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
     int xrrRefreshRate; // used only for compositing

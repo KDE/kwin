@@ -164,7 +164,7 @@ void Scene::paintScreen(int* mask, QRegion* region)
 // Compute time since the last painting pass.
 void Scene::updateTimeDiff()
 {
-    if (last_time.isNull()) {
+    if (!last_time.isValid()) {
         // Painting has been idle (optimized out) for some time,
         // which means time_diff would be huge and would break animations.
         // Simply set it to one (zero would mean no change at all and could
@@ -174,14 +174,14 @@ void Scene::updateTimeDiff()
         time_diff = last_time.elapsed();
     if (time_diff < 0)   // check time rollback
         time_diff = 1;
-    last_time.start();;
+    last_time.restart();;
 }
 
 // Painting pass is optimized away.
 void Scene::idle()
 {
     // Don't break time since last paint for the next pass.
-    last_time = QTime();
+    last_time.invalidate();;
 }
 
 // the function that'll be eventually called by paintScreen() above
