@@ -319,11 +319,6 @@ void Group::lostLeader()
     }
 }
 
-void Group::getIcons()
-{
-    // TODO - also needs adding the flag to NETWinInfo
-}
-
 //***************************************
 // Workspace
 //***************************************

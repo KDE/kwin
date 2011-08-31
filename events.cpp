@@ -1661,8 +1661,6 @@ bool Group::groupEvent(XEvent* e)
 {
     unsigned long dirty[ 2 ];
     leader_info->event(e, dirty, 2);   // pass through the NET stuff
-    if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
-        getIcons();
     if ((dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
         startupIdChanged();
     return false;

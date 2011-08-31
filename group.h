@@ -58,7 +58,6 @@ public:
     void deref();
     EffectWindowGroupImpl* effectGroup();
 private:
-    void getIcons();
     void startupIdChanged();
     ClientList _members;
     Client* leader_client;
