@@ -850,7 +850,6 @@ void WindowMotionManager::calculate(int time)
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
     for (; it != m_managedWindows.end(); ++it) {
         WindowMotion *motion = &it.value();
-        EffectWindow *window = it.key();
         int stopped = 0;
 
         // TODO: What happens when distance() == 0 but we are still moving fast?

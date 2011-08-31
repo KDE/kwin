@@ -1116,8 +1116,6 @@ void KMovingConfig::load(void)
 
 void KMovingConfig::save(void)
 {
-    int v;
-
     KConfigGroup cg(config, "Windows");
 
     cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, moveResizeMaximized->isChecked());

@@ -216,10 +216,6 @@ void BlurEffect::drawRegion(const QRegion &region)
 
 void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    EffectWindowList windows = effects->stackingOrder();
-    QLinkedList<QRegion> blurRegions;
-    bool checkDecos = effects->decorationsHaveAlpha() && effects->decorationSupportsBlurBehind();
-    bool clipChanged = false;
     m_damagedArea = QRegion();
     m_currentBlur = QRegion();
 
