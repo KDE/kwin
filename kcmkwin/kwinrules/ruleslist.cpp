@@ -172,7 +172,7 @@ void KCMRulesList::importClicked()
         return;
 
     int pos = qMax(0, rules_listbox->currentRow());
-    foreach (QString group, groups) {
+    foreach (const QString &group, groups) {
         KConfigGroup grp(&config, group);
         const bool remove = grp.readEntry("DeleteRule", false);
         Rules* new_rule = new Rules(grp);
