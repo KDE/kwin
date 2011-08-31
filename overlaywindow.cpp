@@ -120,7 +120,7 @@ void OverlayWindow::setShape(const QRegion& reg)
     m_shape = reg;
 }
 
-bool OverlayWindow::isVisible()
+bool OverlayWindow::isVisible() const
 {
     return m_visible;
 }
@@ -145,7 +145,7 @@ void OverlayWindow::destroy()
     m_shown = false;
 }
 
-Window OverlayWindow::window()
+Window OverlayWindow::window() const
 {
     return m_window;
 }

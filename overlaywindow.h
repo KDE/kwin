@@ -39,8 +39,8 @@ public:
     void setShape(const QRegion& reg);
     /// Destroys XComposite overlay window
     void destroy();
-    Window window();
-    bool isVisible();
+    Window window() const;
+    bool isVisible() const;
     void setVisibility(bool visible);
 private:
     bool m_visible;
