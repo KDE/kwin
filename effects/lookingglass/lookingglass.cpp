@@ -161,8 +161,11 @@ void LookingGlassEffect::toggle()
             polling = false;
             effects->stopMousePolling();
         }
-        m_enabled = false;
+        if (zoom == target_zoom) {
+            m_enabled = false;
+        }
     }
+    effects->addRepaint(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
 }
 
 void LookingGlassEffect::zoomIn()
@@ -181,10 +184,12 @@ void LookingGlassEffect::zoomOut()
     target_zoom -= 0.5;
     if (target_zoom < 1) {
         target_zoom = 1;
-        m_enabled = false;
         if (polling) {
             polling = false;
             effects->stopMousePolling();
+        }
+        if (zoom == target_zoom) {
+            m_enabled = false;
         }
     }
     effects->addRepaint(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
