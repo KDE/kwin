@@ -85,8 +85,16 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         double diff = time / animationTime(500.0);
         if (target_zoom > zoom)
             zoom = qMin(zoom * qMax(1 + diff, 1.2), target_zoom);
-        else
+        else {
             zoom = qMax(zoom * qMin(1 - diff, 0.8), target_zoom);
+            if (zoom == 1.0) {
+                // zoom ended - delete FBO and texture
+                delete m_fbo;
+                delete m_texture;
+                m_fbo = NULL;
+                m_texture = NULL;
+            }
+        }
     }
     effects->prePaintScreen(data, time);
     if (zoom != 1.0)
@@ -188,10 +196,12 @@ void MagnifierEffect::zoomOut()
             polling = false;
             effects->stopMousePolling();
         }
-        delete m_fbo;
-        delete m_texture;
-        m_fbo = NULL;
-        m_texture = NULL;
+        if (zoom == target_zoom) {
+            delete m_fbo;
+            delete m_texture;
+            m_fbo = NULL;
+            m_texture = NULL;
+        }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -215,10 +225,6 @@ void MagnifierEffect::toggle()
             polling = false;
             effects->stopMousePolling();
         }
-        delete m_fbo;
-        delete m_texture;
-        m_fbo = NULL;
-        m_texture = NULL;
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
