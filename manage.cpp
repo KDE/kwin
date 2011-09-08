@@ -320,7 +320,7 @@ bool Client::manage(Window w, bool isMapped)
     if (!noBorder()) {
         client_group = NULL;
         // Automatically add to previous groups on session restore
-        if (session && session->clientGroupClient && session->clientGroupClient != this)
+        if (session && session->clientGroupClient && session->clientGroupClient != this && session->clientGroupClient->clientGroup())
             session->clientGroupClient->clientGroup()->add(this, -1, true);
         else if (isMapped)
             // If the window is already mapped (Restarted KWin) add any windows that already have the
