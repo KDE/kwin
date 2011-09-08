@@ -115,6 +115,11 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(strictgeometry, force);
     SETUP(disableglobalshortcuts, force);
     SETUP(blockcompositing, force);
+
+    connect (title_match, SIGNAL(currentIndexChanged(int)), SLOT(titleMatchChanged()));
+    connect (extra_match, SIGNAL(currentIndexChanged(int)), SLOT(extraMatchChanged()));
+    connect (machine_match, SIGNAL(currentIndexChanged(int)), SLOT(machineMatchChanged()));
+
     int i;
     for (i = 1;
             i <= KWindowSystem::numberOfDesktops();
