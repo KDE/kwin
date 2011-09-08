@@ -2101,9 +2101,10 @@ void Client::setMaximize(bool vertically, bool horizontally)
         clientGroup()->updateStates(this);
 }
 
+static bool changeMaximizeRecursion = false;
 void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 {
-    if (!isMaximizable())
+    if (!isMaximizable() || changeMaximizeRecursion)
         return;
 
     MaximizeMode old_mode = max_mode;
@@ -2134,8 +2135,13 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     else
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
-    if (options->borderlessMaximizedWindows())
+    if (options->borderlessMaximizedWindows()) {
+        // triggers a maximize change.
+        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore/pretile geometry
+        changeMaximizeRecursion = true;
         setNoBorder(app_noborder || max_mode == MaximizeFull);
+        changeMaximizeRecursion = false;
+    }
 
     // save sizes for restoring, if maximalizing
     if (!adjust && !(old_mode & MaximizeVertical)) {
