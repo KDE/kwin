@@ -119,6 +119,13 @@ void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
 
 void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
 {
+    foreach (EffectWindow *window, thumbnails.uniqueKeys()) {
+        foreach (const Data &thumb, thumbnails.values(window)) {
+            if (w == effects->findWindow(thumb.window)) {
+                window->addRepaint(thumb.rect);
+            }
+        }
+    }
     thumbnails.remove(w);
 }
 
