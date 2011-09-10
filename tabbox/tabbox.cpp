@@ -330,11 +330,16 @@ void TabBox::handlerReady()
 void TabBox::initShortcuts(KActionCollection* keys)
 {
     KAction *a = NULL;
+
+    // The setGlobalShortcut(shortcut); shortcut = a->globalShortcut()
+    // sequence is necessary in the case where the user has defined a
+    // custom key binding which KAction::setGlobalShortcut autoloads.
     #define KEY( name, key, fnSlot, shortcut, shortcutSlot )                    \
     a = keys->addAction( name );                                                \
     a->setText( i18n(name) );                                                   \
     shortcut = KShortcut(key);                                                  \
     qobject_cast<KAction*>( a )->setGlobalShortcut(shortcut);                   \
+    shortcut = a->globalShortcut();                                             \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));                          \
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), SLOT(shortcutSlot));
 
@@ -342,7 +347,7 @@ void TabBox::initShortcuts(KActionCollection* keys)
     KEY(I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT + Qt::SHIFT + Qt::Key_Backtab, slotWalkBackThroughWindows(), m_cutWalkThroughWindowsReverse, slotWalkBackThroughWindowsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternative, slotWalkThroughWindowsAlternativeKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternativeReverse, slotWalkBackThroughWindowsAlternativeKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops(), m_cutWalkThroughDesktops, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops(), m_cutWalkThroughDesktops, slotWalkThroughDesktopsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktops (Reverse)"),      0, slotWalkBackThroughDesktops(), m_cutWalkThroughDesktopsReverse, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktop List"),            0, slotWalkThroughDesktopList(), m_cutWalkThroughDesktopList, slotWalkThroughDesktopListKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktop List (Reverse)"),  0, slotWalkBackThroughDesktopList(), m_cutWalkThroughDesktopListReverse, slotWalkBackThroughDesktopListKeyChanged(QKeySequence))
@@ -484,7 +489,7 @@ void TabBox::setCurrentDesktop(int newDesktop)
     setCurrentIndex(m_tabBox->desktopIndex(newDesktop));
 }
 
-void TabBox::TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
+void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
 {
     if (!index.isValid())
         return;
@@ -1150,6 +1155,7 @@ void TabBox::keyRelease(const XKeyEvent& ev)
         m_tabGrab = old_tab_grab;
         if (desktop != -1) {
             setCurrentDesktop(desktop);
+            Workspace::self()->setCurrentDesktop(desktop);
         }
     }
 }
