@@ -35,11 +35,10 @@ Tile::Tile(Client *c, const QRect& area)
     : m_client(c),
       m_floating(false)
 {
+    Q_ASSERT(c != NULL);
     setGeometry(area);
-    if (c) {
-        m_prevGeom = c->geometry();
-    }
-    if (c && !c->isResizable())
+    m_prevGeom = c->geometry();
+    if (!c->isResizable())
         floatTile();
 }
 
@@ -60,8 +59,6 @@ Tile::Tile(const Tile& orig)
 Tile::~Tile()
 {
     restorePreviousGeometry();
-
-    m_client = NULL;
 }
 
 void Tile::commit()
@@ -115,11 +112,6 @@ void Tile::unfloatTile()
 
 void Tile::restorePreviousGeometry()
 {
-    // why this check?
-    // sometimes we remove a Tile, but don't want to remove the children
-    // so the children are set to NULL. In this case leaf() will return
-    // true but m_client will still be null
-    if (!m_client) return;
     if (m_prevGeom.isNull()) {
         QRect area = m_client->workspace()->clientArea(PlacementArea, m_client);
         m_client->workspace()->place(m_client, area);
