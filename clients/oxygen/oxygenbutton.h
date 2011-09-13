@@ -50,15 +50,13 @@ namespace Oxygen
 
         Q_OBJECT
 
-            //! declare animation progress property
-            Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+        //! declare animation progress property
+        Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
 
-            public:
+        public:
 
-            //! constructor
-            explicit Button(Client &parent,
-            const QString &tip=QString(),
-            ButtonType type=ButtonHelp );
+        //! constructor
+        explicit Button(Client&, const QString& = QString(), ButtonType = ButtonHelp );
 
         //! destructor
         ~Button();
