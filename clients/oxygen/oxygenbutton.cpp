@@ -267,9 +267,6 @@ namespace Oxygen
 
             qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
 
-            // draw shadow
-            painter.drawPixmap( 0, 0, _helper.windecoButtonGlow( shadow, scale ) );
-
             // decide on pressed state
             const bool pressed(
                 (_status == Oxygen::Pressed) ||
@@ -278,7 +275,7 @@ namespace Oxygen
                 ( _type == ButtonBelow && _client.keepBelow() ) );
 
             // draw button shape
-            painter.drawPixmap(0, 0, _helper.windecoButton( base, pressed, scale ) );
+            painter.drawPixmap(0, 0, _helper.windecoButton( base, shadow, pressed, scale ) );
 
         }
 

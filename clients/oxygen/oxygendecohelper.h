@@ -50,8 +50,7 @@ namespace Oxygen
         //!@name decoration specific helper functions
         //!
         //@{
-        virtual QPixmap windecoButton(const QColor &color, bool pressed, int size = 21);
-        virtual QPixmap windecoButtonGlow(const QColor &color, int size = 21);
+        virtual QPixmap windecoButton(const QColor &color, const QColor& glow, bool sunken, int size = 21);
         //@}
 
         //
@@ -73,12 +72,14 @@ namespace Oxygen
         //! dynamically allocated debug area
         int _debugArea;
 
+        //! windeco buttons
+        Cache<QPixmap> _windecoButtonCache;
+
         //! titleBar text color cache
         ColorCache _titleBarTextColorCache;
 
         //! button text color cache
         ColorCache _buttonTextColorCache;
-
 
     };
 
