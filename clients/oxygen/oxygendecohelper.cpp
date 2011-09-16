@@ -66,8 +66,8 @@ namespace Oxygen
             QPainter p( pixmap );
             p.setRenderHints(QPainter::Antialiasing);
             p.setPen(Qt::NoPen);
-            qreal u = size/18.0;
-            p.translate( 0.5*u, (0.5-0.668)*u );
+            p.setWindow( 0, 0, 18, 18 );
+            p.translate( 0.5, (0.5-0.668) );
 
             // button glow
             if( glow.isValid() )
@@ -75,7 +75,7 @@ namespace Oxygen
 
                 {
                     // outer shadow
-                    QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
+                    QRadialGradient rg( 8.5, 8.5, 8.5 );
 
                     static const int nPoints(5);
                     const qreal x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
@@ -91,7 +91,7 @@ namespace Oxygen
 
                 {
                     // inner shadow
-                    QRadialGradient rg( u*8.5, u*8.5, u*8.5 );
+                    QRadialGradient rg( 8.5, 8.5, 8.5 );
 
                     static const int nPoints(6);
                     const qreal x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
@@ -116,7 +116,7 @@ namespace Oxygen
 
                 {
                     //plain background
-                    QLinearGradient lg( 0, u*1.665, 0, u*(12.33+1.665) );
+                    QLinearGradient lg( 0, 1.665, 0, (12.33+1.665) );
                     if( sunken )
                     {
                         lg.setColorAt( 1, light );
@@ -126,7 +126,7 @@ namespace Oxygen
                         lg.setColorAt( 1, dark );
                     }
 
-                    const QRectF r( u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
+                    const QRectF r( 0.5*(17-12.33), 1.665, 12.33, 12.33 );
                     p.setBrush( lg );
                     p.drawEllipse( r );
                 }
@@ -134,11 +134,11 @@ namespace Oxygen
                 {
                     // outline circle
                     const qreal penWidth( 0.7 );
-                    QLinearGradient lg( 0, u*1.665, 0, u*(2.0*12.33+1.665) );
+                    QLinearGradient lg( 0, 1.665, 0, (2.0*12.33+1.665) );
                     lg.setColorAt( 0, light );
                     lg.setColorAt( 1, dark );
-                    const QRectF r( u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
-                    p.setPen( QPen( lg, penWidth*u ) );
+                    const QRectF r( 0.5*(17-12.33+penWidth), (1.665+penWidth), (12.33-penWidth), (12.33-penWidth) );
+                    p.setPen( QPen( lg, penWidth ) );
                     p.setBrush( Qt::NoBrush );
                     p.drawEllipse( r );
                 }
