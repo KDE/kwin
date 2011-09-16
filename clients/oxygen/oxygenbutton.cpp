@@ -250,15 +250,15 @@ namespace Oxygen
             _helper.viewNegativeTextBrush().brush(palette).color():
             _helper.viewHoverBrush().brush(palette).color();
 
-        // shadow color
-        QColor shadow = _helper.calcShadowColor( base );
-
         // decide decoration color
         if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
         else if( _status == Oxygen::Hovered  ) color = glow;
 
         if( hasDecoration() )
         {
+
+            // shadow color
+            QColor shadow = _helper.calcShadowColor( base );
 
             // decide shadow color
             if( isAnimated() ) shadow = KColorUtils::mix( shadow, glow, glowIntensity() );
