@@ -258,12 +258,9 @@ namespace Oxygen
         {
 
             // shadow color
-            QColor shadow = _helper.calcShadowColor( base );
-
-            // decide shadow color
-            if( isAnimated() ) shadow = KColorUtils::mix( shadow, glow, glowIntensity() );
+            QColor shadow;
+            if( isAnimated() ) shadow = _helper.alphaColor( glow, glowIntensity() );
             else if( _status == Oxygen::Hovered ) shadow = glow;
-            shadow = _helper.calcDarkColor( shadow );
 
             qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
 
