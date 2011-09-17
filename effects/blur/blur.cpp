@@ -219,6 +219,13 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     m_damagedArea = QRegion();
     m_currentBlur = QRegion();
 
+#ifdef KWIN_HAVE_OPENGLES
+    // HACK: with GLES the screen does not get updated correctly.
+    // as a workaround we trigger full repaints on GLES
+    // we need to find a proper solution or default to blur off on GLES.
+    data.mask |= PAINT_SCREEN_TRANSFORMED;
+#endif
+
     effects->prePaintScreen(data, time);
 }
 
