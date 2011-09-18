@@ -285,6 +285,7 @@ public:
     virtual bool isNotification() const;
     virtual bool isComboBox() const;
     virtual bool isDNDIcon() const;
+    virtual NET::WindowType windowType() const;
     virtual bool isManaged() const; // managed or override-redirect
     virtual bool acceptsFocus() const;
     virtual bool keepAbove() const;

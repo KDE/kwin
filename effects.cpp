@@ -1612,6 +1612,11 @@ bool EffectWindowImpl::isDNDIcon() const
     return toplevel->isDNDIcon();
 }
 
+NET::WindowType EffectWindowImpl::windowType() const
+{
+    return toplevel->windowType();
+}
+
 bool EffectWindowImpl::isManaged() const
 {
     return dynamic_cast< const Client* >(toplevel) != NULL;
