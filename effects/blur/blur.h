@@ -76,7 +76,7 @@ private:
 
     struct BlurWindowInfo {
         GLTexture blurredBackground; // keeps the horizontally blurred background
-        bool textureValid;
+        QRegion damagedRegion;
     };
 
     QHash< const EffectWindow*, BlurWindowInfo > windows;

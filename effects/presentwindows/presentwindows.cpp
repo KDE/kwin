@@ -246,6 +246,7 @@ void PresentWindowsEffect::postPaintScreen()
             }
         }
         effects->setActiveFullScreenEffect(NULL);
+        effects->addRepaintFull();
     }
 
     // Update windows that are changing brightness or opacity

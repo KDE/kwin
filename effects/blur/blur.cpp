@@ -284,16 +284,17 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
         // if a window underneath the blurred area is damaged we have to
         // blur everything
         if (m_damagedArea.intersects(blurArea)) {
-            data.paint |= expandedBlur;
+            const QRegion damagedArea = expand(blurArea & m_damagedArea);
+            data.paint |= expand(damagedArea);
+            if (windows.contains(w)) {
+                windows[w].damagedRegion |= damagedArea;
+            }
             // we keep track of the "damage propagation"
-            m_damagedArea |= expand(blurArea & m_damagedArea);
+            m_damagedArea |= damagedArea;
             // we have to check again whether we do not damage a blurred area
             // of a window we do not cache
             if (expandedBlur.intersects(m_currentBlur)) {
                 data.paint |= m_currentBlur;
-            }
-            if (windows.contains(w)) {
-                windows[w].textureValid = false;
             }
 
             // Normally we would have shrink the clip of the following windows to get a
@@ -358,8 +359,8 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
+    const QRect screen(0, 0, displayWidth(), displayHeight());
     if (shouldBlur(w, mask, data)) {
-        const QRect screen(0, 0, displayWidth(), displayHeight());
         const QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
         if (!shape.isEmpty()) {
@@ -369,6 +370,10 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
                 doBlur(shape, screen, data.opacity * data.contents_opacity);
             }
         }
+    } else if (windows.contains(w)) {
+        // in case the window has a texture cache but is not drawn, we have to reset
+        // the texture cache
+        windows[w].damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
     }
 
     // Draw the window over the blurred area
@@ -485,13 +490,13 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     if (!windows.contains(w)) {
         BlurWindowInfo bwi;
         bwi.blurredBackground = GLTexture(r.width(),r.height());
-        bwi.textureValid = false;
+        bwi.damagedRegion = expanded;
         windows[w] = bwi;
     }
 
     if (windows[w].blurredBackground.size() != r.size()) {
         windows[w].blurredBackground = GLTexture(r.width(),r.height());
-        windows[w].textureValid = false;
+        windows[w].damagedRegion = expanded;
     }
 
     GLTexture targetTexture = windows[w].blurredBackground;
@@ -510,23 +515,26 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     pushMatrix();
 #endif
 
-    if (!windows[w].textureValid) {
+    const QRegion updateBackground = windows[w].damagedRegion & region;
+
+    if (!updateBackground.isEmpty()) {
+        const QRect updateRect = (expand(updateBackground) & expanded).boundingRect();
         // Create a scratch texture and copy the area in the back buffer that we're
         // going to blur into it
-        GLTexture scratch(r.width(), r.height());
+        GLTexture scratch(updateRect.width(), updateRect.height());
         scratch.setFilter(GL_LINEAR);
         scratch.setWrapMode(GL_CLAMP_TO_EDGE);
         scratch.bind();
 
-        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), displayHeight() - r.y() - r.height(),
-                            r.width(), r.height());
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, updateRect.x(), displayHeight() - updateRect.y() - updateRect.height(),
+                            updateRect.width(), updateRect.height());
 
         // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
         target->attachTexture(targetTexture);
         GLRenderTarget::pushRenderTarget(target);
 
         shader->setDirection(Qt::Horizontal);
-        shader->setPixelDistance(1.0 / r.width());
+        shader->setPixelDistance(1.0 / updateRect.width());
 
         modelViewProjectionMatrix.ortho(0, r.width(), r.height(), 0 , 0, 65535);
         modelViewProjectionMatrix.translate(-r.x(), -r.y(), 0);
@@ -536,7 +544,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         // Set up the texture matrix to transform from screen coordinates
         // to texture coordinates.
         textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-        textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
+        textureMatrix.translate(-updateRect.x(), -scratch.height() - updateRect.y(), 0);
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode(GL_TEXTURE);
         loadMatrix(textureMatrix);
@@ -544,11 +552,11 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 #endif
         shader->setTextureMatrix(textureMatrix);
 
-        drawRegion(expanded);
+        drawRegion(updateBackground & screen);
 
         GLRenderTarget::popRenderTarget();
         scratch.unbind();
-        windows[w].textureValid = true;
+        windows[w].damagedRegion -= updateBackground;
     }
 
     // Now draw the horizontally blurred area back to the backbuffer, while
