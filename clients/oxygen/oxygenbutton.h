@@ -90,6 +90,13 @@ namespace Oxygen
 
         //@}
 
+        //! render buttn to provided painter
+        void paint(QPainter& );
+
+        // parent update
+        void parentUpdate( void )
+        { parentWidget()->update( geometry().adjusted( -1, -1, 1, 1 ) ); }
+
         protected:
 
         //! press event
@@ -109,9 +116,6 @@ namespace Oxygen
 
         //! paint
         void paintEvent( QPaintEvent* );
-
-        //! render buttn to provided painter
-        void paint(QPainter& );
 
         //! draw icon
         void drawIcon( QPainter* );

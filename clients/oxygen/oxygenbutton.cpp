@@ -187,6 +187,8 @@ namespace Oxygen
 
         if( _client.compositingActive() )
         {
+            return;
+
             QPainter painter( this );
             painter.setRenderHints(QPainter::Antialiasing);
             painter.setClipRegion( event->region() );
