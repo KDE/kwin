@@ -66,14 +66,14 @@ namespace Oxygen
             QPainter p( pixmap );
             p.setRenderHints(QPainter::Antialiasing);
             p.setPen(Qt::NoPen);
-            p.setWindow( 0, 0, 18, 18 );
+            p.setWindow( 0, 0, 21, 21 );
 
             // button shadow
             if( color.isValid() )
             {
                 p.save();
                 p.translate( 0, -1.2 );
-                drawShadow( p, calcShadowColor( color ), 18 );
+                drawShadow( p, calcShadowColor( color ), 21 );
                 p.restore();
             }
 
@@ -82,11 +82,12 @@ namespace Oxygen
             {
                 p.save();
                 p.translate( 0, -1.2 );
-                drawOuterGlow( p, glow, 18 );
+                drawOuterGlow( p, glow, 21 );
                 p.restore();
             }
 
             // button slab
+            p.setWindow( 0, 0, 18, 18 );
             if( color.isValid() )
             {
                 p.translate( 0, (0.5-0.668) );

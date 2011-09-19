@@ -238,25 +238,30 @@ namespace Oxygen
             buttonDetailColor( _client.backgroundPalette( this, palette ) ):
             buttonDetailColor( palette );
 
-        // glow color
-        QColor glow = isCloseButton() ?
-            _helper.viewNegativeTextBrush().brush(palette).color():
-            _helper.viewHoverBrush().brush(palette).color();
-
         // decide decoration color
-        if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
-        else if( _status == Oxygen::Hovered  ) color = glow;
+        QColor glow;
+        if( isAnimated() || _status == Oxygen::Hovered )
+        {
+            glow = isCloseButton() ?
+                _helper.viewNegativeTextBrush().brush(palette).color():
+                _helper.viewHoverBrush().brush(palette).color();
+
+            if( isAnimated() )
+            {
+
+                color = KColorUtils::mix( color, glow, glowIntensity() );
+                glow = _helper.alphaColor( glow, glowIntensity() );
+
+            } else if( _status == Oxygen::Hovered  ) color = glow;
+
+        }
 
         if( hasDecoration() )
         {
-
-            // shadow color
-            if( isAnimated() ) shadow = _helper.alphaColor( glow, glowIntensity() );
-            else if( _status == Oxygen::Hovered ) shadow = glow;
-
+            // scale
             qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
 
-            // decide on pressed state
+            // pressed state
             const bool pressed(
                 (_status == Oxygen::Pressed) ||
                 ( _type == ButtonSticky && _client.isOnAllDesktops()  ) ||
@@ -264,7 +269,7 @@ namespace Oxygen
                 ( _type == ButtonBelow && _client.keepBelow() ) );
 
             // draw button shape
-            painter.drawPixmap(0, 0, _helper.windecoButton( base, shadow, pressed, scale ) );
+            painter.drawPixmap(0, 0, _helper.windecoButton( base, glow, pressed, scale ) );
 
         }
 
