@@ -1394,6 +1394,24 @@ namespace Oxygen
             painter.setClipRegion( event->region() );
             paint( painter );
 
+            // update buttons
+            if( compositingActive() )
+            {
+                QList<Button*> buttons( widget()->findChildren<Button*>() );
+                foreach( Button* button, buttons )
+                {
+                    if( event->rect().intersects( button->geometry() ) )
+                    {
+                        painter.save();
+                        painter.setViewport( button->geometry() );
+                        painter.setWindow( button->rect() );
+                        button->paint( painter );
+                        painter.restore();
+                    }
+                }
+            }
+
+
         } else {
 
             {

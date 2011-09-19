@@ -82,13 +82,16 @@ namespace Oxygen
         {
             if( _glowIntensity == value ) return;
             _glowIntensity = value;
-            update();
+            parentUpdate();
         }
 
         qreal glowIntensity( void ) const
         { return _glowIntensity; }
 
         //@}
+
+        //! render buttn to provided painter
+        void paint(QPainter& );
 
         protected:
 
@@ -110,8 +113,8 @@ namespace Oxygen
         //! paint
         void paintEvent( QPaintEvent* );
 
-        //! render buttn to provided painter
-        void paint(QPainter& );
+        // parent update
+        void parentUpdate( void );
 
         //! draw icon
         void drawIcon( QPainter* );
