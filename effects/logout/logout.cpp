@@ -110,7 +110,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             blurTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
             blurTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-            blurTarget = new GLRenderTarget(blurTexture);
+            blurTarget = new GLRenderTarget(*blurTexture);
             if (blurTarget->valid())
                 blurSupported = true;
 

@@ -111,7 +111,7 @@ bool LookingGlassEffect::loadData()
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_fbo = new GLRenderTarget(m_texture);
+    m_fbo = new GLRenderTarget(*m_texture);
     if (!m_fbo->valid()) {
         return false;
     }

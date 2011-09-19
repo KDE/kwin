@@ -54,6 +54,7 @@ public:
     // Sets the distance between two pixels
     virtual void setPixelDistance(float val) = 0;
     virtual void setTextureMatrix(const QMatrix4x4 &matrix) = 0;
+    virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
 
     virtual void bind() = 0;
     virtual void unbind() = 0;
@@ -89,6 +90,7 @@ public:
     void bind();
     void unbind();
     void setTextureMatrix(const QMatrix4x4 &matrix);
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
 
     static bool supported();
 
@@ -116,7 +118,8 @@ public:
     void setPixelDistance(float val);
     void bind();
     void unbind();
-    void setTextureMatrix(const QMatrix4x4 &) {};
+    void setTextureMatrix(const QMatrix4x4 &) {}
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) {}
 
     static bool supported();
 

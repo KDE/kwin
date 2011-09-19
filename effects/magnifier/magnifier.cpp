@@ -182,7 +182,7 @@ void MagnifierEffect::zoomIn()
     if (!m_texture) {
         m_texture = new GLTexture(magnifier_size);
         m_texture->setYInverted(false);
-        m_fbo = new GLRenderTarget(m_texture);
+        m_fbo = new GLRenderTarget(*m_texture);
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -217,7 +217,7 @@ void MagnifierEffect::toggle()
         if (!m_texture) {
             m_texture = new GLTexture(magnifier_size);
             m_texture->setYInverted(false);
-            m_fbo = new GLRenderTarget(m_texture);
+            m_fbo = new GLRenderTarget(*m_texture);
         }
     } else {
         target_zoom = 1;

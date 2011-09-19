@@ -39,7 +39,7 @@ TestFBOEffect::TestFBOEffect() : Effect()
     mTexture = new GLTexture(displayWidth(), displayHeight());
     mTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
 
-    mRenderTarget = new GLRenderTarget(mTexture);
+    mRenderTarget = new GLRenderTarget(*mTexture);
 
     mValid = mRenderTarget->valid();
 }
