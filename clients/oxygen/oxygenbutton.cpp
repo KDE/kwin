@@ -122,7 +122,7 @@ namespace Oxygen
             _glowAnimation->setDirection( Animation::Forward );
             if( !isAnimated() ) _glowAnimation->start();
 
-        } else update();
+        } else parentUpdate();
 
     }
 
@@ -139,7 +139,7 @@ namespace Oxygen
         }
 
         _status = Oxygen::Normal;
-        update();
+        parentUpdate();
 
     }
 
@@ -150,7 +150,7 @@ namespace Oxygen
         if( _type == ButtonMax || event->button() == Qt::LeftButton )
         {
             _status = Oxygen::Pressed;
-            update();
+            parentUpdate();
         }
 
         KCommonDecorationButton::mousePressEvent( event );
@@ -161,7 +161,7 @@ namespace Oxygen
     {
 
         _status = ( rect().contains( event->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
-        update();
+        parentUpdate();
 
         KCommonDecorationButton::mouseReleaseEvent( event );
     }
@@ -184,17 +184,8 @@ namespace Oxygen
     {
 
         if( _client.hideTitleBar() ) return;
-
-        if( _client.compositingActive() )
+        if( !_client.compositingActive() )
         {
-            return;
-
-            QPainter painter( this );
-            painter.setRenderHints(QPainter::Antialiasing);
-            painter.setClipRegion( event->region() );
-            paint( painter );
-
-        } else {
 
             {
 
@@ -260,7 +251,6 @@ namespace Oxygen
         {
 
             // shadow color
-            QColor shadow;
             if( isAnimated() ) shadow = _helper.alphaColor( glow, glowIntensity() );
             else if( _status == Oxygen::Hovered ) shadow = glow;
 

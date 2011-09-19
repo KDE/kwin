@@ -82,7 +82,7 @@ namespace Oxygen
         {
             if( _glowIntensity == value ) return;
             _glowIntensity = value;
-            update();
+            parentUpdate();
         }
 
         qreal glowIntensity( void ) const
