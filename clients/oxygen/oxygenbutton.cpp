@@ -109,109 +109,6 @@ namespace Oxygen
     void Button::reset( unsigned long )
     { _glowAnimation->setDuration( _client.configuration().buttonAnimationsDuration() ); }
 
-
-    //___________________________________________________
-    void Button::enterEvent( QEvent *event )
-    {
-
-        KCommonDecorationButton::enterEvent( event );
-        if( _status != Oxygen::Pressed ) _status = Oxygen::Hovered;
-        if( buttonAnimationsEnabled() )
-        {
-
-            _glowAnimation->setDirection( Animation::Forward );
-            if( !isAnimated() ) _glowAnimation->start();
-
-        } else parentUpdate();
-
-    }
-
-    //___________________________________________________
-    void Button::leaveEvent( QEvent *event )
-    {
-
-        KCommonDecorationButton::leaveEvent( event );
-
-        if( _status == Oxygen::Hovered && buttonAnimationsEnabled() )
-        {
-            _glowAnimation->setDirection( Animation::Backward );
-            if( !isAnimated() ) _glowAnimation->start();
-        }
-
-        _status = Oxygen::Normal;
-        parentUpdate();
-
-    }
-
-    //___________________________________________________
-    void Button::mousePressEvent( QMouseEvent *event )
-    {
-
-        if( _type == ButtonMax || event->button() == Qt::LeftButton )
-        {
-            _status = Oxygen::Pressed;
-            parentUpdate();
-        }
-
-        KCommonDecorationButton::mousePressEvent( event );
-    }
-
-    //___________________________________________________
-    void Button::mouseReleaseEvent( QMouseEvent* event )
-    {
-
-        _status = ( rect().contains( event->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
-        parentUpdate();
-
-        KCommonDecorationButton::mouseReleaseEvent( event );
-    }
-
-    //___________________________________________________
-    void Button::resizeEvent( QResizeEvent *event )
-    {
-
-        // resize backing store pixmap
-        if( !_client.compositingActive() )
-        { _pixmap = QPixmap( event->size() ); }
-
-        // base class implementation
-        KCommonDecorationButton::resizeEvent( event );
-
-    }
-
-    //___________________________________________________
-    void Button::paintEvent(QPaintEvent *event)
-    {
-
-        if( _client.hideTitleBar() ) return;
-        if( !_client.compositingActive() )
-        {
-
-            {
-
-                // create painter
-                QPainter painter( &_pixmap );
-                painter.setRenderHints(QPainter::Antialiasing);
-                painter.setClipRect( this->rect().intersected( event->rect() ) );
-
-                // render parent background
-                painter.translate( -geometry().topLeft() );
-                _client.paintBackground( painter );
-
-                // render buttons
-                painter.translate( geometry().topLeft() );
-                paint( painter );
-
-            }
-
-            QPainter painter(this);
-            painter.setClipRegion( event->region() );
-            painter.drawPixmap( QPoint(), _pixmap );
-
-        }
-
-    }
-
     //___________________________________________________
     void Button::paint( QPainter& painter )
     {
@@ -299,6 +196,117 @@ namespace Oxygen
             drawIcon(&painter);
 
         }
+
+    }
+
+    //___________________________________________________
+    void Button::mousePressEvent( QMouseEvent *event )
+    {
+
+        if( _type == ButtonMax || event->button() == Qt::LeftButton )
+        {
+            _status = Oxygen::Pressed;
+            parentUpdate();
+        }
+
+        KCommonDecorationButton::mousePressEvent( event );
+    }
+
+    //___________________________________________________
+    void Button::mouseReleaseEvent( QMouseEvent* event )
+    {
+
+        _status = ( rect().contains( event->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
+        parentUpdate();
+
+        KCommonDecorationButton::mouseReleaseEvent( event );
+    }
+
+    //___________________________________________________
+    void Button::enterEvent( QEvent *event )
+    {
+
+        KCommonDecorationButton::enterEvent( event );
+        if( _status != Oxygen::Pressed ) _status = Oxygen::Hovered;
+        if( buttonAnimationsEnabled() )
+        {
+
+            _glowAnimation->setDirection( Animation::Forward );
+            if( !isAnimated() ) _glowAnimation->start();
+
+        } else parentUpdate();
+
+    }
+
+    //___________________________________________________
+    void Button::leaveEvent( QEvent *event )
+    {
+
+        KCommonDecorationButton::leaveEvent( event );
+
+        if( _status == Oxygen::Hovered && buttonAnimationsEnabled() )
+        {
+            _glowAnimation->setDirection( Animation::Backward );
+            if( !isAnimated() ) _glowAnimation->start();
+        }
+
+        _status = Oxygen::Normal;
+        parentUpdate();
+
+    }
+
+    //___________________________________________________
+    void Button::resizeEvent( QResizeEvent *event )
+    {
+
+        // resize backing store pixmap
+        if( !_client.compositingActive() )
+        { _pixmap = QPixmap( event->size() ); }
+
+        // base class implementation
+        KCommonDecorationButton::resizeEvent( event );
+
+    }
+
+    //___________________________________________________
+    void Button::paintEvent(QPaintEvent *event)
+    {
+
+        if( _client.hideTitleBar() ) return;
+        if( !_client.compositingActive() )
+        {
+
+            {
+
+                // create painter
+                QPainter painter( &_pixmap );
+                painter.setRenderHints(QPainter::Antialiasing);
+                painter.setClipRect( this->rect().intersected( event->rect() ) );
+
+                // render parent background
+                painter.translate( -geometry().topLeft() );
+                _client.paintBackground( painter );
+
+                // render buttons
+                painter.translate( geometry().topLeft() );
+                paint( painter );
+
+            }
+
+            QPainter painter(this);
+            painter.setClipRegion( event->region() );
+            painter.drawPixmap( QPoint(), _pixmap );
+
+        }
+
+    }
+
+    //___________________________________________________
+    void Button::parentUpdate( void )
+    {
+
+        if( _client.compositingActive() && parentWidget() ) parentWidget()->update( geometry().adjusted( -1, -1, 1, 1 ) );
+        else this->update();
 
     }
 
