@@ -386,7 +386,7 @@ public:
      * Constructs a GLRenderTarget
      * @param color texture where the scene will be rendered onto
      **/
-    GLRenderTarget(GLTexture* color);
+    GLRenderTarget(const GLTexture& color);
     ~GLRenderTarget();
 
     /**
@@ -400,6 +400,13 @@ public:
      *  when @ref enable was called.
      **/
     bool disable();
+
+    /**
+     * Sets the target texture
+     * @param target texture where the scene will be rendered on
+     * @since 4.8
+     **/
+    void attachTexture(const GLTexture& target);
 
     bool valid() const  {
         return mValid;
@@ -443,8 +450,9 @@ private:
     static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
+    static QSize s_oldViewport;
 
-    GLTexture* mTexture;
+    GLTexture mTexture;
     bool mValid;
 
     GLuint mFramebuffer;
