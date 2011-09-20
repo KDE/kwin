@@ -273,6 +273,11 @@ namespace Oxygen
     {
 
         if( _client.hideTitleBar() ) return;
+
+        /*
+        do nothing in compositing mode.
+        painting is performed by the parent widget
+        */
         if( !_client.compositingActive() )
         {
 
