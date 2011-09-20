@@ -72,8 +72,8 @@ namespace Oxygen
             if( color.isValid() )
             {
                 p.save();
-                p.translate( 0, -1.2 );
-                drawShadow( p, alphaColor( calcShadowColor( color ), 0.8 ), 21 );
+                p.translate( 0, -1.4 );
+                drawShadow( p, calcShadowColor( color ), 21 );
                 p.restore();
             }
 
