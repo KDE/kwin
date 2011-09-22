@@ -63,14 +63,14 @@ void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
 {
     if (slide) {
         if (w->isOnAllDesktops()) {
-            if (slide_painting_sticky)
-                data.setTransformed();
-            else
+            if (!slide_painting_sticky)
                 w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        } else if (w->isOnDesktop(painting_desktop))
+        } else if (w->isOnDesktop(painting_desktop)) {
+            data.setTransformed();
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        else
+        } else {
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        }
     }
     effects->prePaintWindow(w, data, time);
 }
@@ -133,11 +133,8 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                     slide_painting_diff.setY(slide_painting_diff.y() + h);
             }
             do_sticky = false; // paint on-all-desktop windows only once
-            ScreenPaintData d = data;
-            d.xTranslate += slide_painting_diff.x();
-            d.yTranslate += slide_painting_diff.y();
             // TODO mask parts that are not visible?
-            effects->paintScreen(mask, region, d);
+            effects->paintScreen(mask, region, data);
         }
     }
 }
@@ -146,9 +143,9 @@ void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
 {
     if (slide) {
         // don't move windows on all desktops (compensate screen transformation)
-        if (w->isOnAllDesktops()) { // TODO also fix 'Workspace::movingClient'
-            data.xTranslate -= slide_painting_diff.x();
-            data.yTranslate -= slide_painting_diff.y();
+        if (!w->isOnAllDesktops()) { // TODO also fix 'Workspace::movingClient'
+            data.xTranslate += slide_painting_diff.x();
+            data.yTranslate += slide_painting_diff.y();
         }
     }
     effects->paintWindow(w, mask, region, data);
