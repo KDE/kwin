@@ -49,6 +49,7 @@ namespace Oxygen
         _client(parent),
         _helper( parent.helper() ),
         _type(type),
+        _status( 0 ),
         _forceInactive( false ),
         _glowAnimation( new Animation( 150, this ) ),
         _glowIntensity(0)
@@ -56,10 +57,8 @@ namespace Oxygen
         setAutoFillBackground(false);
         setAttribute(Qt::WA_NoSystemBackground);
 
-        {
-            unsigned int size( _client.configuration().buttonSize() );
-            setFixedSize( size, size );
-        }
+        unsigned int size( _client.configuration().buttonSize() );
+        setFixedSize( size, size );
 
         setCursor(Qt::ArrowCursor);
         setToolTip(tip);
@@ -73,6 +72,7 @@ namespace Oxygen
 
         // setup connections
         reset(0);
+
 
     }
 
@@ -137,7 +137,7 @@ namespace Oxygen
 
         // decide decoration color
         QColor glow;
-        if( isAnimated() || _status == Oxygen::Hovered )
+        if( isAnimated() || (_status&Hovered) )
         {
             glow = isCloseButton() ?
                 _helper.viewNegativeTextBrush().brush(palette).color():
@@ -149,7 +149,7 @@ namespace Oxygen
                 color = KColorUtils::mix( color, glow, glowIntensity() );
                 glow = _helper.alphaColor( glow, glowIntensity() );
 
-            } else if( _status == Oxygen::Hovered  ) color = glow;
+            } else if( _status&Hovered  ) color = glow;
 
         }
 
@@ -160,7 +160,7 @@ namespace Oxygen
 
             // pressed state
             const bool pressed(
-                (_status == Oxygen::Pressed) ||
+                (_status&Pressed) ||
                 ( _type == ButtonSticky && _client.isOnAllDesktops()  ) ||
                 ( _type == ButtonAbove && _client.keepAbove() ) ||
                 ( _type == ButtonBelow && _client.keepBelow() ) );
@@ -205,7 +205,7 @@ namespace Oxygen
 
         if( _type == ButtonMax || event->button() == Qt::LeftButton )
         {
-            _status = Oxygen::Pressed;
+            _status |= Pressed;
             parentUpdate();
         }
 
@@ -216,7 +216,7 @@ namespace Oxygen
     void Button::mouseReleaseEvent( QMouseEvent* event )
     {
 
-        _status = ( rect().contains( event->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
+        _status &= ~Pressed;
         parentUpdate();
 
         KCommonDecorationButton::mouseReleaseEvent( event );
@@ -227,7 +227,8 @@ namespace Oxygen
     {
 
         KCommonDecorationButton::enterEvent( event );
-        if( _status != Oxygen::Pressed ) _status = Oxygen::Hovered;
+        _status |= Hovered;
+
         if( buttonAnimationsEnabled() )
         {
 
@@ -244,13 +245,13 @@ namespace Oxygen
 
         KCommonDecorationButton::leaveEvent( event );
 
-        if( _status == Oxygen::Hovered && buttonAnimationsEnabled() )
+        if( _status&Hovered && buttonAnimationsEnabled() )
         {
             _glowAnimation->setDirection( Animation::Backward );
             if( !isAnimated() ) _glowAnimation->start();
         }
 
-        _status = Oxygen::Normal;
+        _status &= ~Hovered;
         parentUpdate();
 
     }

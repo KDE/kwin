@@ -38,9 +38,9 @@ namespace Oxygen
     class Client;
 
     enum ButtonStatus {
-        Normal,
-        Hovered,
-        Pressed
+        Normal = 0,
+        Hovered = 1<<0,
+        Pressed = 1<<1
     };
 
     Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
@@ -188,7 +188,7 @@ namespace Oxygen
         ButtonType _type;
 
         //! button status
-        ButtonState _status;
+        unsigned int _status;
 
         //! true if button should be forced inactive
         bool _forceInactive;
