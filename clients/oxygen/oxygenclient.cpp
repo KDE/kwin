@@ -1414,7 +1414,7 @@ namespace Oxygen
                 QList<Button*> buttons( widget()->findChildren<Button*>() );
                 foreach( Button* button, buttons )
                 {
-                    if( event->rect().intersects( button->geometry() ) )
+                    if( button->isVisible() && event->rect().intersects( button->geometry() ) )
                     {
                         painter.save();
                         painter.setViewport( button->geometry() );
