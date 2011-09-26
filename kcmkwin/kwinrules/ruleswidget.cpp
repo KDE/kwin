@@ -388,9 +388,9 @@ static NET::WindowType comboToType(int val)
 
 void RulesWidget::setRules(Rules* rules)
 {
-    Rules tmp;
-
-    Q_ASSERT( rules );
+    const bool readFromNewEmptyRules = !rules;
+    if (readFromNewEmptyRules)
+        rules = new Rules;
 
     description->setText(rules->description);
     wmclass->setText(rules->wmclass);
@@ -451,6 +451,11 @@ void RulesWidget::setRules(Rules* rules)
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
     CHECKBOX_FORCE_RULE(blockcompositing,);
+
+    if (readFromNewEmptyRules) {
+        delete rules;
+        rules = NULL; // it's the function parameter...
+    }
 }
 
 #undef GENERIC_RULE
