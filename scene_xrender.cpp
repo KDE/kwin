@@ -535,10 +535,11 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
 
     Client *client = dynamic_cast<Client*>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
+    const QRect decorationRect = toplevel->decorationRect();
     if (client && Workspace::self()->decorationHasAlpha())
-        transformed_shape = QRegion(client->decorationRect());
+        transformed_shape = decorationRect;
     else if (deleted && Workspace::self()->decorationHasAlpha())
-        transformed_shape = QRegion(deleted->decorationRect());
+        transformed_shape = decorationRect;
     else
         transformed_shape = shape();
 
@@ -552,7 +553,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         }
     };
 
-    XTransform identity = {{
+    static XTransform identity = {{
             { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
             { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
             { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) }
@@ -627,12 +628,10 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         }
         //END OF STUPID RADEON HACK
     }
-
 #define MAP_RECT_TO_TARGET(_RECT_) \
         if (blitInTempPixmap) _RECT_.translate(-decorationRect.topLeft()); else _RECT_ = mapToScreen(mask, data, _RECT_)
 
     //BEGIN deco preparations
-    QRect decorationRect;
     bool noBorder = true;
     const QPixmap *left = NULL;
     const QPixmap *top = NULL;
@@ -648,7 +647,6 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             right  = client->rightDecoPixmap();
             bottom = client->bottomDecoPixmap();
             client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
-            decorationRect = client->decorationRect();
         }
         if (deleted && !deleted->noBorder()) {
             noBorder = deleted->noBorder();
@@ -657,7 +655,6 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             right  = deleted->rightDecoPixmap();
             bottom = deleted->bottomDecoPixmap();
             deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
-            decorationRect = deleted->decorationRect();
         }
         if (!noBorder) {
             MAP_RECT_TO_TARGET(dtr);
