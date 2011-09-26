@@ -129,6 +129,8 @@ bool GLSLBlurShader::supported()
 {
     if (!GLPlatform::instance()->supports(GLSL))
         return false;
+    if (!ShaderManager::instance()->isValid())
+        return false;
 
     (void) glGetError(); // Clear the error state
 
@@ -176,6 +178,14 @@ void GLSLBlurShader::setTextureMatrix(const QMatrix4x4 &matrix)
     shader->setUniform("u_textureMatrix", matrix);
 }
 
+void GLSLBlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
+{
+    if (!isValid()) {
+        return;
+    }
+    shader->setUniform("u_modelViewProjectionMatrix", matrix);
+}
+
 void GLSLBlurShader::bind()
 {
     if (!isValid())
@@ -191,17 +201,17 @@ void GLSLBlurShader::unbind()
 
 int GLSLBlurShader::maxKernelSize() const
 {
-    int value;
 #ifdef KWIN_HAVE_OPENGLES
     // GL_MAX_VARYING_FLOATS not available in GLES
     // querying for GL_MAX_VARYING_VECTORS crashes on nouveau
     // using the minimum value of 8
-    return 8;
+    return 8 * 2;
 #else
+    int value;
     glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
-    // Note: In theory the driver could pack two vec2's in one vec4,
-    //       but we'll assume it doesn't do that
-    return value / 4; // Max number of vec4 varyings
+    // Maximum number of vec4 varyings * 2
+    // The code generator will pack two vec2's into each vec4.
+    return value / 2;
 #endif
 }
 
@@ -224,22 +234,29 @@ void GLSLBlurShader::init()
     stream << "uniform vec2 pixelSize;\n\n";
     stream << "attribute vec4 vertex;\n";
     stream << "attribute vec4 texCoord;\n\n";
-    for (int i = 0; i < size; i++)
-        stream << "varying vec2 samplePos" << i << ";\n";
+    stream << "varying vec4 samplePos[" << std::ceil(size / 2.0) << "];\n";
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    vec2 center = vec4(u_textureMatrix*texCoord).st;\n\n";
-
-    for (int i = 0; i < center; i++)
-        stream << "    samplePos" << i << " = center + pixelSize * vec2("
-               << -(1.5 + (center - i - 1) * 2.0) << ");\n";
-    stream << "    samplePos" << center << " = center;\n";
-    for (int i = center + 1; i < size; i++)
-        stream << "    samplePos" << i << " = center + pixelSize * vec2("
-               << 1.5 + (i - center - 1) * 2.0 << ");\n";
+    stream << "    vec4 center = vec4(u_textureMatrix * texCoord).stst;\n";
+    stream << "    vec4 ps = pixelSize.stst;\n\n";
+    for (int i = 0; i < size; i += 2) {
+        float offset1, offset2;
+        if (i < center) {
+            offset1 = -(1.5 + (center - i - 1) * 2.0);
+            offset2 = (i + 1) == center ? 0 : offset1 + 2;
+        } else if (i > center) {
+            offset1 = 1.5 + (i - center - 1) * 2.0;
+            offset2 = (i + 1) == size ? 0 : offset1 + 2;
+        } else {
+            offset1 = 0;
+            offset2 = 1.5;
+        }
+        stream << "    samplePos[" << i / 2 << "] = center + ps * vec4("
+               << offset1 << ", " << offset1 << ", " << offset2 << ", " << offset2 << ");\n";
+    }
     stream << "\n";
-    stream << "    gl_Position = u_modelViewProjectionMatrix*vertex;\n";
+    stream << "    gl_Position = u_modelViewProjectionMatrix * vertex;\n";
     stream << "}\n";
     stream.flush();
 
@@ -247,20 +264,18 @@ void GLSLBlurShader::init()
     // ===================================================================
     QTextStream stream2(&fragmentSource);
 
-    stream2 << "uniform sampler2D texUnit;\n\n";
-    for (int i = 0; i < size; i++)
-        stream2 << "varying vec2 samplePos" << i << ";\n";
-    stream2 << "\n";
+    stream2 << "uniform sampler2D texUnit;\n";
+    stream2 << "varying vec4 samplePos[" << std::ceil(size / 2.0) << "];\n\n";
+
     for (int i = 0; i <= center; i++)
         stream2 << "const vec4 kernel" << i << " = vec4(" << kernel[i] << ");\n";
     stream2 << "\n";
-
     stream2 << "void main(void)\n";
     stream2 << "{\n";
-    stream2 << "    vec4 sum = texture2D(texUnit, samplePos0) * kernel0;\n";
+    stream2 << "    vec4 sum = texture2D(texUnit, samplePos[0].st) * kernel0;\n";
     for (int i = 1; i < size; i++)
-        stream2 << "    sum = sum + texture2D(texUnit, samplePos" << i << ") * kernel"
-                << (i > center ? size - i - 1 : i) << ";\n";
+        stream2 << "    sum = sum + texture2D(texUnit, samplePos[" << i / 2 << ((i % 2) ? "].pq)" : "].st)")
+                << " * kernel" << (i > center ? size - i - 1 : i) << ";\n";
     stream2 << "    gl_FragColor = sum;\n";
     stream2 << "}\n";
     stream2.flush();

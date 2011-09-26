@@ -68,7 +68,7 @@ bool LiquidEffect::loadData()
     mTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     mTexture->setWrapMode(GL_CLAMP);
 
-    mRenderTarget = new GLRenderTarget(mTexture);
+    mRenderTarget = new GLRenderTarget(*mTexture);
     if (!mRenderTarget->valid())
         return false;
 

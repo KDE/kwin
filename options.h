@@ -149,17 +149,6 @@ public:
     // number, or -1 = active screen (Workspace::activeScreen())
     int xineramaPlacementScreen;
 
-    /**
-       MoveResizeMode, either Tranparent or Opaque.
-     */
-    enum MoveResizeMode { Transparent, Opaque };
-
-    MoveResizeMode resizeMode;
-    MoveResizeMode moveMode;
-
-    static MoveResizeMode stringToMoveResizeMode(const QString& s);
-    static const char* moveResizeModeToString(MoveResizeMode mode);
-
     Placement::Policy placement;
 
     bool focusPolicyIsReasonable() {
@@ -341,13 +330,6 @@ public:
         return borderless_maximized_windows;
     }
 
-    bool topMenuEnabled() const {
-        return topmenus;
-    }
-    bool desktopTopMenu() const {
-        return desktop_topmenu;
-    }
-
     // timeout before non-responding application will be killed after attempt to close
     int killPingTimeout;
 
@@ -425,8 +407,6 @@ private:
     bool electric_border_tiling;
     bool borderless_maximized_windows;
     bool show_geometry_tip;
-    bool topmenus;
-    bool desktop_topmenu;
     // List of window classes for which not to use focus stealing prevention
     QStringList ignoreFocusStealingClasses;
     int animationSpeed; // 0 - instant, 5 - very slow

@@ -65,7 +65,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Number of rows:</string>
@@ -78,7 +78,7 @@
           <item row="1" column="1">
            <widget class="KIntSpinBox" name="rowsSpinBox">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>

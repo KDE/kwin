@@ -33,9 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "workspace.h"
 
-#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
 
 class NETWinInfo2;
 
@@ -79,7 +77,6 @@ public:
     bool isDesktop() const;
     bool isDock() const;
     bool isToolbar() const;
-    bool isTopMenu() const;
     bool isMenu() const;
     bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
     bool isDialog() const;
@@ -125,6 +122,7 @@ public:
     bool unredirected() const;
     void suspendUnredirect(bool suspend);
     void addRepaint(const QRect& r);
+    void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
     virtual void addRepaintFull();
     // these call workspace->addRepaint(), but first transform the damage if needed
@@ -163,15 +161,15 @@ signals:
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
     void propertyNotify(KWin::Toplevel* toplevel, long a);
     void geometryChanged();
+    void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
+    void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
 
 protected:
     virtual ~Toplevel();
     void setWindowHandles(Window client, Window frame);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(XPropertyEvent* e);
-#ifdef HAVE_XDAMAGE
     virtual void damageNotifyEvent(XDamageNotifyEvent* e);
-#endif
     Pixmap createWindowPixmap();
     void discardWindowPixmap();
     void addDamage(const QRect& r);
@@ -204,10 +202,9 @@ private:
     Window frame;
     Workspace* wspace;
     Pixmap window_pix;
-#ifdef HAVE_XDAMAGE
     Damage damage_handle;
-#endif
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
+    float damageRatio;
     bool is_shape;
     EffectWindowImpl* effect_window;
     QByteArray resource_name;
@@ -283,11 +280,6 @@ inline QRect Toplevel::rect() const
     return QRect(0, 0, width(), height());
 }
 
-inline QRect Toplevel::decorationRect() const
-{
-    return rect();
-}
-
 inline QRegion Toplevel::decorationPendingRegion() const
 {
     return QRegion();
@@ -313,14 +305,9 @@ inline bool Toplevel::isDock() const
     return windowType() == NET::Dock;
 }
 
-inline bool Toplevel::isTopMenu() const
-{
-    return windowType() == NET::TopMenu;
-}
-
 inline bool Toplevel::isMenu() const
 {
-    return windowType() == NET::Menu && !isTopMenu(); // because of backwards comp.
+    return windowType() == NET::Menu;
 }
 
 inline bool Toplevel::isToolbar() const

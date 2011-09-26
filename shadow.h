@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QtGui/QPixmap>
 #include <kwineffects.h>
+#include <qvarlengtharray.h>
 
 namespace KWin {
 
@@ -58,7 +59,10 @@ public:
     /**
      * @return Cached Shadow Quads
      **/
-    const WindowQuadList &shadowQuads() {
+    const WindowQuadList &shadowQuads() const {
+        return m_shadowQuads;
+    };
+    WindowQuadList &shadowQuads() {
         return m_shadowQuads;
     };
 
@@ -125,6 +129,14 @@ protected:
     };
     virtual void buildQuads();
     void updateShadowRegion();
+    Toplevel *topLevel() {
+        return m_topLevel;
+    };
+    void setShadowRegion(const QRegion &region) {
+        m_shadowRegion = region;
+    };
+    virtual bool prepareBackend() = 0;
+    WindowQuadList m_shadowQuads;
 
 private:
     static QVector<long> readX11ShadowProperty(WId id);
@@ -139,7 +151,6 @@ private:
     int m_leftOffset;
     // caches
     QRegion m_shadowRegion;
-    WindowQuadList m_shadowQuads;
     QSize m_cachedSize;
 };
 

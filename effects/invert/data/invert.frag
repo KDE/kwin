@@ -1,7 +1,5 @@
 uniform sampler2D sampler;
 uniform vec4 modulation;
-uniform float textureWidth;
-uniform float textureHeight;
 uniform float saturation;
 uniform int u_forceAlpha;
 
@@ -23,6 +21,7 @@ void main()
 
     tex *= modulation;
     tex.rgb = vec3(1.0) - tex.rgb;
+    tex.rgb *= tex.a;
 
     gl_FragColor = tex;
 }

@@ -78,7 +78,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
             // connect required signals and slots together...
             connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
             connect(m_pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()));
-            connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup &)));
+            connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup&)));
             connect(this, SIGNAL(defaultClicked()), m_pluginObject, SLOT(defaults()));
             connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));
         }

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "plugins.h"
+#include "config-kwin.h"
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -35,12 +36,16 @@ PluginMgr::PluginMgr()
 {
     defaultPlugin = (QPixmap::defaultDepth() > 8) ?
                     "kwin3_oxygen" : "kwin3_plastik";
+#ifdef KWIN_BUILD_DECORATIONS
     loadPlugin("");   // load the plugin specified in cfg file
+#else
+    setNoDecoration(true);
+#endif
 }
 
 void PluginMgr::error(const QString &error_msg)
 {
-    qWarning("%s", (i18n("KWin: ") + error_msg).toLocal8Bit().data());
+    qWarning("%s", QString(i18n("KWin: ") + error_msg).toLocal8Bit().data());
 
     setNoDecoration(true);
 }

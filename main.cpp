@@ -39,10 +39,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <kdefakes.h>
 #include <QtDBus/QtDBus>
-#include <stdlib.h>
 #include <QMessageBox>
 #include <QEvent>
+
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
+#endif
 
 #include <kdialog.h>
 #include <kstandarddirs.h>
@@ -51,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <KComboBox>
 #include <QVBoxLayout>
+#include <kworkspace/kworkspace.h>
 
 #include <ksmserver_interface.h>
 
@@ -74,6 +77,7 @@ Options* options;
 Atoms* atoms;
 
 int screen_number = -1;
+bool is_multihead = false;
 
 bool initting = false;
 
@@ -403,54 +407,47 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         }
     }
 
-    // KWin only works properly with Qt's native X11 backend; override any compile-time
-    // or command line settings to raster or OpenGL.
-    QApplication::setGraphicsSystem("native");
+    KWorkSpace::trimMalloc();
 
-    if (!restored) {
-        // We only do the multihead fork if we are not restored by the session
-        // manager, since the session manager will register multiple kwins,
-        // one for each screen...
-        QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
-        if (multiHead.toLower() == "true") {
-            Display* dpy = XOpenDisplay(NULL);
-            if (!dpy) {
-                fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
-                        argv[0], XDisplayName(NULL));
-                exit(1);
+    Display* dpy = XOpenDisplay(NULL);
+    if (!dpy) {
+        fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
+                argv[0], XDisplayName(NULL));
+        exit(1);
+    }
+
+    int number_of_screens = ScreenCount(dpy);
+
+    // multi head
+    if (number_of_screens != 1) {
+        KWin::is_multihead = true;
+        KWin::screen_number = DefaultScreen(dpy);
+        int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
+        QByteArray display_name = XDisplayString(dpy);
+        XCloseDisplay(dpy);
+        dpy = 0;
+
+        if ((pos = display_name.lastIndexOf('.')) != -1)
+            display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
+
+        QString envir;
+        for (int i = 0; i < number_of_screens; i++) {
+            // If execution doesn't pass by here, then kwin
+            // acts exactly as previously
+            if (i != KWin::screen_number && fork() == 0) {
+                KWin::screen_number = i;
+                // Break here because we are the child process, we don't
+                // want to fork() anymore
+                break;
             }
+        }
+        // In the next statement, display_name shouldn't contain a screen
+        // number. If it had it, it was removed at the "pos" check
+        envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::screen_number);
 
-            int number_of_screens = ScreenCount(dpy);
-            KWin::screen_number = DefaultScreen(dpy);
-            int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
-            QByteArray display_name = XDisplayString(dpy);
-            XCloseDisplay(dpy);
-            dpy = 0;
-
-            if ((pos = display_name.lastIndexOf('.')) != -1)
-                display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
-
-            QString envir;
-            if (number_of_screens != 1) {
-                for (int i = 0; i < number_of_screens; i++) {
-                    // If execution doesn't pass by here, then kwin
-                    // acts exactly as previously
-                    if (i != KWin::screen_number && fork() == 0) {
-                        KWin::screen_number = i;
-                        // Break here because we are the child process, we don't
-                        // want to fork() anymore
-                        break;
-                    }
-                }
-                // In the next statement, display_name shouldn't contain a screen
-                // number. If it had it, it was removed at the "pos" check
-                envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::screen_number);
-
-                if (putenv(strdup(envir.toAscii()))) {
-                    fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
-                    perror("putenv()");
-                }
-            }
+        if (putenv(strdup(envir.toAscii()))) {
+            fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
+            perror("putenv()");
         }
     }
 
@@ -474,7 +471,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     args.add("lock", ki18n("Disable configuration options"));
     args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
     args.add("crashes <n>", ki18n("Indicate that KWin has recently crashed n times"));
+#ifdef KWIN_BUILD_SCRIPTING
     args.add("noscript", ki18n("Load the script testing dialog"));
+#endif
     KCmdLineArgs::addCmdLineOptions(args);
 
     if (KDE_signal(SIGTERM, KWin::sighandler) == SIG_IGN)
@@ -494,7 +493,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup("kwin");
     KWin::Application a;
+#ifdef KWIN_BUILD_SCRIPTING
     KWin::Scripting scripting;
+#endif
 
     ksmserver.resumeStartup("kwin");
     KWin::SessionManager weAreIndeed;
@@ -517,7 +518,9 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         appname, QDBusConnectionInterface::DontQueueService);
 
     KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
+#ifdef KWIN_BUILD_SCRIPTING
     scripting.start();
+#endif
 
     return a.exec();
 }

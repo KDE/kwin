@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "floating.h"
 
-#include "tile.h"
+#include "tiling/tile.h"
 #include "client.h"
 
 namespace KWin

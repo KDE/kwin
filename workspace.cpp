@@ -44,9 +44,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 #include "client.h"
-#include "tile.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
 #include "desktopchangeosd.h"
+#endif
 #include "atoms.h"
 #include "placement.h"
 #include "notifications.h"
@@ -55,12 +58,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "kwinadaptor.h"
 #include "unmanaged.h"
-#include "scene.h"
 #include "deleted.h"
 #include "effects.h"
-#include "tilinglayout.h"
-
+#include "overlaywindow.h"
+#ifdef KWIN_BUILD_TILING
+#include "tiling/tile.h"
+#include "tiling/tilinglayout.h"
+#include "tiling/tiling.h"
+#endif
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
+#endif
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -101,7 +109,6 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
-    , tilingEnabled_(false)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
@@ -120,33 +127,28 @@ Workspace::Workspace(bool restore)
     , block_showing_desktop(0)
     , was_user_interaction(false)
     , session_saving(false)
-    , control_grab(false)
-    , tab_grab(false)
-    , mouse_emulation(false)
     , block_focus(0)
+#ifdef KWIN_BUILD_TABBOX
     , tab_box(0)
+#endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     , desktop_change_osd(0)
+#endif
     , popup(0)
     , advanced_popup(0)
-    , trans_popup(0)
     , desk_popup(0)
     , activity_popup(0)
     , add_tabs_popup(0)
     , switch_to_tab_popup(0)
     , keys(0)
     , client_keys(NULL)
+    , disable_shortcuts_keys(NULL)
     , client_keys_dialog(NULL)
     , client_keys_client(NULL)
-    , disable_shortcuts_keys(NULL)
     , global_shortcuts_disabled(false)
     , global_shortcuts_disabled_for_client(false)
     , workspaceInit(true)
     , startup(0)
-    , managing_topmenus(false)
-    , topmenu_selection(NULL)
-    , topmenu_watcher(NULL)
-    , topmenu_height(0)
-    , topmenu_space(NULL)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
     , forced_global_mouse_grab(false)
@@ -154,12 +156,10 @@ Workspace::Workspace(bool restore)
     , compositingSuspended(false)
     , compositingBlocked(false)
     , xrrRefreshRate(0)
-    , overlay(None)
-    , overlay_visible(true)
-    , overlay_shown(false)
     , transSlider(NULL)
     , transButton(NULL)
     , forceUnredirectCheck(true)
+    , m_finishingCompositing(false)
 {
     (void) new KWinAdaptor(this);
 
@@ -180,13 +180,8 @@ Workspace::Workspace(bool restore)
     default_colormap = DefaultColormap(display(), info.screen());
     installed_colormap = default_colormap;
 
-    for (int i = 0; i < ELECTRIC_COUNT; ++i) {
-        electric_reserved[i] = 0;
-        electric_windows[i] = None;
-    }
-
-    connect(&temporaryRulesMessages, SIGNAL(gotMessage(const QString&)),
-            this, SLOT(gotTemporaryRulesMessage(const QString&)));
+    connect(&temporaryRulesMessages, SIGNAL(gotMessage(QString)),
+            this, SLOT(gotTemporaryRulesMessage(QString)));
     connect(&rulesUpdatedTimer, SIGNAL(timeout()), this, SLOT(writeWindowRules()));
     connect(&unredirectTimer, SIGNAL(timeout()), this, SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), this, SLOT(resetCompositing()));
@@ -196,6 +191,10 @@ Workspace::Workspace(bool restore)
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     delayFocusTimer = 0;
+
+#ifdef KWIN_BUILD_TILING
+    m_tiling = new Tiling(this);
+#endif
 
     if (restore)
         loadSessionInfo();
@@ -219,8 +218,10 @@ Workspace::Workspace(bool restore)
 
     Extensions::init();
     compositingSuspended = !options->useCompositing;
+#ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
+#endif
     setupCompositing();
 
     // Compatibility
@@ -238,28 +239,65 @@ Workspace::Workspace(bool restore)
     );
 
     client_keys = new KActionCollection(this);
-    initShortcuts();
+
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     desktop_change_osd = new DesktopChangeOSD(this);
+#endif
     m_outline = new Outline();
+
+    initShortcuts();
 
     init();
 
-    connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*, QSize, QSize)), SLOT(desktopResized()));
-    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*, QPoint, QPoint)), SLOT(desktopResized()));
+    connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), SLOT(screenAdded(Kephal::Screen*)));
+    connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), SLOT(screenRemoved(int)));
+    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*,QSize,QSize)), SLOT(screenResized(Kephal::Screen*,QSize,QSize)));
+    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*,QPoint,QPoint)), SLOT(screenMoved(Kephal::Screen*,QPoint,QPoint)));
 
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
     connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));
     connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(activityAdded(QString)));
+
+    connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
+    screenChangedTimer.setSingleShot(true);
+    screenChangedTimer.setInterval(100);
+}
+
+void Workspace::screenChangeTimeout()
+{
+    kDebug() << "It is time to call desktopResized";
+    desktopResized();
+}
+
+void Workspace::screenAdded(Kephal::Screen* screen)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenRemoved(int screen)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenResized(Kephal::Screen* screen, QSize old, QSize newSize)
+{
+    kDebug();
+    screenChangedTimer.start();
+}
+
+void Workspace::screenMoved(Kephal::Screen* screen, QPoint old, QPoint newPos)
+{
+    kDebug();
+    screenChangedTimer.start();
 }
 
 void Workspace::init()
 {
-    reserveElectricBorderActions(true);
-    if (options->electricBorders() == Options::ElectricAlways)
-        reserveElectricBorderSwitching(true);
-    updateElectricBorders();
+#ifdef KWIN_BUILD_SCREENEDGES
+    m_screenEdge.init();
+#endif
 
     // Not used yet
     //topDock = 0L;
@@ -306,7 +344,6 @@ void Workspace::init()
         NET::MenuMask |
         NET::DialogMask |
         NET::OverrideMask |
-        NET::TopMenuMask |
         NET::UtilityMask |
         NET::SplashMask |
         // No compositing window types here unless we support them also as managed window types
@@ -363,7 +400,6 @@ void Workspace::init()
 
     loadDesktopSettings();
     updateDesktopLayout();
-    desktop_change_osd->numberDesktopsChanged();
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
@@ -398,21 +434,9 @@ void Workspace::init()
     if (!kapp->isSessionRestored())
         ++block_focus; // Because it will be set below
 
-    char nm[100];
-    sprintf(nm, "_KDE_TOPMENU_OWNER_S%d", DefaultScreen(display()));
-    Atom topmenu_atom = XInternAtom(display(), nm, False);
-    topmenu_selection = new KSelectionOwner(topmenu_atom);
-    topmenu_watcher = new KSelectionWatcher(topmenu_atom);
-    //TODO: grabXServer(); // Where exactly put this? topmenu selection claiming down belong must be before
-
     {
         // Begin updates blocker block
         StackingUpdatesBlocker blocker(this);
-
-        if (options->topMenuEnabled() && topmenu_selection->claim(false))
-            setupTopMenuHandling(); // This can call updateStackingOrder()
-        else
-            lostTopMenuSelection();
 
         unsigned int i, nwins;
         Window root_return, parent_return;
@@ -426,8 +450,6 @@ void Workspace::init()
                 createUnmanaged(wins[i]);
                 continue;
             }
-            if (topmenu_space && topmenu_space->winId() == wins[i])
-                continue;
             if (attr.map_state != IsUnmapped) {
                 if (fixoffset)
                     fixPositionAfterCrash(wins[ i ], attr);
@@ -471,18 +493,10 @@ void Workspace::init()
     if (new_active_client != NULL)
         activateClient(new_active_client);
 
-    // outline windows for electric border maximize window mode
-    outline_left = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                 CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_right = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                  CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_top = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-    outline_bottom = XCreateWindow(QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-                                   CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
-
+#ifdef KWIN_BUILD_TILING
     // Enable/disable tiling
-    setTilingEnabled(options->tilingOn);
+    m_tiling->setEnabled(options->tilingOn);
+#endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
@@ -496,6 +510,9 @@ Workspace::~Workspace()
 {
     finishCompositing();
     blockStackingUpdates(true);
+#ifdef KWIN_BUILD_TILING
+    delete m_tiling;
+#endif
 
     // TODO: grabXServer();
 
@@ -515,8 +532,9 @@ Workspace::~Workspace()
             it != unmanaged.constEnd();
             ++it)
         (*it)->release();
-    delete tab_box;
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     delete desktop_change_osd;
+#endif
     delete m_outline;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
@@ -524,20 +542,11 @@ Workspace::~Workspace()
     writeWindowRules();
     KGlobal::config()->sync();
 
-    // destroy outline windows for electric border maximize window mode
-    XDestroyWindow(QX11Info::display(), outline_left);
-    XDestroyWindow(QX11Info::display(), outline_right);
-    XDestroyWindow(QX11Info::display(), outline_top);
-    XDestroyWindow(QX11Info::display(), outline_bottom);
-
     delete rootInfo;
     delete supportWindow;
     delete mgr;
     delete startup;
     delete initPositioning;
-    delete topmenu_watcher;
-    delete topmenu_selection;
-    delete topmenu_space;
     delete client_keys_dialog;
     while (!rules.isEmpty()) {
         delete rules.front();
@@ -563,19 +572,15 @@ Client* Workspace::createClient(Window w, bool is_mapped)
         return NULL;
     }
     addClient(c, Allowed);
-
-    tilingLayouts.resize(numberOfDesktops() + 1);
-
-    createTile(c);
-
-    if (scene)
-        scene->windowAdded(c);
+#ifdef KWIN_BUILD_TILING
+    m_tiling->createTile(c);
+#endif
     return c;
 }
 
 Unmanaged* Workspace::createUnmanaged(Window w)
 {
-    if (w == overlay)
+    if (compositing() && w == scene->overlayWindow()->window())
         return NULL;
     Unmanaged* c = new Unmanaged(this);
     if (!c->track(w)) {
@@ -583,8 +588,6 @@ Unmanaged* Workspace::createUnmanaged(Window w)
         return NULL;
     }
     addUnmanaged(c, Allowed);
-    if (scene)
-        scene->windowAdded(c);
     emit unmanagedAdded(c);
     return c;
 }
@@ -620,8 +623,6 @@ void Workspace::addClient(Client* c, allowed_t)
         unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
     if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
         stacking_order.append(c);      // c to be in stacking_order
-    if (c->isTopMenu())
-        addTopMenu(c);
     x_stacking_dirty = true;
     updateClientArea(); // This cannot be in manage(), because the client got added only now
     updateClientLayer(c);
@@ -637,8 +638,10 @@ void Workspace::addClient(Client* c, allowed_t)
     if (c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows(true);
     checkNonExistentClients();
-    if (tab_grab)
+#ifdef KWIN_BUILD_TABBOX
+    if (tabBox()->isGrabbed())
         tab_box->reset(true);
+#endif
 }
 
 void Workspace::addUnmanaged(Unmanaged* c, allowed_t)
@@ -669,13 +672,12 @@ void Workspace::removeClient(Client* c, allowed_t)
     if (c->isNormalWindow())
         Notify::raise(Notify::Delete);
 
-    if (tab_grab && tab_box->currentClient() == c)
+#ifdef KWIN_BUILD_TABBOX
+    if (tabBox()->isGrabbed() && tabBox()->currentClient() == c)
         tab_box->nextPrev(true);
+#endif
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
-    if (tilingEnabled() && tilingLayouts.value(c->desktop())) {
-        removeTile(c);
-    }
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
     desktops.removeAll(c);
@@ -687,8 +689,6 @@ void Workspace::removeClient(Client* c, allowed_t)
     global_focus_chain.removeAll(c);
     attention_chain.removeAll(c);
     showing_desktop_clients.removeAll(c);
-    if (c->isTopMenu())
-        removeTopMenu(c);
     Group* group = findGroup(c->window());
     if (group != NULL)
         group->lostLeader();
@@ -708,8 +708,10 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     updateCompositeBlocking();
 
-    if (tab_grab)
+#ifdef KWIN_BUILD_TABBOX
+    if (tabBox()->isGrabbed())
         tab_box->reset(true);
+#endif
 
     updateClientArea();
 }
@@ -802,95 +804,6 @@ void Workspace::updateFocusChains(Client* c, FocusChainChange change)
             global_focus_chain.append(c);   // Otherwise add as the first one
     }
 }
-
-void Workspace::updateCurrentTopMenu()
-{
-    if (!managingTopMenus())
-        return;
-    // toplevel menubar handling
-    Client* menubar = 0;
-    bool block_desktop_menubar = false;
-    if (active_client) {
-        // Show the new menu bar first...
-        Client* menu_client = active_client;
-        for (;;) {
-            if (menu_client->isFullScreen())
-                block_desktop_menubar = true;
-            for (ClientList::ConstIterator it = menu_client->transients().constBegin();
-                    it != menu_client->transients().constEnd();
-                    ++it)
-                if ((*it)->isTopMenu()) {
-                    menubar = *it;
-                    break;
-                }
-            if (menubar != NULL || !menu_client->isTransient())
-                break;
-            if (menu_client->isModal() || menu_client->transientFor() == NULL)
-                break; // Don't use mainwindow's menu if this is modal or group transient
-            menu_client = menu_client->transientFor();
-        }
-        if (!menubar) {
-            // Try to find any topmenu from the application (#72113)
-            for (ClientList::ConstIterator it = active_client->group()->members().constBegin();
-                    it != active_client->group()->members().constEnd();
-                    ++it)
-                if ((*it)->isTopMenu()) {
-                    menubar = *it;
-                    break;
-                }
-        }
-    }
-    if (!menubar && !block_desktop_menubar && options->desktopTopMenu()) {
-        // Find the menubar of the desktop
-        Client* desktop = findDesktop(true, currentDesktop());
-        if (desktop != NULL) {
-            for (ClientList::ConstIterator it = desktop->transients().constBegin();
-                    it != desktop->transients().constEnd();
-                    ++it)
-                if ((*it)->isTopMenu()) {
-                    menubar = *it;
-                    break;
-                }
-        }
-        // TODO: To be cleaned app with window grouping
-        // Without qt-copy patch #0009, the topmenu and desktop are not in the same group,
-        // thus the topmenu is not transient for it :-/.
-        if (menubar == NULL) {
-            for (ClientList::ConstIterator it = topmenus.constBegin();
-                    it != topmenus.constEnd();
-                    ++it)
-                // kdesktop's topmenu has WM_TRANSIENT_FOR set pointing to the root window
-                // to recognize it here. Also, with the xroot hack in kdesktop, there's
-                // no NET::Desktop window to be transient for.
-                if ((*it)->wasOriginallyGroupTransient()) {
-                    menubar = *it;
-                    break;
-                }
-        }
-    }
-
-    //kDebug( 1212 ) << "CURRENT TOPMENU:" << menubar << ":" << active_client;
-    if (menubar) {
-        if (active_client && !menubar->isOnDesktop(active_client->desktop()))
-            menubar->setDesktop(active_client->desktop());
-        menubar->hideClient(false);
-        topmenu_space->hide();
-        // Make it appear like it's been raised manually - it's in the Dock layer anyway,
-        // and not raising it could mess up stacking order of topmenus within one application,
-        // and thus break raising of mainclients in raiseClient()
-        unconstrained_stacking_order.removeAll(menubar);
-        unconstrained_stacking_order.append(menubar);
-    } else if (!block_desktop_menubar) {
-        // No topmenu active - show the space window, so that there's not empty space
-        topmenu_space->show();
-    }
-
-    // ... Then hide the other ones. Avoids flickers.
-    for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-        if ((*it)->isTopMenu() && (*it) != menubar)
-            (*it)->hideClient(true);
-}
-
 
 void Workspace::updateToolWindows(bool also_hide)
 {
@@ -1029,7 +942,7 @@ void Workspace::slotSettingsChanged(int category)
 {
     kDebug(1212) << "Workspace::slotSettingsChanged()";
     if (category == KGlobalSettings::SETTINGS_SHORTCUTS)
-        readShortcuts();
+        discardPopup();
 }
 
 /**
@@ -1042,19 +955,20 @@ void Workspace::slotReconfigure()
     kDebug(1212) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
-    reserveElectricBorderActions(false);
+#ifdef KWIN_BUILD_SCREENEDGES
+    m_screenEdge.reserveActions(false);
     if (options->electricBorders() == Options::ElectricAlways)
-        reserveElectricBorderSwitching(false);
+        m_screenEdge.reserveDesktopSwitching(false);
+#endif
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
 
-    tab_box->reconfigure();
-    desktop_change_osd->reconfigure();
+    emit configChanged();
     initPositioning->reinitCascading(0);
-    readShortcuts();
+    discardPopup();
     forEachClient(CheckIgnoreFocusStealingProcedure());
     updateToolWindows(true);
 
@@ -1074,7 +988,7 @@ void Workspace::slotReconfigure()
         // If the new decoration doesn't supports tabs then ungroup clients
         if (!decorationSupportsClientGrouping()) {
             QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
-            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); i++)
+            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); ++i)
                 (*i)->removeAll();
         }
         mgr->destroyPreviousPlugin();
@@ -1084,25 +998,12 @@ void Workspace::slotReconfigure()
         c->triggerDecorationRepaint();
     }
 
-    reserveElectricBorderActions(true);
+#ifdef KWIN_BUILD_SCREENEDGES
+    m_screenEdge.reserveActions(true);
     if (options->electricBorders() == Options::ElectricAlways)
-        reserveElectricBorderSwitching(true);
-    updateElectricBorders();
-
-    if (options->topMenuEnabled() && !managingTopMenus()) {
-        if (topmenu_selection->claim(false))
-            setupTopMenuHandling();
-        else
-            lostTopMenuSelection();
-    } else if (!options->topMenuEnabled() && managingTopMenus()) {
-        topmenu_selection->release();
-        lostTopMenuSelection();
-    }
-    topmenu_height = 0; // Invalidate used menu height
-    if (managingTopMenus()) {
-        updateTopMenuGeometry();
-        updateCurrentTopMenu();
-    }
+        m_screenEdge.reserveDesktopSwitching(true);
+    m_screenEdge.update();
+#endif
 
     if (!compositingSuspended) {
         setupCompositing();
@@ -1133,13 +1034,11 @@ void Workspace::slotReconfigure()
         }
     }
 
-    setTilingEnabled(options->tilingOn);
-    foreach (TilingLayout * layout, tilingLayouts) {
-        if (layout)
-            layout->reconfigureTiling();
-    }
+#ifdef KWIN_BUILD_TILING
+    m_tiling->setEnabled(options->tilingOn);
     // just so that we reset windows in the right manner, 'activate' the current active window
-    notifyTilingWindowActivated(activeClient());
+    m_tiling->notifyTilingWindowActivated(activeClient());
+#endif
     if (hasDecorationPlugin()) {
         rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
     } else {
@@ -1153,7 +1052,9 @@ void Workspace::slotReinitCompositing()
     KGlobal::config()->reparseConfiguration();
 
     // Update any settings that can be set in the compositing kcm.
-    updateElectricBorders();
+#ifdef KWIN_BUILD_SCREENEDGES
+    m_screenEdge.update();
+#endif
 
     // Restart compositing
     finishCompositing();
@@ -1173,8 +1074,10 @@ void Workspace::slotReinitCompositing()
     }
 }
 
+static bool _loading_desktop_settings = false;
 void Workspace::loadDesktopSettings()
 {
+    _loading_desktop_settings = true;
     KSharedConfig::Ptr c = KGlobal::config();
     QString groupname;
     if (screen_number == 0)
@@ -1189,10 +1092,23 @@ void Workspace::loadDesktopSettings()
         rootInfo->setDesktopName(i, s.toUtf8().data());
         desktop_focus_chain[i-1] = i;
     }
+
+    int rows = group.readEntry<int>("Rows", 2);
+    rows = qBound(1, rows, n);
+    // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
+    int columns = n / rows;
+    if (n % rows > 0) {
+        columns++;
+    }
+    rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+    rootInfo->activate();
+    _loading_desktop_settings = false;
 }
 
 void Workspace::saveDesktopSettings()
 {
+    if (_loading_desktop_settings)
+        return;
     KSharedConfig::Ptr c = KGlobal::config();
     QString groupname;
     if (screen_number == 0)
@@ -1231,7 +1147,14 @@ QStringList Workspace::configModules(bool controlCenter)
         args << "kwinoptions";
     else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
         args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing" << "kwintabbox" << "kwinscreenedges";
+             << "kwinrules" << "kwincompositing"
+#ifdef KWIN_BUILD_TABBOX
+             << "kwintabbox"
+#endif
+#ifdef KWIN_BUILD_SCREENEDGES
+             << "kwinscreenedges"
+#endif
+             ;
     return args;
 }
 
@@ -1388,9 +1311,13 @@ bool Workspace::setCurrentDesktop(int new_desktop)
         if (movingClient && !movingClient->isOnDesktop(new_desktop)) {
             int old_desktop = movingClient->desktop();
             movingClient->setDesktop(new_desktop);
-            if (tilingEnabled()) {
-                notifyTilingWindowDesktopChanged(movingClient, old_desktop);
+#ifdef KWIN_BUILD_TILING
+            if (m_tiling->isEnabled()) {
+                m_tiling->notifyTilingWindowDesktopChanged(movingClient, old_desktop);
             }
+#else
+    Q_UNUSED(old_desktop)
+#endif
         }
 
         for (int i = stacking_order.size() - 1; i >= 0 ; --i)
@@ -1441,8 +1368,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     else
         focusToNull();
 
-    updateCurrentTopMenu();
-
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
@@ -1456,10 +1381,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     //for ( uint i = 0; i < desktop_focus_chain.size(); i++ )
     //    s += QString::number( desktop_focus_chain[i] ) + ", ";
     //kDebug( 1212 ) << s << "}\n";
-
-    // Not for the very first time, only if something changed and there are more than 1 desktops
-    if (old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1)
-        desktop_change_osd->desktopChanged(old_desktop);
 
     if (compositing())
         addRepaintFull();
@@ -1566,8 +1487,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         requestFocus(findDesktop(true, currentDesktop()));
     else
         focusToNull();
-
-    updateCurrentTopMenu();
 
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
@@ -1677,11 +1596,6 @@ void Workspace::setNumberOfDesktops(int n)
     for (int i = 0; i < int(desktop_focus_chain.size()); i++)
         desktop_focus_chain[i] = i + 1;
 
-    tilingLayouts.resize(numberOfDesktops() + 1);
-
-    // reset the desktop change osd
-    desktop_change_osd->numberDesktopsChanged();
-
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);
 }
@@ -1693,7 +1607,7 @@ void Workspace::setNumberOfDesktops(int n)
  */
 void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 {
-    if (desk < 1 || desk > numberOfDesktops())
+    if ((desk < 1 && desk != NET::OnAllDesktops) || desk > numberOfDesktops())
         return;
     int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
@@ -1714,7 +1628,9 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
     } else
         raiseClient(c);
 
-    notifyTilingWindowDesktopChanged(c, old_desktop);
+#ifdef KWIN_BUILD_TILING
+    m_tiling->notifyTilingWindowDesktopChanged(c, old_desktop);
+#endif
 
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -1877,246 +1793,6 @@ void Workspace::sendTakeActivity(Client* c, Time timestamp, long flags)
 }
 
 /**
- * Invokes keyboard mouse emulation
- */
-void Workspace::slotMouseEmulation()
-{
-    if (mouse_emulation) {
-        ungrabXKeyboard();
-        mouse_emulation = false;
-        return;
-    }
-
-    if (grabXKeyboard()) {
-        mouse_emulation = true;
-        mouse_emulation_state = 0;
-        mouse_emulation_window = 0;
-    }
-}
-
-/**
- * Returns the child window under the mouse and activates the
- * respective client if necessary.
- *
- * Auxiliary function for the mouse emulation system.
- */
-WId Workspace::getMouseEmulationWindow()
-{
-    Window root;
-    Window child = rootWindow();
-    int root_x, root_y, lx, ly;
-    uint state;
-    Window w;
-    Client * c = 0;
-    do {
-        w = child;
-        if (!c)
-            c = findClient(FrameIdMatchPredicate(w));
-        XQueryPointer(display(), w, &root, &child, &root_x, &root_y, &lx, &ly, &state);
-    } while (child != None && child != w);
-
-    if (c && !c->isActive())
-        activateClient(c);
-    return WId(w);
-}
-
-/**
- * Sends a faked mouse event to the specified window. Returns the new button state.
- */
-unsigned int Workspace::sendFakedMouseEvent(const QPoint& pos, WId w, MouseEmulation type,
-        int button, unsigned int state)
-{
-    if (!w)
-        return state;
-    QWidget* widget = QWidget::find(w);
-    if ((!widget ||  qobject_cast<QToolButton*>(widget)) && !findClient(WindowMatchPredicate(w))) {
-        int x, y;
-        Window xw;
-        XTranslateCoordinates(display(), rootWindow(), w, pos.x(), pos.y(), &x, &y, &xw);
-        if (type == EmuMove) {
-            // Motion notify events
-            XEvent e;
-            e.type = MotionNotify;
-            e.xmotion.window = w;
-            e.xmotion.root = rootWindow();
-            e.xmotion.subwindow = w;
-            e.xmotion.time = xTime();
-            e.xmotion.x = x;
-            e.xmotion.y = y;
-            e.xmotion.x_root = pos.x();
-            e.xmotion.y_root = pos.y();
-            e.xmotion.state = state;
-            e.xmotion.is_hint = NotifyNormal;
-            XSendEvent(display(), w, true, ButtonMotionMask, &e);
-        } else {
-            XEvent e;
-            e.type = type == EmuRelease ? ButtonRelease : ButtonPress;
-            e.xbutton.window = w;
-            e.xbutton.root = rootWindow();
-            e.xbutton.subwindow = w;
-            e.xbutton.time = xTime();
-            e.xbutton.x = x;
-            e.xbutton.y = y;
-            e.xbutton.x_root = pos.x();
-            e.xbutton.y_root = pos.y();
-            e.xbutton.state = state;
-            e.xbutton.button = button;
-            XSendEvent(display(), w, true, ButtonPressMask, &e);
-
-            if (type == EmuPress) {
-                switch(button) {
-                case 2:
-                    state |= Button2Mask;
-                    break;
-                case 3:
-                    state |= Button3Mask;
-                    break;
-                default: // 1
-                    state |= Button1Mask;
-                    break;
-                }
-            } else {
-                switch(button) {
-                case 2:
-                    state &= ~Button2Mask;
-                    break;
-                case 3:
-                    state &= ~Button3Mask;
-                    break;
-                default: // 1
-                    state &= ~Button1Mask;
-                    break;
-                }
-            }
-        }
-    }
-
-    return state;
-}
-
-/**
- * Handles keypress event during mouse emulation
- */
-bool Workspace::keyPressMouseEmulation(XKeyEvent& ev)
-{
-    int kc = XKeycodeToKeysym(display(), ev.keycode, 0);
-    int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
-
-    bool is_control = km & ControlMask;
-    bool is_alt = km & Mod1Mask;
-    bool is_shift = km & ShiftMask;
-    int delta = is_control ? 1 : (is_alt ? 32 : 8);
-    QPoint pos = cursorPos();
-
-    switch(kc) {
-    case XK_Left:
-    case XK_KP_Left:
-        pos.rx() -= delta;
-        break;
-    case XK_Right:
-    case XK_KP_Right:
-        pos.rx() += delta;
-        break;
-    case XK_Up:
-    case XK_KP_Up:
-        pos.ry() -= delta;
-        break;
-    case XK_Down:
-    case XK_KP_Down:
-        pos.ry() += delta;
-        break;
-    case XK_Home:
-    case XK_KP_Home:
-        pos.rx() -= delta;
-        pos.ry() -= delta;
-        break;
-    case XK_Page_Up:
-    case XK_KP_Page_Up:
-        pos.rx() += delta;
-        pos.ry() -= delta;
-        break;
-    case XK_Page_Down:
-    case XK_KP_Page_Down:
-        pos.rx() += delta;
-        pos.ry() += delta;
-        break;
-    case XK_End:
-    case XK_KP_End:
-        pos.rx() -= delta;
-        pos.ry() += delta;
-        break;
-    case XK_F1:
-        if (!mouse_emulation_state)
-            mouse_emulation_window = getMouseEmulationWindow();
-        if ((mouse_emulation_state & Button1Mask) == 0)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuPress, Button1, mouse_emulation_state);
-        if (!is_shift)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuRelease, Button1, mouse_emulation_state);
-        break;
-    case XK_F2:
-        if (!mouse_emulation_state)
-            mouse_emulation_window = getMouseEmulationWindow();
-        if ((mouse_emulation_state & Button2Mask) == 0)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuPress, Button2, mouse_emulation_state);
-        if (!is_shift)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuRelease, Button2, mouse_emulation_state);
-        break;
-    case XK_F3:
-        if (!mouse_emulation_state)
-            mouse_emulation_window = getMouseEmulationWindow();
-        if ((mouse_emulation_state & Button3Mask) == 0)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuPress, Button3, mouse_emulation_state);
-        if (!is_shift)
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuRelease, Button3, mouse_emulation_state);
-        break;
-    case XK_Return:
-    case XK_space:
-    case XK_KP_Enter:
-    case XK_KP_Space: {
-        if (!mouse_emulation_state) {
-            // Nothing was pressed, fake a LMB click
-            mouse_emulation_window = getMouseEmulationWindow();
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuPress, Button1, mouse_emulation_state);
-            mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                    EmuRelease, Button1, mouse_emulation_state);
-        } else {
-            // Release all
-            if (mouse_emulation_state & Button1Mask)
-                mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                        EmuRelease, Button1, mouse_emulation_state);
-            if (mouse_emulation_state & Button2Mask)
-                mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                        EmuRelease, Button2, mouse_emulation_state);
-            if (mouse_emulation_state & Button3Mask)
-                mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                        EmuRelease, Button3, mouse_emulation_state);
-        }
-    }
-    // Fall through
-    case XK_Escape:
-        ungrabXKeyboard();
-        mouse_emulation = false;
-        return true;
-    default:
-        return false;
-    }
-
-    QCursor::setPos(pos);
-    if (mouse_emulation_state)
-        mouse_emulation_state = sendFakedMouseEvent(pos, mouse_emulation_window,
-                                EmuMove, 0, mouse_emulation_state);
-
-    return true;
-}
-
-/**
  * Delayed focus functions
  */
 void Workspace::delayFocus()
@@ -2139,408 +1815,6 @@ void Workspace::cancelDelayFocus()
 {
     delete delayFocusTimer;
     delayFocusTimer = 0;
-}
-
-//-----------------------------------------------------------------------------
-// Electric Borders
-//-----------------------------------------------------------------------------
-// Electric Border Window management. Electric borders allow a user to change
-// the virtual desktop or activate another features by moving the mouse pointer
-// to the borders or corners. Technically this is done with input only windows.
-//-----------------------------------------------------------------------------
-
-void Workspace::updateElectricBorders()
-{
-    electric_time_first = xTime();
-    electric_time_last = xTime();
-    electric_time_last_trigger = xTime();
-    electric_current_border = ElectricNone;
-    QRect r = Kephal::ScreenUtils::desktopGeometry();
-    electricTop = r.top();
-    electricBottom = r.bottom();
-    electricLeft = r.left();
-    electricRight = r.right();
-
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (electric_reserved[pos] == 0) {
-            if (electric_windows[pos] != None)
-                XDestroyWindow(display(), electric_windows[pos]);
-            electric_windows[pos] = None;
-            continue;
-        }
-        if (electric_windows[pos] != None)
-            continue;
-        XSetWindowAttributes attributes;
-        attributes.override_redirect = True;
-        attributes.event_mask = EnterWindowMask | LeaveWindowMask;
-        unsigned long valuemask = CWOverrideRedirect | CWEventMask;
-        int xywh[ELECTRIC_COUNT][4] = {
-            { r.left() + 1, r.top(), r.width() - 2, 1 },   // Top
-            { r.right(), r.top(), 1, 1 },                  // Top-right
-            { r.right(), r.top() + 1, 1, r.height() - 2 }, // Etc.
-            { r.right(), r.bottom(), 1, 1 },
-            { r.left() + 1, r.bottom(), r.width() - 2, 1 },
-            { r.left(), r.bottom(), 1, 1 },
-            { r.left(), r.top() + 1, 1, r.height() - 2 },
-            { r.left(), r.top(), 1, 1 }
-        };
-        electric_windows[pos] = XCreateWindow(display(), rootWindow(),
-                                              xywh[pos][0], xywh[pos][1], xywh[pos][2], xywh[pos][3],
-                                              0, CopyFromParent, InputOnly, CopyFromParent, valuemask, &attributes);
-        XMapWindow(display(), electric_windows[pos]);
-
-        // Set XdndAware on the windows, so that DND enter events are received (#86998)
-        Atom version = 4; // XDND version
-        XChangeProperty(display(), electric_windows[pos], atoms->xdnd_aware, XA_ATOM,
-                        32, PropModeReplace, (unsigned char*)(&version), 1);
-    }
-}
-
-void Workspace::destroyElectricBorders()
-{
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos) {
-        if (electric_windows[pos] != None)
-            XDestroyWindow(display(), electric_windows[pos]);
-        electric_windows[pos] = None;
-    }
-}
-
-void Workspace::restoreElectricBorderSize(ElectricBorder border)
-{
-    if (electric_windows[border] == None)
-        return;
-    QRect r = Kephal::ScreenUtils::desktopGeometry();
-    int xywh[ELECTRIC_COUNT][4] = {
-        { r.left() + 1, r.top(), r.width() - 2, 1 },   // Top
-        { r.right(), r.top(), 1, 1 },                  // Top-right
-        { r.right(), r.top() + 1, 1, r.height() - 2 }, // Etc.
-        { r.right(), r.bottom(), 1, 1 },
-        { r.left() + 1, r.bottom(), r.width() - 2, 1 },
-        { r.left(), r.bottom(), 1, 1 },
-        { r.left(), r.top() + 1, 1, r.height() - 2 },
-        { r.left(), r.top(), 1, 1 }
-    };
-    XMoveResizeWindow(display(), electric_windows[border],
-                      xywh[border][0], xywh[border][1], xywh[border][2], xywh[border][3]);
-}
-
-void Workspace::reserveElectricBorderActions(bool reserve)
-{
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos)
-        if (options->electricBorderAction(static_cast<ElectricBorder>(pos))) {
-            if (reserve)
-                reserveElectricBorder(static_cast<ElectricBorder>(pos));
-            else
-                unreserveElectricBorder(static_cast<ElectricBorder>(pos));
-        }
-}
-
-void Workspace::reserveElectricBorderSwitching(bool reserve)
-{
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos)
-        if (reserve)
-            reserveElectricBorder(static_cast<ElectricBorder>(pos));
-        else
-            unreserveElectricBorder(static_cast<ElectricBorder>(pos));
-}
-
-void Workspace::reserveElectricBorder(ElectricBorder border)
-{
-    if (border == ElectricNone)
-        return;
-    if (electric_reserved[border]++ == 0)
-        QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
-}
-
-void Workspace::unreserveElectricBorder(ElectricBorder border)
-{
-    if (border == ElectricNone)
-        return;
-    assert(electric_reserved[border] > 0);
-    if (--electric_reserved[border] == 0)
-        QTimer::singleShot(0, this, SLOT(updateElectricBorders()));
-}
-
-void Workspace::checkElectricBorder(const QPoint& pos, Time now)
-{
-    if ((pos.x() != electricLeft) &&
-            (pos.x() != electricRight) &&
-            (pos.y() != electricTop) &&
-            (pos.y() != electricBottom))
-        return;
-
-    bool have_borders = false;
-    for (int i = 0; i < ELECTRIC_COUNT; ++i)
-        if (electric_windows[i] != None)
-            have_borders = true;
-    if (!have_borders)
-        return;
-
-    Time treshold_set = options->electricBorderDelay(); // Set timeout
-    Time treshold_reset = 250; // Reset timeout
-    Time treshold_trigger = options->electricBorderCooldown(); // Minimum time between triggers
-    int distance_reset = 30; // Mouse should not move more than this many pixels
-    int pushback_pixels = options->electricBorderPushbackPixels();
-
-    ElectricBorder border;
-    if (pos.x() == electricLeft && pos.y() == electricTop)
-        border = ElectricTopLeft;
-    else if (pos.x() == electricRight && pos.y() == electricTop)
-        border = ElectricTopRight;
-    else if (pos.x() == electricLeft && pos.y() == electricBottom)
-        border = ElectricBottomLeft;
-    else if (pos.x() == electricRight && pos.y() == electricBottom)
-        border = ElectricBottomRight;
-    else if (pos.x() == electricLeft)
-        border = ElectricLeft;
-    else if (pos.x() == electricRight)
-        border = ElectricRight;
-    else if (pos.y() == electricTop)
-        border = ElectricTop;
-    else if (pos.y() == electricBottom)
-        border = ElectricBottom;
-    else
-        abort();
-
-    if (electric_windows[border] == None)
-        return;
-
-    if (pushback_pixels == 0) {
-        // no pushback so we have to activate at once
-        electric_time_last = now;
-    }
-    if ((electric_current_border == border) &&
-            (timestampDiff(electric_time_last, now) < treshold_reset) &&
-            (timestampDiff(electric_time_last_trigger, now) > treshold_trigger) &&
-            ((pos - electric_push_point).manhattanLength() < distance_reset)) {
-        electric_time_last = now;
-
-        if (timestampDiff(electric_time_first, now) > treshold_set) {
-            electric_current_border = ElectricNone;
-            electric_time_last_trigger = now;
-            if (movingClient) {
-                // If moving a client or have force doing the desktop switch
-                if (options->electricBorders() != Options::ElectricDisabled)
-                    electricBorderSwitchDesktop(border, pos);
-                return; // Don't reset cursor position
-            } else {
-                if (options->electricBorders() == Options::ElectricAlways &&
-                        (border == ElectricTop || border == ElectricRight ||
-                         border == ElectricBottom || border == ElectricLeft)) {
-                    // If desktop switching is always enabled don't apply it to the corners if
-                    // an effect is applied to it (We will check that later).
-                    electricBorderSwitchDesktop(border, pos);
-                    return; // Don't reset cursor position
-                }
-                switch(options->electricBorderAction(border)) {
-                case ElectricActionDashboard: { // Display Plasma dashboard
-                    QDBusInterface plasmaApp("org.kde.plasma-desktop", "/App");
-                    plasmaApp.call("toggleDashboard");
-                }
-                break;
-                case ElectricActionShowDesktop: {
-                    setShowingDesktop(!showingDesktop());
-                    break;
-                }
-                case ElectricActionLockScreen: { // Lock the screen
-                    QDBusInterface screenSaver("org.kde.screensaver", "/ScreenSaver");
-                    screenSaver.call("Lock");
-                }
-                break;
-                case ElectricActionPreventScreenLocking: {
-                    break;
-                }
-                case ElectricActionNone: // Either desktop switching or an effect
-                default: {
-                    if (effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated(border))
-                        {} // Handled by effects
-                    else {
-                        electricBorderSwitchDesktop(border, pos);
-                        return; // Don't reset cursor position
-                    }
-                }
-                }
-            }
-        }
-    } else {
-        electric_current_border = border;
-        electric_time_first = now;
-        electric_time_last = now;
-        electric_push_point = pos;
-    }
-
-    // Reset the pointer to find out whether the user is really pushing
-    // (the direction back from which it came, starting from top clockwise)
-    const int xdiff[ELECTRIC_COUNT] = { 0,
-                                        -pushback_pixels,
-                                        -pushback_pixels,
-                                        -pushback_pixels,
-                                        0,
-                                        pushback_pixels,
-                                        pushback_pixels,
-                                        pushback_pixels
-                                      };
-    const int ydiff[ELECTRIC_COUNT] = { pushback_pixels,
-                                        pushback_pixels,
-                                        0,
-                                        -pushback_pixels,
-                                        -pushback_pixels,
-                                        -pushback_pixels,
-                                        0,
-                                        pushback_pixels
-                                      };
-    QCursor::setPos(pos.x() + xdiff[border], pos.y() + ydiff[border]);
-}
-
-void Workspace::electricBorderSwitchDesktop(ElectricBorder border, const QPoint& _pos)
-{
-    QPoint pos = _pos;
-    int desk = currentDesktop();
-    const int OFFSET = 2;
-    if (border == ElectricLeft || border == ElectricTopLeft || border == ElectricBottomLeft) {
-        desk = desktopToLeft(desk, options->rollOverDesktops);
-        pos.setX(displayWidth() - 1 - OFFSET);
-    }
-    if (border == ElectricRight || border == ElectricTopRight || border == ElectricBottomRight) {
-        desk = desktopToRight(desk, options->rollOverDesktops);
-        pos.setX(OFFSET);
-    }
-    if (border == ElectricTop || border == ElectricTopLeft || border == ElectricTopRight) {
-        desk = desktopAbove(desk, options->rollOverDesktops);
-        pos.setY(displayHeight() - 1 - OFFSET);
-    }
-    if (border == ElectricBottom || border == ElectricBottomLeft || border == ElectricBottomRight) {
-        desk = desktopBelow(desk, options->rollOverDesktops);
-        pos.setY(OFFSET);
-    }
-    int desk_before = currentDesktop();
-    setCurrentDesktop(desk);
-    if (currentDesktop() != desk_before)
-        QCursor::setPos(pos);
-}
-
-/**
- * Called when the user entered an electric border with the mouse.
- * It may switch to another virtual desktop.
- */
-bool Workspace::electricBorderEvent(XEvent* e)
-{
-    if (e->type == EnterNotify) {
-        for (int i = 0; i < ELECTRIC_COUNT; ++i)
-            if (electric_windows[i] != None && e->xcrossing.window == electric_windows[i]) {
-                // The user entered an electric border
-                checkElectricBorder(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), e->xcrossing.time);
-                return true;
-            }
-    }
-    if (e->type == ClientMessage) {
-        if (e->xclient.message_type == atoms->xdnd_position) {
-            for (int i = 0; i < ELECTRIC_COUNT; ++i)
-                if (electric_windows[i] != None && e->xclient.window == electric_windows[i]) {
-                    updateXTime();
-                    checkElectricBorder(QPoint(
-                                            e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime());
-                    return true;
-                }
-        }
-    }
-    return false;
-}
-
-//-----------------------------------------------------------------------------
-// Top menu
-
-void Workspace::addTopMenu(Client* c)
-{
-    assert(c->isTopMenu());
-    assert(!topmenus.contains(c));
-    topmenus.append(c);
-    if (managingTopMenus()) {
-        int minsize = c->minSize().height();
-        if (minsize > topMenuHeight()) {
-            topmenu_height = minsize;
-            updateTopMenuGeometry();
-        }
-        updateTopMenuGeometry(c);
-        updateCurrentTopMenu();
-    }
-
-    //kDebug( 1212 ) << "NEW TOPMENU:" << c;
-}
-
-void Workspace::removeTopMenu(Client* c)
-{
-    //if ( c->isTopMenu() )
-    //    kDebug( 1212 ) << "REMOVE TOPMENU:" << c;
-
-    assert(c->isTopMenu());
-    assert(topmenus.contains(c));
-    topmenus.removeAll(c);
-    updateCurrentTopMenu();
-    // TODO: Reduce topMenuHeight() if possible?
-}
-
-void Workspace::lostTopMenuSelection()
-{
-    //kDebug( 1212 ) << "lost TopMenu selection";
-
-    // Make sure this signal is always set when not owning the selection
-    disconnect(topmenu_watcher, SIGNAL(lostOwner()), this, SLOT(lostTopMenuOwner()));
-    connect(topmenu_watcher, SIGNAL(lostOwner()), this, SLOT(lostTopMenuOwner()));
-    if (!managing_topmenus)
-        return;
-    connect(topmenu_watcher, SIGNAL(lostOwner()), this, SLOT(lostTopMenuOwner()));
-    disconnect(topmenu_selection, SIGNAL(lostOwnership()), this, SLOT(lostTopMenuSelection()));
-    managing_topmenus = false;
-    delete topmenu_space;
-    topmenu_space = NULL;
-    updateClientArea();
-    for (ClientList::ConstIterator it = topmenus.constBegin();
-            it != topmenus.constEnd();
-            ++it)
-        (*it)->checkWorkspacePosition();
-}
-
-void Workspace::lostTopMenuOwner()
-{
-    if (!options->topMenuEnabled())
-        return;
-    //kDebug( 1212 ) << "TopMenu selection lost owner";
-    if (!topmenu_selection->claim(false)) {
-        //kDebug( 1212 ) << "Failed to claim TopMenu selection";
-        return;
-    }
-    //kDebug( 1212 ) << "Claimed TopMenu selection";
-    setupTopMenuHandling();
-}
-
-void Workspace::setupTopMenuHandling()
-{
-    if (managing_topmenus)
-        return;
-    connect(topmenu_selection, SIGNAL(lostOwnership()), this, SLOT(lostTopMenuSelection()));
-    disconnect(topmenu_watcher, SIGNAL(lostOwner()), this, SLOT(lostTopMenuOwner()));
-    managing_topmenus = true;
-    topmenu_space = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
-    Window stack[2];
-    stack[0] = supportWindow->winId();
-    stack[1] = topmenu_space->winId();
-    XRestackWindows(display(), stack, 2);
-    updateTopMenuGeometry();
-    topmenu_space->show();
-    updateClientArea();
-    updateCurrentTopMenu();
-}
-
-int Workspace::topMenuHeight() const
-{
-    if (topmenu_height == 0) {
-        // Simply create a dummy menubar and use its preferred height as the menu height
-        KMenuBar tmpmenu;
-        tmpmenu.addAction("dummy");
-        topmenu_height = tmpmenu.sizeHint().height();
-    }
-    return topmenu_height;
 }
 
 KDecoration* Workspace::createDecoration(KDecorationBridge* bridge)
@@ -2871,6 +2145,80 @@ Client* Workspace::findSimilarClient(Client* c)
 Outline* Workspace::outline()
 {
     return m_outline;
+}
+
+#ifdef KWIN_BUILD_SCREENEDGES
+ScreenEdge* Workspace::screenEdge()
+{
+    return &m_screenEdge;
+}
+#endif
+
+bool Workspace::hasTabBox() const
+{
+#ifdef KWIN_BUILD_TABBOX
+    return (tab_box != NULL);
+#else
+    return false;
+#endif
+}
+
+#ifdef KWIN_BUILD_TABBOX
+TabBox::TabBox* Workspace::tabBox() const
+{
+    return tab_box;
+}
+#endif
+
+#ifdef KWIN_BUILD_TILING
+Tiling* Workspace::tiling()
+{
+    return m_tiling;
+}
+#endif
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::toggleTiling()
+{
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling) {
+        m_tiling->slotToggleTiling();
+    }
+#endif
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::nextTileLayout()
+{
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling) {
+        m_tiling->slotNextTileLayout();
+    }
+#endif
+}
+
+/*
+ * Called from D-BUS
+ */
+void Workspace::previousTileLayout()
+{
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling) {
+        m_tiling->slotPreviousTileLayout();
+    }
+#endif
+}
+
+void Workspace::dumpTiles() const {
+#ifdef KWIN_BUILD_TILING
+    if (m_tiling) {
+        m_tiling->dumpTiles();
+    }
+#endif
 }
 
 } // namespace

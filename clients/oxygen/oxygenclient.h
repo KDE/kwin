@@ -79,10 +79,9 @@ namespace Oxygen
         virtual bool isMaximized( void ) const
         { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
 
-
         //! true if animations are used
-        bool useAnimations( void ) const
-        { return configuration().useAnimations(); }
+        bool animationsEnabled( void ) const
+        { return configuration().animationsEnabled(); }
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
@@ -223,7 +222,10 @@ namespace Oxygen
         virtual bool eventFilter( QObject*, QEvent* );
 
         //! resize event
-        virtual void resizeEvent(QResizeEvent *e);
+        virtual void resizeEvent( QResizeEvent* );
+
+        //! paint background to painter
+        void paintBackground( QPainter& ) const;
 
         public slots:
 
@@ -253,6 +255,9 @@ namespace Oxygen
 
         //! paint
         virtual void paintEvent( QPaintEvent* );
+
+        //! render full decoration to provided painter
+        virtual void paint( QPainter& );
 
         //! mouse press event
         virtual bool mousePressEvent( QMouseEvent* );
@@ -335,15 +340,15 @@ namespace Oxygen
         QPixmap itemDragPixmap( int, const QRect& );
 
         //! return true when activity change are animated
-        bool animateActiveChange( void ) const
-        { return ( useAnimations() && !isPreview() ); }
+        bool shadowAnimationsEnabled( void ) const
+        { return ( animationsEnabled() && configuration().shadowAnimationsEnabled() && !isPreview() ); }
 
         //! return true when activity change are animated
-        bool animateTitleChange( void ) const
+        bool titleAnimationsEnabled( void ) const
         {
             return
-                useAnimations() &&
-                configuration().animateTitleChange() &&
+                animationsEnabled() &&
+                configuration().titleAnimationsEnabled() &&
                 !configuration().drawTitleOutline() &&
                 !hideTitleBar() &&
                 !isPreview();
@@ -422,6 +427,9 @@ namespace Oxygen
 
         //! factory
         Factory* _factory;
+
+        //! backing store pixmap (when compositing is not active)
+        QPixmap _pixmap;
 
         //! size grip widget
         SizeGrip* _sizeGrip;

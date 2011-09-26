@@ -81,7 +81,7 @@ void TabstripDecoration::paintTab( QPainter &painter, const QRect &geom, ClientG
     // Draw border around the tab
     painter.setPen( Qt::black );
     painter.drawRect( geom.adjusted( 0, 0, -1, -1 ));
-    painter.setPen( Qt::white );
+    painter.setPen( TabstripFactory::outlineColor() );
     painter.drawRect( geom.adjusted( 1, 1, -2, -2 ));
 
     // Background
@@ -132,7 +132,7 @@ void TabstripDecoration::paintEvent( QPaintEvent * )
     // Draw black/white border around the main window
     painter.setPen( Qt::black );
     painter.drawRect( 0, titlebar.height() - 1, frame.width() - 1, frame.height() - titlebar.height() );
-    painter.setPen( Qt::white );
+    painter.setPen( TabstripFactory::outlineColor() );
     painter.drawRect( 1, titlebar.height(), frame.width() - 3, frame.height() - titlebar.height() - 2 );
 
     QList< ClientGroupItem > tabList = clientGroupItems();
@@ -176,7 +176,7 @@ void TabstripDecoration::paintEvent( QPaintEvent * )
         painter.setPen( Qt::black );
         painter.drawRect( 0, 0, allTabGeom.left(), allTabGeom.height() - 1 );
         painter.drawRect( allTabGeom.right() - 1, 0, frame.width() - allTabGeom.right(), allTabGeom.height() - 1 );
-        painter.setPen( Qt::white );
+        painter.setPen( TabstripFactory::outlineColor() );
         painter.drawRect( 1, 1, allTabGeom.left() - 2, allTabGeom.height() - 3 );
         painter.drawRect( allTabGeom.right(), 1, frame.width() - allTabGeom.right() - 2, allTabGeom.height() - 3 );
 
@@ -189,7 +189,7 @@ void TabstripDecoration::paintEvent( QPaintEvent * )
         // Draw border around the titlebar
         painter.setPen( Qt::black );
         painter.drawRect( titlebar.adjusted( 0, 0, -1, -1 ));
-        painter.setPen( Qt::white );
+        painter.setPen( TabstripFactory::outlineColor() );
         painter.drawRect( titlebar.adjusted( 1, 1, -2, -2 ));
 
         // Background

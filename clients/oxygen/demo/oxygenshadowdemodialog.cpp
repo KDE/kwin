@@ -73,19 +73,19 @@ namespace Oxygen
             _backgroundCheckBox->setChecked( true );
             buttonBox->addButton( _backgroundCheckBox, QDialogButtonBox::ResetRole );
 
-            connect( _backgroundCheckBox, SIGNAL( toggled( bool ) ), ui.inactiveRoundWidget,  SLOT( toggleBackground( bool ) ) );
-            connect( _backgroundCheckBox, SIGNAL( toggled( bool ) ), ui.inactiveSquareWidget, SLOT( toggleBackground( bool ) ) );
-            connect( _backgroundCheckBox, SIGNAL( toggled( bool ) ), ui.activeRoundWidget, SLOT( toggleBackground( bool ) ) );
-            connect( _backgroundCheckBox, SIGNAL( toggled( bool ) ), ui.activeSquareWidget, SLOT( toggleBackground( bool ) ) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.inactiveRoundWidget,  SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.inactiveSquareWidget, SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.activeRoundWidget, SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.activeSquareWidget, SLOT(toggleBackground(bool)) );
 
         }
 
         // connections
-        connect( button( KDialog::Apply ), SIGNAL( clicked() ), SLOT( save() ) );
+        connect( button( KDialog::Apply ), SIGNAL(clicked()), SLOT(save()) );
 
         // use DBus connection to update on oxygen configuration change
         QDBusConnection dbus = QDBusConnection::sessionBus();
-        dbus.connect( QString(), "/OxygenWindeco", "org.kde.Oxygen.Style", "reparseConfiguration", this, SLOT( reparseConfiguration( void ) ) );
+        dbus.connect( QString(), "/OxygenWindeco", "org.kde.Oxygen.Style", "reparseConfiguration", this, SLOT(reparseConfiguration()) );
 
     }
 

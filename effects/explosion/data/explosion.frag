@@ -3,8 +3,7 @@ uniform sampler2D startOffsetTexture;
 uniform sampler2D endOffsetTexture;
 uniform float factor;
 uniform float scale;
-uniform float textureWidth;
-uniform float textureHeight;
+uniform vec2 windowSize;
 
 const float regionTexSize = 512.0;
 
@@ -17,14 +16,14 @@ vec2 getOffset(sampler2D texture, vec2 pos)
 
 vec2 pix2tex( vec2 pix )
 {
-    return vec2( pix.s / textureWidth, pix.t / textureHeight );
+    return pix/windowSize;
 }
 
 void main()
 {
     // Original (unscaled) position in pixels
     // ### FIXME: Use a custom vertex shader that outputs the untransformed texcoords
-    vec2 origpos = varyingTexCoords * vec2(textureWidth, textureHeight);
+    vec2 origpos = varyingTexCoords * windowSize;
     // Position in pixels on the scaled window
     vec2 pos = origpos * scale;
     // Start/end position of current region

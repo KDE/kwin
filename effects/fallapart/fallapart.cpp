@@ -160,4 +160,9 @@ void FallApartEffect::slotWindowDeleted(EffectWindow* c)
     windows.remove(c);
 }
 
+bool FallApartEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
+
 } // namespace

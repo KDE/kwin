@@ -172,6 +172,11 @@ void ThumbnailAsideEffect::repaintAll()
     effects->addRepaint(d.rect);
 }
 
+bool ThumbnailAsideEffect::isActive() const
+{
+    return !windows.isEmpty();
+}
+
 } // namespace
 
 #include "thumbnailaside.moc"

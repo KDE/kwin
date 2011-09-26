@@ -38,9 +38,7 @@ Toplevel::Toplevel(Workspace* ws)
     , frame(None)
     , wspace(ws)
     , window_pix(None)
-#ifdef HAVE_XDAMAGE
     , damage_handle(None)
-#endif
     , is_shape(false)
     , effect_window(NULL)
     , wmClientLeaderWin(0)
@@ -51,9 +49,7 @@ Toplevel::Toplevel(Workspace* ws)
 
 Toplevel::~Toplevel()
 {
-#ifdef HAVE_XDAMAGE
     assert(damage_handle == None);
-#endif
     discardWindowPixmap();
     delete info;
 }
@@ -98,6 +94,14 @@ QDebug& operator<<(QDebug& stream, const ConstToplevelList& list)
     return stream;
 }
 
+QRect Toplevel::decorationRect() const
+{
+    QRect r(rect());
+    if (hasShadow())
+        r |= shadow()->shadowRegion().boundingRect();
+    return r;
+}
+
 void Toplevel::detectShape(Window id)
 {
     is_shape = Extensions::hasShape(id);
@@ -115,9 +119,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     wspace = c->wspace;
     window_pix = c->window_pix;
     ready_for_painting = c->ready_for_painting;
-#ifdef HAVE_XDAMAGE
     damage_handle = None;
-#endif
     damage_region = c->damage_region;
     repaints_region = c->repaints_region;
     is_shape = c->is_shape;
@@ -323,7 +325,6 @@ void Toplevel::setOpacity(double new_opacity)
     if (compositing()) {
         addRepaintFull();
         emit opacityChanged(this, old_opacity);
-        scene->windowOpacityChanged(this);
     }
 }
 
@@ -354,11 +355,18 @@ bool Toplevel::isOnScreen(int screen) const
 
 void Toplevel::getShadow()
 {
+    QRect dirtyRect;  // old & new shadow region
     if (hasShadow()) {
+        dirtyRect = shadow()->shadowRegion().boundingRect();
         effectWindow()->sceneWindow()->shadow()->updateShadow();
     } else {
         Shadow::createShadow(this);
-        addRepaintFull();
+    }
+    if (hasShadow())
+        dirtyRect |= shadow()->shadowRegion().boundingRect();
+    if (dirtyRect.isValid()) {
+        dirtyRect.translate(pos());
+        workspace()->addRepaint(dirtyRect);
     }
 }
 

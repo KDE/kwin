@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -57,10 +57,8 @@ void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
 {
     painted = QRegion();
     effects->paintScreen(mask, region, data);
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (effects->compositingType() == OpenGLCompositing)
         paintGL();
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
         paintXrender();
@@ -77,7 +75,7 @@ void ShowPaintEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 
 void ShowPaintEffect::paintGL()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #ifndef KWIN_HAVE_OPENGLES
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 #endif

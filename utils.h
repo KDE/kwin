@@ -50,12 +50,6 @@ Q_DECLARE_METATYPE(QList<int>)
 namespace KWin
 {
 
-#ifndef HAVE_XDAMAGE
-typedef long Damage;
-struct XDamageNotifyEvent {
-};
-#endif
-
 // window types that are supported as normal windows (i.e. KWin actually manages them)
 const int SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask

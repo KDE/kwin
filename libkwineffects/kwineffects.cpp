@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwineffects.h"
 
-#include "kwinglutils.h"
 #include "kwinxrenderutils.h"
 
 #include <QtDBus/QtDBus>
@@ -172,6 +171,11 @@ bool Effect::provides(Feature)
     return false;
 }
 
+bool Effect::isActive() const
+{
+    return true;
+}
+
 void Effect::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     effects->drawWindow(w, mask, region, data);
@@ -230,11 +234,7 @@ double Effect::animationTime(int defaultTime)
 //****************************************
 
 EffectsHandler::EffectsHandler(CompositingType type)
-    : current_paint_screen(0)
-    , current_paint_window(0)
-    , current_draw_window(0)
-    , current_build_quads(0)
-    , compositing_type(type)
+    : compositing_type(type)
 {
     if (compositing_type == NoCompositing)
         return;
@@ -260,20 +260,6 @@ Window EffectsHandler::createFullScreenInputWindow(Effect* e, const QCursor& cur
 CompositingType EffectsHandler::compositingType() const
 {
     return compositing_type;
-}
-
-bool EffectsHandler::saturationSupported() const
-{
-    switch(compositing_type) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    case OpenGLCompositing:
-        return GLTexture::saturationSupported();
-#endif
-    case XRenderCompositing:
-        return false; // never
-    default:
-        abort();
-    }
 }
 
 void EffectsHandler::sendReloadMessage(const QString& effectname)
@@ -547,7 +533,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     return ret;
 }
 
-void WindowQuadList::makeArrays(float** vertices, float** texcoords) const
+void WindowQuadList::makeArrays(float** vertices, float** texcoords, const QSizeF& size, bool yInverted) const
 {
     *vertices = new float[ count() * 6 * 2 ];
     *texcoords = new float[ count() * 6 * 2 ];
@@ -569,18 +555,33 @@ void WindowQuadList::makeArrays(float** vertices, float** texcoords) const
         *vpos++ = at(i)[ 1 ].x();
         *vpos++ = at(i)[ 1 ].y();
 
-        *tpos++ = at(i)[ 1 ].tx;
-        *tpos++ = at(i)[ 1 ].ty;
-        *tpos++ = at(i)[ 0 ].tx;
-        *tpos++ = at(i)[ 0 ].ty;
-        *tpos++ = at(i)[ 3 ].tx;
-        *tpos++ = at(i)[ 3 ].ty;
-        *tpos++ = at(i)[ 3 ].tx;
-        *tpos++ = at(i)[ 3 ].ty;
-        *tpos++ = at(i)[ 2 ].tx;
-        *tpos++ = at(i)[ 2 ].ty;
-        *tpos++ = at(i)[ 1 ].tx;
-        *tpos++ = at(i)[ 1 ].ty;
+        if (yInverted) {
+            *tpos++ = at(i)[ 1 ].tx / size.width();
+            *tpos++ = at(i)[ 1 ].ty / size.height();
+            *tpos++ = at(i)[ 0 ].tx / size.width();
+            *tpos++ = at(i)[ 0 ].ty / size.height();
+            *tpos++ = at(i)[ 3 ].tx / size.width();
+            *tpos++ = at(i)[ 3 ].ty / size.height();
+            *tpos++ = at(i)[ 3 ].tx / size.width();
+            *tpos++ = at(i)[ 3 ].ty / size.height();
+            *tpos++ = at(i)[ 2 ].tx / size.width();
+            *tpos++ = at(i)[ 2 ].ty / size.height();
+            *tpos++ = at(i)[ 1 ].tx / size.width();
+            *tpos++ = at(i)[ 1 ].ty / size.height();
+        } else {
+            *tpos++ = at(i)[ 1 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 1 ].ty / size.height();
+            *tpos++ = at(i)[ 0 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 0 ].ty / size.height();
+            *tpos++ = at(i)[ 3 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 3 ].ty / size.height();
+            *tpos++ = at(i)[ 3 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 3 ].ty / size.height();
+            *tpos++ = at(i)[ 2 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 2 ].ty / size.height();
+            *tpos++ = at(i)[ 1 ].tx / size.width();
+            *tpos++ = 1.0f - at(i)[ 1 ].ty / size.height();
+        }
     }
 }
 
@@ -686,26 +687,17 @@ QRegion PaintClipper::paintArea()
 struct PaintClipper::Iterator::Data {
     Data() : index(0) {}
     int index;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QVector< QRect > rects;
-#endif
 };
 
 PaintClipper::Iterator::Iterator()
     : data(new Data)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (clip() && effects->compositingType() == OpenGLCompositing) {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_SCISSOR_BIT);
-#endif
-        if (!GLRenderTarget::isRenderTargetBound())
-            glEnable(GL_SCISSOR_TEST);
         data->rects = paintArea().rects();
         data->index = -1;
         next(); // move to the first one
     }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (clip() && effects->compositingType() == XRenderCompositing) {
         XserverRegion region = toXserverRegion(paintArea());
@@ -717,15 +709,6 @@ PaintClipper::Iterator::Iterator()
 
 PaintClipper::Iterator::~Iterator()
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (clip() && effects->compositingType() == OpenGLCompositing) {
-        if (!GLRenderTarget::isRenderTargetBound())
-            glDisable(GL_SCISSOR_TEST);
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
-    }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (clip() && effects->compositingType() == XRenderCompositing)
         XFixesSetPictureClipRegion(display(), effects->xrenderBufferPicture(), 0, 0, None);
@@ -737,10 +720,8 @@ bool PaintClipper::Iterator::isDone()
 {
     if (!clip())
         return data->index == 1; // run once
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (effects->compositingType() == OpenGLCompositing)
         return data->index >= data->rects.count(); // run once per each area
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
         return data->index == 1; // run once
@@ -751,23 +732,14 @@ bool PaintClipper::Iterator::isDone()
 void PaintClipper::Iterator::next()
 {
     data->index++;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if (clip() && effects->compositingType() == OpenGLCompositing && !GLRenderTarget::isRenderTargetBound() && data->index < data->rects.count()) {
-        const QRect& r = data->rects[ data->index ];
-        // Scissor rect has to be given in OpenGL coords
-        glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-    }
-#endif
 }
 
 QRect PaintClipper::Iterator::boundingRect() const
 {
     if (!clip())
         return infiniteRegion();
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if (effects->compositingType() == OpenGLCompositing)
         return data->rects[ data->index ];
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
         return paintArea().boundingRect();
@@ -852,13 +824,6 @@ void WindowMotionManager::manage(EffectWindow *w)
 
 void WindowMotionManager::unmanage(EffectWindow *w)
 {
-    /// superflous, see below
-//     if (!m_managedWindows.contains(w))
-//         return;
-    /// this makes no sense?!
-//     QPointF diffT = m_managedWindows[ w ].translation.distance();
-//     QPointF diffS = m_managedWindows[ w ].scale.distance();
-
     m_movingWindowsSet.remove(w);
     m_managedWindows.remove(w);
 }
@@ -875,7 +840,7 @@ void WindowMotionManager::calculate(int time)
         // Just skip it completely if the user wants no animation
         m_movingWindowsSet.clear();
         QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-        for (; it != m_managedWindows.end(); it++) {
+        for (; it != m_managedWindows.end(); ++it) {
             WindowMotion *motion = &it.value();
             motion->translation.finish();
             motion->scale.finish();
@@ -883,9 +848,8 @@ void WindowMotionManager::calculate(int time)
     }
 
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-    for (; it != m_managedWindows.end(); it++) {
+    for (; it != m_managedWindows.end(); ++it) {
         WindowMotion *motion = &it.value();
-        EffectWindow *window = it.key();
         int stopped = 0;
 
         // TODO: What happens when distance() == 0 but we are still moving fast?
@@ -897,8 +861,8 @@ void WindowMotionManager::calculate(int time)
         else {
             // Still moving
             trans->calculate(time);
-            const short fx = trans->target().x() <= window->x() ? -1 : 1;
-            const short fy = trans->target().y() <= window->y() ? -1 : 1;
+            const short fx = trans->target().x() <= trans->startValue().x() ? -1 : 1;
+            const short fy = trans->target().y() <= trans->startValue().y() ? -1 : 1;
             if (trans->distance().x()*fx/0.5 < 1.0 && trans->velocity().x()*fx/0.2 < 1.0 &&
                 trans->distance().y()*fy/0.5 < 1.0 && trans->velocity().y()*fy/0.2 < 1.0) {
                 // Hide tiny oscillations
@@ -932,7 +896,7 @@ void WindowMotionManager::calculate(int time)
 void WindowMotionManager::reset()
 {
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
-    for (; it != m_managedWindows.end(); it++) {
+    for (; it != m_managedWindows.end(); ++it) {
         WindowMotion *motion = &it.value();
         EffectWindow *window = it.key();
         motion->translation.setTarget(window->pos());

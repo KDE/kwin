@@ -22,9 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-#include <kwinconfig.h> // KWIN_HAVE_OPENGL
-
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils_funcs.h>
 
 #include <QtGui/QPixmap>
@@ -33,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QSize>
 #include <QtCore/QSharedData>
 #include <QtCore/QStack>
+
+#include "kwingltexture.h"
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -130,120 +129,6 @@ KWIN_EXPORT void loadMatrix(const QMatrix4x4 &matrix);
  **/
 KWIN_EXPORT void popMatrix();
 
-
-class KWIN_EXPORT GLTexture
-    : public QSharedData
-{
-public:
-    GLTexture();
-    explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
-    explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
-    GLTexture(const QString& fileName);
-    GLTexture(int width, int height);
-    virtual ~GLTexture();
-
-    bool isNull() const;
-    QSize size() const;
-    int width() const {
-        return mSize.width();    /// @since 4.5
-    }
-    int height() const {
-        return mSize.height();    /// @since 4.5
-    }
-
-    virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
-    virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
-    virtual bool load(const QString& fileName);
-    virtual void discard();
-    virtual void bind();
-    virtual void unbind();
-    void render(QRegion region, const QRect& rect);
-    /**
-     * Set up texture transformation matrix to automatically map unnormalized
-     * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
-     * to OpenGL coordinates. Automatically adjusts for different texture
-     * types. This can be done only for one texture at a time, repeated
-     * calls for the same texture are allowed though, requiring the same
-     * amount of calls to disableUnnormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void enableUnnormalizedTexCoords();
-    /**
-     * Disables transformation set up using enableUnnormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void disableUnnormalizedTexCoords();
-    /**
-     * Set up texture transformation matrix to automatically map normalized
-     * texture coordinates (i.e. 0 to 1, 0 to 1, (0,0) is bottom-left)
-     * to OpenGL coordinates. Automatically adjusts for different texture
-     * types. This can be done only for one texture at a time, repeated
-     * calls for the same texture are allowed though, requiring the same
-     * amount of calls to disableNormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void enableNormalizedTexCoords();
-    /**
-     * Disables transformation set up using enableNormalizedTexCoords().
-     *
-     * In OpenGL ES this method is a no-op. In core profile a shader should be used
-     * @deprecated
-     */
-    void disableNormalizedTexCoords();
-
-    GLuint texture() const;
-    GLenum target() const;
-    GLenum filter() const;
-    virtual bool isDirty() const;
-    void setTexture(GLuint texture);
-    void setTarget(GLenum target);
-    void setFilter(GLenum filter);
-    void setWrapMode(GLenum mode);
-    virtual void setDirty();
-
-    static void initStatic();
-    static bool NPOTTextureSupported()  {
-        return sNPOTTextureSupported;
-    }
-    static bool framebufferObjectSupported()  {
-        return sFramebufferObjectSupported;
-    }
-    static bool saturationSupported()  {
-        return sSaturationSupported;
-    }
-
-protected:
-    void enableFilter();
-    QImage convertToGLFormat(const QImage& img) const;
-
-    GLuint mTexture;
-    GLenum mTarget;
-    GLenum mFilter;
-    QSize mSize;
-    QSizeF mScale; // to un-normalize GL_TEXTURE_2D
-    bool y_inverted; // texture has y inverted
-    bool can_use_mipmaps;
-    bool has_valid_mipmaps;
-
-private:
-    void init();
-    int mUnnormalizeActive; // 0 - no, otherwise refcount
-    int mNormalizeActive; // 0 - no, otherwise refcount
-    GLVertexBuffer* m_vbo;
-    QSize m_cachedSize;
-
-    static bool sNPOTTextureSupported;
-    static bool sFramebufferObjectSupported;
-    static bool sSaturationSupported;
-    Q_DISABLE_COPY(GLTexture)
-};
-
 class KWIN_EXPORT GLShader
 {
 public:
@@ -280,12 +165,6 @@ public:
      **/
     QMatrix4x4 getUniformMatrix4x4(const char* name);
 
-    void setTextureWidth(float width);
-    void setTextureHeight(float height);
-
-    float textureWidth();
-    float textureHeight();
-
     enum MatrixUniform {
         TextureMatrix = 0,
         ProjectionMatrix,
@@ -307,8 +186,6 @@ public:
 
     enum FloatUniform {
         Saturation,
-        TextureWidth,
-        TextureHeight,
         FloatUniformCount
     };
 
@@ -341,8 +218,6 @@ private:
     int mVec4Location[Vec4UniformCount];
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
-    float mTextureWidth;
-    float mTextureHeight;
 
     friend class ShaderManager;
 };
@@ -411,6 +286,13 @@ public:
      * @return @c true if the built-in shaders are valid, @c false otherwise
      **/
     bool isValid() const;
+    /**
+     * Is @c true if the environment variable KWIN_GL_DEBUG is set to 1.
+     * In that case shaders are compiled with KWIN_SHADER_DEBUG defined.
+     * @returns @c true if shaders are compiled with debug information
+     * @since 4.8
+     **/
+    bool isShaderDebug() const;
 
     /**
      * Binds the shader of specified @p type.
@@ -485,6 +367,7 @@ private:
     GLShader *m_colorShader;
     bool m_inited;
     bool m_valid;
+    bool m_debug;
     static ShaderManager *s_shaderManager;
 };
 
@@ -503,7 +386,7 @@ public:
      * Constructs a GLRenderTarget
      * @param color texture where the scene will be rendered onto
      **/
-    GLRenderTarget(GLTexture* color);
+    GLRenderTarget(const GLTexture& color);
     ~GLRenderTarget();
 
     /**
@@ -518,6 +401,13 @@ public:
      **/
     bool disable();
 
+    /**
+     * Sets the target texture
+     * @param target texture where the scene will be rendered on
+     * @since 4.8
+     **/
+    void attachTexture(const GLTexture& target);
+
     bool valid() const  {
         return mValid;
     }
@@ -529,6 +419,27 @@ public:
     static void pushRenderTarget(GLRenderTarget *target);
     static GLRenderTarget *popRenderTarget();
     static bool isRenderTargetBound();
+    /**
+     * Whether the GL_EXT_framebuffer_blit extension is supported.
+     * This functionality is not available in OpenGL ES 2.0.
+     *
+     * @returns whether framebuffer blitting is supported.
+     * @since 4.8
+     **/
+    static bool blitSupported();
+
+    /**
+     * Blits the content of the current draw framebuffer into the texture attached to this FBO.
+     *
+     * Be aware that framebuffer blitting may not be supported on all hardware. Use @link blitSupported to check whether
+     * it is supported.
+     * @param source Geometry in screen coordinates which should be blitted, if not specified complete framebuffer is used
+     * @param destination Geometry in attached texture, if not specified complete texture is used as destination
+     * @param filter The filter to use if blitted content needs to be scaled.
+     * @see blitSupported
+     * @since 4.8
+     **/
+    void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
 
 
 protected:
@@ -537,9 +448,11 @@ protected:
 
 private:
     static bool sSupported;
+    static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
+    static QSize s_oldViewport;
 
-    GLTexture* mTexture;
+    GLTexture mTexture;
     bool mValid;
 
     GLuint mFramebuffer;
@@ -650,8 +563,6 @@ private:
 };
 
 } // namespace
-
-#endif
 
 /** @} */
 

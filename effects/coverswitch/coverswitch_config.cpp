@@ -47,8 +47,8 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
     connect(m_ui->checkAnimateStart, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkAnimateStop, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkReflection, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui->colorFront, SIGNAL(changed(const QColor&)), this, SLOT(changed()));
-    connect(m_ui->colorRear, SIGNAL(changed(const QColor&)), this, SLOT(changed()));
+    connect(m_ui->colorFront, SIGNAL(changed(QColor)), this, SLOT(changed()));
+    connect(m_ui->colorRear, SIGNAL(changed(QColor)), this, SLOT(changed()));
     connect(m_ui->checkWindowTitle, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkDynamicThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));

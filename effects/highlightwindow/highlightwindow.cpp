@@ -257,4 +257,9 @@ void HighlightWindowEffect::finishHighlighting()
         m_windowOpacity.constBegin().key()->addRepaintFull();
 }
 
+bool HighlightWindowEffect::isActive() const
+{
+    return !m_windowOpacity.isEmpty();
+}
+
 } // namespace

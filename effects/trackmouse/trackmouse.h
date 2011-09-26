@@ -41,6 +41,7 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void reconfigure(ReconfigureFlags);
+    virtual bool isActive() const;
 private slots:
     void toggle();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,

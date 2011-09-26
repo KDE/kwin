@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglobals.h"
 
+#include <QPainter>
+#include <QPaintEngine>
+#include <QPixmap>
+
 #include <config-workspace.h>
 #include <config-X11.h>
 
@@ -30,24 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 
-#ifdef HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
-#endif
-#ifdef HAVE_XFIXES
 #include <X11/extensions/Xfixes.h>
-#endif
-#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
-#ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
-#endif
-#ifdef HAVE_OPENGL
-#include <GL/glx.h>
-#endif
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
@@ -64,9 +55,9 @@ int Extensions::damage_event_base = 0;
 int Extensions::composite_version = 0;
 int Extensions::fixes_version = 0;
 int Extensions::render_version = 0;
-bool Extensions::has_glx = false;
 bool Extensions::has_sync = false;
 int Extensions::sync_event_base = 0;
+bool Extensions::non_native_pixmaps = false;
 // for fillExtensionsData()
 const char* Extensions::data_extensions[ 32 ];
 int Extensions::data_nextensions;
@@ -96,7 +87,6 @@ void Extensions::init()
             addData("SHAPE");
         }
     }
-#ifdef HAVE_XRANDR
     has_randr = XRRQueryExtension(display(), &randr_event_base, &error_base);
     if (has_randr) {
         int major, minor;
@@ -104,51 +94,30 @@ void Extensions::init()
         has_randr = (major > 1 || (major == 1 && minor >= 1));
         addData("RANDR");
     }
-#else
-    has_randr = false;
-#endif
-#ifdef HAVE_XDAMAGE
     has_damage = XDamageQueryExtension(display(), &damage_event_base, &error_base);
     if (has_damage)
         addData("DAMAGE");
-#else
-    has_damage = false;
-#endif
     composite_version = 0;
-#ifdef HAVE_XCOMPOSITE
     if (XCompositeQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XCompositeQueryVersion(display(), &major, &minor);
         composite_version = major * 0x10 + minor;
         addData("Composite");
     }
-#endif
     fixes_version = 0;
-#ifdef HAVE_XFIXES
     if (XFixesQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XFixesQueryVersion(display(), &major, &minor);
         fixes_version = major * 0x10 + minor;
         addData("XFIXES");
     }
-#endif
     render_version = 0;
-#ifdef HAVE_XRENDER
     if (XRenderQueryExtension(display(), &event_base, &error_base)) {
         int major = 0, minor = 0;
         XRenderQueryVersion(display(), &major, &minor);
         render_version = major * 0x10 + minor;
         addData("RENDER");
     }
-#endif
-    has_glx = false;
-#ifdef HAVE_OPENGL
-#ifndef KWIN_HAVE_OPENGLES
-    has_glx = glXQueryExtension(display(), &event_base, &error_base);
-    if (has_glx)
-        addData("GLX");
-#endif
-#endif
 #ifdef HAVE_XSYNC
     if (XSyncQueryExtension(display(), &sync_event_base, &error_base)) {
         int major = 0, minor = 0;
@@ -158,6 +127,10 @@ void Extensions::init()
         }
     }
 #endif
+    QPixmap pix(1,1);
+    QPainter p(&pix);
+    non_native_pixmaps = p.paintEngine()->type() != QPaintEngine::X11;
+    p.end();
     kDebug(1212) << "Extensions: shape: 0x" << QString::number(shape_version, 16)
                  << " composite: 0x" << QString::number(composite_version, 16)
                  << " render: 0x" << QString::number(render_version, 16)
@@ -198,20 +171,12 @@ bool Extensions::shapeInputAvailable()
 
 int Extensions::randrNotifyEvent()
 {
-#ifdef HAVE_XRANDR
     return randr_event_base + RRScreenChangeNotify;
-#else
-    return 0;
-#endif
 }
 
 int Extensions::damageNotifyEvent()
 {
-#ifdef HAVE_XDAMAGE
     return damage_event_base + XDamageNotify;
-#else
-    return 0;
-#endif
 }
 
 bool Extensions::compositeOverlayAvailable()

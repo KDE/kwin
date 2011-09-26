@@ -26,8 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include "kwinglutils.h"
-
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include "kwingltexture_p.h"
 
 #ifdef HAVE_XSHM
 #include <X11/extensions/XShm.h>
@@ -39,9 +38,11 @@ namespace KWin
 class SceneOpenGL
     : public Scene
 {
+    Q_OBJECT
 public:
     class EffectFrame;
     class Texture;
+    class TexturePrivate;
     class Window;
     SceneOpenGL(Workspace* ws);
     virtual ~SceneOpenGL();
@@ -50,17 +51,17 @@ public:
         return OpenGLCompositing;
     }
     virtual void paint(QRegion damage, ToplevelList windows);
-    virtual void windowGeometryShapeChanged(Toplevel*);
-    virtual void windowOpacityChanged(Toplevel*);
     virtual void windowAdded(Toplevel*);
-    virtual void windowClosed(Toplevel*, Deleted*);
     virtual void windowDeleted(Deleted*);
 
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
-
+public Q_SLOTS:
+    virtual void windowOpacityChanged(KWin::Toplevel* c);
+    virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
+    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
     bool selectMode();
     bool initTfp();
@@ -70,9 +71,6 @@ private:
     bool initDrawableConfigs();
     void waitSync();
     void flushBuffer(int mask, QRegion damage);
-    bool selfCheck();
-    void selfCheckSetup();
-    bool selfCheckFinish();
     GC gcroot;
     class FBConfigInfo
     {
@@ -101,8 +99,25 @@ private:
 #endif
     QHash< Toplevel*, Window* > windows;
     bool init_ok;
-    bool selfCheckDone;
     bool debug;
+};
+
+class SceneOpenGL::TexturePrivate
+    : public GLTexturePrivate
+{
+public:
+    TexturePrivate();
+    virtual ~TexturePrivate();
+
+    virtual void bind();
+    virtual void unbind();
+    virtual void release();
+
+#ifndef KWIN_HAVE_OPENGLES
+    GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+#endif
+private:
+    Q_DISABLE_COPY(TexturePrivate)
 };
 
 class SceneOpenGL::Texture
@@ -110,34 +125,30 @@ class SceneOpenGL::Texture
 {
 public:
     Texture();
-    Texture(const Pixmap& pix, const QSize& size, int depth);
+    Texture(const Texture& tex);
+    Texture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
     virtual ~Texture();
 
+    Texture & operator = (const Texture& tex);
+
     using GLTexture::load;
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth,
-                      QRegion region);
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth);
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
-    virtual void release(); // undo the tfp_mode binding
-    virtual void bind();
-    virtual void unbind();
-    void setYInverted(bool inverted) {
-        y_inverted = inverted;
-    }
 
 protected:
+    Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();
-    QRegion optimizeBindDamage(const QRegion& reg, int limit);
-    void createTexture();
+    virtual bool load(const Pixmap& pix, const QSize& size, int depth,
+                      QRegion region);
+    virtual bool load(const Pixmap& pix, const QSize& size, int depth);
+
+    Texture(TexturePrivate& dd);
 
 private:
-    void init();
+    Q_DECLARE_PRIVATE(Texture)
 
-#ifndef KWIN_HAVE_OPENGLES
-    GLXPixmap glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
-#endif
+    friend class SceneOpenGL::Window;
 };
 
 class SceneOpenGL::Window
@@ -164,16 +175,16 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
-    void paintShadow(WindowQuadType type, const QRegion &region, const WindowPaintData &data);
-    void makeDecorationArrays(const WindowQuadList& quads, const QRect& rect) const;
-    void renderQuads(int mask, const QRegion& region, const WindowQuadList& quads);
+    void paintShadow(const QRegion &region, const WindowPaintData &data);
+    void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
+    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized = false);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
-    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
+    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
+    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
     void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, Texture *texture);
-    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, Texture *tex);
+    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
+    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
     void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
 
 private:
@@ -234,20 +245,16 @@ public:
     SceneOpenGLShadow(Toplevel *toplevel);
     virtual ~SceneOpenGLShadow();
 
-    /**
-     * Returns the Texture for a specific ShadowQuad. The method takes care of performing
-     * the Texture from Pixmap operation. The calling method can use the returned Texture
-     * directly.
-     * In error case the method returns @c NULL.
-     * @return OpenGL Texture for the Shadow Quad. May be @c NULL.
-     **/
-    SceneOpenGL::Texture *textureForQuadType(WindowQuadType type);
+    GLTexture *shadowTexture() {
+        return m_texture;
+    }
+protected:
+    virtual void buildQuads();
+    virtual bool prepareBackend();
 private:
-    SceneOpenGL::Texture m_shadowTextures[ShadowElementsCount];
+    GLTexture *m_texture;
 };
 
 } // namespace
-
-#endif
 
 #endif

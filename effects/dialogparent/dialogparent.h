@@ -46,6 +46,8 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);
 
+    virtual bool isActive() const;
+
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *c);
     void slotWindowActivated(EffectWindow *c);

@@ -30,7 +30,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="windowClass">
         <property name="text">
-         <string>TextLabel</string>
+         <string notr="true">TextLabel</string>
         </property>
        </widget>
       </item>
@@ -47,7 +47,7 @@
       <item row="1" column="1">
        <widget class="QLabel" name="windowTitle">
         <property name="text">
-         <string>TextLabel</string>
+         <string notr="true">TextLabel</string>
         </property>
        </widget>
       </item>

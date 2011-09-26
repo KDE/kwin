@@ -38,6 +38,7 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
     connect(effects, SIGNAL(clientGroupItemSwitched(EffectWindow*,EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(EffectWindow*,EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -203,6 +204,9 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
     }
+    foreach (const QRegion &r, clippedRegions) {
+        region = region.intersected(r);
+    }
     effects->paintWindow(w, mask, region, data);
     for (int i = clippedRegions.count() - 1; i > -1; --i)
         PaintClipper::pop(clippedRegions.at(i));
@@ -213,9 +217,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
 {
     if (motionManager.isManaging(w)) {
         if (destinationList.contains(w)) {
-            // has window reched its destination?
-            if ((qAbs(motionManager.transformedGeometry(w).x() - destinationList[w].x()) < 1) &&
-                    (qAbs(motionManager.transformedGeometry(w).y() - destinationList[w].y()) < 1)) {
+            if (!motionManager.isWindowMoving(w)) { // has window reched its destination?
                 // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
@@ -257,8 +259,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
             }
         } else {
             // is window back at its original position?
-            if ((qAbs(motionManager.transformedGeometry(w).x() - w->geometry().x()) < 1) &&
-                    (qAbs(motionManager.transformedGeometry(w).y() - w->geometry().y()) < 1)) {
+            if (!motionManager.isWindowMoving(w)) {
                 motionManager.unmanage(w);
                 effects->addRepaintFull();
             }
@@ -316,7 +317,7 @@ void SlideBackEffect::slotClientGroupItemSwitched(EffectWindow* from, EffectWind
     clientItemHidden = from;
 }
 
-void SlideBackEffect::tabBoxClosed()
+void SlideBackEffect::slotTabBoxClosed()
 {
     disabled = true;
 }
@@ -373,6 +374,11 @@ QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
         }
     }
     return modalGroupGeometry;
+}
+
+bool SlideBackEffect::isActive() const
+{
+    return motionManager.managingWindows();
 }
 
 } //Namespace

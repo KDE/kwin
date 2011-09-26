@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTime>
 
 #include <kwineffects.h>
-#include <kwinglutils.h>
 
 
 namespace KWin
 {
+class GLTexture;
 
 class ShowFpsEffect
     : public Effect
@@ -42,7 +42,7 @@ public:
     virtual void postPaintScreen();
     enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
 private:
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     void paintGL(int fps);
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -64,7 +64,7 @@ private:
     int x;
     int y;
     QRect fps_rect;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     GLTexture *fpsText;
 #endif
     int textPosition;

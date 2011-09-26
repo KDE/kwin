@@ -38,6 +38,7 @@ public:
     }
     void reconfigure(ReconfigureFlags);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
+    virtual bool isActive() const;
 
 private slots:
     void toggle();

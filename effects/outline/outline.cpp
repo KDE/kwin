@@ -30,7 +30,7 @@ OutlineEffect::OutlineEffect()
     , m_active(false)
 {
     m_outline = effects->effectFrame(EffectFrameNone);
-    connect(effects, SIGNAL(showOutline(const QRect&)), SLOT(slotShowOutline(const QRect&)));
+    connect(effects, SIGNAL(showOutline(QRect)), SLOT(slotShowOutline(QRect)));
     connect(effects, SIGNAL(hideOutline()), SLOT(slotHideOutline()));
 }
 
@@ -73,6 +73,11 @@ void OutlineEffect::slotShowOutline(const QRect& geometry)
     m_outline->setGeometry(geometry);
     m_outline->setSelection(geometry);
     effects->addRepaint(geometry);
+}
+
+bool OutlineEffect::isActive() const
+{
+    return m_active;
 }
 
 } // namespace

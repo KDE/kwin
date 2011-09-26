@@ -40,8 +40,7 @@ public:
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void postPaintScreen();
-
-    virtual void tabBoxClosed();
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
@@ -49,6 +48,7 @@ public Q_SLOTS:
     void slotWindowDeleted(EffectWindow *w);
     void slotWindowUnminimized(EffectWindow *w);
     void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void slotTabBoxClosed();
 
 private:
 

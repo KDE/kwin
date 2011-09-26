@@ -37,6 +37,8 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void reconfigure(ReconfigureFlags);
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *w);
@@ -45,6 +47,7 @@ private:
     bool isLoginSplash(EffectWindow* w);
     double progress; // 0-1
     EffectWindow* login_window;
+    bool m_fadeToBlack;
 };
 
 } // namespace

@@ -34,78 +34,77 @@
 #include <QtGui/QPalette>
 
 #include "oxygenconfigurationui.h"
-#include "../oxygenexceptionlist.h"
 
 namespace Oxygen {
 
-  class Configuration;
-  class ShadowConfiguration;
+    class Configuration;
+    class ShadowConfiguration;
 
-  // oxygen configuration object
-  class Config: public QObject
-  {
+    // oxygen configuration object
+    class Config: public QObject
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
+            public:
 
-    //! constructor
-    Config( KConfig* conf, QWidget* parent );
+            //! constructor
+            Config( KConfig* conf, QWidget* parent );
 
-    //! destructor
-    ~Config();
+        //! destructor
+        ~Config();
 
-    signals:
+        signals:
 
-    //! emmited whenever configuration is changed
-    void changed();
+        //! emmited whenever configuration is changed
+        void changed();
 
-    //! emmited whenever configuration is changed
-    void changed( bool );
+        //! emmited whenever configuration is changed
+        void changed( bool );
 
-    public slots:
+        public slots:
 
-    //! load configuration
-    void load( const KConfigGroup& );
+        //! load configuration
+        void load( const KConfigGroup& );
 
-    //! save configuration
-    void save( KConfigGroup& );
+        //! save configuration
+        void save( KConfigGroup& );
 
-    //! restore defaults
-    void defaults( void );
+        //! restore defaults
+        void defaults( void );
 
-    //! toggle expert mode
-    void toggleExpertMode( bool );
+        //! toggle expert mode
+        void toggleExpertMode( bool );
 
-    private slots:
+        private slots:
 
-    //! update change state
-    void updateChanged( void );
+        //! update change state
+        void updateChanged( void );
 
-    private:
+        private:
 
-    //! load configuration
-    void loadConfiguration( const Configuration& );
+        //! load configuration
+        void loadConfiguration( const Configuration& );
 
-    //! load configuration
-    void loadShadowConfiguration( QPalette::ColorGroup, const ShadowConfiguration& );
+        //! load configuration
+        void loadShadowConfiguration( QPalette::ColorGroup, const ShadowConfiguration& );
 
-    //! load configuration
-    void saveShadowConfiguration( QPalette::ColorGroup, const ShadowConfigurationUi& ) const;
+        //! load configuration
+        void saveShadowConfiguration( QPalette::ColorGroup, const ShadowConfigurationUi& ) const;
 
-    //! returns true if shadow configuration changed
-    bool shadowConfigurationChanged( const ShadowConfiguration&, const ShadowConfigurationUi& ) const;
+        //! returns true if shadow configuration changed
+        bool shadowConfigurationChanged( const ShadowConfiguration&, const ShadowConfigurationUi& ) const;
 
-    //! returns true if exception list is changed
-    bool exceptionListChanged( void ) const;
+        //! returns true if exception list is changed
+        bool exceptionListChanged( void ) const;
 
-    //! user interface
-    ConfigurationUi *ui;
+        //! user interface
+        ConfigurationUi *ui;
 
-    //! kconfiguration object
-    KConfig *_configuration;
+        //! kconfiguration object
+        KConfig *_configuration;
 
-  };
+    };
 
 } //namespace Oxygen
 

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "kwinxrenderutils.h"
+#include "kwinglobals.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
@@ -191,8 +192,19 @@ static Picture createPicture(Pixmap pix, int depth)
 }
 
 XRenderPicture::XRenderPicture(QPixmap pix)
-    : d(new XRenderPictureData(createPicture(pix.handle(), pix.depth())))
 {
+    if (Extensions::nonNativePixmaps()) {
+        Pixmap xPix = XCreatePixmap(display(), rootWindow(), pix.width(), pix.height(), pix.depth());
+        QPixmap tempPix = QPixmap::fromX11Pixmap(xPix, QPixmap::ExplicitlyShared);
+        tempPix.fill(Qt::transparent);
+        QPainter p(&tempPix);
+        p.drawPixmap(QPoint(0, 0), pix);
+        p.end();
+        d = new XRenderPictureData(createPicture(tempPix.handle(), tempPix.depth()));
+        XFreePixmap(display(), xPix);
+    } else {
+        d = new XRenderPictureData(createPicture(pix.handle(), pix.depth()));
+    }
 }
 
 XRenderPicture::XRenderPicture(Pixmap pix, int depth)

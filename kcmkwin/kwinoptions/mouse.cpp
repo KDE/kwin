@@ -252,17 +252,22 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     label->setWhatsThis(i18n("In this column you can customize mouse clicks into the titlebar"
                              " or the frame of an active window."));
 
+    // Items for titlebar and frame, active windows
+    items << i18n("Raise")
+          << i18n("Lower")
+          << i18n("Toggle Raise & Lower")
+          << i18n("Minimize")
+          << i18n("Shade")
+          << i18n("Close")
+          << i18n("Operations Menu")
+          << i18n("Start Window Tab Drag")
+          << i18n("Nothing");
+
     // Titlebar and frame, active, mouse button 1
     combo = new KComboBox(box);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     grid->addWidget(combo, 1, 1);
-    combo->addItem(i18n("Raise"));
-    combo->addItem(i18n("Lower"));
-    combo->addItem(i18n("Operations Menu"));
-    combo->addItem(i18n("Toggle Raise & Lower"));
-    combo->addItem(i18n("Close"));
-    combo->addItem(i18n("Start Window Tab Drag"));
-    combo->addItem(i18n("Nothing"));
+    combo->addItems(items);
     connect(combo, SIGNAL(activated(int)), SLOT(changed()));
     coTiAct1 = combo;
 
@@ -278,16 +283,6 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     combo->setWhatsThis(txtButton1);
 
     // Titlebar and frame, active, mouse button 2
-
-    items << i18n("Raise")
-          << i18n("Lower")
-          << i18n("Operations Menu")
-          << i18n("Toggle Raise & Lower")
-          << i18n("Close")
-          << i18n("Start Window Tab Drag")
-          << i18n("Nothing")
-          << i18n("Shade");
-
     combo = new KComboBox(box);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     grid->addWidget(combo, 2, 1);
@@ -320,18 +315,22 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     label->setWhatsThis(i18n("In this column you can customize mouse clicks into the titlebar"
                              " or the frame of an inactive window."));
 
+    // Items for titlebar and frame, inactive windows
     items.clear();
     items  << i18n("Activate & Raise")
            << i18n("Activate & Lower")
            << i18n("Activate")
-           << i18n("Shade")
-           << i18n("Operations Menu")
            << i18n("Raise")
            << i18n("Lower")
+           << i18n("Toggle Raise & Lower")
+           << i18n("Minimize")
+           << i18n("Shade")
            << i18n("Close")
+           << i18n("Operations Menu")
            << i18n("Start Window Tab Drag")
            << i18n("Nothing");
 
+    // Titlebar and frame, inactive, mouse button 1
     combo = new KComboBox(box);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     grid->addWidget(combo, 1, 2);
@@ -340,6 +339,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     coTiInAct1 = combo;
     combo->setWhatsThis(txtButton1);
 
+    // Titlebar and frame, inactive, mouse button 2
     combo = new KComboBox(box);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     grid->addWidget(combo, 2, 2);
@@ -348,6 +348,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     coTiInAct2 = combo;
     combo->setWhatsThis(i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
+    // Titlebar and frame, inactive, mouse button 3
     combo = new KComboBox(box);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     grid->addWidget(combo, 3, 2);
@@ -433,12 +434,13 @@ const char* const tbl_TiDbl[] = {
 const char* const tbl_TiAc[] = {
     "Raise",
     "Lower",
-    "Operations menu",
     "Toggle raise and lower",
+    "Minimize",
+    "Shade",
     "Close",
+    "Operations menu",
     "Start window tab drag",
     "Nothing",
-    "Shade",
     ""
 };
 
@@ -446,11 +448,13 @@ const char* const tbl_TiInAc[] = {
     "Activate and raise",
     "Activate and lower",
     "Activate",
-    "Shade",
-    "Operations menu",
     "Raise",
     "Lower",
+    "Toggle raise and lower",
+    "Minimize",
+    "Shade",
     "Close",
+    "Operations menu",
     "Start window tab drag",
     "Nothing",
     ""
@@ -485,6 +489,8 @@ const char* const tbl_All[] = {
     "Raise",
     "Lower",
     "Minimize",
+    "Decrease Opacity",
+    "Increase Opacity",
     "Nothing",
     ""
 };
@@ -823,6 +829,8 @@ KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KConfig *_config, c
           << i18n("Raise")
           << i18n("Lower")
           << i18n("Minimize")
+          << i18n("Decrease Opacity")
+          << i18n("Increase Opacity")
           << i18n("Nothing");
 
     combo = new KComboBox(box);

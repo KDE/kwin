@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
 #endif
 
@@ -88,20 +88,10 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
             thumbData.opacity *= data.opacity;
             QRect r;
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == KWin::OpenGLCompositing) {
                 if (data.shader) {
-                    // there is a shader - update texture width and height
-                    int texw = thumbw->width();
-                    int texh = thumbw->height();
-                    if (!GLTexture::NPOTTextureSupported()) {
-                        kWarning(1212) << "NPOT textures not supported, wasting some memory" ;
-                        texw = nearestPowerOfTwo(texw);
-                        texh = nearestPowerOfTwo(texh);
-                    }
                     thumbData.shader = data.shader;
-                    thumbData.shader->setTextureWidth((float)texw);
-                    thumbData.shader->setTextureHeight((float)texh);
                 }
             } // if ( effects->compositingType() == KWin::OpenGLCompositing )
 #endif
@@ -119,7 +109,7 @@ void TaskbarThumbnailEffect::slotWindowDamaged(EffectWindow* w, const QRect& dam
     foreach (EffectWindow * window, thumbnails.uniqueKeys())
     foreach (const Data & thumb, thumbnails.values(window))
     if (w == effects->findWindow(thumb.window))
-        effects->addRepaint(thumb.rect.translated(window->pos()));
+        window->addRepaint(thumb.rect);
 }
 
 void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
@@ -129,6 +119,13 @@ void TaskbarThumbnailEffect::slotWindowAdded(EffectWindow* w)
 
 void TaskbarThumbnailEffect::slotWindowDeleted(EffectWindow* w)
 {
+    foreach (EffectWindow *window, thumbnails.uniqueKeys()) {
+        foreach (const Data &thumb, thumbnails.values(window)) {
+            if (w == effects->findWindow(thumb.window)) {
+                window->addRepaint(thumb.rect);
+            }
+        }
+    }
     thumbnails.remove(w);
 }
 
@@ -136,6 +133,9 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (!w || a != atom)
         return;
+    foreach (const Data & thumb, thumbnails.values(w)) {
+        w->addRepaintFull();
+    }
     thumbnails.remove(w);
     QByteArray data = w->readProperty(atom, atom, 32);
     if (data.length() < 1)
@@ -156,8 +156,14 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
         data.window = d[ pos ];
         data.rect = QRect(d[ pos + 1 ], d[ pos + 2 ], d[ pos + 3 ], d[ pos + 4 ]);
         thumbnails.insert(w, data);
+        w->addRepaint(data.rect);
         pos += size;
     }
+}
+
+bool TaskbarThumbnailEffect::isActive() const
+{
+    return !thumbnails.isEmpty();
 }
 
 } // namespace

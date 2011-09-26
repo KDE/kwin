@@ -57,7 +57,6 @@ private:
     QRegion scheduled;
     QPixmap scratch;
     bool recursionCheck;
-    QTimer timer;
     QBasicTimer cleanupTimer;
 };
 

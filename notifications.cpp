@@ -98,10 +98,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case DemandAttentionOther:
         event = "demandsattentionother";
         break;
-    case CompositingSlow:
-        event = "compositingslow";
-        flags = KNotification::Persistent;
-        break;
     case CompositingSuspendedDbus:
         event = "compositingsuspendeddbus";
         break;

@@ -247,7 +247,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     }
     pending_take_activity = NULL;
 
-    updateCurrentTopMenu();
     updateToolWindows(false);
     if (c)
         disableGlobalShortcutsForClient(c->rules()->checkDisableGlobalShortcuts(false));
@@ -263,9 +262,6 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     if (active_client) {
         active_client->sl_activated();
     }
-
-    if (tilingEnabled())
-        notifyTilingWindowActivated(active_client);
     --set_active_client_recursion;
 }
 
@@ -359,7 +355,7 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         }
         cancelDelayFocus();
     }
-    if (!(flags & ActivityFocusForce) && (c->isTopMenu() || c->isDock() || c->isSplash()))
+    if (!(flags & ActivityFocusForce) && (c->isDock() || c->isSplash()))
         flags &= ~ActivityFocus; // toplevel menus and dock windows don't take focus if not forced
     if (c->isShade()) {
         if (c->wantsInput() && (flags & ActivityFocus)) {
@@ -626,32 +622,6 @@ void Workspace::clientAttentionChanged(Client* c, bool set)
         attention_chain.removeAll(c);
 }
 
-// This is used when a client should be shown active immediately after requestFocus(),
-// without waiting for the matching FocusIn that will really make the window the active one.
-// Used only in special cases, e.g. for MouseActivateRaiseandMove with transparent windows,
-bool Workspace::fakeRequestedActivity(Client* c)
-{
-    if (should_get_focus.count() > 0 && should_get_focus.last() == c) {
-        if (c->isActive())
-            return false;
-        c->setActive(true);
-        return true;
-    }
-    return false;
-}
-
-void Workspace::unfakeActivity(Client* c)
-{
-    if (should_get_focus.count() > 0 && should_get_focus.last() == c) {
-        // TODO this will cause flicker, and probably is not needed
-        if (last_active_client != NULL)
-            last_active_client->setActive(true);
-        else
-            c->setActive(false);
-    }
-}
-
-
 //********************************************
 // Client
 //********************************************
@@ -736,9 +706,9 @@ void Client::demandAttentionKNotify()
 
 // TODO I probably shouldn't be lazy here and do it without the macro, so that people can read it
 KWIN_COMPARE_PREDICATE(SameApplicationActiveHackPredicate, Client, const Client*,
-                       // ignore already existing splashes, toolbars, utilities, menus and topmenus,
+                       // ignore already existing splashes, toolbars, utilities and menus,
                        // as the app may show those before the main window
-                       !cl->isSplash() && !cl->isToolbar() && !cl->isTopMenu() && !cl->isUtility() && !cl->isMenu()
+                       !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
                        && Client::belongToSameApplication(cl, value, true) && cl != value);
 
 Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,

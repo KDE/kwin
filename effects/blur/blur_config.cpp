@@ -31,6 +31,7 @@ BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
 {
     ui.setupUi(this);
     connect(ui.slider, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
+    connect(ui.checkBox, SIGNAL(stateChanged(int)), SLOT(valueChanged(int)));
 
     load();
 }
@@ -44,6 +45,7 @@ void BlurEffectConfig::load()
     KCModule::load();
     KConfigGroup cg = EffectsHandler::effectConfig("Blur");
     ui.slider->setValue(cg.readEntry("BlurRadius", 12) / 2);
+    ui.checkBox->setChecked(cg.readEntry("CacheTexture", true));
     emit changed(false);
 }
 
@@ -53,6 +55,7 @@ void BlurEffectConfig::save()
 
     KConfigGroup cg = EffectsHandler::effectConfig("Blur");
     cg.writeEntry("BlurRadius", ui.slider->value() * 2);
+    cg.writeEntry("CacheTexture", ui.checkBox->isChecked());
     cg.sync();
 
     emit changed(false);

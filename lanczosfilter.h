@@ -38,9 +38,7 @@ class WindowPaintData;
 class GLTexture;
 class GLRenderTarget;
 class GLShader;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 class LanczosShader;
-#endif
 
 class LanczosFilter
     : public QObject
@@ -61,14 +59,11 @@ private:
     void restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation);
     GLTexture *m_offscreenTex;
     GLRenderTarget *m_offscreenTarget;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     LanczosShader *m_shader;
-#endif
     QBasicTimer m_timer;
     bool m_inited;
 };
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 class LanczosShader
     : public QObject
 {
@@ -94,7 +89,6 @@ private:
     QVector4D m_kernel[16];
     uint m_arbProgram; // TODO: GLuint
 };
-#endif
 
 } // namespace
 

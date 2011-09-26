@@ -38,7 +38,7 @@ CubeSlideEffect::CubeSlideEffect()
     , desktopChangedWhileMoving(false)
     , progressRestriction(0.0f)
 {
-    connect(effects, SIGNAL(desktopChanged(int, int)), this, SLOT(slotDesktopChanged(int, int)));
+    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
     connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
     reconfigure(ReconfigureAll);
@@ -615,6 +615,11 @@ void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection dire
         effects->setActiveFullScreenEffect(this);
     }
     effects->addRepaintFull();
+}
+
+bool CubeSlideEffect::isActive() const
+{
+    return !slideRotations.isEmpty();
 }
 
 } // namespace

@@ -51,7 +51,7 @@ namespace Oxygen
             << Exception::typeName( Exception::WindowTitle, true )
             );
 
-        connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT( selectWindowProperties() ) );
+        connect( ui.detectDialogButton, SIGNAL(clicked()), SLOT(selectWindowProperties()) );
 
         // border size
         ui.frameBorderComboBox->insertItems(0, QStringList()
@@ -67,7 +67,7 @@ namespace Oxygen
             );
         ui.frameBorderComboBox->setEnabled( false );
         _checkBoxes.insert( std::make_pair( Exception::FrameBorder, ui.frameBorderCheckBox ) );
-        connect( ui.frameBorderCheckBox, SIGNAL( toggled( bool ) ), ui.frameBorderComboBox, SLOT( setEnabled( bool ) ) );
+        connect( ui.frameBorderCheckBox, SIGNAL(toggled(bool)), ui.frameBorderComboBox, SLOT(setEnabled(bool)) );
 
         // blend color
         ui.blendColorComboBox->insertItems(0, QStringList()
@@ -77,7 +77,7 @@ namespace Oxygen
             );
         ui.blendColorComboBox->setEnabled( false );
         _checkBoxes.insert( std::make_pair( Exception::BlendColor, ui.blendColorCheckBox ) );
-        connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT( setEnabled( bool ) ) );
+        connect( ui.blendColorCheckBox, SIGNAL(toggled(bool)), ui.blendColorComboBox, SLOT(setEnabled(bool)) );
 
         // size grip
         ui.sizeGripComboBox->insertItems(0, QStringList()
@@ -86,18 +86,18 @@ namespace Oxygen
             );
         ui.sizeGripComboBox->setEnabled( false );
         _checkBoxes.insert( std::make_pair( Exception::SizeGripMode, ui.sizeGripCheckBox ) );
-        connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT( setEnabled( bool ) ) );
+        connect( ui.sizeGripCheckBox, SIGNAL(toggled(bool)), ui.sizeGripComboBox, SLOT(setEnabled(bool)) );
 
         // outline active window title
         ui.titleOutlineComboBox->insertItems(0, QStringList() << i18nc( "outline window title", "Enabled" ) << i18nc( "outline window title", "Disabled" ) );
         ui.titleOutlineComboBox->setEnabled( false );
         _checkBoxes.insert( std::make_pair( Exception::TitleOutline, ui.titleOutlineCheckBox ) );
-        connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT( setEnabled( bool ) ) );
+        connect( ui.titleOutlineCheckBox, SIGNAL(toggled(bool)), ui.titleOutlineComboBox, SLOT(setEnabled(bool)) );
 
         // separator
         ui.separatorComboBox->setEnabled( false );
         _checkBoxes.insert( std::make_pair( Exception::DrawSeparator, ui.separatorCheckBox ) );
-        connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT( setEnabled( bool ) ) );
+        connect( ui.separatorCheckBox, SIGNAL(toggled(bool)), ui.separatorComboBox, SLOT(setEnabled(bool)) );
 
     }
 
@@ -164,7 +164,7 @@ namespace Oxygen
         if( !_detectDialog )
         {
             _detectDialog = new DetectDialog( this );
-            connect( _detectDialog, SIGNAL( detectionDone( bool ) ), SLOT( readWindowProperties( bool ) ) );
+            connect( _detectDialog, SIGNAL(detectionDone(bool)), SLOT(readWindowProperties(bool)) );
         }
 
         _detectDialog->detect(0);

@@ -65,7 +65,7 @@ namespace Oxygen
 
         // also add exceptions
         int index(0);
-        for( ExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
+        for( ExceptionList::const_iterator iter = constBegin(); iter != constEnd(); ++iter, index++ )
         {
 
             KConfigGroup group( &config, exceptionGroupName( index ) );

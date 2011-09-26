@@ -22,9 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "effects.h"
 #include "toplevel.h"
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "scene_opengl.h"
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "scene_xrender.h"
 #endif
@@ -52,9 +50,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!data.isEmpty()) {
         Shadow *shadow = NULL;
         if (effects->compositingType() == OpenGLCompositing) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
             shadow = new SceneOpenGLShadow(toplevel);
-#endif
         } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             shadow = new SceneXRenderShadow(toplevel);
@@ -99,8 +95,8 @@ QVector< long > Shadow::readX11ShadowProperty(WId id)
 bool Shadow::init(const QVector< long > &data)
 {
     for (int i=0; i<ShadowElementsCount; ++i) {
-        QPixmap pix = QPixmap::fromX11Pixmap(data[i]);
-        if (pix.isNull()) {
+        QPixmap pix = QPixmap::fromX11Pixmap(data[i], QPixmap::ExplicitlyShared);
+        if (pix.isNull() || pix.depth() != 32) {
             return false;
         }
         m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
@@ -110,6 +106,9 @@ bool Shadow::init(const QVector< long > &data)
     m_bottomOffset = data[ShadowElementsCount+2];
     m_leftOffset = data[ShadowElementsCount+3];
     updateShadowRegion();
+    if (!prepareBackend()) {
+        return false;
+    }
     buildQuads();
     return true;
 }

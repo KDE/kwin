@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "resize.h"
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -84,7 +84,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
             float alpha = 0.8f;
             QColor color = KColorScheme(QPalette::Normal, KColorScheme::Selection).background().color();
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == OpenGLCompositing) {
 #ifndef KWIN_HAVE_OPENGLES
                 glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);

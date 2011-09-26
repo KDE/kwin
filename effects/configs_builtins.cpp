@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "dashboard/dashboard_config.h"
 #include "desktopgrid/desktopgrid_config.h"
 #include "diminactive/diminactive_config.h"
+#include "login/login_config.h"
 #include "magiclamp/magiclamp_config.h"
 #include "translucency/translucency_config.h"
 #include "presentwindows/presentwindows_config.h"
@@ -35,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "windowgeometry/windowgeometry_config.h"
 #include "zoom/zoom_config.h"
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
@@ -62,6 +63,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(dashboard, DashboardEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(desktopgrid, DesktopGridEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(diminactive, DimInactiveEffectConfig)
+                            KWIN_EFFECT_CONFIG_SINGLE(login, LoginEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(magiclamp, MagicLampEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(presentwindows, PresentWindowsEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(resize, ResizeEffectConfig)
@@ -71,7 +73,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(windowgeometry, WindowGeometryConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(zoom, ZoomEffectConfig)
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
                             KWIN_EFFECT_CONFIG_SINGLE(blur, BlurEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(coverswitch, CoverSwitchEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(cube, CubeEffectConfig)

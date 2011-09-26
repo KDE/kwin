@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
-#include <QDateTime>
+#include <QElapsedTimer>
 #include <kmanagerselection.h>
 
 #include "kactivitycontroller.h"
@@ -38,6 +38,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "screenedge.h"
+#endif
 #include "sm.h"
 
 #include <X11/Xlib.h>
@@ -55,19 +58,30 @@ class KStartupInfoData;
 class QSlider;
 class QPushButton;
 
+namespace Kephal
+{
+    class Screen;
+}
 namespace KWin
 {
 
+#ifdef KWIN_BUILD_TABBOX
 namespace TabBox
 {
 class TabBox;
 }
+#endif
 
 class Client;
+#ifdef KWIN_BUILD_TILING
 class Tile;
+class Tiling;
 class TilingLayout;
+#endif
 class ClientGroup;
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
 class DesktopChangeOSD;
+#endif
 class Outline;
 class RootInfo;
 class PluginMgr;
@@ -140,8 +154,6 @@ public:
     void restoreFocus();
     void gotFocusIn(const Client*);
     void setShouldGetFocus(Client*);
-    bool fakeRequestedActivity(Client* c);
-    void unfakeActivity(Client* c);
     bool activateNextClient(Client* c);
     bool focusChangeEnabled() {
         return block_focus == 0;
@@ -175,13 +187,6 @@ public:
     void clientHidden(Client*);
     void clientAttentionChanged(Client* c, bool set);
 
-    void checkElectricBorder(const QPoint& pos, Time time);
-    void restoreElectricBorderSize(ElectricBorder border);
-    void reserveElectricBorder(ElectricBorder border);
-    void unreserveElectricBorder(ElectricBorder border);
-    void reserveElectricBorderActions(bool reserve);
-    void reserveElectricBorderSwitching(bool reserve);
-
     /**
      * @return List of clients currently managed by Workspace
      **/
@@ -195,33 +200,14 @@ public:
         return unmanaged;
     }
 
-    //-------------------------------------------------
-    // Tiling
-public:
-    bool tilingEnabled() const;
-    void setTilingEnabled(bool tiling);
-    bool tileable(Client *c);
-    void createTile(Client *c);
-    // updates geometry of tiles on all desktops,
-    // this rearranges the tiles.
-    void updateAllTiles();
-
-    // The notification functions are called from
-    // various points in existing code so that
-    // tiling can take any action if required.
-    // They are defined in tiling.cpp
-    void notifyTilingWindowResize(Client *c, const QRect &moveResizeGeom, const QRect &orig);
-    void notifyTilingWindowMove(Client *c, const QRect &moveResizeGeom, const QRect &orig);
-    void notifyTilingWindowResizeDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
-    void notifyTilingWindowMoveDone(Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled);
-    void notifyTilingWindowDesktopChanged(Client *c, int old_desktop);
-    void notifyTilingWindowActivated(Client *c);
-    void notifyTilingWindowMinimizeToggled(Client *c);
-    void notifyTilingWindowMaximized(Client *c, WindowOperation op);
-
-    Position supportedTilingResizeMode(Client *c, Position currentMode);
+#ifdef KWIN_BUILD_TILING
+    Tiling* tiling();
+#endif
 
     Outline* outline();
+#ifdef KWIN_BUILD_SCREENEDGES
+    ScreenEdge* screenEdge();
+#endif
 
     //-------------------------------------------------
     // Desktop layout
@@ -324,14 +310,13 @@ private:
 
     KActivityController activityController_;
 
-    bool tilingEnabled_;
-    // Each tilingLayout is for one virtual desktop.
-    // The length is always one more than the number of
-    // virtual desktops so that we can quickly index them
-    // without having to remember to subtract one.
-    QVector<TilingLayout *> tilingLayouts;
-
+#ifdef KWIN_BUILD_TILING
+    Tiling* m_tiling;
+#endif
     Outline* m_outline;
+#ifdef KWIN_BUILD_SCREENEDGES
+    ScreenEdge m_screenEdge;
+#endif
 
     //-------------------------------------------------
     // Unsorted
@@ -354,25 +339,25 @@ public:
     }
 
     // Tab box
-    Client* currentTabBoxClient() const;
-    ClientList currentTabBoxClientList() const;
-    int currentTabBoxDesktop() const;
-    QList<int> currentTabBoxDesktopList() const;
-    void setTabBoxClient(Client*);
-    void setTabBoxDesktop(int);
-    Client* nextClientFocusChain(Client*) const;
-    Client* previousClientFocusChain(Client*) const;
-    Client* nextClientStatic(Client*) const;
-    Client* previousClientStatic(Client*) const;
-    int nextDesktopFocusChain(int iDesktop) const;
-    int previousDesktopFocusChain(int iDesktop) const;
-    int nextDesktopStatic(int iDesktop) const;
-    int previousDesktopStatic(int iDesktop) const;
-    void refTabBox();
-    void unrefTabBox();
-    void closeTabBox(bool abort = false);
-    TabBox::TabBox *tabBox() const {
-        return tab_box;
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox() const;
+#endif
+    bool hasTabBox() const;
+
+    const QVector<int> &desktopFocusChain() const {
+        return desktop_focus_chain;
+    }
+    const ClientList &globalFocusChain() const {
+        return global_focus_chain;
+    }
+    KActionCollection* actionCollection() const {
+        return keys;
+    }
+    KActionCollection* disableShortcutsKeys() const {
+        return disable_shortcuts_keys;
+    }
+    KActionCollection* clientKeys() const {
+        return client_keys;
     }
 
     // Tabbing
@@ -446,6 +431,7 @@ public:
     bool rulesUpdatesDisabled() const;
 
     bool hasDecorationShadows() const;
+    Qt::Corner decorationCloseButtonCorner();
     bool decorationHasAlpha() const;
     bool decorationSupportsClientGrouping() const; // Returns true if the decoration supports tabs.
     bool decorationSupportsFrameOverlap() const;
@@ -514,10 +500,6 @@ public:
     bool wasUserInteraction() const;
     bool sessionSaving() const;
 
-    bool managingTopMenus() const;
-    int topMenuHeight() const;
-    void updateCurrentTopMenu();
-
     int packPositionLeft(const Client* cl, int oldx, bool left_edge) const;
     int packPositionRight(const Client* cl, int oldx, bool right_edge) const;
     int packPositionUp(const Client* cl, int oldy, bool top_edge) const;
@@ -537,16 +519,6 @@ public:
     void addRepaint(const QRect& r);
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
-    /// Creates XComposite overlay window, call initOverlay() afterwards
-    bool createOverlay();
-    /// Init overlay and the destination window in it
-    void setupOverlay(Window window);
-    void showOverlay();
-    void hideOverlay(); // hides and resets overlay window
-    void setOverlayShape(const QRegion& reg);
-    /// Destroys XComposite overlay window
-    void destroyOverlay();
-    Window overlayWindow();
     void checkUnredirect(bool force = false);
     void checkCompositeTimer();
 
@@ -554,7 +526,9 @@ public:
     void startMousePolling();
     void stopMousePolling();
 
-    void raiseElectricBorderWindows();
+    Client* getMovingClient() {
+        return movingClient;
+    }
 
 public slots:
     void addRepaintFull();
@@ -603,30 +577,13 @@ public slots:
     void slotWindowQuickTileBottomLeft();
     void slotWindowQuickTileBottomRight();
 
-    void slotWalkThroughDesktops();
-    void slotWalkBackThroughDesktops();
-    void slotWalkThroughDesktopList();
-    void slotWalkBackThroughDesktopList();
-    void slotWalkThroughWindows();
-    void slotWalkBackThroughWindows();
-    void slotWalkThroughWindowsAlternative();
-    void slotWalkBackThroughWindowsAlternative();
-
-    void slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabLeftKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabRightKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-
     void slotSwitchWindowUp();
     void slotSwitchWindowDown();
     void slotSwitchWindowRight();
     void slotSwitchWindowLeft();
+
+    void slotIncreaseWindowOpacity();
+    void slotLowerWindowOpacity();
 
     void slotWindowOperations();
     void slotWindowClose();
@@ -645,7 +602,6 @@ public slots:
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
 
-    void slotMouseEmulation();
     void slotDisableGlobalShortcuts();
 
     void slotSettingsChanged(int category);
@@ -664,25 +620,6 @@ public slots:
     void updateClientArea();
     void suspendCompositing();
     void suspendCompositing(bool suspend);
-
-    // user actions, usually bound to shortcuts
-    // and also provided through the D-BUS interface.
-    void slotToggleTiling();
-    void slotToggleFloating();
-    void slotNextTileLayout();
-    void slotPreviousTileLayout();
-
-    // Changes the focused client
-    void slotFocusTileLeft();
-    void slotFocusTileRight();
-    void slotFocusTileTop();
-    void slotFocusTileBottom();
-    // swaps active and adjacent client.
-    void slotMoveTileLeft();
-    void slotMoveTileRight();
-    void slotMoveTileTop();
-    void slotMoveTileBottom();
-    void belowCursor();
 
     // NOTE: debug method
     void dumpTiles() const;
@@ -704,23 +641,24 @@ private slots:
     void clientPopupActivated(QAction*);
     void configureWM();
     void desktopResized();
+    void screenChangeTimeout();
+    void screenAdded(Kephal::Screen*);
+    void screenRemoved(int);
+    void screenResized(Kephal::Screen*, QSize, QSize);
+    void screenMoved(Kephal::Screen*, QPoint, QPoint);
     void slotUpdateToolWindows();
-    void lostTopMenuSelection();
-    void lostTopMenuOwner();
     void delayFocus();
     void gotTemporaryRulesMessage(const QString&);
     void cleanupTemporaryRules();
     void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
-    void setPopupClientOpacity(QAction* action);
     void setupCompositing();
     void finishCompositing();
     void fallbackToXRenderCompositing();
     void performCompositing();
     void performMousePoll();
     void lostCMSelection();
-    void updateElectricBorders();
     void resetCursorPosTime();
     void delayedCheckUnredirect();
 
@@ -730,7 +668,6 @@ private slots:
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
 
 protected:
-    bool keyPressMouseEmulation(XKeyEvent& ev);
     void timerEvent(QTimerEvent *te);
 
 Q_SIGNALS:
@@ -751,11 +688,11 @@ signals:
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void propertyNotify(long a);
+    void configChanged();
 
 private:
     void init();
     void initShortcuts();
-    void readShortcuts();
     void initDesktopPopup();
     void initActivityPopup();
     void discardPopup();
@@ -769,20 +706,6 @@ private:
         DirectionWest
     };
     void switchWindow(Direction direction);
-    bool startKDEWalkThroughWindows(TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    bool startWalkThroughDesktops(TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
-    bool startWalkThroughDesktops();
-    bool startWalkThroughDesktopList();
-    void navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    void KDEWalkThroughWindows(bool forward);
-    void CDEWalkThroughWindows(bool forward);
-    void walkThroughDesktops(bool forward);
-    void KDEOneStepThroughWindows(bool forward, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
-    void oneStepThroughDesktops(bool forward, TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
-    void oneStepThroughDesktops(bool forward);
-    void oneStepThroughDesktopList(bool forward);
-    bool establishTabBoxGrab();
-    void removeTabBoxGrab();
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
     ClientList constrainedStackingOrder();
@@ -791,10 +714,6 @@ private:
     bool allowFullClientRaising(const Client* c, Time timestamp);
     bool keepTransientAbove(const Client* mainwindow, const Client* transient);
     void blockStackingUpdates(bool block);
-    void addTopMenu(Client* c);
-    void removeTopMenu(Client* c);
-    void setupTopMenuHandling();
-    void updateTopMenuGeometry(Client* c = NULL);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(Window w, const XWindowAttributes& attr);
 
@@ -814,31 +733,16 @@ private:
     void loadDesktopSettings();
     void saveDesktopSettings();
 
-    // Mouse emulation
-    WId getMouseEmulationWindow();
-    enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
-    unsigned int sendFakedMouseEvent(const QPoint& pos, WId win, MouseEmulation type, int button, unsigned int state);   // returns the new state
-
-    void tabBoxKeyPress(int key);
-    void tabBoxKeyRelease(const XKeyEvent& ev);
-
-    // Electric borders
-    void destroyElectricBorders();
-    bool electricBorderEvent(XEvent * e);
-    void electricBorderSwitchDesktop(ElectricBorder border, const QPoint& pos);
-
     //---------------------------------------------------------------------
 
     void helperDialog(const QString& message, const Client* c);
 
     QMenu* clientPopup();
     void closeActivePopup();
-
     void updateClientArea(bool force);
 
     bool windowRepaintsPending() const;
     void setCompositeTimer();
-    void checkCompositePaintTime(int msec);
 
     QVector<int> desktop_focus_chain;
 
@@ -856,20 +760,11 @@ private:
     QList<Rules*> rules;
     KXMessages temporaryRulesMessages;
     QTimer rulesUpdatedTimer;
+    QTimer screenChangedTimer;
     bool rules_updates_disabled;
     static const char* windowTypeToTxt(NET::WindowType type);
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
-
-    // try to get a decent tile, either the one with
-    // focus or the one below the mouse.
-    Tile* getNiceTile() const;
-    void removeTile(Client *c);
-    // int, and not Tile::Direction because
-    // we are using a forward declaration for Tile
-    Tile* findAdjacentTile(Tile *ref, int d);
-    void focusTile(int d);
-    void moveTile(int d);
 
     Client* active_client;
     Client* last_active_client;
@@ -909,28 +804,17 @@ private:
     int session_active_client;
     int session_desktop;
 
-    bool control_grab;
-    bool tab_grab;
-    //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
-    //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
-    //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
-    KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
-    KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
-    KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
-    KShortcut cutWalkThroughGroupWindows, cutWalkThroughGroupWindowsReverse;
-    KShortcut cutWalkThroughWindowsAlternative, cutWalkThroughWindowsAlternativeReverse;
-    bool mouse_emulation;
-    unsigned int mouse_emulation_state;
-    WId mouse_emulation_window;
     int block_focus;
 
+#ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox* tab_box;
+#endif
+#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     DesktopChangeOSD* desktop_change_osd;
+#endif
 
     QMenu* popup;
     QMenu* advanced_popup;
-    QMenu* trans_popup;
-    QActionGroup* trans_popup_group;
     QMenu* desk_popup;
     QMenu* activity_popup;
     QMenu* add_tabs_popup; // Menu to add the group to other group
@@ -940,6 +824,7 @@ private:
 
     KActionCollection* keys;
     KActionCollection* client_keys;
+    KActionCollection* disable_shortcuts_keys;
     QAction* mResizeOpAction;
     QAction* mMoveOpAction;
     QAction* mMaximizeOpAction;
@@ -955,7 +840,6 @@ private:
     QAction* mCloseGroup; // Close all clients in the group
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
-    KActionCollection* disable_shortcuts_keys;
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 
@@ -985,18 +869,6 @@ private:
 
     KStartupInfo* startup;
 
-    ElectricBorder electric_current_border;
-    Window electric_windows[ELECTRIC_COUNT];
-    int electricLeft;
-    int electricRight;
-    int electricTop;
-    int electricBottom;
-    Time electric_time_first;
-    Time electric_time_last;
-    Time electric_time_last_trigger;
-    QPoint electric_push_point;
-    int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
-
     Placement* initPositioning;
 
     QVector<QRect> workarea; // Array of workareas for virtual desktops
@@ -1005,13 +877,6 @@ private:
     // Array of the previous restricted areas that window cannot be moved into
     QVector<StrutRects> oldrestrictedmovearea;
     QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
-
-    bool managing_topmenus;
-    KSelectionOwner* topmenu_selection;
-    KSelectionWatcher* topmenu_watcher;
-    ClientList topmenus; // Doesn't own them
-    mutable int topmenu_height;
-    QWidget* topmenu_space;
 
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
@@ -1023,26 +888,17 @@ private:
     KSelectionOwner* cm_selection;
     bool compositingSuspended, compositingBlocked;
     QBasicTimer compositeTimer;
-    qint64 nextPaintReference;
+    QElapsedTimer nextPaintReference;
     QTimer mousePollingTimer;
     uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
     int xrrRefreshRate; // used only for compositing
     QRegion repaints_region;
-    Window overlay; // XComposite overlay window
-    bool overlay_visible;
-    bool overlay_shown; // For showOverlay()
-    QRegion overlay_shape;
     QSlider* transSlider;
     QPushButton* transButton;
     QTimer unredirectTimer;
     bool forceUnredirectCheck;
-    QList< int > composite_paint_times;
     QTimer compositeResetTimer; // for compressing composite resets
-
-    Window outline_left;
-    Window outline_right;
-    Window outline_top;
-    Window outline_bottom;
+    bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
 
 private:
     friend bool performTransiencyCheck();
@@ -1192,11 +1048,6 @@ inline bool Workspace::wasUserInteraction() const
     return was_user_interaction;
 }
 
-inline bool Workspace::managingTopMenus() const
-{
-    return managing_topmenus;
-}
-
 inline void Workspace::sessionSaveStarted()
 {
     session_saving = true;
@@ -1220,11 +1071,6 @@ inline bool Workspace::showingDesktop() const
 inline bool Workspace::globalShortcutsDisabled() const
 {
     return global_shortcuts_disabled || global_shortcuts_disabled_for_client;
-}
-
-inline Window Workspace::overlayWindow()
-{
-    return overlay;
 }
 
 inline bool Workspace::rulesUpdatesDisabled() const
@@ -1324,6 +1170,14 @@ inline bool Workspace::hasDecorationShadows() const
     return mgr->factory()->supports(AbilityProvidesShadow);
 }
 
+inline Qt::Corner Workspace::decorationCloseButtonCorner()
+{
+    if (!hasDecorationPlugin()) {
+        return Qt::TopRightCorner;
+    }
+    return mgr->factory()->closeButtonCorner();
+}
+
 inline bool Workspace::decorationHasAlpha() const
 {
     if (!hasDecorationPlugin()) {
@@ -1364,30 +1218,6 @@ inline void Workspace::addClientGroup(ClientGroup* group)
 inline void Workspace::removeClientGroup(ClientGroup* group)
 {
     clientGroups.removeAll(group);
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::toggleTiling()
-{
-    slotToggleTiling();
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::nextTileLayout()
-{
-    slotNextTileLayout();
-}
-
-/*
- * Called from D-BUS
- */
-inline void Workspace::previousTileLayout()
-{
-    slotPreviousTileLayout();
 }
 
 } // namespace

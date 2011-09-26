@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 
 #include "ui_showfps_config.h"
-#include "showfps.h"
 
 namespace KWin
 {

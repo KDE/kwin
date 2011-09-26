@@ -147,55 +147,35 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     // restack the windows according to the stacking order
     // 1 - supportWindow, 1 - topmenu_space, 8 - electric borders
-    Window* new_stack = new Window[ stacking_order.count() + 1 + 1 + 8 ];
-    int pos = 0;
+    QVector<Window*> newWindowStack;
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
     // but it was lowered after kwin startup. Stacking all clients below
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
-    new_stack[ pos++ ] = supportWindow->winId();
-    for (int i = 0;
-            i < ELECTRIC_COUNT;
-            ++i)
-        if (electric_windows[ i ] != None)
-            new_stack[ pos++ ] = electric_windows[ i ];
-    int topmenu_space_pos = 1; // not 0, that's supportWindow !!!
-    for (int i = stacking_order.size() - 1; i >= 0; i--) {
-        if (stacking_order.at(i)->hiddenPreview())
-            continue;
-        new_stack[ pos++ ] = stacking_order.at(i)->frameId();
-        if (stacking_order.at(i)->belongsToLayer() >= DockLayer)
-            topmenu_space_pos = pos;
+    newWindowStack << (Window*)supportWindow->winId();
+#ifdef KWIN_BUILD_SCREENEDGES
+    QVectorIterator<Window> it(m_screenEdge.windows());
+    while (it.hasNext()) {
+        if ((Window)it.next() != None) {
+            newWindowStack << (Window*)&it;
+        }
     }
-    if (topmenu_space != NULL) {
-        // make sure the topmenu space is below all topmenus, fullscreens, etc.
-        for (int i = pos;
-                i > topmenu_space_pos;
-                --i)
-            new_stack[ i ] = new_stack[ i - 1 ];
-        new_stack[ topmenu_space_pos ] = topmenu_space->winId();
-        ++pos;
-    }
-    // when having hidden previews, stack hidden windows below everything else
-    // (as far as pure X stacking order is concerned), in order to avoid having
-    // these windows that should be unmapped to interfere with other windows
+#endif
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
-        if (!stacking_order.at(i)->hiddenPreview())
+        if (stacking_order.at(i)->hiddenPreview()) {
             continue;
-        new_stack[ pos++ ] = stacking_order.at(i)->frameId();
-        if (stacking_order.at(i)->belongsToLayer() >= DockLayer)
-            topmenu_space_pos = pos;
+        }
+        newWindowStack << (Window*)stacking_order.at(i)->frameId();
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(new_stack[ 0 ] == supportWindow->winId());
-    XRestackWindows(display(), new_stack, pos);
-    delete [] new_stack;
+    assert(newWindowStack.at(0) == (Window*)supportWindow->winId());
+    XRestackWindows(display(), (Window*)newWindowStack.data(), newWindowStack.count());
 
+    int pos = 0;
     if (propagate_new_clients) {
         cl = new Window[ desktops.count() + clients.count()];
-        pos = 0;
         // TODO this is still not completely in the map order
         for (ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
             cl[pos++] = (*it)->window();
@@ -216,27 +196,6 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // the matching event, due to X being asynchronous.
     x_stacking_dirty = true;
 }
-
-/**
- * Raise electric border windows to the real top of the screen. We only need
- * to do this if an effect input window is active.
- */
-void Workspace::raiseElectricBorderWindows()
-{
-    Window* windows = new Window[ 8 ]; // There are up to 8 borders
-    int pos = 0;
-    for (int i = 0; i < ELECTRIC_COUNT; ++i)
-        if (electric_windows[ i ] != None)
-            windows[ pos++ ] = electric_windows[ i ];
-    if (!pos) {
-        delete [] windows;
-        return; // No borders at all
-    }
-    XRaiseWindow(display(), windows[ 0 ]);
-    XRestackWindows(display(), windows, pos);
-    delete [] windows;
-}
-
 
 /*!
   Returns topmost visible client. Windows on the dock, the desktop
@@ -309,8 +268,6 @@ void Workspace::lowerClient(Client* c, bool nogroup)
 {
     if (!c)
         return;
-    if (c->isTopMenu())
-        return;
 
     c->cancelAutoRaise();
 
@@ -337,8 +294,6 @@ void Workspace::lowerClientWithinApplication(Client* c)
 {
     if (!c)
         return;
-    if (c->isTopMenu())
-        return;
 
     c->cancelAutoRaise();
 
@@ -363,8 +318,6 @@ void Workspace::lowerClientWithinApplication(Client* c)
 void Workspace::raiseClient(Client* c, bool nogroup)
 {
     if (!c)
-        return;
-    if (c->isTopMenu())
         return;
 
     c->cancelAutoRaise();
@@ -392,8 +345,6 @@ void Workspace::raiseClient(Client* c, bool nogroup)
 void Workspace::raiseClientWithinApplication(Client* c)
 {
     if (!c)
-        return;
-    if (c->isTopMenu())
         return;
 
     c->cancelAutoRaise();
@@ -504,8 +455,6 @@ void Workspace::restack(Client* c, Client* under)
 
 void Workspace::restackClientUnderActive(Client* c)
 {
-    if (c->isTopMenu())
-        return;
     if (!active_client || active_client == c) {
         raiseClient(c);
         return;
@@ -684,12 +633,6 @@ ClientList Workspace::ensureStackingOrder(const ClientList& list) const
 // there may be some special cases where this rule shouldn't be enfored
 bool Workspace::keepTransientAbove(const Client* mainwindow, const Client* transient)
 {
-    // When topmenu's mainwindow becomes active, topmenu is raised and shown.
-    // They also belong to the Dock layer. This makes them to be very high.
-    // Therefore don't keep group transients above them, otherwise this would move
-    // group transients way too high.
-    if (mainwindow->isTopMenu() && transient->groupTransient())
-        return false;
     // #93832 - don't keep splashscreens above dialogs
     if (transient->isSplash() && mainwindow->isDialog())
         return false;
@@ -824,8 +767,6 @@ Layer Client::belongsToLayer() const
     if (keepBelow())
         return BelowLayer;
     if (isDock() && !keepBelow())
-        return DockLayer;
-    if (isTopMenu())
         return DockLayer;
     if (isActiveFullScreen())
         return ActiveLayer;

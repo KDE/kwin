@@ -25,10 +25,10 @@ SWrapper::Client::Client(KWin::Client* client) :
 {
     if (client != 0) {
         QObject::connect(client, SIGNAL(s_clientMoved()), this, SLOT(sl_clientMoved()));
-        QObject::connect(client, SIGNAL(maximizeSet(QPair<bool, bool>)), this, SLOT(sl_maximizeSet(QPair<bool, bool>)));
+        QObject::connect(client, SIGNAL(maximizeSet(QPair<bool,bool>)), this, SLOT(sl_maximizeSet(QPair<bool,bool>)));
         QObject::connect(client, SIGNAL(s_minimized()), this, SIGNAL(minimized()));
         QObject::connect(client, SIGNAL(s_activated()), this, SIGNAL(gotFocus()));
-        QObject::connect(client, SIGNAL(s_fullScreenSet(bool, bool)), this, SIGNAL(fullScreenSet(bool, bool)));
+        QObject::connect(client, SIGNAL(s_fullScreenSet(bool,bool)), this, SIGNAL(fullScreenSet(bool,bool)));
         QObject::connect(client, SIGNAL(s_setKeepAbove(bool)), this, SIGNAL(onSetKeepAbove(bool)));
         QObject::connect(client, SIGNAL(s_unminimized()), this, SIGNAL(unminimized()));
         QObject::connect(this, SIGNAL(unminimized()), this, SIGNAL(restored()));

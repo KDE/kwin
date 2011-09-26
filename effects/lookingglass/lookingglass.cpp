@@ -111,7 +111,7 @@ bool LookingGlassEffect::loadData()
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_fbo = new GLRenderTarget(m_texture);
+    m_fbo = new GLRenderTarget(*m_texture);
     if (!m_fbo->valid()) {
         return false;
     }
@@ -161,8 +161,11 @@ void LookingGlassEffect::toggle()
             polling = false;
             effects->stopMousePolling();
         }
-        m_enabled = false;
+        if (zoom == target_zoom) {
+            m_enabled = false;
+        }
     }
+    effects->addRepaint(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
 }
 
 void LookingGlassEffect::zoomIn()
@@ -181,10 +184,12 @@ void LookingGlassEffect::zoomOut()
     target_zoom -= 0.5;
     if (target_zoom < 1) {
         target_zoom = 1;
-        m_enabled = false;
         if (polling) {
             polling = false;
             effects->stopMousePolling();
+        }
+        if (zoom == target_zoom) {
+            m_enabled = false;
         }
     }
     effects->addRepaint(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
@@ -245,6 +250,11 @@ void LookingGlassEffect::postPaintScreen()
         ShaderManager::instance()->popShader();
         m_texture->unbind();
     }
+}
+
+bool LookingGlassEffect::isActive() const
+{
+    return m_valid && m_enabled;
 }
 
 } // namespace

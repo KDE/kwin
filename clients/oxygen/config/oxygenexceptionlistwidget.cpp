@@ -59,15 +59,15 @@ namespace Oxygen
         ui.removeButton->setIcon( KIcon( "list-remove", icon_loader ) );
         ui.editButton->setIcon( KIcon( "edit-rename", icon_loader ) );
 
-        connect( ui.addButton, SIGNAL( clicked() ), SLOT( add() ) );
-        connect( ui.editButton, SIGNAL( clicked() ), SLOT( edit() ) );
-        connect( ui.removeButton, SIGNAL( clicked() ), SLOT( remove() ) );
-        connect( ui.moveUpButton, SIGNAL( clicked() ), SLOT( up() ) );
-        connect( ui.moveDownButton, SIGNAL( clicked() ), SLOT( down() ) );
+        connect( ui.addButton, SIGNAL(clicked()), SLOT(add()) );
+        connect( ui.editButton, SIGNAL(clicked()), SLOT(edit()) );
+        connect( ui.removeButton, SIGNAL(clicked()), SLOT(remove()) );
+        connect( ui.moveUpButton, SIGNAL(clicked()), SLOT(up()) );
+        connect( ui.moveDownButton, SIGNAL(clicked()), SLOT(down()) );
 
-        connect( ui.exceptionListView, SIGNAL( activated( const QModelIndex& ) ), SLOT( edit() ) );
-        connect( ui.exceptionListView, SIGNAL( clicked( const QModelIndex& ) ), SLOT( toggle( const QModelIndex& ) ) );
-        connect( ui.exceptionListView->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( updateButtons() ) );
+        connect( ui.exceptionListView, SIGNAL(activated(QModelIndex)), SLOT(edit()) );
+        connect( ui.exceptionListView, SIGNAL(clicked(QModelIndex)), SLOT(toggle(QModelIndex)) );
+        connect( ui.exceptionListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateButtons()) );
 
         updateButtons();
         resizeColumns();

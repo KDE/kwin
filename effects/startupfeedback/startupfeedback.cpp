@@ -86,9 +86,9 @@ StartupFeedbackEffect::StartupFeedbackEffect()
         m_bouncingTextures[i] = 0;
     }
     m_selection->claim(true);
-    connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId, KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId, KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId, KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId, KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId, KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId,KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId,KStartupInfoData)));
+    connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId,KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId,KStartupInfoData)));
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
@@ -285,6 +285,7 @@ void StartupFeedbackEffect::gotNewStartup(const KStartupInfoId& id, const KStart
 
 void StartupFeedbackEffect::gotRemoveStartup(const KStartupInfoId& id, const KStartupInfoData& data)
 {
+    Q_UNUSED( data )
     m_startups.remove(id);
     if (m_startups.count() == 0) {
         m_currentStartup = KStartupInfoId(); // null
@@ -394,7 +395,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
     else
         xDiff = 32 + 7;
     int yDiff = xDiff;
-    GLTexture* texture;
+    GLTexture* texture = 0;
     int yOffset = 0;
     switch(m_type) {
     case BouncingFeedback:
@@ -410,8 +411,15 @@ QRect StartupFeedbackEffect::feedbackRect() const
         break;
     }
     const QPoint cursorPos = effects->cursorPos() + QPoint(xDiff, yDiff + yOffset);
-    const QRect rect(cursorPos, texture->size());
+    QRect rect;
+    if( texture )
+       rect = QRect(cursorPos, texture->size());
     return rect;
+}
+
+bool StartupFeedbackEffect::isActive() const
+{
+    return m_active;
 }
 
 } // namespace

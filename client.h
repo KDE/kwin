@@ -35,8 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 
+// TODO: QScriptValue should be in the ifdef, but it breaks the build
 #include <QScriptValue>
+#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/client.h"
+#endif
 
 #include "utils.h"
 #include "options.h"
@@ -56,12 +59,14 @@ class QProcess;
 class QTimer;
 class KStartupInfoData;
 
+#ifdef KWIN_BUILD_SCRIPTING
 namespace SWrapper
 {
 class Client;
 }
 
 typedef QPair<SWrapper::Client*, QScriptValue> ClientResolution;
+#endif
 
 namespace KWin
 {
@@ -117,12 +122,14 @@ public:
     bool isSpecialWindow() const;
     bool hasNETSupport() const;
 
+#ifdef KWIN_BUILD_SCRIPTING
     /**
       * This is a public object with no wrappers or anything to keep it fast,
       * so in essence, direct access is allowed. Please be very careful while
       * using this object
       */
     QHash<QScriptEngine*, ClientResolution>* scriptCache;
+#endif
 
     QSize minSize() const;
     QSize maxSize() const;
@@ -314,7 +321,7 @@ public:
 
     void gotPing(Time timestamp);
 
-    void checkWorkspacePosition();
+    void checkWorkspacePosition(const QRect &geo = QRect());
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
     bool hasUserTimeSupport() const;
@@ -412,7 +419,6 @@ public:
         WindowRelative      // Relative to the top left corner of the window
     };
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
-    virtual void addRepaintFull();
 
     TabBox::TabBoxClientImpl* tabBoxClient() const {
         return m_tabBoxClient;
@@ -439,11 +445,6 @@ private:
     Position mousePosition(const QPoint&) const;
     void updateCursor();
 
-    // Transparent stuff
-    void drawbound(const QRect& geom);
-    void clearbound();
-    void doDrawbound(const QRect& geom, bool clear);
-
     // Handlers for X11 events
     bool mapRequestEvent(XMapRequestEvent* e);
     void unmapNotifyEvent(XUnmapEvent* e);
@@ -455,9 +456,7 @@ private:
     void leaveNotifyEvent(XCrossingEvent* e);
     void focusInEvent(XFocusInEvent* e);
     void focusOutEvent(XFocusOutEvent* e);
-#ifdef HAVE_XDAMAGE
     virtual void damageNotifyEvent(XDamageNotifyEvent* e);
-#endif
 
     bool buttonPressEvent(Window w, int button, int state, int x, int y, int x_root, int y_root);
     bool buttonReleaseEvent(Window w, int button, int state, int x, int y, int x_root, int y_root);
@@ -472,11 +471,12 @@ protected:
     virtual bool shouldUnredirect() const;
 
 private slots:
+    void delayedSetShortcut();
+    void performMoveResize();
+    void removeSyncSupport();
     void pingTimeout();
     void processKillerExited();
     void demandAttentionKNotify();
-    void syncTimeout();
-    void delayedSetShortcut();
     void repaintDecorationPending();
 
     //Signals for the scripting interface
@@ -491,11 +491,9 @@ signals:
     void maximizeSet(QPair<bool, bool>);
     void s_activated();
     void s_fullScreenSet(bool, bool);
-    void clientClosed(KWin::Client*);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);
-    void clientGeometryShapeChanged(KWin::Client* client, const QRect& old);
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
@@ -531,7 +529,6 @@ private:
     void blockGeometryUpdates(bool block);
     void getSyncCounter();
     void sendSyncRequest();
-
     bool startMoveResize();
     void finishMoveResize(bool cancel);
     void leaveMoveResize();
@@ -544,7 +541,6 @@ private:
     void ungrabButton(int mod);
     void resetMaximize();
     void resizeDecoration(const QSize& s);
-    void performMoveResize();
 
     void pingWindow();
     void killProcess(bool ask, Time timestamp = CurrentTime);
@@ -573,6 +569,8 @@ private:
     Time readUserCreationTime() const;
     void startupIdChanged();
 
+    void checkOffscreenPosition (QRect& geom, const QRect& screenArea);
+
     Window client;
     Window wrapper;
     KDecoration* decoration;
@@ -581,7 +579,6 @@ private:
     QStringList activityList;
     bool buttonDown;
     bool moveResizeMode;
-    bool move_faked_activity;
     Window move_resize_grab_window;
     bool move_resize_has_keyboard_grab;
     bool unrestrictedMoveResize;
@@ -645,6 +642,7 @@ private:
     uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
+    int m_screenNum, m_formerScreenNum;
     bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();
@@ -692,12 +690,14 @@ private:
     QRect deco_rect_before_block;
     bool shade_geometry_change;
 #ifdef HAVE_XSYNC
-    XSyncCounter sync_counter;
-    XSyncValue sync_counter_value;
-    XSyncAlarm sync_alarm;
+    struct {
+        XSyncCounter counter;
+        XSyncValue value;
+        XSyncAlarm alarm;
+        QTimer *timeout, *failsafeTimeout;
+        bool isPending;
+    } syncRequest;
 #endif
-    QTimer* sync_timeout;
-    bool sync_resize_pending;
     int border_left, border_right, border_top, border_bottom;
     int padding_left, padding_right, padding_top, padding_bottom;
     QRegion _mask;
@@ -710,6 +710,8 @@ private:
     friend class GeometryUpdatesBlocker;
     QTimer* demandAttentionKNotifyTimer;
     QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
+    // we (instead of Qt) initialize the Pixmaps, and have to free them
+    bool m_responsibleForDecoPixmap;
     PaintRedirector* paintRedirector;
     TabBox::TabBoxClientImpl* m_tabBoxClient;
 
@@ -717,7 +719,9 @@ private:
     QuickTileMode electricMode;
 
     friend bool performTransiencyCheck();
+#ifdef KWIN_BUILD_SCRIPTING
     friend class SWrapper::Client;
+#endif
 
     void checkActivities();
     bool activitiesDefined; //whether the x property was actually set

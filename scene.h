@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
-#include <QDateTime>
-
 #include "toplevel.h"
 #include "utils.h"
 #include "kwineffects.h"
@@ -35,11 +33,13 @@ class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
 class LanczosFilter;
+class OverlayWindow;
 class Shadow;
 
 // The base class for compositing backends.
-class Scene
+class Scene : public QObject
 {
+    Q_OBJECT
 public:
     Scene(Workspace* ws);
     virtual ~Scene() = 0;
@@ -56,14 +56,8 @@ public:
     // Notification function - KWin core informs about changes.
     // Used to mainly discard cached data.
 
-    // shape/size of a window changed
-    virtual void windowGeometryShapeChanged(Toplevel*) = 0;
-    // opacity of a window changed
-    virtual void windowOpacityChanged(Toplevel*) = 0;
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
-    // a window has been closed
-    virtual void windowClosed(Toplevel*, Deleted*) = 0;
     // a window has been destroyed
     virtual void windowDeleted(Deleted*) = 0;
     // Flags controlling how painting is done.
@@ -100,6 +94,14 @@ public:
     bool waitSyncAvailable() {
         return has_waitSync;
     }
+    OverlayWindow* overlayWindow();
+public Q_SLOTS:
+    // opacity of a window changed
+    virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
+    // shape/size of a window changed
+    virtual void windowGeometryShapeChanged(KWin::Toplevel* c) = 0;
+    // a window has been closed
+    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted) = 0;
 protected:
     // shared implementation, starts painting the screen
     void paintScreen(int* mask, QRegion* region);
@@ -121,11 +123,6 @@ protected:
     void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     // compute time since the last repaint
     void updateTimeDiff();
-    QList< QPoint > selfCheckPoints() const;
-    QRegion selfCheckRegion() const;
-    // dimensions of the test pixmap for selfcheck
-    int selfCheckWidth() const;
-    int selfCheckHeight() const;
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data {
         Phase2Data(Window* w, QRegion r, QRegion c, int m, const WindowQuadList& q)
@@ -137,6 +134,7 @@ protected:
         Window* window;
         QRegion region;
         QRegion clip;
+        QRegion painted_1stpass;
         int mask;
         WindowQuadList quads;
     };
@@ -151,11 +149,12 @@ protected:
     // time since last repaint
     int time_diff;
     uint lastRenderTime;
-    QTime last_time;
+    QElapsedTimer last_time;
     Workspace* wspace;
     bool has_waitSync;
-    bool selfCheckDone;
     LanczosFilter* lanczos_filter;
+    OverlayWindow* m_overlayWindow;
+    QElapsedTimer m_renderTimer;
 };
 
 // The base class for windows representations in composite backends
@@ -245,18 +244,6 @@ protected:
 };
 
 extern Scene* scene;
-
-inline
-int Scene::selfCheckWidth() const
-{
-    return 3;
-}
-
-inline
-int Scene::selfCheckHeight() const
-{
-    return 2;
-}
 
 inline
 int Scene::Window::x() const

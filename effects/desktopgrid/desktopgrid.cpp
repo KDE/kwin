@@ -89,6 +89,12 @@ DesktopGridEffect::~DesktopGridEffect()
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border);
     }
+    QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
+    while (i != m_desktopButtonsViews.end()) {
+        DesktopButtonsView *view = i.key();
+        i = m_desktopButtonsViews.erase(i);
+        view->deleteLater();
+    }
 }
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
@@ -194,7 +200,6 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
     if (desktopNameAlignment) {
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
-            PaintClipper pc(screenGeom);   // TODO: Doesn't work in XRender for some reason?
             int desktop = 1;
             foreach (EffectFrame * frame, desktopNames) {
                 QPointF posTL(scalePos(screenGeom.topLeft(), desktop, screen));
@@ -306,7 +311,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                     screenQuads.append(quad);
                     transformedGeo = manager.transformedGeometry(w);
                     quadsAdded = true;
-                    if (!manager.areWindowsMoving())
+                    if (!manager.areWindowsMoving() && timeline.currentValue() == 1.0)
                         mask |= PAINT_WINDOW_LANCZOS;
                 } else if (w->screen() != screen)
                     quadsAdded = true; // we don't want parts of overlapping windows on the other screen
@@ -355,13 +360,12 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                 PaintClipper pc(effects->clientArea(ScreenArea, screen, 0) & QRect(screenPos, screenSize));
                 effects->paintWindow(w, mask, region, d);
             } else {
-                PaintClipper pc(effects->clientArea(ScreenArea, screen, 0));
                 if (w->isDesktop() && timeline.currentValue() == 1.0) {
                     // desktop windows are not in a motion manager and can always be rendered with
                     // lanczos sampling except for animations
                     mask |= PAINT_WINDOW_LANCZOS;
                 }
-                effects->paintWindow(w, mask, region, d);
+                effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
             }
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
             if (w->isDesktop())
@@ -1217,10 +1221,10 @@ void DesktopGridEffect::globalShortcutChanged(const QKeySequence& seq)
     shortcut = KShortcut(seq);
 }
 
-bool DesktopGridEffect::isMotionManagerMovingWindows()
+bool DesktopGridEffect::isMotionManagerMovingWindows() const
 {
     if (isUsingPresentWindows()) {
-        QList<WindowMotionManager>::iterator it;
+        QList<WindowMotionManager>::const_iterator it;
         for (it = m_managers.begin(); it != m_managers.end(); ++it) {
             if ((*it).areWindowsMoving())
                 return true;
@@ -1366,6 +1370,11 @@ void DesktopGridEffect::desktopsRemoved(int old)
 
     // and repaint
     effects->addRepaintFull();
+}
+
+bool DesktopGridEffect::isActive() const
+{
+    return timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows());
 }
 
 /************************************************

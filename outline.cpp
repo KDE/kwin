@@ -96,13 +96,18 @@ void Outline::showWithX()
                                         CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr);
         m_initialized = true;
     }
+
+    int defaultDepth = XDefaultDepth(QX11Info::display(), QX11Info::appScreen());
+
 // left/right parts are between top/bottom, they don't reach as far as the corners
     XMoveResizeWindow(QX11Info::display(), m_leftOutline, m_outlineGeometry.x(), m_outlineGeometry.y() + 5, 5, m_outlineGeometry.height() - 10);
     XMoveResizeWindow(QX11Info::display(), m_rightOutline, m_outlineGeometry.x() + m_outlineGeometry.width() - 5, m_outlineGeometry.y() + 5, 5, m_outlineGeometry.height() - 10);
     XMoveResizeWindow(QX11Info::display(), m_topOutline, m_outlineGeometry.x(), m_outlineGeometry.y(), m_outlineGeometry.width(), 5);
     XMoveResizeWindow(QX11Info::display(), m_bottomOutline, m_outlineGeometry.x(), m_outlineGeometry.y() + m_outlineGeometry.height() - 5, m_outlineGeometry.width(), 5);
     {
-        QPixmap pix(5, m_outlineGeometry.height() - 10);
+        Pixmap xpix = XCreatePixmap(display(), rootWindow(), 5,
+                                    m_outlineGeometry.height() - 10, defaultDepth);
+        QPixmap pix = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
         QPainter p(&pix);
         p.setPen(Qt::white);
         p.drawLine(0, 0, 0, pix.height() - 1);
@@ -115,9 +120,13 @@ void Outline::showWithX()
         p.end();
         XSetWindowBackgroundPixmap(QX11Info::display(), m_leftOutline, pix.handle());
         XSetWindowBackgroundPixmap(QX11Info::display(), m_rightOutline, pix.handle());
+        // According to the XSetWindowBackgroundPixmap documentation the pixmap can be freed.
+        XFreePixmap (display(), xpix);
     }
     {
-        QPixmap pix(m_outlineGeometry.width(), 5);
+        Pixmap xpix = XCreatePixmap(display(), rootWindow(), m_outlineGeometry.width(),
+                                    5, defaultDepth);
+        QPixmap pix = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
         QPainter p(&pix);
         p.setPen(Qt::white);
         p.drawLine(0, 0, pix.width() - 1 - 0, 0);
@@ -137,9 +146,13 @@ void Outline::showWithX()
         p.drawLine(pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4);
         p.end();
         XSetWindowBackgroundPixmap(QX11Info::display(), m_topOutline, pix.handle());
+        // According to the XSetWindowBackgroundPixmap documentation the pixmap can be freed.
+        XFreePixmap (display(), xpix);
     }
     {
-        QPixmap pix(m_outlineGeometry.width(), 5);
+        Pixmap xpix = XCreatePixmap(display(), rootWindow(), m_outlineGeometry.width(),
+                                    5, defaultDepth);
+        QPixmap pix = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
         QPainter p(&pix);
         p.setPen(Qt::white);
         p.drawLine(4, 0, pix.width() - 1 - 4, 0);
@@ -159,6 +172,8 @@ void Outline::showWithX()
         p.drawLine(pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2);
         p.end();
         XSetWindowBackgroundPixmap(QX11Info::display(), m_bottomOutline, pix.handle());
+        // According to the XSetWindowBackgroundPixmap documentation the pixmap can be freed.
+        XFreePixmap (display(), xpix);
     }
     XClearWindow(QX11Info::display(), m_leftOutline);
     XClearWindow(QX11Info::display(), m_rightOutline);

@@ -1,46 +1,45 @@
 ########### configure tests ###############
 
-# KWIN_HAVE_COMPOSITING - whether any compositing support is available
-if( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
-    set( KWIN_HAVE_COMPOSITING 1 )
-endif( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
+OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
+OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
+OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+OPTION(KWIN_BUILD_TILING "Enable building of KWin Tiling functionality" ON)
+OPTION(KWIN_BUILD_DESKTOPCHANGEOSD "Enable building of KWin DesktopChangeOSD funtionality" ON)
+OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
+OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
+OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
+if(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
+   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+else(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
+   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
+endif(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
 
-# KWIN_HAVE_OPENGL_COMPOSITING - whether OpenGL-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
-    set( KWIN_HAVE_OPENGL_COMPOSITING 1 )
-endif( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
+if(KWIN_PLASMA_ACTIVE)
+    set(KWIN_BUILD_DECORATIONS OFF)
+    set(KWIN_BUILD_KCMS OFF)
+    set(KWIN_BUILD_TABBOX OFF)
+    set(KWIN_BUILD_TILING OFF)
+    set(KWIN_BUILD_DESKTOPCHANGEOSD OFF)
+    set(KWIN_BUILD_SCREENEDGES OFF)
+    set(KWIN_BUILD_SCRIPTING OFF)
+    set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
+    set(KWIN_MOBILE_EFFECTS ON)
+    set(KWIN_BUILD_WITH_OPENGLES ON)
+endif(KWIN_PLASMA_ACTIVE)
 
-# KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
+# KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
+if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
-endif( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
-
-# KWIN_HAVE_OPENGLES_COMPOSITING - whether OpenGL ES-based compositing support is available
-if( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES)
-    set( KWIN_HAVE_OPENGL_COMPOSITING 1)
-    set( KWIN_HAVE_OPENGLES_COMPOSITING 1 )
-    message("Compiling KWin for mobile.")
-endif( KWIN_HAVE_COMPOSITING AND OPENGLES_FOUND AND KWIN_BUILD_WITH_OPENGLES )
-
-# safety
-if( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-    # ok
-else( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-    set( KWIN_HAVE_COMPOSITING ) # unset
-endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
-
-macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "X11 Compositing support"  "http://www.x.org/" FALSE "" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support")
-
-macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
-macro_bool_to_01( KWIN_HAVE_OPENGLES_COMPOSITING KWIN_HAVE_OPENGLES )
+endif( KWIN_BUILD_XRENDER_COMPOSITING )
 
 if(OPENGL_FOUND)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
 
-if(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
+if(OPENGLES_FOUND)
   include_directories(${OPENGLES_INCLUDE_DIR})
-endif(OPENGLES_FOUND AND KWIN_HAVE_OPENGLES_COMPOSITING)
+endif(OPENGLES_FOUND)
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
@@ -50,7 +49,7 @@ configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
 ########### global ###############
 
-include_directories(
+include_directories(BEFORE
     ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libkwineffects
@@ -64,17 +63,16 @@ include_directories(
 add_subdirectory( libkdecorations )
 add_subdirectory( libkwineffects )
 add_subdirectory( killer )
-add_subdirectory( kcmkwin )
+if(KWIN_BUILD_KCMS)
+    add_subdirectory( kcmkwin )
+endif(KWIN_BUILD_KCMS)
 
-OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 if( KWIN_BUILD_DECORATIONS )
     add_subdirectory( clients )
 endif( KWIN_BUILD_DECORATIONS )
 add_subdirectory( data )
 
-if( KWIN_HAVE_COMPOSITING )
 add_subdirectory( effects )
-endif( KWIN_HAVE_COMPOSITING )
 
 ########### next target ###############
 
@@ -87,16 +85,6 @@ set(kwin_KDEINIT_SRCS
    utils.cpp 
    layers.cpp 
    main.cpp 
-   tabbox.cpp
-   tabbox/clientitemdelegate.cpp 
-   tabbox/clientmodel.cpp 
-   tabbox/desktopitemdelegate.cpp 
-   tabbox/desktopmodel.cpp 
-   tabbox/itemlayoutconfig.cpp 
-   tabbox/tabboxconfig.cpp 
-   tabbox/tabboxhandler.cpp 
-   tabbox/tabboxview.cpp 
-   desktopchangeosd.cpp 
    options.cpp 
    outline.cpp
    plugins.cpp 
@@ -108,7 +96,8 @@ set(kwin_KDEINIT_SRCS
    group.cpp 
    bridge.cpp 
    manage.cpp 
-   notifications.cpp 
+   notifications.cpp
+   overlaywindow.cpp
    activation.cpp 
    useractions.cpp 
    geometry.cpp 
@@ -126,35 +115,71 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    desktoplayout.cpp
    paintredirector.cpp
-   tile.cpp
-   tiling.cpp
-   tilinglayout.cpp
-   tilinglayoutfactory.cpp
-
-   #load the scripting related functions
-   scripting/scripting.cpp
-   scripting/workspace.cpp
-   scripting/client.cpp
-   scripting/meta.cpp
-   scripting/toplevel.cpp
-   scripting/windowinfo.cpp
-   scripting/s_clientgroup.cpp
-   scripting/workspaceproxy.cpp
-   scripting/chelate.cpp
-   scripting/timer.cpp
-
-   # tiling layouts
-   # spiral
-   #tilinglayouts/spiral/spiralfactory.cpp
-   tilinglayouts/spiral/spiral.cpp
-
-   # columns
-   #tilinglayouts/columns/columnsfactory.cpp
-   tilinglayouts/columns/columns.cpp
-
-   # floating
-   tilinglayouts/floating/floating.cpp
    )
+
+if(KWIN_BUILD_SCRIPTING)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        scripting/scripting.cpp
+        scripting/workspace.cpp
+        scripting/client.cpp
+        scripting/meta.cpp
+        scripting/toplevel.cpp
+        scripting/windowinfo.cpp
+        scripting/s_clientgroup.cpp
+        scripting/workspaceproxy.cpp
+        scripting/chelate.cpp
+        scripting/timer.cpp
+    )
+endif(KWIN_BUILD_SCRIPTING)
+
+if(KWIN_BUILD_TABBOX)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        tabbox/tabbox.cpp
+        tabbox/clientitemdelegate.cpp
+        tabbox/clientmodel.cpp
+        tabbox/desktopitemdelegate.cpp
+        tabbox/desktopmodel.cpp
+        tabbox/itemlayoutconfig.cpp
+        tabbox/tabboxconfig.cpp
+        tabbox/tabboxhandler.cpp
+        tabbox/tabboxview.cpp
+  )
+endif(KWIN_BUILD_TABBOX)
+
+if(KWIN_BUILD_TILING)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        tiling/tile.cpp
+        tiling/tiling.cpp
+        tiling/tilinglayout.cpp
+        tilinglayoutfactory.cpp
+
+        # tiling layouts
+        # spiral
+        tilinglayouts/spiral/spiral.cpp
+
+        # columns
+        tilinglayouts/columns/columns.cpp
+
+        # floating
+        tilinglayouts/floating/floating.cpp
+   )
+endif(KWIN_BUILD_TILING)
+
+if(KWIN_BUILD_DESKTOPCHANGEOSD)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        desktopchangeosd.cpp
+    )
+endif(KWIN_BUILD_DESKTOPCHANGEOSD)
+
+if(KWIN_BUILD_SCREENEDGES)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        screenedge.cpp
+    )
+endif(KWIN_BUILD_SCREENEDGES)
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
@@ -163,13 +188,24 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
+set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
+
+if(KWIN_BUILD_SCRIPTING)
+    set(kwinLibs ${kwinLibs} ${QT_QTSCRIPT_LIBRARY})
+endif(KWIN_BUILD_SCRIPTING)
+
+if(KWIN_BUILD_TABBOX)
+    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY})
+endif(KWIN_BUILD_TABBOX)
+
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} ${QT_QTSCRIPT_LIBRARY} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES})
+target_link_libraries(kdeinit_kwin ${kwinLibs})
 
-if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
+if(OPENGL_FOUND)
+  set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL)
   add_subdirectory(opengltest)
-  target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
+  target_link_libraries(kdeinit_kwin kwinglutils ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
@@ -177,31 +213,21 @@ if(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
   endif(DL_LIBRARY)
   # must be after opengl, to be initialized first by the linker
   target_link_libraries(kdeinit_kwin kwinnvidiahack)
-endif(OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING)
-
-if(KWIN_HAVE_OPENGLES_COMPOSITING)
-  target_link_libraries(kdeinit_kwin ${OPENGLES_LIBRARIES} ${OPENGLES_EGL_LIBRARIES})
-endif(KWIN_HAVE_OPENGLES_COMPOSITING)
-
-if (X11_Xrandr_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
-endif (X11_Xrandr_FOUND)
-if (X11_Xcomposite_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
-endif (X11_Xcomposite_FOUND)
-if (X11_Xdamage_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xdamage_LIB})
-endif (X11_Xdamage_FOUND)
-if (X11_Xrender_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xrender_LIB})
-endif (X11_Xrender_FOUND)
-if (X11_Xfixes_FOUND)
-  target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
-endif (X11_Xfixes_FOUND)
+elseif(OPENGLES_FOUND)
+  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
+  set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
+endif(OPENGL_FOUND)
 
 install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+if(OPENGLES_FOUND)
+  kde4_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
+  target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
+  set_target_properties(kdeinit_kwin_gles PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
+  install(TARGETS kdeinit_kwin_gles ${INSTALL_TARGETS_DEFAULT_ARGS} )
+  install(TARGETS kwin_gles         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+endif(OPENGLES_FOUND)
 
 ########### next target ###############
 

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Qt>
 
-#include "tilinglayout.h"
+#include "tiling/tilinglayout.h"
 
 namespace KWin
 {

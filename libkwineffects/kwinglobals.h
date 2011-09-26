@@ -105,6 +105,10 @@ enum TabBoxMode {
     TabBoxWindowsAlternativeMode // Secondary window switching mode
 };
 
+enum KWinOption {
+    CloseButtonCorner
+};
+
 inline
 KWIN_EXPORT Display* display()
 {
@@ -165,11 +169,11 @@ public:
         return fixes_version > 0;
     }
     static bool fixesRegionAvailable();
-    static bool glxAvailable() {
-        return has_glx;
-    }
     static bool syncAvailable() {
         return has_sync;
+    }
+    static bool nonNativePixmaps() {
+        return non_native_pixmaps;
     }
     static int syncAlarmNotifyEvent();
     static void fillExtensionsData(const char**& extensions, int& nextensions, int*&majors, int*& error_bases);
@@ -184,13 +188,13 @@ private:
     static int composite_version;
     static int render_version;
     static int fixes_version;
-    static bool has_glx;
     static bool has_sync;
     static int sync_event_base;
     static const char* data_extensions[ 32 ];
     static int data_nextensions;
     static int data_opcodes[ 32 ];
     static int data_error_bases[ 32 ];
+    static bool non_native_pixmaps;
 };
 
 } // namespace

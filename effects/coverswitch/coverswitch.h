@@ -48,6 +48,7 @@ public:
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual bool isActive() const;
 
     static bool supported();
 

@@ -44,6 +44,7 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual bool isActive() const;
 public Q_SLOTS:
     void slotWindowAdded(EffectWindow* w);
     void slotWindowClosed(EffectWindow *w);
@@ -62,7 +63,7 @@ private:
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     void renderVignetting();
     int frameDelay;
     bool blurSupported, useBlur;

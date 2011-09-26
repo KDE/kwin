@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "showfps_config.h"
+#include "showfps.h"
 
 #include <kwineffects.h>
 
@@ -37,8 +38,8 @@ ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& ar
     m_ui->setupUi(this);
 
     connect(m_ui->textPosition, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->textFont, SIGNAL(fontSelected(const QFont&)), this, SLOT(changed()));
-    connect(m_ui->textColor, SIGNAL(changed(const QColor&)), this, SLOT(changed()));
+    connect(m_ui->textFont, SIGNAL(fontSelected(QFont)), this, SLOT(changed()));
+    connect(m_ui->textColor, SIGNAL(changed(QColor)), this, SLOT(changed()));
     connect(m_ui->textAlpha, SIGNAL(valueChanged(double)), this, SLOT(changed()));
 
     load();

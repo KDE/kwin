@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
+#include "overlaywindow.h"
 #include "scene.h"
 #include "scene_basic.h"
 #include "scene_xrender.h"
@@ -66,15 +67,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
-#ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
-#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
-#define HAVE_XCOMPOSITE_OVERLAY
-#endif
-#endif
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
 
 namespace KWin
 {
@@ -87,7 +81,6 @@ extern int currentRefreshRate();
 
 void Workspace::setupCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (scene != NULL)
         return;
     if (compositingSuspended) {
@@ -112,7 +105,6 @@ void Workspace::setupCompositing()
             kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
           break; // don't fall through (this is a testing one) */
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     case OpenGLCompositing: {
         kDebug(1212) << "Initializing OpenGL compositing";
 
@@ -120,11 +112,18 @@ void Workspace::setupCompositing()
         KSharedConfigPtr unsafeConfigPtr(KSharedConfig::openConfig("kwinrc"));
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         if (unsafeConfig.readEntry("OpenGLIsUnsafe", false))
-            kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use, "
-                           "falling back to XRender.";
+            kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
             unsafeConfig.writeEntry("OpenGLIsUnsafe", true);
             unsafeConfig.sync();
+#ifndef KWIN_HAVE_OPENGLES
+            if (!CompositingPrefs::hasGlx()) {
+                unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
+                unsafeConfig.sync();
+                kDebug(1212) << "No glx extensions available";
+                break;
+            }
+#endif
 
             scene = new SceneOpenGL(this);
 
@@ -141,7 +140,6 @@ void Workspace::setupCompositing()
         // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
         break;
     }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         kDebug(1212) << "Initializing XRender compositing";
@@ -149,11 +147,7 @@ void Workspace::setupCompositing()
         break;
 #endif
     default:
-#ifndef KWIN_HAVE_COMPOSITING
-        kDebug(1212) << "Compositing was not available at compile time";
-#else
         kDebug(1212) << "No compositing enabled";
-#endif
         delete cm_selection;
         return;
     }
@@ -174,9 +168,8 @@ void Workspace::setupCompositing()
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     vBlankPadding = 3; // vblank rounding errors... :-(
-    nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+    nextPaintReference.restart();
     checkCompositeTimer();
-    composite_paint_times.clear();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer
     addRepaintFull();
@@ -186,23 +179,14 @@ void Workspace::setupCompositing()
     c->setupCompositing();
     foreach (Unmanaged * c, unmanaged)
     c->setupCompositing();
-    foreach (Client * c, clients)
-    scene->windowAdded(c);
-    foreach (Client * c, desktops)
-    scene->windowAdded(c);
-    foreach (Unmanaged * c, unmanaged)
-    scene->windowAdded(c);
     discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
-#else
-    kDebug(1212) << "Compositing was not available at compile time";
-#endif
 }
 
 void Workspace::finishCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (scene == NULL)
         return;
+    m_finishingCompositing = true;
     delete cm_selection;
     foreach (Client * c, clients)
     scene->windowClosed(c, NULL);
@@ -241,7 +225,7 @@ void Workspace::finishCompositing()
     // discard all Deleted windows (#152914)
     while (!deleted.isEmpty())
         deleted.first()->discard(Allowed);
-#endif
+    m_finishingCompositing = false;
 }
 
 // OpenGL self-check failed, fallback to XRender
@@ -377,9 +361,8 @@ void Workspace::timerEvent(QTimerEvent *te)
 
 void Workspace::performCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (((repaints_region.isEmpty() && !windowRepaintsPending())  // no damage
-            || !overlay_visible)) { // nothing is visible anyway
+            || !scene->overlayWindow()->isVisible())) { // nothing is visible anyway
         vBlankPadding += 3;
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
@@ -390,44 +373,30 @@ void Workspace::performCompositing()
     }
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
-    foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
+    foreach (EffectWindow *c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
         Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
         windows.removeAll(t);
         windows.append(t);
     }
-#if 0
+
     // skip windows that are not yet ready for being painted
-    ToplevelList tmp = windows;
-    windows.clear();
-    // There is a bug somewhere that prevents this from working properly (#160393), but additionally
+    // TODO ?
     // this cannot be used so carelessly - needs protections against broken clients, the window
     // should not get focus before it's displayed, handle unredirected windows properly and so on.
-    foreach (Toplevel * c, tmp)
-    if (c->readyForPainting())
-        windows.append(c);
-#endif
-    foreach (Toplevel * c, windows) {
-        // This could be possibly optimized WRT obscuring, but that'd need being already
-        // past prePaint() phase - probably not worth it.
-        repaints_region |= c->repaints().translated(c->pos());
-        repaints_region |= c->decorationPendingRegion();
-        c->resetRepaints(c->decorationRect());
-        if (c->hasShadow()) {
-            c->resetRepaints(c->shadow()->shadowRegion().boundingRect());
-        }
-    }
+    foreach (Toplevel *t, windows)
+        if (!t->readyForPainting())
+            windows.removeAll(t);
+
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
-    QElapsedTimer t;
-    t.start();
     if (scene->waitSyncAvailable()) {
         // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
         scene->paint(repaints, windows);
-        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+        nextPaintReference.restart();
     } else {
         // no vsyc -> inversion: reset the timer, then paint the scene, this way we can provide a constant framerate
-        nextPaintReference = QDateTime::currentMSecsSinceEpoch();
+        nextPaintReference.restart();
         scene->paint(repaints, windows);
     }
     // reset the roundin error corrective... :-(
@@ -437,8 +406,6 @@ void Workspace::performCompositing()
     // checkCompositeTime() would restart it again somewhen later, called from functions that
     // would again add something pending.
     checkCompositeTimer();
-    checkCompositePaintTime(t.elapsed());
-#endif
 }
 
 void Workspace::performMousePoll()
@@ -469,7 +436,7 @@ void Workspace::setCompositeTimer()
         return;
 
     // interval - "time since last paint completion" - "time we need to paint"
-    uint passed = (QDateTime::currentMSecsSinceEpoch() - nextPaintReference) << 10;
+    uint passed = nextPaintReference.elapsed() << 10;
     uint delay = fpsInterval;
     if (scene->waitSyncAvailable()) {
         if (passed > fpsInterval) {
@@ -493,160 +460,15 @@ void Workspace::stopMousePolling()
     mousePollingTimer.stop();
 }
 
-bool Workspace::createOverlay()
-{
-    assert(overlay == None);
-    if (!Extensions::compositeOverlayAvailable())
-        return false;
-    if (!Extensions::shapeInputAvailable())  // needed in setupOverlay()
-        return false;
-#ifdef HAVE_XCOMPOSITE_OVERLAY
-    overlay = XCompositeGetOverlayWindow(display(), rootWindow());
-    if (overlay == None)
-        return false;
-    XResizeWindow(display(), overlay, displayWidth(), displayHeight());
-    return true;
-#else
-    return false;
-#endif
-}
-
-void Workspace::checkCompositePaintTime(int msec)
-{
-    if (options->disableCompositingChecks)
-        return;
-    // Sanity check. QTime uses the system clock so if the user changes the time or
-    // timezone our timer will return undefined results. Ideally we would use a system
-    // clock independent timer but I am uncertain if Qt provides a nice wrapper for
-    // one or not. As it's unlikely for a single paint to take 15 seconds it seems
-    // like a good upper bound.
-    if (msec < 0 || msec > 15000)
-        return;
-    composite_paint_times.prepend(msec);
-    bool tooslow = false;
-    // If last 3 paints were way too slow, disable and warn.
-    // 1 second seems reasonable, it's not that difficult to get relatively high times
-    // with high system load.
-    const int MAX_LONG_PAINT = 1000;
-    if (composite_paint_times.count() >= 3 && composite_paint_times[ 0 ] > MAX_LONG_PAINT
-            && composite_paint_times[ 1 ] > MAX_LONG_PAINT && composite_paint_times[ 2 ] > MAX_LONG_PAINT) {
-        kDebug(1212) << "Too long paint times, suspending";
-        tooslow = true;
-    }
-    // If last 15 seconds all paints (all of them) were quite slow, disable and warn too. Quite slow being 0,1s
-    // should be reasonable, that's 10fps and having constant 10fps is bad.
-    // This may possibly trigger also when activating an expensive effect, so this may need tweaking.
-    const int MAX_SHORT_PAINT = 100;
-    const int SHORT_TIME = 15000; // 15 sec
-    int time = 0;
-    foreach (int t, composite_paint_times) {
-        if (t < MAX_SHORT_PAINT)
-            break;
-        time += t;
-        if (time > SHORT_TIME) { // all paints in the given time were long
-            kDebug(1212) << "Long paint times for long time, suspending";
-            tooslow = true;
-            break;
-        }
-    }
-    if (composite_paint_times.count() > 1000)
-        composite_paint_times.removeLast();
-    if (tooslow) {
-        QTimer::singleShot(0, this, SLOT(suspendCompositing()));
-        QString shortcut, message;
-        if (KAction* action = qobject_cast<KAction*>(keys->action("Suspend Compositing")))
-            shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
-        if (shortcut.isEmpty())
-            message = i18n("Desktop effects were too slow and have been suspended.\n"
-                           "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects).");
-        else
-            message = i18n("Desktop effects were too slow and have been suspended.\n"
-                           "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
-                           "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects).", shortcut);
-        Notify::raise(Notify::CompositingSlow, message);
-        compositeTimer.start(1000, this);   // so that it doesn't trigger sooner than suspendCompositing()
-    }
-}
-
-void Workspace::setupOverlay(Window w)
-{
-    assert(overlay != None);
-    assert(Extensions::shapeInputAvailable());
-    XSetWindowBackgroundPixmap(display(), overlay, None);
-    overlay_shape = QRegion();
-    setOverlayShape(QRect(0, 0, displayWidth(), displayHeight()));
-    if (w != None) {
-        XSetWindowBackgroundPixmap(display(), w, None);
-        XShapeCombineRectangles(display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
-    }
-    XSelectInput(display(), overlay, VisibilityChangeMask);
-}
-
-void Workspace::showOverlay()
-{
-    assert(overlay != None);
-    if (overlay_shown)
-        return;
-    XMapSubwindows(display(), overlay);
-    XMapWindow(display(), overlay);
-    overlay_shown = true;
-}
-
-void Workspace::hideOverlay()
-{
-    assert(overlay != None);
-    XUnmapWindow(display(), overlay);
-    overlay_shown = false;
-    setOverlayShape(QRect(0, 0, displayWidth(), displayHeight()));
-}
-
-void Workspace::setOverlayShape(const QRegion& reg)
-{
-    // Avoid setting the same shape again, it causes flicker (apparently it is not a no-op
-    // and triggers something).
-    if (reg == overlay_shape)
-        return;
-    QVector< QRect > rects = reg.rects();
-    XRectangle* xrects = new XRectangle[ rects.count()];
-    for (int i = 0;
-            i < rects.count();
-            ++i) {
-        xrects[ i ].x = rects[ i ].x();
-        xrects[ i ].y = rects[ i ].y();
-        xrects[ i ].width = rects[ i ].width();
-        xrects[ i ].height = rects[ i ].height();
-    }
-    XShapeCombineRectangles(display(), overlay, ShapeBounding, 0, 0,
-                            xrects, rects.count(), ShapeSet, Unsorted);
-    delete[] xrects;
-    XShapeCombineRectangles(display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
-    overlay_shape = reg;
-}
-
-void Workspace::destroyOverlay()
-{
-    if (overlay == None)
-        return;
-    // reset the overlay shape
-    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
-    XShapeCombineRectangles(display(), overlay, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted);
-    XShapeCombineRectangles(display(), overlay, ShapeInput, 0, 0, &rec, 1, ShapeSet, Unsorted);
-#ifdef HAVE_XCOMPOSITE_OVERLAY
-    XCompositeReleaseOverlayWindow(display(), overlay);
-#endif
-    overlay = None;
-    overlay_shown = false;
-}
-
 bool Workspace::compositingActive()
 {
-    return compositing();
+    return !m_finishingCompositing && compositing();
 }
 
 // force is needed when the list of windows changes (e.g. a window goes away)
 void Workspace::checkUnredirect(bool force)
 {
-    if (!compositing() || overlay == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
         return;
     if (force)
         forceUnredirectCheck = true;
@@ -656,7 +478,7 @@ void Workspace::checkUnredirect(bool force)
 
 void Workspace::delayedCheckUnredirect()
 {
-    if (!compositing() || overlay == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
@@ -679,7 +501,7 @@ void Workspace::delayedCheckUnredirect()
         if (c->unredirected())
             reg -= c->geometry();
     }
-    setOverlayShape(reg);
+    scene->overlayWindow()->setShape(reg);
 }
 
 //****************************************
@@ -688,9 +510,9 @@ void Workspace::delayedCheckUnredirect()
 
 void Toplevel::setupCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     if (!compositing())
         return;
+    damageRatio = 0.0;
     if (damage_handle != None)
         return;
     damage_handle = XDamageCreate(display(), frameId(), XDamageReportRawRectangles);
@@ -699,12 +521,12 @@ void Toplevel::setupCompositing()
     effect_window->setWindow(this);
     unredirect = false;
     workspace()->checkUnredirect(true);
-#endif
+    scene->windowAdded(this);
 }
 
 void Toplevel::finishCompositing()
 {
-#ifdef KWIN_HAVE_COMPOSITING
+    damageRatio = 0.0;
     if (damage_handle == None)
         return;
     workspace()->checkUnredirect(true);
@@ -717,11 +539,11 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
-#endif
 }
 
 void Toplevel::discardWindowPixmap()
 {
+    damageRatio = 0.0;
     addDamageFull();
     if (window_pix == None)
         return;
@@ -733,7 +555,6 @@ void Toplevel::discardWindowPixmap()
 
 Pixmap Toplevel::createWindowPixmap()
 {
-#ifdef KWIN_HAVE_COMPOSITING
     assert(compositing());
     if (unredirected())
         return None;
@@ -752,12 +573,8 @@ Pixmap Toplevel::createWindowPixmap()
     }
     ungrabXServer();
     return pix;
-#else
-    return None;
-#endif
 }
 
-#ifdef HAVE_XDAMAGE
 // We must specify that the two events are a union so the compiler doesn't
 // complain about strict aliasing rules.
 typedef union {
@@ -765,57 +582,77 @@ typedef union {
     XDamageNotifyEvent de;
 } EventUnion;
 
+static QVector<QRect> damageRects;
+
 void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    QRegion damage(e->area.x, e->area.y, e->area.width, e->area.height);
+    if (damageRatio == 1.0) { // we know that we're completely damaged, no need to tell us again
+        while (XPending(display())) { // drop events
+            EventUnion e2;
+            if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent() &&
+                    e2.e.xany.window == frameId()) {
+                XNextEvent(display(), &e2.e);
+                continue;
+            }
+            break;
+        }
+
+        return;
+    }
+
+    const float area = rect().width()*rect().height();
+    damageRects.reserve(16);
+    damageRects.clear();
+    damageRects << QRect(e->area.x, e->area.y, e->area.width, e->area.height);
+
+    // we can not easily say anything about the overall ratio since the new rects may intersect the present
+    float newDamageRatio = damageRects.last().width()*damageRects.last().height() / area;
+
     // compress
-    int cnt = 1;
     while (XPending(display())) {
         EventUnion e2;
         if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent()
                 && e2.e.xany.window == frameId()) {
             XNextEvent(display(), &e2.e);
-            if (cnt > 200) {
-                // If there are way too many damage events in the queue, just discard them
+            if (damageRatio >= 0.8 || newDamageRatio > 0.8 || damageRects.count() > 15) {
+                // If there are too many damage events in the queue, just discard them
                 // and damage the whole window. Otherwise the X server can just overload
                 // us with a flood of damage events. Should be probably optimized
                 // in the X server, as this is rather lame.
-                damage = rect();
+                newDamageRatio = 1.0;
+                damageRects.clear();
                 continue;
             }
-            QRect r(e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height);
-            ++cnt;
-            // If there are too many damaged rectangles, increase them
-            // to be multiples of 100x100 px grid, since QRegion get quite
-            // slow with many rectangles, and there is little to gain by using
-            // many small rectangles (rather the opposite, several large should
-            // be often faster).
-            if (cnt > 50) {
-                r.setLeft(r.left() / 100 * 100);
-                r.setRight((r.right() + 99) / 100 * 100);
-                r.setTop(r.top() / 100 * 100);
-                r.setBottom((r.bottom() + 99) / 100 * 100);
-            }
-            damage += r;
+            damageRects << QRect(e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height);
+            newDamageRatio += damageRects.last().width()*damageRects.last().height() / area;
             continue;
         }
         break;
     }
-    foreach (const QRect & r, damage.rects())
-    addDamage(r);
+
+
+    if ((damageRects.count() == 1 && damageRects.last() == rect()) ||
+        (damageRects.isEmpty() && newDamageRatio == 1.0)) {
+        addDamageFull();
+    } else {
+        foreach (const QRect &r, damageRects)
+            addDamage(r);
+    }
 }
 
 void Client::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    Toplevel::damageNotifyEvent(e);
 #ifdef HAVE_XSYNC
-    if (sync_counter == None)   // cannot detect complete redraw, consider done now
+    if (syncRequest.isPending && isResize())
+        return;
+    if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
         ready_for_painting = true;
 #else
-    ready_for_painting = true; // no sync at all, consider done now
+    ready_for_painting = true;
 #endif
+
+    Toplevel::damageNotifyEvent(e);
 }
-#endif
 
 void Toplevel::addDamage(const QRect& r)
 {
@@ -831,6 +668,10 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     // may be a damage event coming with size larger than the current window size
     r &= rect();
     damage_region += r;
+    int damageArea = 0;
+    foreach (const QRect &r2, damage_region.rects())
+        damageArea += r2.width()*r2.height();
+    damageRatio = float(damageArea) / float(rect().width()*rect().height());
     repaints_region += r;
     emit damaged(this, r);
     // discard lanczos texture
@@ -852,6 +693,7 @@ void Toplevel::addDamageFull()
         return;
     damage_region = rect();
     repaints_region = rect();
+    damageRatio = 1.0;
     emit damaged(this, rect());
     // discard lanczos texture
     if (effect_window) {
@@ -869,6 +711,10 @@ void Toplevel::addDamageFull()
 void Toplevel::resetDamage(const QRect& r)
 {
     damage_region -= r;
+    int damageArea = 0;
+    foreach (const QRect &r2, damage_region.rects())
+        damageArea += r2.width()*r2.height();
+    damageRatio = float(damageArea) / float(rect().width()*rect().height());
 }
 
 void Toplevel::addRepaint(const QRect& r)
@@ -886,12 +732,17 @@ void Toplevel::addRepaint(int x, int y, int w, int h)
     workspace()->checkCompositeTimer();
 }
 
+void Toplevel::addRepaint(const QRegion& r)
+{
+    if (!compositing())
+        return;
+    repaints_region += r;
+    workspace()->checkCompositeTimer();
+}
+
 void Toplevel::addRepaintFull()
 {
-    repaints_region = rect();
-    if (hasShadow()) {
-        repaints_region = repaints_region.united(shadow()->shadowRegion());
-    }
+    repaints_region = decorationRect();
     workspace()->checkCompositeTimer();
 }
 
@@ -920,16 +771,12 @@ bool Toplevel::updateUnredirectedState()
     if (should && !unredirect) {
         unredirect = true;
         kDebug(1212) << "Unredirecting:" << this;
-#ifdef HAVE_XCOMPOSITE
         XCompositeUnredirectWindow(display(), frameId(), CompositeRedirectManual);
-#endif
         return true;
     } else if (!should && unredirect) {
         unredirect = false;
         kDebug(1212) << "Redirecting:" << this;
-#ifdef HAVE_XCOMPOSITE
         XCompositeRedirectWindow(display(), frameId(), CompositeRedirectManual);
-#endif
         discardWindowPixmap();
         return true;
     }
@@ -952,13 +799,14 @@ void Client::setupCompositing()
 {
     Toplevel::setupCompositing();
     updateVisibility(); // for internalKeep()
+    updateDecoration(true, true);
 }
 
 void Client::finishCompositing()
 {
     Toplevel::finishCompositing();
     updateVisibility();
-    triggerDecorationRepaint();
+    updateDecoration(true, true);
 }
 
 bool Client::shouldUnredirect() const
@@ -979,14 +827,6 @@ bool Client::shouldUnredirect() const
     return false;
 }
 
-void Client::addRepaintFull()
-{
-    repaints_region = decorationRect();
-    if (hasShadow()) {
-        repaints_region = repaints_region.united(shadow()->shadowRegion());
-    }
-    workspace()->checkCompositeTimer();
-}
 
 //****************************************
 // Unmanaged
@@ -1028,13 +868,5 @@ bool Deleted::shouldUnredirect() const
     return false;
 }
 
-void Deleted::addRepaintFull()
-{
-    repaints_region = decorationRect();
-    if (hasShadow()) {
-        repaints_region = repaints_region.united(shadow()->shadowRegion());
-    }
-    workspace()->checkCompositeTimer();
-}
 
 } // namespace

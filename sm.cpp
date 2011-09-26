@@ -34,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSocketNotifier>
 #include <QSessionManager>
 #include <kdebug.h>
+#ifdef KWIN_BUILD_TILING
+#include "tiling/tiling.h"
+#endif
 
 namespace KWin
 {
@@ -84,11 +87,13 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
     int active_client = -1;
 
     if (phase == SMSavePhase2 || phase == SMSavePhase2Full) {
-        cg.writeEntry("tiling", tilingEnabled());
-        if (tilingEnabled()) {
+#ifdef KWIN_BUILD_TILING
+        cg.writeEntry("tiling", m_tiling->isEnabled());
+        if (m_tiling->isEnabled()) {
             kDebug(1212) << "Tiling was ON";
-            setTilingEnabled(false);
+            m_tiling->setEnabled(false);
         }
+#endif
     }
 
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -273,7 +278,9 @@ void Workspace::loadSessionInfo()
     session.clear();
     KConfigGroup cg(kapp->sessionConfig(), "Session");
 
-    setTilingEnabled(cg.readEntry("tiling", false));
+#ifdef KWIN_BUILD_TILING
+    m_tiling->setEnabled(cg.readEntry("tiling", false));
+#endif
 
     addSessionInfo(cg);
 }

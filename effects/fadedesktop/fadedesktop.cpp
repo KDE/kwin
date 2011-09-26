@@ -107,6 +107,11 @@ void FadeDesktopEffect::slotDesktopChanged(int old)
     effects->addRepaintFull();
 }
 
+bool FadeDesktopEffect::isActive() const
+{
+    return m_fading;
+}
+
 } // namespace
 
 #include "fadedesktop.moc"

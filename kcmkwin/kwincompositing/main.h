@@ -76,11 +76,13 @@ public slots:
     void initEffectSelector();
 
 private slots:
+    void rearmGlSupport();
     void toogleSmoothScaleUi(int compositingType);
     void toggleEffectShortcutChanged(const QKeySequence &seq);
 
 private:
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
+    void updateStatusUI(bool compositingIsPossible);
 
     KSharedConfigPtr mKWinConfig;
     Ui::KWinCompositingConfig ui;

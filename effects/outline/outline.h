@@ -35,6 +35,7 @@ public:
 
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual bool provides(Feature feature);
+    virtual bool isActive() const;
 
 public Q_SLOTS:
     void slotShowOutline(const QRect &geometry);

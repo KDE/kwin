@@ -30,11 +30,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 #include "atoms.h"
+#ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
+#endif
 #include "group.h"
+#include "overlaywindow.h"
 #include "rules.h"
 #include "unmanaged.h"
-#include "scene.h"
 #include "effects.h"
 
 #include <QWhatsThis>
@@ -43,12 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 
 #include <X11/extensions/shape.h>
+#include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
-
-#ifdef HAVE_XRANDR
-#include <X11/extensions/Xrandr.h>
-#endif
 
 #include <kephal/screens.h>
 
@@ -221,10 +220,6 @@ void RootInfo::changeShowingDesktop(bool showing)
  */
 bool Workspace::workspaceEvent(XEvent * e)
 {
-    if (mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease)) {
-        mouse_emulation = false;
-        ungrabXKeyboard();
-    }
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (e->type == KeyPress || e->type == KeyRelease))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
@@ -245,10 +240,12 @@ bool Workspace::workspaceEvent(XEvent * e)
         was_user_interaction = true;
         // fallthrough
     case MotionNotify:
-        if (tab_grab || control_grab) {
+#ifdef KWIN_BUILD_TABBOX
+        if (tabBox()->isGrabbed()) {
             tab_box->handleMouseEvent(e);
             return true;
         }
+#endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
             return true;
         break;
@@ -261,18 +258,22 @@ bool Workspace::workspaceEvent(XEvent * e)
             movingClient->keyPressEvent(keyQt);
             return true;
         }
-        if (tab_grab || control_grab) {
-            tabBoxKeyPress(keyQt);
+#ifdef KWIN_BUILD_TABBOX
+        if (tabBox()->isGrabbed()) {
+            tabBox()->keyPress(keyQt);
             return true;
         }
+#endif
         break;
     }
     case KeyRelease:
         was_user_interaction = true;
-        if (tab_grab || control_grab) {
-            tabBoxKeyRelease(e->xkey);
+#ifdef KWIN_BUILD_TABBOX
+        if (tabBox()->isGrabbed()) {
+            tabBox()->keyRelease(e->xkey);
             return true;
         }
+#endif
         break;
     case ConfigureNotify:
         if (e->xconfigure.event == rootWindow())
@@ -380,8 +381,10 @@ bool Workspace::workspaceEvent(XEvent * e)
             if (w)
                 QWhatsThis::leaveWhatsThisMode();
         }
-        if (electricBorderEvent(e))
+#ifdef KWIN_BUILD_SCREENEDGES
+        if (m_screenEdge.isEntered(e))
             return true;
+#endif
         break;
     }
     case LeaveNotify: {
@@ -410,14 +413,6 @@ bool Workspace::workspaceEvent(XEvent * e)
         }
         break;
     }
-    case KeyPress:
-        if (mouse_emulation)
-            return keyPressMouseEmulation(e->xkey);
-        break;
-    case KeyRelease:
-        if (mouse_emulation)
-            return false;
-        break;
     case FocusIn:
         if (e->xfocus.window == rootWindow()
                 && (e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot)) {
@@ -440,21 +435,23 @@ bool Workspace::workspaceEvent(XEvent * e)
     case FocusOut:
         return true; // always eat these, they would tell Qt that KWin is the active app
     case ClientMessage:
-        if (electricBorderEvent(e))
+#ifdef KWIN_BUILD_SCREENEDGES
+        if (m_screenEdge.isEntered(e))
             return true;
+#endif
         break;
     case Expose:
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
-                    || (overlay != None && e->xexpose.window == overlay))) { // overlay needs repainting
+                    || (scene->overlayWindow()->window() != None && e->xexpose.window == scene->overlayWindow()->window()))) { // overlay needs repainting
             addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
         }
         break;
     case VisibilityNotify:
-        if (compositing() && overlay != None && e->xvisibility.window == overlay) {
-            bool was_visible = overlay_visible;
-            overlay_visible = (e->xvisibility.state != VisibilityFullyObscured);
-            if (!was_visible && overlay_visible) {
+        if (compositing() && scene->overlayWindow()->window() != None && e->xvisibility.window == scene->overlayWindow()->window()) {
+            bool was_visible = scene->overlayWindow()->isVisible();
+            scene->overlayWindow()->setVisibility((e->xvisibility.state != VisibilityFullyObscured));
+            if (!was_visible && scene->overlayWindow()->isVisible()) {
                 // hack for #154825
                 addRepaintFull();
                 QTimer::singleShot(2000, this, SLOT(addRepaintFull()));
@@ -464,9 +461,7 @@ bool Workspace::workspaceEvent(XEvent * e)
         break;
     default:
         if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
-#ifdef HAVE_XRANDR
             XRRUpdateConfiguration(e);
-#endif
             if (compositing()) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
@@ -478,9 +473,9 @@ bool Workspace::workspaceEvent(XEvent * e)
         } else if (e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable()) {
 #ifdef HAVE_XSYNC
             foreach (Client * c, clients)
-            c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
+                c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
             foreach (Client * c, desktops)
-            c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
+                c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
 #endif
         }
         break;
@@ -554,8 +549,6 @@ bool Client::windowEvent(XEvent* e)
             fetchIconicName();
         if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut) != 0
                 || (dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut) != 0) {
-            if (isTopMenu())   // the fallback mode of KMenuBar may alter the strut
-                checkWorkspacePosition();  // restore it
             workspace()->updateClientArea();
         }
         if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
@@ -577,7 +570,6 @@ bool Client::windowEvent(XEvent* e)
             if (compositing()) {
                 addRepaintFull();
                 emit opacityChanged(this, old_opacity);
-                scene->windowOpacityChanged(this);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
                 NETWinInfo2 i(display(), frameId(), rootWindow(), 0);
@@ -676,10 +668,8 @@ bool Client::windowEvent(XEvent* e)
             }
         }
         if (e->xany.window == frameId()) {
-#ifdef HAVE_XDAMAGE
             if (e->type == Extensions::damageNotifyEvent())
                 damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
-#endif
         }
         break;
     }
@@ -708,8 +698,6 @@ bool Client::mapRequestEvent(XMapRequestEvent* e)
             return false;
         return true; // no messing with frame etc.
     }
-    if (isTopMenu() && workspace()->managingTopMenus())
-        return true; // kwin controls these
     // also copied in clientMessage()
     if (isMinimized())
         unminimize();
@@ -759,8 +747,6 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
         return; // ignore frame/wrapper
     // WM_STATE
     if (e->message_type == atoms->kde_wm_change_state) {
-        if (isTopMenu() && workspace()->managingTopMenus())
-            return; // kwin controls these
         bool avoid_animation = (e->data.l[ 1 ]);
         if (e->data.l[ 0 ] == IconicState)
             minimize();
@@ -778,8 +764,6 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
             }
         }
     } else if (e->message_type == atoms->wm_change_state) {
-        if (isTopMenu() && workspace()->managingTopMenus())
-            return; // kwin controls these
         if (e->data.l[0] == IconicState)
             minimize();
         return;
@@ -802,8 +786,7 @@ void Client::configureRequestEvent(XConfigureRequestEvent* e)
         sendSyntheticConfigureNotify();
         return;
     }
-    if (isSplash()  // no manipulations with splashscreens either
-            || isTopMenu()) { // topmenus neither
+    if (isSplash()) {  // no manipulations with splashscreens either
         sendSyntheticConfigureNotify();
         return;
     }
@@ -899,7 +882,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
             return;
 
         if (options->autoRaise && !isDesktop() &&
-                !isDock() && !isTopMenu() && workspace()->focusChangeEnabled() &&
+                !isDock() && workspace()->focusChangeEnabled() &&
                 workspace()->topClientOnDesktop(workspace()->currentDesktop(),
                                                 options->separateScreenFocus ? screen() : -1) != this) {
             delete autoRaiseTimer;
@@ -910,7 +893,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         }
 
         QPoint currentPos(e->x_root, e->y_root);
-        if (options->focusPolicy != Options::FocusStrictlyUnderMouse && (isDesktop() || isDock() || isTopMenu()))
+        if (options->focusPolicy != Options::FocusStrictlyUnderMouse && (isDesktop() || isDock()))
             return;
         // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
         // change came because of window changes (e.g. closing a window) - #92290
@@ -1566,15 +1549,17 @@ void Client::keyPressEvent(uint key_code)
 #ifdef HAVE_XSYNC
 void Client::syncEvent(XSyncAlarmNotifyEvent* e)
 {
-    if (e->alarm == sync_alarm && XSyncValueEqual(e->counter_value, sync_counter_value)) {
+    if (e->alarm == syncRequest.alarm && XSyncValueEqual(e->counter_value, syncRequest.value)) {
         ready_for_painting = true;
+        syncRequest.isPending = false;
+        if (syncRequest.failsafeTimeout)
+            syncRequest.failsafeTimeout->stop();
         if (isResize()) {
-            delete sync_timeout;
-            sync_timeout = NULL;
-            if (sync_resize_pending)
-                performMoveResize();
-            sync_resize_pending = false;
-        }
+            if (syncRequest.timeout)
+                syncRequest.timeout->stop();
+            performMoveResize();
+        } else
+            addRepaintFull();
     }
 }
 #endif
@@ -1592,7 +1577,6 @@ bool Unmanaged::windowEvent(XEvent* e)
         if (compositing()) {
             addRepaintFull();
             emit opacityChanged(this, old_opacity);
-            scene->windowOpacityChanged(this);
         }
     }
     switch(e->type) {
@@ -1613,14 +1597,10 @@ bool Unmanaged::windowEvent(XEvent* e)
             detectShape(window());
             addRepaintFull();
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
-            if (scene != NULL)
-                scene->windowGeometryShapeChanged(this);
-            emit unmanagedGeometryShapeChanged(this, geometry());
+            emit geometryShapeChanged(this, geometry());
         }
-#ifdef HAVE_XDAMAGE
         if (e->type == Extensions::damageNotifyEvent())
             damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
-#endif
         break;
     }
     }
@@ -1648,9 +1628,7 @@ void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
         addRepaintFull();
         if (old.size() != geom.size())
             discardWindowPixmap();
-        if (scene != NULL)
-            scene->windowGeometryShapeChanged(this);
-        emit unmanagedGeometryShapeChanged(this, old);
+        emit geometryShapeChanged(this, old);
     }
 }
 
@@ -1683,8 +1661,6 @@ bool Group::groupEvent(XEvent* e)
 {
     unsigned long dirty[ 2 ];
     leader_info->event(e, dirty, 2);   // pass through the NET stuff
-    if ((dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
-        getIcons();
     if ((dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
         startupIdChanged();
     return false;

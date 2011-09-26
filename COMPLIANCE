@@ -97,10 +97,6 @@ version 1.2
         TOOLBAR - many parts in KDE still treat this as "tool" window.
             - should the decoration be shown for the toolbars?
         KDE extensions:
-            _KDE_NET_WM_WINDOW_TYPE_TOPMENU - this is used for implementing
-                standalone menubars for applications. Only the menubar
-                that is transient for the currently active window will be shown.
-                See KMenuBar class in libkdeui for details.
             _KDE_NET_WM_WINDOW_TYPE_OVERRIDE - this seems to mean "this window
             should be borderless", but it's actually used also for other
             things, like fullscreen windows. The plan is to get rid of this

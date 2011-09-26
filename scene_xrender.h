@@ -37,6 +37,7 @@ namespace KWin
 class SceneXrender
     : public Scene
 {
+    Q_OBJECT
 public:
     class EffectFrame;
     SceneXrender(Workspace* ws);
@@ -46,22 +47,20 @@ public:
         return XRenderCompositing;
     }
     virtual void paint(QRegion damage, ToplevelList windows);
-    virtual void windowGeometryShapeChanged(Toplevel*);
-    virtual void windowOpacityChanged(Toplevel*);
     virtual void windowAdded(Toplevel*);
-    virtual void windowClosed(Toplevel*, Deleted*);
     virtual void windowDeleted(Deleted*);
     Picture bufferPicture();
 protected:
     virtual void paintBackground(QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
+public Q_SLOTS:
+    virtual void windowOpacityChanged(KWin::Toplevel* c);
+    virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
+    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
     void paintTransformedScreen(int mask);
     void createBuffer();
     void flushBuffer(int mask, QRegion damage);
-    bool selfCheck();
-    void selfCheckSetup();
-    bool selfCheckFinish();
     XRenderPictFormat* format;
     Picture front;
     static Picture buffer;
@@ -87,7 +86,7 @@ private:
     Picture alphaMask(double opacity);
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
-    void prepareTempPixmap(const QPixmap *left, const QPixmap *top, const QPixmap *right, const QPixmap *bottom);
+    void prepareTempPixmap();
     Picture _picture;
     XRenderPictFormat* format;
     Picture alpha;
@@ -165,6 +164,9 @@ public:
 
 protected:
     virtual void buildQuads();
+    virtual bool prepareBackend() {
+        return true;
+    };
 
 private:
     QPixmap m_resizedElements[ShadowElementsCount];

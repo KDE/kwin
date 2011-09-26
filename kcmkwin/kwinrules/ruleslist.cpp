@@ -23,6 +23,7 @@
 #include <assert.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <KFileDialog>
 
 #include "ruleswidget.h"
 
@@ -48,6 +49,10 @@ KCMRulesList::KCMRulesList(QWidget* parent)
             SLOT(moveupClicked()));
     connect(movedown_button, SIGNAL(clicked()),
             SLOT(movedownClicked()));
+    connect(export_button, SIGNAL(clicked()),
+            SLOT(exportClicked()));
+    connect(import_button, SIGNAL(clicked()),
+            SLOT(importClicked()));
     connect(rules_listbox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             SLOT(modifyClicked()));
     load();
@@ -71,6 +76,7 @@ void KCMRulesList::activeChanged()
         rules_listbox->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
     modify_button->setEnabled(item != NULL);
     delete_button->setEnabled(item != NULL);
+    export_button->setEnabled(item != NULL);
     moveup_button->setEnabled(item != NULL && itemRow > 0);
     movedown_button->setEnabled(item != NULL && itemRow < (rules_listbox->count() - 1));
 }
@@ -138,6 +144,67 @@ void KCMRulesList::movedownClicked()
         Rules* rule = rules[ pos ];
         rules[ pos ] = rules[ pos + 1 ];
         rules[ pos + 1 ] = rule;
+    }
+    emit changed(true);
+}
+
+void KCMRulesList::exportClicked()
+{
+    int pos = rules_listbox->currentRow();
+    assert(pos != -1);
+    QString path = KFileDialog::getSaveFileName(KUrl(), "*.kwinrule", this, i18n("Export Rule"), 0);
+    if (path.isEmpty())
+        return;
+    KConfig config(path, KConfig::SimpleConfig);
+    KConfigGroup group(&config, rules[pos]->description);
+    group.deleteGroup();
+    rules[pos]->write(group);
+}
+
+void KCMRulesList::importClicked()
+{
+    QString path = KFileDialog::getOpenFileName(KUrl(), "*.kwinrule", this, i18n("Import Rules"));
+    if (path.isEmpty())
+        return;
+    KConfig config(path, KConfig::SimpleConfig);
+    QStringList groups = config.groupList();
+    if (groups.isEmpty())
+        return;
+
+    int pos = qMax(0, rules_listbox->currentRow());
+    foreach (const QString &group, groups) {
+        KConfigGroup grp(&config, group);
+        const bool remove = grp.readEntry("DeleteRule", false);
+        Rules* new_rule = new Rules(grp);
+
+        // try to replace existing rule first
+        for (int i = 0; i < rules.count(); ++i) {
+            if (rules[i]->description == new_rule->description) {
+                delete rules[i];
+                if (remove) {
+                    rules.remove(i);
+                    delete rules_listbox->takeItem(i);
+                    delete new_rule;
+                    pos = qMax(0, rules_listbox->currentRow()); // might have changed!
+                }
+                else
+                    rules[i] = new_rule;
+                new_rule = 0;
+                break;
+            }
+        }
+
+        // don't add "to be deleted" if not present
+        if (remove) {
+            delete new_rule;
+            new_rule = 0;
+        }
+
+        // plain insertion
+        if (new_rule) {
+            rules.insert(pos, new_rule);
+            rules_listbox->insertItem(pos++, new_rule->description);
+        }
     }
     emit changed(true);
 }

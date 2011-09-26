@@ -63,6 +63,9 @@ DesktopChangeOSD::DesktopChangeOSD(Workspace* ws)
 
     m_delayedHideTimer.setSingleShot(true);
     connect(&m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()));
+    connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(desktopChanged(int)));
+    connect(ws, SIGNAL(numberDesktopsChanged(int)), this, SLOT(numberDesktopsChanged()));
+    connect(ws, SIGNAL(configChanged()), this, SLOT(reconfigure()));
 
     m_scene = new QGraphicsScene(0);
     setScene(m_scene);
@@ -89,6 +92,9 @@ void DesktopChangeOSD::reconfigure()
 
 void DesktopChangeOSD::desktopChanged(int old)
 {
+    // Not for the very first time, only if something changed and there are more than 1 desktops
+    if (old == 0 || old == m_wspace->currentDesktop() || m_wspace->numberOfDesktops() <= 1)
+        return;
     if (!m_show)
         return;
     // we have to stop in case the old desktop does not exist anymore

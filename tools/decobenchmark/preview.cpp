@@ -115,11 +115,11 @@ bool KDecorationPreview::recreateDecoration()
 {
     delete deco;
     deco = m_plugin->createDecoration(bridge);
-    deco->init();
 
     if (!deco)
         return false;
 
+    deco->init();
     positionPreviews();
     deco->widget()->show();
 

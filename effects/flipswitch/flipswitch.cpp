@@ -296,11 +296,11 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         // fade in/out one window at the end of the stack during animation
         if (m_animation && !m_scheduledDirections.isEmpty()) {
             EffectWindow* w = m_flipOrderedWindows.last();
-            if (m_windows.contains(w)) {
+            if (ItemInfo *info = m_windows.value(w,0)) {
                 WindowPaintData data(w);
-                data.opacity = m_windows[ w ]->opacity;
-                data.brightness = m_windows[ w ]->brightness;
-                data.saturation = m_windows[ w ]->saturation;
+                data.opacity = info->opacity;
+                data.brightness = info->brightness;
+                data.saturation = info->saturation;
                 int distance = tempList.count() - 1;
                 float zDistance = 500.0f;
                 data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.currentValue();
@@ -323,13 +323,14 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             }
         }
 
-        foreach (EffectWindow * w, m_flipOrderedWindows) {
-            if (!m_windows.contains(w))
+        foreach (EffectWindow *w, m_flipOrderedWindows) {
+            ItemInfo *info = m_windows.value(w,0);
+            if (!info)
                 continue;
             WindowPaintData data(w);
-            data.opacity = m_windows[ w ]->opacity;
-            data.brightness = m_windows[ w ]->brightness;
-            data.saturation = m_windows[ w ]->saturation;
+            data.opacity = info->opacity;
+            data.brightness = info->brightness;
+            data.saturation = info->saturation;
             int windowIndex = tempList.indexOf(w);
             int distance;
             if (m_mode == TabboxMode) {
@@ -485,30 +486,23 @@ void FlipSwitchEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data,
 void FlipSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (m_active) {
-        if (w->isDesktop()) {
-            // desktop is painted in normal way
-            if (m_windows.contains(w)) {
-                m_windows[ w ]->opacity = data.opacity;
-                m_windows[ w ]->brightness = data.brightness;
-                m_windows[ w ]->saturation = data.saturation;
-            }
-            effects->paintWindow(w, mask, region, data);
-            return;
+        ItemInfo *info = m_windows.value(w,0);
+        if (info) {
+            info->opacity = data.opacity;
+            info->brightness = data.brightness;
+            info->saturation = data.saturation;
         }
-        if ((m_start || m_stop) && !m_windows.contains(w)) {
-            // fade out all windows not in window list
+
+        // fade out all windows not in window list except the desktops
+        const bool isFader = (m_start || m_stop) && !info && !w->isDesktop();
+        if (isFader)
             data.opacity *= (1.0 - m_startStopTimeLine.currentValue());
-            effects->paintWindow(w, mask, region, data);
+
+        // if not a fader or the desktop, skip painting here to prevent flicker
+        if (!(isFader || w->isDesktop()))
             return;
-        }
-        m_windows[ w ]->opacity = data.opacity;
-        m_windows[ w ]->brightness = data.brightness;
-        m_windows[ w ]->saturation = data.saturation;
-        // it's not nice but it removes flickering
-        return;
-    } else {
-        effects->paintWindow(w, mask, region, data);
     }
+    effects->paintWindow(w, mask, region, data);
 }
 
 //*************************************************************
@@ -585,7 +579,7 @@ void FlipSwitchEffect::slotTabBoxUpdated()
 void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
 {
     if (m_active && isSelectableWindow(w)) {
-        m_windows[ w ] = new ItemInfo();
+        m_windows[ w ] = new ItemInfo;
     }
 }
 
@@ -593,8 +587,12 @@ void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_selectedWindow == w)
         m_selectedWindow = 0;
-    if (m_active && m_windows.contains(w)) {
-        m_windows.remove(w);
+    if (m_active) {
+        QHash< const EffectWindow*, ItemInfo* >::iterator it = m_windows.find(w);
+        if (it != m_windows.end()) {
+            delete *it;
+            m_windows.erase(it);
+        }
     }
 }
 
@@ -621,7 +619,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         m_mode = mode;
         foreach (EffectWindow * w, effects->stackingOrder()) {
             if (isSelectableWindow(w) && !m_windows.contains(w))
-                m_windows[ w ] = new ItemInfo();
+                m_windows[ w ] = new ItemInfo;
         }
         if (m_windows.isEmpty())
             return;
@@ -934,6 +932,11 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
         }
         effects->addRepaintFull();
     }
+}
+
+bool FlipSwitchEffect::isActive() const
+{
+    return m_active;
 }
 
 //*************************************************************

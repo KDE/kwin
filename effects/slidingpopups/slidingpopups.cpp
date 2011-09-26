@@ -58,18 +58,18 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeInTime));
-        it++;
+        ++it;
     }
     it = mDisappearingWindows.begin();
     while (it != mDisappearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeOutTime));
-        it++;
+        ++it;
     }
     QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
     while (wIt != mWindowsData.end()) {
         wIt.value().fadeInDuration = mFadeInTime;
         wIt.value().fadeOutDuration = mFadeOutTime;
-        wIt++;
+        ++wIt;
     }
 }
 
@@ -122,25 +122,28 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
                 progress = 1.0;
         }
         const int start = mWindowsData[ w ].start;
+        QRect r;
 
         switch(mWindowsData[ w ].from) {
         case West:
             data.xTranslate += (start - w->width()) * progress;
-            clippedRegion = clippedRegion.subtracted(QRegion(start - w->width(), w->y(), w->width(), w->height()));
+            r = QRect(start - w->width(), w->y(), w->width(), w->height());
             break;
         case North:
             data.yTranslate += (start - w->height()) * progress;
-            clippedRegion = clippedRegion.subtracted(QRegion(w->x(), start - w->height(), w->width(), w->height()));
+            r = QRect(w->x(), start - w->height(), w->width(), w->height());
             break;
         case East:
             data.xTranslate += (start - w->x()) * progress;
-            clippedRegion = clippedRegion.subtracted(QRegion(w->x() + w->width(), w->y(), w->width(), w->height()));
+            r = QRect(w->x() + w->width(), w->y(), w->width(), w->height());
             break;
         case South:
         default:
             data.yTranslate += (start - w->y()) * progress;
-            clippedRegion = clippedRegion.subtracted(QRegion(w->x(), start, w->width(), w->height()));
+            r = QRect(w->x(), start, w->width(), w->height());
         }
+        clippedRegion = clippedRegion.subtracted(r);
+        effects->addRepaint(r);
     }
 
     effects->paintWindow(w, mask, clippedRegion, data);
@@ -243,4 +246,10 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     }
     mWindowsData[ w ] = animData;
 }
+
+bool SlidingPopupsEffect::isActive() const
+{
+    return !mAppearingWindows.isEmpty() || !mDisappearingWindows.isEmpty();
+}
+
 } // namespace

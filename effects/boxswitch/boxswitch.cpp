@@ -272,6 +272,10 @@ void BoxSwitchEffect::slotWindowDamaged(EffectWindow* w, const QRect& damage)
                 effects->addRepaint(desktops[ w->desktop()]->area);
             }
         }
+#ifdef KWIN_HAVE_OPENGLES
+        // without full repaints, blur effect flickers on GLES, see BUG 272688
+        effects->addRepaintFull();
+#endif
     }
 }
 
@@ -547,6 +551,10 @@ void BoxSwitchEffect::calculateItemSizes()
         qDeleteAll(windows);
         windows.clear();
         if ((mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch)) {
+            if (original_windows.isEmpty()) {
+                // can happen when last window is closed.
+                return;
+            }
             int index = original_windows.indexOf(effects->currentTabBoxWindow());
             int leftIndex = index;
             int rightIndex = index + 1;
@@ -716,7 +724,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
 
         // paint one part of the thumbnail
         effects->paintWindow(w,
-                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                              info->thumbnail, data);
 
         QRect secondThumbnail;
@@ -756,7 +764,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->paintWindow(w,
-                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                              info->thumbnail, data);
     } else if ((windows.size() % 2 == 0) && (w == right_window)) {
         // in case of even number of thumbnails:
@@ -797,7 +805,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
         // left quads are painted on right side of frame
         data.quads = leftQuads;
         effects->drawWindow(w,
-                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                             info->thumbnail, data);
 
         // right quads are painted on left side of frame
@@ -811,7 +819,7 @@ void BoxSwitchEffect::paintWindowThumbnail(EffectWindow* w)
                                    secondThumbnail.adjusted(highlight_margin, highlight_margin, -highlight_margin, -highlight_margin),
                                    Qt::KeepAspectRatio);
         effects->drawWindow(w,
-                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
+                            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
                             info->thumbnail, data);
     } else {
         effects->drawWindow(w,
@@ -937,6 +945,11 @@ void BoxSwitchEffect::activateFromProxy(int mode, bool animate, bool showText, f
         if (!mActivated)
             mProxyActivated = false;
     }
+}
+
+bool BoxSwitchEffect::isActive() const
+{
+    return mActivated;
 }
 
 BoxSwitchEffect::ItemInfo::ItemInfo()

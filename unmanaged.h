@@ -46,9 +46,6 @@ public:
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
-Q_SIGNALS:
-    void unmanagedClosed(KWin::Unmanaged*);
-    void unmanagedGeometryShapeChanged(KWin::Unmanaged*, const QRect&);
 private:
     virtual ~Unmanaged(); // use release()
     // handlers for X11 events

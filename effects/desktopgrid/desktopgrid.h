@@ -75,6 +75,7 @@ public:
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual bool borderActivated(ElectricBorder border);
+    virtual bool isActive() const;
 
     enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
@@ -106,7 +107,7 @@ private:
     void setup();
     void setupGrid();
     void finish();
-    bool isMotionManagerMovingWindows();
+    bool isMotionManagerMovingWindows() const;
     bool isUsingPresentWindows() const;
     QRectF moveGeometryToDesktop(int desktop) const;
     void desktopsAdded(int old);

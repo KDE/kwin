@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "options.h"
+#include "config-kwin.h"
 
 #ifndef KCMRULES
 
@@ -40,10 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kephal/screens.h>
 
-#ifdef HAVE_XRANDR
 #include <X11/extensions/Xrandr.h>
-#endif
-
 
 #endif
 
@@ -57,7 +55,6 @@ int currentRefreshRate()
     int rate = -1;
     if (options->refreshRate > 0)   // use manually configured refresh rate
         rate = options->refreshRate;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #ifndef KWIN_HAVE_OPENGLES
     else if (GLPlatform::instance()->driver() == Driver_NVidia) {
         QProcess nvidia_settings;
@@ -74,14 +71,11 @@ int currentRefreshRate()
         }
     }
 #endif
-#endif
-#ifdef HAVE_XRANDR
     else if (Extensions::randrAvailable()) {
         XRRScreenConfiguration *config = XRRGetScreenInfo(display(), rootWindow());
         rate = XRRConfigCurrentRate(config);
         XRRFreeScreenConfigInfo(config);
     }
-#endif
 
     // 0Hz or less is invalid, so we fallback to a default rate
     if (rate <= 0)
@@ -113,8 +107,6 @@ unsigned long Options::updateSettings()
     changed |= KDecorationOptions::updateSettings(_config.data());   // read decoration settings
 
     KConfigGroup config(_config, "Windows");
-    moveMode = stringToMoveResizeMode(config.readEntry("MoveMode", "Opaque"));
-    resizeMode = stringToMoveResizeMode(config.readEntry("ResizeMode", "Opaque"));
     show_geometry_tip = config.readEntry("GeometryTip", false);
 
     QString val;
@@ -148,7 +140,11 @@ unsigned long Options::updateSettings()
     xineramaMaximizeEnabled = config.readEntry("XineramaMaximizeEnabled", true);
     xineramaFullscreenEnabled = config.readEntry("XineramaFullscreenEnabled", true);
 
+#ifdef KWIN_BUILD_DECORATIONS
     placement = Placement::policyFromString(config.readEntry("Placement"), true);
+#else
+    placement = Placement::Maximizing;
+#endif
     xineramaPlacementScreen = qBound(-1, config.readEntry("XineramaPlacementScreen", -1),
                                      Kephal::ScreenUtils::numScreens() - 1);
 
@@ -251,15 +247,6 @@ unsigned long Options::updateSettings()
     // and not kstyle tooltips and vise-versa, we don't read the
     // "EffectNoTooltip" setting from kdeglobals.
 
-#if 0
-FIXME: we have no mac style menu implementation in kwin anymore, so this just breaks
-    things for people!
-    KConfig _globalConfig("kdeglobals");
-    KConfigGroup globalConfig(&_globalConfig, "KDE");
-    topmenus = globalConfig.readEntry("macStyle", false);
-#else
-    topmenus = false;
-#endif
 
 //    QToolTip::setGloballyEnabled( d->show_tooltips );
 // KDE4 this probably needs to be done manually in clients
@@ -326,8 +313,7 @@ void Options::reloadCompositingSettings(bool force)
     prefs.detect();
 
     useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
-    disableCompositingChecks = config.readEntry("DisableChecks", false);
-    glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering());
+    glDirect = prefs.enableDirectRendering();
     glVSync = config.readEntry("GLVSync", prefs.enableVSync());
     glSmoothScale = qBound(-1, config.readEntry("GLTextureFilter", 2), 2);
     glStrictBinding = config.readEntry("GLStrictBinding", prefs.strictBinding());
@@ -344,7 +330,7 @@ void Options::reloadCompositingSettings(bool force)
     else if (hps == 6)
         hiddenPreviews = HiddenPreviewsAlways;
 
-    unredirectFullscreen = config.readEntry("UnredirectFullscreen", true);
+    unredirectFullscreen = config.readEntry("UnredirectFullscreen", false);
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", 3), 6);
 }
 
@@ -413,6 +399,8 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "minimize") return MouseMinimize;
     if (lowerName == "start window tab drag") return MouseClientGroupDrag;
     if (lowerName == "close") return MouseClose;
+    if (lowerName == "increase opacity") return MouseOpacityMore;
+    if (lowerName == "decrease opacity") return MouseOpacityLess;
     if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;
 }
@@ -504,16 +492,6 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int de
     }
 }
 #endif
-
-Options::MoveResizeMode Options::stringToMoveResizeMode(const QString& s)
-{
-    return s == "Opaque" ? Opaque : Transparent;
-}
-
-const char* Options::moveResizeModeToString(MoveResizeMode mode)
-{
-    return mode == Opaque ? "Opaque" : "Transparent";
-}
 
 double Options::animationTimeFactor() const
 {

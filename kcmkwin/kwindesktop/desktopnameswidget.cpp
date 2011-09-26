@@ -77,7 +77,7 @@ void DesktopNamesWidget::numberChanged(int number)
                 if (desktop > 1) {
                     setTabOrder(m_nameInputs[desktop - 1], m_nameInputs[desktop]);
                 }
-                connect(edit, SIGNAL(textChanged(const QString&)), SIGNAL(changed()));
+                connect(edit, SIGNAL(textChanged(QString)), SIGNAL(changed()));
             }
         }
     }

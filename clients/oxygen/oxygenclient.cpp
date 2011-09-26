@@ -96,15 +96,15 @@ namespace Oxygen
         _glowAnimation->setTargetObject( this );
         _glowAnimation->setPropertyName( "glowIntensity" );
         _glowAnimation->setEasingCurve( QEasingCurve::InOutQuad );
-        connect( _glowAnimation, SIGNAL( finished( void ) ), this, SLOT( clearForceActive( void ) ) );
+        connect( _glowAnimation, SIGNAL(finished()), this, SLOT(clearForceActive()) );
 
 
         // title animation data
         _titleAnimationData->initialize();
-        connect( _titleAnimationData, SIGNAL( pixmapsChanged() ), SLOT( updateTitleRect() ) );
+        connect( _titleAnimationData, SIGNAL(pixmapsChanged()), SLOT(updateTitleRect()) );
 
         // lists
-        connect( _itemData.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
+        connect( _itemData.animation().data(), SIGNAL(finished()), this, SLOT(clearTargetItem()) );
 
         // in case of preview, one wants to make the label used
         // for the central widget transparent. This allows one to have
@@ -142,11 +142,15 @@ namespace Oxygen
 
         _configuration = _factory->configuration( *this );
 
-        // animations duration
-        _glowAnimation->setDuration( configuration().animationsDuration() );
-        _titleAnimationData->setDuration( configuration().animationsDuration() );
-        _itemData.animation().data()->setDuration( configuration().animationsDuration() );
-        _itemData.setAnimationsEnabled( useAnimations() );
+        // glow animations
+        _glowAnimation->setDuration( configuration().shadowAnimationsDuration() );
+
+        // title transitions
+        _titleAnimationData->setDuration( configuration().titleAnimationsDuration() );
+
+        // tabs
+        _itemData.setAnimationsEnabled( animationsEnabled() && configuration().tabAnimationsEnabled() );
+        _itemData.animation().data()->setDuration( configuration().tabAnimationsDuration() );
 
         // reset title transitions
         _titleAnimationData->reset();
@@ -249,12 +253,12 @@ namespace Oxygen
         {
 
             if( hideTitleBar() ) mask = QRegion();
-            else if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame, 1, 1, 1, 0 );
+            else if( compositingActive() ) mask = QRegion();
             else mask = helper().roundedMask( frame, 1, 1, 1, 0 );
 
         } else {
 
-            if( compositingActive() ) mask = (configuration().shadowMode() == Configuration::OxygenShadows ) ? QRegion():helper().decoRoundedMask( frame );
+            if( compositingActive() ) mask = QRegion();
             else mask = helper().roundedMask( frame );
 
         }
@@ -268,6 +272,7 @@ namespace Oxygen
     {
 
         const bool maximized( isMaximized() );
+        const bool shaded( isShade() );
         const bool narrowSpacing( configuration().useNarrowButtonSpacing() );
         const int frameBorder( configuration().frameBorder() );
         const int buttonSize( hideTitleBar() ? 0 : configuration().buttonSize() );
@@ -276,15 +281,35 @@ namespace Oxygen
         {
             case LM_BorderLeft:
             case LM_BorderRight:
-            case LM_BorderBottom:
             {
-                int border( 0 );
+                int border( frameBorder );
                 if( respectWindowState && maximized )
                 {
 
                     border = 0;
 
-                } else if( lm == LM_BorderBottom && frameBorder >= Configuration::BorderNoSide ) {
+                } else if( frameBorder < Configuration::BorderTiny ) {
+
+                    border = 0;
+
+                } else if( !compositingActive() && frameBorder == Configuration::BorderTiny ) {
+
+                    border = qMax( frameBorder, 3 );
+
+                }
+
+                return border;
+            }
+
+            case LM_BorderBottom:
+            {
+                int border( frameBorder );
+                if( (respectWindowState && maximized) || shaded )
+                {
+
+                    border = 0;
+
+                } else if( frameBorder >= Configuration::BorderNoSide ) {
 
                     // for tiny border, the convention is to have a larger bottom area in order to
                     // make resizing easier
@@ -297,10 +322,6 @@ namespace Oxygen
                 } else if( !compositingActive() && frameBorder == Configuration::BorderTiny ) {
 
                     border = qMax( frameBorder, 3 );
-
-                } else {
-
-                    border = frameBorder;
 
                 }
 
@@ -371,7 +392,8 @@ namespace Oxygen
             case LM_OuterPaddingRight:
             case LM_OuterPaddingTop:
             case LM_OuterPaddingBottom:
-            return shadowCache().shadowSize();
+            if( maximized ) return 0;
+            else return shadowCache().shadowSize();
 
             default:
             return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -601,7 +623,7 @@ namespace Oxygen
         }
 
         // background pixmap
-        if( helper().hasBackgroundPixmap( windowId() ) )
+        if( isPreview() || helper().hasBackgroundPixmap( windowId() ) )
         {
             int offset = layoutMetric( LM_OuterPaddingTop );
 
@@ -645,9 +667,7 @@ namespace Oxygen
         }
 
         QRect r = (isPreview()) ? this->widget()->rect():window->rect();
-
-        const qreal shadowSize( shadowCache().shadowSize() );
-        r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
+        r.adjust( layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ), -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) );
         r.adjust(0,0, 1, 1);
 
         // base color
@@ -789,8 +809,7 @@ namespace Oxygen
         }
 
         QRect r = (isPreview()) ? this->widget()->rect():window->rect();
-        qreal shadowSize( shadowCache().shadowSize() );
-        r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
+        r.adjust( layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ), -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) );
 
         // dimensions
         const int titleHeight = layoutMetric(LM_TitleHeight);
@@ -1192,7 +1211,7 @@ namespace Oxygen
         _itemData.setDirty( true );
 
         // reset animation
-        if( animateActiveChange() )
+        if( shadowAnimationsEnabled() )
         {
             _glowAnimation->setDirection( isActive() ? Animation::Forward : Animation::Backward );
             if(!glowIsAnimated()) { _glowAnimation->start(); }
@@ -1229,7 +1248,7 @@ namespace Oxygen
 
         KCommonDecorationUnstable::captionChange();
         _itemData.setDirty( true );
-        if( animateTitleChange() )
+        if( titleAnimationsEnabled() )
         { _titleAnimationData->setDirty( true ); }
 
     }
@@ -1295,9 +1314,6 @@ namespace Oxygen
     {
 
         // all dedicated event filtering is here to handle multiple tabs.
-        // if tabs are disabled, do nothing
-        if( !configuration().tabsEnabled() )
-        { return KCommonDecorationUnstable::eventFilter( object, event ); }
 
         bool state = false;
         switch( event->type() )
@@ -1358,8 +1374,23 @@ namespace Oxygen
     //_________________________________________________________
     void Client::resizeEvent( QResizeEvent* event )
     {
+
+        // prepare item data updates
         _itemData.setDirty( true );
+
+        // resize backing store pixmap
+        if( !compositingActive() )
+        { _pixmap = QPixmap( event->size() ); }
+
+        // base class implementation
         KCommonDecorationUnstable::resizeEvent( event );
+    }
+
+    //_________________________________________________________
+    void Client::paintBackground( QPainter& painter ) const
+    {
+        if( !compositingActive() )
+        { painter.drawPixmap( QPoint(), _pixmap ); }
     }
 
     //_________________________________________________________
@@ -1369,14 +1400,67 @@ namespace Oxygen
         // factory
         if(!( _initialized && _factory->initialized() ) ) return;
 
+        if( compositingActive() )
+        {
+
+            QPainter painter(widget());
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setClipRegion( event->region() );
+            paint( painter );
+
+            // update buttons
+            if( compositingActive() )
+            {
+                QList<Button*> buttons( widget()->findChildren<Button*>() );
+                foreach( Button* button, buttons )
+                {
+                    if( event->rect().intersects( button->geometry() ) )
+                    {
+                        painter.save();
+                        painter.setViewport( button->geometry() );
+                        painter.setWindow( button->rect() );
+                        button->paint( painter );
+                        painter.restore();
+                    }
+                }
+            }
+
+
+        } else {
+
+            {
+                // update backing store pixmap
+                QPainter painter( &_pixmap );
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setClipRegion( event->region() );
+                paint( painter );
+            }
+
+            QPainter painter( widget() );
+            painter.setClipRegion( event->region() );
+            painter.drawPixmap( QPoint(), _pixmap );
+
+            // update buttons
+            QList<Button*> buttons( widget()->findChildren<Button*>() );
+            foreach( Button* button, buttons )
+            {
+                if( event->rect().intersects( button->geometry() ) )
+                { button->update(); }
+            }
+
+        }
+
+
+
+    }
+
+    //_________________________________________________________
+    void Client::paint( QPainter& painter )
+    {
+
         // palette
         QPalette palette = widget()->palette();
         palette.setCurrentColorGroup( (isActive() ) ? QPalette::Active : QPalette::Inactive );
-
-        // painter
-        QPainter painter(widget());
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setClipRegion( event->region() );
 
         // define frame
         QRect frame = widget()->rect();
@@ -1385,7 +1469,7 @@ namespace Oxygen
         QColor color = palette.window().color();
 
         // draw shadows
-        if( compositingActive() && shadowCache().shadowSize() > 0 )
+        if( compositingActive() && shadowCache().shadowSize() > 0 && !isMaximized() )
         {
 
             TileSet *tileSet( 0 );

@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qevent.h>
 #include <qpainter.h>
 #include <qmath.h>
+#include "utils.h"
 
 namespace KWin
 {
@@ -36,8 +37,6 @@ PaintRedirector::PaintRedirector(QWidget* w)
     : widget(w)
     , recursionCheck(false)
 {
-    timer.setSingleShot(true);
-    connect(&timer, SIGNAL(timeout()), SIGNAL(paintPending()));
     added(w);
 }
 
@@ -83,12 +82,15 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
         break;
     }
     case QEvent::Paint: {
+        if (!compositing()) {
+            return false;
+        }
         if (!recursionCheck) {
             QPaintEvent* pe = static_cast< QPaintEvent* >(e);
             QWidget* w = static_cast< QWidget* >(o);
             pending |= pe->region().translated(w->mapTo(widget, QPoint(0, 0)));
             scheduled = pending;
-            timer.start(0);
+            emit paintPending();
             return true; // filter out
         }
     }

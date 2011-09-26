@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobal.h>
 #include <ksharedconfig.h>
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -51,7 +51,7 @@ const int MAX_TIME = 100;
 ShowFpsEffect::ShowFpsEffect()
     : paints_pos(0)
     , frames_pos(0)
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     , fpsText(0)
 #endif
 {
@@ -162,7 +162,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             ++fps; // count all frames in the last second
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     if (effects->compositingType() == OpenGLCompositing) {
         paintGL(fps);
         glFinish(); // make sure all rendering is done
@@ -176,7 +176,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #endif
 }
 
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
 void ShowFpsEffect::paintGL(int fps)
 {
     int x = this->x;
@@ -343,7 +343,7 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
 
 void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize)
 {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     if (effects->compositingType() == OpenGLCompositing) {
         QColor color(0, 0, 0);
         color.setAlphaF(alpha);
@@ -458,7 +458,7 @@ void ShowFpsEffect::paintFPSText(int fps)
 {
     if (!fpsTextRect.isValid())
         return;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL
     QImage im(100, 100, QImage::Format_ARGB32);
     im.fill(0);
     QPainter painter(&im);

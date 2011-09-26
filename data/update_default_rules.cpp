@@ -38,7 +38,7 @@ int main( int argc, char* argv[] )
     KCmdLineArgs::init( argc, argv, &about );
     KComponentData inst( &about );
     Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated descriptions
-    QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
+    QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/%1" ).arg(argv[ 1 ] ));
     if( file.isEmpty())
         {
         kWarning(1212) << "File " << argv[ 1 ] << " not found!" ;

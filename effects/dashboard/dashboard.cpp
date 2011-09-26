@@ -27,9 +27,9 @@ KWIN_EFFECT(dashboard, DashboardEffect)
 
 DashboardEffect::DashboardEffect()
     : transformWindow(false)
+    , retransformWindow(false)
     , activateAnimation(false)
     , deactivateAnimation(false)
-    , retransformWindow(false)
     , window(NULL)
 {
     // propagate that the effect is loaded
@@ -197,6 +197,11 @@ void DashboardEffect::slotWindowClosed(EffectWindow* w)
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->addRepaintFull();
     }
+}
+
+bool DashboardEffect::isActive() const
+{
+    return transformWindow;
 }
 
 } // namespace

@@ -38,9 +38,9 @@ namespace Oxygen
     class Client;
 
     enum ButtonStatus {
-        Normal,
-        Hovered,
-        Pressed
+        Normal = 0,
+        Hovered = 1<<0,
+        Pressed = 1<<1
     };
 
     Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
@@ -50,15 +50,13 @@ namespace Oxygen
 
         Q_OBJECT
 
-            //! declare animation progress property
-            Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+        //! declare animation progress property
+        Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
 
-            public:
+        public:
 
-            //! constructor
-            explicit Button(Client &parent,
-            const QString &tip=QString(),
-            ButtonType type=ButtonHelp );
+        //! constructor
+        explicit Button(Client&, const QString& = QString(), ButtonType = ButtonHelp );
 
         //! destructor
         ~Button();
@@ -84,7 +82,7 @@ namespace Oxygen
         {
             if( _glowIntensity == value ) return;
             _glowIntensity = value;
-            update();
+            parentUpdate();
         }
 
         qreal glowIntensity( void ) const
@@ -92,31 +90,40 @@ namespace Oxygen
 
         //@}
 
+        //! render buttn to provided painter
+        void paint(QPainter& );
+
         protected:
 
         //! press event
-        void mousePressEvent(QMouseEvent* );
+        void mousePressEvent( QMouseEvent* );
 
         //! release event
-        void mouseReleaseEvent(QMouseEvent* );
+        void mouseReleaseEvent( QMouseEvent* );
 
         //! enter event
         void enterEvent( QEvent* );
 
         //! leave event
-        void leaveEvent(QEvent* );
+        void leaveEvent( QEvent* );
+
+        //! resize event
+        void resizeEvent( QResizeEvent* );
 
         //! paint
-        void paintEvent(QPaintEvent* );
+        void paintEvent( QPaintEvent* );
+
+        // parent update
+        void parentUpdate( void );
 
         //! draw icon
-        void drawIcon(QPainter*);
+        void drawIcon( QPainter* );
 
         //! color
-        QColor buttonDetailColor(const QPalette& ) const;
+        QColor buttonDetailColor( const QPalette& ) const;
 
         //! color
-        QColor buttonDetailColor(const QPalette& palette, bool active ) const
+        QColor buttonDetailColor( const QPalette& palette, bool active ) const
         {
             if( _type == ButtonItemClose )
             {
@@ -143,7 +150,7 @@ namespace Oxygen
         bool isActive( void ) const;
 
         //! true if buttons hover are animated
-        bool animateButtonHover( void ) const;
+        bool buttonAnimationsEnabled( void ) const;
 
         //!@name button properties
         //@{
@@ -174,11 +181,14 @@ namespace Oxygen
         //! helper
         DecoHelper &_helper;
 
+        //! backing store pixmap (when compositing is not active)
+        QPixmap _pixmap;
+
         //! button type
         ButtonType _type;
 
         //! button status
-        ButtonState _status;
+        unsigned int _status;
 
         //! true if button should be forced inactive
         bool _forceInactive;

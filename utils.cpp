@@ -452,8 +452,8 @@ ShortcutDialog::ShortcutDialog(const QKeySequence& cut)
 
     // Listen to changed shortcuts
     connect(
-        widget, SIGNAL(keySequenceChanged(const QKeySequence&)),
-        SLOT(keySequenceChanged(const QKeySequence&)));
+        widget, SIGNAL(keySequenceChanged(QKeySequence)),
+        SLOT(keySequenceChanged(QKeySequence)));
 
     setMainWidget(vBoxContainer);
     widget->setFocus();

@@ -46,8 +46,9 @@ public:
     void windowInputMouseEvent(QMouseEvent* e);
     virtual void drawBackground(QPainter* painter, const QRectF& rect);
 
-    void delayedShow();
-    void hide();
+    void disarm();
+public slots:
+    void arm();
 
 Q_SIGNALS:
     void close();
@@ -55,7 +56,7 @@ Q_SIGNALS:
 private:
     Plasma::PushButton* m_closeButton;
     Plasma::FrameSvg* m_frame;
-    QTimer* m_delayedShowTimer;
+    QTimer* m_armTimer;
 };
 
 /**
@@ -103,6 +104,7 @@ public:
     virtual bool borderActivated(ElectricBorder border);
     virtual void windowInputMouseEvent(Window w, QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
+    virtual bool isActive() const;
 
     enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
     enum PresentWindowsMode {
@@ -160,6 +162,7 @@ public slots:
 
 private slots:
     void closeWindow();
+    void elevateCloseWindow();
 
 protected:
     // Window rearranging
@@ -265,6 +268,7 @@ private:
 
     CloseWindowView* m_closeView;
     EffectWindow* m_closeWindow;
+    Qt::Corner m_closeButtonCorner;
 
     // drag to close
     QPoint m_dragStart;

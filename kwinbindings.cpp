@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // new DEF3 allows to pass data to the action, replacing the %1 argument in the name
 
 #ifndef NOSLOTS
-#define KWIN_CONNECT(_FNSLOT_) connect(a, SIGNAL(triggered(bool)), SLOT(_FNSLOT_));
+#define KWIN_CONNECT(_FNSLOT_) connect(a,SIGNAL(triggered(bool)),SLOT(_FNSLOT_));
 #else
 #define KWIN_CONNECT(_FNSLOT_) /*noop*/
 #endif
@@ -59,17 +59,9 @@ a->setText(i18n("System"));
 
 a = actionCollection->addAction("Group:Navigation");
 a->setText(i18n("Navigation"));
-DEF(I18N_NOOP("Walk Through Windows"),                 Qt::ALT + Qt::Key_Tab, slotWalkThroughWindows());
-DEF(I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT + Qt::SHIFT + Qt::Key_Backtab, slotWalkBackThroughWindows());
 DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotSwitchToTabRight());
 DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotSwitchToTabLeft());
 DEF(I18N_NOOP("Remove Window From Group"),             0, slotRemoveFromGroup());
-DEF(I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative());
-DEF(I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative());
-DEF(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops());
-DEF(I18N_NOOP("Walk Through Desktops (Reverse)"),      0, slotWalkBackThroughDesktops());
-DEF(I18N_NOOP("Walk Through Desktop List"),            0, slotWalkThroughDesktopList());
-DEF(I18N_NOOP("Walk Through Desktop List (Reverse)"),  0, slotWalkBackThroughDesktopList());
 
 a = actionCollection->addAction("Group:Windows");
 a->setText(i18n("Windows"));
@@ -145,6 +137,10 @@ DEF2("Switch Window Right", I18N_NOOP("Switch to Window to the Right"),
      Qt::META + Qt::ALT + Qt::Key_Right, slotSwitchWindowRight());
 DEF2("Switch Window Left", I18N_NOOP("Switch to Window to the Left"),
      Qt::META + Qt::ALT + Qt::Key_Left, slotSwitchWindowLeft());
+DEF2("Increase Opacity", I18N_NOOP("Increase Opacity of Active Window by 5 %"),
+    0, slotIncreaseWindowOpacity());
+DEF2("Decrease Opacity", I18N_NOOP("Decrease Opacity of Active Window by 5 %"),
+    0, slotLowerWindowOpacity());
 
 a = actionCollection->addAction("Group:Window Desktop");
 a->setText(i18n("Window & Desktop"));
@@ -192,26 +188,9 @@ DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen());
 
 a = actionCollection->addAction("Group:Miscellaneous");
 a->setText(i18n("Miscellaneous"));
-DEF(I18N_NOOP("Mouse Emulation"),                  Qt::ALT + Qt::Key_F12, slotMouseEmulation());
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow());
 DEF(I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());
-
-a = actionCollection->addAction("Group:Tiling");
-a->setText(i18n("Tiling"));
-DEF(I18N_NOOP("Enable/Disable Tiling"),                    Qt::SHIFT + Qt::ALT + Qt::Key_F11, slotToggleTiling());
-DEF(I18N_NOOP("Toggle Floating"),              Qt::META + Qt::Key_F, slotToggleFloating());
-
-DEF(I18N_NOOP("Switch Focus Left") ,   Qt::META + Qt::Key_H, slotFocusTileLeft());
-DEF(I18N_NOOP("Switch Focus Right") ,   Qt::META + Qt::Key_L, slotFocusTileRight());
-DEF(I18N_NOOP("Switch Focus Up") ,   Qt::META + Qt::Key_K, slotFocusTileTop());
-DEF(I18N_NOOP("Switch Focus Down") ,   Qt::META + Qt::Key_J, slotFocusTileBottom());
-DEF(I18N_NOOP("Move Window Left") ,   Qt::SHIFT + Qt::META + Qt::Key_H, slotMoveTileLeft());
-DEF(I18N_NOOP("Move Window Right") ,   Qt::SHIFT + Qt::META + Qt::Key_L, slotMoveTileRight());
-DEF(I18N_NOOP("Move Window Up") ,   Qt::SHIFT + Qt::META + Qt::Key_K, slotMoveTileTop());
-DEF(I18N_NOOP("Move Window Down") ,   Qt::SHIFT + Qt::META + Qt::Key_J, slotMoveTileBottom());
-DEF(I18N_NOOP("Next Layout"), Qt::META + Qt::Key_PageDown, slotNextTileLayout());
-DEF(I18N_NOOP("Previous Layout"), Qt::META + Qt::Key_PageUp, slotPreviousTileLayout());
 
 #undef DEF
 #undef DEF2
