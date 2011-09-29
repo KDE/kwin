@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 #include <limits.h>
+#include <netwm.h>
 
 class KLibrary;
 class KConfigGroup;
@@ -1212,6 +1213,11 @@ public:
      * See _NET_WM_WINDOW_TYPE_DND at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     virtual bool isDNDIcon() const = 0;
+    /**
+     * Returns the NETWM window type
+     * See http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    virtual NET::WindowType windowType() const = 0;
     /**
      * Returns whether the window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).

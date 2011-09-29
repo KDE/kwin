@@ -1292,9 +1292,10 @@ void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     ShaderManager *shaderManager = ShaderManager::instance();
-    GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+    GLShader *shader = NULL;
     QMatrix4x4 origMatrix;
     if (activated && cube_painting) {
+        shader = shaderManager->pushShader(ShaderManager::GenericShader);
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
         if (start) {

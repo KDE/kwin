@@ -809,10 +809,9 @@ void Workspace::updateToolWindows(bool also_hide)
 {
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->hideUtilityWindowsForInactive) {
-        for (ClientList::ConstIterator it = clients.constBegin();
-                it != clients.constEnd();
-                ++it)
-            (*it)->hideClient(false);
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
+            if (!(*it)->clientGroup() || (*it)->clientGroup()->visible() == *it)
+                (*it)->hideClient(false);
         return;
     }
     const Group* group = NULL;
