@@ -1182,57 +1182,6 @@ void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
     }
 }
 
-// Try to be smart about keeping the clients visible.
-// If the client was fully inside the workspace before, try to keep
-// it still inside the workarea, possibly moving it or making it smaller if possible,
-// and try to keep the distance from the nearest workarea edge.
-// On the other hand, it it was partially moved outside of the workspace in some direction,
-// don't do anything with that direction if it's still at least partially visible. If it's
-// not visible anymore at all, make sure it's visible at least partially
-// again (not fully, as that could(?) be potentionally annoying) by
-// moving it slightly inside the workarea (those '+ 5').
-// Again, this is done for the x direction, y direction will be done by x<->y swapping
-void Client::checkDirection(int new_diff, int old_diff, QRect& rect, const QRect& area)
-{
-    if (old_diff != INT_MIN) { // was inside workarea
-        if (old_diff == INT_MAX) { // was in workarea, but far from edge
-            if (new_diff == INT_MIN) {  // is not anymore fully in workarea
-                rect.setLeft(area.left());
-                rect.setRight(area.right());
-            }
-            return;
-        }
-        if (isMovable()) {
-            if (old_diff < 0)   // was in left third, keep distance from left edge
-                rect.moveLeft(area.left() + (-old_diff - 1));
-            else // old_diff > 0 // was in right third, keep distance from right edge
-                rect.moveRight(area.right() - (old_diff - 1));
-        } else if (isResizable()) {
-            if (old_diff < 0)
-                rect.setLeft(area.left() + (-old_diff - 1));
-            else // old_diff > 0
-                rect.setRight(area.right() - (old_diff - 1));
-        }
-        if (rect.width() > area.width() && isResizable())
-            rect.setWidth(area.width());
-        if (isMovable()) {
-            if (rect.left() < area.left())
-                rect.moveLeft(area.left());
-            else if (rect.right() > area.right())
-                rect.moveRight(area.right());
-        }
-    }
-    if (rect.right() < area.left() + 5 || rect.left() > area.right() - 5) {
-        // not visible (almost) at all - try to make it at least partially visible
-        if (isMovable()) {
-            if (rect.left() < area.left() + 5)
-                rect.moveRight(area.left() + 5);
-            if (rect.right() > area.right() - 5)
-                rect.moveLeft(area.right() - 5);
-        }
-    }
-}
-
 /*!
   Adjust the frame size \a frame according to he window's size hints.
  */

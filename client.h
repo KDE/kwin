@@ -522,7 +522,6 @@ private:
     void finishWindowRules();
     void setShortcutInternal(const KShortcut& cut);
 
-    void checkDirection(int new_diff, int old_diff, QRect& rect, const QRect& area);
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
     int checkShadeGeometry(int w, int h);
