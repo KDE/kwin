@@ -1036,7 +1036,7 @@ void Client::checkWorkspacePosition(const QRect &geo)
         changeMaximize(false, false, true);   // adjust size
         const QRect &screenArea = workspace()->clientArea(ScreenArea, this);
         QRect geom = geometry();
-        checkOffscreenPosition(geom, screenArea);
+        checkOffscreenPosition(&geom, screenArea);
         setGeometry(geom);
         return;
     }
@@ -1161,7 +1161,7 @@ void Client::checkWorkspacePosition(const QRect &geo)
                                   newGeom.x() + newGeom.width() - 1));
         }
 
-        checkOffscreenPosition(newGeom, screenArea);
+        checkOffscreenPosition(&newGeom, screenArea);
         // Obey size hints. TODO: We really should make sure it stays in the right place
         newGeom.setSize(adjustedSize(newGeom.size()));
 
@@ -1170,15 +1170,15 @@ void Client::checkWorkspacePosition(const QRect &geo)
     }
 }
 
-void Client::checkOffscreenPosition(QRect& geom, const QRect& screenArea)
+void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
 {
-    if (geom.x() > screenArea.right()) {
+    if (geom->x() > screenArea.right()) {
         int screenWidth = screenArea.width();
-        geom.moveLeft(screenWidth - (screenWidth / 4));
+        geom->moveLeft(screenWidth - (screenWidth / 4));
     }
-    if (geom.y() > screenArea.bottom()) {
+    if (geom->y() > screenArea.bottom()) {
         int screenHeight = screenArea.height();
-        geom.moveBottom(screenHeight - (screenHeight / 4));
+        geom->moveBottom(screenHeight - (screenHeight / 4));
     }
 }
 

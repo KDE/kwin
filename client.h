@@ -569,7 +569,7 @@ private:
     Time readUserCreationTime() const;
     void startupIdChanged();
 
-    void checkOffscreenPosition (QRect& geom, const QRect& screenArea);
+    void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
 
     Window client;
     Window wrapper;
