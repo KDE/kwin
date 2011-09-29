@@ -216,7 +216,7 @@ void Workspace::updateClientArea(bool force)
                 ++it)
             (*it)->checkWorkspacePosition();
 
-        oldrestrictedmovearea.clear(); // reset, for hasPreviousRestricedMoveAreas()
+        oldrestrictedmovearea.clear(); // reset, for hasPreviousRestrictedMoveAreas()
     }
 
     kDebug(1212) << "Done.";
@@ -353,7 +353,7 @@ QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) con
 }
 
 // This in practice returns true when we are inside Workspace::updateClientArea()
-bool Workspace::hasPreviousRestricedMoveAreas() const
+bool Workspace::hasPreviousRestrictedMoveAreas() const
 {
     return !oldrestrictedmovearea.isEmpty();
 }
@@ -1084,7 +1084,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
         // Get the max strut point for each side where the window is (E.g. Highest point for
         // the bottom struts bounded by the window's left and right sides).
-        if( workspace()->hasPreviousRestricedMoveAreas()) {
+        if( workspace()->hasPreviousRestrictedMoveAreas()) {
             // These 4 compute old bounds when the restricted areas themselves changed (Workspace::updateClientArea())
             foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
                 QRect rect = r & oldGeomTall;

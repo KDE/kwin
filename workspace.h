@@ -121,7 +121,7 @@ public:
 
     QRegion restrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
     QRegion previousRestrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
-    bool hasPreviousRestricedMoveAreas() const;
+    bool hasPreviousRestrictedMoveAreas() const;
 
     /**
      * @internal
