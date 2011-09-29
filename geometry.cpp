@@ -1034,7 +1034,7 @@ void Client::checkWorkspacePosition(const QRect &geo)
     if (maximizeMode() != MaximizeRestore) {
         // TODO update geom_restore?
         changeMaximize(false, false, true);   // adjust size
-        const QRect &screenArea = workspace()->clientArea(ScreenArea, this);
+        const QRect screenArea = workspace()->clientArea(ScreenArea, this);
         QRect geom = geometry();
         checkOffscreenPosition(&geom, screenArea);
         setGeometry(geom);
@@ -1058,15 +1058,15 @@ void Client::checkWorkspacePosition(const QRect &geo)
         // If the window was touching an edge before but not now move it so it is again.
         // Old and new maximums have different starting values so windows on the screen
         // edge will move when a new strut is placed on the edge.
-        const QRect& screenArea = workspace()->clientArea(ScreenArea, this);
+        const QRect screenArea = workspace()->clientArea(ScreenArea, this);
         int oldTopMax = screenArea.y();
         int oldRightMax = screenArea.x() + screenArea.width();
         int oldBottomMax = screenArea.y() + screenArea.height();
         int oldLeftMax = screenArea.x();
         int topMax = INT_MIN, rightMax = INT_MAX, bottomMax = INT_MAX, leftMax = INT_MIN;
         QRect newGeom = geo.isValid() ? geo : geometry();
-        const QRect& newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
-        const QRect& newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
+        const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
+        const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
 
         // Get the max strut point for each side where the window is (E.g. Highest point for
         // the bottom struts bounded by the window's left and right sides).
