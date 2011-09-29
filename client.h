@@ -321,7 +321,7 @@ public:
 
     void gotPing(Time timestamp);
 
-    void checkWorkspacePosition(const QRect &geo = QRect());
+    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2);
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
     bool hasUserTimeSupport() const;

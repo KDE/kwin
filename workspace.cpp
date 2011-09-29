@@ -1584,8 +1584,6 @@ void Workspace::setNumberOfDesktops(int n)
     workarea.resize(n + 1);
     restrictedmovearea.clear();
     restrictedmovearea.resize(n + 1);
-    oldrestrictedmovearea.clear();
-    oldrestrictedmovearea.resize(n + 1);
     screenarea.clear();
 
     updateClientArea(true);
@@ -1630,6 +1628,7 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 #ifdef KWIN_BUILD_TILING
     m_tiling->notifyTilingWindowDesktopChanged(c, old_desktop);
 #endif
+    c->checkWorkspacePosition( QRect(), old_desktop );
 
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -1742,9 +1741,10 @@ void Workspace::sendClientToScreen(Client* c, int screen)
     GeometryUpdatesBlocker blocker(c);
     QRect old_sarea = clientArea(MaximizeArea, c);
     QRect sarea = clientArea(MaximizeArea, screen, c->desktop());
+    QRect oldgeom = c->geometry();
     c->setGeometry(sarea.x() - old_sarea.x() + c->x(), sarea.y() - old_sarea.y() + c->y(),
                    c->size().width(), c->size().height());
-    c->checkWorkspacePosition();
+    c->checkWorkspacePosition( oldgeom );
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();
