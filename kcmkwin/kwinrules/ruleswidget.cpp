@@ -117,8 +117,13 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(blockcompositing, force);
 
     connect (title_match, SIGNAL(currentIndexChanged(int)), SLOT(titleMatchChanged()));
-    connect (extra_match, SIGNAL(currentIndexChanged(int)), SLOT(extraMatchChanged()));
     connect (machine_match, SIGNAL(currentIndexChanged(int)), SLOT(machineMatchChanged()));
+    connect (shortcut_edit, SIGNAL(clicked()), SLOT(shortcutEditClicked()));
+
+    edit_reg_wmclass->hide();
+    edit_reg_role->hide();
+    edit_reg_title->hide();
+    edit_reg_machine->hide();
 
     int i;
     for (i = 1;
@@ -412,9 +417,6 @@ void RulesWidget::setRules(Rules* rules)
     title->setText(rules->title);
     title_match->setCurrentIndex(rules->titlematch);
     titleMatchChanged();
-    extra->setText(rules->extrarole);
-    extra_match->setCurrentIndex(rules->extrarolematch);
-    extraMatchChanged();
     machine->setText(rules->clientmachine);
     machine_match->setCurrentIndex(rules->clientmachinematch);
     machineMatchChanged();
@@ -510,8 +512,6 @@ Rules* RulesWidget::rules() const
     }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >(title_match->currentIndex());
-    rules->extrarole = extra->text().toUtf8();
-    rules->extrarolematch = static_cast< Rules::StringMatch >(extra_match->currentIndex());
     rules->clientmachine = machine->text().toUtf8();
     rules->clientmachinematch = static_cast< Rules::StringMatch >(machine_match->currentIndex());
     LINEEDIT_SET_RULE(position, strToPosition);
@@ -568,7 +568,6 @@ Rules* RulesWidget::rules() const
 STRING_MATCH_COMBO(wmclass)
 STRING_MATCH_COMBO(role)
 STRING_MATCH_COMBO(title)
-STRING_MATCH_COMBO(extra)
 STRING_MATCH_COMBO(machine)
 
 #undef STRING_MATCH_COMBO

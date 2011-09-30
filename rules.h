@@ -195,8 +195,6 @@ private:
     StringMatch windowrolematch;
     QString title;
     StringMatch titlematch;
-    QByteArray extrarole;
-    StringMatch extrarolematch;
     QByteArray clientmachine;
     StringMatch clientmachinematch;
     unsigned long types; // types for matching
