@@ -1283,6 +1283,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     StackingUpdatesBlocker blocker(this);
 
     int old_desktop = currentDesktop();
+    int old_active_screen = activeScreen();
     if (new_desktop != currentDesktop()) {
         ++block_showing_desktop;
         // Optimized Desktop switching: unmapping done from back to front
@@ -1341,9 +1342,10 @@ bool Workspace::setCurrentDesktop(int new_desktop)
             c = active_client; // The requestFocus below will fail, as the client is already active
         if (!c) {
             for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
-                if (focus_chain[currentDesktop()].at(i)->isShown(false) &&
-                        focus_chain[currentDesktop()].at(i)->isOnCurrentActivity()) {
-                    c = focus_chain[currentDesktop()].at(i);
+                Client* tmp = focus_chain[currentDesktop()].at(i);
+                if (tmp->isShown(false) && tmp->isOnCurrentActivity()
+                    && ( !options->separateScreenFocus || tmp->screen() == old_active_screen )) {
+                    c = tmp;
                     break;
                 }
             }
