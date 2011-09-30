@@ -1743,8 +1743,13 @@ void Workspace::sendClientToScreen(Client* c, int screen)
     QRect old_sarea = clientArea(MaximizeArea, c);
     QRect sarea = clientArea(MaximizeArea, screen, c->desktop());
     QRect oldgeom = c->geometry();
-    c->setGeometry(sarea.x() - old_sarea.x() + c->x(), sarea.y() - old_sarea.y() + c->y(),
-                   c->size().width(), c->size().height());
+    QRect geom = c->geometry();
+    // move the window to have the same relative position to the center of the screen
+    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
+    geom.moveCenter(
+        QPoint(( geom.center().x() - old_sarea.center().x()) * sarea.width() / old_sarea.width() + sarea.center().x(),
+            ( geom.center().y() - old_sarea.center().y()) * sarea.height() / old_sarea.height() + sarea.center().y()));
+    c->setGeometry( geom );
     c->checkWorkspacePosition( oldgeom );
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
