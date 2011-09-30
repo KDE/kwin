@@ -676,7 +676,6 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     emit damaged(this, r);
     // discard lanczos texture
     if (effect_window) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
         if (cachedTextureVariant.isValid()) {
             GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
@@ -684,7 +683,6 @@ void Toplevel::addDamage(int x, int y, int w, int h)
             cachedTexture = 0;
             effect_window->setData(LanczosCacheRole, QVariant());
         }
-#endif
     }
     workspace()->checkCompositeTimer();
 }
@@ -699,7 +697,6 @@ void Toplevel::addDamageFull()
     emit damaged(this, rect());
     // discard lanczos texture
     if (effect_window) {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
         if (cachedTextureVariant.isValid()) {
             GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
@@ -707,7 +704,6 @@ void Toplevel::addDamageFull()
             cachedTexture = 0;
             effect_window->setData(LanczosCacheRole, QVariant());
         }
-#endif
     }
     workspace()->checkCompositeTimer();
 }
