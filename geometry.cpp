@@ -86,6 +86,7 @@ void Workspace::desktopResized()
 
 void Workspace::saveOldScreenSizes()
 {
+    olddisplaysize = QSize( displayWidth(), displayHeight());
     oldscreensizes.clear();
     for( int i = 0;
          i < numScreens();
@@ -370,6 +371,16 @@ QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) con
 QVector< QRect > Workspace::previousScreenSizes() const
 {
     return oldscreensizes;
+}
+
+int Workspace::oldDisplayWidth() const
+{
+    return olddisplaysize.width();
+}
+
+int Workspace::oldDisplayHeight() const
+{
+    return olddisplaysize.height();
 }
 
 /*!
@@ -1085,9 +1096,13 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         // Old and new maximums have different starting values so windows on the screen
         // edge will move when a new strut is placed on the edge.
         QRect oldScreenArea;
+        QRect oldGeomTall;
+        QRect oldGeomWide;
         if( workspace()->inUpdateClientArea()) {
             // we need to find the screen area as it was before the change
-            oldScreenArea = QRect( 0, 0, displayWidth(), displayHeight());
+            oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
+            oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), workspace()->oldDisplayHeight());   // Full screen height
+            oldGeomWide = QRect(0, oldGeometry.y(), workspace()->oldDisplayWidth(), oldGeometry.height());   // Full screen width
             int distance = INT_MAX;
             foreach( QRect r, workspace()->previousScreenSizes()) {
                 int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
@@ -1096,17 +1111,21 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
                     oldScreenArea = r;
                 }
             }
-        } else
+        } else {
             oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
+            oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displayHeight());   // Full screen height
+            oldGeomWide = QRect(0, oldGeometry.y(), displayWidth(), oldGeometry.height());   // Full screen width
+        }
         int oldTopMax = oldScreenArea.y();
         int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
         int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
         int oldLeftMax = oldScreenArea.x();
         const QRect screenArea = workspace()->clientArea(ScreenArea, this);
-        int topMax = INT_MIN, rightMax = INT_MAX, bottomMax = INT_MAX, leftMax = INT_MIN;
+        int topMax = screenArea.y();
+        int rightMax = screenArea.x() + screenArea.width();
+        int bottomMax = screenArea.y() + screenArea.height();
+        int leftMax = screenArea.x();
         QRect newGeom = geometry();
-        const QRect oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displayHeight());   // Full screen height
-        const QRect oldGeomWide = QRect(0, oldGeometry.y(), displayWidth(), oldGeometry.height());   // Full screen width
         const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
         const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
         // Get the max strut point for each side where the window is (E.g. Highest point for
@@ -1178,54 +1197,32 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
                 leftMax = qMax(leftMax, rect.x() + rect.width());
         }
 
-        // Check if the sides were touching before but are no longer
-        if (oldGeometry.y() == oldTopMax &&
-                newGeom.y() != topMax) {
-            // Top was touching before but isn't anymore
-            // If the other side was touching make sure it still is afterwards
-            if (oldGeometry.y() + oldGeometry.height() == oldBottomMax)
+        // Check if the sides were inside or touching but are no longer
+        if ((oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
+            || (oldGeometry.y() == oldTopMax && newGeom.y() != topMax)) {
+            // Top was inside or touching before but isn't anymore
+            newGeom.moveTop(qMax(topMax, screenArea.y()));
+        }
+        if ((oldGeometry.y() + oldGeometry.height() <= oldBottomMax && newGeom.y() + newGeom.height() > bottomMax)
+            || (oldGeometry.y() + oldGeometry.height() == oldBottomMax && newGeom.y() + newGeom.height() != bottomMax)) {
+            // Bottom was inside or touching before but isn't anymore
+            newGeom.moveBottom(qMin(bottomMax - 1, screenArea.bottom()));
+            // If the other side was inside make sure it still is afterwards (shrink appropriately)
+            if (oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
                 newGeom.setTop(qMax(topMax, screenArea.y()));
-            else
-                newGeom.moveTop(qMax(topMax, screenArea.y()));
-            // Make sure it doesn't go off the other side of the screen/under an opposite strut
-            newGeom.setBottom(qMin(qMin(bottomMax - 1, screenArea.bottom()),
-                                   newGeom.y() + newGeom.height() - 1));
         }
-        if (oldGeometry.x() + oldGeometry.width() == oldRightMax &&
-                newGeom.x() + newGeom.width() != rightMax) {
-            // Right was touching before but isn't anymore
-            // If the other side was touching make sure it still is afterwards
-            if (oldGeometry.x() == oldLeftMax)
-                newGeom.setRight(qMin(rightMax - 1, screenArea.right()));
-            else
+        if ((oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
+            || (oldGeometry.x() == oldLeftMax && newGeom.x() != leftMax)) {
+            // Left was inside or touching before but isn't anymore
+            newGeom.moveLeft(qMax(leftMax, screenArea.x()));
+        }
+        if ((oldGeometry.x() + oldGeometry.width() <= oldRightMax && newGeom.x() + newGeom.width() > rightMax)
+            || (oldGeometry.x() + oldGeometry.width() == oldRightMax && newGeom.x() + newGeom.width() != rightMax)) {
+            // Right was inside or touching before but isn't anymore
+            newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
+            // If the other side was inside make sure it still is afterwards (shrink appropriately)
+            if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
                 newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
-            // Make sure it doesn't go off the other side of the screen/under an opposite strut
-            newGeom.setLeft(qMax(qMax(leftMax, screenArea.x()),
-                                 newGeom.x()));
-        }
-        if (oldGeometry.y() + oldGeometry.height() == oldBottomMax &&
-                newGeom.y() + newGeom.height() != bottomMax) {
-            // Bottom was touching before but isn't anymore
-            // If the other side was touching make sure it still is afterwards
-            if (oldGeometry.y() == oldTopMax)
-                newGeom.setBottom(qMin(bottomMax - 1, screenArea.bottom()));
-            else
-                newGeom.moveBottom(qMin(bottomMax - 1, screenArea.bottom()));
-            // Make sure it doesn't go off the other side of the screen/under an opposite strut
-            newGeom.setTop(qMax(qMax(topMax, screenArea.y()),
-                                newGeom.y()));
-        }
-        if (oldGeometry.x() == oldLeftMax &&
-                newGeom.x() != leftMax) {
-            // Left was touching before but isn't anymore
-            // If the other side was touching make sure it still is afterwards
-            if (oldGeometry.x() + oldGeometry.width() == oldRightMax)
-                newGeom.setLeft(qMax(leftMax, screenArea.x()));
-            else
-                newGeom.moveLeft(qMax(leftMax, screenArea.x()));
-            // Make sure it doesn't go off the other side of the screen/under an opposite strut
-            newGeom.setRight(qMin(qMin(rightMax - 1, screenArea.right()),
-                                  newGeom.x() + newGeom.width() - 1));
         }
 
         checkOffscreenPosition(&newGeom, screenArea);

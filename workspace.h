@@ -342,6 +342,8 @@ public:
     bool inUpdateClientArea() const;
     QRegion previousRestrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
     QVector< QRect > previousScreenSizes() const;
+    int oldDisplayWidth() const;
+    int oldDisplayHeight() const;
 
     // Tab box
 #ifdef KWIN_BUILD_TABBOX
@@ -884,6 +886,7 @@ private:
     QVector<StrutRects> oldrestrictedmovearea;
     QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
     QVector< QRect > oldscreensizes; // array of previous sizes of xinerama screens
+    QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
 
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
