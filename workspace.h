@@ -120,8 +120,6 @@ public:
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
     QRegion restrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
-    QRegion previousRestrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
-    bool hasPreviousRestrictedMoveAreas() const;
 
     /**
      * @internal
@@ -338,6 +336,12 @@ public:
     QStringList openActivityList() const {
         return activityController_.listActivities(KActivityInfo::Running);
     }
+
+    // True when performing Workspace::updateClientArea().
+    // The calls below are valid only in that case.
+    bool inUpdateClientArea() const;
+    QRegion previousRestrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
+    QVector< QRect > previousScreenSizes() const;
 
     // Tab box
 #ifdef KWIN_BUILD_TABBOX
@@ -717,6 +721,7 @@ private:
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(Window w, const XWindowAttributes& attr);
+    void saveOldScreenSizes();
 
     /// This is the right way to create a new client
     Client* createClient(Window w, bool is_mapped);
@@ -878,6 +883,7 @@ private:
     // Array of the previous restricted areas that window cannot be moved into
     QVector<StrutRects> oldrestrictedmovearea;
     QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
+    QVector< QRect > oldscreensizes; // array of previous sizes of xinerama screens
 
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled

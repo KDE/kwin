@@ -76,11 +76,21 @@ void Workspace::desktopResized()
     rootInfo->setDesktopGeometry(-1, desktop_geometry);
 
     updateClientArea();
+    saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.update(true);
 #endif
     if (compositing())
         compositeResetTimer.start(0);
+}
+
+void Workspace::saveOldScreenSizes()
+{
+    oldscreensizes.clear();
+    for( int i = 0;
+         i < numScreens();
+         ++i )
+        oldscreensizes.append( screenGeometry( i ));
 }
 
 /*!
@@ -216,7 +226,7 @@ void Workspace::updateClientArea(bool force)
                 ++it)
             (*it)->checkWorkspacePosition();
 
-        oldrestrictedmovearea.clear(); // reset, for hasPreviousRestrictedMoveAreas()
+        oldrestrictedmovearea.clear(); // reset, no longer valid or needed
     }
 
     kDebug(1212) << "Done.";
@@ -341,6 +351,11 @@ QRegion Workspace::restrictedMoveArea(int desktop, StrutAreas areas) const
     return region;
 }
 
+bool Workspace::inUpdateClientArea() const
+{
+    return !oldrestrictedmovearea.isEmpty();
+}
+
 QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
@@ -352,10 +367,9 @@ QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) con
     return region;
 }
 
-// This in practice returns true when we are inside Workspace::updateClientArea()
-bool Workspace::hasPreviousRestrictedMoveAreas() const
+QVector< QRect > Workspace::previousScreenSizes() const
 {
-    return !oldrestrictedmovearea.isEmpty();
+    return oldscreensizes;
 }
 
 /*!
@@ -1070,7 +1084,20 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         // If the window was touching an edge before but not now move it so it is again.
         // Old and new maximums have different starting values so windows on the screen
         // edge will move when a new strut is placed on the edge.
-        const QRect oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
+        QRect oldScreenArea;
+        if( workspace()->inUpdateClientArea()) {
+            // we need to find the screen area as it was before the change
+            oldScreenArea = QRect( 0, 0, displayWidth(), displayHeight());
+            int distance = INT_MAX;
+            foreach( QRect r, workspace()->previousScreenSizes()) {
+                int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
+                if( d < distance ) {
+                    distance = d;
+                    oldScreenArea = r;
+                }
+            }
+        } else
+            oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
         int oldTopMax = oldScreenArea.y();
         int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
         int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
@@ -1084,7 +1111,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
         // Get the max strut point for each side where the window is (E.g. Highest point for
         // the bottom struts bounded by the window's left and right sides).
-        if( workspace()->hasPreviousRestrictedMoveAreas()) {
+        if( workspace()->inUpdateClientArea()) {
             // These 4 compute old bounds when the restricted areas themselves changed (Workspace::updateClientArea())
             foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
                 QRect rect = r & oldGeomTall;
