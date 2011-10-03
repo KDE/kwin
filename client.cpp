@@ -1140,16 +1140,18 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    bool belongs_to_desktop = false;
-    for (ClientList::ConstIterator it = group()->members().constBegin();
-            it != group()->members().constEnd();
-            ++it)
-        if ((*it)->isDesktop()) {
-            belongs_to_desktop = true;
-            break;
-        }
-    if (!belongs_to_desktop && workspace()->showingDesktop())
-        workspace()->resetShowingDesktop(true);
+    if( workspace()->showingDesktop()) {
+        bool belongs_to_desktop = false;
+        for (ClientList::ConstIterator it = group()->members().constBegin();
+                it != group()->members().constEnd();
+                ++it)
+            if ((*it)->isDesktop()) {
+                belongs_to_desktop = true;
+                break;
+            }
+        if (!belongs_to_desktop)
+            workspace()->resetShowingDesktop(true);
+    }
     internalShow(Allowed);
 }
 
