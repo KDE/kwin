@@ -702,10 +702,14 @@ namespace Oxygen
 
             // adjustements to cope with shadow size and outline border.
             rect.adjust( -shadowSize, 0, shadowSize-1, 0 );
-            if( configuration().frameBorder() > Configuration::BorderTiny && configuration().drawTitleOutline() && isActive() && !isMaximized() )
-            { rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 ); }
+            if( configuration().drawTitleOutline() && isActive() && !isMaximized() )
+            {
+                if( configuration().frameBorder() == Configuration::BorderTiny ) rect.adjust( 1, 0, -1, 0 );
+                else if( configuration().frameBorder() > Configuration::BorderTiny ) rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 );
+            }
 
-            helper().slab( color, 0, shadowSize )->render( rect, painter, TileSet::Top );
+            if( rect.isValid() )
+            { helper().slab( color, 0, shadowSize )->render( rect, painter, TileSet::Top ); }
 
         }
 
@@ -735,7 +739,7 @@ namespace Oxygen
 
                 const QColor shadow( helper().calcDarkColor( color ) );
                 painter->setPen( shadow );
-                painter->drawLine( rect.bottomLeft()+QPoint(0,1), rect.bottomRight()+QPoint(0,1) );
+                painter->drawLine( rect.bottomLeft()+QPoint(-1,1), rect.bottomRight()+QPoint(1,1) );
 
             }
 
