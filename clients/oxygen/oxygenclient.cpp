@@ -712,6 +712,10 @@ namespace Oxygen
         if( configuration().drawTitleOutline() && isActive() )
         {
 
+            // save old hints and turn off anti-aliasing
+            const QPainter::RenderHints hints( painter->renderHints() );
+            painter->setRenderHint( QPainter::Antialiasing, false );
+
             // save mask and frame to where
             // grey window background is to be rendered
             QRegion mask;
@@ -760,6 +764,9 @@ namespace Oxygen
 
                 painter->drawLine( rect.topRight()+QPoint(1,0), rect.bottomRight()+QPoint(1, 0) );
             }
+
+            // restore old hints
+            painter->setRenderHints( hints );
 
             // in preview mode also adds center square
             if( isPreview() )
