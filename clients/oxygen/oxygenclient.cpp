@@ -673,6 +673,10 @@ namespace Oxygen
         // base color
         QColor color( palette.window().color() );
 
+        // add alpha channel
+        if( _itemData.count() == 1 && glowIsAnimated() )
+        { color = helper().alphaColor( color, glowIntensity() ); }
+
         // title height
         const int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
@@ -702,7 +706,7 @@ namespace Oxygen
 
             // adjustements to cope with shadow size and outline border.
             rect.adjust( -shadowSize, 0, shadowSize-1, 0 );
-            if( configuration().drawTitleOutline() && isActive() && !isMaximized() )
+            if( configuration().drawTitleOutline() && ( isActive() || glowIsAnimated() ) && !isMaximized() )
             {
                 if( configuration().frameBorder() == Configuration::BorderTiny ) rect.adjust( 1, 0, -1, 0 );
                 else if( configuration().frameBorder() > Configuration::BorderTiny ) rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 );
@@ -713,7 +717,7 @@ namespace Oxygen
 
         }
 
-        if( configuration().drawTitleOutline() && isActive() )
+        if( configuration().drawTitleOutline() && ( isActive() || glowIsAnimated() ) )
         {
 
             // save old hints and turn off anti-aliasing
@@ -858,7 +862,14 @@ namespace Oxygen
         const int offset( -3 );
         const int voffset( 5-shadowSize );
         const QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
-        helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
+        QColor color( palette.color( widget()->backgroundRole() ) );
+
+        // add alpha channel
+        if( _itemData.count() == 1 && glowIsAnimated() )
+        { color = helper().alphaColor( color, glowIntensity() ); }
+
+        // render slab
+        helper().slab( color, 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
 
     }
 
