@@ -130,8 +130,13 @@ void BlurEffect::slotWindowDeleted(EffectWindow *w)
 
 void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
-    if (w && atom == net_wm_blur_region)
+    if (w && atom == net_wm_blur_region) {
         updateBlurRegion(w);
+        if (windows.contains(w)) {
+            const QRect screen(0, 0, displayWidth(), displayHeight());
+            windows[w].damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
+        }
+    }
 }
 
 bool BlurEffect::enabledByDefault()
