@@ -185,8 +185,7 @@ void AuroraeButton::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void AuroraeButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    Q_UNUSED(event)
-    if (m_pressed) {
+    if (m_pressed && contains(event->pos())) {
         emit clicked();
     }
     m_pressed = false;
@@ -391,7 +390,7 @@ void AuroraeMaximizeButton::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void AuroraeMaximizeButton::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (isPressed() && m_pressedButton == event->button()) {
+    if (isPressed() && m_pressedButton == event->button() && contains(event->pos())) {
         emit clicked(m_pressedButton);
     }
     setPressed(false);
