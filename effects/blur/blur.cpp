@@ -192,11 +192,9 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
             if (w->hasDecoration() && effects->decorationSupportsBlurBehind()) {
                 region = w->shape();
                 region -= w->decorationInnerRect();
-                region |= appRegion.translated(w->contentsRect().topLeft()) &
-                          w->contentsRect();
-            } else
-                region = appRegion.translated(w->contentsRect().topLeft()) &
-                         w->contentsRect();
+            }
+            region |= appRegion.translated(w->contentsRect().topLeft()) &
+                      w->decorationInnerRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
