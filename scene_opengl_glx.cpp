@@ -92,6 +92,10 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     if (GLPlatform::instance()->supports(GLSL)) {
         if (!ShaderManager::instance()->isValid()) {
             kDebug(1212) << "No Scene Shaders available";
+        } else {
+            // push one shader on the stack so that one is always bound
+            // consistency with GLES
+            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         }
     }
 
