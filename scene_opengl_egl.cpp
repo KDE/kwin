@@ -35,8 +35,10 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return;
 
     initEGL();
-    if (!hasGLExtension("EGL_KHR_image_pixmap")) {
-        kError(1212) << "Required extension EGL_KHR_image_pixmap not found, disabling compositing";
+    if (!hasGLExtension("EGL_KHR_image") &&
+        (!hasGLExtension("EGL_KHR_image_base") ||
+         !hasGLExtension("EGL_KHR_image_pixmap"))) {
+        kError(1212) << "Required support for binding pixmaps to EGLImages not found, disabling compositing";
         return;
     }
     initGL();

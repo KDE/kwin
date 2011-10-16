@@ -301,7 +301,9 @@ glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
 void eglResolveFunctions()
 {
-    if (hasGLExtension("EGL_KHR_image_pixmap")) {
+    if (hasGLExtension("EGL_KHR_image") ||
+        (hasGLExtension("EGL_KHR_image_base") &&
+         hasGLExtension("EGL_KHR_image_pixmap"))) {
         eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
         eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
     } else {
