@@ -26,6 +26,7 @@ EGLDisplay dpy;
 EGLConfig config;
 EGLSurface surface;
 EGLContext ctx;
+int surfaceHasSubPost;
 
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
@@ -107,6 +108,8 @@ bool SceneOpenGL::initRenderingContext()
     surface = eglCreateWindowSurface(dpy, config, m_overlayWindow->window(), 0);
 
     eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+
+    eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost);
 
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -200,9 +203,10 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
 {
     Q_UNUSED(damage)
     glFlush();
-    if (mask & PAINT_SCREEN_REGION) {
-        // TODO: implement me properly
-        eglSwapBuffers(dpy, surface);
+    if (mask & PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV) {
+        QRect damageRect = damage.boundingRect();
+
+        eglPostSubBufferNV(dpy, surface, damageRect.left(), displayHeight() - damageRect.bottom() - 1, damageRect.width(), damageRect.height());
     } else {
         eglSwapBuffers(dpy, surface);
     }

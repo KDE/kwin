@@ -358,8 +358,10 @@ void KWIN_EXPORT glResolveFunctions();
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
+typedef EGLBoolean (*eglPostSubBufferNV_func)(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height);
 extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
 extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
+extern KWIN_EXPORT eglPostSubBufferNV_func eglPostSubBufferNV;
 
 // GLES
 typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
