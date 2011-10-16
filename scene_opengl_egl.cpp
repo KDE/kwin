@@ -106,6 +106,8 @@ bool SceneOpenGL::initRenderingContext()
     }
     surface = eglCreateWindowSurface(dpy, config, m_overlayWindow->window(), 0);
 
+    eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
