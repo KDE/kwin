@@ -350,6 +350,10 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 #include <EGL/eglext.h>
 #include <fixx11h.h>
 
+#ifndef EGL_POST_SUB_BUFFER_SUPPORTED_NV
+#define EGL_POST_SUB_BUFFER_SUPPORTED_NV 0x30BE
+#endif
+
 namespace KWin
 {
 
