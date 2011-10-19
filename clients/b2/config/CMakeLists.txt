@@ -1,6 +1,3 @@
-include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
-
-
 ########### next target ###############
 
 set(kwin_b2_config_PART_SRCS config.cpp )

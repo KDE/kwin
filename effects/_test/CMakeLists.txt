@@ -11,11 +11,6 @@ macro(KWIN4_ADD_EFFECT_CONFIG name)
     install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT_CONFIG)
 
-include_directories(
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
-    )
-
-
 ### tests - meant to test/demo certain functionality, not really usable for end-users
 SET(kwin4_effect_tests_sources
     demo_shakymove.cpp
