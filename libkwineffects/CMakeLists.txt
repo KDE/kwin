@@ -4,6 +4,8 @@
 set(kwin_EFFECTSLIB_SRCS
     kwinglobals.cpp
     kwineffects.cpp
+    anidata.cpp
+    kwinanimationeffect.cpp
     kwinxrenderutils.cpp
     )
 
@@ -58,6 +60,7 @@ endif(OPENGL_FOUND)
 install( FILES
     kwinglobals.h
     kwineffects.h
+    kwinanimationeffect.h
     kwinglplatform.h
     kwinglutils.h
     kwinglutils_funcs.h
