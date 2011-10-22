@@ -273,7 +273,15 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             topw->resetRepaints(topw->shadow()->shadowRegion().boundingRect());
         }
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
-        data.clip = w->isOpaque() ? w->clientShape().translated(w->x(), w->y()) : QRegion();
+        if (w->isOpaque()) {
+            // the window is fully opaque
+            data.clip = w->clientShape().translated(w->x(), w->y());
+        } else if (topw->hasAlpha() && topw->opacity() == 1.0) {
+            // the window is partially opaque
+            data.clip = (w->clientShape() & topw->opaqueRegion()).translated(w->x(), w->y());
+        } else {
+            data.clip = QRegion();
+        }
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(w), data, time_diff);
@@ -314,7 +322,9 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // a higher opaque window
         data->region -= allclips;
 
-        if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
+        // Here we rely on WindowPrePaintData::setTranslucent() to remove
+        // the clip if needed.
+        if (!data->clip.isEmpty()) {
             // clip away this region for all windows below this one
             allclips |= data->clip;
             // Paint the opaque window
@@ -326,7 +336,8 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             data->region -= data->clip;
             // if prePaintWindow didn't change the clipping area we only have to paint
             // the decoration
-            if (data-> clip == data.key()->clientShape().translated(data.key()->x(), data.key()->y())) {
+            if ((data-> clip ^
+                 data.key()->clientShape().translated(data.key()->x(), data.key()->y())).isEmpty()) {
                 data->mask |= PAINT_DECORATION_ONLY;
             }
         }

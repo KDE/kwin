@@ -120,6 +120,9 @@ Atoms::Atoms()
     atoms[n] = &kde_net_wm_shadow;
     names[n++] = (char*) "_KDE_NET_WM_SHADOW";
 
+    atoms[n] = &kde_net_wm_opaque_region;
+    names[n++] = (char*) "_KDE_NET_WM_OPAQUE_REGION";
+
     assert(n <= max);
 
     XInternAtoms(display(), names, n, false, atoms_return);

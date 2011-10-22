@@ -136,6 +136,7 @@ bool Client::manage(Window w, bool isMapped)
     getWindowProtocols();
     getWmNormalHints(); // Get xSizeHint
     getMotifHints();
+    getWmOpaqueRegion();
 
     // TODO: Try to obey all state information from info->state()
 

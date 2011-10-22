@@ -131,6 +131,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     client_machine = c->wmClientMachine(false);
     wmClientLeaderWin = c->wmClientLeader();
     window_role = c->windowRole();
+    opaque_region = c->opaqueRegion();
     // this needs to be done already here, otherwise 'c' could very likely
     // call discardWindowPixmap() in something called during cleanup
     c->window_pix = None;
@@ -394,6 +395,44 @@ const Shadow *Toplevel::shadow() const
     } else {
         return NULL;
     }
+}
+
+void Toplevel::getWmOpaqueRegion()
+{
+    const int length=32768;
+    unsigned long bytes_after_return=0;
+    QRegion new_opaque_region;
+    do {
+        unsigned long* data;
+        Atom type;
+        int rformat;
+        unsigned long nitems;
+        if (XGetWindowProperty(display(), client,
+                               atoms->kde_net_wm_opaque_region, 0, length, false, XA_CARDINAL,
+                               &type, &rformat, &nitems, &bytes_after_return,
+                               reinterpret_cast< unsigned char** >(&data)) == Success) {
+            if (type != XA_CARDINAL || rformat != 32 || nitems%4) {
+                // it can happen, that the window does not provide this property
+                XFree(data);
+                break;
+            }
+
+            for (unsigned int i = 0; i < nitems;) {
+                const int x = data[i++];
+                const int y = data[i++];
+                const int w = data[i++];
+                const int h = data[i++];
+
+                new_opaque_region += QRect(x,y,w,h);
+            }
+            XFree(data);
+        } else {
+            kWarning(1212) << "XGetWindowProperty failed";
+            break;
+        }
+    } while (bytes_after_return > 0);
+
+    opaque_region = new_opaque_region;
 }
 
 } // namespace
