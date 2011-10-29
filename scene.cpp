@@ -176,14 +176,14 @@ void Scene::updateTimeDiff()
         time_diff = last_time.elapsed();
     if (time_diff < 0)   // check time rollback
         time_diff = 1;
-    last_time.restart();;
+    last_time.restart();
 }
 
 // Painting pass is optimized away.
 void Scene::idle()
 {
     // Don't break time since last paint for the next pass.
-    last_time.invalidate();;
+    last_time.invalidate();
 }
 
 // the function that'll be eventually called by paintScreen() above
