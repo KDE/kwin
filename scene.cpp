@@ -93,6 +93,7 @@ Scene* scene = 0;
 
 Scene::Scene(Workspace* ws)
     : QObject(ws)
+    , lastRenderTime(0)
     , wspace(ws)
     , has_waitSync(false)
     , lanczos_filter(new LanczosFilter())
