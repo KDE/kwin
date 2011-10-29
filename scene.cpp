@@ -98,6 +98,7 @@ Scene::Scene(Workspace* ws)
     , lanczos_filter(new LanczosFilter())
     , m_overlayWindow(new OverlayWindow())
 {
+    last_time.invalidate(); // Initialize the timer
 }
 
 Scene::~Scene()

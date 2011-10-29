@@ -222,6 +222,8 @@ Workspace::Workspace(bool restore)
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
 #endif
+
+    nextPaintReference.invalidate(); // Initialize the timer
     setupCompositing();
 
     // Compatibility
