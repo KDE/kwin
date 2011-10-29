@@ -441,11 +441,14 @@ bool SceneOpenGL::initDrawableConfigs()
 // the entry function for painting
 void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
-    m_renderTimer.restart();
+    QElapsedTimer renderTimer;
+    renderTimer.start();
+
     foreach (Toplevel * c, toplevels) {
         assert(windows.contains(c));
         stacking_order.append(windows[ c ]);
     }
+
     grabXServer();
     glXWaitX();
     glPushMatrix();
@@ -461,8 +464,7 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
-    lastRenderTime = m_renderTimer.elapsed();
-    m_renderTimer.invalidate();
+    lastRenderTime = renderTimer.elapsed();
     flushBuffer(mask, damage);
     // do cleanup
     stacking_order.clear();

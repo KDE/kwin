@@ -154,7 +154,6 @@ protected:
     bool has_waitSync;
     LanczosFilter* lanczos_filter;
     OverlayWindow* m_overlayWindow;
-    QElapsedTimer m_renderTimer;
 };
 
 // The base class for windows representations in composite backends

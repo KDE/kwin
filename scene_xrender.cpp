@@ -161,17 +161,22 @@ void SceneXrender::createBuffer()
 // the entry point for painting
 void SceneXrender::paint(QRegion damage, ToplevelList toplevels)
 {
-    m_renderTimer.restart();
+    QElapsedTimer renderTimer;
+    renderTimer.start();
+
     foreach (Toplevel * c, toplevels) {
         assert(windows.contains(c));
         stacking_order.append(windows[ c ]);
     }
+
     int mask = 0;
     paintScreen(&mask, &damage);
+
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
-    lastRenderTime = m_renderTimer.elapsed();
-    m_renderTimer.invalidate();
+
+    lastRenderTime = renderTimer.elapsed();
+
     flushBuffer(mask, damage);
     // do cleanup
     stacking_order.clear();
