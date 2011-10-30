@@ -224,7 +224,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
 {
     Q_D(AnimationEffect);
     if ( d->m_animated ) {
-        AniMap::const_iterator entry = d->m_animations.find( w );
+        AniMap::const_iterator entry = d->m_animations.constFind( w );
         if ( entry != d->m_animations.constEnd() ) {
             bool isUsed = false;
             for (QList<AniData>::const_iterator anim = entry->constBegin(); anim != entry->constEnd(); ++anim) {
@@ -286,7 +286,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 {
     Q_D(AnimationEffect);
     if ( d->m_animated ) {
-        AniMap::const_iterator entry = d->m_animations.find( w );
+        AniMap::const_iterator entry = d->m_animations.constFind( w );
         if ( entry != d->m_animations.constEnd() ) {
             for ( QList<AniData>::const_iterator anim = entry->constBegin(); anim != entry->constEnd(); ++anim ) {
 
