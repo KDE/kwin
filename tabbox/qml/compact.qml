@@ -27,8 +27,10 @@ Item {
     property int screenHeight : 0
     property string longestCaption: ""
     property int imagePathPrefix: (new Date()).getTime()
-    width: Math.min(Math.max(screenWidth * 0.2, compactListView.maxRowWidth), screenWidth * 0.8)
-    height: Math.min(Math.max(screenHeight * 0.2, compactListView.rowHeight * compactListView.count + background.margins.top + background.margins.bottom), screenHeight * 0.8)
+    property int optimalWidth: compactListView.maxRowWidth
+    property int optimalHeight: compactListView.rowHeight * compactListView.count + background.margins.top + background.margins.bottom
+    width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
+    height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
 
     property int textMargin: 2
 

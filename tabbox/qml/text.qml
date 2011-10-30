@@ -26,8 +26,10 @@ Item {
     property int screenWidth : 0
     property int screenHeight : 0
     property string longestCaption: ""
-    width: Math.min(Math.max(screenWidth * 0.2, textListView.maxRowWidth), screenWidth * 0.8)
-    height: Math.min(Math.max(screenHeight * 0.2, textListView.rowHeight * textListView.count + background.margins.top + background.margins.bottom), screenHeight * 0.8)
+    property int optimalWidth: textListView.maxRowWidth
+    property int optimalHeight: textListView.rowHeight * textListView.count + background.margins.top + background.margins.bottom
+    width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
+    height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
 
     property int textMargin: 2
 

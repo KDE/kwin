@@ -26,8 +26,10 @@ Item {
     property int screenWidth : 0
     property int screenHeight : 0
     property int imagePathPrefix: (new Date()).getTime()
-    width: Math.min(Math.max(screenWidth * 0.1, (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.margins.left + background.margins.bottom), screenWidth * 0.9)
-    height: Math.min(Math.max(screenHeight * 0.05, icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom), screenHeight * 0.5)
+    property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.margins.left + background.margins.bottom
+    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom
+    width: Math.min(Math.max(screenWidth * 0.1, optimalWidth), screenWidth * 0.9)
+    height: Math.min(Math.max(screenHeight * 0.05, optimalHeight), screenHeight * 0.5)
 
 
     function setModel(model) {

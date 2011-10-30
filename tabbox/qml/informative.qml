@@ -28,8 +28,10 @@ Item {
     property bool allDesktops: true
     property string longestCaption: ""
     property int imagePathPrefix: (new Date()).getTime()
-    width: Math.min(Math.max(screenWidth * 0.2, listView.maxRowWidth), screenWidth * 0.8)
-    height: Math.min(Math.max(screenHeight * 0.2, listView.rowHeight * listView.count + background.margins.top + background.margins.bottom), screenHeight * 0.8)
+    property int optimalWidth: listView.maxRowWidth
+    property int optimalHeight: listView.rowHeight * listView.count + background.margins.top + background.margins.bottom
+    width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
+    height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
 
     property int textMargin: 2
 
