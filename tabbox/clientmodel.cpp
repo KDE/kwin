@@ -38,6 +38,11 @@ namespace TabBox
 ClientModel::ClientModel(QObject* parent)
     : QAbstractItemModel(parent)
 {
+    QHash<int, QByteArray> roles;
+    roles[CaptionRole] = "caption";
+    roles[DesktopNameRole] = "desktopName";
+    roles[MinimizedRole] = "minimized";
+    setRoleNames(roles);
 }
 
 ClientModel::~ClientModel()
@@ -77,6 +82,17 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     default:
         return QVariant();
     }
+}
+
+QString ClientModel::longestCaption() const
+{
+    QString caption;
+    foreach (TabBoxClient *client, m_clientList) {
+        if (client->caption().size() > caption.size()) {
+            caption = client->caption();
+        }
+    }
+    return caption;
 }
 
 int ClientModel::columnCount(const QModelIndex& parent) const

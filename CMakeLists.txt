@@ -139,6 +139,7 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabbox.cpp
         tabbox/clientitemdelegate.cpp
         tabbox/clientmodel.cpp
+        tabbox/declarative.cpp
         tabbox/desktopitemdelegate.cpp
         tabbox/desktopmodel.cpp
         tabbox/itemlayoutconfig.cpp
@@ -195,7 +196,7 @@ if(KWIN_BUILD_SCRIPTING)
 endif(KWIN_BUILD_SCRIPTING)
 
 if(KWIN_BUILD_TABBOX)
-    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY})
+    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative)
 endif(KWIN_BUILD_TABBOX)
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
@@ -246,5 +247,14 @@ install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 install( FILES tabbox/DefaultTabBoxLayouts.xml DESTINATION ${DATA_INSTALL_DIR}/kwin )
+install( FILES
+    tabbox/qml/informative.qml
+    tabbox/qml/big_icons.qml
+    tabbox/qml/compact.qml
+    tabbox/qml/small_icons.qml
+    tabbox/qml/tabbox.qml
+    tabbox/qml/text.qml
+    tabbox/qml/IconTabBox.qml
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/tabbox )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )

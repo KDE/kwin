@@ -63,6 +63,7 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    QString longestCaption() const;
 
     /**
     * @param client The TabBoxClient whose index should be returned

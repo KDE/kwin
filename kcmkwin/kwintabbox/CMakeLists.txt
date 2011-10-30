@@ -8,6 +8,7 @@ set(kcm_kwintabbox_PART_SRCS
     previewhandlerimpl.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientitemdelegate.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientmodel.cpp
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/declarative.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/desktopitemdelegate.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/desktopmodel.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/itemlayoutconfig.cpp
@@ -20,7 +21,7 @@ kde4_add_ui_files( kcm_kwintabbox_PART_SRCS layoutconfig.ui )
 
 kde4_add_plugin(kcm_kwintabbox ${kcm_kwintabbox_PART_SRCS})
 
-target_link_libraries(kcm_kwintabbox ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PLASMA_LIBS} ${X11_LIBRARIES} ${QT_QTXML_LIBRARY} kephal )
+target_link_libraries(kcm_kwintabbox ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PLASMA_LIBS} ${X11_LIBRARIES} ${QT_QTXML_LIBRARY} kephal ${QT_QTDECLARATIVE_LIBRARY} kdeclarative )
 
 install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
