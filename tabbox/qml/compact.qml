@@ -94,6 +94,10 @@ Item {
                 source: "image://client/" + index + "/" + compactTabBox.imagePathPrefix + "-" + compactListView.imageId + (index == compactListView.currentIndex ? "/selected" : "/disabled")
                 width: 16
                 height: 16
+                sourceSize {
+                    width: 16
+                    height: 16
+                }
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left

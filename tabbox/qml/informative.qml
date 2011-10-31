@@ -95,6 +95,10 @@ Item {
                 source: "image://client/" + index + "/" + informativeTabBox.imagePathPrefix + "-" + listView.imageId + (index == listView.currentIndex ? "/selected" : "/disabled")
                 width: 32
                 height: 32
+                sourceSize {
+                    width: 32
+                    height: 32
+                }
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
