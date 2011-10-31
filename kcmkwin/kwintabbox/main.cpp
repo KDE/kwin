@@ -584,7 +584,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClicked()
     connect(dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChanged()));
 
     m_configForm = new TabBox::LayoutConfig(dialog);
-    m_configForm->setConfig(m_tabBoxConfig);
+    m_configForm->setLayout(m_tabBoxConfig.layoutName());
     dialog->setMainWidget(m_configForm);
 
     dialog->exec();
@@ -593,7 +593,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClicked()
 
 void KWinTabBoxConfig::slotLayoutChanged()
 {
-    m_tabBoxConfig = m_configForm->config();
+    m_tabBoxConfig.setLayoutName(m_configForm->selectedLayout());
     emit changed(true);
 }
 
@@ -605,7 +605,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClickedAlternative()
     connect(dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChangedAlternative()));
 
     m_configForm = new TabBox::LayoutConfig(dialog);
-    m_configForm->setConfig(m_tabBoxAlternativeConfig);
+    m_configForm->setLayout(m_tabBoxAlternativeConfig.layoutName());
     dialog->setMainWidget(m_configForm);
 
     dialog->exec();
@@ -614,7 +614,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClickedAlternative()
 
 void KWinTabBoxConfig::slotLayoutChangedAlternative()
 {
-    m_tabBoxAlternativeConfig = m_configForm->config();
+    m_tabBoxAlternativeConfig.setLayoutName(m_configForm->selectedLayout());
     emit changed(true);
 }
 

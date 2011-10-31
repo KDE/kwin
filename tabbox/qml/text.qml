@@ -28,6 +28,8 @@ Item {
     property string longestCaption: ""
     property int optimalWidth: textListView.maxRowWidth
     property int optimalHeight: textListView.rowHeight * textListView.count + background.margins.top + background.margins.bottom
+    property bool canStretchX: true
+    property bool canStretchY: false
     width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
     height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
 

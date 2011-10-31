@@ -30,6 +30,8 @@ Item {
     property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: listView.maxRowWidth
     property int optimalHeight: listView.rowHeight * listView.count + background.margins.top + background.margins.bottom
+    property bool canStretchX: true
+    property bool canStretchY: false
     width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
     height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
 

@@ -28,6 +28,8 @@ Item {
     property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.margins.left + background.margins.bottom
     property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom
+    property bool canStretchX: false
+    property bool canStretchY: false
     width: Math.min(Math.max(screenWidth * 0.1, optimalWidth), screenWidth * 0.9)
     height: Math.min(Math.max(screenHeight * 0.05, optimalHeight), screenHeight * 0.5)
 

@@ -28,4 +28,4 @@ install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 install( FILES kwintabbox.desktop DESTINATION  ${SERVICES_INSTALL_DIR} )
-
+install( FILES qml/main.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwintabbox)
