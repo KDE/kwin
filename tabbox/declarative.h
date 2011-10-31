@@ -62,6 +62,7 @@ public Q_SLOTS:
     void slotUpdateGeometry();
 private Q_SLOTS:
     void updateQmlSource();
+    void currentIndexChanged(int row);
 private:
     QAbstractItemModel *m_model;
     QRect m_currentScreenGeometry;

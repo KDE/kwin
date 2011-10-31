@@ -165,6 +165,7 @@ Item {
         function indexAtMousePos(pos) {
             return compactListView.indexAt(pos.x, pos.y);
         }
+        signal currentIndexChanged(int index)
         id: compactListView
         objectName: "listView"
         // the maximum text width + icon item width (32 + 4 margin) + margins for hover item + margins for background
@@ -189,7 +190,10 @@ Item {
         }
         MouseArea {
             anchors.fill: parent
-            onClicked: compactListView.currentIndex = compactListView.indexAt(mouse.x, mouse.y)
+            onClicked: {
+                compactListView.currentIndex = compactListView.indexAt(mouse.x, mouse.y);
+                compactListView.currentIndexChanged(compactListView.currentIndex);
+            }
         }
     }
 }

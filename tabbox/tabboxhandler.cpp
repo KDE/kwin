@@ -531,6 +531,9 @@ int TabBoxHandler::currentSelectedDesktop() const
 
 void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
 {
+    if (d->index == index) {
+        return;
+    }
     if (d->view) {
         d->view->setCurrentIndex(index);
     }
@@ -546,6 +549,11 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
             d->updateHighlightWindows();
         }
     }
+}
+
+const QModelIndex& TabBoxHandler::currentIndex() const
+{
+    return d->index;
 }
 
 QModelIndex TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const

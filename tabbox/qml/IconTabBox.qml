@@ -81,6 +81,7 @@ Item {
         function indexAtMousePos(pos) {
             return iconsListView.indexAt(pos.x, pos.y);
         }
+        signal currentIndexChanged(int index)
         id: iconsListView
         objectName: "listView"
         orientation: ListView.Horizontal
@@ -100,7 +101,10 @@ Item {
         }
         MouseArea {
             anchors.fill: parent
-            onClicked: iconsListView.currentIndex = iconsListView.indexAt(mouse.x, mouse.y)
+            onClicked: {
+                iconsListView.currentIndex = iconsListView.indexAt(mouse.x, mouse.y);
+                iconsListView.currentIndexChanged(iconsListView.currentIndex);
+            }
         }
     }
 }

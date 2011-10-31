@@ -126,6 +126,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
 
     if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
         item->setProperty("currentIndex", tabBox->first().row());
+        connect(item, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
     }
     slotUpdateGeometry();
     QGraphicsView::showEvent(event);
@@ -174,6 +175,11 @@ QModelIndex DeclarativeView::indexAt(const QPoint &pos) const
         return m_model->index(returnedValue.toInt(), 0);
     }
     return QModelIndex();
+}
+
+void DeclarativeView::currentIndexChanged(int row)
+{
+    tabBox->setCurrentIndex(m_model->index(row, 0));
 }
 
 void DeclarativeView::updateQmlSource()

@@ -181,6 +181,7 @@ Item {
         function indexAtMousePos(pos) {
             return listView.indexAt(pos.x, pos.y);
         }
+        signal currentIndexChanged(int index)
         id: listView
         objectName: "listView"
         // the maximum text width + icon item width (32 + 4 margin) + margins for hover item + margins for background
@@ -205,7 +206,10 @@ Item {
         }
         MouseArea {
             anchors.fill: parent
-            onClicked: listView.currentIndex = listView.indexAt(mouse.x, mouse.y)
+            onClicked: {
+                listView.currentIndex = listView.indexAt(mouse.x, mouse.y);
+                listView.currentIndexChanged(listView.currentIndex);
+            }
         }
     }
 }

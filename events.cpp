@@ -242,8 +242,7 @@ bool Workspace::workspaceEvent(XEvent * e)
     case MotionNotify:
 #ifdef KWIN_BUILD_TABBOX
         if (tabBox()->isGrabbed()) {
-            tab_box->handleMouseEvent(e);
-            return true;
+            return tab_box->handleMouseEvent(e);
         }
 #endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
