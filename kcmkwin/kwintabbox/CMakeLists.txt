@@ -5,7 +5,6 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox )
 set(kcm_kwintabbox_PART_SRCS
     main.cpp
     layoutconfig.cpp
-    previewhandlerimpl.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientitemdelegate.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientmodel.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/declarative.cpp
@@ -17,7 +16,6 @@ set(kcm_kwintabbox_PART_SRCS
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/tabboxview.cpp )
 
 kde4_add_ui_files( kcm_kwintabbox_PART_SRCS main.ui )
-kde4_add_ui_files( kcm_kwintabbox_PART_SRCS layoutconfig.ui )
 
 kde4_add_plugin(kcm_kwintabbox ${kcm_kwintabbox_PART_SRCS})
 
