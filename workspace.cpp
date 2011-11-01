@@ -520,9 +520,7 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    for (ClientList::ConstIterator it = stacking_order.constBegin();
-            it != stacking_order.constEnd();
-            ++it) {
+    for (ClientList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
         // Only release the window
         (*it)->releaseWindow(true);
         // No removeClient() is called, it does more than just removing.
@@ -531,9 +529,7 @@ Workspace::~Workspace()
         clients.removeAll(*it);
         desktops.removeAll(*it);
     }
-    for (UnmanagedList::ConstIterator it = unmanaged.constBegin();
-            it != unmanaged.constEnd();
-            ++it)
+    for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release();
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     delete desktop_change_osd;
