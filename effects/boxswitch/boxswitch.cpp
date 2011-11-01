@@ -487,6 +487,9 @@ void BoxSwitchEffect::setSelectedWindow(EffectWindow* w)
 
 void BoxSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
+    if (!mActivated) {
+        return;
+    }
     if (w == selected_window) {
         setSelectedWindow(0);
     }
