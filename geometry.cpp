@@ -1524,6 +1524,11 @@ QSize Client::maxSize() const
     return rules()->checkMaxSize(QSize(xSizeHint.max_width, xSizeHint.max_height));
 }
 
+QSize Client::basicUnit() const
+{
+    return QSize(xSizeHint.width_inc, xSizeHint.height_inc);
+}
+
 /*!
   Auxiliary function to inform the client about the current window
   configuration.

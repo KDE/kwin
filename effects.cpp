@@ -1443,6 +1443,12 @@ int EffectWindowImpl::height() const
     return toplevel->height();
 }
 
+QSize EffectWindowImpl::basicUnit() const
+{
+    Client *client = dynamic_cast<Client*>(toplevel);
+    return client ? client->basicUnit() : QSize(1,1);
+}
+
 QRect EffectWindowImpl::geometry() const
 {
     return toplevel->geometry();

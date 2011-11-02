@@ -253,6 +253,7 @@ public:
     virtual int y() const;
     virtual int width() const;
     virtual int height() const;
+    virtual QSize basicUnit() const;
     virtual QRect geometry() const;
     virtual QRegion shape() const;
     virtual int screen() const;

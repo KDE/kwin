@@ -133,6 +133,7 @@ public:
 
     QSize minSize() const;
     QSize maxSize() const;
+    QSize basicUnit() const;
     virtual QPoint clientPos() const; // Inside of geometry()
     virtual QSize clientSize() const;
     virtual QRect visibleRect() const;

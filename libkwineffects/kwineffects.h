@@ -167,7 +167,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 181
+#define KWIN_EFFECT_API_VERSION_MINOR 182
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1101,6 +1101,11 @@ public:
     virtual int y() const = 0;
     virtual int width() const = 0;
     virtual int height() const = 0;
+    /**
+     * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
+     * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
+     */
+    virtual QSize basicUnit() const = 0;
     virtual QRect geometry() const = 0;
     virtual QRegion shape() const = 0;
     virtual int screen() const = 0;
