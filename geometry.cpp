@@ -2580,6 +2580,7 @@ bool Client::startMoveResize()
     }
 
     moveResizeMode = true;
+    moveResizeStartScreen = screen();
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
@@ -2644,7 +2645,7 @@ void Client::finishMoveResize(bool cancel)
             setGeometry(initialMoveResizeGeom);
         else
             setGeometry(moveResizeGeom);
-        if (maximizeMode() != MaximizeRestore)
+        if (screen() != moveResizeStartScreen && maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();
     }
 #else
