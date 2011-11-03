@@ -211,6 +211,10 @@ public:
     * @param index The current Model index
     */
     void setCurrentIndex(const QModelIndex& index);
+    /**
+     * @returns the current index
+     **/
+    const QModelIndex &currentIndex() const;
 
     /**
     * Retrieves the next or previous item of the current item.

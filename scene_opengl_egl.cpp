@@ -26,6 +26,7 @@ EGLDisplay dpy;
 EGLConfig config;
 EGLSurface surface;
 EGLContext ctx;
+int surfaceHasSubPost;
 
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
@@ -35,8 +36,10 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return;
 
     initEGL();
-    if (!hasGLExtension("EGL_KHR_image_pixmap")) {
-        kError(1212) << "Required extension EGL_KHR_image_pixmap not found, disabling compositing";
+    if (!hasGLExtension("EGL_KHR_image") &&
+        (!hasGLExtension("EGL_KHR_image_base") ||
+         !hasGLExtension("EGL_KHR_image_pixmap"))) {
+        kError(1212) << "Required support for binding pixmaps to EGLImages not found, disabling compositing";
         return;
     }
     initGL();
@@ -104,6 +107,10 @@ bool SceneOpenGL::initRenderingContext()
     }
     surface = eglCreateWindowSurface(dpy, config, m_overlayWindow->window(), 0);
 
+    eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+
+    eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost);
+
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
@@ -167,11 +174,14 @@ bool SceneOpenGL::initDrawableConfigs()
 // the entry function for painting
 void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
-    m_renderTimer.restart();
+    QElapsedTimer renderTimer;
+    renderTimer.start();
+
     foreach (Toplevel * c, toplevels) {
         assert(windows.contains(c));
         stacking_order.append(windows[ c ]);
     }
+
     grabXServer();
     XSync(display(), false);
     int mask = 0;
@@ -179,8 +189,7 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
-    lastRenderTime = m_renderTimer.elapsed();
-    m_renderTimer.invalidate();
+    lastRenderTime = renderTimer.elapsed();
     flushBuffer(mask, damage);
     // do cleanup
     stacking_order.clear();
@@ -196,9 +205,10 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
 {
     Q_UNUSED(damage)
     glFlush();
-    if (mask & PAINT_SCREEN_REGION) {
-        // TODO: implement me properly
-        eglSwapBuffers(dpy, surface);
+    if (mask & PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV) {
+        QRect damageRect = damage.boundingRect();
+
+        eglPostSubBufferNV(dpy, surface, damageRect.left(), displayHeight() - damageRect.bottom() - 1, damageRect.width(), damageRect.height());
     } else {
         eglSwapBuffers(dpy, surface);
     }

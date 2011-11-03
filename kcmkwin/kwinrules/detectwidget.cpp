@@ -85,7 +85,6 @@ void DetectDialog::readWindow(WId w)
                            | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
                            | NET::UtilityMask | NET::SplashMask);
     title = info.name();
-    extrarole = ""; // TODO
     machine = info.clientMachine();
     executeDialog();
 }
@@ -116,7 +115,6 @@ void DetectDialog::executeDialog()
     else
         widget->type_label->setText(i18n(types[ type ]));
     widget->title_label->setText(title);
-    widget->extrarole_label->setText(extrarole);
     widget->machine_label->setText(machine);
     widget->adjustSize();
     adjustSize();

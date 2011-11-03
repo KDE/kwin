@@ -71,12 +71,12 @@ private:
     long net_wm_blur_region;
     QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
-    QRegion m_currentBlur; // keeps track of the currently blured area (from bottom to top)
+    QRegion m_currentBlur; // keeps track of the currently blured area of non-caching windows(from bottom to top)
     bool m_shouldCache;
 
     struct BlurWindowInfo {
         GLTexture blurredBackground; // keeps the horizontally blurred background
-        bool textureValid;
+        QRegion damagedRegion;
     };
 
     QHash< const EffectWindow*, BlurWindowInfo > windows;

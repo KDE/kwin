@@ -50,7 +50,6 @@ protected slots:
     void wmclassMatchChanged();
     void roleMatchChanged();
     void titleMatchChanged();
-    void extraMatchChanged();
     void machineMatchChanged();
     void shortcutEditClicked();
 private slots:

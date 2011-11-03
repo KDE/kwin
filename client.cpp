@@ -99,6 +99,7 @@ Client::Client(Workspace* ws)
     , transient_for (NULL)
     , transient_for_id(None)
     , original_transient_for_id(None)
+    , skip_switcher(false)
     , blocks_compositing(false)
     , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
@@ -1140,16 +1141,18 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    bool belongs_to_desktop = false;
-    for (ClientList::ConstIterator it = group()->members().constBegin();
-            it != group()->members().constEnd();
-            ++it)
-        if ((*it)->isDesktop()) {
-            belongs_to_desktop = true;
-            break;
-        }
-    if (!belongs_to_desktop && workspace()->showingDesktop())
-        workspace()->resetShowingDesktop(true);
+    if( workspace()->showingDesktop()) {
+        bool belongs_to_desktop = false;
+        for (ClientList::ConstIterator it = group()->members().constBegin();
+                it != group()->members().constEnd();
+                ++it)
+            if ((*it)->isDesktop()) {
+                belongs_to_desktop = true;
+                break;
+            }
+        if (!belongs_to_desktop)
+            workspace()->resetShowingDesktop(true);
+    }
     internalShow(Allowed);
 }
 

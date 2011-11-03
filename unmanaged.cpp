@@ -72,6 +72,7 @@ bool Unmanaged::track(Window w)
     if (Extensions::shapeAvailable())
         XShapeSelectInput(display(), w, ShapeNotifyMask);
     detectShape(w);
+    getWmOpaqueRegion();
     setupCompositing();
     ungrabXServer();
     if (effects)

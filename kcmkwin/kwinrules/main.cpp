@@ -79,7 +79,6 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
                                            | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
                                            | NET::UtilityMask | NET::SplashMask);
     QString title = info.name();
-//    QCString extrarole = ""; // TODO
     QByteArray machine = info.clientMachine().toLower();
     Rules* best_match = NULL;
     int match_quality = 0;
@@ -145,7 +144,6 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
         ret->titlematch = Rules::UnimportantMatch;
         ret->clientmachine = machine; // set, but make unimportant
         ret->clientmachinematch = Rules::UnimportantMatch;
-        ret->extrarolematch = Rules::UnimportantMatch;
         ret->windowrolematch = Rules::UnimportantMatch;
         if (wmclass_name == wmclass_class) {
             ret->wmclasscomplete = false;
@@ -168,8 +166,6 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
     ret->titlematch = Rules::UnimportantMatch;
     ret->clientmachine = machine; // set, but make unimportant
     ret->clientmachinematch = Rules::UnimportantMatch;
-//    ret->extrarole = extra; TODO
-    ret->extrarolematch = Rules::UnimportantMatch;
     if (!role.isEmpty()
             && role != "unknown" && role != "unnamed") { // Qt sets this if not specified
         ret->windowrole = role;

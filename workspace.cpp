@@ -222,6 +222,8 @@ Workspace::Workspace(bool restore)
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
 #endif
+
+    nextPaintReference.invalidate(); // Initialize the timer
     setupCompositing();
 
     // Compatibility
@@ -462,6 +464,7 @@ void Workspace::init()
         // Propagate clients, will really happen at the end of the updates blocker block
         updateStackingOrder(true);
 
+        saveOldScreenSizes();
         updateClientArea();
 
         // NETWM spec says we have to set it to (0,0) if we don't support it
@@ -517,9 +520,7 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    for (ClientList::ConstIterator it = stacking_order.constBegin();
-            it != stacking_order.constEnd();
-            ++it) {
+    for (ClientList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
         // Only release the window
         (*it)->releaseWindow(true);
         // No removeClient() is called, it does more than just removing.
@@ -528,9 +529,7 @@ Workspace::~Workspace()
         clients.removeAll(*it);
         desktops.removeAll(*it);
     }
-    for (UnmanagedList::ConstIterator it = unmanaged.constBegin();
-            it != unmanaged.constEnd();
-            ++it)
+    for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release();
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
     delete desktop_change_osd;
@@ -1282,6 +1281,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     StackingUpdatesBlocker blocker(this);
 
     int old_desktop = currentDesktop();
+    int old_active_screen = activeScreen();
     if (new_desktop != currentDesktop()) {
         ++block_showing_desktop;
         // Optimized Desktop switching: unmapping done from back to front
@@ -1340,9 +1340,10 @@ bool Workspace::setCurrentDesktop(int new_desktop)
             c = active_client; // The requestFocus below will fail, as the client is already active
         if (!c) {
             for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
-                if (focus_chain[currentDesktop()].at(i)->isShown(false) &&
-                        focus_chain[currentDesktop()].at(i)->isOnCurrentActivity()) {
-                    c = focus_chain[currentDesktop()].at(i);
+                Client* tmp = focus_chain[currentDesktop()].at(i);
+                if (tmp->isShown(false) && tmp->isOnCurrentActivity()
+                    && ( !options->separateScreenFocus || tmp->screen() == old_active_screen )) {
+                    c = tmp;
                     break;
                 }
             }
@@ -1584,8 +1585,6 @@ void Workspace::setNumberOfDesktops(int n)
     workarea.resize(n + 1);
     restrictedmovearea.clear();
     restrictedmovearea.resize(n + 1);
-    oldrestrictedmovearea.clear();
-    oldrestrictedmovearea.resize(n + 1);
     screenarea.clear();
 
     updateClientArea(true);
@@ -1630,6 +1629,7 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 #ifdef KWIN_BUILD_TILING
     m_tiling->notifyTilingWindowDesktopChanged(c, old_desktop);
 #endif
+    c->checkWorkspacePosition( QRect(), old_desktop );
 
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -1742,9 +1742,21 @@ void Workspace::sendClientToScreen(Client* c, int screen)
     GeometryUpdatesBlocker blocker(c);
     QRect old_sarea = clientArea(MaximizeArea, c);
     QRect sarea = clientArea(MaximizeArea, screen, c->desktop());
-    c->setGeometry(sarea.x() - old_sarea.x() + c->x(), sarea.y() - old_sarea.y() + c->y(),
-                   c->size().width(), c->size().height());
-    c->checkWorkspacePosition();
+    QRect oldgeom = c->geometry();
+    QRect geom = c->geometry();
+    // move the window to have the same relative position to the center of the screen
+    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
+    geom.moveCenter(
+        QPoint(( geom.center().x() - old_sarea.center().x()) * sarea.width() / old_sarea.width() + sarea.center().x(),
+            ( geom.center().y() - old_sarea.center().y()) * sarea.height() / old_sarea.height() + sarea.center().y()));
+    c->setGeometry( geom );
+    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
+    // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
+    // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
+    // which could alter the resulting geometry.
+    if( old_sarea.contains( oldgeom ))
+        c->keepInArea( sarea );
+    c->checkWorkspacePosition( oldgeom );
     ClientList transients_stacking_order = ensureStackingOrder(c->transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();

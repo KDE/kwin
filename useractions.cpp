@@ -843,20 +843,34 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseToggleRaiseAndLower:
         workspace()->raiseOrLowerClient(this);
         break;
-    case Options::MouseActivateAndRaise:
+    case Options::MouseActivateAndRaise: {
         replay = isActive(); // for clickraise mode
+        bool mustReplay = !rules()->checkAcceptFocus(input);
+        if (mustReplay) {
+            ClientList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+                                     begin = workspace()->stackingOrder().constBegin();
+            while (mustReplay && --it != begin && *it != this) {
+                if (((*it)->keepAbove() && !keepAbove()) || (keepBelow() && !(*it)->keepBelow()))
+                    continue; // can never raise above "it"
+                mustReplay = !((*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->geometry().intersects(geometry()));
+            }
+        }
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled && replay);
         workspace()->setActiveScreenMouse(globalPos);
+        replay = replay || mustReplay;
         break;
+    }
     case Options::MouseActivateAndLower:
         workspace()->requestFocus(this);
         workspace()->lowerClient(this);
         workspace()->setActiveScreenMouse(globalPos);
+        replay = replay || !rules()->checkAcceptFocus(input);
         break;
     case Options::MouseActivate:
         replay = isActive(); // for clickraise mode
         workspace()->takeActivity(this, ActivityFocus, handled && replay);
         workspace()->setActiveScreenMouse(globalPos);
+        replay = replay || !rules()->checkAcceptFocus(input);
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled);

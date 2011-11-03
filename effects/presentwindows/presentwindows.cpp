@@ -246,6 +246,7 @@ void PresentWindowsEffect::postPaintScreen()
             }
         }
         effects->setActiveFullScreenEffect(NULL);
+        effects->addRepaintFull();
     }
 
     // Update windows that are changing brightness or opacity
@@ -347,7 +348,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
             m_motionManager.apply(w, data);
             QRect rect = m_motionManager.transformedGeometry(w).toRect();
 
-            if (winData->highlight > 0.0) {
+            if (m_activated && winData->highlight > 0.0) {
                 // scale the window (interpolated by the highlight level) to at least 105% or to cover 1/16 of the screen size - yet keep it in screen bounds
                 QRect area = effects->clientArea(FullScreenArea, w);
                 QSizeF effSize(w->width()*data.xScale, w->height()*data.yScale);

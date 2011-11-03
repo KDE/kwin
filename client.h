@@ -321,7 +321,7 @@ public:
 
     void gotPing(Time timestamp);
 
-    void checkWorkspacePosition(const QRect &geo = QRect());
+    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2);
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
     bool hasUserTimeSupport() const;
@@ -522,7 +522,6 @@ private:
     void finishWindowRules();
     void setShortcutInternal(const KShortcut& cut);
 
-    void checkDirection(int new_diff, int old_diff, QRect& rect, const QRect& area);
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
     int checkShadeGeometry(int w, int h);
@@ -569,7 +568,7 @@ private:
     Time readUserCreationTime() const;
     void startupIdChanged();
 
-    void checkOffscreenPosition (QRect& geom, const QRect& screenArea);
+    void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
 
     Window client;
     Window wrapper;
@@ -642,7 +641,6 @@ private:
     uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
-    int m_screenNum, m_formerScreenNum;
     bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();

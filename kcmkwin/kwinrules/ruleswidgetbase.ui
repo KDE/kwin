@@ -226,59 +226,6 @@
         </widget>
        </item>
        <item row="11" column="0">
-        <widget class="QLabel" name="textLabel6">
-         <property name="text">
-          <string>Extra role:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-         <property name="buddy">
-          <cstring>extra</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="KComboBox" name="extra_match">
-         <item>
-          <property name="text">
-           <string>Unimportant</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Exact Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Substring Match</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Regular Expression</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="11" column="4">
-        <widget class="KPushButton" name="edit_reg_extra">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Edit</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
         <widget class="QLabel" name="textLabel7">
          <property name="text">
           <string>&amp;Machine (hostname):</string>
@@ -294,7 +241,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="11" column="1">
         <widget class="KComboBox" name="machine_match">
          <item>
           <property name="text">
@@ -318,7 +265,7 @@
          </item>
         </widget>
        </item>
-       <item row="12" column="4">
+       <item row="11" column="4">
         <widget class="KPushButton" name="edit_reg_machine">
          <property name="enabled">
           <bool>false</bool>
@@ -331,7 +278,7 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="0" colspan="5">
+       <item row="12" column="0" colspan="5">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -344,11 +291,8 @@
          </property>
         </spacer>
        </item>
-       <item row="12" column="2" colspan="2">
-        <widget class="KLineEdit" name="machine"/>
-       </item>
        <item row="11" column="2" colspan="2">
-        <widget class="KLineEdit" name="extra"/>
+        <widget class="KLineEdit" name="machine"/>
        </item>
        <item row="10" column="2" colspan="2">
         <widget class="KLineEdit" name="title"/>
@@ -2048,20 +1992,6 @@ like your complete screen area.</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1" rowspan="2" colspan="7">
-        <widget class="Line" name="line_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="enable_moveresizemode">
-         <property name="text">
-          <string>&amp;Moving/resizing</string>
-         </property>
-        </widget>
-       </item>
        <item row="11" column="3">
         <spacer name="verticalSpacer_9">
          <property name="orientation">
@@ -2353,45 +2283,6 @@ while it's active!</string>
          </property>
         </spacer>
        </item>
-       <item row="8" column="5" colspan="3">
-        <widget class="KComboBox" name="moveresizemode">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Opaque</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Transparent</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="8" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_moveresizemode">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="0" column="5" colspan="3">
         <widget class="YesNoBox" name="noborder" native="true">
          <property name="enabled">
@@ -2511,6 +2402,59 @@ but this may sometimes fail or superact.
          </property>
         </widget>
        </item>
+       <item row="6" column="1" rowspan="2" colspan="7">
+        <widget class="Line" name="line_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2" colspan="3">
+        <widget class="KComboBox" name="rule_moveresizemode">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="8" column="5" colspan="3">
+        <widget class="KComboBox" name="moveresizemode">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Opaque</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Transparent</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QCheckBox" name="enable_moveresizemode">
+         <property name="text">
+          <string>&amp;Moving/resizing</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -2519,9 +2463,9 @@ but this may sometimes fail or superact.
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
@@ -2529,9 +2473,9 @@ but this may sometimes fail or superact.
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KRestrictedLine</class>
@@ -2558,9 +2502,6 @@ but this may sometimes fail or superact.
   <tabstop>title_match</tabstop>
   <tabstop>title</tabstop>
   <tabstop>edit_reg_title</tabstop>
-  <tabstop>extra_match</tabstop>
-  <tabstop>extra</tabstop>
-  <tabstop>edit_reg_extra</tabstop>
   <tabstop>machine_match</tabstop>
   <tabstop>machine</tabstop>
   <tabstop>edit_reg_machine</tabstop>

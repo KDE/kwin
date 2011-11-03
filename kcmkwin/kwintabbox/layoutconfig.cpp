@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,176 +19,234 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "layoutconfig.h"
-#include "ui_layoutconfig.h"
-// tabbox
-#include "tabboxconfig.h"
+#include <QtDeclarative/qdeclarative.h>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtGui/QGraphicsObject>
+#include <kdeclarative.h>
+#include <KDE/KDesktopFile>
+#include <KDE/KGlobal>
+#include <KDE/KIcon>
+#include <KDE/KIconEffect>
+#include <KDE/KIconLoader>
+#include <KDE/KLocalizedString>
+#include <KDE/KService>
+#include <KDE/KStandardDirs>
 
 namespace KWin
 {
 namespace TabBox
 {
 
-/***************************************************
-* LayoutConfigPrivate
-***************************************************/
-class LayoutConfigPrivate
-{
-public:
-    LayoutConfigPrivate();
-    ~LayoutConfigPrivate() { }
-
-    TabBoxConfig config;
-    Ui::LayoutConfigForm ui;
-};
-
-LayoutConfigPrivate::LayoutConfigPrivate()
-{
-}
-
-/***************************************************
-* LayoutConfig
-***************************************************/
 LayoutConfig::LayoutConfig(QWidget* parent)
-    : QWidget(parent)
+    : QDeclarativeView(parent)
+    , m_layoutsModels(new LayoutModel(this))
 {
-    d = new LayoutConfigPrivate;
-    d->ui.setupUi(this);
-
-    // init the item layout combo box
-    d->ui.itemLayoutCombo->addItem(i18n("Informative"));
-    d->ui.itemLayoutCombo->addItem(i18n("Compact"));
-    d->ui.itemLayoutCombo->addItem(i18n("Small Icons"));
-    d->ui.itemLayoutCombo->addItem(i18n("Large Icons"));
-    d->ui.itemLayoutCombo->addItem(i18n("Text Only"));
-    // TODO: user defined layouts
-
-    // init the selected item layout combo box
-    d->ui.selectedItemLayoutCombo->addItem(i18n("Informative"));
-    d->ui.selectedItemLayoutCombo->addItem(i18n("Compact"));
-    d->ui.selectedItemLayoutCombo->addItem(i18n("Small Icons"));
-    d->ui.selectedItemLayoutCombo->addItem(i18n("Large Icons"));
-    d->ui.selectedItemLayoutCombo->addItem(i18n("Text Only"));
-
-    connect(d->ui.minWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(d->ui.minHeightSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(d->ui.itemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(d->ui.layoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(d->ui.selectedItemCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(d->ui.selectedItemLayoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(d->ui.selectedItemBox, SIGNAL(clicked(bool)), this, SLOT(changed()));
-
+    setAttribute(Qt::WA_TranslucentBackground);
+    QPalette pal = palette();
+    pal.setColor(backgroundRole(), Qt::transparent);
+    setPalette(pal);
+    setMinimumSize(QSize(500, 500));
+    setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        engine()->addImportPath(importPath);
+    }
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("data", "kwin/tabbox")) {
+        engine()->addImportPath(importPath);
+    }
+    ExampleClientModel *model = new ExampleClientModel(this);
+    engine()->addImageProvider(QLatin1String("client"), new TabBoxImageProvider(model));
+    KDeclarative kdeclarative;
+    kdeclarative.setDeclarativeEngine(engine());
+    kdeclarative.initialize();
+    kdeclarative.setupBindings();
+    rootContext()->setContextProperty("clientModel", model);
+    rootContext()->setContextProperty("layoutModel", m_layoutsModels);
+    setSource(KStandardDirs::locate("data", "kwin/kcm_kwintabbox/main.qml"));
 }
 
 LayoutConfig::~LayoutConfig()
 {
-    delete d;
 }
 
-TabBoxConfig& LayoutConfig::config() const
+void LayoutConfig::setLayout(const QString &layoutName)
 {
-    return d->config;
+    const QModelIndex index = m_layoutsModels->indexForLayoutName(layoutName);
+    const int row = (index.isValid()) ? index.row() : -1;
+    if (QObject *item = rootObject()->findChild<QObject*>("view")) {
+        item->setProperty("currentIndex", row);
+    }
 }
 
-void LayoutConfig::setConfig(const KWin::TabBox::TabBoxConfig& config)
+QString LayoutConfig::selectedLayout() const
 {
-    d->config = config;
-    d->ui.selectedItemBox->setChecked(config.selectedItemViewPosition() != TabBoxConfig::NonePosition);
-
-    d->ui.layoutCombo->setCurrentIndex(config.layout());
-    d->ui.selectedItemCombo->setCurrentIndex(config.selectedItemViewPosition() - 1);
-
-    d->ui.minWidthSpinBox->setValue(config.minWidth());
-    d->ui.minHeightSpinBox->setValue(config.minHeight());
-
-    // item layouts
-    if (config.layoutName().compare("Default", Qt::CaseInsensitive) == 0) {
-        d->ui.itemLayoutCombo->setCurrentIndex(0);
-    } else if (config.layoutName().compare("Compact", Qt::CaseInsensitive) == 0) {
-        d->ui.itemLayoutCombo->setCurrentIndex(1);
-    } else if (config.layoutName().compare("Small Icons", Qt::CaseInsensitive) == 0) {
-        d->ui.itemLayoutCombo->setCurrentIndex(2);
-    } else if (config.layoutName().compare("Big Icons", Qt::CaseInsensitive) == 0) {
-        d->ui.itemLayoutCombo->setCurrentIndex(3);
-    } else if (config.layoutName().compare("Text", Qt::CaseInsensitive) == 0) {
-        d->ui.itemLayoutCombo->setCurrentIndex(4);
-    } else {
-        // TODO: user defined layouts
+    int row = 0;
+    if (QObject *item = rootObject()->findChild<QObject*>("view")) {
+        row = item->property("currentIndex").toInt();
     }
-
-    if (config.selectedItemLayoutName().compare("Default", Qt::CaseInsensitive) == 0) {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex(0);
-    } else if (config.selectedItemLayoutName().compare("Compact", Qt::CaseInsensitive) == 0) {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex(1);
-    } else if (config.selectedItemLayoutName().compare("Small Icons", Qt::CaseInsensitive) == 0) {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex(2);
-    } else if (config.selectedItemLayoutName().compare("Big Icons", Qt::CaseInsensitive) == 0) {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex(3);
-    } else if (config.selectedItemLayoutName().compare("Text", Qt::CaseInsensitive) == 0) {
-        d->ui.selectedItemLayoutCombo->setCurrentIndex(4);
-    } else {
-        // TODO: user defined layouts
+    const QModelIndex index = m_layoutsModels->index(row);
+    if (!index.isValid()) {
+        return QString();
     }
-
+    return m_layoutsModels->data(index, Qt::UserRole+2).toString();
 }
 
-void LayoutConfig::changed()
+TabBoxImageProvider::TabBoxImageProvider(QAbstractListModel* model)
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    , m_model(model)
 {
-    // it's actually overkill but we just sync all options
-    d->config.setMinWidth(d->ui.minWidthSpinBox->value());
-    d->config.setMinHeight(d->ui.minHeightSpinBox->value());
-    d->config.setLayout(TabBoxConfig::LayoutMode(d->ui.layoutCombo->currentIndex()));
+}
 
-    QString layout;
-    switch(d->ui.itemLayoutCombo->currentIndex()) {
-    case 0:
-        layout = "Default";
-        break;
-    case 1:
-        layout = "Compact";
-        break;
-    case 2:
-        layout = "Small Icons";
-        break;
-    case 3:
-        layout = "Big Icons";
-        break;
-    case 4:
-        layout = "Text";
-        break;
-    default:
-        // TODO: user defined layouts
-        break;
+QPixmap TabBoxImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+{
+    bool ok = false;
+    QStringList parts = id.split('/');
+    const int index = parts.first().toInt(&ok);
+    if (!ok) {
+        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
     }
-    d->config.setLayoutName(layout);
-
-    if (d->ui.selectedItemBox->isChecked()) {
-        d->config.setSelectedItemViewPosition(TabBoxConfig::SelectedItemViewPosition(
-                d->ui.selectedItemCombo->currentIndex() + 1));
-        QString selectedLayout;
-        switch(d->ui.selectedItemLayoutCombo->currentIndex()) {
-        case 0:
-            selectedLayout = "Default";
-            break;
-        case 1:
-            selectedLayout = "Compact";
-            break;
-        case 2:
-            selectedLayout = "Small Icons";
-            break;
-        case 3:
-            selectedLayout = "Big Icons";
-            break;
-        case 4:
-            selectedLayout = "Text";
-            break;
-        default:
-            // TODO: user defined layouts
-            break;
+    QSize s(32, 32);
+    if (requestedSize.isValid()) {
+        s = requestedSize;
+    }
+    *size = s;
+    QPixmap icon(KIcon(m_model->data(m_model->index(index), Qt::UserRole+3).toString()).pixmap(s));
+    if (parts.size() > 2) {
+        KIconEffect *effect = KIconLoader::global()->iconEffect();
+        KIconLoader::States state = KIconLoader::DefaultState;
+        if (parts.at(2) == QLatin1String("selected")) {
+            state = KIconLoader::ActiveState;
+        } else if (parts.at(2) == QLatin1String("disabled")) {
+            state = KIconLoader::DisabledState;
         }
-        d->config.setSelectedItemLayoutName(selectedLayout);
-    } else {
-        d->config.setSelectedItemViewPosition(TabBoxConfig::NonePosition);
+        icon = effect->apply(icon, KIconLoader::Desktop, state);
     }
+    return icon;
+}
+
+ExampleClientModel::ExampleClientModel (QObject* parent)
+    : QAbstractListModel (parent)
+{
+    QHash<int, QByteArray> roles;
+    roles[Qt::UserRole] = "caption";
+    roles[Qt::UserRole+1] = "minimized";
+    roles[Qt::UserRole+2] = "desktopName";
+    setRoleNames(roles);
+    init();
+}
+
+ExampleClientModel::~ExampleClientModel()
+{
+}
+
+void ExampleClientModel::init()
+{
+    QList<QString> applications;
+    applications << "konqbrowser" << "KMail2" << "systemsettings" << "dolphin";
+
+    foreach (const QString& application, applications) {
+        KService::Ptr service = KService::serviceByStorageId("kde4-" + application + ".desktop");
+        if (service) {
+            m_nameList << service->entryPath();
+        }
+    }
+}
+
+QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    switch (role) {
+    case Qt::DisplayRole:
+    case Qt::UserRole:
+        return KDesktopFile(m_nameList.at(index.row())).readName();
+    case Qt::UserRole+1:
+        return false;
+    case Qt::UserRole+2:
+        return i18nc("An example Desktop Name", "Desktop 1");
+    case Qt::UserRole+3:
+        return KDesktopFile(m_nameList.at(index.row())).readIcon();
+    }
+    return QVariant();
+}
+
+int ExampleClientModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return m_nameList.size();
+}
+
+LayoutModel::LayoutModel(QObject *parent)
+    : QAbstractListModel(parent)
+{
+    QHash<int, QByteArray> roles;
+    roles[Qt::UserRole] = "name";
+    roles[Qt::UserRole+1] = "sourcePath";
+    setRoleNames(roles);
+    init();
+}
+
+LayoutModel::~LayoutModel()
+{
+}
+
+void LayoutModel::init()
+{
+    QStringList layouts;
+    layouts << "informative" << "compact" << "text" << "big_icons" << "small_icons";
+    QStringList descriptions;
+    descriptions << i18nc("Name for a window switcher layout showing icon, name and desktop", "Informative");
+    descriptions << i18nc("Name for a window switcher layout showing only icon and name", "Compact");
+    descriptions << i18nc("Name for a window switcher layout showing only the name", "Text");
+    descriptions << i18nc("Name for a window switcher layout showing large icons", "Large Icons");
+    descriptions << i18nc("Name for a window switcher layout showing small icons", "Small Icons");
+
+    for (int i=0; i<layouts.size(); ++i) {
+        const QString path = KStandardDirs::locate("data", "kwin/tabbox/" + layouts.at(i) + ".qml");
+        if (!path.isNull()) {
+            m_nameList << descriptions.at(i);
+            m_pathList << path;
+            m_layoutList << layouts.at(i);
+        }
+    }
+}
+
+QVariant LayoutModel::data (const QModelIndex& index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    switch (role) {
+    case Qt::DisplayRole:
+    case Qt::UserRole:
+        return m_nameList.at(index.row());
+    case Qt::UserRole + 1:
+        return m_pathList.at(index.row());
+    case Qt::UserRole + 2:
+        return m_layoutList.at(index.row());
+    }
+    return QVariant();
+}
+
+int LayoutModel::rowCount (const QModelIndex& parent) const
+{
+    Q_UNUSED(parent)
+    return m_nameList.size();
+}
+
+QModelIndex LayoutModel::indexForLayoutName(const QString &name) const
+{
+    // fallback for default
+    if (name == "Default" || name.isEmpty()) {
+        return index(0);
+    }
+    for (int i=0; i<m_layoutList.size(); ++i) {
+        if (name.toLower().replace(' ', '_') == m_layoutList.at(i)) {
+            return index(i);
+        }
+    }
+    return QModelIndex();
 }
 
 } // namespace KWin

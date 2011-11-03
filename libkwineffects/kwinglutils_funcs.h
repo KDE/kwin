@@ -350,6 +350,10 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 #include <EGL/eglext.h>
 #include <fixx11h.h>
 
+#ifndef EGL_POST_SUB_BUFFER_SUPPORTED_NV
+#define EGL_POST_SUB_BUFFER_SUPPORTED_NV 0x30BE
+#endif
+
 namespace KWin
 {
 
@@ -358,8 +362,10 @@ void KWIN_EXPORT glResolveFunctions();
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
+typedef EGLBoolean (*eglPostSubBufferNV_func)(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height);
 extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
 extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
+extern KWIN_EXPORT eglPostSubBufferNV_func eglPostSubBufferNV;
 
 // GLES
 typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);

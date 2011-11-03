@@ -242,8 +242,7 @@ bool Workspace::workspaceEvent(XEvent * e)
     case MotionNotify:
 #ifdef KWIN_BUILD_TABBOX
         if (tabBox()->isGrabbed()) {
-            tab_box->handleMouseEvent(e);
-            return true;
+            return tab_box->handleMouseEvent(e);
         }
 #endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
@@ -1648,6 +1647,8 @@ void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
             getWindowRole();
         else if (e->atom == atoms->kde_net_wm_shadow)
             getShadow();
+        else if (e->atom == atoms->kde_net_wm_opaque_region)
+            getWmOpaqueRegion();
         break;
     }
     emit propertyNotify(this, e->atom);

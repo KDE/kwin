@@ -25,9 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDataStream>
 #include <kapplication.h>
 #include <ksessionmanager.h>
-#include <X11/SM/SMlib.h>
 #include <netwm_def.h>
 #include <QRect>
+
+#include <X11/SM/SMlib.h>
+#include <fixx11h.h>
 
 class QSocketNotifier;
 

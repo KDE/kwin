@@ -117,8 +117,13 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(blockcompositing, force);
 
     connect (title_match, SIGNAL(currentIndexChanged(int)), SLOT(titleMatchChanged()));
-    connect (extra_match, SIGNAL(currentIndexChanged(int)), SLOT(extraMatchChanged()));
     connect (machine_match, SIGNAL(currentIndexChanged(int)), SLOT(machineMatchChanged()));
+    connect (shortcut_edit, SIGNAL(clicked()), SLOT(shortcutEditClicked()));
+
+    edit_reg_wmclass->hide();
+    edit_reg_role->hide();
+    edit_reg_title->hide();
+    edit_reg_machine->hide();
 
     int i;
     for (i = 1;
@@ -388,10 +393,9 @@ static NET::WindowType comboToType(int val)
 
 void RulesWidget::setRules(Rules* rules)
 {
-    const bool readFromNewEmptyRules = !rules;
-    if (readFromNewEmptyRules)
-        rules = new Rules;
-
+    Rules tmp;
+    if (rules == NULL)
+        rules = &tmp; // empty
     description->setText(rules->description);
     wmclass->setText(rules->wmclass);
     whole_wmclass->setChecked(rules->wmclasscomplete);
@@ -413,9 +417,6 @@ void RulesWidget::setRules(Rules* rules)
     title->setText(rules->title);
     title_match->setCurrentIndex(rules->titlematch);
     titleMatchChanged();
-    extra->setText(rules->extrarole);
-    extra_match->setCurrentIndex(rules->extrarolematch);
-    extraMatchChanged();
     machine->setText(rules->clientmachine);
     machine_match->setCurrentIndex(rules->clientmachinematch);
     machineMatchChanged();
@@ -451,11 +452,6 @@ void RulesWidget::setRules(Rules* rules)
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
     CHECKBOX_FORCE_RULE(blockcompositing,);
-
-    if (readFromNewEmptyRules) {
-        delete rules;
-        rules = NULL; // it's the function parameter...
-    }
 }
 
 #undef GENERIC_RULE
@@ -516,8 +512,6 @@ Rules* RulesWidget::rules() const
     }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >(title_match->currentIndex());
-    rules->extrarole = extra->text().toUtf8();
-    rules->extrarolematch = static_cast< Rules::StringMatch >(extra_match->currentIndex());
     rules->clientmachine = machine->text().toUtf8();
     rules->clientmachinematch = static_cast< Rules::StringMatch >(machine_match->currentIndex());
     LINEEDIT_SET_RULE(position, strToPosition);
@@ -574,7 +568,6 @@ Rules* RulesWidget::rules() const
 STRING_MATCH_COMBO(wmclass)
 STRING_MATCH_COMBO(role)
 STRING_MATCH_COMBO(title)
-STRING_MATCH_COMBO(extra)
 STRING_MATCH_COMBO(machine)
 
 #undef STRING_MATCH_COMBO

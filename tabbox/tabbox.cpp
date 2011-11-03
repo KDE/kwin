@@ -392,10 +392,10 @@ void TabBox::reset(bool partial_reset)
                 setCurrentClient(Workspace::self()->activeClient());
             // it's possible that the active client is not part of the model
             // in that case the index is invalid
-            if (!m_index.isValid())
+            if (!m_tabBox->currentIndex().isValid())
                 setCurrentIndex(m_tabBox->first());
         } else {
-            if (!m_index.isValid() || !m_tabBox->client(m_index))
+            if (!m_tabBox->currentIndex().isValid() || !m_tabBox->client(m_tabBox->currentIndex()))
                 setCurrentIndex(m_tabBox->first());
         }
         break;
@@ -425,7 +425,7 @@ void TabBox::nextPrev(bool next)
  */
 Client* TabBox::currentClient()
 {
-    if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_index))) {
+    if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_tabBox->currentIndex()))) {
         if (!Workspace::self()->hasClient(client->client()))
             return NULL;
         return client->client();
@@ -456,7 +456,7 @@ ClientList TabBox::currentClientList()
  */
 int TabBox::currentDesktop()
 {
-    return m_tabBox->desktop(m_index);
+    return m_tabBox->desktop(m_tabBox->currentIndex());
 }
 
 /*!
@@ -493,7 +493,6 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
 {
     if (!index.isValid())
         return;
-    m_index = index;
     m_tabBox->setCurrentIndex(index);
     if (notifyEffects) {
         emit tabBoxUpdated();
@@ -529,7 +528,6 @@ void TabBox::hide(bool abort)
     emit tabBoxClosed();
     if (isDisplayed())
         kDebug(1212) << "Tab box was not properly closed by an effect";
-    m_index = QModelIndex();
     m_tabBox->hide(abort);
     QApplication::syncX();
     XEvent otherEvent;
@@ -614,25 +612,35 @@ void TabBox::delayedShow()
 }
 
 
-void TabBox::handleMouseEvent(XEvent* e)
+bool TabBox::handleMouseEvent(XEvent* e)
 {
     XAllowEvents(display(), AsyncPointer, xTime());
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
-            return;
+            return true;
     }
-    if (e->type != ButtonPress)
-        return;
+    if (e->type == ButtonPress) {
+        // press outside Tabbox?
+        QPoint pos(e->xbutton.x_root, e->xbutton.y_root);
+
+        if ((!m_isShown && isDisplayed())
+                || (!m_tabBox->containsPos(pos) &&
+                    (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3))) {
+            close();  // click outside closes tab
+            return true;
+        }
+    }
+    if (m_tabBoxMode == TabBoxWindowsMode || m_tabBoxMode == TabBoxWindowsAlternativeMode) {
+        // pass to declarative view
+        return false;
+    }
+
+    // not declarative view
+    if (e->type != ButtonPress) {
+        return true;
+    }
     QPoint pos(e->xbutton.x_root, e->xbutton.y_root);
-
-    if ((!m_isShown && isDisplayed())
-            || (!m_tabBox->containsPos(pos) &&
-                (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3))) {
-        close();  // click outside closes tab
-        return;
-    }
-
     QModelIndex index;
     if (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3) {
         index = m_tabBox->indexAt(pos);
@@ -640,7 +648,7 @@ void TabBox::handleMouseEvent(XEvent* e)
             if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(index))) {
                 if (Workspace::self()->hasClient(client->client())) {
                     client->client()->closeWindow();
-                    return;
+                    return true;
                 }
             }
         }
@@ -651,6 +659,7 @@ void TabBox::handleMouseEvent(XEvent* e)
 
     if (index.isValid())
         setCurrentIndex(index);
+    return true;
 }
 
 void TabBox::grabbedKeyEvent(QKeyEvent* event)

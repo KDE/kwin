@@ -280,11 +280,18 @@ void GLTexture::render(QRegion region, const QRect& rect)
             r.x() + rect.width(), r.y(),
             r.x() + rect.width(), r.y() + rect.height()
         };
+#ifdef KWIN_HAVE_OPENGLES
+        const float texWidth = 1.0f;
+        const float texHeight = 1.0f;
+#else
+        const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
+        const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;
+#endif
         const float texcoords[ 4 * 2 ] = {
-            0.0f, d->m_yInverted ? 0.0f : 1.0f, // y needs to be swapped (normalized coords)
-            0.0f, d->m_yInverted ? 1.0f : 0.0f,
-            1.0f, d->m_yInverted ? 0.0f : 1.0f,
-            1.0f, d->m_yInverted ? 1.0f : 0.0f
+            0.0f, d->m_yInverted ? 0.0f : texHeight, // y needs to be swapped (normalized coords)
+            0.0f, d->m_yInverted ? texHeight : 0.0f,
+            texWidth, d->m_yInverted ? 0.0f : texHeight,
+            texWidth, d->m_yInverted ? texHeight : 0.0f
         };
         d->m_vbo->setData(4, 2, verts, texcoords);
     }

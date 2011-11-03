@@ -459,7 +459,7 @@ bool Workspace::activateNextClient(Client* c)
 
 void Workspace::setCurrentScreen(int new_screen)
 {
-    if (new_screen < 0 || new_screen > numScreens())
+    if (new_screen < 0 || new_screen >= numScreens())
         return;
     if (!options->focusPolicyIsReasonable())
         return;

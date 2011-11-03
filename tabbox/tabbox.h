@@ -143,7 +143,7 @@ public:
         return m_displayRefcount > 0;
     };
 
-    void handleMouseEvent(XEvent*);
+    bool handleMouseEvent(XEvent* e);
     void grabbedKeyEvent(QKeyEvent* event);
 
     bool isGrabbed() const {
@@ -219,7 +219,6 @@ private Q_SLOTS:
 
 private:
     TabBoxMode m_tabBoxMode;
-    QModelIndex m_index;
     TabBoxHandlerImpl* m_tabBox;
     bool m_delayShow;
     int m_delayShowTime;

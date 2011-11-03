@@ -673,6 +673,10 @@ namespace Oxygen
         // base color
         QColor color( palette.window().color() );
 
+        // add alpha channel
+        if( _itemData.count() == 1 && glowIsAnimated() )
+        { color = helper().alphaColor( color, glowIntensity() ); }
+
         // title height
         const int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
@@ -702,15 +706,23 @@ namespace Oxygen
 
             // adjustements to cope with shadow size and outline border.
             rect.adjust( -shadowSize, 0, shadowSize-1, 0 );
-            if( configuration().frameBorder() > Configuration::BorderTiny && configuration().drawTitleOutline() && isActive() && !isMaximized() )
-            { rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 ); }
+            if( configuration().drawTitleOutline() && ( isActive() || glowIsAnimated() ) && !isMaximized() )
+            {
+                if( configuration().frameBorder() == Configuration::BorderTiny ) rect.adjust( 1, 0, -1, 0 );
+                else if( configuration().frameBorder() > Configuration::BorderTiny ) rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 );
+            }
 
-            helper().slab( color, 0, shadowSize )->render( rect, painter, TileSet::Top );
+            if( rect.isValid() )
+            { helper().slab( color, 0, shadowSize )->render( rect, painter, TileSet::Top ); }
 
         }
 
-        if( configuration().drawTitleOutline() && isActive() )
+        if( configuration().drawTitleOutline() && ( isActive() || glowIsAnimated() ) )
         {
+
+            // save old hints and turn off anti-aliasing
+            const QPainter::RenderHints hints( painter->renderHints() );
+            painter->setRenderHint( QPainter::Antialiasing, false );
 
             // save mask and frame to where
             // grey window background is to be rendered
@@ -731,7 +743,7 @@ namespace Oxygen
 
                 const QColor shadow( helper().calcDarkColor( color ) );
                 painter->setPen( shadow );
-                painter->drawLine( rect.bottomLeft()+QPoint(0,1), rect.bottomRight()+QPoint(0,1) );
+                painter->drawLine( rect.bottomLeft()+QPoint(-1,1), rect.bottomRight()+QPoint(1,1) );
 
             }
 
@@ -760,6 +772,9 @@ namespace Oxygen
 
                 painter->drawLine( rect.topRight()+QPoint(1,0), rect.bottomRight()+QPoint(1, 0) );
             }
+
+            // restore old hints
+            painter->setRenderHints( hints );
 
             // in preview mode also adds center square
             if( isPreview() )
@@ -847,7 +862,14 @@ namespace Oxygen
         const int offset( -3 );
         const int voffset( 5-shadowSize );
         const QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
-        helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
+        QColor color( palette.color( widget()->backgroundRole() ) );
+
+        // add alpha channel
+        if( _itemData.count() == 1 && glowIsAnimated() )
+        { color = helper().alphaColor( color, glowIntensity() ); }
+
+        // render slab
+        helper().slab( color, 0, shadowSize )->render( adjustedRect, painter, TileSet::Tiles(TileSet::Top|TileSet::Left|TileSet::Right) );
 
     }
 
@@ -1590,8 +1612,8 @@ namespace Oxygen
 
             QPoint point = event->pos();
             int itemClicked( this->itemClicked( point ) );
-            displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
             _mouseButton = Qt::NoButton;
+            displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
             accepted = true; // displayClientMenu can possibly destroy the deco...
 
         }

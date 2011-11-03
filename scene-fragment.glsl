@@ -10,9 +10,7 @@ varying vec2 varyingTexCoords;
 void main() {
     vec4 tex = texture2D(sampler, varyingTexCoords);
 
-    if (u_forceAlpha > 0) {
-        tex.a = 1.0;
-    }
+    tex.a += float(u_forceAlpha);
 
     if( saturation != 1.0 ) {
         vec3 desaturated = tex.rgb * vec3( 0.30, 0.59, 0.11 );

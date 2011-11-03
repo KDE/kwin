@@ -41,7 +41,6 @@ Rules::Rules()
     , wmclasscomplete(UnimportantMatch)
     , windowrolematch(UnimportantMatch)
     , titlematch(UnimportantMatch)
-    , extrarolematch(UnimportantMatch)
     , clientmachinematch(UnimportantMatch)
     , types(NET::AllTypesMask)
     , placementrule(UnusedForceRule)
@@ -137,7 +136,6 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     wmclasscomplete = cfg.readEntry("wmclasscomplete" , false);
     READ_MATCH_STRING(windowrole, .toLower().toLatin1());
     READ_MATCH_STRING(title,);
-    READ_MATCH_STRING(extrarole, .toLower().toLatin1());
     READ_MATCH_STRING(clientmachine, .toLower().toLatin1());
     types = cfg.readEntry("types", uint(NET::AllTypesMask));
     READ_FORCE_RULE2(placement, QString(), Placement::policyFromString, false);
@@ -234,7 +232,6 @@ void Rules::write(KConfigGroup& cfg) const
     cfg.writeEntry("wmclasscomplete", wmclasscomplete);
     WRITE_MATCH_STRING(windowrole, (const char*), false);
     WRITE_MATCH_STRING(title, , false);
-    WRITE_MATCH_STRING(extrarole, (const char*), false);
     WRITE_MATCH_STRING(clientmachine, (const char*), false);
     if (types != NET::AllTypesMask)
         cfg.writeEntry("types", uint(types));
@@ -423,7 +420,6 @@ bool Rules::match(const Client* c) const
         return false;
     if (!matchTitle(c->caption(false)))
         return false;
-    // TODO extrarole
     if (!matchClientMachine(c->wmClientMachine(false)))
         return false;
     return true;
