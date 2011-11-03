@@ -194,6 +194,7 @@ bool FadeEffect::isFadeWindow(EffectWindow* w)
         e = w->data(WindowAddedGrabRole).value<void*>();
     if (w->windowClass() == "ksplashx ksplashx"
             || w->windowClass() == "ksplashsimple ksplashsimple"
+            || w->windowClass() == "qt-subapplication ksplashqml"
             || (e && e != this)) {
         // see login effect
         return false;

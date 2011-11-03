@@ -111,7 +111,8 @@ bool LoginEffect::isLoginSplash(EffectWindow* w)
     // TODO there should be probably a better way (window type?)
     // see also fade effect and composite.cpp
     if (w->windowClass() == "ksplashx ksplashx"
-            || w->windowClass() == "ksplashsimple ksplashsimple") {
+            || w->windowClass() == "ksplashsimple ksplashsimple"
+            || w->windowClass() == "qt-subapplication ksplashqml") {
         return true;
     }
     return false;
