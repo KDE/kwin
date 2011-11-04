@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <kmanagerselection.h>
 
-#include "kactivitycontroller.h"
+#include <Activities/Controller>
 
 #include "plugins.h"
 #include "utils.h"
@@ -307,7 +307,7 @@ private:
     QString activity_;
     QStringList allActivities_;
 
-    KActivityController activityController_;
+    KActivities::Controller activityController_;
 
 #ifdef KWIN_BUILD_TILING
     Tiling* m_tiling;
@@ -334,7 +334,7 @@ public:
         return allActivities_;
     }
     QStringList openActivityList() const {
-        return activityController_.listActivities(KActivityInfo::Running);
+        return activityController_.listActivities(KActivities::Info::Running);
     }
 
     // True when performing Workspace::updateClientArea().

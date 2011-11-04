@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdebug.h>
 
-#include "kactivityconsumer.h"
-
 #include "utils.h"
 #include "workspace.h"
 
