@@ -534,6 +534,9 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
     if (d->index == index) {
         return;
     }
+    if (!index.isValid()) {
+        return;
+    }
     if (d->view) {
         d->view->setCurrentIndex(index);
     }
