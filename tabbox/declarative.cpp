@@ -104,7 +104,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
     kdeclarative.initialize();
     kdeclarative.setupBindings();
     rootContext()->setContextProperty("clientModel", model);
-    updateQmlSource();
+    setSource(QUrl(KStandardDirs::locate("data", "kwin/tabbox/tabbox.qml")));
 
     // FrameSvg
     m_frame->setImagePath("dialogs/background");
@@ -116,6 +116,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
 
 void DeclarativeView::showEvent(QShowEvent *event)
 {
+    updateQmlSource();
     m_currentScreenGeometry = Kephal::ScreenUtils::screenGeometry(tabBox->activeScreen());
     rootObject()->setProperty("screenWidth", m_currentScreenGeometry.width());
     rootObject()->setProperty("screenHeight", m_currentScreenGeometry.height());
@@ -188,7 +189,6 @@ void DeclarativeView::updateQmlSource()
         return;
     }
     m_currentLayout = tabBox->config().layoutName();
-    setSource(QUrl(KStandardDirs::locate("data", "kwin/tabbox/tabbox.qml")));
     QString file = KStandardDirs::locate("data", "kwin/tabbox/" + m_currentLayout.toLower().replace(' ', '_') + ".qml");
     if (file.isNull()) {
         // fallback to default
