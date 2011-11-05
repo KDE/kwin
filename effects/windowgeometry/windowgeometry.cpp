@@ -105,7 +105,7 @@ void WindowGeometry::slotWindowStartUserMovedResized(EffectWindow *w)
     myResizeWindow = w;
     myOriginalGeometry = w->geometry();
     myCurrentGeometry = w->geometry();
-    effects->addRepaint(myCurrentGeometry.adjusted(-20, -20, 20, 20));
+    slotWindowStepUserMovedResized(w, w->geometry());
 }
 
 void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
