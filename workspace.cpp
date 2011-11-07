@@ -2098,6 +2098,21 @@ void Workspace::moveItemToClientGroup(ClientGroup* oldGroup, int oldIndex,
     group->add(c, index, true);
 }
 
+void Workspace::removeClientGroup(ClientGroup* group)
+{
+    int index = clientGroups.indexOf(group);
+    if (index == -1) {
+        return;
+    }
+
+    clientGroups.removeAt(index);
+    for (; index < clientGroups.size(); index++) {
+        foreach (Client *c, clientGroups.at(index)->clients()) {
+            c->setClientGroup(c->clientGroup());
+        }
+    }
+}
+
 // To accept "mainwindow#1" to "mainwindow#2"
 static QByteArray truncatedWindowRole(QByteArray a)
 {

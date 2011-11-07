@@ -319,7 +319,7 @@ bool Client::manage(Window w, bool isMapped)
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;
     if (!noBorder()) {
-        client_group = NULL;
+        setClientGroup(NULL);
         // Automatically add to previous groups on session restore
         if (session && session->clientGroupClient && session->clientGroupClient != this && session->clientGroupClient->clientGroup())
             session->clientGroupClient->clientGroup()->add(this, -1, true);
@@ -349,7 +349,7 @@ bool Client::manage(Window w, bool isMapped)
             }
         }
         if (!client_group)
-            client_group = new ClientGroup(this);
+            setClientGroup(new ClientGroup(this));
     }
 
     updateDecoration(false);   // Also gravitates

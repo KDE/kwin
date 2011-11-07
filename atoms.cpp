@@ -123,6 +123,9 @@ Atoms::Atoms()
     atoms[n] = &kde_net_wm_opaque_region;
     names[n++] = (char*) "_KDE_NET_WM_OPAQUE_REGION";
 
+    atoms[n] = &kde_net_wm_tab_group;
+    names[n++] = (char*) "_KDE_NET_WM_TAB_GROUP";
+
     assert(n <= max);
 
     XInternAtoms(display(), names, n, false, atoms_return);

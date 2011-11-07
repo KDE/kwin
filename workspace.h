@@ -1225,11 +1225,6 @@ inline void Workspace::addClientGroup(ClientGroup* group)
     clientGroups.append(group);
 }
 
-inline void Workspace::removeClientGroup(ClientGroup* group)
-{
-    clientGroups.removeAll(group);
-}
-
 } // namespace
 
 #endif

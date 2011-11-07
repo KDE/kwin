@@ -1834,6 +1834,14 @@ QString Client::caption(bool full) const
     return full ? cap_normal + cap_suffix : cap_normal;
 }
 
+void Client::setClientGroup(ClientGroup* group)
+{
+    client_group = group;
+    unsigned long data[1] = {(unsigned long)workspace()->indexOfClientGroup(group)};
+    XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, atoms->kde_net_wm_tab_group, 32,
+                    PropModeReplace, (unsigned char*)(data), 1);
+}
+
 void Client::dontMoveResize()
 {
     buttonDown = false;

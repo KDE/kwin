@@ -818,11 +818,6 @@ inline Group* Client::group()
     return in_group;
 }
 
-inline void Client::setClientGroup(ClientGroup* group)
-{
-    client_group = group;
-}
-
 inline ClientGroup* Client::clientGroup() const
 {
     return client_group;
