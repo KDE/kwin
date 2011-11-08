@@ -558,6 +558,7 @@ Pixmap Toplevel::createWindowPixmap()
     assert(compositing());
     if (unredirected())
         return None;
+    damageRatio = 0.0;
     grabXServer();
     KXErrorHandler err;
     Pixmap pix = XCompositeNameWindowPixmap(display(), frameId());
@@ -667,6 +668,8 @@ void Toplevel::addDamage(int x, int y, int w, int h)
     // resizing the decoration may lag behind a bit and when shrinking there
     // may be a damage event coming with size larger than the current window size
     r &= rect();
+    if (r.isEmpty())
+        return;
     damage_region += r;
     int damageArea = 0;
     foreach (const QRect &r2, damage_region.rects())
