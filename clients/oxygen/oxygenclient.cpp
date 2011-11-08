@@ -830,8 +830,12 @@ namespace Oxygen
         const int titleHeight = layoutMetric(LM_TitleHeight);
         const int titleTop = layoutMetric(LM_TitleEdgeTop) + r.top();
 
+        // set color
         QColor local( color );
-        if( glowIsAnimated() ) local = helper().alphaColor( color, glowIntensity() );
+        if( glowIsAnimated() && configuration().separatorMode() != Configuration::SeparatorAlways )
+        { local = helper().alphaColor( color, glowIntensity() ); }
+
+        // render
         helper().drawSeparator( painter, QRect(r.top(), titleTop+titleHeight-1.5, r.width(), 2).translated( -position ), local, Qt::Horizontal);
 
         if (clipRect.isValid()) { painter->restore(); }
