@@ -1838,7 +1838,7 @@ void Client::setClientGroup(ClientGroup* group)
 {
     client_group = group;
     unsigned long data[1] = {(unsigned long)workspace()->indexOfClientGroup(group)};
-    XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, atoms->kde_net_wm_tab_group, 32,
+    XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)(data), 1);
 }
 
