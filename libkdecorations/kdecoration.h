@@ -205,10 +205,29 @@ public:
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
 
     /**
-    *
-    * Returns mimeType used to drag and drop clientGroupItems
-    */
+     * Regions that can be returned by KDecorationUnstable::region().
+     */
+    enum Region {
+        /**
+         * This is an invisible input region that can be used to expand the
+         * borders by an invisible amount, both inside and outside the
+         * decoration. The intended use case is to provide an active border
+         * area that's larger than the visible border.
+         *
+         * The mousePosition() implementation must return correct values
+         * for the pixels inside this region.
+         *
+         * Note that mouse events that occur within this region are not
+         * forwarded to the decoration. This may change in the future.
+         *
+         * @since 4.8
+         */
+        ExtendedBorderRegion
+    };
 
+    /**
+     * Returns the mimeType used to drag and drop clientGroupItems
+     */
     static QString clientGroupItemDragMimeType();
 
 };
@@ -978,6 +997,17 @@ public:
      * a button press was for window tab dragging or for displaying the client menu.
      */
     WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
+
+public Q_SLOTS:
+    /**
+     * This slot can be reimplemented to return the regions defined
+     * by KDecorationDefines::Region.
+     *
+     * The default implementation always returns an empty region.
+     *
+     * @since 4.8
+     */
+    QRegion region(KDecorationDefines::Region r);
 };
 
 inline

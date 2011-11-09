@@ -474,6 +474,11 @@ KDecoration::WindowOperation KDecorationUnstable::buttonToWindowOperation(Qt::Mo
     return static_cast< KDecorationBridgeUnstable* >(bridge_)->buttonToWindowOperation(button);
 }
 
+QRegion KDecorationUnstable::region(KDecorationDefines::Region)
+{
+    return QRegion();
+}
+
 QString KDecorationDefines::clientGroupItemDragMimeType()
 {
     return "text/ClientGroupItem";
