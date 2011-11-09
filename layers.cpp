@@ -163,10 +163,16 @@ void Workspace::propagateClients(bool propagate_new_clients)
     }
 #endif
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
-        if (stacking_order.at(i)->hiddenPreview()) {
+        Client *client = stacking_order.at(i);
+        if (client->hiddenPreview()) {
             continue;
         }
-        newWindowStack << (Window*)stacking_order.at(i)->frameId();
+
+        if (client->inputId())
+            // Stack the input window above the frame
+            newWindowStack << (Window*)client->inputId();
+
+        newWindowStack << (Window*)client->frameId();
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?

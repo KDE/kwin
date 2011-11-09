@@ -130,6 +130,7 @@ Client::Client(Workspace* ws)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
+    , input_window(None)
 {
     // TODO: Do all as initialization
 
@@ -348,6 +349,52 @@ void Client::destroyClient()
     deleteClient(this, Allowed);
 }
 
+void Client::updateInputWindow()
+{
+    QRegion region;
+
+    if (!noBorder() && dynamic_cast<KDecorationUnstable*>(decoration)) {
+        // This function is implemented as a slot to avoid breaking binary
+        // compatibility
+        QMetaObject::invokeMethod(decoration, "region", Qt::DirectConnection,
+                Q_RETURN_ARG(QRegion, region),
+                Q_ARG(KDecorationDefines::Region, KDecorationDefines::ExtendedBorderRegion));
+    }
+
+    if (region.isEmpty()) {
+        if (input_window) {
+            XDestroyWindow(display(), input_window);
+            input_window = None;
+        }
+        return;
+    }
+
+    QRect bounds = region.boundingRect();
+    input_offset = bounds.topLeft();
+
+    // Move the bounding rect to screen coordinates
+    bounds.translate(geometry().topLeft());
+
+    // Move the region to input window coordinates
+    region.translate(-input_offset);
+
+    if (!input_window) {
+        XSetWindowAttributes attr;
+        attr.event_mask = EnterWindowMask | LeaveWindowMask |
+                          ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+        attr.override_redirect = True;
+
+        input_window = XCreateWindow(display(), rootWindow(), bounds.x(), bounds.y(),
+                                     bounds.width(), bounds.height(), 0, 0,
+                                     InputOnly, 0, CWEventMask | CWOverrideRedirect, &attr);
+    } else {
+        XMoveResizeWindow(display(), input_window, bounds.x(), bounds.y(),
+                          bounds.width(), bounds.height());
+    }
+
+    XShapeCombineRegion(display(), input_window, ShapeInput, 0, 0, region.handle(), ShapeSet);
+}
+
 void Client::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force &&
@@ -382,6 +429,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     if (check_workspace_pos)
         checkWorkspacePosition(oldgeom);
+    updateInputWindow();
     blockGeometryUpdates(false);
     if (!noBorder())
         decoration->widget()->show();
@@ -414,6 +462,10 @@ void Client::destroyDecoration()
         if (!deleting) {
             emit geometryShapeChanged(this, oldgeom);
         }
+    }
+    if (inputId()) {
+        XDestroyWindow(display(), input_window);
+        input_window = None;
     }
 }
 
@@ -737,6 +789,7 @@ void Client::resizeDecoration(const QSize& s)
     } else { // oldSize != newSize
         resizeDecorationPixmaps();
     }
+    updateInputWindow();
 }
 
 bool Client::noBorder() const
@@ -1185,8 +1238,11 @@ void Client::internalShow(allowed_t)
     mapping_state = Mapped;
     if (old == Unmapped || old == Withdrawn)
         map(Allowed);
-    if (old == Kept)
+    if (old == Kept) {
+        if (inputId())
+            XMapWindow(display(), inputId());
         updateHiddenPreview();
+    }
     workspace()->checkUnredirect();
 }
 
@@ -1214,6 +1270,8 @@ void Client::internalKeep(allowed_t)
     mapping_state = Kept;
     if (old == Unmapped || old == Withdrawn)
         map(Allowed);
+    if (inputId())
+        XUnmapWindow(display(), inputId());
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
@@ -1238,6 +1296,8 @@ void Client::map(allowed_t)
     if (!isShade()) {
         XMapWindow(display(), wrapper);
         XMapWindow(display(), client);
+        if (inputId())
+            XMapWindow(display(), inputId());
         exportMappingState(NormalState);
     } else
         exportMappingState(IconicState);
@@ -1258,6 +1318,8 @@ void Client::unmap(allowed_t)
     XUnmapWindow(display(), frameId());
     XUnmapWindow(display(), wrapper);
     XUnmapWindow(display(), client);
+    if (inputId())
+        XUnmapWindow(display(), inputId());
     XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
     if (decoration != NULL)
         decoration->widget()->hide(); // Not really necessary, but let it know the state
@@ -2182,6 +2244,8 @@ void Client::updateCursor()
     if (decoration != NULL)
         decoration->widget()->setCursor(cursor);
     XDefineCursor(display(), frameId(), cursor.handle());
+    if (inputId())
+        XDefineCursor(display(), inputId(), cursor.handle());
     if (moveResizeMode)   // XDefineCursor doesn't change cursor if there's pointer grab active
         XChangeActivePointerGrab(display(),
                                  ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,

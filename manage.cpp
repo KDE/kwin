@@ -149,6 +149,9 @@ bool Client::manage(Window w, bool isMapped)
     KStartupInfoData asn_data;
     bool asn_valid = workspace()->checkStartupNotification(window(), asn_id, asn_data);
 
+    // Make sure that the input window is created before we update the stacking order
+    updateInputWindow();
+
     workspace()->updateClientLayer(this);
 
     SessionInfo* session = workspace()->takeSessionInfo(this);

@@ -289,6 +289,9 @@ bool Workspace::workspaceEvent(XEvent * e)
     } else if (Client* c = findClient(FrameIdMatchPredicate(e->xany.window))) {
         if (c->windowEvent(e))
             return true;
+    } else if (Client *c = findClient(InputIdMatchPredicate(e->xany.window))) {
+        if (c->windowEvent(e))
+            return true;
     } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xany.window))) {
         if (c->windowEvent(e))
             return true;
@@ -1090,7 +1093,7 @@ bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int
         return true;
     }
 
-    if (w == wrapperId() || w == frameId() || w == decorationId()) {
+    if (w == wrapperId() || w == frameId() || w == decorationId() || w == inputId()) {
         // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime();
         workspace()->setWasUserInteraction();
@@ -1173,7 +1176,11 @@ bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int
         XAllowEvents(display(), ReplayPointer, CurrentTime);  //xTime());
         return true;
     }
-    if (w == decorationId()) {
+    if (w == decorationId() || w == inputId()) {
+        if (w == inputId()) {
+            x = x_root - geometry().x() + padding_left;
+            y = y_root - geometry().y() + padding_top;
+        }
         if (dynamic_cast<KDecorationUnstable*>(decoration))
             // New API processes core events FIRST and only passes unused ones to the decoration
             return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
@@ -1262,7 +1269,7 @@ bool Client::buttonReleaseEvent(Window w, int /*button*/, int state, int x, int 
         XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
         return true;
     }
-    if (w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
+    if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
         return true;
     x = this->x(); // translate from grab window to local coords
     y = this->y();
@@ -1348,12 +1355,17 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent(Window w, int /*state*/, int x, int y, int x_root, int y_root)
 {
-    if (w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
+    if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
     if (!buttonDown) {
         QPoint mousePos(x, y);
         if (w == frameId())
             mousePos += QPoint(padding_left, padding_top);
+        if (w == inputId()) {
+            int x = x_root - geometry().x() + padding_left;
+            int y = y_root - geometry().y() + padding_top;
+            mousePos = QPoint(x, y);
+        }
         Position newmode = mousePosition(mousePos);
         if (newmode != mode) {
             mode = newmode;

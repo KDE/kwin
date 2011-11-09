@@ -90,6 +90,7 @@ public:
     Client(Workspace* ws);
     Window wrapperId() const;
     Window decorationId() const;
+    Window inputId() const { return input_window; }
 
     const Client* transientFor() const;
     Client* transientFor();
@@ -137,6 +138,7 @@ public:
     virtual QPoint clientPos() const; // Inside of geometry()
     virtual QSize clientSize() const;
     virtual QRect visibleRect() const;
+    QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(XEvent* e);
     virtual bool eventFilter(QObject* o, QEvent* e);
@@ -571,6 +573,8 @@ private:
 
     void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
 
+    void updateInputWindow();
+
     Window client;
     Window wrapper;
     KDecoration* decoration;
@@ -726,6 +730,9 @@ private:
     bool activitiesDefined; //whether the x property was actually set
 
     bool needsSessionInteract;
+
+    Window input_window;
+    QPoint input_offset;
 };
 
 /**
@@ -1022,6 +1029,7 @@ inline bool Client::hiddenPreview() const
 }
 
 KWIN_COMPARE_PREDICATE(WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value);
+KWIN_COMPARE_PREDICATE(InputIdMatchPredicate, Client, Window, cl->inputId() == value);
 
 } // namespace
 

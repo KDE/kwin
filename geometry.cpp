@@ -1917,8 +1917,13 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force, bool
                 XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
         }
         updateShape();
-    } else
+    } else {
         XMoveWindow(display(), frameId(), x, y);
+        if (inputId()) {
+            const QPoint pos = QPoint(x, y) + inputPos();
+            XMoveWindow(display(), inputId(), pos.x(), pos.y());
+        }
+    }
     // SELI TODO won't this be too expensive?
     sendSyntheticConfigureNotify();
     updateWindowRules();
