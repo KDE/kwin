@@ -105,11 +105,7 @@ void DetectDialog::executeDialog()
     };
     widget->class_label->setText(wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')');
     widget->role_label->setText(role);
-    widget->use_role->setEnabled(!role.isEmpty());
-    if (widget->use_role->isEnabled())
-        widget->use_role->setChecked(true);
-    else
-        widget->use_whole_class->setChecked(true);
+    widget->match_role->setEnabled(!role.isEmpty());
     if (type == NET::Unknown)
         widget->type_label->setText(i18n("Unknown - will be treated as Normal Window"));
     else
@@ -125,19 +121,19 @@ void DetectDialog::executeDialog()
 
 QByteArray DetectDialog::selectedClass() const
 {
-    if (widget->use_class->isChecked() || widget->use_role->isChecked())
-        return wmclass_class;
-    return wmclass_name + ' ' + wmclass_class;
+    if (widget->match_whole_class->isChecked())
+        return wmclass_name + ' ' + wmclass_class;
+    return wmclass_class;
 }
 
 bool DetectDialog::selectedWholeClass() const
 {
-    return widget->use_whole_class->isChecked();
+    return widget->match_whole_class->isChecked();
 }
 
 QByteArray DetectDialog::selectedRole() const
 {
-    if (widget->use_role->isChecked())
+    if (widget->match_role->isChecked())
         return role;
     return "";
 }
@@ -154,7 +150,7 @@ Rules::StringMatch DetectDialog::titleMatch() const
 
 bool DetectDialog::selectedWholeApp() const
 {
-    return widget->use_class->isChecked();
+    return !widget->match_type->isChecked();
 }
 
 NET::WindowType DetectDialog::selectedType() const
