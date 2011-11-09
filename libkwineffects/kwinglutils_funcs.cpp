@@ -226,11 +226,15 @@ void glResolveFunctions()
         glGetFramebufferAttachmentParameteriv = NULL;
         glGenerateMipmap = NULL;
     }
-    if (hasGLExtension("GL_EXT_framebuffer_blit")) {
+
+    if (hasGLExtension("GL_ARB_framebuffer_object")) {
+        glBlitFramebuffer = (glBlitFramebuffer_func) getProcAddress("glBlitFramebuffer");
+    } else if (hasGLExtension("GL_EXT_framebuffer_blit")) {
         glBlitFramebuffer = (glBlitFramebuffer_func) getProcAddress("glBlitFramebufferEXT");
     } else {
         glBlitFramebuffer = NULL;
     }
+
     if (hasGLExtension("GL_ARB_shading_language_100") && hasGLExtension("GL_ARB_fragment_shader")) {
         GL_RESOLVE_WITH_EXT(glCreateShader, glCreateShaderObjectARB);
         GL_RESOLVE_WITH_EXT(glShaderSource, glShaderSourceARB);
