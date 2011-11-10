@@ -106,7 +106,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.effectSelector, SIGNAL(configCommitted(QByteArray)),
             this, SLOT(reparseConfiguration(QByteArray)));
 
-    connect(ui.windowSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.desktopSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
@@ -149,20 +148,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     // search the effect names
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List services;
-    QString boxswitch, presentwindows, coverswitch, flipswitch, slide, cube, fadedesktop;
-    // window switcher
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_boxswitch'");
-    if (!services.isEmpty())
-        boxswitch = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
-    if (!services.isEmpty())
-        presentwindows = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_coverswitch'");
-    if (!services.isEmpty())
-        coverswitch = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_flipswitch'");
-    if (!services.isEmpty())
-        flipswitch = services.first()->name();
+    QString slide, cube, fadedesktop;
     // desktop switcher
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_slide'");
     if (!services.isEmpty())
@@ -173,12 +159,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_fadedesktop'");
     if (!services.isEmpty())
         fadedesktop = services.first()->name();
-    // init the combo boxes
-    ui.windowSwitchingCombo->addItem(i18n("No Effect"));
-    ui.windowSwitchingCombo->addItem(boxswitch);
-    ui.windowSwitchingCombo->addItem(presentwindows);
-    ui.windowSwitchingCombo->addItem(coverswitch);
-    ui.windowSwitchingCombo->addItem(flipswitch);
 
     ui.desktopSwitchingCombo->addItem(i18n("No Effect"));
     ui.desktopSwitchingCombo->addItem(slide);
@@ -297,22 +277,6 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
 #undef LOAD_EFFECT_CONFIG
-
-    // window switching
-    // Set current option to "none" if no plugin is activated.
-    ui.windowSwitchingCombo->setCurrentIndex(0);
-    KConfigGroup boxswitchconfig(mKWinConfig, "Effect-BoxSwitch");
-    if (effectEnabled("boxswitch", effectconfig) && boxswitchconfig.readEntry("TabBox", true))
-        ui.windowSwitchingCombo->setCurrentIndex(1);
-    KConfigGroup coverswitchconfig(mKWinConfig, "Effect-CoverSwitch");
-    if (effectEnabled("coverswitch", effectconfig) && coverswitchconfig.readEntry("TabBox", false))
-        ui.windowSwitchingCombo->setCurrentIndex(3);
-    KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
-    if (effectEnabled("flipswitch", effectconfig) && flipswitchconfig.readEntry("TabBox", false))
-        ui.windowSwitchingCombo->setCurrentIndex(4);
-    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    if (effectEnabled("presentwindows", effectconfig) && presentwindowsconfig.readEntry("TabBox", false))
-        ui.windowSwitchingCombo->setCurrentIndex(2);
 
     // desktop switching
     // Set current option to "none" if no plugin is activated.
@@ -456,49 +420,6 @@ void KWinCompositingConfig::saveGeneralTab()
     //  enable/disable desktopgrid's animation according to this setting
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
 #undef WRITE_EFFECT_CONFIG
-
-    int windowSwitcher = ui.windowSwitchingCombo->currentIndex();
-    bool boxSwitch              = false;
-    bool presentWindowSwitching = false;
-    bool coverSwitch            = false;
-    bool flipSwitch             = false;
-    switch(windowSwitcher) {
-    case 1:
-        boxSwitch = true;
-        break;
-    case 2:
-        presentWindowSwitching = true;
-        break;
-    case 3:
-        coverSwitch = true;
-        break;
-    case 4:
-        flipSwitch = true;
-        break;
-    default:
-        break; // nothing
-    }
-    // activate effects if not active
-    if (boxSwitch)
-        effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", true);
-    if (presentWindowSwitching)
-        effectconfig.writeEntry("kwin4_effect_presentwindowsEnabled", true);
-    if (coverSwitch)
-        effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
-    if (flipSwitch)
-        effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
-    KConfigGroup boxswitchconfig(mKWinConfig, "Effect-BoxSwitch");
-    boxswitchconfig.writeEntry("TabBox", boxSwitch);
-    boxswitchconfig.sync();
-    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
-    presentwindowsconfig.sync();
-    KConfigGroup coverswitchconfig(mKWinConfig, "Effect-CoverSwitch");
-    coverswitchconfig.writeEntry("TabBox", coverSwitch);
-    coverswitchconfig.sync();
-    KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
-    flipswitchconfig.writeEntry("TabBox", flipSwitch);
-    flipswitchconfig.sync();
 
     int desktopSwitcher = ui.desktopSwitchingCombo->currentIndex();
     switch(desktopSwitcher) {
@@ -699,7 +620,6 @@ void KWinCompositingConfig::defaults()
     ui.effectWinManagement->setChecked(true);
     ui.effectAnimations->setChecked(true);
 
-    ui.windowSwitchingCombo->setCurrentIndex(1);
     ui.desktopSwitchingCombo->setCurrentIndex(1);
     ui.animationSpeedCombo->setCurrentIndex(3);
 
