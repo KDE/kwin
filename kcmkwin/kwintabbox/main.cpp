@@ -156,14 +156,10 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     connect(m_primaryTabBoxUi->effectInfoButton, SIGNAL(clicked(bool)), this, SLOT(slotAboutEffectClicked()));
     connect(m_primaryTabBoxUi->effectConfigButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureEffectClicked()));
 
-    connect(m_primaryTabBoxUi->layoutConfigButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureLayoutClicked()));
-
     // effects alternative
     connect(m_alternativeTabBoxUi->effectCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotEffectSelectionChangedAlternative(int)));
     connect(m_alternativeTabBoxUi->effectInfoButton, SIGNAL(clicked(bool)), this, SLOT(slotAboutEffectClickedAlternative()));
     connect(m_alternativeTabBoxUi->effectConfigButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureEffectClickedAlternative()));
-
-    connect(m_alternativeTabBoxUi->layoutConfigButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureLayoutClickedAlternative()));
 
     // check focus policy - we don't offer configs for unreasonable focus policies
     KConfigGroup config(m_config, "Windows");
