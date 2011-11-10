@@ -435,7 +435,6 @@ void KWinTabBoxConfig::effectSelectionChanged(KWinTabBoxConfigForm* ui, int inde
     if (index > 0)
         enabled = true;
     ui->effectInfoButton->setEnabled(enabled);
-    ui->effectConfigButton->setEnabled(enabled);
 }
 
 void KWinTabBoxConfig::slotAboutEffectClicked()
@@ -500,11 +499,19 @@ void KWinTabBoxConfig::aboutEffectClicked(KWinTabBoxConfigForm* ui)
 
 void KWinTabBoxConfig::slotConfigureEffectClicked()
 {
+    if (m_primaryTabBoxUi->effectCombo->currentIndex() == 0) {
+        slotConfigureLayoutClicked();
+        return;
+    }
     configureEffectClicked(m_primaryTabBoxUi);
 }
 
 void KWinTabBoxConfig::slotConfigureEffectClickedAlternative()
 {
+    if (m_alternativeTabBoxUi->effectCombo->currentIndex() == 0) {
+        slotConfigureLayoutClickedAlternative();
+        return;
+    }
     configureEffectClicked(m_alternativeTabBoxUi);
 }
 
