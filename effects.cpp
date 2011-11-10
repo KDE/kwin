@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "thumbnailitem.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -1278,7 +1279,9 @@ void EffectsHandlerImpl::slotHideOutline()
 // EffectWindowImpl
 //****************************************
 
-EffectWindowImpl::EffectWindowImpl() : EffectWindow()
+EffectWindowImpl::EffectWindowImpl()
+    : QObject(NULL)
+    , EffectWindow()
     , toplevel(NULL)
     , sw(NULL)
 {
@@ -1741,6 +1744,36 @@ EffectWindow* effectWindow(Scene::Window* w)
     EffectWindowImpl* ret = w->window()->effectWindow();
     ret->setSceneWindow(w);
     return ret;
+}
+
+void EffectWindowImpl::registerThumbnail(ThumbnailItem *item)
+{
+    insertThumbnail(item);
+    connect(item, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
+    connect(item, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
+}
+
+void EffectWindowImpl::thumbnailDestroyed(QObject *object)
+{
+    // we know it is a ThumbnailItem
+    m_thumbnails.remove(static_cast<ThumbnailItem*>(object));
+}
+
+void EffectWindowImpl::thumbnailTargetChanged()
+{
+    if (ThumbnailItem *item = qobject_cast<ThumbnailItem*>(sender())) {
+        insertThumbnail(item);
+    }
+}
+
+void EffectWindowImpl::insertThumbnail(ThumbnailItem *item)
+{
+    EffectWindow *w = effects->findWindow(item->wId());
+    if (w) {
+        m_thumbnails.insert(item, QWeakPointer<EffectWindowImpl>(static_cast<EffectWindowImpl*>(w)));
+    } else {
+        m_thumbnails.insert(item, QWeakPointer<EffectWindowImpl>());
+    }
 }
 
 //****************************************

@@ -37,6 +37,8 @@ class KService;
 namespace KWin
 {
 
+class ThumbnailItem;
+
 class Client;
 class Deleted;
 class Unmanaged;
@@ -218,8 +220,9 @@ private:
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
 };
 
-class EffectWindowImpl : public EffectWindow
+class EffectWindowImpl : public QObject, public EffectWindow
 {
+    Q_OBJECT
 public:
     EffectWindowImpl();
     virtual ~EffectWindowImpl();
@@ -315,10 +318,20 @@ public:
 
     void setData(int role, const QVariant &data);
     QVariant data(int role) const;
+
+    void registerThumbnail(ThumbnailItem *item);
+    QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
+        return m_thumbnails;
+    }
+private Q_SLOTS:
+    void thumbnailDestroyed(QObject *object);
+    void thumbnailTargetChanged();
 private:
+    void insertThumbnail(ThumbnailItem *item);
     Toplevel* toplevel;
     Scene::Window* sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
+    QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> > m_thumbnails;
 };
 
 class EffectWindowGroupImpl

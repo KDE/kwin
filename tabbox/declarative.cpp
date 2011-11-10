@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/WindowEffects>
 #include <kdeclarative.h>
 #include <kephal/screens.h>
+// KWin
+#include "thumbnailitem.h"
 
 namespace KWin
 {
@@ -103,6 +105,8 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
+    qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+    rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
     rootContext()->setContextProperty("clientModel", model);
     setSource(QUrl(KStandardDirs::locate("data", "kwin/tabbox/tabbox.qml")));
 

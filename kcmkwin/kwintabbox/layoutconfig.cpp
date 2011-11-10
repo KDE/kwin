@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "layoutconfig.h"
+#include "thumbnailitem.h"
 #include <QtDeclarative/qdeclarative.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -60,6 +61,7 @@ LayoutConfig::LayoutConfig(QWidget* parent)
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
+    qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("clientModel", model);
     rootContext()->setContextProperty("layoutModel", m_layoutsModels);
     setSource(KStandardDirs::locate("data", "kwin/kcm_kwintabbox/main.qml"));
@@ -131,6 +133,7 @@ ExampleClientModel::ExampleClientModel (QObject* parent)
     roles[Qt::UserRole] = "caption";
     roles[Qt::UserRole+1] = "minimized";
     roles[Qt::UserRole+2] = "desktopName";
+    roles[Qt::UserRole+4] = "windowId";
     setRoleNames(roles);
     init();
 }
@@ -167,6 +170,18 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
         return i18nc("An example Desktop Name", "Desktop 1");
     case Qt::UserRole+3:
         return KDesktopFile(m_nameList.at(index.row())).readIcon();
+    case Qt::UserRole+4:
+        const QString desktopFile = KDesktopFile(m_nameList.at(index.row())).fileName().split('/').last();
+        if (desktopFile == "konqbrowser.desktop") {
+            return ThumbnailItem::Konqueror;
+        } else if (desktopFile == "KMail2.desktop") {
+            return ThumbnailItem::KMail;
+        } else if (desktopFile == "systemsettings.desktop") {
+            return ThumbnailItem::Systemsettings;
+        } else if (desktopFile == "dolphin.desktop") {
+            return ThumbnailItem::Dolphin;
+        }
+        return 0;
     }
     return QVariant();
 }
@@ -194,8 +209,9 @@ LayoutModel::~LayoutModel()
 void LayoutModel::init()
 {
     QStringList layouts;
-    layouts << "informative" << "compact" << "text" << "big_icons" << "small_icons";
+    layouts << "thumbnails" << "informative" << "compact" << "text" << "big_icons" << "small_icons";
     QStringList descriptions;
+    descriptions << i18nc("Name for a window switcher layout showing live window thumbnails", "Thumbnails");
     descriptions << i18nc("Name for a window switcher layout showing icon, name and desktop", "Informative");
     descriptions << i18nc("Name for a window switcher layout showing only icon and name", "Compact");
     descriptions << i18nc("Name for a window switcher layout showing only the name", "Text");

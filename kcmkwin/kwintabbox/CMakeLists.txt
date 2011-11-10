@@ -5,6 +5,7 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox )
 set(kcm_kwintabbox_PART_SRCS
     main.cpp
     layoutconfig.cpp
+    thumbnailitem.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientitemdelegate.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientmodel.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/declarative.cpp
@@ -27,3 +28,4 @@ install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 ########### install files ###############
 install( FILES kwintabbox.desktop DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES qml/main.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwintabbox)
+install( FILES thumbnails/konqueror.png thumbnails/kmail.png thumbnails/systemsettings.png thumbnails/dolphin.png DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwintabbox)

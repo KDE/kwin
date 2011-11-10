@@ -42,6 +42,7 @@ ClientModel::ClientModel(QObject* parent)
     roles[CaptionRole] = "caption";
     roles[DesktopNameRole] = "desktopName";
     roles[MinimizedRole] = "minimized";
+    roles[WIdRole] = "windowId";
     setRoleNames(roles);
 }
 

@@ -109,6 +109,7 @@ set(kwin_KDEINIT_SRCS
    scene_basic.cpp
    scene_xrender.cpp
    scene_opengl.cpp
+   thumbnailitem.cpp
    lanczosfilter.cpp
    deleted.cpp
    effects.cpp
@@ -254,6 +255,7 @@ install( FILES
     tabbox/qml/small_icons.qml
     tabbox/qml/tabbox.qml
     tabbox/qml/text.qml
+    tabbox/qml/thumbnails.qml
     tabbox/qml/IconTabBox.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/tabbox )
 

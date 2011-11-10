@@ -81,6 +81,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include <kephal/screens.h>
+#include "thumbnailitem.h"
 
 namespace KWin
 {
@@ -388,6 +389,44 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
     WindowPaintData data(w->window()->effectWindow());
     data.quads = quads;
     effects->paintWindow(effectWindow(w), mask, region, data);
+    // paint thumbnails on top of window
+    EffectWindowImpl *wImpl = static_cast<EffectWindowImpl*>(effectWindow(w));
+    for (QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
+            it != wImpl->thumbnails().constEnd();
+            ++it) {
+        if (it.value().isNull()) {
+            continue;
+        }
+        ThumbnailItem *item = it.key();
+        if (!item->isVisible()) {
+            continue;
+        }
+        EffectWindowImpl *thumb = it.value().data();
+        WindowPaintData thumbData(thumb);
+        thumbData.opacity = data.opacity;
+
+        QSizeF size = QSizeF(thumb->size());
+        size.scale(QSizeF(item->sceneBoundingRect().width(), item->sceneBoundingRect().height()), Qt::KeepAspectRatio);
+        thumbData.xScale = size.width() / static_cast<qreal>(thumb->width());
+        thumbData.yScale = size.height() / static_cast<qreal>(thumb->height());
+        const int x = item->scenePos().x() + w->x() + (item->width() - size.width()) / 2;
+        const int y = item->scenePos().y() + w->y() + (item->height() - size.height()) / 2;
+        thumbData.xTranslate = x - thumb->x();
+        thumbData.yTranslate = y - thumb->y();
+        int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
+        if (thumbData.opacity == 1.0) {
+            thumbMask |= PAINT_WINDOW_OPAQUE;
+        } else {
+            thumbMask |= PAINT_WINDOW_TRANSLUCENT;
+        }
+        if (x < wImpl->x() || x + size.width() > wImpl->x() + wImpl->width() ||
+            y < wImpl->y() || y + size.height() > wImpl->y() + wImpl->height()) {
+            // don't render windows outside the containing window.
+            // TODO: improve by spliting out the window quads which do not fit
+            continue;
+        }
+        effects->drawWindow(thumb, thumbMask, QRegion(x, y, size.width(), size.height()), thumbData);
+    }
 }
 
 // the function that'll be eventually called by paintWindow() above
