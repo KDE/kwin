@@ -27,6 +27,7 @@ Item {
     property int imagePathPrefix: (new Date()).getTime()
     property alias count: iconsListView.count
     property alias margins: hoverItem.margins
+    property alias currentItem: iconsListView.currentItem
 
 
     function setModel(model) {
@@ -54,10 +55,12 @@ Item {
     Component {
         id: listDelegate
         Item {
+            property alias data: iconItem.data
             id: delegateItem
             width: iconSize + hoverItem.margins.left + hoverItem.margins.right
             height: iconSize + hoverItem.margins.top + hoverItem.margins.bottom
             Image {
+                property variant data: model
                 id: iconItem
                 source: "image://client/" + index + "/" + iconsTabBox.imagePathPrefix + "-" + iconsListView.imageId + (index == iconsListView.currentIndex ? "/selected" : "")
                 sourceSize {

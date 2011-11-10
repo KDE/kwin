@@ -27,7 +27,7 @@ Item {
     property int screenHeight : 0
     property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.margins.left + background.margins.bottom
-    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom
+    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom + 40
     property bool canStretchX: false
     property bool canStretchY: false
     width: Math.min(Math.max(screenWidth * 0.1, optimalWidth), screenWidth * 0.9)
@@ -51,12 +51,43 @@ Item {
     IconTabBox {
         id: icons
         iconSize: 16
+        height: iconSize + background.margins.top + background.margins.bottom
         anchors {
-            fill: parent
+            top: parent.top
+            left: parent.left
+            right: parent.right
             topMargin: background.margins.top
             rightMargin: background.margins.right
             bottomMargin: background.margins.bottom
             leftMargin: background.margins.left
+        }
+    }
+    Item {
+        anchors {
+            top: icons.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: background.margins.left
+            rightMargin: background.margins.right
+            bottomMargin: background.margins.bottom
+        }
+        Text {
+            id: textItem
+            text: icons.currentItem ? icons.currentItem.data.caption : ""
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color: theme.textColor
+            elide: Text.ElideMiddle
+            font {
+                bold: true
+            }
+            anchors {
+                right: parent.right
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
+            }
         }
     }
 }
