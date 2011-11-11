@@ -190,14 +190,14 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
+set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
 
 if(KWIN_BUILD_SCRIPTING)
     set(kwinLibs ${kwinLibs} ${QT_QTSCRIPT_LIBRARY})
 endif(KWIN_BUILD_SCRIPTING)
 
 if(KWIN_BUILD_TABBOX)
-    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative)
+    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY})
 endif(KWIN_BUILD_TABBOX)
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
