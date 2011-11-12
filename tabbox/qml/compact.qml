@@ -188,6 +188,7 @@ Item {
             prefix: "hover"
             width: compactListView.width
         }
+        highlightMoveDuration: 250
         MouseArea {
             anchors.fill: parent
             onClicked: {

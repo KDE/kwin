@@ -153,6 +153,7 @@ Item {
             prefix: "hover"
             width: textListView.width
         }
+        highlightMoveDuration: 250
         MouseArea {
             anchors.fill: parent
             onClicked: {

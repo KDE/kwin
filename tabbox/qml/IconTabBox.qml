@@ -102,6 +102,7 @@ Item {
             width: iconSize + margins.left + margins.right
             height: iconSize + margins.top + margins.bottom
         }
+        highlightMoveDuration: 250
         MouseArea {
             anchors.fill: parent
             onClicked: {

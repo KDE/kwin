@@ -79,6 +79,7 @@ Item {
         property int thumbnailWidth: 300
         height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
         spacing: 5
+        highlightMoveDuration: 250
         anchors {
             top: parent.top
             left: parent.left

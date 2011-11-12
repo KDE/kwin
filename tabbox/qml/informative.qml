@@ -204,6 +204,7 @@ Item {
             prefix: "hover"
             width: listView.width
         }
+        highlightMoveDuration: 250
         MouseArea {
             anchors.fill: parent
             onClicked: {
