@@ -373,6 +373,38 @@ bool Client::manage(Window w, bool isMapped)
         placementDone = true;
     }
 
+    // bugs #285967, #286146, #183694
+    // geometry() now includes the requested size and the decoration and is at the correct screen/position (hopefully)
+    // Maximization for oversized windows must happen NOW.
+    // If we effectively pass keepInArea(), the window will resizeWithChecks() - i.e. constrained
+    // to the combo of all screen MINUS all struts on the edges
+    // If only one screen struts, this will affect screens as a side-effect, the window is artificailly shrinked
+    // below the screen size and as result no more maximized what breaks KMainWindow's stupid width+1, height+1 hack
+    // TODO: get KMainWindow a correct state storage what will allow to store the restore size as well.
+
+    if (!session) { // has a better handling of this
+        geom_restore = geometry(); // Remember restore geometry
+        if (isMaximizable() && (width() >= area.width() || height() >= area.height())) {
+            // Window is too large for the screen, maximize in the
+            // directions necessary
+            if (width() >= area.width() && height() >= area.height()) {
+                dontKeepInArea = true;
+                maximize(Client::MaximizeFull);
+                geom_restore = QRect(); // Use placement when unmaximizing
+            } else if (width() >= area.width()) {
+                maximize(Client::MaximizeHorizontal);
+                geom_restore = QRect(); // Use placement when unmaximizing
+                geom_restore.setY(y());   // But only for horizontal direction
+                geom_restore.setHeight(height());
+            } else if (height() >= area.height()) {
+                maximize(Client::MaximizeVertical);
+                geom_restore = QRect(); // Use placement when unmaximizing
+                geom_restore.setX(x());   // But only for vertical direction
+                geom_restore.setWidth(width());
+            }
+        }
+    }
+
     if ((!isSpecialWindow() || isToolbar()) && isMovable() && !dontKeepInArea)
         keepInArea(area, partial_keep_in_area);
 
@@ -438,26 +470,6 @@ bool Client::manage(Window w, bool isMapped)
             geom_fs_restore = session->fsrestore;
         }
     } else {
-        geom_restore = geometry(); // Remember restore geometry
-        if (isMaximizable() && (width() >= area.width() || height() >= area.height())) {
-            // Window is too large for the screen, maximize in the
-            // directions necessary
-            if (width() >= area.width() && height() >= area.height()) {
-                maximize(Client::MaximizeFull);
-                geom_restore = QRect(); // Use placement when unmaximizing
-            } else if (width() >= area.width()) {
-                maximize(Client::MaximizeHorizontal);
-                geom_restore = QRect(); // Use placement when unmaximizing
-                geom_restore.setY(y());   // But only for horizontal direction
-                geom_restore.setHeight(height());
-            } else if (height() >= area.height()) {
-                maximize(Client::MaximizeVertical);
-                geom_restore = QRect(); // Use placement when unmaximizing
-                geom_restore.setX(x());   // But only for vertical direction
-                geom_restore.setWidth(width());
-            }
-        }
-
         // Window may want to be maximized
         // done after checking that the window isn't larger than the workarea, so that
         // the restore geometry from the checks above takes precedence, and window
