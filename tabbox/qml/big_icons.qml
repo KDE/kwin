@@ -50,7 +50,7 @@ Item {
 
     IconTabBox {
         id: icons
-        iconSize: 64
+        iconSize: 128
         height: iconSize + background.margins.top + background.margins.bottom
         anchors {
             top: parent.top
