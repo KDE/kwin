@@ -1374,7 +1374,7 @@ void DesktopGridEffect::desktopsRemoved(int old)
 
 bool DesktopGridEffect::isActive() const
 {
-    return timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows());
+    return timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows());
 }
 
 /************************************************
