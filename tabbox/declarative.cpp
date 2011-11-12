@@ -77,6 +77,14 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     }
     *size = s;
     QPixmap icon = client->icon(s);
+    if (s.width() > icon.width() || s.height() > icon.height()) {
+        // icon is smaller than what we requested - QML would scale it which looks bad
+        QPixmap temp(s);
+        temp.fill(Qt::transparent);
+        QPainter p(&temp);
+        p.drawPixmap(s.width()/2 - icon.width()/2, s.height()/2 - icon.height()/2, icon);
+        icon = temp;
+    }
     if (parts.size() > 2) {
         KIconEffect *effect = KIconLoader::global()->iconEffect();
         KIconLoader::States state = KIconLoader::DefaultState;
