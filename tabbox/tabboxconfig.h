@@ -306,7 +306,7 @@ public:
         return 20;
     }
     static QString defaultLayoutName() {
-        return QString("Default");
+        return QString("thumbnails");
     }
     static QString defaultSelectedItemLayoutName() {
         return QString("Text");

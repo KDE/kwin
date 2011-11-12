@@ -86,7 +86,7 @@ void BoxSwitchEffect::reconfigure(ReconfigureFlags)
     elevate_window = conf.readEntry("ElevateSelected", true);
     mAnimateSwitch = conf.readEntry("AnimateSwitch", false);
 
-    primaryTabBox = conf.readEntry("TabBox", true);
+    primaryTabBox = conf.readEntry("TabBox", false);
     secondaryTabBox = conf.readEntry("TabBoxAlternative", false);
 }
 

@@ -555,10 +555,6 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
                                        config.readEntry<int>("ListMode", TabBoxConfig::defaultListMode())));
     tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
                                             config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
-    tabBoxConfig.setLayout(TabBoxConfig::LayoutMode(
-                               config.readEntry<int>("LayoutMode", TabBoxConfig::defaultLayoutMode())));
-    tabBoxConfig.setSelectedItemViewPosition(TabBoxConfig::SelectedItemViewPosition(
-                config.readEntry<int>("SelectedItem", TabBoxConfig::defaultSelectedItemViewPosition())));
 
     tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline",
                                 TabBoxConfig::defaultShowOutline()));
@@ -569,13 +565,7 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
     tabBoxConfig.setShowDesktop(config.readEntry<bool>("ShowDesktop",
                                 TabBoxConfig::defaultShowDesktop()));
 
-    tabBoxConfig.setMinWidth(config.readEntry<int>("MinWidth",
-                             TabBoxConfig::defaultMinWidth()));
-    tabBoxConfig.setMinHeight(config.readEntry<int>("MinHeight",
-                              TabBoxConfig::defaultMinHeight()));
-
     tabBoxConfig.setLayoutName(config.readEntry<QString>("LayoutName", TabBoxConfig::defaultLayoutName()));
-    tabBoxConfig.setSelectedItemLayoutName(config.readEntry<QString>("SelectedLayoutName", TabBoxConfig::defaultSelectedItemLayoutName()));
 }
 
 /*!
