@@ -158,8 +158,12 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
             dy = r.height() - r2.height();
 
             const QSize baseInc = w->basicUnit();
-            Q_ASSERT(baseInc.width() && baseInc.height());
-            myMeasure[1]->setText( i18nc(myResizeString, r.width()/baseInc.width(), r.height()/baseInc.height(), number(dx/baseInc.width()), number(dy/baseInc.height()) ) );
+            if (baseInc != QSize(1,1)) {
+                Q_ASSERT(baseInc.width() && baseInc.height());
+                const QSize csz = w->contentsRect().size();
+                myMeasure[1]->setText( i18nc(myResizeString, csz.width()/baseInc.width(), csz.height()/baseInc.height(), number(dx/baseInc.width()), number(dy/baseInc.height()) ) );
+            } else
+                myMeasure[1]->setText( i18nc(myResizeString, r.width(), r.height(), number(dx), number(dy) ) );
 
             // calc width for bottomright element, superfluous otherwise
             dx = r.right() - r2.right();
