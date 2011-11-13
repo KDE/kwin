@@ -210,7 +210,7 @@ inline QList< ClientGroupItem > ClientGroup::items() const
 
 inline Client* ClientGroup::visible()
 {
-    return clients_[visible_];
+    return clients_.at(visible_);
 }
 
 inline QSize ClientGroup::minSize() const
