@@ -1647,7 +1647,7 @@ void Client::updateActivities(bool includeTransients)
         workspace()->updateOnAllActivitiesOfTransients(this);
     workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
     updateVisibility();
-    updateWindowRules();
+    // TODO: add activity rule
 
     // Update states of all other windows in this group
     if (clientGroup())
