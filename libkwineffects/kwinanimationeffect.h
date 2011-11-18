@@ -29,13 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class FPx2 {
+class KWIN_EXPORT FPx2 {
 public:
     FPx2() { f[0] = f[1] = 0.0; valid = false; }
     FPx2(float v) { f[0] = f[1] = v; valid = true; }
     FPx2(float v1, float v2) { f[0] = v1; f[1] = v2; valid = true; }
     FPx2(const FPx2 &other) { f[0] = other.f[0]; f[1] = other.f[1]; valid = other.valid; }
+    FPx2(const QPoint &other) { f[0] = other.x(); f[1] = other.y(); valid = true; }
     FPx2(const QPointF &other) { f[0] = other.x(); f[1] = other.y(); valid = true; }
+    FPx2(const QSize &other) { f[0] = other.width(); f[1] = other.height(); valid = true; }
     FPx2(const QSizeF &other) { f[0] = other.width(); f[1] = other.height(); valid = true; }
     inline void invalidate() { valid = false; }
     inline bool isValid() const { return valid; }
@@ -85,7 +87,7 @@ private:
 
 class AniData;
 class AnimationEffectPrivate;
-class AnimationEffect : public Effect
+class KWIN_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
 public:
