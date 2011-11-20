@@ -724,6 +724,14 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->x11ShadowPictureHandle(
         }
 #undef RENDER_SHADOW_TILE
 
+        if (!(mask & PAINT_DECORATION_ONLY)) {
+            // Paint the window contents
+            Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
+            XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+            if (!opaque)
+                transformed_shape = QRegion();
+        }
+
 #define RENDER_DECO_PART(_PART_, _RECT_) \
 XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAlpha, renderTarget,\
                  0, 0, 0, 0, _RECT_.x(), _RECT_.y(), _RECT_.width(), _RECT_.height())
@@ -739,14 +747,6 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         }
 #undef RENDER_DECO_PART
 
-        if (!(mask & PAINT_DECORATION_ONLY)) {
-            // Paint the window contents
-            Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
-            XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
-            if (!opaque)
-                transformed_shape = QRegion();
-        }
-
         if (data.brightness < 1.0) {
             // fake brightness change by overlaying black
             XRenderColor col = { 0, 0, 0, 0xffff *(1 - data.brightness) * data.opacity };
@@ -760,7 +760,7 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
             const QRect r = mapToScreen(mask, data, decorationRect);
             XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &xform);
             XRenderSetPictureFilter(display(), temp_pixmap->x11PictureHandle(), const_cast<char*>("good"), NULL, 0);
-            XRenderComposite(display(), PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,
+            XRenderComposite(display(), PictOpOver, temp_pixmap->x11PictureHandle(), None, buffer,
                              0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
             XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &identity);
         }
