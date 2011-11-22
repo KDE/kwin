@@ -34,13 +34,21 @@ KWIN_EFFECT(glide, GlideEffect)
 KWIN_EFFECT_SUPPORTED(glide, GlideEffect::supported())
 
 static const int IsGlideWindow = 0x22A982D4;
+static Atom slideAtom;
 
 GlideEffect::GlideEffect()
 {
+    slideAtom = XInternAtom( display(), "_KDE_SLIDE", False );
+    effects->registerPropertyType( slideAtom, true );
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
+}
+
+GlideEffect::~GlideEffect()
+{
+    effects->registerPropertyType( slideAtom, false );
 }
 
 bool GlideEffect::supported()
@@ -217,6 +225,8 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
         return false;
     if (w->data(IsGlideWindow).toBool())
         return true;
+    if (!w->readProperty( slideAtom, slideAtom, 32 ).isNull())
+        return false;
     if (w->hasDecoration())
         return true;
     if (!w->isManaged() || w->isMenu() ||  w->isNotification() || w->isDesktop() ||

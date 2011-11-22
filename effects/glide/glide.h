@@ -36,6 +36,7 @@ class GlideEffect
     Q_OBJECT
 public:
     GlideEffect();
+    ~GlideEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
