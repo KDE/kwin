@@ -270,8 +270,9 @@ void Workspace::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
+            if (!compositingBlocked) // do NOT attempt to call suspendCompositing(true); from within the eventchain!
+                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
             compositingBlocked = true;
-            suspendCompositing(true);
         }
     }
     else if (compositingBlocked) {  // lost a client and we're blocked - can we resume?
