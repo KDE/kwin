@@ -1570,134 +1570,144 @@ SceneOpenGLShadow::~SceneOpenGLShadow()
 void SceneOpenGLShadow::buildQuads()
 {
     // prepare window quads
-    WindowQuadList quads = shadowQuads();
-    quads.clear();
-    const QRectF topRect(QPoint(0, 0), shadowPixmap(ShadowElementTop).size());
-    const QRectF topRightRect(QPoint(0, 0), shadowPixmap(ShadowElementTopRight).size());
-    const QRectF rightRect(QPoint(0, 0), shadowPixmap(ShadowElementRight).size());
-    const QRectF bottomRightRect(QPoint(0, 0), shadowPixmap(ShadowElementBottomRight).size());
-    const QRectF bottomRect(QPoint(0, 0), shadowPixmap(ShadowElementBottom).size());
-    const QRectF bottomLeftRect(QPoint(0, 0), shadowPixmap(ShadowElementBottomLeft).size());
-    const QRectF leftRect(QPoint(0, 0), shadowPixmap(ShadowElementLeft).size());
-    const QRectF topLeftRect(QPoint(0, 0), shadowPixmap(ShadowElementTopLeft).size());
-    if ((leftRect.width() - leftOffset() > topLevel()->width()) ||
-        (rightRect.width() - rightOffset() > topLevel()->width()) ||
-        (topRect.height() - topOffset() > topLevel()->height()) ||
-        (bottomRect.height() - bottomOffset() > topLevel()->height())) {
+    m_shadowQuads.clear();
+    const QSizeF top(shadowPixmap(ShadowElementTop).size());
+    const QSizeF topRight(shadowPixmap(ShadowElementTopRight).size());
+    const QSizeF right(shadowPixmap(ShadowElementRight).size());
+    const QSizeF bottomRight(shadowPixmap(ShadowElementBottomRight).size());
+    const QSizeF bottom(shadowPixmap(ShadowElementBottom).size());
+    const QSizeF bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
+    const QSizeF left(shadowPixmap(ShadowElementLeft).size());
+    const QSizeF topLeft(shadowPixmap(ShadowElementTopLeft).size());
+    if ((left.width() - leftOffset() > topLevel()->width()) ||
+        (right.width() - rightOffset() > topLevel()->width()) ||
+        (top.height() - topOffset() > topLevel()->height()) ||
+        (bottom.height() - bottomOffset() > topLevel()->height())) {
         // if our shadow is bigger than the window, we don't render the shadow
         setShadowRegion(QRegion());
         return;
     }
+
+    const QRectF outerRect(QPointF(-leftOffset(), -topOffset()), QPointF(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset()));
+
     // calculate the width
-    const qreal cornerWidth = topLeftRect.width() + topRightRect.width() + bottomLeftRect.width() + bottomRightRect.width();
-    const qreal leftRightWidth = leftRect.width() + rightRect.width();
-    const qreal topBottomWidth = topRect.width() + bottomRect.width();
+    const qreal cornerWidth = topLeft.width() + topRight.width() + bottomLeft.width() + bottomRight.width();
+    const qreal leftRightWidth = left.width() + right.width();
+    const qreal topBottomWidth = top.width() + bottom.width();
     // calculate the height
-    const qreal cornerHeight = qMax<int>(topLeftRect.height(), qMax<int>(topRightRect.height(), qMax<int>(bottomLeftRect.height(), bottomRightRect.height())));
-    const qreal leftRightHeight = qMax<int>(leftRect.height(), rightRect.height());
+    const qreal cornerHeight = qMax<int>(topLeft.height(), qMax<int>(topRight.height(), qMax<int>(bottomLeft.height(), bottomRight.height())));
+    const qreal leftRightHeight = qMax<int>(left.height(), right.height());
+
     const qreal width = m_texture->width();
     const qreal height = m_texture->height();
-    qreal tx1, tx2, ty1, ty2;
-    tx1 = tx2 = ty1 = ty2 = 0.0;
-    tx2 = topLeftRect.width()/width;
-    ty2 = topLeftRect.height()/height;
+
+    qreal tx1(0.0), tx2(0.0), ty1(0.0), ty2(0.0);
+
+    tx2 = topLeft.width()/width;
+    ty2 = topLeft.height()/height;
     WindowQuad topLeftQuad(WindowQuadShadowTopLeft);
-    topLeftQuad[ 0 ] = WindowVertex(-leftOffset(), -topOffset(), tx1, ty1);
-    topLeftQuad[ 1 ] = WindowVertex(-leftOffset() + topLeftRect.width(), -topOffset(), tx2, ty1);
-    topLeftQuad[ 2 ] = WindowVertex(-leftOffset() + topLeftRect.width(), -topOffset() + topLeftRect.height(), tx2, ty2);
-    topLeftQuad[ 3 ] = WindowVertex(-leftOffset(), -topOffset() + topLeftRect.height(), tx1, ty2);
-    quads.append(topLeftQuad);
-    tx2 = topRect.width()/width;
+    topLeftQuad[ 0 ] = WindowVertex(outerRect.x(),                      outerRect.y(), tx1, ty1);
+    topLeftQuad[ 1 ] = WindowVertex(outerRect.x() + topLeft.width(),    outerRect.y(), tx2, ty1);
+    topLeftQuad[ 2 ] = WindowVertex(outerRect.x() + topLeft.width(),    outerRect.y() + topLeft.height(), tx2, ty2);
+    topLeftQuad[ 3 ] = WindowVertex(outerRect.x(),                      outerRect.y() + topLeft.height(), tx1, ty2);
+    m_shadowQuads.append(topLeftQuad);
+
+    tx2 = top.width()/width;
     ty1 = (cornerHeight + leftRightHeight)/height;
-    ty2 = (cornerHeight + leftRightHeight + topRect.height())/height;
+    ty2 = (cornerHeight + leftRightHeight + top.height())/height;
     WindowQuad topQuad(WindowQuadShadowTop);
-    topQuad[ 0 ] = WindowVertex(-leftOffset() + topLeftRect.width(), -topOffset(), tx1, ty1);
-    topQuad[ 1 ] = WindowVertex(topLevel()->width() + rightOffset() - topRightRect.width(), -topOffset(), tx2, ty1);
-    topQuad[ 2 ] = WindowVertex(topLevel()->width() + rightOffset() - topRightRect.width(), -topOffset() + topRect.height(),tx2, ty2);
-    topQuad[ 3 ] = WindowVertex(-leftOffset() + topLeftRect.width(), -topOffset() + topRect.height(), tx1, ty2);
-    quads.append(topQuad);
-    tx1 = topLeftRect.width()/width;
-    tx2 = (topLeftRect.width() + topRightRect.width())/width;
+    topQuad[ 0 ] = WindowVertex(outerRect.x() + topLeft.width(),        outerRect.y(), tx1, ty1);
+    topQuad[ 1 ] = WindowVertex(outerRect.right() - topRight.width(),   outerRect.y(), tx2, ty1);
+    topQuad[ 2 ] = WindowVertex(outerRect.right() - topRight.width(),   outerRect.y() + top.height(),tx2, ty2);
+    topQuad[ 3 ] = WindowVertex(outerRect.x() + topLeft.width(),        outerRect.y() + top.height(), tx1, ty2);
+    m_shadowQuads.append(topQuad);
+
+    tx1 = topLeft.width()/width;
+    tx2 = (topLeft.width() + topRight.width())/width;
     ty1 = 0.0;
-    ty2 = topRightRect.height()/height;
+    ty2 = topRight.height()/height;
     WindowQuad topRightQuad(WindowQuadShadowTopRight);
-    topRightQuad[ 0 ] = WindowVertex(topLevel()->width() + rightOffset() - topRightRect.width(), -topOffset(), tx1, ty1);
-    topRightQuad[ 1 ] = WindowVertex(topLevel()->width() + rightOffset(), -topOffset(), tx2, ty1);
-    topRightQuad[ 2 ] = WindowVertex(topLevel()->width() + rightOffset(), -topOffset() + topRightRect.height(), tx2, ty2);
-    topRightQuad[ 3 ] = WindowVertex(topLevel()->width() + rightOffset() - topRightRect.width(), -topOffset() + topRightRect.height(), tx1, ty2);
-    quads.append(topRightQuad);
-    tx1 = leftRect.width()/width;
+    topRightQuad[ 0 ] = WindowVertex(outerRect.right() - topRight.width(),  outerRect.y(), tx1, ty1);
+    topRightQuad[ 1 ] = WindowVertex(outerRect.right(),                     outerRect.y(), tx2, ty1);
+    topRightQuad[ 2 ] = WindowVertex(outerRect.right(),                     outerRect.y() + topRight.height(), tx2, ty2);
+    topRightQuad[ 3 ] = WindowVertex(outerRect.right() - topRight.width(),  outerRect.y() + topRight.height(), tx1, ty2);
+    m_shadowQuads.append(topRightQuad);
+
+    tx1 = left.width()/width;
     tx2 = leftRightWidth/width;
     ty1 = cornerHeight/height;
-    ty2 = (cornerHeight+rightRect.height())/height;
+    ty2 = (cornerHeight+right.height())/height;
     WindowQuad rightQuad(WindowQuadShadowRight);
-    rightQuad[ 0 ] = WindowVertex(topLevel()->width() + rightOffset() - rightRect.width(), -topOffset() + topRightRect.height(), tx1, ty1);
-    rightQuad[ 1 ] = WindowVertex(topLevel()->width() + rightOffset(), -topOffset() + topRightRect.height(), tx2, ty1);
-    rightQuad[ 2 ] = WindowVertex(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset() - bottomRightRect.height(), tx2, ty2);
-    rightQuad[ 3 ] = WindowVertex(topLevel()->width() + rightOffset() - rightRect.width(), topLevel()->height() + bottomOffset() - bottomRightRect.height(), tx1, ty2);
-    quads.append(rightQuad);
-    tx1 = (topLeftRect.width() + topRightRect.width() + bottomLeftRect.width())/width;
+    rightQuad[ 0 ] = WindowVertex(outerRect.right() - right.width(),    outerRect.y() + topRight.height(), tx1, ty1);
+    rightQuad[ 1 ] = WindowVertex(outerRect.right(),                    outerRect.y() + topRight.height(), tx2, ty1);
+    rightQuad[ 2 ] = WindowVertex(outerRect.right(),                    outerRect.bottom() - bottomRight.height(), tx2, ty2);
+    rightQuad[ 3 ] = WindowVertex(outerRect.right() - right.width(),    outerRect.bottom() - bottomRight.height(), tx1, ty2);
+    m_shadowQuads.append(rightQuad);
+
+    tx1 = (topLeft.width() + topRight.width() + bottomLeft.width())/width;
     tx2 = cornerWidth/width;
     ty1 = 0.0;
-    ty2 = bottomRightRect.height()/height;
+    ty2 = bottomRight.height()/height;
     WindowQuad bottomRightQuad(WindowQuadShadowBottomRight);
-    bottomRightQuad[ 0 ] = WindowVertex(topLevel()->width() + rightOffset() - bottomRightRect.width(), topLevel()->height() + bottomOffset() - bottomRightRect.height(), tx1, ty1);
-    bottomRightQuad[ 1 ] = WindowVertex(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset() - bottomRightRect.height(), tx2, ty1);
-    bottomRightQuad[ 2 ] = WindowVertex(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset(), tx2, ty2);
-    bottomRightQuad[ 3 ] = WindowVertex(topLevel()->width() + rightOffset() - bottomRightRect.width(), topLevel()->height() + bottomOffset(), tx1, ty2);
-    quads.append(bottomRightQuad);
-    tx1 = topRect.width()/width;
+    bottomRightQuad[ 0 ] = WindowVertex(outerRect.right() - bottomRight.width(),    outerRect.bottom() - bottomRight.height(), tx1, ty1);
+    bottomRightQuad[ 1 ] = WindowVertex(outerRect.right(),                          outerRect.bottom() - bottomRight.height(), tx2, ty1);
+    bottomRightQuad[ 2 ] = WindowVertex(outerRect.right(),                          outerRect.bottom(), tx2, ty2);
+    bottomRightQuad[ 3 ] = WindowVertex(outerRect.right() - bottomRight.width(),    outerRect.bottom(), tx1, ty2);
+    m_shadowQuads.append(bottomRightQuad);
+
+    tx1 = top.width()/width;
     tx2 = topBottomWidth/width;
     ty1 = (cornerHeight + leftRightHeight)/height;
-    ty2 = (cornerHeight + leftRightHeight + bottomRect.height())/height;
+    ty2 = (cornerHeight + leftRightHeight + bottom.height())/height;
     WindowQuad bottomQuad(WindowQuadShadowBottom);
-    bottomQuad[ 0 ] = WindowVertex(-leftOffset() + bottomLeftRect.width(), topLevel()->height() + bottomOffset() - bottomRect.height(), tx1, ty1);
-    bottomQuad[ 1 ] = WindowVertex(topLevel()->width() + rightOffset() - bottomRightRect.width(), topLevel()->height() + bottomOffset() - bottomRect.height(), tx2, ty1);
-    bottomQuad[ 2 ] = WindowVertex(topLevel()->width() + rightOffset() - bottomRightRect.width(), topLevel()->height() + bottomOffset(), tx2, ty2);
-    bottomQuad[ 3 ] = WindowVertex(-leftOffset() + bottomLeftRect.width(), topLevel()->height() + bottomOffset(), tx1, ty2);
-    quads.append(bottomQuad);
-    tx1 = (topLeftRect.width() + topRightRect.width())/width;
-    tx2 = (topLeftRect.width() + topRightRect.width() + bottomLeftRect.width())/width;
+    bottomQuad[ 0 ] = WindowVertex(outerRect.x() + bottomLeft.width(),      outerRect.bottom() - bottom.height(), tx1, ty1);
+    bottomQuad[ 1 ] = WindowVertex(outerRect.right() - bottomRight.width(), outerRect.bottom() - bottom.height(), tx2, ty1);
+    bottomQuad[ 2 ] = WindowVertex(outerRect.right() - bottomRight.width(), outerRect.bottom(), tx2, ty2);
+    bottomQuad[ 3 ] = WindowVertex(outerRect.x() + bottomLeft.width(),      outerRect.bottom(), tx1, ty2);
+    m_shadowQuads.append(bottomQuad);
+
+    tx1 = (topLeft.width() + topRight.width())/width;
+    tx2 = (topLeft.width() + topRight.width() + bottomLeft.width())/width;
     ty1 = 0.0;
-    ty2 = bottomLeftRect.height()/height;
+    ty2 = bottomLeft.height()/height;
     WindowQuad bottomLeftQuad(WindowQuadShadowBottomLeft);
-    bottomLeftQuad[ 0 ] = WindowVertex(-leftOffset(), topLevel()->height() + bottomOffset() - bottomLeftRect.height(), tx1, ty1);
-    bottomLeftQuad[ 1 ] = WindowVertex(-leftOffset() + bottomLeftRect.width(), topLevel()->height() + bottomOffset() - bottomLeftRect.height(), tx2, ty1);
-    bottomLeftQuad[ 2 ] = WindowVertex(-leftOffset() + bottomLeftRect.width(), topLevel()->height() + bottomOffset(), tx2, ty2);
-    bottomLeftQuad[ 3 ] = WindowVertex(-leftOffset(), topLevel()->height() + bottomOffset(), tx1, ty2);
-    quads.append(bottomLeftQuad);
+    bottomLeftQuad[ 0 ] = WindowVertex(outerRect.x(),                       outerRect.bottom() - bottomLeft.height(), tx1, ty1);
+    bottomLeftQuad[ 1 ] = WindowVertex(outerRect.x() + bottomLeft.width(),  outerRect.bottom() - bottomLeft.height(), tx2, ty1);
+    bottomLeftQuad[ 2 ] = WindowVertex(outerRect.x() + bottomLeft.width(),  outerRect.bottom(), tx2, ty2);
+    bottomLeftQuad[ 3 ] = WindowVertex(outerRect.x(),                       outerRect.bottom(), tx1, ty2);
+    m_shadowQuads.append(bottomLeftQuad);
+
     tx1 = 0.0;
-    tx2 = leftRect.width()/width;
+    tx2 = left.width()/width;
     ty1 = cornerHeight/height;
-    ty2 = (cornerHeight+leftRect.height())/height;
+    ty2 = (cornerHeight+left.height())/height;
     WindowQuad leftQuad(WindowQuadShadowLeft);
-    leftQuad[ 0 ] = WindowVertex(-leftOffset(), -topOffset() + topLeftRect.height(), tx1, ty1);
-    leftQuad[ 1 ] = WindowVertex(-leftOffset() + leftRect.width(), -topOffset() + topLeftRect.height(), tx2, ty1);
-    leftQuad[ 2 ] = WindowVertex(-leftOffset() + leftRect.width(), topLevel()->height() + bottomOffset() - bottomLeftRect.height(), tx2, ty2);
-    leftQuad[ 3 ] = WindowVertex(-leftOffset(), topLevel()->height() + bottomOffset() - bottomLeftRect.height(), tx1, ty2);
-    quads.append(leftQuad);
-    m_shadowQuads = quads;
+    leftQuad[ 0 ] = WindowVertex(outerRect.x(),                 outerRect.y() + topLeft.height(), tx1, ty1);
+    leftQuad[ 1 ] = WindowVertex(outerRect.x() + left.width(),  outerRect.y() + topLeft.height(), tx2, ty1);
+    leftQuad[ 2 ] = WindowVertex(outerRect.x() + left.width(),  outerRect.bottom() - bottomLeft.height(), tx2, ty2);
+    leftQuad[ 3 ] = WindowVertex(outerRect.x(),                 outerRect.bottom() - bottomLeft.height(), tx1, ty2);
+    m_shadowQuads.append(leftQuad);
 }
 
 bool SceneOpenGLShadow::prepareBackend()
 {
-    const QRect topRect(QPoint(0, 0), shadowPixmap(ShadowElementTop).size());
-    const QRect topRightRect(QPoint(0, 0), shadowPixmap(ShadowElementTopRight).size());
-    const QRect rightRect(QPoint(0, 0), shadowPixmap(ShadowElementRight).size());
-    const QRect bottomRightRect(QPoint(0, 0), shadowPixmap(ShadowElementBottomRight).size());
-    const QRect bottomRect(QPoint(0, 0), shadowPixmap(ShadowElementBottom).size());
-    const QRect bottomLeftRect(QPoint(0, 0), shadowPixmap(ShadowElementBottomLeft).size());
-    const QRect leftRect(QPoint(0, 0), shadowPixmap(ShadowElementLeft).size());
-    const QRect topLeftRect(QPoint(0, 0), shadowPixmap(ShadowElementTopLeft).size());
+    const QSize top(shadowPixmap(ShadowElementTop).size());
+    const QSize topRight(shadowPixmap(ShadowElementTopRight).size());
+    const QSize right(shadowPixmap(ShadowElementRight).size());
+    const QSize bottomRight(shadowPixmap(ShadowElementBottomRight).size());
+    const QSize bottom(shadowPixmap(ShadowElementBottom).size());
+    const QSize bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
+    const QSize left(shadowPixmap(ShadowElementLeft).size());
+    const QSize topLeft(shadowPixmap(ShadowElementTopLeft).size());
     // calculate the width
-    const int cornerWidth = topLeftRect.width() + topRightRect.width() + bottomLeftRect.width() + bottomRightRect.width();
-    const int leftRightWidth = leftRect.width() + rightRect.width();
-    const int topBottomWidth = topRect.width() + bottomRect.width();
+    const int cornerWidth = topLeft.width() + topRight.width() + bottomLeft.width() + bottomRight.width();
+    const int leftRightWidth = left.width() + right.width();
+    const int topBottomWidth = top.width() + bottom.width();
     const int width = qMax<int>(cornerWidth, qMax<int>(leftRightWidth, topBottomWidth));
     // calculate the height
-    const int cornerHeight = qMax<int>(topLeftRect.height(), qMax<int>(topRightRect.height(), qMax<int>(bottomLeftRect.height(), bottomRightRect.height())));
-    const int leftRightHeight = qMax<int>(leftRect.height(), rightRect.height());
-    const int topBottomHeight = qMax<int>(topRect.height(), bottomRect.height());
+    const int cornerHeight = qMax<int>(topLeft.height(), qMax<int>(topRight.height(), qMax<int>(bottomLeft.height(), bottomRight.height())));
+    const int leftRightHeight = qMax<int>(left.height(), right.height());
+    const int topBottomHeight = qMax<int>(top.height(), bottom.height());
     const int height = cornerHeight + leftRightHeight + topBottomHeight;
 
     QImage image(width, height, QImage::Format_ARGB32);
@@ -1705,21 +1715,18 @@ bool SceneOpenGLShadow::prepareBackend()
     QPainter p;
     p.begin(&image);
     p.drawPixmap(0, 0, shadowPixmap(ShadowElementTopLeft));
-    p.drawPixmap(topLeftRect.width(), 0, shadowPixmap(ShadowElementTopRight));
-    p.drawPixmap(topLeftRect.width() + topRightRect.width(), 0, shadowPixmap(ShadowElementBottomLeft));
-    p.drawPixmap(topLeftRect.width() + topRightRect.width() + bottomLeftRect.width(), 0, shadowPixmap(ShadowElementBottomRight));
+    p.drawPixmap(topLeft.width(), 0, shadowPixmap(ShadowElementTopRight));
+    p.drawPixmap(topLeft.width() + topRight.width(), 0, shadowPixmap(ShadowElementBottomLeft));
+    p.drawPixmap(topLeft.width() + topRight.width() + bottomLeft.width(), 0, shadowPixmap(ShadowElementBottomRight));
     p.drawPixmap(0, cornerHeight, shadowPixmap(ShadowElementLeft));
-    p.drawPixmap(leftRect.width(), cornerHeight, shadowPixmap(ShadowElementRight));
+    p.drawPixmap(left.width(), cornerHeight, shadowPixmap(ShadowElementRight));
     p.drawPixmap(0, cornerHeight + leftRightHeight, shadowPixmap(ShadowElementTop));
-    p.drawPixmap(topRect.width(), cornerHeight + leftRightHeight, shadowPixmap(ShadowElementBottom));
+    p.drawPixmap(top.width(), cornerHeight + leftRightHeight, shadowPixmap(ShadowElementBottom));
     p.end();
 
-    if (m_texture) {
-        delete m_texture;
-        m_texture = NULL;
-    }
-
+    delete m_texture;
     m_texture = new GLTexture(image);
+
     return true;
 }
 
