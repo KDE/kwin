@@ -150,26 +150,29 @@ class SceneXRenderShadow
 {
 public:
     SceneXRenderShadow(Toplevel *toplevel);
+    using Shadow::ShadowElements;
+    using Shadow::ShadowElementTop;
+    using Shadow::ShadowElementTopRight;
+    using Shadow::ShadowElementRight;
+    using Shadow::ShadowElementBottomRight;
+    using Shadow::ShadowElementBottom;
+    using Shadow::ShadowElementBottomLeft;
+    using Shadow::ShadowElementLeft;
+    using Shadow::ShadowElementTopLeft;
+    using Shadow::ShadowElementsCount;
+    using Shadow::shadowPixmap;
     virtual ~SceneXRenderShadow();
 
-    Qt::HANDLE x11ShadowPictureHandle(WindowQuadType);
     void layoutShadowRects(QRect& top, QRect& topRight,
                            QRect& right, QRect& bottomRight,
                            QRect& bottom, QRect& bottomLeft,
                            QRect& Left, QRect& topLeft);
-
-    const QPixmap &resizedShadowPixmap(ShadowElements element) const {
-        return m_resizedElements[element];
-    };
 
 protected:
     virtual void buildQuads();
     virtual bool prepareBackend() {
         return true;
     };
-
-private:
-    QPixmap m_resizedElements[ShadowElementsCount];
 };
 
 } // namespace
