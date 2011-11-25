@@ -199,6 +199,8 @@ bool Shadow::updateShadow()
         return false;
     }
     init(data);
+    if (m_topLevel && m_topLevel->effectWindow())
+        m_topLevel->effectWindow()->buildQuads(true);
     return true;
 }
 

@@ -146,7 +146,7 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleRect() const
 {
-    if (hasShadow()) {
+    if (hasShadow() && !shadow()->shadowRegion().isEmpty()) {
         return shadow()->shadowRegion().boundingRect().translated(geometry().topLeft());
     }
     return geometry();
