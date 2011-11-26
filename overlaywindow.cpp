@@ -120,6 +120,13 @@ void OverlayWindow::setShape(const QRegion& reg)
     m_shape = reg;
 }
 
+void OverlayWindow::resize(const QSize &size)
+{
+    assert(m_window != None);
+    XResizeWindow(display(), m_window, size.width(), size.height());
+    setShape(QRegion(0, 0, size.width(), size.height()));
+}
+
 bool OverlayWindow::isVisible() const
 {
     return m_visible;

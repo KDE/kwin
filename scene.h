@@ -60,6 +60,13 @@ public:
     virtual void windowAdded(Toplevel*) = 0;
     // a window has been destroyed
     virtual void windowDeleted(Deleted*) = 0;
+    /**
+     * Method invoked when the screen geometry is changed.
+     * Reimplementing classes should also invoke the parent method
+     * as it takes care of resizing the overlay window.
+     * @param size The new screen geometry size
+     **/
+    virtual void screenGeometryChanged(const QSize &size);
     // Flags controlling how painting is done.
     enum {
         // Window (or at least part of it) will be painted opaque.

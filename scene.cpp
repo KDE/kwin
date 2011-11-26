@@ -426,6 +426,11 @@ OverlayWindow* Scene::overlayWindow()
     return m_overlayWindow;
 }
 
+void Scene::screenGeometryChanged(const QSize &size)
+{
+    m_overlayWindow->resize(size);
+}
+
 //****************************************
 // Scene::Window
 //****************************************

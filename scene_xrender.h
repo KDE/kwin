@@ -49,6 +49,7 @@ public:
     virtual void paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
+    virtual void screenGeometryChanged(const QSize &size);
     Picture bufferPicture();
 protected:
     virtual void paintBackground(QRegion region);
@@ -61,6 +62,7 @@ private:
     void paintTransformedScreen(int mask);
     void createBuffer();
     void flushBuffer(int mask, QRegion damage);
+    void initXRender(bool createOverlay);
     XRenderPictFormat* format;
     Picture front;
     static Picture buffer;

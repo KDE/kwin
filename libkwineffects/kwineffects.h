@@ -796,6 +796,16 @@ public:
                                      const QPoint& position = QPoint(-1, -1), Qt::Alignment alignment = Qt::AlignCenter) const = 0;
 
     /**
+     * Allows an effect to trigger a reload of itself.
+     * This can be used by an effect which needs to be reloaded when screen geometry changes.
+     * It is possible that the effect cannot be loaded again as it's supported method does no longer
+     * hold.
+     * @param effect The effect to reload
+     * @since 4.8
+     **/
+    virtual void reloadEffect(Effect *effect) = 0;
+
+    /**
      * Sends message over DCOP to reload given effect.
      * @param effectname effect's name without "kwin4_effect_" prefix.
      * Can be called from effect's config module to apply config changes.
@@ -1032,6 +1042,15 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void hideOutline();
+
+    /**
+     * Signal emitted after the screen geometry changed (e.g. add of a monitor).
+     * Effects using displayWidth()/displayHeight() to cache information should
+     * react on this signal and update the caches.
+     * @param size The new screen size
+     * @since 4.8
+     **/
+    void screenGeometryChanged(const QSize &size);
 
 protected:
     QVector< EffectPair > loaded_effects;

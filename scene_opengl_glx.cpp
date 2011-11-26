@@ -38,6 +38,7 @@ GLXDrawable SceneOpenGL::last_pixmap = None;
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
+    , m_resetModelViewProjectionMatrix(true)
 {
     initGLX();
     // check for FBConfig support
@@ -100,23 +101,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     }
 
     // OpenGL scene setup
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    float fovy = 60.0f;
-    float aspect = 1.0f;
-    float zNear = 0.1f;
-    float zFar = 100.0f;
-    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-    float ymin = -ymax;
-    float xmin =  ymin * aspect;
-    float xmax = ymax * aspect;
-    // swap top and bottom to have OpenGL coordinate system match X system
-    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+    setupModelViewProjectionMatrix();
     if (checkGLError("Init")) {
         kError(1212) << "OpenGL compositing setup failed";
         return; // error
@@ -150,6 +135,28 @@ SceneOpenGL::~SceneOpenGL()
     }
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError("Cleanup");
+}
+
+void SceneOpenGL::setupModelViewProjectionMatrix()
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float fovy = 60.0f;
+    float aspect = 1.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+    float ymin = -ymax;
+    float xmin =  ymin * aspect;
+    float xmax = ymax * aspect;
+    // swap top and bottom to have OpenGL coordinate system match X system
+    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
+    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+    m_resetModelViewProjectionMatrix = false;
 }
 
 bool SceneOpenGL::initTfp()
@@ -451,6 +458,10 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
     grabXServer();
     glXWaitX();
+    if (m_resetModelViewProjectionMatrix) {
+        // reset model view projection matrix if required
+        setupModelViewProjectionMatrix();
+    }
     glPushMatrix();
     int mask = 0;
 #ifdef CHECK_GL_ERROR
@@ -556,6 +567,33 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
             XCopyArea(display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0);
         XFlush(display());
     }
+}
+
+void SceneOpenGL::screenGeometryChanged(const QSize &size)
+{
+    Scene::screenGeometryChanged(size);
+    glViewport(0,0, size.width(), size.height());
+    if (m_overlayWindow->window() == None) {
+        glXMakeCurrent(display(), None, NULL);
+        glXDestroyPixmap(display(), glxbuffer);
+        XFreePixmap(display(), buffer);
+        XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbcbuffer);
+        buffer = XCreatePixmap(display(), rootWindow(), size.width(), size.height(), visual->depth);
+        XFree(visual);
+        glxbuffer = glXCreatePixmap(display(), fbcbuffer, buffer, NULL);
+        glXMakeCurrent(display(), glxbuffer, ctxbuffer);
+        // TODO: there seems some bug, some clients become black until an eg. un/remap - could be a general pixmap buffer issue, though
+    }
+    else {
+        glXMakeCurrent(display(), None, NULL); // deactivate context ////
+        XMoveResizeWindow(display(), buffer, 0,0, size.width(), size.height());
+        m_overlayWindow->setup(buffer);
+        XSync(display(), false);  // ensure X11 stuff has applied ////
+        glXMakeCurrent(display(), glxbuffer, ctxbuffer); // reactivate context ////
+        glViewport(0,0, size.width(), size.height()); // adjust viewport last - should btw. be superflous on the Pixmap buffer - iirc glXCreatePixmap sets the context anyway. ////
+    }
+    ShaderManager::instance()->resetAllShaders();
+    m_resetModelViewProjectionMatrix = true;
 }
 
 //****************************************

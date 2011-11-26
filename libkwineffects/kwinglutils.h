@@ -322,6 +322,13 @@ public:
     void popShader();
 
     /**
+     * Resets all shaders to the default uniform values.
+     * Only built in shaders are changed.
+     * @since 4.8
+     **/
+    void resetAllShaders();
+
+    /**
      * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
      * @param vertex The generic vertex shader
      * @param fragmentFile The path to the source code of the fragment shader

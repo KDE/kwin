@@ -160,7 +160,9 @@ public:
     bool borderActivated(ElectricBorder border);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
+    void desktopResized(const QSize &size);
 
+    virtual void reloadEffect(Effect *effect);
     bool loadEffect(const QString& name, bool checkDefault = false);
     void toggleEffect(const QString& name);
     void unloadEffect(const QString& name);

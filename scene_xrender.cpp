@@ -99,8 +99,32 @@ SceneXrender::SceneXrender(Workspace* ws)
         kError(1212) << "No XFixes v3+ extension available";
         return;
     }
+    initXRender(true);
+}
+
+SceneXrender::~SceneXrender()
+{
+    if (!init_ok) {
+        // TODO this probably needs to clean up whatever has been created until the failure
+        m_overlayWindow->destroy();
+        return;
+    }
+    XRenderFreePicture(display(), front);
+    XRenderFreePicture(display(), buffer);
+    buffer = None;
+    m_overlayWindow->destroy();
+    foreach (Window * w, windows)
+    delete w;
+}
+
+void SceneXrender::initXRender(bool createOverlay)
+{
+    init_ok = false;
+    if (front != None)
+        XRenderFreePicture(display(), front);
     KXErrorHandler xerr;
-    if (m_overlayWindow->create()) {
+    bool haveOverlay = createOverlay ? m_overlayWindow->create() : (m_overlayWindow->window() != None);
+    if (haveOverlay) {
         m_overlayWindow->setup(None);
         XWindowAttributes attrs;
         XGetWindowAttributes(display(), m_overlayWindow->window(), &attrs);
@@ -129,21 +153,6 @@ SceneXrender::SceneXrender(Workspace* ws)
     init_ok = true;
 }
 
-SceneXrender::~SceneXrender()
-{
-    if (!init_ok) {
-        // TODO this probably needs to clean up whatever has been created until the failure
-        m_overlayWindow->destroy();
-        return;
-    }
-    XRenderFreePicture(display(), front);
-    XRenderFreePicture(display(), buffer);
-    buffer = None;
-    m_overlayWindow->destroy();
-    foreach (Window * w, windows)
-    delete w;
-}
-
 bool SceneXrender::initFailed() const
 {
     return !init_ok;
@@ -153,6 +162,8 @@ bool SceneXrender::initFailed() const
 // so it is done manually using this buffer,
 void SceneXrender::createBuffer()
 {
+    if (buffer != None)
+        XRenderFreePicture(display(), buffer);
     Pixmap pixmap = XCreatePixmap(display(), rootWindow(), displayWidth(), displayHeight(), DefaultDepth(display(), DefaultScreen(display())));
     buffer = XRenderCreatePicture(display(), pixmap, format, 0, 0);
     XFreePixmap(display(), pixmap);   // The picture owns the pixmap now
@@ -772,6 +783,12 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
             XRenderChangePicture(display(), pic, CPRepeat, &attr);
         }
     }
+}
+
+void SceneXrender::screenGeometryChanged(const QSize &size)
+{
+    Scene::screenGeometryChanged(size);
+    initXRender(false);
 }
 
 //****************************************

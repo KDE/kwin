@@ -63,6 +63,7 @@ BlurEffect::BlurEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
+    connect(effects, SIGNAL(screenGeometryChanged(QSize)), this, SLOT(slotScreenGeometryChanged()));
 }
 
 BlurEffect::~BlurEffect()
@@ -74,6 +75,11 @@ BlurEffect::~BlurEffect()
 
     delete shader;
     delete target;
+}
+
+void BlurEffect::slotScreenGeometryChanged()
+{
+    effects->reloadEffect(this);
 }
 
 void BlurEffect::reconfigure(ReconfigureFlags flags)

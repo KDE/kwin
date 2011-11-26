@@ -532,6 +532,13 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
     return keyboard_grab_effect != NULL;
 }
 
+void EffectsHandlerImpl::desktopResized(const QSize &size)
+{
+    scene->screenGeometryChanged(size);
+    emit screenGeometryChanged(size);
+    Workspace::self()->addRepaintFull();
+}
+
 void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
 {
     if (!registered_atoms.contains(atom))
@@ -1241,6 +1248,21 @@ bool EffectsHandlerImpl::isEffectLoaded(const QString& name)
             return true;
 
     return false;
+}
+
+void EffectsHandlerImpl::reloadEffect(Effect *effect)
+{
+    QString effectName;
+    for (QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
+        if ((*it).second == effect) {
+            effectName = (*it).first;
+            break;
+        }
+    }
+    if (!effectName.isNull()) {
+        unloadEffect(effectName);
+        loadEffect(effectName);
+    }
 }
 
 void EffectsHandlerImpl::effectsChanged()

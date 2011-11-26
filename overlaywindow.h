@@ -37,6 +37,7 @@ public:
     void show();
     void hide(); // hides and resets overlay window
     void setShape(const QRegion& reg);
+    void resize(const QSize &size);
     /// Destroys XComposite overlay window
     void destroy();
     Window window() const;

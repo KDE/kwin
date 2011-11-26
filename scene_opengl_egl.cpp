@@ -218,6 +218,13 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
     XFlush(display());
 }
 
+void SceneOpenGL::screenGeometryChanged(const QSize &size)
+{
+    glViewport(0,0, size.width(), size.height());
+    Scene::screenGeometryChanged(size);
+    ShaderManager::instance()->resetAllShaders();
+}
+
 //****************************************
 // SceneOpenGL::Texture
 //****************************************

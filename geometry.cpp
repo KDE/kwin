@@ -76,8 +76,9 @@ void Workspace::desktopResized()
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.update(true);
 #endif
-    if (compositing())
-        compositeResetTimer.start(0);
+    if (effects) {
+        static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
+    }
 }
 
 void Workspace::saveOldScreenSizes()

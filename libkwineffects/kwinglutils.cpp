@@ -689,6 +689,20 @@ GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
     return shader;
 }
 
+void ShaderManager::resetAllShaders()
+{
+    if (!m_inited || !m_valid) {
+        return;
+    }
+    pushShader(SimpleShader, true);
+    pushShader(GenericShader, true);
+    pushShader(ColorShader, true);
+    popShader();
+    popShader();
+    popShader();
+}
+
+
 void ShaderManager::pushShader(GLShader *shader)
 {
     // only bind shader if it is not already bound
