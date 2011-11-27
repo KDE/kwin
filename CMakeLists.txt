@@ -257,6 +257,7 @@ install( FILES
     tabbox/qml/text.qml
     tabbox/qml/thumbnails.qml
     tabbox/qml/IconTabBox.qml
+    tabbox/qml/window_strip.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/tabbox )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
