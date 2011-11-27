@@ -99,6 +99,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , mouse_poll_ref_count(0)
 {
+    // init is important, otherwise causes crashes when quads are build before the first painting pass start
+    m_currentBuildQuadsIterator = m_activeEffects.end();
+
     Workspace *ws = Workspace::self();
     connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
