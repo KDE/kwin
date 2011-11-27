@@ -43,6 +43,7 @@ ClientModel::ClientModel(QObject* parent)
     roles[DesktopNameRole] = "desktopName";
     roles[MinimizedRole] = "minimized";
     roles[WIdRole] = "windowId";
+    roles[CloseableRole] = "closeable";
     setRoleNames(roles);
 }
 
@@ -80,6 +81,8 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return qulonglong(m_clientList[ clientIndex ]->window());
     case MinimizedRole:
         return m_clientList[ clientIndex ]->isMinimized();
+    case CloseableRole:
+        return m_clientList[ clientIndex ]->isCloseable();
     default:
         return QVariant();
     }

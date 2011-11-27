@@ -270,6 +270,11 @@ int TabBoxClientImpl::height() const
     return m_client->height();
 }
 
+bool TabBoxClientImpl::isCloseable() const
+{
+    return m_client->isCloseable();
+}
+
 
 /*********************************************************
 * TabBox

@@ -105,7 +105,7 @@ Item {
                 prefix: "shadow"
                 width: closeButton.width + margins.left + margins.right
                 height: closeButton.height + margins.top + margins.bottom
-                visible: true//model["actionClose"] && (model["className"] != shellName)
+                visible: closeable
                 anchors {
                     top: parent.top
                     right: parent.right

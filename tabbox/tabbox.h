@@ -80,6 +80,7 @@ public:
     virtual int y() const;
     virtual int width() const;
     virtual int height() const;
+    virtual bool isCloseable() const;
 
     Client* client() const {
         return m_client;
