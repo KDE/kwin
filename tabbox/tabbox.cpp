@@ -275,6 +275,10 @@ bool TabBoxClientImpl::isCloseable() const
     return m_client->isCloseable();
 }
 
+void TabBoxClientImpl::close()
+{
+    m_client->closeWindow();
+}
 
 /*********************************************************
 * TabBox

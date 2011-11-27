@@ -46,6 +46,7 @@ namespace TabBox
 class ClientModel
     : public QAbstractItemModel
 {
+    Q_OBJECT
 public:
     enum {
         ClientRole = Qt::UserRole, ///< The TabBoxClient
@@ -94,6 +95,9 @@ public:
     TabBoxClientList clientList() const {
         return m_clientList;
     }
+
+public Q_SLOTS:
+    void close(int index);
 
 private:
     TabBoxClientList m_clientList;

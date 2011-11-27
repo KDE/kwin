@@ -135,13 +135,7 @@ Item {
                             rightMargin: parent.margins.right
                         }
 
-                        onClicked: {
-                            console.log("Close button clicked")
-                            /*var service = tasksSource.serviceForSource(winId)
-                            var operation = service.operationDescription("close")
-
-                            service.startOperationCall(operation)*/
-                        }
+                        onClicked: thumbnailListView.model.close(index)
                     }
                 }
             }

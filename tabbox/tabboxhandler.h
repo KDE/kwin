@@ -385,6 +385,7 @@ public:
     virtual int width() const = 0;
     virtual int height() const = 0;
     virtual bool isCloseable() const = 0;
+    virtual void close() = 0;
 };
 
 /**

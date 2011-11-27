@@ -235,5 +235,14 @@ void ClientModel::createClientList(int desktop, bool partialReset)
     reset();
 }
 
+void ClientModel::close(int i)
+{
+    QModelIndex ind = index(i, 0);
+    if (!ind.isValid()) {
+        return;
+    }
+    m_clientList.at(i)->close();
+}
+
 } // namespace Tabbox
 } // namespace KWin

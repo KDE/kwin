@@ -81,6 +81,7 @@ public:
     virtual int width() const;
     virtual int height() const;
     virtual bool isCloseable() const;
+    virtual void close();
 
     Client* client() const {
         return m_client;
