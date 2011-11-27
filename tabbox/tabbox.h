@@ -61,6 +61,7 @@ public:
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
     virtual QVector< Window > outlineWindowIds() const;
+    virtual void activateAndClose();
 
 private:
     TabBox* m_tabBox;

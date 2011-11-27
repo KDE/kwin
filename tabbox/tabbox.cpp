@@ -214,6 +214,22 @@ QVector< Window > TabBoxHandlerImpl::outlineWindowIds() const
     return Workspace::self()->outline()->windowIds();
 }
 
+void TabBoxHandlerImpl::activateAndClose()
+{
+    Client* c = NULL;
+    if (TabBoxClientImpl* cl = static_cast< TabBoxClientImpl* >(client(currentIndex()))) {
+        c = cl->client();
+    }
+    m_tabBox->close();
+    if (c) {
+        Workspace::self()->activateClient(c);
+        if (c->isShade() && options->shadeHover)
+            c->setShade(ShadeActivated);
+        if (c->isDesktop())
+            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
+    }
+}
+
 
 /*********************************************************
 * TabBoxClientImpl

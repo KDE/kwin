@@ -244,5 +244,15 @@ void ClientModel::close(int i)
     m_clientList.at(i)->close();
 }
 
+void ClientModel::activate(int i)
+{
+    QModelIndex ind = index(i, 0);
+    if (!ind.isValid()) {
+        return;
+    }
+    tabBox->setCurrentIndex(ind);
+    tabBox->activateAndClose();
+}
+
 } // namespace Tabbox
 } // namespace KWin

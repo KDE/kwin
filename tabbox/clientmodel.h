@@ -98,6 +98,11 @@ public:
 
 public Q_SLOTS:
     void close(int index);
+    /**
+     * Activates the client at @p index and closes the TabBox.
+     * @param index The row index
+     **/
+    void activate(int index);
 
 private:
     TabBoxClientList m_clientList;

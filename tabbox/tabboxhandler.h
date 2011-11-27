@@ -173,6 +173,10 @@ public:
     * @return The first desktop window in the stacking order.
     */
     virtual TabBoxClient* desktopClient() const = 0;
+    /**
+     * Activates the currently selected client and closes the TabBox.
+     **/
+    virtual void activateAndClose() = 0;
 
     /**
     * @return The currently used TabBoxConfig

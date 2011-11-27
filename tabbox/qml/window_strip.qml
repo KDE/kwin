@@ -81,10 +81,7 @@ Item {
                 anchors.centerIn: parent
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
-                        thumbnailListView.currentIndex = index
-                        thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
-                    }
+                    onClicked: thumbnailListView.model.activate(index)
                 }
             }
             PlasmaComponents.Label {
