@@ -336,7 +336,7 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
 {
 #ifndef KWIN_HAVE_OPENGLES
     // Make sure shaders are actually supported
-    if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedGLSL)) {
+    if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedNPOT)) {
         kError(1212) << "Shaders are not supported";
         return false;
     }
