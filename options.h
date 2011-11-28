@@ -98,11 +98,6 @@ public:
     int autoRaiseInterval;
 
     /**
-       whether delay focus is enabled or not.
-     */
-    bool delayFocus;
-
-    /**
        delayed focus interval
      */
     int delayFocusInterval;

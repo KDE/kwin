@@ -901,10 +901,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         // change came because of window changes (e.g. closing a window) - #92290
         if (options->focusPolicy != Options::FocusFollowsMouse
                 || currentPos != workspace()->focusMousePosition()) {
-            if (options->delayFocus)
                 workspace()->requestDelayFocus(this);
-            else
-                workspace()->requestFocus(this);
         }
         return;
     }

@@ -151,12 +151,10 @@ unsigned long Options::updateSettings()
     if (focusPolicy == ClickToFocus) {
         autoRaise = false;
         autoRaiseInterval = 0;
-        delayFocus = false;
         delayFocusInterval = 0;
     } else {
         autoRaise = config.readEntry("AutoRaise", false);
         autoRaiseInterval = config.readEntry("AutoRaiseInterval", 0);
-        delayFocus = config.readEntry("DelayFocus", false);
         delayFocusInterval = config.readEntry("DelayFocusInterval", 0);
     }
 

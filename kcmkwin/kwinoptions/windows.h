@@ -95,7 +95,6 @@ private:
     void setAutoRaiseInterval(int);
     void setAutoRaise(bool);
     void setDelayFocusInterval(int);
-    void setDelayFocus(bool);
     void setClickRaise(bool);
     void setSeparateScreenFocus(bool);
     void setActiveMouseScreen(bool);
@@ -109,7 +108,6 @@ private:
     QLabel *autoRaiseOnLabel;
     QCheckBox *autoRaiseOn;
     QLabel *delayFocusOnLabel;
-    QCheckBox *delayFocusOn;
     QCheckBox *clickRaiseOn;
     KIntNumInput *autoRaise;
     KIntNumInput *delayFocus;

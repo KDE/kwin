@@ -52,7 +52,6 @@
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
-#define KWIN_DELAYFOCUS            "DelayFocus"
 #define KWIN_CLICKRAISE            "ClickRaise"
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_SHADEHOVER            "ShadeHover"
@@ -206,8 +205,6 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentD
 
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()));
 
-    delayFocusOn = new QCheckBox(fcsBox);
-    connect(delayFocusOn, SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
     delayFocus = new KIntNumInput(500, fcsBox);
     delayFocus->setRange(0, 3000, 100);
     delayFocus->setSteps(100, 100);
@@ -216,7 +213,6 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentD
     delayFocusOnLabel = new QLabel(i18n("Delay focus by:"), this);
     delayFocusOnLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     delayFocusOnLabel->setBuddy(delayFocus);
-    gLay->addWidget(delayFocusOn, 3, 0);
     gLay->addWidget(delayFocusOnLabel, 3, 1);
     gLay->addWidget(delayFocus, 3, 2);
 
@@ -235,8 +231,6 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentD
                                     " it for inactive windows, you need to change the settings"
                                     " in the Actions tab."));
 
-    delayFocusOn->setWhatsThis(i18n("When this option is enabled, there will be a delay after which the"
-                                    " window the mouse pointer is over will become active (receive focus)."));
     delayFocus->setWhatsThis(i18n("This is the delay after which the window the mouse pointer is over"
                                   " will automatically receive focus."));
 
@@ -266,7 +260,6 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentD
     // Any changes goes to slotChanged()
     connect(focusCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect(autoRaiseOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(delayFocusOn, SIGNAL(clicked()), SLOT(changed()));
     connect(clickRaiseOn, SIGNAL(clicked()), SLOT(changed()));
     connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -315,11 +308,6 @@ void KFocusConfig::setAutoRaise(bool on)
     autoRaiseOn->setChecked(on);
 }
 
-void KFocusConfig::setDelayFocus(bool on)
-{
-    delayFocusOn->setChecked(on);
-}
-
 void KFocusConfig::setClickRaise(bool on)
 {
     clickRaiseOn->setChecked(on);
@@ -343,9 +331,8 @@ void KFocusConfig::setDelayFocusEnabled()
     int policyIndex = focusCombo->currentIndex();
 
     // the delayed focus related widgets are: delayFocus
-    delayFocusOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
     delayFocusOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
-    delayFocusOnTog(policyIndex != CLICK_TO_FOCUS && delayFocusOn->isChecked());
+    delayFocusOnTog(policyIndex != CLICK_TO_FOCUS);
 }
 
 void KFocusConfig::autoRaiseOnTog(bool a)
@@ -419,7 +406,6 @@ void KFocusConfig::load(void)
     setDelayFocusInterval(k);
 
     setAutoRaise(cg.readEntry(KWIN_AUTORAISE, false));
-    setDelayFocus(cg.readEntry(KWIN_DELAYFOCUS, false));
     setClickRaise(cg.readEntry(KWIN_CLICKRAISE, true));
     focusPolicyChanged();      // this will disable/hide the auto raise delay widget if focus==click
     setDelayFocusEnabled();
@@ -461,8 +447,6 @@ void KFocusConfig::save(void)
 
     cg.writeEntry(KWIN_AUTORAISE, autoRaiseOn->isChecked());
 
-    cg.writeEntry(KWIN_DELAYFOCUS, delayFocusOn->isChecked());
-
     cg.writeEntry(KWIN_CLICKRAISE, clickRaiseOn->isChecked());
 
     cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, separateScreenFocus->isChecked());
@@ -487,7 +471,6 @@ void KFocusConfig::defaults()
     setDelayFocusInterval(0);
     setFocus(CLICK_TO_FOCUS);
     setAutoRaise(false);
-    setDelayFocus(false);
     setClickRaise(true);
     setSeparateScreenFocus(false);
 
