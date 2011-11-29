@@ -195,7 +195,8 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
 
     KConfigGroup windowsConfig(config, "Windows");
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = windowsConfig.readEntry("MoveResizeMaximizedWindows", false);
+    move_resize_maximized_windows = windowsConfig.readEntry("MoveResizeMaximizedWindows", false) ||
+                                    windowsConfig.readEntry("TilingOn", false); // bug 246153
     if (old_move_resize_maximized_windows != move_resize_maximized_windows)
         changed |= SettingBorder;
 
