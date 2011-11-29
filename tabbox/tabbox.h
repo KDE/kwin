@@ -174,7 +174,7 @@ public slots:
      * @param modal Whether the TabBox should grab keyboard and mouse, that is go into modal
      * mode or whether the TabBox is controlled externally (e.g. through an effect).
      **/
-    Q_SCRIPTABLE void start(bool modal = true);
+    Q_SCRIPTABLE void open(bool modal = true);
     Q_SCRIPTABLE void close(bool abort = false);
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();

@@ -955,7 +955,7 @@ void TabBox::modalActionsSwitch(bool enabled)
     action->setEnabled(enabled);
 }
 
-void TabBox::start(bool modal)
+void TabBox::open(bool modal)
 {
     if (isDisplayed()) {
         return;
