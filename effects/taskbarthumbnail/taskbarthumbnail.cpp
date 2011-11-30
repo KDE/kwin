@@ -86,7 +86,9 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
                 continue;
             WindowPaintData thumbData(thumbw);
             thumbData.opacity *= data.opacity;
-            QRect r;
+            QRect r, thumbRect(thumb.rect);
+            thumbRect.translate(w->pos() + QPoint(data.xTranslate, data.yTranslate));
+            thumbRect.setSize(QSize(thumbRect.width() * data.xScale, thumbRect.height() * data.yScale)); // QSize has no vector multiplicator... :-(
 
 #ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == KWin::OpenGLCompositing) {
@@ -95,8 +97,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
                 }
             } // if ( effects->compositingType() == KWin::OpenGLCompositing )
 #endif
-            setPositionTransformations(thumbData, r,
-                                       thumbw, thumb.rect.translated(w->pos()), Qt::KeepAspectRatio);
+            setPositionTransformations(thumbData, r, thumbw, thumbRect, Qt::KeepAspectRatio);
             effects->drawWindow(thumbw, mask, r, thumbData);
         }
     }
