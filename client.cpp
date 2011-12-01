@@ -127,6 +127,7 @@ Client::Client(Workspace* ws)
     , demandAttentionKNotifyTimer(NULL)
     , m_responsibleForDecoPixmap(false)
     , paintRedirector(0)
+    , m_firstInTabBox(false)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
@@ -2391,6 +2392,24 @@ QRect Client::decorationRect() const
     } else {
         return QRect(0, 0, width(), height());
     }
+}
+
+void Client::updateFirstInTabBox()
+{
+    // TODO: move into KWindowInfo
+    Atom type;
+    int format, status;
+    unsigned long nitems = 0;
+    unsigned long extra = 0;
+    unsigned char *data = 0;
+    status = XGetWindowProperty(display(), window(), atoms->kde_first_in_window_list, 0, 1, false, atoms->kde_first_in_window_list, &type, &format, &nitems, &extra, &data);
+    if (status == Success && format == 32 && nitems == 1) {
+        setFirstInTabBox(true);
+    } else {
+        setFirstInTabBox(false);
+    }
+    if (data)
+        XFree(data);
 }
 
 } // namespace

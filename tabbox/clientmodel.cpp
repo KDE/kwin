@@ -175,6 +175,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         start = m_clientList.first();
 
     m_clientList.clear();
+    QList<TabBoxClient*> stickyClients;
 
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
@@ -190,6 +191,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                     m_clientList.prepend(add);
                 } else
                     m_clientList += add;
+                if (add->isFirstInTabBox()) {
+                    stickyClients << add;
+                }
             }
             c = tabBox->nextClientFocusChain(c);
 
@@ -214,6 +218,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                     m_clientList.prepend(add);
                 } else
                     m_clientList += add;
+                if (add->isFirstInTabBox()) {
+                    stickyClients << add;
+                }
             }
             if (index >= stacking.size() - 1) {
                 c = NULL;
@@ -226,6 +233,10 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         }
         break;
     }
+    }
+    foreach (TabBoxClient *c, stickyClients) {
+        m_clientList.removeAll(c);
+        m_clientList.prepend(c);
     }
     if (tabBox->config().isShowDesktop()) {
         TabBoxClient* desktopClient = tabBox->desktopClient();

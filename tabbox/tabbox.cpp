@@ -297,6 +297,11 @@ void TabBoxClientImpl::close()
     m_client->closeWindow();
 }
 
+bool TabBoxClientImpl::isFirstInTabBox() const
+{
+    return m_client->isFirstInTabBox();
+}
+
 /*********************************************************
 * TabBox
 *********************************************************/

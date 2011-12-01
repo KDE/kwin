@@ -857,6 +857,8 @@ void Client::propertyNotifyEvent(XPropertyEvent* e)
             checkActivities();
         else if (e->atom == atoms->kde_net_wm_block_compositing)
             updateCompositeBlocking(true);
+        else if (e->atom == atoms->kde_first_in_window_list)
+            updateFirstInTabBox();
         break;
     }
 }

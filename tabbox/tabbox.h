@@ -83,6 +83,7 @@ public:
     virtual int height() const;
     virtual bool isCloseable() const;
     virtual void close();
+    virtual bool isFirstInTabBox() const;
 
     Client* client() const {
         return m_client;
