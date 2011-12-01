@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <QtCore/QTimeLine>
+#include <QtDebug>
 
 namespace KWin
 {
@@ -114,7 +115,6 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
-        QRect area = effects->clientArea(ScreenArea, w);
         IconPosition position = Top;
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid()) {
@@ -205,108 +205,122 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             }
         }
 
+#define SANITIZE_PROGRESS   if (p_progress[0] < 0)\
+                                p_progress[0] = -p_progress[0];\
+                            if (p_progress[1] < 0)\
+                                p_progress[1] = -p_progress[1]
+#define SET_QUADS(_SET_A_, _A_, _DA_, _SET_B_, _B_, _O0_, _O1_, _O2_, _O3_) quad[0]._SET_A_((icon._A_() + icon._DA_()*(quad[0]._A_() / geo._DA_()) - (quad[0]._A_() + geo._A_()))*p_progress[_O0_] + quad[0]._A_());\
+                                                                            quad[1]._SET_A_((icon._A_() + icon._DA_()*(quad[1]._A_() / geo._DA_()) - (quad[1]._A_() + geo._A_()))*p_progress[_O1_] + quad[1]._A_());\
+                                                                            quad[2]._SET_A_((icon._A_() + icon._DA_()*(quad[2]._A_() / geo._DA_()) - (quad[2]._A_() + geo._A_()))*p_progress[_O2_] + quad[2]._A_());\
+                                                                            quad[3]._SET_A_((icon._A_() + icon._DA_()*(quad[3]._A_() / geo._DA_()) - (quad[3]._A_() + geo._A_()))*p_progress[_O3_] + quad[3]._A_());\
+                                                                            \
+                                                                            quad[0]._SET_B_(quad[0]._B_() + offset[_O0_]);\
+                                                                            quad[1]._SET_B_(quad[1]._B_() + offset[_O1_]);\
+                                                                            quad[2]._SET_B_(quad[2]._B_() + offset[_O2_]);\
+                                                                            quad[3]._SET_B_(quad[3]._B_() + offset[_O3_])
+
         WindowQuadList newQuads;
-        foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
-            if (position == Top || position == Bottom) {
-                // quadFactor defines how fast a quad is vertically moved: y coordinates near to window top are slowed down
-                // it is used as quadFactor^3/windowHeight^3
-                // quadFactor is the y position of the quad but is changed towards becomming the window height
-                // by that the factor becomes 1 and has no influence any more
-                float quadFactor;
-                // how far has a quad to be moved? Distance between icon and window multiplied by the progress and by the quadFactor
-                float yOffsetTop;
-                float yOffsetBottom;
-                // top and bottom progress is the factor which defines how far the x values have to be changed
-                // factor is the current moved y value diveded by the distance between icon and window
-                float topProgress;
-                float bottomProgress;
-                if (position == Bottom) {
+        float quadFactor;   // defines how fast a quad is vertically moved: y coordinates near to window top are slowed down
+                            // it is used as quadFactor^3/windowHeight^3
+                            // quadFactor is the y position of the quad but is changed towards becomming the window height
+                            // by that the factor becomes 1 and has no influence any more
+        float offset[2] = {0,0};    // how far has a quad to be moved? Distance between icon and window multiplied by the progress and by the quadFactor
+        float p_progress[2] = {0,0};  // the factor which defines how far the x values have to be changed
+                            // factor is the current moved y value diveded by the distance between icon and window
+        WindowQuad lastQuad(WindowQuadError);
+        lastQuad[0].setX(-1);
+        lastQuad[0].setY(-1);
+        lastQuad[1].setX(-1);
+        lastQuad[1].setY(-1);
+        lastQuad[2].setX(-1);
+        lastQuad[2].setY(-1);
+
+        if (position == Bottom) {
+            float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+
+                if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
                     quadFactor = quad[0].y() + (geo.height() - quad[0].y()) * progress;
-                    yOffsetTop = (icon.y() + quad[0].y() - geo.y()) * progress *
-                                 ((quadFactor * quadFactor * quadFactor) / (geo.height() * geo.height() * geo.height()));
+                    offset[0] = (icon.y() + quad[0].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
                     quadFactor = quad[2].y() + (geo.height() - quad[2].y()) * progress;
-                    yOffsetBottom = (icon.y() + quad[2].y() - geo.y()) * progress *
-                                    ((quadFactor * quadFactor * quadFactor) / (geo.height() * geo.height() * geo.height()));
-                    topProgress = qMin(yOffsetTop / (icon.y() + icon.height() - geo.y() - (float)(quad[0].y() / geo.height() * geo.height())), 1.0f);
-                    bottomProgress = qMin(yOffsetBottom / (icon.y() + icon.height() - geo.y() - (float)(quad[2].y() / geo.height() * geo.height())), 1.0f);
-                } else {
-                    quadFactor = geo.height() - quad[0].y() + (quad[0].y()) * progress;
-                    yOffsetTop = (geo.y() - icon.height() + geo.height() + quad[0].y() - icon.y()) * progress *
-                                 ((quadFactor * quadFactor * quadFactor) / (geo.height() * geo.height() * geo.height()));
-                    quadFactor = geo.height() - quad[2].y() + (quad[2].y()) * progress;
-                    yOffsetBottom = (geo.y() - icon.height() + geo.height() + quad[2].y() - icon.y()) * progress *
-                                    ((quadFactor * quadFactor * quadFactor) / (geo.height() * geo.height() * geo.height()));
-                    topProgress = qMin(yOffsetTop / (geo.y() - icon.height() + geo.height() - icon.y() -
-                                                     (float)((geo.height() - quad[0].y()) / geo.height() * geo.height())), 1.0f);
-                    bottomProgress = qMin(yOffsetBottom / (geo.y() - icon.height() + geo.height() - icon.y() -
-                                                           (float)((geo.height() - quad[2].y()) / geo.height() * geo.height())), 1.0f);
-                }
-                if (position == Top) {
-                    yOffsetTop *= -1;
-                    yOffsetBottom *= -1;
-                }
-                if (topProgress < 0)
-                    topProgress *= -1;
-                if (bottomProgress < 0)
-                    bottomProgress *= -1;
+                    offset[1] = (icon.y() + quad[2].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
+                    p_progress[1] = qMin(offset[1] / (icon.y() + icon.height() - geo.y() - float(quad[2].y())), 1.0f);
+                    p_progress[0] = qMin(offset[0] / (icon.y() + icon.height() - geo.y() - float(quad[0].y())), 1.0f);
+                } else
+                    lastQuad = quad;
 
+                SANITIZE_PROGRESS;
                 // x values are moved towards the center of the icon
-                quad[0].setX((icon.x() + icon.width()*(quad[0].x() / geo.width()) - (quad[0].x() + geo.x()))*topProgress + quad[0].x());
-                quad[1].setX((icon.x() + icon.width()*(quad[1].x() / geo.width()) - (quad[1].x() + geo.x()))*topProgress + quad[1].x());
-                quad[2].setX((icon.x() + icon.width()*(quad[2].x() / geo.width()) - (quad[2].x() + geo.x()))*bottomProgress + quad[2].x());
-                quad[3].setX((icon.x() + icon.width()*(quad[3].x() / geo.width()) - (quad[3].x() + geo.x()))*bottomProgress + quad[3].x());
+                SET_QUADS(setX, x, width, setY, y, 0,0,1,1);
 
-                quad[0].setY(quad[0].y() + yOffsetTop);
-                quad[1].setY(quad[1].y() + yOffsetTop);
-                quad[2].setY(quad[2].y() + yOffsetBottom);
-                quad[3].setY(quad[3].y() + yOffsetBottom);
-            } else {
-                float quadFactor;
-                float xOffsetLeft;
-                float xOffsetRight;
-                float leftProgress;
-                float rightProgress;
-                if (position == Right) {
-                    quadFactor = quad[0].x() + (geo.width() - quad[0].x()) * progress;
-                    xOffsetLeft = (icon.x() + quad[0].x() - geo.x()) * progress *
-                                  ((quadFactor * quadFactor * quadFactor) / (geo.width() * geo.width() * geo.width()));
-                    quadFactor = quad[1].x() + (geo.width() - quad[1].x()) * progress;
-                    xOffsetRight = (icon.x() + quad[1].x() - geo.x()) * progress *
-                                   ((quadFactor * quadFactor * quadFactor) / (geo.width() * geo.width() * geo.width()));
-                    leftProgress = qMin(xOffsetLeft / (icon.x() + icon.width() - geo.x() - (float)(quad[0].x() / geo.width() * geo.width())), 1.0f);
-                    rightProgress = qMin(xOffsetRight / (icon.x() + icon.width() - geo.x() - (float)(quad[1].x() / geo.width() * geo.width())), 1.0f);
-                } else {
-                    quadFactor = geo.width() - quad[0].x() + (quad[0].x()) * progress;
-                    xOffsetLeft = (geo.x() - icon.width() + geo.width() + quad[0].x() - icon.x()) * progress *
-                                  ((quadFactor * quadFactor * quadFactor) / (geo.width() * geo.width() * geo.width()));
-                    quadFactor = geo.width() - quad[1].x() + (quad[1].x()) * progress;
-                    xOffsetRight = (geo.x() - icon.width() + geo.width() + quad[1].x() - icon.x()) * progress *
-                                   ((quadFactor * quadFactor * quadFactor) / (geo.width() * geo.width() * geo.width()));
-                    leftProgress = qMin(xOffsetLeft / (geo.x() - icon.width() + geo.width() - icon.x() -
-                                                       (float)((geo.width() - quad[0].x()) / geo.width() * geo.width())), 1.0f);
-                    rightProgress = qMin(xOffsetRight / (geo.x() - icon.width() + geo.width() - icon.x() -
-                                                         (float)((geo.width() - quad[1].x()) / geo.width() * geo.width())), 1.0f);
-                }
-                if (position == Left) {
-                    xOffsetLeft *= -1;
-                    xOffsetRight *= -1;
-                }
-                if (leftProgress < 0)
-                    leftProgress *= -1;
-                if (rightProgress < 0)
-                    rightProgress *= -1;
-
-                quad[0].setY((icon.y() + icon.height()*(quad[0].y() / geo.height()) - (quad[0].y() + geo.y()))*leftProgress + quad[0].y());
-                quad[1].setY((icon.y() + icon.height()*(quad[1].y() / geo.height()) - (quad[1].y() + geo.y()))*rightProgress + quad[1].y());
-                quad[2].setY((icon.y() + icon.height()*(quad[2].y() / geo.height()) - (quad[2].y() + geo.y()))*rightProgress + quad[2].y());
-                quad[3].setY((icon.y() + icon.height()*(quad[3].y() / geo.height()) - (quad[3].y() + geo.y()))*leftProgress + quad[3].y());
-
-                quad[0].setX(quad[0].x() + xOffsetLeft);
-                quad[1].setX(quad[1].x() + xOffsetRight);
-                quad[2].setX(quad[2].x() + xOffsetRight);
-                quad[3].setX(quad[3].x() + xOffsetLeft);
+                newQuads.append(quad);
             }
-            newQuads.append(quad);
+        } else if (position == Top) {
+            float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
+            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+
+                if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
+                    quadFactor = geo.height() - quad[0].y() + (quad[0].y()) * progress;
+                    offset[0] = (geo.y() - icon.height() + geo.height() + quad[0].y() - icon.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
+                    quadFactor = geo.height() - quad[2].y() + (quad[2].y()) * progress;
+                    offset[1] = (geo.y() - icon.height() + geo.height() + quad[2].y() - icon.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
+                    p_progress[0] = qMin(offset[0] / (geo.y() - icon.height() + geo.height() - icon.y() - float(geo.height() - quad[0].y())), 1.0f);
+                    p_progress[1] = qMin(offset[1] / (geo.y() - icon.height() + geo.height() - icon.y() - float(geo.height() - quad[2].y())), 1.0f);
+                } else
+                    lastQuad = quad;
+
+                offset[0] = -offset[0];
+                offset[1] = -offset[1];
+
+                SANITIZE_PROGRESS;
+                // x values are moved towards the center of the icon
+                SET_QUADS(setX, x, width, setY, y, 0,0,1,1);
+
+                newQuads.append(quad);
+            }
+        } else if (position == Left) {
+            float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+
+                if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
+                    quadFactor = geo.width() - quad[0].x() + (quad[0].x()) * progress;
+                    offset[0] = (geo.x() - icon.width() + geo.width() + quad[0].x() - icon.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
+                    quadFactor = geo.width() - quad[1].x() + (quad[1].x()) * progress;
+                    offset[1] = (geo.x() - icon.width() + geo.width() + quad[1].x() - icon.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
+                    p_progress[0] = qMin(offset[0] / (geo.x() - icon.width() + geo.width() - icon.x() - float(geo.width() - quad[0].x())), 1.0f);
+                    p_progress[1] = qMin(offset[1] / (geo.x() - icon.width() + geo.width() - icon.x() - float(geo.width() - quad[1].x())), 1.0f);
+                } else
+                    lastQuad = quad;
+
+                offset[0] = -offset[0];
+                offset[1] = -offset[1];
+
+                SANITIZE_PROGRESS;
+                // y values are moved towards the center of the icon
+                SET_QUADS(setY, y, height, setX, x, 0,1,1,0);
+
+                newQuads.append(quad);
+            }
+        } else if (position == Right) {
+            float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
+            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+
+                if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
+                    quadFactor = quad[0].x() + (geo.width() - quad[0].x()) * progress;
+                    offset[0] = (icon.x() + quad[0].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
+                    quadFactor = quad[1].x() + (geo.width() - quad[1].x()) * progress;
+                    offset[1] = (icon.x() + quad[1].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
+                    p_progress[0] = qMin(offset[0] / (icon.x() + icon.width() - geo.x() - float(quad[0].x())), 1.0f);
+                    p_progress[1] = qMin(offset[1] / (icon.x() + icon.width() - geo.x() - float(quad[1].x())), 1.0f);
+                } else
+                    lastQuad = quad;
+
+                SANITIZE_PROGRESS;
+                // y values are moved towards the center of the icon
+                SET_QUADS(setY, y, height, setX, x, 0,1,1,0);
+
+                newQuads.append(quad);
+            }
         }
         data.quads = newQuads;
     }
