@@ -722,6 +722,15 @@ void GLPlatform::detect()
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
     }
 
+#ifdef KWIN_HAVE_OPENGLES
+    if (isMesaDriver()) {
+        // According to the reference implementation in
+        // mesa/demos/src/egl/opengles1/texture_from_pixmap
+        // the mesa egl implementation does not require a strict binding (so far).
+        m_looseBinding = true;
+    }
+#endif
+
     // Loose binding is broken with Gallium drivers in Mesa 7.10
     if (isGalliumDriver() && mesaVersion() == kVersionNumber(7, 10, 0))
         m_looseBinding = false;

@@ -115,6 +115,8 @@ public:
 
 #ifndef KWIN_HAVE_OPENGLES
     GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+#else
+    EGLImageKHR m_image;
 #endif
 private:
     Q_DISABLE_COPY(TexturePrivate)

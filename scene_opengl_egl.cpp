@@ -138,7 +138,7 @@ bool SceneOpenGL::initBuffer()
 bool SceneOpenGL::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
+        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT|EGL_SWAP_BEHAVIOR_PRESERVED_BIT,
         EGL_RED_SIZE,             1,
         EGL_GREEN_SIZE,           1,
         EGL_BLUE_SIZE,            1,
@@ -224,10 +224,14 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
 SceneOpenGL::TexturePrivate::TexturePrivate()
 {
     m_target = GL_TEXTURE_2D;
+    m_image = EGL_NO_IMAGE_KHR;
 }
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
+    if (m_image != EGL_NO_IMAGE_KHR) {
+        eglDestroyImageKHR(dpy, m_image);
+    }
 }
 
 void SceneOpenGL::Texture::findTarget()
@@ -263,16 +267,15 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
     };
-    EGLImageKHR image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+    d->m_image = eglCreateImageKHR(dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
                                           (EGLClientBuffer)pix, attribs);
 
-    if (EGL_NO_IMAGE_KHR == image) {
+    if (EGL_NO_IMAGE_KHR == d->m_image) {
         kDebug(1212) << "failed to create egl image";
         unbind();
         return false;
     }
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
-    eglDestroyImageKHR(dpy, image);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)d->m_image);
     unbind();
     checkGLError("load texture");
     setYInverted(true);
@@ -283,6 +286,12 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
 void SceneOpenGL::TexturePrivate::bind()
 {
     GLTexturePrivate::bind();
+    if (options->glStrictBinding) {
+        // This is just implemented to be consistent with
+        // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
+        eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) m_image);
+    }
 }
 
 void SceneOpenGL::TexturePrivate::unbind()

@@ -360,7 +360,6 @@ SceneOpenGL::Window::~Window()
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
-#ifndef KWIN_HAVE_OPENGLES
     if (!texture.isNull()) {
         if (!toplevel->damage().isEmpty()) {
             // mipmaps need to be updated
@@ -369,7 +368,6 @@ bool SceneOpenGL::Window::bindTexture()
         }
         return true;
     }
-#endif
     // Get the pixmap with the window contents
     Pixmap pix = toplevel->windowPixmap();
     if (pix == None)
