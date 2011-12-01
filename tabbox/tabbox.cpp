@@ -968,7 +968,23 @@ void TabBox::open(bool modal)
     } else {
         m_tabGrab = false;
     }
+    m_noModifierGrab = !modal;
+    setMode(TabBoxWindowsMode);
+    reset();
+    show();
+}
+
+void TabBox::openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment)
+{
+    if (isDisplayed()) {
+        return;
+    }
+    m_tabGrab = false;
     m_noModifierGrab = true;
+    tabBox->setEmbedded(static_cast<WId>(wid));
+    tabBox->setEmbeddedOffset(offset);
+    tabBox->setEmbeddedSize(size);
+    tabBox->setEmbeddedAlignment(static_cast<Qt::AlignmentFlag>(horizontalAlignment) | static_cast<Qt::AlignmentFlag>(verticalAlignment));
     setMode(TabBoxWindowsMode);
     reset();
     show();
@@ -980,6 +996,7 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
         return false;
     m_tabGrab = true;
     m_noModifierGrab = false;
+    tabBox->resetEmbedded();
     modalActionsSwitch(false);
     setMode(mode);
     reset();

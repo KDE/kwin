@@ -175,6 +175,22 @@ public slots:
      * mode or whether the TabBox is controlled externally (e.g. through an effect).
      **/
     Q_SCRIPTABLE void open(bool modal = true);
+    /**
+     * Opens the TabBox view embedded on a different window. This implies non-modal mode.
+     * The geometry of the TabBox is determined by offset, size and the alignment flags.
+     * If the alignment flags are set to center the view scales with the container. That is if
+     * the window where the TabBox is embedded onto resizes, the TabBox resizes, too.
+     * The alignment in combination with the offset determines to what border the TabBox is snapped.
+     * E.g. if horizontal alignment is right the offset is interpreted as the offset between right
+     * corner of TabBox view and the container view. When the container changes its geometry this
+     * offset is kept. So the offset on the left side would increase.
+     * @param wid The window Id the TabBox should be embedded onto
+     * @param offset The offset to one of the size borders
+     * @param size The size of the TabBox. To use the same size as the container, set alignment to center
+     * @param horizontalAlignment Either Qt::AlignLeft, Qt::AlignHCenter or Qt::AlignRight
+     * @param verticalAlignment Either Qt::AlignTop, Qt::AlignVCenter or Qt::AlignBottom
+     **/
+    Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment);
     Q_SCRIPTABLE void close(bool abort = false);
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();

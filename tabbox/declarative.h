@@ -58,11 +58,16 @@ public:
     void setCurrentIndex(const QModelIndex &index);
     QModelIndex indexAt(const QPoint &pos) const;
 
+protected:
+    virtual void hideEvent(QHideEvent *event);
+
 public Q_SLOTS:
     void slotUpdateGeometry();
+    void slotEmbeddedChanged(bool enabled);
 private Q_SLOTS:
-    void updateQmlSource();
+    void updateQmlSource(bool force = false);
     void currentIndexChanged(int row);
+    void slotWindowChanged(WId wId, unsigned int properties);
 private:
     QAbstractItemModel *m_model;
     QRect m_currentScreenGeometry;
@@ -71,6 +76,8 @@ private:
     */
     Plasma::FrameSvg* m_frame;
     QString m_currentLayout;
+    int m_cachedWidth;
+    int m_cachedHeight;
 };
 
 } // namespace TabBox
