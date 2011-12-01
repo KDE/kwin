@@ -310,6 +310,12 @@ bool CompositingPrefs::initEGLContext()
     EGLConfig configs[1024];
     eglChooseConfig(mEGLDisplay, config_attribs, configs, 1024, &count);
 
+    if (count == 0) {
+        // egl_glx only supports indirect rendering, which itself does not allow GLES2
+        kWarning(1212) << "You might be using mesa egl_glx, which is not supported!";
+        return false;
+    }
+
     EGLint visualId = XVisualIDFromVisual((Visual*)QX11Info::appVisual());
 
     EGLConfig config = configs[0];
