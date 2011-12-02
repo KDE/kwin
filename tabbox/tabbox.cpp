@@ -216,20 +216,8 @@ QVector< Window > TabBoxHandlerImpl::outlineWindowIds() const
 
 void TabBoxHandlerImpl::activateAndClose()
 {
-    Client* c = NULL;
-    if (TabBoxClientImpl* cl = static_cast< TabBoxClientImpl* >(client(currentIndex()))) {
-        c = cl->client();
-    }
-    m_tabBox->close();
-    if (c) {
-        Workspace::self()->activateClient(c);
-        if (c->isShade() && options->shadeHover)
-            c->setShade(ShadeActivated);
-        if (c->isDesktop())
-            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
-    }
+    m_tabBox->accept();
 }
-
 
 /*********************************************************
 * TabBoxClientImpl
@@ -695,15 +683,7 @@ void TabBox::grabbedKeyEvent(QKeyEvent* event)
     }
     if (m_noModifierGrab) {
         if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Space) {
-            Client* c = currentClient();
-            close();
-            if (c) {
-                Workspace::self()->activateClient(c);
-                if (c->isShade() && options->shadeHover)
-                    c->setShade(ShadeActivated);
-                if (c->isDesktop())
-                    Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
-            }
+            accept();
         }
     }
     setCurrentIndex(m_tabBox->grabbedKeyEvent(event));
@@ -1186,6 +1166,24 @@ void TabBox::close(bool abort)
     m_noModifierGrab = false;
 }
 
+void TabBox::accept()
+{
+    Client* c = currentClient();
+    close();
+    if (c) {
+        Workspace::self()->activateClient(c);
+        if (c->isShade() && options->shadeHover)
+            c->setShade(ShadeActivated);
+        if (c->isDesktop())
+            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
+    }
+}
+
+void TabBox::reject()
+{
+    close(true);
+}
+
 /*!
   Handles alt-tab / control-tab releasing
  */
@@ -1227,16 +1225,8 @@ void TabBox::keyRelease(const XKeyEvent& ev)
         return;
     if (m_tabGrab) {
         bool old_control_grab = m_desktopGrab;
-        Client* c = currentClient();
-        close();
+        accept();
         m_desktopGrab = old_control_grab;
-        if (c) {
-            Workspace::self()->activateClient(c);
-            if (c->isShade() && options->shadeHover)
-                c->setShade(ShadeActivated);
-            if (c->isDesktop())
-                Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
-        }
     }
     if (m_desktopGrab) {
         bool old_tab_grab = m_tabGrab;

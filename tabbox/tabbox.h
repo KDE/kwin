@@ -193,6 +193,8 @@ public slots:
      **/
     Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment);
     Q_SCRIPTABLE void close(bool abort = false);
+    Q_SCRIPTABLE void accept();
+    Q_SCRIPTABLE void reject();
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
     void slotWalkThroughDesktopList();
