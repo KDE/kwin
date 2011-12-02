@@ -330,6 +330,7 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
     m_tabBox = new TabBoxHandlerImpl(this);
     connect(m_tabBox, SIGNAL(ready()), SLOT(handlerReady()));
+    connect(m_tabBox, SIGNAL(selectedIndexChanged()), SIGNAL(itemSelected()));
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));

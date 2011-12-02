@@ -220,6 +220,7 @@ public slots:
 signals:
     void tabBoxAdded(int);
     Q_SCRIPTABLE void tabBoxClosed();
+    Q_SCRIPTABLE void itemSelected();
     void tabBoxUpdated();
     void tabBoxKeyEvent(QKeyEvent*);
 

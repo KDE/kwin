@@ -559,6 +559,7 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
             d->updateHighlightWindows();
         }
     }
+    emit selectedIndexChanged();
 }
 
 const QModelIndex& TabBoxHandler::currentIndex() const

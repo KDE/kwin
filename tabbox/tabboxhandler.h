@@ -359,6 +359,7 @@ signals:
     void configChanged();
     void ready();
     void embeddedChanged(bool enabled);
+    void selectedIndexChanged();
 
 private:
     friend class TabBoxHandlerPrivate;
