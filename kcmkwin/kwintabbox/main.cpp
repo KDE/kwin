@@ -190,29 +190,29 @@ void KWinTabBoxConfig::load()
 
     // effects
     // Set current option to "none" if no plugin is activated.
-    m_primaryTabBoxUi->effectCombo->setCurrentIndex(0);
-    m_alternativeTabBoxUi->effectCombo->setCurrentIndex(0);
+    m_primaryTabBoxUi->effectCombo->setCurrentIndex(Layout);
+    m_alternativeTabBoxUi->effectCombo->setCurrentIndex(Layout);
     KConfigGroup effectconfig(m_config, "Plugins");
     KConfigGroup presentwindowsconfig(m_config, "Effect-PresentWindows");
     if (effectEnabled("presentwindows", effectconfig)) {
         if (presentwindowsconfig.readEntry("TabBox", false))
-            m_primaryTabBoxUi->effectCombo->setCurrentIndex(2);
+            m_primaryTabBoxUi->effectCombo->setCurrentIndex(PresentWindows);
         if (presentwindowsconfig.readEntry("TabBoxAlternative", false))
-            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(2);
+            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(PresentWindows);
     }
     KConfigGroup coverswitchconfig(m_config, "Effect-CoverSwitch");
     if (effectEnabled("coverswitch", effectconfig)) {
         if (coverswitchconfig.readEntry("TabBox", false))
-            m_primaryTabBoxUi->effectCombo->setCurrentIndex(3);
+            m_primaryTabBoxUi->effectCombo->setCurrentIndex(CoverSwitch);
         if (coverswitchconfig.readEntry("TabBoxAlternative", false))
-            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(3);
+            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(CoverSwitch);
     }
     KConfigGroup flipswitchconfig(m_config, "Effect-FlipSwitch");
     if (effectEnabled("flipswitch", effectconfig)) {
         if (flipswitchconfig.readEntry("TabBox", false))
-            m_primaryTabBoxUi->effectCombo->setCurrentIndex(4);
+            m_primaryTabBoxUi->effectCombo->setCurrentIndex(FlipSwitch);
         if (flipswitchconfig.readEntry("TabBoxAlternative", false))
-            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(4);
+            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(FlipSwitch);
     }
     slotEffectSelectionChanged(m_primaryTabBoxUi->effectCombo->currentIndex());
     slotEffectSelectionChangedAlternative(m_alternativeTabBoxUi->effectCombo->currentIndex());
@@ -304,13 +304,13 @@ void KWinTabBoxConfig::save()
         break; // nothing
     }
     switch(m_alternativeTabBoxUi->effectCombo->currentIndex()) {
-    case 1:
+    case PresentWindows:
         presentWindowSwitchingAlternative = true;
         break;
-    case 2:
+    case CoverSwitch:
         coverSwitchAlternative = true;
         break;
-    case 3:
+    case FlipSwitch:
         flipSwitchAlternative = true;
         break;
     default:
@@ -374,7 +374,7 @@ void KWinTabBoxConfig::defaults()
     m_alternativeTabBoxUi->showDesktopBox->setChecked(TabBox::TabBoxConfig::defaultShowDesktop());
 
     // effects
-    m_alternativeTabBoxUi->effectCombo->setCurrentIndex(0);
+    m_alternativeTabBoxUi->effectCombo->setCurrentIndex(Layout);
 
     m_editor->allDefault();
 
@@ -495,7 +495,7 @@ void KWinTabBoxConfig::aboutEffectClicked(KWinTabBoxConfigForm* ui)
 
 void KWinTabBoxConfig::slotConfigureEffectClicked()
 {
-    if (m_primaryTabBoxUi->effectCombo->currentIndex() == 0) {
+    if (m_primaryTabBoxUi->effectCombo->currentIndex() == Layout) {
         slotConfigureLayoutClicked();
         return;
     }
@@ -504,7 +504,7 @@ void KWinTabBoxConfig::slotConfigureEffectClicked()
 
 void KWinTabBoxConfig::slotConfigureEffectClickedAlternative()
 {
-    if (m_alternativeTabBoxUi->effectCombo->currentIndex() == 0) {
+    if (m_alternativeTabBoxUi->effectCombo->currentIndex() == Layout) {
         slotConfigureLayoutClickedAlternative();
         return;
     }
@@ -515,13 +515,13 @@ void KWinTabBoxConfig::configureEffectClicked(KWinTabBoxConfigForm* ui)
 {
     QString effect;
     switch(ui->effectCombo->currentIndex()) {
-    case 1:
+    case PresentWindows:
         effect = "presentwindows_config";
         break;
-    case 2:
+    case CoverSwitch:
         effect = "coverswitch_config";
         break;
-    case 3:
+    case FlipSwitch:
         effect = "flipswitch_config";
         break;
     default:
