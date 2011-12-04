@@ -75,6 +75,13 @@ Item {
                     bottomMargin: hoverItem.margins.bottom
                 }
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    iconsListView.currentIndex = index;
+                    iconsListView.currentIndexChanged(iconsListView.currentIndex);
+                }
+            }
         }
     }
     ListView {
@@ -103,12 +110,5 @@ Item {
             height: iconSize + margins.top + margins.bottom
         }
         highlightMoveDuration: 250
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                iconsListView.currentIndex = iconsListView.indexAt(mouse.x, mouse.y);
-                iconsListView.currentIndexChanged(iconsListView.currentIndex);
-            }
-        }
     }
 }

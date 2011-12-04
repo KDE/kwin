@@ -124,6 +124,13 @@ Item {
                     leftMargin: 2 * compactTabBox.textMargin
                 }
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    compactListView.currentIndex = index;
+                    compactListView.currentIndexChanged(compactListView.currentIndex);
+                }
+            }
         }
     }
     ListView {
@@ -189,12 +196,5 @@ Item {
             width: compactListView.width
         }
         highlightMoveDuration: 250
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                compactListView.currentIndex = compactListView.indexAt(mouse.x, mouse.y);
-                compactListView.currentIndexChanged(compactListView.currentIndex);
-            }
-        }
     }
 }

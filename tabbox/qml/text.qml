@@ -91,6 +91,13 @@ Item {
                     leftMargin: hoverItem.margins.left
                 }
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    textListView.currentIndex = index;
+                    textListView.currentIndexChanged(textListView.currentIndex);
+                }
+            }
         }
     }
     ListView {
@@ -154,12 +161,5 @@ Item {
             width: textListView.width
         }
         highlightMoveDuration: 250
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                textListView.currentIndex = textListView.indexAt(mouse.x, mouse.y);
-                textListView.currentIndexChanged(textListView.currentIndex);
-            }
-        }
     }
 }
