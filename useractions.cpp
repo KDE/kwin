@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tiling/tiling.h"
 #endif
 
-#include "kactivityinfo.h"
+#include <Activities/Info>
 
 #include <fixx11h.h>
 #include <QPushButton>
@@ -506,7 +506,7 @@ void Workspace::activityPopupAboutToShow()
     activity_popup->addSeparator();
 
     foreach (const QString & id, openActivityList()) {
-        KActivityInfo activity(id);
+        KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
         action = activity_popup->addAction(KIcon(activity.icon()), name);
