@@ -354,12 +354,12 @@ bool Workspace::workspaceEvent(XEvent * e)
 // Note: Now the save-set support in Client::mapRequestEvent() actually requires that
 // this code doesn't check the parent to be root.
 //            if ( e->xmaprequest.parent == root ) {
-            c = createClient(e->xmaprequest.window, false);
-            if (c == NULL)   // refused to manage, simply map it (most probably override redirect)
+            if (c = createClient(e->xmaprequest.window, false))
+                c->windowEvent(e);
+            else // refused to manage, simply map it (most probably override redirect)
                 XMapRaised(display(), e->xmaprequest.window);
             return true;
-        }
-        if (c) {
+        } else {
             c->windowEvent(e);
             updateFocusChains(c, FocusChainUpdate);
             return true;
