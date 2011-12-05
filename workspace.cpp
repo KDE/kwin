@@ -1831,6 +1831,10 @@ void Workspace::delayFocus()
 
 void Workspace::requestDelayFocus(Client* c)
 {
+    if (!options->delayFocusInterval) {
+        QMetaObject::invokeMethod(this, "delayFocus", Qt::QueuedConnection);
+        return;
+    }
     delayfocus_client = c;
     delete delayFocusTimer;
     delayFocusTimer = new QTimer(this);
