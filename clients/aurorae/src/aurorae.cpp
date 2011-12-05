@@ -40,6 +40,8 @@ AuroraeFactory::AuroraeFactory()
 
 void AuroraeFactory::init()
 {
+    qRegisterMetaType<uint>("Qt::MouseButtons");
+
     KConfig conf("auroraerc");
     KConfigGroup group(&conf, "Engine");
 
@@ -137,16 +139,16 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
                                options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
                                options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight(),
                                providesContextHelp(), NULL);
-    connect(m_scene, SIGNAL(closeWindow()), SLOT(closeWindow()));
-    connect(m_scene, SIGNAL(maximize(Qt::MouseButtons)), SLOT(maximize(Qt::MouseButtons)));
-    connect(m_scene, SIGNAL(showContextHelp()), SLOT(showContextHelp()));
-    connect(m_scene, SIGNAL(minimizeWindow()), SLOT(minimize()));
-    connect(m_scene, SIGNAL(menuClicked()), SLOT(menuClicked()));
-    connect(m_scene, SIGNAL(menuDblClicked()), SLOT(closeWindow()));
-    connect(m_scene, SIGNAL(toggleOnAllDesktops()), SLOT(toggleOnAllDesktops()));
-    connect(m_scene, SIGNAL(toggleShade()), SLOT(toggleShade()));
-    connect(m_scene, SIGNAL(toggleKeepAbove()), SLOT(toggleKeepAbove()));
-    connect(m_scene, SIGNAL(toggleKeepBelow()), SLOT(toggleKeepBelow()));
+    connect(m_scene, SIGNAL(closeWindow()), SLOT(closeWindow()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(maximize(Qt::MouseButtons)), SLOT(maximize(Qt::MouseButtons)), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(showContextHelp()), SLOT(showContextHelp()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(minimizeWindow()), SLOT(minimize()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(menuClicked()), SLOT(menuClicked()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(menuDblClicked()), SLOT(closeWindow()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(toggleOnAllDesktops()), SLOT(toggleOnAllDesktops()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(toggleShade()), SLOT(toggleShade()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(toggleKeepAbove()), SLOT(toggleKeepAbove()), Qt::QueuedConnection);
+    connect(m_scene, SIGNAL(toggleKeepBelow()), SLOT(toggleKeepBelow()), Qt::QueuedConnection);
     connect(m_scene, SIGNAL(titlePressed(Qt::MouseButton,Qt::MouseButtons)),
             SLOT(titlePressed(Qt::MouseButton,Qt::MouseButtons)));
     connect(m_scene, SIGNAL(titleReleased(Qt::MouseButton,Qt::MouseButtons)),
