@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <kmanagerselection.h>
 
-#include <Activities/Controller>
+#include <KActivities/Controller>
 
 #include "plugins.h"
 #include "utils.h"

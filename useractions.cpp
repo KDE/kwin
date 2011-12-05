@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tiling/tiling.h"
 #endif
 
-#include <Activities/Info>
+#include <KActivities/Info>
 
 #include <fixx11h.h>
 #include <QPushButton>
