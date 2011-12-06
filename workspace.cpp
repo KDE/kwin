@@ -1831,12 +1831,13 @@ void Workspace::delayFocus()
 
 void Workspace::requestDelayFocus(Client* c)
 {
+    delayfocus_client = c;
+    delete delayFocusTimer;
     if (!options->delayFocusInterval) {
+        delayFocusTimer = 0;
         QMetaObject::invokeMethod(this, "delayFocus", Qt::QueuedConnection);
         return;
     }
-    delayfocus_client = c;
-    delete delayFocusTimer;
     delayFocusTimer = new QTimer(this);
     connect(delayFocusTimer, SIGNAL(timeout()), this, SLOT(delayFocus()));
     delayFocusTimer->setSingleShot(true);
