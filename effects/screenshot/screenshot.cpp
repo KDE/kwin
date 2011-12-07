@@ -43,6 +43,7 @@ bool ScreenShotEffect::supported()
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
 {
+    connect ( effects, SIGNAL(windowClosed(EffectWindow*)), SLOT(windowClosed(EffectWindow*)) );
     QDBusConnection::sessionBus().registerObject("/Screenshot", this, QDBusConnection::ExportScriptableContents);
     QDBusConnection::sessionBus().registerService("org.kde.kwin.Screenshot");
 }
@@ -137,10 +138,15 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
 {
     m_type = (ScreenShotType)mask;
     const QPoint cursor = effects->cursorPos();
-    foreach (EffectWindow * w, effects->stackingOrder()) {
-        if (w->geometry().contains(cursor) && w->isOnCurrentDesktop() && !w->isMinimized()) {
-            m_scheduledScreenshot = w;
-        }
+    EffectWindowList order = effects->stackingOrder();
+    EffectWindowList::const_iterator it = order.constEnd(), first = order.constBegin();
+    while( it != first ) {
+        m_scheduledScreenshot = *(--it);
+        if (m_scheduledScreenshot->isOnCurrentDesktop() &&
+            !m_scheduledScreenshot->isMinimized() && !m_scheduledScreenshot->isDeleted() &&
+            m_scheduledScreenshot->geometry().contains(cursor))
+            break;
+        m_scheduledScreenshot = 0;
     }
     if (m_scheduledScreenshot) {
         m_scheduledScreenshot->addRepaintFull();
@@ -261,6 +267,14 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 bool ScreenShotEffect::isActive() const
 {
     return m_scheduledScreenshot != NULL;
+}
+
+void ScreenShotEffect::windowClosed( EffectWindow* w )
+{
+    if (w == m_scheduledScreenshot) {
+        m_scheduledScreenshot = NULL;
+        screenshotWindowUnderCursor(m_type);
+    }
 }
 
 } // namespace
