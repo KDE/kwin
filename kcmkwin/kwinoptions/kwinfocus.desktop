@@ -184,3 +184,6 @@ Comment[zh_CN]=配置窗口焦点策略
 Comment[zh_TW]=設定視窗焦點政策
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
+X-KDE-Keywords[kk]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
+X-KDE-Keywords[uk]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,фокус,фокусування,місце,розташування,підняття,автоматично,клацання,клавіатура,всі стільниці,стільниця,альт-таб
+X-KDE-Keywords[x-test]=xxfocus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktopxx

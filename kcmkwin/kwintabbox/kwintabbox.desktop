@@ -120,3 +120,6 @@ Comment[x-test]=xxConfigure the behavior for navigating through windowsxx
 Comment[zh_CN]=配置窗口导航的行为
 Comment[zh_TW]=設定透過視窗導覽的行為。
 X-KDE-Keywords=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
+X-KDE-Keywords[kk]=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
+X-KDE-Keywords[uk]=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,вікно,вікна,перемикач,перемикач вікон,перемикання,перемикання вікон,альттаб,альт-таб,альт+таб
+X-KDE-Keywords[x-test]=xxwindow,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tabxx

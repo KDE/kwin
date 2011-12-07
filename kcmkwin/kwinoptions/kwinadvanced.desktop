@@ -187,3 +187,6 @@ Comment[zh_CN]=配置高级窗口管理特性
 Comment[zh_TW]=設定進階視窗管理功能
 
 X-KDE-Keywords=shading,border,hover,active borders
+X-KDE-Keywords[kk]=shading,border,hover,active borders
+X-KDE-Keywords[uk]=shading,border,hover,active borders,тінь,тіні,рамка,межа,наведення,активна рамка,активна межа
+X-KDE-Keywords[x-test]=xxshading,border,hover,active bordersxx

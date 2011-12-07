@@ -148,3 +148,6 @@ Comment[zh_CN]=配置活动窗口边缘
 Comment[zh_TW]=設定作用的螢幕邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop
+X-KDE-Keywords[kk]=kwin,window,manager,effect,edge,border,action,switch,desktop
+X-KDE-Keywords[uk]=kwin,window,manager,effect,edge,border,action,switch,desktop,вікно,вікна,керування,ефект,край,межа,дія,перемикання
+X-KDE-Keywords[x-test]=xxkwin,window,manager,effect,edge,border,action,switch,desktopxx

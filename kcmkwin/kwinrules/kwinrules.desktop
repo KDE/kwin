@@ -159,3 +159,6 @@ Comment[zh_CN]=配置指定窗口的设置
 Comment[zh_TW]=設定特定視窗設定值
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+X-KDE-Keywords[kk]=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+X-KDE-Keywords[uk]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила
+X-KDE-Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx
