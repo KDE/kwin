@@ -284,6 +284,8 @@ void KWinTabBoxConfig::save()
     saveConfig(config, m_tabBoxAlternativeConfig);
 
     // effects
+    bool highlightWindows = m_primaryTabBoxUi->highlightWindowCheck->isChecked() ||
+                            m_alternativeTabBoxUi->highlightWindowCheck->isChecked();
     bool presentWindowSwitching = false;
     bool coverSwitch            = false;
     bool flipSwitch             = false;
@@ -316,6 +318,7 @@ void KWinTabBoxConfig::save()
     default:
         break; // nothing
     }
+
     // activate effects if not active
     KConfigGroup effectconfig(m_config, "Plugins");
     if (presentWindowSwitching || presentWindowSwitchingAlternative)
@@ -324,6 +327,8 @@ void KWinTabBoxConfig::save()
         effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
     if (flipSwitch || flipSwitchAlternative)
         effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
+    if (highlightWindows)
+        effectconfig.writeEntry("kwin4_effect_highlightwindowEnabled", true);
     effectconfig.sync();
     KConfigGroup presentwindowsconfig(m_config, "Effect-PresentWindows");
     presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
