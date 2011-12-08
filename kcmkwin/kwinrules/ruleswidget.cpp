@@ -62,7 +62,7 @@ RulesWidget::RulesWidget(QWidget* parent)
              " window settings from taking effect.</li>"
              "<li><em>Apply Initially:</em> The window property will be only set to the given value"
              " after the window is created. No further changes will be affected.</li>"
-             "<li><em>Remember:</em> The value of the window property will be remembered and every time"
+             "<li><em>Remember:</em> The value of the window property will be remembered and every"
              " time the window is created, the last remembered value will be applied.</li>"
              "<li><em>Force:</em> The window property will be always forced to the given value.</li>"
              "<li><em>Apply Now:</em> The window property will be set to the given value immediately"
