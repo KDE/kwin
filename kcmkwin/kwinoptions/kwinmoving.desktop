@@ -186,6 +186,10 @@ Comment[zh_CN]=配置窗口移动的方式
 Comment[zh_TW]=設定視窗移動的方式
 
 X-KDE-Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
+X-KDE-Keywords[ia]=movente,intelligente,cascada,maximisa,maximiza,zona de ruptura,margine
 X-KDE-Keywords[kk]=moving,smart,cascade,maximize,maximise,snap zone,snap,border
+X-KDE-Keywords[pt]=movimento,inteligente,cascata,maximizar,ajuste à zona,ajuste,contorno
+X-KDE-Keywords[pt_BR]=movimento,movimentação,inteligente,cascata,maximizar,ajuste à área,ajuste,borda
+X-KDE-Keywords[sv]=flytta,smart,kaskad,maximera,låszon,lås,kanter
 X-KDE-Keywords[uk]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,пересування,кмітливе,каскадом,максимізувати,розгорнути,прилипання,зона прилипання,межа
 X-KDE-Keywords[x-test]=xxmoving,smart,cascade,maximize,maximise,snap zone,snap,borderxx

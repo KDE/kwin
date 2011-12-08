@@ -180,6 +180,11 @@ Comment[zh_CN]=配置桌面效果
 Comment[zh_TW]=設定桌面效果
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect
+X-KDE-Keywords[ia]=kwin,fenestra,gerente,composite,effecto
 X-KDE-Keywords[kk]=kwin,window,manager,compositing,effect
+X-KDE-Keywords[nl]=kwin,venster,beheerder,compositing,effect
+X-KDE-Keywords[pt]=kwin,janela,gestor,composição,efeito
+X-KDE-Keywords[pt_BR]=kwin,janela,gerenciador,composição,efeito
+X-KDE-Keywords[sv]=kwin,fönster,hanterare,sammansättning,effekt
 X-KDE-Keywords[uk]=kwin,window,manager,compositing,effect,вікно,вікна,керування,менеджер,композитне,ефект
 X-KDE-Keywords[x-test]=xxkwin,window,manager,compositing,effectxx

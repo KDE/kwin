@@ -189,6 +189,10 @@ Comment[zh_CN]=配置键盘和鼠标设置
 Comment[zh_TW]=設定鍵盤與滑鼠的設定值
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+X-KDE-Keywords[ia]=tinta,maximisa,maximisa,minimisa,minimisa,plus basse,menu de operationes,barra de titulo, redimensionar
 X-KDE-Keywords[kk]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+X-KDE-Keywords[pt]=enrolar,maximizar,minimizar,baixar,menu de operações,barra de título,dimensionar
+X-KDE-Keywords[pt_BR]=enrolar,maximizar,minimizar,baixar,menu de operações,barra de título,redimensionar
+X-KDE-Keywords[sv]=skugga,maximera,minimera,åtgärdsmeny,namnlist,ändra storlek
 X-KDE-Keywords[uk]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,тінь,максимізувати,розгорнути,згорнути,нижче,меню дій,заголовок,смужка заголовка,розмір,розміри,зміна розмірів
 X-KDE-Keywords[x-test]=xxshade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resizexx
