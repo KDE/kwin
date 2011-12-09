@@ -191,8 +191,10 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 d->m_animated = true;
                 ++anim;
             }
-            else
+            else {
+                animationEnded(entry.key(), anim->attribute);
                 anim = entry->erase(anim);
+            }
         }
         if (entry->isEmpty()) {
             const int i = d->m_zombies.indexOf(entry.key());
