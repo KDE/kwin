@@ -587,6 +587,7 @@ private:
     bool move_resize_has_keyboard_grab;
     bool unrestrictedMoveResize;
     int moveResizeStartScreen;
+    static bool s_haveResizeEffect;
 
     Position mode;
     QPoint moveOffset;

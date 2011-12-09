@@ -2580,6 +2580,7 @@ bool Client::startMoveResize()
     }
 
     moveResizeMode = true;
+    s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
     moveResizeStartScreen = screen();
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
@@ -3034,7 +3035,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         return;
 
 #ifdef HAVE_XSYNC
-    if (isResize() && syncRequest.counter != None) {
+    if (isResize() && syncRequest.counter != None && !s_haveResizeEffect) {
         if (!syncRequest.timeout) {
             syncRequest.timeout = new QTimer(this);
             connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
@@ -3062,7 +3063,11 @@ void Client::performMoveResize()
 #ifdef KWIN_BUILD_TILING
     if (!workspace()->tiling()->isEnabled())
 #endif
-        setGeometry(moveResizeGeom);
+    {
+        if (isMove() || (isResize() && !s_haveResizeEffect)) {
+            setGeometry(moveResizeGeom);
+        }
+    }
 #ifdef HAVE_XSYNC
     if (isResize() && syncRequest.counter != None)
         addRepaintFull();

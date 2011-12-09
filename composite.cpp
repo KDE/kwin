@@ -811,6 +811,8 @@ void Client::finishCompositing()
     Toplevel::finishCompositing();
     updateVisibility();
     updateDecoration(true, true);
+    // for safety in case KWin is just resizing the window
+    s_haveResizeEffect = false;
 }
 
 bool Client::shouldUnredirect() const
