@@ -53,6 +53,7 @@ private:
     bool slide;
     QPoint slide_start_pos;
     bool slide_painting_sticky;
+    bool slide_painting_keep_above;
     QPoint slide_painting_diff;
 
 };

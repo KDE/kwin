@@ -53,6 +53,9 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         else {
             slide = false;
             mTimeLine.setCurrentTime(0);
+            foreach (EffectWindow * w, effects->stackingOrder()) {
+                w->setData(WindowForceBlurRole, QVariant(false));
+            }
             effects->setActiveFullScreenEffect(NULL);
         }
     }
@@ -63,8 +66,11 @@ void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
 {
     if (slide) {
         if (w->isOnAllDesktops()) {
-            if (!slide_painting_sticky)
+            bool keep_above = w->keepAbove() || w->isDock();
+            if ((!slide_painting_sticky || keep_above) &&
+                (!keep_above || !slide_painting_keep_above)) {
                 w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+            }
         } else if (w->isOnDesktop(painting_desktop)) {
             data.setTransformed();
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
@@ -114,13 +120,29 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         currentRegion |= (currentRegion & QRect(0, h, w, h)).translated(0, -h);
     }
     bool do_sticky = true;
+    // Assure that the windows that are on all desktops and always on top
+    // are painted with the last screen (e.g. plasma's tooltips). All other windows
+    // that are on all desktops (e.g. the background window) are painted together
+    // with the first screen.
+    int last_desktop = 0;
+    QList<QRect> desktop_rects;
     for (int desktop = 1;
             desktop <= effects->numberOfDesktops();
             ++desktop) {
         QRect rect = desktopRect(desktop);
+        desktop_rects << rect;
+        if (currentRegion.contains(rect)) {
+            last_desktop = desktop;
+        }
+    }
+    for (int desktop = 1;
+            desktop <= effects->numberOfDesktops();
+            ++desktop) {
+        QRect rect = desktop_rects[desktop-1];
         if (currentRegion.contains(rect)) {  // part of the desktop needs painting
             painting_desktop = desktop;
             slide_painting_sticky = do_sticky;
+            slide_painting_keep_above = (last_desktop == desktop);
             slide_painting_diff = rect.topLeft() - currentPos;
             if (effects->optionRollOverDesktops()) {
                 if (slide_painting_diff.x() > displayWidth())
@@ -222,6 +244,9 @@ void SlideEffect::slotDesktopChanged(int old, int current)
         mTimeLine.setCurrentTime(0);
         slide_start_pos = desktopRect(old).topLeft();
         slide = true;
+        foreach (EffectWindow * w, effects->stackingOrder()) {
+            w->setData(WindowForceBlurRole, QVariant(true));
+        }
         effects->setActiveFullScreenEffect(this);
     }
     effects->addRepaintFull();
