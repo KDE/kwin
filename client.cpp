@@ -982,6 +982,9 @@ void Client::minimize(bool avoid_animation)
         return;
     }
 
+    if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
+        info->setState(0, NET::Shaded);
+
 #ifdef KWIN_BUILD_SCRIPTING
     //Scripting call. Does not use a signal/slot mechanism
     //as ensuring connections was a bit difficult between
@@ -1019,6 +1022,9 @@ void Client::unminimize(bool avoid_animation)
     if (rules()->checkMinimize(false)) {
         return;
     }
+
+    if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
+        info->setState(NET::Shaded, NET::Shaded);
 
 #ifdef KWIN_BUILD_SCRIPTING
     SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
