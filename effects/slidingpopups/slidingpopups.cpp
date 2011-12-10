@@ -82,17 +82,86 @@ void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
+    qreal progress = 1.0;
+    bool appearing = false;
     if (mAppearingWindows.contains(w)) {
         mAppearingWindows[ w ]->setCurrentTime(mAppearingWindows[ w ]->currentTime() + time);
-        if (mAppearingWindows[ w ]->currentValue() < 1)
+        if (mAppearingWindows[ w ]->currentValue() < 1) {
             data.setTransformed();
-        else
+            progress = mAppearingWindows[ w ]->currentValue();
+            appearing = true;
+        } else
             delete mAppearingWindows.take(w);
     } else if (mDisappearingWindows.contains(w)) {
-        data.setTransformed();
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
 
         mDisappearingWindows[ w ]->setCurrentTime(mDisappearingWindows[ w ]->currentTime() + time);
+        progress = mDisappearingWindows[ w ]->currentValue();
+
+        if (progress != 1.0) {
+            data.setTransformed();
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
+        } else {
+            delete mDisappearingWindows.take(w);
+            w->unrefWindow();
+        }
+    }
+    if (progress != 1.0) {
+        const int start = mWindowsData[ w ].start;
+        if (start != 0) {
+            const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+            // filter out window quads, but only if the window does not start from the edge
+            switch(mWindowsData[ w ].from) {
+            case West: {
+                const double splitPoint = w->width() - (w->x() + w->width() - screenRect.x() - start) + w->width() * (appearing ? 1.0 - progress : progress);
+                data.quads = data.quads.splitAtX(splitPoint);
+                WindowQuadList filtered;
+                foreach (const WindowQuad &quad, data.quads) {
+                    if (quad.left() >= splitPoint) {
+                        filtered << quad;
+                    }
+                }
+                data.quads = filtered;
+                break;
+            }
+            case North: {
+                const double splitPoint = w->height() - (w->y() + w->height() - screenRect.y() - start) + w->height() * (appearing ? 1.0 - progress : progress);
+                data.quads = data.quads.splitAtY(splitPoint);
+                WindowQuadList filtered;
+                foreach (const WindowQuad &quad, data.quads) {
+                    if (quad.top() >= splitPoint) {
+                        filtered << quad;
+                    }
+                }
+                data.quads = filtered;
+                break;
+            }
+            case East: {
+                const double splitPoint = screenRect.x() + screenRect.width() - w->x() - start - w->width() * (appearing ? 1.0 - progress : progress);
+                data.quads = data.quads.splitAtX(splitPoint);
+                WindowQuadList filtered;
+                foreach (const WindowQuad &quad, data.quads) {
+                    if (quad.right() <= splitPoint) {
+                        filtered << quad;
+                    }
+                }
+                data.quads = filtered;
+                break;
+            }
+            case South:
+            default: {
+                const double splitPoint = screenRect.y() + screenRect.height() - w->y() - start - w->height() * (appearing ? 1.0 - progress : progress);
+                data.quads = data.quads.splitAtY(splitPoint);
+                WindowQuadList filtered;
+                foreach (const WindowQuad &quad, data.quads) {
+                    if (quad.bottom() <= splitPoint) {
+                        filtered << quad;
+                    }
+                }
+                data.quads = filtered;
+                break;
+            }
+            }
+        }
     }
     effects->prePaintWindow(w, data, time);
 }
@@ -101,7 +170,6 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
 {
     bool animating = false;
     bool appearing = false;
-    QRegion clippedRegion = region;
 
     if (mAppearingWindows.contains(w)) {
         appearing = true;
@@ -122,59 +190,33 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
                 progress = 1.0;
         }
         const int start = mWindowsData[ w ].start;
-        QRect r;
 
+        const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
         switch(mWindowsData[ w ].from) {
         case West:
-            data.xTranslate += (start - w->width()) * progress;
-            r = QRect(start - w->width(), w->y(), w->width(), w->height());
+            data.xTranslate -= w->width() * progress;
             break;
         case North:
-            data.yTranslate += (start - w->height()) * progress;
-            r = QRect(w->x(), start - w->height(), w->width(), w->height());
+            data.yTranslate -= w->height() * progress;
             break;
         case East:
-            data.xTranslate += (start - w->x()) * progress;
-            r = QRect(w->x() + w->width(), w->y(), w->width(), w->height());
+            data.xTranslate += w->width() * progress;
             break;
         case South:
         default:
-            data.yTranslate += (start - w->y()) * progress;
-            r = QRect(w->x(), start, w->width(), w->height());
+            data.yTranslate += w->height() * progress;
         }
-        clippedRegion = clippedRegion.subtracted(r);
-        effects->addRepaint(r);
     }
 
-    effects->paintWindow(w, mask, clippedRegion, data);
+    effects->paintWindow(w, mask, region, data);
 }
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 {
     if (mAppearingWindows.contains(w) || mDisappearingWindows.contains(w)) {
         w->addRepaintFull(); // trigger next animation repaint
-        const int start = mWindowsData[ w ].start;
-        switch(mWindowsData[ w ].from) {
-        case West:
-            effects->addRepaint(QRect(start, w->y(), w->x(), w->height()));
-            break;
-        case North:
-            effects->addRepaint(QRect(w->x(), start, w->width(), w->y()));
-            break;
-        case East:
-            effects->addRepaint(QRect(w->x() + w->width(), w->y(), displayWidth() - w->x() - w->width() - start, w->height()));
-            break;
-        case South:
-        default:
-            effects->addRepaint(QRect(w->x(), w->y()+w->height(), w->width(), displayHeight() - w->y() - w->height() - start));
-        }
     }
     effects->postPaintWindow(w);
-    if (mDisappearingWindows.contains(w) && mDisappearingWindows[ w ]->currentValue() >= 1) {
-        delete mDisappearingWindows.take(w);
-        w->unrefWindow();
-        effects->addRepaint(w->geometry());
-    }
 }
 
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
@@ -244,6 +286,42 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         animData.fadeInDuration = animationTime(mFadeInTime);
         animData.fadeOutDuration = animationTime(mFadeOutTime);
     }
+    const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    if (animData.start == -1) {
+        switch (animData.from) {
+        case West:
+            animData.start = qMax(w->x() - screenRect.x(), 0);
+            break;
+        case North:
+            animData.start = qMax(w->y() - screenRect.y(), 0);
+            break;
+        case East:
+            animData.start = qMax(screenRect.x() + screenRect.width() - (w->x() + w->width()), 0);
+            break;
+        case South:
+        default:
+            animData.start = qMax(screenRect.y() + screenRect.height() - (w->y() + w->height()), 0);
+            break;
+        }
+    }
+    // sanitize
+    int difference = 0;
+    switch (animData.from) {
+    case West:
+        difference = w->x() - screenRect.x();
+        break;
+    case North:
+        difference = w->y() - screenRect.y();
+        break;
+    case East:
+        difference = w->x() + w->width() - (screenRect.x() + screenRect.width());
+        break;
+    case South:
+    default:
+        difference = w->y() + w->height() - (screenRect.y() + screenRect.height());
+        break;
+    }
+    animData.start = qMax<int>(animData.start, difference);
     mWindowsData[ w ] = animData;
 }
 
