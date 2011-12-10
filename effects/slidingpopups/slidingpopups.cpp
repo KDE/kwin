@@ -90,8 +90,10 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             data.setTransformed();
             progress = mAppearingWindows[ w ]->currentValue();
             appearing = true;
-        } else
+        } else {
             delete mAppearingWindows.take(w);
+            w->setData(WindowForceBlurRole, false);
+        }
     } else if (mDisappearingWindows.contains(w)) {
 
         mDisappearingWindows[ w ]->setCurrentTime(mDisappearingWindows[ w ]->currentTime() + time);
@@ -192,19 +194,28 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         const int start = mWindowsData[ w ].start;
 
         const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
+        int splitPoint = 0;
         switch(mWindowsData[ w ].from) {
         case West:
             data.xTranslate -= w->width() * progress;
+            splitPoint = w->width() - (w->x() + w->width() - screenRect.x() - start);
+            region = QRegion(w->x() + splitPoint, w->y(), w->width() - splitPoint, w->height());
             break;
         case North:
             data.yTranslate -= w->height() * progress;
+            splitPoint = w->height() - (w->y() + w->height() - screenRect.y() - start);
+            region = QRegion(w->x(), w->y() + splitPoint, w->width(), w->height() - splitPoint);
             break;
         case East:
             data.xTranslate += w->width() * progress;
+            splitPoint = screenRect.x() + screenRect.width() - w->x() - start;
+            region = QRegion(w->x(), w->y(), splitPoint, w->height());
             break;
         case South:
         default:
             data.yTranslate += w->height() * progress;
+            splitPoint = screenRect.y() + screenRect.height() - w->y() - start;
+            region = QRegion(w->x(), w->y(), w->width(), splitPoint);
         }
     }
 
@@ -228,6 +239,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 
         // Tell other windowAdded() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        w->setData(WindowForceBlurRole, true);
 
         w->addRepaintFull();
     }
@@ -244,6 +256,7 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        w->setData(WindowForceBlurRole, true);
 
         w->addRepaintFull();
     }

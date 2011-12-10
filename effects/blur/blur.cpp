@@ -347,7 +347,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     bool scaled = !qFuzzyCompare(data.xScale, 1.0) && !qFuzzyCompare(data.yScale, 1.0);
     bool translated = data.xTranslate || data.yTranslate;
 
-    if (scaled || translated || (mask & PAINT_WINDOW_TRANSFORMED))
+    if (scaled || ((translated || (mask & PAINT_WINDOW_TRANSFORMED)) && !w->data(WindowForceBlurRole).toBool()))
         return false;
 
     bool blurBehindDecos = effects->decorationsHaveAlpha() &&
@@ -363,10 +363,17 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 {
     const QRect screen(0, 0, displayWidth(), displayHeight());
     if (shouldBlur(w, mask, data)) {
-        const QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
+        QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
+
+        const bool translated = data.xTranslate || data.yTranslate;
+        // let's do the evil parts - someone wants to blur behind a transformed window
+        if (translated) {
+            shape = shape.translated(data.xTranslate, data.yTranslate);
+            shape = shape & region;
+        }
 
         if (!shape.isEmpty()) {
-            if (m_shouldCache) {
+            if (m_shouldCache && !translated) {
                 doCachedBlur(w, region, data.opacity * data.contents_opacity);
             } else {
                 doBlur(shape, screen, data.opacity * data.contents_opacity);
