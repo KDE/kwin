@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin
 #include "atoms.h"
+#include "client.h"
 #include "effects.h"
 #include "options.h"
 #include "utils.h"
@@ -323,6 +324,9 @@ void ScreenEdge::switchDesktop(ElectricBorder border, const QPoint& _pos)
         desk = Workspace::self()->desktopBelow(desk, options->rollOverDesktops);
         pos.setY(OFFSET);
     }
+    Client *c = Workspace::self()->getMovingClient();
+    if (c && c->rules()->checkDesktop(desk) != desk)
+        return; // user attempts to move a client to another desktop where it is ruleforced to not be
     int desk_before = Workspace::self()->currentDesktop();
     Workspace::self()->setCurrentDesktop(desk);
     if (Workspace::self()->currentDesktop() != desk_before)
