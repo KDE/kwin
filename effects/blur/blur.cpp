@@ -1,5 +1,6 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
+ *   Copyright © 2011 Philipp Knechtges <philipp-dev@knechtges.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -278,19 +279,16 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 
         // if a window underneath the blurred area is damaged we have to
         // update the cached texture
-        if (m_damagedArea.intersects(blurArea)) {
+        const QRegion damagedCache = expand(expandedBlur & m_damagedArea) & expandedBlur;
+        if (!damagedCache.isEmpty()) {
             // This is the area of the blurry window which really can change.
-            // TODO: damagedArea can be a bit bigger than it needs to be
-            // if m_damagedArea intersects with the boundary of blurArea, but this
-            // only results in a slightly bigger repaint. At the moment I don't think it
-            // is worth to clip once more against blurArea after the expansion.
-            const QRegion damagedArea = expand(blurArea & m_damagedArea);
+            const QRegion damagedArea = damagedCache & blurArea;
             // In order to be able to recalculate this area we have to make sure the
             // background area is painted before.
             data.paint |= expand(damagedArea);
             if (windows.contains(w)) {
                 // In case we already have a texture cache mark the dirty regions invalid.
-                windows[w].damagedRegion |= damagedArea;
+                windows[w].damagedRegion |= damagedCache;
             }
             // we keep track of the "damage propagation"
             m_damagedArea |= damagedArea;
@@ -305,10 +303,10 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 
         // if this window or an window underneath the blurred area is painted again we have to
         // blur everything
-        if (m_paintedArea.intersects(blurArea) || data.paint.intersects(blurArea)) {
+        if (m_paintedArea.intersects(expandedBlur) || data.paint.intersects(blurArea)) {
             data.paint |= expandedBlur;
             // we keep track of the "damage propagation"
-            m_damagedArea |= expand(blurArea & m_damagedArea);
+            m_damagedArea |= expand(expandedBlur & m_damagedArea) & blurArea;
             // we have to check again whether we do not damage a blurred area
             // of a window we do not cache
             if (expandedBlur.intersects(m_currentBlur)) {
@@ -368,10 +366,6 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
                 doBlur(shape, screen, data.opacity * data.contents_opacity);
             }
         }
-    } else if (windows.contains(w)) {
-        // in case the window has a texture cache but is not drawn, we have to reset
-        // the texture cache
-        windows[w].damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
     }
 
     // Draw the window over the blurred area
