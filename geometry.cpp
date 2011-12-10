@@ -1852,7 +1852,9 @@ bool Client::isMaximizable() const
         if (!isMovable() || !isResizable() || isToolbar())  // SELI isToolbar() ?
             return false;
     }
-    return true;
+    if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore && rules()->checkMaximize(MaximizeFull) != MaximizeRestore)
+        return true;
+    return false;
 }
 
 
@@ -2127,8 +2129,15 @@ void Client::setMaximize(bool vertically, bool horizontally)
 static bool changeMaximizeRecursion = false;
 void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 {
-    if (!isMaximizable() || changeMaximizeRecursion)
+    if (changeMaximizeRecursion)
         return;
+    {
+        // isMovable() and isResizable() may be false for maximized windows
+        // with moving/resizing maximized windows disabled
+        TemporaryAssign< MaximizeMode > tmp(max_mode, MaximizeRestore);
+        if (!isMovable() || !isResizable() || isToolbar())  // SELI isToolbar() ?
+            return;
+    }
 
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
