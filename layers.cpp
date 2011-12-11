@@ -336,7 +336,7 @@ void Workspace::raiseClient(Client* c, bool nogroup)
         while ((transient_parent = transient_parent->transientFor()))
             transients << transient_parent;
         foreach (transient_parent, transients)
-        raiseClient(transient_parent, true);
+            raiseClient(transient_parent, true);
     }
 
     unconstrained_stacking_order.removeAll(c);
@@ -359,13 +359,14 @@ void Workspace::raiseClientWithinApplication(Client* c)
     // ignore mainwindows
 
     // first try to put it above the top-most window of the application
-    for (int i = unconstrained_stacking_order.size() - 1; i >= 0 ; i--) {
-        if (unconstrained_stacking_order.at(i) == c)     // don't lower it just because it asked to be raised
+    for (int i = unconstrained_stacking_order.size() - 1; i > -1 ; --i) {
+        Client *other = unconstrained_stacking_order.at(i);
+        if (other == c)     // don't lower it just because it asked to be raised
             return;
-        if (Client::belongToSameApplication(unconstrained_stacking_order.at(i), c)) {
+        if (Client::belongToSameApplication(other, c)) {
             unconstrained_stacking_order.removeAll(c);
-            unconstrained_stacking_order.insert(++i, c);   // insert after the found one
-            return;
+            unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(other) + 1, c);   // insert after the found one
+            break;
         }
     }
 }
@@ -396,29 +397,23 @@ void Workspace::lowerClientRequest(Client* c, NET::RequestSource src, Time /*tim
 void Workspace::restack(Client* c, Client* under)
 {
     assert(unconstrained_stacking_order.contains(under));
-    if (Client::belongToSameApplication(under, c)) {
-        // put it below the active window if it's the same app
-        unconstrained_stacking_order.removeAll(c);
-        unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), c);
-    } else {
-        // put in the stacking order below _all_ windows belonging to the active application
-        for (ClientList::Iterator it = unconstrained_stacking_order.begin();
-                it != unconstrained_stacking_order.end();
-                ++it) {
-            // TODO ignore topmenus?
-            if (Client::belongToSameApplication(under, *it)) {
-                if (*it != c) {
-                    unconstrained_stacking_order.removeAll(c);
-                    unconstrained_stacking_order.insert(it, c);
-                }
+    if (!Client::belongToSameApplication(under, c)) {
+         // put in the stacking order below _all_ windows belonging to the active application
+        Client *other = 0;
+        for (int i = 0; i < unconstrained_stacking_order.size(); ++i) { // TODO ignore topmenus?
+            if (Client::belongToSameApplication(under, (other = unconstrained_stacking_order.at(i)))) {
+                under = (c == other) ? 0 : other;
                 break;
             }
         }
     }
+    if (under) {
+        unconstrained_stacking_order.removeAll(c);
+        unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), c);
+    }
+
     assert(unconstrained_stacking_order.contains(c));
-    for (int desktop = 1;
-            desktop <= numberOfDesktops();
-            ++desktop) {
+    for (int desktop = 1; desktop <= numberOfDesktops(); ++desktop) {
         // do for every virtual desktop to handle the case of onalldesktop windows
         if (c->wantsTabFocus() && c->isOnDesktop(desktop) && focus_chain[ desktop ].contains(under)) {
             if (Client::belongToSameApplication(under, c)) {
@@ -428,9 +423,7 @@ void Workspace::restack(Client* c, Client* under)
             } else {
                 // put it in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
                 focus_chain[ desktop ].removeAll(c);
-                for (int i = focus_chain[ desktop ].size() - 1;
-                        i >= 0;
-                        --i) {
+                for (int i = focus_chain[ desktop ].size() - 1; i >= 0; --i) {
                     if (Client::belongToSameApplication(under, focus_chain[ desktop ].at(i))) {
                         focus_chain[ desktop ].insert(i, c);
                         break;
@@ -446,9 +439,7 @@ void Workspace::restack(Client* c, Client* under)
             global_focus_chain.insert(global_focus_chain.indexOf(under), c);
         } else {
             global_focus_chain.removeAll(c);
-            for (int i = global_focus_chain.size() - 1;
-                    i >= 0;
-                    --i) {
+            for (int i = global_focus_chain.size() - 1; i >= 0; --i) {
                 if (Client::belongToSameApplication(under, global_focus_chain.at(i))) {
                     global_focus_chain.insert(i, c);
                     break;
@@ -687,21 +678,78 @@ ToplevelList Workspace::xStackingOrder() const
 // Client
 //*******************************
 
-void Client::restackWindow(Window /*above TODO */, int detail, NET::RequestSource src, Time timestamp, bool send_event)
+void Client::restackWindow(Window above, int detail, NET::RequestSource src, Time timestamp, bool send_event)
 {
-    switch(detail) {
-    case Above:
-    case TopIf:
-        workspace()->raiseClientRequest(this, src, timestamp);
-        break;
-    case Below:
-    case BottomIf:
-        workspace()->lowerClientRequest(this, src, timestamp);
-        break;
-    case Opposite:
-    default:
-        break;
+    Client *other = 0;
+    if (detail == Opposite) {
+        other = workspace()->findClient(WindowMatchPredicate(above));
+        if (!other) {
+            workspace()->raiseOrLowerClient(this);
+            return;
+        }
+        ClientList::const_iterator  it = workspace()->stackingOrder().constBegin(),
+                                    end = workspace()->stackingOrder().constEnd();
+        while (it != end) {
+            if (*it == this) {
+                detail = Above;
+                break;
+            } else if (*it == other) {
+                detail = Below;
+                break;
+            }
+            ++it;
+        }
     }
+    else if (detail == TopIf) {
+        other = workspace()->findClient(WindowMatchPredicate(above));
+        if (other && other->geometry().intersects(geometry()))
+            workspace()->raiseClientRequest(this, src, timestamp);
+        return;
+    }
+    else if (detail == BottomIf) {
+        other = workspace()->findClient(WindowMatchPredicate(above));
+        if (other && other->geometry().intersects(geometry()))
+            workspace()->lowerClientRequest(this, src, timestamp);
+        return;
+    }
+
+    if (!other)
+        other = workspace()->findClient(WindowMatchPredicate(above));
+
+    if (other && detail == Above) {
+        ClientList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+                                    begin = workspace()->stackingOrder().constBegin();
+        while (--it != begin) {
+            if (*it == this)
+                return; // we're already above
+
+            if (*it == other) { // the other one is top on stack
+                it = begin; // invalidate
+                src = NET::FromTool; // force
+                break;
+            }
+
+            if (!(  (*it)->isNormalWindow() && (*it)->isShown(true) &&
+                    (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnScreen(screen()) ))
+                continue; // irrelevant clients
+
+            if (*(it - 1) == other)
+                break; // "it" is the one above the target one, stack below "it"
+        }
+
+        if (it != begin && (*(it - 1) == other))
+            other = const_cast<Client*>(*it);
+        else
+            other = 0;
+    }
+
+    if (other)
+        workspace()->restack(this, other);
+    else if (detail == Below)
+        workspace()->lowerClientRequest(this, src, timestamp);
+    else if (detail == Above)
+        workspace()->raiseClientRequest(this, src, timestamp);
+
     if (send_event)
         sendSyntheticConfigureNotify();
 }
