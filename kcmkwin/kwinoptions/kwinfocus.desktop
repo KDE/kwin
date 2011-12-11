@@ -184,6 +184,7 @@ Comment[zh_CN]=配置窗口焦点策略
 Comment[zh_TW]=設定視窗焦點政策
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
+X-KDE-Keywords[ca]=focus,situació,elevació automàtica,elevació,elevació de clic,teclat,CDE,alt-tab,tots els escriptoris
 X-KDE-Keywords[ia]=focus,placiamento,auto altiar,altiar,altiar de click,claviero,CDE,alt-tab,tote scriptorio
 X-KDE-Keywords[kk]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
 X-KDE-Keywords[nl]=focus,plaatsing,automatisch omhoog,omhoog,klik omhoog,toetsenbord,CDE,alt-tab,alle bureaublad
@@ -192,3 +193,4 @@ X-KDE-Keywords[pt_BR]=foco,colocação,elevação automática,elevar,clicar para
 X-KDE-Keywords[sv]=fokus,placering,höj automatiskt,höj,höj med klick,tangentbord,CDE,alt-tabulator,alla skrivbord
 X-KDE-Keywords[uk]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,фокус,фокусування,місце,розташування,підняття,автоматично,клацання,клавіатура,всі стільниці,стільниця,альт-таб
 X-KDE-Keywords[x-test]=xxfocus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktopxx
+X-KDE-Keywords[zh_TW]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop

@@ -187,6 +187,7 @@ Comment[zh_CN]=配置高级窗口管理特性
 Comment[zh_TW]=設定進階視窗管理功能
 
 X-KDE-Keywords=shading,border,hover,active borders
+X-KDE-Keywords[ca]=ombrejat,vora,passar per sobre,vores actives
 X-KDE-Keywords[ia]=degradation,margine,flottar,margines active
 X-KDE-Keywords[kk]=shading,border,hover,active borders
 X-KDE-Keywords[nl]=verdonkering,grens,overheen bewegen,actieve grenzen
@@ -195,3 +196,4 @@ X-KDE-Keywords[pt_BR]=enrolamento,borda,passagem,bordas ativas
 X-KDE-Keywords[sv]=skuggning,kanter,hålla musen över,aktiva kanter
 X-KDE-Keywords[uk]=shading,border,hover,active borders,тінь,тіні,рамка,межа,наведення,активна рамка,активна межа
 X-KDE-Keywords[x-test]=xxshading,border,hover,active bordersxx
+X-KDE-Keywords[zh_TW]=shading,border,hover,active borders

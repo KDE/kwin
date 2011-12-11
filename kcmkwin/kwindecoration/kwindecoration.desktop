@@ -160,6 +160,7 @@ Comment[zh_CN]=配置窗口标题的观感
 Comment[zh_TW]=設定視窗標題列的外觀與感覺
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
+X-KDE-Keywords[ca]=kwin,finestra,gestor,vora,estil,tema,aspecte,aparença,disposició,botó,gestió,vora,kwm,decoració
 X-KDE-Keywords[ia]=kwin,fenestra,gerente,margine,stilo,thema,aspecto,sentir,disposition,button,maneator,bordo,kwm,decoration
 X-KDE-Keywords[kk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[nl]=kwin,venster,beheerder,grens,stijl,thema,look,feel,indeling,knop,handel,rand,kwm,decoratie
@@ -168,6 +169,7 @@ X-KDE-Keywords[pt_BR]=kwin,gerenciador,janela,borda,estilo,tema,aparência,compo
 X-KDE-Keywords[sv]=kwin,fönster,hantering,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration
 X-KDE-Keywords[uk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення
 X-KDE-Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
+X-KDE-Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 
