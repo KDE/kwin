@@ -804,6 +804,7 @@ void Client::setupCompositing()
     Toplevel::setupCompositing();
     updateVisibility(); // for internalKeep()
     updateDecoration(true, true);
+    move(calculateGravitation(true)); // we just polluted the gravity because the window likely has no decoration yet
 }
 
 void Client::finishCompositing()
