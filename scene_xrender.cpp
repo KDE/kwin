@@ -584,7 +584,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         QVector<QRect> rects = transformed_shape.rects();
         for (int i = 0; i < rects.count(); ++i) {
             QRect& r = rects[ i ];
-            r = QRect(qRound(r.x() * xscale), qRound(r.y() * yscale),
+            r.setRect(qRound(r.x() * xscale), qRound(r.y() * yscale),
                       qRound(r.width() * xscale), qRound(r.height() * yscale));
         }
         transformed_shape.setRects(rects.constData(), rects.count());
