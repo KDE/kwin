@@ -50,8 +50,8 @@ private:
 
     bool m_finishing;
 
-    double m_fadeDuration;
-    QHash<EffectWindow*, double> m_windowOpacity;
+    float m_fadeDuration;
+    QHash<EffectWindow*, float> m_windowOpacity;
 
     long m_atom;
     QList<EffectWindow*> m_highlightedWindows;
