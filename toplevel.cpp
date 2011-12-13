@@ -408,7 +408,7 @@ void Toplevel::getWmOpaqueRegion()
         int rformat;
         unsigned long nitems;
         if (XGetWindowProperty(display(), client,
-                               atoms->kde_net_wm_opaque_region, 0, length, false, XA_CARDINAL,
+                               atoms->net_wm_opaque_region, 0, length, false, XA_CARDINAL,
                                &type, &rformat, &nitems, &bytes_after_return,
                                reinterpret_cast< unsigned char** >(&data)) == Success) {
             if (type != XA_CARDINAL || rformat != 32 || nitems%4) {

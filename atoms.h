@@ -62,7 +62,7 @@ public:
     Atom net_wm_sync_request;
     Atom kde_net_wm_block_compositing;
     Atom kde_net_wm_shadow;
-    Atom kde_net_wm_opaque_region;
+    Atom net_wm_opaque_region;
     Atom kde_net_wm_tab_group;
 };
 

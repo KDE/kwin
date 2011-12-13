@@ -1656,7 +1656,7 @@ void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
             getWindowRole();
         else if (e->atom == atoms->kde_net_wm_shadow)
             getShadow();
-        else if (e->atom == atoms->kde_net_wm_opaque_region)
+        else if (e->atom == atoms->net_wm_opaque_region)
             getWmOpaqueRegion();
         break;
     }
