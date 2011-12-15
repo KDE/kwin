@@ -60,6 +60,7 @@ public:
 
 protected:
     virtual void hideEvent(QHideEvent *event);
+    virtual bool x11Event(XEvent *e);
 
 public Q_SLOTS:
     void slotUpdateGeometry();
@@ -78,6 +79,8 @@ private:
     QString m_currentLayout;
     int m_cachedWidth;
     int m_cachedHeight;
+    //relative position to the embedding window
+    QPoint m_relativePos;
 };
 
 } // namespace TabBox

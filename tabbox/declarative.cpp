@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QGraphicsObject>
 #include <QtGui/QResizeEvent>
+#include <QX11Info>
+
 // include KDE
 #include <KDE/KDebug>
 #include <KDE/KIconEffect>
@@ -186,6 +188,28 @@ void DeclarativeView::hideEvent(QHideEvent *event)
     }
 }
 
+bool DeclarativeView::x11Event(XEvent *e)
+{
+    if (tabBox->embedded() && 
+        (e->type == ButtonPress || e->type == ButtonRelease || e->type == MotionNotify)) {
+        XEvent ev;
+
+        memcpy(&ev, e, sizeof(ev));
+        if (e->type == ButtonPress || e->type == ButtonRelease) {
+            ev.xbutton.x += m_relativePos.x();
+            ev.xbutton.y += m_relativePos.y();
+            ev.xbutton.window = tabBox->embedded();
+        } else if (e->type == MotionNotify) {
+            ev.xmotion.x += m_relativePos.x();
+            ev.xmotion.y += m_relativePos.y();
+            ev.xmotion.window = tabBox->embedded();
+        }
+
+        XSendEvent( QX11Info::display(), tabBox->embedded(), False, NoEventMask, &ev );
+    }
+    return QDeclarativeView::x11Event(e);
+}
+
 void DeclarativeView::slotUpdateGeometry()
 {
     const WId embeddedId = tabBox->embedded();
@@ -216,12 +240,15 @@ void DeclarativeView::slotUpdateGeometry()
             height = info.geometry().height() - 2 * offset.y();
         }
         setGeometry(QRect(x, y, width, height));
+
+        m_relativePos = QPoint(info.geometry().x(), info.geometry().x());
     } else {
         const int width = rootObject()->property("width").toInt();
         const int height = rootObject()->property("height").toInt();
         setGeometry(m_currentScreenGeometry.x() + static_cast<qreal>(m_currentScreenGeometry.width()) * 0.5 - static_cast<qreal>(width) * 0.5,
             m_currentScreenGeometry.y() + static_cast<qreal>(m_currentScreenGeometry.height()) * 0.5 - static_cast<qreal>(height) * 0.5,
             width, height);
+        m_relativePos = pos();
     }
 }
 
