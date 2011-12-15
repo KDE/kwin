@@ -218,7 +218,7 @@ void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 
 bool SnapHelperEffect::isActive() const
 {
-    return m_timeline.currentValue() != 0.0;
+    return m_active || m_timeline.currentValue() != 0.0;
 }
 
 } // namespace
