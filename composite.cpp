@@ -232,8 +232,17 @@ void Workspace::finishCompositing()
 void Workspace::fallbackToXRenderCompositing()
 {
     finishCompositing();
-    options->compositingMode = XRenderCompositing;
-    setupCompositing();
+    KConfigGroup config(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    config.writeEntry("Backend", "XRender");
+    config.writeEntry("GraphicsSystem", "native");
+    config.sync();
+    if (Extensions::nonNativePixmaps()) { // must restart to change the graphicssystem
+        restartKWin("automatic graphicssystem change for XRender backend");
+        return;
+    } else {
+        options->compositingMode = XRenderCompositing;
+        setupCompositing();
+    }
 }
 
 void Workspace::lostCMSelection()

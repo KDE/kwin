@@ -702,6 +702,7 @@ private:
     void initShortcuts();
     void initDesktopPopup();
     void initActivityPopup();
+    void restartKWin(const QString &reason);
     void discardPopup();
     void setupWindowShortcut(Client* c);
     void checkCursorPos();

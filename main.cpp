@@ -409,6 +409,22 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
 
     KWorkSpace::trimMalloc();
 
+    // the raster graphicssystem has a quite terrible performance on the XRender backend or when not
+    // compositing at all while some to many decorations suffer from bad performance of the native
+    // graphicssystem (lack of implementation, QGradient internally uses the raster system and
+    // XPutImage's the result because some graphics drivers have insufficient or bad performing
+    // implementations of XRenderCreate*Gradient)
+    //
+    // Therefore we allow configurationa and do some automagic selection to discourage
+    // ""known to be stupid" ideas ;-P
+    // The invalid system parameter "" will use the systems default graphicssystem
+    // "!= XRender" is intended since eg. pot. SW backends likely would profit from raster as well
+    KConfigGroup config(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    QString preferredSystem("native");
+    if (config.readEntry("Enabled", true) && config.readEntry("Backend", "OpenGL") != "XRender")
+        preferredSystem = "";
+    QApplication::setGraphicsSystem(config.readEntry("GraphicsSystem", preferredSystem));
+
     Display* dpy = XOpenDisplay(NULL);
     if (!dpy) {
         fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
