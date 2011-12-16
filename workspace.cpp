@@ -1020,10 +1020,24 @@ void Workspace::slotReconfigure()
     }
 }
 
+void Workspace::restartKWin(const QString &reason)
+{
+    kDebug(1212) << "restarting kwin for:" << reason;
+    char cmd[1024]; // copied from crashhandler - maybe not the best way to do?
+    sprintf(cmd, "%s --replace &", QFile::encodeName(QCoreApplication::applicationFilePath()).constData());
+    system(cmd);
+}
+
 void Workspace::slotReinitCompositing()
 {
     // Reparse config. Config options will be reloaded by setupCompositing()
     KGlobal::config()->reparseConfiguration();
+    const QString graphicsSystem = KConfigGroup(KSharedConfig::openConfig("kwinrc"), "Compositing").readEntry("GraphicsSystem", "");
+    if ((Extensions::nonNativePixmaps() && graphicsSystem == "native") ||
+        (!Extensions::nonNativePixmaps() && (graphicsSystem == "raster" || graphicsSystem == "raster")) ) {
+        restartKWin("explicitly reconfigured graphicsSystem change");
+        return;
+    }
 
     // Update any settings that can be set in the compositing kcm.
 #ifdef KWIN_BUILD_SCREENEDGES
