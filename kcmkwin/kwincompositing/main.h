@@ -77,6 +77,7 @@ public slots:
 
 private slots:
     void rearmGlSupport();
+    void suggestGraphicsSystem();
     void toogleSmoothScaleUi(int compositingType);
     void toggleEffectShortcutChanged(const QKeySequence &seq);
 
@@ -93,6 +94,7 @@ private:
     KSharedConfigPtr mTmpConfig;
     bool m_showConfirmDialog;
     KActionCollection* m_actionCollection;
+    QString originalGraphicsSystem;
 };
 
 } // namespace
