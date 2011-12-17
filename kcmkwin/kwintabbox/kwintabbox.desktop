@@ -122,6 +122,7 @@ Comment[zh_CN]=配置窗口导航的行为
 Comment[zh_TW]=設定透過視窗導覽的行為。
 X-KDE-Keywords=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
 X-KDE-Keywords[ca]=finestra,finestres,commutador,commutador de finestres,commutació,commutació de finestres,alttab,alt-tab,alt+tab,alt tab
+X-KDE-Keywords[fi]=ikkuna,ikkunat,vaihtaja,vaihto,ikkunan vaihtaja,vaihtaminen,ikkunan vaihtaminen,ikkunan vaihto,alttab,alt-tab,alt+tab,alt tab,altsarkain,alt-sarkain,alt+sarkain,alt sarkain
 X-KDE-Keywords[ia]=fenestra,fenestras,commutator,commutator de fenestra,commutar,commutar fenestra,alttab,alt-tab,alt+tab,alt tab
 X-KDE-Keywords[kk]=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
 X-KDE-Keywords[nb]=vindu,vinduer,bytter,vindusbytter,bytte,vindusbytte,alttab,alt-tab,alt+tab,alt tab
