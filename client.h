@@ -86,6 +86,43 @@ class Client
     : public Toplevel
 {
     Q_OBJECT
+    // TODO: notify signal
+    Q_PROPERTY(bool active READ isActive)
+    // TODO: notify signal
+    Q_PROPERTY(QString caption READ caption)
+    // TODO: notify signal
+    Q_PROPERTY(bool closeable READ isCloseable)
+    // TODO: notify signal
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop)
+    // TODO: notify signal, proper setter with only one attribute
+    Q_PROPERTY(bool fullScreen READ isFullScreen)
+    Q_PROPERTY(bool fullScreenable READ isFullScreenable)
+    // TODO: notify signal
+    Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
+    // TODO: notify signal
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove)
+    // TODO: notify signal
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow)
+    // TODO: notify signal
+    Q_PROPERTY(bool maximizable READ isMaximizable)
+    // TODO: notify signal
+    Q_PROPERTY(bool minimizable READ isMinimizable)
+    // TODO: setter and notify signal
+    Q_PROPERTY(bool minimized READ isMinimized)
+    Q_PROPERTY(bool modal READ isModal)
+    Q_PROPERTY(bool moveable READ isMovable)
+    Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
+    // TODO: notify signal
+    Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
+    Q_PROPERTY(bool resizeable READ isResizable)
+    // TODO: notify signal
+    Q_PROPERTY(bool shadeable READ isShadeable)
+    // TODO: proper setShade method and notifiy signal
+    Q_PROPERTY(bool shade READ isShade)
+    // TODO: notify signal
+    Q_PROPERTY(bool transient READ isTransient)
+    // TODO: notify signal, add meta type
+    Q_PROPERTY(Client *transientFor READ transientFor)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;

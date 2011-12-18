@@ -46,6 +46,18 @@ class Toplevel
     : public QObject, public KDecorationDefines
 {
     Q_OBJECT
+    Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
+    Q_PROPERTY(qulonglong frameId READ frameId)
+    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(int height READ height)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(QPoint pos READ pos)
+    Q_PROPERTY(int screen READ screen)
+    Q_PROPERTY(QSize size READ size)
+    Q_PROPERTY(int width READ width)
+    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
+    Q_PROPERTY(int x READ x)
+    Q_PROPERTY(int y READ y)
 public:
     Toplevel(Workspace *ws);
     Window frameId() const;
