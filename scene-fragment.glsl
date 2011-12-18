@@ -12,10 +12,8 @@ void main() {
 
     tex.a += float(u_forceAlpha);
 
-    if( saturation != 1.0 ) {
-        vec3 desaturated = tex.rgb * vec3( 0.30, 0.59, 0.11 );
-        desaturated = vec3( dot( desaturated, tex.rgb ));
-        tex.rgb = tex.rgb * vec3( saturation ) + desaturated * vec3( 1.0 - saturation );
+    if (saturation != 1.0) {
+        tex.rgb = mix(vec3(dot( vec3( 0.30, 0.59, 0.11 ), tex.rgb )), tex.rgb, saturation);
     }
 
     tex *= modulation;
