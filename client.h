@@ -35,12 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 
-// TODO: QScriptValue should be in the ifdef, but it breaks the build
-#include <QScriptValue>
-#ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/client.h"
-#endif
-
 #include "utils.h"
 #include "options.h"
 #include "workspace.h"
@@ -58,15 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QProcess;
 class QTimer;
 class KStartupInfoData;
-
-#ifdef KWIN_BUILD_SCRIPTING
-namespace SWrapper
-{
-class Client;
-}
-
-typedef QPair<SWrapper::Client*, QScriptValue> ClientResolution;
-#endif
 
 namespace KWin
 {
@@ -159,15 +144,6 @@ public:
      */
     bool isSpecialWindow() const;
     bool hasNETSupport() const;
-
-#ifdef KWIN_BUILD_SCRIPTING
-    /**
-      * This is a public object with no wrappers or anything to keep it fast,
-      * so in essence, direct access is allowed. Please be very careful while
-      * using this object
-      */
-    QHash<QScriptEngine*, ClientResolution>* scriptCache;
-#endif
 
     QSize minSize() const;
     QSize maxSize() const;
@@ -769,9 +745,6 @@ private:
     QuickTileMode electricMode;
 
     friend bool performTransiencyCheck();
-#ifdef KWIN_BUILD_SCRIPTING
-    friend class SWrapper::Client;
-#endif
 
     void checkActivities();
     bool activitiesDefined; //whether the x property was actually set

@@ -122,10 +122,7 @@ if(KWIN_BUILD_SCRIPTING)
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         scripting/scripting.cpp
         scripting/workspace.cpp
-        scripting/client.cpp
         scripting/meta.cpp
-        scripting/toplevel.cpp
-        scripting/windowinfo.cpp
         scripting/s_clientgroup.cpp
         scripting/workspaceproxy.cpp
         scripting/chelate.cpp

@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "./../client.h"
 #include "./../group.h"
 
-#include "client.h"
 #include "workspaceproxy.h"
 #include <QScriptEngine>
 
@@ -42,7 +41,6 @@ class Workspace : public QObject
 
 private:
     static KWin::Workspace* centralObject;
-    static SWrapper::Client* clientHolder;
     QScriptEngine* centralEngine;
 
     Q_DISABLE_COPY(Workspace)
@@ -91,6 +89,8 @@ public:
     static QScriptValue activeClient(QScriptContext*, QScriptEngine*);
     static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
 };
+
+QScriptValue valueForClient(KWin::Client *client, QScriptEngine *engine);
 
 }
 

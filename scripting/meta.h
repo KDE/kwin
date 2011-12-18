@@ -21,15 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_META_H
 #define KWIN_SCRIPTING_META_H
 
-#include "client.h"
 #include "s_clientgroup.h"
 #include <QStringList>
 #include <QScriptValueIterator>
 
-typedef KWin::Client* KClientRef;
-typedef KWin::ClientList KClientList;
 typedef KWin::ClientGroup* KClientGroupRef;
-typedef KWin::Toplevel* KToplevelRef;
 
 namespace KWin
 {
@@ -39,28 +35,16 @@ QScriptValue lazyLogicGenerate(QScriptContext*, QScriptEngine*);
 }
 }
 
-Q_DECLARE_METATYPE(KClientRef)
 Q_DECLARE_METATYPE(QPoint)
 Q_DECLARE_METATYPE(QSize)
 Q_DECLARE_METATYPE(QRect)
-Q_DECLARE_METATYPE(KClientList)
 Q_DECLARE_METATYPE(KClientGroupRef)
-Q_DECLARE_METATYPE(KToplevelRef)
 Q_DECLARE_METATYPE(QList<KWin::ClientGroup*>)
 
 namespace KWin
 {
 namespace MetaScripting
 {
-/**
-  * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
-  * Conversion functions for KWin::Client*
-  */
-namespace Client
-{
-QScriptValue toScriptValue(QScriptEngine*, const KClientRef&);
-void fromScriptValue(const QScriptValue&, KClientRef&);
-}
 
 /**
   * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
@@ -70,16 +54,6 @@ namespace ClientGroup
 {
 QScriptValue toScriptValue(QScriptEngine*, const KClientGroupRef&);
 void fromScriptValue(const QScriptValue&, KClientGroupRef&);
-}
-
-/**
-  * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
-  * Conversion functions for KWin::Toplevel*
-  */
-namespace Toplevel
-{
-QScriptValue toScriptValue(QScriptEngine*, const KToplevelRef&);
-void fromScriptValue(const QScriptValue&, KToplevelRef&);
 }
 
 /**

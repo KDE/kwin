@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 
 #ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/client.h"
 #include "scripting/scripting.h"
 #include "scripting/workspaceproxy.h"
 #endif
@@ -136,10 +135,6 @@ Client::Client(Workspace* ws)
     , input_window(None)
 {
     // TODO: Do all as initialization
-
-#ifdef KWIN_BUILD_SCRIPTING
-    scriptCache = new QHash<QScriptEngine*, ClientResolution>();
-#endif
 #ifdef HAVE_XSYNC
     syncRequest.counter = syncRequest.alarm = None;
     syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
@@ -233,9 +228,6 @@ Client::~Client()
     delete bridge;
 #ifdef KWIN_BUILD_TABBOX
     delete m_tabBoxClient;
-#endif
-#ifdef KWIN_BUILD_SCRIPTING
-    delete scriptCache;
 #endif
 }
 

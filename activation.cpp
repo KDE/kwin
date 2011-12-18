@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 
-#include "scripting/client.h"
-
 #include <fixx11h.h>
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>

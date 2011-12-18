@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "s_clientgroup.h"
+#include "meta.h"
+#include "workspace.h"
 
 Q_DECLARE_METATYPE(SWrapper::ClientGroup*)
 
@@ -76,7 +78,7 @@ QScriptValue SWrapper::ClientGroup::toString(QScriptContext* ctx, QScriptEngine*
 
 QScriptValue SWrapper::ClientGroup::add(QScriptContext* ctx, QScriptEngine* eng)
 {
-    KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
+    KWin::Client* client = qobject_cast<KWin::Client*>(ctx->argument(0).toQObject());
     KWin::ClientGroup* cGrp = qscriptvalue_cast<KWin::ClientGroup*>(ctx->thisObject());
 
     if ((client == 0) || (cGrp == 0)) {
@@ -108,7 +110,7 @@ QScriptValue SWrapper::ClientGroup::remove(QScriptContext* ctx, QScriptEngine* e
         cGrp->remove(arg.toNumber(), geom, false);
         return eng->toScriptValue<bool>(1);
     } else {
-        KWin::Client* client = qscriptvalue_cast<KWin::Client*>(arg);
+        KWin::Client* client = qobject_cast<KWin::Client*>(arg.toQObject());
 
         if (client == 0) {
             return eng->toScriptValue<bool>(0);
@@ -126,7 +128,7 @@ QScriptValue SWrapper::ClientGroup::contains(QScriptContext* ctx, QScriptEngine*
     if (cGrp == 0) {
         return QScriptValue();
     } else {
-        KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
+        KWin::Client* client = qobject_cast<KWin::Client*>(ctx->argument(0).toQObject());
 
         if (client == 0) {
             return QScriptValue();
@@ -143,7 +145,7 @@ QScriptValue SWrapper::ClientGroup::indexOf(QScriptContext* ctx, QScriptEngine* 
     if (cGrp == 0) {
         return QScriptValue();
     } else {
-        KWin::Client* client = qscriptvalue_cast<KWin::Client*>(ctx->argument(0));
+        KWin::Client* client = qobject_cast<KWin::Client*>(ctx->argument(0).toQObject());
 
         if (client == 0) {
             return QScriptValue();
@@ -166,8 +168,8 @@ QScriptValue SWrapper::ClientGroup::move(QScriptContext* ctx, QScriptEngine* eng
     QScriptValue arg1 = ctx->argument(0);
     QScriptValue arg2 = ctx->argument(1);
 
-    KWin::Client* cl1 = qscriptvalue_cast<KWin::Client*>(arg1);
-    KWin::Client* cl2 = qscriptvalue_cast<KWin::Client*>(arg2);
+    KWin::Client* cl1 = qobject_cast<KWin::Client*>(arg1.toQObject());
+    KWin::Client* cl2 = qobject_cast<KWin::Client*>(arg2.toQObject());
 
     if (cl1 != 0) {
         if (cl2 == 0) {
@@ -253,7 +255,12 @@ QScriptValue SWrapper::ClientGroup::clients(QScriptContext* ctx, QScriptEngine* 
     if (cGrp == 0) {
         return QScriptValue();
     } else {
-        return eng->toScriptValue<KClientList>(cGrp->clients());
+        KWin::ClientList clients = cGrp->clients();
+        QScriptValue value = eng->newArray(clients.size());
+        for (int i=0; i<clients.size(); ++i) {
+            value.setProperty(i, SWrapper::valueForClient(clients.at(i), eng));
+        }
+        return value;
     }
 }
 
@@ -264,7 +271,7 @@ QScriptValue SWrapper::ClientGroup::visible(QScriptContext* ctx, QScriptEngine* 
     if (cGrp == 0) {
         return QScriptValue();
     } else {
-        return eng->toScriptValue<KWin::Client*>(cGrp->visible());
+        return valueForClient(cGrp->visible(), eng);
     }
 }
 
@@ -289,7 +296,7 @@ QScriptValue SWrapper::ClientGroup::generate(QScriptEngine* eng, SWrapper::Clien
 QScriptValue SWrapper::ClientGroup::construct(QScriptContext* ctx, QScriptEngine* eng)
 {
     return generate(eng, new SWrapper::ClientGroup(
-                        qscriptvalue_cast<KClientRef>(ctx->argument(0))
+                        qobject_cast<KWin::Client*>(ctx->argument(0).toQObject())
                     ));
 }
 
