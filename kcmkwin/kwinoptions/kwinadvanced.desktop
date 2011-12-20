@@ -94,8 +94,8 @@ Name[uz]=Qoʻshimcha
 Name[uz@cyrillic]=Қўшимча
 Name[vi]=Nâng cao
 Name[wa]=Sipepieus
-Name[x-test]=xxAdvancedxx
 Name[xh]=Ebhekisa phambili
+Name[x-test]=xxAdvancedxx
 Name[zh_CN]=高级
 Name[zh_TW]=進階
 
@@ -181,13 +181,14 @@ Comment[uz]=Oyna boshqaruvning koʻshimcha imkoniyatlarini moslash
 Comment[uz@cyrillic]=Ойна бошқарувнинг кўшимча имкониятларини мослаш
 Comment[vi]=Cấu hình các tính năng quản lý cửa sổ nâng cao
 Comment[wa]=Apontiaedje des spepieusès fonccionålités do manaedjaedje des fniesses
-Comment[x-test]=xxConfigure advanced window management featuresxx
 Comment[xh]=Qwalasela imisebenzi esemqoka ebhekisa phambili yophatho lwe window
+Comment[x-test]=xxConfigure advanced window management featuresxx
 Comment[zh_CN]=配置高级窗口管理特性
 Comment[zh_TW]=設定進階視窗管理功能
 
 X-KDE-Keywords=shading,border,hover,active borders
 X-KDE-Keywords[ca]=ombrejat,vora,passar per sobre,vores actives
+X-KDE-Keywords[de]=Schatten,Umrandung,Aktive Ränder,Schweben,Fensterheber
 X-KDE-Keywords[fi]=rullaus,kehys,reuna,leijunta,aktiiviset reunat,aktiiviset kehykset
 X-KDE-Keywords[ia]=degradation,margine,flottar,margines active
 X-KDE-Keywords[kk]=shading,border,hover,active borders
