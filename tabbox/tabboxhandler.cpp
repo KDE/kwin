@@ -89,11 +89,18 @@ public:
     bool isShown;
     QMap< QString, ItemLayoutConfig > tabBoxLayouts;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
+    WId m_embedded;
+    QPoint m_embeddedOffset;
+    QSize m_embeddedSize;
+    Qt::Alignment m_embeddedAlignment;
 };
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     : view(NULL)
     , m_declarativeView(NULL)
+    , m_embedded(0)
+    , m_embeddedOffset(QPoint(0, 0))
+    , m_embeddedSize(QSize(0, 0))
 {
     this->q = q;
     isShown = false;
@@ -552,6 +559,7 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
             d->updateHighlightWindows();
         }
     }
+    emit selectedIndexChanged();
 }
 
 const QModelIndex& TabBoxHandler::currentIndex() const
@@ -586,11 +594,13 @@ QModelIndex TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
         if (column >= model->columnCount())
             column = 0;
         break;
+    case Qt::Key_Backtab:
     case Qt::Key_Up:
         row--;
         if (row < 0)
             row = model->rowCount() - 1;
         break;
+    case Qt::Key_Tab:
     case Qt::Key_Down:
         row++;
         if (row >= model->rowCount())
@@ -694,6 +704,58 @@ QModelIndex TabBoxHandler::first() const
 QWidget* TabBoxHandler::tabBoxView() const
 {
     return d->view;
+}
+
+WId TabBoxHandler::embedded() const
+{
+    return d->m_embedded;
+}
+
+void TabBoxHandler::setEmbedded(WId wid)
+{
+    d->m_embedded = wid;
+    emit embeddedChanged(wid != 0);
+}
+
+void TabBoxHandler::setEmbeddedOffset(const QPoint &offset)
+{
+    d->m_embeddedOffset = offset;
+}
+
+void TabBoxHandler::setEmbeddedSize(const QSize &size)
+{
+    d->m_embeddedSize = size;
+}
+
+const QPoint &TabBoxHandler::embeddedOffset() const
+{
+    return d->m_embeddedOffset;
+}
+
+const QSize &TabBoxHandler::embeddedSize() const
+{
+    return d->m_embeddedSize;
+}
+
+Qt::Alignment TabBoxHandler::embeddedAlignment() const
+{
+    return d->m_embeddedAlignment;
+}
+
+void TabBoxHandler::setEmbeddedAlignment(Qt::Alignment alignment)
+{
+    d->m_embeddedAlignment = alignment;
+}
+
+void TabBoxHandler::resetEmbedded()
+{
+    if (d->m_embedded == 0) {
+        return;
+    }
+    d->m_embedded = 0;
+    d->m_embeddedOffset = QPoint(0, 0);
+    d->m_embeddedSize = QSize(0, 0);
+    emit embeddedChanged(false);
 }
 
 TabBoxHandler* tabBox = 0;

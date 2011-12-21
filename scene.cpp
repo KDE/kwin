@@ -419,8 +419,8 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         } else {
             thumbMask |= PAINT_WINDOW_TRANSLUCENT;
         }
-        if (x < wImpl->x() || x + size.width() > wImpl->x() + wImpl->width() ||
-            y < wImpl->y() || y + size.height() > wImpl->y() + wImpl->height()) {
+        if (item->isClip() && (x < wImpl->x() || x + size.width() > wImpl->x() + wImpl->width() ||
+            y < wImpl->y() || y + size.height() > wImpl->y() + wImpl->height())) {
             // don't render windows outside the containing window.
             // TODO: improve by spliting out the window quads which do not fit
             continue;

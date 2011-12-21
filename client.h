@@ -426,6 +426,13 @@ public:
     TabBox::TabBoxClientImpl* tabBoxClient() const {
         return m_tabBoxClient;
     }
+    bool isFirstInTabBox() const {
+        return m_firstInTabBox;
+    }
+    void setFirstInTabBox(bool enable) {
+        m_firstInTabBox = enable;
+    }
+    void updateFirstInTabBox();
 
     //sets whether the client should be treated as a SessionInteract window
     void setSessionInteract(bool needed);
@@ -719,6 +726,7 @@ private:
     bool m_responsibleForDecoPixmap;
     PaintRedirector* paintRedirector;
     TabBox::TabBoxClientImpl* m_tabBoxClient;
+    bool m_firstInTabBox;
 
     bool electricMaximizing;
     QuickTileMode electricMode;

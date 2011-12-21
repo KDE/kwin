@@ -638,7 +638,7 @@ void Workspace::addClient(Client* c, allowed_t)
         updateToolWindows(true);
     checkNonExistentClients();
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isGrabbed())
+    if (tabBox()->isDisplayed())
         tab_box->reset(true);
 #endif
 }
@@ -672,7 +672,7 @@ void Workspace::removeClient(Client* c, allowed_t)
         Notify::raise(Notify::Delete);
 
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isGrabbed() && tabBox()->currentClient() == c)
+    if (tabBox()->isDisplayed() && tabBox()->currentClient() == c)
         tab_box->nextPrev(true);
 #endif
 
@@ -708,7 +708,7 @@ void Workspace::removeClient(Client* c, allowed_t)
     updateCompositeBlocking();
 
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isGrabbed())
+    if (tabBox()->isDisplayed())
         tab_box->reset(true);
 #endif
 

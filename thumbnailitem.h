@@ -34,6 +34,7 @@ class ThumbnailItem : public QDeclarativeItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
+    Q_PROPERTY(bool clip READ isClip WRITE setClip NOTIFY clipChanged SCRIPTABLE true)
 public:
     ThumbnailItem(QDeclarativeItem *parent = 0);
     virtual ~ThumbnailItem();
@@ -42,15 +43,21 @@ public:
         return m_wId;
     }
     void setWId(qulonglong wId);
+    bool isClip() const {
+        return m_clip;
+    }
+    void setClip(bool clip);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
+    void clipChanged(bool clipped);
 private Q_SLOTS:
     void init();
     void effectWindowAdded();
 private:
     void findParentEffectWindow();
     qulonglong m_wId;
+    bool m_clip;
     QWeakPointer<EffectWindowImpl> m_parent;
 };
 

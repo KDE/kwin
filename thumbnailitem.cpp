@@ -35,6 +35,7 @@ namespace KWin
 ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     : QDeclarativeItem(parent)
     , m_wId(0)
+    , m_clip(true)
     , m_parent(QWeakPointer<EffectWindowImpl>())
 {
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
@@ -79,6 +80,12 @@ void ThumbnailItem::setWId(qulonglong wId)
 {
     m_wId = wId;
     emit wIdChanged(wId);
+}
+
+void ThumbnailItem::setClip(bool clip)
+{
+    m_clip = clip;
+    emit clipChanged(clip);
 }
 
 void ThumbnailItem::effectWindowAdded()

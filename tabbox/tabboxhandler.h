@@ -173,6 +173,10 @@ public:
     * @return The first desktop window in the stacking order.
     */
     virtual TabBoxClient* desktopClient() const = 0;
+    /**
+     * Activates the currently selected client and closes the TabBox.
+     **/
+    virtual void activateAndClose() = 0;
 
     /**
     * @return The currently used TabBoxConfig
@@ -311,6 +315,16 @@ public:
     */
     QModelIndex first() const;
 
+    void setEmbedded(WId wid);
+    WId embedded() const;
+    void setEmbeddedOffset(const QPoint &offset);
+    const QPoint &embeddedOffset() const;
+    void setEmbeddedSize(const QSize &size);
+    const QSize &embeddedSize() const;
+    void setEmbeddedAlignment(Qt::Alignment alignment);
+    Qt::Alignment embeddedAlignment() const;
+    void resetEmbedded();
+
     /**
     * @return The tabBoxView Widget
     */
@@ -344,6 +358,8 @@ signals:
     */
     void configChanged();
     void ready();
+    void embeddedChanged(bool enabled);
+    void selectedIndexChanged();
 
 private:
     friend class TabBoxHandlerPrivate;
@@ -384,6 +400,9 @@ public:
     virtual int y() const = 0;
     virtual int width() const = 0;
     virtual int height() const = 0;
+    virtual bool isCloseable() const = 0;
+    virtual void close() = 0;
+    virtual bool isFirstInTabBox() const = 0;
 };
 
 /**

@@ -46,6 +46,7 @@ namespace TabBox
 class ClientModel
     : public QAbstractItemModel
 {
+    Q_OBJECT
 public:
     enum {
         ClientRole = Qt::UserRole, ///< The TabBoxClient
@@ -54,7 +55,8 @@ public:
         IconRole = Qt::UserRole + 3, // TODO: to be removed
         EmptyRole = Qt::UserRole + 4, ///< Indicates if the model contains TabBoxClients
         WIdRole = Qt::UserRole + 5, ///< The window ID of TabBoxClient
-        MinimizedRole = Qt::UserRole + 6 ///< TabBoxClient is minimized
+        MinimizedRole = Qt::UserRole + 6, ///< TabBoxClient is minimized
+        CloseableRole = Qt::UserRole + 7 ///< TabBoxClient can be closed
     };
     ClientModel(QObject* parent = 0);
     ~ClientModel();
@@ -93,6 +95,14 @@ public:
     TabBoxClientList clientList() const {
         return m_clientList;
     }
+
+public Q_SLOTS:
+    void close(int index);
+    /**
+     * Activates the client at @p index and closes the TabBox.
+     * @param index The row index
+     **/
+    void activate(int index);
 
 private:
     TabBoxClientList m_clientList;

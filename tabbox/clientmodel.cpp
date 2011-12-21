@@ -43,6 +43,7 @@ ClientModel::ClientModel(QObject* parent)
     roles[DesktopNameRole] = "desktopName";
     roles[MinimizedRole] = "minimized";
     roles[WIdRole] = "windowId";
+    roles[CloseableRole] = "closeable";
     setRoleNames(roles);
 }
 
@@ -80,6 +81,8 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return qulonglong(m_clientList[ clientIndex ]->window());
     case MinimizedRole:
         return m_clientList[ clientIndex ]->isMinimized();
+    case CloseableRole:
+        return m_clientList[ clientIndex ]->isCloseable();
     default:
         return QVariant();
     }
@@ -172,6 +175,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         start = m_clientList.first();
 
     m_clientList.clear();
+    QList<TabBoxClient*> stickyClients;
 
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
@@ -187,6 +191,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                     m_clientList.prepend(add);
                 } else
                     m_clientList += add;
+                if (add->isFirstInTabBox()) {
+                    stickyClients << add;
+                }
             }
             c = tabBox->nextClientFocusChain(c);
 
@@ -211,6 +218,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                     m_clientList.prepend(add);
                 } else
                     m_clientList += add;
+                if (add->isFirstInTabBox()) {
+                    stickyClients << add;
+                }
             }
             if (index >= stacking.size() - 1) {
                 c = NULL;
@@ -224,12 +234,35 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         break;
     }
     }
+    foreach (TabBoxClient *c, stickyClients) {
+        m_clientList.removeAll(c);
+        m_clientList.prepend(c);
+    }
     if (tabBox->config().isShowDesktop()) {
         TabBoxClient* desktopClient = tabBox->desktopClient();
         if (desktopClient)
             m_clientList.append(desktopClient);
     }
     reset();
+}
+
+void ClientModel::close(int i)
+{
+    QModelIndex ind = index(i, 0);
+    if (!ind.isValid()) {
+        return;
+    }
+    m_clientList.at(i)->close();
+}
+
+void ClientModel::activate(int i)
+{
+    QModelIndex ind = index(i, 0);
+    if (!ind.isValid()) {
+        return;
+    }
+    tabBox->setCurrentIndex(ind);
+    tabBox->activateAndClose();
 }
 
 } // namespace Tabbox

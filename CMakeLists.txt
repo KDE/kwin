@@ -18,7 +18,6 @@ endif(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
-    set(KWIN_BUILD_TABBOX OFF)
     set(KWIN_BUILD_TILING OFF)
     set(KWIN_BUILD_DESKTOPCHANGEOSD OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
@@ -257,6 +256,7 @@ install( FILES
     tabbox/qml/text.qml
     tabbox/qml/thumbnails.qml
     tabbox/qml/IconTabBox.qml
+    tabbox/qml/window_strip.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/tabbox )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )

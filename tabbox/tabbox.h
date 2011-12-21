@@ -61,6 +61,7 @@ public:
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
     virtual QVector< Window > outlineWindowIds() const;
+    virtual void activateAndClose();
 
 private:
     TabBox* m_tabBox;
@@ -80,6 +81,9 @@ public:
     virtual int y() const;
     virtual int width() const;
     virtual int height() const;
+    virtual bool isCloseable() const;
+    virtual void close();
+    virtual bool isFirstInTabBox() const;
 
     Client* client() const {
         return m_client;
@@ -95,6 +99,7 @@ private:
 class TabBox : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin")
 public:
     TabBox(QObject *parent = NULL);
     ~TabBox();
@@ -160,12 +165,36 @@ public:
     int previousDesktopFocusChain(int iDesktop) const;
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
-    void close(bool abort = false);
     void keyPress(int key);
     void keyRelease(const XKeyEvent& ev);
 
 public slots:
     void show();
+    /**
+     * Only for DBus Interface to start primary KDE Walk through windows.
+     * @param modal Whether the TabBox should grab keyboard and mouse, that is go into modal
+     * mode or whether the TabBox is controlled externally (e.g. through an effect).
+     **/
+    Q_SCRIPTABLE void open(bool modal = true);
+    /**
+     * Opens the TabBox view embedded on a different window. This implies non-modal mode.
+     * The geometry of the TabBox is determined by offset, size and the alignment flags.
+     * If the alignment flags are set to center the view scales with the container. That is if
+     * the window where the TabBox is embedded onto resizes, the TabBox resizes, too.
+     * The alignment in combination with the offset determines to what border the TabBox is snapped.
+     * E.g. if horizontal alignment is right the offset is interpreted as the offset between right
+     * corner of TabBox view and the container view. When the container changes its geometry this
+     * offset is kept. So the offset on the left side would increase.
+     * @param wid The window Id the TabBox should be embedded onto
+     * @param offset The offset to one of the size borders
+     * @param size The size of the TabBox. To use the same size as the container, set alignment to center
+     * @param horizontalAlignment Either Qt::AlignLeft, Qt::AlignHCenter or Qt::AlignRight
+     * @param verticalAlignment Either Qt::AlignTop, Qt::AlignVCenter or Qt::AlignBottom
+     **/
+    Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment);
+    Q_SCRIPTABLE void close(bool abort = false);
+    Q_SCRIPTABLE void accept();
+    Q_SCRIPTABLE void reject();
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
     void slotWalkThroughDesktopList();
@@ -190,7 +219,8 @@ public slots:
 
 signals:
     void tabBoxAdded(int);
-    void tabBoxClosed();
+    Q_SCRIPTABLE void tabBoxClosed();
+    Q_SCRIPTABLE void itemSelected();
     void tabBoxUpdated();
     void tabBoxKeyEvent(QKeyEvent*);
 
@@ -235,6 +265,8 @@ private:
     bool m_isShown;
     bool m_desktopGrab;
     bool m_tabGrab;
+    // true if tabbox is in modal mode which does not require holding a modifier
+    bool m_noModifierGrab;
     KShortcut m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse;
     KShortcut m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse;
     KShortcut m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
