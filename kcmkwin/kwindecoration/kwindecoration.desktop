@@ -154,14 +154,16 @@ Comment[uz]=Oyna sarlavhasining tashqi koʻrinishini moslash
 Comment[uz@cyrillic]=Ойна сарлавҳасининг ташқи кўринишини мослаш
 Comment[vi]=Cấu hình giao diện và cảm nhận cho tên cửa sổ
 Comment[wa]=Apontyî li rivnance eyet l' dujhance des tites des fniesses
-Comment[xh]=Qwalasela inkangeleko nemvakalelo yezihloko zeWindow
 Comment[x-test]=xxConfigure the look and feel of window titlesxx
+Comment[xh]=Qwalasela inkangeleko nemvakalelo yezihloko zeWindow
 Comment[zh_CN]=配置窗口标题的观感
 Comment[zh_TW]=設定視窗標題列的外觀與感覺
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[ca]=kwin,finestra,gestor,vora,estil,tema,aspecte,aparença,disposició,botó,gestió,vora,kwm,decoració
+X-KDE-Keywords[da]=kwin,vindueshåndtering,window,manager,kant,stil,tema,udseende,layout,knap,håndtag,kant,kwm,dekoration
 X-KDE-Keywords[de]=KWin,Kwm,Fenster,Manager,Rahmen,Design,Stile,Themes,Optik,Erscheinungsbild,Layout,Knöpfe,Ränder,Dekorationen
+X-KDE-Keywords[et]=kwin,aken,haldur,piire,stiil,teema,välimus,paigutus,nupp,pide,serv,kwm,dekoratsioon
 X-KDE-Keywords[fi]=kwin,ikkuna,hallinta,ikkunaohjelma,kehys,reunus,tyyli,teema,ulkoasu,käyttäytyminen,asettelu,painike,kahva,kulma,reuna,kwm,koriste
 X-KDE-Keywords[ia]=kwin,fenestra,gerente,margine,stilo,thema,aspecto,sentir,disposition,button,maneator,bordo,kwm,decoration
 X-KDE-Keywords[kk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
