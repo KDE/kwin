@@ -1152,6 +1152,9 @@ QStringList Workspace::configModules(bool controlCenter)
 #ifdef KWIN_BUILD_SCREENEDGES
              << "kwinscreenedges"
 #endif
+#ifdef KWIN_BUILD_SCRIPTING
+             << "kwinscripts"
+#endif
              ;
     return args;
 }

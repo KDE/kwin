@@ -1,0 +1,17 @@
+[Desktop Entry]
+Exec=kcmshell4 kwin-scripts
+Icon=preferences-system-windows-actions
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kcm_kwin_scripts
+X-KDE-PluginKeyword=kwin-scripts
+X-KDE-ParentApp=kcontrol
+
+X-KDE-Keywords=kwin script
+X-KDE-System-Settings-Parent-Category=window-behaviour
+
+Name=KWin Scripts
+Comment=Manage KWin scripts
+
+Categories=KDE;X-KDE-settings-system;
