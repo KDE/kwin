@@ -1968,11 +1968,6 @@ void Client::getWMHints()
     updateAllowedActions(); // Group affects isMinimizable()
 }
 
-void Client::sl_activated()
-{
-    emit s_activated();
-}
-
 void Client::getMotifHints()
 {
     bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;

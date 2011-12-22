@@ -71,8 +71,11 @@ class Client
     : public Toplevel
 {
     Q_OBJECT
-    // TODO: notify signal
-    Q_PROPERTY(bool active READ isActive)
+    /**
+     * Whether this Client is active or not. Use Workspace::activateClient() to activate a Client.
+     * @see Workspace::activateClient
+     **/
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     // TODO: notify signal
     Q_PROPERTY(QString caption READ caption)
     // TODO: notify signal
@@ -512,7 +515,6 @@ signals:
     void s_minimized();
     void s_unminimized();
     void maximizeSet(QPair<bool, bool>);
-    void s_activated();
     void s_fullScreenSet(bool, bool);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
     void clientMinimized(KWin::Client* client, bool animate);
@@ -520,11 +522,7 @@ signals:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-
-    // To make workspace-client calls, a few slots are also
-    // required
-public slots:
-    void sl_activated();
+    void activeChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
