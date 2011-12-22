@@ -1551,6 +1551,7 @@ void Client::setModal(bool m)
     if (modal == m)
         return;
     modal = m;
+    emit modalChanged();
     if (!modal)
         return;
     // Changing modality for a mapped window is weird (?)

@@ -113,7 +113,10 @@ class Client
     Q_PROPERTY(bool minimizable READ isMinimizable)
     // TODO: setter and notify signal
     Q_PROPERTY(bool minimized READ isMinimized)
-    Q_PROPERTY(bool modal READ isModal)
+    /**
+     * Whether the Client represents a modal window.
+     **/
+    Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
     Q_PROPERTY(bool moveable READ isMovable)
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
     // TODO: notify signal
@@ -548,6 +551,7 @@ signals:
     void desktopChanged();
     void fullScreenChanged();
     void transientChanged();
+    void modalChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
