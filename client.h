@@ -111,9 +111,16 @@ class Client
      * Whether the Client is set to be kept below other windows.
      **/
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
-    // TODO: notify signal
+    /**
+     * Whether the Client can be maximized both horizontally and vertically.
+     * The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
     Q_PROPERTY(bool maximizable READ isMaximizable)
-    // TODO: notify signal
+    /**
+     * Whether the Client can be minimized. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
     Q_PROPERTY(bool minimizable READ isMinimizable)
     // TODO: setter and notify signal
     Q_PROPERTY(bool minimized READ isMinimized)
