@@ -775,6 +775,7 @@ void Client::setKeepAbove(bool b)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit keepAboveChanged();
 }
 
 void Client::setKeepBelow(bool b)
@@ -798,6 +799,7 @@ void Client::setKeepBelow(bool b)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit keepBelowChanged();
 }
 
 Layer Client::layer() const

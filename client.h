@@ -103,10 +103,14 @@ class Client
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
     // TODO: notify signal
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
-    // TODO: notify signal
-    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove)
-    // TODO: notify signal
-    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow)
+    /**
+     * Whether the Client is set to be kept above other windows.
+     **/
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
+    /**
+     * Whether the Client is set to be kept below other windows.
+     **/
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
     // TODO: notify signal
     Q_PROPERTY(bool maximizable READ isMaximizable)
     // TODO: notify signal
@@ -577,6 +581,8 @@ signals:
     void transientChanged();
     void modalChanged();
     void shadeChanged();
+    void keepAboveChanged();
+    void keepBelowChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
