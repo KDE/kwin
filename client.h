@@ -76,8 +76,11 @@ class Client
      * @see Workspace::activateClient
      **/
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    // TODO: notify signal
-    Q_PROPERTY(QString caption READ caption)
+    /**
+     * The Caption of the Client. Read from WM_NAME property together with a suffix for hostname and shortcut.
+     * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
+     **/
+    Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
     // TODO: notify signal
     Q_PROPERTY(bool closeable READ isCloseable)
     // TODO: notify signal
@@ -523,6 +526,7 @@ signals:
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
     void activeChanged();
+    void captionChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

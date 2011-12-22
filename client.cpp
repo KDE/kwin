@@ -1869,6 +1869,7 @@ void Client::setCaption(const QString& _s, bool force)
                 client_group->updateItems();
             decoration->captionChange();
         }
+        emit captionChanged();
     }
 }
 
