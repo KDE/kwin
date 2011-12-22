@@ -119,8 +119,11 @@ class Client
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
     Q_PROPERTY(bool moveable READ isMovable)
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
-    // TODO: notify signal
-    Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
+    /**
+     * Whether the Client provides context help. Mostly needed by decorations to decide whether to
+     * show the help button or not.
+     **/
+    Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
     Q_PROPERTY(bool resizeable READ isResizable)
     // TODO: notify signal
     Q_PROPERTY(bool shadeable READ isShadeable)
