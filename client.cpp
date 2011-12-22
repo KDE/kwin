@@ -967,6 +967,11 @@ bool Client::isMinimizable() const
     return true;
 }
 
+void Client::setMinimized(bool set)
+{
+    set ? minimize() : unminimize();
+}
+
 /**
  * Minimizes this client plus its transients
  */
@@ -988,8 +993,6 @@ void Client::minimize(bool avoid_animation)
     }
 #endif
 
-    emit s_minimized();
-
     Notify::raise(Notify::Minimize);
 
     minimized = true;
@@ -1005,6 +1008,7 @@ void Client::minimize(bool avoid_animation)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit minimizedChanged();
 }
 
 void Client::unminimize(bool avoid_animation)
@@ -1039,6 +1043,7 @@ void Client::unminimize(bool avoid_animation)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit minimizedChanged();
 }
 
 QRect Client::iconGeometry() const

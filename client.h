@@ -122,8 +122,10 @@ class Client
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool minimizable READ isMinimizable)
-    // TODO: setter and notify signal
-    Q_PROPERTY(bool minimized READ isMinimized)
+    /**
+     * Whether the Client is minimized.
+     **/
+    Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
     /**
      * Whether the Client represents a modal window.
      **/
@@ -413,6 +415,7 @@ public:
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
     static void readIcons(Window win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon);
 
+    void setMinimized(bool set);
     void minimize(bool avoid_animation = false);
     void unminimize(bool avoid_animation = false);
     void closeWindow();
@@ -572,7 +575,6 @@ private slots:
 signals:
     void s_clientMoved();
     void clientManaging(KWin::Client*);
-    void s_minimized();
     void s_unminimized();
     void maximizeSet(QPair<bool, bool>);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
@@ -590,6 +592,7 @@ signals:
     void shadeChanged();
     void keepAboveChanged();
     void keepBelowChanged();
+    void minimizedChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
