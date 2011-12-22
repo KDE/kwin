@@ -81,7 +81,10 @@ class Client
      * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
      **/
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
-    // TODO: notify signal
+    /**
+     * Whether the window can be closed by the user. The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
     Q_PROPERTY(bool closeable READ isCloseable)
     // TODO: notify signal
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop)
