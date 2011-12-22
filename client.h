@@ -102,6 +102,10 @@ class Client
      **/
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
     // TODO: notify signal
+    /**
+     * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
+     * might be emitted at each resize step or only at the end of the resize operation.
+     **/
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
     /**
      * Whether the Client is set to be kept above other windows.
@@ -335,13 +339,13 @@ public:
 
     void updateShape();
 
-    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true);
-    void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true);
+    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet);
+    void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
     void move(const QPoint& p, ForceGeometry_t force = NormalGeometrySet);
     /// plainResize() simply resizes
-    void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true);
-    void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet, bool emitJs = true);
+    void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
+    void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
@@ -573,7 +577,6 @@ private slots:
     //in between objects as compared to simple function
     //calls
 signals:
-    void s_clientMoved();
     void clientManaging(KWin::Client*);
     void s_unminimized();
     void maximizeSet(QPair<bool, bool>);
@@ -1059,9 +1062,9 @@ inline QRect Client::visibleRect() const
     return Toplevel::visibleRect().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
 }
 
-inline void Client::setGeometry(const QRect& r, ForceGeometry_t force, bool emitJs)
+inline void Client::setGeometry(const QRect& r, ForceGeometry_t force)
 {
-    setGeometry(r.x(), r.y(), r.width(), r.height(), force, emitJs);
+    setGeometry(r.x(), r.y(), r.width(), r.height(), force);
 }
 
 inline void Client::move(const QPoint& p, ForceGeometry_t force)
@@ -1069,9 +1072,9 @@ inline void Client::move(const QPoint& p, ForceGeometry_t force)
     move(p.x(), p.y(), force);
 }
 
-inline void Client::plainResize(const QSize& s, ForceGeometry_t force, bool emitJs)
+inline void Client::plainResize(const QSize& s, ForceGeometry_t force)
 {
-    plainResize(s.width(), s.height(), force, emitJs);
+    plainResize(s.width(), s.height(), force);
 }
 
 inline void Client::resizeWithChecks(const QSize& s, ForceGeometry_t force)
