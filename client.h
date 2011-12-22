@@ -123,10 +123,16 @@ class Client
     Q_PROPERTY(bool shadeable READ isShadeable)
     // TODO: proper setShade method and notifiy signal
     Q_PROPERTY(bool shade READ isShade)
-    // TODO: notify signal
-    Q_PROPERTY(bool transient READ isTransient)
-    // TODO: notify signal, add meta type
-    Q_PROPERTY(Client *transientFor READ transientFor)
+    /**
+     * Whether the Client is a transient Window to another Window.
+     * @see transientFor
+     **/
+    Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
+    /**
+     * The Client to which this Client is a transient if any.
+     * Property uses a QObject. If the property is needed as a Client, perform a qobject_cast.
+     **/
+    Q_PROPERTY(QObject *transientFor READ transientFor NOTIFY transientChanged)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -542,6 +548,7 @@ signals:
     void captionChanged();
     void desktopChanged();
     void fullScreenChanged();
+    void transientChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

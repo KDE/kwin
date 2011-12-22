@@ -628,6 +628,7 @@ void Client::setTransient(Window new_transient_for_id)
         checkGroup(NULL, true);   // force, because transiency has changed
         workspace()->updateClientLayer(this);
         workspace()->resetUpdateToolWindowsTimer();
+        emit transientChanged();
     }
 }
 
