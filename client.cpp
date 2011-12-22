@@ -1598,6 +1598,7 @@ void Client::setDesktop(int desktop)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit desktopChanged();
 }
 
 /**

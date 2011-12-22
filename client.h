@@ -86,8 +86,10 @@ class Client
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool closeable READ isCloseable)
-    // TODO: notify signal
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop)
+    /**
+     * The desktop this Client is on. If the Client is on all desktops the property has value -1.
+     **/
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
     // TODO: notify signal, proper setter with only one attribute
     Q_PROPERTY(bool fullScreen READ isFullScreen)
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
@@ -530,6 +532,7 @@ signals:
     void clientFinishUserMovedResized(KWin::Client*);
     void activeChanged();
     void captionChanged();
+    void desktopChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
