@@ -191,6 +191,8 @@ Comment[zh_TW]=設定視窗行為
 
 X-KDE-Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[ca]=focus,situació,comportament de finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,clic doble
+X-KDE-Keywords[da]=fokus,placering,vinduesopførsel,animation,hæv,autohæv,vinduesramme,titelbjælke,dobbeltklik
+X-KDE-Keywords[et]=fookus,asetus,paigutus,akende käitumine,animeerimine,animatsioon,esiletoomine,automaatne esiletoomine,aknad,raam,tiitliriba,topeltklõps
 X-KDE-Keywords[fi]=kohdistus,sijoittelu,sijoitus,ikkunoiden käyttäytyminen,animaatio,nosta,automaattinen nosto,ikkunat,kehys,otsikkopalkki,kaksoisnapsautus,tuplanapsautus,kaksoisklikkaus,tuplaklikkaus
 X-KDE-Keywords[ia]=focus,placiamento,comportamento de fenestra,animation,altiar,auto altiar,fenestras,quadro,barra de titulo,duple click
 X-KDE-Keywords[kk]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
