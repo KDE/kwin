@@ -100,8 +100,8 @@ QScriptValue Rect::toScriptValue(QScriptEngine* eng, const QRect& rect)
 
 void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
 {
-    QScriptValue w = obj.property("w", QScriptValue::ResolveLocal);
-    QScriptValue h = obj.property("h", QScriptValue::ResolveLocal);
+    QScriptValue w = obj.property("width", QScriptValue::ResolveLocal);
+    QScriptValue h = obj.property("height", QScriptValue::ResolveLocal);
     QScriptValue x = obj.property("x", QScriptValue::ResolveLocal);
     QScriptValue y = obj.property("y", QScriptValue::ResolveLocal);
 

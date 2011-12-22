@@ -101,7 +101,6 @@ class Client
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
-    // TODO: notify signal
     /**
      * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
      * might be emitted at each resize step or only at the end of the resize operation.
