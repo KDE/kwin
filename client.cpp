@@ -1064,6 +1064,10 @@ bool Client::isShadeable() const
     return !isSpecialWindow() && !noBorder() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
 }
 
+void Client::setShade(bool set) {
+    set ? setShade(ShadeNormal) : setShade(ShadeNone);
+}
+
 void Client::setShade(ShadeMode mode)
 {
     if (isSpecialWindow() || noBorder())
@@ -1138,6 +1142,7 @@ void Client::setShade(ShadeMode mode)
     // Update states of all other windows in this group
     if (clientGroup())
         clientGroup()->updateStates(this);
+    emit shadeChanged();
 }
 
 void Client::shadeHover()

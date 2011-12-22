@@ -125,10 +125,15 @@ class Client
      **/
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
     Q_PROPERTY(bool resizeable READ isResizable)
-    // TODO: notify signal
+    /**
+     * Whether the Client can be shaded. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
     Q_PROPERTY(bool shadeable READ isShadeable)
-    // TODO: proper setShade method and notifiy signal
-    Q_PROPERTY(bool shade READ isShade)
+    /**
+     * Whether the Client is shaded.
+     **/
+    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
     /**
      * Whether the Client is a transient Window to another Window.
      * @see transientFor
@@ -229,6 +234,7 @@ public:
 
     bool isShade() const; // True only for ShadeNormal
     ShadeMode shadeMode() const; // Prefer isShade()
+    void setShade(bool set);
     void setShade(ShadeMode mode);
     bool isShadeable() const;
 
@@ -555,6 +561,7 @@ signals:
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
+    void shadeChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
