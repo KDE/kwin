@@ -90,8 +90,12 @@ class Client
      * The desktop this Client is on. If the Client is on all desktops the property has value -1.
      **/
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
-    // TODO: notify signal, proper setter with only one attribute
-    Q_PROPERTY(bool fullScreen READ isFullScreen)
+    /**
+     * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
+     * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
+     * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
+     **/
+    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
     // TODO: notify signal
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
@@ -221,7 +225,7 @@ public:
     void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;
 
-    void setFullScreen(bool set, bool user);
+    void setFullScreen(bool set, bool user = true);
     bool isFullScreen() const;
     bool isFullScreenable(bool fullscreen_hack = false) const;
     bool isActiveFullScreen() const;
@@ -533,6 +537,7 @@ signals:
     void activeChanged();
     void captionChanged();
     void desktopChanged();
+    void fullScreenChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

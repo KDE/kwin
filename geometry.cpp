@@ -2428,6 +2428,9 @@ void Client::setFullScreen(bool set, bool user)
 #endif
 
     emit s_fullScreenSet(set, user);
+    if (was_fs != isFullScreen()) {
+        emit fullScreenChanged();
+    }
 }
 
 
@@ -2502,10 +2505,12 @@ void Client::updateFullScreenHack(const QRect& geom)
         } else
             geom = workspace()->clientArea(FullScreenArea, geom.center(), desktop());
         setGeometry(geom);
+        emit fullScreenChanged();
     } else if (fullscreen_mode == FullScreenHack && type == 0) {
         fullscreen_mode = FullScreenNone;
         updateDecoration(false, false);
         // whoever called this must setup correct geometry
+        emit fullScreenChanged();
     }
     StackingUpdatesBlocker blocker(workspace());
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
