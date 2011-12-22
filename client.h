@@ -96,6 +96,10 @@ class Client
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
      **/
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
+    /**
+     * Whether the Client can be set to fullScreen. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
     // TODO: notify signal
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
