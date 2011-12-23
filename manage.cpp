@@ -323,10 +323,11 @@ bool Client::manage(Window w, bool isMapped)
     bool dontKeepInArea = false;
     if (!noBorder()) {
         setClientGroup(NULL);
+        bool autogrouping = rules()->checkAutogrouping(options->autogroupSimilarWindows);
         // Automatically add to previous groups on session restore
         if (session && session->clientGroupClient && session->clientGroupClient != this && session->clientGroupClient->clientGroup())
             session->clientGroupClient->clientGroup()->add(this, -1, true);
-        else if (isMapped)
+        else if (isMapped && autogrouping)
             // If the window is already mapped (Restarted KWin) add any windows that already have the
             // same geometry to the same client group. (May incorrectly handle maximized windows)
             foreach (ClientGroup * group, workspace()->clientGroups)
