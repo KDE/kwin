@@ -44,23 +44,28 @@ namespace KWin
   * the scriptfile, the configfile and the QScriptEngine
   * that will run this script
   */
-class Script
+class Script : public QObject
 {
+    Q_OBJECT
 public:
-    QScriptEngine* engine;
-    QFile scriptFile;
-    QString configFile;
-    SWrapper::Workspace* workspace;
 
-    Script(QScriptEngine* _engine, QString scriptName, QDir dir) :
-        engine(_engine) {
-        scriptFile.setFileName(dir.filePath(scriptName));
-        configFile = (QFileInfo(scriptFile).completeBaseName() + QString(".kwscfg"));
-    }
+    Script(QString scriptName, QDir dir, QObject *parent = NULL);
+    virtual ~Script();
+    void run();
 
-    ~Script() {
-        delete engine;
-    }
+private slots:
+    /**
+      * A nice clean way to handle exceptions in scripting.
+      * TODO: Log to file, show from notifier..
+      */
+    void sigException(const QScriptValue &exception);
+
+private:
+    QScriptEngine *m_engine;
+    QDir m_scriptDir;
+    QFile m_scriptFile;
+    QString m_configFile;
+    SWrapper::Workspace *m_workspace;
 };
 
 /**
@@ -82,13 +87,6 @@ private:
     // Proceed with caution.
     // An interface to run scripts at runtime
     void runScript(KWin::Script*);
-
-public slots:
-    /**
-      * A nice clean way to handle exceptions in scripting.
-      * TODO: Log to file, show from notifier..
-      */
-    void sigException(const QScriptValue&);
 
 public:
     Scripting();
