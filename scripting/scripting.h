@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2010 Rohan Prabhu <rohan@rohanprabhu.com>
+Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,37 +22,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_H
 #define KWIN_SCRIPTING_H
 
-#include <QScriptClass>
-#include <QScriptEngine>
 #include <QDir>
-#include <QVector>
-#include <QSettings>
-#include <QVariant>
 
-#include "chelate.h"
 #include "workspace.h"
 #include "workspaceproxy.h"
-#include "s_clientgroup.h"
 
-#include "./../workspace.h"
-
-#include "meta.h"
+class QScriptEngine;
+class QScriptValue;
 
 namespace KWin
 {
 
-/** This mostly behaves like a struct. Is used to store
-  * the scriptfile, the configfile and the QScriptEngine
-  * that will run this script
-  */
 class Script : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
 
-    Script(QString scriptName, QDir dir, QObject *parent = NULL);
+    Script(int id, QString scriptName, QDir dir, QObject *parent = NULL);
     virtual ~Script();
-    void run();
+    QString fileName() const {
+        return m_scriptFile.fileName();
+    }
+
+    void printMessage(const QString &message);
+
+public Q_SLOTS:
+    Q_SCRIPTABLE void stop();
+    Q_SCRIPTABLE void run();
+
+Q_SIGNALS:
+    Q_SCRIPTABLE void print(const QString &text);
+    Q_SCRIPTABLE void printError(const QString &text);
 
 private slots:
     /**
@@ -61,11 +63,13 @@ private slots:
     void sigException(const QScriptValue &exception);
 
 private:
+    int m_scriptId;
     QScriptEngine *m_engine;
     QDir m_scriptDir;
     QFile m_scriptFile;
     QString m_configFile;
     SWrapper::Workspace *m_workspace;
+    bool m_running;
 };
 
 /**
@@ -74,18 +78,14 @@ private:
 class Scripting : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 private:
     QStringList scriptList;
     QDir scriptsDir;
-    QVector<KWin::Script*> scripts;
+    QList<KWin::Script*> scripts;
 
     // Preferably call ONLY at load time
     void runScripts();
-
-    // NOTE: Runtime script running is not yet tested.
-    // Proceed with caution.
-    // An interface to run scripts at runtime
-    void runScript(KWin::Script*);
 
 public:
     Scripting(QObject *parent = NULL);
@@ -95,6 +95,10 @@ public:
       */
     void start();
     ~Scripting();
+    Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath);
+
+public Q_SLOTS:
+    void scriptDestroyed(QObject *object);
 };
 
 }
