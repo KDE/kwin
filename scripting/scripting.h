@@ -71,14 +71,13 @@ private:
 /**
   * The heart of KWin::Scripting. Infinite power lies beyond
   */
-class Scripting : public QScriptEngine
+class Scripting : public QObject
 {
     Q_OBJECT
 private:
     QStringList scriptList;
     QDir scriptsDir;
     QVector<KWin::Script*> scripts;
-    SWrapper::WorkspaceProxy proxy;
 
     // Preferably call ONLY at load time
     void runScripts();
@@ -89,7 +88,7 @@ private:
     void runScript(KWin::Script*);
 
 public:
-    Scripting();
+    Scripting(QObject *parent = NULL);
     /**
       * Start running scripts. This was essential to have KWin::Scripting
       * be initialized on stack and also have the option to disable scripting.

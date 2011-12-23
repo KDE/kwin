@@ -86,10 +86,9 @@ void KWin::Script::sigException(const QScriptValue& exception)
 }
 
 
-KWin::Scripting::Scripting()
+KWin::Scripting::Scripting(QObject *parent)
+    : QObject(parent)
 {
-    // Default constructor no longer used, scripting can
-    // be disabled by calling kwin --noscript
 }
 
 void KWin::Scripting::start()
