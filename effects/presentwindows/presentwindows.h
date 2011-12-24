@@ -210,6 +210,7 @@ private:
     // User configuration settings
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_borderActivateAll;
+    QList<ElectricBorder> m_borderActivateClass;
     int m_layoutMode;
     bool m_showCaptions;
     bool m_showIcons;

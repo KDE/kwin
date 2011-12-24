@@ -195,6 +195,7 @@ void KWinScreenEdgesConfig::monitorInit()
     } else {
         monitorAddItem(services.first()->name() + " - " + i18n("All Desktops"));
         monitorAddItem(services.first()->name() + " - " + i18n("Current Desktop"));
+        monitorAddItem(services.first()->name() + " - " + i18n("Current Application"));
     }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'");
     if (services.isEmpty()) {
@@ -269,6 +270,13 @@ void KWinScreenEdgesConfig::monitorLoad()
     list = presentWindowsConfig.readEntry("BorderActivate", list);
     foreach (int i, list) {
         monitorChangeEdge(ElectricBorder(i), int(PresentWindowsCurrent));
+    }
+    // PresentWindows BorderActivateClass
+    list.clear();
+    list.append(int(ElectricNone));
+    list = presentWindowsConfig.readEntry("BorderActivateClass", list);
+    foreach (int i, list) {
+        monitorChangeEdge(ElectricBorder(i), int(PresentWindowsClass));
     }
 
     // Desktop Grid
@@ -365,6 +373,8 @@ void KWinScreenEdgesConfig::monitorSave()
                                     monitorCheckEffectHasEdge(int(PresentWindowsAll)));
     presentWindowsConfig.writeEntry("BorderActivate",
                                     monitorCheckEffectHasEdge(int(PresentWindowsCurrent)));
+    presentWindowsConfig.writeEntry("BorderActivateClass",
+                                    monitorCheckEffectHasEdge(int(PresentWindowsClass)));
 
     // Desktop Grid
     KConfigGroup gridConfig(m_config, "Effect-DesktopGrid");

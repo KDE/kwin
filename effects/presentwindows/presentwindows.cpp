@@ -156,6 +156,13 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
         m_borderActivateAll.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
+    borderList.clear();
+    borderList.append(int(ElectricNone));
+    borderList = conf.readEntry("BorderActivateClass", borderList);
+    foreach (int i, borderList) {
+        m_borderActivateClass.append(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i));
+    }
     m_layoutMode = conf.readEntry("LayoutMode", int(LayoutNatural));
     m_showCaptions = conf.readEntry("DrawWindowCaptions", true);
     m_showIcons = conf.readEntry("DrawWindowIcons", true);
@@ -510,14 +517,26 @@ void PresentWindowsEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const
 
 bool PresentWindowsEffect::borderActivated(ElectricBorder border)
 {
-    if (!m_borderActivate.contains(border) && !m_borderActivateAll.contains(border))
+    int mode = 0;
+    if (m_borderActivate.contains(border))
+        mode |= 1;
+    else if (m_borderActivateAll.contains(border))
+        mode |= 2;
+    else if (m_borderActivateClass.contains(border))
+        mode |= 4;
+
+    if (!mode)
         return false;
+
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return true;
-    if (m_borderActivate.contains(border))
+
+    if (mode & 1)
         toggleActive();
-    else
+    else if (mode & 2)
         toggleActiveAllDesktops();
+    else if (mode & 4)
+        toggleActiveClass();
     return true;
 }
 

@@ -66,6 +66,7 @@ private:
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
         PresentWindowsCurrent,
+        PresentWindowsClass,
         DesktopGrid,
         Cube,
         Cylinder,
