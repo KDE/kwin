@@ -1371,76 +1371,12 @@ void EffectWindowImpl::addRepaintFull()
     toplevel->addRepaintFull();
 }
 
-int EffectWindowImpl::desktop() const
-{
-    return toplevel->desktop();
-}
-
-bool EffectWindowImpl::isOnActivity(QString activity) const
-{
-    return toplevel->isOnActivity(activity);
-}
-
-bool EffectWindowImpl::isOnAllActivities() const
-{
-    return toplevel->isOnAllActivities();
-}
-
-bool EffectWindowImpl::isOnAllDesktops() const
-{
-    return desktop() == NET::OnAllDesktops;
-}
-
-QString EffectWindowImpl::caption() const
-{
-    if (Client* c = dynamic_cast<Client*>(toplevel))
-        return c->caption();
-    else
-        return "";
-}
-
-QString EffectWindowImpl::windowClass() const
-{
-    return toplevel->resourceName() + ' ' + toplevel->resourceClass();
-}
-
-QString EffectWindowImpl::windowRole() const
-{
-    return toplevel->windowRole();
-}
-
-QPixmap EffectWindowImpl::icon() const
-{
-    if (Client* c = dynamic_cast<Client*>(toplevel))
-        return c->icon();
-    return QPixmap(); // TODO
-}
-
 const EffectWindowGroup* EffectWindowImpl::group() const
 {
     if (Client* c = dynamic_cast< Client* >(toplevel))
         return c->group()->effectGroup();
     return NULL; // TODO
 }
-
-bool EffectWindowImpl::isMinimized() const
-{
-    if (Client* c = dynamic_cast<Client*>(toplevel))
-        return c->isMinimized();
-    else
-        return false;
-}
-
-double EffectWindowImpl::opacity() const
-{
-    return toplevel->opacity();
-}
-
-bool EffectWindowImpl::hasAlpha() const
-{
-    return toplevel->hasAlpha();
-}
-
 
 bool EffectWindowImpl::isDeleted() const
 {
@@ -1472,70 +1408,14 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
     sw = w;
 }
 
-int EffectWindowImpl::x() const
-{
-    return toplevel->x();
-}
-
-int EffectWindowImpl::y() const
-{
-    return toplevel->y();
-}
-
-int EffectWindowImpl::width() const
-{
-    return toplevel->width();
-}
-
-int EffectWindowImpl::height() const
-{
-    return toplevel->height();
-}
-
-QSize EffectWindowImpl::basicUnit() const
-{
-    Client *client = dynamic_cast<Client*>(toplevel);
-    return client ? client->basicUnit() : QSize(1,1);
-}
-
-QRect EffectWindowImpl::geometry() const
-{
-    return toplevel->geometry();
-}
-
 QRegion EffectWindowImpl::shape() const
 {
     return sw ? sw->shape() : geometry();
 }
 
-int EffectWindowImpl::screen() const
-{
-    return toplevel->screen();
-}
-
 bool EffectWindowImpl::hasOwnShape() const
 {
     return toplevel->shape();
-}
-
-QSize EffectWindowImpl::size() const
-{
-    return toplevel->size();
-}
-
-QPoint EffectWindowImpl::pos() const
-{
-    return toplevel->pos();
-}
-
-QRect EffectWindowImpl::rect() const
-{
-    return toplevel->rect();
-}
-
-QRect EffectWindowImpl::contentsRect() const
-{
-    return QRect(toplevel->clientPos(), toplevel->clientSize());
 }
 
 QRect EffectWindowImpl::decorationInnerRect() const
@@ -1554,150 +1434,9 @@ void EffectWindowImpl::deleteProperty(long int atom) const
     deleteWindowProperty(window()->window(), atom);
 }
 
-bool EffectWindowImpl::isMovable() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isMovable();
-    return false;
-}
-
-bool EffectWindowImpl::isMovableAcrossScreens() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isMovableAcrossScreens();
-    return false;
-}
-
-bool EffectWindowImpl::isUserMove() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isMove();
-    return false;
-}
-
-bool EffectWindowImpl::isUserResize() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isResize();
-    return false;
-}
-
-QRect EffectWindowImpl::iconGeometry() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->iconGeometry();
-    return QRect();
-}
-
-bool EffectWindowImpl::isDesktop() const
-{
-    return toplevel->isDesktop();
-}
-
-bool EffectWindowImpl::isDock() const
-{
-    return toplevel->isDock();
-}
-
-bool EffectWindowImpl::isToolbar() const
-{
-    return toplevel->isToolbar();
-}
-
-bool EffectWindowImpl::isMenu() const
-{
-    return toplevel->isMenu();
-}
-
-bool EffectWindowImpl::isNormalWindow() const
-{
-    return toplevel->isNormalWindow();
-}
-
-bool EffectWindowImpl::isSpecialWindow() const
-{
-    if (Client* c = dynamic_cast<Client*>(toplevel))
-        return c->isSpecialWindow();
-    else
-        return true;
-}
-
-bool EffectWindowImpl::isDialog() const
-{
-    return toplevel->isDialog();
-}
-
-bool EffectWindowImpl::isSplash() const
-{
-    return toplevel->isSplash();
-}
-
-bool EffectWindowImpl::isUtility() const
-{
-    return toplevel->isUtility();
-}
-
-bool EffectWindowImpl::isDropdownMenu() const
-{
-    return toplevel->isDropdownMenu();
-}
-
-bool EffectWindowImpl::isPopupMenu() const
-{
-    return toplevel->isPopupMenu();
-}
-
-bool EffectWindowImpl::isTooltip() const
-{
-    return toplevel->isTooltip();
-}
-
-bool EffectWindowImpl::isNotification() const
-{
-    return toplevel->isNotification();
-}
-
-bool EffectWindowImpl::isComboBox() const
-{
-    return toplevel->isComboBox();
-}
-
-bool EffectWindowImpl::isDNDIcon() const
-{
-    return toplevel->isDNDIcon();
-}
-
-NET::WindowType EffectWindowImpl::windowType() const
-{
-    return toplevel->windowType();
-}
-
 bool EffectWindowImpl::isManaged() const
 {
     return dynamic_cast< const Client* >(toplevel) != NULL;
-}
-
-bool EffectWindowImpl::acceptsFocus() const
-{
-    const Client* client = dynamic_cast< const Client* >(toplevel);
-    if (!client)
-        return true; // We don't actually know...
-    return client->wantsInput();
-}
-
-bool EffectWindowImpl::keepAbove() const
-{
-    const Client* client = dynamic_cast< const Client* >(toplevel);
-    if (!client)
-        return true;
-    return client->keepAbove();
-}
-
-bool EffectWindowImpl::isModal() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isModal();
-    return false;
 }
 
 EffectWindow* EffectWindowImpl::findModal()
@@ -1721,30 +1460,9 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     return EffectWindowList();
 }
 
-bool EffectWindowImpl::isSkipSwitcher() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->skipSwitcher();
-    return false;
-}
-
 WindowQuadList EffectWindowImpl::buildQuads(bool force) const
 {
     return sceneWindow()->buildQuads(force);
-}
-
-void EffectWindowImpl::minimize() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        c->minimize();
-    }
-}
-
-void EffectWindowImpl::unminimize() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        c->unminimize();
-    }
 }
 
 void EffectWindowImpl::closeWindow() const

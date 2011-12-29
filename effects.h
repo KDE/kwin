@@ -242,72 +242,20 @@ public:
     virtual void unrefWindow();
     virtual bool isDeleted() const;
 
-    virtual bool isOnActivity(QString id) const;
-    virtual bool isOnAllActivities() const;
-
-    virtual bool isOnAllDesktops() const;
-    virtual int desktop() const; // prefer isOnXXX()
-    virtual bool isMinimized() const;
-    virtual double opacity() const;
-    virtual bool hasAlpha() const;
-    virtual QString caption() const;
-    virtual QPixmap icon() const;
-    virtual QString windowClass() const;
-    virtual QString windowRole() const;
     virtual const EffectWindowGroup* group() const;
 
-    virtual int x() const;
-    virtual int y() const;
-    virtual int width() const;
-    virtual int height() const;
-    virtual QSize basicUnit() const;
-    virtual QRect geometry() const;
     virtual QRegion shape() const;
-    virtual int screen() const;
     virtual bool hasOwnShape() const;
-    virtual QPoint pos() const;
-    virtual QSize size() const;
-    virtual QRect rect() const;
-    virtual bool isMovable() const;
-    virtual bool isMovableAcrossScreens() const;
-    virtual bool isUserMove() const;
-    virtual bool isUserResize() const;
-    virtual QRect iconGeometry() const;
-    virtual QRect contentsRect() const;
     virtual QRect decorationInnerRect() const;
     virtual QByteArray readProperty(long atom, long type, int format) const;
     virtual void deleteProperty(long atom) const;
 
-    virtual bool isDesktop() const;
-    virtual bool isDock() const;
-    virtual bool isToolbar() const;
-    virtual bool isMenu() const;
-    virtual bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
-    virtual bool isSpecialWindow() const;
-    virtual bool isDialog() const;
-    virtual bool isSplash() const;
-    virtual bool isUtility() const;
-    virtual bool isDropdownMenu() const;
-    virtual bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
-    virtual bool isTooltip() const;
-    virtual bool isNotification() const;
-    virtual bool isComboBox() const;
-    virtual bool isDNDIcon() const;
-    virtual NET::WindowType windowType() const;
     virtual bool isManaged() const; // managed or override-redirect
-    virtual bool acceptsFocus() const;
-    virtual bool keepAbove() const;
-
-    virtual bool isModal() const;
     virtual EffectWindow* findModal();
     virtual EffectWindowList mainWindows() const;
 
-    virtual bool isSkipSwitcher() const;
-
     virtual WindowQuadList buildQuads(bool force = false) const;
 
-    virtual void minimize() const;
-    virtual void unminimize() const;
     virtual void closeWindow() const;
 
     virtual bool visibleInClientGroup() const;

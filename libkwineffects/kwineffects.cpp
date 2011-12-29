@@ -291,6 +291,109 @@ EffectWindow::~EffectWindow()
 {
 }
 
+#define WINDOW_HELPER( rettype, prototype, propertyname ) \
+    rettype EffectWindow::prototype ( ) const \
+    { \
+        return parent()->property( propertyname ).value< rettype >(); \
+    }
+
+WINDOW_HELPER(double, opacity, "opacity")
+WINDOW_HELPER(bool, hasAlpha, "alpha")
+WINDOW_HELPER(int, x, "x")
+WINDOW_HELPER(int, y, "y")
+WINDOW_HELPER(int, width, "width")
+WINDOW_HELPER(int, height, "height")
+WINDOW_HELPER(QPoint, pos, "pos")
+WINDOW_HELPER(QSize, size, "size")
+WINDOW_HELPER(int, screen, "screen")
+WINDOW_HELPER(QRect, geometry, "geometry")
+WINDOW_HELPER(QRect, rect, "rect")
+WINDOW_HELPER(int, desktop, "desktop")
+WINDOW_HELPER(bool, isDesktop, "desktopWindow")
+WINDOW_HELPER(bool, isDock, "dock")
+WINDOW_HELPER(bool, isToolbar, "toolbar")
+WINDOW_HELPER(bool, isMenu, "menu")
+WINDOW_HELPER(bool, isNormalWindow, "normalWindow")
+WINDOW_HELPER(bool, isDialog, "dialog")
+WINDOW_HELPER(bool, isSplash, "splash")
+WINDOW_HELPER(bool, isUtility, "utility")
+WINDOW_HELPER(bool, isDropdownMenu, "dropdownMenu")
+WINDOW_HELPER(bool, isPopupMenu, "popupMenu")
+WINDOW_HELPER(bool, isTooltip, "tooltip")
+WINDOW_HELPER(bool, isNotification, "notification")
+WINDOW_HELPER(bool, isComboBox, "comboBox")
+WINDOW_HELPER(bool, isDNDIcon, "dndIcon")
+WINDOW_HELPER(QString, windowRole, "windowRole")
+
+QString EffectWindow::windowClass() const
+{
+    return parent()->property("resourceName").toString() + ' ' + parent()->property("resourceClass").toString();
+}
+
+QRect EffectWindow::contentsRect() const
+{
+    return QRect(parent()->property("clientPos").toPoint(), parent()->property("clientSize").toSize());
+}
+
+NET::WindowType EffectWindow::windowType() const
+{
+    return static_cast<NET::WindowType>(parent()->property("windowType").toInt());
+}
+
+bool EffectWindow::isOnActivity(QString activity) const
+{
+    const QStringList activities = parent()->property("activities").toStringList();
+    return activities.isEmpty() || activities.contains(activity);
+}
+
+bool EffectWindow::isOnAllActivities() const
+{
+    return parent()->property("activities").toStringList().isEmpty();
+}
+
+#undef WINDOW_HELPER
+
+#define WINDOW_HELPER_DEFAULT( rettype, prototype, propertyname, defaultValue ) \
+    rettype EffectWindow::prototype ( ) const \
+    { \
+        const QVariant variant = parent()->property( propertyname ); \
+        if (!variant.isValid()) { \
+            return defaultValue; \
+        } \
+        return variant.value< rettype >(); \
+    }
+
+WINDOW_HELPER_DEFAULT(bool, isMinimized, "minimized", false)
+WINDOW_HELPER_DEFAULT(bool, isMovable, "moveable", false)
+WINDOW_HELPER_DEFAULT(bool, isMovableAcrossScreens, "moveableAcrossScreens", false)
+WINDOW_HELPER_DEFAULT(QString, caption, "caption", "")
+WINDOW_HELPER_DEFAULT(bool, keepAbove, "keepAbove", true)
+WINDOW_HELPER_DEFAULT(bool, isModal, "modal", false)
+WINDOW_HELPER_DEFAULT(QSize, basicUnit, "basicUnit", QSize(1, 1))
+WINDOW_HELPER_DEFAULT(bool, isUserMove, "move", false)
+WINDOW_HELPER_DEFAULT(bool, isUserResize, "resize", false)
+WINDOW_HELPER_DEFAULT(QRect, iconGeometry, "iconGeometry", QRect())
+WINDOW_HELPER_DEFAULT(bool, isSpecialWindow, "specialWindow", true)
+WINDOW_HELPER_DEFAULT(bool, acceptsFocus, "wantsInput", true) // We don't actually know...
+WINDOW_HELPER_DEFAULT(QPixmap, icon, "icon", QPixmap())
+WINDOW_HELPER_DEFAULT(bool, isSkipSwitcher, "skipSwitcher", false)
+
+#undef WINDOW_HELPER_DEFAULT
+
+#define WINDOW_HELPER_SETTER( prototype, propertyname, args, value ) \
+    void EffectWindow::prototype ( args ) \
+    {\
+        const QVariant variant = parent()->property( propertyname ); \
+        if (variant.isValid()) { \
+            parent()->setProperty( propertyname, value ); \
+        } \
+    }
+
+WINDOW_HELPER_SETTER(minimize, "minimized",,true)
+WINDOW_HELPER_SETTER(unminimize, "minimized",,false)
+
+#undef WINDOW_HELPER_SETTER
+
 bool EffectWindow::isOnCurrentActivity() const
 {
     return isOnActivity(effects->currentActivity());
@@ -304,6 +407,11 @@ bool EffectWindow::isOnCurrentDesktop() const
 bool EffectWindow::isOnDesktop(int d) const
 {
     return desktop() == d || isOnAllDesktops();
+}
+
+bool EffectWindow::isOnAllDesktops() const
+{
+    return desktop() == NET::OnAllDesktops;
 }
 
 bool EffectWindow::hasDecoration() const
