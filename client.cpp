@@ -204,6 +204,8 @@ Client::Client(Workspace* ws)
     connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
+    connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
+    connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -1553,6 +1555,7 @@ void Client::setSkipSwitcher(bool set)
         return;
     skip_switcher = set;
     updateWindowRules();
+    emit skipSwitcherChanged();
 }
 
 void Client::setModal(bool m)
@@ -2066,6 +2069,7 @@ void Client::getIcons()
     }
     if (isManaged() && decoration != NULL)
         decoration->iconChange();
+    emit iconChanged();
 }
 
 QPixmap Client::icon(const QSize& size) const

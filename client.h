@@ -175,6 +175,50 @@ class Client
      * Property uses a QObject. If the property is needed as a Client, perform a qobject_cast.
      **/
     Q_PROPERTY(QObject *transientFor READ transientFor NOTIFY transientChanged)
+    /**
+     * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
+     * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     */
+    Q_PROPERTY(QSize basicUnit READ basicUnit)
+    /**
+     * Whether the Client is currently being moved by the user.
+     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     **/
+    Q_PROPERTY(bool move READ isMove NOTIFY moveResizedChanged)
+    /**
+     * Whether the Client is currently being resized by the user.
+     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     **/
+    Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
+    /**
+     * The optional geometry representing the minimized Client in e.g a taskbar.
+     * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(QRect iconGeometry READ iconGeometry)
+    /**
+     * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
+     * i.e. window types that usually don't have a window frame and the user does not use window
+     * management (moving, raising,...) on them.
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(bool specialWindow READ isSpecialWindow)
+    /**
+     * Whether the Client can accept keyboard focus.
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(bool wantsInput READ wantsInput)
+    // TODO: a QIcon with all icon sizes?
+    Q_PROPERTY(QPixmap icon READ icon NOTIFY iconChanged)
+    /**
+     * Whether the Client should be excluded from window switching effects.
+     **/
+    Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -595,6 +639,9 @@ signals:
     void keepAboveChanged();
     void keepBelowChanged();
     void minimizedChanged();
+    void moveResizedChanged();
+    void iconChanged();
+    void skipSwitcherChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
