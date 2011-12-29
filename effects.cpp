@@ -1325,10 +1325,9 @@ void EffectsHandlerImpl::slotHideOutline()
 // EffectWindowImpl
 //****************************************
 
-EffectWindowImpl::EffectWindowImpl()
-    : QObject(NULL)
-    , EffectWindow()
-    , toplevel(NULL)
+EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
+    : EffectWindow(toplevel)
+    , toplevel(toplevel)
     , sw(NULL)
 {
 }
@@ -1465,6 +1464,7 @@ void EffectWindowImpl::unrefWindow()
 void EffectWindowImpl::setWindow(Toplevel* w)
 {
     toplevel = w;
+    setParent(w);
 }
 
 void EffectWindowImpl::setSceneWindow(Scene::Window* w)

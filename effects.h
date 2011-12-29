@@ -224,11 +224,11 @@ private:
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
 };
 
-class EffectWindowImpl : public QObject, public EffectWindow
+class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    EffectWindowImpl();
+    EffectWindowImpl(Toplevel *toplevel);
     virtual ~EffectWindowImpl();
 
     virtual void enablePainting(int reason);

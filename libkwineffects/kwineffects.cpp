@@ -282,7 +282,8 @@ EffectsHandler* effects = 0;
 // EffectWindow
 //****************************************
 
-EffectWindow::EffectWindow()
+EffectWindow::EffectWindow(QObject *parent)
+    : QObject(parent)
 {
 }
 

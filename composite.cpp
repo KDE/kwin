@@ -529,8 +529,7 @@ void Toplevel::setupCompositing()
         return;
     damage_handle = XDamageCreate(display(), frameId(), XDamageReportRawRectangles);
     damage_region = QRegion(0, 0, width(), height());
-    effect_window = new EffectWindowImpl();
-    effect_window->setWindow(this);
+    effect_window = new EffectWindowImpl(this);
     unredirect = false;
     workspace()->checkUnredirect(true);
     scene->windowAdded(this);

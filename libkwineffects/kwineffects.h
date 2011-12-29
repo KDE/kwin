@@ -1067,8 +1067,9 @@ protected:
  * The purpose is to hide internal data and also to serve as a single
  *  representation for the case when Client/Unmanaged becomes Deleted.
  **/
-class KWIN_EXPORT EffectWindow
+class KWIN_EXPORT EffectWindow : public QObject
 {
+    Q_OBJECT
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -1086,7 +1087,7 @@ public:
         PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
     };
 
-    EffectWindow();
+    EffectWindow(QObject *parent = NULL);
     virtual ~EffectWindow();
 
     virtual void enablePainting(int reason) = 0;
