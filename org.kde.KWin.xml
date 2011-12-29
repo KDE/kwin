@@ -81,5 +81,8 @@
       <arg type="s" direction="in"/>
       <arg type="b" direction="out"/>
     </method>
+    <method name="activeEffects">
+      <arg type="as" direction="out"/>
+    </method>
   </interface>
 </node>

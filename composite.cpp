@@ -275,6 +275,13 @@ void Workspace::toggleCompositing()
     }
 }
 
+QStringList Workspace::activeEffects() const
+{
+    if (effects)
+        return static_cast< EffectsHandlerImpl* >(effects)->activeEffects();
+    return QStringList();
+}
+
 void Workspace::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume

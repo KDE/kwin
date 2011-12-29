@@ -170,6 +170,7 @@ public:
     QStringList listOfEffects() const;
 
     QList<EffectWindow*> elevatedWindows() const;
+    QStringList activeEffects() const;
 
 public Q_SLOTS:
     void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
