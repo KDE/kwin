@@ -1253,6 +1253,18 @@ void EffectsHandlerImpl::effectsChanged()
     }
 }
 
+QStringList EffectsHandlerImpl::activeEffects() const
+{
+    QStringList ret;
+    for(QVector< KWin::EffectPair >::const_iterator it = loaded_effects.constBegin(),
+                                                    end = loaded_effects.constEnd(); it != end; ++it) {
+            if (it->second->isActive()) {
+                ret << it->first;
+            }
+        }
+    return ret;
+}
+
 EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const
 {
     return new EffectFrameImpl(style, staticSize, position, alignment);
