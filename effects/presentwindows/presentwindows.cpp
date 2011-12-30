@@ -343,8 +343,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
         data.brightness *= interpolate(0.40, 1.0, winData->highlight);
 
         if (m_motionManager.isManaging(w)) {
-            if (w->isDesktop())
+            if (w->isDesktop()) {
                 effects->paintWindow(w, mask, region, data);
+            }
             m_motionManager.apply(w, data);
             QRect rect = m_motionManager.transformedGeometry(w).toRect();
 
@@ -353,8 +354,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 QRect area = effects->clientArea(FullScreenArea, w);
                 QSizeF effSize(w->width()*data.xScale, w->height()*data.yScale);
                 float tScale = sqrt((area.width()*area.height()) / (16.0*effSize.width()*effSize.height()));
-                if (tScale < 1.05)
+                if (tScale < 1.05) {
                     tScale = 1.05;
+                }
                 if (effSize.width()*tScale > area.width())
                     tScale = area.width() / effSize.width();
                 if (effSize.height()*tScale > area.height())
@@ -364,16 +366,21 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                     if (scale < tScale) // don't use lanczos during transition
                         mask &= ~PAINT_WINDOW_LANCZOS;
 
-                    const QPoint ac = area.center();
-                    const QPoint wc = rect.center();
+                    const float df = (tScale-1.0f)*0.5f;
+                    int tx = qRound(rect.width()*df);
+                    int ty = qRound(rect.height()*df);
+                    QRect tRect(rect.adjusted(-tx, -ty, tx, ty));
+                    tx = qMax(tRect.x(), area.x()) + qMin(0, area.right()-tRect.right());
+                    ty = qMax(tRect.y(), area.y()) + qMin(0, area.bottom()-tRect.bottom());
+                    tx = qRound((tx-rect.x())*winData->highlight);
+                    ty = qRound((ty-rect.y())*winData->highlight);
 
-                    data.xScale *= scale;
-                    data.yScale *= scale;
-                    const int tx = -w->width()*data.xScale*(scale-1.0)*(0.5+(wc.x() - ac.x())/area.width());
-                    const int ty = -w->height()*data.yScale*(scale-1.0)*(0.5+(wc.y() - ac.y())/area.height());
                     rect.translate(tx,ty);
                     rect.setWidth(rect.width()*scale);
                     rect.setHeight(rect.height()*scale);
+
+                    data.xScale *= scale;
+                    data.yScale *= scale;
                     data.xTranslate += tx;
                     data.yTranslate += ty;
                 }
