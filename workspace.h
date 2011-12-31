@@ -649,10 +649,6 @@ private slots:
     void configureWM();
     void desktopResized();
     void screenChangeTimeout();
-    void screenAdded(Kephal::Screen*);
-    void screenRemoved(int);
-    void screenResized(Kephal::Screen*, QSize, QSize);
-    void screenMoved(Kephal::Screen*, QPoint, QPoint);
     void slotUpdateToolWindows();
     void delayFocus();
     void gotTemporaryRulesMessage(const QString&);
