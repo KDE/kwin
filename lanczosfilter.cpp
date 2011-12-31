@@ -68,6 +68,10 @@ void LanczosFilter::init()
     GLPlatform *gl = GLPlatform::instance();
     if (!force && gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(7, 10))
         return;
+    // With fglrx the ARB Shader crashes KWin (see Bug #270818 and #286795) and GLSL Shaders are not functional
+    if (!force && gl->driver() == Driver_Catalyst) {
+        return;
+    }
 
     m_shader = new LanczosShader(this);
     if (!m_shader->init()) {
