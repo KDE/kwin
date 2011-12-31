@@ -146,6 +146,10 @@ bool BlurEffect::enabledByDefault()
 
     if (gl->isIntel())
         return false;
+    if (gl->driver() == Driver_Catalyst) {
+        // fglrx supports only ARB shaders and those tend to crash KWin (see Bug #270818 and #286795)
+        return false;
+    }
 
     return true;
 }
