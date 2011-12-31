@@ -254,6 +254,7 @@ void SceneOpenGL::windowGeometryShapeChanged(KWin::Toplevel* c)
 
 void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
 {
+    Q_UNUSED(t)
 #if 0 // not really needed, windows are painted on every repaint
     // and opacity is used when applying texture, not when
     // creating it
@@ -325,7 +326,6 @@ bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
 
 bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 {
-    Q_D(Texture);
     if (pixmap.isNull())
         return false;
 

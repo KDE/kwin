@@ -617,6 +617,7 @@ void SceneOpenGL::Texture::findTarget()
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
                                 int depth, QRegion region)
 {
+    Q_UNUSED(region)
     // decrease the reference counter for the old texture
     d_ptr = new TexturePrivate();
 

@@ -839,6 +839,7 @@ void SceneXrender::EffectFrame::crossFadeText()
 
 void SceneXrender::EffectFrame::render(QRegion region, double opacity, double frameOpacity)
 {
+    Q_UNUSED(region)
     if (m_effectFrame->geometry().isEmpty()) {
         return; // Nothing to display
     }
