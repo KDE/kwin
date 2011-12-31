@@ -147,7 +147,7 @@ Comment[x-test]=xxConfigure active screen edgesxx
 Comment[zh_CN]=配置活动窗口边缘
 Comment[zh_TW]=設定作用的螢幕邊緣
 
-X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop
+X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,acció,commutació,escriptori
 X-KDE-Keywords[da]=kwin,vindueshåndtering,window,manager,effekt,kant,handling,skrift,skrivebord
 X-KDE-Keywords[et]=kwin,aken,haldur,efekt,serv,piire,toiming,lülitamine,töölaud
