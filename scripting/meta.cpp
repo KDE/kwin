@@ -227,12 +227,3 @@ void KWin::MetaScripting::valueMerge(QScriptValue& first, QScriptValue second)
         first.setProperty(value_it.name(), value_it.value());
     }
 }
-
-QScriptValue KWin::MetaScripting::getLazyLogicFunction(QScriptEngine* eng, const QString& type)
-{
-    QScriptValue base = eng->newFunction(KWin::Chelate::lazyLogicGenerate, 0);
-    QScriptValue data = eng->newObject();
-    data.setProperty("lazylogic_type", eng->toScriptValue<QString>(type));
-    base.setData(data);
-    return base;
-}

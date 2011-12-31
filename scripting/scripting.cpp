@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scripting.h"
 // own
-#include "chelate.h"
 #include "meta.h"
 #include "s_clientgroup.h"
 // KDE
@@ -81,8 +80,6 @@ void KWin::Script::run()
         m_workspace->attach(m_engine);
         m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
         m_engine->globalObject().setProperty("ClientGroup", SWrapper::ClientGroup::publishClientGroupClass(m_engine));
-        m_engine->globalObject().setProperty("chelate", KWin::Chelate::publishChelate(m_engine));
-        m_engine->globalObject().setProperty("ch", KWin::Chelate::publishChelate(m_engine));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(m_engine);
 

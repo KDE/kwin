@@ -125,7 +125,6 @@ if(KWIN_BUILD_SCRIPTING)
         scripting/meta.cpp
         scripting/s_clientgroup.cpp
         scripting/workspaceproxy.cpp
-        scripting/chelate.cpp
         scripting/timer.cpp
     )
 endif(KWIN_BUILD_SCRIPTING)

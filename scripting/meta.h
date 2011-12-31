@@ -111,11 +111,6 @@ void valueMerge(QScriptValue&, QScriptValue);
 void registration(QScriptEngine* eng);
 
 /**
-  * Get the kind of LazyLogic (tm) function you want
-  */
-QScriptValue getLazyLogicFunction(QScriptEngine*, const QString&);
-
-/**
   * Functions for the JS function objects, config.exists and config.get.
   * Read scripting/IMPLIST for details on how they work
   */
