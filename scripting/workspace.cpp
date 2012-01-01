@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 KWin::Workspace*  SWrapper::Workspace::centralObject = 0;
 
 QScriptValue SWrapper::valueForClient(KWin::Client *client, QScriptEngine *engine) {
-    return engine->newQObject(client);
+    return engine->newQObject(client, QScriptEngine::QtOwnership,
+                              QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
 }
 
 SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
