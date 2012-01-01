@@ -69,6 +69,10 @@ class ClientGroup : public QObject
      * The index of the visible Client in this group.
      **/
     Q_PROPERTY(int visibleClientIndex READ indexOfVisibleClient NOTIFY visibleChanged)
+    /**
+     * The Clients in this group.
+     **/
+    Q_PROPERTY(QList<KWin::Client*> clients READ clients)
 public:
     /**
      * Creates a new group containing \p c.

@@ -1178,5 +1178,6 @@ KWIN_COMPARE_PREDICATE(InputIdMatchPredicate, Client, Window, cl->inputId() == v
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::Client*)
+Q_DECLARE_METATYPE(QList<KWin::Client*>)
 
 #endif

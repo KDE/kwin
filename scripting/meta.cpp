@@ -132,6 +132,7 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
 
     qScriptRegisterSequenceMetaType<QStringList>(eng);
     qScriptRegisterSequenceMetaType< QList<KWin::ClientGroup*> >(eng);
+    qScriptRegisterSequenceMetaType< QList<KWin::Client*> >(eng);
 }
 
 QScriptValue KWin::MetaScripting::configExists(QScriptContext* ctx, QScriptEngine* eng)
