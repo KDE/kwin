@@ -436,7 +436,7 @@ bool Workspace::activateNextClient(Client* c)
             Client *client = *(--it);
 
             // rule out clients which are not really visible.
-            // the screen test is rather superflous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
+            // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
             if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
                   client->isOnCurrentActivity() && client->isOnScreen(c ? c->screen() : activeScreen())))
                 continue;

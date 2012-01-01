@@ -254,7 +254,7 @@ public:
 
     /**
      * This method returns the area that the Toplevel window reports to be opaque.
-     * It is supposed to only provide valueable information if @link hasAlpha is @c true .
+     * It is supposed to only provide valuable information if @link hasAlpha is @c true .
      * @see hasAlpha
      **/
     const QRegion& opaqueRegion() const;

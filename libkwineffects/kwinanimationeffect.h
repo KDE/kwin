@@ -141,7 +141,7 @@ protected:
      * The central function of this class - call it to create an animated transition of any supported attribute
      * @param w - The EffectWindow to manipulate
      * @param a - The @enum Attribute to manipulate
-     * @param meta - Basically a wildcard to carry various extra informations, eg. the anchor, relativity or rotation axis. You will probably use require it when performing Generic animations.
+     * @param meta - Basically a wildcard to carry various extra information, eg. the anchor, relativity or rotation axis. You will probably use require it when performing Generic animations.
      * @param ms - How long the transition will last
      * @param to - The target value. FPx2 is an agnostic two component float type (like QPointF or QSizeF, but without requiring to be either and supporting an invalid state)
      * @param shape - How the animation progresses, eg. Linear progresses constantly while Exponential start slow and becomes very fast in the end
