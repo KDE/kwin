@@ -164,7 +164,7 @@ protected:
 private:
     float interpolated( const AniData&, int i = 0 ) const;
     float progress( const AniData& ) const;
-private slots:
+private Q_SLOTS:
     void init();
     void triggerRepaint();
     void _windowClosed( EffectWindow* w );
