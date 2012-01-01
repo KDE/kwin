@@ -218,6 +218,10 @@ class Client
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
+    /**
+     * The "Window Tabs" Group this Client belongs to.
+     **/
+    Q_PROPERTY(KWin::ClientGroup* clientGroup READ clientGroup NOTIFY clientGroupChanged)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -641,6 +645,11 @@ signals:
     void moveResizedChanged();
     void iconChanged();
     void skipSwitcherChanged();
+    /**
+     * Emitted whenever the Client's ClientGroup changed. That is whenever the Client is moved to
+     * another group, but not when a Client gets added or removed to the Client's ClientGroup.
+     **/
+    void clientGroupChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

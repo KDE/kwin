@@ -123,7 +123,6 @@ if(KWIN_BUILD_SCRIPTING)
         scripting/scripting.cpp
         scripting/workspace.cpp
         scripting/meta.cpp
-        scripting/s_clientgroup.cpp
         scripting/workspaceproxy.cpp
         scripting/timer.cpp
     )

@@ -53,6 +53,22 @@ class Client;
 class ClientGroup : public QObject
 {
     Q_OBJECT
+    /**
+     * Currently visible client in this group.
+     **/
+    Q_PROPERTY(KWin::Client* visible READ visible WRITE setVisible NOTIFY visibleChanged)
+    /**
+     * Combined minimum size of all clients in the group.
+     **/
+    Q_PROPERTY(QSize minSize READ minSize NOTIFY minSizeChanged)
+    /**
+     * Combined maximum size of all clients in the group.
+     **/
+    Q_PROPERTY(QSize maxSize READ maxSize NOTIFY maxSizeChanged)
+    /**
+     * The index of the visible Client in this group.
+     **/
+    Q_PROPERTY(int visibleClientIndex READ indexOfVisibleClient NOTIFY visibleChanged)
 public:
     /**
      * Creates a new group containing \p c.
@@ -60,11 +76,12 @@ public:
     ClientGroup(Client* c);
     ~ClientGroup();
 
+public Q_SLOTS:
     /**
      * Adds \p c to the group before \p before in the list. If \p becomeVisible is \i true then
      * the added client will become also the visible client.
      */
-    void add(Client* c, int before = -1, bool becomeVisible = false);
+    void add(KWin::Client* c, int before = -1, bool becomeVisible = false);
     /**
      * Remove the client at index \p index from the group. If \p newGeom is set then the client
      * will move and resize to the specified geometry, otherwise it will stay where the group
@@ -77,7 +94,7 @@ public:
      * the specified geometry, otherwise it will stay where the group is located. If
      * \p toNullGroup is not true then the client will be added to a new group of its own.
      */
-    void remove(Client* c, const QRect& newGeom = QRect(), bool toNullGroup = false);
+    void remove(KWin::Client* c, const QRect& newGeom = QRect(), bool toNullGroup = false);
     /**
      * Remove all clients from this group. Results in all clients except the first being moved
        to a group of their own.
@@ -95,7 +112,7 @@ public:
     /**
      * Move \p c to the position before \p before in the list.
      */
-    void move(Client* c, Client* before);
+    void move(KWin::Client* c, KWin::Client* before);
     /**
      * Display the right-click client menu belonging to the client at index \p index at the
      * global coordinates specified by \p pos.
@@ -105,12 +122,13 @@ public:
      * Display the right-click client menu belonging to \p c at the global coordinates
      * specified by \p pos.
      */
-    void displayClientMenu(Client* c, const QPoint& pos);
+    void displayClientMenu(KWin::Client* c, const QPoint& pos);
 
+public:
     /**
      * Returns the list index of \p c.
      */
-    int indexOfClient(Client* c);
+    Q_SCRIPTABLE int indexOfClient(KWin::Client* c);
     /**
      * Returns the list index of the currently visible client in the group.
      */
@@ -118,7 +136,7 @@ public:
     /**
      * Returns whether or not this group contains \p c.
      */
-    bool contains(Client* c);
+    Q_SCRIPTABLE bool contains(KWin::Client* c);
     /**
      * Returns whether or not this group contains the active client.
      */
@@ -162,6 +180,20 @@ public:
      * that client is updated to match \p main.
      */
     void updateStates(Client* main, Client* only = NULL);
+
+Q_SIGNALS:
+    /**
+     * Emitted when the visible Client in this group changes.
+     **/
+    void visibleChanged();
+    /**
+     * Emitted when the group's minimum size changes.
+     **/
+    void minSizeChanged();
+    /**
+     * Emitted when the group's maximum size changes.
+     **/
+    void maxSizeChanged();
 
 private:
     /**
@@ -224,5 +256,7 @@ inline QSize ClientGroup::maxSize() const
 }
 
 }
+Q_DECLARE_METATYPE(KWin::ClientGroup*)
+Q_DECLARE_METATYPE(QList<KWin::ClientGroup*>)
 
 #endif

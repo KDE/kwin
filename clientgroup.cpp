@@ -266,6 +266,7 @@ void ClientGroup::setVisible(Client* c)
     for (ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i)
         if ((*i) != c)
             (*i)->setClientShown(false);
+    emit visibleChanged();
 }
 
 void ClientGroup::updateStates(Client* main, Client* only)
@@ -331,6 +332,9 @@ void ClientGroup::updateMinMaxSize()
         //kWarning(1212) << "ClientGroup's min size is greater than its max size. Setting max to min.";
         maxSize_ = minSize_;
     }
+    // TODO: only emit if really changed
+    emit minSizeChanged();
+    emit maxSizeChanged();
 
     // Ensure all windows are within these sizes
     const QSize size = clients_[visible_]->clientSize();

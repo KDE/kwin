@@ -21,17 +21,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_META_H
 #define KWIN_SCRIPTING_META_H
 
-#include "s_clientgroup.h"
-#include <QStringList>
 #include <QScriptValueIterator>
 
-typedef KWin::ClientGroup* KClientGroupRef;
+// forward declarations
+class QPoint;
+class QRect;
+class QScriptContext;
+class QSize;
 
-Q_DECLARE_METATYPE(QPoint)
-Q_DECLARE_METATYPE(QSize)
-Q_DECLARE_METATYPE(QRect)
-Q_DECLARE_METATYPE(KClientGroupRef)
-Q_DECLARE_METATYPE(QList<KWin::ClientGroup*>)
+namespace KWin {
+class Client;
+class ClientGroup;
+}
+
+typedef KWin::Client* KClientRef;
+typedef KWin::ClientGroup* KClientGroupRef;
 
 namespace KWin
 {
@@ -80,6 +84,11 @@ QScriptValue toScriptValue(QScriptEngine*, const QRect&);
 void fromScriptValue(const QScriptValue&, QRect&);
 }
 
+namespace Client
+{
+QScriptValue toScriptValue(QScriptEngine *eng, const KClientRef &client);
+void fromScriptValue(const QScriptValue &value, KClientRef& client);
+}
 
 /**
   * Merges the second QScriptValue in the first one.

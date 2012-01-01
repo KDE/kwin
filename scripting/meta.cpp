@@ -19,27 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "meta.h"
+#include "client.h"
 #include "clientgroup.h"
 
-Q_DECLARE_METATYPE(SWrapper::ClientGroup*)
+#include <QtScript/QScriptEngine>
 
 using namespace KWin::MetaScripting;
 
 // Meta for KWin::ClientGroup* objects
 QScriptValue ClientGroup::toScriptValue(QScriptEngine* eng, const KClientGroupRef& cGrp)
 {
-    return SWrapper::ClientGroup::generate(eng, new SWrapper::ClientGroup(cGrp));
+    return eng->newQObject(cGrp, QScriptEngine::QtOwnership,
+                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
 }
 
 void ClientGroup::fromScriptValue(const QScriptValue& obj, KWin::ClientGroup*& cGrp)
 {
-    SWrapper::ClientGroup* wrapper = qscriptvalue_cast<SWrapper::ClientGroup*>(obj);
-
-    if (wrapper == 0) {
-        cGrp = 0;
-    } else {
-        cGrp = wrapper->getCentralObject();
-    }
+    cGrp = qobject_cast<KWin::ClientGroup*>(obj.toQObject());
 }
 // End of metas for KWin::ClientGroup* objects
 
@@ -114,12 +110,24 @@ void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
 }
 // End of meta for QRect object
 
+QScriptValue Client::toScriptValue(QScriptEngine *eng, const KClientRef &client)
+{
+    return eng->newQObject(client, QScriptEngine::QtOwnership,
+                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
+}
+
+void Client::fromScriptValue(const QScriptValue &value, KWin::Client* &client)
+{
+    client = qobject_cast<KWin::Client*>(value.toQObject());
+}
+
 // Other helper functions
 void KWin::MetaScripting::registration(QScriptEngine* eng)
 {
     qScriptRegisterMetaType<QPoint>(eng, Point::toScriptValue, Point::fromScriptValue);
     qScriptRegisterMetaType<QSize>(eng, Size::toScriptValue, Size::fromScriptValue);
     qScriptRegisterMetaType<QRect>(eng, Rect::toScriptValue, Rect::fromScriptValue);
+    qScriptRegisterMetaType<KClientRef>(eng, Client::toScriptValue, Client::fromScriptValue);
     qScriptRegisterMetaType<KClientGroupRef>(eng, ClientGroup::toScriptValue, ClientGroup::fromScriptValue);
 
     qScriptRegisterSequenceMetaType<QStringList>(eng);
