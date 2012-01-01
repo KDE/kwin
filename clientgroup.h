@@ -145,7 +145,7 @@ public:
     /**
      * Returns the list of all the clients contained in this group in their current order.
      */
-    ClientList clients() const;
+    const ClientList &clients() const;
     /**
      * Returns a list of the captions and icons of all the clients contained in this group
      * in their current order.
@@ -230,7 +230,7 @@ inline bool ClientGroup::contains(Client* c)
     return clients_.contains(c);
 }
 
-inline ClientList ClientGroup::clients() const
+inline const ClientList &ClientGroup::clients() const
 {
     return clients_;
 }
