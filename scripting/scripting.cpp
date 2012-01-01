@@ -57,12 +57,12 @@ KWin::Script::Script(int scriptId, QString scriptName, QDir dir, QObject *parent
     , m_running(false)
 {
     m_scriptFile.setFileName(dir.filePath(scriptName));
-    QDBusConnection::sessionBus().registerObject("/" + QString::number(m_scriptId), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
+    QDBusConnection::sessionBus().registerObject('/' + QString::number(m_scriptId), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
 
 KWin::Script::~Script()
 {
-    QDBusConnection::sessionBus().unregisterObject("/" + QString::number(m_scriptId));
+    QDBusConnection::sessionBus().unregisterObject('/' + QString::number(m_scriptId));
 }
 
 void KWin::Script::printMessage(const QString &message)
