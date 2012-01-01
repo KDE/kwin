@@ -80,17 +80,6 @@ QScriptValue toScriptValue(QScriptEngine*, const QRect&);
 void fromScriptValue(const QScriptValue&, QRect&);
 }
 
-/**
-  * The Reference wrapping used previously for storing pointers to objects that were
-  * wrapped. Can still be used for non-QObject converted QScriptValue's, but as of
-  * now, it is not in use anywhere.
-  */
-namespace RefWrapping
-{
-// Simple template class to wrap pointers within QScriptValue's
-template<typename T> void embed(QScriptValue&, const T);
-template<typename T> T extract(const QScriptValue&);
-}
 
 /**
   * Merges the second QScriptValue in the first one.
@@ -121,25 +110,6 @@ void supplyConfig(QScriptEngine*, const QVariant&);
   */
 void supplyConfig(QScriptEngine*);
 
-// RefWrapping may be used for objects who use pointer based scriptvalue
-// storage, but do not use caching.
-template <typename T>
-void RefWrapping::embed(QScriptValue& value, const T datum)
-{
-    QScriptEngine* eng = value.engine();
-    value.setData(qScriptValueFromValue(eng,
-                                        static_cast<void*>(
-                                            const_cast<T>(datum)
-                                        )
-                                       ));
-}
-
-template <typename T>
-T RefWrapping::extract(const QScriptValue& value)
-{
-    T datum = static_cast<T>(qscriptvalue_cast<void*>(value.data()));
-    return datum;
-}
 }
 }
 
