@@ -27,14 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 typedef KWin::ClientGroup* KClientGroupRef;
 
-namespace KWin
-{
-namespace Chelate
-{
-QScriptValue lazyLogicGenerate(QScriptContext*, QScriptEngine*);
-}
-}
-
 Q_DECLARE_METATYPE(QPoint)
 Q_DECLARE_METATYPE(QSize)
 Q_DECLARE_METATYPE(QRect)
