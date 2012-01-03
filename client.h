@@ -468,7 +468,6 @@ public:
     void setMinimized(bool set);
     void minimize(bool avoid_animation = false);
     void unminimize(bool avoid_animation = false);
-    void closeWindow();
     void killWindow();
     void maximize(MaximizeMode);
     void toggleShade();
@@ -565,6 +564,9 @@ public:
 
     //sets whether the client should be treated as a SessionInteract window
     void setSessionInteract(bool needed);
+
+public slots:
+    void closeWindow();
 
 private slots:
     void autoRaise();
