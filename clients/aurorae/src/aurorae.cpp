@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsSceneMouseEvent>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeContext>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -186,17 +188,17 @@ void AuroraeClient::init()
     widget()->setAttribute(Qt::WA_TranslucentBackground);
     widget()->setAttribute(Qt::WA_NoSystemBackground);
     widget()->installEventFilter(this);
-    m_view = new QGraphicsView(m_scene, widget());
+    m_view = new QDeclarativeView(widget());
+    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     m_view->setAttribute(Qt::WA_TranslucentBackground);
-    m_view->setFrameShape(QFrame::NoFrame);
+    m_view->setWindowFlags(Qt::X11BypassWindowManagerHint);
     QPalette pal = m_view->palette();
     pal.setColor(m_view->backgroundRole(), Qt::transparent);
     m_view->setPalette(pal);
     QPalette pal2 = widget()->palette();
     pal2.setColor(widget()->backgroundRole(), Qt::transparent);
     widget()->setPalette(pal2);
-    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->rootContext()->setContextProperty("decoration", this);
     // scene initialisation
     m_scene->setActive(isActive(), false);
     m_scene->setIcon(icon());

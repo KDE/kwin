@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
+class QDeclarativeView;
 class QGraphicsSceneMouseEvent;
-class QGraphicsView;
 class QGraphicsScene;
 
 namespace Aurorae
@@ -136,7 +136,7 @@ private:
     void updateWindowShape();
     void checkTabs(bool force = false);
     AuroraeScene *m_scene;
-    QGraphicsView *m_view;
+    QDeclarativeView *m_view;
     bool m_clickInProgress;
 };
 
