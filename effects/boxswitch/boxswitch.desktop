@@ -155,6 +155,6 @@ X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-Category=Window Management
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
-X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Library=kwin4_effect_builtins
 X-KDE-Ordering=50
