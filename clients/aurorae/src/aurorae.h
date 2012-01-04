@@ -60,6 +60,31 @@ private:
 class AuroraeClient : public KDecorationUnstable
 {
     Q_OBJECT
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+    Q_PROPERTY(QRect geometry READ geometry)
+    Q_PROPERTY(int height READ height)
+    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(bool closeable READ isCloseable)
+    Q_PROPERTY(bool maximizeable READ isMaximizable)
+    Q_PROPERTY(bool minimizeable READ isMinimizable)
+    Q_PROPERTY(bool modal READ isModal)
+    Q_PROPERTY(bool moveable READ isMovable)
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops NOTIFY desktopChanged)
+    Q_PROPERTY(bool preview READ isPreview CONSTANT)
+    Q_PROPERTY(bool resizeable READ isResizable)
+    Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
+    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
+    Q_PROPERTY(bool shadeable READ isShadeable)
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
+    // TODO: maximize mode
+    Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
+    Q_PROPERTY(QRect transparentRect READ transparentRect)
+    Q_PROPERTY(int width READ width)
+    Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
+    // TODO: window tabs - they suck for dynamic features
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
@@ -78,11 +103,21 @@ public:
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
     virtual void reset(long unsigned int changed);
 
+Q_SIGNALS:
+    void activeChanged();
+    void captionChanged();
+    void desktopChanged();
+    void iconChanged();
+    void maximizeChanged();
+    void shadeChanged();
+    void keepAboveChanged();
+    void keepBelowChanged();
+
 private slots:
     void menuClicked();
     void toggleShade();
-    void keepAboveChanged(bool above);
-    void keepBelowChanged(bool below);
+    void slotKeepAboveChanged(bool above);
+    void slotKeepBelowChanged(bool below);
     void toggleKeepAbove();
     void toggleKeepBelow();
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);

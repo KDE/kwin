@@ -164,8 +164,8 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(m_scene, SIGNAL(tabRemoved(int)), SLOT(tabRemoved(int)));
     connect(m_scene, SIGNAL(tabMoved(int,int)), SLOT(tabMoved(int,int)));
     connect(m_scene, SIGNAL(tabMovedToGroup(long int,int)), SLOT(tabMovedToGroup(long int,int)));
-    connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChanged(bool)));
-    connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChanged(bool)));
+    connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(slotKeepAboveChanged(bool)));
+    connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(slotKeepBelowChanged(bool)));
 }
 
 AuroraeClient::~AuroraeClient()
@@ -215,21 +215,25 @@ void AuroraeClient::activeChange()
     if (m_scene->isActive() != isActive()) {
         m_scene->setActive(isActive());
     }
+    emit activeChanged();
 }
 
 void AuroraeClient::captionChange()
 {
     checkTabs(true);
+    emit captionChanged();
 }
 
 void AuroraeClient::iconChange()
 {
     m_scene->setIcon(icon());
+    emit iconChanged();
 }
 
 void AuroraeClient::desktopChange()
 {
     m_scene->setAllDesktops(isOnAllDesktops());
+    emit desktopChanged();
 }
 
 void AuroraeClient::maximizeChange()
@@ -237,6 +241,7 @@ void AuroraeClient::maximizeChange()
     if (!options()->moveResizeMaximizedWindows()) {
         m_scene->setMaximizeMode(maximizeMode());
     }
+    emit maximizeChanged();
 }
 
 void AuroraeClient::resize(const QSize &s)
@@ -251,6 +256,7 @@ void AuroraeClient::resize(const QSize &s)
 void AuroraeClient::shadeChange()
 {
     m_scene->setShade(isShade());
+    emit shadeChanged();
 }
 
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
@@ -342,7 +348,7 @@ void AuroraeClient::toggleShade()
     setShade(!isShade());
 }
 
-void AuroraeClient::keepAboveChanged(bool above)
+void AuroraeClient::slotKeepAboveChanged(bool above)
 {
     if (above && m_scene->isKeepBelow()) {
         m_scene->setKeepBelow(false);
@@ -350,7 +356,7 @@ void AuroraeClient::keepAboveChanged(bool above)
     m_scene->setKeepAbove(above);
 }
 
-void AuroraeClient::keepBelowChanged(bool below)
+void AuroraeClient::slotKeepBelowChanged(bool below)
 {
     if (below && m_scene->isKeepAbove()) {
         m_scene->setKeepAbove(false);
