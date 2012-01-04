@@ -351,7 +351,10 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 
             if (m_activated && winData->highlight > 0.0) {
                 // scale the window (interpolated by the highlight level) to at least 105% or to cover 1/16 of the screen size - yet keep it in screen bounds
-                QRect area = effects->clientArea(FullScreenArea, w);
+                QRect area = m_tabBoxEnabled ?
+                                effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop()) :
+                                effects->clientArea(FullScreenArea, w);
+
                 QSizeF effSize(w->width()*data.xScale, w->height()*data.yScale);
                 float tScale = sqrt((area.width()*area.height()) / (16.0*effSize.width()*effSize.height()));
                 if (tScale < 1.05) {
