@@ -1465,13 +1465,6 @@ WindowQuadList EffectWindowImpl::buildQuads(bool force) const
     return sceneWindow()->buildQuads(force);
 }
 
-void EffectWindowImpl::closeWindow() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        c->closeWindow();
-    }
-}
-
 bool EffectWindowImpl::visibleInClientGroup() const
 {
     if (Client* c = dynamic_cast< Client* >(toplevel)) {

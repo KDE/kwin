@@ -1271,7 +1271,7 @@ public:
 
     void minimize();
     void unminimize();
-    virtual void closeWindow() const = 0;
+    void closeWindow() const;
 
     virtual bool visibleInClientGroup() const = 0;
 

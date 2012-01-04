@@ -394,6 +394,11 @@ WINDOW_HELPER_SETTER(unminimize, "minimized",,false)
 
 #undef WINDOW_HELPER_SETTER
 
+void EffectWindow::closeWindow() const
+{
+    QMetaObject::invokeMethod(parent(), "closeWindow");
+}
+
 bool EffectWindow::isOnCurrentActivity() const
 {
     return isOnActivity(effects->currentActivity());
