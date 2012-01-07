@@ -3,9 +3,6 @@ include_directories( ./lib )
 
 set(kwin3_aurorae_PART_SRCS
     aurorae.cpp
-    lib/auroraebutton.cpp
-    lib/auroraescene.cpp
-    lib/auroraetab.cpp
     lib/auroraetheme.cpp
     lib/themeconfig.cpp
 )
@@ -20,3 +17,11 @@ install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 install( FILES aurorae.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES aurorae.knsrc  DESTINATION  ${CONFIG_INSTALL_DIR} )
+install( FILES
+    qml/aurorae.qml
+    qml/AuroraeButton.qml
+    qml/AuroraeButtonGroup.qml
+    qml/Decoration.qml
+    qml/DecorationButton.qml
+    qml/MenuButton.qml
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/aurorae )

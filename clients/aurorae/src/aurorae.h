@@ -30,7 +30,6 @@ class QGraphicsScene;
 namespace Aurorae
 {
 class AuroraeTheme;
-class AuroraeScene;
 
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
@@ -77,8 +76,8 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
     Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
     Q_PROPERTY(bool shadeable READ isShadeable)
-    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
-    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChangedWrapper)
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChangedWrapper)
     // TODO: maximize mode
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
     Q_PROPERTY(QRect transparentRect READ transparentRect)
@@ -114,14 +113,12 @@ Q_SIGNALS:
     void iconChanged();
     void maximizeChanged();
     void shadeChanged();
-    void keepAboveChanged();
-    void keepBelowChanged();
+    void keepAboveChangedWrapper();
+    void keepBelowChangedWrapper();
 
 public slots:
     void menuClicked();
     void toggleShade();
-    void slotKeepAboveChanged(bool above);
-    void slotKeepBelowChanged(bool below);
     void toggleKeepAbove();
     void toggleKeepBelow();
     void titlePressed(int button, int buttons);
@@ -130,21 +127,10 @@ public slots:
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
-    void tabMouseButtonPress(QGraphicsSceneMouseEvent *e, int index);
-    void tabMouseButtonRelease(QGraphicsSceneMouseEvent *e, int index);
-    void tabRemoved(int index);
-    void tabMoved(int index, int before);
-    void tabMovedToGroup(long int uid, int before);
-
-protected:
-    virtual bool eventFilter(QObject *o, QEvent *e);
 
 private:
     void updateWindowShape();
-    void checkTabs(bool force = false);
-    AuroraeScene *m_scene;
     QDeclarativeView *m_view;
-    bool m_clickInProgress;
 };
 
 }
