@@ -4,6 +4,7 @@
 
 Copyright (C) 2006-2007 Rivo Laks <rivolaks@hot.ee>
 Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2012 Philipp Knechtges <philipp-dev@knechtges.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,13 +118,16 @@ GLTexturePrivate::GLTexturePrivate()
 {
     m_texture = 0;
     m_target = 0;
-    m_filter = 0;
+    m_filter = GL_NEAREST_MIPMAP_LINEAR;
+    m_wrapMode = GL_REPEAT;
     m_yInverted = false;
     m_canUseMipmaps = false;
-    m_hasValidMipmaps = false;
+    m_markedDirty = false;
     m_unnormalizeActive = 0;
     m_normalizeActive = 0;
     m_vbo = 0;
+    m_filterChanged = false;
+    m_wrapModeChanged = false;
 }
 
 GLTexturePrivate::~GLTexturePrivate()
@@ -192,13 +196,11 @@ bool GLTexture::load(const QImage& image, GLenum target)
         d->m_canUseMipmaps = false;
     }
 #endif
-    setFilter(GL_LINEAR);
     d->m_size = img.size();
     d->m_yInverted = true;
 
     img = d->convertToGLFormat(img);
 
-    setDirty();
     if (isNull()) {
         glGenTextures(1, &d->m_texture);
     }
@@ -212,6 +214,7 @@ bool GLTexture::load(const QImage& image, GLenum target)
                  GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
 #endif
     unbind();
+    setFilter(GL_LINEAR);
     return true;
 }
 
@@ -240,13 +243,44 @@ void GLTexturePrivate::bind()
     glEnable(m_target);
 #endif
     glBindTexture(m_target, m_texture);
-    enableFilter();
 }
 
 void GLTexture::bind()
 {
     Q_D(GLTexture);
     d->bind();
+    if (d->m_markedDirty) {
+        d->onDamage();
+    }
+    if (d->m_filterChanged) {
+        if (d->m_filter == GL_LINEAR_MIPMAP_LINEAR) {
+            // trilinear filtering requested, but is it possible?
+            if (d->sNPOTTextureSupported
+                    && d->sFramebufferObjectSupported
+                    && d->m_canUseMipmaps) {
+                glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glGenerateMipmap(d->m_target);
+            } else {
+                // can't use trilinear, so use bilinear
+                d->m_filter = GL_LINEAR;
+                glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            }
+        } else if (d->m_filter == GL_LINEAR) {
+            glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        } else {
+            // if neither trilinear nor bilinear, default to fast filtering
+            d->m_filter = GL_NEAREST;
+            glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        }
+    }
+    if (d->m_wrapModeChanged) {
+        glTexParameteri(d->m_target, GL_TEXTURE_WRAP_S, d->m_wrapMode);
+        glTexParameteri(d->m_target, GL_TEXTURE_WRAP_T, d->m_wrapMode);
+    }
 }
 
 void GLTexturePrivate::unbind()
@@ -334,13 +368,13 @@ GLenum GLTexture::filter() const
 bool GLTexture::isDirty() const
 {
     Q_D(const GLTexture);
-    return d->m_hasValidMipmaps;
+    return d->m_markedDirty;
 }
 
 void GLTexture::setTexture(GLuint texture)
 {
-    Q_D(GLTexture);
     discard();
+    Q_D(GLTexture);
     d->m_texture = texture;
 }
 
@@ -353,53 +387,32 @@ void GLTexture::setTarget(GLenum target)
 void GLTexture::setFilter(GLenum filter)
 {
     Q_D(GLTexture);
-    d->m_filter = filter;
+    if (filter != d->m_filter) {
+        d->m_filter = filter;
+        d->m_filterChanged = true;
+    }
 }
 
 void GLTexture::setWrapMode(GLenum mode)
 {
     Q_D(GLTexture);
-    bind();
-    glTexParameteri(d->m_target, GL_TEXTURE_WRAP_S, mode);
-    glTexParameteri(d->m_target, GL_TEXTURE_WRAP_T, mode);
-    unbind();
+    if (mode != d->m_wrapMode) {
+        d->m_wrapMode = mode;
+        d->m_wrapModeChanged=true;
+    }
+}
+
+void GLTexturePrivate::onDamage()
+{
+    if (m_filter == GL_LINEAR_MIPMAP_LINEAR && !m_filterChanged) {
+        glGenerateMipmap(m_target);
+    }
 }
 
 void GLTexture::setDirty()
 {
     Q_D(GLTexture);
-    d->m_hasValidMipmaps = false;
-}
-
-
-void GLTexturePrivate::enableFilter()
-{
-    if (m_filter == GL_LINEAR_MIPMAP_LINEAR) {
-        // trilinear filtering requested, but is it possible?
-        if (sNPOTTextureSupported
-                && sFramebufferObjectSupported
-                && m_canUseMipmaps) {
-            glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            if (!m_hasValidMipmaps) {
-                glGenerateMipmap(m_target);
-                m_hasValidMipmaps = true;
-            }
-        } else {
-            // can't use trilinear, so use bilinear
-            m_filter = GL_LINEAR;
-            glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        }
-    } else if (m_filter == GL_LINEAR) {
-        glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    } else {
-        // if neither trilinear nor bilinear, default to fast filtering
-        m_filter = GL_NEAREST;
-        glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    }
+    d->m_markedDirty = true;
 }
 
 QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const

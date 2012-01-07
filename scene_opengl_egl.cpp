@@ -266,11 +266,9 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
         return false;
 
     glGenTextures(1, &d->m_texture);
+    setWrapMode(GL_CLAMP_TO_EDGE);
+    setFilter(GL_LINEAR);
     bind();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     const EGLint attribs[] = {
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
@@ -281,6 +279,7 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     if (EGL_NO_IMAGE_KHR == d->m_image) {
         kDebug(1212) << "failed to create egl image";
         unbind();
+        discard();
         return false;
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)d->m_image);
@@ -291,15 +290,20 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     return true;
 }
 
-void SceneOpenGL::TexturePrivate::bind()
+void SceneOpenGL::TexturePrivate::onDamage()
 {
-    GLTexturePrivate::bind();
     if (options->glStrictBinding) {
         // This is just implemented to be consistent with
         // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) m_image);
     }
+    GLTexturePrivate::onDamage();
+}
+
+void SceneOpenGL::TexturePrivate::bind()
+{
+    GLTexturePrivate::bind();
 }
 
 void SceneOpenGL::TexturePrivate::unbind()

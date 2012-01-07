@@ -94,7 +94,6 @@ public:
     static bool saturationSupported();
 
 protected:
-    void enableFilter();
     QImage convertToGLFormat(const QImage& img) const;
 
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;

@@ -42,18 +42,21 @@ public:
     virtual void bind();
     virtual void unbind();
     virtual void release();
+    virtual void onDamage();
 
-    void enableFilter();
     QImage convertToGLFormat(const QImage& img) const;
 
     GLuint m_texture;
     GLenum m_target;
     GLenum m_filter;
+    GLenum m_wrapMode;
     QSize m_size;
     QSizeF m_scale; // to un-normalize GL_TEXTURE_2D
     bool m_yInverted; // texture has y inverted
     bool m_canUseMipmaps;
-    bool m_hasValidMipmaps;
+    bool m_markedDirty;
+    bool m_filterChanged;
+    bool m_wrapModeChanged;
 
     int m_unnormalizeActive; // 0 - no, otherwise refcount
     int m_normalizeActive; // 0 - no, otherwise refcount
