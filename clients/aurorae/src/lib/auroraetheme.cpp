@@ -1,6 +1,6 @@
 /*
     Library for Aurorae window decoration themes.
-    Copyright (C) 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+    Copyright (C) 2009, 2010, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,11 +46,13 @@ public:
     Aurorae::ThemeConfig themeConfig;
     Plasma::FrameSvg *decoration;
     QHash< AuroraeButtonType, Plasma::FrameSvg* > buttons;
+    QHash< AuroraeButtonType, QString > pathes;
     bool activeCompositing;
     KDecorationDefines::BorderSize borderSize;
     bool showTooltips;
     KDecorationDefines::BorderSize buttonSize;
     QString dragMimeType;
+    QString decorationPath;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
@@ -87,6 +89,7 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
         frame->setCacheAllRenderedFrames(true);
         frame->setEnabledBorders(Plasma::FrameSvg::NoBorder);
         buttons[ type ] = frame;
+        pathes[ type ] = path;
     } else {
         kDebug(1216) << "No button for: " << AuroraeTheme::mapButtonToName(type);
     }
@@ -143,6 +146,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
         d->themeName.clear();
         return;
     }
+    d->decorationPath = path;
     d->decoration = new Plasma::FrameSvg(this);
     d->decoration->setImagePath(path);
     d->decoration->setCacheAllRenderedFrames(true);
@@ -358,6 +362,70 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
     }
 }
 
+int AuroraeTheme::bottomBorder() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, false);
+    return bottom;
+}
+
+int AuroraeTheme::leftBorder() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, false);
+    return left;
+}
+
+int AuroraeTheme::rightBorder() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, false);
+    return right;
+}
+
+int AuroraeTheme::topBorder() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, false);
+    return top;
+}
+
+int AuroraeTheme::bottomBorderMaximized() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, true);
+    return bottom;
+}
+
+int AuroraeTheme::leftBorderMaximized() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, true);
+    return left;
+}
+
+int AuroraeTheme::rightBorderMaximized() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, true);
+    return right;
+}
+
+int AuroraeTheme::topBorderMaximized() const
+{
+    int left, top, right, bottom;
+    left = top = right = bottom = 0;
+    borders(left, top, right, bottom, true);
+    return top;
+}
+
 void AuroraeTheme::padding(int& left, int& top, int& right, int& bottom) const
 {
     left   = d->themeConfig.paddingLeft();
@@ -365,6 +433,82 @@ void AuroraeTheme::padding(int& left, int& top, int& right, int& bottom) const
     right  = d->themeConfig.paddingRight();
     bottom = d->themeConfig.paddingBottom();
 }
+
+#define THEME_CONFIG( prototype ) \
+int AuroraeTheme::prototype ( ) const \
+{ \
+    return d->themeConfig.prototype( ); \
+}
+
+THEME_CONFIG(paddingBottom)
+THEME_CONFIG(paddingLeft)
+THEME_CONFIG(paddingRight)
+THEME_CONFIG(paddingTop)
+THEME_CONFIG(buttonWidth)
+THEME_CONFIG(buttonWidthMinimize)
+THEME_CONFIG(buttonWidthMaximizeRestore)
+THEME_CONFIG(buttonWidthClose)
+THEME_CONFIG(buttonWidthAllDesktops)
+THEME_CONFIG(buttonWidthKeepAbove)
+THEME_CONFIG(buttonWidthKeepBelow)
+THEME_CONFIG(buttonWidthShade)
+THEME_CONFIG(buttonWidthHelp)
+THEME_CONFIG(buttonWidthMenu)
+THEME_CONFIG(buttonHeight)
+THEME_CONFIG(buttonSpacing)
+THEME_CONFIG(buttonMarginTop)
+THEME_CONFIG(explicitButtonSpacer)
+THEME_CONFIG(animationTime)
+THEME_CONFIG(titleEdgeLeft)
+THEME_CONFIG(titleEdgeRight)
+THEME_CONFIG(titleEdgeTop)
+THEME_CONFIG(titleEdgeLeftMaximized)
+THEME_CONFIG(titleEdgeRightMaximized)
+THEME_CONFIG(titleEdgeTopMaximized)
+THEME_CONFIG(titleBorderLeft)
+THEME_CONFIG(titleBorderRight)
+
+#undef THEME_CONFIG
+
+#define THEME_CONFIG_TYPE( rettype, prototype ) \
+rettype AuroraeTheme::prototype ( ) const \
+{\
+    return d->themeConfig.prototype(); \
+}
+
+THEME_CONFIG_TYPE(QColor, activeTextColor)
+THEME_CONFIG_TYPE(QColor, inactiveTextColor)
+THEME_CONFIG_TYPE(Qt::Alignment, alignment)
+THEME_CONFIG_TYPE(Qt::Alignment, verticalAlignment)
+
+#undef THEME_CONFIG_TYPE
+
+QString AuroraeTheme::decorationPath() const
+{
+    return d->decorationPath;
+}
+
+#define BUTTON_PATH( prototype, buttonType ) \
+QString AuroraeTheme::prototype ( ) const \
+{ \
+    if (hasButton( buttonType )) { \
+        return d->pathes[ buttonType ]; \
+    } else { \
+        return ""; \
+    } \
+}\
+
+BUTTON_PATH(minimizeButtonPath, MinimizeButton)
+BUTTON_PATH(maximizeButtonPath, MaximizeButton)
+BUTTON_PATH(restoreButtonPath, RestoreButton)
+BUTTON_PATH(closeButtonPath, CloseButton)
+BUTTON_PATH(allDesktopsButtonPath, AllDesktopsButton)
+BUTTON_PATH(keepAboveButtonPath, KeepAboveButton)
+BUTTON_PATH(keepBelowButtonPath, KeepBelowButton)
+BUTTON_PATH(shadeButtonPath, ShadeButton)
+BUTTON_PATH(helpButtonPath, HelpButton)
+
+#undef BUTTON_PATH
 
 void AuroraeTheme::titleEdges(int &left, int &top, int &right, int &bottom, bool maximized) const
 {
