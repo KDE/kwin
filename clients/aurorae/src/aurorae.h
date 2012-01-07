@@ -1,5 +1,5 @@
 /********************************************************************
-Copyright (C) 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009, 2010, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,14 +66,14 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(QRect geometry READ geometry)
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
-    Q_PROPERTY(bool closeable READ isCloseable)
-    Q_PROPERTY(bool maximizeable READ isMaximizable)
-    Q_PROPERTY(bool minimizeable READ isMinimizable)
+    Q_PROPERTY(bool closeable READ isCloseable CONSTANT)
+    Q_PROPERTY(bool maximizeable READ isMaximizable CONSTANT)
+    Q_PROPERTY(bool minimizeable READ isMinimizable CONSTANT)
     Q_PROPERTY(bool modal READ isModal)
-    Q_PROPERTY(bool moveable READ isMovable)
+    Q_PROPERTY(bool moveable READ isMovable CONSTANT)
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops NOTIFY desktopChanged)
     Q_PROPERTY(bool preview READ isPreview CONSTANT)
-    Q_PROPERTY(bool resizeable READ isResizable)
+    Q_PROPERTY(bool resizeable READ isResizable CONSTANT)
     Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
     Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
     Q_PROPERTY(bool shadeable READ isShadeable)
@@ -85,6 +85,8 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
     // TODO: window tabs - they suck for dynamic features
+    Q_PROPERTY(QString leftButtons READ leftButtons CONSTANT)
+    Q_PROPERTY(QString rightButtons READ rightButtons CONSTANT)
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
@@ -102,6 +104,8 @@ public:
     // optional overrides
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
     virtual void reset(long unsigned int changed);
+    QString leftButtons() const;
+    QString rightButtons() const;
 
 Q_SIGNALS:
     void activeChanged();
@@ -113,13 +117,16 @@ Q_SIGNALS:
     void keepAboveChanged();
     void keepBelowChanged();
 
-private slots:
+public slots:
     void menuClicked();
     void toggleShade();
     void slotKeepAboveChanged(bool above);
     void slotKeepBelowChanged(bool below);
     void toggleKeepAbove();
     void toggleKeepBelow();
+    void titlePressed(int button, int buttons);
+    void titleReleased(int button, int buttons);
+    void titleMouseMoved(int button, int buttons);
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);

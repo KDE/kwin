@@ -1,5 +1,5 @@
 /********************************************************************
-Copyright (C) 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009, 2010, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -405,6 +405,21 @@ void AuroraeClient::updateWindowShape()
     setMask(mask);
 }
 
+void AuroraeClient::titlePressed(int button, int buttons)
+{
+    titlePressed(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
+}
+
+void AuroraeClient::titleReleased(int button, int buttons)
+{
+    titleReleased(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
+}
+
+void AuroraeClient::titleMouseMoved(int button, int buttons)
+{
+    titleMouseMoved(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
+}
+
 void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
     QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, widget()->mapFromGlobal(QCursor::pos()),
@@ -496,6 +511,18 @@ void AuroraeClient::tabMoved(int index, int before)
 void AuroraeClient::tabMovedToGroup(long int uid, int before)
 {
     moveItemToClientGroup(uid, before);
+}
+
+QString AuroraeClient::rightButtons() const
+{
+    // TODO: make independent of Aurorae
+    return options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight();
+}
+
+QString AuroraeClient::leftButtons() const
+{
+    // TODO: make independent of Aurorae
+    return options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft();
 }
 
 } // namespace Aurorae
