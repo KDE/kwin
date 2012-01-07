@@ -586,18 +586,21 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     }
 
     // paint the content
-    texture.bind();
-    prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-    renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
-    restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-    texture.unbind();
+    WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
+    if (!contentQuads.empty()) {
+        texture.bind();
+        prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+        renderQuads(mask, region, contentQuads, &texture);
+        restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+        texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
-    if (static_cast<SceneOpenGL*>(scene)->debug) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
+        if (static_cast<SceneOpenGL*>(scene)->debug) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            renderQuads(mask, region, contentQuads, &texture);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
 #endif
+    }
 
     if (sceneShader) {
         ShaderManager::instance()->popShader();
@@ -626,17 +629,16 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     default:
         return;
     }
-    if (decorationTexture->texture() != None && !updateDeco) {
-        // texture doesn't need updating, just bind it
-        decorationTexture->bind();
-    } else if (!decoration->isNull()) {
+    if (decoration->isNull()) {
+        return;
+    }
+    if (decorationTexture->isNull() || updateDeco) {
         bool success = decorationTexture->load(*decoration);
         if (!success) {
             kDebug(1212) << "Failed to bind decoartion";
             return;
         }
-    } else
-        return;
+    }
 
     // We have to update the texture although we do not paint anything.
     // This is especially needed if we draw the opaque part of the window
