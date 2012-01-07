@@ -248,10 +248,6 @@ void SceneOpenGL::Texture::findTarget()
     d->m_target = GL_TEXTURE_2D;
 }
 
-void SceneOpenGL::TexturePrivate::release()
-{
-}
-
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
                                 int depth, QRegion region)
 {

@@ -114,7 +114,6 @@ public:
     TexturePrivate();
     virtual ~TexturePrivate();
 
-    virtual void release();
     virtual void onDamage();
 
 #ifndef KWIN_HAVE_OPENGLES

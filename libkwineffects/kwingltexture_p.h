@@ -41,7 +41,6 @@ public:
 
     virtual void bind();
     virtual void unbind();
-    virtual void release();
     virtual void onDamage();
 
     QImage convertToGLFormat(const QImage& img) const;

@@ -72,30 +72,21 @@ public:
     virtual void discard();
     void bind();
     void unbind();
-    /**
-     * Release the data which is bound to the texture.
-     * @since 4.8
-     **/
-    void release();
     void render(QRegion region, const QRect& rect);
 
     GLuint texture() const;
     GLenum target() const;
     GLenum filter() const;
-    virtual bool isDirty() const;
-    void setTexture(GLuint texture);
-    void setTarget(GLenum target);
+    bool isDirty() const;
     void setFilter(GLenum filter);
     void setWrapMode(GLenum mode);
-    virtual void setDirty();
+    void setDirty();
 
     static bool NPOTTextureSupported();
     static bool framebufferObjectSupported();
     static bool saturationSupported();
 
 protected:
-    QImage convertToGLFormat(const QImage& img) const;
-
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
     GLTexture(GLTexturePrivate& dd);
 

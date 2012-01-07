@@ -371,19 +371,6 @@ bool GLTexture::isDirty() const
     return d->m_markedDirty;
 }
 
-void GLTexture::setTexture(GLuint texture)
-{
-    discard();
-    Q_D(GLTexture);
-    d->m_texture = texture;
-}
-
-void GLTexture::setTarget(GLenum target)
-{
-    Q_D(GLTexture);
-    d->m_target = target;
-}
-
 void GLTexture::setFilter(GLenum filter)
 {
     Q_D(GLTexture);
@@ -514,17 +501,6 @@ bool GLTexture::framebufferObjectSupported()
 bool GLTexture::saturationSupported()
 {
     return GLTexturePrivate::sSaturationSupported;
-}
-
-void GLTexture::release()
-{
-    Q_D(GLTexture);
-    d->release();
-}
-
-void GLTexturePrivate::release()
-{
-    // nothing to do because we are not bound to any specific data
 }
 
 } // namespace KWin

@@ -607,11 +607,6 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
-    release();
-}
-
-void SceneOpenGL::TexturePrivate::release()
-{
     if (m_glxpixmap != None) {
         if (!options->glStrictBinding) {
             glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
