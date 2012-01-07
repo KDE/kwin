@@ -300,13 +300,3 @@ void SceneOpenGL::TexturePrivate::onDamage()
     }
     GLTexturePrivate::onDamage();
 }
-
-void SceneOpenGL::TexturePrivate::bind()
-{
-    GLTexturePrivate::bind();
-}
-
-void SceneOpenGL::TexturePrivate::unbind()
-{
-    GLTexturePrivate::unbind();
-}

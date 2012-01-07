@@ -114,8 +114,6 @@ public:
     TexturePrivate();
     virtual ~TexturePrivate();
 
-    virtual void bind();
-    virtual void unbind();
     virtual void release();
     virtual void onDamage();
 

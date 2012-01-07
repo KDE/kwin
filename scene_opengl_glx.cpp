@@ -733,22 +733,3 @@ void SceneOpenGL::TexturePrivate::onDamage()
     }
     GLTexturePrivate::onDamage();
 }
-
-void SceneOpenGL::TexturePrivate::bind()
-{
-    GLTexturePrivate::bind();
-    if (hasGLVersion(1, 4, 0)) {
-        // Lod bias makes the trilinear-filtered texture look a bit sharper
-        glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f);
-    }
-}
-
-void SceneOpenGL::TexturePrivate::unbind()
-{
-    if (hasGLVersion(1, 4, 0)) {
-        glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f);
-    }
-
-    GLTexturePrivate::unbind();
-}
-
