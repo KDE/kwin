@@ -528,12 +528,9 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
     if (!updateBackground.isEmpty()) {
         const QRect updateRect = (expand(updateBackground) & expanded).boundingRect();
-        // Create a scratch texture and copy the area in the back buffer that we're
-        // going to blur into it
-        GLTexture scratch(updateRect.width(), updateRect.height());
-        scratch.setFilter(GL_LINEAR);
-        scratch.setWrapMode(GL_CLAMP_TO_EDGE);
-        scratch.bind();
+        // First we have to copy the background from the frontbuffer
+        // into a scratch texture (in this case "tex").
+        tex.bind();
 
         glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, updateRect.x(), displayHeight() - updateRect.y() - updateRect.height(),
                             updateRect.width(), updateRect.height());
@@ -543,7 +540,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         GLRenderTarget::pushRenderTarget(target);
 
         shader->setDirection(Qt::Horizontal);
-        shader->setPixelDistance(1.0 / updateRect.width());
+        shader->setPixelDistance(1.0 / tex.width());
 
         modelViewProjectionMatrix.ortho(0, r.width(), r.height(), 0 , 0, 65535);
         modelViewProjectionMatrix.translate(-r.x(), -r.y(), 0);
@@ -552,8 +549,8 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
         // Set up the texture matrix to transform from screen coordinates
         // to texture coordinates.
-        textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-        textureMatrix.translate(-updateRect.x(), -scratch.height() - updateRect.y(), 0);
+        textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
+        textureMatrix.translate(-updateRect.x(), -updateRect.height() - updateRect.y(), 0);
 #ifndef KWIN_HAVE_OPENGLES
         glMatrixMode(GL_TEXTURE);
         loadMatrix(textureMatrix);
@@ -564,7 +561,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         drawRegion(updateBackground & screen);
 
         GLRenderTarget::popRenderTarget();
-        scratch.unbind();
+        tex.unbind();
         // mark the updated region as valid
         windows[w].damagedRegion -= updateBackground;
     }
