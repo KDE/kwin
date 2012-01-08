@@ -65,6 +65,9 @@ DecorationButton {
         case "A":
             // maximize
             return auroraeTheme.maximizeButtonPath;
+        case "R":
+            // maximize
+            return auroraeTheme.restoreButtonPath;
         case "X":
             // close
             return auroraeTheme.closeButtonPath;
@@ -189,6 +192,9 @@ DecorationButton {
             visible = false;
         } else {
             visible = buttonSvg.imagePath != "";
+        }
+        if (buttonType == "R") {
+            visible = decoration.maximized;
         }
     }
     onHoveredChanged: {
@@ -323,6 +329,23 @@ DecorationButton {
                 state = "active-hover";
             } else {
                 state = "active";
+            }
+        }
+        onMaximizedChanged: {
+            if (buttonType != "A" && buttonType != "R") {
+                return;
+            }
+            if (auroraeTheme.restoreButtonPath != "") {
+                if (buttonType == "A") {
+                    visible = !decoration.maximized;
+                } else if (buttonType == "R") {
+                    visible = decoration.maximized;
+                }
+                if (!decoration.active && buttonSvg.supportsInactive) {
+                    state = "inactive";
+                } else {
+                    state = "active";
+                }
             }
         }
     }

@@ -78,7 +78,7 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(bool shadeable READ isShadeable)
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChangedWrapper)
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChangedWrapper)
-    // TODO: maximize mode
+    Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizeChanged)
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
     Q_PROPERTY(QRect transparentRect READ transparentRect)
     Q_PROPERTY(int width READ width)
@@ -105,6 +105,7 @@ public:
     virtual void reset(long unsigned int changed);
     QString leftButtons() const;
     QString rightButtons() const;
+    bool isMaximized() const;
 
 Q_SIGNALS:
     void activeChanged();

@@ -32,6 +32,9 @@ Item {
                     groupRow, "menuButton" + buttons + i);
             } else {
                 component.createObject(groupRow, {buttonType: buttons.charAt(i)});
+                if (buttons.charAt(i) == "A") {
+                    component.createObject(groupRow, {buttonType: "R"});
+                }
             }
         }
     }

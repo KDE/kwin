@@ -325,6 +325,11 @@ void AuroraeClient::toggleKeepBelow()
     setKeepBelow(!keepBelow());
 }
 
+bool AuroraeClient::isMaximized() const
+{
+    return maximizeMode()==KDecorationDefines::MaximizeFull && !options()->moveResizeMaximizedWindows();
+}
+
 void AuroraeClient::updateWindowShape()
 {
     bool maximized = maximizeMode()==KDecorationDefines::MaximizeFull && !options()->moveResizeMaximizedWindows();

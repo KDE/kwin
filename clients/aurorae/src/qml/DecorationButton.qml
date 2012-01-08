@@ -27,6 +27,7 @@ Item {
         case "X":
             return decoration.closeable;
         case "A":
+        case "R":
             return decoration.maximizeable;
         case "I":
             return decoration.minimizeable;
@@ -43,6 +44,7 @@ Item {
             case "M":
                 return Qt.LeftButton | Qt.RightButton;
             case "A":
+            case "R":
                 return Qt.LeftButton | Qt.RightButton | Qt.MiddleButton;
             default:
                 return Qt.LeftButton;
@@ -73,8 +75,9 @@ Item {
                 decoration.minimize();
                 break;
             case "A":
+            case "R":
                 // maximize
-                decoration.maximize(mouse.buttons);
+                decoration.maximize(mouse.button);
                 break;
             case "X":
                 // close
