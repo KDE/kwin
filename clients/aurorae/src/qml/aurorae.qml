@@ -47,6 +47,7 @@ Decoration {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
         property bool supportsMaximized: hasElementPrefix("decoration-maximized")
         property bool supportsMaximizedInactive: hasElementPrefix("decoration-maximized-inactive")
+        property bool supportsInnerBorderInactive: hasElementPrefix("innerborder-inactive")
         id: backgroundSvg
         imagePath: auroraeTheme.decorationPath
     }
@@ -160,6 +161,100 @@ Decoration {
             onDoubleClicked: decoration.titlebarDblClickOperation()
             onPressed: decoration.titlePressed(mouse.button, mouse.buttons)
             onReleased: decoration.titleReleased(mouse.button, mouse.buttons)
+        }
+    }
+    PlasmaCore.FrameSvgItem {
+        function checkVisible() {
+            if (decoration.maximized) {
+                state = "invisible";
+            } else {
+                if (!decoration.active && backgroundSvg.supportsInnerBorderInactive) {
+                    state = "invisible";
+                } else {
+                    state = "visible";
+                }
+            }
+        }
+        id: innerBorder
+        anchors {
+            fill: parent
+            leftMargin: parent.paddingLeft + parent.borderLeft - margins.left
+            rightMargin: parent.paddingRight + parent.borderRight - margins.right
+            topMargin: parent.paddingTop + parent.borderTop - margins.top
+            bottomMargin: parent.paddingBottom + parent.borderBottom - margins.bottom
+        }
+        imagePath: backgroundSvg.imagePath
+        prefix: "innerborder"
+        states: [
+            State { name: "visible" },
+            State { name: "invisible" }
+        ]
+        transitions:  [
+            Transition {
+                to: "visible"
+                ParallelAnimation {
+                    NumberAnimation { target: innerBorder; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+                }
+            },
+            Transition {
+                to: "invisible"
+                ParallelAnimation {
+                    NumberAnimation { target: innerBorder; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                }
+            }
+        ]
+        Component.onCompleted: checkVisible()
+        Connections {
+            target: decoration
+            onActiveChanged: innerBorder.checkVisible()
+            onMaximizedChanged: innerBorder.checkVisible()
+        }
+    }
+    PlasmaCore.FrameSvgItem {
+        function checkVisible() {
+            if (decoration.maximized) {
+                state = "invisible";
+            } else {
+                if (!decoration.active && backgroundSvg.supportsInnerBorderInactive) {
+                    state = "visible";
+                } else {
+                    state = "invisible";
+                }
+            }
+        }
+        id: innerBorderInactive
+        anchors {
+            fill: parent
+            leftMargin: parent.paddingLeft + parent.borderLeft - margins.left
+            rightMargin: parent.paddingRight + parent.borderRight - margins.right
+            topMargin: parent.paddingTop + parent.borderTop - margins.top
+            bottomMargin: parent.paddingBottom + parent.borderBottom - margins.bottom
+        }
+        imagePath: backgroundSvg.imagePath
+        prefix: "innerborder-inactive"
+        states: [
+            State { name: "visible" },
+            State { name: "invisible" }
+        ]
+        transitions:  [
+            Transition {
+                to: "visible"
+                ParallelAnimation {
+                    NumberAnimation { target: innerBorderInactive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+                }
+            },
+            Transition {
+                to: "invisible"
+                ParallelAnimation {
+                    NumberAnimation { target: innerBorderInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                }
+            }
+        ]
+        Component.onCompleted: checkVisible()
+        Connections {
+            target: decoration
+            onActiveChanged: innerBorderInactive.checkVisible()
+            onMaximizedChanged: innerBorderInactive.checkVisible()
         }
     }
     states: [
