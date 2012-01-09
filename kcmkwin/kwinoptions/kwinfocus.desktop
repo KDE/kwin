@@ -185,7 +185,9 @@ Comment[zh_TW]=設定視窗焦點政策
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
 X-KDE-Keywords[ca]=focus,situació,elevació automàtica,elevació,elevació de clic,teclat,CDE,alt-tab,tots els escriptoris
+X-KDE-Keywords[ca@valencia]=focus,situació,elevació automàtica,elevació,elevació de clic,teclat,CDE,alt-tab,tots els escriptoris
 X-KDE-Keywords[da]=fokus,placering,autohæv,hæv,klikhæv,tastatur,CDE,alt-tab,alle skriveborde
+X-KDE-Keywords[de]=Fokus,Aktivierung,Platzierung,Autom. Aktivierung,Nach oben/unten, Klick,Tastatur,CDE,Alt+Tab
 X-KDE-Keywords[et]=fookus,paigutus,automaatne esiletoomine,esiletoomine,klõpsuga esiletoomine,klaviatuur,CDE,alt-tab,kõik töölauad
 X-KDE-Keywords[fi]=kohdistus,sijoittelu,sijoitus,automaattinen nosto,nosta,nosto,nosta napsauttamalla,näppäimistö,CDE,alt-tab,alt-sarkain
 X-KDE-Keywords[ga]=fócas,láithriú,uathardaigh,ardaigh,gliogardaigh,méarchlár,CDE,alt-tab,gach deasc
