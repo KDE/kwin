@@ -18,6 +18,17 @@ import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 
 Decoration {
+    function updateState() {
+        if (!decoration.active && decoration.maximized && backgroundSvg.supportsMaximizedInactive) {
+            root.state = "maximized-inactive";
+        } else if (decoration.maximized && backgroundSvg.supportsMaximized) {
+            root.state = "maximized";
+        } else if (!decoration.active && backgroundSvg.supportsInactive) {
+            root.state = "inactive";
+        } else {
+            root.state = "active";
+        }
+    }
     id: root
     borderLeft: auroraeTheme.borderLeft
     borderRight: auroraeTheme.borderRight
@@ -31,19 +42,11 @@ Decoration {
     paddingRight: auroraeTheme.paddingRight
     paddingBottom: auroraeTheme.paddingBottom
     paddingTop: auroraeTheme.paddingTop
-    Component.onCompleted: {
-        if (decoration.active) {
-            root.state = "active";
-        } else {
-            if (backgroundSvg.supportsInactive) {
-                root.state = "inactive";
-            } else {
-                root.state = "active";
-            }
-        }
-    }
+    Component.onCompleted: updateState()
     PlasmaCore.FrameSvg {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
+        property bool supportsMaximized: hasElementPrefix("decoration-maximized")
+        property bool supportsMaximizedInactive: hasElementPrefix("decoration-maximized-inactive")
         id: backgroundSvg
         imagePath: auroraeTheme.decorationPath
     }
@@ -60,6 +63,36 @@ Decoration {
         prefix: "decoration-inactive"
         opacity: 0
     }
+    PlasmaCore.FrameSvgItem {
+        id: decorationMaximized
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            leftMargin: parent.paddingLeft
+            rightMargin: parent.paddingRight
+            topMargin: parent.paddingTop
+        }
+        imagePath: backgroundSvg.imagePath
+        prefix: "decoration-maximized"
+        opacity: 0
+        height: parent.borderTopMaximized
+    }
+    PlasmaCore.FrameSvgItem {
+        id: decorationMaximizedInactive
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            leftMargin: parent.paddingLeft
+            rightMargin: parent.paddingRight
+            topMargin: parent.paddingTop
+        }
+        imagePath: backgroundSvg.imagePath
+        prefix: "decoration-maximized-inactive"
+        opacity: 0
+        height: parent.borderTopMaximized
+    }
     AuroraeButtonGroup {
         id: leftButtonGroup
         buttons: decoration.leftButtons
@@ -70,6 +103,18 @@ Decoration {
             leftMargin: auroraeTheme.titleEdgeLeft + root.paddingLeft
             topMargin: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop
         }
+        transitions: [
+            Transition {
+                to: "normal"
+                NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeft + root.paddingLeft; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+            },
+            Transition {
+                to: "maximized"
+                NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeftMaximized + root.paddingLeft; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+            }
+        ]
     }
     AuroraeButtonGroup {
         id: rightButtonGroup
@@ -81,6 +126,18 @@ Decoration {
             rightMargin: auroraeTheme.titleEdgeRight + root.paddingRight
             topMargin: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop
         }
+        transitions: [
+            Transition {
+                to: "normal"
+                NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRight + root.paddingRight; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+            },
+            Transition {
+                to: "maximized"
+                NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRightMaximized + root.paddingRight; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+            }
+        ]
     }
     Text {
         id: caption
@@ -106,7 +163,9 @@ Decoration {
     }
     states: [
         State { name: "active" },
-        State { name: "inactive" }
+        State { name: "inactive" },
+        State { name: "maximized" },
+        State { name: "maximized-inactive" }
     ]
     transitions: [
         Transition {
@@ -115,7 +174,9 @@ Decoration {
             ParallelAnimation {
                 NumberAnimation { target: decorationActive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
                 NumberAnimation { target: decorationInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximized; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
                 ColorAnimation { target: caption; property: "color"; to: auroraeTheme.activeTextColor; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: caption; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop; duration: auroraeTheme.animationTime }
             }
         },
         Transition {
@@ -124,20 +185,38 @@ Decoration {
             ParallelAnimation {
                 NumberAnimation { target: decorationActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
                 NumberAnimation { target: decorationInactive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximized; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximizedInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
                 ColorAnimation { target: caption; property: "color"; to: auroraeTheme.inactiveTextColor; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: caption; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop; duration: auroraeTheme.animationTime }
+            }
+        },
+        Transition {
+            to: "maximized"
+            ParallelAnimation {
+                NumberAnimation { target: decorationActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximizedInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximized; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+                ColorAnimation { target: caption; property: "color"; to: auroraeTheme.activeTextColor; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: caption; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized; duration: auroraeTheme.animationTime }
+            }
+        },
+        Transition {
+            to: "maximized-inactive"
+            ParallelAnimation {
+                NumberAnimation { target: decorationActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximizedInactive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: decorationMaximized; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
+                ColorAnimation { target: caption; property: "color"; to: auroraeTheme.inactiveTextColor; duration: auroraeTheme.animationTime }
+                NumberAnimation { target: caption; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized; duration: auroraeTheme.animationTime }
             }
         }
     ]
     Connections {
         target: decoration
-        onActiveChanged: {
-            if (decoration.active) {
-                root.state = "active";
-            } else {
-                if (backgroundSvg.supportsInactive) {
-                    root.state = "inactive";
-                }
-            }
-        }
+        onActiveChanged: updateState()
+        onMaximizedChanged: updateState()
     }
 }
