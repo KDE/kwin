@@ -130,7 +130,6 @@ public slots:
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
 
 private:
-    void updateWindowShape();
     QDeclarativeView *m_view;
 };
 

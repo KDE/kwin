@@ -207,7 +207,6 @@ void AuroraeClient::resize(const QSize &s)
 {
     m_view->resize(s);
     widget()->resize(s);
-    updateWindowShape();
 }
 
 void AuroraeClient::shadeChange()
@@ -301,7 +300,6 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
 void AuroraeClient::reset(long unsigned int changed)
 {
     if (changed & SettingCompositing) {
-        updateWindowShape();
         AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
     }
     if (changed & SettingButtons) {
@@ -336,35 +334,6 @@ void AuroraeClient::toggleKeepBelow()
 bool AuroraeClient::isMaximized() const
 {
     return maximizeMode()==KDecorationDefines::MaximizeFull && !options()->moveResizeMaximizedWindows();
-}
-
-void AuroraeClient::updateWindowShape()
-{
-    bool maximized = maximizeMode()==KDecorationDefines::MaximizeFull && !options()->moveResizeMaximizedWindows();
-    int w=widget()->width();
-    int h=widget()->height();
-
-    if (maximized || compositingActive()) {
-        QRegion mask(0,0,w,h);
-        setMask(mask);
-        return;
-    }
-
-    int pl, pt, pr, pb;
-    padding(pl, pr, pt, pb);
-    Plasma::FrameSvg *deco = AuroraeFactory::instance()->theme()->decoration();
-    if (!deco->hasElementPrefix("decoration-opaque")) {
-        // opaque element is missing: set generic mask
-        w = w - pl - pr;
-        h = h - pt - pb;
-        QRegion mask(pl, pt, w, h);
-        setMask(mask);
-        return;
-    }
-    deco->setElementPrefix("decoration-opaque");
-    deco->resizeFrame(QSize(w-pl-pr, h-pt-pb));
-    QRegion mask = deco->mask().translated(pl, pt);
-    setMask(mask);
 }
 
 void AuroraeClient::titlePressed(int button, int buttons)
