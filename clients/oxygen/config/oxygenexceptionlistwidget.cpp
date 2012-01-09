@@ -27,7 +27,7 @@
 #include "oxygenexceptionlistwidget.moc"
 #include "oxygenexceptiondialog.h"
 
-#include <QtCore/QSharedPointer>
+#include <QtCore/QPointer>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -113,9 +113,13 @@ namespace Oxygen
     {
 
         // map dialog
-        QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
+        //QSharedPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
+        QPointer<ExceptionDialog> dialog = new ExceptionDialog( this );
         dialog->setException( _defaultConfiguration );
+
+        // run dialog and check existence
         if( dialog->exec() == QDialog::Rejected ) return;
+        if( !dialog ) return;
 
         // retrieve exception and check
         Exception exception( dialog->exception() );
@@ -131,6 +135,8 @@ namespace Oxygen
             ui.exceptionListView->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
             ui.exceptionListView->selectionModel()->setCurrentIndex( index,  QItemSelectionModel::Current|QItemSelectionModel::Rows );
         }
+
+        delete dialog;
 
         resizeColumns();
         emit changed();
