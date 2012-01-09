@@ -467,6 +467,7 @@ THEME_CONFIG(titleEdgeRightMaximized)
 THEME_CONFIG(titleEdgeTopMaximized)
 THEME_CONFIG(titleBorderLeft)
 THEME_CONFIG(titleBorderRight)
+THEME_CONFIG(titleHeight)
 
 #undef THEME_CONFIG
 

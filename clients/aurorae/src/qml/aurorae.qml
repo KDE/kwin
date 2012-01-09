@@ -145,6 +145,7 @@ Decoration {
         horizontalAlignment: auroraeTheme.horizontalAlignment
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
+        height: auroraeTheme.titleHeight
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left

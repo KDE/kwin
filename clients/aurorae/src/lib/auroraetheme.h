@@ -101,6 +101,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(int titleEdgeTopMaximized READ titleEdgeTopMaximized NOTIFY themeChanged)
     Q_PROPERTY(int titleBorderRight READ titleBorderRight NOTIFY themeChanged)
     Q_PROPERTY(int titleBorderLeft READ titleBorderLeft NOTIFY themeChanged)
+    Q_PROPERTY(int titleHeight READ titleHeight NOTIFY themeChanged)
     Q_PROPERTY(QString decorationPath READ decorationPath NOTIFY themeChanged)
     Q_PROPERTY(QString minimizeButtonPath READ minimizeButtonPath NOTIFY themeChanged)
     Q_PROPERTY(QString maximizeButtonPath READ maximizeButtonPath NOTIFY themeChanged)
@@ -158,6 +159,7 @@ public:
     int titleEdgeTopMaximized() const;
     int titleBorderLeft() const;
     int titleBorderRight() const;
+    int titleHeight() const;
     QString decorationPath() const;
     QString minimizeButtonPath() const;
     QString maximizeButtonPath() const;
