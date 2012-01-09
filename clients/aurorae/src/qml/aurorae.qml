@@ -107,13 +107,17 @@ Decoration {
         transitions: [
             Transition {
                 to: "normal"
-                NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeft + root.paddingLeft; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                ParallelAnimation {
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeft + root.paddingLeft; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                }
             },
             Transition {
                 to: "maximized"
-                NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeftMaximized + root.paddingLeft; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                ParallelAnimation {
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeftMaximized + root.paddingLeft; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                }
             }
         ]
     }
@@ -130,13 +134,17 @@ Decoration {
         transitions: [
             Transition {
                 to: "normal"
-                NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRight + root.paddingRight; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                ParallelAnimation {
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRight + root.paddingRight; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                }
             },
             Transition {
                 to: "maximized"
-                NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRightMaximized + root.paddingRight; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                ParallelAnimation {
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.rightMargin"; to: auroraeTheme.titleEdgeRightMaximized + root.paddingRight; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                }
             }
         ]
     }
