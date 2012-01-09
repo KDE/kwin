@@ -217,6 +217,10 @@ void AuroraeClient::shadeChange()
 
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
 {
+    if (m_view->status() == QDeclarativeView::Error) {
+        left = right = top = bottom = 0;
+        return;
+    }
     const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
     if (maximized) {
         left = m_view->rootObject()->property("borderLeftMaximized").toInt();
@@ -233,6 +237,10 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
 
 void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
 {
+    if (m_view->status() == QDeclarativeView::Error) {
+        left = right = top = bottom = 0;
+        return;
+    }
     left = m_view->rootObject()->property("paddingLeft").toInt();
     right = m_view->rootObject()->property("paddingRight").toInt();
     top = m_view->rootObject()->property("paddingTop").toInt();
