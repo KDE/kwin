@@ -85,23 +85,14 @@ bool AuroraeFactory::supports(Ability ability) const
     case AbilityButtonMenu:
     case AbilityButtonSpacer:
     case AbilityExtendIntoClientArea:
-        return true;
     case AbilityButtonMinimize:
-        return m_theme->hasButton(MinimizeButton);
     case AbilityButtonMaximize:
-        return m_theme->hasButton(MaximizeButton) || m_theme->hasButton(RestoreButton);
     case AbilityButtonClose:
-        return m_theme->hasButton(CloseButton);
     case AbilityButtonAboveOthers:
-        return m_theme->hasButton(KeepAboveButton);
     case AbilityButtonBelowOthers:
-        return m_theme->hasButton(KeepBelowButton);
     case AbilityButtonShade:
-        return m_theme->hasButton(ShadeButton);
     case AbilityButtonOnAllDesktops:
-        return m_theme->hasButton(AllDesktopsButton);
     case AbilityButtonHelp:
-        return m_theme->hasButton(HelpButton);
     case AbilityProvidesShadow:
         return true; // TODO: correct value from theme
     case AbilityClientGrouping:
