@@ -308,6 +308,7 @@ void AuroraeClient::reset(long unsigned int changed)
     if (changed & SettingFont) {
         // TODO: set font
     }
+    m_view->setSource(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     KDecoration::reset(changed);
 }
 
