@@ -105,7 +105,7 @@ bool AuroraeFactory::supports(Ability ability) const
     case AbilityProvidesShadow:
         return true; // TODO: correct value from theme
     case AbilityClientGrouping:
-        return true;
+        return false;
     case AbilityUsesBlurBehind:
         return true;
     default:
