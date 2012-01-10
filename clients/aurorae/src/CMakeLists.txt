@@ -21,6 +21,7 @@ install( FILES
     qml/aurorae.qml
     qml/AuroraeButton.qml
     qml/AuroraeButtonGroup.qml
+    qml/AuroraeMaximizeButton.qml
     qml/Decoration.qml
     qml/DecorationButton.qml
     qml/MenuButton.qml

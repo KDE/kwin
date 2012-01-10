@@ -35,11 +35,11 @@ Item {
             } else if (buttons.charAt(i) == "M") {
                 Qt.createQmlObject("import QtQuick 1.1; MenuButton { width: auroraeTheme.buttonWidthMenu; height: auroraeTheme.buttonHeight }",
                     groupRow, "menuButton" + buttons + i);
+            } else if (buttons.charAt(i) == "A") {
+                var maximizeComponent = Qt.createComponent("AuroraeMaximizeButton.qml");
+                maximizeComponent.createObject(groupRow);
             } else {
                 component.createObject(groupRow, {buttonType: buttons.charAt(i)});
-                if (buttons.charAt(i) == "A") {
-                    component.createObject(groupRow, {buttonType: "R"});
-                }
             }
         }
     }
