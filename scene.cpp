@@ -254,7 +254,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS
                          | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE)) == 0);
-    QHash< Window*, Phase2Data > phase2data;
+    QList< QPair< Window*, Phase2Data > > phase2data;
 
     QRegion dirtyArea = region;
     for (int i = 0;  // do prePaintWindow bottom to top
@@ -302,81 +302,58 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         }
         dirtyArea |= data.paint;
         // Schedule the window for painting
-        phase2data[w] = Phase2Data(w, data.paint, data.clip, data.mask, data.quads);
+        phase2data.append(QPair< Window*, Phase2Data >(w,Phase2Data(w, data.paint, data.clip,
+                                                                    data.mask, data.quads)));
         // no transformations, but translucency requires window pixmap
         w->suspendUnredirect(data.mask & PAINT_WINDOW_TRANSLUCENT);
     }
-    // Do the actual painting
-    // First opaque windows, top to bottom
-    // This also calculates correct paint regions for windows, also taking
-    //  care of clipping
-    QRegion allclips, upperTranslucentDamage;
-    for (int i = stacking_order.count() - 1; i >= 0; --i) {
-        QHash< Window*, Phase2Data >::iterator data = phase2data.find(stacking_order[ i ]);
-        if (data == phase2data.end())
-            continue;
 
-        Toplevel *tlw = data.key()->window();
+    // This is the occlusion culling pass
+    QRegion allclips, upperTranslucentDamage;
+    for (int i = phase2data.count() - 1; i >= 0; --i) {
+        QPair< Window*, Phase2Data > *entry = &phase2data[i];
+        Phase2Data *data = &entry->second;
+
+        Toplevel *tlw = entry->first->window();
         // In case there is a window with a higher stackposition which has translucent regions
         // (e.g. decorations) that still have to be drawn, we also have to repaint the current window
         // in these particular regions
         data->region |= (upperTranslucentDamage & tlw->decorationRect().translated(tlw->pos()));
 
-        // subtract the parts which have possibly been drawn already as part of
+        // subtract the parts which will possibly been drawn as part of
         // a higher opaque window
         data->region -= allclips;
 
         // Here we rely on WindowPrePaintData::setTranslucent() to remove
         // the clip if needed.
         if (!data->clip.isEmpty()) {
-            // clip away this region for all windows below this one
+            // clip away the opaque regions for all windows below this one
             allclips |= data->clip;
-            // Paint the opaque window
-            data->painted_1stpass = data->clip & data->region;
-            paintWindow(data->window, data->mask, data->painted_1stpass, data->quads);
-            painted_region |= data->painted_1stpass;
-
-            // Clip out the client area, so we only draw the rest in the next pass
-            data->region -= data->clip;
-            // if prePaintWindow didn't change the clipping area we only have to paint
-            // the decoration
-            if ((data-> clip ^
-                 data.key()->clientShape().translated(data.key()->x(), data.key()->y())).isEmpty()) {
-                data->mask |= PAINT_DECORATION_ONLY;
-            }
+            // extend the translucent damage for windows below this by remaining (translucent) regions
+            upperTranslucentDamage |= data->region - data->clip;
+        } else {
+            upperTranslucentDamage |= data->region;
         }
-        // extend the translucent damage for windows below this by remaining (translucent) regions
-        upperTranslucentDamage |= data->region;
     }
 
-    QRegion painted_2ndpass;
+    QRegion paintedArea;
     // Fill any areas of the root window not covered by opaque windows
     if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
-        painted_2ndpass = dirtyArea - allclips;
-        paintBackground(painted_2ndpass);
+        paintedArea = dirtyArea - allclips;
+        paintBackground(paintedArea);
     }
 
-    // Now walk the list bottom to top, drawing translucent windows.
-    QRegion lowerOpaqueDamage;
-    for (int i = 0; i < stacking_order.count(); i++) {
-        QHash< Window*, Phase2Data >::iterator data = phase2data.find(stacking_order[ i ]);
-        if (data == phase2data.end())
-            continue;
+    // Now walk the list bottom to top and draw the windows.
+    for (int i = 0; i < phase2data.count(); ++i) {
+        Phase2Data *data = &phase2data[i].second;
 
-        Toplevel *tlw = data.key()->window();
-
-        // add all regions of the lower windows which have already be drawn in the 1st pass
-        data->region |= (lowerOpaqueDamage & tlw->decorationRect().translated(tlw->pos()));
-        // and extend that region by opaque parts of ourself
-        lowerOpaqueDamage |= data->painted_1stpass;
-
-        // add all regions which have been drawn so far in the 2nd pass
-        painted_2ndpass |= data->region;
-        data->region = painted_2ndpass;
+        // add all regions which have been drawn so far
+        paintedArea |= data->region;
+        data->region = paintedArea;
 
         paintWindow(data->window, data->mask, data->region, data->quads);
     }
-    painted_region |= painted_2ndpass;
+    painted_region |= paintedArea;
 }
 
 void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads)

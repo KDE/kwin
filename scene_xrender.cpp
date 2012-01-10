@@ -594,7 +594,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     PaintClipper pcreg(region);   // clip by the region to paint
     PaintClipper pc(transformed_shape);   // clip by window's shape
 
-    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty() && (isOpaque() || !(mask & PAINT_DECORATION_ONLY));
+    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty() && isOpaque();
 
     // In order to obtain a pixel perfect rescaling
     // we need to blit the window content togheter with
@@ -724,13 +724,11 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
         }
 #undef RENDER_SHADOW_TILE
 
-        if (!(mask & PAINT_DECORATION_ONLY)) {
-            // Paint the window contents
-            Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
-            XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
-            if (!opaque)
-                transformed_shape = QRegion();
-        }
+        // Paint the window contents
+        Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
+        XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+        if (!opaque)
+            transformed_shape = QRegion();
 
 #define RENDER_DECO_PART(_PART_, _RECT_) \
 XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAlpha, renderTarget,\

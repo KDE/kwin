@@ -586,20 +586,18 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     }
 
     // paint the content
-    if (!(mask & PAINT_DECORATION_ONLY)) {
-        texture.bind();
-        prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-        renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
-        restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
-        texture.unbind();
+    texture.bind();
+    prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+    renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
+    restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+    texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
-        if (static_cast<SceneOpenGL*>(scene)->debug) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
-#endif
+    if (static_cast<SceneOpenGL*>(scene)->debug) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        renderQuads(mask, region, data.quads.select(WindowQuadContents), &texture);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+#endif
 
     if (sceneShader) {
         ShaderManager::instance()->popShader();

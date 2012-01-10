@@ -77,8 +77,7 @@ public:
         PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
         // Clear whole background as the very first step, without optimizing it
         PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
-        // Temporary solution since (_OPAQUE | _TRANSLUCENT) is not working currently.
-        PAINT_DECORATION_ONLY = 1 << 7,
+        // PAINT_DECORATION_ONLY = 1 << 7 has been removed
         // Window will be painted with a lanczos filter.
         PAINT_WINDOW_LANCZOS = 1 << 8,
         // same as PAINT_SCREEN_TRANSFORMED without full repainting
@@ -134,7 +133,6 @@ protected:
         Window* window;
         QRegion region;
         QRegion clip;
-        QRegion painted_1stpass;
         int mask;
         WindowQuadList quads;
     };

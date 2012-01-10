@@ -311,10 +311,7 @@ public:
          * Clear whole background as the very first step, without optimizing it
          **/
         PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
-        /**
-        * Temporary solution since (_OPAQUE | _TRANSLUCENT) is not working currently.
-        **/
-        PAINT_DECORATION_ONLY = 1 << 7,
+        // PAINT_DECORATION_ONLY = 1 << 7 has been deprecated
         /**
          * Window will be painted with a lanczos filter.
          **/
