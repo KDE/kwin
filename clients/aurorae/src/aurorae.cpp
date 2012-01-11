@@ -19,9 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "auroraetheme.h"
 
 #include <QApplication>
+#include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeItem>
+#include <QtGui/QGraphicsView>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -35,6 +37,8 @@ AuroraeFactory::AuroraeFactory()
         : QObject()
         , KDecorationFactoryUnstable()
         , m_theme(new AuroraeTheme(this))
+        , m_engine(new QDeclarativeEngine(this))
+        , m_component(new QDeclarativeComponent(m_engine, this))
 {
     init();
 }
@@ -54,6 +58,13 @@ void AuroraeFactory::init()
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     m_theme->setShowTooltips(options()->showTooltips());
     m_theme->setTabDragMimeType(clientGroupItemDragMimeType());
+    // setup the QML engine
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        m_engine->addImportPath(importPath);
+    }
+    m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
+    m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
+
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -117,6 +128,12 @@ QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
         BorderVeryHuge << BorderOversized;
 }
 
+QDeclarativeItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *client)
+{
+    QDeclarativeContext *context = new QDeclarativeContext(m_engine->rootContext(), this);
+    context->setContextProperty("decoration", client);
+    return qobject_cast< QDeclarativeItem* >(m_component->create(context));
+}
 
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
 
@@ -125,6 +142,9 @@ AuroraeFactory *AuroraeFactory::s_instance = NULL;
 *******************************************************/
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
     : KDecorationUnstable(bridge, factory)
+    , m_view(NULL)
+    , m_scene(new QGraphicsScene(this))
+    , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
 {
     connect(this, SIGNAL(keepAboveChanged(bool)), SIGNAL(keepAboveChangedWrapper()));
     connect(this, SIGNAL(keepBelowChanged(bool)), SIGNAL(keepBelowChangedWrapper()));
@@ -138,6 +158,7 @@ AuroraeClient::~AuroraeClient()
 
 void AuroraeClient::init()
 {
+    m_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     // HACK: we need to add the GraphicsView as a child widget to a normal widget
     // the GraphicsView eats the mouse release event and by that kwin core starts to move
     // the decoration each time the decoration is clicked
@@ -146,25 +167,24 @@ void AuroraeClient::init()
     createMainWidget();
     widget()->setAttribute(Qt::WA_TranslucentBackground);
     widget()->setAttribute(Qt::WA_NoSystemBackground);
-    m_view = new QDeclarativeView(widget());
-    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    m_view = new QGraphicsView(m_scene, widget());
     m_view->setAttribute(Qt::WA_TranslucentBackground);
     m_view->setWindowFlags(Qt::X11BypassWindowManagerHint);
+    m_view->setFrameShape(QFrame::NoFrame);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    m_view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     QPalette pal = m_view->palette();
     pal.setColor(m_view->backgroundRole(), Qt::transparent);
     m_view->setPalette(pal);
     QPalette pal2 = widget()->palette();
     pal2.setColor(widget()->backgroundRole(), Qt::transparent);
     widget()->setPalette(pal2);
+    m_scene->addItem(m_item);
 
-    // setup the QML engine
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_view->engine()->addImportPath(importPath);
-    }
-    m_view->rootContext()->setContextProperty("decoration", this);
-    m_view->rootContext()->setContextProperty("auroraeTheme", AuroraeFactory::instance()->theme());
-    m_view->setSource(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
+    connect(AuroraeFactory::instance()->theme(), SIGNAL(themeChanged()), SLOT(themeChanged()));
 }
 
 void AuroraeClient::activeChange()
@@ -196,6 +216,11 @@ void AuroraeClient::maximizeChange()
 
 void AuroraeClient::resize(const QSize &s)
 {
+    if (m_item) {
+        m_item->setWidth(s.width());
+        m_item->setHeight(s.height());
+    }
+    m_scene->setSceneRect(QRectF(QPoint(0, 0), s));
     m_view->resize(s);
     widget()->resize(s);
 }
@@ -207,34 +232,34 @@ void AuroraeClient::shadeChange()
 
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
 {
-    if (m_view->status() == QDeclarativeView::Error) {
+    if (!m_item) {
         left = right = top = bottom = 0;
         return;
     }
     const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
     if (maximized) {
-        left = m_view->rootObject()->property("borderLeftMaximized").toInt();
-        right = m_view->rootObject()->property("borderRightMaximized").toInt();
-        top = m_view->rootObject()->property("borderTopMaximized").toInt();
-        bottom = m_view->rootObject()->property("borderBottomMaximized").toInt();
+        left = m_item->property("borderLeftMaximized").toInt();
+        right = m_item->property("borderRightMaximized").toInt();
+        top = m_item->property("borderTopMaximized").toInt();
+        bottom = m_item->property("borderBottomMaximized").toInt();
     } else {
-        left = m_view->rootObject()->property("borderLeft").toInt();
-        right = m_view->rootObject()->property("borderRight").toInt();
-        top = m_view->rootObject()->property("borderTop").toInt();
-        bottom = m_view->rootObject()->property("borderBottom").toInt();
+        left = m_item->property("borderLeft").toInt();
+        right = m_item->property("borderRight").toInt();
+        top = m_item->property("borderTop").toInt();
+        bottom = m_item->property("borderBottom").toInt();
     }
 }
 
 void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
 {
-    if (m_view->status() == QDeclarativeView::Error) {
+    if (!m_item) {
         left = right = top = bottom = 0;
         return;
     }
-    left = m_view->rootObject()->property("paddingLeft").toInt();
-    right = m_view->rootObject()->property("paddingRight").toInt();
-    top = m_view->rootObject()->property("paddingTop").toInt();
-    bottom = m_view->rootObject()->property("paddingBottom").toInt();
+    left = m_item->property("paddingLeft").toInt();
+    right = m_item->property("paddingRight").toInt();
+    top = m_item->property("paddingTop").toInt();
+    bottom = m_item->property("paddingBottom").toInt();
 }
 
 QSize AuroraeClient::minimumSize() const
@@ -299,7 +324,6 @@ void AuroraeClient::reset(long unsigned int changed)
     if (changed & SettingFont) {
         // TODO: set font
     }
-    m_view->setSource(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     KDecoration::reset(changed);
 }
 
@@ -380,6 +404,17 @@ QString AuroraeClient::leftButtons() const
 {
     // TODO: make independent of Aurorae
     return options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft();
+}
+
+void AuroraeClient::themeChanged()
+{
+    m_scene->clear();
+    m_item = AuroraeFactory::instance()->createQmlDecoration(this);
+    if (m_item) {
+        m_item->setWidth(width());
+        m_item->setHeight(height());
+    }
+    m_scene->addItem(m_item);
 }
 
 } // namespace Aurorae

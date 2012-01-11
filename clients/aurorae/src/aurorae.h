@@ -23,13 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
-class QDeclarativeView;
+class QDeclarativeComponent;
+class QDeclarativeEngine;
+class QDeclarativeItem;
 class QGraphicsSceneMouseEvent;
 class QGraphicsScene;
+class QGraphicsView;
 
 namespace Aurorae
 {
 class AuroraeTheme;
+class AuroraeClient;
 
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
@@ -45,6 +49,7 @@ public:
     AuroraeTheme *theme() const {
         return m_theme;
     }
+    QDeclarativeItem *createQmlDecoration(AuroraeClient *client);
 
 private:
     AuroraeFactory();
@@ -54,6 +59,8 @@ private:
     static AuroraeFactory *s_instance;
 
     AuroraeTheme *m_theme;
+    QDeclarativeEngine *m_engine;
+    QDeclarativeComponent *m_component;
 };
 
 class AuroraeClient : public KDecorationUnstable
@@ -129,8 +136,13 @@ public slots:
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
 
+private slots:
+    void themeChanged();
+
 private:
-    QDeclarativeView *m_view;
+    QGraphicsView *m_view;
+    QGraphicsScene *m_scene;
+    QDeclarativeItem *m_item;
 };
 
 }
