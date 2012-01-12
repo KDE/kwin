@@ -411,8 +411,8 @@ void AuroraeClient::themeChanged()
     m_scene->clear();
     m_item = AuroraeFactory::instance()->createQmlDecoration(this);
     if (m_item) {
-        m_item->setWidth(width());
-        m_item->setHeight(height());
+        m_item->setWidth(m_scene->sceneRect().width());
+        m_item->setHeight(m_scene->sceneRect().height());
     }
     m_scene->addItem(m_item);
 }
