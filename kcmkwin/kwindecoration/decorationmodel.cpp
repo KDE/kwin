@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationmodel.h"
 #include "preview.h"
-#include "auroraetheme.h"
-#include "auroraescene.h"
 // kwin
 #include <kdecorationfactory.h>
 // Qt
@@ -37,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KIcon>
 #include <KLocale>
 #include <KStandardDirs>
+#include "kwindecoration.h"
 
 namespace KWin
 {
@@ -48,12 +47,15 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     , m_customButtons(false)
     , m_leftButtons(QString())
     , m_rightButtons(QString())
-    , m_theme(new Aurorae::AuroraeTheme(this))
-    , m_scene(new Aurorae::AuroraeScene(m_theme, QString(), QString(), true, this))
     , m_renderWidget(new QWidget(0))
 {
+    QHash<int, QByteArray> roleNames;
+    roleNames[Qt::DisplayRole] = "display";
+    roleNames[DecorationModel::PixmapRole] = "preview";
+    roleNames[TypeRole] = "type";
+    roleNames[AuroraeNameRole] = "auroraeThemeName";
+    setRoleNames(roleNames);
     m_config = KSharedConfig::openConfig("auroraerc");
-    m_scene->setIcon(KIcon("xorg"));
     findDecorations();
 }
 
@@ -258,7 +260,7 @@ void DecorationModel::regeneratePreviews()
     QList<DecorationModelData>::iterator it = m_decorations.begin();
 
     for (int i = 0; i < m_decorations.count(); i++) {
-        regeneratePreview(index(i), m_decorations.at(i).preview.size());
+        regeneratePreview(index(i), QSize(qobject_cast<KWinDecorationModule*>(QObject::parent())->itemWidth(), 150));
     }
 }
 
@@ -299,52 +301,6 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         m_preview->setTempBorderSize(m_plugins, data.borderSize);
         data.preview = m_preview->preview(&document, m_renderWidget);
         break;
-    case DecorationModelData::AuroraeDecoration: {
-        QPixmap pix(size);
-        pix.fill(Qt::transparent);
-        KConfig conf("aurorae/themes/" + data.auroraeName + '/' + data.auroraeName + "rc", KConfig::FullConfig, "data");
-        m_theme->loadTheme(data.auroraeName, conf);
-        m_theme->setBorderSize(data.borderSize);
-        m_theme->setButtonSize(data.buttonSize);
-        m_scene->setButtons(m_customButtons ? m_leftButtons : m_theme->defaultButtonsLeft(),
-                            m_customButtons ? m_rightButtons : m_theme->defaultButtonsRight());
-        int left, top, right, bottom;
-        m_theme->borders(left, top, right, bottom, false);
-        int padLeft, padRight, padTop, padBottom;
-        m_theme->padding(padLeft, padTop, padRight, padBottom);
-        top = qMin(int(top * .9), 30);
-        int xoffset = qMin(qMax(10, QApplication::isRightToLeft() ? left : right), 30);
-        m_scene->setSceneRect(0, 0 ,
-                              size.width() - xoffset - 20 + padLeft + padRight,
-                              size.height() - top - 20 + padLeft + padRight);
-        m_scene->setActive(false, false);
-        m_scene->addTab(i18n("Inactive Window"));
-        m_scene->updateLayout();
-        QPainter painter(&pix);
-        QRect rect = QRectF(QPointF(10 + xoffset - padLeft, 10 - padTop), m_scene->sceneRect().size()).toRect();
-        m_scene->render(&painter, QStyle::visualRect(QApplication::layoutDirection(), pix.rect(), rect));
-        m_scene->setActive(true, false);
-        m_scene->setCaption(i18n("Active Window"));
-        rect = QRectF(QPointF(10 - padLeft, top + 10 - padTop), m_scene->sceneRect().size()).toRect();
-        m_scene->render(&painter, QStyle::visualRect(QApplication::layoutDirection(), pix.rect(), rect));
-
-        const int width = rect.width() - left - right - padLeft - padRight;
-        const int height = rect.height() - top - bottom - padTop - padBottom;
-        m_renderWidget->setGeometry(0, 0, width, height);
-        painter.save();
-        const QPoint topLeft = QStyle::visualRect(QApplication::layoutDirection(), pix.rect(), rect).topLeft() +
-                               QPoint(left + padLeft, top + padTop);
-        m_renderWidget->render(&painter, topLeft);
-        painter.restore();
-        //Enable word-wrap
-        document.setTextWidth(width - margin * 2);
-        painter.save();
-        painter.translate(topLeft);
-        document.drawContents(&painter, QRectF(margin, margin, width - margin * 2, height - margin * 2));
-        painter.restore();
-        data.preview = pix;
-        break;
-    }
     default:
         // nothing
         break;

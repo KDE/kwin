@@ -31,17 +31,22 @@
 #include "kwindecoration.h"
 #include "buttonsconfigdialog.h"
 #include "configdialog.h"
-#include "decorationdelegate.h"
 #include "decorationmodel.h"
+#include "auroraetheme.h"
 // Qt
 #include <QtDBus/QtDBus>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QSortFilterProxyModel>
 // KDE
 #include <KAboutData>
 #include <KDialog>
 #include <KLocale>
 #include <KNS3/DownloadDialog>
+#include <KDE/KStandardDirs>
 #include <KPluginFactory>
+#include <qdeclarative.h>
 
 // KCModule plugin interface
 // =========================
@@ -69,9 +74,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_rightButtons(QString())
     , m_configLoaded(false)
 {
+    qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
-    DecorationDelegate* delegate = new DecorationDelegate(this);
-    m_ui->decorationList->setItemDelegate(delegate);
     m_ui->configureDecorationButton->setIcon(KIcon("configure"));
     m_ui->configureButtonsButton->setIcon(KIcon("configure"));
     m_ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
@@ -85,16 +89,21 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_proxyModel = new QSortFilterProxyModel(this);
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_ui->decorationList->setModel(m_proxyModel);
+    m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        m_ui->decorationList->engine()->addImportPath(importPath);
+    }
+    m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
+    m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml"));
+    m_ui->decorationList->setSource(KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml"));
 
     readConfig(style);
 
-    connect(m_ui->decorationList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelectionChanged()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(widthChanged()), m_model, SLOT(regeneratePreviews()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
-    connect(delegate, SIGNAL(regeneratePreview(QModelIndex,QSize)),
-            m_model, SLOT(regeneratePreview(QModelIndex,QSize)));
     connect(m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
 
     KAboutData *about =
@@ -104,11 +113,17 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
                        ki18n("(c) 2001 Karol Szwed"));
     about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
     setAboutData(about);
+    m_model->regeneratePreviews();
 }
 
 
 KWinDecorationModule::~KWinDecorationModule()
 {
+}
+
+int KWinDecorationModule::itemWidth() const
+{
+    return m_ui->decorationList->rootObject()->property("width").toInt();
 }
 
 // This is the selection handler setting
@@ -144,13 +159,13 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
         const QString themeName = group.readEntry("ThemeName", "example-deco");
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(themeName));
         if (index.isValid()) {
-            m_ui->decorationList->setCurrentIndex(index);
+            m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
         }
     } else {
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfLibrary(libraryName));
         if (index.isValid()) {
             m_model->setBorderSize(index, borderSize);
-            m_ui->decorationList->setCurrentIndex(index);
+            m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
         }
     }
 
@@ -175,7 +190,7 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
 // Writes the selected user configuration to the kwin config file
 void KWinDecorationModule::writeConfig(KConfigGroup & conf)
 {
-    const QModelIndex index = m_proxyModel->mapToSource(m_ui->decorationList->currentIndex());
+    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
     const QString libName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
 
     // General settings
@@ -231,7 +246,7 @@ void KWinDecorationModule::defaults()
     m_showTooltips = true;
     const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfName(i18n("Oxygen")));
     if (index.isValid())
-        m_ui->decorationList->setCurrentIndex(index);
+        m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
 
     m_leftButtons = KDecorationOptions::defaultTitleButtonsLeft();
     m_rightButtons = KDecorationOptions::defaultTitleButtonsRight();
@@ -273,7 +288,7 @@ void KWinDecorationModule::slotGHNSClicked()
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("aurorae.knsrc", this);
     if (downloadDialog->exec() == KDialog::Accepted) {
         if (!downloadDialog->changedEntries().isEmpty()) {
-            const QModelIndex index = m_proxyModel->mapToSource(m_ui->decorationList->currentIndex());
+            const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
             const QString libraryName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
             bool aurorae = m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration;
             const QString auroraeName = m_model->data(index, DecorationModel::AuroraeNameRole).toString();
@@ -281,11 +296,11 @@ void KWinDecorationModule::slotGHNSClicked()
             if (aurorae) {
                 const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName));
                 if (proxyIndex.isValid())
-                    m_ui->decorationList->setCurrentIndex(proxyIndex);
+                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
             } else {
                 const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfLibrary(libraryName));
                 if (proxyIndex.isValid())
-                    m_ui->decorationList->setCurrentIndex(proxyIndex);
+                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
             }
         }
     }
@@ -294,7 +309,7 @@ void KWinDecorationModule::slotGHNSClicked()
 
 void KWinDecorationModule::slotConfigureDecoration()
 {
-    const QModelIndex index = m_proxyModel->mapToSource(m_ui->decorationList->currentIndex());
+    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
     bool reload = false;
     if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration) {
         QPointer< KDialog > dlg = new KDialog(this);

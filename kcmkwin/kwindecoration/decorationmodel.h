@@ -30,12 +30,6 @@ class KDesktopFile;
 class KDecorationPlugins;
 class KDecorationPreview;
 
-namespace Aurorae
-{
-class AuroraeTheme;
-class AuroraeScene;
-}
-
 namespace KWin
 {
 
@@ -113,11 +107,11 @@ public:
 
 public slots:
     void regeneratePreview(const QModelIndex& index, const QSize& size);
+    void regeneratePreviews();
 
 private:
     void findDecorations();
     void findAuroraeThemes();
-    void regeneratePreviews();
     void metaData(DecorationModelData& data, const KDesktopFile& df);
     QList<DecorationModelData> m_decorations;
     KDecorationPlugins* m_plugins;
@@ -125,8 +119,6 @@ private:
     bool m_customButtons;
     QString m_leftButtons;
     QString m_rightButtons;
-    Aurorae::AuroraeTheme* m_theme;
-    Aurorae::AuroraeScene* m_scene;
     KSharedConfigPtr m_config;
     QWidget* m_renderWidget;
 };

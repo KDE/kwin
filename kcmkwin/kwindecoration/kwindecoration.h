@@ -66,6 +66,8 @@ public:
 
     QString quickHelp() const;
 
+    int itemWidth() const;
+
 signals:
     void pluginLoad(const KConfigGroup& conf);
     void pluginSave(KConfigGroup &conf);
