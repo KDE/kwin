@@ -30,14 +30,14 @@ Decoration {
         }
     }
     id: root
-    borderLeft: auroraeTheme.borderLeft
-    borderRight: auroraeTheme.borderRight
-    borderTop: auroraeTheme.borderTop
-    borderBottom: auroraeTheme.borderBottom
-    borderLeftMaximized: auroraeTheme.borderLeftMaximized
-    borderRightMaximized: auroraeTheme.borderRightMaximized
-    borderBottomMaximized: auroraeTheme.borderBottomMaximized
-    borderTopMaximized: auroraeTheme.borderTopMaximized
+    borderLeft: Math.max(0, auroraeTheme.borderLeft)
+    borderRight: Math.max(0, auroraeTheme.borderRight)
+    borderTop: Math.max(0, auroraeTheme.borderTop)
+    borderBottom: Math.max(0, auroraeTheme.borderBottom)
+    borderLeftMaximized: Math.max(0, auroraeTheme.borderLeftMaximized)
+    borderRightMaximized: Math.max(0, auroraeTheme.borderRightMaximized)
+    borderBottomMaximized: Math.max(0, auroraeTheme.borderBottomMaximized)
+    borderTopMaximized: Math.max(0, auroraeTheme.borderTopMaximized)
     paddingLeft: auroraeTheme.paddingLeft
     paddingRight: auroraeTheme.paddingRight
     paddingBottom: auroraeTheme.paddingBottom
