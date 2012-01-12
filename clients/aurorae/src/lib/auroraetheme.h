@@ -34,11 +34,6 @@ class KConfig;
 
 namespace Aurorae {
 class AuroraeThemePrivate;
-class AuroraeTab;
-class AuroraeScene;
-class AuroraeButton;
-class AuroraeMaximizeButton;
-class AuroraeSpacer;
 class ThemeConfig;
 
 enum AuroraeButtonType {
@@ -243,12 +238,6 @@ private:
     const ThemeConfig &themeConfig() const;
 
     AuroraeThemePrivate* const d;
-
-    friend class Aurorae::AuroraeButton;
-    friend class Aurorae::AuroraeMaximizeButton;
-    friend class Aurorae::AuroraeSpacer;
-    friend class Aurorae::AuroraeScene;
-    friend class Aurorae::AuroraeTab;
 };
 
 } // namespace
