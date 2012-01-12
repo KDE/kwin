@@ -59,9 +59,9 @@ a->setText(i18n("System"));
 
 a = actionCollection->addAction("Group:Navigation");
 a->setText(i18n("Navigation"));
-DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotSwitchToTabRight());
-DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotSwitchToTabLeft());
-DEF(I18N_NOOP("Remove Window From Group"),             0, slotRemoveFromGroup());
+DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab());
+DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab());
+DEF(I18N_NOOP("Remove Window From Group"),             0, slotUntab());
 
 a = actionCollection->addAction("Group:Windows");
 a->setText(i18n("Windows"));

@@ -120,17 +120,18 @@ public:
     virtual QRect transparentRect() const;
 
     // Window tabbing
-    virtual bool isClientGroupActive();
-    virtual QList< ClientGroupItem > clientGroupItems() const;
-    virtual long itemId(int index);
-    virtual int visibleClientGroupItem();
-    virtual void setVisibleClientGroupItem(int index);
-    virtual void moveItemInClientGroup(int index, int before);
-    virtual void moveItemToClientGroup(long itemId, int before);
-    virtual void removeFromClientGroup(int index, const QRect& newGeom);
-    virtual void closeClientGroupItem(int index);
-    virtual void closeAllInClientGroup();
-    virtual void displayClientMenu(int index, const QPoint& pos);
+    virtual QString caption(int idx) const;
+    virtual void closeTab(long id);
+    virtual void closeTabGroup();
+    virtual long currentTabId() const;
+    virtual QIcon icon(int idx) const;
+    virtual void setCurrentTab(long id);
+    virtual void showWindowMenu(const QPoint &, long id);
+    virtual void tab_A_before_B(long A, long B);
+    virtual void tab_A_behind_B(long A, long B);
+    virtual int tabCount() const;
+    virtual long tabId(int idx) const;
+    virtual void untab(long id, const QRect& newGeom);
     virtual WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
 
 private:

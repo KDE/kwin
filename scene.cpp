@@ -526,8 +526,8 @@ void Scene::Window::resetPaintingEnabled()
     if (Client* c = dynamic_cast< Client* >(toplevel)) {
         if (c->isMinimized())
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
-        if (c->clientGroup() && c != c->clientGroup()->visible())
-            disable_painting |= PAINT_DISABLED_BY_CLIENT_GROUP;
+        if (c->tabGroup() && c != c->tabGroup()->current())
+            disable_painting |= PAINT_DISABLED_BY_TAB_GROUP;
         else if (c->isHiddenInternal())
             disable_painting |= PAINT_DISABLED;
     }

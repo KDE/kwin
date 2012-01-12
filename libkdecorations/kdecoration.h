@@ -104,12 +104,12 @@ public:
         NoOp,
         SetupWindowShortcutOp,
         ApplicationRulesOp,
-        RemoveClientFromGroupOp, // Remove from group
-        CloseClientGroupOp, // Close the group
-        MoveClientInGroupLeftOp, // Move left in the group
-        MoveClientInGroupRightOp, // Move right in the group
+        RemoveTabFromGroupOp, // Remove from group
+        CloseTabGroupOp, // Close the group
+        ActivateNextTabOp, // Move left in the group
+        ActivatePreviousTabOp, // Move right in the group
         ToggleClientTiledStateOp, // put a floating client into tiling
-        ClientGroupDragOp
+        TabDragOp
     };
     /**
      * Basic color types that should be recognized by all decoration styles.
@@ -197,7 +197,7 @@ public:
         AbilityUsesBlurBehind = 3003, ///< The decoration wants the background to be blurred, when the blur plugin is enabled.
         /// @since 4.6
         // Tabbing
-        AbilityClientGrouping = 4000, ///< The decoration supports tabbing
+        AbilityTabbing = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
     };
@@ -228,26 +228,8 @@ public:
     /**
      * Returns the mimeType used to drag and drop clientGroupItems
      */
-    static QString clientGroupItemDragMimeType();
+    static QString tabDragMimeType();
 
-};
-
-class KWIN_EXPORT ClientGroupItem
-{
-public:
-    ClientGroupItem(QString t, QIcon i) {
-        title_ = t;
-        icon_ = i;
-    }
-    inline QIcon icon() const {
-        return icon_;
-    }
-    inline QString title() const {
-        return title_;
-    }
-private:
-    QString title_;
-    QIcon icon_;
 };
 
 class KDecorationProvides
@@ -942,56 +924,67 @@ public:
     /**
      * Returns whether or not this client group contains the active client.
      */
-    bool isClientGroupActive();
+    bool isInActiveTabGroup();
     /**
-     * Return a list of all the clients in the group that contains the client that this
-     * decoration is attached to.
+     * Return the amount of tabs in this group
      */
-    QList< ClientGroupItem > clientGroupItems() const;
+    int tabCount() const;
+
     /**
-     * Returns a unique identifier for the client at index \p index of the client group list.
-     * \see moveItemToClientGroup()
+     * Return the icon for the tab at index \p idx (\p idx must be smaller than tabCount())
      */
-    long itemId(int index);
+    QIcon icon(int idx) const;
+
     /**
-     * Returns the list index of the currently visible client in this group.
+     * Return the caption for the tab at index \p idx (\p idx must be smaller than tabCount())
      */
-    int visibleClientGroupItem();
+    QString caption(int idx) const;
+
     /**
-     * Switch the currently visible client to the one at list index \p index.
+     * Return the unique id for the tab at index \p idx (\p idx must be smaller than tabCount())
      */
-    void setVisibleClientGroupItem(int index);
+    long tabId(int idx) const;
     /**
-     * Move the client at index \p index to the position before the client at index \p before.
+     * Returns the id of the currently active client in this group.
      */
-    void moveItemInClientGroup(int index, int before);
+    long currentTabId() const;
     /**
-     * Move the client that's unique identifier is \p itemId to the position before the client
-     * at index \p before if set, otherwise the end of the list. This call is to move clients
-     * between two different groups, if moving in the same group then use
-     * moveItemInClientGroup() instead.
-     * \see itemId()
+     * Activate tab for the window with the id  \p id.
      */
-    void moveItemToClientGroup(long itemId, int before = -1);
+    void setCurrentTab(long id);
+
     /**
-     * Remove the client at index \p index from the group. If \p newGeom is set then the client
-     * will move and resize to the specified geometry, otherwise it will stay where the group
-     * is located.
+     * Entab windw with id \p A beFORE the window with the id \p B.
      */
-    void removeFromClientGroup(int index, const QRect& newGeom = QRect());
+    virtual void tab_A_before_B(long A, long B);
     /**
-     * Close the client at index \p index.
+     * Entab windw with id \p A beHIND the window with the id \p B.
      */
-    void closeClientGroupItem(int index);
+    virtual void tab_A_behind_B(long A, long B);
+    /**
+     * Remove the window with the id \p id from its tabgroup and place it at \p newGeom
+     */
+    virtual void untab(long id, const QRect& newGeom);
+
+    /**
+     * Close the client with the id \p id.
+     */
+    void closeTab(long id);
     /**
      * Close all windows in this group.
      */
-    void closeAllInClientGroup();
+    void closeTabGroup();
     /**
      * Display the right-click client menu belonging to the client at index \p index at the
      * global coordinates specified by \p pos.
      */
-    void displayClientMenu(int index, const QPoint& pos);
+    void showWindowMenu(const QPoint& pos, long id);
+    /**
+     * unshadow virtuals
+     */
+    using KDecoration::caption;
+    using KDecoration::icon;
+    using KDecoration::showWindowMenu;
     /**
      * Determine which action the user has mapped \p button to. Useful for determining whether
      * a button press was for window tab dragging or for displaying the client menu.

@@ -385,11 +385,13 @@ void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
     emit windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *c)
+void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
-    Q_ASSERT(dynamic_cast<Client*>(c));
-    setupClientConnections(static_cast<Client*>(c));
-    emit windowAdded(c->effectWindow());
+    Q_ASSERT(dynamic_cast<Client*>(t));
+    Client *c = static_cast<Client*>(t);
+    setupClientConnections(c);
+    if (!c->tabGroup()) // the "window" has already been there
+        emit windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
@@ -424,19 +426,19 @@ void EffectsHandlerImpl::slotClientUnminimized(Client* c, bool animate)
     }
 }
 
-void EffectsHandlerImpl::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
+void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
 {
-    emit clientGroupItemSwitched(from, to);
+    emit currentTabAboutToChange(from, to);
 }
 
-void EffectsHandlerImpl::slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to)
+void EffectsHandlerImpl::slotTabAdded(EffectWindow* w, EffectWindow* to)
 {
-    emit clientGroupItemAdded(from, to);
+    emit tabAdded(w, to);
 }
 
-void EffectsHandlerImpl::slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group)
+void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfFormerGroup)
 {
-    emit clientGroupItemRemoved(c, group);
+    emit tabRemoved(w, leaderOfFormerGroup);
 }
 
 void EffectsHandlerImpl::slotDesktopChanged(int old)

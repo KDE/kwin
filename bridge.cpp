@@ -39,7 +39,6 @@ Bridge::Bridge(Client* cl)
         return c->prototype( args2 ); \
     }
 
-BRIDGE_HELPER(bool, isActive, , , const)
 BRIDGE_HELPER(bool, isCloseable, , , const)
 BRIDGE_HELPER(bool, isMaximizable, , , const)
 BRIDGE_HELPER(Bridge::MaximizeMode, maximizeMode, , , const)
@@ -61,6 +60,11 @@ BRIDGE_HELPER(void, maximize, MaximizeMode m, m,)
 BRIDGE_HELPER(void, minimize, , ,)
 BRIDGE_HELPER(void, showContextHelp, , ,)
 BRIDGE_HELPER(void, setDesktop, int desktop, desktop,)
+
+bool Bridge::isActive() const
+{
+    return c->isActive() || (c->tabGroup() && c->tabGroup()->isActive());
+}
 
 void Bridge::setKeepAbove(bool set)
 {
@@ -93,7 +97,15 @@ bool Bridge::isSetShade() const
 
 void Bridge::showWindowMenu(const QPoint &p)
 {
-    c->workspace()->showWindowMenu(p, c);
+    c->workspace()->showWindowMenu(QRect(p,p), c);
+}
+
+void Bridge::showWindowMenu(const QPoint &p, long id)
+{
+    Client *cc = clientForId(id);
+    if (!cc)
+        cc = c;
+    cc->workspace()->showWindowMenu(QRect(p,p), cc);
 }
 
 void Bridge::showWindowMenu(const QRect &p)
@@ -207,89 +219,118 @@ QRect Bridge::transparentRect() const
     return c->transparentRect().translated(-c->decorationRect().topLeft());
 }
 
-bool Bridge::isClientGroupActive()
-{
-    if (c->clientGroup())
-        return c->clientGroup()->containsActiveClient();
-    return isActive();
-}
+//BEGIN TABBING
 
-QList< ClientGroupItem > Bridge::clientGroupItems() const
+Client *Bridge::clientForId(long id) const
 {
-    if (c->clientGroup())
-        return c->clientGroup()->items();
-    QList< ClientGroupItem > items;
-    QIcon icon(c->icon());
-    icon.addPixmap(c->miniIcon());
-    items.append(ClientGroupItem(c->caption(), icon));
-    return items;
-}
-
-long Bridge::itemId(int index)
-{
-    if (!c->clientGroup())
+    Client* client = reinterpret_cast<Client*>(id);
+    if (!c->workspace()->hasClient(client)) {
+        kWarning(1212) << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******" << id;
         return 0;
-    const ClientList list = c->clientGroup()->clients();
-    return reinterpret_cast<long>(list.at(index));
+    }
+    return client;
 }
 
-int Bridge::visibleClientGroupItem()
+int Bridge::tabCount() const
 {
-    if (c->clientGroup())
-        return c->clientGroup()->indexOfVisibleClient();
+    if (c->tabGroup())
+        return c->tabGroup()->count();
+    return 1;
+}
+
+long Bridge::tabId(int idx) const
+{
+    if (c->tabGroup())
+        return tabIdOf(c->tabGroup()->clients().at(idx));
+    return tabIdOf(c);
+}
+
+QIcon Bridge::icon(int idx) const
+{
+    if (c->tabGroup()) {
+        Client *tabC = c->tabGroup()->clients().at(idx);
+        QIcon icon(tabC->icon());
+        icon.addPixmap(tabC->miniIcon());
+        return icon;
+    }
+    return icon();
+}
+
+QString Bridge::caption(int idx) const
+{
+    if (c->tabGroup())
+        return c->tabGroup()->clients().at(idx)->caption();
+    return c->caption();
+}
+
+long Bridge::currentTabId() const
+{
+    if (c->tabGroup())
+        return tabIdOf(c->tabGroup()->current());
     return 0;
 }
 
-void Bridge::setVisibleClientGroupItem(int index)
+void Bridge::setCurrentTab(long id)
 {
-    if (c->clientGroup())
-        c->clientGroup()->setVisible(index);
+    if (c->tabGroup())
+        c->tabGroup()->setCurrent(clientForId(id));
 }
 
-void Bridge::moveItemInClientGroup(int index, int before)
+void Bridge::tab_A_before_B(long A, long B)
 {
-    if (c->clientGroup())
-        c->clientGroup()->move(index, before);
-}
-
-void Bridge::moveItemToClientGroup(long itemId, int before)
-{
-    Client* item = reinterpret_cast<Client*>(itemId);
-    if (!c->workspace()->hasClient(item)) {
-        kWarning(1212) << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******";
+    if (!B) {
+        if (c->tabGroup()) {
+            if (Client *a = clientForId(A))
+                a->untab();
+        }
         return;
     }
-    if (item->clientGroup())
-        c->workspace()->moveItemToClientGroup(item->clientGroup(), item->clientGroup()->indexOfClient(item),
-                                              c->clientGroup(), before);
+
+    if (Client *a = clientForId(A))
+    if (Client *b = clientForId(B))
+        a->tabBefore(b, true);
 }
 
-void Bridge::removeFromClientGroup(int index, const QRect& newGeom)
+void Bridge::tab_A_behind_B(long A, long B)
 {
-    if (c->clientGroup())
-        c->clientGroup()->remove(index, newGeom);
-}
-
-void Bridge::closeClientGroupItem(int index)
-{
-    if (!c->clientGroup())
+    if (!B) {
+        if (c->tabGroup()) {
+            if (Client *a = clientForId(A))
+            a->untab();
+        }
         return;
-    const ClientList list = c->clientGroup()->clients();
-    if (index >= 0 || index <= list.count())
-        list.at(index)->closeWindow();
+    }
+
+    if (Client *a = clientForId(A))
+    if (Client *b = clientForId(B))
+        a->tabBehind(b, true);
 }
 
-void Bridge::closeAllInClientGroup()
+
+void Bridge::untab(long id, const QRect& newGeom)
 {
-    if (c->clientGroup())
-        c->clientGroup()->closeAll();
+    if (c->tabGroup())
+    if (Client* client = clientForId(id))
+    if (client->untab(newGeom)) {
+        if (options->focusPolicyIsReasonable())
+            c->workspace()->takeActivity(client, ActivityFocus | ActivityRaise, true);
+        c->workspace()->raiseClient(client);
+    }
 }
 
-void Bridge::displayClientMenu(int index, const QPoint& pos)
+void Bridge::closeTab(long id)
 {
-    if (c->clientGroup())
-        c->clientGroup()->displayClientMenu(index, pos);
+    if (Client* client = clientForId(id))
+        client->closeWindow();
 }
+
+void Bridge::closeTabGroup()
+{
+    if (c->tabGroup())
+        c->tabGroup()->closeAll();
+}
+
+//END TABBING
 
 KDecoration::WindowOperation Bridge::buttonToWindowOperation(Qt::MouseButtons button)
 {

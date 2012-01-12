@@ -131,10 +131,6 @@ SLOTWRAPPER(slotWindowToDesktopLeft)
 SLOTWRAPPER(slotWindowToDesktopUp)
 SLOTWRAPPER(slotWindowToDesktopDown)
 
-SLOTWRAPPER(slotSwitchToTabLeft)
-SLOTWRAPPER(slotSwitchToTabRight)
-SLOTWRAPPER(slotRemoveFromGroup)
-
 #undef SLOTWRAPPER
 
 void WorkspaceWrapper::setActiveClient(KWin::Client* client)

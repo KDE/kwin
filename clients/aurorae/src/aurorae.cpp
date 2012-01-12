@@ -56,7 +56,7 @@ void AuroraeFactory::init()
     m_theme->loadTheme(themeName, config);
     m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
-    m_theme->setTabDragMimeType(clientGroupItemDragMimeType());
+    m_theme->setTabDragMimeType(tabDragMimeType());
     // setup the QML engine
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         m_engine->addImportPath(importPath);
@@ -117,7 +117,7 @@ bool AuroraeFactory::supports(Ability ability) const
     case AbilityButtonHelp:
     case AbilityProvidesShadow:
         return true; // TODO: correct value from theme
-    case AbilityClientGrouping:
+    case AbilityTabbing:
         return false;
     case AbilityUsesBlurBehind:
         return true;

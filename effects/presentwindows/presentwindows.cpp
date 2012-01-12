@@ -277,7 +277,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);   // Display always
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         if (winData->visible)
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_CLIENT_GROUP);
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_TAB_GROUP);
 
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
@@ -1711,7 +1711,7 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
             DataHash::iterator winData = m_windowData.find(w);
             if (winData != m_windowData.end())
                 winData->visible = (w->isOnDesktop(desktop) || w->isOnAllDesktops()) &&
-                                    !w->isMinimized() && (w->visibleInClientGroup() || winData->visible);
+                                    !w->isMinimized() && (w->isCurrentTab() || winData->visible);
         }
         delete m_closeView;
         m_closeView = 0;
@@ -1766,7 +1766,7 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
         return false;
     if (!w->acceptsFocus())
         return false;
-    if (!w->visibleInClientGroup())
+    if (!w->isCurrentTab())
         return false;
     if (w->isSkipSwitcher())
         return false;

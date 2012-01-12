@@ -20,24 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "meta.h"
 #include "client.h"
-#include "clientgroup.h"
+#include "tabgroup.h"
 
 #include <QtScript/QScriptEngine>
 
 using namespace KWin::MetaScripting;
-
-// Meta for KWin::ClientGroup* objects
-QScriptValue ClientGroup::toScriptValue(QScriptEngine* eng, const KClientGroupRef& cGrp)
-{
-    return eng->newQObject(cGrp, QScriptEngine::QtOwnership,
-                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
-}
-
-void ClientGroup::fromScriptValue(const QScriptValue& obj, KWin::ClientGroup*& cGrp)
-{
-    cGrp = qobject_cast<KWin::ClientGroup*>(obj.toQObject());
-}
-// End of metas for KWin::ClientGroup* objects
 
 // Meta for QPoint object
 QScriptValue Point::toScriptValue(QScriptEngine* eng, const QPoint& point)
@@ -128,10 +115,8 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
     qScriptRegisterMetaType<QSize>(eng, Size::toScriptValue, Size::fromScriptValue);
     qScriptRegisterMetaType<QRect>(eng, Rect::toScriptValue, Rect::fromScriptValue);
     qScriptRegisterMetaType<KClientRef>(eng, Client::toScriptValue, Client::fromScriptValue);
-    qScriptRegisterMetaType<KClientGroupRef>(eng, ClientGroup::toScriptValue, ClientGroup::fromScriptValue);
 
     qScriptRegisterSequenceMetaType<QStringList>(eng);
-    qScriptRegisterSequenceMetaType< QList<KWin::ClientGroup*> >(eng);
     qScriptRegisterSequenceMetaType< QList<KWin::Client*> >(eng);
 }
 
