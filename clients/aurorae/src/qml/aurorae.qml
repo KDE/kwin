@@ -108,15 +108,15 @@ Decoration {
             Transition {
                 to: "normal"
                 ParallelAnimation {
-                    NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeft + root.paddingLeft; duration: auroraeTheme.animationTime }
-                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: leftButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeft + root.paddingLeft; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: leftButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTop + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
                 }
             },
             Transition {
                 to: "maximized"
                 ParallelAnimation {
-                    NumberAnimation { target: rightButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeftMaximized + root.paddingLeft; duration: auroraeTheme.animationTime }
-                    NumberAnimation { target: rightButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: leftButtonGroup; property: "anchors.leftMargin"; to: auroraeTheme.titleEdgeLeftMaximized + root.paddingLeft; duration: auroraeTheme.animationTime }
+                    NumberAnimation { target: leftButtonGroup; property: "anchors.topMargin"; to: root.paddingTop + auroraeTheme.titleEdgeTopMaximized + auroraeTheme.buttonMarginTop; duration: auroraeTheme.animationTime }
                 }
             }
         ]
