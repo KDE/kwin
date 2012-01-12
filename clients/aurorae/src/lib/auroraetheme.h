@@ -27,9 +27,6 @@
 #include <QtGui/QGraphicsItem>
 #include <kdecoration.h>
 
-namespace Plasma {
-class FrameSvg;
-}
 class KConfig;
 
 namespace Aurorae {
@@ -192,14 +189,6 @@ public:
     void setCompositingActive(bool active);
     bool isCompositingActive() const;
 
-    /**
-    * @returns The FrameSvg containing the decoration.
-    */
-    Plasma::FrameSvg *decoration() const;
-    /**
-    * @returns The FrameSvg for the specified button or NULL if there is no such button.
-    */
-    Plasma::FrameSvg *button(AuroraeButtonType button) const;
     /**
     * @returns true if the theme contains a FrameSvg for specified button.
     */

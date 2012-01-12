@@ -28,7 +28,6 @@
 #include <KDE/KDebug>
 #include <KDE/KStandardDirs>
 #include <KDE/KGlobal>
-#include <KDE/Plasma/FrameSvg>
 
 namespace Aurorae {
 
@@ -44,8 +43,6 @@ public:
     void reset();
     QString themeName;
     Aurorae::ThemeConfig themeConfig;
-    Plasma::FrameSvg *decoration;
-    QHash< AuroraeButtonType, Plasma::FrameSvg* > buttons;
     QHash< AuroraeButtonType, QString > pathes;
     bool activeCompositing;
     KDecorationDefines::BorderSize borderSize;
@@ -56,8 +53,7 @@ public:
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
-    : decoration(0)
-    , activeCompositing(true)
+    :activeCompositing(true)
     , borderSize(KDecoration::BorderNormal)
     , showTooltips(true)
     , buttonSize(KDecoration::BorderNormal)
@@ -66,12 +62,6 @@ AuroraeThemePrivate::AuroraeThemePrivate()
 
 AuroraeThemePrivate::~AuroraeThemePrivate()
 {
-    while (!buttons.isEmpty()) {
-        Plasma::FrameSvg *button = buttons.begin().value();
-        delete button;
-        button = 0;
-        buttons.remove(buttons.begin().key());
-    }
 }
 
 void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
@@ -84,11 +74,6 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
         path = KGlobal::dirs()->findResource("data", file);
     }
     if (!path.isEmpty()) {
-        Plasma::FrameSvg *frame = new Plasma::FrameSvg();
-        frame->setImagePath(path);
-        frame->setCacheAllRenderedFrames(true);
-        frame->setEnabledBorders(Plasma::FrameSvg::NoBorder);
-        buttons[ type ] = frame;
         pathes[ type ] = path;
     } else {
         kDebug(1216) << "No button for: " << AuroraeTheme::mapButtonToName(type);
@@ -97,16 +82,6 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
 
 void AuroraeThemePrivate::reset()
 {
-    decoration->clearCache();
-    delete decoration;
-    decoration = 0;
-    while (!buttons.isEmpty()) {
-        Plasma::FrameSvg *button = buttons.begin().value();
-        button->clearCache();
-        delete button;
-        button = 0;
-        buttons.remove(buttons.begin().key());
-    }
 }
 
 /************************************************
@@ -157,10 +132,6 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
         return;
     }
     d->decorationPath = path;
-    d->decoration = new Plasma::FrameSvg(this);
-    d->decoration->setImagePath(path);
-    d->decoration->setCacheAllRenderedFrames(true);
-    d->decoration->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
     // load the buttons
     d->initButtonFrame(MinimizeButton);
@@ -184,23 +155,9 @@ void AuroraeTheme::readThemeConfig(const KConfig &config)
     emit themeChanged();
 }
 
-Plasma::FrameSvg *AuroraeTheme::button(AuroraeButtonType b) const
-{
-    if (hasButton(b)) {
-        return d->buttons[ b ];
-    } else {
-        return NULL;
-    }
-}
-
-Plasma::FrameSvg *AuroraeTheme::decoration() const
-{
-    return d->decoration;
-}
-
 bool AuroraeTheme::hasButton(AuroraeButtonType button) const
 {
-    return d->buttons.contains(button);
+    return d->pathes.contains(button);
 }
 
 QLatin1String AuroraeTheme::mapButtonToName(AuroraeButtonType type)
