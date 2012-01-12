@@ -128,6 +128,16 @@ bool AuroraeTheme::isValid() const
     return !d->themeName.isNull();
 }
 
+void AuroraeTheme::loadTheme(const QString &name)
+{
+    KConfig conf("auroraerc");
+    KConfig config("aurorae/themes/" + name + '/' + name + "rc", KConfig::FullConfig, "data");
+    KConfigGroup themeGroup(&conf, name);
+    loadTheme(name, config);
+    setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
+    setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+}
+
 void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
 {
     if (!d->themeName.isNull()) {

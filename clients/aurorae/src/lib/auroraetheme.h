@@ -232,6 +232,7 @@ public:
 
 public Q_SLOTS:
     void setShowTooltips(bool show);
+    void loadTheme(const QString &name);
 
 Q_SIGNALS:
     void themeChanged();
