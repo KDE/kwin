@@ -163,12 +163,8 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
     cg.writeEntry(QString("windowType") + n, windowTypeToTxt(c->windowType()));
     cg.writeEntry(QString("shortcut") + n, c->shortcut().toString());
     cg.writeEntry(QString("stackingOrder") + n, unconstrained_stacking_order.indexOf(c));
-    int group = 0;
-    if (c->clientGroup())
-        group = c->clientGroup()->clients().count() > 1 ?
-                // KConfig doesn't support long so we need to live with less precision on 64-bit systems
-                static_cast<int>(reinterpret_cast<long>(c->clientGroup())) : 0;
-    cg.writeEntry(QString("clientGroup") + n, group);
+    // KConfig doesn't support long so we need to live with less precision on 64-bit systems
+    cg.writeEntry(QString("tabGroup") + n, static_cast<int>(reinterpret_cast<long>(c->tabGroup())));
     cg.writeEntry(QString("activities") + n, c->activities());
 }
 
@@ -322,8 +318,8 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
         info->shortcut = cg.readEntry(QString("shortcut") + n, QString());
         info->active = (active_client == i);
         info->stackingOrder = cg.readEntry(QString("stackingOrder") + n, -1);
-        info->clientGroup = cg.readEntry(QString("clientGroup") + n, 0);
-        info->clientGroupClient = NULL;
+        info->tabGroup = cg.readEntry(QString("tabGroup") + n, 0);
+        info->tabGroupClient = NULL;
         info->activities = cg.readEntry(QString("activities") + n, QStringList());
     }
 }
@@ -414,11 +410,13 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
         }
     }
 
-    // Set clientGroupClient for other clients in the same group
-    if (realInfo && realInfo->clientGroup)
-        foreach (SessionInfo * info, session)
-        if (!info->clientGroupClient && info->clientGroup == realInfo->clientGroup)
-            info->clientGroupClient = c;
+    // Set tabGroupClient for other clients in the same group
+    if (realInfo && realInfo->tabGroup) {
+        foreach (SessionInfo * info, session) {
+            if (!info->tabGroupClient && info->tabGroup == realInfo->tabGroup)
+                info->tabGroupClient = c;
+        }
+    }
 
     return realInfo;
 }

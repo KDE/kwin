@@ -416,7 +416,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 if ((((*l)->isOnDesktop(c->desktop()) && !(*l)->isMinimized())
                         || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(Workspace::currentDesktop())
                             && !(*l)->isMinimized()))
-                        && (!(*l)->clientGroup() || (*l) == (*l)->clientGroup()->visible())
+                        && (!(*l)->tabGroup() || (*l) == (*l)->tabGroup()->current())
                         && (*l) != c) {
                     lx = (*l)->x();
                     ly = (*l)->y();
@@ -1257,8 +1257,8 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSize min_size = clientGroup() ? clientGroup()->minSize() : minSize();
-    QSize max_size = clientGroup() ? clientGroup()->maxSize() : maxSize();
+    QSize min_size = tabGroup() ? tabGroup()->minSize() : minSize();
+    QSize max_size = tabGroup() ? tabGroup()->maxSize() : maxSize();
     if (decoration != NULL) {
         QSize decominsize = decoration->minimumSize();
         QSize border_size(border_left + border_right, border_top + border_bottom);
@@ -1458,8 +1458,8 @@ void Client::getWmNormalHints()
         xSizeHint.win_gravity = NorthWestGravity;
 
     // Update min/max size of this group
-    if (clientGroup())
-        clientGroup()->updateMinMaxSize();
+    if (tabGroup())
+        tabGroup()->updateMinMaxSize();
 
     if (isManaged()) {
         // update to match restrictions
@@ -1803,8 +1803,8 @@ bool Client::isResizable() const
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
 
-    QSize min = clientGroup() ? clientGroup()->minSize() : minSize();
-    QSize max = clientGroup() ? clientGroup()->maxSize() : maxSize();
+    QSize min = tabGroup() ? tabGroup()->minSize() : minSize();
+    QSize max = tabGroup() ? tabGroup()->maxSize() : maxSize();
     return min.width() < max.width() || min.height() < max.height();
 }
 
@@ -1919,8 +1919,8 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
-    if (clientGroup())
-        clientGroup()->updateStates(this);
+    if (tabGroup())
+        tabGroup()->updateStates(this);
 
     // TODO: this signal is emitted too often
     emit geometryChanged();
@@ -1986,8 +1986,8 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
-    if (clientGroup())
-        clientGroup()->updateStates(this);
+    if (tabGroup())
+        tabGroup()->updateStates(this);
     // TODO: this signal is emitted too often
     emit geometryChanged();
 }
@@ -2033,8 +2033,8 @@ void Client::move(int x, int y, ForceGeometry_t force)
     deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
-    if (clientGroup())
-        clientGroup()->updateStates(this);
+    if (tabGroup())
+        tabGroup()->updateStates(this);
 }
 
 void Client::blockGeometryUpdates(bool block)
@@ -2075,8 +2075,8 @@ void Client::setMaximize(bool vertically, bool horizontally)
     emit clientMaximizedStateChanged(this, vertically, horizontally);
 
     // Update states of all other windows in this group
-    if (clientGroup())
-        clientGroup()->updateStates(this);
+    if (tabGroup())
+        tabGroup()->updateStates(this);
 }
 
 static bool changeMaximizeRecursion = false;

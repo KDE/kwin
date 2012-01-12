@@ -412,62 +412,69 @@ void KDecorationUnstable::padding(int &left, int &right, int &top, int &bottom) 
     left = right = top = bottom = 0;
 }
 
-// Window tabbing
+//BEGIN Window tabbing
 
-bool KDecorationUnstable::isClientGroupActive()
+int KDecorationUnstable::tabCount() const
 {
-    return static_cast< KDecorationBridgeUnstable* >(bridge_)->isClientGroupActive();
+    return static_cast< KDecorationBridgeUnstable* >(bridge_)->tabCount();
 }
 
-QList< ClientGroupItem > KDecorationUnstable::clientGroupItems() const
+long KDecorationUnstable::tabId(int idx) const
 {
-    return static_cast< KDecorationBridgeUnstable* >(bridge_)->clientGroupItems();
+    return static_cast< KDecorationBridgeUnstable* >(bridge_)->tabId(idx);
 }
 
-long KDecorationUnstable::itemId(int index)
+QString KDecorationUnstable::caption(int idx) const
 {
-    return static_cast< KDecorationBridgeUnstable* >(bridge_)->itemId(index);
+    return static_cast< KDecorationBridgeUnstable* >(bridge_)->caption(idx);
 }
 
-int KDecorationUnstable::visibleClientGroupItem()
+QIcon KDecorationUnstable::icon(int idx) const
 {
-    return static_cast< KDecorationBridgeUnstable* >(bridge_)->visibleClientGroupItem();
+    return static_cast< KDecorationBridgeUnstable* >(bridge_)->icon(idx);
 }
 
-void KDecorationUnstable::setVisibleClientGroupItem(int index)
+long KDecorationUnstable::currentTabId() const
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->setVisibleClientGroupItem(index);
+    return static_cast< KDecorationBridgeUnstable* >(bridge_)->currentTabId();
 }
 
-void KDecorationUnstable::moveItemInClientGroup(int index, int before)
+void KDecorationUnstable::setCurrentTab(long id)
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->moveItemInClientGroup(index, before);
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->setCurrentTab(id);
 }
 
-void KDecorationUnstable::moveItemToClientGroup(long itemId, int before)
+void KDecorationUnstable::tab_A_before_B(long A, long B)
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->moveItemToClientGroup(itemId, before);
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->tab_A_before_B(A, B);
 }
 
-void KDecorationUnstable::removeFromClientGroup(int index, const QRect& newGeom)
+void KDecorationUnstable::tab_A_behind_B(long A, long B)
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->removeFromClientGroup(index, newGeom);
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->tab_A_behind_B(A, B);
 }
 
-void KDecorationUnstable::closeClientGroupItem(int index)
+void KDecorationUnstable::untab(long id, const QRect& newGeom)
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->closeClientGroupItem(index);
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->untab(id, newGeom);
 }
 
-void KDecorationUnstable::closeAllInClientGroup()
+void KDecorationUnstable::closeTab(long id)
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->closeAllInClientGroup();
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->closeTab(id);
 }
 
-void KDecorationUnstable::displayClientMenu(int index, const QPoint& pos)
+void KDecorationUnstable::closeTabGroup()
 {
-    static_cast< KDecorationBridgeUnstable* >(bridge_)->displayClientMenu(index, pos);
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->closeTabGroup();
 }
+
+void KDecorationUnstable::showWindowMenu(const QPoint &pos, long id)
+{
+    static_cast< KDecorationBridgeUnstable* >(bridge_)->showWindowMenu(pos, id);
+}
+
+//END tabbing
 
 KDecoration::WindowOperation KDecorationUnstable::buttonToWindowOperation(Qt::MouseButtons button)
 {
@@ -479,7 +486,7 @@ QRegion KDecorationUnstable::region(KDecorationDefines::Region)
     return QRegion();
 }
 
-QString KDecorationDefines::clientGroupItemDragMimeType()
+QString KDecorationDefines::tabDragMimeType()
 {
     return "text/ClientGroupItem";
 }

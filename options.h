@@ -197,14 +197,14 @@ public:
         MouseNextDesktop, MousePreviousDesktop,
         MouseAbove, MouseBelow,
         MouseOpacityMore, MouseOpacityLess,
-        MouseClose, MouseLeftGroupWindow, MouseRightGroupWindow, MouseClientGroupDrag,
+        MouseClose, MousePreviousTab, MouseNextTab, MouseDragTab,
         MouseNothing
     };
 
     enum MouseWheelCommand {
         MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
         MouseWheelAboveBelow, MouseWheelPreviousNextDesktop,
-        MouseWheelChangeOpacity, MouseWheelChangeGroupWindow,
+        MouseWheelChangeOpacity, MouseWheelChangeCurrentTab,
         MouseWheelNothing
     };
 

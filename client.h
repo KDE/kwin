@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kdecoration.h"
 #include "rules.h"
 #include "toplevel.h"
-#include "clientgroup.h"
+#include "tabgroup.h"
 
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
@@ -221,12 +221,12 @@ class Client
     /**
      * The "Window Tabs" Group this Client belongs to.
      **/
-    Q_PROPERTY(KWin::ClientGroup* clientGroup READ clientGroup NOTIFY clientGroupChanged)
+    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged)
     /**
      * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
      * For change connect to the visibleChanged signal on the Client's Group.
      **/
-    Q_PROPERTY(bool visibleInClientGroup READ isVisibleInClientGroup)
+    Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
     /**
      * Minimum size as specified in WM_NORMAL_HINTS
      **/
@@ -500,8 +500,14 @@ public:
     bool hasStrut() const;
 
     // Tabbing functions
-    ClientGroup* clientGroup() const; // Returns a pointer to client_group
-    void setClientGroup(ClientGroup* group);
+    TabGroup* tabGroup() const; // Returns a pointer to client_group
+    Q_INVOKABLE inline bool tabBefore(Client *other, bool activate) { return tabTo(other, false, activate); }
+    Q_INVOKABLE inline bool tabBehind(Client *other, bool activate) { return tabTo(other, true, activate); }
+    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect());
+    /**
+     * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
+     */
+    void setTabGroup(TabGroup* group);
     /*
     *   If shown is true the client is mapped and raised, if false
     *   the client is unmapped and hidden, this function is called
@@ -515,7 +521,7 @@ public:
     *   client, this function stops it.
     */
     void dontMoveResize();
-    bool isVisibleInClientGroup() const;
+    bool isCurrentTab() const;
 
     /**
      * Whether or not the window has a strut that expands through the invisible area of
@@ -628,6 +634,7 @@ private:
 
     bool processDecorationButtonPress(int button, int state, int x, int y, int x_root, int y_root,
                                       bool ignoreMenu = false);
+    Client* findAutogroupCandidate() const;
 
 protected:
     virtual void debug(QDebug& stream) const;
@@ -670,10 +677,10 @@ signals:
     void iconChanged();
     void skipSwitcherChanged();
     /**
-     * Emitted whenever the Client's ClientGroup changed. That is whenever the Client is moved to
+     * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
      * another group, but not when a Client gets added or removed to the Client's ClientGroup.
      **/
-    void clientGroupChanged();
+    void tabGroupChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
@@ -743,6 +750,8 @@ private:
     void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
 
     void updateInputWindow();
+
+    bool tabTo(Client *other, bool behind, bool activate);
 
     Window client;
     Window wrapper;
@@ -845,7 +854,7 @@ private:
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;
     Window window_group;
-    ClientGroup* client_group;
+    TabGroup* tab_group;
     Layer in_layer;
     QTimer* ping_timer;
     QProcess* process_killer;
@@ -994,9 +1003,9 @@ inline Group* Client::group()
     return in_group;
 }
 
-inline ClientGroup* Client::clientGroup() const
+inline TabGroup* Client::tabGroup() const
 {
-    return client_group;
+    return tab_group;
 }
 
 inline bool Client::isMinimized() const
@@ -1012,7 +1021,7 @@ inline bool Client::isActive() const
 inline bool Client::isShown(bool shaded_is_shown) const
 {
     return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden &&
-           (clientGroup() == NULL || clientGroup()->visible() == this);
+           (!tabGroup() || tabGroup()->current() == this);
 }
 
 inline bool Client::isHiddenInternal() const

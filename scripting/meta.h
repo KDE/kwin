@@ -31,26 +31,15 @@ class QSize;
 
 namespace KWin {
 class Client;
-class ClientGroup;
 }
 
 typedef KWin::Client* KClientRef;
-typedef KWin::ClientGroup* KClientGroupRef;
 
 namespace KWin
 {
 namespace MetaScripting
 {
 
-/**
-  * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
-  * Conversion functions for KWin::ClientGroup*
-  */
-namespace ClientGroup
-{
-QScriptValue toScriptValue(QScriptEngine*, const KClientGroupRef&);
-void fromScriptValue(const QScriptValue&, KClientGroupRef&);
-}
 
 /**
   * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.

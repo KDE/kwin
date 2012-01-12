@@ -89,7 +89,7 @@ namespace Oxygen
 
         //! true when decoration is forced active
         bool isForcedActive( void ) const
-        { return _forceActive && clientGroupItems().count() > 1; }
+        { return _forceActive && tabCount() > 1; }
 
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
@@ -116,7 +116,7 @@ namespace Oxygen
             return
                 configuration().hideTitleBar() &&
                 !isShade() &&
-                clientGroupItems().count() == 1;
+                tabCount() == 1;
         }
 
         //@}
@@ -333,7 +333,7 @@ namespace Oxygen
         virtual bool closeItem( const Button* );
 
         //! index of item matching point
-        int itemClicked( const QPoint& position, bool between = false ) const
+        int tabIndexAt( const QPoint& position, bool between = false ) const
         { return _itemData.itemAt( position , between ); }
 
         //! return pixmap corresponding to a given tab, for dragging
@@ -358,7 +358,7 @@ namespace Oxygen
         bool hasTitleOutline( void ) const
         {
             return
-                clientGroupItems().count() >= 2 ||
+                tabCount() >= 2 ||
                 _itemData.isAnimated() ||
                 ( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() );
         }

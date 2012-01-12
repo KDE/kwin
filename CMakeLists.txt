@@ -78,7 +78,7 @@ add_subdirectory( effects )
 set(kwin_KDEINIT_SRCS
    workspace.cpp 
    client.cpp 
-   clientgroup.cpp
+   tabgroup.cpp
    placement.cpp 
    atoms.cpp 
    utils.cpp 

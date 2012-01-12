@@ -1207,7 +1207,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
     if (button == Button1
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
             && com != Options::MouseMinimize  // mouse release event
-            && com != Options::MouseClientGroupDrag) {
+            && com != Options::MouseDragTab) {
         mode = mousePosition(QPoint(x, y));
         buttonDown = true;
         moveOffset = QPoint(x - padding_left, y - padding_top);
@@ -1227,7 +1227,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
                com == Options::MouseActivate ||
                com == Options::MouseActivateRaiseAndPassClick ||
                com == Options::MouseActivateAndPassClick ||
-               com == Options::MouseClientGroupDrag ||
+               com == Options::MouseDragTab ||
                com == Options::MouseNothing);
 }
 
@@ -1276,7 +1276,7 @@ bool Client::buttonReleaseEvent(Window w, int /*button*/, int state, int x, int 
             // mouse position is still relative to old Client position, adjust it
             QPoint mousepos(x_root - x + padding_left, y_root - y + padding_top);
             mode = mousePosition(mousepos);
-        } else if (workspace()->decorationSupportsClientGrouping())
+        } else if (workspace()->decorationSupportsTabbing())
             return false;
         updateCursor();
     }

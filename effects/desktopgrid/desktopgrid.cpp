@@ -383,7 +383,7 @@ void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
     if (!activated)
         return;
     if (isUsingPresentWindows()) {
-        if (w->isDesktop() || w->isDock() || !w->visibleInClientGroup())
+        if (w->isDesktop() || w->isDock() || !w->isCurrentTab())
             return; // don't add
         if (w->isOnAllDesktops()) {
             for (int i = 0; i < effects->numberOfDesktops(); i++) {
@@ -1103,7 +1103,7 @@ void DesktopGridEffect::setup()
                 WindowMotionManager manager;
                 foreach (EffectWindow * w, effects->stackingOrder()) {
                     if (w->isOnDesktop(i) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                            w->visibleInClientGroup() && !w->isSkipSwitcher() && w->isOnCurrentActivity()) {
+                            w->isCurrentTab() && !w->isSkipSwitcher() && w->isOnCurrentActivity()) {
                         manager.manage(w);
                     }
                 }
@@ -1319,7 +1319,7 @@ void DesktopGridEffect::desktopsAdded(int old)
                 WindowMotionManager manager;
                 foreach (EffectWindow * w, effects->stackingOrder()) {
                     if (w->isOnDesktop(i) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                            w->visibleInClientGroup()) {
+                            w->isCurrentTab()) {
                         manager.manage(w);
                     }
                 }
@@ -1358,7 +1358,7 @@ void DesktopGridEffect::desktopsRemoved(int old)
             WindowMotionManager& manager = m_managers[(desktop-1)*(effects->numScreens())+j ];
             foreach (EffectWindow * w, effects->stackingOrder()) {
                 if (!manager.isManaging(w) && w->isOnDesktop(desktop) && w->screen() == j &&
-                        !w->isDesktop() && !w->isDock() && w->visibleInClientGroup()) {
+                        !w->isDesktop() && !w->isDock() && w->isCurrentTab()) {
                     manager.manage(w);
                 }
             }
