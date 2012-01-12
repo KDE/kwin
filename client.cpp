@@ -1987,15 +1987,15 @@ void Client::getMotifHints()
 {
     bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
     Motif::readFlags(client, mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose);
-    if (mgot_noborder) {
+    if (mgot_noborder && motif_noborder != mnoborder) {
         motif_noborder = mnoborder;
         // If we just got a hint telling us to hide decorations, we do so.
         if (motif_noborder)
-            noborder = true;
+            noborder = rules()->checkNoBorder(true);
         // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
         // instruct us to hide decorations in some other way, though.
-        else if (!motif_noborder && !app_noborder)
-            noborder = false;
+        else if (!app_noborder)
+            noborder = rules()->checkNoBorder(false);
     }
     if (!hasNETSupport()) {
         // NETWM apps should set type and size constraints
