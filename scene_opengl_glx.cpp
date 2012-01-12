@@ -465,7 +465,9 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
     lastRenderTime = renderTimer.elapsed();
-    flushBuffer(mask, damage);
+    if (!damage.isEmpty()) {
+        flushBuffer(mask, damage);
+    }
     // do cleanup
     stacking_order.clear();
     checkGLError("PostPaint");
