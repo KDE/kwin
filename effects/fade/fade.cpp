@@ -169,12 +169,14 @@ void FadeEffect::slotWindowAdded(EffectWindow* w)
 
 void FadeEffect::slotWindowClosed(EffectWindow* w)
 {
-    if (!fadeWindows || !isFadeWindow(w))
+    // In the cases, where we are still fading in or are not responsible, we do not fade out.
+    if (!fadeWindows || !isFadeWindow(w) || windows.contains(w)) {
         return;
-    if (!windows.contains(w))
-        windows[ w ].opacity = w->opacity();
-    if (windows[ w ].opacity == 1.0)
+    }
+    windows[ w ].opacity = w->opacity();
+    if (windows[ w ].opacity == 1.0) {
         windows[ w ].opacity -= 0.1 / fadeOutTime;
+    }
     windows[ w ].deleted = true;
     w->refWindow();
     w->addRepaintFull();
