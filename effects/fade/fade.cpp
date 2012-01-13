@@ -46,8 +46,6 @@ void FadeEffect::reconfigure(ReconfigureFlags)
     // Add all existing windows to the window list
     // TODO: Enabling desktop effects should trigger windowAdded() on all windows
     windows.clear();
-    if (!fadeWindows)
-        return;
 }
 
 void FadeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
