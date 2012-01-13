@@ -174,6 +174,15 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
         newWindowStack << (Window*)client->frameId();
     }
+
+    // when having hidden previews, stack hidden windows below everything else
+    // (as far as pure X stacking order is concerned), in order to avoid having
+    // these windows that should be unmapped to interfere with other windows
+    for (int i = stacking_order.size() - 1; i >= 0; i--) {
+        if (!stacking_order.at(i)->hiddenPreview())
+            continue;
+        newWindowStack << (Window*)stacking_order.at(i)->frameId();
+    }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
     assert(newWindowStack.at(0) == (Window*)supportWindow->winId());
