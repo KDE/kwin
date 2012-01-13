@@ -33,6 +33,8 @@ class KDecorationPreview;
 namespace KWin
 {
 
+class DecorationButtons;
+
 class DecorationModelData
 {
 public:
@@ -93,7 +95,7 @@ public:
     /**
     * Changes the button state and regenerates the preview.
     */
-    void changeButtons(bool custom, const QString& left, const QString& right);
+    void changeButtons(const DecorationButtons *buttons);
     /**
     * Changes the button state without regenerating the preview.
     */

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "buttonsconfigdialog.h"
+#include "kwindecoration.h"
 
 #include <QVBoxLayout>
 
@@ -33,12 +34,10 @@ KWinDecorationButtonsConfigForm::KWinDecorationButtonsConfigForm(QWidget* parent
     setupUi(this);
 }
 
-KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent, Qt::WFlags flags)
+KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(DecorationButtons const *buttons, bool showTooltips, QWidget* parent, Qt::WFlags flags)
     : KDialog(parent, flags)
-    , m_customPositions(customPositions)
     , m_showTooltip(showTooltips)
-    , m_buttonsLeft(buttonsLeft)
-    , m_buttonsRight(buttonsRight)
+    , m_buttons(buttons)
 {
     m_ui = new KWinDecorationButtonsConfigForm(this);
     setWindowTitle(i18n("Buttons"));
@@ -46,7 +45,7 @@ KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(bool custom
     enableButton(KDialog::Reset, false);
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(m_ui);
-    m_ui->buttonPositionWidget->setEnabled(customPositions);
+    m_ui->buttonPositionWidget->setEnabled(buttons->customPositions());
 
     QWidget* main = new QWidget(this);
     main->setLayout(layout);
@@ -101,10 +100,10 @@ void KWinDecorationButtonsConfigDialog::slotDefaultClicked()
 
 void KWinDecorationButtonsConfigDialog::slotResetClicked()
 {
-    m_ui->useCustomButtonPositionsCheckBox->setChecked(m_customPositions);
+    m_ui->useCustomButtonPositionsCheckBox->setChecked(m_buttons->customPositions());
     m_ui->showToolTipsCheckBox->setChecked(m_showTooltip);
-    m_ui->buttonPositionWidget->setButtonsLeft(m_buttonsLeft);
-    m_ui->buttonPositionWidget->setButtonsRight(m_buttonsRight);
+    m_ui->buttonPositionWidget->setButtonsLeft(m_buttons->leftButtons());
+    m_ui->buttonPositionWidget->setButtonsRight(m_buttons->rightButtons());
     changed();
     enableButton(KDialog::Reset, false);
 }

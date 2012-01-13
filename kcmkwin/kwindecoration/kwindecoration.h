@@ -52,6 +52,38 @@ public:
     explicit KWinDecorationForm(QWidget* parent);
 };
 
+class DecorationButtons : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool customButtonPositions READ customPositions WRITE setCustomPositions NOTIFY customPositionsChanged)
+    Q_PROPERTY(QString leftButtons READ leftButtons WRITE setLeftButtons NOTIFY leftButtonsChanged)
+    Q_PROPERTY(QString rightButtons READ rightButtons WRITE setRightButtons NOTIFY rightButtonsChanged)
+public:
+    explicit DecorationButtons(QObject *parent = 0);
+    virtual ~DecorationButtons();
+
+    bool customPositions() const;
+    const QString &leftButtons() const;
+    const QString &rightButtons() const;
+
+    void setCustomPositions(bool set);
+    void setLeftButtons(const QString &leftButtons);
+    void setRightButtons(const QString &rightButtons);
+
+public Q_SLOTS:
+    void resetToDefaults();
+
+Q_SIGNALS:
+    void customPositionsChanged();
+    void leftButtonsChanged();
+    void rightButtonsChanged();
+
+private:
+    bool m_customPositions;
+    QString m_leftButtons;
+    QString m_rightButtons;
+};
+
 class KWinDecorationModule : public KCModule, public KDecorationDefines
 {
     Q_OBJECT
@@ -88,13 +120,11 @@ private:
 
     KWinDecorationForm* m_ui;
     bool m_showTooltips;
-    bool m_customPositions;
-    QString m_leftButtons;
-    QString m_rightButtons;
 
     DecorationModel* m_model;
     QSortFilterProxyModel* m_proxyModel;
     bool m_configLoaded;
+    DecorationButtons *m_decorationButtons;
 };
 
 } //namespace

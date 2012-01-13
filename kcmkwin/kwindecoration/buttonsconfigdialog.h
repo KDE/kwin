@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class DecorationButtons;
+
 class KWinDecorationButtonsConfigForm : public QWidget, public Ui::KWinDecorationButtonsConfigForm
 {
     Q_OBJECT
@@ -40,7 +42,7 @@ class KWinDecorationButtonsConfigDialog : public KDialog
 {
     Q_OBJECT
 public:
-    KWinDecorationButtonsConfigDialog(bool customPositions, bool showTooltips, QString buttonsLeft, QString buttonsRight, QWidget* parent = 0, Qt::WFlags flags = 0);
+    KWinDecorationButtonsConfigDialog(DecorationButtons const *buttons, bool showTooltips, QWidget* parent = 0, Qt::WFlags flags = 0);
     ~KWinDecorationButtonsConfigDialog();
 
     bool customPositions() const;
@@ -55,10 +57,8 @@ private slots:
 
 private:
     KWinDecorationButtonsConfigForm* m_ui;
-    bool m_customPositions;
     bool m_showTooltip;
-    QString m_buttonsLeft;
-    QString m_buttonsRight;
+    DecorationButtons const *m_buttons;
 };
 
 } // namespace KWin

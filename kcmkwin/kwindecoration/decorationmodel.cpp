@@ -236,14 +236,14 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
 }
 
 
-void DecorationModel::changeButtons(bool custom, const QString& left, const QString& right)
+void DecorationModel::changeButtons(const KWin::DecorationButtons *buttons)
 {
-    bool regenerate = (custom != m_customButtons);
-    if (!regenerate && custom)
-        regenerate = (left != m_leftButtons) || (right != m_rightButtons);
-    m_customButtons = custom;
-    m_leftButtons = left;
-    m_rightButtons = right;
+    bool regenerate = (buttons->customPositions() != m_customButtons);
+    if (!regenerate && buttons->customPositions())
+        regenerate = (buttons->leftButtons() != m_leftButtons) || (buttons->rightButtons() != m_rightButtons);
+    m_customButtons = buttons->customPositions();
+    m_leftButtons = buttons->leftButtons();
+    m_rightButtons = buttons->rightButtons();
     if (regenerate)
         regeneratePreviews();
 }

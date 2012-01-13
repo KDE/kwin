@@ -96,7 +96,7 @@ Decoration {
     }
     AuroraeButtonGroup {
         id: leftButtonGroup
-        buttons: decoration.leftButtons
+        buttons: options.customButtonPositions ? options.leftButtons : auroraeTheme.defaultButtonsLeft
         width: childrenRect.width
         anchors {
             top: parent.top
@@ -123,7 +123,7 @@ Decoration {
     }
     AuroraeButtonGroup {
         id: rightButtonGroup
-        buttons: decoration.rightButtons
+        buttons: options.customButtonPositions ? options.rightButtons : auroraeTheme.defaultButtonsRight
         width: childrenRect.width
         anchors {
             top: parent.top

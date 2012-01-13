@@ -63,7 +63,7 @@ void AuroraeFactory::init()
     }
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
-
+    m_engine->rootContext()->setContextProperty("options", this);
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -82,6 +82,9 @@ AuroraeFactory *AuroraeFactory::instance()
 
 bool AuroraeFactory::reset(unsigned long changed)
 {
+    if (changed & SettingButtons) {
+        emit buttonsChanged();
+    }
     init();
     resetDecorations(changed);
     return false; // need hard reset
@@ -132,6 +135,21 @@ QDeclarativeItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *cl
     QDeclarativeContext *context = new QDeclarativeContext(m_engine->rootContext(), this);
     context->setContextProperty("decoration", client);
     return qobject_cast< QDeclarativeItem* >(m_component->create(context));
+}
+
+QString AuroraeFactory::rightButtons()
+{
+    return options()->titleButtonsRight();
+}
+
+QString AuroraeFactory::leftButtons()
+{
+    return options()->titleButtonsLeft();
+}
+
+bool AuroraeFactory::customButtonPositions()
+{
+    return options()->customButtonPositions();
 }
 
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
@@ -391,18 +409,6 @@ void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons but
     QApplication::sendEvent(widget(), event);
     delete event;
     event = 0;
-}
-
-QString AuroraeClient::rightButtons() const
-{
-    // TODO: make independent of Aurorae
-    return options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight();
-}
-
-QString AuroraeClient::leftButtons() const
-{
-    // TODO: make independent of Aurorae
-    return options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft();
 }
 
 void AuroraeClient::themeChanged()

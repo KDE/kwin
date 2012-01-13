@@ -107,6 +107,8 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(QColor inactiveTextColor READ inactiveTextColor NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment NOTIFY themeChanged)
+    Q_PROPERTY(QString defaultButtonsLeft READ defaultButtonsLeft NOTIFY themeChanged)
+    Q_PROPERTY(QString defaultButtonsRight READ defaultButtonsRight NOTIFY themeChanged)
 public:
     AuroraeTheme(QObject* parent = 0);
     virtual ~AuroraeTheme();

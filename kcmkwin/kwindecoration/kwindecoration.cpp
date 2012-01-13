@@ -70,10 +70,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     : KCModule(KWinDecoFactory::componentData(), parent)
     , kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_showTooltips(false)
-    , m_customPositions(false)
-    , m_leftButtons(QString())
-    , m_rightButtons(QString())
     , m_configLoaded(false)
+    , m_decorationButtons(new DecorationButtons(this))
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
@@ -95,6 +93,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
         m_ui->decorationList->engine()->addImportPath(importPath);
     }
     m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
+    m_ui->decorationList->rootContext()->setContextProperty("options", m_decorationButtons);
     m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml"));
     m_ui->decorationList->setSource(KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml"));
 
@@ -172,16 +171,16 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
 
     // Buttons tab
     // ============
-    m_customPositions = conf.readEntry("CustomButtonPositions", false);
+    m_decorationButtons->setCustomPositions(conf.readEntry("CustomButtonPositions", false));
     // Menu and onAllDesktops buttons are default on LHS
-    m_leftButtons = conf.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft());
+    m_decorationButtons->setLeftButtons(conf.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft()));
     // Help, Minimize, Maximize and Close are default on RHS
-    m_rightButtons = conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight());
+    m_decorationButtons->setRightButtons(conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight()));
     if (m_configLoaded)
-        m_model->changeButtons(m_customPositions, m_leftButtons, m_rightButtons);
+        m_model->changeButtons(m_decorationButtons);
     else {
         m_configLoaded = true;
-        m_model->setButtons(m_customPositions, m_leftButtons, m_rightButtons);
+        m_model->setButtons(m_decorationButtons->customPositions(), m_decorationButtons->leftButtons(), m_decorationButtons->rightButtons());
     }
 
     emit KCModule::changed(false);
@@ -196,12 +195,12 @@ void KWinDecorationModule::writeConfig(KConfigGroup & conf)
 
     // General settings
     conf.writeEntry("PluginLib", libName);
-    conf.writeEntry("CustomButtonPositions", m_customPositions);
+    conf.writeEntry("CustomButtonPositions", m_decorationButtons->customPositions());
     conf.writeEntry("ShowToolTips", m_showTooltips);
 
     // Button settings
-    conf.writeEntry("ButtonsOnLeft", m_leftButtons);
-    conf.writeEntry("ButtonsOnRight", m_rightButtons);
+    conf.writeEntry("ButtonsOnLeft", m_decorationButtons->leftButtons());
+    conf.writeEntry("ButtonsOnRight", m_decorationButtons->rightButtons());
     conf.writeEntry("BorderSize",
                     static_cast<int>(m_model->data(index, DecorationModel::BorderSizeRole).toInt()));
 
@@ -243,16 +242,14 @@ void KWinDecorationModule::save()
 void KWinDecorationModule::defaults()
 {
     // Set the KDE defaults
-    m_customPositions = false;
     m_showTooltips = true;
     const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfName(i18n("Oxygen")));
     if (index.isValid())
         m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
 
-    m_leftButtons = KDecorationOptions::defaultTitleButtonsLeft();
-    m_rightButtons = KDecorationOptions::defaultTitleButtonsRight();
+    m_decorationButtons->resetToDefaults();
 
-    m_model->changeButtons(m_customPositions, m_leftButtons, m_rightButtons);
+    m_model->changeButtons(m_decorationButtons);
 
     emit changed(true);
 }
@@ -271,13 +268,13 @@ QString KWinDecorationModule::quickHelp() const
 
 void KWinDecorationModule::slotConfigureButtons()
 {
-    QPointer< KWinDecorationButtonsConfigDialog > configDialog = new KWinDecorationButtonsConfigDialog(m_customPositions, m_showTooltips, m_leftButtons, m_rightButtons, this);
+    QPointer< KWinDecorationButtonsConfigDialog > configDialog = new KWinDecorationButtonsConfigDialog(m_decorationButtons, m_showTooltips, this);
     if (configDialog->exec() == KDialog::Accepted) {
-        m_customPositions = configDialog->customPositions();
+        m_decorationButtons->setCustomPositions(configDialog->customPositions());
         m_showTooltips = configDialog->showTooltips();
-        m_leftButtons = configDialog->buttonsLeft();
-        m_rightButtons = configDialog->buttonsRight();
-        m_model->changeButtons(m_customPositions, m_leftButtons, m_rightButtons);
+        m_decorationButtons->setLeftButtons(configDialog->buttonsLeft());
+        m_decorationButtons->setRightButtons(configDialog->buttonsRight());
+        m_model->changeButtons(m_decorationButtons);
         emit changed(true);
     }
 
@@ -345,6 +342,67 @@ void KWinDecorationModule::slotConfigureDecoration()
         QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
+}
+
+DecorationButtons::DecorationButtons(QObject *parent)
+    : QObject(parent)
+    , m_customPositions(false)
+    , m_leftButtons(KDecorationOptions::defaultTitleButtonsLeft())
+    , m_rightButtons(KDecorationOptions::defaultTitleButtonsRight())
+{
+}
+
+DecorationButtons::~DecorationButtons()
+{
+}
+
+bool DecorationButtons::customPositions() const
+{
+    return m_customPositions;
+}
+
+const QString &DecorationButtons::leftButtons() const
+{
+    return m_leftButtons;
+}
+
+const QString &DecorationButtons::rightButtons() const
+{
+    return m_rightButtons;
+}
+
+void DecorationButtons::setCustomPositions(bool set)
+{
+    if (m_customPositions == set) {
+        return;
+    }
+    m_customPositions = set;
+    emit customPositionsChanged();
+}
+
+void DecorationButtons::setLeftButtons(const QString &leftButtons)
+{
+    if (m_leftButtons == leftButtons) {
+        return;
+    }
+    m_leftButtons = leftButtons;
+    emit leftButtonsChanged();
+}
+
+void DecorationButtons::setRightButtons (const QString &rightButtons)
+{
+    if (m_rightButtons == rightButtons) {
+        return;
+    }
+    m_rightButtons = rightButtons;
+    emit rightButtonsChanged();
+}
+
+void DecorationButtons::resetToDefaults()
+{
+    setCustomPositions(false);
+    setLeftButtons(KDecorationOptions::defaultTitleButtonsLeft());
+    setRightButtons(KDecorationOptions::defaultTitleButtonsRight());
 }
 
 } // namespace KWin

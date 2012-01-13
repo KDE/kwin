@@ -37,6 +37,10 @@ class AuroraeClient;
 
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
+    Q_OBJECT
+    Q_PROPERTY(QString leftButtons READ leftButtons NOTIFY buttonsChanged)
+    Q_PROPERTY(QString rightButtons READ rightButtons NOTIFY buttonsChanged)
+    Q_PROPERTY(bool customButtonPositions READ customButtonPositions NOTIFY buttonsChanged)
 public:
     ~AuroraeFactory();
 
@@ -50,10 +54,16 @@ public:
         return m_theme;
     }
     QDeclarativeItem *createQmlDecoration(AuroraeClient *client);
+    QString leftButtons();
+    QString rightButtons();
+    bool customButtonPositions();
 
 private:
     AuroraeFactory();
     void init();
+
+Q_SIGNALS:
+    void buttonsChanged();
 
 private:
     static AuroraeFactory *s_instance;
@@ -91,8 +101,6 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
     // TODO: window tabs - they suck for dynamic features
-    Q_PROPERTY(QString leftButtons READ leftButtons CONSTANT)
-    Q_PROPERTY(QString rightButtons READ rightButtons CONSTANT)
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
@@ -110,8 +118,6 @@ public:
     // optional overrides
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
     virtual void reset(long unsigned int changed);
-    QString leftButtons() const;
-    QString rightButtons() const;
     bool isMaximized() const;
 
 Q_SIGNALS:
