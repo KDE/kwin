@@ -39,6 +39,7 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QGraphicsObject>
 // KDE
 #include <KAboutData>
 #include <KDialog>

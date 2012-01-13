@@ -40,13 +40,11 @@ public:
     AuroraeThemePrivate();
     ~AuroraeThemePrivate();
     void initButtonFrame(AuroraeButtonType type);
-    void reset();
     QString themeName;
     Aurorae::ThemeConfig themeConfig;
     QHash< AuroraeButtonType, QString > pathes;
     bool activeCompositing;
     KDecorationDefines::BorderSize borderSize;
-    bool showTooltips;
     KDecorationDefines::BorderSize buttonSize;
     QString dragMimeType;
     QString decorationPath;
@@ -55,7 +53,6 @@ public:
 AuroraeThemePrivate::AuroraeThemePrivate()
     :activeCompositing(true)
     , borderSize(KDecoration::BorderNormal)
-    , showTooltips(true)
     , buttonSize(KDecoration::BorderNormal)
 {
 }
@@ -78,10 +75,6 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
     } else {
         kDebug(1216) << "No button for: " << AuroraeTheme::mapButtonToName(type);
     }
-}
-
-void AuroraeThemePrivate::reset()
-{
 }
 
 /************************************************
@@ -115,10 +108,6 @@ void AuroraeTheme::loadTheme(const QString &name)
 
 void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
 {
-    if (!d->themeName.isNull()) {
-        // only reset if the theme has been initialized at least once
-        d->reset();
-    }
     d->themeName = name;
     QString file("aurorae/themes/" + d->themeName + "/decoration.svg");
     QString path = KGlobal::dirs()->findResource("data", file);
@@ -144,13 +133,6 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
     d->initButtonFrame(ShadeButton);
     d->initButtonFrame(HelpButton);
 
-    d->themeConfig.load(config);
-    emit themeChanged();
-}
-
-void AuroraeTheme::readThemeConfig(const KConfig &config)
-{
-    // read config values
     d->themeConfig.load(config);
     emit themeChanged();
 }
@@ -188,51 +170,9 @@ QLatin1String AuroraeTheme::mapButtonToName(AuroraeButtonType type)
     }
 }
 
-char AuroraeTheme::mapButtonToChar(AuroraeButtonType type)
-{
-    char c = ' ';
-    switch (type) {
-    case Aurorae::MinimizeButton:
-        c = 'I';
-        break;
-    case Aurorae::MaximizeButton: // fall through
-    case Aurorae::RestoreButton:
-        c = 'A';
-        break;
-    case Aurorae::CloseButton:
-        c = 'X';
-        break;
-    case Aurorae::AllDesktopsButton:
-        c = 'S';
-        break;
-    case Aurorae::KeepAboveButton:
-        c = 'F';
-        break;
-    case Aurorae::KeepBelowButton:
-        c = 'B';
-        break;
-    case Aurorae::ShadeButton:
-        c = 'L';
-        break;
-    case Aurorae::HelpButton:
-        c = 'H';
-        break;
-    case Aurorae::MenuButton:
-        c = 'M';
-        break;
-    default:
-        break; // nothing
-    }
-    return c;
-}
-
 const QString &AuroraeTheme::themeName() const
 {
     return d->themeName;
-}
-const Aurorae::ThemeConfig &AuroraeTheme::themeConfig() const
-{
-    return d->themeConfig;
 }
 
 void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool maximized) const
@@ -493,13 +433,6 @@ void AuroraeTheme::titleEdges(int &left, int &top, int &right, int &bottom, bool
     }
 }
 
-void AuroraeTheme::buttonMargins(int &left, int &top, int &right) const
-{
-    left   = d->themeConfig.titleBorderLeft();
-    top    = d->themeConfig.buttonMarginTop();
-    right  = d->themeConfig.titleBorderRight();
-}
-
 bool AuroraeTheme::isCompositingActive() const
 {
     return d->activeCompositing;
@@ -523,17 +456,6 @@ QString AuroraeTheme::defaultButtonsRight() const
 void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
 {
     d->borderSize = size;
-}
-
-bool AuroraeTheme::isShowTooltips() const
-{
-    return d->showTooltips;
-}
-
-void AuroraeTheme::setShowTooltips(bool show)
-{
-    d->showTooltips = show;
-    emit showTooltipsChanged(show);
 }
 
 void AuroraeTheme::setButtonSize(KDecorationDefines::BorderSize size)

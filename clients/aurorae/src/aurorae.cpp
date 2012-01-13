@@ -56,7 +56,6 @@ void AuroraeFactory::init()
     m_theme->loadTheme(themeName, config);
     m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
-    m_theme->setShowTooltips(options()->showTooltips());
     m_theme->setTabDragMimeType(clientGroupItemDragMimeType());
     // setup the QML engine
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {

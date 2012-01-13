@@ -24,7 +24,6 @@
 // #include "libaurorae_export.h"
 
 #include <QtCore/QObject>
-#include <QtGui/QGraphicsItem>
 #include <kdecoration.h>
 
 class KConfig;
@@ -34,7 +33,7 @@ class AuroraeThemePrivate;
 class ThemeConfig;
 
 enum AuroraeButtonType {
-    MinimizeButton = QGraphicsItem::UserType+1,
+    MinimizeButton = 0,
     MaximizeButton,
     RestoreButton,
     CloseButton,
@@ -114,7 +113,6 @@ public:
     // TODO: KSharedConfigPtr
     void loadTheme(const QString &name, const KConfig &config);
     bool isValid() const;
-    void readThemeConfig(const KConfig& config);
     const QString &themeName() const;
     int leftBorder() const;
     int rightBorder() const;
@@ -171,11 +169,6 @@ public:
     * Title edges are global to all windows.
     */
     void titleEdges(int &left, int &top, int &right, int &bottom, bool maximized) const;
-    /**
-    * Sets the button margins.
-    * Button margins are global to all windows. There is no button margin bottom.
-    */
-    void buttonMargins(int& left, int& top, int& right) const;
     void setCompositingActive(bool active);
     bool isCompositingActive() const;
 
@@ -186,7 +179,6 @@ public:
     QString defaultButtonsLeft() const;
     QString defaultButtonsRight() const;
     void setBorderSize(KDecorationDefines::BorderSize size);
-    bool isShowTooltips() const;
     /**
     * Sets the size of the buttons.
     * The available sizes are identical to border sizes, therefore BorderSize is used.
@@ -202,19 +194,15 @@ public:
 
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
-    static char mapButtonToChar(AuroraeButtonType type);
 
 public Q_SLOTS:
-    void setShowTooltips(bool show);
     void loadTheme(const QString &name);
 
 Q_SIGNALS:
     void themeChanged();
-    void showTooltipsChanged(bool show);
     void buttonSizesChanged();
 
 private:
-    const ThemeConfig &themeConfig() const;
     /**
     * Sets the borders according to maximized state.
     * Borders are global to all windows.
