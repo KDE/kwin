@@ -167,16 +167,6 @@ public:
     Qt::Alignment alignment() const;
     Qt::Alignment verticalAlignment() const;
     /**
-    * Sets the borders according to maximized state.
-    * Borders are global to all windows.
-    */
-    void borders(int &left, int &top, int &right, int &bottom, bool maximized) const;
-    /**
-    * Sets the padding according.
-    * Padding is global to all windows.
-    */
-    void padding(int &left, int &top, int &right, int &bottom) const;
-    /**
     * Sets the title edges according to maximized state.
     * Title edges are global to all windows.
     */
@@ -225,6 +215,16 @@ Q_SIGNALS:
 
 private:
     const ThemeConfig &themeConfig() const;
+    /**
+    * Sets the borders according to maximized state.
+    * Borders are global to all windows.
+    */
+    void borders(int &left, int &top, int &right, int &bottom, bool maximized) const;
+    /**
+    * Sets the padding according.
+    * Padding is global to all windows.
+    */
+    void padding(int &left, int &top, int &right, int &bottom) const;
 
     AuroraeThemePrivate* const d;
 };
