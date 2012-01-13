@@ -38,7 +38,7 @@ FadeEffect::FadeEffect()
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
-    connect(effects, SIGNAL(windowOpacityChanged(EffectWindow*,qreal,qreal)), this, SLOT(slotWindowOpacityChanged(EffectWindow*,qreal)));
+    connect(effects, SIGNAL(windowOpacityChanged(EffectWindow*,qreal,qreal)), this, SLOT(slotWindowOpacityChanged(EffectWindow*)));
 }
 
 void FadeEffect::reconfigure(ReconfigureFlags)
@@ -153,7 +153,7 @@ void FadeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
     effects->paintWindow(w, mask, region, data);
 }
 
-void FadeEffect::slotWindowOpacityChanged(EffectWindow* w, qreal old_opacity)
+void FadeEffect::slotWindowOpacityChanged(EffectWindow* w)
 {
     if (!windows.contains(w) || !isFadeWindow(w))
         return;

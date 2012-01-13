@@ -46,7 +46,7 @@ public Q_SLOTS:
     void slotWindowAdded(EffectWindow* c);
     void slotWindowClosed(EffectWindow *c);
     void slotWindowDeleted(EffectWindow *w);
-    void slotWindowOpacityChanged(EffectWindow *w, qreal oldOpacity);
+    void slotWindowOpacityChanged(EffectWindow *w);
 private:
     class WindowInfo;
     QHash< const EffectWindow*, WindowInfo > windows;
