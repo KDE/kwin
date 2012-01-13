@@ -23,7 +23,8 @@ Item {
     property alias currentIndex: listView.currentIndex
     ListView {
         id: listView
-        anchors.fill: parent
+        height: parent.height
+        width: parent.width - scrollBar.width
         model: decorationModel
         highlight: PlasmaComponents.Highlight {
             width: listView.width - 10
@@ -80,6 +81,15 @@ Item {
                     listView.currentIndex = index;
                 }
             }
+        }
+    }
+    PlasmaComponents.ScrollBar {
+        id: scrollBar
+        flickableItem: listView
+        anchors {
+            right: parent.right
+            top: parent.top
+            bottom: parent.bottom
         }
     }
 }
