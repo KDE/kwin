@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtra
-import org.kde.kwin.aurorae 0.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
@@ -39,40 +38,9 @@ Item {
                 anchors.fill: parent
                 visible: type == 0
             }
-            Item {
-                id: aurorae
-                visible: type == 1
+            Loader {
+                source: type == 1 ? "AuroraePreview.qml" : ""
                 anchors.fill: parent
-                AuroraeTheme {
-                    id: auroraeTheme
-                    Component.onCompleted: {
-                        auroraeTheme.loadTheme(auroraeThemeName);
-                        inactiveAurorae.source = auroraeSource;
-                        activeAurorae.source = auroraeSource;
-                    }
-                }
-                AuroraeDecoration {
-                    id: inactiveAurorae
-                    active: false
-                    anchors {
-                        fill: parent
-                        leftMargin: 40 - auroraeTheme.paddingLeft
-                        rightMargin: 10 - auroraeTheme.paddingRight
-                        topMargin: 10 - auroraeTheme.paddingTop
-                        bottomMargin: 40 - auroraeTheme.paddingBottom
-                    }
-                }
-                AuroraeDecoration {
-                    id: activeAurorae
-                    active: true
-                    anchors {
-                        fill: parent
-                        leftMargin: 10 - auroraeTheme.paddingLeft
-                        rightMargin: 40 - auroraeTheme.paddingRight
-                        topMargin: 40 - auroraeTheme.paddingTop
-                        bottomMargin: 10 - auroraeTheme.paddingBottom
-                    }
-                }
             }
             MouseArea {
                 hoverEnabled: false
