@@ -18,15 +18,7 @@ import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 
 Item {
-    id: group
-    property string buttons
-    states: [
-        State { name: "normal" },
-        State { name: "maximized" }
-    ]
-
-    Component.onCompleted: {
-        group.state = decoration.maximized ? "maximized" : "normal";
+    function createButtons() {
         var component = Qt.createComponent("AuroraeButton.qml");
         for (var i=0; i<buttons.length; i++) {
             if (buttons.charAt(i) == "_") {
@@ -43,6 +35,16 @@ Item {
             }
         }
     }
+    id: group
+    property string buttons
+    states: [
+        State { name: "normal" },
+        State { name: "maximized" }
+    ]
+
+    Component.onCompleted: {
+        group.state = decoration.maximized ? "maximized" : "normal";
+    }
     Row {
         id: groupRow
         spacing: auroraeTheme.buttonSpacing
@@ -50,5 +52,11 @@ Item {
     Connections {
         target: decoration
         onMaximizedChanged: group.state = decoration.maximized ? "maximized" : "normal"
+    }
+    onButtonsChanged: {
+        for (i = 0; i < groupRow.children.length; i++) {
+            groupRow.children[i].destroy();
+        }
+        createButtons();
     }
 }
