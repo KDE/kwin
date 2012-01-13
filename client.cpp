@@ -1565,8 +1565,6 @@ void Client::setModal(bool m)
         return;
     modal = m;
     emit modalChanged();
-    if (!modal)
-        return;
     // Changing modality for a mapped window is weird (?)
     // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
 }
