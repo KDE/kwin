@@ -25,8 +25,8 @@ Item {
         }
     }
     id: button
-    width: auroraeTheme.buttonWidthMaximizeRestore
-    height: auroraeTheme.buttonHeight
+    width: auroraeTheme.buttonWidthMaximizeRestore * auroraeTheme.buttonSizeFactor
+    height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor
     states: [
         State { name: "maximize" },
         State { name: "restore" }

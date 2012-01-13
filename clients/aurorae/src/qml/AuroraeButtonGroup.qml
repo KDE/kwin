@@ -22,10 +22,10 @@ Item {
         var component = Qt.createComponent("AuroraeButton.qml");
         for (var i=0; i<buttons.length; i++) {
             if (buttons.charAt(i) == "_") {
-                Qt.createQmlObject("import QtQuick 1.1; Item { width: auroraeTheme.explicitButtonSpacer; height: auroraeTheme.buttonHeight }",
+                Qt.createQmlObject("import QtQuick 1.1; Item { width: auroraeTheme.explicitButtonSpacer * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "explicitSpacer" + buttons + i);
             } else if (buttons.charAt(i) == "M") {
-                Qt.createQmlObject("import QtQuick 1.1; MenuButton { width: auroraeTheme.buttonWidthMenu; height: auroraeTheme.buttonHeight }",
+                Qt.createQmlObject("import QtQuick 1.1; MenuButton { width: auroraeTheme.buttonWidthMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "menuButton" + buttons + i);
             } else if (buttons.charAt(i) == "A") {
                 var maximizeComponent = Qt.createComponent("AuroraeMaximizeButton.qml");
@@ -47,7 +47,7 @@ Item {
     }
     Row {
         id: groupRow
-        spacing: auroraeTheme.buttonSpacing
+        spacing: auroraeTheme.buttonSpacing * auroraeTheme.buttonSizeFactor
     }
     Connections {
         target: decoration
