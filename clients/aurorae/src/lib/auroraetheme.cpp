@@ -84,6 +84,8 @@ AuroraeTheme::AuroraeTheme(QObject* parent)
     : QObject(parent)
     , d(new AuroraeThemePrivate)
 {
+    connect(this, SIGNAL(themeChanged()), SIGNAL(borderSizesChanged()));
+    connect(this, SIGNAL(buttonSizesChanged()), SIGNAL(borderSizesChanged()));
 }
 
 AuroraeTheme::~AuroraeTheme()
@@ -455,11 +457,18 @@ QString AuroraeTheme::defaultButtonsRight() const
 
 void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
 {
+    if (d->borderSize == size) {
+        return;
+    }
     d->borderSize = size;
+    emit borderSizesChanged();
 }
 
 void AuroraeTheme::setButtonSize(KDecorationDefines::BorderSize size)
 {
+    if (d->buttonSize == size) {
+        return;
+    }
     d->buttonSize = size;
     emit buttonSizesChanged();
 }

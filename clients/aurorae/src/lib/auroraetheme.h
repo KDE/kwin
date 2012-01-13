@@ -55,14 +55,14 @@ enum DecorationPosition {
 class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int borderLeft READ leftBorder NOTIFY themeChanged)
-    Q_PROPERTY(int borderRight READ rightBorder NOTIFY themeChanged)
-    Q_PROPERTY(int borderTop READ topBorder NOTIFY themeChanged)
-    Q_PROPERTY(int borderBottom READ bottomBorder NOTIFY themeChanged)
-    Q_PROPERTY(int borderLeftMaximized READ leftBorderMaximized NOTIFY themeChanged)
-    Q_PROPERTY(int borderRightMaximized READ rightBorderMaximized NOTIFY themeChanged)
-    Q_PROPERTY(int borderTopMaximized READ topBorderMaximized NOTIFY themeChanged)
-    Q_PROPERTY(int borderBottomMaximized READ bottomBorderMaximized NOTIFY themeChanged)
+    Q_PROPERTY(int borderLeft READ leftBorder NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderRight READ rightBorder NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderTop READ topBorder NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderBottom READ bottomBorder NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderLeftMaximized READ leftBorderMaximized NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderRightMaximized READ rightBorderMaximized NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderTopMaximized READ topBorderMaximized NOTIFY borderSizesChanged)
+    Q_PROPERTY(int borderBottomMaximized READ bottomBorderMaximized NOTIFY borderSizesChanged)
     Q_PROPERTY(int paddingLeft READ paddingLeft NOTIFY themeChanged)
     Q_PROPERTY(int paddingRight READ paddingRight NOTIFY themeChanged)
     Q_PROPERTY(int paddingTop READ paddingTop NOTIFY themeChanged)
@@ -203,6 +203,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void themeChanged();
     void buttonSizesChanged();
+    void borderSizesChanged();
 
 private:
     /**

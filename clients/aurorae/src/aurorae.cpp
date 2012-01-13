@@ -85,8 +85,17 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingButtons) {
         emit buttonsChanged();
     }
-    init();
-    resetDecorations(changed);
+    const KConfig conf("auroraerc");
+    const KConfigGroup group(&conf, "Engine");
+    const QString themeName = group.readEntry("ThemeName", "example-deco");
+    const KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
+    const KConfigGroup themeGroup(&conf, themeName);
+    if (themeName != m_theme->themeName()) {
+        m_theme->loadTheme(themeName, config);
+        resetDecorations(changed);
+    }
+    m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
+    m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     return false; // need hard reset
 }
 
@@ -332,15 +341,6 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
 
 void AuroraeClient::reset(long unsigned int changed)
 {
-    if (changed & SettingCompositing) {
-        AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
-    }
-    if (changed & SettingButtons) {
-        // TODO: update buttons
-    }
-    if (changed & SettingFont) {
-        // TODO: set font
-    }
     KDecoration::reset(changed);
 }
 
