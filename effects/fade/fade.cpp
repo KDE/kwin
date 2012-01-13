@@ -28,6 +28,11 @@ namespace KWin
 KWIN_EFFECT(fade, FadeEffect)
 
 FadeEffect::FadeEffect()
+    : fadeInStep(0.0)
+    , fadeOutStep(0.0)
+    , fadeInTime(0)
+    , fadeOutTime(0)
+    , fadeWindows(false)
 {
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
