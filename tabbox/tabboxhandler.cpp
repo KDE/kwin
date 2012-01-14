@@ -223,7 +223,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     // highlight windows
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
-    XDeleteProperty(dpy, config.isShowTabBox() && view ? view->winId() : QX11Info::appRootWindow(), atom);
+    XDeleteProperty(dpy, config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : QX11Info::appRootWindow(), atom);
 }
 
 /***********************************************************
