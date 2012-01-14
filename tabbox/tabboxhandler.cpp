@@ -429,6 +429,8 @@ bool TabBoxHandler::containsPos(const QPoint& pos) const
     QWidget *w = NULL;
     if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
         w = d->m_declarativeView;
+    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
+        w = d->m_declarativeDesktopView;
     } else {
         return false;
     }
