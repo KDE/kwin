@@ -57,7 +57,6 @@ public:
     virtual void showEvent(QShowEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
     void setCurrentIndex(const QModelIndex &index);
-    QModelIndex indexAt(const QPoint &pos) const;
 
 protected:
     virtual void hideEvent(QHideEvent *event);

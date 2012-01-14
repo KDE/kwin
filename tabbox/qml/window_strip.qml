@@ -55,12 +55,6 @@ Item {
     }
 
     ListView {
-        /**
-         * Called from C++ to get the index at a mouse pos.
-         **/
-        function indexAtMousePos(pos) {
-            return thumbnailListView.indexAt(pos.x, pos.y);
-        }
         signal currentIndexChanged(int index)
         id: thumbnailListView
         objectName: "listView"

@@ -271,21 +271,6 @@ void DeclarativeView::setCurrentIndex(const QModelIndex &index)
     }
 }
 
-QModelIndex DeclarativeView::indexAt(const QPoint &pos) const
-{
-    if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
-        QVariant returnedValue;
-        QVariant xPos(pos.x());
-        QVariant yPos(pos.y());
-        QMetaObject::invokeMethod(item, "indexAtMousePos", Q_RETURN_ARG(QVariant, returnedValue), Q_ARG(QVariant, QVariant(pos)));
-        if (!returnedValue.canConvert<int>()) {
-            return QModelIndex();
-        }
-        return m_model->index(returnedValue.toInt(), 0);
-    }
-    return QModelIndex();
-}
-
 void DeclarativeView::currentIndexChanged(int row)
 {
     tabBox->setCurrentIndex(m_model->index(row, 0));

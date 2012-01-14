@@ -342,11 +342,6 @@ int TabBoxHandler::desktop(const QModelIndex& index) const
         return -1;
 }
 
-int TabBoxHandler::currentSelectedDesktop() const
-{
-    return desktop(d->index);
-}
-
 void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
 {
     if (d->index == index) {
@@ -438,18 +433,6 @@ bool TabBoxHandler::containsPos(const QPoint& pos) const
         return false;
     }
     return w->geometry().contains(pos);
-}
-
-QModelIndex TabBoxHandler::indexAt(const QPoint& pos) const
-{
-    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
-        QPoint widgetPos = d->m_declarativeView->mapFromGlobal(pos);
-        return d->m_declarativeView->indexAt(widgetPos);
-    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
-        QPoint widgetPos = d->m_declarativeDesktopView->mapFromGlobal(pos);
-        return d->m_declarativeDesktopView->indexAt(widgetPos);
-    }
-    return QModelIndex();
 }
 
 QModelIndex TabBoxHandler::index(KWin::TabBox::TabBoxClient* client) const

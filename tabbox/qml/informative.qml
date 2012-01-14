@@ -182,12 +182,6 @@ Item {
             // icon size or two text elements and margins and hoverItem margins
             return Math.max(32, height*2 + informativeTabBox.textMargin * 3 + hoverItem.margins.top + hoverItem.margins.bottom);
         }
-        /**
-         * Called from C++ to get the index at a mouse pos.
-         **/
-        function indexAtMousePos(pos) {
-            return listView.indexAt(pos.x, pos.y);
-        }
         signal currentIndexChanged(int index)
         id: listView
         objectName: "listView"

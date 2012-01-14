@@ -131,12 +131,6 @@ Item {
             // icon size or two text elements and margins and hoverItem margins
             return height + hoverItem.margins.top + hoverItem.margins.bottom;
         }
-        /**
-         * Called from C++ to get the index at a mouse pos.
-         **/
-        function indexAtMousePos(pos) {
-            return textListView.indexAt(pos.x, pos.y);
-        }
         signal currentIndexChanged(int index)
         id: textListView
         objectName: "listView"
