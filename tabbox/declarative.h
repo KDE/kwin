@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // includes
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtDeclarative/QDeclarativeView>
+#include "tabboxconfig.h"
 
 // forward declaration
 class QAbstractItemModel;
@@ -52,7 +53,7 @@ class DeclarativeView : public QDeclarativeView
 {
     Q_OBJECT
 public:
-    DeclarativeView(QAbstractItemModel *model, QWidget *parent = NULL);
+    DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent = NULL);
     virtual void showEvent(QShowEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
     void setCurrentIndex(const QModelIndex &index);
@@ -71,6 +72,7 @@ private Q_SLOTS:
     void slotWindowChanged(WId wId, unsigned int properties);
 private:
     QAbstractItemModel *m_model;
+    TabBoxConfig::TabBoxMode m_mode;
     QRect m_currentScreenGeometry;
     /**
     * Background Frame required for setting the blur mask

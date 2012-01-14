@@ -79,6 +79,7 @@ public:
     TabBoxConfig config;
     TabBoxView* view;
     DeclarativeView *m_declarativeView;
+    DeclarativeView *m_declarativeDesktopView;
     ClientModel* m_clientModel;
     DesktopModel* m_desktopModel;
     QModelIndex index;
@@ -98,6 +99,7 @@ public:
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     : view(NULL)
     , m_declarativeView(NULL)
+    , m_declarativeDesktopView(NULL)
     , m_embedded(0)
     , m_embeddedOffset(QPoint(0, 0))
     , m_embeddedSize(QSize(0, 0))
@@ -121,6 +123,7 @@ TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
     delete view;
     delete m_declarativeView;
+    delete m_declarativeDesktopView;
 }
 
 void TabBoxHandlerPrivate::createView()
@@ -421,16 +424,16 @@ void TabBoxHandler::show()
         if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
             // use declarative view
             if (!d->m_declarativeView) {
-                d->m_declarativeView = new DeclarativeView(d->clientModel());
+                d->m_declarativeView = new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox);
             }
             d->m_declarativeView->show();
             d->m_declarativeView->setCurrentIndex(d->index);
         } else {
-            if (!d->view) {
-                d->createView();
+            if (!d->m_declarativeDesktopView) {
+                d->m_declarativeDesktopView = new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox);
             }
-            d->view->show();
-            d->view->updateGeometry();
+            d->m_declarativeDesktopView->show();
+            d->m_declarativeDesktopView->setCurrentIndex(d->index);
         }
     }
     if (d->config.isHighlightWindows()) {
@@ -452,6 +455,9 @@ void TabBoxHandler::hide(bool abort)
     }
     if (d->m_declarativeView) {
         d->m_declarativeView->hide();
+    }
+    if (d->m_declarativeDesktopView) {
+        d->m_declarativeDesktopView->hide();
     }
 }
 
@@ -550,6 +556,9 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
     if (d->m_declarativeView) {
         d->m_declarativeView->setCurrentIndex(index);
     }
+    if (d->m_declarativeDesktopView) {
+        d->m_declarativeDesktopView->setCurrentIndex(index);
+    }
     d->index = index;
     if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
         if (d->config.isShowOutline()) {
@@ -639,6 +648,9 @@ QModelIndex TabBoxHandler::indexAt(const QPoint& pos) const
     } else if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
         QPoint widgetPos = d->m_declarativeView->mapFromGlobal(pos);
         return d->m_declarativeView->indexAt(widgetPos);
+    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
+        QPoint widgetPos = d->m_declarativeDesktopView->mapFromGlobal(pos);
+        return d->m_declarativeDesktopView->indexAt(widgetPos);
     }
     return QModelIndex();
 }

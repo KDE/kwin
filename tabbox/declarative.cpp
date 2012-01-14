@@ -101,9 +101,10 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     return icon;
 }
 
-DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
+DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
     : QDeclarativeView(parent)
     , m_model(model)
+    , m_mode(mode)
     , m_currentScreenGeometry()
     , m_frame(new Plasma::FrameSvg(this))
     , m_currentLayout()
@@ -130,7 +131,11 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
     kdeclarative.setupBindings();
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
-    rootContext()->setContextProperty("clientModel", model);
+    if (m_mode == TabBoxConfig::ClientTabBox) {
+        rootContext()->setContextProperty("clientModel", model);
+    } else if (m_mode == TabBoxConfig::DesktopTabBox) {
+        rootContext()->setContextProperty("clientModel", model);
+    }
     setSource(QUrl(KStandardDirs::locate("data", "kwin/tabbox/tabbox.qml")));
 
     // FrameSvg
@@ -139,7 +144,9 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, QWidget *parent)
     m_frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
     connect(tabBox, SIGNAL(configChanged()), SLOT(updateQmlSource()));
-    connect(tabBox, SIGNAL(embeddedChanged(bool)), SLOT(slotEmbeddedChanged(bool)));
+    if (m_mode == TabBoxConfig::ClientTabBox) {
+        connect(tabBox, SIGNAL(embeddedChanged(bool)), SLOT(slotEmbeddedChanged(bool)));
+    }
 }
 
 void DeclarativeView::showEvent(QShowEvent *event)
@@ -154,7 +161,9 @@ void DeclarativeView::showEvent(QShowEvent *event)
     rootObject()->setProperty("allDesktops", tabBox->config().tabBoxMode() == TabBoxConfig::ClientTabBox &&
         ((tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList) ||
         (tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList)));
-    rootObject()->setProperty("longestCaption", static_cast<ClientModel*>(m_model)->longestCaption());
+    if (ClientModel *clientModel = qobject_cast<ClientModel*>(m_model)) {
+        rootObject()->setProperty("longestCaption", clientModel->longestCaption());
+    }
 
     if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
         item->setProperty("currentIndex", tabBox->first().row());
@@ -254,6 +263,9 @@ void DeclarativeView::slotUpdateGeometry()
 
 void DeclarativeView::setCurrentIndex(const QModelIndex &index)
 {
+    if (tabBox->config().tabBoxMode() != m_mode) {
+        return;
+    }
     if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
         item->setProperty("currentIndex", index.row());
     }
@@ -281,14 +293,22 @@ void DeclarativeView::currentIndexChanged(int row)
 
 void DeclarativeView::updateQmlSource(bool force)
 {
+    if (tabBox->config().tabBoxMode() != m_mode) {
+        return;
+    }
     if (!force && tabBox->config().layoutName() == m_currentLayout) {
         return;
     }
     m_currentLayout = tabBox->config().layoutName();
     QString file = KStandardDirs::locate("data", "kwin/tabbox/" + m_currentLayout.toLower().replace(' ', '_') + ".qml");
+    if (m_mode == TabBoxConfig::DesktopTabBox) {
+        file = KStandardDirs::locate("data", "kwin/tabbox/desktop.qml");
+    }
     if (file.isNull()) {
         // fallback to default
-        file = KStandardDirs::locate("data", "kwin/tabbox/informative.qml");
+        if (m_mode == TabBoxConfig::ClientTabBox) {
+            file = KStandardDirs::locate("data", "kwin/tabbox/informative.qml");
+        }
     }
     rootObject()->setProperty("source", QUrl(file));
 }

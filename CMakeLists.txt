@@ -246,6 +246,7 @@ install( FILES
     tabbox/qml/informative.qml
     tabbox/qml/big_icons.qml
     tabbox/qml/compact.qml
+    tabbox/qml/desktop.qml
     tabbox/qml/small_icons.qml
     tabbox/qml/tabbox.qml
     tabbox/qml/text.qml
