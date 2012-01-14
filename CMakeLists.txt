@@ -186,10 +186,6 @@ if(KWIN_BUILD_SCRIPTING)
     set(kwinLibs ${kwinLibs} ${QT_QTSCRIPT_LIBRARY})
 endif(KWIN_BUILD_SCRIPTING)
 
-if(KWIN_BUILD_TABBOX)
-    set(kwinLibs ${kwinLibs} ${QT_QTXML_LIBRARY})
-endif(KWIN_BUILD_TABBOX)
-
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${kwinLibs})
