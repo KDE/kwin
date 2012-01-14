@@ -132,15 +132,11 @@ if(KWIN_BUILD_TABBOX)
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         tabbox/tabbox.cpp
-        tabbox/clientitemdelegate.cpp
         tabbox/clientmodel.cpp
         tabbox/declarative.cpp
-        tabbox/desktopitemdelegate.cpp
         tabbox/desktopmodel.cpp
-        tabbox/itemlayoutconfig.cpp
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp
-        tabbox/tabboxview.cpp
   )
 endif(KWIN_BUILD_TABBOX)
 
@@ -241,7 +237,6 @@ install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
-install( FILES tabbox/DefaultTabBoxLayouts.xml DESTINATION ${DATA_INSTALL_DIR}/kwin )
 install( FILES
     tabbox/qml/informative.qml
     tabbox/qml/big_icons.qml

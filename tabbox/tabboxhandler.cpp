@@ -21,27 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "tabboxhandler.h"
 // tabbox
-#include "clientitemdelegate.h"
 #include "clientmodel.h"
 #include "declarative.h"
-#include "desktopitemdelegate.h"
 #include "desktopmodel.h"
-#include "itemlayoutconfig.h"
 #include "tabboxconfig.h"
-#include "tabboxview.h"
 // Qt
-#include <qdom.h>
-#include <QtCore/QtConcurrentRun>
-#include <QtCore/QFutureWatcher>
-#include <QFile>
 #include <QKeyEvent>
 #include <QModelIndex>
-#include <QPainter>
 #include <QX11Info>
 #include <X11/Xlib.h>
 // KDE
 #include <KDebug>
-#include <KStandardDirs>
 #include <KWindowSystem>
 
 namespace KWin
@@ -71,13 +61,10 @@ public:
 
     ClientModel* clientModel() const;
     DesktopModel* desktopModel() const;
-    void createView();
-    void parseConfig(const QString& fileName);
 
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
-    TabBoxView* view;
     DeclarativeView *m_declarativeView;
     DeclarativeView *m_declarativeDesktopView;
     ClientModel* m_clientModel;
@@ -88,7 +75,6 @@ public:
     * Used to determine if the outline has to be updated, etc.
     */
     bool isShown;
-    QMap< QString, ItemLayoutConfig > tabBoxLayouts;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
     WId m_embedded;
     QPoint m_embeddedOffset;
@@ -97,8 +83,7 @@ public:
 };
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
-    : view(NULL)
-    , m_declarativeView(NULL)
+    : m_declarativeView(NULL)
     , m_declarativeDesktopView(NULL)
     , m_embedded(0)
     , m_embeddedOffset(QPoint(0, 0))
@@ -111,39 +96,12 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     config = TabBoxConfig();
     m_clientModel = new ClientModel(q);
     m_desktopModel = new DesktopModel(q);
-
-    // load the layouts
-    QFuture< void> future = QtConcurrent::run(this, &TabBoxHandlerPrivate::parseConfig, KStandardDirs::locate("data", "kwin/DefaultTabBoxLayouts.xml"));
-    QFutureWatcher< void > *watcher = new QFutureWatcher< void >(q);
-    watcher->setFuture(future);
-    q->connect(watcher, SIGNAL(finished()), q, SIGNAL(ready()));
 }
 
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
-    delete view;
     delete m_declarativeView;
     delete m_declarativeDesktopView;
-}
-
-void TabBoxHandlerPrivate::createView()
-{
-    view = new TabBoxView(m_clientModel, m_desktopModel);
-    if (tabBoxLayouts.contains(config.layoutName())) {
-        view->clientDelegate()->setConfig(tabBoxLayouts.value(config.layoutName()));
-        view->desktopDelegate()->setConfig(tabBoxLayouts.value(config.layoutName()));
-    } else {
-        view->clientDelegate()->setConfig(tabBoxLayouts.value("Default"));
-        view->desktopDelegate()->setConfig(tabBoxLayouts.value("Desktop"));
-    }
-    if (tabBoxLayouts.contains(config.selectedItemLayoutName())) {
-        view->additionalClientDelegate()->setConfig(tabBoxLayouts.value(config.selectedItemLayoutName()));
-    } else {
-        view->additionalClientDelegate()->setConfig(tabBoxLayouts.value("Text"));
-    }
-    view->desktopDelegate()->setLayouts(tabBoxLayouts);
-    emit q->configChanged();
-    view->setCurrentIndex(index);
 }
 
 ClientModel* TabBoxHandlerPrivate::clientModel() const
@@ -198,9 +156,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     WId wId;
     QVector< WId > data;
     QWidget *w = NULL;
-    if (view && view->isVisible()) {
-        w = view;
-    } else if (m_declarativeView && m_declarativeView->isVisible()) {
+    if (m_declarativeView && m_declarativeView->isVisible()) {
         w = m_declarativeView;
     }
     if (config.isShowTabBox() && w) {
@@ -233,143 +189,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     // highlight windows
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
-    XDeleteProperty(dpy, config.isShowTabBox() && view ? view->winId() : QX11Info::appRootWindow(), atom);
-}
-
-/***********************************************************
-* Based on the implementation of Kopete's
-* contaclistlayoutmanager.cpp by Nikolaj Hald Nielsen and
-* Roman Jarosz
-***********************************************************/
-void TabBoxHandlerPrivate::parseConfig(const QString& fileName)
-{
-    // open the file
-    if (!QFile::exists(fileName)) {
-        kDebug(1212) << "File " << fileName << " does not exist";
-        return;
-    }
-    QDomDocument doc("Layouts");
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        kDebug(1212) << "Error reading file " << fileName;
-        return;
-    }
-    if (!doc.setContent(&file)) {
-        kDebug(1212) << "Error parsing file " << fileName;
-        file.close();
-        return;
-    }
-    file.close();
-
-    QDomElement layouts_element = doc.firstChildElement("tabbox_layouts");
-    QDomNodeList layouts = layouts_element.elementsByTagName("layout");
-
-    for (int i = 0; i < layouts.size(); i++) {
-        QDomNode layout = layouts.item(i);
-        ItemLayoutConfig currentLayout;
-
-        // parse top elements
-        QDomElement element = layout.toElement();
-        QString layoutName = element.attribute("name", "");
-
-        const bool highlightIcon = (element.attribute("highlight_selected_icon", "true").compare("true", Qt::CaseInsensitive) == 0);
-        currentLayout.setHighlightSelectedIcons(highlightIcon);
-
-        const bool grayscaleIcon = (element.attribute("grayscale_deselected_icon", "false").compare("true", Qt::CaseInsensitive) == 0);
-        currentLayout.setGrayscaleDeselectedIcons(grayscaleIcon);
-
-        // rows
-        QDomNodeList rows = element.elementsByTagName("row");
-        for (int j = 0; j < rows.size(); j++) {
-            QDomNode rowNode = rows.item(j);
-
-            ItemLayoutConfigRow row;
-
-            QDomNodeList elements = rowNode.toElement().elementsByTagName("element");
-            for (int k = 0; k < elements.size(); k++) {
-                QDomNode elementNode = elements.item(k);
-                QDomElement currentElement = elementNode.toElement();
-
-                ItemLayoutConfigRowElement::ElementType type = ItemLayoutConfigRowElement::ElementType(currentElement.attribute(
-                            "type", int(ItemLayoutConfigRowElement::ElementClientName)).toInt());
-                ItemLayoutConfigRowElement currentRowElement;
-                currentRowElement.setType(type);
-
-                // width - used by all types
-                qreal width = currentElement.attribute("width", "0.0").toDouble();
-                currentRowElement.setWidth(width);
-                switch(type) {
-                case ItemLayoutConfigRowElement::ElementEmpty:
-                    row.addElement(currentRowElement);
-                    break;
-                case ItemLayoutConfigRowElement::ElementIcon: {
-                    qreal iconWidth = currentElement.attribute("icon_size", "16.0").toDouble();
-                    currentRowElement.setIconSize(QSizeF(iconWidth, iconWidth));
-                    currentRowElement.setRowSpan(currentElement.attribute("row_span", "true").compare(
-                                                     "true", Qt::CaseInsensitive) == 0);
-                    row.addElement(currentRowElement);
-                    break;
-                }
-                case ItemLayoutConfigRowElement::ElementClientList: {
-                    currentRowElement.setStretch(currentElement.attribute("stretch", "false").compare(
-                                                     "true", Qt::CaseInsensitive) == 0);
-                    currentRowElement.setClientListLayoutName(currentElement.attribute("layout_name", ""));
-                    QString layoutMode = currentElement.attribute("layout_mode", "horizontal");
-                    if (layoutMode.compare("horizontal", Qt::CaseInsensitive) == 0)
-                        currentRowElement.setClientListLayoutMode(TabBoxConfig::HorizontalLayout);
-                    else if (layoutMode.compare("vertical", Qt::CaseInsensitive) == 0)
-                        currentRowElement.setClientListLayoutMode(TabBoxConfig::VerticalLayout);
-                    else if (layoutMode.compare("tabular", Qt::CaseInsensitive) == 0)
-                        currentRowElement.setClientListLayoutMode(TabBoxConfig::HorizontalVerticalLayout);
-                    row.addElement(currentRowElement);
-                    break;
-                }
-                default: { // text elements
-                    currentRowElement.setStretch(currentElement.attribute("stretch", "false").compare(
-                                                     "true", Qt::CaseInsensitive) == 0);
-                    currentRowElement.setSmallTextSize(currentElement.attribute("small", "false").compare(
-                                                           "true", Qt::CaseInsensitive) == 0);
-                    currentRowElement.setBold(currentElement.attribute("bold", "false").compare(
-                                                  "true", Qt::CaseInsensitive) == 0);
-                    currentRowElement.setItalic(currentElement.attribute("italic", "false").compare(
-                                                    "true", Qt::CaseInsensitive) == 0);
-                    currentRowElement.setItalicMinimized(currentElement.attribute("italic_minimized", "true").compare(
-                            "true", Qt::CaseInsensitive) == 0);
-
-                    currentRowElement.setPrefix(currentElement.attribute("prefix", ""));
-                    currentRowElement.setSuffix(currentElement.attribute("suffix", ""));
-                    currentRowElement.setPrefixMinimized(currentElement.attribute("prefix_minimized", ""));
-                    currentRowElement.setSuffixMinimzed(currentElement.attribute("suffix_minimized", ""));
-
-                    QString halign = currentElement.attribute("horizontal_alignment", "left");
-                    Qt::Alignment alignment;
-                    if (halign.compare("left", Qt::CaseInsensitive) == 0)
-                        alignment = Qt::AlignLeft;
-                    else if (halign.compare("right", Qt::CaseInsensitive) == 0)
-                        alignment = Qt::AlignRight;
-                    else
-                        alignment = Qt::AlignCenter;
-                    QString valign = currentElement.attribute("vertical_alignment", "center");
-                    if (valign.compare("top", Qt::CaseInsensitive) == 0)
-                        alignment = alignment | Qt::AlignTop;
-                    else if (valign.compare("bottom", Qt::CaseInsensitive) == 0)
-                        alignment = alignment | Qt::AlignBottom;
-                    else
-                        alignment = alignment | Qt::AlignVCenter;
-                    currentRowElement.setAlignment(alignment);
-
-                    row.addElement(currentRowElement);
-                    break;
-                }// case default
-                } // switch type
-            } // for loop elements
-
-            currentLayout.addRow(row);
-        } // for loop rows
-        if (!layoutName.isEmpty()) {
-            tabBoxLayouts.insert(layoutName, currentLayout);
-        }
-    } // for loop layouts
+    XDeleteProperty(dpy, config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : QX11Info::appRootWindow(), atom);
 }
 
 /***********************************************
@@ -395,18 +215,6 @@ const KWin::TabBox::TabBoxConfig& TabBoxHandler::config() const
 
 void TabBoxHandler::setConfig(const TabBoxConfig& config)
 {
-    if (config.layoutName() != d->config.layoutName()) {
-        // new item layout config
-        if (d->tabBoxLayouts.contains(config.layoutName()) && d->view) {
-            d->view->clientDelegate()->setConfig(d->tabBoxLayouts.value(config.layoutName()));
-            d->view->desktopDelegate()->setConfig(d->tabBoxLayouts.value(config.layoutName()));
-        }
-    }
-    if (config.selectedItemLayoutName() != d->config.selectedItemLayoutName()) {
-        // TODO: desktop layouts
-        if (d->tabBoxLayouts.contains(config.selectedItemLayoutName()) && d->view)
-            d->view->additionalClientDelegate()->setConfig(d->tabBoxLayouts.value(config.selectedItemLayoutName()));
-    }
     d->config = config;
     emit configChanged();
 }
@@ -449,9 +257,6 @@ void TabBoxHandler::hide(bool abort)
     }
     if (d->config.isShowOutline()) {
         hideOutline();
-    }
-    if (d->view) {
-        d->view->hide();
     }
     if (d->m_declarativeView) {
         d->m_declarativeView->hide();
@@ -550,9 +355,6 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
     if (!index.isValid()) {
         return;
     }
-    if (d->view) {
-        d->view->setCurrentIndex(index);
-    }
     if (d->m_declarativeView) {
         d->m_declarativeView->setCurrentIndex(index);
     }
@@ -630,9 +432,7 @@ QModelIndex TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
 bool TabBoxHandler::containsPos(const QPoint& pos) const
 {
     QWidget *w = NULL;
-    if (d->view && d->view->isVisible()) {
-        w = d->view;
-    } else if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
+    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
         w = d->m_declarativeView;
     } else {
         return false;
@@ -642,10 +442,7 @@ bool TabBoxHandler::containsPos(const QPoint& pos) const
 
 QModelIndex TabBoxHandler::indexAt(const QPoint& pos) const
 {
-    if (d->view && d->view->isVisible()) {
-        QPoint widgetPos = d->view->mapFromGlobal(pos);
-        return d->view->indexAt(widgetPos);
-    } else if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
+    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
         QPoint widgetPos = d->m_declarativeView->mapFromGlobal(pos);
         return d->m_declarativeView->indexAt(widgetPos);
     } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
@@ -692,9 +489,6 @@ void TabBoxHandler::createModel(bool partialReset)
         d->desktopModel()->createDesktopList();
         break;
     }
-    if (d->view) {
-        d->view->updateGeometry();
-    }
 }
 
 QModelIndex TabBoxHandler::first() const
@@ -711,11 +505,6 @@ QModelIndex TabBoxHandler::first() const
         return QModelIndex();
     }
     return model->index(0, 0);
-}
-
-QWidget* TabBoxHandler::tabBoxView() const
-{
-    return d->view;
 }
 
 WId TabBoxHandler::embedded() const

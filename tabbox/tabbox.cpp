@@ -329,7 +329,7 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
     m_tabBox = new TabBoxHandlerImpl(this);
-    connect(m_tabBox, SIGNAL(ready()), SLOT(handlerReady()));
+    QTimer::singleShot(0, this, SLOT(handlerReady()));
     connect(m_tabBox, SIGNAL(selectedIndexChanged()), SIGNAL(itemSelected()));
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables

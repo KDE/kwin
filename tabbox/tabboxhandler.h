@@ -80,7 +80,6 @@ class DesktopModel;
 class ClientModel;
 class TabBoxConfig;
 class TabBoxClient;
-class TabBoxView;
 class TabBoxHandlerPrivate;
 typedef QList< TabBoxClient* > TabBoxClientList;
 
@@ -325,11 +324,6 @@ public:
     Qt::Alignment embeddedAlignment() const;
     void resetEmbedded();
 
-    /**
-    * @return The tabBoxView Widget
-    */
-    QWidget* tabBoxView() const;
-
 protected:
     /**
      * Show the outline of the current selected window
@@ -357,7 +351,6 @@ signals:
     * @see setConfig
     */
     void configChanged();
-    void ready();
     void embeddedChanged(bool enabled);
     void selectedIndexChanged();
 
