@@ -1273,7 +1273,7 @@ public:
     void unminimize();
     void closeWindow() const;
 
-    virtual bool visibleInClientGroup() const = 0;
+    bool visibleInClientGroup() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

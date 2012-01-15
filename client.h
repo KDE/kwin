@@ -223,6 +223,11 @@ class Client
      **/
     Q_PROPERTY(KWin::ClientGroup* clientGroup READ clientGroup NOTIFY clientGroupChanged)
     /**
+     * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
+     * For change connect to the visibleChanged signal on the Client's Group.
+     **/
+    Q_PROPERTY(bool visibleInClientGroup READ isVisibleInClientGroup)
+    /**
      * Minimum size as specified in WM_NORMAL_HINTS
      **/
     Q_PROPERTY(QSize minSize READ minSize)
@@ -510,6 +515,7 @@ public:
     *   client, this function stops it.
     */
     void dontMoveResize();
+    bool isVisibleInClientGroup() const;
 
     /**
      * Whether or not the window has a strut that expands through the invisible area of

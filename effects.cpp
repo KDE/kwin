@@ -1450,16 +1450,6 @@ WindowQuadList EffectWindowImpl::buildQuads(bool force) const
     return sceneWindow()->buildQuads(force);
 }
 
-bool EffectWindowImpl::visibleInClientGroup() const
-{
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        if (!c->clientGroup())
-            return true;
-        return c == c->clientGroup()->visible();
-    }
-    return false;
-}
-
 void EffectWindowImpl::setData(int role, const QVariant &data)
 {
     if (!data.isNull())

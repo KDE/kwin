@@ -253,8 +253,6 @@ public:
 
     virtual WindowQuadList buildQuads(bool force = false) const;
 
-    virtual bool visibleInClientGroup() const;
-
     const Toplevel* window() const;
     Toplevel* window();
 

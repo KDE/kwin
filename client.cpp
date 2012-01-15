@@ -1903,6 +1903,14 @@ void Client::setClientGroup(ClientGroup* group)
     emit clientGroupChanged();
 }
 
+bool Client::isVisibleInClientGroup() const
+{
+    if (!client_group) {
+        return true;
+    }
+    return (client_group->visible() == this);
+}
+
 void Client::dontMoveResize()
 {
     buttonDown = false;
