@@ -161,6 +161,11 @@ QRect Deleted::transparentRect() const
     return transparent_rect;
 }
 
+bool Deleted::isDeleted() const
+{
+    return true;
+}
+
 } // namespace
 
 #include "deleted.moc"

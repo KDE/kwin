@@ -144,6 +144,15 @@ class Toplevel
      */
     Q_PROPERTY(int windowType READ windowType)
     Q_PROPERTY(QStringList activities READ activities)
+    /**
+     * Whether this Toplevel is managed by KWin (it has control over its placement and other
+     * aspects, as opposed to override-redirect windows that are entirely handled by the application).
+     **/
+    Q_PROPERTY(bool managed READ isClient CONSTANT)
+    /**
+     * Whether this Toplevel represents an already deleted window and only kept for the compositor for animations.
+     **/
+    Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 public:
     Toplevel(Workspace *ws);
     Window frameId() const;
@@ -165,6 +174,8 @@ public:
     virtual QRect decorationRect() const; // rect including the decoration shadows
     virtual QRect transparentRect() const = 0;
     virtual QRegion decorationPendingRegion() const; // decoration region that needs to be repainted
+    virtual bool isClient() const;
+    virtual bool isDeleted() const;
 
     // prefer isXXX() instead
     // 0 for supported types means default for managed/unmanaged types

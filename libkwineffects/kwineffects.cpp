@@ -323,6 +323,8 @@ WINDOW_HELPER(bool, isTooltip, "tooltip")
 WINDOW_HELPER(bool, isNotification, "notification")
 WINDOW_HELPER(bool, isComboBox, "comboBox")
 WINDOW_HELPER(bool, isDNDIcon, "dndIcon")
+WINDOW_HELPER(bool, isManaged, "managed")
+WINDOW_HELPER(bool, isDeleted, "deleted")
 WINDOW_HELPER(QString, windowRole, "windowRole")
 
 QString EffectWindow::windowClass() const

@@ -240,7 +240,6 @@ public:
 
     virtual void refWindow();
     virtual void unrefWindow();
-    virtual bool isDeleted() const;
 
     virtual const EffectWindowGroup* group() const;
 
@@ -250,7 +249,6 @@ public:
     virtual QByteArray readProperty(long atom, long type, int format) const;
     virtual void deleteProperty(long atom) const;
 
-    virtual bool isManaged() const; // managed or override-redirect
     virtual EffectWindow* findModal();
     virtual EffectWindowList mainWindows() const;
 

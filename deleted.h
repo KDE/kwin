@@ -40,6 +40,7 @@ public:
     virtual QPoint clientPos() const;
     virtual QSize clientSize() const;
     virtual QRect transparentRect() const;
+    virtual bool isDeleted() const;
     const QPixmap *topDecoPixmap() const {
         return &decorationPixmapTop;
     }

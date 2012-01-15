@@ -1099,7 +1099,7 @@ public:
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
-    virtual bool isDeleted() const = 0;
+    bool isDeleted() const;
 
     bool isMinimized() const;
     double opacity() const;
@@ -1244,7 +1244,7 @@ public:
      * Returns whether the window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
      */
-    virtual bool isManaged() const = 0; // whether it's managed or override-redirect
+    bool isManaged() const; // whether it's managed or override-redirect
     /**
      * Returns whether or not the window can accept keyboard focus.
      */

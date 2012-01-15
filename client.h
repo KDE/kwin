@@ -579,6 +579,7 @@ public:
 
     //sets whether the client should be treated as a SessionInteract window
     void setSessionInteract(bool needed);
+    virtual bool isClient() const;
 
 public slots:
     void closeWindow();

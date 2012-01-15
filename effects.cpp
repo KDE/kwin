@@ -1378,11 +1378,6 @@ const EffectWindowGroup* EffectWindowImpl::group() const
     return NULL; // TODO
 }
 
-bool EffectWindowImpl::isDeleted() const
-{
-    return (dynamic_cast<Deleted*>(toplevel) != 0);
-}
-
 void EffectWindowImpl::refWindow()
 {
     if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
@@ -1432,11 +1427,6 @@ QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) cons
 void EffectWindowImpl::deleteProperty(long int atom) const
 {
     deleteWindowProperty(window()->window(), atom);
-}
-
-bool EffectWindowImpl::isManaged() const
-{
-    return dynamic_cast< const Client* >(toplevel) != NULL;
 }
 
 EffectWindow* EffectWindowImpl::findModal()

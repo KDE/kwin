@@ -2405,6 +2405,11 @@ void Client::updateFirstInTabBox()
         XFree(data);
 }
 
+bool Client::isClient() const
+{
+    return true;
+}
+
 } // namespace
 
 #include "client.moc"
