@@ -1356,21 +1356,6 @@ void EffectWindowImpl::disablePainting(int reason)
     sceneWindow()->disablePainting(reason);
 }
 
-void EffectWindowImpl::addRepaint(const QRect& r)
-{
-    toplevel->addRepaint(r);
-}
-
-void EffectWindowImpl::addRepaint(int x, int y, int w, int h)
-{
-    toplevel->addRepaint(x, y, w, h);
-}
-
-void EffectWindowImpl::addRepaintFull()
-{
-    toplevel->addRepaintFull();
-}
-
 const EffectWindowGroup* EffectWindowImpl::group() const
 {
     if (Client* c = dynamic_cast< Client* >(toplevel))

@@ -232,10 +232,10 @@ public:
     bool updateUnredirectedState();
     bool unredirected() const;
     void suspendUnredirect(bool suspend);
-    void addRepaint(const QRect& r);
-    void addRepaint(const QRegion& r);
-    void addRepaint(int x, int y, int w, int h);
-    virtual void addRepaintFull();
+    Q_INVOKABLE void addRepaint(const QRect& r);
+    Q_INVOKABLE void addRepaint(const QRegion& r);
+    Q_INVOKABLE void addRepaint(int x, int y, int w, int h);
+    Q_INVOKABLE virtual void addRepaintFull();
     // these call workspace->addRepaint(), but first transform the damage if needed
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);

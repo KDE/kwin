@@ -234,9 +234,6 @@ public:
     virtual void enablePainting(int reason);
     virtual void disablePainting(int reason);
     virtual bool isPaintingEnabled();
-    virtual void addRepaint(const QRect& r);
-    virtual void addRepaint(int x, int y, int w, int h);
-    virtual void addRepaintFull();
 
     virtual void refWindow();
     virtual void unrefWindow();

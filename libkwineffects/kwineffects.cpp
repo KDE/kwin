@@ -403,6 +403,21 @@ void EffectWindow::closeWindow() const
     QMetaObject::invokeMethod(parent(), "closeWindow");
 }
 
+void EffectWindow::addRepaint(int x, int y, int w, int h)
+{
+    QMetaObject::invokeMethod(parent(), "addRepaint", Q_ARG(int, x), Q_ARG(int, y), Q_ARG(int, w), Q_ARG(int, h));
+}
+
+void EffectWindow::addRepaint(const QRect &r)
+{
+    QMetaObject::invokeMethod(parent(), "addRepaint", Q_ARG(const QRect&, r));
+}
+
+void EffectWindow::addRepaintFull()
+{
+    QMetaObject::invokeMethod(parent(), "addRepaintFull");
+}
+
 bool EffectWindow::isOnCurrentActivity() const
 {
     return isOnActivity(effects->currentActivity());
