@@ -153,6 +153,10 @@ class Toplevel
      * Whether this Toplevel represents an already deleted window and only kept for the compositor for animations.
      **/
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
+    /**
+     * Whether the window has an own shape
+     **/
+    Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
 public:
     Toplevel(Workspace *ws);
     Window frameId() const;
@@ -278,6 +282,12 @@ signals:
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
     void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
     void windowShown(KWin::Toplevel* toplevel);
+    /**
+     * Signal emitted when the window's shape state changed. That is if it did not have a shape
+     * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
+     * decoration.
+     **/
+    void shapedChanged();
 
 protected:
     virtual ~Toplevel();

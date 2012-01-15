@@ -104,7 +104,11 @@ QRect Toplevel::decorationRect() const
 
 void Toplevel::detectShape(Window id)
 {
+    const bool wasShape = is_shape;
     is_shape = Extensions::hasShape(id);
+    if (wasShape != is_shape) {
+        emit shapedChanged();
+    }
 }
 
 // used only by Deleted::copy()

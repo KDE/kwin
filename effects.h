@@ -244,7 +244,6 @@ public:
     virtual const EffectWindowGroup* group() const;
 
     virtual QRegion shape() const;
-    virtual bool hasOwnShape() const;
     virtual QRect decorationInnerRect() const;
     virtual QByteArray readProperty(long atom, long type, int format) const;
     virtual void deleteProperty(long atom) const;

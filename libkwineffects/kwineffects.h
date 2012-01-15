@@ -1127,7 +1127,7 @@ public:
     virtual QRegion shape() const = 0;
     int screen() const;
     /** @internal Do not use */
-    virtual bool hasOwnShape() const = 0; // only for shadow effect, for now
+    bool hasOwnShape() const; // only for shadow effect, for now
     QPoint pos() const;
     QSize size() const;
     QRect rect() const;

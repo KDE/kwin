@@ -1408,11 +1408,6 @@ QRegion EffectWindowImpl::shape() const
     return sw ? sw->shape() : geometry();
 }
 
-bool EffectWindowImpl::hasOwnShape() const
-{
-    return toplevel->shape();
-}
-
 QRect EffectWindowImpl::decorationInnerRect() const
 {
     Client *client = dynamic_cast<Client*>(toplevel);
