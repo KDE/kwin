@@ -372,7 +372,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 
                     if (tAnchor != sAnchor) {
                         QPointF pt2(xCoord(geo, tAnchor), yCoord(geo, tAnchor));
-                        pt += prgrs*(pt2 - pt);
+                        pt += static_cast<qreal>(prgrs)*(pt2 - pt);
                     }
 
                     rot.xRotationPoint = pt.x();
