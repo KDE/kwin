@@ -118,6 +118,10 @@ namespace Oxygen
             foreach( QLabel* widget, children )
             { widget->setAutoFillBackground( false ); }
 
+            // also change shadow configuration size to something that fits in the preview list
+            shadowCache().setShadowSize( QPalette::Active, 15 );
+            shadowCache().setShadowSize( QPalette::Inactive, 15 );
+
         }
 
         _initialized = true;
