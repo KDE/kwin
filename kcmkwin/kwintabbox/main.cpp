@@ -228,8 +228,6 @@ void KWinTabBoxConfig::loadConfig(const KConfigGroup& config, KWin::TabBox::TabB
                                             config.readEntry<int>("SwitchingMode", TabBox::TabBoxConfig::defaultSwitchingMode())));
     tabBoxConfig.setLayout(TabBox::TabBoxConfig::LayoutMode(
                                config.readEntry<int>("LayoutMode", TabBox::TabBoxConfig::defaultLayoutMode())));
-    tabBoxConfig.setSelectedItemViewPosition(TabBox::TabBoxConfig::SelectedItemViewPosition(
-                config.readEntry<int>("SelectedItem", TabBox::TabBoxConfig::defaultSelectedItemViewPosition())));
     tabBoxConfig.setShowDesktop(config.readEntry<bool>("ShowDesktop",
                                 TabBox::TabBoxConfig::defaultShowDesktop()));
 
@@ -255,7 +253,6 @@ void KWinTabBoxConfig::saveConfig(KConfigGroup& config, const KWin::TabBox::TabB
     config.writeEntry("ListMode",           int(tabBoxConfig.clientListMode()));
     config.writeEntry("SwitchingMode",      int(tabBoxConfig.clientSwitchingMode()));
     config.writeEntry("LayoutMode",         int(tabBoxConfig.layout()));
-    config.writeEntry("SelectedItem",       int(tabBoxConfig.selectedItemViewPosition()));
     config.writeEntry("LayoutName",         tabBoxConfig.layoutName());
     config.writeEntry("SelectedLayoutName", tabBoxConfig.selectedItemLayoutName());
     config.writeEntry("ShowDesktop",        tabBoxConfig.isShowDesktop());

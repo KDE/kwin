@@ -94,18 +94,6 @@ public:
         ClientTabBox,///< TabBox uses TabBoxClientModel
         DesktopTabBox///< TabBox uses TabBoxDesktopModel
     };
-    /**
-    * SelectedItemViewPosition defines where an additional view only showing the selected item is shown.
-    * This second view is useful when using for example icon only layout and wanting to provide the
-    * caption of selected item.
-    */
-    enum SelectedItemViewPosition {
-        NonePosition,///< There is no additional view for selected item
-        AbovePosition,///< Additional view is positioned above of the switching list
-        BelowPosition,///< Additional view is positioned below of the switching list
-        LeftPosition,///< Additional view is positioned left of the switching list
-        RightPosition///< Additional view is positioned right of the switching list
-    };
     TabBoxConfig();
     ~TabBoxConfig();
     TabBoxConfig& operator=(const TabBoxConfig& object);
@@ -163,12 +151,6 @@ public:
     * @see setDesktopSwitchingMode
     */
     DesktopSwitchingMode desktopSwitchingMode() const;
-    /**
-    * @return The position of the selected item view.
-    * @see setSelectedItemViewPosition
-    * @see defaultSelectedItemViewPosition
-    */
-    SelectedItemViewPosition selectedItemViewPosition() const;
     /**
     * @return The minimum width in percent of screen width the TabBox should use.
     * @see setMinWidth
@@ -247,11 +229,6 @@ public:
     */
     void setDesktopSwitchingMode(DesktopSwitchingMode switchingMode);
     /**
-    * @param viewPosition The new position of the selected item view
-    * @see selectedItemViewPosition
-    */
-    void setSelectedItemViewPosition(SelectedItemViewPosition viewPosition);
-    /**
     * @param value The minimum width of TabBox in percent of screen width.
     * @see minWidth
     */
@@ -286,9 +263,6 @@ public:
     }
     static LayoutMode defaultLayoutMode() {
         return VerticalLayout;
-    }
-    static SelectedItemViewPosition defaultSelectedItemViewPosition() {
-        return NonePosition;
     }
     static bool defaultShowTabBox() {
         return true;
