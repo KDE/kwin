@@ -24,11 +24,13 @@ SWrapper::WorkspaceProxy* SWrapper::WorkspaceProxy::_instance = 0;
 
 SWrapper::WorkspaceProxy::WorkspaceProxy()
 {
-    _instance = this;
 }
 
 SWrapper::WorkspaceProxy* SWrapper::WorkspaceProxy::instance()
 {
+    if (!_instance) {
+        _instance = new WorkspaceProxy();
+    }
     return _instance;
 }
 

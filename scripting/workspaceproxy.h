@@ -57,8 +57,6 @@ class WorkspaceProxy : public QObject
     Q_OBJECT
 
 public:
-    WorkspaceProxy();
-    static WorkspaceProxy* _instance;
     static WorkspaceProxy* instance();
 
 public slots:
@@ -78,6 +76,10 @@ signals:
     void killWindowCalled(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientSetKeepAbove(KWin::Client*, bool);
+
+private:
+    WorkspaceProxy();
+    static WorkspaceProxy* _instance;
 };
 
 }
