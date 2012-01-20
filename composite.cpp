@@ -49,7 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "scene.h"
-#include "scene_basic.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "shadow.h"
@@ -101,10 +100,6 @@ void Workspace::setupCompositing()
     cm_selection->claim(true);   // force claiming
 
     switch(options->compositingMode) {
-        /*case 'B':
-            kDebug( 1212 ) << "X compositing";
-            scene = new SceneBasic( this );
-          break; // don't fall through (this is a testing one) */
     case OpenGLCompositing: {
         kDebug(1212) << "Initializing OpenGL compositing";
 
