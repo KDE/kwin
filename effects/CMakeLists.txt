@@ -1,8 +1,6 @@
 # the factory macros cause errors
 kde4_no_enable_final(kwineffects)
 
-# Uncomment to have the test effects built as well
-#add_subdirectory( _test )
 macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
     target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES})
