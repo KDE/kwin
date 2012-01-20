@@ -1,5 +1,6 @@
 /********************************************************************
 Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2012 Nuno Pinheiro <nuno@oxygen-icons.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,19 +17,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtra
-import org.kde.plasma.components 0.1 as PlasmaComponents
 
-Item {
+BorderImage {
     property alias currentIndex: listView.currentIndex
+    source: "images/bg.png"
+    border {
+        left: 4
+        top: 4
+        right: 4
+        bottom: 4
+    }
+
+    MouseArea {
+        id: focusOver
+        anchors.fill: parent
+        hoverEnabled: true
+    }
+
     ListView {
         id: listView
-        height: parent.height
-        width: parent.width - scrollBar.width
+        x: 3
+        height: parent.height - 1 // -1 on the account of the last pixel being a glow pixel
+        width: parent.width - 6 - scrollbar.width
         model: decorationModel
-        highlight: PlasmaComponents.Highlight {
-            width: listView.width - 10
-            height: 140
-            hover: true
+        highlight: Rectangle {
+            width: listView.width
+            height: 150
+            color: "lightsteelblue"
+            opacity: 0.5
         }
         delegate: Item {
             width: listView.width
@@ -51,13 +67,34 @@ Item {
             }
         }
     }
-    PlasmaComponents.ScrollBar {
-        id: scrollBar
-        flickableItem: listView
-        anchors {
-            right: parent.right
-            top: parent.top
-            bottom: parent.bottom
+    OxygenScrollbar {
+        id: scrollbar
+        list: listView
+        itemHeight: 150
+    }
+
+    BorderImage {
+        id: shadow
+        source: "images/shadow.png"
+        anchors.fill:parent
+        border.left: 4; border.top: 4
+        border.right: 4; border.bottom: 5
+        opacity:focusOver.containsMouse? 0.01:1 //insert here a proper focus mechanism
+        Behavior on opacity {
+            NumberAnimation {  duration: 300 }
+        }
+
+    }
+
+    BorderImage {
+        id: glow
+        source: "images/glow.png"
+        anchors.fill:parent
+        border.left: 4; border.top: 4
+        border.right: 4; border.bottom: 5
+        opacity:focusOver.containsMouse? 1:0 //insert here a proper focus mechanism
+        Behavior on opacity {
+            NumberAnimation {  duration: 300 }
         }
     }
 }

@@ -89,6 +89,10 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    m_ui->decorationList->setAttribute(Qt::WA_TranslucentBackground);
+    QPalette pal = m_ui->decorationList->palette();
+    pal.setColor(m_ui->decorationList->backgroundRole(), Qt::transparent);
+    m_ui->decorationList->setPalette(pal);
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         m_ui->decorationList->engine()->addImportPath(importPath);
     }
