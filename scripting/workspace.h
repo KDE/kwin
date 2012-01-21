@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2010 Rohan Prabhu <rohan@rohanprabhu.com>
+Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTING_WORKSPACE_H
 
 #include "../workspace.h"
-#include <QScriptEngine>
 
 namespace SWrapper
 {
@@ -30,13 +30,17 @@ namespace SWrapper
 class Workspace : public QObject
 {
     Q_OBJECT
-    //Don't add WRITE for now. Access considerations
-    Q_PROPERTY(int currentDesktop READ currentDesktop)
+    Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
+    Q_PROPERTY(KWin::Client *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
+    // TODO: write and notify?
+    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize)
+    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth)
+    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight)
+    Q_PROPERTY(int workspaceWidth READ workspaceWidth)
+    Q_PROPERTY(int workspaceHeight READ workspaceHeight)
+    Q_PROPERTY(QSize workspaceSize READ workspaceSize)
 
 private:
-    static KWin::Workspace* centralObject;
-    QScriptEngine* centralEngine;
-
     Q_DISABLE_COPY(Workspace)
 
 signals:
@@ -57,22 +61,21 @@ signals:
 public:
     Workspace(QObject* parent = 0);
     int currentDesktop() const;
-    void attach(QScriptEngine*);
+    void setCurrentDesktop(int desktop);
+    KWin::Client *activeClient();
+    void setActiveClient(KWin::Client *client);
+    QSize desktopGridSize() const;
+    int desktopGridWidth() const;
+    int desktopGridHeight() const;
+    int workspaceWidth() const;
+    int workspaceHeight() const;
+    QSize workspaceSize() const;
 
-    static QScriptValue getAllClients(QScriptContext*, QScriptEngine*);
-
-    static bool initialize(KWin::Workspace*);
-    static QScriptValue setCurrentDesktop(QScriptContext*, QScriptEngine*);
-    static QScriptValue dimensions(QScriptContext*, QScriptEngine*);
-    static QScriptValue desktopGridSize(QScriptContext*, QScriptEngine*);
-    static QScriptValue activeClient(QScriptContext*, QScriptEngine*);
-    static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
+    Q_INVOKABLE QList< KWin::Client* > clientList() const;
 
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);
 };
-
-QScriptValue valueForClient(KWin::Client *client, QScriptEngine *engine);
 
 }
 

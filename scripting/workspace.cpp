@@ -3,7 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2010 Rohan Prabhu <rohan@rohanprabhu.com>
-Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2011, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,156 +20,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "workspace.h"
-#include "meta.h"
 #include "../client.h"
-
-KWin::Workspace*  SWrapper::Workspace::centralObject = 0;
-
-QScriptValue SWrapper::valueForClient(KWin::Client *client, QScriptEngine *engine) {
-    return engine->newQObject(client, QScriptEngine::QtOwnership,
-                              QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
-}
 
 SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
 {
-    if (centralObject == 0) {
-        return;
-    } else {
-
-        QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*,int)),
-                         this, SIGNAL(desktopPresenceChanged(KWin::Client*,int))
-                        );
-
-        QObject::connect(centralObject, SIGNAL(currentDesktopChanged(int)),
-                         this, SIGNAL(currentDesktopChanged(int))
-                        );
-
-        QObject::connect(centralObject, SIGNAL(clientAdded(KWin::Client*)),
-                         this, SIGNAL(clientAdded(KWin::Client*))
-                        );
-        QObject::connect(centralObject, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
-
-        QObject::connect(centralObject, SIGNAL(clientRemoved(KWin::Client*)),
-                         this, SIGNAL(clientRemoved(KWin::Client*))
-                        );
-
-        QObject::connect(centralObject, SIGNAL(clientActivated(KWin::Client*)),
-                         this, SIGNAL(clientActivated(KWin::Client*))
-                        );
-    }
-    foreach (KWin::Client *client, centralObject->clientList()) {
+    KWin::Workspace *ws = KWin::Workspace::self();
+    connect(ws, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)));
+    connect(ws, SIGNAL(currentDesktopChanged(int)), SIGNAL(currentDesktopChanged(int)));
+    connect(ws, SIGNAL(clientAdded(KWin::Client*)), SIGNAL(clientAdded(KWin::Client*)));
+    connect(ws, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
+    connect(ws, SIGNAL(clientRemoved(KWin::Client*)), SIGNAL(clientRemoved(KWin::Client*)));
+    connect(ws, SIGNAL(clientActivated(KWin::Client*)), SIGNAL(clientActivated(KWin::Client*)));
+    foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
     }
 }
 
-bool SWrapper::Workspace::initialize(KWin::Workspace* wspace)
+QList< KWin::Client* > SWrapper::Workspace::clientList() const
 {
-    if (wspace == 0) {
-        return false;
-    } else {
-        SWrapper::Workspace::centralObject = wspace;
-        return true;
-    }
+    return KWin::Workspace::self()->clientList();
 }
 
-QScriptValue SWrapper::Workspace::getAllClients(QScriptContext* ctx, QScriptEngine* eng)
+KWin::Client* SWrapper::Workspace::activeClient()
 {
-    const KWin::ClientList x = centralObject->stackingOrder();
-
-    if (ctx->argumentCount() == 0) {
-        QScriptValue array = eng->newArray(x.size());
-        for (int i=0; i<x.size(); ++i) {
-            array.setProperty(i, valueForClient(x.at(i), eng));
-        }
-        return array;
-    } else {
-        KWin::ClientList ret;
-        int desk_no = (ctx->argument(0)).toNumber();
-        if ((desk_no >= 1) && (desk_no > SWrapper::Workspace::centralObject->numberOfDesktops())) {
-            return QScriptValue();
-        } else {
-            QScriptValue array = eng->newArray();
-            for (int i = 0; i < x.size(); i++) {
-                if (x.at(i)->desktop() == desk_no) {
-                    ret.append(x.at(i));
-                }
-            }
-            for (int i=0; i<ret.size(); ++i) {
-                array.setProperty(i, valueForClient(ret.at(i), eng));
-            }
-
-            return array;
-        }
-    }
+    return KWin::Workspace::self()->activeClient();
 }
 
-QScriptValue SWrapper::Workspace::activeClient(QScriptContext* ctx, QScriptEngine* eng)
+void SWrapper::Workspace::setActiveClient(KWin::Client* client)
 {
-    Q_UNUSED(ctx);
-    return valueForClient(centralObject->activeClient(), eng);
+    KWin::Workspace::self()->activateClient(client);
 }
 
-QScriptValue SWrapper::Workspace::setCurrentDesktop(QScriptContext* ctx, QScriptEngine* /*eng*/)
+void SWrapper::Workspace::setCurrentDesktop(int desktop)
 {
-    if (ctx->argumentCount() >= 1) {
-        int num = ((ctx->argument(0)).isNumber()) ? ((ctx->argument(0)).toNumber()) : (-1);
-        if (num != -1) {
-            centralObject->setCurrentDesktop(num);
-        }
-    }
-
-    return QScriptValue();
+    KWin::Workspace::self()->setCurrentDesktop(desktop);
 }
 
-QScriptValue SWrapper::Workspace::dimensions(QScriptContext* ctx, QScriptEngine* eng)
+int SWrapper::Workspace::workspaceWidth() const
 {
-    Q_UNUSED(ctx);
-    return eng->toScriptValue(QSize(centralObject->workspaceWidth(), centralObject->workspaceHeight()));
+    return KWin::Workspace::self()->workspaceWidth();
 }
 
-QScriptValue SWrapper::Workspace::desktopGridSize(QScriptContext* ctx, QScriptEngine* eng)
+int SWrapper::Workspace::workspaceHeight() const
 {
-    Q_UNUSED(ctx);
-    return eng->toScriptValue(centralObject->desktopGridSize());
+    return KWin::Workspace::self()->workspaceHeight();
 }
 
-QScriptValue SWrapper::Workspace::clientGroups(QScriptContext* ctx, QScriptEngine* eng)
+QSize SWrapper::Workspace::workspaceSize() const
 {
-    Q_UNUSED(ctx);
-    return eng->toScriptValue<QList<KWin::ClientGroup*> >(centralObject->clientGroups);
+    return QSize(workspaceWidth(), workspaceHeight());
+}
+
+QSize SWrapper::Workspace::desktopGridSize() const
+{
+    return KWin::Workspace::self()->desktopGridSize();
+}
+
+int SWrapper::Workspace::desktopGridWidth() const
+{
+    return KWin::Workspace::self()->desktopGridWidth();
+}
+
+int SWrapper::Workspace::desktopGridHeight() const
+{
+    return KWin::Workspace::self()->desktopGridHeight();
 }
 
 int SWrapper::Workspace::currentDesktop() const
 {
-    return centralObject->currentDesktop();
-}
-
-void SWrapper::Workspace::attach(QScriptEngine* engine)
-{
-    QScriptValue func;
-    centralEngine = engine;
-
-    QScriptValue self = engine->newQObject(
-                            this,
-                            QScriptEngine::QtOwnership,
-                            QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater
-                        );
-
-    func = engine->newFunction(setCurrentDesktop, 1);
-    self.setProperty("setCurrentDesktop", func, QScriptValue::Undeletable);
-
-    func = engine->newFunction(getAllClients, 0);
-    self.setProperty("getAllClients", func, QScriptValue::Undeletable);
-
-    func = engine->newFunction(dimensions, 0);
-    self.setProperty("dimensions", func, QScriptValue::Undeletable);
-
-    func = engine->newFunction(desktopGridSize, 0);
-    self.setProperty("desktopGridSize", func, QScriptValue::Undeletable);
-    self.setProperty("activeClient", engine->newFunction(activeClient, 0), QScriptValue::Undeletable);
-    self.setProperty("clientGroups", engine->newFunction(clientGroups, 0), QScriptValue::Undeletable);
-
-    (engine->globalObject()).setProperty("workspace", self, QScriptValue::Undeletable);
+    return KWin::Workspace::self()->currentDesktop();
 }
 
 void SWrapper::Workspace::setupClientConnections(KWin::Client *client)

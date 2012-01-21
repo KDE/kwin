@@ -77,7 +77,9 @@ void KWin::Script::run()
         return;
     }
     if (m_scriptFile.open(QIODevice::ReadOnly)) {
-        m_workspace->attach(m_engine);
+        QScriptValue workspace = m_engine->newQObject(m_workspace, QScriptEngine::QtOwnership,
+                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
+        m_engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
         m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(m_engine);
@@ -157,9 +159,6 @@ void KWin::Scripting::start()
     for (int i = 0; i < scriptList.size(); i++) {
         loadScript(scriptsDir.filePath(scriptList.at(i)));
     }
-
-    // Initialize singletons. Currently, only KWin::Workspace.
-    SWrapper::Workspace::initialize(KWin::Workspace::self());
 
     runScripts();
 }
