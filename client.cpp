@@ -34,11 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <signal.h>
 
-#ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/scripting.h"
-#include "scripting/workspaceproxy.h"
-#endif
-
 #include "bridge.h"
 #include "group.h"
 #include "workspace.h"
@@ -985,16 +980,6 @@ void Client::minimize(bool avoid_animation)
     if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
         info->setState(0, NET::Shaded);
 
-#ifdef KWIN_BUILD_SCRIPTING
-    //Scripting call. Does not use a signal/slot mechanism
-    //as ensuring connections was a bit difficult between
-    //so many clients and the workspace
-    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
-    if (ws_wrap != 0) {
-        ws_wrap->sl_clientMinimized(this);
-    }
-#endif
-
     Notify::raise(Notify::Minimize);
 
     minimized = true;
@@ -1024,15 +1009,6 @@ void Client::unminimize(bool avoid_animation)
 
     if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
         info->setState(NET::Shaded, NET::Shaded);
-
-#ifdef KWIN_BUILD_SCRIPTING
-    SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
-    if (ws_wrap != 0) {
-        ws_wrap->sl_clientUnminimized(this);
-    }
-#endif
-
-    emit s_unminimized();
 
     Notify::raise(Notify::UnMinimize);
     minimized = false;

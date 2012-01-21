@@ -626,9 +626,9 @@ private slots:
     //calls
 signals:
     void clientManaging(KWin::Client*);
-    void s_unminimized();
-    void maximizeSet(QPair<bool, bool>);
+    void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
+    void clientMaximizedStateChanged(KWin::Client* c, bool h, bool v);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);
     void clientStartUserMovedResized(KWin::Client*);

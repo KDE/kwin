@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "workspace.h"
-#include "workspaceproxy.h"
 #include "meta.h"
 #include "../client.h"
 
@@ -36,7 +35,6 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
     if (centralObject == 0) {
         return;
     } else {
-        SWrapper::WorkspaceProxy* proxy = SWrapper::WorkspaceProxy::instance();
 
         QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*,int)),
                          this, SIGNAL(desktopPresenceChanged(KWin::Client*,int))
@@ -49,6 +47,7 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
         QObject::connect(centralObject, SIGNAL(clientAdded(KWin::Client*)),
                          this, SIGNAL(clientAdded(KWin::Client*))
                         );
+        QObject::connect(centralObject, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
 
         QObject::connect(centralObject, SIGNAL(clientRemoved(KWin::Client*)),
                          this, SIGNAL(clientRemoved(KWin::Client*))
@@ -57,36 +56,9 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
         QObject::connect(centralObject, SIGNAL(clientActivated(KWin::Client*)),
                          this, SIGNAL(clientActivated(KWin::Client*))
                         );
-
-        QObject::connect(proxy, SIGNAL(clientMinimized(KWin::Client*)),
-                         this, SIGNAL(clientMinimized(KWin::Client*))
-                        );
-
-        QObject::connect(proxy, SIGNAL(clientUnminimized(KWin::Client*)),
-                         this, SIGNAL(clientUnminimized(KWin::Client*))
-                        );
-
-        QObject::connect(proxy, SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)),
-                         this, SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool))
-                        );
-
-        QObject::connect(proxy, SIGNAL(clientManaging(KWin::Client*)),
-                         this, SIGNAL(clientManaging(KWin::Client*))
-                        );
-
-        QObject::connect(proxy, SIGNAL(killWindowCalled(KWin::Client*)),
-                         this, SIGNAL(killWindowCalled(KWin::Client*))
-                        );
-
-        QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)),
-                         this, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool))
-                        );
-
-        QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*,bool)),
-                         this, SIGNAL(clientSetKeepAbove(KWin::Client*,bool))
-                        );
-
-
+    }
+    foreach (KWin::Client *client, centralObject->clientList()) {
+        setupClientConnections(client);
     }
 }
 
@@ -198,4 +170,13 @@ void SWrapper::Workspace::attach(QScriptEngine* engine)
     self.setProperty("clientGroups", engine->newFunction(clientGroups, 0), QScriptValue::Undeletable);
 
     (engine->globalObject()).setProperty("workspace", self, QScriptValue::Undeletable);
+}
+
+void SWrapper::Workspace::setupClientConnections(KWin::Client *client)
+{
+    connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
+    connect(client, SIGNAL(clientUnminimized(KWin::Client*,bool)), SIGNAL(clientUnminimized(KWin::Client*)));
+    connect(client, SIGNAL(clientManaging(KWin::Client*)), SIGNAL(clientManaging(KWin::Client*)));
+    connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
+    connect(client, SIGNAL(clientMaximizedStateChanged(KWin::Client*,bool,bool)), SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)));
 }

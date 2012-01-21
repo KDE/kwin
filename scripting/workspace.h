@@ -67,6 +67,9 @@ public:
     static QScriptValue desktopGridSize(QScriptContext*, QScriptEngine*);
     static QScriptValue activeClient(QScriptContext*, QScriptEngine*);
     static QScriptValue clientGroups(QScriptContext*, QScriptEngine*);
+
+private Q_SLOTS:
+    void setupClientConnections(KWin::Client* client);
 };
 
 QScriptValue valueForClient(KWin::Client *client, QScriptEngine *engine);
