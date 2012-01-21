@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "workspace.h"
+#include "workspaceproxy.h"
 #include "meta.h"
+#include "../client.h"
 
 KWin::Workspace*  SWrapper::Workspace::centralObject = 0;
 
@@ -37,184 +39,55 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
         SWrapper::WorkspaceProxy* proxy = SWrapper::WorkspaceProxy::instance();
 
         QObject::connect(centralObject, SIGNAL(desktopPresenceChanged(KWin::Client*,int)),
-                         this, SLOT(sl_desktopPresenceChanged(KWin::Client*,int))
+                         this, SIGNAL(desktopPresenceChanged(KWin::Client*,int))
                         );
 
         QObject::connect(centralObject, SIGNAL(currentDesktopChanged(int)),
-                         this, SLOT(sl_currentDesktopChanged(int))
+                         this, SIGNAL(currentDesktopChanged(int))
                         );
 
         QObject::connect(centralObject, SIGNAL(clientAdded(KWin::Client*)),
-                         this, SLOT(sl_clientAdded(KWin::Client*))
+                         this, SIGNAL(clientAdded(KWin::Client*))
                         );
 
         QObject::connect(centralObject, SIGNAL(clientRemoved(KWin::Client*)),
-                         this, SLOT(sl_clientRemoved(KWin::Client*))
+                         this, SIGNAL(clientRemoved(KWin::Client*))
                         );
 
         QObject::connect(centralObject, SIGNAL(clientActivated(KWin::Client*)),
-                         this, SLOT(sl_clientActivated(KWin::Client*))
-                        );
-
-        QObject::connect(centralObject, SIGNAL(groupAdded(KWin::Group*)),
-                         this, SLOT(sl_groupAdded(KWin::Group*))
+                         this, SIGNAL(clientActivated(KWin::Client*))
                         );
 
         QObject::connect(proxy, SIGNAL(clientMinimized(KWin::Client*)),
-                         this, SLOT(sl_clientMinimized(KWin::Client*))
+                         this, SIGNAL(clientMinimized(KWin::Client*))
                         );
 
         QObject::connect(proxy, SIGNAL(clientUnminimized(KWin::Client*)),
-                         this, SLOT(sl_clientUnminimized(KWin::Client*))
+                         this, SIGNAL(clientUnminimized(KWin::Client*))
                         );
 
-        QObject::connect(proxy, SIGNAL(clientMaximizeSet(KWin::Client*,QPair<bool,bool>)),
-                         this, SLOT(sl_clientMaximizeSet(KWin::Client*,QPair<bool,bool>))
+        QObject::connect(proxy, SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)),
+                         this, SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool))
                         );
 
         QObject::connect(proxy, SIGNAL(clientManaging(KWin::Client*)),
-                         this, SLOT(sl_clientManaging(KWin::Client*))
+                         this, SIGNAL(clientManaging(KWin::Client*))
                         );
 
         QObject::connect(proxy, SIGNAL(killWindowCalled(KWin::Client*)),
-                         this, SLOT(sl_killWindowCalled(KWin::Client*))
+                         this, SIGNAL(killWindowCalled(KWin::Client*))
                         );
 
         QObject::connect(proxy, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)),
-                         this, SLOT(sl_clientFullScreenSet(KWin::Client*,bool,bool))
+                         this, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool))
                         );
 
         QObject::connect(proxy, SIGNAL(clientSetKeepAbove(KWin::Client*,bool)),
-                         this, SLOT(sl_clientSetKeepAbove(KWin::Client*,bool))
+                         this, SIGNAL(clientSetKeepAbove(KWin::Client*,bool))
                         );
 
 
     }
-}
-
-void SWrapper::Workspace::sl_desktopPresenceChanged(KWin::Client* client, int prev_desk)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit desktopPresenceChanged(valueForClient(client, centralEngine),
-                                    centralEngine->toScriptValue(prev_desk)
-                                   );
-    }
-}
-
-void SWrapper::Workspace::sl_clientAdded(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientAdded(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientFullScreenSet(KWin::Client* client, bool set, bool user)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientFullScreenSet(valueForClient(client, centralEngine),
-                                 centralEngine->toScriptValue<bool>(set),
-                                 centralEngine->toScriptValue<bool>(user)
-                                );
-    }
-}
-
-void SWrapper::Workspace::sl_clientSetKeepAbove(KWin::Client* client, bool set)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientSetKeepAbove(valueForClient(client, centralEngine),
-                                centralEngine->toScriptValue<bool>(set)
-                               );
-    }
-}
-
-void SWrapper::Workspace::sl_currentDesktopChanged(int prev_desk)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit currentDesktopChanged(centralEngine->toScriptValue(prev_desk));
-    }
-}
-
-void SWrapper::Workspace::sl_clientRemoved(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientRemoved(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientManaging(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientManaging(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientMinimized(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientMinimized(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientUnminimized(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientUnminimized(valueForClient(client, centralEngine));
-        emit clientRestored(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientMaximizeSet(KWin::Client* client, QPair<bool, bool> param)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        QScriptValue temp = centralEngine->newObject();
-        temp.setProperty("v", centralEngine->toScriptValue(param.first));
-        temp.setProperty("h", centralEngine->toScriptValue(param.second));
-        emit clientMaximizeSet(valueForClient(client, centralEngine), temp);
-    }
-}
-
-void SWrapper::Workspace::sl_killWindowCalled(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit killWindowCalled(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_clientActivated(KWin::Client* client)
-{
-    if (centralEngine == 0) {
-        return;
-    } else {
-        emit clientActivated(valueForClient(client, centralEngine));
-    }
-}
-
-void SWrapper::Workspace::sl_groupAdded(KWin::Group* group)
-{
-    Q_UNUSED(group);
-    //TODO
 }
 
 bool SWrapper::Workspace::initialize(KWin::Workspace* wspace)

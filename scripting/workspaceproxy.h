@@ -22,12 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTING_WORKSPACEPROXY_H
 
 #include <QObject>
-#include <QScriptValue>
 
-#include <QDebug>
-
-#include "../workspace.h"
-#include "../client.h"
+namespace KWin {
+class Client;
+class Workspace;
+}
 
 #define PROXYPASS1(name, param) \
     void SWrapper::WorkspaceProxy::sl_ ## name(param _param) { \
@@ -43,8 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     void SWrapper::WorkspaceProxy::sl_ ## name(param1 _param1, param2 _param2, param3 _param3) { \
         name(_param1, _param2, _param3); \
     }
-
-typedef QPair<bool, bool> DualBool;
 
 namespace SWrapper
 {
@@ -63,7 +60,7 @@ public slots:
     void sl_clientManaging(KWin::Client*);
     void sl_clientMinimized(KWin::Client*);
     void sl_clientUnminimized(KWin::Client*);
-    void sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
+    void sl_clientMaximizeSet(KWin::Client*, bool, bool);
     void sl_killWindowCalled(KWin::Client*);
     void sl_clientFullScreenSet(KWin::Client*, bool, bool);
     void sl_clientSetKeepAbove(KWin::Client*, bool);
@@ -72,7 +69,7 @@ signals:
     void clientManaging(KWin::Client*);
     void clientMinimized(KWin::Client*);
     void clientUnminimized(KWin::Client*);
-    void clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
+    void clientMaximizeSet(KWin::Client*, bool, bool);
     void killWindowCalled(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientSetKeepAbove(KWin::Client*, bool);

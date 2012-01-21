@@ -2104,7 +2104,7 @@ void Client::setMaximize(bool vertically, bool horizontally)
     //so many clients and the workspace
     SWrapper::WorkspaceProxy* ws_wrap = SWrapper::WorkspaceProxy::instance();
     if (ws_wrap != 0) {
-        ws_wrap->sl_clientMaximizeSet(this, QPair<bool, bool>(vertically, horizontally));
+        ws_wrap->sl_clientMaximizeSet(this, vertically, horizontally);
     }
 #endif
 

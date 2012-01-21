@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 // KDE
 #include <kstandarddirs.h>
+#include <KDE/KDebug>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QSettings>

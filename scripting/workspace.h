@@ -21,13 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_WORKSPACE_H
 #define KWIN_SCRIPTING_WORKSPACE_H
 
-#include <QDebug>
-
-#include "./../workspace.h"
-#include "./../client.h"
-#include "./../group.h"
-
-#include "workspaceproxy.h"
+#include "../workspace.h"
 #include <QScriptEngine>
 
 namespace SWrapper
@@ -45,35 +39,20 @@ private:
 
     Q_DISABLE_COPY(Workspace)
 
-public slots:
-    void sl_desktopPresenceChanged(KWin::Client*, int);
-    void sl_currentDesktopChanged(int);
-    void sl_clientAdded(KWin::Client*);
-    void sl_clientRemoved(KWin::Client*);
-    void sl_clientManaging(KWin::Client*);
-    void sl_clientMinimized(KWin::Client*);
-    void sl_clientUnminimized(KWin::Client*);
-    void sl_clientMaximizeSet(KWin::Client*, QPair<bool, bool>);
-    void sl_killWindowCalled(KWin::Client*);
-    void sl_clientActivated(KWin::Client*);
-    void sl_groupAdded(KWin::Group*);
-    void sl_clientFullScreenSet(KWin::Client*, bool, bool);
-    void sl_clientSetKeepAbove(KWin::Client*, bool);
-
 signals:
-    void desktopPresenceChanged(QScriptValue, QScriptValue);
-    void currentDesktopChanged(QScriptValue);
-    void clientAdded(QScriptValue);
-    void clientRemoved(QScriptValue);
-    void clientManaging(QScriptValue);
-    void clientMinimized(QScriptValue);
-    void clientUnminimized(QScriptValue);
-    void clientRestored(QScriptValue);
-    void clientMaximizeSet(QScriptValue, QScriptValue);
-    void killWindowCalled(QScriptValue);
-    void clientActivated(QScriptValue);
-    void clientFullScreenSet(QScriptValue, QScriptValue, QScriptValue);
-    void clientSetKeepAbove(QScriptValue, QScriptValue);
+    void desktopPresenceChanged(KWin::Client*, int);
+    void currentDesktopChanged(int);
+    void clientAdded(KWin::Client*);
+    void clientRemoved(KWin::Client*);
+    void clientManaging(KWin::Client*);
+    void clientMinimized(KWin::Client*);
+    void clientUnminimized(KWin::Client*);
+    void clientRestored(KWin::Client*);
+    void clientMaximizeSet(KWin::Client*, bool, bool);
+    void killWindowCalled(KWin::Client*);
+    void clientActivated(KWin::Client*);
+    void clientFullScreenSet(KWin::Client*, bool, bool);
+    void clientSetKeepAbove(KWin::Client*, bool);
 
 public:
     Workspace(QObject* parent = 0);
