@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scripting.h"
 // own
 #include "meta.h"
+#include "workspace_wrapper.h"
 // KDE
 #include <kstandarddirs.h>
 #include <KDE/KDebug>
@@ -53,7 +54,7 @@ KWin::Script::Script(int scriptId, QString scriptName, QDir dir, QObject *parent
     , m_engine(new QScriptEngine(this))
     , m_scriptDir(dir)
     , m_configFile(QFileInfo(m_scriptFile).completeBaseName() + QString(".kwscfg"))
-    , m_workspace(new SWrapper::Workspace(m_engine))
+    , m_workspace(new WorkspaceWrapper(m_engine))
     , m_running(false)
 {
     m_scriptFile.setFileName(dir.filePath(scriptName));

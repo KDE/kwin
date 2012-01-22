@@ -121,7 +121,7 @@ if(KWIN_BUILD_SCRIPTING)
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         scripting/scripting.cpp
-        scripting/workspace.cpp
+        scripting/workspace_wrapper.cpp
         scripting/meta.cpp
         scripting/timer.cpp
     )

@@ -19,10 +19,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include "workspace.h"
+#include "workspace_wrapper.h"
 #include "../client.h"
 
-SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
+namespace KWin {
+
+WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
 {
     KWin::Workspace *ws = KWin::Workspace::self();
     connect(ws, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)));
@@ -36,62 +38,62 @@ SWrapper::Workspace::Workspace(QObject* parent) : QObject(parent)
     }
 }
 
-QList< KWin::Client* > SWrapper::Workspace::clientList() const
+QList< KWin::Client* > WorkspaceWrapper::clientList() const
 {
     return KWin::Workspace::self()->clientList();
 }
 
-KWin::Client* SWrapper::Workspace::activeClient()
+KWin::Client* WorkspaceWrapper::activeClient()
 {
     return KWin::Workspace::self()->activeClient();
 }
 
-void SWrapper::Workspace::setActiveClient(KWin::Client* client)
+void WorkspaceWrapper::setActiveClient(KWin::Client* client)
 {
     KWin::Workspace::self()->activateClient(client);
 }
 
-void SWrapper::Workspace::setCurrentDesktop(int desktop)
+void WorkspaceWrapper::setCurrentDesktop(int desktop)
 {
     KWin::Workspace::self()->setCurrentDesktop(desktop);
 }
 
-int SWrapper::Workspace::workspaceWidth() const
+int WorkspaceWrapper::workspaceWidth() const
 {
     return KWin::Workspace::self()->workspaceWidth();
 }
 
-int SWrapper::Workspace::workspaceHeight() const
+int WorkspaceWrapper::workspaceHeight() const
 {
     return KWin::Workspace::self()->workspaceHeight();
 }
 
-QSize SWrapper::Workspace::workspaceSize() const
+QSize WorkspaceWrapper::workspaceSize() const
 {
     return QSize(workspaceWidth(), workspaceHeight());
 }
 
-QSize SWrapper::Workspace::desktopGridSize() const
+QSize WorkspaceWrapper::desktopGridSize() const
 {
     return KWin::Workspace::self()->desktopGridSize();
 }
 
-int SWrapper::Workspace::desktopGridWidth() const
+int WorkspaceWrapper::desktopGridWidth() const
 {
     return KWin::Workspace::self()->desktopGridWidth();
 }
 
-int SWrapper::Workspace::desktopGridHeight() const
+int WorkspaceWrapper::desktopGridHeight() const
 {
     return KWin::Workspace::self()->desktopGridHeight();
 }
 
-int SWrapper::Workspace::currentDesktop() const
+int WorkspaceWrapper::currentDesktop() const
 {
     return KWin::Workspace::self()->currentDesktop();
 }
 
-void SWrapper::Workspace::setupClientConnections(KWin::Client *client)
+void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
     connect(client, SIGNAL(clientUnminimized(KWin::Client*,bool)), SIGNAL(clientUnminimized(KWin::Client*)));
@@ -99,3 +101,5 @@ void SWrapper::Workspace::setupClientConnections(KWin::Client *client)
     connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
     connect(client, SIGNAL(clientMaximizedStateChanged(KWin::Client*,bool,bool)), SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)));
 }
+
+} // KWin

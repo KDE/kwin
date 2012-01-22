@@ -19,15 +19,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_SCRIPTING_WORKSPACE_H
-#define KWIN_SCRIPTING_WORKSPACE_H
+#ifndef KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
+#define KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
 
-#include "../workspace.h"
+#include <QtCore/QObject>
+#include <QtCore/QSize>
 
-namespace SWrapper
+namespace KWin
 {
+// forward declarations
+class Client;
 
-class Workspace : public QObject
+class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
@@ -41,7 +44,7 @@ class Workspace : public QObject
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
 
 private:
-    Q_DISABLE_COPY(Workspace)
+    Q_DISABLE_COPY(WorkspaceWrapper)
 
 signals:
     void desktopPresenceChanged(KWin::Client*, int);
@@ -59,7 +62,7 @@ signals:
     void clientSetKeepAbove(KWin::Client*, bool);
 
 public:
-    Workspace(QObject* parent = 0);
+    WorkspaceWrapper(QObject* parent = 0);
     int currentDesktop() const;
     void setCurrentDesktop(int desktop);
     KWin::Client *activeClient();

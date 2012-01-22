@@ -24,13 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDir>
 
-#include "workspace.h"
-
 class QScriptEngine;
 class QScriptValue;
 
 namespace KWin
 {
+class WorkspaceWrapper;
 
 class Script : public QObject
 {
@@ -67,7 +66,7 @@ private:
     QDir m_scriptDir;
     QFile m_scriptFile;
     QString m_configFile;
-    SWrapper::Workspace *m_workspace;
+    WorkspaceWrapper *m_workspace;
     bool m_running;
 };
 
