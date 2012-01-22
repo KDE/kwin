@@ -159,7 +159,7 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int des
             }
         }
     }
-    if (options->separateScreenFocus && options->xineramaEnabled) {
+    if (options->separateScreenFocus) {
         if (current->screen() != workspace->activeScreen())
             ret = NULL;
     }

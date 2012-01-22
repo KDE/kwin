@@ -273,40 +273,16 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 
     switch(opt) {
     case MaximizeArea:
-        if (is_multihead)
-            return sarea;
-        else if (options->xineramaMaximizeEnabled)
-            return sarea;
-        else
-            return warea;
-    case MaximizeFullArea:
-        if (is_multihead)
-            return Kephal::ScreenUtils::screenGeometry(screen_number);
-        else if (options->xineramaMaximizeEnabled)
-            return Kephal::ScreenUtils::screenGeometry(screen);
-        else
-            return Kephal::ScreenUtils::desktopGeometry();
-    case FullScreenArea:
-        if (is_multihead)
-            return Kephal::ScreenUtils::screenGeometry(screen_number);
-        else if (options->xineramaFullscreenEnabled)
-            return Kephal::ScreenUtils::screenGeometry(screen);
-        else
-            return Kephal::ScreenUtils::desktopGeometry();
     case PlacementArea:
-        if (is_multihead)
             return sarea;
-        else if (options->xineramaPlacementEnabled)
-            return sarea;
-        else
-            return warea;
+    case MaximizeFullArea:
+    case FullScreenArea:
     case MovementArea:
+    case ScreenArea:
         if (is_multihead)
             return Kephal::ScreenUtils::screenGeometry(screen_number);
-        else if (options->xineramaMovementEnabled)
-            return Kephal::ScreenUtils::screenGeometry(screen);
         else
-            return Kephal::ScreenUtils::desktopGeometry();
+            return Kephal::ScreenUtils::screenGeometry(screen);
     case WorkArea:
         if (is_multihead)
             return sarea;
@@ -317,11 +293,6 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
             return Kephal::ScreenUtils::screenGeometry(screen_number);
         else
             return Kephal::ScreenUtils::desktopGeometry();
-    case ScreenArea:
-        if (is_multihead)
-            return Kephal::ScreenUtils::screenGeometry(screen_number);
-        else
-            return Kephal::ScreenUtils::screenGeometry(screen);
     }
     abort();
 }

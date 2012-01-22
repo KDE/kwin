@@ -136,19 +136,11 @@ unsigned long Options::updateSettings()
     if (!focusPolicyIsReasonable())  // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    xineramaEnabled = config.readEntry("XineramaEnabled", true);
-    xineramaPlacementEnabled = config.readEntry("XineramaPlacementEnabled", true);
-    xineramaMovementEnabled = config.readEntry("XineramaMovementEnabled", true);
-    xineramaMaximizeEnabled = config.readEntry("XineramaMaximizeEnabled", true);
-    xineramaFullscreenEnabled = config.readEntry("XineramaFullscreenEnabled", true);
-
 #ifdef KWIN_BUILD_DECORATIONS
     placement = Placement::policyFromString(config.readEntry("Placement"), true);
 #else
     placement = Placement::Maximizing;
 #endif
-    xineramaPlacementScreen = qBound(-1, config.readEntry("XineramaPlacementScreen", -1),
-                                     Kephal::ScreenUtils::numScreens() - 1);
 
     if (focusPolicy == ClickToFocus) {
         autoRaise = false;

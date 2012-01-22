@@ -352,8 +352,6 @@ void Toplevel::deleteEffectWindow()
 
 int Toplevel::screen() const
 {
-    if (!options->xineramaEnabled)
-        return 0;
     int s = workspace()->screenNumber(geometry().center());
     if (s < 0) {
         kDebug(1212) << "Invalid screen: Center" << geometry().center() << ", screen" << s;
@@ -364,8 +362,6 @@ int Toplevel::screen() const
 
 bool Toplevel::isOnScreen(int screen) const
 {
-    if (!options->xineramaEnabled)
-        return screen == 0;
     return workspace()->screenGeometry(screen).intersects(geometry());
 }
 

@@ -132,18 +132,6 @@ public:
     // whether active Xinerama screen is the one with mouse (or with the active window)
     bool activeMouseScreen;
 
-    /**
-     * Xinerama options
-     */
-    bool xineramaEnabled;
-    bool xineramaPlacementEnabled;
-    bool xineramaMovementEnabled;
-    bool xineramaMaximizeEnabled;
-    bool xineramaFullscreenEnabled;
-
-    // number, or -1 = active screen (Workspace::activeScreen())
-    int xineramaPlacementScreen;
-
     Placement::Policy placement;
 
     bool focusPolicyIsReasonable() {

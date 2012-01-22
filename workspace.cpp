@@ -1686,15 +1686,11 @@ void Workspace::toggleClientOnActivity(Client* c, const QString &activity, bool 
 
 int Workspace::numScreens() const
 {
-    if (!options->xineramaEnabled)
-        return 1;
     return Kephal::ScreenUtils::numScreens();
 }
 
 int Workspace::activeScreen() const
 {
-    if (!options->xineramaEnabled)
-        return 0;
     if (!options->activeMouseScreen) {
         if (activeClient() != NULL && !activeClient()->isOnScreen(active_screen))
             return activeClient()->screen();
@@ -1709,8 +1705,6 @@ int Workspace::activeScreen() const
  */
 void Workspace::checkActiveScreen(const Client* c)
 {
-    if (!options->xineramaEnabled)
-        return;
     if (!c->isActive())
         return;
     if (!c->isOnScreen(active_screen))
@@ -1723,22 +1717,16 @@ void Workspace::checkActiveScreen(const Client* c)
  */
 void Workspace::setActiveScreenMouse(const QPoint& mousepos)
 {
-    if (!options->xineramaEnabled)
-        return;
     active_screen = Kephal::ScreenUtils::screenId(mousepos);
 }
 
 QRect Workspace::screenGeometry(int screen) const
 {
-    if (!options->xineramaEnabled)
-        return Kephal::ScreenUtils::desktopGeometry();
     return Kephal::ScreenUtils::screenGeometry(screen);
 }
 
 int Workspace::screenNumber(const QPoint& pos) const
 {
-    if (!options->xineramaEnabled)
-        return 0;
     return Kephal::ScreenUtils::screenId(pos);
 }
 
