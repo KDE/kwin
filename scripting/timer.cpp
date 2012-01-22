@@ -21,7 +21,6 @@
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptable>
 #include <QtCore/QTimer>
-#include "plasma-backportglobal.h"
 
 Q_DECLARE_METATYPE(QTimer*)
 
@@ -35,36 +34,10 @@ static QScriptValue ctor(QScriptContext *ctx, QScriptEngine *eng)
     return newTimer(eng, new QTimer(qscriptvalue_cast<QObject*>(ctx->argument(0))));
 }
 
-static QScriptValue toString(QScriptContext *ctx, QScriptEngine *eng)
-{
-    DECLARE_SELF(QTimer, toString);
-    return QScriptValue(eng, QString::fromLatin1("QTimer(interval=%0)")
-                        .arg(self->interval()));
-}
-
-static QScriptValue active(QScriptContext *ctx, QScriptEngine *eng)
-{
-    DECLARE_SELF(QTimer, active);
-
-    if (ctx->argumentCount()) {
-        if (ctx->argument(0).toBool()) {
-            self->start();
-        } else {
-            self->stop();
-        }
-    }
-
-    return QScriptValue(eng, self->isActive());
-}
-
 QScriptValue constructTimerClass(QScriptEngine *eng)
 {
     QScriptValue proto = newTimer(eng, new QTimer());
-    ADD_METHOD(proto, toString);
     eng->setDefaultPrototype(qMetaTypeId<QTimer*>(), proto);
-    QScriptValue::PropertyFlags getter = QScriptValue::PropertyGetter;
-    QScriptValue::PropertyFlags setter = QScriptValue::PropertySetter;
-    proto.setProperty("active", eng->newFunction(active), getter | setter);
 
     return eng->newFunction(ctor, proto);
 }
