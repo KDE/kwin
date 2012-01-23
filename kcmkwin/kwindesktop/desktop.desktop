@@ -12,7 +12,7 @@ X-KDE-System-Settings-Parent-Category=workspace-behavior
 X-KDE-Weight=60
 
 Name=Virtual Desktops
-Name[ar]=أسطح المكتب الإفتراضية
+Name[ar]=أسطح المكتب الافتراضية
 Name[ast]=Escritorios virtuales
 Name[bg]=Виртуални работни плотове
 Name[bs]=Virtuelne površi
@@ -75,7 +75,7 @@ Name[zh_TW]=虛擬桌面
 
 Comment=You can configure how many virtual desktops there are.
 Comment[af]=Jy kan opstel hoeveel virtuele werkskerms daar is.
-Comment[ar]=تستطيع ضبط عدد أسطح المكتب الإفتراضية
+Comment[ar]=تستطيع ضبط عدد أسطح المكتب الافتراضية
 Comment[ast]=Configuración del númberu d'escritorios virtuales.
 Comment[be]=Тут вы можаце змяніць колькасць віртуальных стальніц.
 Comment[be@latin]=Tut možna naładzić, kolki jość virtualnych rabočych stałoŭ.
