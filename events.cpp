@@ -144,7 +144,9 @@ void RootInfo::changeActiveWindow(Window w, NET::RequestSource src, Time timesta
             src = NET::FromTool;
         if (src == NET::FromTool)
             workspace->activateClient(c, true);   // force
-        else { // NET::FromApplication
+        else if (c == workspace->mostRecentlyActivatedClient()) {
+            return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
+        } else { // NET::FromApplication
             Client* c2;
             if (workspace->allowClientActivation(c, timestamp, false, true))
                 workspace->activateClient(c);
