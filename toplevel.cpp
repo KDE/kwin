@@ -329,6 +329,17 @@ void Toplevel::setOpacity(double new_opacity)
     }
 }
 
+void Toplevel::setReadyForPainting()
+{
+    if (!ready_for_painting) {
+        ready_for_painting = true;
+        if (compositing()) {
+            addRepaintFull();
+            emit windowShown(this);
+        }
+    }
+}
+
 void Toplevel::deleteEffectWindow()
 {
     delete effect_window;

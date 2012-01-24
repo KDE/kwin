@@ -1562,7 +1562,7 @@ void Client::keyPressEvent(uint key_code)
 void Client::syncEvent(XSyncAlarmNotifyEvent* e)
 {
     if (e->alarm == syncRequest.alarm && XSyncValueEqual(e->counter_value, syncRequest.value)) {
-        ready_for_painting = true;
+        setReadyForPainting();
         syncRequest.isPending = false;
         if (syncRequest.failsafeTimeout)
             syncRequest.failsafeTimeout->stop();
@@ -1570,7 +1570,7 @@ void Client::syncEvent(XSyncAlarmNotifyEvent* e)
             if (syncRequest.timeout)
                 syncRequest.timeout->stop();
             performMoveResize();
-        } else
+        } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
             addRepaintFull();
     }
 }

@@ -663,11 +663,13 @@ void Client::damageNotifyEvent(XDamageNotifyEvent* e)
 #ifdef HAVE_XSYNC
     if (syncRequest.isPending && isResize())
         return;
-    if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
-        ready_for_painting = true;
+    if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
+        if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
+            setReadyForPainting();
 #else
-    ready_for_painting = true;
+        setReadyForPainting();
 #endif
+    }
 
     Toplevel::damageNotifyEvent(e);
 }

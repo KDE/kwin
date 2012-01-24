@@ -373,14 +373,23 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotClientAdded(Client *c)
 {
-    setupClientConnections(c);
-    emit windowAdded(c->effectWindow());
+    if (c->readyForPainting())
+        slotClientShown(c);
+    else
+        connect(c, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotClientShown(KWin::Toplevel*)));
 }
 
 void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{
+{   // regardless, unmanaged windows are -yet?- not synced anyway
     setupUnmanagedConnections(u);
     emit windowAdded(u->effectWindow());
+}
+
+void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *c)
+{
+    Q_ASSERT(dynamic_cast<Client*>(c));
+    setupClientConnections(static_cast<Client*>(c));
+    emit windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)

@@ -266,6 +266,7 @@ signals:
     void geometryChanged();
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
     void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
+    void windowShown(KWin::Toplevel* toplevel);
 
 protected:
     virtual ~Toplevel();
@@ -280,6 +281,7 @@ protected:
     void addDamageFull();
     void getWmClientLeader();
     void getWmClientMachine();
+    void setReadyForPainting();
 
     /**
      * This function fetches the opaque region from this Toplevel.

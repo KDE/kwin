@@ -2174,8 +2174,7 @@ void Client::sendSyncRequest()
 void Client::removeSyncSupport()
 {
     if (!ready_for_painting) {
-        ready_for_painting = true;
-        addRepaintFull();
+        setReadyForPainting();
         return;
     }
     syncRequest.isPending = false;
