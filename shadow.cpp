@@ -206,6 +206,9 @@ bool Shadow::updateShadow()
 {
     QVector<long> data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
+        if (m_topLevel && m_topLevel->effectWindow() && m_topLevel->effectWindow()->sceneWindow())
+            m_topLevel->effectWindow()->sceneWindow()->updateShadow(0);
+        deleteLater();
         return false;
     }
     init(data);
