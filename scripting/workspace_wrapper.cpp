@@ -48,62 +48,32 @@ void WorkspaceWrapper::setterName( rettype val ) { \
 }
 
 GETTERSETTER(int, numberOfDesktops, setNumberOfDesktops)
+GETTERSETTER(int, currentDesktop, setCurrentDesktop)
 
 #undef GETTERSETTER
 
-QList< KWin::Client* > WorkspaceWrapper::clientList() const
-{
-    return KWin::Workspace::self()->clientList();
+#define GETTER( rettype, getterName ) \
+rettype WorkspaceWrapper::getterName( ) const { \
+    return Workspace::self()->getterName(); \
 }
+GETTER(KWin::Client*, activeClient)
+GETTER(QList< KWin::Client* >, clientList)
+GETTER(int, workspaceWidth)
+GETTER(int, workspaceHeight)
+GETTER(QSize, desktopGridSize)
+GETTER(int, desktopGridWidth)
+GETTER(int, desktopGridHeight)
 
-KWin::Client* WorkspaceWrapper::activeClient()
-{
-    return KWin::Workspace::self()->activeClient();
-}
+#undef GETTER
 
 void WorkspaceWrapper::setActiveClient(KWin::Client* client)
 {
     KWin::Workspace::self()->activateClient(client);
 }
 
-void WorkspaceWrapper::setCurrentDesktop(int desktop)
-{
-    KWin::Workspace::self()->setCurrentDesktop(desktop);
-}
-
-int WorkspaceWrapper::workspaceWidth() const
-{
-    return KWin::Workspace::self()->workspaceWidth();
-}
-
-int WorkspaceWrapper::workspaceHeight() const
-{
-    return KWin::Workspace::self()->workspaceHeight();
-}
-
 QSize WorkspaceWrapper::workspaceSize() const
 {
     return QSize(workspaceWidth(), workspaceHeight());
-}
-
-QSize WorkspaceWrapper::desktopGridSize() const
-{
-    return KWin::Workspace::self()->desktopGridSize();
-}
-
-int WorkspaceWrapper::desktopGridWidth() const
-{
-    return KWin::Workspace::self()->desktopGridWidth();
-}
-
-int WorkspaceWrapper::desktopGridHeight() const
-{
-    return KWin::Workspace::self()->desktopGridHeight();
-}
-
-int WorkspaceWrapper::currentDesktop() const
-{
-    return KWin::Workspace::self()->currentDesktop();
 }
 
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)

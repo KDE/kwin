@@ -77,11 +77,9 @@ public:
 rettype getter() const; \
 void setter( rettype val );
     GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
+    GETTERSETTERDEF(int, currentDesktop, setCurrentDesktop)
+    GETTERSETTERDEF(KWin::Client*, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
-    int currentDesktop() const;
-    void setCurrentDesktop(int desktop);
-    KWin::Client *activeClient();
-    void setActiveClient(KWin::Client *client);
     QSize desktopGridSize() const;
     int desktopGridWidth() const;
     int desktopGridHeight() const;
