@@ -42,6 +42,10 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
+    /**
+     * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
+     **/
+    Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -60,9 +64,20 @@ signals:
     void clientActivated(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientSetKeepAbove(KWin::Client*, bool);
+    /**
+     * Signal emitted whenever the number of desktops changed.
+     * To get the current number of desktops use the property desktops.
+     * @param oldNumberOfDesktops The previous number of desktops.
+     **/
+    void numberDesktopsChanged(int oldNumberOfDesktops);
 
 public:
     WorkspaceWrapper(QObject* parent = 0);
+#define GETTERSETTERDEF( rettype, getter, setter ) \
+rettype getter() const; \
+void setter( rettype val );
+    GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
+#undef GETTERSETTERDEF
     int currentDesktop() const;
     void setCurrentDesktop(int desktop);
     KWin::Client *activeClient();

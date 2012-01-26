@@ -33,10 +33,23 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
     connect(ws, SIGNAL(clientRemoved(KWin::Client*)), SIGNAL(clientRemoved(KWin::Client*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), SIGNAL(clientActivated(KWin::Client*)));
+    connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
     foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
     }
 }
+
+#define GETTERSETTER( rettype, getterName, setterName ) \
+rettype WorkspaceWrapper::getterName( ) const { \
+    return Workspace::self()->getterName(); \
+} \
+void WorkspaceWrapper::setterName( rettype val ) { \
+    Workspace::self()->setterName( val ); \
+}
+
+GETTERSETTER(int, numberOfDesktops, setNumberOfDesktops)
+
+#undef GETTERSETTER
 
 QList< KWin::Client* > WorkspaceWrapper::clientList() const
 {
