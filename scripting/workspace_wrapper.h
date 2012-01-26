@@ -46,6 +46,18 @@ class WorkspaceWrapper : public QObject
      * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
      **/
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
+    /**
+     * The same of the display, that is all screens.
+     **/
+    Q_PROPERTY(QSize displaySize READ displaySize)
+    /**
+     * The width of the display, that is width of all combined screens.
+     **/
+    Q_PROPERTY(int displayWidth READ displayWidth)
+    /**
+     * The height of the display, that is height of all combined screens.
+     **/
+    Q_PROPERTY(int displayHeight READ displayHeight)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -86,6 +98,9 @@ void setter( rettype val );
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;
+    int displayWidth() const;
+    int displayHeight() const;
+    QSize displaySize() const;
 
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
 

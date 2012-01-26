@@ -76,6 +76,21 @@ QSize WorkspaceWrapper::workspaceSize() const
     return QSize(workspaceWidth(), workspaceHeight());
 }
 
+QSize WorkspaceWrapper::displaySize() const
+{
+    return QSize(KWin::displayWidth(), KWin::displayHeight());
+}
+
+int WorkspaceWrapper::displayWidth() const
+{
+    return KWin::displayWidth();
+}
+
+int WorkspaceWrapper::displayHeight() const
+{
+    return KWin::displayWidth();
+}
+
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
