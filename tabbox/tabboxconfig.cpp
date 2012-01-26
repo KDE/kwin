@@ -35,6 +35,7 @@ public:
         , layout(TabBoxConfig::defaultLayoutMode())
         , clientListMode(TabBoxConfig::defaultListMode())
         , clientSwitchingMode(TabBoxConfig::defaultSwitchingMode())
+        , clientMinimizedMode(TabBoxConfig::defaultMinimizedMode())
         , desktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching)
         , minWidth(TabBoxConfig::defaultMinWidth())
         , minHeight(TabBoxConfig::defaultMinHeight())
@@ -52,6 +53,7 @@ public:
     TabBoxConfig::LayoutMode layout;
     TabBoxConfig::ClientListMode clientListMode;
     TabBoxConfig::ClientSwitchingMode clientSwitchingMode;
+    TabBoxConfig::ClientMinimizedMode clientMinimizedMode;
     TabBoxConfig::DesktopSwitchingMode desktopSwitchingMode;
     int minWidth;
     int minHeight;
@@ -80,6 +82,7 @@ TabBoxConfig& TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig& object)
     d->layout = object.layout();
     d->clientListMode = object.clientListMode();
     d->clientSwitchingMode = object.clientSwitchingMode();
+    d->clientMinimizedMode = object.clientMinimizedMode();
     d->desktopSwitchingMode = object.desktopSwitchingMode();
     d->selectedItemLayoutName = object.selectedItemLayoutName();
     d->minWidth = object.minWidth();
@@ -156,6 +159,16 @@ TabBoxConfig::ClientSwitchingMode TabBoxConfig::clientSwitchingMode() const
 void TabBoxConfig::setClientSwitchingMode(ClientSwitchingMode switchingMode)
 {
     d->clientSwitchingMode = switchingMode;
+}
+
+TabBoxConfig::ClientMinimizedMode TabBoxConfig::clientMinimizedMode() const
+{
+    return d->clientMinimizedMode;
+}
+
+void TabBoxConfig::setClientMinimizedMode(ClientMinimizedMode minimizedMode)
+{
+    d->clientMinimizedMode = minimizedMode;
 }
 
 TabBoxConfig::DesktopSwitchingMode TabBoxConfig::desktopSwitchingMode() const

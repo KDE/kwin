@@ -90,6 +90,41 @@
        </item>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Minimized:</string>
+       </property>
+       <property name="buddy">
+        <cstring>minimizedModeCombo</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="KComboBox" name="minimizedModeCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Ignore status</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Exclude minimized windows</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Minimized windows only</string>
+        </property>
+       </item>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

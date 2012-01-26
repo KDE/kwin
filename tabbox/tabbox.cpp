@@ -135,6 +135,8 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int des
         addClient = current->isOnDesktop(desktop);
     addClient = addClient && current->isOnCurrentActivity();
     addClient = addClient && current->wantsTabFocus() && !current->skipSwitcher();
+    addClient = addClient && !(current->isMinimized() && config().clientMinimizedMode() == TabBoxConfig::ExcludeMinimizedClients );
+    addClient = addClient && !(!current->isMinimized() && config().clientMinimizedMode() == TabBoxConfig::OnlyMinimizedClients);
     if (addClient) {
         // don't add windows that have modal dialogs
         Client* modal = current->findModal();
@@ -578,6 +580,8 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
                                        config.readEntry<int>("ListMode", TabBoxConfig::defaultListMode())));
     tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
                                             config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
+    tabBoxConfig.setClientMinimizedMode(TabBoxConfig::ClientMinimizedMode(
+                                       config.readEntry<int>("MinimizedMode", TabBoxConfig::defaultMinimizedMode())));
 
     tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline",
                                 TabBoxConfig::defaultShowOutline()));

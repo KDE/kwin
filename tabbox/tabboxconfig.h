@@ -79,6 +79,15 @@ public:
         StackingOrderSwitching ///< Sort by current stacking order
     };
     /**
+    * ClientMinimizedMode defines the mode used to create the TabBoxClient List
+    * in the TabBoxClientModel
+    */
+    enum ClientMinimizedMode {
+        IgnoreMinimizedStatus, ///< TabBoxClients are included no matter they are minimized or not
+        ExcludeMinimizedClients, ///< Exclude minimized TabBoxClients
+        OnlyMinimizedClients ///< Only minimized TabBoxClients are included
+    };
+    /**
     * DesktopSwitchingMode defines the sorting of the desktops in the
     * TabBoxDesktopModel.
     */
@@ -145,6 +154,13 @@ public:
     * @see defaultSwitchingMode
     */
     ClientSwitchingMode clientSwitchingMode() const;
+    /**
+    * @return The current ClientMinimizedMode
+    * This option only applies for TabBoxMode ClientTabBox.
+    * @see setClientMinimizedMode
+    * @see defaultMinimizedMode
+    */
+    ClientMinimizedMode clientMinimizedMode() const;
     /**
     * @return The current DesktopSwitchingMode
     * This option only applies for TabBoxMode DesktopTabBox.
@@ -223,6 +239,12 @@ public:
     */
     void setClientSwitchingMode(ClientSwitchingMode switchingMode);
     /**
+    * @param minimizedMode The new ClientMinimizedMode to be used.
+    * This option only applies for TabBoxMode ClientTabBox.
+    * @see clientMinimizedMode
+    */
+    void setClientMinimizedMode(ClientMinimizedMode minimizedMode);
+    /**
     * @param switchingMode The new DesktopSwitchingMode to be used.
     * This option only applies for TabBoxMode DesktopTabBox.
     * @see desktopSwitchingMode
@@ -260,6 +282,9 @@ public:
     }
     static ClientSwitchingMode defaultSwitchingMode() {
         return FocusChainSwitching;
+    }
+    static ClientMinimizedMode defaultMinimizedMode() {
+        return IgnoreMinimizedStatus;
     }
     static LayoutMode defaultLayoutMode() {
         return VerticalLayout;
