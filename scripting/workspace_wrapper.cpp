@@ -91,6 +91,21 @@ int WorkspaceWrapper::displayHeight() const
     return KWin::displayWidth();
 }
 
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
+{
+    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), p, desktop);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Client *c) const
+{
+    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desktop) const
+{
+    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), screen, desktop);
+}
+
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));

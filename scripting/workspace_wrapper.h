@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QObject>
 #include <QtCore/QSize>
+#include <kwinglobals.h>
 
 namespace KWin
 {
@@ -33,6 +34,7 @@ class Client;
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(ClientAreaOption)
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::Client *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
@@ -84,6 +86,28 @@ signals:
     void numberDesktopsChanged(int oldNumberOfDesktops);
 
 public:
+//------------------------------------------------------------------
+//enums copy&pasted from kwinglobals.h because qtscript is evil
+
+    enum ClientAreaOption {
+        ///< geometry where a window will be initially placed after being mapped
+        PlacementArea,
+        ///< window movement snapping area?  ignore struts
+        MovementArea,
+        ///< geometry to which a window will be maximized
+        MaximizeArea,
+        ///< like MaximizeArea, but ignore struts - used e.g. for topmenu
+        MaximizeFullArea,
+        ///< area for fullscreen windows
+        FullScreenArea,
+        ///< whole workarea (all screens together)
+        WorkArea,
+        ///< whole area (all screens together), ignore struts
+        FullArea,
+        ///< one whole screen, ignore struts
+        ScreenArea
+    };
+
     WorkspaceWrapper(QObject* parent = 0);
 #define GETTERSETTERDEF( rettype, getter, setter ) \
 rettype getter() const; \
@@ -103,6 +127,31 @@ void setter( rettype val );
     QSize displaySize() const;
 
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
+    /**
+     * Returns the geometry a Client can use with the specified option.
+     * This method should be preferred over other methods providing screen sizes as the
+     * various options take constraints such as struts set on panels into account.
+     * This method is also multi screen aware, but there are also options to get full areas.
+     * @param option The type of area which should be considered
+     * @param screen The screen for which the area should be considered
+     * @param desktop The desktop for which the area should be considered, in general there should not be a difference
+     * @returns The specified screen geometry
+     **/
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, int screen, int desktop) const;
+    /**
+     * Overloaded method for convenience.
+     * @param option The type of area which should be considered
+     * @param point The coordinates which have to be included in the area
+     * @param desktop The desktop for which the area should be considered, in general there should not be a difference
+     * @returns The specified screen geometry
+     **/
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint& point, int desktop) const;
+    /**
+     * Overloaded method for convenience.
+     * @param client The Client for which the area should be retrieved
+     * @returns The specified screen geometry
+     **/
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const Client* client) const;
 
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);

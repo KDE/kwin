@@ -82,6 +82,7 @@ void KWin::Script::run()
                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
         m_engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
         m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
+        m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(m_engine);
 
