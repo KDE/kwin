@@ -66,6 +66,77 @@ GETTER(int, desktopGridHeight)
 
 #undef GETTER
 
+#define SLOTWRAPPER( name ) \
+void WorkspaceWrapper::name( ) { \
+    Workspace::self()->name(); \
+}
+
+SLOTWRAPPER(slotSwitchDesktopNext)
+SLOTWRAPPER(slotSwitchDesktopPrevious)
+SLOTWRAPPER(slotSwitchDesktopRight)
+SLOTWRAPPER(slotSwitchDesktopLeft)
+SLOTWRAPPER(slotSwitchDesktopUp)
+SLOTWRAPPER(slotSwitchDesktopDown)
+
+SLOTWRAPPER(slotSwitchToNextScreen)
+SLOTWRAPPER(slotWindowToNextScreen)
+SLOTWRAPPER(slotToggleShowDesktop)
+
+SLOTWRAPPER(slotWindowMaximize)
+SLOTWRAPPER(slotWindowMaximizeVertical)
+SLOTWRAPPER(slotWindowMaximizeHorizontal)
+SLOTWRAPPER(slotWindowMinimize)
+SLOTWRAPPER(slotWindowShade)
+SLOTWRAPPER(slotWindowRaise)
+SLOTWRAPPER(slotWindowLower)
+SLOTWRAPPER(slotWindowRaiseOrLower)
+SLOTWRAPPER(slotActivateAttentionWindow)
+SLOTWRAPPER(slotWindowPackLeft)
+SLOTWRAPPER(slotWindowPackRight)
+SLOTWRAPPER(slotWindowPackUp)
+SLOTWRAPPER(slotWindowPackDown)
+SLOTWRAPPER(slotWindowGrowHorizontal)
+SLOTWRAPPER(slotWindowGrowVertical)
+SLOTWRAPPER(slotWindowShrinkHorizontal)
+SLOTWRAPPER(slotWindowShrinkVertical)
+SLOTWRAPPER(slotWindowQuickTileLeft)
+SLOTWRAPPER(slotWindowQuickTileRight)
+SLOTWRAPPER(slotWindowQuickTileTopLeft)
+SLOTWRAPPER(slotWindowQuickTileTopRight)
+SLOTWRAPPER(slotWindowQuickTileBottomLeft)
+SLOTWRAPPER(slotWindowQuickTileBottomRight)
+
+SLOTWRAPPER(slotSwitchWindowUp)
+SLOTWRAPPER(slotSwitchWindowDown)
+SLOTWRAPPER(slotSwitchWindowRight)
+SLOTWRAPPER(slotSwitchWindowLeft)
+
+SLOTWRAPPER(slotIncreaseWindowOpacity)
+SLOTWRAPPER(slotLowerWindowOpacity)
+
+SLOTWRAPPER(slotWindowOperations)
+SLOTWRAPPER(slotWindowClose)
+SLOTWRAPPER(slotWindowMove)
+SLOTWRAPPER(slotWindowResize)
+SLOTWRAPPER(slotWindowAbove)
+SLOTWRAPPER(slotWindowBelow)
+SLOTWRAPPER(slotWindowOnAllDesktops)
+SLOTWRAPPER(slotWindowFullScreen)
+SLOTWRAPPER(slotWindowNoBorder)
+
+SLOTWRAPPER(slotWindowToNextDesktop)
+SLOTWRAPPER(slotWindowToPreviousDesktop)
+SLOTWRAPPER(slotWindowToDesktopRight)
+SLOTWRAPPER(slotWindowToDesktopLeft)
+SLOTWRAPPER(slotWindowToDesktopUp)
+SLOTWRAPPER(slotWindowToDesktopDown)
+
+SLOTWRAPPER(slotSwitchToTabLeft)
+SLOTWRAPPER(slotSwitchToTabRight)
+SLOTWRAPPER(slotRemoveFromGroup)
+
+#undef SLOTWRAPPER
+
 void WorkspaceWrapper::setActiveClient(KWin::Client* client)
 {
     KWin::Workspace::self()->activateClient(client);

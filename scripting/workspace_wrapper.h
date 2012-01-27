@@ -153,6 +153,72 @@ void setter( rettype val );
      **/
     Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const Client* client) const;
 
+public Q_SLOTS:
+    // all the available key bindings
+    void slotSwitchDesktopNext();
+    void slotSwitchDesktopPrevious();
+    void slotSwitchDesktopRight();
+    void slotSwitchDesktopLeft();
+    void slotSwitchDesktopUp();
+    void slotSwitchDesktopDown();
+
+    void slotSwitchToNextScreen();
+    void slotWindowToNextScreen();
+    void slotToggleShowDesktop();
+
+    void slotWindowMaximize();
+    void slotWindowMaximizeVertical();
+    void slotWindowMaximizeHorizontal();
+    void slotWindowMinimize();
+    void slotWindowShade();
+    void slotWindowRaise();
+    void slotWindowLower();
+    void slotWindowRaiseOrLower();
+    void slotActivateAttentionWindow();
+    void slotWindowPackLeft();
+    void slotWindowPackRight();
+    void slotWindowPackUp();
+    void slotWindowPackDown();
+    void slotWindowGrowHorizontal();
+    void slotWindowGrowVertical();
+    void slotWindowShrinkHorizontal();
+    void slotWindowShrinkVertical();
+    void slotWindowQuickTileLeft();
+    void slotWindowQuickTileRight();
+    void slotWindowQuickTileTopLeft();
+    void slotWindowQuickTileTopRight();
+    void slotWindowQuickTileBottomLeft();
+    void slotWindowQuickTileBottomRight();
+
+    void slotSwitchWindowUp();
+    void slotSwitchWindowDown();
+    void slotSwitchWindowRight();
+    void slotSwitchWindowLeft();
+
+    void slotIncreaseWindowOpacity();
+    void slotLowerWindowOpacity();
+
+    void slotWindowOperations();
+    void slotWindowClose();
+    void slotWindowMove();
+    void slotWindowResize();
+    void slotWindowAbove();
+    void slotWindowBelow();
+    void slotWindowOnAllDesktops();
+    void slotWindowFullScreen();
+    void slotWindowNoBorder();
+
+    void slotWindowToNextDesktop();
+    void slotWindowToPreviousDesktop();
+    void slotWindowToDesktopRight();
+    void slotWindowToDesktopLeft();
+    void slotWindowToDesktopUp();
+    void slotWindowToDesktopDown();
+
+    void slotSwitchToTabLeft(); // Slot to move left the active Client.
+    void slotSwitchToTabRight(); // Slot to move right the active Client.
+    void slotRemoveFromGroup(); // Slot to remove the active client from its group.
+
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);
 };
