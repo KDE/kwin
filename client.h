@@ -222,6 +222,21 @@ class Client
      * The "Window Tabs" Group this Client belongs to.
      **/
     Q_PROPERTY(KWin::ClientGroup* clientGroup READ clientGroup NOTIFY clientGroupChanged)
+    /**
+     * Minimum size as specified in WM_NORMAL_HINTS
+     **/
+    Q_PROPERTY(QSize minSize READ minSize)
+    /**
+     * Maximum size as specified in WM_NORMAL_HINTS
+     **/
+    Q_PROPERTY(QSize maxSize READ maxSize)
+    /**
+     * Whether the window has a decoration or not.
+     * This property is not allowed to be set by applications themselves.
+     * The decision whether a window has a border or not belongs to the window manager.
+     * If this property gets abused by application developers, it will be removed again.
+     **/
+    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
