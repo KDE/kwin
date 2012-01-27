@@ -257,8 +257,6 @@ void DecorationModel::setButtons(bool custom, const QString& left, const QString
 
 void DecorationModel::regeneratePreviews()
 {
-    QList<DecorationModelData>::iterator it = m_decorations.begin();
-
     for (int i = 0; i < m_decorations.count(); i++) {
         regeneratePreview(index(i), QSize(qobject_cast<KWinDecorationModule*>(QObject::parent())->itemWidth(), 150));
     }
@@ -267,28 +265,27 @@ void DecorationModel::regeneratePreviews()
 void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& size)
 {
     DecorationModelData& data = m_decorations[ index.row()];
-    //Use a QTextDocument to layout the text
-    QTextDocument document;
-
-    QString html = QString("<strong>%1</strong>").arg(data.name);
-
-    if (!data.author.isEmpty()) {
-        QString authorCaption = i18nc("Caption to decoration preview, %1 author name",
-                                      "by %1", data.author);
-
-        html += QString("<br /><span style=\"font-size: %1pt;\">%2</span>")
-                .arg(KGlobalSettings::smallestReadableFont().pointSize())
-                .arg(authorCaption);
-    }
-
-    QColor color = QApplication::palette().brush(QPalette::Text).color();
-    html = QString("<div style=\"color: %1\" align=\"center\">%2</div>").arg(color.name()).arg(html);
-
-    document.setHtml(html);
-    const int margin = 5;
 
     switch(data.type) {
-    case DecorationModelData::NativeDecoration:
+    case DecorationModelData::NativeDecoration: {
+        //Use a QTextDocument to layout the text
+        QTextDocument document;
+
+        QString html = QString("<strong>%1</strong>").arg(data.name);
+
+        if (!data.author.isEmpty()) {
+            QString authorCaption = i18nc("Caption to decoration preview, %1 author name",
+                                        "by %1", data.author);
+
+            html += QString("<br /><span style=\"font-size: %1pt;\">%2</span>")
+                    .arg(KGlobalSettings::smallestReadableFont().pointSize())
+                    .arg(authorCaption);
+        }
+
+        QColor color = QApplication::palette().brush(QPalette::Text).color();
+        html = QString("<div style=\"color: %1\" align=\"center\">%2</div>").arg(color.name()).arg(html);
+
+        document.setHtml(html);
         m_plugins->reset(KDecoration::SettingDecoration);
         if (m_plugins->loadPlugin(data.libraryName) &&
                 m_preview->recreateDecoration(m_plugins))
@@ -301,6 +298,7 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         m_preview->setTempBorderSize(m_plugins, data.borderSize);
         data.preview = m_preview->preview(&document, m_renderWidget);
         break;
+    }
     default:
         // nothing
         break;
