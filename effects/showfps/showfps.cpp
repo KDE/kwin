@@ -181,9 +181,6 @@ void ShowFpsEffect::paintGL(int fps)
 {
     int x = this->x;
     int y = this->y;
-#ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // TODO painting first the background white and then the contents
@@ -249,9 +246,6 @@ void ShowFpsEffect::paintGL(int fps)
 
     // Paint paint sizes
     glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-    glPopAttrib();
-#endif
 }
 #endif
 

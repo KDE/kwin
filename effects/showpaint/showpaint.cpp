@@ -76,9 +76,6 @@ void ShowPaintEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 void ShowPaintEffect::paintGL()
 {
 #ifdef KWIN_HAVE_OPENGL
-#ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
@@ -106,9 +103,6 @@ void ShowPaintEffect::paintGL()
         ShaderManager::instance()->popShader();
     }
     glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-    glPopAttrib();
-#endif
 #endif
 }
 

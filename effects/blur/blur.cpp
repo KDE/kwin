@@ -442,9 +442,11 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
 #ifndef KWIN_HAVE_OPENGLES
-    glMatrixMode(GL_TEXTURE);
+    if (!ShaderManager::instance()->isValid()) {
+        glMatrixMode(GL_TEXTURE);
+        pushMatrix();
+    }
 #endif
-    pushMatrix();
     QMatrix4x4 textureMatrix;
     textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
     textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
@@ -466,9 +468,6 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     // Modulate the blurred texture with the window opacity if the window isn't opaque
     if (opacity < 1.0) {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_COLOR_BUFFER_BIT);
-#endif
         glEnable(GL_BLEND);
         glBlendColor(0, 0, 0, opacity);
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
@@ -484,16 +483,15 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     drawRegion(shape);
 
-    popMatrix();
 #ifndef KWIN_HAVE_OPENGLES
-    glMatrixMode(GL_MODELVIEW);
+    if (!ShaderManager::instance()->isValid()) {
+        popMatrix();
+        glMatrixMode(GL_MODELVIEW);
+    }
 #endif
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
     }
 
     tex.unbind();
@@ -533,13 +531,15 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     QMatrix4x4 textureMatrix;
     QMatrix4x4 modelViewProjectionMatrix;
 #ifndef KWIN_HAVE_OPENGLES
-    glMatrixMode(GL_MODELVIEW);
-    pushMatrix();
-    glLoadIdentity();
-    glMatrixMode(GL_TEXTURE);
-    pushMatrix();
-    glMatrixMode(GL_PROJECTION);
-    pushMatrix();
+    if (!ShaderManager::instance()->isValid()) {
+        glMatrixMode(GL_MODELVIEW);
+        pushMatrix();
+        glLoadIdentity();
+        glMatrixMode(GL_TEXTURE);
+        pushMatrix();
+        glMatrixMode(GL_PROJECTION);
+        pushMatrix();
+    }
 #endif
 
     /**
@@ -603,9 +603,11 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
         textureMatrix.translate(-updateRect.x(), -updateRect.height() - updateRect.y(), 0);
 #ifndef KWIN_HAVE_OPENGLES
-        glMatrixMode(GL_TEXTURE);
-        loadMatrix(textureMatrix);
-        glMatrixMode(GL_PROJECTION);
+        if (!ShaderManager::instance()->isValid()) {
+            glMatrixMode(GL_TEXTURE);
+            loadMatrix(textureMatrix);
+            glMatrixMode(GL_PROJECTION);
+        }
 #endif
         shader->setTextureMatrix(textureMatrix);
 
@@ -626,9 +628,6 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
     // Modulate the blurred texture with the window opacity if the window isn't opaque
     if (opacity < 1.0) {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_COLOR_BUFFER_BIT);
-#endif
         glEnable(GL_BLEND);
         glBlendColor(0, 0, 0, opacity);
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
@@ -645,27 +644,28 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     textureMatrix.scale(1.0 / targetTexture.width(), -1.0 / targetTexture.height(), 1);
     textureMatrix.translate(-r.x(), -targetTexture.height() - r.y(), 0);
 #ifndef KWIN_HAVE_OPENGLES
-    glMatrixMode(GL_TEXTURE);
-    loadMatrix(textureMatrix);
-    glMatrixMode(GL_PROJECTION);
+    if (!ShaderManager::instance()->isValid()) {
+        glMatrixMode(GL_TEXTURE);
+        loadMatrix(textureMatrix);
+        glMatrixMode(GL_PROJECTION);
+    }
 #endif
     shader->setTextureMatrix(textureMatrix);
 
     drawRegion(blurredRegion & region);
 
 #ifndef KWIN_HAVE_OPENGLES
-    popMatrix();
-    glMatrixMode(GL_TEXTURE);
-    popMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    popMatrix();
+    if (!ShaderManager::instance()->isValid()) {
+        popMatrix();
+        glMatrixMode(GL_TEXTURE);
+        popMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        popMatrix();
+    }
 #endif
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
     }
 
     targetTexture.unbind();

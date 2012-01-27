@@ -113,9 +113,6 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
     if (!active)
         return;
     if (texture) {
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
         if (ShaderManager::instance()->isValid()) {
             ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         }
@@ -133,9 +130,6 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         if (ShaderManager::instance()->isValid()) {
             ShaderManager::instance()->popShader();
         }
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
     }
 }
 

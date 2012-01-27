@@ -79,7 +79,6 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     if (marks.isEmpty() && drawing.isEmpty())
         return;
 #ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT);
     glEnable(GL_LINE_SMOOTH);
 #endif
     glLineWidth(width);
@@ -115,7 +114,6 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     glLineWidth(1.0);
 #ifndef KWIN_HAVE_OPENGLES
     glDisable(GL_LINE_SMOOTH);
-    glPopAttrib();
 #endif
 }
 

@@ -334,18 +334,12 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
 #ifdef KWIN_HAVE_OPENGL
         if (texture) {
-#ifndef KWIN_HAVE_OPENGLES
-            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
             texture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             texture->render(region, rect);
             texture->unbind();
             glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-            glPopAttrib();
-#endif
         }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

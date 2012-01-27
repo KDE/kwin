@@ -462,7 +462,6 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         // reset model view projection matrix if required
         setupModelViewProjectionMatrix();
     }
-    glPushMatrix();
     int mask = 0;
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint1");
@@ -471,7 +470,6 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint2");
 #endif
-    glPopMatrix();
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
