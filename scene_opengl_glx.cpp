@@ -37,8 +37,8 @@ GLXDrawable SceneOpenGL::last_pixmap = None;
 
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
-    , init_ok(false)
     , m_resetModelViewProjectionMatrix(true)
+    , init_ok(false)
 {
     initGLX();
     // check for FBConfig support
