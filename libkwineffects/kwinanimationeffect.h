@@ -90,6 +90,9 @@ class AnimationEffectPrivate;
 class KWIN_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
+    Q_ENUMS(Anchor)
+    Q_ENUMS(Attribute)
+    Q_ENUMS(MetaType)
 public:
     enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };

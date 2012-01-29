@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "scripting/scriptedeffect.h"
 #include "thumbnailitem.h"
 #include "workspace.h"
 #include "kwinglutils.h"
@@ -1139,6 +1140,11 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
     }
     KService::Ptr service = offers.first();
 
+    if (service->property("X-Plasma-API").toString() == "javascript") {
+        // this is a scripted effect - use different loader
+        return loadScriptedEffect(name, service.data());
+    }
+
     KLibrary* library = findEffectLibrary(service.data());
     if (!library) {
         return false;
@@ -1222,6 +1228,28 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
     return true;
 }
 
+bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *service)
+{
+    const KDesktopFile df("services", service->entryPath());
+    const QString scriptName = df.desktopGroup().readEntry<QString>("X-Plasma-MainScript", "");
+    if (scriptName.isEmpty()) {
+        kDebug(1212) << "X-Plasma-MainScript not set";
+        return false;
+    }
+    const QString scriptFile = KStandardDirs::locateLocal("data", "kwin/effects/" + name + '/' + scriptName);
+    if (scriptFile.isNull()) {
+        kDebug(1212) << "Could not locate the effect script";
+        return false;
+    }
+    ScriptedEffect *effect = ScriptedEffect::create(scriptFile);
+    if (!effect) {
+        return false;
+    }
+    effect_order.insert(service->property("X-KDE-Ordering").toInt(), EffectPair(name, effect));
+    effectsChanged();
+    return true;
+}
+
 void EffectsHandlerImpl::unloadEffect(const QString& name)
 {
     Workspace::self()->addRepaintFull();
@@ -1235,7 +1263,9 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
             delete it.value().second;
             effect_order.erase(it);
             effectsChanged();
-            effect_libraries[ name ]->unload();
+            if (effect_libraries.contains(name)) {
+                effect_libraries[ name ]->unload();
+            }
             return;
         }
     }

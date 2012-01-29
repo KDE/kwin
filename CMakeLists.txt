@@ -122,6 +122,7 @@ if(KWIN_BUILD_SCRIPTING)
         scripting/scripting.cpp
         scripting/workspace_wrapper.cpp
         scripting/meta.cpp
+        scripting/scriptedeffect.cpp
         scripting/timer.cpp
     )
 endif(KWIN_BUILD_SCRIPTING)

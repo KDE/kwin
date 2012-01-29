@@ -202,6 +202,7 @@ protected Q_SLOTS:
     void slotPropertyNotify(long atom);
 
 protected:
+    bool loadScriptedEffect(const QString &name, KService *service);
     KLibrary* findEffectLibrary(KService* service);
     void effectsChanged();
     void setupClientConnections(KWin::Client *c);
