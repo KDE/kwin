@@ -29,9 +29,9 @@ KWIN_EFFECT(minimizeanimation, MinimizeAnimationEffect)
 MinimizeAnimationEffect::MinimizeAnimationEffect()
 {
     mActiveAnimations = 0;
-    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
-    connect(effects, SIGNAL(windowMinimized(EffectWindow*)), this, SLOT(slotWindowMinimized(EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowMinimized(KWin::EffectWindow*)), this, SLOT(slotWindowMinimized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
 }
 
 

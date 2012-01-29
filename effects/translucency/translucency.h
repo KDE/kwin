@@ -38,8 +38,8 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
 public Q_SLOTS:
-    void slotWindowActivated(EffectWindow* w);
-    void slotWindowStartStopUserMovedResized(EffectWindow *w);
+    void slotWindowActivated(KWin::EffectWindow* w);
+    void slotWindowStartStopUserMovedResized(KWin::EffectWindow *w);
 
 private:
     bool isInactive(const EffectWindow *w) const;

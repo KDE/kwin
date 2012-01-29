@@ -29,8 +29,8 @@ KWIN_EFFECT(dialogparent, DialogParentEffect)
 DialogParentEffect::DialogParentEffect()
 {
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
-    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
 }
 
 void DialogParentEffect::reconfigure(ReconfigureFlags)

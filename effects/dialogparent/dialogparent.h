@@ -49,8 +49,8 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowActivated(EffectWindow *c);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowActivated(KWin::EffectWindow *c);
 protected:
     bool hasModalWindow(EffectWindow* t);
 private:

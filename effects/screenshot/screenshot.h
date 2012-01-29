@@ -74,7 +74,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void screenshotCreated(qulonglong handle);
 
 private slots:
-    void windowClosed( EffectWindow* w );
+    void windowClosed( KWin::EffectWindow* w );
 
 private:
     void grabPointerImage(QImage& snapshot, int offsetx, int offsety);

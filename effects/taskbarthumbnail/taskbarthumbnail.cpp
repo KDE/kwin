@@ -43,10 +43,10 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     // TODO hackish way to announce support, make better after 4.0
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), atom, atom, 8, PropModeReplace, &dummy, 1);
-    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
-    connect(effects, SIGNAL(windowDamaged(EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(EffectWindow*,QRect)));
-    connect(effects, SIGNAL(propertyNotify(EffectWindow*,long)), this, SLOT(slotPropertyNotify(EffectWindow*,long)));
+    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(KWin::EffectWindow*,QRect)));
+    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()

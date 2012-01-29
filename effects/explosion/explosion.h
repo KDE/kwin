@@ -52,8 +52,8 @@ public:
     static bool supported();
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
 
 protected:
     bool loadData();

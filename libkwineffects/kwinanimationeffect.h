@@ -167,8 +167,8 @@ private:
 private Q_SLOTS:
     void init();
     void triggerRepaint();
-    void _windowClosed( EffectWindow* w );
-    void _windowDeleted( EffectWindow* w );
+    void _windowClosed( KWin::EffectWindow* w );
+    void _windowDeleted( KWin::EffectWindow* w );
 private:
     typedef QMap< EffectWindow*, QList<AniData> > AniMap;
     AnimationEffectPrivate * const d_ptr;

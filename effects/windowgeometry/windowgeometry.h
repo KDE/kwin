@@ -42,9 +42,9 @@ public:
 
 private slots:
     void toggle();
-    void slotWindowStartUserMovedResized(EffectWindow *w);
-    void slotWindowFinishUserMovedResized(EffectWindow *w);
-    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
 private:
     EffectWindow *myResizeWindow;
     EffectFrame *myMeasure[3];

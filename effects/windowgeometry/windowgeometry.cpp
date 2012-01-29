@@ -60,9 +60,9 @@ WindowGeometry::WindowGeometry()
     a->setText(i18n("Toggle window geometry display (effect only)"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
-    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
-    connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*,QRect)));
+    connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));
 }
 
 WindowGeometry::~WindowGeometry()

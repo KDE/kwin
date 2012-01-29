@@ -44,9 +44,9 @@ public:
     static bool supported();
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowStartUserMovedResized(EffectWindow *w);
-    void slotWindowFinishUserMovedResized(EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
 
 private:
     bool m_active;

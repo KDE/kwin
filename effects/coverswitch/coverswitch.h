@@ -53,7 +53,7 @@ public:
     static bool supported();
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *c);
+    void slotWindowClosed(KWin::EffectWindow *c);
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();
     void slotTabBoxUpdated();

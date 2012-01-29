@@ -41,7 +41,7 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
 
 private:
     bool isLoginSplash(EffectWindow* w);

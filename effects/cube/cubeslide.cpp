@@ -39,8 +39,8 @@ CubeSlideEffect::CubeSlideEffect()
     , progressRestriction(0.0f)
 {
     connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
-    connect(effects, SIGNAL(windowStepUserMovedResized(EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
     reconfigure(ReconfigureAll);
 }
 

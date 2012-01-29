@@ -34,7 +34,7 @@ LoginEffect::LoginEffect()
     , login_window(NULL)
 {
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
 }
 
 void LoginEffect::prePaintScreen(ScreenPrePaintData& data, int time)

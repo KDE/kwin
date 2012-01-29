@@ -46,9 +46,9 @@ public:
 
     static bool supported();
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow* c);
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow* c);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
 
 private:
     class WindowInfo;

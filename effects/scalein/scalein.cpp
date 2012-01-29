@@ -29,8 +29,8 @@ KWIN_EFFECT(scalein, ScaleInEffect)
 ScaleInEffect::ScaleInEffect()
     : Effect()
 {
-    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(EffectWindow*)), this, SLOT(slotWindowClosed(EffectWindow*)));
+    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
 }
 
 void ScaleInEffect::prePaintScreen(ScreenPrePaintData& data, int time)

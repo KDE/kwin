@@ -49,9 +49,9 @@ public:
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotPropertyNotify(EffectWindow *w, long atom);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotPropertyNotify(KWin::EffectWindow *w, long atom);
     void slotScreenGeometryChanged();
 
 private:

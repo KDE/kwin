@@ -41,8 +41,8 @@ public:
     virtual bool isActive() const;
     // TODO react also on virtual desktop changes
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow* c);
-    void slotWindowClosed(EffectWindow *c);
+    void slotWindowAdded(KWin::EffectWindow* c);
+    void slotWindowClosed(KWin::EffectWindow *c);
 private:
     bool isScaleWindow(EffectWindow* w);
     QHash< const EffectWindow*, QTimeLine* > mTimeLineWindows;

@@ -42,7 +42,7 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowActivated(EffectWindow *w);
+    void slotWindowActivated(KWin::EffectWindow *w);
 
 private:
     bool mActivated;

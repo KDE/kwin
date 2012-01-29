@@ -51,7 +51,7 @@ public:
 public slots:
     void toggle();
     void toggleWindow();
-    void slotWindowClosed(EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
 
 protected:
     bool loadData();

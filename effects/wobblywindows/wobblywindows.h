@@ -58,12 +58,12 @@ public:
     static bool supported();
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowStartUserMovedResized(EffectWindow *w);
-    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
-    void slotWindowFinishUserMovedResized(EffectWindow *w);
-    void slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
+    void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowMaximizeStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
 
 private:
 

@@ -45,9 +45,9 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
 private slots:
     void toggleCurrentThumbnail();
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
-    void slotWindowDamaged(EffectWindow* w, const QRect& damage);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
+    void slotWindowDamaged(KWin::EffectWindow* w, const QRect& damage);
     virtual bool isActive() const;
 private:
     void addThumbnail(EffectWindow* w);

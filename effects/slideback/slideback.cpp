@@ -33,11 +33,11 @@ SlideBackEffect::SlideBackEffect()
     updateStackingOrder();
     disabled = false;
     unminimizedWindow = NULL;
-    connect(effects, SIGNAL(windowAdded(EffectWindow*)), this, SLOT(slotWindowAdded(EffectWindow*)));
-    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(EffectWindow*)), this, SLOT(slotWindowDeleted(EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(EffectWindow*)), this, SLOT(slotWindowUnminimized(EffectWindow*)));
-    connect(effects, SIGNAL(clientGroupItemSwitched(EffectWindow*,EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(EffectWindow*,EffectWindow*)));
+    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(clientGroupItemSwitched(KWin::EffectWindow*,KWin::EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(KWin::EffectWindow*,KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
 }
 

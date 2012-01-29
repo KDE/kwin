@@ -43,9 +43,9 @@ public:
     virtual void reconfigure(ReconfigureFlags);
 
 public Q_SLOTS:
-    void slotWindowStartUserMovedResized(EffectWindow *w);
-    void slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
-    void slotWindowFinishUserMovedResized(EffectWindow *w);
+    void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
+    void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
 
 private:
     enum Feature { TextureScale = 1 << 0, Outline = 1 << 1 };

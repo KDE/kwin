@@ -40,8 +40,8 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
 
 private:
     QHash< const EffectWindow*, double > windows;

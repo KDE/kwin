@@ -43,11 +43,11 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowActivated(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotWindowUnminimized(EffectWindow *w);
-    void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowActivated(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWindowUnminimized(KWin::EffectWindow *w);
+    void slotClientGroupItemSwitched(KWin::EffectWindow* from, KWin::EffectWindow* to);
     void slotTabBoxClosed();
 
 private:

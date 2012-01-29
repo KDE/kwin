@@ -86,11 +86,11 @@ private slots:
     void globalShortcutChanged(const QKeySequence& seq);
     void slotAddDesktop();
     void slotRemoveDesktop();
-    void slotWindowAdded(EffectWindow* w);
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow* w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
     void slotNumberDesktopsChanged(int old);
-    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;

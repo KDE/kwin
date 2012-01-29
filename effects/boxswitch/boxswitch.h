@@ -60,12 +60,12 @@ public:
     void paintWindowsBox(const QRegion& region);
 
 public Q_SLOTS:
-    void slotWindowClosed(EffectWindow* w);
+    void slotWindowClosed(KWin::EffectWindow* w);
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
-    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
-    void slotWindowDamaged(EffectWindow* w, const QRect& damage);
+    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
+    void slotWindowDamaged(KWin::EffectWindow* w, const QRect& damage);
 
 private:
     class ItemInfo;

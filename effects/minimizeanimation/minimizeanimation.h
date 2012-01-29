@@ -46,9 +46,9 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowDeleted(EffectWindow *w);
-    void slotWindowMinimized(EffectWindow *w);
-    void slotWindowUnminimized(EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWindowMinimized(KWin::EffectWindow *w);
+    void slotWindowUnminimized(KWin::EffectWindow *w);
 
 private:
     QHash< EffectWindow*, QTimeLine* > mTimeLineWindows;

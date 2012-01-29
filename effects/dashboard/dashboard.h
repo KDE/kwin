@@ -46,9 +46,9 @@ public:
     virtual bool isActive() const;
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow* c);
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowActivated(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow* c);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowActivated(KWin::EffectWindow *w);
 private:
     bool blur;
     bool isDashboard(EffectWindow* w);

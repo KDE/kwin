@@ -46,10 +46,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool isActive() const;
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow* w);
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotPropertyNotify(EffectWindow *w, long a);
+    void slotWindowAdded(KWin::EffectWindow* w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotPropertyNotify(KWin::EffectWindow *w, long a);
 private:
     bool isLogoutDialog(EffectWindow* w);
     double progress; // 0-1

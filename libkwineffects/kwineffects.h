@@ -828,7 +828,7 @@ Q_SIGNALS:
      * @param w The added window
      * @since 4.7
      **/
-    void windowAdded(EffectWindow *w);
+    void windowAdded(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window is being removed from the Workspace.
      * An effect which wants to animate the window closing should connect
@@ -837,13 +837,13 @@ Q_SIGNALS:
      * @param w The window which is being closed
      * @since 4.7
      **/
-    void windowClosed(EffectWindow *w);
+    void windowClosed(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window get's activated.
      * @param w The new active window, or @c NULL if there is no active window.
      * @since 4.7
      **/
-    void windowActivated(EffectWindow *w);
+    void windowActivated(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window is deleted.
      * This means that a closed window is not referenced any more.
@@ -855,7 +855,7 @@ Q_SIGNALS:
      * @see windowClosed
      * @since 4.7
      **/
-    void windowDeleted(EffectWindow *w);
+    void windowDeleted(KWin::EffectWindow *w);
     /**
      * Signal emitted when a user begins a window move or resize operation.
      * To figure out whether the user resizes or moves the window use
@@ -871,7 +871,7 @@ Q_SIGNALS:
      * @see EffectWindow::isUserResize
      * @since 4.7
      **/
-    void windowStartUserMovedResized(EffectWindow *w);
+    void windowStartUserMovedResized(KWin::EffectWindow *w);
     /**
      * Signal emitted during a move/resize operation when the user changed the geometry.
      * Please note: KWin supports two operation modes. In one mode all changes are applied
@@ -888,7 +888,7 @@ Q_SIGNALS:
      * @see EffectWindow::isUserResize
      * @since 4.7
      **/
-    void windowStepUserMovedResized(EffectWindow *w, const QRect &geometry);
+    void windowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
     /**
      * Signal emitted when the user finishes move/resize of window @p w.
      * @param w The window which has been moved/resized
@@ -896,7 +896,7 @@ Q_SIGNALS:
      * @see windowFinishUserMovedResized
      * @since 4.7
      **/
-    void windowFinishUserMovedResized(EffectWindow *w);
+    void windowFinishUserMovedResized(KWin::EffectWindow *w);
     /**
      * Signal emitted when the maximized state of the window @p w changed.
      * A window can be in one of four states:
@@ -909,7 +909,7 @@ Q_SIGNALS:
      * @param vertical If @c true maximized vertically
      * @since 4.7
      **/
-    void windowMaximizedStateChanged(EffectWindow *w, bool horizontal, bool vertical);
+    void windowMaximizedStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
     /**
      * Signal emitted when the geometry or shape of a window changed.
      * This is caused if the window changes geometry without user interaction.
@@ -920,7 +920,7 @@ Q_SIGNALS:
      * @see windowUserMovedResized
      * @since 4.7
      **/
-    void windowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     /**
      * Signal emitted when the windows opacity is changed.
      * @param w The window whose opacity level is changed.
@@ -928,19 +928,19 @@ Q_SIGNALS:
      * @param newOpacity The new opacity level
      * @since 4.7
      **/
-    void windowOpacityChanged(EffectWindow *w, qreal oldOpacity, qreal newOpacity);
+    void windowOpacityChanged(KWin::EffectWindow *w, qreal oldOpacity, qreal newOpacity);
     /**
      * Signal emitted when a window got minimized.
      * @param w The window which was minimized
      * @since 4.7
      **/
-    void windowMinimized(EffectWindow *w);
+    void windowMinimized(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window got unminimized.
      * @param w The window which was unminimized
      * @since 4.7
      **/
-    void windowUnminimized(EffectWindow *w);
+    void windowUnminimized(KWin::EffectWindow *w);
     /**
      * Signal emitted when an area of a window is scheduled for repainting.
      * Use this signal in an effect if another area needs to be synced as well.
@@ -948,7 +948,7 @@ Q_SIGNALS:
      * @param r The damaged rect
      * @since 4.7
      **/
-    void windowDamaged(EffectWindow *w, const QRect &r);
+    void windowDamaged(KWin::EffectWindow *w, const QRect &r);
     /**
      * Signal emitted when a tabbox is added.
      * An effect who wants to replace the tabbox with itself should use @link refTabBox.
@@ -988,9 +988,9 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void tabBoxKeyEvent(QKeyEvent* event);
-    void currentTabAboutToChange(EffectWindow* from, EffectWindow* to);
-    void tabAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
-    void tabRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
+    void currentTabAboutToChange(KWin::EffectWindow* from, KWin::EffectWindow* to);
+    void tabAdded(KWin::EffectWindow* from, KWin::EffectWindow* to);   // from merged with to
+    void tabRemoved(KWin::EffectWindow* c, KWin::EffectWindow* group);   // c removed from group
     /**
      * Signal emitted when mouse changed.
      * If an effect needs to get updated mouse positions, it needs to first call @link startMousePolling.
@@ -1017,7 +1017,7 @@ Q_SIGNALS:
      * @param atom The property
      * @since 4.7
      */
-    void propertyNotify(EffectWindow* w, long atom);
+    void propertyNotify(KWin::EffectWindow* w, long atom);
     /**
      * Requests to show an outline. An effect providing to show an outline should
      * connect to the signal and render an outline.
@@ -2156,6 +2156,7 @@ void Motion<T>::finish()
 }
 
 } // namespace
+Q_DECLARE_METATYPE(KWin::EffectWindow*)
 
 /** @} */
 

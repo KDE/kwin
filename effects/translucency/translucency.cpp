@@ -34,9 +34,9 @@ TranslucencyEffect::TranslucencyEffect()
 {
     reconfigure(ReconfigureAll);
     active = effects->activeWindow();
-    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
-    connect(effects, SIGNAL(windowStartUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(KWin::EffectWindow*)));
 }
 
 void TranslucencyEffect::reconfigure(ReconfigureFlags)

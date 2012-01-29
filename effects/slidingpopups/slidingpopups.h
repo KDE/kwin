@@ -45,10 +45,10 @@ public:
     // TODO react also on virtual desktop changes
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow *c);
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotPropertyNotify(EffectWindow *w, long a);
+    void slotWindowAdded(KWin::EffectWindow *c);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotPropertyNotify(KWin::EffectWindow *w, long a);
 private:
     enum Position {
         West = 0,

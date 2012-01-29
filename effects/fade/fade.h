@@ -43,10 +43,10 @@ public:
     bool isFadeWindow(EffectWindow* w);
 
 public Q_SLOTS:
-    void slotWindowAdded(EffectWindow* c);
-    void slotWindowClosed(EffectWindow *c);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotWindowOpacityChanged(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow* c);
+    void slotWindowClosed(KWin::EffectWindow *c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWindowOpacityChanged(KWin::EffectWindow *w);
 private:
     class WindowInfo;
     QHash< const EffectWindow*, WindowInfo > windows;

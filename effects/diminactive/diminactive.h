@@ -41,8 +41,8 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
 public Q_SLOTS:
-    void slotWindowActivated(EffectWindow* c);
-    void slotWindowDeleted(EffectWindow *w);
+    void slotWindowActivated(KWin::EffectWindow* c);
+    void slotWindowDeleted(KWin::EffectWindow *w);
 
 private:
     bool dimWindow(const EffectWindow* w) const;

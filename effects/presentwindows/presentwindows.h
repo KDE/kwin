@@ -148,17 +148,17 @@ public slots:
     void globalShortcutChangedAll(const QKeySequence& seq);
     void globalShortcutChangedClass(const QKeySequence& seq);
     // EffectsHandler
-    void slotWindowAdded(EffectWindow *w);
-    void slotWindowClosed(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
-    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowClosed(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     // Tab box
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
     void slotTabBoxKeyEvent(QKeyEvent* event);
     // atoms
-    void slotPropertyNotify(EffectWindow* w, long atom);
+    void slotPropertyNotify(KWin::EffectWindow* w, long atom);
 
 private slots:
     void closeWindow();

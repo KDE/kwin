@@ -43,7 +43,7 @@ bool ScreenShotEffect::supported()
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
 {
-    connect ( effects, SIGNAL(windowClosed(EffectWindow*)), SLOT(windowClosed(EffectWindow*)) );
+    connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
     QDBusConnection::sessionBus().registerObject("/Screenshot", this, QDBusConnection::ExportScriptableContents);
     QDBusConnection::sessionBus().registerService("org.kde.kwin.Screenshot");
 }

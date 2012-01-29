@@ -32,7 +32,7 @@ DimScreenEffect::DimScreenEffect()
     , deactivateAnimation(false)
 {
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowActivated(EffectWindow*)), this, SLOT(slotWindowActivated(EffectWindow*)));
+    connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
 }
 
 DimScreenEffect::~DimScreenEffect()
