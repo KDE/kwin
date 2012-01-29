@@ -53,13 +53,11 @@ public:
     Picture bufferPicture();
 protected:
     virtual void paintBackground(QRegion region);
-    virtual void paintGenericScreen(int mask, ScreenPaintData data);
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
-    void paintTransformedScreen(int mask);
     void createBuffer();
     void flushBuffer(int mask, QRegion damage);
     void initXRender(bool createOverlay);
