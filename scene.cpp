@@ -139,12 +139,14 @@ void Scene::paintScreen(int* mask, QRegion* region)
         *region = QRegion(0, 0, displayWidth(), displayHeight());
     }
     painted_region = *region;
-    if (*mask & PAINT_SCREEN_BACKGROUND_FIRST)
+    if (*mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         paintBackground(*region);
+    }
     ScreenPaintData data;
     effects->paintScreen(*mask, *region, data);
-    foreach (Window * w, stacking_order)
-    effects->postPaintWindow(effectWindow(w));
+    foreach (Window * w, stacking_order) {
+        effects->postPaintWindow(effectWindow(w));
+    }
     effects->postPaintScreen();
     *region |= painted_region;
     // make sure not to go outside of the screen area
@@ -190,13 +192,12 @@ void Scene::finalPaintScreen(int mask, QRegion region, ScreenPaintData& data)
 // It simply paints bottom-to-top.
 void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
 {
-    if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST))
+    if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
         paintBackground(infiniteRegion());
+    }
     QList< Phase2Data > phase2;
     foreach (Window * w, stacking_order) { // bottom to top
         Toplevel* topw = w->window();
-        painted_region |= topw->repaints().translated(topw->pos());
-        painted_region |= topw->decorationPendingRegion();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
@@ -219,8 +220,9 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
             kFatal(1212) << "Pre-paint calls are not allowed to transform quads!" ;
         }
 #endif
-        if (!w->isPaintingEnabled())
+        if (!w->isPaintingEnabled()) {
             continue;
+        }
         phase2.append(Phase2Data(w, infiniteRegion(), data.clip, data.mask, data.quads));
         // transformations require window pixmap
         w->suspendUnredirect(data.mask
