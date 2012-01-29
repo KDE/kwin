@@ -122,20 +122,9 @@ void Scene::paintScreen(int* mask, QRegion* region)
     pdata.mask = *mask;
     pdata.paint = *region;
 
-    // region only includes all workspace-specific repaints but some effect (e.g. blur)
-    // rely on the full damaged area
-    QRegion dirtyArea;
-    foreach (Window * w, stacking_order) { // bottom to top
-        Toplevel* topw = w->window();
-        dirtyArea |= topw->repaints().translated(topw->pos());
-        dirtyArea |= topw->decorationPendingRegion();
-    }
-    pdata.paint |= dirtyArea;
-
     effects->prePaintScreen(pdata, time_diff);
     *mask = pdata.mask;
-    // Subtract the dirty region and let finalPaintScreen decide which areas have to be drawn
-    *region |= pdata.paint - dirtyArea;
+    *region = pdata.paint;
 
     if (*mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         // Region painting is not possible with transformations,
