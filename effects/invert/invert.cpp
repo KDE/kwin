@@ -88,9 +88,6 @@ bool InvertEffect::loadData()
 
 void InvertEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    if (m_valid && (m_allWindows || !m_windows.isEmpty())) {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
-    }
     effects->prePaintScreen(data, time);
 }
 

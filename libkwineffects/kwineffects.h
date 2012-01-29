@@ -316,15 +316,7 @@ public:
          * Window will be painted with a lanczos filter.
          **/
         PAINT_WINDOW_LANCZOS = 1 << 8,
-        /**
-         * Same as PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS but does not trigger
-         * full repaints of the screen. If this flag is used the effect has
-         * to ensure by itself that the correct areas are repainted. If not
-         * handled correctly it will cause rendering glitches.
-         * Use with care!
-         * @since 4.6
-         **/
-        PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9
+        // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
 
     enum Feature {

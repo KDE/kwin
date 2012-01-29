@@ -291,8 +291,6 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     // screen won't be repainted, resulting in artefacts.
     // Could we just set a subset of the screen to be repainted ?
     if (windows.count() != 0) {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
-
         m_updateRegion = QRegion();
     }
 

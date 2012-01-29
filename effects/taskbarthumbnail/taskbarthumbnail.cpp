@@ -57,9 +57,6 @@ TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
 
 void TaskbarThumbnailEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (thumbnails.count() > 0) {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS;
-    }
     effects->prePaintScreen(data, time);
 }
 
