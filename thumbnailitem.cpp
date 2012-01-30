@@ -40,7 +40,7 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
 {
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
     if (effects) {
-        connect(effects, SIGNAL(windowAdded(EffectWindow*)), SLOT(effectWindowAdded()));
+        connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
     }
     QTimer::singleShot(0, this, SLOT(init()));
 }
