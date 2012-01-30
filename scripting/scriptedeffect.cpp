@@ -57,6 +57,36 @@ void effectWindowFromScriptValue(const QScriptValue &value, EffectWindow* &windo
     window = qobject_cast<EffectWindow*>(value.toQObject());
 }
 
+QScriptValue fpx2ToScriptValue(QScriptEngine *eng, const KWin::FPx2 &fpx2)
+{
+    QScriptValue val = eng->newObject();
+    val.setProperty("value1", fpx2[0]);
+    val.setProperty("value2", fpx2[1]);
+    return val;
+}
+
+void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
+{
+    if (value.isNull()) {
+        fpx2 = FPx2();
+        return;
+    }
+    if (value.isNumber()) {
+        fpx2 = FPx2(value.toNumber());
+        return;
+    }
+    if (value.isObject()) {
+        QScriptValue value1 = value.property("value1");
+        QScriptValue value2 = value.property("value2");
+        if (!value1.isValid() || !value2.isValid() || !value1.isNumber() || !value2.isNumber()) {
+            kDebug(1212) << "Cannot cast scripted FPx2 to C++";
+            fpx2 = FPx2();
+            return;
+        }
+        fpx2 = FPx2(value1.toNumber(), value2.toNumber());
+    }
+}
+
 ScriptedEffect *ScriptedEffect::create(const QString &pathToScript)
 {
     ScriptedEffect *effect = new ScriptedEffect();
@@ -87,6 +117,7 @@ bool ScriptedEffect::init(const QString &pathToScript)
     m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     MetaScripting::registration(m_engine);
     qScriptRegisterMetaType<KEffectWindowRef>(m_engine, effectWindowToScriptValue, effectWindowFromScriptValue);
+    qScriptRegisterMetaType<KWin::FPx2>(m_engine, fpx2ToScriptValue, fpx2FromScriptValue);
     // add our print
     QScriptValue printFunc = m_engine->newFunction(kwinEffectScriptPrint);
     printFunc.setData(m_engine->newQObject(this));
@@ -116,59 +147,9 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
     }
 }
 
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, float to, uint meta, QEasingCurve curve, int delay)
+void ScriptedEffect::animate(EffectWindow* w, AnimationEffect::Attribute a, int ms, FPx2 to, FPx2 from, uint meta, QEasingCurve curve, int delay)
 {
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay);
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QPoint to, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay);
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QPointF to, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay);
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QSize to, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay);
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QSizeF to, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay);
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, float to, float from, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay, FPx2(from));
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, float to, float to2, float from, float from2, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to, to2), curve, delay, FPx2(from, from2));
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QPoint to, QPoint from, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay, FPx2(from));
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QPointF to, QPointF from, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay, FPx2(from));
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QSize to, QSize from, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay, FPx2(from));
-}
-
-void ScriptedEffect::animate(EffectWindow *w, Attribute a, int ms, QSizeF to, QSizeF from, uint meta, QEasingCurve curve, int delay)
-{
-    AnimationEffect::animate(w, a, meta, ms, FPx2(to), curve, delay, FPx2(from));
+    AnimationEffect::animate(w, a, meta, ms, to, curve, delay, from);
 }
 
 } // namespace

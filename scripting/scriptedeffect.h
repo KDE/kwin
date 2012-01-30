@@ -39,17 +39,7 @@ public:
     static ScriptedEffect *create(const QString &pathToScript);
 
 public Q_SLOTS:
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, float to, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QPoint to, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QPointF to, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QSize to, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QSizeF to, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, float to, float from, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, float to, float to2, float from, float from2, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QPoint to, QPoint from, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QPointF to, QPointF from, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QSize to, QSize from, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, QSizeF to, QSizeF from, uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
+    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);

@@ -180,5 +180,6 @@ private:
 
 
 } // namespace
+Q_DECLARE_METATYPE(KWin::FPx2)
 
 #endif // ANIMATION_EFFECT_H
