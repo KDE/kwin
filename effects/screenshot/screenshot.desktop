@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Screenshot
+Name[ar]=لقطة شاشة
 Name[ast]=Captura de pantalla
 Name[bg]=Снимка на екрана
 Name[bs]=Snimak ekrana
@@ -59,6 +60,7 @@ Name[zh_CN]=屏幕截图
 Name[zh_TW]=螢幕快照
 Icon=preferences-system-windows-effect-screenshot
 Comment=Saves screenshot of active window into the home directory
+Comment[ar]=يحفظ لقطة شاشة للنافذة الحالية إلى مجلد المنزل
 Comment[ast]=Guarda una captura de la ventana activa na carpeta personal
 Comment[bg]=Запазване снимка на активния прозорец в домашната папка
 Comment[bs]=Upisuje snimak aktivnog prozora u domaću fasciklu

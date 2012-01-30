@@ -9,9 +9,18 @@ X-KDE-PluginKeyword=kwin-scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
+X-KDE-Keywords[hu]=kwin szkript
+X-KDE-Keywords[uk]=скрипт,kwin
+X-KDE-Keywords[x-test]=xxkwin scriptxx
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=KWin Scripts
+Name[hu]=KWin szkriptek
+Name[uk]=Скрипти KWin
+Name[x-test]=xxKWin Scriptsxx
 Comment=Manage KWin scripts
+Comment[hu]=KWin szkriptek kezelése
+Comment[uk]=Керування скриптами KWin
+Comment[x-test]=xxManage KWin scriptsxx
 
 Categories=KDE;X-KDE-settings-system;
