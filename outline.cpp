@@ -29,6 +29,7 @@ namespace KWin {
 
 Outline::Outline()
     : m_initialized(false)
+    , m_active(false)
 {
 }
 
@@ -44,6 +45,7 @@ Outline::~Outline()
 
 void Outline::show()
 {
+    m_active = true;
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
         static_cast<EffectsHandlerImpl*>(effects)->slotShowOutline(m_outlineGeometry);
         return; // done by effect
@@ -53,6 +55,10 @@ void Outline::show()
 
 void Outline::hide()
 {
+    if (!m_active) {
+        return;
+    }
+    m_active = false;
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
         static_cast<EffectsHandlerImpl*>(effects)->slotHideOutline();
         return; // done by effect

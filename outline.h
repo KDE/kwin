@@ -96,6 +96,7 @@ private:
     Window m_leftOutline;
     QRect m_outlineGeometry;
     bool m_initialized;
+    bool m_active;
 };
 
 }
