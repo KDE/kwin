@@ -187,5 +187,7 @@ Comment[zh_CN]=配置高级窗口管理特性
 Comment[zh_TW]=設定進階視窗管理功能
 
 X-KDE-Keywords=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
+X-KDE-Keywords[pt]=sombra,contorno,passagem,contornos activos,lado-a-lado,páginas,páginas da janela,agrupamento de janelas,janelas lado-a-lado,colocação das janelas,comportamento avançado das janelas
+X-KDE-Keywords[pt_BR]=sombra,contorno,passagem,contornos ativos,lado a lado,páginas,páginas da janela,agrupamento de janelas,janelas lado a lado,colocação das janelas,comportamento avançado das janelas
 X-KDE-Keywords[uk]=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior,тіні,границі,межі,краї,активні краї,плитка,тайлінґ,вкладки,мозаїка,вікно з вкладками,групування вікон,розташування вікон, додаткові ефекти поведінки
 X-KDE-Keywords[x-test]=xxshading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behaviorxx
