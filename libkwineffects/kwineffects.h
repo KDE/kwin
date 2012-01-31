@@ -1062,6 +1062,177 @@ protected:
 class KWIN_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
+    Q_PROPERTY(QRect geometry READ geometry)
+    Q_PROPERTY(int height READ height)
+    Q_PROPERTY(qreal opacity READ opacity)
+    Q_PROPERTY(QPoint pos READ pos)
+    Q_PROPERTY(int screen READ screen)
+    Q_PROPERTY(QSize size READ size)
+    Q_PROPERTY(int width READ width)
+    Q_PROPERTY(int x READ x)
+    Q_PROPERTY(int y READ y)
+    Q_PROPERTY(int desktop READ desktop)
+    Q_PROPERTY(QRect rect READ rect)
+    Q_PROPERTY(QString windowClass READ windowClass)
+    Q_PROPERTY(QString windowRole READ windowRole)
+    /**
+     * Returns whether the window is a desktop background window (the one with wallpaper).
+     * See _NET_WM_WINDOW_TYPE_DESKTOP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool desktopWindow READ isDesktop)
+    /**
+     * Returns whether the window is a dock (i.e. a panel).
+     * See _NET_WM_WINDOW_TYPE_DOCK at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool dock READ isDock)
+    /**
+     * Returns whether the window is a standalone (detached) toolbar window.
+     * See _NET_WM_WINDOW_TYPE_TOOLBAR at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool toolbar READ isToolbar)
+    /**
+     * Returns whether the window is a torn-off menu.
+     * See _NET_WM_WINDOW_TYPE_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool menu READ isMenu)
+    /**
+     * Returns whether the window is a "normal" window, i.e. an application or any other window
+     * for which none of the specialized window types fit.
+     * See _NET_WM_WINDOW_TYPE_NORMAL at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool normalWindow READ isNormalWindow)
+    /**
+     * Returns whether the window is a dialog window.
+     * See _NET_WM_WINDOW_TYPE_DIALOG at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool dialog READ isDialog)
+    /**
+     * Returns whether the window is a splashscreen. Note that many (especially older) applications
+     * do not support marking their splash windows with this type.
+     * See _NET_WM_WINDOW_TYPE_SPLASH at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool splash READ isSplash)
+    /**
+     * Returns whether the window is a utility window, such as a tool window.
+     * See _NET_WM_WINDOW_TYPE_UTILITY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool utility READ isUtility)
+    /**
+     * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
+     * from the applications menubar).
+     * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool dropdownMenu READ isDropdownMenu)
+    /**
+     * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
+     * See _NET_WM_WINDOW_TYPE_POPUP_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool popupMenu READ isPopupMenu)
+    /**
+     * Returns whether the window is a tooltip.
+     * See _NET_WM_WINDOW_TYPE_TOOLTIP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool tooltip READ isTooltip)
+    /**
+     * Returns whether the window is a window with a notification.
+     * See _NET_WM_WINDOW_TYPE_NOTIFICATION at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool notification READ isNotification)
+    /**
+     * Returns whether the window is a combobox popup.
+     * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool comboBox READ isComboBox)
+    /**
+     * Returns whether the window is a Drag&Drop icon.
+     * See _NET_WM_WINDOW_TYPE_DND at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(bool dndIcon READ isDNDIcon)
+    /**
+     * Returns the NETWM window type
+     * See http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     */
+    Q_PROPERTY(int windowType READ windowType)
+    /**
+     * Whether this EffectWindow is managed by KWin (it has control over its placement and other
+     * aspects, as opposed to override-redirect windows that are entirely handled by the application).
+     **/
+    Q_PROPERTY(bool managed READ isManaged)
+    /**
+     * Whether this EffectWindow represents an already deleted window and only kept for the compositor for animations.
+     **/
+    Q_PROPERTY(bool deleted READ isDeleted)
+    /**
+     * Whether the window has an own shape
+     **/
+    Q_PROPERTY(bool shaped READ hasOwnShape)
+    /**
+     * The Caption of the window. Read from WM_NAME property together with a suffix for hostname and shortcut.
+     **/
+    Q_PROPERTY(QString caption READ caption)
+    /**
+     * Whether the window is set to be kept above other windows.
+     **/
+    Q_PROPERTY(bool keepAbove READ keepAbove)
+    /**
+     * Whether the window is minimized.
+     **/
+    Q_PROPERTY(bool minimized READ isMinimized)
+    /**
+     * Whether the window represents a modal window.
+     **/
+    Q_PROPERTY(bool modal READ isModal)
+    /**
+     * Whether the window is moveable. Even if it is not moveable, it might be possible to move
+     * it to another screen.
+     * @see moveableAcrossScreens
+     **/
+    Q_PROPERTY(bool moveable READ isMovable)
+    /**
+     * Whether the window can be moved to another screen.
+     * @see moveable
+     **/
+    Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
+    /**
+     * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
+     * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
+     */
+    Q_PROPERTY(QSize basicUnit READ basicUnit)
+    /**
+     * Whether the window is currently being moved by the user.
+     **/
+    Q_PROPERTY(bool move READ isUserMove)
+    /**
+     * Whether the window is currently being resized by the user.
+     **/
+    Q_PROPERTY(bool resize READ isUserResize)
+    /**
+     * The optional geometry representing the minimized Client in e.g a taskbar.
+     * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     **/
+    Q_PROPERTY(QRect iconGeometry READ iconGeometry)
+    /**
+     * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
+     * i.e. window types that usually don't have a window frame and the user does not use window
+     * management (moving, raising,...) on them.
+     **/
+    Q_PROPERTY(bool specialWindow READ isSpecialWindow)
+    Q_PROPERTY(QPixmap icon READ icon)
+    /**
+     * Whether the window should be excluded from window switching effects.
+     **/
+    Q_PROPERTY(bool skipSwitcher READ isSkipSwitcher)
+    /**
+     * Geometry of the actual window contents inside the whole (including decorations) window.
+     */
+    Q_PROPERTY(QRect contentsRect READ contentsRect)
+    /**
+     * Geometry of the transparent rect in the decoration.
+     * May be different from contentsRect if the decoration is extended into the client area.
+     */
+    Q_PROPERTY(QRect decorationInnerRect READ decorationInnerRect)
+    Q_PROPERTY(bool hasDecoration READ hasDecoration)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
