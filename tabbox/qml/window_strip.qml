@@ -71,9 +71,9 @@ Item {
                 id: thumbnailItem
                 wId: windowId
                 width: parent.width - closeButtonContainer.width - 20
-                height: thumbnailListView.height - 40
+                height: thumbnailListView.height - windowTitle.height - 4
                 clip: false
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
