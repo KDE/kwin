@@ -113,7 +113,7 @@ bool ScriptedEffect::init(const QString &pathToScript)
     m_scriptFile = pathToScript;
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
-    m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&AnimationEffect::staticMetaObject));
+    m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
     m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     MetaScripting::registration(m_engine);
     qScriptRegisterMetaType<KEffectWindowRef>(m_engine, effectWindowToScriptValue, effectWindowFromScriptValue);
@@ -150,6 +150,16 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
 void ScriptedEffect::animate(EffectWindow* w, AnimationEffect::Attribute a, int ms, FPx2 to, FPx2 from, uint meta, QEasingCurve curve, int delay)
 {
     AnimationEffect::animate(w, a, meta, ms, to, curve, delay, from);
+}
+
+bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)
+{
+    void *e = w->data(static_cast<KWin::DataRole>(grabRole)).value<void*>();
+    if (e) {
+        return e != this;
+    } else {
+        return false;
+    }
 }
 
 } // namespace

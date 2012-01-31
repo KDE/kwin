@@ -32,11 +32,31 @@ namespace KWin
 class ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
+    Q_ENUMS(DataRole)
 public:
+    // copied from kwineffects.h
+    enum DataRole {
+        // Grab roles are used to force all other animations to ignore the window.
+        // The value of the data is set to the Effect's `this` value.
+        WindowAddedGrabRole = 1,
+        WindowClosedGrabRole,
+        WindowMinimizedGrabRole,
+        WindowUnminimizedGrabRole,
+        WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
+        WindowBlurBehindRole, ///< For single windows to blur behind
+        LanczosCacheRole
+    };
     const QString &scriptFile() const {
         return m_scriptFile;
     }
     static ScriptedEffect *create(const QString &pathToScript);
+    /**
+     * Whether another effect has grabbed the @p w with the given @p grabRole.
+     * @param w The window to check
+     * @param grabRole The grab role to check
+     * @returns @c true if another window has grabbed the effect, @c false otherwise
+     **/
+    Q_SCRIPTABLE bool isGrabbed(KWin::EffectWindow *w, DataRole grabRole);
 
 public Q_SLOTS:
     void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
