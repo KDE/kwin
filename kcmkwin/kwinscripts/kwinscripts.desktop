@@ -9,6 +9,7 @@ X-KDE-PluginKeyword=kwin-scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
+X-KDE-Keywords[cs]=skript kwinu
 X-KDE-Keywords[hu]=kwin szkript
 X-KDE-Keywords[pt]=programa do kwin
 X-KDE-Keywords[pt_BR]=Script do kwin
@@ -17,6 +18,7 @@ X-KDE-Keywords[x-test]=xxkwin scriptxx
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=KWin Scripts
+Name[cs]=Skripty KWinu
 Name[hu]=KWin szkriptek
 Name[pt]=Programas do KWin
 Name[pt_BR]=Scripts do KWin
