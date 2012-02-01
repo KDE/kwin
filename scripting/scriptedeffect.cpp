@@ -48,6 +48,18 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
     return engine->undefinedValue();
 }
 
+QScriptValue kwinEffectScriptAnimationTime(QScriptContext *context, QScriptEngine *engine)
+{
+    ScriptedEffect *script = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
+    if (context->argumentCount() != 1) {
+        return engine->undefinedValue();
+    }
+    if (!context->argument(0).isNumber()) {
+        return engine->undefinedValue();
+    }
+    return Effect::animationTime(context->argument(0).toInteger());
+}
+
 QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
 {
     return eng->newQObject(window, QScriptEngine::QtOwnership,
@@ -129,6 +141,10 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QScriptValue printFunc = m_engine->newFunction(kwinEffectScriptPrint);
     printFunc.setData(m_engine->newQObject(this));
     m_engine->globalObject().setProperty("print", printFunc);
+    // add our animationTime
+    QScriptValue animationTimeFunc = m_engine->newFunction(kwinEffectScriptAnimationTime);
+    animationTimeFunc.setData(m_engine->newQObject(this));
+    m_engine->globalObject().setProperty("animationTime", animationTimeFunc);
 
     QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
 
