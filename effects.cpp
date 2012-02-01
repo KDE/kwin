@@ -1241,7 +1241,7 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
         kDebug(1212) << "Could not locate the effect script";
         return false;
     }
-    ScriptedEffect *effect = ScriptedEffect::create(scriptFile);
+    ScriptedEffect *effect = ScriptedEffect::create(name, scriptFile);
     if (!effect) {
         return false;
     }

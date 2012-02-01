@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 // KDE
 #include <KDE/KDebug>
+#include <KDE/KStandardDirs>
+#include <KDE/Plasma/ConfigLoader>
 // Qt
 #include <QtCore/QFile>
 #include <QtScript/QScriptEngine>
@@ -87,10 +89,10 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
     }
 }
 
-ScriptedEffect *ScriptedEffect::create(const QString &pathToScript)
+ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript)
 {
     ScriptedEffect *effect = new ScriptedEffect();
-    if (!effect->init(pathToScript)) {
+    if (!effect->init(effectName, pathToScript)) {
         delete effect;
         return NULL;
     }
@@ -100,17 +102,22 @@ ScriptedEffect *ScriptedEffect::create(const QString &pathToScript)
 ScriptedEffect::ScriptedEffect()
     : AnimationEffect()
     , m_engine(new QScriptEngine(this))
+    , m_scriptFile(QString())
+    , m_currentConfig(QString("main"))
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
 }
 
-bool ScriptedEffect::init(const QString &pathToScript)
+bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript)
 {
     QFile scriptFile(pathToScript);
     if (!scriptFile.open(QIODevice::ReadOnly)) {
         return false;
     }
+    m_effectName = effectName;
     m_scriptFile = pathToScript;
+    loadConfig("main");
+
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
@@ -160,6 +167,59 @@ bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRol
     } else {
         return false;
     }
+}
+
+void ScriptedEffect::reconfigure(ReconfigureFlags flags)
+{
+    AnimationEffect::reconfigure(flags);
+    emit configChanged();
+}
+
+QString ScriptedEffect::activeConfig() const
+{
+    return m_currentConfig;
+}
+
+void ScriptedEffect::setActiveConfig(const QString &name)
+{
+    if (name.isEmpty()) {
+        m_currentConfig = "main";
+        return;
+    }
+    Plasma::ConfigLoader *loader = m_configs.value(name, 0);
+
+    if (!loader) {
+        if (!loadConfig(name)) {
+            return;
+        }
+    }
+
+    m_currentConfig = name;
+}
+
+QVariant ScriptedEffect::readConfig(const QString& key)
+{
+    Plasma::ConfigLoader *config = m_configs.value(m_currentConfig);
+    QVariant result;
+
+    if (config) {
+        result = config->property(key);
+    }
+    return result;
+}
+
+bool ScriptedEffect::loadConfig(const QString& name)
+{
+    const QString path = KStandardDirs::locateLocal("data", "kwin/effects/" + m_effectName + "/config/" + name + ".xml");
+    if (path.isEmpty()) {
+        return false;
+    }
+
+    QFile f(path);
+    KConfigGroup cg = effects->effectConfig(m_effectName);
+    Plasma::ConfigLoader *loader = new Plasma::ConfigLoader(&cg, &f, this);
+    m_configs.insert(name, loader);
+    return true;
 }
 
 } // namespace
