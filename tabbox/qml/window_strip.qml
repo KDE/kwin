@@ -71,9 +71,12 @@ Item {
                 id: thumbnailItem
                 wId: windowId
                 width: parent.width - closeButtonContainer.width - 20
-                height: thumbnailListView.height - windowTitle.height - 4
+                height: thumbnailListView.height - windowTitle.height - 16
                 clip: false
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: windowTitle.top
+                }
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
@@ -85,8 +88,9 @@ Item {
             PlasmaComponents.Label {
                 id: windowTitle
                 anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter;
-                anchors.topMargin: 4
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                height: paintedHeight
 
                 text: caption
                 elide: Text.ElideRight
