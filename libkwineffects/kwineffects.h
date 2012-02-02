@@ -1073,6 +1073,8 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(int x READ x)
     Q_PROPERTY(int y READ y)
     Q_PROPERTY(int desktop READ desktop)
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
+    Q_PROPERTY(bool onCurrentDesktop READ isOnCurrentDesktop)
     Q_PROPERTY(QRect rect READ rect)
     Q_PROPERTY(QString windowClass READ windowClass)
     Q_PROPERTY(QString windowRole READ windowRole)
@@ -1167,6 +1169,10 @@ class KWIN_EXPORT EffectWindow : public QObject
      * Whether the window has an own shape
      **/
     Q_PROPERTY(bool shaped READ hasOwnShape)
+    /**
+     * The Window's shape
+     **/
+    Q_PROPERTY(QRegion shape READ shape)
     /**
      * The Caption of the window. Read from WM_NAME property together with a suffix for hostname and shortcut.
      **/
