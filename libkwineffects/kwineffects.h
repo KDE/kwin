@@ -1233,6 +1233,9 @@ class KWIN_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(QRect decorationInnerRect READ decorationInnerRect)
     Q_PROPERTY(bool hasDecoration READ hasDecoration)
+    Q_PROPERTY(QStringList activities READ activities)
+    Q_PROPERTY(bool onCurrentActivity READ isOnCurrentActivity)
+    Q_PROPERTY(bool onAllActivities READ isOnAllActivities)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -1271,8 +1274,9 @@ public:
     bool hasAlpha() const;
 
     bool isOnCurrentActivity() const;
-    bool isOnActivity(QString id) const;
+    Q_SCRIPTABLE bool isOnActivity(QString id) const;
     bool isOnAllActivities() const;
+    QStringList activities() const;
 
     bool isOnDesktop(int d) const;
     bool isOnCurrentDesktop() const;

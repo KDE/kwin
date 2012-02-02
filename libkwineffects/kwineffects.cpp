@@ -327,6 +327,7 @@ WINDOW_HELPER(bool, isManaged, "managed")
 WINDOW_HELPER(bool, isDeleted, "deleted")
 WINDOW_HELPER(bool, hasOwnShape, "shaped")
 WINDOW_HELPER(QString, windowRole, "windowRole")
+WINDOW_HELPER(QStringList, activities, "activities")
 
 QString EffectWindow::windowClass() const
 {
