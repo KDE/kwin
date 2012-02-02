@@ -573,6 +573,40 @@ public:
 class KWIN_EXPORT EffectsHandler : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY desktopChanged)
+    Q_PROPERTY(QString currentActivity READ currentActivity)
+    Q_PROPERTY(KWin::EffectWindow *activeWindow READ activeWindow WRITE activateWindow NOTIFY windowActivated)
+    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize)
+    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth)
+    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight)
+    Q_PROPERTY(int workspaceWidth READ workspaceWidth)
+    Q_PROPERTY(int workspaceHeight READ workspaceHeight)
+    /**
+     * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
+     **/
+    Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
+    Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
+    Q_PROPERTY(int activeScreen READ activeScreen)
+    Q_PROPERTY(int numScreens READ numScreens)
+    /**
+     * Factor by which animation speed in the effect should be modified (multiplied).
+     * If configurable in the effect itself, the option should have also 'default'
+     * animation speed. The actual value should be determined using animationTime().
+     * Note: The factor can be also 0, so make sure your code can cope with 0ms time
+     * if used manually.
+     */
+    Q_PROPERTY(qreal animationTimeFactor READ animationTimeFactor)
+    Q_PROPERTY(EffectWindowList stackingOrder READ stackingOrder)
+    /**
+     * Whether window decorations use the alpha channel.
+     **/
+    Q_PROPERTY(bool decorationsHaveAlpha READ decorationsHaveAlpha)
+    /**
+     * Whether the window decorations support blurring behind the decoration.
+     **/
+    Q_PROPERTY(bool decorationSupportsBlurBehind READ decorationSupportsBlurBehind)
+    Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
+    Q_PROPERTY(QPoint cursorPos READ cursorPos)
     friend class Effect;
 public:
     EffectsHandler(CompositingType type);
@@ -615,8 +649,8 @@ public:
     virtual void reserveElectricBorderSwitching(bool reserve) = 0;
 
     // functions that allow controlling windows/desktop
-    virtual void activateWindow(EffectWindow* c) = 0;
-    virtual EffectWindow* activeWindow() const = 0 ;
+    virtual void activateWindow(KWin::EffectWindow* c) = 0;
+    virtual KWin::EffectWindow* activeWindow() const = 0 ;
     virtual void moveWindow(EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) = 0;
     virtual void windowToDesktop(EffectWindow* w, int desktop) = 0;
     virtual void windowToScreen(EffectWindow* w, int screen) = 0;
