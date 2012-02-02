@@ -651,9 +651,9 @@ public:
     // functions that allow controlling windows/desktop
     virtual void activateWindow(KWin::EffectWindow* c) = 0;
     virtual KWin::EffectWindow* activeWindow() const = 0 ;
-    virtual void moveWindow(EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) = 0;
-    virtual void windowToDesktop(EffectWindow* w, int desktop) = 0;
-    virtual void windowToScreen(EffectWindow* w, int screen) = 0;
+    Q_SCRIPTABLE virtual void moveWindow(KWin::EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) = 0;
+    Q_SCRIPTABLE virtual void windowToDesktop(KWin::EffectWindow* w, int desktop) = 0;
+    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow* w, int screen) = 0;
     virtual void setShowingDesktop(bool showing) = 0;
 
 
@@ -716,28 +716,28 @@ public:
      * @returns The ID of the desktop above desktop @a id. Wraps around to the bottom of
      * the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    virtual int desktopAbove(int desktop = 0, bool wrap = true) const = 0;
+    Q_SCRIPTABLE virtual int desktopAbove(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop to the right of desktop @a id. Wraps around to the
      * left of the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    virtual int desktopToRight(int desktop = 0, bool wrap = true) const = 0;
+    Q_SCRIPTABLE virtual int desktopToRight(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop below desktop @a id. Wraps around to the top of the
      * layout if @a wrap is set. If @a id is not set use the current one.
      */
-    virtual int desktopBelow(int desktop = 0, bool wrap = true) const = 0;
+    Q_SCRIPTABLE virtual int desktopBelow(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop to the left of desktop @a id. Wraps around to the
      * right of the layout if @a wrap is set. If @a id is not set use the current one.
      */
-    virtual int desktopToLeft(int desktop = 0, bool wrap = true) const = 0;
-    virtual QString desktopName(int desktop) const = 0;
+    Q_SCRIPTABLE virtual int desktopToLeft(int desktop = 0, bool wrap = true) const = 0;
+    Q_SCRIPTABLE virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 
     virtual int activeScreen() const = 0; // Xinerama
     virtual int numScreens() const = 0; // Xinerama
-    virtual int screenNumber(const QPoint& pos) const = 0;   // Xinerama
+    Q_SCRIPTABLE virtual int screenNumber(const QPoint& pos) const = 0;   // Xinerama
     virtual QRect clientArea(clientAreaOption, int screen, int desktop) const = 0;
     virtual QRect clientArea(clientAreaOption, const EffectWindow* c) const = 0;
     virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const = 0;
@@ -751,7 +751,7 @@ public:
     virtual double animationTimeFactor() const = 0;
     virtual WindowQuadType newWindowQuadType() = 0;
 
-    virtual EffectWindow* findWindow(WId id) const = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
     virtual void setElevatedWindow(EffectWindow* w, bool set) = 0;
@@ -774,10 +774,10 @@ public:
      * If you call it during painting (including prepaint) then it does not
      *  affect the current painting.
      **/
-    virtual void addRepaintFull() = 0;
-    virtual void addRepaint(const QRect& r) = 0;
-    virtual void addRepaint(const QRegion& r) = 0;
-    virtual void addRepaint(int x, int y, int w, int h) = 0;
+    Q_SCRIPTABLE virtual void addRepaintFull() = 0;
+    Q_SCRIPTABLE virtual void addRepaint(const QRect& r) = 0;
+    Q_SCRIPTABLE virtual void addRepaint(const QRegion& r) = 0;
+    Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
 
     CompositingType compositingType() const;
     virtual unsigned long xrenderBufferPicture() = 0;
