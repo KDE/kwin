@@ -138,6 +138,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 {
     QFile scriptFile(pathToScript);
     if (!scriptFile.open(QIODevice::ReadOnly)) {
+        kDebug(1212) << "Could not open script file: " << pathToScript;
         return false;
     }
     m_effectName = effectName;
@@ -245,7 +246,7 @@ QVariant ScriptedEffect::readConfig(const QString& key)
 
 bool ScriptedEffect::loadConfig(const QString& name)
 {
-    const QString path = KStandardDirs::locateLocal("data", "kwin/effects/" + m_effectName + "/config/" + name + ".xml");
+    const QString path = KStandardDirs::locate("data", "kwin/effects/" + m_effectName + "/contents/config/" + name + ".xml");
     if (path.isEmpty()) {
         return false;
     }

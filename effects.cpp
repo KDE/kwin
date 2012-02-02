@@ -1236,13 +1236,14 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
         kDebug(1212) << "X-Plasma-MainScript not set";
         return false;
     }
-    const QString scriptFile = KStandardDirs::locateLocal("data", "kwin/effects/" + name + '/' + scriptName);
+    const QString scriptFile = KStandardDirs::locate("data", "kwin/effects/" + name + "/contents/" + scriptName);
     if (scriptFile.isNull()) {
         kDebug(1212) << "Could not locate the effect script";
         return false;
     }
     ScriptedEffect *effect = ScriptedEffect::create(name, scriptFile);
     if (!effect) {
+        kDebug(1212) << "Could not initialize scripted effect: " << name;
         return false;
     }
     effect_order.insert(service->property("X-KDE-Ordering").toInt(), EffectPair(name, effect));
