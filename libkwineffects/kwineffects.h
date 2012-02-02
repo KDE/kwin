@@ -1265,11 +1265,11 @@ public:
     virtual void enablePainting(int reason) = 0;
     virtual void disablePainting(int reason) = 0;
     virtual bool isPaintingEnabled() = 0;
-    void addRepaint(const QRect& r);
-    void addRepaint(int x, int y, int w, int h);
-    void addRepaintFull();
-    void addLayerRepaint(const QRect& r);
-    void addLayerRepaint(int x, int y, int w, int h);
+    Q_SCRIPTABLE void addRepaint(const QRect& r);
+    Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
+    Q_SCRIPTABLE void addRepaintFull();
+    Q_SCRIPTABLE void addLayerRepaint(const QRect& r);
+    Q_SCRIPTABLE void addLayerRepaint(int x, int y, int w, int h);
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
@@ -1430,8 +1430,8 @@ public:
     bool keepAbove() const;
 
     bool isModal() const;
-    virtual EffectWindow* findModal() = 0;
-    virtual EffectWindowList mainWindows() const = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow* findModal() = 0;
+    Q_SCRIPTABLE virtual EffectWindowList mainWindows() const = 0;
 
     /**
     * Returns whether the window should be excluded from window switching effects.
@@ -1446,15 +1446,15 @@ public:
 
     void minimize();
     void unminimize();
-    void closeWindow() const;
+    Q_SCRIPTABLE void closeWindow() const;
 
     bool isCurrentTab() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
      */
-    virtual void setData(int role, const QVariant &data) = 0;
-    virtual QVariant data(int role) const = 0;
+    Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;
+    Q_SCRIPTABLE virtual QVariant data(int role) const = 0;
 };
 
 class KWIN_EXPORT EffectWindowGroup
