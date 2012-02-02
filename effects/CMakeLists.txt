@@ -79,6 +79,11 @@ set( kwin4_effect_include_directories )
 # scripted effects
 add_subdirectory( fade )
 
+# scripted effects only relevant to desktop
+if( NOT KWIN_MOBILE_EFFECTS )
+    add_subdirectory( fadedesktop )
+endif( NOT KWIN_MOBILE_EFFECTS )
+
 ###############################################################################
 # Built-in effects go here
 
@@ -97,7 +102,6 @@ if( NOT KWIN_MOBILE_EFFECTS )
     include( desktopgrid/CMakeLists.txt )
     include( diminactive/CMakeLists.txt )
     include( dimscreen/CMakeLists.txt )
-    include( fadedesktop/CMakeLists.txt )
     include( fallapart/CMakeLists.txt )
     include( highlightwindow/CMakeLists.txt )
     include( magiclamp/CMakeLists.txt )
