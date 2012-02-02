@@ -1,12 +1,6 @@
-#######################################
-# Effect
+install(DIRECTORY package/
+        DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/kwin4_effect_fade)
 
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    fade/fade.cpp
-    )
-
-# .desktop files
-install( FILES
-    fade/fade.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+install(FILES package/metadata.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin
+        RENAME kwin4_effect_fade.desktop)

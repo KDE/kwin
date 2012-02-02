@@ -76,12 +76,14 @@ if( NOT KWIN_MOBILE_EFFECTS )
 endif( NOT KWIN_MOBILE_EFFECTS )
 set( kwin4_effect_include_directories )
 
+# scripted effects
+add_subdirectory( fade )
+
 ###############################################################################
 # Built-in effects go here
 
 # Common effects
 include( dialogparent/CMakeLists.txt )
-include( fade/CMakeLists.txt )
 include( login/CMakeLists.txt )
 include( outline/CMakeLists.txt )
 include( presentwindows/CMakeLists.txt )
