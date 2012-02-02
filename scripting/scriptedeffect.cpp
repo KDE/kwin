@@ -60,6 +60,20 @@ QScriptValue kwinEffectScriptAnimationTime(QScriptContext *context, QScriptEngin
     return Effect::animationTime(context->argument(0).toInteger());
 }
 
+QScriptValue kwinEffectDisplayWidth(QScriptContext *context, QScriptEngine *engine)
+{
+    Q_UNUSED(context)
+    Q_UNUSED(engine)
+    return Effect::displayWidth();
+}
+
+QScriptValue kwinEffectDisplayHeight(QScriptContext *context, QScriptEngine *engine)
+{
+    Q_UNUSED(context)
+    Q_UNUSED(engine)
+    return Effect::displayHeight();
+}
+
 QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
 {
     return eng->newQObject(window, QScriptEngine::QtOwnership,
@@ -145,6 +159,11 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QScriptValue animationTimeFunc = m_engine->newFunction(kwinEffectScriptAnimationTime);
     animationTimeFunc.setData(m_engine->newQObject(this));
     m_engine->globalObject().setProperty("animationTime", animationTimeFunc);
+    // add displayWidth and displayHeight
+    QScriptValue displayWidthFunc = m_engine->newFunction(kwinEffectDisplayWidth);
+    m_engine->globalObject().setProperty("displayWidth", displayWidthFunc);
+    QScriptValue displayHeightFunc = m_engine->newFunction(kwinEffectDisplayHeight);
+    m_engine->globalObject().setProperty("displayHeight", displayHeightFunc);
 
     QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
 
