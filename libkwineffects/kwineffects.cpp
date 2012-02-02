@@ -399,6 +399,15 @@ WINDOW_HELPER_SETTER(unminimize, "minimized",,false)
 
 #undef WINDOW_HELPER_SETTER
 
+void EffectWindow::setMinimized(bool min)
+{
+    if (min) {
+        minimize();
+    } else {
+        unminimize();
+    }
+}
+
 void EffectWindow::closeWindow() const
 {
     QMetaObject::invokeMethod(parent(), "closeWindow");

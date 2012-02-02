@@ -1184,7 +1184,7 @@ class KWIN_EXPORT EffectWindow : public QObject
     /**
      * Whether the window is minimized.
      **/
-    Q_PROPERTY(bool minimized READ isMinimized)
+    Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized)
     /**
      * Whether the window represents a modal window.
      **/
@@ -1444,6 +1444,7 @@ public:
      */
     virtual WindowQuadList buildQuads(bool force = false) const = 0;
 
+    void setMinimized(bool minimize);
     void minimize();
     void unminimize();
     Q_SCRIPTABLE void closeWindow() const;
