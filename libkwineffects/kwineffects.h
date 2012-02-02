@@ -69,7 +69,7 @@ class ScreenPaintData;
 
 typedef QPair< QString, Effect* > EffectPair;
 typedef QPair< Effect*, Window > InputWindowPair;
-typedef QList< EffectWindow* > EffectWindowList;
+typedef QList< KWin::EffectWindow* > EffectWindowList;
 
 
 /** @defgroup kwineffects KWin effects library
@@ -596,7 +596,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
      * if used manually.
      */
     Q_PROPERTY(qreal animationTimeFactor READ animationTimeFactor)
-    Q_PROPERTY(EffectWindowList stackingOrder READ stackingOrder)
+    Q_PROPERTY(QList< KWin::EffectWindow* > stackingOrder READ stackingOrder)
     /**
      * Whether window decorations use the alpha channel.
      **/
@@ -2373,6 +2373,7 @@ void Motion<T>::finish()
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::EffectWindow*)
+Q_DECLARE_METATYPE(QList<KWin::EffectWindow*>)
 
 /** @} */
 

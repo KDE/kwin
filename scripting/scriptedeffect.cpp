@@ -152,6 +152,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     MetaScripting::registration(m_engine);
     qScriptRegisterMetaType<KEffectWindowRef>(m_engine, effectWindowToScriptValue, effectWindowFromScriptValue);
     qScriptRegisterMetaType<KWin::FPx2>(m_engine, fpx2ToScriptValue, fpx2FromScriptValue);
+    qScriptRegisterSequenceMetaType<QList< KWin::EffectWindow* > >(m_engine);
     // add our print
     QScriptValue printFunc = m_engine->newFunction(kwinEffectScriptPrint);
     printFunc.setData(m_engine->newQObject(this));
