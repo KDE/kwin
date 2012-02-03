@@ -344,29 +344,23 @@ bool Workspace::workspaceEvent(XEvent * e)
     case MapRequest: {
         updateXTime();
 
-        // e->xmaprequest.window is different from e->xany.window
-        // TODO this shouldn't be necessary now
-        Client* c = findClient(WindowMatchPredicate(e->xmaprequest.window));
-        if (!c) {
-// don't check for the parent being the root window, this breaks when some app unmaps
-// a window, changes something and immediately maps it back, without giving KWin
-// a chance to reparent it back to root
-// since KWin can get MapRequest only for root window children and
-// children of WindowWrapper (=clients), the check is AFAIK useless anyway
-// Note: Now the save-set support in Client::mapRequestEvent() actually requires that
-// this code doesn't check the parent to be root.
-//            if ( e->xmaprequest.parent == root ) {
-            if (c = createClient(e->xmaprequest.window, false))
-                c->windowEvent(e);
-            else // refused to manage, simply map it (most probably override redirect)
-                XMapRaised(display(), e->xmaprequest.window);
-            return true;
-        } else {
+        if (Client* c = findClient(WindowMatchPredicate(e->xmaprequest.window))) {
+            // e->xmaprequest.window is different from e->xany.window
+            // TODO this shouldn't be necessary now
             c->windowEvent(e);
             updateFocusChains(c, FocusChainUpdate);
-            return true;
+        } else if ( true /*|| e->xmaprequest.parent != root */ ) {
+            // NOTICE don't check for the parent being the root window, this breaks when some app unmaps
+            // a window, changes something and immediately maps it back, without giving KWin
+            // a chance to reparent it back to root
+            // since KWin can get MapRequest only for root window children and
+            // children of WindowWrapper (=clients), the check is AFAIK useless anyway
+            // NOTICE: The save-set support in Client::mapRequestEvent() actually requires that
+            // this code doesn't check the parent to be root.
+            if (!createClient(e->xmaprequest.window, false))
+                XMapRaised(display(), e->xmaprequest.window);
         }
-        break;
+        return true;
     }
     case MapNotify: {
         if (e->xmap.override_redirect) {

@@ -1990,9 +1990,12 @@ void Client::getMotifHints()
 
     // mminimize; - Ignore, bogus - E.g. shading or sending to another desktop is "minimizing" too
     // mmaximize; - Ignore, bogus - Maximizing is basically just resizing
+    const bool closabilityChanged = motif_may_close != mclose;
     motif_may_close = mclose; // Motif apps like to crash when they set this hint and WM closes them anyway
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
+    if (decoration && closabilityChanged)
+        decoration->reset(KDecoration::SettingButtons);
 }
 
 void Client::readIcons(Window win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon)
