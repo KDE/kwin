@@ -840,15 +840,37 @@ Layer Client::belongsToLayer() const
     return NormalLayer;
 }
 
+bool rec_checkTransientOnTop(const ClientList &transients, const Client *topmost)
+{
+    foreach (const Client *transient, transients) {
+        if (transient == topmost || rec_checkTransientOnTop(transient->transients(), topmost)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Client::isActiveFullScreen() const
 {
+    if (!isFullScreen())
+        return false;
+
+//     const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+//     if (!ac)
+//         return false;
+// not needed, for xinerama  -> && ( ac == this || this->group() == ac->group())
+
     // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
     // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
-    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
     const Client* top = workspace()->topClientOnDesktop(workspace()->currentDesktop(), screen(), true, false);
-    return(isFullScreen() && ac != NULL && top != NULL
-// not needed, for xinerama  && ( ac == this || this->group() == ac->group())
-           && (top == this || this->group() == top->group()));
+    if (!top)
+        return false;
+
+    // check whether we ...
+    if (top == this)
+        return true;
+    // ... or one of our transients is topmost
+    return rec_checkTransientOnTop(transients_list, top);
 }
 
 } // namespace
