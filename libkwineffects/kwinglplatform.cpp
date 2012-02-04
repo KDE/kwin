@@ -366,9 +366,13 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
             chipset.contains("Q45/Q43")    ||
             chipset.contains("G41")        ||
             chipset.contains("B43")        ||
-            chipset.contains("Ironlake")   ||
-            chipset.contains("Sandybridge"))  // GL 3.1, CL 1.1, DX 10.1
+            chipset.contains("Ironlake"))
         return I965;
+
+    // GL 3.1, CL 1.1, DX 10.1
+    if (chipset.contains("Sandybridge")) {
+        return SandyBridge;
+    }
 
     return UnknownIntel;
 }
