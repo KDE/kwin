@@ -1896,7 +1896,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     }
     // SELI TODO won't this be too expensive?
     sendSyntheticConfigureNotify();
-    updateWindowRules();
+    updateWindowRules(Rules::Position|Rules::Size);
 
     // keep track of old maximize mode
     // to detect changes
@@ -1973,7 +1973,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     updateShape();
 
     sendSyntheticConfigureNotify();
-    updateWindowRules();
+    updateWindowRules(Rules::Position|Rules::Size);
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -2018,7 +2018,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     }
     XMoveWindow(display(), frameId(), x, y);
     sendSyntheticConfigureNotify();
-    updateWindowRules();
+    updateWindowRules(Rules::Position);
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
@@ -2282,7 +2282,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     updateAllowedActions();
     if (decoration != NULL)
         decoration->maximizeChange();
-    updateWindowRules();
+    updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
 }
 
 void Client::resetMaximize()
@@ -2370,7 +2370,7 @@ void Client::setFullScreen(bool set, bool user)
             setGeometry(workspace()->clientArea(MaximizeArea, this));
         }
     }
-    updateWindowRules();
+    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
     workspace()->checkUnredirect();
 
     if (was_fs != isFullScreen()) {

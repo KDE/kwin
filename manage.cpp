@@ -593,7 +593,7 @@ bool Client::manage(Window w, bool isMapped)
     client_rules.discardTemporary();
     applyWindowRules(); // Just in case
     workspace()->discardUsedWindowRules(this, false);   // Remove ApplyNow rules
-    updateWindowRules(); // Was blocked while !isManaged()
+    updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     updateCompositeBlocking(true);
 

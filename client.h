@@ -267,7 +267,7 @@ public:
     void removeRule(Rules* r);
     void setupWindowRules(bool ignore_temporary);
     void applyWindowRules();
-    void updateWindowRules();
+    void updateWindowRules(Rules::Types selection);
     void updateFullscreenMonitors(NETFullscreenMonitors topology);
 
     /**

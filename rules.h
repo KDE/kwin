@@ -48,7 +48,7 @@ class WindowRules
 public:
     WindowRules(const QVector< Rules* >& rules);
     WindowRules();
-    void update(Client*);
+    void update(Client*, int selection);
     void discardTemporary();
     bool contains(const Rules* rule) const;
     void remove(Rules* rule);
@@ -100,12 +100,20 @@ public:
     Rules();
     Rules(const KConfigGroup&);
     Rules(const QString&, bool temporary);
+    enum Type {
+        Position = 1<<0, Size = 1<<1, Desktop = 1<<2,
+        MaximizeVert = 1<<3, MaximizeHoriz = 1<<4, Minimize = 1<<5,
+        Shade = 1<<6, SkipTaskbar = 1<<7, SkipPager = 1<<8,
+        SkipSwitcher = 1<<9, Above = 1<<10, Below = 1<<11, Fullscreen = 1<<12,
+        NoBorder = 1<<13, OpacityActive = 1<<14, OpacityInactive = 1<<15, All = 0xffffffff
+    };
+    Q_DECLARE_FLAGS(Types, Type)
     void write(KConfigGroup&) const;
     bool isEmpty() const;
 #ifndef KCMRULES
     void discardUsed(bool withdrawn);
     bool match(const Client* c) const;
-    bool update(Client*);
+    bool update(Client*, int selection);
     bool isTemporary() const;
     bool discardTemporary(bool force);   // removes if temporary and forced or too old
     bool applyPlacement(Placement::Policy& placement) const;
@@ -325,5 +333,7 @@ void WindowRules::remove(Rules* rule)
 QDebug& operator<<(QDebug& stream, const Rules*);
 
 } // namespace
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Rules::Types)
 
 #endif

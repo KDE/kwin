@@ -779,7 +779,7 @@ void Client::setKeepAbove(bool b)
     if (decoration != NULL)
         decoration->emitKeepAboveChanged(keepAbove());
     workspace()->updateClientLayer(this);
-    updateWindowRules();
+    updateWindowRules(Rules::Above);
 
     // Update states of all other windows in this group
     if (clientGroup())
@@ -803,7 +803,7 @@ void Client::setKeepBelow(bool b)
     if (decoration != NULL)
         decoration->emitKeepBelowChanged(keepBelow());
     workspace()->updateClientLayer(this);
-    updateWindowRules();
+    updateWindowRules(Rules::Below);
 
     // Update states of all other windows in this group
     if (clientGroup())

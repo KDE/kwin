@@ -425,11 +425,13 @@ bool Rules::match(const Client* c) const
     return true;
 }
 
-bool Rules::update(Client* c)
+#define NOW_REMEMBER(_T_, _V_) ((selection & _T_) && (_V_##rule == (SetRule)Remember))
+
+bool Rules::update(Client* c, int selection)
 {
     // TODO check this setting is for this client ?
     bool updated = false;
-    if (positionrule == (SetRule)Remember) {
+    if NOW_REMEMBER(Position, position) {
         if (!c->isFullScreen()) {
             QPoint new_pos = position;
             // don't use the position in the direction which is maximized
@@ -441,7 +443,7 @@ bool Rules::update(Client* c)
             position = new_pos;
         }
     }
-    if (sizerule == (SetRule)Remember) {
+    if NOW_REMEMBER(Size, size) {
         if (!c->isFullScreen()) {
             QSize new_size = size;
             // don't use the position in the direction which is maximized
@@ -453,62 +455,64 @@ bool Rules::update(Client* c)
             size = new_size;
         }
     }
-    if (desktoprule == (SetRule)Remember) {
+    if NOW_REMEMBER(Desktop, desktop) {
         updated = updated || desktop != c->desktop();
         desktop = c->desktop();
     }
-    if (maximizevertrule == (SetRule)Remember) {
+    if NOW_REMEMBER(MaximizeVert, maximizevert) {
         updated = updated || maximizevert != bool(c->maximizeMode() & MaximizeVertical);
         maximizevert = c->maximizeMode() & MaximizeVertical;
     }
-    if (maximizehorizrule == (SetRule)Remember) {
+    if NOW_REMEMBER(MaximizeHoriz, maximizehoriz) {
         updated = updated || maximizehoriz != bool(c->maximizeMode() & MaximizeHorizontal);
         maximizehoriz = c->maximizeMode() & MaximizeHorizontal;
     }
-    if (minimizerule == (SetRule)Remember) {
+    if NOW_REMEMBER(Minimize, minimize) {
         updated = updated || minimize != c->isMinimized();
         minimize = c->isMinimized();
     }
-    if (shaderule == (SetRule)Remember) {
+    if NOW_REMEMBER(Shade, shade) {
         updated = updated || (shade != (c->shadeMode() != ShadeNone));
         shade = c->shadeMode() != ShadeNone;
     }
-    if (skiptaskbarrule == (SetRule)Remember) {
+    if NOW_REMEMBER(SkipTaskbar, skiptaskbar) {
         updated = updated || skiptaskbar != c->skipTaskbar();
         skiptaskbar = c->skipTaskbar();
     }
-    if (skippagerrule == (SetRule)Remember) {
+    if NOW_REMEMBER(SkipPager, skippager) {
         updated = updated || skippager != c->skipPager();
         skippager = c->skipPager();
     }
-    if (skipswitcherrule == (SetRule)Remember) {
+    if NOW_REMEMBER(SkipSwitcher, skipswitcher) {
         updated = updated || skipswitcher != c->skipSwitcher();
         skipswitcher = c->skipSwitcher();
     }
-    if (aboverule == (SetRule)Remember) {
+    if NOW_REMEMBER(Above, above) {
         updated = updated || above != c->keepAbove();
         above = c->keepAbove();
     }
-    if (belowrule == (SetRule)Remember) {
+    if NOW_REMEMBER(Below, below) {
         updated = updated || below != c->keepBelow();
         below = c->keepBelow();
     }
-    if (fullscreenrule == (SetRule)Remember) {
+    if NOW_REMEMBER(Fullscreen, fullscreen) {
         updated = updated || fullscreen != c->isFullScreen();
         fullscreen = c->isFullScreen();
     }
-    if (noborderrule == (SetRule)Remember) {
+    if NOW_REMEMBER(NoBorder, noborder) {
         updated = updated || noborder != c->noBorder();
         noborder = c->noBorder();
     }
-    if (opacityactiverule == (ForceRule)Force) {
+    if NOW_REMEMBER(OpacityActive, opacityactive) {
         // TODO
     }
-    if (opacityinactiverule == (ForceRule)Force) {
+    if NOW_REMEMBER(OpacityInactive, opacityinactive) {
         // TODO
     }
     return updated;
 }
+
+#undef NOW_REMEMBER
 
 #define APPLY_RULE( var, name, type ) \
     bool Rules::apply##name( type& arg, bool init ) const \
@@ -711,13 +715,13 @@ void WindowRules::discardTemporary()
     rules.erase(it2, rules.end());
 }
 
-void WindowRules::update(Client* c)
+void WindowRules::update(Client* c, int selection)
 {
     bool updated = false;
     for (QVector< Rules* >::ConstIterator it = rules.constBegin();
             it != rules.constEnd();
             ++it)
-        if ((*it)->update(c))    // no short-circuiting here
+        if ((*it)->update(c, selection))    // no short-circuiting here
             updated = true;
     if (updated)
         Workspace::self()->rulesUpdated();
@@ -870,18 +874,18 @@ void Client::applyWindowRules()
         setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
 }
 
-void Client::updateWindowRules()
+void Client::updateWindowRules(Rules::Types selection)
 {
     if (!isManaged())  // not fully setup yet
         return;
     if (workspace()->rulesUpdatesDisabled())
         return;
-    client_rules.update(this);
+    client_rules.update(this, selection);
 }
 
 void Client::finishWindowRules()
 {
-    updateWindowRules();
+    updateWindowRules(Rules::All);
     client_rules = WindowRules();
 }
 
@@ -1025,9 +1029,10 @@ void Workspace::rulesUpdated()
 void Workspace::disableRulesUpdates(bool disable)
 {
     rules_updates_disabled = disable;
-    if (!disable)
+    if (!disable) {
         foreach (Client * c, clients)
-        c->updateWindowRules();
+            c->updateWindowRules(Rules::All);
+    }
 }
 
 #endif
