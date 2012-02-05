@@ -98,13 +98,13 @@ void Module::exportScript()
 
         if (f.copy(path)) {
             KMessageWidget* msgWidget = new KMessageWidget;
-            msgWidget->setText(ki18n("The selected script was exported successfully!").toString());
+            msgWidget->setText(ki18n("The selected script was exported successfully.").toString());
             msgWidget->setMessageType(KMessageWidget::Positive);
             ui->verticalLayout2->insertWidget(0, msgWidget);
             msgWidget->animatedShow();
         } else {
             KMessageWidget* msgWidget = new KMessageWidget;
-            msgWidget->setText(ki18n("An error occurred, the selected script could not be exported!").toString());
+            msgWidget->setText(ki18n("An error occurred, the selected script could not be exported.").toString());
             msgWidget->setMessageType(KMessageWidget::Error);
             ui->verticalLayout2->insertWidget(0, msgWidget);
             msgWidget->animatedShow();
@@ -140,7 +140,7 @@ void Module::importScript()
             f.close();
 
             KMessageWidget* msgWidget = new KMessageWidget;
-            msgWidget->setText(ki18n("The selected script was imported successfully!").toString());
+            msgWidget->setText(ki18n("The selected script was imported successfully.").toString());
             msgWidget->setMessageType(KMessageWidget::Positive);
             ui->verticalLayout2->insertWidget(0, msgWidget);
             msgWidget->animatedShow();
