@@ -605,7 +605,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     PaintClipper pcreg(region);   // clip by the region to paint
     PaintClipper pc(transformed_shape);   // clip by window's shape
 
-    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty() && isOpaque();
+    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty();
 
     // In order to obtain a pixel perfect rescaling
     // we need to blit the window content togheter with
