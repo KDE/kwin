@@ -735,24 +735,48 @@ void Toplevel::resetDamage(const QRect& r)
 
 void Toplevel::addRepaint(const QRect& r)
 {
-    addRepaint(r.x(), r.y(), r.width(), r.height());
-}
-
-void Toplevel::addRepaint(int x, int y, int w, int h)
-{
-    if (!compositing())
+    if (!compositing()) {
         return;
-    QRect r(x, y, w, h);
-    r &= rect();
+    }
     repaints_region += r;
     workspace()->checkCompositeTimer();
 }
 
+void Toplevel::addRepaint(int x, int y, int w, int h)
+{
+    QRect r(x, y, w, h);
+    addRepaint(r);
+}
+
 void Toplevel::addRepaint(const QRegion& r)
+{
+    if (!compositing()) {
+        return;
+    }
+    repaints_region += r;
+    workspace()->checkCompositeTimer();
+}
+
+void Toplevel::addLayerRepaint(const QRect& r)
+{
+    if (!compositing()) {
+        return;
+    }
+    layer_repaints_region += r;
+    workspace()->checkCompositeTimer();
+}
+
+void Toplevel::addLayerRepaint(int x, int y, int w, int h)
+{
+    QRect r(x, y, w, h);
+    addLayerRepaint(r);
+}
+
+void Toplevel::addLayerRepaint(const QRegion& r)
 {
     if (!compositing())
         return;
-    repaints_region += r;
+    layer_repaints_region += r;
     workspace()->checkCompositeTimer();
 }
 
@@ -762,9 +786,10 @@ void Toplevel::addRepaintFull()
     workspace()->checkCompositeTimer();
 }
 
-void Toplevel::resetRepaints(const QRect& r)
+void Toplevel::resetRepaints()
 {
-    repaints_region -= r;
+    repaints_region = QRegion();
+    layer_repaints_region = QRegion();
 }
 
 void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)

@@ -1088,6 +1088,8 @@ public:
     void addRepaint(const QRect& r);
     void addRepaint(int x, int y, int w, int h);
     void addRepaintFull();
+    void addLayerRepaint(const QRect& r);
+    void addLayerRepaint(int x, int y, int w, int h);
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;

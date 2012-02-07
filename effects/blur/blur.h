@@ -78,6 +78,7 @@ private:
     struct BlurWindowInfo {
         GLTexture blurredBackground; // keeps the horizontally blurred background
         QRegion damagedRegion;
+        QPoint windowPos;
         bool dropCache;
     };
 

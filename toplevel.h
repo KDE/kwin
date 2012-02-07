@@ -235,12 +235,15 @@ public:
     Q_INVOKABLE void addRepaint(const QRect& r);
     Q_INVOKABLE void addRepaint(const QRegion& r);
     Q_INVOKABLE void addRepaint(int x, int y, int w, int h);
+    Q_INVOKABLE void addLayerRepaint(const QRect& r);
+    Q_INVOKABLE void addLayerRepaint(const QRegion& r);
+    Q_INVOKABLE void addLayerRepaint(int x, int y, int w, int h);
     Q_INVOKABLE virtual void addRepaintFull();
     // these call workspace->addRepaint(), but first transform the damage if needed
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
     QRegion repaints() const;
-    void resetRepaints(const QRect& r);
+    void resetRepaints();
     QRegion damage() const;
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
@@ -324,6 +327,7 @@ protected:
     NETWinInfo2* info;
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
+    QRegion layer_repaints_region;
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);
@@ -513,7 +517,7 @@ inline QRegion Toplevel::damage() const
 
 inline QRegion Toplevel::repaints() const
 {
-    return repaints_region;
+    return repaints_region.translated(pos()) | layer_repaints_region;
 }
 
 inline bool Toplevel::shape() const

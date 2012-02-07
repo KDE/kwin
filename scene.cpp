@@ -202,10 +202,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
-        topw->resetRepaints(topw->decorationRect());
-        if (topw->hasShadow()) {
-            topw->resetRepaints(topw->shadow()->shadowRegion().boundingRect());
-        }
+        topw->resetRepaints();
 
         WindowPrePaintData data;
         data.mask = orig_mask | (w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
@@ -253,16 +250,13 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         data.mask = orig_mask | (w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
         w->resetPaintingEnabled();
         data.paint = region;
-        data.paint |= topw->repaints().translated(topw->pos());
+        data.paint |= topw->repaints();
         data.paint |= topw->decorationPendingRegion();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
-        topw->resetRepaints(topw->decorationRect());
-        if (topw->hasShadow()) {
-            topw->resetRepaints(topw->shadow()->shadowRegion().boundingRect());
-        }
+        topw->resetRepaints();
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         if (w->isOpaque()) {
             // the window is fully opaque
@@ -299,15 +293,8 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         QPair< Window*, Phase2Data > *entry = &phase2data[i];
         Phase2Data *data = &entry->second;
 
-        Toplevel *tlw = entry->first->window();
-        // In case there is a window with a higher stackposition which has translucent regions
-        // (e.g. decorations) that still have to be drawn, we also have to repaint the current window
-        // in these particular regions
-        if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region |= (upperTranslucentDamage & tlw->decorationRect().translated(tlw->pos()));
-        } else {
-            data->region |= upperTranslucentDamage;
-        }
+        data->region |= upperTranslucentDamage;
+
         // subtract the parts which will possibly been drawn as part of
         // a higher opaque window
         data->region -= allclips;
