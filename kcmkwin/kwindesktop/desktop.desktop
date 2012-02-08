@@ -162,6 +162,7 @@ Comment[x-test]=xxYou can configure how many virtual desktops there are.xx
 Comment[zh_CN]=您可以在这里配置虚拟桌面的数量。
 Comment[zh_TW]=您可以在這裡設定要有多少個虛擬桌面。
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
+X-KDE-Keywords[nl]=bureaublad,bureaubladen,aantal,virtueel bureaublad,meervoudige bureaubladen,pager,pager-widget,pager-applet,pagerinstellingen
 X-KDE-Keywords[pt]=ecrã,ecrãs,número,ecrã virtual,múltiplos ecrãs,paginador,elemento paginador,'applet' do paginador,configuração do paginador
 X-KDE-Keywords[pt_BR]=área de trabalho,áreas de trabalho,desktop,desktops,número,área de trabalho virtual,múltiplas áreas de trabalho,paginador,elemento paginador,miniaplicativo do paginador,configurações do paginador
 X-KDE-Keywords[uk]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача
