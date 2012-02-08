@@ -1803,7 +1803,8 @@ void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
     if (w == m_highlightedWindow || (w != NULL && !m_motionManager.isManaging(w)))
         return;
 
-    m_closeView->hide();
+    if (m_closeView)
+        m_closeView->hide();
     if (m_highlightedWindow) {
         effects->setElevatedWindow(m_highlightedWindow, false);
         m_highlightedWindow->addRepaintFull(); // Trigger the first repaint
