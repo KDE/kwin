@@ -282,7 +282,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             data.clip = w->clientShape().translated(w->x(), w->y());
         } else if (topw->hasAlpha() && topw->opacity() == 1.0) {
             // the window is partially opaque
-            data.clip = (w->clientShape() & topw->opaqueRegion()).translated(w->x(), w->y());
+            data.clip = (w->clientShape() & topw->opaqueRegion().translated(topw->clientPos())).translated(w->x(), w->y());
         } else {
             data.clip = QRegion();
         }
