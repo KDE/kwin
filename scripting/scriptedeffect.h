@@ -26,10 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QScriptEngine;
 class QScriptValue;
 
-namespace Plasma {
-class ConfigLoader;
-}
-
 namespace KWin
 {
 
@@ -37,12 +33,6 @@ class ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
     Q_ENUMS(DataRole)
-    /**
-     * The current active configuration description. For instance, setting it to "foo" would cause the
-     * Effect to try and reference the contents/config/foo.xml KConfigXT file. Setting this to an empty
-     * string will switch to the main.xml file.
-     **/
-    Q_PROPERTY(QString activeConfig READ activeConfig WRITE setActiveConfig)
 public:
     // copied from kwineffects.h
     enum DataRole {
@@ -71,10 +61,12 @@ public:
      **/
     Q_SCRIPTABLE bool isGrabbed(KWin::EffectWindow *w, DataRole grabRole);
     /**
-     * Reads the value from the configuration data for the given key as defined by the currently active configuration.
+     * Reads the value from the configuration data for the given key.
+     * @param key The key to search for
+     * @param defaultValue The value to return if the key is not found
      * @returns The config value if present
      **/
-    Q_SCRIPTABLE QVariant readConfig(const QString &key);
+    Q_SCRIPTABLE QVariant readConfig(const QString &key, const QVariant defaultValue = QVariant());
 
 public Q_SLOTS:
     void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
@@ -90,12 +82,9 @@ private Q_SLOTS:
 private:
     ScriptedEffect();
     bool init(const QString &effectName, const QString &pathToScript);
-    bool loadConfig(const QString &name);
     QScriptEngine *m_engine;
     QString m_effectName;
     QString m_scriptFile;
-    QString m_currentConfig;
-    QMap<QString, Plasma::ConfigLoader*> m_configs;
 };
 
 }
