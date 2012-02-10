@@ -33,6 +33,7 @@ class ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
     Q_ENUMS(DataRole)
+    Q_ENUMS(MetaType)
 public:
     // copied from kwineffects.h
     enum DataRole {
