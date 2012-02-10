@@ -712,8 +712,8 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, cons
     QVector<float> texcoords;
     vertices.reserve(quads.count() * 6 * 2);
     texcoords.reserve(quads.count() * 6 * 2);
-    float width = tex->size().width();
-    float height = tex->size().height();
+    float width = rect.width();
+    float height = rect.height();
 #ifndef KWIN_HAVE_OPENGLES
     if (tex->target() == GL_TEXTURE_RECTANGLE_ARB) {
         width = 1.0;
