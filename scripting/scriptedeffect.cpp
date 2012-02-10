@@ -50,7 +50,6 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
 
 QScriptValue kwinEffectScriptAnimationTime(QScriptContext *context, QScriptEngine *engine)
 {
-    ScriptedEffect *script = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
     if (context->argumentCount() != 1) {
         return engine->undefinedValue();
     }
