@@ -511,7 +511,7 @@ namespace Oxygen
         const QRect titleRect( this->titleRect() );
 
         // get tabs
-        const int items( tabCount() );
+        const int items( clientGroupItems().count() );
 
         // make sure item data have the correct number of items
         while( _itemData.count() < items ) _itemData.push_back( ClientGroupItemData() );
@@ -574,7 +574,7 @@ namespace Oxygen
         }
 
         // button activity
-        _itemData.updateButtonActivity( currentTabId() );
+        _itemData.updateButtonActivity( visibleClientGroupItem() );
 
         // reset buttons location
         _itemData.updateButtons( alsoUpdate );
@@ -685,7 +685,7 @@ namespace Oxygen
         const int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
         // make titlebar background darker for tabbed, non-outline window
-        if( ( tabCount() >= 2 || _itemData.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
+        if( ( clientGroupItems().count() >= 2 || _itemData.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
         {
 
             const QPoint topLeft( r.topLeft()-position );
@@ -917,6 +917,7 @@ namespace Oxygen
                 renderTitleText( painter, rect, color, contrast );
 
             } else if( !caption().isEmpty() ) {
+
                 renderTitleText( painter, rect, caption(), color, contrast );
 
             }
@@ -941,6 +942,7 @@ namespace Oxygen
             if( isMaximized() ) painter->translate( 0, -2 );
 
         } else if( !caption().isEmpty() ) {
+
             renderTitleText( painter, rect, caption(), color, contrast );
 
         }
@@ -1017,10 +1019,11 @@ namespace Oxygen
         { textRect.adjust( 0, 0, - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
 
         // check if current item is active
-        const bool active( tabId(index) == currentTabId() );
+        const bool active( index == visibleClientGroupItem() );
 
         // get current item caption and update text rect
-        const QString caption( itemCount == 1 ? this->caption() : this->caption(index) );
+        const QList< ClientGroupItem >& items( clientGroupItems() );
+        const QString caption( itemCount == 1 ? this->caption() : items[index].title() );
 
         if( !configuration().centerTitleOnFullWidth() )
         { boundRectTo( textRect, titleRect() ); }
@@ -1107,7 +1110,7 @@ namespace Oxygen
             if(
                 ( index == itemCount-1 && buttonsRightWidth() > 0 ) ||
                 ( index+1 < itemCount && ( _itemData.isTarget( index+1 ) ||
-                !( tabId(index+1) == currentTabId() && _itemData[index+1]._boundingRect.isValid() ) ) ) )
+                !( index+1 == visibleClientGroupItem() && _itemData[index+1]._boundingRect.isValid() ) ) ) )
             {
 
                 const QRect local( item._boundingRect.topRight()+QPoint(0,2), QSize( 2, item._boundingRect.height()-3 ) );
@@ -1550,12 +1553,12 @@ namespace Oxygen
 
         }
 
-        // make sure ItemData and tabList are synchronized
+        // make sure ItemData and clientGroupItems are synchronized
         /*
         this needs to be done before calling RenderWindowBorder
         since some painting in there depend on the clientGroups state
         */
-        if(  _itemData.isDirty() || _itemData.count() != tabCount() )
+        if(  _itemData.isDirty() || _itemData.count() != clientGroupItems().count() )
         { updateItemBoundingRects( false ); }
 
         // window background
@@ -1603,12 +1606,12 @@ namespace Oxygen
     {
 
         const QPoint point = event->pos();
-        if( tabIndexAt( point ) < 0 ) return false;
+        if( itemClicked( point ) < 0 ) return false;
         _dragPoint = point;
 
         _mouseButton = event->button();
         bool accepted( false );
-        if( buttonToWindowOperation( _mouseButton ) == TabDragOp )
+        if( buttonToWindowOperation( _mouseButton ) == ClientGroupDragOp )
         {
 
             accepted = true;
@@ -1616,10 +1619,9 @@ namespace Oxygen
         } else if( buttonToWindowOperation( _mouseButton ) == OperationsOp ) {
 
             QPoint point = event->pos();
-            const int clickedIndex( tabIndexAt( point ) );
+            int itemClicked( this->itemClicked( point ) );
             _mouseButton = Qt::NoButton;
-            if ( tabIndexAt( point ) > -1)
-                showWindowMenu( widget()->mapToGlobal( event->pos() ), tabId(clickedIndex) );
+            displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
             accepted = true; // displayClientMenu can possibly destroy the deco...
 
         }
@@ -1637,11 +1639,11 @@ namespace Oxygen
 
             const QPoint point = event->pos();
 
-            const long visibleItem = currentTabId();
-            const int clickedIndex( tabIndexAt( point ) );
-            if( clickedIndex >= 0 && visibleItem != tabId(clickedIndex) )
+            const int visibleItem = visibleClientGroupItem();
+            const int itemClicked( this->itemClicked( point ) );
+            if( itemClicked >= 0 && visibleItem != itemClicked )
             {
-                setCurrentTab( tabId(clickedIndex) );
+                setVisibleClientGroupItem( itemClicked );
                 setForceActive( true );
                 accepted = true;
             }
@@ -1662,23 +1664,23 @@ namespace Oxygen
         { return false; }
 
         bool accepted( false );
-        if( buttonToWindowOperation( _mouseButton ) == TabDragOp )
+        if( buttonToWindowOperation( _mouseButton ) == ClientGroupDragOp )
         {
 
             const QPoint point = event->pos();
-            const int clickedIndex( tabIndexAt( point ) );
-            if( clickedIndex < 0 ) return false;
+            const int itemClicked( this->itemClicked( point ) );
+            if( itemClicked < 0 ) return false;
 
             _titleAnimationData->reset();
 
             QDrag *drag = new QDrag( widget() );
             QMimeData *groupData = new QMimeData();
-            groupData->setData( tabDragMimeType(), QString().setNum( tabId(clickedIndex) ).toAscii() );
+            groupData->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( itemClicked )).toAscii() );
             drag->setMimeData( groupData );
-            _sourceItem = tabIndexAt( _dragPoint );
+            _sourceItem = this->itemClicked( _dragPoint );
 
             // get tab geometry
-            QRect geometry( _itemData[clickedIndex]._boundingRect );
+            QRect geometry( _itemData[itemClicked]._boundingRect );
 
             // remove space used for buttons
             if( _itemData.count() > 1  )
@@ -1695,7 +1697,7 @@ namespace Oxygen
 
             }
 
-            drag->setPixmap( itemDragPixmap( clickedIndex, geometry ) );
+            drag->setPixmap( itemDragPixmap( itemClicked, geometry ) );
 
             // note: the pixmap is moved just above the pointer on purpose
             // because overlapping pixmap and pointer slows down the pixmap a lot.
@@ -1715,7 +1717,7 @@ namespace Oxygen
             if( drag->target() == 0 && _itemData.count() > 1 )
             {
                 _itemData.setDirty( true );
-                untab( tabId(_sourceItem),
+                removeFromClientGroup( _sourceItem,
                     widget()->frameGeometry().adjusted(
                     layoutMetric( LM_OuterPaddingLeft ),
                     layoutMetric( LM_OuterPaddingTop ),
@@ -1741,7 +1743,7 @@ namespace Oxygen
     {
 
         // check if drag enter is allowed
-        if( !event->mimeData()->hasFormat( tabDragMimeType() ) || hideTitleBar() ) return false;
+        if( !event->mimeData()->hasFormat( clientGroupItemDragMimeType() ) || hideTitleBar() ) return false;
 
         //
         event->acceptProposedAction();
@@ -1749,13 +1751,13 @@ namespace Oxygen
         {
 
             const QPoint position( event->pos() );
-            _itemData.animate( AnimationEnter, tabIndexAt( position, true ) );
+            _itemData.animate( AnimationEnter, itemClicked( position, true ) );
 
         } else if( _itemData.count() > 1 )  {
 
             const QPoint position( event->pos() );
-            const int clickedIndex( tabIndexAt( position, false ) );
-            _itemData.animate( AnimationEnter|AnimationSameTarget, clickedIndex );
+            const int itemClicked( this->itemClicked( position, false ) );
+            _itemData.animate( AnimationEnter|AnimationSameTarget, itemClicked );
 
         }
 
@@ -1789,20 +1791,20 @@ namespace Oxygen
     {
 
         // check format
-        if( !event->mimeData()->hasFormat( tabDragMimeType() ) ) return false;
+        if( !event->mimeData()->hasFormat( clientGroupItemDragMimeType() ) ) return false;
         if( event->source() != widget() )
         {
 
             const QPoint position( event->pos() );
-            _itemData.animate( AnimationMove, tabIndexAt( position, true ) );
+            _itemData.animate( AnimationMove, itemClicked( position, true ) );
 
         } else if( _itemData.count() > 1 )  {
 
             if( _dragStartTimer.isActive() ) _dragStartTimer.stop();
 
             const QPoint position( event->pos() );
-            const int clickedIndex( tabIndexAt( position, false ) );
-            _itemData.animate( AnimationMove|AnimationSameTarget, clickedIndex );
+            const int itemClicked( this->itemClicked( position, false ) );
+            _itemData.animate( AnimationMove|AnimationSameTarget, itemClicked );
 
         }
 
@@ -1818,24 +1820,34 @@ namespace Oxygen
         _itemData.animate( AnimationNone );
 
         const QMimeData *groupData = event->mimeData();
-        if( !groupData->hasFormat( tabDragMimeType() ) ) return false;
-
-        _itemData.setDirty( true );
-
-        if( widget() != event->source() )
-            setForceActive( true );
-
-        const long source = QString( groupData->data( tabDragMimeType() ) ).toLong();
-        int clickedIndex( tabIndexAt( point, true ) );
-        if (clickedIndex < 0)
-            tab_A_behind_B(source, tabId(_itemData.count() - 1));
-        else if (clickedIndex)
-            tab_A_behind_B(source, tabId(clickedIndex));
-        else
-            tab_A_before_B(source, tabId(clickedIndex));
+        if( !groupData->hasFormat( clientGroupItemDragMimeType() ) ) return false;
 
         if( widget() == event->source() )
+        {
+
+            const int from = this->itemClicked( _dragPoint );
+            int itemClicked( this->itemClicked( point, false ) );
+
+            if( itemClicked > from )
+            {
+                itemClicked++;
+                if( itemClicked >= clientGroupItems().count() )
+                { itemClicked = -1; }
+            }
+
+            _itemData.setDirty( true );
+            moveItemInClientGroup( from, itemClicked );
             updateTitleRect();
+
+        } else {
+
+            setForceActive( true );
+            const int itemClicked( this->itemClicked( point, true ) );
+            const long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
+            _itemData.setDirty( true );
+            moveItemToClientGroup( source, itemClicked );
+
+        }
 
         _titleAnimationData->reset();
         return true;
@@ -1869,7 +1881,7 @@ namespace Oxygen
             if( button == _itemData[i]._closeButton.data() )
             {
                 _itemData.setDirty( true );
-                closeTab( tabId(i) );
+                closeClientGroupItem( i );
                 return true;
             }
         }
@@ -1880,7 +1892,7 @@ namespace Oxygen
     //________________________________________________________________
     QPixmap Client::itemDragPixmap( int index, const QRect& geometry )
     {
-        const bool itemValid( index >= 0 && index < tabCount() );
+        const bool itemValid( index >= 0 && index < clientGroupItems().count() );
 
         QPixmap pixmap( geometry.size() );
         QPainter painter( &pixmap );
@@ -1892,7 +1904,7 @@ namespace Oxygen
         renderWindowBackground( &painter, geometry, widget(), widget()->palette() );
 
         // darken background if item is inactive
-        const bool itemActive = !( itemValid && tabId(index) != currentTabId() );
+        const bool itemActive = !( itemValid && index != visibleClientGroupItem() );
         if( !itemActive )
         {
 
@@ -1912,8 +1924,7 @@ namespace Oxygen
         if( itemValid )
         { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
-        const QString caption( itemValid ? this->caption(index) : this->caption() );
-
+        const QString caption( itemValid ? clientGroupItems()[index].title() : this->caption() );
         renderTitleText(
             &painter, textRect, caption,
             titlebarTextColor( widget()->palette(), isActive() && itemActive ),

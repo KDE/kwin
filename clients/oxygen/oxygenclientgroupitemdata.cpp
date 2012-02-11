@@ -214,7 +214,7 @@ namespace Oxygen
                         if( count() <= 2 )
                         {
 
-                            item._endBoundingRect = _client.defaultTitleRect( _client.tabId(index) == _client.currentTabId() );
+                            item._endBoundingRect = _client.defaultTitleRect( index == _client.visibleClientGroupItem() );
 
                         } else {
 
@@ -260,7 +260,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________
-    void ClientGroupItemDataList::updateButtonActivity( long visibleItem ) const
+    void ClientGroupItemDataList::updateButtonActivity( int visibleItem ) const
     {
 
         for( int index = 0; index < count(); index++ )
@@ -268,7 +268,7 @@ namespace Oxygen
 
             const ClientGroupItemData& item( at(index) );
             if( item._closeButton )
-            { item._closeButton.data()->setForceInactive( _client.tabId(index) != visibleItem ); }
+            { item._closeButton.data()->setForceInactive( index != visibleItem ); }
 
         }
 

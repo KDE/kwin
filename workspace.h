@@ -78,6 +78,7 @@ class Tile;
 class Tiling;
 class TilingLayout;
 #endif
+class ClientGroup;
 #ifdef KWIN_BUILD_DESKTOPCHANGEOSD
 class DesktopChangeOSD;
 #endif
@@ -366,6 +367,16 @@ public:
         return client_keys;
     }
 
+    // Tabbing
+    void addClientGroup(ClientGroup* group);
+    void removeClientGroup(ClientGroup* group);
+    /// Returns the index of c in clientGroupList.
+    int indexOfClientGroup(ClientGroup* group);
+    /// Change the client c_id to the group with index g_id
+    void moveItemToClientGroup(ClientGroup* oldGroup, int oldIndex, ClientGroup* group, int index = -1);
+    Client* findSimilarClient(Client* c);
+    QList<ClientGroup*> clientGroups; // List of existing clients groups with no special order
+
     /**
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
@@ -429,7 +440,7 @@ public:
     bool hasDecorationShadows() const;
     Qt::Corner decorationCloseButtonCorner();
     bool decorationHasAlpha() const;
-    bool decorationSupportsTabbing() const; // Returns true if the decoration supports tabs.
+    bool decorationSupportsClientGrouping() const; // Returns true if the decoration supports tabs.
     bool decorationSupportsFrameOverlap() const;
     bool decorationSupportsBlurBehind() const;
 
@@ -621,15 +632,15 @@ public slots:
     // NOTE: debug method
     void dumpTiles() const;
 
-    void slotActivateNextTab(); // Slot to move left the active Client.
-    void slotActivatePrevTab(); // Slot to move right the active Client.
-    void slotUntab(); // Slot to remove the active client from its group.
+    void slotSwitchToTabLeft(); // Slot to move left the active Client.
+    void slotSwitchToTabRight(); // Slot to move right the active Client.
+    void slotRemoveFromGroup(); // Slot to remove the active client from its group.
 
 private slots:
-    void rebuildTabGroupPopup();
-    void rebuildTabListPopup();
-    void entabPopupClient(QAction*);
-    void selectPopupClientTab(QAction*);
+    void groupTabPopupAboutToShow(); // Popup to add to another group
+    void switchToTabPopupAboutToShow(); // Popup to move in the group
+    void slotAddToTabGroup(QAction*);   // Add client to a group
+    void slotSwitchToTab(QAction*);   // Change the tab
     void desktopPopupAboutToShow();
     void activityPopupAboutToShow();
     void clientPopupAboutToShow();
@@ -688,7 +699,6 @@ private:
     void initShortcuts();
     void initDesktopPopup();
     void initActivityPopup();
-    void initTabbingPopups();
     void restartKWin(const QString &reason);
     void discardPopup();
     void setupWindowShortcut(Client* c);
@@ -832,12 +842,15 @@ private:
     QAction* mNoBorderOpAction;
     QAction* mMinimizeOpAction;
     QAction* mCloseOpAction;
-    QAction* mRemoveFromTabGroup; // Remove client from group
-    QAction* mCloseTabGroup; // Close all clients in the group
+    QAction* mRemoveTabGroup; // Remove client from group
+    QAction* mCloseGroup; // Close all clients in the group
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
+
+    void initAddToTabGroup(); // Load options for menu add_tabs_popup
+    void initSwitchToTab(); // Load options for menu switch_to_tab_popup
 
     PluginMgr* mgr;
 
@@ -1181,12 +1194,12 @@ inline bool Workspace::decorationHasAlpha() const
     return mgr->factory()->supports(AbilityUsesAlphaChannel);
 }
 
-inline bool Workspace::decorationSupportsTabbing() const
+inline bool Workspace::decorationSupportsClientGrouping() const
 {
     if (!hasDecorationPlugin()) {
         return false;
     }
-    return mgr->factory()->supports(AbilityTabbing);
+    return mgr->factory()->supports(AbilityClientGrouping);
 }
 
 inline bool Workspace::decorationSupportsFrameOverlap() const
@@ -1203,6 +1216,11 @@ inline bool Workspace::decorationSupportsBlurBehind() const
         return false;
     }
     return mgr->factory()->supports(AbilityUsesBlurBehind);
+}
+
+inline void Workspace::addClientGroup(ClientGroup* group)
+{
+    clientGroups.append(group);
 }
 
 } // namespace

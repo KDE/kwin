@@ -395,19 +395,17 @@ public:
     bool compositingActive() const;
 
     // Window tabbing
-    using KCommonDecoration::caption;
-    QString caption(int idx) const;
-    void closeTab(long id);
-    void closeTabGroup();
-    long currentTabId() const;
-    QIcon icon(int idx = 0) const;
-    void setCurrentTab(long id);
-    void showWindowMenu(const QPoint &, long id);
-    void tab_A_before_B(long A, long B);
-    void tab_A_behind_B(long A, long B);
-    int tabCount() const;
-    long tabId(int idx) const;
-    void untab(long id, const QRect& newGeom);
+    bool isClientGroupActive();
+    QList< ClientGroupItem > clientGroupItems() const;
+    long itemId(int index);
+    int visibleClientGroupItem();
+    void setVisibleClientGroupItem(int index);
+    void moveItemInClientGroup(int index, int before);
+    void moveItemToClientGroup(long itemId, int before = -1);
+    void removeFromClientGroup(int index, const QRect& newGeom = QRect());
+    void closeClientGroupItem(int index);
+    void closeAllInClientGroup();
+    void displayClientMenu(int index, const QPoint& pos);
 
     WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
     virtual bool eventFilter(QObject* o, QEvent* e);

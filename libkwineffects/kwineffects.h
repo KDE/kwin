@@ -988,9 +988,9 @@ Q_SIGNALS:
      * @since 4.7
      **/
     void tabBoxKeyEvent(QKeyEvent* event);
-    void currentTabAboutToChange(EffectWindow* from, EffectWindow* to);
-    void tabAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
-    void tabRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
+    void clientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void clientGroupItemAdded(EffectWindow* from, EffectWindow* to);   // from merged with to
+    void clientGroupItemRemoved(EffectWindow* c, EffectWindow* group);   // c removed from group
     /**
      * Signal emitted when mouse changed.
      * If an effect needs to get updated mouse positions, it needs to first call @link startMousePolling.
@@ -1074,7 +1074,7 @@ public:
         /**  Window will not be painted because it is minimized  */
         PAINT_DISABLED_BY_MINIMIZE     = 1 << 3,
         /**  Window will not be painted because it is not the active window in a client group  */
-        PAINT_DISABLED_BY_TAB_GROUP = 1 << 4,
+        PAINT_DISABLED_BY_CLIENT_GROUP = 1 << 4,
         /**  Window will not be painted because it's not on the current activity  */
         PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
     };
@@ -1265,7 +1265,7 @@ public:
     void unminimize();
     void closeWindow() const;
 
-    bool isCurrentTab() const;
+    bool visibleInClientGroup() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

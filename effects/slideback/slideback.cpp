@@ -334,7 +334,7 @@ bool SlideBackEffect::isWindowOnTop(EffectWindow* w)
 bool SlideBackEffect::isWindowUsable(EffectWindow* w)
 {
     return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
-           && w->isCurrentTab();
+           && w->visibleInClientGroup();
 }
 
 bool SlideBackEffect::intersects(EffectWindow* windowUnder, const QRect &windowOverGeometry)

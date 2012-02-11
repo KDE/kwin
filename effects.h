@@ -175,9 +175,9 @@ public:
     QStringList activeEffects() const;
 
 public Q_SLOTS:
-    void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
-    void slotTabAdded(EffectWindow* from, EffectWindow* to);
-    void slotTabRemoved(EffectWindow* c, EffectWindow* newActiveWindow);
+    void slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemAdded(EffectWindow* from, EffectWindow* to);
+    void slotClientGroupItemRemoved(EffectWindow* c, EffectWindow* group);
     void slotShowOutline(const QRect &geometry);
     void slotHideOutline();
 

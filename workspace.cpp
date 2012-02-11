@@ -632,8 +632,6 @@ void Workspace::removeClient(Client* c, allowed_t)
     if (c == active_popup_client)
         closeActivePopup();
 
-    c->untab();
-
     if (client_keys_client == c)
         setupWindowShortcutDone(false);
     if (!c->shortcut().isEmpty()) {
@@ -784,7 +782,7 @@ void Workspace::updateToolWindows(bool also_hide)
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->hideUtilityWindowsForInactive) {
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-            if (!(*it)->tabGroup() || (*it)->tabGroup()->current() == *it)
+            if (!(*it)->clientGroup() || (*it)->clientGroup()->visible() == *it)
                 (*it)->hideClient(false);
         return;
     }
@@ -954,18 +952,21 @@ void Workspace::slotReconfigure()
         //curtain.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
         //curtain.show();
 
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
+        for (ClientList::ConstIterator it = clients.constBegin();
+                it != clients.constEnd();
+                ++it)
             (*it)->updateDecoration(true, true);
         // If the new decoration doesn't supports tabs then ungroup clients
-        if (!decorationSupportsTabbing()) {
-            foreach (Client * c, clients)
-                c->untab();
+        if (!decorationSupportsClientGrouping()) {
+            QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
+            for (QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); ++i)
+                (*i)->removeAll();
         }
         mgr->destroyPreviousPlugin();
     } else {
         forEachClient(CheckBorderSizesProcedure());
         foreach (Client * c, clients)
-            c->triggerDecorationRepaint();
+        c->triggerDecorationRepaint();
     }
 
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -2080,6 +2081,87 @@ void Workspace::checkCursorPos()
     }
 }
 
+int Workspace::indexOfClientGroup(ClientGroup* group)
+{
+    return clientGroups.indexOf(group);
+}
+
+void Workspace::moveItemToClientGroup(ClientGroup* oldGroup, int oldIndex,
+                                      ClientGroup* group, int index)
+{
+    Client* c = oldGroup->clients().at(oldIndex);
+    group->add(c, index, true);
+}
+
+void Workspace::removeClientGroup(ClientGroup* group)
+{
+    int index = clientGroups.indexOf(group);
+    if (index == -1) {
+        return;
+    }
+
+    clientGroups.removeAt(index);
+    for (; index < clientGroups.size(); index++) {
+        foreach (Client *c, clientGroups.at(index)->clients()) {
+            c->setClientGroup(c->clientGroup());
+        }
+    }
+}
+
+// To accept "mainwindow#1" to "mainwindow#2"
+static QByteArray truncatedWindowRole(QByteArray a)
+{
+    int i = a.indexOf('#');
+    if (i == -1)
+        return a;
+    QByteArray b(a);
+    b.truncate(i);
+    return b;
+}
+
+Client* Workspace::findSimilarClient(Client* c)
+{
+    // Attempt to find a similar window to the input. If we find multiple possibilities that are in
+    // different groups then ignore all of them. This function is for automatic window grouping.
+    Client* found = NULL;
+
+    // See if the window has a group ID to match with
+    QString wGId = c->rules()->checkAutogroupById(QString());
+    if (!wGId.isEmpty()) {
+        foreach (Client * cl, clients) {
+            if (wGId == cl->rules()->checkAutogroupById(QString())) {
+                if (found && found->clientGroup() != cl->clientGroup()) { // We've found two, ignore both
+                    found = NULL;
+                    break; // Continue to the next test
+                }
+                found = cl;
+            }
+        }
+        if (found)
+            return found;
+    }
+
+    // If this is a transient window don't take a guess
+    if (c->isTransient())
+        return NULL;
+
+    // If we don't have an ID take a guess
+    if (c->rules()->checkAutogrouping(options->autogroupSimilarWindows)) {
+        QByteArray wRole = truncatedWindowRole(c->windowRole());
+        foreach (Client * cl, clients) {
+            QByteArray wRoleB = truncatedWindowRole(cl->windowRole());
+            if (c->resourceClass() == cl->resourceClass() &&  // Same resource class
+                    wRole == wRoleB && // Same window role
+                    cl->isNormalWindow()) { // Normal window TODO: Can modal windows be "normal"?
+                if (found && found->clientGroup() != cl->clientGroup())   // We've found two, ignore both
+                    return NULL;
+                found = cl;
+            }
+        }
+    }
+
+    return found;
+}
 
 Outline* Workspace::outline()
 {

@@ -361,8 +361,8 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         flags &= ~ActivityFocus;
         handled = false; // no point, can't get clicks
     }
-    if (c->tabGroup() && c->tabGroup()->current() != c)
-        c->tabGroup()->setCurrent(c);
+    if (c->clientGroup() && c->clientGroup()->visible() != c)
+        c->clientGroup()->setVisible(c);
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
         kWarning(1212) << "takeActivity: not shown" ;
         return;

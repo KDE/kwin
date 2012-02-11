@@ -151,7 +151,7 @@ namespace Oxygen
         { return animation().data()->isRunning(); }
 
         //! update button activity
-        void updateButtonActivity( long visibleItem ) const;
+        void updateButtonActivity( int visibleItem ) const;
 
         //! update buttons
         void updateButtons( bool alsoUpdate ) const;

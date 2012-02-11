@@ -215,6 +215,10 @@ public Q_SLOTS:
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
 
+    void slotSwitchToTabLeft(); // Slot to move left the active Client.
+    void slotSwitchToTabRight(); // Slot to move right the active Client.
+    void slotRemoveFromGroup(); // Slot to remove the active client from its group.
+
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);
 };

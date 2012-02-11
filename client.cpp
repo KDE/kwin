@@ -102,7 +102,7 @@ Client::Client(Workspace* ws)
     , delayedMoveResizeTimer(NULL)
     , in_group(NULL)
     , window_group(None)
-    , tab_group(NULL)
+    , client_group(NULL)
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
     , process_killer(NULL)
@@ -265,14 +265,15 @@ void Client::releaseWindow(bool on_shutdown)
     XUnmapWindow(display(), frameId());  // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
+    if (clientGroup())
+        clientGroup()->remove(this, QRect(), true);
     if (!on_shutdown) {
         workspace()->removeClient(this, Allowed);
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
         desk = 0;
         info->setState(0, info->state());  // Reset all state flags
-    } else
-        untab();
+    }
     XDeleteProperty(display(), client, atoms->kde_net_wm_user_creation_time);
     XDeleteProperty(display(), client, atoms->net_frame_extents);
     XDeleteProperty(display(), client, atoms->kde_net_wm_frame_strut);
@@ -325,6 +326,8 @@ void Client::destroyClient()
     workspace()->clientHidden(this);
     destroyDecoration();
     cleanGrouping();
+    if (clientGroup())
+        clientGroup()->remove(this, QRect(), true);
     workspace()->removeClient(this, Allowed);
     client = None; // invalidate
     XDestroyWindow(display(), wrapper);
@@ -788,7 +791,7 @@ bool Client::noBorder() const
 
 bool Client::userCanSetNoBorder() const
 {
-    return !isFullScreen() && !isShade() && !tabGroup();
+    return !isFullScreen() && !isShade() && (clientGroup() == NULL || !(clientGroup()->items().count() > 1));
 }
 
 void Client::setNoBorder(bool set)
@@ -990,8 +993,8 @@ void Client::minimize(bool avoid_animation)
     emit clientMinimized(this, !avoid_animation);
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
     emit minimizedChanged();
 }
 
@@ -1016,8 +1019,8 @@ void Client::unminimize(bool avoid_animation)
     emit clientUnminimized(this, !avoid_animation);
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
     emit minimizedChanged();
 }
 
@@ -1120,8 +1123,8 @@ void Client::setShade(ShadeMode mode)
     updateWindowRules(Rules::Shade);
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
     emit shadeChanged();
 }
 
@@ -1153,7 +1156,7 @@ void Client::updateVisibility()
 {
     if (deleting)
         return;
-    if (hidden && isCurrentTab()) {
+    if (hidden && (clientGroup() == NULL || clientGroup()->visible() == this)) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true, false);   // Also hide from taskbar
         if (compositing() && options->hiddenPreviews == HiddenPreviewsAlways)
@@ -1162,7 +1165,7 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    if (isCurrentTab())
+    if (clientGroup() == NULL || clientGroup()->visible() == this)
         setSkipTaskbar(original_skip_taskbar, false);   // Reset from 'hidden'
     if (minimized) {
         info->setState(NET::Hidden, NET::Hidden);
@@ -1581,8 +1584,8 @@ void Client::setDesktop(int desktop)
     updateWindowRules(Rules::Desktop);
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
     emit desktopChanged();
 }
 
@@ -1644,8 +1647,8 @@ void Client::updateActivities(bool includeTransients)
     // TODO: add activity rule
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
 }
 
 /**
@@ -1686,8 +1689,8 @@ void Client::setOnAllDesktops(bool b)
         setDesktop(workspace()->currentDesktop());
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
+    if (clientGroup())
+        clientGroup()->updateStates(this);
 }
 
 /**
@@ -1850,7 +1853,9 @@ void Client::setCaption(const QString& _s, bool force)
             // Keep the same suffix in iconic name if it's set
             info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
 
-        if (isManaged() && decoration) {
+        if (isManaged() && decoration != NULL) {
+            if (client_group)
+                client_group->updateItems();
             decoration->captionChange();
         }
         emit captionChanged();
@@ -1889,62 +1894,21 @@ QString Client::caption(bool full) const
     return full ? cap_normal + cap_suffix : cap_normal;
 }
 
-bool Client::tabTo(Client *other, bool behind, bool activate)
+void Client::setClientGroup(ClientGroup* group)
 {
-    Q_ASSERT(other && other != this);
+    client_group = group;
+    unsigned long data[1] = {(unsigned long)workspace()->indexOfClientGroup(group)};
+    XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, XA_CARDINAL, 32,
+                    PropModeReplace, (unsigned char*)(data), 1);
+    emit clientGroupChanged();
+}
 
-    if (tab_group && tab_group == other->tabGroup()) { // special case: move inside group
-        tab_group->move(this, other, behind);
+bool Client::isVisibleInClientGroup() const
+{
+    if (!client_group) {
         return true;
     }
-
-    GeometryUpdatesBlocker blocker(this);
-    const bool wasBlocking = signalsBlocked();
-    blockSignals(true); // prevent client emitting "retabbed to nowhere" cause it's about to be entabbed the next moment
-    untab();
-    blockSignals(wasBlocking);
-
-    TabGroup *newGroup = other->tabGroup() ? other->tabGroup() : new TabGroup(other);
-
-    if (!newGroup->add(this, other, behind, activate)) {
-        if (newGroup->count() < 2) { // adding "c" to "to" failed for whatever reason
-            newGroup->remove(other);
-            delete newGroup;
-        }
-        return false;
-    }
-    return true;
-}
-
-bool Client::untab(const QRect &toGeometry)
-{
-    TabGroup *group = tab_group;
-    if (group && group->remove(this, toGeometry)) { // remove sets the tabgroup to "0", therefore the pointer is cached
-        if (group->isEmpty()) {
-            delete group;
-        }
-        setClientShown(!(isMinimized() || isShade()));
-        return true;
-    }
-    return false;
-}
-
-void Client::setTabGroup(TabGroup *group)
-{
-    tab_group = group;
-    if (group) {
-        unsigned long data = qHash(group); //->id();
-        XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, XA_CARDINAL, 32,
-                        PropModeReplace, (unsigned char*)(&data), 1);
-    }
-    else
-        XDeleteProperty(display(), window(), atoms->kde_net_wm_tab_group);
-    emit tabGroupChanged();
-}
-
-bool Client::isCurrentTab() const
-{
-    return !tab_group || tab_group->current() == this;
+    return (client_group->visible() == this);
 }
 
 void Client::dontMoveResize()
@@ -1959,20 +1923,26 @@ void Client::setClientShown(bool shown)
 {
     if (deleting)
         return; // Don't change shown status if this client is being deleted
-    if (shown != hidden)
-        return; // nothing to change
-    hidden = !shown;
-    if (options->inactiveTabsSkipTaskbar)
-        setSkipTaskbar(hidden, false); // TODO: Causes reshuffle of the taskbar
-    if (shown) {
+    if (shown && hidden) {
         map(Allowed);
+        hidden = false;
+        //updateVisibility();
+        //updateAllowedActions();
+        if (options->inactiveTabsSkipTaskbar)
+            setSkipTaskbar(false, false);
         takeFocus(Allowed);
         autoRaise();
         workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
-    } else {
+    }
+    if (!shown && !hidden) {
         unmap(Allowed);
+        hidden = true;
+        //updateVisibility();
+        //updateAllowedActions();
+        if (options->inactiveTabsSkipTaskbar)
+            setSkipTaskbar(true, false);   // TODO: Causes reshuffle of the taskbar
         // Don't move tabs to the end of the list when another tab get's activated
-        if (isCurrentTab())
+        if (!clientGroup() || clientGroup()->visible() == this)
             workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
         addWorkspaceRepaint(visibleRect());
     }

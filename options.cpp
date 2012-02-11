@@ -389,7 +389,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "resize") return restricted ? MouseResize : MouseUnrestrictedResize;
     if (lowerName == "shade") return MouseShade;
     if (lowerName == "minimize") return MouseMinimize;
-    if (lowerName == "start window tab drag") return MouseDragTab;
+    if (lowerName == "start window tab drag") return MouseClientGroupDrag;
     if (lowerName == "close") return MouseClose;
     if (lowerName == "increase opacity") return MouseOpacityMore;
     if (lowerName == "decrease opacity") return MouseOpacityLess;
@@ -406,9 +406,9 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     if (lowerName == "above/below") return MouseWheelAboveBelow;
     if (lowerName == "previous/next desktop") return MouseWheelPreviousNextDesktop;
     if (lowerName == "change opacity") return MouseWheelChangeOpacity;
-    if (lowerName == "switch to window tab to the left/right") return MouseWheelChangeCurrentTab;
+    if (lowerName == "switch to window tab to the left/right") return MouseWheelChangeGroupWindow;
     if (lowerName == "nothing") return MouseWheelNothing;
-    return MouseWheelChangeCurrentTab;
+    return MouseWheelChangeGroupWindow;
 }
 
 bool Options::showGeometryTip()
@@ -477,8 +477,8 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int de
         return delta > 0 ? MousePreviousDesktop : MouseNextDesktop;
     case MouseWheelChangeOpacity:
         return delta > 0 ? MouseOpacityMore : MouseOpacityLess;
-    case MouseWheelChangeCurrentTab:
-        return delta > 0 ? MousePreviousTab : MouseNextTab;
+    case MouseWheelChangeGroupWindow:
+        return delta > 0 ? MouseLeftGroupWindow : MouseRightGroupWindow;
     default:
         return MouseNothing;
     }

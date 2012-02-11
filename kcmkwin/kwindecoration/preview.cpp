@@ -475,59 +475,54 @@ QRect KDecorationPreviewBridge::transparentRect() const
 
 // Window tabbing
 
-int KDecorationPreviewBridge::tabCount() const
+bool KDecorationPreviewBridge::isClientGroupActive()
 {
-    return 1;
+    return active;
 }
 
-QString KDecorationPreviewBridge::caption(int) const
+QList< ClientGroupItem > KDecorationPreviewBridge::clientGroupItems() const
 {
-    return active ? "Active Window" : "Inactive Window";
+    return QList< ClientGroupItem >() << ClientGroupItem(
+               active ? "Active Window" : "Inactive Window", icon());
 }
 
-QIcon KDecorationPreviewBridge::icon(int) const
-{
-    return icon();
-}
-
-long KDecorationPreviewBridge::tabId(int) const
+long KDecorationPreviewBridge::itemId(int)
 {
     return 0;
 }
 
-long KDecorationPreviewBridge::currentTabId() const
+int KDecorationPreviewBridge::visibleClientGroupItem()
 {
     return 0;
 }
 
-void KDecorationPreviewBridge::setCurrentTab(long)
+void KDecorationPreviewBridge::setVisibleClientGroupItem(int)
 {
 }
 
-void KDecorationPreviewBridge::tab_A_before_B(long, long)
+void KDecorationPreviewBridge::moveItemInClientGroup(int, int)
 {
 }
 
-void KDecorationPreviewBridge::tab_A_behind_B(long, long)
+void KDecorationPreviewBridge::moveItemToClientGroup(long, int)
 {
 }
 
-void KDecorationPreviewBridge::untab(long, const QRect&)
+void KDecorationPreviewBridge::removeFromClientGroup(int, const QRect&)
 {
 }
 
-void KDecorationPreviewBridge::closeTab(long)
+void KDecorationPreviewBridge::closeClientGroupItem(int)
 {
 }
 
-void KDecorationPreviewBridge::closeTabGroup()
+void KDecorationPreviewBridge::closeAllInClientGroup()
 {
 }
 
-void KDecorationPreviewBridge::showWindowMenu(const QPoint &, long)
+void KDecorationPreviewBridge::displayClientMenu(int, const QPoint&)
 {
 }
-
 
 KDecoration::WindowOperation KDecorationPreviewBridge::buttonToWindowOperation(Qt::MouseButtons)
 {

@@ -171,7 +171,7 @@ namespace Oxygen
             return true;
 
             // tabs
-            case AbilityTabbing:
+            case AbilityClientGrouping:
             return true;
 
             // no colors supported at this time
