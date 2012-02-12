@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QGraphicsObject>
 #include <kdeclarative.h>
+#include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>
 #include <KDE/KGlobal>
 #include <KDE/KIcon>
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIconLoader>
 #include <KDE/KLocalizedString>
 #include <KDE/KService>
+#include <KDE/KServiceTypeTrader>
 #include <KDE/KStandardDirs>
 
 namespace KWin
@@ -208,23 +210,20 @@ LayoutModel::~LayoutModel()
 
 void LayoutModel::init()
 {
-    QStringList layouts;
-    layouts << "thumbnails" << "informative" << "compact" << "text" << "big_icons" << "small_icons";
-    QStringList descriptions;
-    descriptions << i18nc("Name for a window switcher layout showing live window thumbnails", "Thumbnails");
-    descriptions << i18nc("Name for a window switcher layout showing icon, name and desktop", "Informative");
-    descriptions << i18nc("Name for a window switcher layout showing only icon and name", "Compact");
-    descriptions << i18nc("Name for a window switcher layout showing only the name", "Text");
-    descriptions << i18nc("Name for a window switcher layout showing large icons", "Large Icons");
-    descriptions << i18nc("Name for a window switcher layout showing small icons", "Small Icons");
-
-    for (int i=0; i<layouts.size(); ++i) {
-        const QString path = KStandardDirs::locate("data", "kwin/tabbox/" + layouts.at(i) + ".qml");
-        if (!path.isNull()) {
-            m_nameList << descriptions.at(i);
-            m_pathList << path;
-            m_layoutList << layouts.at(i);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher");
+    foreach (KService::Ptr service, offers) {
+        const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
+        if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
+            continue;
         }
+        const QString scriptName = service->property("X-Plasma-MainScript").toString();
+        const QString scriptFile = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
+        if (scriptFile.isNull()) {
+            continue;
+        }
+        m_nameList << service->name();
+        m_pathList << scriptFile;
+        m_layoutList << pluginName;
     }
 }
 
@@ -254,11 +253,12 @@ int LayoutModel::rowCount (const QModelIndex& parent) const
 QModelIndex LayoutModel::indexForLayoutName(const QString &name) const
 {
     // fallback for default
+    QString normalizedName = name.toLower().replace(' ', '_');
     if (name == "Default" || name.isEmpty()) {
-        return index(0);
+        normalizedName = "informative";
     }
     for (int i=0; i<m_layoutList.size(); ++i) {
-        if (name.toLower().replace(' ', '_') == m_layoutList.at(i)) {
+        if (normalizedName == m_layoutList.at(i)) {
             return index(i);
         }
     }

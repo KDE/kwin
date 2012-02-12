@@ -72,6 +72,7 @@ endif( KWIN_BUILD_DECORATIONS )
 add_subdirectory( data )
 
 add_subdirectory( effects )
+add_subdirectory( tabbox )
 
 ########### next target ###############
 
@@ -231,17 +232,5 @@ install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
-install( FILES
-    tabbox/qml/informative.qml
-    tabbox/qml/big_icons.qml
-    tabbox/qml/compact.qml
-    tabbox/qml/desktop.qml
-    tabbox/qml/small_icons.qml
-    tabbox/qml/tabbox.qml
-    tabbox/qml/text.qml
-    tabbox/qml/thumbnails.qml
-    tabbox/qml/IconTabBox.qml
-    tabbox/qml/window_strip.qml
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/tabbox )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )

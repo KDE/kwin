@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KWin/WindowSwitcher
+
+Comment=KWin Window Switcher Layout
+
+[PropertyDef::X-Plasma-API]
+Type=QString
+
+[PropertyDef::X-Plasma-MainScript]
+Type=QString

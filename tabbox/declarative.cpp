@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KDebug>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
+#include <KDE/KServiceTypeTrader>
 #include <KDE/KStandardDirs>
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/Theme>
@@ -284,16 +285,35 @@ void DeclarativeView::updateQmlSource(bool force)
     if (!force && tabBox->config().layoutName() == m_currentLayout) {
         return;
     }
-    m_currentLayout = tabBox->config().layoutName();
-    QString file = KStandardDirs::locate("data", "kwin/tabbox/" + m_currentLayout.toLower().replace(' ', '_') + ".qml");
     if (m_mode == TabBoxConfig::DesktopTabBox) {
-        file = KStandardDirs::locate("data", "kwin/tabbox/desktop.qml");
+        m_currentLayout = tabBox->config().layoutName();
+        const QString file = KStandardDirs::locate("data", "kwin/tabbox/desktop.qml");
+        rootObject()->setProperty("source", QUrl(file));
+        return;
     }
-    if (file.isNull()) {
-        // fallback to default
-        if (m_mode == TabBoxConfig::ClientTabBox) {
-            file = KStandardDirs::locate("data", "kwin/tabbox/informative.qml");
+    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(tabBox->config().layoutName());
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher", constraint);
+    if (offers.isEmpty()) {
+        // load default
+        constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg("informative");
+        offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher", constraint);
+        if (offers.isEmpty()) {
+            kDebug(1212) << "could not find default window switcher layout";
+            return;
         }
+    }
+    m_currentLayout = tabBox->config().layoutName();
+    KService::Ptr service = offers.first();
+    const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
+    if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
+        kDebug(1212) << "Window Switcher Layout is no declarativeappletscript";
+        return;
+    }
+    const QString scriptName = service->property("X-Plasma-MainScript").toString();
+    const QString file = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
+    if (file.isNull()) {
+        kDebug(1212) << "Could not find QML file for window switcher";
+        return;
     }
     rootObject()->setProperty("source", QUrl(file));
 }
