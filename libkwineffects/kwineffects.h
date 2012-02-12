@@ -167,7 +167,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 183
+#define KWIN_EFFECT_API_VERSION_MINOR 182
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1140,12 +1140,6 @@ public:
      * @since 4.5
      */
     virtual QRect decorationInnerRect() const = 0;
-    /**
-     * Geometry of the window including decoration & pot. shadows
-     * May be different from geometry() if the window has a shadow
-     * @since 4.5
-     */
-    virtual QRect decorationRect() const = 0;
     bool hasDecoration() const;
     virtual QByteArray readProperty(long atom, long type, int format) const = 0;
     virtual void deleteProperty(long atom) const = 0;

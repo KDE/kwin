@@ -242,7 +242,6 @@ public:
 
     virtual QRegion shape() const;
     virtual QRect decorationInnerRect() const;
-    virtual QRect decorationRect() const;
     virtual QByteArray readProperty(long atom, long type, int format) const;
     virtual void deleteProperty(long atom) const;
 

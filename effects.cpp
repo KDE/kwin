@@ -1401,11 +1401,6 @@ QRect EffectWindowImpl::decorationInnerRect() const
     return client ? client->transparentRect() : contentsRect();
 }
 
-QRect EffectWindowImpl::decorationRect() const
-{
-    return toplevel->decorationRect();
-}
-
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const
 {
     return readWindowProperty(window()->window(), atom, type, format);
