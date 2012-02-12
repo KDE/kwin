@@ -297,7 +297,7 @@ void GLTexture::unbind()
     d->unbind();
 }
 
-void GLTexture::render(QRegion region, const QRect& rect)
+void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
 {
     Q_D(GLTexture);
     if (rect.size() != d->m_cachedSize) {
@@ -338,7 +338,7 @@ void GLTexture::render(QRegion region, const QRect& rect)
     } else {
         pushMatrix(translation);
     }
-    d->m_vbo->render(region, GL_TRIANGLE_STRIP);
+    d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
     if (ShaderManager::instance()->isShaderBound()) {
         GLShader *shader = ShaderManager::instance()->getBoundShader();
         shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());

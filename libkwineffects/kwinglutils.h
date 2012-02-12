@@ -510,9 +510,10 @@ public:
      */
     void render(GLenum primitiveMode);
     /**
-     * Same as above restricting painting to @a region.
+     * Same as above restricting painting to @a region if @a hardwareClipping is true.
+     * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
      */
-    void render(const QRegion& region, GLenum primitiveMode);
+    void render(const QRegion& region, GLenum primitiveMode, bool hardwareClipping = false);
     /**
      * Sets the color the geometry will be rendered with.
      * For legacy rendering glColor is used before rendering the geometry.

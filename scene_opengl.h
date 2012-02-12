@@ -175,10 +175,10 @@ protected:
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco);
-    void paintShadow(const QRegion &region, const WindowPaintData &data);
+    void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco, bool hardwareClipping);
+    void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
-    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized = false);
+    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
     void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
     void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
