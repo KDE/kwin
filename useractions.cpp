@@ -816,13 +816,17 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseRaise:
         workspace()->raiseClient(this);
         break;
-    case Options::MouseLower:
+    case Options::MouseLower: {
         workspace()->lowerClient(this);
-        // As this most likely makes the window no longer visible change the
-        // keyboard focus to the next available window.
-        //workspace()->activateNextClient( this ); // Doesn't work when we lower a child window
-        workspace()->activateClient(workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1));
+        // used to be activateNextClient(this), then topClientOnDesktop
+        // since this is a mouseOp it's however safe to use the client under the mouse instead
+        if (isActive()) {
+            Client *next = workspace()->clientUnderMouse(screen());
+            if (next && next != this)
+                workspace()->requestFocus(next, false);
+        }
         break;
+    }
     case Options::MouseShade :
         toggleShade();
         cancelShadeHoverTimer();
@@ -1238,13 +1242,13 @@ void Workspace::slotWindowRaise()
  */
 void Workspace::slotWindowLower()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c) {
+    if ((Client* c = active_popup_client ? active_popup_client : active_client)) {
         lowerClient(c);
         // As this most likely makes the window no longer visible change the
         // keyboard focus to the next available window.
         //activateNextClient( c ); // Doesn't work when we lower a child window
-        activateClient(topClientOnDesktop(currentDesktop(), -1));
+        if (c->isActive())
+            activateClient(topClientOnDesktop(currentDesktop(), -1));
     }
 }
 

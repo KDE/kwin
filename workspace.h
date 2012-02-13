@@ -144,6 +144,8 @@ public:
      */
     Client* mostRecentlyActivatedClient() const;
 
+    Client* clientUnderMouse(int screen) const;
+
     void activateClient(Client*, bool force = false);
     void requestFocus(Client* c, bool force = false);
     void takeActivity(Client* c, int flags, bool handled);   // Flags are ActivityFlags
