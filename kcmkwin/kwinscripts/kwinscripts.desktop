@@ -27,6 +27,7 @@ Name[pt_BR]=Scripts do KWin
 Name[uk]=Скрипти KWin
 Name[x-test]=xxKWin Scriptsxx
 Comment=Manage KWin scripts
+Comment[cs]=Spravovat skripty KWinu
 Comment[hu]=KWin szkriptek kezelése
 Comment[nl]=KWin-scripts beheren
 Comment[pt]=Gerir os programas do KWin
