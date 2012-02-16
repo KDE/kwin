@@ -281,8 +281,9 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
 
     // in case this window has regions to be blurred
-    const QRegion blurArea = blurRegion(w).translated(w->pos());
-    const QRegion expandedBlur = expand(blurArea);
+    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRegion blurArea = blurRegion(w).translated(w->pos()) & screen;
+    const QRegion expandedBlur = expand(blurArea) & screen;
 
     if (m_shouldCache) {
         // we are caching the horizontally blurred background texture
@@ -290,8 +291,11 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
         // if a window underneath the blurred area is damaged we have to
         // update the cached texture
         QRegion damagedCache;
-        if (windows.contains(w) && !windows.value(w).dropCache) {
-            damagedCache = expand(expandedBlur & m_damagedArea) & expandedBlur;
+        if (windows.contains(w) && !windows.value(w).dropCache &&
+            windows.value(w).windowPos == w->pos() &&
+            windows.value(w).blurredBackground.size() == expandedBlur.boundingRect().size()) {
+            damagedCache = (expand(expandedBlur & m_damagedArea) |
+                            (windows.value(w).damagedRegion & data.paint)) & expandedBlur;
         } else {
             damagedCache = expandedBlur;
         }
@@ -303,6 +307,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
             data.paint |= expand(damagedArea);
             if (windows.contains(w)) {
                 // In case we already have a texture cache mark the dirty regions invalid.
+                windows[w].damagedRegion &= expandedBlur;
                 windows[w].damagedRegion |= damagedCache;
                 windows[w].dropCache = false;
             }
@@ -508,11 +513,9 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         windows.insert(w, bwi);
     } else if (windows.value(w).blurredBackground.size() != r.size()) {
         windows[w].blurredBackground = GLTexture(r.width(),r.height());
-        windows[w].damagedRegion = expanded;
         windows[w].dropCache = false;
         windows[w].windowPos = w->pos();
     } else if (windows.value(w).windowPos != w->pos()) {
-        windows[w].damagedRegion = expanded;
         windows[w].dropCache = false;
         windows[w].windowPos = w->pos();
     }
@@ -533,10 +536,42 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     pushMatrix();
 #endif
 
-    // We only update that part of the background texture that is visible and marked as dirty.
-    const QRegion updateBackground = windows.value(w).damagedRegion & region;
+    /**
+     * Which part of the background texture can be updated ?
+     *
+     * Well this is a rather difficult question. We kind of rely on the fact, that
+     * we need a bigger background region being painted before, more precisely if we want to
+     * blur region A we need the background region expand(A). This business logic is basically
+     * done in prePaintWindow:
+     *          data.paint |= expand(damagedArea);
+     *
+     * Now "data.paint" gets clipped and becomes what we receive as the "region" variable
+     * in this function. In theory there is now only one function that does this clipping
+     * and this is paintSimpleScreen. The clipping has the effect that "damagedRegion"
+     * is no longer a subset of "region" and we cannot fully validate the cache within one
+     * rendering pass. If we would now update the "damageRegion & region" part of the cache
+     * we would wrongly update the part of the cache that is next to the "region" border and
+     * which lies within "damagedRegion", just because we cannot assume that the framebuffer
+     * outside of "region" is valid. Therefore the maximal damaged region of the cache that can
+     * be repainted is given by:
+     *          validUpdate = damagedRegion - expand(damagedRegion - region);
+     *
+     * Now you may ask what is with the rest of "damagedRegion & region" that is not part
+     * of "validUpdate" but also might end up on the screen. Well under the assumption
+     * that only the occlusion culling can shrink "data.paint", we can control this by reducing
+     * the opaque area of every window by a margin of the blurring radius (c.f. prePaintWindow).
+     * This way we are sure that this area is overpainted by a higher opaque window.
+     *
+     * Apparently paintSimpleScreen is not the only function that can influence "region".
+     * In fact every effect's paintWindow that is called before Blur::paintWindow
+     * can do so (e.g. SlidingPopups). Hence we have to make the compromise that we update
+     * "damagedRegion & region" of the cache but only mark "validUpdate" as valid.
+     **/
+    const QRegion damagedRegion = windows.value(w).damagedRegion;
+    const QRegion updateBackground = damagedRegion & region;
+    const QRegion validUpdate = damagedRegion - expand(damagedRegion - region);
 
-    if (!updateBackground.isEmpty()) {
+    if (!validUpdate.isEmpty()) {
         const QRect updateRect = (expand(updateBackground) & expanded).boundingRect();
         // First we have to copy the background from the frontbuffer
         // into a scratch texture (in this case "tex").
@@ -573,7 +608,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         GLRenderTarget::popRenderTarget();
         tex.unbind();
         // mark the updated region as valid
-        windows[w].damagedRegion -= updateBackground;
+        windows[w].damagedRegion -= validUpdate;
     }
 
     // Now draw the horizontally blurred area back to the backbuffer, while
