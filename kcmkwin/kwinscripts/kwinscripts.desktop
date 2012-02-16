@@ -10,6 +10,7 @@ X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
 X-KDE-Keywords[cs]=skript kwinu
+X-KDE-Keywords[de]=KWin-Skript
 X-KDE-Keywords[hu]=kwin szkript
 X-KDE-Keywords[nl]=kwin-script
 X-KDE-Keywords[pt]=programa do kwin
@@ -20,6 +21,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=KWin Scripts
 Name[cs]=Skripty KWinu
+Name[de]=KWin-Skripte
 Name[hu]=KWin szkriptek
 Name[nl]=KWin-scripts
 Name[pt]=Programas do KWin
@@ -28,6 +30,7 @@ Name[uk]=Скрипти KWin
 Name[x-test]=xxKWin Scriptsxx
 Comment=Manage KWin scripts
 Comment[cs]=Spravovat skripty KWinu
+Comment[de]=KWin-Skripte  verwalten
 Comment[hu]=KWin szkriptek kezelése
 Comment[nl]=KWin-scripts beheren
 Comment[pt]=Gerir os programas do KWin
