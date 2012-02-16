@@ -422,6 +422,11 @@ void AuroraeClient::themeChanged()
     m_scene->addItem(m_item);
 }
 
+int AuroraeClient::doubleClickInterval() const
+{
+    return QApplication::doubleClickInterval();
+}
+
 } // namespace Aurorae
 
 extern "C"

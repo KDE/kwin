@@ -100,6 +100,7 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(QRect transparentRect READ transparentRect)
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
+    Q_PROPERTY(int doubleClickInterval READ doubleClickInterval)
     // TODO: window tabs - they suck for dynamic features
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
@@ -119,6 +120,7 @@ public:
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
     virtual void reset(long unsigned int changed);
     bool isMaximized() const;
+    int doubleClickInterval() const;
 
 Q_SIGNALS:
     void activeChanged();

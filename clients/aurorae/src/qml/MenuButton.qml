@@ -23,4 +23,46 @@ DecorationButton {
         icon: decoration.icon
         anchors.fill: parent
     }
+    Timer {
+        id: timer
+        interval: decoration.doubleClickInterval
+        repeat: false
+        onTriggered: decoration.menuClicked()
+    }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onPressed: {
+            parent.pressed = true;
+            // we need a timer to figure out whether there is a double click in progress or not
+            // if we have a "normal" click we want to open the context menu. This would eat our
+            // second click of the double click. To properly get the double click we have to wait
+            // the double click delay to ensure that it was only a single click.
+            if (timer.running) {
+                timer.stop();
+            } else {
+                timer.start();
+            }
+        }
+        onReleased: {
+            parent.pressed = false;
+        }
+        onExited: {
+            if (!parent.pressed) {
+                return;
+            }
+            if (timer.running) {
+                timer.stop();
+            }
+            parent.pressed = false;
+        }
+        onClicked: {
+            // for right clicks we show the menu instantly
+            if (mouse.button == Qt.RightButton) {
+                decoration.menuClicked();
+                timer.stop();
+            }
+        }
+        onDoubleClicked: decoration.closeWindow()
+    }
 }
