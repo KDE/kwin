@@ -216,6 +216,9 @@ void LayoutModel::init()
         if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
             continue;
         }
+        if (service->property("X-KWin-Exclude-Listing").toBool()) {
+            continue;
+        }
         const QString scriptName = service->property("X-Plasma-MainScript").toString();
         const QString scriptFile = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
         if (scriptFile.isNull()) {

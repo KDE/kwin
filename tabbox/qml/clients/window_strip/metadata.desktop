@@ -5,6 +5,7 @@ Icon=preferences-system-windows-switcher-window-strip
 
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
+X-KWin-Exclude-Listing=true
 
 X-KDE-PluginInfo-Author=Martin Gräßlin
 X-KDE-PluginInfo-Email=mgraesslin@kde.org
