@@ -1,6 +1,17 @@
 [Desktop Entry]
 Name=Compact
+Name[cs]=Kompaktní
+Name[nl]=Compact
+Name[pt]=Compacto
+Name[pt_BR]=Compacto
+Name[uk]=Компактне
+Name[x-test]=xxCompactxx
 Comment=A compact window switcher layout
+Comment[nl]=Een compacte indeling van de vensterwisselaar
+Comment[pt]=Uma disposição de mudança de janelas compacta
+Comment[pt_BR]=Uma leiaute compacto do seletor de janelas
+Comment[uk]=Компактне компонування засобу перемикання вікон
+Comment[x-test]=xxA compact window switcher layoutxx
 Icon=preferences-system-windows-switcher-compact
 
 X-Plasma-API=declarativeappletscript

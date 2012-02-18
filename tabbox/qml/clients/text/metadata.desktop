@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Text Icons
+Name[nl]=Tekstpictogrammen
+Name[pt]=Ícones de Texto
+Name[pt_BR]=Ícones de texto
+Name[uk]=Текстові піктограми
+Name[x-test]=xxText Iconsxx
 Comment=A window switcher layout only showing window captions
+Comment[nl]=Een indeling van de vensterwisselaar die alleen bijschriften van vensters toont
+Comment[pt]=Uma disposição de mudança de janelas que só mostra os títulos das janelas
+Comment[pt_BR]=Um leiaute do seletor de janelas que mostra apenas os títulos das janelas
+Comment[uk]=Компонування засобу перемикання вікон з показом лише підписів вікон
+Comment[x-test]=xxA window switcher layout only showing window captionsxx
 Icon=preferences-system-windows-switcher-text
 
 X-Plasma-API=declarativeappletscript

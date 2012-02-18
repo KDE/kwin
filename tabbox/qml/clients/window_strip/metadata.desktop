@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Window Strip
+Name[nl]=Vensterstrook
+Name[pt]=Barra da Janela
+Name[pt_BR]=Barra da janela
+Name[uk]=Стрічка-вікно
+Name[x-test]=xxWindow Stripxx
 Comment=Window switcher layout for Plasma Active
+Comment[nl]=Indeling van de vensterwisselaar voor Plasma Active
+Comment[pt]=A disposição de mudança de janelas do Plasma Active
+Comment[pt_BR]=Um leiaute do seletor de janelas do Plasma Active
+Comment[uk]=Компонування засобу перемикання вікон для портативної Плазми
+Comment[x-test]=xxWindow switcher layout for Plasma Activexx
 Icon=preferences-system-windows-switcher-window-strip
 
 X-Plasma-API=declarativeappletscript

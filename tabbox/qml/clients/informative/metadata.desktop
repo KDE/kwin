@@ -1,6 +1,17 @@
 [Desktop Entry]
 Name=Informative
+Name[cs]=Informativní
+Name[nl]=Informatief
+Name[pt]=Informativa
+Name[pt_BR]=Informativo
+Name[uk]=Інформативне
+Name[x-test]=xxInformativexx
 Comment=An informative window switcher layout including desktop name
+Comment[nl]=Een informatieve indeling van de vensterwisselaar inclusief de naam van het bureaublad
+Comment[pt]=Uma disposição de mudança de janelas que inclui o nome do ecrã
+Comment[pt_BR]=Um leiaute do seletor de janelas que inclui o nome da área de trabalho
+Comment[uk]=Інформативне компонування засобу перемикання вікон з назвами стільниць
+Comment[x-test]=xxAn informative window switcher layout including desktop namexx
 Icon=preferences-system-windows-switcher-informative
 
 X-Plasma-API=declarativeappletscript

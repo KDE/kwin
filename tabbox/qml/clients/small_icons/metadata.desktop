@@ -1,6 +1,17 @@
 [Desktop Entry]
 Name=Small Icons
+Name[cs]=Malé ikony
+Name[nl]=Kleine pictogrammen
+Name[pt]=Ícones Pequenos
+Name[pt_BR]=Ícones pequenos
+Name[uk]=Малі піктограми
+Name[x-test]=xxSmall Iconsxx
 Comment=A window switcher layout using small icons to represent the window
+Comment[nl]=Een indeling van de vensterwisselaar die kleine pictogrammen gebruikt om vensters te representeren
+Comment[pt]=Uma disposição de mudança de janelas que usa ícones pequenos para representar a janela
+Comment[pt_BR]=Um leiaute do seletor de janelas que usa ícones pequenos para representá-las
+Comment[uk]=Компонування засобу перемикання вікон з малими піктограмами вікон
+Comment[x-test]=xxA window switcher layout using small icons to represent the windowxx
 Icon=preferences-system-windows-switcher-small-icons
 
 X-Plasma-API=declarativeappletscript

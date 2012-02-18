@@ -1,6 +1,17 @@
 [Desktop Entry]
 Name=Large Icons
+Name[cs]=Velké ikony
+Name[nl]=Grote pictogrammen
+Name[pt]=Ícones Grandes
+Name[pt_BR]=Ícones grandes
+Name[uk]=Великі піктограми
+Name[x-test]=xxLarge Iconsxx
 Comment=A window switcher layout using large icons to represent the window
+Comment[nl]=Een indeling van de vensterwisselaar die grote pictogrammen gebruikt om vensters te representeren
+Comment[pt]=Uma disposição de mudança de janelas que usa ícones grandes para representar a janela
+Comment[pt_BR]=Um leiaute do seletor de janelas que usa ícones grandes para representá-las
+Comment[uk]=Компонування засобу перемикання вікон з великими піктограмами вікон
+Comment[x-test]=xxA window switcher layout using large icons to represent the windowxx
 Icon=preferences-system-windows-switcher-big-icons
 
 X-Plasma-API=declarativeappletscript
