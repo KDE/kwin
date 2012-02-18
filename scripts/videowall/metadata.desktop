@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Video Wall
+Comment=Spans fullscreen video player over all attached screens to create a Video Wall
+Icon=preferences-system-windows-script-test
+
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=mgraesslin@kde.org
+X-KDE-PluginInfo-Name=videowall
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script
+Type=Service

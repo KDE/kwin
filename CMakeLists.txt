@@ -72,6 +72,7 @@ endif( KWIN_BUILD_DECORATIONS )
 add_subdirectory( data )
 
 add_subdirectory( effects )
+add_subdirectory( scripts )
 add_subdirectory( tabbox )
 
 ########### next target ###############
