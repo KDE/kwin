@@ -65,7 +65,6 @@ private:
     QScriptEngine *m_engine;
     QDir m_scriptDir;
     QFile m_scriptFile;
-    QString m_configFile;
     WorkspaceWrapper *m_workspace;
     bool m_running;
 };

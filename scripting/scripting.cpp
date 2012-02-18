@@ -25,7 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 // KDE
 #include <kstandarddirs.h>
+#include <KDE/KConfigGroup>
 #include <KDE/KDebug>
+#include <KDE/KPluginInfo>
+#include <KDE/KServiceTypeTrader>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QSettings>
@@ -53,7 +56,6 @@ KWin::Script::Script(int scriptId, QString scriptName, QDir dir, QObject *parent
     , m_scriptId(scriptId)
     , m_engine(new QScriptEngine(this))
     , m_scriptDir(dir)
-    , m_configFile(QFileInfo(m_scriptFile).completeBaseName() + QString(".kwscfg"))
     , m_workspace(new WorkspaceWrapper(m_engine))
     , m_running(false)
 {
@@ -85,20 +87,7 @@ void KWin::Script::run()
         m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(m_engine);
-
-        if (m_scriptDir.exists(m_configFile)) {
-            QSettings scriptSettings(m_scriptDir.filePath(m_configFile), QSettings::IniFormat);
-            QHash<QString, QVariant> scriptConfig;
-            QStringList keys = scriptSettings.allKeys();
-
-            for (int i = 0; i < keys.size(); i++) {
-                scriptConfig.insert(keys.at(i), scriptSettings.value(keys.at(i)));
-            }
-
-            KWin::MetaScripting::supplyConfig(m_engine, QVariant(scriptConfig));
-        } else {
-            KWin::MetaScripting::supplyConfig(m_engine);
-        }
+        KWin::MetaScripting::supplyConfig(m_engine);
         // add our print
         QScriptValue printFunc = m_engine->newFunction(kwinScriptPrint);
         printFunc.setData(m_engine->newQObject(this));
@@ -146,20 +135,29 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::start()
 {
-    QStringList scriptFilters;
-    QString sDirectory = KStandardDirs::locateLocal("data", "kwin/scripts/");
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup conf(_config, "Plugins");
 
-    if (sDirectory.isEmpty()) {
-        // Abort scripting setup. No location found to locate scripts
-        return;
-    }
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
 
-    scriptFilters << "*.kwinscript" << "*.kws" << "*.kwinqs";
-    scriptsDir.setPath(sDirectory);
-    scriptList = scriptsDir.entryList(scriptFilters, QDir::Files | QDir::Readable | QDir::Executable);
+    foreach (const KService::Ptr & service, offers) {
+        KPluginInfo plugininfo(service);
+        plugininfo.load(conf);
+        if (service->property("X-Plasma-API").toString() != "javascript") {
+            continue;
+        }
 
-    for (int i = 0; i < scriptList.size(); i++) {
-        loadScript(scriptsDir.filePath(scriptList.at(i)));
+        if (!plugininfo.isPluginEnabled()) {
+            continue;
+        }
+        const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
+        const QString scriptName = service->property("X-Plasma-MainScript").toString();
+        const QString file = KStandardDirs::locate("data", "kwin/scripts/" + pluginName + "/contents/" + scriptName);
+        if (file.isNull()) {
+            kDebug(1212) << "Could not find script file for " << pluginName;
+            continue;
+        }
+        loadScript(file);
     }
 
     runScripts();

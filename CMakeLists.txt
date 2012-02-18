@@ -233,4 +233,9 @@ install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
+if( KWIN_BUILD_SCRIPTING )
+    # Install the KWin/WindowSwitcher service type
+    install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+endif( KWIN_BUILD_SCRIPTING )
+
 kde4_install_icons( ${ICON_INSTALL_DIR} )
