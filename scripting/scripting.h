@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_H
 #define KWIN_SCRIPTING_H
 
-#include <QDir>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
 
 class QScriptEngine;
 class QScriptValue;
@@ -37,7 +38,7 @@ class Script : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
 
-    Script(int id, QString scriptName, QDir dir, QObject *parent = NULL);
+    Script(int id, QString scriptName, QObject *parent = NULL);
     virtual ~Script();
     QString fileName() const {
         return m_scriptFile.fileName();
@@ -63,7 +64,6 @@ private slots:
 private:
     int m_scriptId;
     QScriptEngine *m_engine;
-    QDir m_scriptDir;
     QFile m_scriptFile;
     WorkspaceWrapper *m_workspace;
     bool m_running;
@@ -78,7 +78,6 @@ class Scripting : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 private:
     QStringList scriptList;
-    QDir scriptsDir;
     QList<KWin::Script*> scripts;
 
     // Preferably call ONLY at load time

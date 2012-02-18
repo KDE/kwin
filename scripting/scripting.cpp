@@ -51,15 +51,14 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
 }
 
 
-KWin::Script::Script(int scriptId, QString scriptName, QDir dir, QObject *parent)
+KWin::Script::Script(int scriptId, QString scriptName, QObject *parent)
     : QObject(parent)
     , m_scriptId(scriptId)
     , m_engine(new QScriptEngine(this))
-    , m_scriptDir(dir)
     , m_workspace(new WorkspaceWrapper(m_engine))
     , m_running(false)
 {
-    m_scriptFile.setFileName(dir.filePath(scriptName));
+    m_scriptFile.setFileName(scriptName);
     QDBusConnection::sessionBus().registerObject('/' + QString::number(m_scriptId), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
 
@@ -178,7 +177,7 @@ void KWin::Scripting::scriptDestroyed(QObject *object)
 int KWin::Scripting::loadScript(const QString &filePath)
 {
     const int id = scripts.size();
-    KWin::Script *script = new KWin::Script(id, filePath, scriptsDir, this);
+    KWin::Script *script = new KWin::Script(id, filePath, this);
     connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
     scripts.append(script);
     return id;
