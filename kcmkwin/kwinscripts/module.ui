@@ -19,7 +19,17 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout2">
        <item>
-        <widget class="QListWidget" name="listWidget"/>
+        <widget class="KPluginSelector" name="scriptSelector" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::WheelFocus</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -29,20 +39,6 @@
         <widget class="QPushButton" name="importScriptButton">
          <property name="text">
           <string>Import KWin script</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="exportSelectedButton">
-         <property name="text">
-          <string>Export selected KWin script</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="removeScriptButton">
-         <property name="text">
-          <string>Remove selected KWin script</string>
          </property>
         </widget>
        </item>
@@ -65,6 +61,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPluginSelector</class>
+   <extends>QWidget</extends>
+   <header>kpluginselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

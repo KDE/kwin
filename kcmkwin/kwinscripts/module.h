@@ -20,6 +20,7 @@
 #define MODULE_H
 
 #include <KDE/KCModule>
+#include <KDE/KSharedConfig>
 
 namespace Ui
 {
@@ -42,28 +43,16 @@ public:
      * Destructor.
      */
     ~Module();
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
 
 protected slots:
-    /**
-     * Called when the selection changes in the list view.
-     * Disables/enables the remove and export buttons.
-     */
-    void updateButtons();
-
-    /**
-     * Called when the export script button is clicked.
-     */
-    void exportScript();
 
     /**
      * Called when the import script button is clicked.
      */
     void importScript();
-
-    /**
-     * Called when the remove script button is clicked.
-     */
-    void removeScript();
 
 private:
     /**
@@ -74,6 +63,7 @@ private:
      * Updates the contents of the list view.
      */
     void updateListViewContents();
+    KSharedConfigPtr m_kwinConfig;
 };
 
 #endif // MODULE_H
