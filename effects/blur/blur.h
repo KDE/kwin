@@ -83,6 +83,7 @@ private:
     };
 
     QHash< const EffectWindow*, BlurWindowInfo > windows;
+    typedef QHash<const EffectWindow*, BlurWindowInfo>::iterator CacheEntry;
 };
 
 } // namespace KWin

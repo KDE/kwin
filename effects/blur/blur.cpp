@@ -139,9 +139,10 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
     if (w && atom == net_wm_blur_region) {
         updateBlurRegion(w);
-        if (windows.contains(w)) {
+        CacheEntry it = windows.find(w);
+        if (it != windows.end()) {
             const QRect screen(0, 0, displayWidth(), displayHeight());
-            windows[w].damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
+            it->damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
         }
     }
 }
@@ -291,11 +292,12 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
         // if a window underneath the blurred area is damaged we have to
         // update the cached texture
         QRegion damagedCache;
-        if (windows.contains(w) && !windows.value(w).dropCache &&
-            windows.value(w).windowPos == w->pos() &&
-            windows.value(w).blurredBackground.size() == expandedBlur.boundingRect().size()) {
+        CacheEntry it = windows.find(w);
+        if (it != windows.end() && !it->dropCache &&
+            it->windowPos == w->pos() &&
+            it->blurredBackground.size() == expandedBlur.boundingRect().size()) {
             damagedCache = (expand(expandedBlur & m_damagedArea) |
-                            (windows.value(w).damagedRegion & data.paint)) & expandedBlur;
+                            (it->damagedRegion & data.paint)) & expandedBlur;
         } else {
             damagedCache = expandedBlur;
         }
@@ -305,11 +307,11 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
             // In order to be able to recalculate this area we have to make sure the
             // background area is painted before.
             data.paint |= expand(damagedArea);
-            if (windows.contains(w)) {
+            if (it != windows.end()) {
                 // In case we already have a texture cache mark the dirty regions invalid.
-                windows[w].damagedRegion &= expandedBlur;
-                windows[w].damagedRegion |= damagedCache;
-                windows[w].dropCache = false;
+                it->damagedRegion &= expandedBlur;
+                it->damagedRegion |= damagedCache;
+                it->dropCache = false;
             }
             // we keep track of the "damage propagation"
             m_damagedArea |= damagedArea;
@@ -504,23 +506,24 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
     // The background texture we get is only partially valid.
 
-    if (!windows.contains(w)) {
+    CacheEntry it = windows.find(w);
+    if (it == windows.end()) {
         BlurWindowInfo bwi;
         bwi.blurredBackground = GLTexture(r.width(),r.height());
         bwi.damagedRegion = expanded;
         bwi.dropCache = false;
         bwi.windowPos = w->pos();
-        windows.insert(w, bwi);
-    } else if (windows.value(w).blurredBackground.size() != r.size()) {
-        windows[w].blurredBackground = GLTexture(r.width(),r.height());
-        windows[w].dropCache = false;
-        windows[w].windowPos = w->pos();
-    } else if (windows.value(w).windowPos != w->pos()) {
-        windows[w].dropCache = false;
-        windows[w].windowPos = w->pos();
+        it = windows.insert(w, bwi);
+    } else if (it->blurredBackground.size() != r.size()) {
+        it->blurredBackground = GLTexture(r.width(),r.height());
+        it->dropCache = false;
+        it->windowPos = w->pos();
+    } else if (it->windowPos != w->pos()) {
+        it->dropCache = false;
+        it->windowPos = w->pos();
     }
 
-    GLTexture targetTexture = windows[w].blurredBackground;
+    GLTexture targetTexture = it->blurredBackground;
     targetTexture.setFilter(GL_LINEAR);
     targetTexture.setWrapMode(GL_CLAMP_TO_EDGE);
     shader->bind();
@@ -567,7 +570,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
      * can do so (e.g. SlidingPopups). Hence we have to make the compromise that we update
      * "damagedRegion & region" of the cache but only mark "validUpdate" as valid.
      **/
-    const QRegion damagedRegion = windows.value(w).damagedRegion;
+    const QRegion damagedRegion = it->damagedRegion;
     const QRegion updateBackground = damagedRegion & region;
     const QRegion validUpdate = damagedRegion - expand(damagedRegion - region);
 
@@ -608,7 +611,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         GLRenderTarget::popRenderTarget();
         tex.unbind();
         // mark the updated region as valid
-        windows[w].damagedRegion -= validUpdate;
+        it->damagedRegion -= validUpdate;
     }
 
     // Now draw the horizontally blurred area back to the backbuffer, while
