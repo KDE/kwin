@@ -311,6 +311,9 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
                 // In case we already have a texture cache mark the dirty regions invalid.
                 it->damagedRegion &= expandedBlur;
                 it->damagedRegion |= damagedCache;
+                // The valid part of the cache can be considered as being opaque
+                // as long as we don't need to update a bordering part
+                data.clip |= blurArea - expand(it->damagedRegion);
                 it->dropCache = false;
             }
             // we keep track of the "damage propagation"
