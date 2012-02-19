@@ -78,9 +78,6 @@ class Tile;
 class Tiling;
 class TilingLayout;
 #endif
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-class DesktopChangeOSD;
-#endif
 class Outline;
 class RootInfo;
 class PluginMgr;
@@ -806,9 +803,6 @@ private:
 
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox* tab_box;
-#endif
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    DesktopChangeOSD* desktop_change_osd;
 #endif
 
     QMenu* popup;

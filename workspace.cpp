@@ -47,9 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-#include "desktopchangeosd.h"
-#endif
 #include "atoms.h"
 #include "placement.h"
 #include "notifications.h"
@@ -127,9 +124,6 @@ Workspace::Workspace(bool restore)
     , block_focus(0)
 #ifdef KWIN_BUILD_TABBOX
     , tab_box(0)
-#endif
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    , desktop_change_osd(0)
 #endif
     , popup(0)
     , advanced_popup(0)
@@ -239,9 +233,6 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
 
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    desktop_change_osd = new DesktopChangeOSD(this);
-#endif
     m_outline = new Outline();
 
     initShortcuts();
@@ -504,9 +495,6 @@ Workspace::~Workspace()
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release();
-#ifdef KWIN_BUILD_DESKTOPCHANGEOSD
-    delete desktop_change_osd;
-#endif
     delete m_outline;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);

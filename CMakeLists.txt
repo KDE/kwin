@@ -5,7 +5,6 @@ OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 OPTION(KWIN_BUILD_TILING "Enable building of KWin Tiling functionality" ON)
-OPTION(KWIN_BUILD_DESKTOPCHANGEOSD "Enable building of KWin DesktopChangeOSD funtionality" ON)
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
@@ -19,7 +18,6 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_TILING OFF)
-    set(KWIN_BUILD_DESKTOPCHANGEOSD OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_BUILD_SCRIPTING OFF)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
@@ -159,12 +157,6 @@ if(KWIN_BUILD_TILING)
         tilinglayouts/floating/floating.cpp
    )
 endif(KWIN_BUILD_TILING)
-
-if(KWIN_BUILD_DESKTOPCHANGEOSD)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        desktopchangeosd.cpp
-    )
-endif(KWIN_BUILD_DESKTOPCHANGEOSD)
 
 if(KWIN_BUILD_SCREENEDGES)
     set(
