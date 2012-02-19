@@ -60,6 +60,8 @@ class WorkspaceWrapper : public QObject
      * The height of the display, that is height of all combined screens.
      **/
     Q_PROPERTY(int displayHeight READ displayHeight)
+    Q_PROPERTY(int activeScreen READ activeScreen)
+    Q_PROPERTY(int numScreens READ numScreens)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -125,6 +127,8 @@ void setter( rettype val );
     int displayWidth() const;
     int displayHeight() const;
     QSize displaySize() const;
+    int activeScreen() const;
+    int numScreens() const;
 
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
     /**

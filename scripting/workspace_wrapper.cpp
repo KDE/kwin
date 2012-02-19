@@ -63,6 +63,8 @@ GETTER(int, workspaceHeight)
 GETTER(QSize, desktopGridSize)
 GETTER(int, desktopGridWidth)
 GETTER(int, desktopGridHeight)
+GETTER(int, activeScreen)
+GETTER(int, numScreens)
 
 #undef GETTER
 
