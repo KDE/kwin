@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 
+class QDeclarativeView;
 class QScriptEngine;
 class QScriptValue;
 
@@ -32,7 +33,46 @@ namespace KWin
 {
 class WorkspaceWrapper;
 
-class Script : public QObject
+class AbstractScript : public QObject
+{
+    Q_OBJECT
+public:
+    AbstractScript(int id, QString scriptName, QObject *parent = NULL);
+    ~AbstractScript();
+    QString fileName() const {
+        return m_scriptFile.fileName();
+    }
+
+public Q_SLOTS:
+    Q_SCRIPTABLE void stop();
+    Q_SCRIPTABLE virtual void run() = 0;
+
+protected:
+    QFile &scriptFile() {
+        return m_scriptFile;
+    }
+    bool running() const {
+        return m_running;
+    }
+    void setRunning(bool running) {
+        m_running = running;
+    }
+    int scriptId() const {
+        return m_scriptId;
+    }
+
+    WorkspaceWrapper *workspace() {
+        return m_workspace;
+    }
+
+private:
+    int m_scriptId;
+    QFile m_scriptFile;
+    bool m_running;
+    WorkspaceWrapper *m_workspace;
+};
+
+class Script : public AbstractScript
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
@@ -40,14 +80,10 @@ public:
 
     Script(int id, QString scriptName, QObject *parent = NULL);
     virtual ~Script();
-    QString fileName() const {
-        return m_scriptFile.fileName();
-    }
 
     void printMessage(const QString &message);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void stop();
     Q_SCRIPTABLE void run();
 
 Q_SIGNALS:
@@ -62,11 +98,22 @@ private slots:
     void sigException(const QScriptValue &exception);
 
 private:
-    int m_scriptId;
     QScriptEngine *m_engine;
-    QFile m_scriptFile;
-    WorkspaceWrapper *m_workspace;
-    bool m_running;
+};
+
+class DeclarativeScript : public AbstractScript
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
+public:
+    explicit DeclarativeScript(int id, QString scriptName, QObject *parent = 0);
+    virtual ~DeclarativeScript();
+
+public Q_SLOTS:
+    Q_SCRIPTABLE void run();
+
+private:
+    QDeclarativeView *m_view;
 };
 
 /**
@@ -78,7 +125,7 @@ class Scripting : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 private:
     QStringList scriptList;
-    QList<KWin::Script*> scripts;
+    QList<KWin::AbstractScript*> scripts;
 
     // Preferably call ONLY at load time
     void runScripts();
@@ -92,6 +139,7 @@ public:
     void start();
     ~Scripting();
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath);
+    Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath);
 
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
