@@ -156,6 +156,10 @@ void setter( rettype val );
      * @returns The specified screen geometry
      **/
     Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const Client* client) const;
+    /**
+     * Returns the name for the given @p desktop.
+     **/
+    Q_SCRIPTABLE QString desktopName(int desktop) const;
 
 public Q_SLOTS:
     // all the available key bindings

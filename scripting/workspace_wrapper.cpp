@@ -175,6 +175,11 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desk
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), screen, desktop);
 }
 
+QString WorkspaceWrapper::desktopName(int desktop) const
+{
+    return Workspace::self()->desktopName(desktop);
+}
+
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
