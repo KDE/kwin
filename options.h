@@ -336,7 +336,6 @@ public:
     // General preferences
     HiddenPreviews hiddenPreviews;
     bool unredirectFullscreen;
-    bool disableCompositingChecks;
     // OpenGL
     int glSmoothScale;  // 0 = no, 1 = yes when transformed,
     // 2 = try trilinear when transformed; else 1,
