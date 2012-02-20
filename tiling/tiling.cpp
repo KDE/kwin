@@ -88,8 +88,6 @@ void Tiling::setEnabled(bool tiling)
     config.writeEntry("TilingOn", m_enabled);
     config.sync();
     options->tilingOn = m_enabled;
-    options->tilingLayout = static_cast<TilingLayoutFactory::Layouts>(config.readEntry("TilingDefaultLayout", 0));
-    options->tilingRaisePolicy = config.readEntry("TilingRaisePolicy", 0);
 
     if (m_enabled) {
         connect(m_workspace, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(createTile(KWin::Client*)));
