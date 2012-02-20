@@ -3,6 +3,11 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Script
 
 Comment=KWin Script
+Comment[nl]=KWin-scripts
+Comment[pt]=Programa do KWin
+Comment[pt_BR]=Script do KWin
+Comment[uk]=Скрипт KWin
+Comment[x-test]=xxKWin Scriptxx
 
 [PropertyDef::X-Plasma-API]
 Type=QString
