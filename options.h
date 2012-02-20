@@ -228,9 +228,9 @@ public:
         return m_legacyFullscreenSupport;
     }
 
-    bool checkIgnoreFocusStealing(const Client* c);
+    bool checkIgnoreFocusStealing(const Client* c) const;
 
-    WindowOperation operationTitlebarDblClick() {
+    WindowOperation operationTitlebarDblClick() const {
         return OpTitlebarDblClick;
     }
 
@@ -257,53 +257,53 @@ public:
         MouseWheelNothing
     };
 
-    MouseCommand operationTitlebarMouseWheel(int delta) {
+    MouseCommand operationTitlebarMouseWheel(int delta) const {
         return wheelToMouseCommand(CmdTitlebarWheel, delta);
     }
-    MouseCommand operationWindowMouseWheel(int delta) {
+    MouseCommand operationWindowMouseWheel(int delta) const {
         return wheelToMouseCommand(CmdAllWheel, delta);
     }
 
-    MouseCommand commandActiveTitlebar1() {
+    MouseCommand commandActiveTitlebar1() const {
         return CmdActiveTitlebar1;
     }
-    MouseCommand commandActiveTitlebar2() {
+    MouseCommand commandActiveTitlebar2() const {
         return CmdActiveTitlebar2;
     }
-    MouseCommand commandActiveTitlebar3() {
+    MouseCommand commandActiveTitlebar3() const {
         return CmdActiveTitlebar3;
     }
-    MouseCommand commandInactiveTitlebar1() {
+    MouseCommand commandInactiveTitlebar1() const {
         return CmdInactiveTitlebar1;
     }
-    MouseCommand commandInactiveTitlebar2() {
+    MouseCommand commandInactiveTitlebar2() const {
         return CmdInactiveTitlebar2;
     }
-    MouseCommand commandInactiveTitlebar3() {
+    MouseCommand commandInactiveTitlebar3() const {
         return CmdInactiveTitlebar3;
     }
-    MouseCommand commandWindow1() {
+    MouseCommand commandWindow1() const {
         return CmdWindow1;
     }
-    MouseCommand commandWindow2() {
+    MouseCommand commandWindow2() const {
         return CmdWindow2;
     }
-    MouseCommand commandWindow3() {
+    MouseCommand commandWindow3() const {
         return CmdWindow3;
     }
-    MouseCommand commandWindowWheel() {
+    MouseCommand commandWindowWheel() const {
         return CmdWindowWheel;
     }
-    MouseCommand commandAll1() {
+    MouseCommand commandAll1() const {
         return CmdAll1;
     }
-    MouseCommand commandAll2() {
+    MouseCommand commandAll2() const {
         return CmdAll2;
     }
-    MouseCommand commandAll3() {
+    MouseCommand commandAll3() const {
         return CmdAll3;
     }
-    uint keyCmdAllModKey() {
+    uint keyCmdAllModKey() const {
         return CmdAllModKey;
     }
 
@@ -315,27 +315,27 @@ public:
     /**
     * @returns true if the Geometry Tip should be shown during a window move/resize.
     */
-    bool showGeometryTip();
+    bool showGeometryTip() const;
 
     enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
     /**
     * @returns The action assigned to the specified electric border
     */
-    ElectricBorderAction electricBorderAction(ElectricBorder edge);
+    ElectricBorderAction electricBorderAction(ElectricBorder edge) const;
     /**
     * @returns true if electric borders are enabled. With electric borders
     * you can change desktop by moving the mouse pointer towards the edge
     * of the screen
     */
-    int electricBorders();
+    int electricBorders() const;
     /**
     * @returns the activation delay for electric borders in milliseconds.
     */
-    int electricBorderDelay();
+    int electricBorderDelay() const;
     /**
     * @returns the trigger cooldown for electric borders in milliseconds.
     */
-    int electricBorderCooldown();
+    int electricBorderCooldown() const;
     /**
     * @returns the number of pixels the mouse cursor is pushed back when it
     * reaches the screen edge.
@@ -527,7 +527,7 @@ private:
     QStringList ignoreFocusStealingClasses;
     int animationSpeed; // 0 - instant, 5 - very slow
 
-    MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta);
+    MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };
 
 extern Options* options;

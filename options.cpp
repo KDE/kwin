@@ -411,12 +411,12 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     return MouseWheelChangeCurrentTab;
 }
 
-bool Options::showGeometryTip()
+bool Options::showGeometryTip() const
 {
     return show_geometry_tip;
 }
 
-ElectricBorderAction Options::electricBorderAction(ElectricBorder edge)
+ElectricBorderAction Options::electricBorderAction(ElectricBorder edge) const
 {
     switch(edge) {
     case ElectricTop:
@@ -442,27 +442,27 @@ ElectricBorderAction Options::electricBorderAction(ElectricBorder edge)
     return ElectricActionNone;
 }
 
-int Options::electricBorders()
+int Options::electricBorders() const
 {
     return electric_borders;
 }
 
-int Options::electricBorderDelay()
+int Options::electricBorderDelay() const
 {
     return electric_border_delay;
 }
 
-int Options::electricBorderCooldown()
+int Options::electricBorderCooldown() const
 {
     return electric_border_cooldown;
 }
 
-bool Options::checkIgnoreFocusStealing(const Client* c)
+bool Options::checkIgnoreFocusStealing(const Client* c) const
 {
     return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
 }
 
-Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta)
+Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const
 {
     switch(com) {
     case MouseWheelRaiseLower:
