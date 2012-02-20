@@ -288,7 +288,7 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
 
 void SceneOpenGL::TexturePrivate::onDamage()
 {
-    if (options->glStrictBinding) {
+    if (options->isGlStrictBinding()) {
         // This is just implemented to be consistent with
         // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);

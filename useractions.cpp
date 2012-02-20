@@ -819,7 +819,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         cancelShadeHoverTimer();
         break;
     case Options::MouseOperationsMenu:
-        if (isActive() && options->clickRaise)
+        if (isActive() && options->isClickRaise())
             autoRaise();
         workspace()->showWindowMenu(globalPos, this);
         break;
@@ -1028,7 +1028,7 @@ void Workspace::slotSwitchDesktopNext()
 {
     int d = currentDesktop() + 1;
     if (d > numberOfDesktops()) {
-        if (options->rollOverDesktops) {
+        if (options->isRollOverDesktops()) {
             d = 1;
         } else {
             return;
@@ -1041,7 +1041,7 @@ void Workspace::slotSwitchDesktopPrevious()
 {
     int d = currentDesktop() - 1;
     if (d <= 0) {
-        if (options->rollOverDesktops)
+        if (options->isRollOverDesktops())
             d = numberOfDesktops();
         else
             return;
@@ -1051,7 +1051,7 @@ void Workspace::slotSwitchDesktopPrevious()
 
 void Workspace::slotSwitchDesktopRight()
 {
-    int desktop = desktopToRight(currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopToRight(currentDesktop(), options->isRollOverDesktops());
     if (desktop == currentDesktop())
         return;
     setCurrentDesktop(desktop);
@@ -1059,7 +1059,7 @@ void Workspace::slotSwitchDesktopRight()
 
 void Workspace::slotSwitchDesktopLeft()
 {
-    int desktop = desktopToLeft(currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopToLeft(currentDesktop(), options->isRollOverDesktops());
     if (desktop == currentDesktop())
         return;
     setCurrentDesktop(desktop);
@@ -1067,7 +1067,7 @@ void Workspace::slotSwitchDesktopLeft()
 
 void Workspace::slotSwitchDesktopUp()
 {
-    int desktop = desktopAbove(currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopAbove(currentDesktop(), options->isRollOverDesktops());
     if (desktop == currentDesktop())
         return;
     setCurrentDesktop(desktop);
@@ -1075,7 +1075,7 @@ void Workspace::slotSwitchDesktopUp()
 
 void Workspace::slotSwitchDesktopDown()
 {
-    int desktop = desktopBelow(currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopBelow(currentDesktop(), options->isRollOverDesktops());
     if (desktop == currentDesktop())
         return;
     setCurrentDesktop(desktop);
@@ -1312,7 +1312,7 @@ void Workspace::windowToPreviousDesktop(Client* c)
 void Workspace::slotWindowToDesktopRight()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopToRight(currentDesktop(), options->rollOverDesktops);
+        int d = desktopToRight(currentDesktop(), options->isRollOverDesktops());
         if (d == currentDesktop())
             return;
 
@@ -1325,7 +1325,7 @@ void Workspace::slotWindowToDesktopRight()
 void Workspace::slotWindowToDesktopLeft()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopToLeft(currentDesktop(), options->rollOverDesktops);
+        int d = desktopToLeft(currentDesktop(), options->isRollOverDesktops());
         if (d == currentDesktop())
             return;
 
@@ -1338,7 +1338,7 @@ void Workspace::slotWindowToDesktopLeft()
 void Workspace::slotWindowToDesktopUp()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopAbove(currentDesktop(), options->rollOverDesktops);
+        int d = desktopAbove(currentDesktop(), options->isRollOverDesktops());
         if (d == currentDesktop())
             return;
 
@@ -1351,7 +1351,7 @@ void Workspace::slotWindowToDesktopUp()
 void Workspace::slotWindowToDesktopDown()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopBelow(currentDesktop(), options->rollOverDesktops);
+        int d = desktopBelow(currentDesktop(), options->isRollOverDesktops());
         if (d == currentDesktop())
             return;
 

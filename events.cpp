@@ -868,28 +868,28 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
             (!options->focusPolicyIsReasonable() &&
              e->mode == NotifyUngrab)) {
 
-        if (options->shadeHover) {
+        if (options->isShadeHover()) {
             cancelShadeHoverTimer();
             if (isShade()) {
                 shadeHoverTimer = new QTimer(this);
                 connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeHover()));
                 shadeHoverTimer->setSingleShot(true);
-                shadeHoverTimer->start(options->shadeHoverInterval);
+                shadeHoverTimer->start(options->shadeHoverInterval());
             }
         }
 
-        if (options->focusPolicy == Options::ClickToFocus)
+        if (options->focusPolicy() == Options::ClickToFocus)
             return;
 
-        if (options->autoRaise && !isDesktop() &&
+        if (options->isAutoRaise() && !isDesktop() &&
                 !isDock() && workspace()->focusChangeEnabled() &&
                 workspace()->topClientOnDesktop(workspace()->currentDesktop(),
-                                                options->separateScreenFocus ? screen() : -1) != this) {
+                                                options->isSeparateScreenFocus() ? screen() : -1) != this) {
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer(this);
             connect(autoRaiseTimer, SIGNAL(timeout()), this, SLOT(autoRaise()));
             autoRaiseTimer->setSingleShot(true);
-            autoRaiseTimer->start(options->autoRaiseInterval);
+            autoRaiseTimer->start(options->autoRaiseInterval());
         }
 
         QPoint currentPos(e->x_root, e->y_root);
@@ -897,7 +897,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
             return;
         // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
         // change came because of window changes (e.g. closing a window) - #92290
-        if (options->focusPolicy != Options::FocusFollowsMouse
+        if (options->focusPolicy() != Options::FocusFollowsMouse
                 || currentPos != workspace()->focusMousePosition()) {
                 workspace()->requestDelayFocus(this);
         }
@@ -938,10 +938,10 @@ void Client::leaveNotifyEvent(XCrossingEvent* e)
                 shadeHoverTimer = new QTimer(this);
                 connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeUnhover()));
                 shadeHoverTimer->setSingleShot(true);
-                shadeHoverTimer->start(options->shadeHoverInterval);
+                shadeHoverTimer->start(options->shadeHoverInterval());
             }
         }
-        if (options->focusPolicy == Options::FocusStrictlyUnderMouse && isActive() && lostMouse) {
+        if (options->focusPolicy() == Options::FocusStrictlyUnderMouse && isActive() && lostMouse) {
             workspace()->requestDelayFocus(0);
         }
         return;
@@ -996,7 +996,7 @@ void Client::updateMouseGrab()
         XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
         // keep grab for the simple click without modifiers if needed (see below)
         bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
-        if (!(!options->clickRaise || not_obscured))
+        if (!(!options->isClickRaise() || not_obscured))
             grabButton(None);
         return;
     }
@@ -1011,7 +1011,7 @@ void Client::updateMouseGrab()
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
         // the most recently raised window)
         bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
-        if (!options->clickRaise || not_obscured)
+        if (!options->isClickRaise() || not_obscured)
             ungrabButton(None);
         else
             grabButton(None);
@@ -1149,7 +1149,7 @@ bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int
             }
             // active inner window
             if (isActive() && w == wrapperId()
-                    && options->clickRaise && button < 4) { // exclude wheel
+                    && options->isClickRaise() && button < 4) { // exclude wheel
                 com = Options::MouseActivateRaiseAndPassClick;
                 was_action = true;
                 perform_handled = true;

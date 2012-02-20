@@ -54,7 +54,7 @@ TilingLayout* TilingLayoutFactory::createLayout(int type, Workspace *w)
     /* For new layouts, make a case entry here */
     switch(type) {
     case DefaultLayout: // NOTE: fall through makes first layout default
-        layout = createLayout(indexToLayoutIndex(options->tilingLayout), w);
+        layout = createLayout(indexToLayoutIndex(options->tilingLayout()), w);
         break;
 
         ADD_LAYOUT(Spiral, I18N_NOOP2_NOSTRIP("Spiral tiling layout", "Spiral"));

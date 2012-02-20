@@ -159,7 +159,7 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int des
             }
         }
     }
-    if (options->separateScreenFocus) {
+    if (options->isSeparateScreenFocus()) {
         if (current->screen() != workspace->activeScreen())
             ret = NULL;
     }
@@ -1052,7 +1052,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             Workspace::self()->lowerClient(c);
         if (options->focusPolicyIsReasonable()) {
             Workspace::self()->activateClient(nc);
-            if (nc->isShade() && options->shadeHover)
+            if (nc->isShade() && options->isShadeHover())
                 nc->setShade(ShadeActivated);
         } else {
             if (!nc->isOnDesktop(currentDesktop()))
@@ -1069,7 +1069,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     nextPrev(forward);
     if (Client* c = currentClient()) {
         Workspace::self()->activateClient(c);
-        if (c->isShade() && options->shadeHover)
+        if (c->isShade() && options->isShadeHover())
             c->setShade(ShadeActivated);
     }
 }
@@ -1157,7 +1157,7 @@ void TabBox::accept()
     close();
     if (c) {
         Workspace::self()->activateClient(c);
-        if (c->isShade() && options->shadeHover)
+        if (c->isShade() && options->isShadeHover())
             c->setShade(ShadeActivated);
         if (c->isDesktop())
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());

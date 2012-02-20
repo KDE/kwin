@@ -214,7 +214,7 @@ Workspace::Workspace(bool restore)
                 );
 
     Extensions::init();
-    compositingSuspended = !options->useCompositing;
+    compositingSuspended = !options->isUseCompositing();
 #ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
@@ -471,7 +471,7 @@ void Workspace::init()
 
 #ifdef KWIN_BUILD_TILING
     // Enable/disable tiling
-    m_tiling->setEnabled(options->tilingOn);
+    m_tiling->setEnabled(options->isTilingOn());
 #endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
@@ -782,7 +782,7 @@ void Workspace::updateFocusChains(Client* c, FocusChainChange change)
 void Workspace::updateToolWindows(bool also_hide)
 {
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
-    if (!options->hideUtilityWindowsForInactive) {
+    if (!options->isHideUtilityWindowsForInactive()) {
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
             if (!(*it)->tabGroup() || (*it)->tabGroup()->current() == *it)
                 (*it)->hideClient(false);
@@ -1005,7 +1005,7 @@ void Workspace::slotReconfigure()
     }
 
 #ifdef KWIN_BUILD_TILING
-    m_tiling->setEnabled(options->tilingOn);
+    m_tiling->setEnabled(options->isTilingOn());
     // just so that we reset windows in the right manner, 'activate' the current active window
     m_tiling->notifyTilingWindowActivated(activeClient());
 #endif
@@ -1045,7 +1045,7 @@ void Workspace::slotReinitCompositing()
 
     // resume compositing if suspended
     compositingSuspended = false;
-    options->compositingInitialized = false;
+    options->setCompositingInitialized(false);
     setupCompositing();
     if (hasDecorationPlugin()) {
         KDecorationFactory* factory = mgr->factory();
@@ -1328,7 +1328,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
                 active_client->isShown(true) && active_client->isOnCurrentDesktop())
             c = active_client; // The requestFocus below will fail, as the client is already active
         // from actiavtion.cpp
-        if (!c && options->nextFocusPrefersMouse) {
+        if (!c && options->isNextFocusPrefersMouse()) {
             QList<Client*>::const_iterator it = stackingOrder().constEnd();
             while (it != stackingOrder().constBegin()) {
                 Client *client = *(--it);
@@ -1348,7 +1348,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
             for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
                 Client* tmp = focus_chain[currentDesktop()].at(i);
                 if (tmp->isShown(false) && tmp->isOnCurrentActivity()
-                    && ( !options->separateScreenFocus || tmp->screen() == old_active_screen )) {
+                    && ( !options->isSeparateScreenFocus() || tmp->screen() == old_active_screen )) {
                     c = tmp;
                     break;
                 }
@@ -1690,7 +1690,7 @@ int Workspace::numScreens() const
 
 int Workspace::activeScreen() const
 {
-    if (!options->activeMouseScreen) {
+    if (!options->isActiveMouseScreen()) {
         if (activeClient() != NULL && !activeClient()->isOnScreen(active_screen))
             return activeClient()->screen();
         return active_screen;
@@ -1813,7 +1813,7 @@ void Workspace::requestDelayFocus(Client* c)
     delayFocusTimer = new QTimer(this);
     connect(delayFocusTimer, SIGNAL(timeout()), this, SLOT(delayFocus()));
     delayFocusTimer->setSingleShot(true);
-    delayFocusTimer->start(options->delayFocusInterval);
+    delayFocusTimer->start(options->delayFocusInterval());
 }
 
 void Workspace::cancelDelayFocus()

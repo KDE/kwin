@@ -270,7 +270,7 @@ void Workspace::raiseOrLowerClient(Client *c)
         topmost = most_recently_raised;
     else
         topmost = topClientOnDesktop(c->isOnAllDesktops() ? currentDesktop() : c->desktop(),
-                                     options->separateScreenFocus ? c->screen() : -1);
+                                     options->isSeparateScreenFocus() ? c->screen() : -1);
 
     if (c == topmost)
         lowerClient(c);

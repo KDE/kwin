@@ -87,7 +87,7 @@ void Tiling::setEnabled(bool tiling)
     KConfigGroup config(_config, "Windows");
     config.writeEntry("TilingOn", m_enabled);
     config.sync();
-    options->tilingOn = m_enabled;
+    options->setTilingOn(m_enabled);
 
     if (m_enabled) {
         connect(m_workspace, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(createTile(KWin::Client*)));
@@ -270,7 +270,7 @@ void Tiling::notifyTilingWindowActivated(KWin::Client *c)
     if (c == NULL)
         return;
 
-    if (options->tilingRaisePolicy == 1)   // individual raise/lowers
+    if (options->tilingRaisePolicy() == 1)   // individual raise/lowers
         return;
 
     if (m_tilingLayouts.value(c->desktop())) {
@@ -286,7 +286,7 @@ void Tiling::notifyTilingWindowActivated(KWin::Client *c)
 
         kDebug(1212) << "FOUND TILE";
         bool raise_floating = false;
-        if (options->tilingRaisePolicy == 2)   // floating always on top
+        if (options->tilingRaisePolicy() == 2)   // floating always on top
             raise_floating = true;
         else
             raise_floating = tile_to_raise->floating();

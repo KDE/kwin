@@ -365,8 +365,8 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
     //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
     //CT adapted for kwin on 25Nov1999
     //aleXXX 02Nov2000 added second snapping mode
-    if (options->windowSnapZone || options->borderSnapZone || options->centerSnapZone) {
-        const bool sOWO = options->snapOnlyWhenOverlapping;
+    if (options->windowSnapZone() || options->borderSnapZone() || options->centerSnapZone()) {
+        const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const QRect maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
@@ -387,7 +387,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
         // border snap
-        int snap = options->borderSnapZone * snapAdjust; //snap trigger
+        int snap = options->borderSnapZone() * snapAdjust; //snap trigger
         if (snap) {
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snap)) {
                 deltaX = xmin - cx;
@@ -409,7 +409,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         }
 
         // windows snap
-        snap = options->windowSnapZone * snapAdjust;
+        snap = options->windowSnapZone() * snapAdjust;
         if (snap) {
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
@@ -476,7 +476,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         }
 
         // center snap
-        snap = options->centerSnapZone * snapAdjust; //snap trigger
+        snap = options->centerSnapZone() * snapAdjust; //snap trigger
         if (snap) {
             int diffX = qAbs((xmin + xmax) / 2 - (cx + cw / 2));
             int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
@@ -486,7 +486,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 deltaY = diffY;
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
-            } else if (options->borderSnapZone) {
+            } else if (options->borderSnapZone()) {
                 // Enhance border snap
                 if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
                     // Snap to vertical center on screen edge
@@ -511,8 +511,8 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
     //adapted from adjustClientPosition on 29May2004
     //this function is called when resizing a window and will modify
     //the new dimensions to snap to other windows/borders if appropriate
-    if (options->windowSnapZone || options->borderSnapZone) {  // || options->centerSnapZone )
-        const bool sOWO = options->snapOnlyWhenOverlapping;
+    if (options->windowSnapZone() || options->borderSnapZone()) {  // || options->centerSnapZone )
+        const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
         const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
@@ -533,7 +533,7 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
         int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
         // border snap
-        int snap = options->borderSnapZone; //snap trigger
+        int snap = options->borderSnapZone(); //snap trigger
         if (snap) {
             deltaX = int(snap);
             deltaY = int(snap);
@@ -603,7 +603,7 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
         }
 
         // windows snap
-        snap = options->windowSnapZone;
+        snap = options->windowSnapZone();
         if (snap) {
             deltaX = int(snap);
             deltaY = int(snap);
@@ -2427,7 +2427,7 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
 
 int Client::checkFullScreenHack(const QRect& geom) const
 {
-    if (!options->legacyFullscreenSupport)
+    if (!options->isLegacyFullscreenSupport())
         return 0;
     // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
     if (noBorder() && app_noborder && isFullScreenable(true)) {

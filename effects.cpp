@@ -718,7 +718,7 @@ QString EffectsHandlerImpl::desktopName(int desktop) const
 
 bool EffectsHandlerImpl::optionRollOverDesktops() const
 {
-    return options->rollOverDesktops;
+    return options->isRollOverDesktops();
 }
 
 double EffectsHandlerImpl::animationTimeFactor() const

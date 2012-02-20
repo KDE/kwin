@@ -58,13 +58,13 @@ void Placement::place(Client* c, QRect& area)
     }
 
     if (c->isUtility())
-        placeUtility(c, area, options->placement);
+        placeUtility(c, area, options->placement());
     else if (c->isDialog())
-        placeDialog(c, area, options->placement);
+        placeDialog(c, area, options->placement());
     else if (c->isSplash())
         placeOnMainWindow(c, area);   // on mainwindow, if any, otherwise centered
     else
-        place(c, area, options->placement);
+        place(c, area, options->placement());
 }
 
 void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacement)
@@ -72,7 +72,7 @@ void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacemen
     if (policy == Unknown)
         policy = Default;
     if (policy == Default)
-        policy = options->placement;
+        policy = options->placement();
     if (policy == NoPlacement)
         return;
     else if (policy == Random)

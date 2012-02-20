@@ -274,7 +274,7 @@ bool Client::manage(Window w, bool isMapped)
     else
         usePosition = true;
     if (!rules()->checkIgnoreGeometry(!usePosition)) {
-        bool ignorePPosition = options->ignorePositionClasses.contains(
+        bool ignorePPosition = options->ignorePositionClasses().contains(
                                    QString::fromLatin1(resourceClass()));
 
         if (((xSizeHint.flags & PPosition) && !ignorePPosition) ||
@@ -307,8 +307,8 @@ bool Client::manage(Window w, bool isMapped)
     bool dontKeepInArea = false;
     setTabGroup(NULL);
     if (!noBorder()) {
-        const bool autogrouping = rules()->checkAutogrouping(options->autogroupSimilarWindows);
-        const bool autogroupInFg = rules()->checkAutogroupInForeground(options->autogroupInForeground);
+        const bool autogrouping = rules()->checkAutogrouping(options->isAutogroupSimilarWindows());
+        const bool autogroupInFg = rules()->checkAutogroupInForeground(options->isAutogroupInForeground());
         // Automatically add to previous groups on session restore
         if (session && session->tabGroupClient && session->tabGroupClient != this) {
             tabBehind(session->tabGroupClient, autogroupInFg);
@@ -563,7 +563,7 @@ bool Client::manage(Window w, bool isMapped)
                 break;
             }
         if (!belongs_to_desktop && workspace()->showingDesktop())
-            workspace()->resetShowingDesktop(options->showDesktopIsMinimizeAll);
+            workspace()->resetShowingDesktop(options->isShowDesktopIsMinimizeAll());
 
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0))
             workspace()->restackClientUnderActive(this);
@@ -706,7 +706,7 @@ Client* Client::findAutogroupCandidate() const
         return NULL;
 
     // If we don't have an ID take a guess
-    if (rules()->checkAutogrouping(options->autogroupSimilarWindows)) {
+    if (rules()->checkAutogrouping(options->isAutogroupSimilarWindows())) {
         QByteArray wRole = truncatedWindowRole(windowRole());
         foreach (Client *c, workspace()->clientList()) {
             if (desktop() != c->desktop() || activities() != c->activities())

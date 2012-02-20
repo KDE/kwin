@@ -78,106 +78,155 @@ public:
       </ul>
      */
     enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStrictlyUnderMouse };
-    FocusPolicy focusPolicy;
-    bool nextFocusPrefersMouse;
+    FocusPolicy focusPolicy() const {
+        return m_focusPolicy;
+    }
+    bool isNextFocusPrefersMouse() const {
+        return m_nextFocusPrefersMouse;
+    }
 
     /**
        Whether clicking on a window raises it in FocusFollowsMouse
        mode or not.
      */
-    bool clickRaise;
+    bool isClickRaise() const {
+        return m_clickRaise;
+    }
 
     /**
        whether autoraise is enabled FocusFollowsMouse mode or not.
      */
-    bool autoRaise;
+    bool isAutoRaise() const {
+        return m_autoRaise;
+    }
 
     /**
        autoraise interval
      */
-    int autoRaiseInterval;
+    int autoRaiseInterval() const {
+        return m_autoRaiseInterval;
+    }
 
     /**
        delayed focus interval
      */
-    int delayFocusInterval;
+    int delayFocusInterval() const {
+        return m_delayFocusInterval;
+    }
 
     /**
        Whether shade hover is enabled or not
      */
-    bool shadeHover;
+    bool isShadeHover() const {
+        return m_shadeHover;
+    }
 
     /**
        shade hover interval
      */
-    int shadeHoverInterval;
+    int shadeHoverInterval() {
+        return m_shadeHoverInterval;
+    }
 
     /**
      * Whether tiling is enabled or not
      */
-    bool tilingOn;
+    bool isTilingOn() const {
+        return m_tilingOn;
+    }
+    void setTilingOn(bool enabled) {
+        m_tilingOn = enabled;
+    }
 
     /**
      * Tiling Layout
      */
-    enum TilingLayoutFactory::Layouts tilingLayout;
+    TilingLayoutFactory::Layouts tilingLayout() const {
+        return m_tilingLayout;
+    }
 
     /**
      * Tiling window raise policy.
      */
-    int tilingRaisePolicy;
+    int tilingRaisePolicy() const {
+        return m_tilingRaisePolicy;
+    }
 
     // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
-    bool separateScreenFocus;
+    bool isSeparateScreenFocus() const {
+        return m_separateScreenFocus;
+    }
     // whether active Xinerama screen is the one with mouse (or with the active window)
-    bool activeMouseScreen;
+    bool isActiveMouseScreen() const {
+        return m_activeMouseScreen;
+    }
 
-    Placement::Policy placement;
+    Placement::Policy placement() const {
+        return m_placement;
+    }
 
     bool focusPolicyIsReasonable() {
-        return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;
+        return m_focusPolicy == ClickToFocus || m_focusPolicy == FocusFollowsMouse;
     }
 
     /**
      * the size of the zone that triggers snapping on desktop borders
      */
-    int borderSnapZone;
+    int borderSnapZone() const {
+        return m_borderSnapZone;
+    }
 
     /**
      * the size of the zone that triggers snapping with other windows
      */
-    int windowSnapZone;
+    int windowSnapZone() const {
+        return m_windowSnapZone;
+    }
 
     /**
      * the size of the zone that triggers snapping on the screen center
      */
-    int centerSnapZone;
+    int centerSnapZone() const {
+        return m_centerSnapZone;
+    }
 
 
     /**
      * snap only when windows will overlap
      */
-    bool snapOnlyWhenOverlapping;
+    bool isSnapOnlyWhenOverlapping() const {
+        return m_snapOnlyWhenOverlapping;
+    }
 
-    bool showDesktopIsMinimizeAll;
+    bool isShowDesktopIsMinimizeAll() const {
+        return m_showDesktopIsMinimizeAll;
+    }
 
     /**
      * whether or not we roll over to the other edge when switching desktops past the edge
      */
-    bool rollOverDesktops;
+    bool isRollOverDesktops() const {
+        return m_rollOverDesktops;
+    }
 
     // 0 - 4 , see Workspace::allowClientActivation()
-    int focusStealingPreventionLevel;
+    int focusStealingPreventionLevel() const {
+        return m_focusStealingPreventionLevel;
+    }
 
     /**
      * List of window classes to ignore PPosition size hint
      */
-    QStringList ignorePositionClasses;
+    const QStringList &ignorePositionClasses() const {
+        return m_ignorePositionClasses;
+    }
 
     /**
     * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
     */
-    bool legacyFullscreenSupport;
+    bool isLegacyFullscreenSupport() const {
+        return m_legacyFullscreenSupport;
+    }
 
     bool checkIgnoreFocusStealing(const Client* c);
 
@@ -314,14 +363,24 @@ public:
     }
 
     // timeout before non-responding application will be killed after attempt to close
-    int killPingTimeout;
+    int killPingTimeout() const {
+        return m_killPingTimeout;
+    }
 
     // Whether to hide utility windows for inactive applications.
-    bool hideUtilityWindowsForInactive;
+    bool isHideUtilityWindowsForInactive() const {
+        return m_hideUtilityWindowsForInactive;
+    }
 
-    bool inactiveTabsSkipTaskbar;
-    bool autogroupSimilarWindows;
-    bool autogroupInForeground;
+    bool isInactiveTabsSkipTaskbar() const {
+        return m_inactiveTabsSkipTaskbar;
+    }
+    bool isAutogroupSimilarWindows() const {
+        return m_autogroupSimilarWindows;
+    }
+    bool isAutogroupInForeground() const {
+        return m_autogroupInForeground;
+    }
 
     // Desktop effects
     double animationTimeFactor() const;
@@ -329,30 +388,105 @@ public:
     //----------------------
     // Compositing settings
     void reloadCompositingSettings(bool force = false);
-    CompositingType compositingMode;
-    bool useCompositing; // Separate to mode so the user can toggle
-    bool compositingInitialized;
+    CompositingType compositingMode() const {
+        return m_compositingMode;
+    }
+    void setCompositingMode(CompositingType mode) {
+        m_compositingMode = mode;
+    }
+    // Separate to mode so the user can toggle
+    bool isUseCompositing() const {
+        return m_useCompositing;
+    }
+    bool isCompositingInitialized() const {
+        return m_compositingInitialized;
+    }
+    void setCompositingInitialized(bool set) {
+        m_compositingInitialized = set;
+    }
 
     // General preferences
-    HiddenPreviews hiddenPreviews;
-    bool unredirectFullscreen;
+    HiddenPreviews hiddenPreviews() const {
+        return m_hiddenPreviews;
+    }
+    bool isUnredirectFullscreen() const {
+        return m_unredirectFullscreen;
+    }
     // OpenGL
-    int glSmoothScale;  // 0 = no, 1 = yes when transformed,
+    // 0 = no, 1 = yes when transformed,
     // 2 = try trilinear when transformed; else 1,
     // -1 = auto
-    bool glVSync;
+    int glSmoothScale() const {
+        return m_glSmoothScale;
+    }
+    bool isGlVSync() const {
+        return m_glVSync;
+    }
     // XRender
-    bool xrenderSmoothScale;
+    bool isXrenderSmoothScale() const {
+        return m_xrenderSmoothScale;
+    }
 
-    uint maxFpsInterval;
+    uint maxFpsInterval() const {
+        return m_maxFpsInterval;
+    }
     // Settings that should be auto-detected
-    uint refreshRate;
-    bool glDirect;
-    bool glStrictBinding;
+    uint refreshRate() const {
+        return m_refreshRate;
+    }
+    bool isGlDirect() const {
+        return m_glDirect;
+    }
+    bool isGlStrictBinding() const {
+        return m_glStrictBinding;
+    }
 
     //----------------------
 
 private:
+    FocusPolicy m_focusPolicy;
+    bool m_nextFocusPrefersMouse;
+    bool m_clickRaise;
+    bool m_autoRaise;
+    int m_autoRaiseInterval;
+    int m_delayFocusInterval;
+    bool m_shadeHover;
+    int m_shadeHoverInterval;
+    bool m_tilingOn;
+    TilingLayoutFactory::Layouts m_tilingLayout;
+    int m_tilingRaisePolicy;
+    bool m_separateScreenFocus;
+    bool m_activeMouseScreen;
+    Placement::Policy m_placement;
+    int m_borderSnapZone;
+    int m_windowSnapZone;
+    int m_centerSnapZone;
+    bool m_snapOnlyWhenOverlapping;
+    bool m_showDesktopIsMinimizeAll;
+    bool m_rollOverDesktops;
+    int m_focusStealingPreventionLevel;
+    QStringList m_ignorePositionClasses;
+    bool m_legacyFullscreenSupport;
+    int m_killPingTimeout;
+    bool m_hideUtilityWindowsForInactive;
+    bool m_inactiveTabsSkipTaskbar;
+    bool m_autogroupSimilarWindows;
+    bool m_autogroupInForeground;
+
+    CompositingType m_compositingMode;
+    bool m_useCompositing;
+    bool m_compositingInitialized;
+    HiddenPreviews m_hiddenPreviews;
+    bool m_unredirectFullscreen;
+    int m_glSmoothScale;
+    bool m_glVSync;
+    bool m_xrenderSmoothScale;
+    uint m_maxFpsInterval;
+    // Settings that should be auto-detected
+    uint m_refreshRate;
+    bool m_glDirect;
+    bool m_glStrictBinding;
+
     WindowOperation OpTitlebarDblClick;
 
     // mouse bindings

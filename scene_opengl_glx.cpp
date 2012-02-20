@@ -76,7 +76,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         glDrawBuffer(GL_BACK);
     // Check whether certain features are supported
     has_waitSync = false;
-    if (glXGetVideoSync && glXIsDirect(display(), ctxbuffer) && options->glVSync) {
+    if (glXGetVideoSync && glXIsDirect(display(), ctxbuffer) && options->isGlVSync()) {
         unsigned int sync;
         if (glXGetVideoSync(&sync) == 0) {
             if (glXWaitVideoSync(1, 0, &sync) == 0)
@@ -168,7 +168,7 @@ bool SceneOpenGL::initTfp()
 
 bool SceneOpenGL::initRenderingContext()
 {
-    bool direct_rendering = options->glDirect;
+    bool direct_rendering = options->isGlDirect();
     KXErrorHandler errs1;
     ctxbuffer = glXCreateNewContext(display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
                                     direct_rendering ? GL_TRUE : GL_FALSE);
@@ -608,7 +608,7 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
     if (m_glxpixmap != None) {
-        if (!options->glStrictBinding) {
+        if (!options->isGlStrictBinding()) {
             glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
         }
         glXDestroyPixmap(display(), m_glxpixmap);
@@ -722,7 +722,7 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
 
 void SceneOpenGL::TexturePrivate::onDamage()
 {
-    if (options->glStrictBinding && m_glxpixmap) {
+    if (options->isGlStrictBinding() && m_glxpixmap) {
         glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
         glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
     }

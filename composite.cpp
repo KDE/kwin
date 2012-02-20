@@ -90,7 +90,7 @@ void Workspace::setupCompositing()
         return;
     }
 
-    if (!options->compositingInitialized)
+    if (!options->isCompositingInitialized())
         options->reloadCompositingSettings(true);
 
     char selection_name[ 100 ];
@@ -99,7 +99,7 @@ void Workspace::setupCompositing()
     connect(cm_selection, SIGNAL(lostOwnership()), SLOT(lostCMSelection()));
     cm_selection->claim(true);   // force claiming
 
-    switch(options->compositingMode) {
+    switch(options->compositingMode()) {
     case OpenGLCompositing: {
         kDebug(1212) << "Initializing OpenGL compositing";
 
@@ -155,7 +155,7 @@ void Workspace::setupCompositing()
         return;
     }
     xrrRefreshRate = KWin::currentRefreshRate();
-    fpsInterval = (options->maxFpsInterval << 10);
+    fpsInterval = (options->maxFpsInterval() << 10);
     if (scene->waitSyncAvailable()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
         vBlankInterval = (1000 << 10) / xrrRefreshRate;
         fpsInterval -= (fpsInterval % vBlankInterval);
@@ -235,7 +235,7 @@ void Workspace::fallbackToXRenderCompositing()
         restartKWin("automatic graphicssystem change for XRender backend");
         return;
     } else {
-        options->compositingMode = XRenderCompositing;
+        options->setCompositingMode(XRenderCompositing);
         setupCompositing();
     }
 }
@@ -480,7 +480,7 @@ bool Workspace::compositingActive()
 // force is needed when the list of windows changes (e.g. a window goes away)
 void Workspace::checkUnredirect(bool force)
 {
-    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
         return;
     if (force)
         forceUnredirectCheck = true;
@@ -490,7 +490,7 @@ void Workspace::checkUnredirect(bool force)
 
 void Workspace::delayedCheckUnredirect()
 {
-    if (!compositing() || scene->overlayWindow()->window() == None || !options->unredirectFullscreen)
+    if (!compositing() || scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;

@@ -487,7 +487,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         return;
 
     // Update the texture filter
-    if (options->glSmoothScale != 0 &&
+    if (options->glSmoothScale() != 0 &&
         (mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
         filter = ImageFilterGood;
     else

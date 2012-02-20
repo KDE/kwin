@@ -53,8 +53,8 @@ namespace KWin
 int currentRefreshRate()
 {
     int rate = -1;
-    if (options->refreshRate > 0)   // use manually configured refresh rate
-        rate = options->refreshRate;
+    if (options->refreshRate() > 0)   // use manually configured refresh rate
+        rate = options->refreshRate();
 #ifndef KWIN_HAVE_OPENGLES
     else if (GLPlatform::instance()->driver() == Driver_NVidia) {
         QProcess nvidia_settings;
@@ -92,7 +92,7 @@ Options::Options()
     : electric_borders(0)
     , electric_border_delay(0)
 {
-    compositingInitialized = false;
+    m_compositingInitialized = false;
     updateSettings();
 }
 
@@ -112,60 +112,60 @@ unsigned long Options::updateSettings()
     QString val;
 
     val = config.readEntry("FocusPolicy", "ClickToFocus");
-    focusPolicy = ClickToFocus; // what a default :-)
+    m_focusPolicy = ClickToFocus; // what a default :-)
     if (val == "FocusFollowsMouse")
-        focusPolicy = FocusFollowsMouse;
+        m_focusPolicy = FocusFollowsMouse;
     else if (val == "FocusUnderMouse")
-        focusPolicy = FocusUnderMouse;
+        m_focusPolicy = FocusUnderMouse;
     else if (val == "FocusStrictlyUnderMouse")
-        focusPolicy = FocusStrictlyUnderMouse;
+        m_focusPolicy = FocusStrictlyUnderMouse;
 
-    nextFocusPrefersMouse = config.readEntry("NextFocusPrefersMouse", false);
+    m_nextFocusPrefersMouse = config.readEntry("NextFocusPrefersMouse", false);
 
-    separateScreenFocus = config.readEntry("SeparateScreenFocus", false);
-    activeMouseScreen = config.readEntry("ActiveMouseScreen", focusPolicy != ClickToFocus);
+    m_separateScreenFocus = config.readEntry("SeparateScreenFocus", false);
+    m_activeMouseScreen = config.readEntry("ActiveMouseScreen", m_focusPolicy != ClickToFocus);
 
-    rollOverDesktops = config.readEntry("RollOverDesktops", true);
+    m_rollOverDesktops = config.readEntry("RollOverDesktops", true);
 
-    legacyFullscreenSupport = config.readEntry("LegacyFullscreenSupport", false);
+    m_legacyFullscreenSupport = config.readEntry("LegacyFullscreenSupport", false);
 
 //    focusStealingPreventionLevel = config.readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
-    focusStealingPreventionLevel = config.readEntry("FocusStealingPreventionLevel", 1);
-    focusStealingPreventionLevel = qMax(0, qMin(4, focusStealingPreventionLevel));
+    m_focusStealingPreventionLevel = config.readEntry("FocusStealingPreventionLevel", 1);
+    m_focusStealingPreventionLevel = qMax(0, qMin(4, m_focusStealingPreventionLevel));
     if (!focusPolicyIsReasonable())  // #48786, comments #7 and later
-        focusStealingPreventionLevel = 0;
+        m_focusStealingPreventionLevel = 0;
 
 #ifdef KWIN_BUILD_DECORATIONS
-    placement = Placement::policyFromString(config.readEntry("Placement"), true);
+    m_placement = Placement::policyFromString(config.readEntry("Placement"), true);
 #else
-    placement = Placement::Maximizing;
+    m_placement = Placement::Maximizing;
 #endif
 
-    if (focusPolicy == ClickToFocus) {
-        autoRaise = false;
-        autoRaiseInterval = 0;
-        delayFocusInterval = 0;
+    if (m_focusPolicy == ClickToFocus) {
+        m_autoRaise = false;
+        m_autoRaiseInterval = 0;
+        m_delayFocusInterval = 0;
     } else {
-        autoRaise = config.readEntry("AutoRaise", false);
-        autoRaiseInterval = config.readEntry("AutoRaiseInterval", 0);
-        delayFocusInterval = config.readEntry("DelayFocusInterval", 0);
+        m_autoRaise = config.readEntry("AutoRaise", false);
+        m_autoRaiseInterval = config.readEntry("AutoRaiseInterval", 0);
+        m_delayFocusInterval = config.readEntry("DelayFocusInterval", 0);
     }
 
-    shadeHover = config.readEntry("ShadeHover", false);
-    shadeHoverInterval = config.readEntry("ShadeHoverInterval", 250);
+    m_shadeHover = config.readEntry("ShadeHover", false);
+    m_shadeHoverInterval = config.readEntry("ShadeHoverInterval", 250);
 
-    tilingOn = config.readEntry("TilingOn", false);
-    tilingLayout = static_cast<TilingLayoutFactory::Layouts>(config.readEntry("TilingDefaultLayout", 0));
-    tilingRaisePolicy = config.readEntry("TilingRaisePolicy", 0);
+    m_tilingOn = config.readEntry("TilingOn", false);
+    m_tilingLayout = static_cast<TilingLayoutFactory::Layouts>(config.readEntry("TilingDefaultLayout", 0));
+    m_tilingRaisePolicy = config.readEntry("TilingRaisePolicy", 0);
 
     // important: autoRaise implies ClickRaise
-    clickRaise = autoRaise || config.readEntry("ClickRaise", true);
+    m_clickRaise = m_autoRaise || config.readEntry("ClickRaise", true);
 
-    borderSnapZone = config.readEntry("BorderSnapZone", 10);
-    windowSnapZone = config.readEntry("WindowSnapZone", 10);
-    centerSnapZone = config.readEntry("CenterSnapZone", 0);
-    snapOnlyWhenOverlapping = config.readEntry("SnapOnlyWhenOverlapping", false);
+    m_borderSnapZone = config.readEntry("BorderSnapZone", 10);
+    m_windowSnapZone = config.readEntry("WindowSnapZone", 10);
+    m_centerSnapZone = config.readEntry("CenterSnapZone", 0);
+    m_snapOnlyWhenOverlapping = config.readEntry("SnapOnlyWhenOverlapping", false);
 
     // Electric borders
     KConfigGroup borderConfig(_config, "ElectricBorders");
@@ -189,12 +189,12 @@ unsigned long Options::updateSettings()
     setOpMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
     setOpMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
-    ignorePositionClasses = config.readEntry("IgnorePositionClasses", QStringList());
+    m_ignorePositionClasses = config.readEntry("IgnorePositionClasses", QStringList());
     ignoreFocusStealingClasses = config.readEntry("IgnoreFocusStealingClasses", QStringList());
     // Qt3.2 and older had resource class all lowercase, but Qt3.3 has it capitalized
     // therefore Client::resourceClass() forces lowercase, force here lowercase as well
-    for (QStringList::Iterator it = ignorePositionClasses.begin();
-            it != ignorePositionClasses.end();
+    for (QStringList::Iterator it = m_ignorePositionClasses.begin();
+            it != m_ignorePositionClasses.end();
             ++it)
         (*it) = (*it).toLower();
     for (QStringList::Iterator it = ignoreFocusStealingClasses.begin();
@@ -202,12 +202,12 @@ unsigned long Options::updateSettings()
             ++it)
         (*it) = (*it).toLower();
 
-    killPingTimeout = config.readEntry("KillPingTimeout", 5000);
-    hideUtilityWindowsForInactive = config.readEntry("HideUtilityWindowsForInactive", true);
-    inactiveTabsSkipTaskbar = config.readEntry("InactiveTabsSkipTaskbar", false);
-    autogroupSimilarWindows = config.readEntry("AutogroupSimilarWindows", false);
-    autogroupInForeground = config.readEntry("AutogroupInForeground", true);
-    showDesktopIsMinimizeAll = config.readEntry("ShowDesktopIsMinimizeAll", false);
+    m_killPingTimeout = config.readEntry("KillPingTimeout", 5000);
+    m_hideUtilityWindowsForInactive = config.readEntry("HideUtilityWindowsForInactive", true);
+    m_inactiveTabsSkipTaskbar = config.readEntry("InactiveTabsSkipTaskbar", false);
+    m_autogroupSimilarWindows = config.readEntry("AutogroupSimilarWindows", false);
+    m_autogroupInForeground = config.readEntry("AutogroupInForeground", true);
+    m_showDesktopIsMinimizeAll = config.readEntry("ShowDesktopIsMinimizeAll", false);
 
     borderless_maximized_windows = config.readEntry("BorderlessMaximizedWindows", false);
 
@@ -231,8 +231,8 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel", "Nothing"));
 
     config = KConfigGroup(_config, "Compositing");
-    maxFpsInterval = qRound(1000.0 / config.readEntry("MaxFPS", 60));
-    refreshRate = config.readEntry("RefreshRate", 0);
+    m_maxFpsInterval = qRound(1000.0 / config.readEntry("MaxFPS", 60));
+    m_refreshRate = config.readEntry("RefreshRate", 0);
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
@@ -244,7 +244,7 @@ unsigned long Options::updateSettings()
 // KDE4 this probably needs to be done manually in clients
 
     // Driver-specific config detection
-    compositingInitialized = false;
+    m_compositingInitialized = false;
     reloadCompositingSettings();
 
     return changed;
@@ -257,29 +257,29 @@ void Options::reloadCompositingSettings(bool force)
 
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if (compositingBackend == "XRender")
-        compositingMode = XRenderCompositing;
+        m_compositingMode = XRenderCompositing;
     else
-        compositingMode = OpenGLCompositing;
+        m_compositingMode = OpenGLCompositing;
 
-    useCompositing = false;
+    m_useCompositing = false;
     if (const char *c = getenv("KWIN_COMPOSE")) {
         switch(c[0]) {
         case 'O':
             kDebug(1212) << "Compositing forced to OpenGL mode by environment variable";
-            compositingMode = OpenGLCompositing;
-            useCompositing = true;
+            m_compositingMode = OpenGLCompositing;
+            m_useCompositing = true;
             break;
         case 'X':
             kDebug(1212) << "Compositing forced to XRender mode by environment variable";
-            compositingMode = XRenderCompositing;
-            useCompositing = true;
+            m_compositingMode = XRenderCompositing;
+            m_useCompositing = true;
             break;
         case 'N':
             if (getenv("KDE_FAILSAFE"))
                 kDebug(1212) << "Compositing disabled forcefully by KDE failsafe mode";
             else
                 kDebug(1212) << "Compositing disabled forcefully by environment variable";
-            compositingMode = NoCompositing;
+            m_compositingMode = NoCompositing;
             break;
         default:
             kDebug(1212) << "Unknown KWIN_COMPOSE mode set, ignoring";
@@ -287,42 +287,42 @@ void Options::reloadCompositingSettings(bool force)
         }
     }
 
-    if (compositingMode == NoCompositing)
+    if (m_compositingMode == NoCompositing)
         return; // do not even detect compositing preferences if explicitly disabled
 
     // it's either enforced by env or by initial resume from "suspend" or we check the settings
-    useCompositing = useCompositing || force || config.readEntry("Enabled", true);
+    m_useCompositing = m_useCompositing || force || config.readEntry("Enabled", true);
 
-    if (!useCompositing)
+    if (!m_useCompositing)
         return; // not enforced or necessary and not "enabled" by setting
 
     // from now on we've an initial setup and don't have to reload settigns on compositing activation
     // see Workspace::setupCompositing(), composite.cpp
-    compositingInitialized = true;
+    m_compositingInitialized = true;
 
     // Compositing settings
     CompositingPrefs prefs;
     prefs.detect();
 
-    useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
-    glDirect = prefs.enableDirectRendering();
-    glVSync = config.readEntry("GLVSync", prefs.enableVSync());
-    glSmoothScale = qBound(-1, config.readEntry("GLTextureFilter", 2), 2);
-    glStrictBinding = config.readEntry("GLStrictBinding", prefs.strictBinding());
+    m_useCompositing = config.readEntry("Enabled" , prefs.recommendCompositing());
+    m_glDirect = prefs.enableDirectRendering();
+    m_glVSync = config.readEntry("GLVSync", prefs.enableVSync());
+    m_glSmoothScale = qBound(-1, config.readEntry("GLTextureFilter", 2), 2);
+    m_glStrictBinding = config.readEntry("GLStrictBinding", prefs.strictBinding());
 
-    xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
+    m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 
-    hiddenPreviews = HiddenPreviewsShown;
+    m_hiddenPreviews = HiddenPreviewsShown;
     // 4 - off, 5 - shown, 6 - always, other are old values
     int hps = config.readEntry("HiddenPreviews", 5);
     if (hps == 4)
-        hiddenPreviews = HiddenPreviewsNever;
+        m_hiddenPreviews = HiddenPreviewsNever;
     else if (hps == 5)
-        hiddenPreviews = HiddenPreviewsShown;
+        m_hiddenPreviews = HiddenPreviewsShown;
     else if (hps == 6)
-        hiddenPreviews = HiddenPreviewsAlways;
+        m_hiddenPreviews = HiddenPreviewsAlways;
 
-    unredirectFullscreen = config.readEntry("UnredirectFullscreen", false);
+    m_unredirectFullscreen = config.readEntry("UnredirectFullscreen", false);
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", 3), 6);
 }
 

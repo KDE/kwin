@@ -449,7 +449,7 @@ bool Workspace::activateNextClient(Client* c)
 
     Client* get_focus = NULL;
 
-    if (options->nextFocusPrefersMouse) {
+    if (options->isNextFocusPrefersMouse()) {
         get_focus = clientUnderMouse(c ? c->screen() : activeScreen());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
             // should rather not happen, but it cannot get the focus. rest of usability is tested above
@@ -460,14 +460,14 @@ bool Workspace::activateNextClient(Client* c)
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
 
         // first try to pass the focus to the (former) active clients leader
-        if (c  && (get_focus = c->transientFor()) && isUsableFocusCandidate(get_focus, c, options->separateScreenFocus)) {
+        if (c  && (get_focus = c->transientFor()) && isUsableFocusCandidate(get_focus, c, options->isSeparateScreenFocus())) {
             raiseClient(get_focus);   // also raise - we don't know where it came from
         } else {
             // nope, ask the focus chain for the next candidate
             get_focus = NULL; // reset from the inline assignment above
             for (int i = focus_chain[ currentDesktop()].size() - 1; i >= 0; --i) {
                 Client* ci = focus_chain[ currentDesktop()].at(i);
-                if (isUsableFocusCandidate(ci, c, options->separateScreenFocus)) {
+                if (isUsableFocusCandidate(ci, c, options->isSeparateScreenFocus())) {
                     get_focus = ci;
                     break; // we're done
                 }
@@ -545,7 +545,7 @@ bool Workspace::allowClientActivation(const Client* c, Time time, bool focus_in,
     // 4 - extreme - no window gets focus without user intervention
     if (time == -1U)
         time = c->userTime();
-    int level = c->rules()->checkFSP(options->focusStealingPreventionLevel);
+    int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (session_saving && level <= 2) { // <= normal
         return true;
     }
@@ -600,7 +600,7 @@ bool Workspace::allowClientActivation(const Client* c, Time time, bool focus_in,
 // to the same application
 bool Workspace::allowFullClientRaising(const Client* c, Time time)
 {
-    int level = c->rules()->checkFSP(options->focusStealingPreventionLevel);
+    int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (session_saving && level <= 2) { // <= normal
         return true;
     }
@@ -786,7 +786,7 @@ Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStart
                     first_window = false;
             }
             // don't refuse if focus stealing prevention is turned off
-            if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel) > 0) {
+            if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > 0) {
                 kDebug(1212) << "User timestamp, already exists:" << 0;
                 return 0; // refuse activation
             }

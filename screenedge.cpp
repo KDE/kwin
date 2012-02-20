@@ -309,19 +309,19 @@ void ScreenEdge::switchDesktop(ElectricBorder border, const QPoint& _pos)
     int desk = Workspace::self()->currentDesktop();
     const int OFFSET = 2;
     if (border == ElectricLeft || border == ElectricTopLeft || border == ElectricBottomLeft) {
-        desk = Workspace::self()->desktopToLeft(desk, options->rollOverDesktops);
+        desk = Workspace::self()->desktopToLeft(desk, options->isRollOverDesktops());
         pos.setX(displayWidth() - 1 - OFFSET);
     }
     if (border == ElectricRight || border == ElectricTopRight || border == ElectricBottomRight) {
-        desk = Workspace::self()->desktopToRight(desk, options->rollOverDesktops);
+        desk = Workspace::self()->desktopToRight(desk, options->isRollOverDesktops());
         pos.setX(OFFSET);
     }
     if (border == ElectricTop || border == ElectricTopLeft || border == ElectricTopRight) {
-        desk = Workspace::self()->desktopAbove(desk, options->rollOverDesktops);
+        desk = Workspace::self()->desktopAbove(desk, options->isRollOverDesktops());
         pos.setY(displayHeight() - 1 - OFFSET);
     }
     if (border == ElectricBottom || border == ElectricBottomLeft || border == ElectricBottomRight) {
-        desk = Workspace::self()->desktopBelow(desk, options->rollOverDesktops);
+        desk = Workspace::self()->desktopBelow(desk, options->isRollOverDesktops());
         pos.setY(OFFSET);
     }
     Client *c = Workspace::self()->getMovingClient();

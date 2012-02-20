@@ -1161,7 +1161,7 @@ void Client::updateVisibility()
     if (hidden && isCurrentTab()) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true, false);   // Also hide from taskbar
-        if (compositing() && options->hiddenPreviews == HiddenPreviewsAlways)
+        if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep(Allowed);
         else
             internalHide(Allowed);
@@ -1171,7 +1171,7 @@ void Client::updateVisibility()
         setSkipTaskbar(original_skip_taskbar, false);   // Reset from 'hidden'
     if (minimized) {
         info->setState(NET::Hidden, NET::Hidden);
-        if (compositing() && options->hiddenPreviews == HiddenPreviewsAlways)
+        if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep(Allowed);
         else
             internalHide(Allowed);
@@ -1179,14 +1179,14 @@ void Client::updateVisibility()
     }
     info->setState(0, NET::Hidden);
     if (!isOnCurrentDesktop()) {
-        if (compositing() && options->hiddenPreviews != HiddenPreviewsNever)
+        if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
             internalKeep(Allowed);
         else
             internalHide(Allowed);
         return;
     }
     if (!isOnCurrentActivity()) {
-        if (compositing() && options->hiddenPreviews != HiddenPreviewsNever)
+        if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
             internalKeep(Allowed);
         else
             internalHide(Allowed);
@@ -1425,14 +1425,14 @@ void Client::pingWindow()
 {
     if (!Pping)
         return; // Can't ping :(
-    if (options->killPingTimeout == 0)
+    if (options->killPingTimeout() == 0)
         return; // Turned off
     if (ping_timer != NULL)
         return; // Pinging already
     ping_timer = new QTimer(this);
     connect(ping_timer, SIGNAL(timeout()), SLOT(pingTimeout()));
     ping_timer->setSingleShot(true);
-    ping_timer->start(options->killPingTimeout);
+    ping_timer->start(options->killPingTimeout());
     ping_timestamp = xTime();
     workspace()->sendPingToWindow(window(), ping_timestamp);
 }
@@ -1967,7 +1967,7 @@ void Client::setClientShown(bool shown)
     if (shown != hidden)
         return; // nothing to change
     hidden = !shown;
-    if (options->inactiveTabsSkipTaskbar)
+    if (options->isInactiveTabsSkipTaskbar())
         setSkipTaskbar(hidden, false); // TODO: Causes reshuffle of the taskbar
     if (shown) {
         map(Allowed);
