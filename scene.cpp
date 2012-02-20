@@ -214,9 +214,6 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
         topw->resetRepaints(topw->decorationRect());
-        if (topw->hasShadow()) {
-            topw->resetRepaints(topw->shadow()->shadowRegion().boundingRect());
-        }
 
         WindowPrePaintData data;
         data.mask = orig_mask | (w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
@@ -273,9 +270,6 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
         topw->resetRepaints(topw->decorationRect());
-        if (topw->hasShadow()) {
-            topw->resetRepaints(topw->shadow()->shadowRegion().boundingRect());
-        }
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         if (w->isOpaque()) {
             // the window is fully opaque
