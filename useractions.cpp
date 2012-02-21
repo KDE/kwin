@@ -410,10 +410,8 @@ void Workspace::initDesktopPopup()
 
     desk_popup = new QMenu(popup);
     desk_popup->setFont(KGlobalSettings::menuFont());
-    connect(desk_popup, SIGNAL(triggered(QAction*)),
-            this, SLOT(slotSendToDesktop(QAction*)));
-    connect(desk_popup, SIGNAL(aboutToShow()),
-            this, SLOT(desktopPopupAboutToShow()));
+    connect(desk_popup, SIGNAL(triggered(QAction*)), SLOT(slotSendToDesktop(QAction*)));
+    connect(desk_popup, SIGNAL(aboutToShow()), SLOT(desktopPopupAboutToShow()));
 
     QAction *action = desk_popup->menuAction();
     // set it as the first item
@@ -618,6 +616,8 @@ void Workspace::clientPopupActivated(QAction *action)
 
     WindowOperation op = static_cast< WindowOperation >(action->data().toInt());
     Client* c = active_popup_client ? active_popup_client : active_client;
+    if (!c)
+        return;
     QString type;
     switch(op) {
     case FullScreenOp:
@@ -795,13 +795,17 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseRaise:
         workspace()->raiseClient(this);
         break;
-    case Options::MouseLower:
+    case Options::MouseLower: {
         workspace()->lowerClient(this);
-        // As this most likely makes the window no longer visible change the
-        // keyboard focus to the next available window.
-        //workspace()->activateNextClient( this ); // Doesn't work when we lower a child window
-        workspace()->activateClient(workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1));
+        // used to be activateNextClient(this), then topClientOnDesktop
+        // since this is a mouseOp it's however safe to use the client under the mouse instead
+        if (isActive()) {
+            Client *next = workspace()->clientUnderMouse(screen());
+            if (next && next != this)
+                workspace()->requestFocus(next, false);
+        }
         break;
+    }
     case Options::MouseShade :
         toggleShade();
         cancelShadeHoverTimer();
@@ -1095,17 +1099,18 @@ void Workspace::slotSwitchToDesktop()
         setCurrentDesktop(i);
 }
 
+#define USABLE_ACTIVE_CLIENT (active_client && !(active_client->isDesktop() || active_client->isDock()))
 
 void Workspace::slotWindowToDesktop()
 {
-    const int i = senderValue(sender());
-    if (i < 1)
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (i >= 1 && i <= numberOfDesktops() && c
-            && !c->isDesktop()
-            && !c->isDock())
-        sendClientToDesktop(c, i, true);
+    if (USABLE_ACTIVE_CLIENT) {
+        const int i = senderValue(sender());
+        if (i < 1)
+            return;
+
+        if (i >= 1 && i <= numberOfDesktops())
+            sendClientToDesktop(active_client, i, true);
+    }
 }
 
 void Workspace::slotSwitchToScreen()
@@ -1122,25 +1127,20 @@ void Workspace::slotSwitchToNextScreen()
 
 void Workspace::slotWindowToScreen()
 {
-    const int i = senderValue(sender());
-    if (i < 0)
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (i >= 0 && i <= numScreens() && c
-            && !c->isDesktop()
-            && !c->isDock()) {
-        sendClientToScreen(c, i);
+    if (USABLE_ACTIVE_CLIENT) {
+        const int i = senderValue(sender());
+        if (i < 0)
+            return;
+        if (i >= 0 && i <= numScreens()) {
+            sendClientToScreen(active_client, i);
+        }
     }
 }
 
 void Workspace::slotWindowToNextScreen()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c
-            && !c->isDesktop()
-            && !c->isDock()) {
-        sendClientToScreen(c, (c->screen() + 1) % numScreens());
-    }
+    if (USABLE_ACTIVE_CLIENT)
+        sendClientToScreen(active_client, (active_client->screen() + 1) % numScreens());
 }
 
 /*!
@@ -1148,9 +1148,8 @@ void Workspace::slotWindowToNextScreen()
  */
 void Workspace::slotWindowMaximize()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::MaximizeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::MaximizeOp);
 }
 
 /*!
@@ -1158,9 +1157,8 @@ void Workspace::slotWindowMaximize()
  */
 void Workspace::slotWindowMaximizeVertical()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::VMaximizeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::VMaximizeOp);
 }
 
 /*!
@@ -1168,9 +1166,8 @@ void Workspace::slotWindowMaximizeVertical()
  */
 void Workspace::slotWindowMaximizeHorizontal()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::HMaximizeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::HMaximizeOp);
 }
 
 
@@ -1179,8 +1176,8 @@ void Workspace::slotWindowMaximizeHorizontal()
  */
 void Workspace::slotWindowMinimize()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    performWindowOperation(c, Options::MinimizeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::MinimizeOp);
 }
 
 /*!
@@ -1188,8 +1185,8 @@ void Workspace::slotWindowMinimize()
  */
 void Workspace::slotWindowShade()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    performWindowOperation(c, Options::ShadeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::ShadeOp);
 }
 
 /*!
@@ -1197,9 +1194,8 @@ void Workspace::slotWindowShade()
  */
 void Workspace::slotWindowRaise()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        raiseClient(c);
+    if (USABLE_ACTIVE_CLIENT)
+        raiseClient(active_client);
 }
 
 /*!
@@ -1207,13 +1203,13 @@ void Workspace::slotWindowRaise()
  */
 void Workspace::slotWindowLower()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c) {
-        lowerClient(c);
+    if (USABLE_ACTIVE_CLIENT) {
+        lowerClient(active_client);
         // As this most likely makes the window no longer visible change the
         // keyboard focus to the next available window.
         //activateNextClient( c ); // Doesn't work when we lower a child window
-        activateClient(topClientOnDesktop(currentDesktop(), -1));
+        if (active_client->isActive())
+            activateClient(topClientOnDesktop(currentDesktop(), -1));
     }
 }
 
@@ -1222,50 +1218,43 @@ void Workspace::slotWindowLower()
   */
 void Workspace::slotWindowRaiseOrLower()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        raiseOrLowerClient(c);
+    if (USABLE_ACTIVE_CLIENT)
+        raiseOrLowerClient(active_client);
 }
 
 void Workspace::slotWindowOnAllDesktops()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        c->setOnAllDesktops(!c->isOnAllDesktops());
+    if (USABLE_ACTIVE_CLIENT)
+        active_client->setOnAllDesktops(!active_client->isOnAllDesktops());
 }
 
 void Workspace::slotWindowFullScreen()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::FullScreenOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::FullScreenOp);
 }
 
 void Workspace::slotWindowNoBorder()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::NoBorderOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::NoBorderOp);
 }
 
 void Workspace::slotWindowAbove()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::KeepAboveOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::KeepAboveOp);
 }
 
 void Workspace::slotWindowBelow()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::KeepBelowOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::KeepBelowOp);
 }
 void Workspace::slotSetupWindowShortcut()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c)
-        performWindowOperation(c, Options::SetupWindowShortcutOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::SetupWindowShortcutOp);
 }
 
 /*!
@@ -1281,7 +1270,8 @@ void Workspace::slotToggleShowDesktop()
  */
 void Workspace::slotWindowToNextDesktop()
 {
-    windowToNextDesktop(active_popup_client ? active_popup_client : active_client);
+    if (USABLE_ACTIVE_CLIENT)
+        windowToNextDesktop(active_client);
 }
 
 void Workspace::windowToNextDesktop(Client* c)
@@ -1302,7 +1292,8 @@ void Workspace::windowToNextDesktop(Client* c)
  */
 void Workspace::slotWindowToPreviousDesktop()
 {
-    windowToPreviousDesktop(active_popup_client ? active_popup_client : active_client);
+    if (USABLE_ACTIVE_CLIENT)
+        windowToPreviousDesktop(active_client);
 }
 
 void Workspace::windowToPreviousDesktop(Client* c)
@@ -1320,13 +1311,12 @@ void Workspace::windowToPreviousDesktop(Client* c)
 
 void Workspace::slotWindowToDesktopRight()
 {
-    int d = desktopToRight(currentDesktop(), options->rollOverDesktops);
-    if (d == currentDesktop())
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
+    if (USABLE_ACTIVE_CLIENT) {
+        int d = desktopToRight(currentDesktop(), options->rollOverDesktops);
+        if (d == currentDesktop())
+            return;
+
+        setClientIsMoving(active_client);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
     }
@@ -1334,13 +1324,12 @@ void Workspace::slotWindowToDesktopRight()
 
 void Workspace::slotWindowToDesktopLeft()
 {
-    int d = desktopToLeft(currentDesktop(), options->rollOverDesktops);
-    if (d == currentDesktop())
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
+    if (USABLE_ACTIVE_CLIENT) {
+        int d = desktopToLeft(currentDesktop(), options->rollOverDesktops);
+        if (d == currentDesktop())
+            return;
+
+        setClientIsMoving(active_client);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
     }
@@ -1348,13 +1337,12 @@ void Workspace::slotWindowToDesktopLeft()
 
 void Workspace::slotWindowToDesktopUp()
 {
-    int d = desktopAbove(currentDesktop(), options->rollOverDesktops);
-    if (d == currentDesktop())
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
+    if (USABLE_ACTIVE_CLIENT) {
+        int d = desktopAbove(currentDesktop(), options->rollOverDesktops);
+        if (d == currentDesktop())
+            return;
+
+        setClientIsMoving(active_client);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
     }
@@ -1362,13 +1350,12 @@ void Workspace::slotWindowToDesktopUp()
 
 void Workspace::slotWindowToDesktopDown()
 {
-    int d = desktopBelow(currentDesktop(), options->rollOverDesktops);
-    if (d == currentDesktop())
-        return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
+    if (USABLE_ACTIVE_CLIENT) {
+        int d = desktopBelow(currentDesktop(), options->rollOverDesktops);
+        if (d == currentDesktop())
+            return;
+
+        setClientIsMoving(active_client);
         setCurrentDesktop(d);
         setClientIsMoving(NULL);
     }
@@ -1586,8 +1573,8 @@ void Workspace::slotWindowClose()
     // TODO: why?
 //     if ( tab_box->isVisible())
 //         return;
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    performWindowOperation(c, Options::CloseOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::CloseOp);
 }
 
 /*!
@@ -1595,8 +1582,8 @@ void Workspace::slotWindowClose()
  */
 void Workspace::slotWindowMove()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    performWindowOperation(c, Options::UnrestrictedMoveOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::UnrestrictedMoveOp);
 }
 
 /*!
@@ -1604,9 +1591,11 @@ void Workspace::slotWindowMove()
  */
 void Workspace::slotWindowResize()
 {
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    performWindowOperation(c, Options::UnrestrictedResizeOp);
+    if (USABLE_ACTIVE_CLIENT)
+        performWindowOperation(active_client, Options::UnrestrictedResizeOp);
 }
+
+#undef USABLE_ACTIVE_CLIENT
 
 void Client::setShortcut(const QString& _cut)
 {

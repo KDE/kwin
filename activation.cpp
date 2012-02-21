@@ -403,6 +403,25 @@ static inline bool isUsableFocusCandidate(Client *c, Client *prev, bool respectS
            (!respectScreen || c->isOnScreen(prev ? prev->screen() : Workspace::self()->activeScreen()));
 }
 
+Client *Workspace::clientUnderMouse(int screen) const
+{
+    QList<Client*>::const_iterator it = stackingOrder().constEnd();
+    while (it != stackingOrder().constBegin()) {
+        Client *client = *(--it);
+
+        // rule out clients which are not really visible.
+        // the screen test is rather superflous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
+        if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
+                client->isOnCurrentActivity() && client->isOnScreen(screen)))
+            continue;
+
+        if (client->geometry().contains(QCursor::pos())) {
+            return client;
+        }
+    }
+    return 0;
+}
+
 // deactivates 'c' and activates next client
 bool Workspace::activateNextClient(Client* c)
 {
@@ -431,22 +450,10 @@ bool Workspace::activateNextClient(Client* c)
     Client* get_focus = NULL;
 
     if (options->nextFocusPrefersMouse) {
-        QList<Client*>::const_iterator it = stackingOrder().constEnd();
-        while (it != stackingOrder().constBegin()) {
-            Client *client = *(--it);
-
-            // rule out clients which are not really visible.
-            // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
-            if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
-                  client->isOnCurrentActivity() && client->isOnScreen(c ? c->screen() : activeScreen())))
-                continue;
-
-            if (client->geometry().contains(QCursor::pos())) {
-                if (client != c && !client->isDesktop()) // should rather not happen, but it cannot get the focus. rest of usability is tested above
-                    get_focus = client;
-                break; // unconditional break  - we do not pass the focus to some client below an unusable one
-            }
-
+        get_focus = clientUnderMouse(c ? c->screen() : activeScreen());
+        if (get_focus && (get_focus == c || get_focus->isDesktop())) {
+            // should rather not happen, but it cannot get the focus. rest of usability is tested above
+            get_focus = 0;
         }
     }
 

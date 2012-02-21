@@ -381,6 +381,7 @@ void Toplevel::getShadow()
     if (hasShadow())
         dirtyRect |= shadow()->shadowRegion().boundingRect();
     if (dirtyRect.isValid()) {
+        resetRepaints(dirtyRect);
         dirtyRect.translate(pos());
         workspace()->addRepaint(dirtyRect);
     }

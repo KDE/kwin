@@ -818,10 +818,15 @@ void Client::updateShape()
             noborder = true;
             updateDecoration(true);
         }
-    }
-    if (shape() && noBorder())
-        XShapeCombineShape(display(), frameId(), ShapeBounding,
+        if (noBorder())
+            XShapeCombineShape(display(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(), window(), ShapeBounding, ShapeSet);
+    } else if (app_noborder) {
+        XShapeCombineMask(display(), frameId(), ShapeBounding, 0, 0, None, ShapeSet);
+        detectNoBorder();
+        app_noborder = noborder;
+        updateDecoration(true);
+    }
 
     // Decoration mask (i.e. 'else' here) setting is done in setMask()
     // when the decoration calls it or when the decoration is created/destroyed

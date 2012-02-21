@@ -453,7 +453,7 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
         m_motionManager.manage(w);
         rearrangeWindows();
     }
-    if (w == effects->findWindow(m_closeView->winId())) {
+    if (m_closeView && w == effects->findWindow(m_closeView->winId())) {
         winData->visible = true;
         winData->highlight = 1.0;
         m_closeWindow = w;
@@ -527,7 +527,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     Q_UNUSED(w);
 
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
-    if (m_closeView->geometry().contains(me->pos())) {
+    if (m_closeView && m_closeView->geometry().contains(me->pos())) {
         if (!m_closeView->isVisible()) {
             updateCloseWindow();
         }
@@ -557,7 +557,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     }
     if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(me->pos()))
         updateCloseWindow();
-    else
+    else if (m_closeView)
         m_closeView->hide();
 
     if (e->type() == QEvent::MouseButtonRelease) {
@@ -966,7 +966,8 @@ void PresentWindowsEffect::rearrangeWindows()
         return;
 
     effects->addRepaintFull(); // Trigger the first repaint
-    m_closeView->hide();
+    if (m_closeView)
+        m_closeView->hide();
 
     // Work out which windows are on which screens
     EffectWindowList windowlist;
@@ -1600,8 +1601,10 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         m_highlightedWindow = NULL;
         m_windowFilter.clear();
 
-        m_closeView = new CloseWindowView();
-        connect(m_closeView, SIGNAL(close()), SLOT(closeWindow()));
+        if (!m_doNotCloseWindows) {
+            m_closeView = new CloseWindowView();
+            connect(m_closeView, SIGNAL(close()), SLOT(closeWindow()));
+        }
 
         // Add every single window to m_windowData (Just calling [w] creates it)
         foreach (EffectWindow * w, effects->stackingOrder()) {
@@ -1770,7 +1773,7 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
         return false;
     if (w->isSkipSwitcher())
         return false;
-    if (w == effects->findWindow(m_closeView->winId()))
+    if (m_closeView && w == effects->findWindow(m_closeView->winId()))
         return false;
     if (m_tabBoxEnabled)
         return true;

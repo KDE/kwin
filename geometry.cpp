@@ -1591,10 +1591,12 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     kDebug(1212) << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<
                             bool(maximizeMode() & MaximizeVertical) <<
                             bool(maximizeMode() & MaximizeHorizontal);
-    if (maximizeMode() & MaximizeVertical)
-        value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
-    if (maximizeMode() & MaximizeHorizontal)
-        value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+    if (!app_noborder) { //
+        if (maximizeMode() & MaximizeVertical)
+            value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
+        if (maximizeMode() & MaximizeHorizontal)
+            value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+    }
     if (!(value_mask & (CWX|CWWidth|CWY|CWHeight))) {
         kDebug(1212) << "DENIED";
         return; // nothing to (left) to do for use - bugs #158974, #252314

@@ -257,6 +257,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
         topw->resetRepaints();
+
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         if (w->isOpaque()) {
             // the window is fully opaque
