@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "thumbnailitem.h"
 #include <kwindowsystem.h>
+#include "../client.h"
+#include "../workspace.h"
 
 namespace KWin
 {
@@ -152,9 +154,14 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
 
 void DeclarativeView::showEvent(QShowEvent *event)
 {
+#ifndef TABBOX_KCM
     if (tabBox->embedded()) {
-        connect(KWindowSystem::self(), SIGNAL(windowChanged(WId,uint)), SLOT(slotWindowChanged(WId, uint)));
+        Client *c = Workspace::self()->findClient(WindowMatchPredicate(tabBox->embedded()));
+        if (c) {
+            connect(c, SIGNAL(geometryChanged()), this, SLOT(slotUpdateGeometry()));
+        }
     }
+#endif
     updateQmlSource();
     m_currentScreenGeometry = Kephal::ScreenUtils::screenGeometry(tabBox->activeScreen());
     rootObject()->setProperty("screenWidth", m_currentScreenGeometry.width());
@@ -193,9 +200,14 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
 void DeclarativeView::hideEvent(QHideEvent *event)
 {
     QWidget::hideEvent(event);
+#ifndef TABBOX_KCM
     if (tabBox->embedded()) {
-        disconnect(KWindowSystem::self(), SIGNAL(windowChanged(WId,uint)), this, SLOT(slotWindowChanged(WId,uint)));
+        Client *c = Workspace::self()->findClient(WindowMatchPredicate(tabBox->embedded()));
+        if (c) {
+            disconnect(c, SIGNAL(geometryChanged()), this, SLOT(slotUpdateGeometry()));
+        }
     }
+#endif
 }
 
 bool DeclarativeView::x11Event(XEvent *e)
