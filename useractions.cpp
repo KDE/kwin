@@ -1130,7 +1130,7 @@ void Workspace::slotSwitchToDesktop()
         setCurrentDesktop(i);
 }
 
-#define USABLE_ACTIVE_CLIENT (!active_client || (active_client->isDesktop() || active_client->isDock()))
+#define USABLE_ACTIVE_CLIENT (active_client && !(active_client->isDesktop() || active_client->isDock()))
 
 void Workspace::slotWindowToDesktop()
 {
