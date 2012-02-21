@@ -88,8 +88,9 @@ int currentRefreshRate()
     return rate;
 }
 
-Options::Options()
-    : electric_borders(0)
+Options::Options(QObject *parent)
+    : QObject(parent)
+    , electric_borders(0)
     , electric_border_delay(0)
 {
     m_compositingInitialized = false;
@@ -246,6 +247,8 @@ unsigned long Options::updateSettings()
     // Driver-specific config detection
     m_compositingInitialized = false;
     reloadCompositingSettings();
+
+    emit configChanged();
 
     return changed;
 }

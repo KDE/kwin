@@ -37,11 +37,169 @@ namespace KWin
 class Client;
 class CompositingPrefs;
 
-class Options : public KDecorationOptions
+class Options : public QObject, public KDecorationOptions
 {
+    Q_OBJECT
+    Q_ENUMS(FocusPolicy)
+    Q_ENUMS(MouseCommand)
+    Q_ENUMS(MouseWheelCommand)
+
+    Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy NOTIFY configChanged)
+    Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse NOTIFY configChanged)
+    /**
+       Whether clicking on a window raises it in FocusFollowsMouse
+       mode or not.
+     */
+    Q_PROPERTY(bool clickRaise READ isClickRaise NOTIFY configChanged)
+    /**
+       whether autoraise is enabled FocusFollowsMouse mode or not.
+     */
+    Q_PROPERTY(bool autoRaise READ isAutoRaise NOTIFY configChanged)
+    /**
+       autoraise interval
+     */
+    Q_PROPERTY(int autoRaiseInterval READ autoRaiseInterval NOTIFY configChanged)
+    /**
+       delayed focus interval
+     */
+    Q_PROPERTY(int delayFocusInterval READ delayFocusInterval NOTIFY configChanged)
+    /**
+       Whether shade hover is enabled or not
+     */
+    Q_PROPERTY(bool shadeHover READ isShadeHover NOTIFY configChanged)
+    /**
+       shade hover interval
+     */
+    Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval NOTIFY configChanged)
+    /**
+     * Whether tiling is enabled or not
+     */
+    Q_PROPERTY(bool tiling  READ isTilingOn WRITE setTilingOn NOTIFY configChanged)
+    Q_PROPERTY(int tilingLayout READ tilingLayout NOTIFY configChanged)
+    /**
+     * Tiling window raise policy.
+     */
+    Q_PROPERTY(int tilingRaisePolicy READ tilingRaisePolicy NOTIFY configChanged)
+    /**
+     * whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
+     **/
+    Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus NOTIFY configChanged)
+    /**
+     * whether active Xinerama screen is the one with mouse (or with the active window)
+     **/
+    Q_PROPERTY(bool activeMouseScreen READ isActiveMouseScreen NOTIFY configChanged)
+    Q_PROPERTY(int placement READ placement NOTIFY configChanged)
+    Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY configChanged)
+    /**
+     * the size of the zone that triggers snapping on desktop borders
+     */
+    Q_PROPERTY(int borderSnapZone READ borderSnapZone NOTIFY configChanged)
+    /**
+     * the size of the zone that triggers snapping with other windows
+     */
+    Q_PROPERTY(int windowSnapZone READ windowSnapZone NOTIFY configChanged)
+    /**
+     * the size of the zone that triggers snapping on the screen center
+     */
+    Q_PROPERTY(int centerSnapZone READ centerSnapZone NOTIFY configChanged)
+    /**
+     * snap only when windows will overlap
+     */
+    Q_PROPERTY(bool snapOnlyWhenOverlapping READ isSnapOnlyWhenOverlapping NOTIFY configChanged)
+    Q_PROPERTY(bool showDesktopIsMinimizeAll READ isShowDesktopIsMinimizeAll NOTIFY configChanged)
+    /**
+     * whether or not we roll over to the other edge when switching desktops past the edge
+     */
+    Q_PROPERTY(bool rollOverDesktops READ isRollOverDesktops NOTIFY configChanged)
+    /**
+     * 0 - 4 , see Workspace::allowClientActivation()
+     **/
+    Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel NOTIFY configChanged)
+    /**
+     * List of window classes to ignore PPosition size hint
+     */
+    Q_PROPERTY(QStringList ignorePositionClasses READ ignorePositionClasses NOTIFY configChanged)
+    /**
+    * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
+    */
+    Q_PROPERTY(bool legacyFullscreenSupport READ isLegacyFullscreenSupport NOTIFY configChanged)
+    Q_PROPERTY(WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandActiveTitlebar1 READ commandActiveTitlebar1 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandActiveTitlebar2 READ commandActiveTitlebar2 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandActiveTitlebar3 READ commandActiveTitlebar3 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandInactiveTitlebar1 READ commandInactiveTitlebar1 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandInactiveTitlebar2 READ commandInactiveTitlebar2 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandInactiveTitlebar3 READ commandInactiveTitlebar3 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandWindow1 READ commandWindow1 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandWindow2 READ commandWindow2 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandWindow3 READ commandWindow3 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandWindowWheel READ commandWindowWheel NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandAll1 READ commandAll1 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandAll2 READ commandAll2 NOTIFY configChanged)
+    Q_PROPERTY(MouseCommand commandAll3 READ commandAll3 NOTIFY configChanged)
+    Q_PROPERTY(uint keyCmdAllModKey READ keyCmdAllModKey NOTIFY configChanged)
+    /**
+    * whether the Geometry Tip should be shown during a window move/resize.
+    */
+    Q_PROPERTY(bool showGeometryTip READ showGeometryTip NOTIFY configChanged)
+    /**
+    * Whether electric borders are enabled. With electric borders
+    * you can change desktop by moving the mouse pointer towards the edge
+    * of the screen
+    */
+    Q_PROPERTY(bool electricBorders READ electricBorders NOTIFY configChanged)
+    /**
+    * the activation delay for electric borders in milliseconds.
+    */
+    Q_PROPERTY(int electricBorderDelay READ electricBorderDelay NOTIFY configChanged)
+    /**
+    * the trigger cooldown for electric borders in milliseconds.
+    */
+    Q_PROPERTY(int electricBorderCooldown READ electricBorderCooldown NOTIFY configChanged)
+    /**
+    * the number of pixels the mouse cursor is pushed back when it reaches the screen edge.
+    */
+    Q_PROPERTY(int electricBorderPushbackPixels READ electricBorderPushbackPixels NOTIFY configChanged)
+    /**
+    * Whether a window gets maximized when it reaches top screen edge while being moved.
+    */
+    Q_PROPERTY(bool electricBorderMaximize READ electricBorderMaximize NOTIFY configChanged)
+    /**
+    * Whether a window is tiled to half screen when reaching left or right screen edge while been moved
+    */
+    Q_PROPERTY(bool electricBorderTiling READ electricBorderTiling NOTIFY configChanged)
+    Q_PROPERTY(bool borderlessMaximizedWindows READ borderlessMaximizedWindows NOTIFY configChanged)
+    /**
+     * timeout before non-responding application will be killed after attempt to close
+     **/
+    Q_PROPERTY(int killPingTimeout READ killPingTimeout NOTIFY configChanged)
+    /**
+     * Whether to hide utility windows for inactive applications.
+     **/
+    Q_PROPERTY(bool hideUtilityWindowsForInactive READ isHideUtilityWindowsForInactive NOTIFY configChanged)
+    Q_PROPERTY(bool inactiveTabsSkipTaskbar READ isInactiveTabsSkipTaskbar NOTIFY configChanged)
+    Q_PROPERTY(bool autogroupSimilarWindows READ isAutogroupSimilarWindows NOTIFY configChanged)
+    Q_PROPERTY(bool autogroupInForeground READ isAutogroupInForeground NOTIFY configChanged)
+    Q_PROPERTY(int compositingMode READ compositingMode NOTIFY configChanged)
+    Q_PROPERTY(bool useCompositing READ isUseCompositing NOTIFY configChanged)
+    Q_PROPERTY(bool compositingInitialized READ isCompositingInitialized WRITE setCompositingInitialized NOTIFY configChanged)
+    Q_PROPERTY(int hiddenPreviews READ hiddenPreviews NOTIFY configChanged)
+    Q_PROPERTY(bool unredirectFullscreen READ isUnredirectFullscreen NOTIFY configChanged)
+    /**
+     * 0 = no, 1 = yes when transformed,
+     * 2 = try trilinear when transformed; else 1,
+     * -1 = auto
+     **/
+    Q_PROPERTY(int glSmoothScale READ glSmoothScale NOTIFY configChanged)
+    Q_PROPERTY(bool glVSync READ isGlVSync NOTIFY configChanged)
+    Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale NOTIFY configChanged)
+    Q_PROPERTY(uint maxFpsInterval READ maxFpsInterval NOTIFY configChanged)
+    Q_PROPERTY(uint refreshRate READ refreshRate NOTIFY configChanged)
+    Q_PROPERTY(bool glDirect READ isGlDirect NOTIFY configChanged)
+    Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding NOTIFY configChanged)
 public:
 
-    Options();
+    Options(QObject *parent = NULL);
     ~Options();
 
     virtual unsigned long updateSettings();
@@ -442,6 +600,8 @@ public:
     }
 
     //----------------------
+Q_SIGNALS:
+    void configChanged();
 
 private:
     FocusPolicy m_focusPolicy;
