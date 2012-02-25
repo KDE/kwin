@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QDeclarativeView;
 class QScriptEngine;
 class QScriptValue;
+class KConfigGroup;
 
 namespace KWin
 {
@@ -37,11 +38,13 @@ class AbstractScript : public QObject
 {
     Q_OBJECT
 public:
-    AbstractScript(int id, QString scriptName, QObject *parent = NULL);
+    AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
     ~AbstractScript();
     QString fileName() const {
         return m_scriptFile.fileName();
     }
+
+    KConfigGroup config() const;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void stop();
@@ -50,6 +53,9 @@ public Q_SLOTS:
 protected:
     QFile &scriptFile() {
         return m_scriptFile;
+    }
+    const QString &pluginName() {
+        return m_pluginName;
     }
     bool running() const {
         return m_running;
@@ -65,9 +71,12 @@ protected:
         return m_workspace;
     }
 
+    void installScriptFunctions(QScriptEngine *engine);
+
 private:
     int m_scriptId;
     QFile m_scriptFile;
+    QString m_pluginName;
     bool m_running;
     WorkspaceWrapper *m_workspace;
 };
@@ -78,7 +87,7 @@ class Script : public AbstractScript
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
 
-    Script(int id, QString scriptName, QObject *parent = NULL);
+    Script(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
     virtual ~Script();
 
     void printMessage(const QString &message);
@@ -106,7 +115,7 @@ class DeclarativeScript : public AbstractScript
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
-    explicit DeclarativeScript(int id, QString scriptName, QObject *parent = 0);
+    explicit DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent = 0);
     virtual ~DeclarativeScript();
 
 public Q_SLOTS:
@@ -138,8 +147,8 @@ public:
       */
     void start();
     ~Scripting();
-    Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath);
-    Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath);
+    Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
+    Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
 
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);

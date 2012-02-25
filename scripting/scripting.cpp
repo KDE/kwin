@@ -57,17 +57,41 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
     return engine->undefinedValue();
 }
 
-KWin::AbstractScript::AbstractScript (int id, QString scriptName, QObject *parent)
+QScriptValue kwinScriptReadConfig(QScriptContext *context, QScriptEngine *engine)
+{
+    KWin::AbstractScript *script = qobject_cast<KWin::AbstractScript*>(context->callee().data().toQObject());
+    if (context->argumentCount() < 1 || context->argumentCount() > 2) {
+        kDebug(1212) << "Incorrect number of arguments";
+        return engine->undefinedValue();
+    }
+    const QString key = context->argument(0).toString();
+    QVariant defaultValue;
+    if (context->argumentCount() == 2) {
+        defaultValue = context->argument(1).toVariant();
+    }
+    return engine->newVariant(script->config().readEntry(key, defaultValue));
+}
+
+KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : QObject(parent)
     , m_scriptId(id)
+    , m_pluginName(pluginName)
     , m_running(false)
     , m_workspace(new WorkspaceWrapper(this))
 {
     m_scriptFile.setFileName(scriptName);
+    if (m_pluginName.isNull()) {
+        m_pluginName = scriptName;
+    }
 }
 
 KWin::AbstractScript::~AbstractScript()
 {
+}
+
+KConfigGroup KWin::AbstractScript::config() const
+{
+    return KGlobal::config()->group("Script-" + m_pluginName);
 }
 
 void KWin::AbstractScript::stop()
@@ -75,8 +99,20 @@ void KWin::AbstractScript::stop()
     deleteLater();
 }
 
-KWin::Script::Script(int id, QString scriptName, QObject *parent)
-    : AbstractScript(id, scriptName, parent)
+void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
+{
+    // add our print
+    QScriptValue printFunc = engine->newFunction(kwinScriptPrint);
+    printFunc.setData(engine->newQObject(this));
+    engine->globalObject().setProperty("print", printFunc);
+    // add read config
+    QScriptValue configFunc = engine->newFunction(kwinScriptReadConfig);
+    configFunc.setData(engine->newQObject(this));
+    engine->globalObject().setProperty("readConfig", configFunc);
+}
+
+KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)
+    : AbstractScript(id, scriptName, pluginName, parent)
     , m_engine(new QScriptEngine(this))
 {
     QDBusConnection::sessionBus().registerObject('/' + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
@@ -110,10 +146,7 @@ void KWin::Script::run()
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
         KWin::MetaScripting::registration(m_engine);
         KWin::MetaScripting::supplyConfig(m_engine);
-        // add our print
-        QScriptValue printFunc = m_engine->newFunction(kwinScriptPrint);
-        printFunc.setData(m_engine->newQObject(this));
-        m_engine->globalObject().setProperty("print", printFunc);
+        installScriptFunctions(m_engine);
 
         QScriptValue ret = m_engine->evaluate(scriptFile().readAll());
 
@@ -142,8 +175,8 @@ void KWin::Script::sigException(const QScriptValue& exception)
     emit printError(exception.toString());
 }
 
-KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QObject *parent)
-    : AbstractScript(id, scriptName, parent)
+KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)
+    : AbstractScript(id, scriptName, pluginName, parent)
     , m_view(new QDeclarativeView())
 {
 }
@@ -168,10 +201,13 @@ void KWin::DeclarativeScript::run()
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         m_view->engine()->addImportPath(importPath);
     }
+
+    // add read config
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_view->engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
+    installScriptFunctions(kdeclarative.scriptEngine());
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     qmlRegisterType<WorkspaceWrapper>("org.kde.kwin", 0, 1, "KWin");
 
@@ -216,9 +252,9 @@ void KWin::Scripting::start()
             continue;
         }
         if (javaScript) {
-            loadScript(file);
+            loadScript(file, pluginName);
         } else if (declarativeScript) {
-            loadDeclarativeScript(file);
+            loadDeclarativeScript(file, pluginName);
         }
     }
 
@@ -237,19 +273,19 @@ void KWin::Scripting::scriptDestroyed(QObject *object)
     scripts.removeAll(static_cast<KWin::Script*>(object));
 }
 
-int KWin::Scripting::loadScript(const QString &filePath)
+int KWin::Scripting::loadScript(const QString &filePath, const QString& pluginName)
 {
     const int id = scripts.size();
-    KWin::Script *script = new KWin::Script(id, filePath, this);
+    KWin::Script *script = new KWin::Script(id, filePath, pluginName, this);
     connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
     scripts.append(script);
     return id;
 }
 
-int KWin::Scripting::loadDeclarativeScript(const QString &filePath)
+int KWin::Scripting::loadDeclarativeScript(const QString& filePath, const QString& pluginName)
 {
     const int id = scripts.size();
-    KWin::DeclarativeScript *script = new KWin::DeclarativeScript(id, filePath, this);
+    KWin::DeclarativeScript *script = new KWin::DeclarativeScript(id, filePath, pluginName, this);
     connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
     scripts.append(script);
     return id;
