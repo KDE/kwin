@@ -26,6 +26,7 @@
 #include "kcommondecoration_p.h"
 
 #include <QApplication>
+#include <QBasicTimer>
 #include <QCursor>
 #include <QDateTime>
 #include <QLabel>
@@ -693,32 +694,67 @@ void KCommonDecoration::slotKeepBelow()
     setKeepBelow(!keepBelow());
 }
 
+static QBasicTimer* timer = NULL;
 void KCommonDecoration::menuButtonPressed()
 {
-    static QTime* t = NULL;
-    static KCommonDecoration* lastClient = NULL;
-    if (t == NULL)
-        t = new QTime;
-    bool dbl = (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
-    lastClient = this;
-    t->start();
-    if (!dbl || !decorationBehaviour(DB_MenuClose)) {
-        QRect menuRect = m_button[MenuButton]->rect();
-        QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
-        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight()) + QPoint(0, 2);
+    if (decorationBehaviour(DB_MenuClose)) {
+        if (timer == NULL) {
+            timer = new QBasicTimer();
+        }
+        if (!timer->isActive()) {
+            timer->start(150, this);
+        }
+        // double click behavior
+        static QTime* t = NULL;
+        static KCommonDecoration* lastClient = NULL;
+        if (t == NULL) {
+            t = new QTime;
+        }
+        if (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval()) {
+            closing = true;
+        } else {
+            lastClient = this;
+            t->start();
+        }
+    } else {
         KDecorationFactory* f = factory();
-        showWindowMenu(QRect(menutop, menubottom));
+        doShowWindowMenu();
         if (!f->exists(decoration()))   // 'this' was deleted
             return;
         m_button[MenuButton]->setDown(false);
-    } else
-        closing = true;
+    }
 }
 
 void KCommonDecoration::menuButtonReleased()
 {
-    if (closing)
+    if (closing) {
+        if (timer && timer->isActive()) {
+            timer->stop();
+        }
         closeWindow();
+    }
+}
+
+void KCommonDecoration::timerEvent(QTimerEvent *event)
+{
+    if (timer && event->timerId() == timer->timerId()) {
+        timer->stop();
+        closing = false;
+        if (!m_button[MenuButton]->isDown()) {
+            return;
+        }
+        doShowWindowMenu();
+        return;
+    }
+    QObject::timerEvent(event);
+}
+
+void KCommonDecoration::doShowWindowMenu()
+{
+    QRect menuRect = m_button[MenuButton]->rect();
+    QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
+    QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight()) + QPoint(0, 2);
+    showWindowMenu(QRect(menutop, menubottom));
 }
 
 void KCommonDecoration::resizeEvent(QResizeEvent */*e*/)

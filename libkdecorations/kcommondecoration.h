@@ -352,6 +352,9 @@ public:
     const KDecoration* decoration() const;
     KDecoration* decoration();
 
+protected:
+    virtual void timerEvent(QTimerEvent *event);
+
 private Q_SLOTS:
     /* look out for buttons that have been destroyed. */
     void objDestroyed(QObject *obj);
@@ -361,6 +364,7 @@ private:
 
     void moveWidget(int x, int y, QWidget *widget) const;
     void resizeWidget(int w, int h, QWidget *widget) const;
+    void doShowWindowMenu();
 
     typedef QVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
     int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
