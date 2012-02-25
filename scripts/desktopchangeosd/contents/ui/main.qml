@@ -30,13 +30,22 @@ Item {
     // we count desktops starting from 0 to have it better match the layout in the Grid
     property int currentDesktop: 0
     property int previousDesktop: 0
-    // TODO: read from config
     property int animationDuration: 1000
     property bool showGrid: true
+
+    function loadConfig() {
+        root.animationDuration = readConfig("PopupHideDelay", 1000);
+        if (readConfig("TextOnly", "false") == "true") {
+            root.showGrid = false;
+        } else {
+            root.showGrid = true;
+        }
+    }
     Component.onCompleted: {
         var screen = workspace.clientArea(KWin.FullScreenArea, workspace.activeScreen, workspace.currentDesktop);
         root.screenWidth = screen.width;
         root.screenHeight = screen.height;
+        loadConfig();
     }
     PlasmaCore.Dialog {
         id: dialog
@@ -283,5 +292,9 @@ Item {
             timer.start();
             dialog.visible = true;
         }
+    }
+    Connections {
+        target: options
+        onConfigChanged: root.loadConfig()
     }
 }
