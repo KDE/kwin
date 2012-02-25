@@ -270,8 +270,9 @@ void KWinDesktopConfig::load()
 #endif
 
     // Popup info
-    KConfigGroup popupInfo(m_config, "PopupInfo");
-    m_ui->popupInfoCheckBox->setChecked(popupInfo.readEntry("ShowPopup", false));
+    KConfigGroup effectconfig(m_config, "Plugins");
+    KConfigGroup popupInfo(m_config, "Script-desktopchangeosd");
+    m_ui->popupInfoCheckBox->setChecked(effectconfig.readEntry("desktopchangeosdEnabled", false));
     m_ui->popupHideSpinBox->setValue(popupInfo.readEntry("PopupHideDelay", 1000));
     m_ui->desktopLayoutIndicatorCheckBox->setChecked(!popupInfo.readEntry("TextOnly", false));
 
@@ -281,7 +282,6 @@ void KWinDesktopConfig::load()
 
     // Effect for desktop switching
     // Set current option to "none" if no plugin is activated.
-    KConfigGroup effectconfig(m_config, "Plugins");
     m_ui->effectComboBox->setCurrentIndex(0);
     if (effectEnabled("slide", effectconfig))
         m_ui->effectComboBox->setCurrentIndex(1);
@@ -345,8 +345,9 @@ void KWinDesktopConfig::save()
 #endif
 
     // Popup info
-    KConfigGroup popupInfo(m_config, "PopupInfo");
-    popupInfo.writeEntry("ShowPopup", m_ui->popupInfoCheckBox->isChecked());
+    KConfigGroup effectconfig(m_config, "Plugins");
+    KConfigGroup popupInfo(m_config, "Script-desktopchangeosd");
+    effectconfig.writeEntry("desktopchangeosdEnabled", m_ui->popupInfoCheckBox->isChecked());
     popupInfo.writeEntry("PopupHideDelay", m_ui->popupHideSpinBox->value());
     popupInfo.writeEntry("TextOnly", !m_ui->desktopLayoutIndicatorCheckBox->isChecked());
 
@@ -355,7 +356,6 @@ void KWinDesktopConfig::save()
     windowConfig.writeEntry("RollOverDesktops", m_ui->wrapAroundBox->isChecked());
 
     // Effect desktop switching
-    KConfigGroup effectconfig(m_config, "Plugins");
     int desktopSwitcher = m_ui->effectComboBox->currentIndex();
     switch(desktopSwitcher) {
     case 0:
