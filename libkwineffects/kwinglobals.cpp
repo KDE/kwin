@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPaintEngine>
 #include <QPixmap>
 
-#include <config-workspace.h>
 #include <config-X11.h>
 
 #include <assert.h>

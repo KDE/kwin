@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCENE_XRENDER_H
 #define KWIN_SCENE_XRENDER_H
 
-#include <config-workspace.h>
-
 #include "scene.h"
 #include "shadow.h"
 
