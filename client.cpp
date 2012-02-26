@@ -2223,10 +2223,12 @@ void Client::removeSyncSupport()
         setReadyForPainting();
         return;
     }
+#ifdef HAVE_XSYNC
     syncRequest.isPending = false;
     syncRequest.counter = syncRequest.alarm = None;
     delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
     syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
+#endif
 }
 
 bool Client::wantsTabFocus() const

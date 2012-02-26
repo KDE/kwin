@@ -660,10 +660,10 @@ void Client::damageNotifyEvent(XDamageNotifyEvent* e)
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
         if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
             setReadyForPainting();
+    }
 #else
         setReadyForPainting();
 #endif
-    }
 
     Toplevel::damageNotifyEvent(e);
 }

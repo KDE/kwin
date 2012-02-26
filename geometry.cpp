@@ -2657,8 +2657,10 @@ void Client::leaveMoveResize()
     move_resize_grab_window = None;
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
+#ifdef HAVE_XSYNC
     delete syncRequest.timeout;
     syncRequest.timeout = NULL;
+#endif
 #ifdef KWIN_BUILD_SCREENEDGES
     if (options->electricBorders() == Options::ElectricMoveOnly ||
             options->electricBorderMaximize() ||
@@ -2739,8 +2741,10 @@ void Client::delayedMoveResize()
 
 void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 {
+#ifdef HAVE_XSYNC
     if (syncRequest.isPending && isResize())
         return; // we're still waiting for the client or the timeout
+#endif
 
     if ((mode == PositionCenter && !isMovableAcrossScreens())
             || (mode != PositionCenter && (isShade() || !isResizable())))
