@@ -69,6 +69,13 @@ void TranslucencyEffect::reconfigure(ReconfigureFlags)
 
 void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
+    // We keep track of the windows that was last active so we know
+    // which one to fade out and which ones to paint as fully inactive
+    if (w == active && w != current) {
+        previous = current;
+        current = w;
+    }
+
     moveresize_timeline.setCurrentTime(moveresize_timeline.currentTime() + time);
     activeinactive_timeline.setCurrentTime(activeinactive_timeline.currentTime() + time);
 
@@ -77,13 +84,15 @@ void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& dat
         // don't clear PAINT_WINDOW_OPAQUE, contents are not affected
         data.clip &= w->contentsRect().translated(w->pos());  // decoration cannot clip
     }
-    if (inactive != 1.0 && isInactive(w))
+    if (inactive != 1.0 && (isInactive(w) || activeinactive_timeline.currentValue() < 1.0))
         data.setTranslucent();
-    if ((moveresize != 1.0 && (w->isUserMove() || w->isUserResize()))
-            || (dialogs != 1.0 && w->isDialog())) {
+    else if (moveresize != 1.0 && (w->isUserMove() || w->isUserResize() || w == fadeout)) {
         data.setTranslucent();
     }
-    if ((dropdownmenus != 1.0 && w->isDropdownMenu())
+    else if (dialogs != 1.0 && w->isDialog()) {
+        data.setTranslucent();
+    }
+    else if ((dropdownmenus != 1.0 && w->isDropdownMenu())
             || (popupmenus != 1.0 && w->isPopupMenu())
             || (tornoffmenus != 1.0 && w->isMenu())
             || (comboboxpopups != 1.0 && w->isComboBox())) {
@@ -95,13 +104,6 @@ void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& dat
 
 void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    // We keep track of the windows that was last active so we know
-    // which one to fade out and which ones to paint as fully inactive
-    if (w == active && w != current) {
-        previous = current;
-        current = w;
-    }
-
     if (w->isDesktop() || w->isDock()) {
         effects->paintWindow(w, mask, region, data);
         return;
@@ -114,6 +116,8 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
             data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.currentValue())));
             if (activeinactive_timeline.currentValue() < 1.0)
                 w->addRepaintFull();
+            else
+                previous = NULL;
         }
     } else {
         // Fading in
@@ -136,8 +140,7 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
                 data.opacity *= (moveresize + ((1.0 - moveresize) * (1.0 - progress)));
                 if (progress < 1.0 && progress > 0.0) {
                     w->addRepaintFull();
-                    if (fadeout != w)
-                        fadeout = w;
+                    fadeout = w;
                 }
             } else {
                 // Fading back to more opaque
