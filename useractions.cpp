@@ -40,7 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tiling/tiling.h"
 #endif
 
+#ifdef KWIN_BUILD_ACTIVITIES
 #include <KActivities/Info>
+#endif
 
 #include <fixx11h.h>
 #include <QPushButton>
@@ -494,6 +496,7 @@ void Workspace::activityPopupAboutToShow()
     if (!activity_popup)
         return;
 
+#ifdef KWIN_BUILD_ACTIVITIES
     activity_popup->clear();
     QAction *action = activity_popup->addAction(i18n("&All Activities"));
     action->setData(QString());
@@ -515,6 +518,7 @@ void Workspace::activityPopupAboutToShow()
                 !active_popup_client->isOnAllActivities() && active_popup_client->isOnActivity(id))
             action->setChecked(true);
     }
+#endif
 }
 
 void Workspace::closeActivePopup()

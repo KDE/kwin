@@ -246,9 +246,11 @@ Workspace::Workspace(bool restore)
     connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*,QSize,QSize)), &screenChangedTimer, SLOT(start()));
     connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*,QPoint,QPoint)), &screenChangedTimer, SLOT(start()));
 
+#ifdef KWIN_BUILD_ACTIVITIES
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
     connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));
     connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(activityAdded(QString)));
+#endif
 
     connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
     screenChangedTimer.setSingleShot(true);
@@ -379,8 +381,10 @@ void Workspace::init()
     }
     if (!setCurrentDesktop(initial_desktop))
         setCurrentDesktop(1);
+#ifdef KWIN_BUILD_ACTIVITIES
     allActivities_ = activityController_.listActivities();
     updateCurrentActivity(activityController_.currentActivity());
+#endif
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
     initPositioning = new Placement(this);

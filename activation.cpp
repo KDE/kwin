@@ -284,12 +284,14 @@ void Workspace::activateClient(Client* c, bool force)
         setCurrentDesktop(c->desktop());
         --block_focus;
     }
+#ifdef KWIN_BUILD_ACTIVITIES
     if (!c->isOnCurrentActivity()) {
         ++block_focus;
         //DBUS!
         activityController_.setCurrentActivity(c->activities().first());   //first isn't necessarily best, but it's easiest
         --block_focus;
     }
+#endif
     if (c->isMinimized())
         c->unminimize();
 

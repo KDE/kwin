@@ -32,10 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <kmanagerselection.h>
 
+// need to include utils.h before we use the ifdefs
+#include "utils.h"
+#ifdef KWIN_BUILD_ACTIVITIES
 #include <KActivities/Controller>
+#endif
 
 #include "plugins.h"
-#include "utils.h"
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -305,7 +308,9 @@ private:
     QString activity_;
     QStringList allActivities_;
 
+#ifdef KWIN_BUILD_ACTIVITIES
     KActivities::Controller activityController_;
+#endif
 
 #ifdef KWIN_BUILD_TILING
     Tiling* m_tiling;
@@ -332,7 +337,11 @@ public:
         return allActivities_;
     }
     QStringList openActivityList() const {
+#ifdef KWIN_BUILD_ACTIVITIES
         return activityController_.listActivities(KActivities::Info::Running);
+#else
+        return QStringList();
+#endif
     }
 
     // True when performing Workspace::updateClientArea().
