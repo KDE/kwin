@@ -28,10 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 #include "kwingltexture_p.h"
 
-#ifdef HAVE_XSHM
-#include <X11/extensions/XShm.h>
-#endif
-
 namespace KWin
 {
 
