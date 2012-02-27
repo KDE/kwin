@@ -219,6 +219,14 @@ class Client
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
     /**
+     * Indicates that the window should not be included on a taskbar.
+     **/
+    Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
+    /**
+     * Indicates that the window should not be included on a Pager.
+     **/
+    Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
+    /**
      * The "Window Tabs" Group this Client belongs to.
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged)
@@ -363,7 +371,7 @@ public:
     void checkNoBorder();
 
     bool skipTaskbar(bool from_outside = false) const;
-    void setSkipTaskbar(bool set, bool from_outside);
+    void setSkipTaskbar(bool set, bool from_outside = false);
 
     bool skipPager() const;
     void setSkipPager(bool);
@@ -676,6 +684,8 @@ signals:
     void moveResizedChanged();
     void iconChanged();
     void skipSwitcherChanged();
+    void skipTaskbarChanged();
+    void skipPagerChanged();
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
      * another group, but not when a Client gets added or removed to the Client's ClientGroup.

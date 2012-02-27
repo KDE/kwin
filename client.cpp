@@ -1514,6 +1514,7 @@ void Client::setSkipTaskbar(bool b, bool from_outside)
     if (was_wants_tab_focus != wantsTabFocus())
         workspace()->updateFocusChains(this,
                                        isActive() ? Workspace::FocusChainMakeFirst : Workspace::FocusChainUpdate);
+    emit skipTaskbarChanged();
 }
 
 void Client::setSkipPager(bool b)
@@ -1524,6 +1525,7 @@ void Client::setSkipPager(bool b)
     skip_pager = b;
     info->setState(b ? NET::SkipPager : 0, NET::SkipPager);
     updateWindowRules(Rules::SkipPager);
+    emit skipPagerChanged();
 }
 
 void Client::setSkipSwitcher(bool set)
