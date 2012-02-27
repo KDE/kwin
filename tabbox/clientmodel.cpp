@@ -82,7 +82,8 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     case MinimizedRole:
         return m_clientList[ clientIndex ]->isMinimized();
     case CloseableRole:
-        return m_clientList[ clientIndex ]->isCloseable();
+        //clients that claim to be first are not closeable
+        return m_clientList[ clientIndex ]->isCloseable() && !m_clientList[ clientIndex ]->isFirstInTabBox();
     default:
         return QVariant();
     }
