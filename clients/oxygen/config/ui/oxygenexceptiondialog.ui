@@ -159,16 +159,32 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
   </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>exceptionType</tabstop>
+  <tabstop>exceptionEditor</tabstop>
+  <tabstop>detectDialogButton</tabstop>
+  <tabstop>frameBorderCheckBox</tabstop>
+  <tabstop>frameBorderComboBox</tabstop>
+  <tabstop>blendColorCheckBox</tabstop>
+  <tabstop>blendColorComboBox</tabstop>
+  <tabstop>sizeGripCheckBox</tabstop>
+  <tabstop>sizeGripComboBox</tabstop>
+  <tabstop>titleOutlineCheckBox</tabstop>
+  <tabstop>titleOutlineComboBox</tabstop>
+  <tabstop>separatorCheckBox</tabstop>
+  <tabstop>separatorComboBox</tabstop>
+  <tabstop>hideTitleBar</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

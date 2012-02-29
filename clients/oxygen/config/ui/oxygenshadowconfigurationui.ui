@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
-    <height>118</height>
+    <width>180</width>
+    <height>112</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -99,16 +99,23 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
    <class>KColorButton</class>
    <extends>QPushButton</extends>
    <header>kcolorbutton.h</header>
   </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>shadowSize</tabstop>
+  <tabstop>verticalOffset</tabstop>
+  <tabstop>innerColor</tabstop>
+  <tabstop>outerColor</tabstop>
+  <tabstop>useOuterColor</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

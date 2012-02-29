@@ -96,6 +96,14 @@
    <header>kpushbutton.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>exceptionListView</tabstop>
+  <tabstop>moveUpButton</tabstop>
+  <tabstop>moveDownButton</tabstop>
+  <tabstop>addButton</tabstop>
+  <tabstop>removeButton</tabstop>
+  <tabstop>editButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

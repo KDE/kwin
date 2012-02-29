@@ -336,6 +336,21 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>frameBorder</tabstop>
+  <tabstop>titleAlignment</tabstop>
+  <tabstop>buttonSize</tabstop>
+  <tabstop>animationsEnabled</tabstop>
+  <tabstop>_expertModeButton</tabstop>
+  <tabstop>blendColor</tabstop>
+  <tabstop>sizeGripMode</tabstop>
+  <tabstop>separatorMode</tabstop>
+  <tabstop>titleOutline</tabstop>
+  <tabstop>narrowButtonSpacing</tabstop>
+  <tabstop>inactiveShadowConfiguration</tabstop>
+  <tabstop>activeShadowConfiguration</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
