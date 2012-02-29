@@ -975,9 +975,9 @@ namespace Oxygen
     QPixmap Client::renderTitleText( const QRect& rect, const QString& caption, const QColor& color, bool elide ) const
     {
 
-        QPixmap out( rect.size() );
         if( !rect.isValid() ) return QPixmap();
 
+        QPixmap out( rect.size() );
         out.fill( Qt::transparent );
         if( caption.isEmpty() || !color.isValid() ) return out;
 
@@ -1686,7 +1686,6 @@ namespace Oxygen
                 geometry.adjust( 0, 0,  - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 );
 
             } else if( !( isActive() && configuration().drawTitleOutline() ) ) {
-
 
                 geometry.adjust(
                     buttonsLeftWidth() + layoutMetric( LM_TitleEdgeLeft ) , 0,
