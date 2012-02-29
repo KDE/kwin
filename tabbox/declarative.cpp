@@ -287,6 +287,7 @@ void DeclarativeView::setCurrentIndex(const QModelIndex &index)
 void DeclarativeView::currentIndexChanged(int row)
 {
     tabBox->setCurrentIndex(m_model->index(row, 0));
+    KWindowSystem::forceActiveWindow(m_model->data(m_model->index(row, 0), ClientModel::WIdRole).toLongLong());
 }
 
 void DeclarativeView::updateQmlSource(bool force)
