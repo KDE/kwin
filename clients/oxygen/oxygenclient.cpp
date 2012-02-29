@@ -1436,19 +1436,16 @@ namespace Oxygen
             paint( painter );
 
             // update buttons
-            if( compositingActive() )
+            QList<Button*> buttons( widget()->findChildren<Button*>() );
+            foreach( Button* button, buttons )
             {
-                QList<Button*> buttons( widget()->findChildren<Button*>() );
-                foreach( Button* button, buttons )
+                if( button->isVisible() && event->rect().intersects( button->geometry() ) )
                 {
-                    if( button->isVisible() && event->rect().intersects( button->geometry() ) )
-                    {
-                        painter.save();
-                        painter.setViewport( button->geometry() );
-                        painter.setWindow( button->rect() );
-                        button->paint( painter );
-                        painter.restore();
-                    }
+                    painter.save();
+                    painter.setViewport( button->geometry() );
+                    painter.setWindow( button->rect() );
+                    button->paint( painter );
+                    painter.restore();
                 }
             }
 
