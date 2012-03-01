@@ -43,6 +43,9 @@ public:
     QString fileName() const {
         return m_scriptFile.fileName();
     }
+    const QString &pluginName() {
+        return m_pluginName;
+    }
 
     void printMessage(const QString &message);
 
@@ -58,9 +61,6 @@ Q_SIGNALS:
 protected:
     QFile &scriptFile() {
         return m_scriptFile;
-    }
-    const QString &pluginName() {
-        return m_pluginName;
     }
     bool running() const {
         return m_running;
@@ -143,17 +143,15 @@ private:
 
 public:
     Scripting(QObject *parent = NULL);
-    /**
-      * Start running scripts. This was essential to have KWin::Scripting
-      * be initialized on stack and also have the option to disable scripting.
-      */
-    void start();
     ~Scripting();
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
+    Q_SCRIPTABLE Q_INVOKABLE bool isScriptLoaded(const QString &pluginName) const;
+    Q_SCRIPTABLE Q_INVOKABLE bool unloadScript(const QString &pluginName);
 
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
+    void start();
 };
 
 }

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "../thumbnailitem.h"
 #include "../options.h"
+#include "../workspace.h"
 // KDE
 #include <kstandarddirs.h>
 #include <KDE/KConfigGroup>
@@ -229,6 +230,7 @@ KWin::Scripting::Scripting(QObject *parent)
 {
     QDBusConnection::sessionBus().registerObject("/Scripting", this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
     QDBusConnection::sessionBus().registerService("org.kde.kwin.Scripting");
+    connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
 }
 
 void KWin::Scripting::start()
@@ -248,6 +250,10 @@ void KWin::Scripting::start()
         }
 
         if (!plugininfo.isPluginEnabled()) {
+            if (isScriptLoaded(plugininfo.pluginName())) {
+                // unload the script
+                unloadScript(plugininfo.pluginName());
+            }
             continue;
         }
         const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
@@ -267,6 +273,27 @@ void KWin::Scripting::start()
     runScripts();
 }
 
+bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
+{
+    foreach (AbstractScript *script, scripts) {
+        if (script->pluginName() == pluginName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool KWin::Scripting::unloadScript(const QString &pluginName)
+{
+    foreach (AbstractScript *script, scripts) {
+        if (script->pluginName() == pluginName) {
+            script->deleteLater();
+            return true;
+        }
+    }
+    return false;
+}
+
 void KWin::Scripting::runScripts()
 {
     for (int i = 0; i < scripts.size(); i++) {
@@ -281,6 +308,9 @@ void KWin::Scripting::scriptDestroyed(QObject *object)
 
 int KWin::Scripting::loadScript(const QString &filePath, const QString& pluginName)
 {
+    if (isScriptLoaded(pluginName)) {
+        return -1;
+    }
     const int id = scripts.size();
     KWin::Script *script = new KWin::Script(id, filePath, pluginName, this);
     connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
@@ -290,6 +320,9 @@ int KWin::Scripting::loadScript(const QString &filePath, const QString& pluginNa
 
 int KWin::Scripting::loadDeclarativeScript(const QString& filePath, const QString& pluginName)
 {
+    if (isScriptLoaded(pluginName)) {
+        return -1;
+    }
     const int id = scripts.size();
     KWin::DeclarativeScript *script = new KWin::DeclarativeScript(id, filePath, pluginName, this);
     connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
