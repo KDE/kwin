@@ -25,7 +25,7 @@ DecorationButton {
     }
     Timer {
         id: timer
-        interval: decoration.doubleClickInterval
+        interval: 150
         repeat: false
         onTriggered: decoration.menuClicked()
     }
@@ -46,6 +46,7 @@ DecorationButton {
         }
         onReleased: {
             parent.pressed = false;
+            timer.stop();
         }
         onExited: {
             if (!parent.pressed) {
