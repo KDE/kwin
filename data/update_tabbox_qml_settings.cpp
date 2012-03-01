@@ -46,9 +46,11 @@ int main( int argc, char* argv[] )
     KComponentData inst( &about );
     Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated descriptions
     KConfig config("kwinrc");
+    KConfigGroup plugins = config.group("Plugins");
+    const bool boxSwitchEnabled = plugins.readEntry<bool>("kwin4_effect_boxswitchEnabled", true);
     KConfigGroup boxswitch = config.group("Effect-BoxSwitch");
-    const bool boxSwitchPrimary = boxswitch.readEntry<bool>("TabBox", true);
-    const bool boxSwitchAlternative = boxswitch.readEntry<bool>("TabBoxAlternative", false);
+    const bool boxSwitchPrimary = boxSwitchEnabled && boxswitch.hasKey("TabBox") && boxswitch.readEntry<bool>("TabBox", true);
+    const bool boxSwitchAlternative = boxSwitchEnabled && boxswitch.hasKey("TabBoxAlternative") && boxswitch.readEntry<bool>("TabBoxAlternative", false);
     boxswitch.writeEntry("TabBox", false);
     boxswitch.writeEntry("TabBoxAlternative", false);
     boxswitch.sync();
