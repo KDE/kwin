@@ -1,5 +1,0 @@
-Id=kwin_focus2
-File=kwinrc
-Group=Windows
-Options=overwrite
-Script=kwin_focus2.sh,sh

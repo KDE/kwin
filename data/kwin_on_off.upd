@@ -1,5 +1,0 @@
-Id=kwin_on_off
-File=kwinrc
-Group=Windows
-Options=overwrite
-Script=on-off_to_true-false.sh,sh

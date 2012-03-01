@@ -1,8 +1,0 @@
-Id=stickyupd3.1
-File=kwin.eventsrc
-Group=sticky,on_all_desktops
-AllKeys
-Group=unsticky,not_on_all_desktops
-AllKeys
-RemoveGroup=sticky
-RemoveGroup=unsticky
