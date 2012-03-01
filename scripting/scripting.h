@@ -44,11 +44,16 @@ public:
         return m_scriptFile.fileName();
     }
 
+    void printMessage(const QString &message);
+
     KConfigGroup config() const;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void stop();
     Q_SCRIPTABLE virtual void run() = 0;
+
+Q_SIGNALS:
+    Q_SCRIPTABLE void print(const QString &text);
 
 protected:
     QFile &scriptFile() {
@@ -90,13 +95,10 @@ public:
     Script(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
     virtual ~Script();
 
-    void printMessage(const QString &message);
-
 public Q_SLOTS:
     Q_SCRIPTABLE void run();
 
 Q_SIGNALS:
-    Q_SCRIPTABLE void print(const QString &text);
     Q_SCRIPTABLE void printError(const QString &text);
 
 private slots:

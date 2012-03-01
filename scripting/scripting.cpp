@@ -44,7 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
 {
-    KWin::Script *script = qobject_cast<KWin::Script*>(context->callee().data().toQObject());
+    KWin::AbstractScript *script = qobject_cast<KWin::Script*>(context->callee().data().toQObject());
+    if (!script) {
+        return engine->undefinedValue();
+    }
     QString result;
     for (int i = 0; i < context->argumentCount(); ++i) {
         if (i > 0) {
@@ -60,6 +63,9 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
 QScriptValue kwinScriptReadConfig(QScriptContext *context, QScriptEngine *engine)
 {
     KWin::AbstractScript *script = qobject_cast<KWin::AbstractScript*>(context->callee().data().toQObject());
+    if (!script) {
+        return engine->undefinedValue();
+    }
     if (context->argumentCount() < 1 || context->argumentCount() > 2) {
         kDebug(1212) << "Incorrect number of arguments";
         return engine->undefinedValue();
@@ -99,6 +105,12 @@ void KWin::AbstractScript::stop()
     deleteLater();
 }
 
+void KWin::AbstractScript::printMessage(const QString &message)
+{
+    kDebug(1212) << scriptFile().fileName() << ":" << message;
+    emit print(message);
+}
+
 void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
 {
     // add our print
@@ -121,12 +133,6 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* pa
 KWin::Script::~Script()
 {
     QDBusConnection::sessionBus().unregisterObject('/' + QString::number(scriptId()));
-}
-
-void KWin::Script::printMessage(const QString &message)
-{
-    kDebug(1212) << scriptFile().fileName() << ":" << message;
-    emit print(message);
 }
 
 void KWin::Script::run()
