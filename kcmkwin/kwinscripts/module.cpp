@@ -85,7 +85,7 @@ void Module::importScript()
 
 void Module::updateListViewContents()
 {
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script", "not (exist [X-KWin-Exclude-Listing]) or [X-KWin-Exclude-Listing] == false");
     QList<KPluginInfo> scriptinfos = KPluginInfo::fromServices(offers);
     ui->scriptSelector->addPlugins(scriptinfos, KPluginSelector::ReadConfigFile, QString(), QString(), m_kwinConfig);
 }

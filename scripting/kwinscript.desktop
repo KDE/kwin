@@ -17,3 +17,6 @@ Type=QString
 
 [PropertyDef::X-Plasma-MainScript]
 Type=QString
+
+[PropertyDef::X-KWin-Exclude-Listing]
+Type=bool
