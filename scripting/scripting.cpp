@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 #include "workspace_wrapper.h"
 #include "../thumbnailitem.h"
+#include "../options.h"
 // KDE
 #include <kstandarddirs.h>
 #include <KDE/KConfigGroup>
@@ -100,7 +101,10 @@ void KWin::Script::run()
     if (scriptFile().open(QIODevice::ReadOnly)) {
         QScriptValue workspace = m_engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
+        QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
+                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
         m_engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
+        m_engine->globalObject().setProperty("options", optionsValue, QScriptValue::Undeletable);
         m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
         m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
@@ -172,6 +176,7 @@ void KWin::DeclarativeScript::run()
     qmlRegisterType<WorkspaceWrapper>("org.kde.kwin", 0, 1, "KWin");
 
     m_view->rootContext()->setContextProperty("workspace", workspace());
+    m_view->rootContext()->setContextProperty("options", options);
 
     m_view->setSource(QUrl::fromLocalFile(scriptFile().fileName()));
     setRunning(true);
