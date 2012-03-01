@@ -1,5 +1,0 @@
-Id=kde414
-File=kglobalshortcutsrc
-Group=kwin
-Options=overwrite
-Script=kwin_window_shortcuts.sh,sh
