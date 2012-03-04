@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
+#include <QStack>
 #include <QVector>
 #include <QPixmap>
 #include <QPainter>
@@ -210,6 +211,55 @@ XRenderPicture::XRenderPicture(QPixmap pix)
 XRenderPicture::XRenderPicture(Pixmap pix, int depth)
     : d(new XRenderPictureData(createPicture(pix, depth)))
 {
+}
+
+static QPixmap *s_offscreenTarget = 0;
+static QStack<XRenderPicture*> s_scene_offscreenTargetStack;
+static int s_renderOffscreen = 0;
+
+void scene_setXRenderOffscreenTarget(QPixmap *pix)
+{
+    s_offscreenTarget = pix;
+}
+
+XRenderPicture *scene_xRenderOffscreenTarget()
+{
+    return s_scene_offscreenTargetStack.isEmpty() ? 0 : s_scene_offscreenTargetStack.top();
+}
+
+void setXRenderOffscreen(bool b)
+{
+    b ? ++s_renderOffscreen : --s_renderOffscreen;
+    if (s_renderOffscreen < 0) {
+        s_renderOffscreen = 0;
+        qWarning("*** SOMETHING IS MESSED UP WITH YOUR setXRenderOffscreen() USAGE ***");
+    }
+}
+
+void xRenderPushTarget(XRenderPicture *pic)
+{
+    s_scene_offscreenTargetStack.push(pic);
+    ++s_renderOffscreen;
+}
+
+void xRenderPopTarget()
+{
+    s_scene_offscreenTargetStack.pop();
+    --s_renderOffscreen;
+    if (s_renderOffscreen < 0) {
+        s_renderOffscreen = 0;
+        qWarning("*** SOMETHING IS MESSED UP WITH YOUR xRenderPopTarget() USAGE ***");
+    }
+}
+
+bool xRenderOffscreen()
+{
+    return s_renderOffscreen;
+}
+
+QPixmap *xRenderOffscreenTarget()
+{
+    return s_offscreenTarget;
 }
 
 } // namespace

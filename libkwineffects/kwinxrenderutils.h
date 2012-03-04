@@ -126,6 +126,42 @@ KWIN_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
 KWIN_EXPORT XRenderPicture xRenderFill(const XRenderColor *c);
 KWIN_EXPORT XRenderPicture xRenderFill(const QColor &c);
 
+/**
+ * Allows to render a window into a (transparent) pixmap
+ * NOTICE: the result can be queried as xRenderWindowOffscreenTarget()
+ * NOTICE: it may be 0
+ * NOTICE: when done call setXRenderWindowOffscreen(false) to continue normal render process
+ */
+KWIN_EXPORT void setXRenderOffscreen(bool b);
+
+/**
+ * Allows to define a persistent effect member as render target
+ * The window (including shadows) is rendered into the top left corner
+ * NOTICE: do NOT call setXRenderOffscreen(true) in addition!
+ * NOTICE: do not forget to xRenderPopTarget once you're done to continue the normal render process
+ */
+KWIN_EXPORT void xRenderPushTarget(XRenderPicture *pic);
+KWIN_EXPORT void xRenderPopTarget();
+
+/**
+ * Whether windows are currently rendered into an offscreen target buffer
+ */
+KWIN_EXPORT bool xRenderOffscreen();
+/**
+ * The offscreen buffer as set by the renderer because of setXRenderWindowOffscreen(true)
+ */
+KWIN_EXPORT QPixmap *xRenderOffscreenTarget();
+
+/**
+ * NOTICE: HANDS OFF!!!
+ * scene_setXRenderWindowOffscreenTarget() is ONLY to be used by the renderer - DO NOT TOUCH!
+ */
+KWIN_EXPORT void scene_setXRenderOffscreenTarget(QPixmap *pix);
+/**
+ * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
+ */
+KWIN_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
+
 } // namespace
 
 #endif

@@ -417,8 +417,10 @@ void SceneXrender::Window::prepareTempPixmap()
         XFreePixmap(display(), temp_pixmap->handle());   // The picture owns the pixmap now
     if (!temp_pixmap)
         temp_pixmap = new QPixmap(r.width(), r.height());
-    else if (temp_pixmap->width() < r.width() || temp_pixmap->height() < r.height())
+    else if (temp_pixmap->width() < r.width() || temp_pixmap->height() < r.height()) {
         *temp_pixmap = QPixmap(r.width(), r.height());
+        scene_setXRenderOffscreenTarget(0); // invalidate, better crash than cause weird results for developers
+    }
     if (Extensions::nonNativePixmaps()) {
         Pixmap pix = XCreatePixmap(display(), rootWindow(), temp_pixmap->width(), temp_pixmap->height(), DefaultDepth(display(), DefaultScreen(display())));
         *temp_pixmap = QPixmap::fromX11Pixmap(pix);
@@ -532,12 +534,16 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     // the window has border
     // This solves a number of glitches and on top of this
     // it optimizes painting quite a bit
-    const bool blitInTempPixmap = scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder()));
-    Picture renderTarget = buffer;
+    const bool blitInTempPixmap = xRenderOffscreen() || (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
 
+    Picture renderTarget = buffer;
     if (blitInTempPixmap) {
-        prepareTempPixmap();
-        renderTarget = temp_pixmap->x11PictureHandle();
+        if (scene_xRenderOffscreenTarget())
+            renderTarget = *scene_xRenderOffscreenTarget();
+        else {
+            prepareTempPixmap();
+            renderTarget = temp_pixmap->x11PictureHandle();
+        }
     } else {
         XRenderSetPictureTransform(display(), pic, &xform);
         if (filter == ImageFilterGood) {
@@ -702,6 +708,8 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
             XRenderChangePicture(display(), pic, CPRepeat, &attr);
         }
     }
+    if (xRenderOffscreen())
+        scene_setXRenderOffscreenTarget(temp_pixmap);
 }
 
 void SceneXrender::screenGeometryChanged(const QSize &size)
