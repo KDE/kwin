@@ -58,6 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include <kwinglplatform.h>
+#include <kwinglutils.h>
 #ifdef KWIN_BUILD_TILING
 #include "tiling/tile.h"
 #include "tiling/tilinglayout.h"
@@ -2146,6 +2148,132 @@ void Workspace::dumpTiles() const {
         m_tiling->dumpTiles();
     }
 #endif
+}
+
+QString Workspace::supportInformation() const
+{
+    QString support;
+
+    support.append(ki18nc("Introductory text shown in the support information.",
+        "KWin Support Information:\n"
+        "The following information should be used when requesting support on e.g. http://forum.kde.org.\n"
+        "It provides information about the currently running instance, which options are used,\n"
+        "what OpenGL driver and which effects are running.\n"
+        "Please post the information provided underneath this introductory text to a paste bin service\n"
+        "like http://paste.kde.org instead of pasting into support threads.\n").toString());
+    support.append("\n==========================\n\n");
+    // all following strings are intended for support. They need to be pasted to e.g forums.kde.org
+    // it is expected that the support will happen in English language or that the people providing
+    // help understand English. Because of that all texts are not translated
+    support.append("Options\n");
+    support.append("=======\n");
+    const QMetaObject *metaOptions = options->metaObject();
+    for (int i=0; i<metaOptions->propertyCount(); ++i) {
+        const QMetaProperty property = metaOptions->property(i);
+        if (QLatin1String(property.name()) == "objectName") {
+            continue;
+        }
+        support.append(QLatin1String(property.name()) % ": " % options->property(property.name()).toString() % '\n');
+    }
+    support.append("\nCompositing\n");
+    support.append(  "===========\n");
+    if (effects) {
+        support.append("Compositing is active\n");
+        switch (effects->compositingType()) {
+        case OpenGLCompositing: {
+#ifdef KWIN_HAVE_OPENGLES
+            support.append("Compositing Type: OpenGL ES 2.0\n");
+#else
+            support.append("Compositing Type: OpenGL\n");
+#endif
+
+            GLPlatform *platform = GLPlatform::instance();
+            support.append("OpenGL vendor string: " %   platform->glVendorString() % '\n');
+            support.append("OpenGL renderer string: " % platform->glRendererString() % '\n');
+            support.append("OpenGL version string: " %  platform->glVersionString() % '\n');
+
+            if (platform->supports(LimitedGLSL))
+                support.append("OpenGL shading language version string: " % platform->glShadingLanguageVersionString() % '\n');
+
+            support.append("Driver: " % GLPlatform::driverToString(platform->driver()) % '\n');
+            if (!platform->isMesaDriver())
+                support.append("Driver version: " % GLPlatform::versionToString(platform->driverVersion()) % '\n');
+
+            support.append("GPU class: " % GLPlatform::chipClassToString(platform->chipClass()) % '\n');
+
+            support.append("OpenGL version: " % GLPlatform::versionToString(platform->glVersion()) % '\n');
+
+            if (platform->supports(LimitedGLSL))
+                support.append("GLSL version: " % GLPlatform::versionToString(platform->glslVersion()) % '\n');
+
+            if (platform->isMesaDriver())
+                support.append("Mesa version: " % GLPlatform::versionToString(platform->mesaVersion()) % '\n');
+            if (platform->serverVersion() > 0)
+                support.append("X server version: " % GLPlatform::versionToString(platform->serverVersion()) % '\n');
+            if (platform->kernelVersion() > 0)
+                support.append("Linux kernel version: " % GLPlatform::versionToString(platform->kernelVersion()) % '\n');
+
+            support.append("Direct rendering: ");
+            if (platform->isDirectRendering()) {
+                support.append("yes\n");
+            } else {
+                support.append("no\n");
+            }
+            support.append("Requires strict binding: ");
+            if (!platform->isLooseBinding()) {
+                support.append("yes\n");
+            } else {
+                support.append("no\n");
+            }
+            support.append("GLSL shaders: ");
+            if (platform->supports(GLSL)) {
+                if (platform->supports(LimitedGLSL)) {
+                    support.append(" limited\n");
+                } else {
+                    support.append(" yes\n");
+                }
+            } else {
+                support.append(" no\n");
+            }
+            support.append("Texture NPOT support: ");
+            if (platform->supports(TextureNPOT)) {
+                if (platform->supports(LimitedNPOT)) {
+                    support.append(" limited\n");
+                } else {
+                    support.append(" yes\n");
+                }
+            } else {
+                support.append(" no\n");
+            }
+
+            if (ShaderManager::instance()->isValid()) {
+                support.append("OpenGL 2 Shaders are used\n");
+            } else {
+                support.append("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n");
+            }
+            break;
+        }
+        case XRenderCompositing:
+            support.append("Compositing Type: XRender\n");
+            break;
+        case NoCompositing:
+        default:
+            support.append("Something is really broken, neither OpenGL nor XRender is used");
+        }
+        support.append("\nLoaded Effects:\n");
+        support.append(  "---------------\n");
+        foreach (const QString &effect, loadedEffects()) {
+            support.append(effect % '\n');
+        }
+        support.append("\nCurrently Active Effects:\n");
+        support.append(  "-------------------------\n");
+        foreach (const QString &effect, activeEffects()) {
+            support.append(effect % '\n');
+        }
+    } else {
+        support.append("Compositing is not active\n");
+    }
+    return support;
 }
 
 } // namespace

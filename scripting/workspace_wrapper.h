@@ -160,6 +160,10 @@ void setter( rettype val );
      * Returns the name for the given @p desktop.
      **/
     Q_SCRIPTABLE QString desktopName(int desktop) const;
+    /**
+     * Provides support information about the currently running KWin instance.
+     **/
+    Q_SCRIPTABLE QString supportInformation() const;
 
 public Q_SLOTS:
     // all the available key bindings

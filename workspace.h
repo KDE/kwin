@@ -448,6 +448,7 @@ public:
     bool stopActivity(const QString &id);
     bool startActivity(const QString &id);
     QStringList activeEffects() const;
+    QString supportInformation() const;
 
     void setCurrentScreen(int new_screen);
 

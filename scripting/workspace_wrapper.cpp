@@ -180,6 +180,11 @@ QString WorkspaceWrapper::desktopName(int desktop) const
     return Workspace::self()->desktopName(desktop);
 }
 
+QString WorkspaceWrapper::supportInformation() const
+{
+    return Workspace::self()->supportInformation();
+}
+
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
