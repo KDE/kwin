@@ -241,6 +241,63 @@ public:
      **/
     bool isSoftwareEmulation() const;
 
+    /**
+     * @returns the GL_VERSION string as provided by the driver.
+     * @since 4.9
+     **/
+    const QByteArray &glVersionString() const;
+    /**
+     * @returns the GL_RENDERER string as provided by the driver.
+     * @since 4.9
+     **/
+    const QByteArray &glRendererString() const;
+    /**
+     * @returns the GL_VENDOR string as provided by the driver.
+     * @since 4.9
+     **/
+    const QByteArray &glVendorString() const;
+    /**
+     * @returns the GL_SHADING_LANGUAGE_VERSION string as provided by the driver.
+     * If the driver does not support the OpenGL Shading Language a null bytearray is returned.
+     * @since 4.9
+     **/
+    const QByteArray &glShadingLanguageVersionString() const;
+    /**
+     * @returns Whether a direct rendering OpenGL context is used.
+     * @since 4.9
+     **/
+    bool isDirectRendering() const;
+    /**
+     * @returns Whether the driver supports loose texture binding.
+     * @since 4.9
+     **/
+    bool isLooseBinding() const;
+
+    /**
+     * @returns a human readable form of the @p version.
+     * @since 4.9
+     * @see glVersion
+     * @see glslVersion
+     * @see driverVersion
+     * @see mesaVersion
+     * @see galliumVersion
+     * @see kernelVersion
+     * @see serverVersion
+     **/
+    static QString versionToString(qint64 version);
+    /**
+     * @returns a human readable form for the @p driver.
+     * @since 4.9
+     * @see driver
+     **/
+    static QString driverToString(Driver driver);
+    /**
+     * @returns a human readable form for the @p chipClass.
+     * @since 4.9
+     * @see chipClass
+     **/
+    static QString chipClassToString(ChipClass chipClass);
+
 private:
     GLPlatform();
 

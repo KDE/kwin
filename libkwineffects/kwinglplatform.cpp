@@ -377,7 +377,7 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
     return UnknownIntel;
 }
 
-static QString versionToString(qint64 version)
+QString GLPlatform::versionToString(qint64 version)
 {
     int major = (version >> 32);
     int minor = (version >> 16) & 0xffff;
@@ -390,7 +390,7 @@ static QString versionToString(qint64 version)
     return string;
 }
 
-static QString driverToString(Driver driver)
+QString GLPlatform::driverToString(Driver driver)
 {
     switch(driver) {
     case Driver_R100:
@@ -425,7 +425,7 @@ static QString driverToString(Driver driver)
     }
 }
 
-static QString chipClassToString(ChipClass chipClass)
+QString GLPlatform::chipClassToString(ChipClass chipClass)
 {
     switch(chipClass) {
     case R100:
@@ -885,6 +885,36 @@ bool GLPlatform::isIntel() const
 bool GLPlatform::isSoftwareEmulation() const
 {
     return m_driver == Driver_Softpipe || m_driver == Driver_Swrast || m_driver == Driver_Llvmpipe;
+}
+
+const QByteArray &GLPlatform::glRendererString() const
+{
+    return m_renderer;
+}
+
+const QByteArray &GLPlatform::glVendorString() const
+{
+    return m_vendor;
+}
+
+const QByteArray &GLPlatform::glVersionString() const
+{
+    return m_version;
+}
+
+const QByteArray &GLPlatform::glShadingLanguageVersionString() const
+{
+    return m_glsl_version;
+}
+
+bool GLPlatform::isDirectRendering() const
+{
+    return m_directRendering;
+}
+
+bool GLPlatform::isLooseBinding() const
+{
+    return m_looseBinding;
 }
 
 } // namespace KWin
