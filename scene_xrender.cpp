@@ -724,7 +724,7 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
         }
 #undef RENDER_SHADOW_TILE
 
-        if (!(mask & PAINT_DECORATION_ONLY)) {
+        if (!((mask & PAINT_DECORATION_ONLY) || (client && client->isShade()))) {
             // Paint the window contents
             Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
             XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
