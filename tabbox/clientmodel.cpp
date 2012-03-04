@@ -183,9 +183,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         TabBoxClient* c = tabBox->nextClientFocusChain(start);
         TabBoxClient* stop = c;
         while (c) {
-            TabBoxClient* add = tabBox->clientToAddToList(c, desktop,
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList ||
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList);
+            TabBoxClient* add = tabBox->clientToAddToList(c, desktop);
             if (add != NULL) {
                 if (start == add) {
                     m_clientList.removeAll(add);
@@ -210,9 +208,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         TabBoxClient* stop = c;
         int index = 0;
         while (c) {
-            TabBoxClient* add = tabBox->clientToAddToList(c, desktop,
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList ||
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList);
+            TabBoxClient* add = tabBox->clientToAddToList(c, desktop);
             if (add != NULL) {
                 if (start == add) {
                     m_clientList.removeAll(add);
@@ -239,7 +235,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         m_clientList.removeAll(c);
         m_clientList.prepend(c);
     }
-    if (tabBox->config().isShowDesktop()) {
+    if (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient) {
         TabBoxClient* desktopClient = tabBox->desktopClient();
         if (desktopClient)
             m_clientList.append(desktopClient);

@@ -167,8 +167,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
     rootObject()->setProperty("screenWidth", m_currentScreenGeometry.width());
     rootObject()->setProperty("screenHeight", m_currentScreenGeometry.height());
     rootObject()->setProperty("allDesktops", tabBox->config().tabBoxMode() == TabBoxConfig::ClientTabBox &&
-        ((tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList) ||
-        (tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList)));
+        tabBox->config().clientDesktopMode() == TabBoxConfig::AllDesktopsClients);
     if (ClientModel *clientModel = qobject_cast<ClientModel*>(m_model)) {
         rootObject()->setProperty("longestCaption", clientModel->longestCaption());
     }

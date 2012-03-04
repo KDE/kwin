@@ -121,22 +121,101 @@ TabBoxClient* TabBoxHandlerImpl::activeClient() const
         return NULL;
 }
 
-TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const
+bool TabBoxHandlerImpl::checkDesktop(TabBoxClient* client, int desktop) const
 {
+    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+
+    switch (config().clientDesktopMode()) {
+    case TabBoxConfig::AllDesktopsClients:
+        return true;
+    case TabBoxConfig::ExcludeCurrentDesktopClients:
+        return !current->isOnDesktop(desktop);
+    default:       // TabBoxConfig::OnlyCurrentDesktopClients
+        return current->isOnDesktop(desktop);
+    }
+}
+
+bool TabBoxHandlerImpl::checkActivity(TabBoxClient* client) const
+{
+    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+
+    switch (config().clientActivitiesMode()) {
+    case TabBoxConfig::AllActivitiesClients:
+        return true;
+    case TabBoxConfig::ExcludeCurrentActivityClients:
+        return !current->isOnCurrentActivity();
+    default:       // TabBoxConfig::OnlyCurrentActivityClients
+        return current->isOnCurrentActivity();
+    }
+}
+
+bool TabBoxHandlerImpl::checkApplications(TabBoxClient* client) const
+{
+    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    TabBoxClientImpl* c;
+    QListIterator< TabBoxClient* > i(clientList());
+
+    switch (config().clientApplicationsMode()) {
+    case TabBoxConfig::OneWindowPerApplication:
+        // check if the list already contains an entry of this application
+        while (i.hasNext()) {
+            if ((c = dynamic_cast< TabBoxClientImpl* >(i.next()))) {
+                if (c->client()->resourceClass() == current->resourceClass()) {
+                    return false;
+                }
+            }
+	}
+        return true;
+    case TabBoxConfig::AllWindowsCurrentApplication:
+        if ((c = dynamic_cast< TabBoxClientImpl* >(tabBox->activeClient()))) {
+            if (c->client()->resourceClass() == current->resourceClass()) {
+                return true;
+            }
+        }
+        return false;
+    default:       // TabBoxConfig::AllWindowsAllApplications
+      return true;
+    }
+}
+
+bool TabBoxHandlerImpl::checkMinimized(TabBoxClient* client) const
+{
+    switch (config().clientMinimizedMode()) {
+    case TabBoxConfig::ExcludeMinimizedClients:
+        return !client->isMinimized();
+    case TabBoxConfig::OnlyMinimizedClients:
+        return client->isMinimized();
+    default:       // TabBoxConfig::IgnoreMinimizedStatus
+        return true;
+    }
+}
+
+bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
+{
+    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
     Workspace* workspace = Workspace::self();
+
+    switch (config().clientMultiScreenMode()) {
+    case TabBoxConfig::IgnoreMultiScreen:
+        return true;
+    case TabBoxConfig::ExcludeCurrentScreenClients:
+        return current->screen() != workspace->activeScreen();
+    default:       // TabBoxConfig::OnlyCurrentScreenClients
+        return current->screen() == workspace->activeScreen();
+    }
+}
+
+TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int desktop) const
+{
     Client* ret = NULL;
     Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
-    bool addClient = false;
-    bool applications = (config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList ||
-                         config().clientListMode() == TabBoxConfig::CurrentDesktopApplicationList);
-    if (allDesktops)
-        addClient = true;
-    else
-        addClient = current->isOnDesktop(desktop);
-    addClient = addClient && current->isOnCurrentActivity();
+
+    bool addClient = checkDesktop(client, desktop)
+                  && checkActivity(client)
+                  && checkApplications(client)
+                  && checkMinimized(client)
+                  && checkMultiScreen(client);
     addClient = addClient && current->wantsTabFocus() && !current->skipSwitcher();
-    addClient = addClient && !(current->isMinimized() && config().clientMinimizedMode() == TabBoxConfig::ExcludeMinimizedClients );
-    addClient = addClient && !(!current->isMinimized() && config().clientMinimizedMode() == TabBoxConfig::OnlyMinimizedClients);
     if (addClient) {
         // don't add windows that have modal dialogs
         Client* modal = current->findModal();
@@ -147,21 +226,6 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int des
         else {
             // nothing
         }
-        if (ret && applications) {
-            // check if the list already contains an entry of this application
-            foreach (TabBoxClient * tabBoxClient, clientList()) {
-                if (TabBoxClientImpl* c = dynamic_cast< TabBoxClientImpl* >(tabBoxClient)) {
-                    if (c->client()->resourceClass() == ret->resourceClass()) {
-                        ret = NULL;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    if (options->isSeparateScreenFocus()) {
-        if (current->screen() != workspace->activeScreen())
-            ret = NULL;
     }
     if (ret)
         return ret->tabBoxClient();
@@ -307,27 +371,37 @@ TabBox::TabBox(QObject *parent)
     m_isShown = false;
     m_defaultConfig = TabBoxConfig();
     m_defaultConfig.setTabBoxMode(TabBoxConfig::ClientTabBox);
-    m_defaultConfig.setClientListMode(TabBoxConfig::CurrentDesktopClientList);
+    m_defaultConfig.setClientDesktopMode(TabBoxConfig::OnlyCurrentDesktopClients);
+    m_defaultConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
+    m_defaultConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
+    m_defaultConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
+    m_defaultConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
+    m_defaultConfig.setClientMultiScreenMode(TabBoxConfig::OnlyCurrentScreenClients);
     m_defaultConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
     m_defaultConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_alternativeConfig = TabBoxConfig();
     m_alternativeConfig.setTabBoxMode(TabBoxConfig::ClientTabBox);
-    m_alternativeConfig.setClientListMode(TabBoxConfig::AllDesktopsClientList);
+    m_alternativeConfig.setClientDesktopMode(TabBoxConfig::AllDesktopsClients);
+    m_alternativeConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
+    m_alternativeConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
+    m_alternativeConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
+    m_alternativeConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
+    m_alternativeConfig.setClientMultiScreenMode(TabBoxConfig::OnlyCurrentScreenClients);
     m_alternativeConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
     m_alternativeConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_desktopConfig = TabBoxConfig();
     m_desktopConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
     m_desktopConfig.setShowTabBox(true);
-    m_desktopConfig.setShowDesktop(false);
+    m_desktopConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopConfig.setDesktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching);
     m_desktopConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_desktopListConfig = TabBoxConfig();
     m_desktopListConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
     m_desktopListConfig.setShowTabBox(true);
-    m_desktopListConfig.setShowDesktop(false);
+    m_desktopListConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
     m_tabBox = new TabBoxHandlerImpl(this);
@@ -576,12 +650,20 @@ void TabBox::reconfigure()
 
 void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
 {
-    tabBoxConfig.setClientListMode(TabBoxConfig::ClientListMode(
-                                       config.readEntry<int>("ListMode", TabBoxConfig::defaultListMode())));
-    tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
-                                            config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
+    tabBoxConfig.setClientDesktopMode(TabBoxConfig::ClientDesktopMode(
+                                       config.readEntry<int>("DesktopMode", TabBoxConfig::defaultDesktopMode())));
+    tabBoxConfig.setClientActivitiesMode(TabBoxConfig::ClientActivitiesMode(
+                                       config.readEntry<int>("ActivitiesMode", TabBoxConfig::defaultActivitiesMode())));
+    tabBoxConfig.setClientApplicationsMode(TabBoxConfig::ClientApplicationsMode(
+                                       config.readEntry<int>("ApplicationsMode", TabBoxConfig::defaultApplicationsMode())));
     tabBoxConfig.setClientMinimizedMode(TabBoxConfig::ClientMinimizedMode(
                                        config.readEntry<int>("MinimizedMode", TabBoxConfig::defaultMinimizedMode())));
+    tabBoxConfig.setShowDesktopMode(TabBoxConfig::ShowDesktopMode(
+                                       config.readEntry<int>("ShowDesktopMode", TabBoxConfig::defaultShowDesktopMode())));
+    tabBoxConfig.setClientMultiScreenMode(TabBoxConfig::ClientMultiScreenMode(
+                                       config.readEntry<int>("MultiScreenMode", TabBoxConfig::defaultMultiScreenMode())));
+    tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
+                                            config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
 
     tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline",
                                 TabBoxConfig::defaultShowOutline()));
@@ -589,8 +671,6 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
                                TabBoxConfig::defaultShowTabBox()));
     tabBoxConfig.setHighlightWindows(config.readEntry<bool>("HighlightWindows",
                                      TabBoxConfig::defaultHighlightWindow()));
-    tabBoxConfig.setShowDesktop(config.readEntry<bool>("ShowDesktop",
-                                TabBoxConfig::defaultShowDesktop()));
 
     tabBoxConfig.setLayoutName(config.readEntry<QString>("LayoutName", TabBoxConfig::defaultLayoutName()));
 }

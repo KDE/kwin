@@ -56,7 +56,7 @@ public:
     virtual TabBoxClientList stackingOrder() const;
     virtual void raiseClient(TabBoxClient *client) const;
     virtual void restack(TabBoxClient *c, TabBoxClient *under);
-    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const;
+    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop) const;
     virtual TabBoxClient* desktopClient() const;
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
@@ -64,6 +64,12 @@ public:
     virtual void activateAndClose();
 
 private:
+    bool checkDesktop(TabBoxClient* client, int desktop) const;
+    bool checkActivity(TabBoxClient* client) const;
+    bool checkApplications(TabBoxClient* client) const;
+    bool checkMinimized(TabBoxClient* client) const;
+    bool checkMultiScreen(TabBoxClient* client) const;
+
     TabBox* m_tabBox;
 };
 

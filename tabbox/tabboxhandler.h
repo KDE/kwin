@@ -167,7 +167,7 @@ public:
     * @param allDesktops Add clients from all desktops or only from current
     * @return The client to be included in the list or NULL if it isn't to be included
     */
-    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop, bool allDesktops) const = 0;
+    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop) const = 0;
     /**
     * @return The first desktop window in the stacking order.
     */
