@@ -6,6 +6,7 @@ Name[pt_BR]=Sincronizar o 'Ignorar seletor' com a barra de tarefas
 Name[sv]=Synkronisera överhoppning av aktivitetsraden med fönsterbyte
 Name[uk]=Синхронізувати виключення вікон у перемикачі з панеллю задач
 Name[x-test]=xxSynchronize Skip Switcher with Taskbarxx
+Name[zh_TW]=將工作列中設定要忽略的視窗也套用在視窗切換器
 Comment=Hides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)
 Comment[nl]=Verbergt alle vensters gemarkeerd als Taakbalkoverslaan om ook te worden uitgesloten van vensterschakelaars (bijv. Alt+Tab)
 Comment[pt]=Esconde todas as janelas marcadas como 'Ignorar a Barra de Tarefas' para também serem excluídas dos selectores de janelas (p.ex., Alt+Tab)
@@ -13,6 +14,7 @@ Comment[pt_BR]=Oculta todas as janelas marcadas como 'Ignorar a barra de tarefas
 Comment[sv]=Dölj alla fönster som är markerade att hoppa över aktivitetsraden så att de också utesluts vid fönsterbyte (t.ex. Alt+Tabulator)
 Comment[uk]=Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)
 Comment[x-test]=xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx
+Comment[zh_TW]=工作列中設定要忽略的視窗，在視窗切換器（如 Alt+Tab 切換）切換時也忽略
 Icon=preferences-system-windows-script-synchronizeskipswitcher
 
 X-Plasma-API=javascript

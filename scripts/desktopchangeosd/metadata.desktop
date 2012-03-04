@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Desktop Change OSD
+Name[pt]=OSD de Mudança do Ecrã
+Name[pt_BR]=OSD de mudança de área de trabalho
+Name[sv]=Skärmvisning av skrivbordsändring
+Name[uk]=Панель зміни стільниць
+Name[x-test]=xxDesktop Change OSDxx
 Comment=An on screen display indicating the desktop change
+Comment[pt]=Uma apresentação que indica a mudança do ecrã
+Comment[pt_BR]=Uma apresentação que indica a mudança de área de trabalho
+Comment[sv]=En skärmvisning som anger skrivbordsändringen
+Comment[uk]=Екранна панель спостереження за зміною стільниць
+Comment[x-test]=xxAn on screen display indicating the desktop changexx
 Icon=preferences-system-windows-script-test
 
 X-Plasma-API=declarativescript
