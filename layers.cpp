@@ -515,20 +515,23 @@ ClientList Workspace::constrainedStackingOrder()
         kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // build the order from layers
-    QHash< Group*, Layer > minimum_layer;
-    for (ClientList::ConstIterator it = unconstrained_stacking_order.constBegin();
-            it != unconstrained_stacking_order.constEnd();
-            ++it) {
+    QVector< QMap<Group*, Layer> > minimum_layer(numScreens());
+    for (ClientList::ConstIterator it = unconstrained_stacking_order.constBegin(),
+                                  end = unconstrained_stacking_order.constEnd(); it != end; ++it) {
         Layer l = (*it)->layer();
-        // If a window is raised above some other window in the same window group
-        // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
-        // above that window (see #95731).
-        if (minimum_layer.contains((*it)->group())
-                && minimum_layer[(*it)->group()] == ActiveLayer
-                && (l == NormalLayer || l == AboveLayer)) {
-            l = minimum_layer[(*it)->group()];
+
+        const int screen = (*it)->screen();
+        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find((*it)->group());
+        if (mLayer != minimum_layer[screen].end()) {
+            // If a window is raised above some other window in the same window group
+            // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
+            // above that window (see #95731).
+            if (*mLayer == ActiveLayer && (l == NormalLayer || l == AboveLayer))
+                l = ActiveLayer;
+            *mLayer = l;
+        } else {
+            minimum_layer[screen].insertMulti((*it)->group(), l);
         }
-        minimum_layer[(*it)->group()] = l;
         layer[ l ].append(*it);
     }
     ClientList stacking;
