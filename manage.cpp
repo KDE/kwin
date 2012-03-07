@@ -207,7 +207,7 @@ bool Client::manage(Window w, bool isMapped)
         }
     }
     if (desk == 0)   // Assume window wants to be visible on the current desktop
-        desk = workspace()->currentDesktop();
+        desk = isDesktop() ? NET::OnAllDesktops : workspace()->currentDesktop();
     desk = rules()->checkDesktop(desk, !isMapped);
     if (desk != NET::OnAllDesktops)   // Do range check
         desk = qMax(1, qMin(workspace()->numberOfDesktops(), desk));

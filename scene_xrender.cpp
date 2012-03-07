@@ -653,10 +653,12 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
 #undef RENDER_SHADOW_TILE
 
         // Paint the window contents
-        Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
-        XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
-        if (!opaque)
-            transformed_shape = QRegion();
+        if (!(client && client->isShade())) {
+            Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
+            XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+            if (!opaque)
+                transformed_shape = QRegion();
+        }
 
 #define RENDER_DECO_PART(_PART_, _RECT_) \
 XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAlpha, renderTarget,\
