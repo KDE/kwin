@@ -1209,7 +1209,7 @@ void Workspace::slotWindowLower()
         // keyboard focus to the next available window.
         //activateNextClient( c ); // Doesn't work when we lower a child window
         if (active_client->isActive() && options->focusPolicyIsReasonable()) {
-            if (options->nextFocusPrefersMouse) {
+            if (options->isNextFocusPrefersMouse()) {
                 Client *next = clientUnderMouse(active_client->screen());
                 if (next && next != active_client)
                     requestFocus(next, false);
