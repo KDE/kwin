@@ -2133,6 +2133,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 {
     if (changeMaximizeRecursion)
         return;
+
+    // sic! codeblock for TemporaryAssign
     {
         // isMovable() and isResizable() may be false for maximized windows
         // with moving/resizing maximized windows disabled
@@ -2169,14 +2171,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     else
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
-    if (options->borderlessMaximizedWindows()) {
-        // triggers a maximize change.
-        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore/pretile geometry
-        changeMaximizeRecursion = true;
-        setNoBorder(app_noborder || max_mode == MaximizeFull);
-        changeMaximizeRecursion = false;
-    }
-
     // save sizes for restoring, if maximalizing
     if (!adjust && !(old_mode & MaximizeVertical)) {
         geom_restore.setTop(y());
@@ -2192,6 +2186,14 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         // see above
         geom_pretile.setLeft(x());
         geom_pretile.setWidth(width());
+    }
+
+    if (options->borderlessMaximizedWindows()) {
+        // triggers a maximize change.
+        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore/pretile geometry
+        changeMaximizeRecursion = true;
+        setNoBorder(app_noborder || max_mode == MaximizeFull);
+        changeMaximizeRecursion = false;
     }
 
     if (!adjust) {
