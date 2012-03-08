@@ -23,4 +23,4 @@
 
 K_PLUGIN_FACTORY(KcmKWinScriptsFactory,
                  registerPlugin<Module>("kwin-scripts");)
-K_EXPORT_PLUGIN(KcmKWinScriptsFactory("kwin-scripts"))
+K_EXPORT_PLUGIN(KcmKWinScriptsFactory("kwin-scripts", "kcm-kwin-scripts"))
