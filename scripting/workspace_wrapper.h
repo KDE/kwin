@@ -155,7 +155,7 @@ void setter( rettype val );
      * @param client The Client for which the area should be retrieved
      * @returns The specified screen geometry
      **/
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const Client* client) const;
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const KWin::Client* client) const;
     /**
      * Returns the name for the given @p desktop.
      **/
