@@ -650,6 +650,7 @@ void Workspace::clientAttentionChanged(Client* c, bool set)
         attention_chain.prepend(c);
     } else
         attention_chain.removeAll(c);
+    emit clientDemandsAttentionChanged(c, set);
 }
 
 //********************************************
@@ -723,6 +724,7 @@ void Client::demandAttention(bool set)
     } else
         info->setState(set ? NET::DemandsAttention : 0, NET::DemandsAttention);
     workspace()->clientAttentionChanged(this, set);
+    emit demandsAttentionChanged();
 }
 
 void Client::demandAttentionKNotify()

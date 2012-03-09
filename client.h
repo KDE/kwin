@@ -250,6 +250,15 @@ class Client
      * If this property gets abused by application developers, it will be removed again.
      **/
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
+    /**
+     * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
+     * action in or with the window happened. For example, it may be set by the Window Manager if
+     * the window requested activation but the Window Manager refused it, or the application may set
+     * it if it finished some work. This state may be set by both the Client and the Window Manager.
+     * It should be unset by the Window Manager when it decides the window got the required attention
+     * (usually, that it got activated).
+     **/
+    Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -402,6 +411,9 @@ public:
 
     void takeActivity(int flags, bool handled, allowed_t);   // Takes ActivityFlags as arg (in utils.h)
     void takeFocus(allowed_t);
+    bool isDemandingAttention() const {
+        return demands_attention;
+    }
     void demandAttention(bool set = true);
 
     void setMask(const QRegion& r, int mode = X::Unsorted);
@@ -691,6 +703,10 @@ signals:
      * another group, but not when a Client gets added or removed to the Client's ClientGroup.
      **/
     void tabGroupChanged();
+    /**
+     * Emitted whenever the demands attention state changes.
+     **/
+    void demandsAttentionChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

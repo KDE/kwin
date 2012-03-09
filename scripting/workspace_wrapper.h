@@ -86,6 +86,12 @@ signals:
      * @param oldNumberOfDesktops The previous number of desktops.
      **/
     void numberDesktopsChanged(int oldNumberOfDesktops);
+    /**
+     * The demands attention state for Client @p c changed to @p set.
+     * @param c The Client for which demands attention changed
+     * @param set New value of demands attention
+     **/
+    void clientDemandsAttentionChanged(KWin::Client* c, bool set);
 
 public:
 //------------------------------------------------------------------

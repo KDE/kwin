@@ -34,6 +34,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, SIGNAL(clientRemoved(KWin::Client*)), SIGNAL(clientRemoved(KWin::Client*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), SIGNAL(clientActivated(KWin::Client*)));
     connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
+    connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
     foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
     }

@@ -674,6 +674,7 @@ signals:
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);
+    void clientDemandsAttentionChanged(KWin::Client*, bool);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
