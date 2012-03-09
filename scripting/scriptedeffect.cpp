@@ -30,6 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtScript/QScriptValueIterator>
 
 typedef KWin::EffectWindow* KEffectWindowRef;
+
+Q_DECLARE_METATYPE(KWin::AnimationData*)
+Q_SCRIPT_DECLARE_QMETAOBJECT(KWin::AnimationData, QObject*)
+
 namespace KWin
 {
 
@@ -146,6 +150,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
     m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
+    m_engine->globalObject().setProperty("AnimationData", m_engine->scriptValueFromQMetaObject<AnimationData>());
     MetaScripting::registration(m_engine);
     qScriptRegisterMetaType<KEffectWindowRef>(m_engine, effectWindowToScriptValue, effectWindowFromScriptValue);
     qScriptRegisterMetaType<KWin::FPx2>(m_engine, fpx2ToScriptValue, fpx2FromScriptValue);
@@ -188,8 +193,32 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
     }
 }
 
-void ScriptedEffect::animate(EffectWindow* w, AnimationEffect::Attribute a, int ms, FPx2 to, FPx2 from, uint meta, QEasingCurve curve, int delay)
+void ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, KWin::AnimationData* data, QEasingCurve curve, int delay)
 {
+    uint meta = 0;
+    if (data) {
+        if (data->axis() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::Axis, data->axis() -1, meta);
+        }
+        if (data->sourceAnchor() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::SourceAnchor, data->sourceAnchor(), meta);
+        }
+        if (data->targetAnchor() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::TargetAnchor, data->targetAnchor(), meta);
+        }
+        if (data->relativeSourceX() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::RelativeSourceX, data->relativeSourceX(), meta);
+        }
+        if (data->relativeSourceY() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::RelativeSourceY, data->relativeSourceY(), meta);
+        }
+        if (data->relativeTargetX() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::RelativeTargetX, data->relativeTargetX(), meta);
+        }
+        if (data->relativeTargetY() != 0) {
+            AnimationEffect::setMetaData(AnimationEffect::RelativeTargetY, data->relativeTargetY(), meta);
+        }
+    }
     AnimationEffect::animate(w, a, meta, ms, to, curve, delay, from);
 }
 
@@ -213,6 +242,88 @@ QVariant ScriptedEffect::readConfig(const QString &key, const QVariant defaultVa
 {
     KConfigGroup cg = effects->effectConfig(m_effectName);
     return cg.readEntry(key, defaultValue);
+}
+
+AnimationData::AnimationData (QObject* parent)
+    : QObject (parent)
+    , m_sourceAnchor((AnimationEffect::Anchor)0)
+    , m_targetAnchor((AnimationEffect::Anchor)0)
+    , m_relativeSourceX(0)
+    , m_relativeSourceY(0)
+    , m_relativeTargetX(0)
+    , m_relativeTargetY(0)
+    , m_axis((AnimationData::Axis)0)
+{
+}
+
+AnimationData::Axis AnimationData::axis() const
+{
+    return m_axis;
+}
+
+int AnimationData::relativeSourceX() const
+{
+    return m_relativeSourceX;
+}
+
+int AnimationData::relativeSourceY() const
+{
+    return m_relativeSourceY;
+}
+
+int AnimationData::relativeTargetX() const
+{
+    return m_relativeTargetX;
+}
+
+int AnimationData::relativeTargetY() const
+{
+    return m_relativeTargetY;
+}
+
+void AnimationData::setRelativeSourceX(int relativeSourceX)
+{
+    m_relativeSourceX = relativeSourceX;
+}
+
+void AnimationData::setRelativeSourceY(int relativeSourceY)
+{
+    m_relativeSourceY = relativeSourceY;
+}
+
+void AnimationData::setRelativeTargetX(int relativeTargetX)
+{
+    m_relativeTargetX = relativeTargetX;
+}
+
+void AnimationData::setRelativeTargetY(int relativeTargetY)
+{
+    m_relativeTargetY = relativeTargetY;
+}
+
+void AnimationData::setAxis(AnimationData::Axis axis)
+{
+    m_axis = axis;
+}
+
+void AnimationData::setSourceAnchor(AnimationEffect::Anchor sourceAnchor)
+{
+    m_sourceAnchor = sourceAnchor;
+}
+
+void AnimationData::setTargetAnchor(AnimationEffect::Anchor targetAnchor)
+{
+    m_targetAnchor = targetAnchor;
+}
+
+AnimationEffect::Anchor AnimationData::sourceAnchor() const
+{
+    return m_sourceAnchor;
+}
+
+AnimationEffect::Anchor AnimationData::targetAnchor() const
+{
+    return m_targetAnchor;
 }
 
 } // namespace

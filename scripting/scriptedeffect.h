@@ -28,11 +28,60 @@ class QScriptValue;
 
 namespace KWin
 {
+class ScriptedEffect;
+class AnimationData : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(Axis)
+    Q_PROPERTY(KWin::AnimationEffect::Anchor sourceAnchor READ sourceAnchor WRITE setSourceAnchor)
+    Q_PROPERTY(KWin::AnimationEffect::Anchor targetAnchor READ targetAnchor WRITE setTargetAnchor)
+    Q_PROPERTY(int relativeSourceX READ relativeSourceX WRITE setRelativeSourceX)
+    Q_PROPERTY(int relativeSourceY READ relativeSourceY WRITE setRelativeSourceY)
+    Q_PROPERTY(int relativeTargetX READ relativeTargetX WRITE setRelativeTargetX)
+    Q_PROPERTY(int relativeTargetY READ relativeTargetY WRITE setRelativeTargetY)
+    Q_PROPERTY(Axis axis READ axis WRITE setAxis)
+public:
+    enum Axis {
+        XAxis = 1,
+        YAxis,
+        ZAxis
+    };
+    explicit AnimationData(QObject* parent = 0);
+
+    // getter
+    AnimationEffect::Anchor sourceAnchor() const;
+    AnimationEffect::Anchor targetAnchor() const;
+    int relativeSourceX() const;
+    int relativeSourceY() const;
+    int relativeTargetX() const;
+    int relativeTargetY() const;
+    Axis axis() const;
+
+    // setter
+    void setSourceAnchor(AnimationEffect::Anchor sourceAnchor);
+    void setTargetAnchor(AnimationEffect::Anchor targetAnchor);
+    void setRelativeSourceX(int relativeSourceX);
+    void setRelativeSourceY(int relativeSourceY);
+    void setRelativeTargetX(int relativeTargetX);
+    void setRelativeTargetY(int relativeTargetY);
+    void setAxis(Axis axis);
+
+private:
+    AnimationEffect::Anchor m_sourceAnchor;
+    AnimationEffect::Anchor m_targetAnchor;
+    int m_relativeSourceX;
+    int m_relativeSourceY;
+    int m_relativeTargetX;
+    int m_relativeTargetY;
+    Axis m_axis;
+};
 
 class ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
     Q_ENUMS(DataRole)
+    Q_ENUMS(KWin::AnimationData::Axis)
+    Q_ENUMS(Anchor)
     Q_ENUMS(MetaType)
 public:
     // copied from kwineffects.h
@@ -70,7 +119,7 @@ public:
     Q_SCRIPTABLE QVariant readConfig(const QString &key, const QVariant defaultValue = QVariant());
 
 public Q_SLOTS:
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint meta = 0, QEasingCurve curve = QEasingCurve(), int delay = 0);
+    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve curve = QEasingCurve(), int delay = 0);
 
 Q_SIGNALS:
     /**
