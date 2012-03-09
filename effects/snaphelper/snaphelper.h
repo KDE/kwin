@@ -41,8 +41,6 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
-    static bool supported();
-
 public Q_SLOTS:
     void slotWindowClosed(EffectWindow *w);
     void slotWindowStartUserMovedResized(EffectWindow *w);

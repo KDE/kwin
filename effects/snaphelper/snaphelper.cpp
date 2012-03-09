@@ -21,13 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "snaphelper.h"
 
 #include "kwinglutils.h"
-//#include "kwinxrenderutils.h"
+#include "kwinxrenderutils.h"
 
 namespace KWin
 {
 
 KWIN_EFFECT(snaphelper, SnapHelperEffect)
-KWIN_EFFECT_SUPPORTED(snaphelper, SnapHelperEffect::supported())
 
 SnapHelperEffect::SnapHelperEffect()
     : m_active(false)
@@ -57,11 +56,6 @@ SnapHelperEffect::~SnapHelperEffect()
 void SnapHelperEffect::reconfigure(ReconfigureFlags)
 {
     m_timeline.setDuration(animationTime(250));
-}
-
-bool SnapHelperEffect::supported()
-{
-    return effects->compositingType() == OpenGLCompositing;
 }
 
 void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
@@ -139,50 +133,48 @@ void SnapHelperEffect::postPaintScreen()
             glPopAttrib();
 #endif
         }
-        /*if ( effects->compositingType() == XRenderCompositing )
-            { // TODO
-            for ( int i = 0; i < effects->numScreens(); i++ )
-                {
+        if ( effects->compositingType() == XRenderCompositing ) {
+            for ( int i = 0; i < effects->numScreens(); i++ ) {
                 const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
                 int midX = rect.x() + rect.width() / 2;
                 int midY = rect.y() + rect.height() / 2 ;
                 int halfWidth = m_window->width() / 2;
                 int halfHeight = m_window->height() / 2;
 
-                XSegment segments[6];
-
+                XRectangle rects[6];
                 // Center lines
-                segments[0].x1 = rect.x() + rect.width() / 2;
-                segments[0].y1 = rect.y();
-                segments[0].x2 = rect.x() + rect.width() / 2;
-                segments[0].y2 = rect.y() + rect.height();
-                segments[1].x1 = rect.x();
-                segments[1].y1 = rect.y() + rect.height() / 2;
-                segments[1].x2 = rect.x() + rect.width();
-                segments[1].y2 = rect.y() + rect.height() / 2;
+                rects[0].x = rect.x() + rect.width() / 2 - 2;
+                rects[0].y = rect.y();
+                rects[0].width = 4;
+                rects[0].height = rect.height();
+                rects[1].x = rect.x();
+                rects[1].y = rect.y() + rect.height() / 2 - 2;
+                rects[1].width = rect.width();
+                rects[1].height = 4;
 
                 // Window outline
-                // The +/- 2 is to prevent line overlap
-                segments[2].x1 = midX - halfWidth + 2;
-                segments[2].y1 = midY - halfHeight;
-                segments[2].x2 = midX + halfWidth + 2;
-                segments[2].y2 = midY - halfHeight;
-                segments[3].x1 = midX + halfWidth;
-                segments[3].y1 = midY - halfHeight + 2;
-                segments[3].x2 = midX + halfWidth;
-                segments[3].y2 = midY + halfHeight + 2;
-                segments[4].x1 = midX + halfWidth - 2;
-                segments[4].y1 = midY + halfHeight;
-                segments[4].x2 = midX - halfWidth - 2;
-                segments[4].y2 = midY + halfHeight;
-                segments[5].x1 = midX - halfWidth;
-                segments[5].y1 = midY + halfHeight - 2;
-                segments[5].x2 = midX - halfWidth;
-                segments[5].y2 = midY - halfHeight - 2;
+                // The +/- 4 is to prevent line overlap
+                rects[2].x = midX - halfWidth + 4;
+                rects[2].y = midY - halfHeight;
+                rects[2].width = 2*halfWidth - 4;
+                rects[2].height = 4;
+                rects[3].x = midX + halfWidth - 4;
+                rects[3].y = midY - halfHeight + 4;
+                rects[3].width = 4;
+                rects[3].height = 2*halfHeight - 4;
+                rects[4].x = midX - halfWidth;
+                rects[4].y = midY + halfHeight - 4;
+                rects[4].width = 2*halfWidth - 4;
+                rects[4].height = 4;
+                rects[5].x = midX - halfWidth;
+                rects[5].y = midY - halfHeight;
+                rects[5].width = 4;
+                rects[5].height = 2*halfHeight - 4;
 
-                XDrawSegments( display(), effects->xrenderBufferPicture(), m_gc, segments, 6 );
-                }
-            }*/
+                XRenderColor c = preMultiply(QColor(128, 128, 128, m_timeline.currentValue()*128));
+                XRenderFillRectangles(display(), PictOpOver, effects->xrenderBufferPicture(), &c, rects, 6);
+            }
+        }
     } else if (m_window && !m_active) {
         if (m_window->isDeleted())
             m_window->unrefWindow();
