@@ -782,7 +782,7 @@ void Toplevel::addLayerRepaint(const QRegion& r)
 
 void Toplevel::addRepaintFull()
 {
-    repaints_region = decorationRect();
+    repaints_region = visibleRect().translated(-pos());
     workspace()->checkCompositeTimer();
 }
 

@@ -96,10 +96,7 @@ QDebug& operator<<(QDebug& stream, const ConstToplevelList& list)
 
 QRect Toplevel::decorationRect() const
 {
-    QRect r(rect());
-    if (hasShadow())
-        r |= shadow()->shadowRegion().boundingRect();
-    return r;
+    return rect();
 }
 
 void Toplevel::detectShape(Window id)

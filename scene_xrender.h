@@ -91,6 +91,7 @@ private:
     double alpha_cached_opacity;
     QRegion transformed_shape;
     static QPixmap *temp_pixmap;
+    static QRect temp_visibleRect;
 };
 
 class SceneXrender::EffectFrame

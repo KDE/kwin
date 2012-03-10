@@ -2425,12 +2425,7 @@ void Client::setSessionInteract(bool needed)
 QRect Client::decorationRect() const
 {
     if (decoration && decoration->widget()) {
-        QRect r = decoration->widget()->rect().translated(-padding_left, -padding_top);
-        if (hasShadow())
-            r |= shadow()->shadowRegion().boundingRect();
-        return r;
-    } else if (hasShadow()) {
-        return shadow()->shadowRegion().boundingRect();
+        return decoration->widget()->rect().translated(-padding_left, -padding_top);
     } else {
         return QRect(0, 0, width(), height());
     }

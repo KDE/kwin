@@ -149,11 +149,7 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
 
 QRect Deleted::decorationRect() const
 {
-    QRect r(rect());
-    r.adjust(-padding_left, -padding_top, padding_top, padding_bottom);
-    if (hasShadow())
-        r |= shadow()->shadowRegion().boundingRect();
-    return r;
+    return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
 }
 
 QRect Deleted::transparentRect() const
