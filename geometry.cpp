@@ -2476,7 +2476,7 @@ void Client::positionGeometryTip()
         geometryTip->raise();
     }
 }
-
+static int s_lastScreen = 0;
 bool Client::startMoveResize()
 {
     assert(!moveResizeMode);
@@ -2532,7 +2532,7 @@ bool Client::startMoveResize()
 
     moveResizeMode = true;
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
-    moveResizeStartScreen = screen();
+    s_lastScreen = moveResizeStartScreen = screen();
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
@@ -2955,17 +2955,19 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
             if (!unrestrictedMoveResize) {
                 // Make sure the titlebar isn't behind a restricted area.
+                const QRegion fullArea = workspace()->clientArea(ScreenArea, s_lastScreen, 0);   // On the screen
+                const QRegion moveArea = workspace()->restrictedMoveArea(desktop());   // Strut areas
                 for (;;) {
                     QRegion titlebarRegion(moveResizeGeom.left(), moveResizeGeom.top(),
                                            moveResizeGeom.width(), frameTop);
-                    titlebarRegion &= workspace()->clientArea(FullArea, -1, 0);   // On the screen
-                    titlebarRegion -= workspace()->restrictedMoveArea(desktop());   // Strut areas
+                    titlebarRegion &= fullArea;
+                    titlebarRegion -= moveArea;   // Strut areas
                     // Now we have a region of all the visible areas of the titlebar
                     // Count the visible pixels and check to see if it's enough
                     int visiblePixels = 0;
                     foreach (const QRect & rect, titlebarRegion.rects())
-                    if (rect.height() >= frameTop)   // Only the full height regions, prevents long slim areas
-                        visiblePixels += rect.width() * rect.height();
+                        if (rect.height() >= frameTop)   // Only the full height regions, prevents long slim areas
+                            visiblePixels += rect.width() * rect.height();
                     if (visiblePixels >= titlebarArea)
                         break; // We have reached a valid position
 
@@ -2983,6 +2985,20 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         }
         if (moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
+        else if (screen() != s_lastScreen) {  // invalid position on screen change?
+            s_lastScreen = screen();
+            const QRect area = workspace()->clientArea(WorkArea, s_lastScreen, desktop());
+            if (moveResizeGeom.bottom() > area.bottom())
+                moveResizeGeom.moveBottom(area.bottom());
+            if (moveResizeGeom.right() > area.right())
+                moveResizeGeom.moveRight(area.right());
+            if (moveResizeGeom.top() < area.top())
+                moveResizeGeom.moveTop(area.top());
+            if (moveResizeGeom.left() < area.left())
+                moveResizeGeom.moveLeft(area.left());
+            if (moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
+                update = true;
+        }
     } else
         abort();
 
