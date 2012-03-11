@@ -2183,18 +2183,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         }
     }
 
-    // restore partial maximizations
-    if (old_mode == MaximizeFull && max_mode == MaximizeRestore) {
-        if (maximizeModeRestore() == MaximizeVertical) {
-            max_mode = MaximizeVertical;
-            maxmode_restore = MaximizeRestore;
-        }
-        if (maximizeModeRestore() == MaximizeHorizontal) {
-            max_mode = MaximizeHorizontal;
-            maxmode_restore = MaximizeRestore;
-        }
-    }
-
     switch(max_mode) {
 
     case MaximizeVertical: {
@@ -2266,12 +2254,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     }
 
     case MaximizeFull: {
-        if (!adjust) {
-            if (old_mode & MaximizeVertical)
-                maxmode_restore = MaximizeVertical;
-            if (old_mode & MaximizeHorizontal)
-                maxmode_restore = MaximizeHorizontal;
-        }
         QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax);
         QRect r = QRect(clientArea.topLeft(), adjSize);
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...

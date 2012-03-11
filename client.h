@@ -356,7 +356,6 @@ public:
     bool isMinimized() const;
     bool isMaximizable() const;
     QRect geometryRestore() const;
-    MaximizeMode maximizeModeRestore() const;
     MaximizeMode maximizeMode() const;
     bool isMinimizable() const;
     void setMaximize(bool vertically, bool horizontally);
@@ -872,7 +871,6 @@ private:
     MaximizeMode max_mode;
     QRect geom_restore;
     QRect geom_fs_restore;
-    MaximizeMode maxmode_restore;
     QTimer* autoRaiseTimer;
     QTimer* shadeHoverTimer;
     QTimer* delayedMoveResizeTimer;
@@ -1088,11 +1086,6 @@ inline QPixmap Client::hugeIcon() const
 inline QRect Client::geometryRestore() const
 {
     return geom_restore;
-}
-
-inline Client::MaximizeMode Client::maximizeModeRestore() const
-{
-    return maxmode_restore;
 }
 
 inline Client::MaximizeMode Client::maximizeMode() const

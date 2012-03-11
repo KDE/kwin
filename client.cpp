@@ -179,7 +179,6 @@ Client::Client(Workspace* ws)
     skip_pager = false;
 
     max_mode = MaximizeRestore;
-    maxmode_restore = MaximizeRestore;
 
     cmap = None;
 
