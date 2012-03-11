@@ -268,9 +268,11 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             prevPoint = cursorPoint;
             break;
         case MouseTrackingCentred:
-            data.xTranslate = qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - cursorPoint.x() * zoom)));
-            data.yTranslate = qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - cursorPoint.y() * zoom)));
             prevPoint = cursorPoint;
+            // fall through
+        case MouseTrackingDisabled:
+            data.xTranslate = qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - prevPoint.x() * zoom)));
+            data.yTranslate = qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - prevPoint.y() * zoom)));
             break;
         case MouseTrackingPush:
             if (timeline.state() != QTimeLine::Running) {
@@ -293,8 +295,6 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                     timeline.start();
                 }
             }
-            // fall through
-        case MouseTrackingDisabled:
             data.xTranslate = - int(prevPoint.x() * (zoom - 1.0));
             data.yTranslate = - int(prevPoint.y() * (zoom - 1.0));
             break;
@@ -381,6 +381,8 @@ void ZoomEffect::zoomIn()
         polling = true;
         effects->startMousePolling();
     }
+    if (mouseTracking == MouseTrackingDisabled)
+        prevPoint = QCursor::pos();
     effects->addRepaintFull();
 }
 
@@ -394,6 +396,8 @@ void ZoomEffect::zoomOut()
             effects->stopMousePolling();
         }
     }
+    if (mouseTracking == MouseTrackingDisabled)
+        prevPoint = QCursor::pos();
     effects->addRepaintFull();
 }
 
