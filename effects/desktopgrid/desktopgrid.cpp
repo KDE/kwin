@@ -673,6 +673,8 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
                     }
                     effects->addRepaintFull();
                 }
+                else
+                    effects->activateWindow(windowMove);
             }
             effects->setElevatedWindow(windowMove, false);
             windowMove = NULL;
