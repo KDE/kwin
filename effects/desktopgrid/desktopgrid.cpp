@@ -549,32 +549,37 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
         if (d != highlightedDesktop) { // Highlight desktop
             if ((me->buttons() & Qt::LeftButton) && isValidMove && !wasWindowMove && d <= effects->numberOfDesktops()) {
                 EffectWindowList windows = effects->stackingOrder();
-                EffectWindowList stack;
-                foreach (EffectWindow * w, windows) {
+                EffectWindowList stack[3];
+                for (EffectWindowList::const_iterator it = windows.constBegin(),
+                                                      end = windows.constEnd(); it != end; ++it) {
+                    EffectWindow *w = const_cast<EffectWindow*>(*it); // we're not really touching it here but below
                     if (w->isOnAllDesktops())
                         continue;
-                    if (w->isOnDesktop(highlightedDesktop)) {
-                        effects->windowToDesktop(w, d);
-                        if (isUsingPresentWindows()) {
-                            m_managers[(d-1)*(effects->numScreens()) + w->screen()].manage(w);
-                            m_managers[(highlightedDesktop-1)*(effects->numScreens()) + w->screen()].unmanage(w);
-                        }
-                    } else if (w->isOnDesktop(d))
-                        stack << w;
+                    if (w->isOnDesktop(highlightedDesktop))
+                        stack[0] << w;
+                    if (w->isOnDesktop(d))
+                        stack[1] << w;
+                    if (w->isOnDesktop(m_originalMovingDesktop))
+                        stack[2] << w;
                 }
-                foreach (EffectWindow * w, stack) {
-                    effects->windowToDesktop(w, highlightedDesktop);
-                    if (isUsingPresentWindows()) {
-                        m_managers[(d-1)*(effects->numScreens()) + w->screen()].unmanage(w);
-                        m_managers[(highlightedDesktop-1)*(effects->numScreens()) + w->screen()].manage(w);
+                const int desks[4] = {highlightedDesktop, d, m_originalMovingDesktop, highlightedDesktop};
+                for (int i = 0; i < 3; ++i ) {
+                    if (desks[i] == desks[i+1])
+                        continue;
+                    foreach (EffectWindow *w, stack[i]) {
+                        effects->windowToDesktop(w, desks[i+1]);
+                        if (isUsingPresentWindows()) {
+                            m_managers[(desks[i]-1)*(effects->numScreens()) + w->screen()].unmanage(w);
+                            m_managers[(desks[i+1]-1)*(effects->numScreens()) + w->screen()].manage(w);
+                        }
                     }
                 }
                 if (isUsingPresentWindows()) {
                     for (int i = 0; i < effects->numScreens(); i++) {
-                        WindowMotionManager& manager = m_managers[(d-1)*(effects->numScreens()) + i ];
-                        WindowMotionManager& manager2 = m_managers[(highlightedDesktop-1)*(effects->numScreens()) + i ];
-                        m_proxy->calculateWindowTransformations(manager.managedWindows(), i, manager);
-                        m_proxy->calculateWindowTransformations(manager2.managedWindows(), i, manager2);
+                        for (int j = 0; j < 3; ++j) {
+                            WindowMotionManager& manager = m_managers[(desks[j]-1)*(effects->numScreens()) + i ];
+                            m_proxy->calculateWindowTransformations(manager.managedWindows(), i, manager);
+                        }
                     }
                     effects->addRepaintFull();
                 }
@@ -591,6 +596,8 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
             EffectWindow* w = isDesktop ? NULL : windowAt(me->pos());
             if (w != NULL)
                 isDesktop = w->isDesktop();
+            if (isDesktop)
+                m_originalMovingDesktop = posToDesktop(me->pos());
             if (w != NULL && !w->isDesktop() && (w->isMovable() || w->isMovableAcrossScreens() || isUsingPresentWindows())) {
                 // Prepare it for moving
                 windowMoveDiff = w->pos() - unscalePos(me->pos(), NULL);

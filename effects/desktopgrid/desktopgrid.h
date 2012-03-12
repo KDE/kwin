@@ -124,6 +124,7 @@ private:
     QTimeLine timeline;
     int paintingDesktop;
     int highlightedDesktop;
+    int m_originalMovingDesktop;
     Window input;
     bool keyboardGrab;
     bool wasWindowMove, wasDesktopMove, isValidMove;
