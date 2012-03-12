@@ -2172,20 +2172,25 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
     // save sizes for restoring, if maximalizing
+    QSize sz;
+    if (isShade())
+        sz = sizeForClientSize(clientSize());
+    else
+        sz = size();
     if (!adjust && !(old_mode & MaximizeVertical)) {
         geom_restore.setTop(y());
-        geom_restore.setHeight(height());
+        geom_restore.setHeight(sz.height());
         // we can fall from maximize to tiled
         // TODO unify quicktiling and regular maximization
         geom_pretile.setTop(y());
-        geom_pretile.setHeight(height());
+        geom_pretile.setHeight(sz.height());
     }
     if (!adjust && !(old_mode & MaximizeHorizontal)) {
         geom_restore.setLeft(x());
-        geom_restore.setWidth(width());
+        geom_restore.setWidth(sz.width());
         // see above
         geom_pretile.setLeft(x());
-        geom_pretile.setWidth(width());
+        geom_pretile.setWidth(sz.width());
     }
 
     if (options->borderlessMaximizedWindows()) {
