@@ -632,7 +632,10 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
     if (e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton) {
         isValidMove = false;
         if (!wasWindowMove && !wasDesktopMove) {
-            setCurrentDesktop(posToDesktop(me->pos()));
+            const int desk = posToDesktop(me->pos());
+            if (desk > effects->numberOfDesktops())
+                return; // don't quit when missing desktop
+            setCurrentDesktop(desk);
             if (windowMove)
                 effects->activateWindow(windowMove);
             setActive(false);
