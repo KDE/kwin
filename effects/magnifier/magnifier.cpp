@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 
 namespace KWin
 {
@@ -45,6 +46,7 @@ MagnifierEffect::MagnifierEffect()
     , polling(false)
     , m_texture(0)
     , m_fbo(0)
+    , m_pixmap(0)
 {
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a;
@@ -63,11 +65,13 @@ MagnifierEffect::~MagnifierEffect()
 {
     delete m_fbo;
     delete m_texture;
+    delete m_pixmap;
 }
 
 bool MagnifierEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing && GLRenderTarget::blitSupported();
+    return  effects->compositingType() == XRenderCompositing ||
+            (effects->compositingType() == OpenGLCompositing && GLRenderTarget::blitSupported());
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -91,8 +95,10 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
                 // zoom ended - delete FBO and texture
                 delete m_fbo;
                 delete m_texture;
+                delete m_pixmap;
                 m_fbo = NULL;
                 m_texture = NULL;
+                m_pixmap = NULL;
             }
         }
     }
@@ -108,51 +114,91 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPoint cursor = cursorPos();
-        m_fbo->blitFromFramebuffer(QRect(cursor.x() - (double)area.width() / (zoom*2), cursor.y() - (double)area.height() / (zoom*2),
-                                         (double)area.width() / zoom, (double)area.height() / zoom));
-        // paint magnifier
-        m_texture->bind();
-        m_texture->render(infiniteRegion(), area);
-        m_texture->unbind();
-        QVector<float> verts;
-        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-        vbo->reset();
-        vbo->setColor(QColor(0, 0, 0));
-        // top frame
-        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.top() - 1;
-        verts << area.left() - FRAME_WIDTH << area.top() - 1;
-        verts << area.right() + FRAME_WIDTH << area.top() - 1;
-        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        // left frame
-        verts << area.left() - 1 << area.top() - FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.left() - 1 << area.bottom() + FRAME_WIDTH;
-        verts << area.left() - 1 << area.top() - FRAME_WIDTH;
-        // right frame
-        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        verts << area.right() + 1 << area.top() - FRAME_WIDTH;
-        verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
-        verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
-        verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-        // bottom frame
-        verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
-        verts << area.left() - FRAME_WIDTH << area.bottom() + 1;
-        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-        verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
-        vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
-        if (ShaderManager::instance()->isValid()) {
-            ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+
+        QRect srcArea(cursor.x() - (double)area.width() / (zoom*2),
+                      cursor.y() - (double)area.height() / (zoom*2),
+                      (double)area.width() / zoom, (double)area.height() / zoom);
+        if (effects->compositingType() == OpenGLCompositing) {
+            m_fbo->blitFromFramebuffer(srcArea);
+            // paint magnifier
+            m_texture->bind();
+            m_texture->render(infiniteRegion(), area);
+            m_texture->unbind();
+            QVector<float> verts;
+            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+            vbo->reset();
+            vbo->setColor(QColor(0, 0, 0));
+            // top frame
+            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.top() - 1;
+            verts << area.left() - FRAME_WIDTH << area.top() - 1;
+            verts << area.right() + FRAME_WIDTH << area.top() - 1;
+            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            // left frame
+            verts << area.left() - 1 << area.top() - FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.left() - 1 << area.bottom() + FRAME_WIDTH;
+            verts << area.left() - 1 << area.top() - FRAME_WIDTH;
+            // right frame
+            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << area.right() + 1 << area.top() - FRAME_WIDTH;
+            verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
+            verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
+            verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            // bottom frame
+            verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
+            verts << area.left() - FRAME_WIDTH << area.bottom() + 1;
+            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
+            verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
+            vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+            }
+            vbo->render(GL_TRIANGLES);
+            if (ShaderManager::instance()->isValid()) {
+                ShaderManager::instance()->popShader();
+            }
         }
-        vbo->render(GL_TRIANGLES);
-        if (ShaderManager::instance()->isValid()) {
-            ShaderManager::instance()->popShader();
+        if (effects->compositingType() == XRenderCompositing) {
+            if (!m_pixmap || m_pixmap->size() != srcArea.size()) {
+                delete m_pixmap;
+                m_pixmap = new QPixmap(srcArea.size());
+            }
+            static XTransform identity = {{
+                    { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
+                    { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
+                    { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) }
+                }
+            };
+            static XTransform xform = {{
+                    { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
+                    { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
+                    { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) }
+                }
+            };
+            XRenderComposite( display(), PictOpSrc, effects->xrenderBufferPicture(), 0, m_pixmap->x11PictureHandle(),
+                                srcArea.x(), srcArea.y(), 0, 0, 0, 0, srcArea.width(), srcArea.height() );
+            XFlush(display());
+            xform.matrix[0][0] = XDoubleToFixed(1.0/zoom);
+            xform.matrix[1][1] = XDoubleToFixed(1.0/zoom);
+            XRenderSetPictureTransform(display(), m_pixmap->x11PictureHandle(), &xform);
+            XRenderSetPictureFilter(display(), m_pixmap->x11PictureHandle(), const_cast<char*>("good"), NULL, 0);
+            XRenderComposite( display(), PictOpSrc, m_pixmap->x11PictureHandle(), 0, effects->xrenderBufferPicture(),
+                                0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
+            XRenderSetPictureFilter(display(), m_pixmap->x11PictureHandle(), const_cast<char*>("fast"), NULL, 0);
+            XRenderSetPictureTransform(display(), m_pixmap->x11PictureHandle(), &identity);
+            const XRectangle rects[4] = { { area.x()+FRAME_WIDTH, area.y(), area.width()-FRAME_WIDTH, FRAME_WIDTH},
+                                          { area.right()-FRAME_WIDTH, area.y()+FRAME_WIDTH, FRAME_WIDTH, area.height()-FRAME_WIDTH},
+                                          { area.x(), area.bottom()-FRAME_WIDTH, area.width()-FRAME_WIDTH, FRAME_WIDTH},
+                                          { area.x(), area.y(), FRAME_WIDTH, area.height()-FRAME_WIDTH} };
+            XRenderColor c = preMultiply(QColor(0,0,0,255));
+            XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), &c, rects, 4);
         }
     }
 }
@@ -199,8 +245,10 @@ void MagnifierEffect::zoomOut()
         if (zoom == target_zoom) {
             delete m_fbo;
             delete m_texture;
+            delete m_pixmap;
             m_fbo = NULL;
             m_texture = NULL;
+            m_pixmap = NULL;
         }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));

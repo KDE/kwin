@@ -2086,6 +2086,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 {
     if (changeMaximizeRecursion)
         return;
+
+    // sic! codeblock for TemporaryAssign
     {
         // isMovable() and isResizable() may be false for maximized windows
         // with moving/resizing maximized windows disabled
@@ -2122,29 +2124,34 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     else
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
+    // save sizes for restoring, if maximalizing
+    QSize sz;
+    if (isShade())
+        sz = sizeForClientSize(clientSize());
+    else
+        sz = size();
+    if (!adjust && !(old_mode & MaximizeVertical)) {
+        geom_restore.setTop(y());
+        geom_restore.setHeight(sz.height());
+        // we can fall from maximize to tiled
+        // TODO unify quicktiling and regular maximization
+        geom_pretile.setTop(y());
+        geom_pretile.setHeight(sz.height());
+    }
+    if (!adjust && !(old_mode & MaximizeHorizontal)) {
+        geom_restore.setLeft(x());
+        geom_restore.setWidth(sz.width());
+        // see above
+        geom_pretile.setLeft(x());
+        geom_pretile.setWidth(sz.width());
+    }
+
     if (options->borderlessMaximizedWindows()) {
         // triggers a maximize change.
         // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore/pretile geometry
         changeMaximizeRecursion = true;
         setNoBorder(app_noborder || max_mode == MaximizeFull);
         changeMaximizeRecursion = false;
-    }
-
-    // save sizes for restoring, if maximalizing
-    if (!adjust && !(old_mode & MaximizeVertical)) {
-        geom_restore.setTop(y());
-        geom_restore.setHeight(height());
-        // we can fall from maximize to tiled
-        // TODO unify quicktiling and regular maximization
-        geom_pretile.setTop(y());
-        geom_pretile.setHeight(height());
-    }
-    if (!adjust && !(old_mode & MaximizeHorizontal)) {
-        geom_restore.setLeft(x());
-        geom_restore.setWidth(width());
-        // see above
-        geom_pretile.setLeft(x());
-        geom_pretile.setWidth(width());
     }
 
     if (!adjust) {

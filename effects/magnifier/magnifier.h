@@ -58,6 +58,7 @@ private:
     QSize magnifier_size;
     GLTexture *m_texture;
     GLRenderTarget *m_fbo;
+    QPixmap *m_pixmap;
 };
 
 } // namespace
