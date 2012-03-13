@@ -565,6 +565,8 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
             break;
         }
     }
+    if (!hovering)
+        setHighlightedWindow(NULL);
     if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(me->pos()))
         updateCloseWindow();
     else if (m_closeView)
@@ -751,36 +753,28 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
         switch(e->key()) {
             // Wrap only if not auto-repeating
         case Qt::Key_Left:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, -1, 0, !e->isAutoRepeat()));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, -1, 0, !e->isAutoRepeat()));
             break;
         case Qt::Key_Right:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 1, 0, !e->isAutoRepeat()));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 1, 0, !e->isAutoRepeat()));
             break;
         case Qt::Key_Up:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1, !e->isAutoRepeat()));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1, !e->isAutoRepeat()));
             break;
         case Qt::Key_Down:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1, !e->isAutoRepeat()));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1, !e->isAutoRepeat()));
             break;
         case Qt::Key_Home:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, -1000, 0, false));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, -1000, 0, false));
             break;
         case Qt::Key_End:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 1000, 0, false));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 1000, 0, false));
             break;
         case Qt::Key_PageUp:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1000, false));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1000, false));
             break;
         case Qt::Key_PageDown:
-            if (m_highlightedWindow)
-                setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1000, false));
+            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1000, false));
             break;
         case Qt::Key_Backspace:
             if (!m_windowFilter.isEmpty()) {
@@ -936,7 +930,7 @@ void PresentWindowsEffect::rearrangeWindows()
         }
     }
     if (windowlist.isEmpty()) {
-        setHighlightedWindow(NULL);   // TODO: Having a NULL highlighted window isn't really safe
+        setHighlightedWindow(NULL);
         return;
     }
 
@@ -1762,6 +1756,8 @@ void PresentWindowsEffect::closeWindow()
 
 EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, int ydiff, bool wrap) const
 {
+    if (!w)
+        return m_motionManager.managedWindows().first();
     // TODO: Is it possible to select hidden windows?
     EffectWindow* next;
     QRect area = effects->clientArea(FullArea, 0, effects->currentDesktop());
