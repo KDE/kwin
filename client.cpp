@@ -95,6 +95,7 @@ Client::Client(Workspace* ws)
     , transient_for (NULL)
     , transient_for_id(None)
     , original_transient_for_id(None)
+    , shade_below(NULL)
     , skip_switcher(false)
     , blocks_compositing(false)
     , autoRaiseTimer(NULL)
@@ -1099,8 +1100,11 @@ void Client::setShade(ShadeMode mode)
         plainResize(s);
         shade_geometry_change = false;
         if (isActive()) {
-            if (was_shade_mode == ShadeHover)
+            if (was_shade_mode == ShadeHover) {
+                if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
+                    workspace()->restack(this, shade_below);
                 workspace()->activateNextClient(this);
+            }
             else
                 workspace()->focusToNull();
         }
@@ -1111,6 +1115,15 @@ void Client::setShade(ShadeMode mode)
         plainResize(s);
         if (shade_mode == ShadeHover || shade_mode == ShadeActivated)
             setActive(true);
+        if (shade_mode == ShadeHover) {
+            ClientList order = workspace()->stackingOrder();
+            int idx = order.indexOf(this) + 1;   // this is likely related to the index parameter?!
+            shade_below = (idx < order.count()) ? order.at(idx) : NULL;
+            if (shade_below && shade_below->isNormalWindow())
+                workspace()->raiseClient(this);
+            else
+                shade_below = NULL;
+        }
         XMapWindow(display(), wrapperId());
         XMapWindow(display(), window());
         if (isActive())

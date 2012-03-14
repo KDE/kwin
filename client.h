@@ -823,6 +823,7 @@ private:
     Window original_transient_for_id;
     ClientList transients_list; // SELI TODO: Make this ordered in stacking order?
     ShadeMode shade_mode;
+    Client *shade_below;
     uint active : 1;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
     uint keep_above : 1; ///< NET::KeepAbove (was stays_on_top)

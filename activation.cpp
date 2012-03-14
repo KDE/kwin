@@ -667,8 +667,10 @@ void Client::updateUserTime(Time time)
         time = xTime();
     if (time != -1U
             && (user_time == CurrentTime
-                || timestampCompare(time, user_time) > 0))    // time > user_time
+                || timestampCompare(time, user_time) > 0)) {    // time > user_time
         user_time = time;
+        shade_below = NULL; // do not hover re-shade a window after it got interaction
+    }
     group()->updateUserTime(user_time);
 }
 
