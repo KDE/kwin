@@ -208,6 +208,8 @@ static int edit(Window wid, bool whole_app)
     loadRules(rules);
     Rules* orig_rule = findRule(rules, wid, whole_app);
     RulesDialog dlg;
+    if (whole_app)
+        dlg.setWindowTitle(i18nc("Window caption for the application wide rules dialog", "Edit Application-Specific Settings"));
     // dlg.edit() creates new Rules instance if edited
     Rules* edited_rule = dlg.edit(orig_rule, wid, true);
     if (edited_rule == NULL || edited_rule->isEmpty()) {
