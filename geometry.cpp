@@ -2276,24 +2276,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
 }
 
-void Client::resetMaximize()
-{
-    if (max_mode == MaximizeRestore)
-        return;
-    max_mode = MaximizeRestore;
-    Notify::raise(Notify::UnMaximize);
-    info->setState(0, NET::Max);
-    updateAllowedActions();
-    if (decoration != NULL)
-        decoration->borders(border_left, border_right, border_top, border_bottom);
-    if (isShade())
-        setGeometry(QRect(pos(), sizeForClientSize(clientSize())), ForceGeometrySet);
-    else
-        setGeometry(geometry(), ForceGeometrySet);
-    if (decoration != NULL)
-        decoration->maximizeChange();
-}
-
 bool Client::isFullScreenable(bool fullscreen_hack) const
 {
     if (!rules()->checkFullScreen(true))

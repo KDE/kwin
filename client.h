@@ -741,7 +741,6 @@ private:
     void positionGeometryTip();
     void grabButton(int mod);
     void ungrabButton(int mod);
-    void resetMaximize();
     void resizeDecoration(const QSize& s);
 
     void pingWindow();
