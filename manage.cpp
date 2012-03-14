@@ -107,7 +107,6 @@ bool Client::manage(Window w, bool isMapped)
     // and also relies on rules already existing
     cap_normal = readName();
     setupWindowRules(false);
-    ignore_focus_stealing = options->checkIgnoreFocusStealing(this);   // TODO: Change to rules
     setCaption(cap_normal, true);
 
     if (Extensions::shapeAvailable())
@@ -274,10 +273,7 @@ bool Client::manage(Window w, bool isMapped)
     else
         usePosition = true;
     if (!rules()->checkIgnoreGeometry(!usePosition)) {
-        bool ignorePPosition = options->ignorePositionClasses().contains(
-                                   QString::fromLatin1(resourceClass()));
-
-        if (((xSizeHint.flags & PPosition) && !ignorePPosition) ||
+        if (((xSizeHint.flags & PPosition)) ||
                 (xSizeHint.flags & USPosition)) {
             placementDone = true;
             // Disobey xinerama placement option for now (#70943)

@@ -495,7 +495,6 @@ public:
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
     bool hasUserTimeSupport() const;
-    bool ignoreFocusStealing() const;
 
     /// Does 'delete c;'
     static void deleteClient(Client* c, allowed_t);
@@ -912,7 +911,6 @@ private:
     KShortcut _shortcut;
     int sm_stacking_order;
     friend struct FetchNameInternalPredicate;
-    friend struct CheckIgnoreFocusStealingProcedure;
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
     QTimer* demandAttentionKNotifyTimer;
@@ -1193,17 +1191,10 @@ inline bool Client::hasUserTimeSupport() const
     return info->userTime() != -1U;
 }
 
-inline bool Client::ignoreFocusStealing() const
-{
-    return ignore_focus_stealing;
-}
-
 inline const WindowRules* Client::rules() const
 {
     return &client_rules;
 }
-
-KWIN_PROCEDURE(CheckIgnoreFocusStealingProcedure, Client, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing(cl));
 
 inline Window Client::moveResizeGrabWindow() const
 {

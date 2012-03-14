@@ -190,19 +190,6 @@ unsigned long Options::updateSettings()
     setOpMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
     setOpMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
-    m_ignorePositionClasses = config.readEntry("IgnorePositionClasses", QStringList());
-    ignoreFocusStealingClasses = config.readEntry("IgnoreFocusStealingClasses", QStringList());
-    // Qt3.2 and older had resource class all lowercase, but Qt3.3 has it capitalized
-    // therefore Client::resourceClass() forces lowercase, force here lowercase as well
-    for (QStringList::Iterator it = m_ignorePositionClasses.begin();
-            it != m_ignorePositionClasses.end();
-            ++it)
-        (*it) = (*it).toLower();
-    for (QStringList::Iterator it = ignoreFocusStealingClasses.begin();
-            it != ignoreFocusStealingClasses.end();
-            ++it)
-        (*it) = (*it).toLower();
-
     m_killPingTimeout = config.readEntry("KillPingTimeout", 5000);
     m_hideUtilityWindowsForInactive = config.readEntry("HideUtilityWindowsForInactive", true);
     m_inactiveTabsSkipTaskbar = config.readEntry("InactiveTabsSkipTaskbar", false);
@@ -458,11 +445,6 @@ int Options::electricBorderDelay() const
 int Options::electricBorderCooldown() const
 {
     return electric_border_cooldown;
-}
-
-bool Options::checkIgnoreFocusStealing(const Client* c) const
-{
-    return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
 }
 
 Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const

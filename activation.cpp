@@ -304,8 +304,7 @@ void Workspace::activateClient(Client* c, bool force)
     // E.g. typing URL in minicli which will show kio_uiserver dialog (with workaround),
     // and then kdesktop shows dialog about SSL certificate.
     // This needs also avoiding user creation time in Client::readUserTimeMapTimestamp().
-    if (!c->ignoreFocusStealing())
-        c->updateUserTime();
+    c->updateUserTime();
 }
 
 /*!
@@ -565,8 +564,6 @@ bool Workspace::allowClientActivation(const Client* c, Time time, bool focus_in,
         return false;
     if (!ignore_desktop && !c->isOnCurrentDesktop())
         return false; // allow only with level == 0
-    if (c->ignoreFocusStealing())
-        return true;
     if (ac == NULL || ac->isDesktop()) {
         kDebug(1212) << "Activation: No client active, allowing";
         return true; // no active client -> always allow
@@ -613,8 +610,6 @@ bool Workspace::allowFullClientRaising(const Client* c, Time time)
         kDebug(1212) << "Raising: No client active, allowing";
         return true; // no active client -> always allow
     }
-    if (c->ignoreFocusStealing())
-        return true;
     // TODO window urgency  -> return true?
     if (Client::belongToSameApplication(c, ac, true)) {
         kDebug(1212) << "Raising: Belongs to active application";
@@ -804,10 +799,7 @@ Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStart
         // this check will be done in manage().
         if (session)
             return -1U;
-        if (ignoreFocusStealing() && act != NULL)
-            time = act->userTime();
-        else
-            time = readUserCreationTime();
+        time = readUserCreationTime();
     }
     kDebug(1212) << "User timestamp, final:" << this << ":" << time;
     return time;

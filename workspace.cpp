@@ -932,7 +932,6 @@ void Workspace::slotReconfigure()
     emit configChanged();
     initPositioning->reinitCascading(0);
     discardPopup();
-    forEachClient(CheckIgnoreFocusStealingProcedure());
     updateToolWindows(true);
 
     if (hasDecorationPlugin() && mgr->reset(changed)) {

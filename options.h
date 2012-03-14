@@ -116,10 +116,6 @@ class Options : public QObject, public KDecorationOptions
      **/
     Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel NOTIFY configChanged)
     /**
-     * List of window classes to ignore PPosition size hint
-     */
-    Q_PROPERTY(QStringList ignorePositionClasses READ ignorePositionClasses NOTIFY configChanged)
-    /**
     * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
     */
     Q_PROPERTY(bool legacyFullscreenSupport READ isLegacyFullscreenSupport NOTIFY configChanged)
@@ -373,20 +369,11 @@ public:
     }
 
     /**
-     * List of window classes to ignore PPosition size hint
-     */
-    const QStringList &ignorePositionClasses() const {
-        return m_ignorePositionClasses;
-    }
-
-    /**
     * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
     */
     bool isLegacyFullscreenSupport() const {
         return m_legacyFullscreenSupport;
     }
-
-    bool checkIgnoreFocusStealing(const Client* c) const;
 
     WindowOperation operationTitlebarDblClick() const {
         return OpTitlebarDblClick;
@@ -625,7 +612,6 @@ private:
     bool m_showDesktopIsMinimizeAll;
     bool m_rollOverDesktops;
     int m_focusStealingPreventionLevel;
-    QStringList m_ignorePositionClasses;
     bool m_legacyFullscreenSupport;
     int m_killPingTimeout;
     bool m_hideUtilityWindowsForInactive;
@@ -683,8 +669,6 @@ private:
     bool electric_border_tiling;
     bool borderless_maximized_windows;
     bool show_geometry_tip;
-    // List of window classes for which not to use focus stealing prevention
-    QStringList ignoreFocusStealingClasses;
     int animationSpeed; // 0 - instant, 5 - very slow
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
