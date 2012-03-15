@@ -1522,8 +1522,11 @@ void Workspace::switchWindow(Direction direction)
             }
         }
     }
-    if (switchTo)
+    if (switchTo) {
+        if (switchTo->tabGroup())
+            switchTo = switchTo->tabGroup()->current();
         activateClient(switchTo);
+    }
 }
 
 /*!
