@@ -123,6 +123,14 @@ QMenu* Workspace::clientPopup()
         action = advanced_popup->addAction(i18n("S&pecial Application Settings..."));
         action->setIcon(KIcon("preferences-system-windows-actions"));
         action->setData(Options::ApplicationRulesOp);
+        if (!KGlobal::config()->isImmutable() &&
+                !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty()) {
+            advanced_popup->addSeparator();
+            action = advanced_popup->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
+                                            "Window &Manager Settings..."));
+            action->setIcon(KIcon("configure"));
+            connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
+        }
 
         mMoveOpAction = popup->addAction(i18n("&Move"));
         mMoveOpAction->setIcon(KIcon("transform-move"));
@@ -198,14 +206,6 @@ QMenu* Workspace::clientPopup()
         action->setText(i18n("Ad&vanced"));
 
         popup->addSeparator();
-
-        if (!KGlobal::config()->isImmutable() &&
-                !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty()) {
-            action = popup->addAction(i18n("Configur&e Window Behavior..."));
-            action->setIcon(KIcon("configure"));
-            connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
-            popup->addSeparator();
-        }
 
         mCloseOpAction = popup->addAction(i18n("&Close"));
         mCloseOpAction->setIcon(KIcon("window-close"));
