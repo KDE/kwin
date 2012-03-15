@@ -1000,7 +1000,7 @@ void Client::minimize(bool avoid_animation)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Minimized);
     emit minimizedChanged();
 }
 
@@ -1026,7 +1026,7 @@ void Client::unminimize(bool avoid_animation)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Minimized);
     emit minimizedChanged();
 }
 
@@ -1148,7 +1148,7 @@ void Client::setShade(ShadeMode mode)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Shaded);
     emit shadeChanged();
 }
 
@@ -1598,7 +1598,7 @@ void Client::setDesktop(int desktop)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Desktop);
     emit desktopChanged();
 }
 
@@ -1661,7 +1661,7 @@ void Client::updateActivities(bool includeTransients)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Activity);
 }
 
 /**
@@ -1703,7 +1703,7 @@ void Client::setOnAllDesktops(bool b)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Desktop);
 }
 
 /**

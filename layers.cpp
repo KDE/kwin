@@ -812,7 +812,7 @@ void Client::setKeepAbove(bool b)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Layer);
     emit keepAboveChanged();
 }
 
@@ -836,7 +836,7 @@ void Client::setKeepBelow(bool b)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Layer);
     emit keepBelowChanged();
 }
 

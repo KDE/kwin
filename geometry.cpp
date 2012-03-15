@@ -1928,7 +1928,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Geometry);
 
     // TODO: this signal is emitted too often
     emit geometryChanged();
@@ -1995,7 +1995,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Geometry);
     // TODO: this signal is emitted too often
     emit geometryChanged();
 }
@@ -2042,7 +2042,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
 
     // Update states of all other windows in this group
     if (tabGroup())
-        tabGroup()->updateStates(this);
+        tabGroup()->updateStates(this, TabGroup::Geometry);
 }
 
 void Client::blockGeometryUpdates(bool block)
@@ -2082,10 +2082,35 @@ void Client::setMaximize(bool vertically, bool horizontally)
     emit clientMaximizedStateChanged(this, max_mode);
     emit clientMaximizedStateChanged(this, vertically, horizontally);
 
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this);
 }
+
+// Update states of all other windows in this group
+class TabSynchronizer
+{
+public:
+    TabSynchronizer(Client *client, TabGroup::States syncStates) :
+    m_client(client) , m_states(syncStates)
+    {
+        if (client->tabGroup())
+            client->tabGroup()->blockStateUpdates(true);
+    }
+    ~TabSynchronizer()
+    {
+        syncNow();
+    }
+    void syncNow()
+    {
+        if (m_client && m_client->tabGroup()) {
+            m_client->tabGroup()->blockStateUpdates(false);
+            m_client->tabGroup()->updateStates(m_client, m_states);
+        }
+        m_client = 0;
+    }
+private:
+    Client *m_client;
+    TabGroup::States m_states;
+};
+
 
 static bool changeMaximizeRecursion = false;
 void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
@@ -2116,6 +2141,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         return;
 
     GeometryUpdatesBlocker blocker(this);
+    // QT synchronizing required because we eventually change from QT to Maximized
+    TabSynchronizer syncer(this, TabGroup::Maximized|TabGroup::QuickTile);
 
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
@@ -2271,6 +2298,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     default:
         break;
     }
+
+    syncer.syncNow(); // important because of window rule updates!
 
     updateAllowedActions();
     if (decoration != NULL)
@@ -3101,6 +3130,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     if (mode == QuickTileMaximize)
     {
+        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
         quick_tile_mode = QuickTileNone;
         if (maximizeMode() == MaximizeFull)
             setMaximize(false, false);
@@ -3122,6 +3152,9 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (maximizeMode() == MaximizeFull) {
+
+        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
+
         setMaximize(false, false);
 
         // Temporary, so the maximize code doesn't get all confused
@@ -3137,14 +3170,18 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     // First, check if the requested tile negates the tile we're in now: move right when left or left when right
     // is the same as explicitly untiling this window, so allow it.
     if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
+        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
+
+        quick_tile_mode = QuickTileNone;
         // Untiling, so just restore geometry, and we're done.
         if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
             geom_restore = geometry();
         setGeometry(geom_restore);
-        quick_tile_mode = QuickTileNone;
         checkWorkspacePosition(); // Just in case it's a different screen
         return;
     } else {
+        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
+
         QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
@@ -3182,18 +3219,19 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 mode = QuickTileRight;
             else
                 mode = QuickTileLeft;
-        } else
+        } else {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             geom_restore = geometry();
+        }
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;
         if (mode != QuickTileNone)
             setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()));
+
         // Store the mode change
         quick_tile_mode = mode;
-
     }
 }
 

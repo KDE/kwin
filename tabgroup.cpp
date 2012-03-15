@@ -31,6 +31,7 @@ TabGroup::TabGroup(Client *c)
     , m_current(c)
     , m_minSize(c->minSize())
     , m_maxSize(c->maxSize())
+    , m_stateUpdatesBlocked(0)
 {
     QIcon icon(c->icon());
     icon.addPixmap(c->miniIcon());
@@ -112,7 +113,7 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
     c->setTabGroup(this);   // Let the client know which group it belongs to
 
     updateMinMaxSize();
-    updateStates(m_current, c);
+    updateStates(m_current, All, c);
 
     if (!becomeVisible)
         c->setClientShown(false);
@@ -156,9 +157,12 @@ bool TabGroup::remove(Client* c, const QRect& newGeom)
             static_cast<EffectsHandlerImpl*>(effects)->slotCurrentTabAboutToChange(c->effectWindow(), m_current->effectWindow());
     }
 
-    if (newGeom.isValid()) {
+    if (c->quickTileMode() != QuickTileNone)
+        c->setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
+    else if (newGeom.isValid()) {
         c->maximize(Client::MaximizeRestore); // explicitly calling for a geometry -> unmaximize - in doubt
         c->setGeometry(newGeom);
+        c->checkWorkspacePosition(); // oxygen has now twice kicked me a window out of the screen - better be safe then sorry
     }
 
     // Notify effects of removal
@@ -268,32 +272,56 @@ void TabGroup::updateMinMaxSize()
     }
 }
 
-void TabGroup::updateStates(Client* main, Client* only)
+
+void TabGroup::blockStateUpdates(bool more) {
+    more ? ++m_stateUpdatesBlocked : --m_stateUpdatesBlocked;
+    if (m_stateUpdatesBlocked < 0) {
+        m_stateUpdatesBlocked = 0;
+        qWarning("TabGroup: Something is messed up with TabGroup::blockStateUpdates() invokation\nReleased more than blocked!");
+    }
+}
+
+void TabGroup::updateStates(Client* main, States states, Client* only)
 {
+    if (m_stateUpdatesBlocked > 0)
+        return;
+
     ClientList toBeRemoved;
     for (ClientList::const_iterator i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i) {
         Client *c = (*i);
         if (c != main && (!only || c == only)) {
-            if (c->isMinimized() != main->isMinimized()) {
+            if ((states & Minimized) && c->isMinimized() != main->isMinimized()) {
                 if (main->isMinimized())
                     c->minimize(true);
                 else
                     c->unminimize(true);
             }
-            if (c->isShade() != main->isShade())
+
+            // the order QuickTile -> Maximized -> Geometry is somewhat important because one will change the other
+            // don't change w/o good reason and care
+            if ((states & QuickTile) && c->quickTileMode() != main->quickTileMode())
+                c->setQuickTileMode(main->quickTileMode());
+            if ((states & Maximized) && c->maximizeMode() != main->maximizeMode())
+                c->maximize(main->maximizeMode());
+            // the order Shaded -> Geometry is somewhat important because one will change the other
+            if ((states & Shaded) && c->isShade() != main->isShade())
                 c->setShade(main->isShade() ? ShadeNormal : ShadeNone);
-            if (c->geometry() != main->geometry())
+            if ((states & Geometry) && c->geometry() != main->geometry())
                 c->setGeometry(main->geometry());
-            if (c->isOnAllDesktops() != main->isOnAllDesktops())
-                c->setOnAllDesktops(main->isOnAllDesktops());
-            if (c->desktop() != main->desktop())
-                c->setDesktop(main->desktop());
-            if (c->activities() != main->activities())
+            if (states & Desktop) {
+                if (c->isOnAllDesktops() != main->isOnAllDesktops())
+                    c->setOnAllDesktops(main->isOnAllDesktops());
+                if (c->desktop() != main->desktop())
+                    c->setDesktop(main->desktop());
+            }
+            if ((states & Activity) && c->activities() != main->activities())
                 c->setOnActivities(main->activities());
-            if (c->keepAbove() != main->keepAbove())
-                c->setKeepAbove(main->keepAbove());
-            if (c->keepBelow() != main->keepBelow())
-                c->setKeepBelow(main->keepBelow());
+            if (states & Layer) {
+                if (c->keepAbove() != main->keepAbove())
+                    c->setKeepAbove(main->keepAbove());
+                if (c->keepBelow() != main->keepBelow())
+                    c->setKeepBelow(main->keepBelow());
+            }
 
             // If it's not possible to have the same states then ungroup them, TODO: Check all states
             if (c->geometry() != main->geometry() || c->desktop() != main->desktop())

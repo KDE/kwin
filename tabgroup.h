@@ -56,6 +56,13 @@ public:
     TabGroup(Client* c);
     ~TabGroup();
 
+    enum State {
+        Minimized = 1<<0, Maximized = 1<<1, Shaded = 1<<2,
+        Geometry = 1<<3, Desktop = 1<<4, Activity = 1<<5,
+        Layer = 1<<6, QuickTile = 1<<7, All = 0xffffffff
+    };
+    Q_DECLARE_FLAGS(States, State)
+
     /**
      * Activate next tab (flips)
      */
@@ -65,6 +72,13 @@ public:
      * Activate previous tab (flips)
      */
     void activatePrev();
+
+    /**
+     * Allows to alter several attributes in random order and trigger a general update at the end
+     * (must still be explicitly called)
+     * this is to prevent side effects, mostly for geometry adjustments during maximization and QuickTiling
+     */
+    void blockStateUpdates(bool);
 
     /**
      * Close all clients in this group.
@@ -125,7 +139,7 @@ public:
      * \p main as the primary client to copy the settings off. If \p only is set then only
      * that client is updated to match \p main.
      */
-    void updateStates(Client* main, Client* only = NULL);
+    void updateStates(Client* main, States states, Client* only = NULL);
 
     /**
      * updates geometry restrictions of this group, basically called from Client::getWmNormalHints(), otherwise rather private
@@ -149,6 +163,7 @@ private:
     Client *m_current;
     QSize m_minSize;
     QSize m_maxSize;
+    int m_stateUpdatesBlocked;
 };
 
 inline bool TabGroup::contains(Client* c) const
@@ -187,5 +202,7 @@ inline QSize TabGroup::maxSize() const
 }
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::TabGroup::States)
 
 #endif

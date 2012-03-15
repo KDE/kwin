@@ -368,6 +368,7 @@ public:
     bool isMaximizable() const;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const;
+    QuickTileMode quickTileMode() const;
     bool isMinimizable() const;
     void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;
@@ -1115,6 +1116,11 @@ inline QRect Client::geometryRestore() const
 inline Client::MaximizeMode Client::maximizeMode() const
 {
     return max_mode;
+}
+
+inline KWin::QuickTileMode Client::quickTileMode() const
+{
+    return (KWin::QuickTileMode)quick_tile_mode;
 }
 
 inline bool Client::skipTaskbar(bool from_outside) const
