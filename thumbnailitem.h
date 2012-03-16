@@ -54,6 +54,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void init();
     void effectWindowAdded();
+    void repaint(KWin::EffectWindow* w);
 private:
     void findParentEffectWindow();
     qulonglong m_wId;

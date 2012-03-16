@@ -41,6 +41,7 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
     if (effects) {
         connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
+        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
     }
     QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -115,6 +116,13 @@ void ThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     const QSize size(boundingRect().size().toSize() - pixmap.size());
     painter->drawPixmap(boundingRect().adjusted(size.width()/2.0, size.height()/2.0, -size.width()/2.0, -size.height()/2.0).toRect(),
                         pixmap);
+}
+
+void ThumbnailItem::repaint(KWin::EffectWindow *w)
+{
+    if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
+        update();
+    }
 }
 
 } // namespace KWin
