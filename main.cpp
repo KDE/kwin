@@ -487,9 +487,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     args.add("lock", ki18n("Disable configuration options"));
     args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
     args.add("crashes <n>", ki18n("Indicate that KWin has recently crashed n times"));
-#ifdef KWIN_BUILD_SCRIPTING
-    args.add("noscript", ki18n("Load the script testing dialog"));
-#endif
     KCmdLineArgs::addCmdLineOptions(args);
 
     if (KDE_signal(SIGTERM, KWin::sighandler) == SIG_IGN)
