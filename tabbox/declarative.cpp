@@ -136,7 +136,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
         rootContext()->setContextProperty("clientModel", model);
     }
-    setSource(QUrl(KStandardDirs::locate("data", "kwin/tabbox/tabbox.qml")));
+    setSource(QUrl(KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + QLatin1String("/tabbox/tabbox.qml"))));
 
     // FrameSvg
     m_frame->setImagePath("dialogs/background");
@@ -304,7 +304,7 @@ void DeclarativeView::updateQmlSource(bool force)
     }
     if (m_mode == TabBoxConfig::DesktopTabBox) {
         m_currentLayout = tabBox->config().layoutName();
-        const QString file = KStandardDirs::locate("data", "kwin/tabbox/desktop.qml");
+        const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + QLatin1String("/tabbox/desktop.qml"));
         rootObject()->setProperty("source", QUrl(file));
         return;
     }
@@ -327,7 +327,7 @@ void DeclarativeView::updateQmlSource(bool force)
         return;
     }
     const QString scriptName = service->property("X-Plasma-MainScript").toString();
-    const QString file = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
+    const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/tabbox/" + pluginName + "/contents/" + scriptName);
     if (file.isNull()) {
         kDebug(1212) << "Could not find QML file for window switcher";
         return;

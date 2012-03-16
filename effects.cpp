@@ -1103,6 +1103,7 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary(KService* service)
         libname.replace("kwin4_effect_", "kwin4_effect_gles_");
     }
 #endif
+    libname.replace("kwin", KWIN_NAME);
     KLibrary* library = new KLibrary(libname);
     if (!library) {
         kError(1212) << "couldn't open library for effect '" <<
@@ -1265,7 +1266,7 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
         kDebug(1212) << "X-Plasma-MainScript not set";
         return false;
     }
-    const QString scriptFile = KStandardDirs::locate("data", "kwin/effects/" + name + "/contents/" + scriptName);
+    const QString scriptFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/effects/" + name + "/contents/" + scriptName);
     if (scriptFile.isNull()) {
         kDebug(1212) << "Could not locate the effect script";
         return false;

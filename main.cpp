@@ -223,7 +223,7 @@ public:
         addWM("metacity");
         addWM("openbox");
         addWM("fvwm2");
-        addWM("kwin");
+        addWM(KWIN_NAME);
 
         setMainWidget(mainWidget);
 
@@ -278,7 +278,7 @@ Application::Application()
     if (crashes >= 4) {
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
-        QString cmd = "kwin";
+        QString cmd = KWIN_NAME;
         if (dialog.exec() == QDialog::Accepted)
             cmd = dialog.selectedWM();
         else
@@ -435,7 +435,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     // ""known to be stupid" ideas ;-P
     // The invalid system parameter "" will use the systems default graphicssystem
     // "!= XRender" is intended since eg. pot. SW backends likely would profit from raster as well
-    KConfigGroup config(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    KConfigGroup config(KSharedConfig::openConfig(KWIN_CONFIG), "Compositing");
     QString preferredSystem("native");
     if (config.readEntry("Enabled", true) && config.readEntry("Backend", "OpenGL") != "XRender")
         preferredSystem = "";
@@ -484,7 +484,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     }
 
     KAboutData aboutData(
-        "kwin",                     // The program name used internally
+        KWIN_NAME,                     // The program name used internally
         0,                          // The message catalog name. If null, program name is used instead
         ki18n("KWin"),              // A displayable program name string
         version,                    // The program version string
@@ -517,10 +517,10 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     setenv("QT_NO_GLIB", "1", true);
 
     org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
-    ksmserver.suspendStartup("kwin");
+    ksmserver.suspendStartup(KWIN_NAME);
     KWin::Application a;
 
-    ksmserver.resumeStartup("kwin");
+    ksmserver.resumeStartup(KWIN_NAME);
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
     KGlobal::locale()->insertCatalog("kwin_effects");

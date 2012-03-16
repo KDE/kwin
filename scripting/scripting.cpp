@@ -400,7 +400,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad(KConfigGroup &conf)
         }
         const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
         const QString scriptName = service->property("X-Plasma-MainScript").toString();
-        const QString file = KStandardDirs::locate("data", "kwin/scripts/" + pluginName + "/contents/" + scriptName);
+        const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/scripts/" + pluginName + "/contents/" + scriptName);
         if (file.isNull()) {
             kDebug(1212) << "Could not find script file for " << pluginName;
             continue;

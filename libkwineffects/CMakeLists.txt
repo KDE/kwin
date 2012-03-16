@@ -19,6 +19,7 @@ target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}
     ${X11_Xfixes_LIB}
 )
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 
 install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -44,9 +45,11 @@ endmacro( KWIN4_ADD_GLUTILS_BACKEND )
 if(OPENGLES_FOUND)
     KWIN4_ADD_GLUTILS_BACKEND(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})
     set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGLES)
+    set_target_properties(kwinglesutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glesutils)
 endif(OPENGLES_FOUND)
 if(OPENGL_FOUND)
     KWIN4_ADD_GLUTILS_BACKEND(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
+    set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
     target_link_libraries(kwinglutils ${OPENGL_gl_LIBRARY})
     target_link_libraries(kwinglutils LINK_INTERFACE_LIBRARIES ${OPENGL_gl_LIBRARY})

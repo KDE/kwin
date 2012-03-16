@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 
 #include "kwinxrenderutils.h"
+#include "config-kwin.h"
 
 #include <QtDBus/QtDBus>
 #include <QVariant>
@@ -271,7 +272,7 @@ void EffectsHandler::sendReloadMessage(const QString& effectname)
 
 KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
 {
-    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig("kwinrc", KConfig::NoGlobals);
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig(KWIN_CONFIG, KConfig::NoGlobals);
     return kwinconfig->group("Effect-" + effectname);
 }
 
