@@ -559,7 +559,7 @@ QString KDecorationOptions::titleButtonsRight() const
 
 QString KDecorationOptions::defaultTitleButtonsRight()
 {
-    return "HIA__X";
+    return "HIAX";
 }
 
 bool KDecorationOptions::showTooltips() const
