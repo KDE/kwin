@@ -37,7 +37,6 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(clientGroupItemSwitched(KWin::EffectWindow*,KWin::EffectWindow*)), this, SLOT(slotClientGroupItemSwitched(KWin::EffectWindow*,KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
 }
 
@@ -69,16 +68,6 @@ void SlideBackEffect::slotWindowActivated(EffectWindow* w)
         return;
     }
 
-    if (clientItemShown == w) {
-        clientItemShown = NULL;
-        updateStackingOrder();
-        return;
-    }
-    if (clientItemHidden == w) {
-        clientItemHidden = NULL;
-        updateStackingOrder();
-        return;
-    }
     // Determine all windows on top of the activated one
     bool currentFound = false;
     foreach (EffectWindow * tmp, oldStackingOrder) {
@@ -309,12 +298,6 @@ void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
     } else {
         unminimizedWindow = NULL;
     }
-}
-
-void SlideBackEffect::slotClientGroupItemSwitched(EffectWindow* from, EffectWindow* to)
-{
-    clientItemShown = to;
-    clientItemHidden = from;
 }
 
 void SlideBackEffect::slotTabBoxClosed()

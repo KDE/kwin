@@ -47,7 +47,6 @@ public Q_SLOTS:
     void slotWindowActivated(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowUnminimized(KWin::EffectWindow *w);
-    void slotClientGroupItemSwitched(KWin::EffectWindow* from, KWin::EffectWindow* to);
     void slotTabBoxClosed();
 
 private:
@@ -58,8 +57,6 @@ private:
     EffectWindowList coveringWindows;
     EffectWindowList elevatedList;
     EffectWindow* unminimizedWindow;
-    EffectWindow* clientItemShown;
-    EffectWindow* clientItemHidden;
     QHash<EffectWindow *, QRect> destinationList;
     bool disabled;
     QList <QRegion> clippedRegions;
