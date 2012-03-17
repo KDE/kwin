@@ -1396,7 +1396,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
         w += xSizeHint.base_width;
         h += xSizeHint.base_height;
     }
-    if (!rules()->checkStrictGeometry(true)) {
+    if (!rules()->checkStrictGeometry(!isFullScreen())) {
         // disobey increments and aspect by explicit rule
         w = w1;
         h = h1;
@@ -2344,11 +2344,12 @@ void Client::setFullScreen(bool set, bool user)
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     info->setState(isFullScreen() ? NET::FullScreen : 0, NET::FullScreen);
     updateDecoration(false, false);
-    if (isFullScreen())
+    if (isFullScreen()) {
         if (info->fullscreenMonitors().isSet())
             setGeometry(fullscreenMonitorsArea(info->fullscreenMonitors()));
         else
             setGeometry(workspace()->clientArea(FullScreenArea, this));
+    }
     else {
         if (!geom_fs_restore.isNull()) {
             int currentScreen = screen();
