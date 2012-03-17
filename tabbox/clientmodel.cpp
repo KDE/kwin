@@ -57,10 +57,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     if (m_clientList.isEmpty()) {
-        if (role == EmptyRole)
-            return true;
-        else
-            return i18n("*** No Windows ***");
+        return QVariant();
     }
 
     int clientIndex = index.row() * columnCount() + index.column();
@@ -75,8 +72,6 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     case DesktopNameRole: {
         return tabBox->desktopName(m_clientList[ clientIndex ]);
     }
-    case EmptyRole:
-        return false;
     case WIdRole:
         return qulonglong(m_clientList[ clientIndex ]->window());
     case MinimizedRole:
@@ -235,7 +230,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         m_clientList.removeAll(c);
         m_clientList.prepend(c);
     }
-    if (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient) {
+    if (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient || m_clientList.isEmpty()) {
         TabBoxClient* desktopClient = tabBox->desktopClient();
         if (desktopClient)
             m_clientList.append(desktopClient);

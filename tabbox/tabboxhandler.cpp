@@ -119,7 +119,7 @@ void TabBoxHandlerPrivate::updateOutline()
     if (config.tabBoxMode() != TabBoxConfig::ClientTabBox)
         return;
 //     if ( c == NULL || !m_isShown || !c->isShown( true ) || !c->isOnCurrentDesktop())
-    if (!isShown || clientModel()->data(index, ClientModel::EmptyRole).toBool()) {
+    if (!isShown) {
         q->hideOutline();
         return;
     }
@@ -410,8 +410,7 @@ TabBoxClientList TabBoxHandler::clientList() const
 TabBoxClient* TabBoxHandler::client(const QModelIndex& index) const
 {
     if ((!index.isValid()) ||
-            (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox) ||
-            (d->clientModel()->data(index, ClientModel::EmptyRole).toBool()))
+            (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox))
         return NULL;
     TabBoxClient* c = static_cast< TabBoxClient* >(
                           d->clientModel()->data(index, ClientModel::ClientRole).value<void *>());

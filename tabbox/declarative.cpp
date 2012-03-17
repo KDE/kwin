@@ -69,9 +69,6 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     if (!index.isValid()) {
         return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
     }
-    if (index.model()->data(index, ClientModel::EmptyRole).toBool()) {
-        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
-    }
     TabBoxClient* client = static_cast< TabBoxClient* >(index.model()->data(index, ClientModel::ClientRole).value<void *>());
     if (!client) {
         return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);

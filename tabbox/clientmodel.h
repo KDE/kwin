@@ -53,7 +53,6 @@ public:
         CaptionRole = Qt::UserRole + 1, ///< The caption of TabBoxClient
         DesktopNameRole = Qt::UserRole + 2, ///< The name of the desktop the TabBoxClient is on
         IconRole = Qt::UserRole + 3, // TODO: to be removed
-        EmptyRole = Qt::UserRole + 4, ///< Indicates if the model contains TabBoxClients
         WIdRole = Qt::UserRole + 5, ///< The window ID of TabBoxClient
         MinimizedRole = Qt::UserRole + 6, ///< TabBoxClient is minimized
         CloseableRole = Qt::UserRole + 7 ///< TabBoxClient can be closed
