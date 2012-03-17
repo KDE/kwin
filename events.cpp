@@ -864,9 +864,10 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
 {
     if (e->window != frameId())
         return; // care only about entering the whole frame
-    if (e->mode == NotifyNormal ||
-            (!options->focusPolicyIsReasonable() &&
-             e->mode == NotifyUngrab)) {
+
+#define MOUSE_DRIVEN_FOCUS (!options->focusPolicyIsReasonable() || \
+                            (options->focusPolicy() == Options::FocusFollowsMouse && options->isNextFocusPrefersMouse()))
+    if (e->mode == NotifyNormal || (e->mode == NotifyUngrab && MOUSE_DRIVEN_FOCUS)) {
 
         if (options->isShadeHover()) {
             cancelShadeHoverTimer();
@@ -877,6 +878,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
                 shadeHoverTimer->start(options->shadeHoverInterval());
             }
         }
+#undef MOUSE_DRIVEN_FOCUS
 
         if (options->focusPolicy() == Options::ClickToFocus)
             return;
