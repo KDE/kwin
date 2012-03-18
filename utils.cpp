@@ -496,6 +496,11 @@ void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
     if (_shortcut == seq)
         return; // don't try to update the same
 
+    if (seq.isEmpty()) { // clear
+        _shortcut = seq;
+        return;
+    }
+
     // Check if the key sequence is used currently
     QString sc = seq.toString();
     // NOTICE - seq.toString() & the entries in "conflicting" randomly get invalidated after the next call (if no sc has been set & conflicting isn't empty?!)
