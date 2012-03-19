@@ -397,7 +397,7 @@ void WobblyWindowsEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 
 void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical)
 {
-    if (!m_moveEffectEnabled || w->isSpecialWindow())
+    if (w->isUserMove() || !m_moveEffectEnabled || w->isSpecialWindow())
         return;
 
     if (m_moveWobble && m_resizeWobble) {

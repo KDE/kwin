@@ -2525,6 +2525,9 @@ bool Client::startMoveResize()
         return false;
     }
 
+    moveResizeMode = true;
+    workspace()->setClientIsMoving(this);
+
     // If we have quick maximization enabled then it's safe to automatically restore windows
     // when starting a move as the user can undo their action by moving the window back to
     // the top of the screen. When the setting is disabled then doing so is confusing.
@@ -2551,10 +2554,8 @@ bool Client::startMoveResize()
         quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
     }
 
-    moveResizeMode = true;
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
     s_lastScreen = moveResizeStartScreen = screen();
-    workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
