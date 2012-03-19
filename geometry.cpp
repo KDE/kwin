@@ -2510,6 +2510,7 @@ bool Client::startMoveResize()
     // If we have quick maximization enabled then it's safe to automatically restore windows
     // when starting a move as the user can undo their action by moving the window back to
     // the top of the screen. When the setting is disabled then doing so is confusing.
+    bool fakeMove = false;
     if (maximizeMode() != MaximizeRestore && (maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows())) {
         // allow moveResize, but unset maximization state in resize case
         if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
@@ -2524,6 +2525,7 @@ bool Client::startMoveResize()
         // Move the window so it's under the cursor
         moveOffset = QPoint(double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
                             double(moveOffset.y()) / double(before.height()) * double(geom_restore.height()));
+        fakeMove = true;
     }
 
     if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
@@ -2545,6 +2547,8 @@ bool Client::startMoveResize()
             options->electricBorderTiling())
         workspace()->screenEdge()->reserveDesktopSwitching(true);
 #endif
+    if (fakeMove) // fix geom_pretile position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
+        handleMoveResize(QCursor::pos().x(), QCursor::pos().y(), QCursor::pos().x(), QCursor::pos().y());
     return true;
 }
 
