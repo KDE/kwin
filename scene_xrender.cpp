@@ -212,6 +212,12 @@ void SceneXrender::flushBuffer(int mask, QRegion damage)
     }
 }
 
+void SceneXrender::paintGenericScreen(int mask, ScreenPaintData data)
+{
+    screen_paint = data; // save, transformations will be done when painting windows
+    Scene::paintGenericScreen(mask, data);
+}
+
 // fill the screen background
 void SceneXrender::paintBackground(QRegion region)
 {

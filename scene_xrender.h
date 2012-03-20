@@ -51,6 +51,7 @@ public:
     Picture bufferPicture();
 protected:
     virtual void paintBackground(QRegion region);
+    virtual void paintGenericScreen(int mask, ScreenPaintData data);
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
