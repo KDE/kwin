@@ -58,7 +58,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_ignoreMinimized(false)
     , m_decalOpacity(0.0)
     , m_hasKeyboardGrab(false)
-    , m_tabBoxEnabled(false)
     , m_mode(ModeCurrentDesktop)
     , m_managerWindow(NULL)
     , m_highlightedWindow(NULL)
@@ -108,10 +107,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
-    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
-    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
-    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
-    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
 }
 
@@ -167,8 +162,6 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_showCaptions = conf.readEntry("DrawWindowCaptions", true);
     m_showIcons = conf.readEntry("DrawWindowIcons", true);
     m_doNotCloseWindows = !conf.readEntry("AllowClosingWindows", true);
-    m_tabBoxAllowed = conf.readEntry("TabBox", false);
-    m_tabBoxAlternativeAllowed = conf.readEntry("TabBoxAlternative", false);
     m_ignoreMinimized = conf.readEntry("IgnoreMinimized", false);
     m_accuracy = conf.readEntry("Accuracy", 1) * 20;
     m_fillGaps = conf.readEntry("FillGaps", true);
@@ -358,9 +351,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 
             if (m_activated && winData->highlight > 0.0) {
                 // scale the window (interpolated by the highlight level) to at least 105% or to cover 1/16 of the screen size - yet keep it in screen bounds
-                QRect area = m_tabBoxEnabled ?
-                                effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop()) :
-                                effects->clientArea(FullScreenArea, w);
+                QRect area = effects->clientArea(FullScreenArea, w);
 
                 QSizeF effSize(w->width()*data.xScale, w->height()*data.yScale);
                 float tScale = sqrt((area.width()*area.height()) / (16.0*effSize.width()*effSize.height()));
@@ -831,81 +822,6 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
 }
 
 //-----------------------------------------------------------------------------
-// Tab box
-
-void PresentWindowsEffect::slotTabBoxAdded(int mode)
-{
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
-        return;
-    if (m_activated)
-        return;
-    if (((mode == TabBoxWindowsMode && m_tabBoxAllowed) ||
-            (mode == TabBoxWindowsAlternativeMode && m_tabBoxAlternativeAllowed)) &&
-            effects->currentTabBoxWindowList().count() > 0) {
-        m_tabBoxEnabled = true;
-        setActive(true);
-        if (m_activated)
-            effects->refTabBox();
-        else
-            m_tabBoxEnabled = false;
-    }
-}
-
-void PresentWindowsEffect::slotTabBoxClosed()
-{
-    if (m_activated) {
-        effects->unrefTabBox();
-        setActive(false, true);
-        m_tabBoxEnabled = false;
-    }
-}
-
-void PresentWindowsEffect::slotTabBoxUpdated()
-{
-    if (m_activated)
-        setHighlightedWindow(effects->currentTabBoxWindow());
-}
-
-void PresentWindowsEffect::slotTabBoxKeyEvent(QKeyEvent* event)
-{
-    if (!m_activated)
-        return;
-    // not using the "normal" grabbedKeyboardEvent as we don't want to filter in tabbox
-    if (event->type() == QEvent::KeyPress) {
-        switch(event->key()) {
-            // Wrap only if not auto-repeating
-        case Qt::Key_Left:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, -1, 0, !event->isAutoRepeat()));
-            break;
-        case Qt::Key_Right:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 1, 0, !event->isAutoRepeat()));
-            break;
-        case Qt::Key_Up:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1, !event->isAutoRepeat()));
-            break;
-        case Qt::Key_Down:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1, !event->isAutoRepeat()));
-            break;
-        case Qt::Key_Home:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, -1000, 0, false));
-            break;
-        case Qt::Key_End:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 1000, 0, false));
-            break;
-        case Qt::Key_PageUp:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, -1000, false));
-            break;
-        case Qt::Key_PageDown:
-            setHighlightedWindow(relativeWindow(m_highlightedWindow, 0, 1000, false));
-            break;
-        default:
-            // nothing
-            break;
-        }
-    }
-}
-
-//-----------------------------------------------------------------------------
 // Atom handling
 void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
@@ -995,12 +911,7 @@ void PresentWindowsEffect::rearrangeWindows()
         windowlists.append(EffectWindowList());
 
     if (m_windowFilter.isEmpty()) {
-        if (m_tabBoxEnabled)
-            // Assume we correctly set things up, should be identical to
-            // m_motionManager except just in a slightly different order.
-            windowlist = effects->currentTabBoxWindowList();
-        else
-            windowlist = m_motionManager.managedWindows();
+        windowlist = m_motionManager.managedWindows();
         foreach (EffectWindow * w, m_motionManager.managedWindows()) {
             DataHash::iterator winData = m_windowData.find(w);
             if (winData == m_windowData.end() || winData->deleted)
@@ -1034,20 +945,13 @@ void PresentWindowsEffect::rearrangeWindows()
         DataHash::iterator winData = m_windowData.find(m_highlightedWindow);
         if (winData != m_windowData.end() && !winData->visible)
             setHighlightedWindow(findFirstWindow());
-    } else if (m_tabBoxEnabled)
-        setHighlightedWindow(effects->currentTabBoxWindow());
-    else
+    } else
         setHighlightedWindow(findFirstWindow());
 
-    int screens = m_tabBoxEnabled ? 1 : effects->numScreens();
+    int screens = effects->numScreens();
     for (int screen = 0; screen < screens; screen++) {
         EffectWindowList windows;
-        if (m_tabBoxEnabled) {
-            // Kind of cheating here
-            screen = effects->activeScreen();
-            windows = windowlist;
-        } else
-            windows = windowlists[screen];
+        windows = windowlists[screen];
 
         // Don't rearrange if the grid is the same size as what it was before to prevent
         // windows moving to a better spot if one was filtered out.
@@ -1055,8 +959,7 @@ void PresentWindowsEffect::rearrangeWindows()
                 m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
                 windows.size() < m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
                 windows.size() > (m_gridSizes[screen].columns - 1) * m_gridSizes[screen].rows &&
-                windows.size() > m_gridSizes[screen].columns *(m_gridSizes[screen].rows - 1) &&
-                !m_tabBoxEnabled)
+                windows.size() > m_gridSizes[screen].columns *(m_gridSizes[screen].rows - 1))
             continue;
 
         // No point continuing if there is no windows to process
@@ -1085,7 +988,7 @@ void PresentWindowsEffect::rearrangeWindows()
 void PresentWindowsEffect::calculateWindowTransformations(EffectWindowList windowlist, int screen,
         WindowMotionManager& motionManager, bool external)
 {
-    if (m_layoutMode == LayoutRegularGrid || m_tabBoxEnabled)   // Force the grid for window switching
+    if (m_layoutMode == LayoutRegularGrid)
         calculateWindowTransformationsClosest(windowlist, screen, motionManager);
     else if (m_layoutMode == LayoutFlexibleGrid)
         calculateWindowTransformationsKompose(windowlist, screen, motionManager);
@@ -1131,51 +1034,39 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     takenSlots.resize(rows*columns);
     takenSlots.fill(0);
 
-    if (m_tabBoxEnabled) {
-        // Rearrange in the correct order. As rearrangeWindows() is only ever
-        // called once so we can use effects->currentTabBoxWindow() here.
-        int selectedWindow = qMax(0, windowlist.indexOf(effects->currentTabBoxWindow()));
-        int j = 0;
-        for (int i = selectedWindow; i < windowlist.count(); ++i)
-            takenSlots[j++] = windowlist[i];
-        for (int i = selectedWindow - 1; i >= 0; --i)
-            takenSlots[j++] = windowlist[i];
-    } else {
+    // precalculate all slot centers
+    QVector<QPoint> slotCenters;
+    slotCenters.resize(rows*columns);
+    for (int x = 0; x < columns; ++x)
+        for (int y = 0; y < rows; ++y) {
+            slotCenters[x + y*columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2,
+                                                area.y() + slotHeight * y + slotHeight / 2);
+        }
 
-        // precalculate all slot centers
-        QVector<QPoint> slotCenters;
-        slotCenters.resize(rows*columns);
-        for (int x = 0; x < columns; ++x)
-            for (int y = 0; y < rows; ++y) {
-                slotCenters[x + y*columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2,
-                                                    area.y() + slotHeight * y + slotHeight / 2);
-            }
-
-        // Assign each window to the closest available slot
-        EffectWindowList tmpList = windowlist; // use a QLinkedList copy instead?
-        QPoint otherPos;
-        while (!tmpList.isEmpty()) {
-            EffectWindow *w = tmpList.first();
-            int slotCandidate = -1, slotCandidateDistance = INT_MAX;
-            QPoint pos = w->geometry().center();
-            for (int i = 0; i < columns*rows; ++i) { // all slots
-                const int dist = distance(pos, slotCenters[i]);
-                if (dist < slotCandidateDistance) { // window is interested in this slot
-                    EffectWindow *occupier = takenSlots[i];
-                    assert(occupier != w);
-                    if (!occupier || dist < distance((otherPos = occupier->geometry().center()), slotCenters[i])) {
-                        // either nobody lives here, or we're better - takeover the slot if it's our best
-                        slotCandidate = i;
-                        slotCandidateDistance = dist;
-                    }
+    // Assign each window to the closest available slot
+    EffectWindowList tmpList = windowlist; // use a QLinkedList copy instead?
+    QPoint otherPos;
+    while (!tmpList.isEmpty()) {
+        EffectWindow *w = tmpList.first();
+        int slotCandidate = -1, slotCandidateDistance = INT_MAX;
+        QPoint pos = w->geometry().center();
+        for (int i = 0; i < columns*rows; ++i) { // all slots
+            const int dist = distance(pos, slotCenters[i]);
+            if (dist < slotCandidateDistance) { // window is interested in this slot
+                EffectWindow *occupier = takenSlots[i];
+                assert(occupier != w);
+                if (!occupier || dist < distance((otherPos = occupier->geometry().center()), slotCenters[i])) {
+                    // either nobody lives here, or we're better - takeover the slot if it's our best
+                    slotCandidate = i;
+                    slotCandidateDistance = dist;
                 }
             }
-            assert(slotCandidate != -1);
-            if (takenSlots[slotCandidate])
-                tmpList << takenSlots[slotCandidate]; // occupier needs a new home now :p
-            tmpList.removeAll(w);
-            takenSlots[slotCandidate] = w; // ...and we rumble in =)
         }
+        assert(slotCandidate != -1);
+        if (takenSlots[slotCandidate])
+            tmpList << takenSlots[slotCandidate]; // occupier needs a new home now :p
+        tmpList.removeAll(w);
+        takenSlots[slotCandidate] = w; // ...and we rumble in =)
     }
 
     for (int slot = 0; slot < columns*rows; ++slot) {
@@ -1609,10 +1500,6 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         return;
     if (m_activated == active)
         return;
-    if (m_activated && m_tabBoxEnabled && !closingTab) {
-        effects->closeTabBox();
-        return;
-    }
     m_activated = active;
     if (m_activated) {
         m_closeButtonCorner = (Qt::Corner)effects->kwinOption(KWin::CloseButtonCorner).toInt();
@@ -1649,27 +1536,11 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
             winData->iconFrame->setAlignment(Qt::AlignRight | Qt::AlignBottom);
             winData->iconFrame->setIcon(w->icon());
         }
-
-        if (m_tabBoxEnabled) {
-            DataHash::iterator winData;
-            foreach (EffectWindow * w, effects->currentTabBoxWindowList()) {
-                if (!w)
-                    continue;
+        // Filter out special windows such as panels and taskbars
+        foreach (EffectWindow * w, effects->stackingOrder()) {
+            if (isSelectableWindow(w)) {
                 m_motionManager.manage(w);
-                if ((winData = m_windowData.find(w)) != m_windowData.end())
-                    winData->visible = effects->currentTabBoxWindowList().contains(w);
             }
-            // Hide windows not in the list
-            foreach (EffectWindow * w, effects->stackingOrder()) {
-                if ((winData = m_windowData.find(w)) != m_windowData.end())
-                    winData->visible = isVisibleWindow(w) &&
-                            (!isSelectableWindow(w) || effects->currentTabBoxWindowList().contains(w));
-            }
-        } else {
-            // Filter out special windows such as panels and taskbars
-            foreach (EffectWindow * w, effects->stackingOrder())
-            if (isSelectableWindow(w))
-                m_motionManager.manage(w);
         }
         if (m_motionManager.managedWindows().isEmpty() ||
                 ((m_motionManager.managedWindows().count() == 1) && m_motionManager.managedWindows().first()->isOnCurrentDesktop()  &&
@@ -1709,10 +1580,7 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         }
 
         rearrangeWindows();
-        if (m_tabBoxEnabled)
-            setHighlightedWindow(effects->currentTabBoxWindow());
-        else
-            setHighlightedWindow(effects->activeWindow());
+        setHighlightedWindow(effects->activeWindow());
 
         foreach (EffectWindow * w, effects->stackingOrder()) {
             if (w->isDock()) {
@@ -1724,8 +1592,6 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
             effects->setElevatedWindow(m_highlightedWindow, false);
         // Fade in/out all windows
         EffectWindow *activeWindow = effects->activeWindow();
-        if (m_tabBoxEnabled)
-            activeWindow = effects->currentTabBoxWindow();
         int desktop = effects->currentDesktop();
         if (activeWindow && !activeWindow->isOnAllDesktops())
             desktop = activeWindow->desktop();
@@ -1794,8 +1660,6 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
         return false;
     if (m_closeView && w == effects->findWindow(m_closeView->winId()))
         return false;
-    if (m_tabBoxEnabled)
-        return true;
     if (m_ignoreMinimized && w->isMinimized())
         return false;
     switch(m_mode) {
@@ -1837,8 +1701,6 @@ void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
         m_highlightedWindow->addRepaintFull(); // Trigger the first repaint
     }
 
-    if (m_tabBoxEnabled && m_highlightedWindow)
-        effects->setTabBoxWindow(w);
     updateCloseWindow();
 }
 

@@ -152,11 +152,6 @@ public slots:
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
-    // Tab box
-    void slotTabBoxAdded(int mode);
-    void slotTabBoxClosed();
-    void slotTabBoxUpdated();
-    void slotTabBoxKeyEvent(QKeyEvent* event);
     // atoms
     void slotPropertyNotify(KWin::EffectWindow* w, long atom);
 
@@ -215,8 +210,6 @@ private:
     bool m_showCaptions;
     bool m_showIcons;
     bool m_doNotCloseWindows;
-    bool m_tabBoxAllowed;
-    bool m_tabBoxAlternativeAllowed;
     int m_accuracy;
     bool m_fillGaps;
     double m_fadeDuration;
@@ -228,7 +221,6 @@ private:
     double m_decalOpacity;
     Window m_input;
     bool m_hasKeyboardGrab;
-    bool m_tabBoxEnabled;
     PresentWindowsMode m_mode;
     int m_desktop;
     EffectWindowList m_selectedWindows;
