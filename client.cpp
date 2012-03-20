@@ -1054,6 +1054,8 @@ void Client::setShade(bool set) {
 
 void Client::setShade(ShadeMode mode)
 {
+    if (mode == ShadeHover && isMove())
+        return; // causes geometry breaks and is probably nasty
     if (isSpecialWindow() || noBorder())
         mode = ShadeNone;
     mode = rules()->checkShade(mode);
