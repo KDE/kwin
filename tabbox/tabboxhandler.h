@@ -259,14 +259,9 @@ public:
 
     /**
     * Handles additional grabbed key events by the TabBox controller.
-    * It is able to handle cursor key presses and to find the item
-    * left/right/above/below of current item.
     * @param event The key event which has been grabbed
-    * @return Returns the model index of the left, right, above or
-    * below item, if a cursor key has been pressed. If there is no
-    * such item the current item is returned.
     */
-    virtual QModelIndex grabbedKeyEvent(QKeyEvent* event) const;
+    virtual void grabbedKeyEvent(QKeyEvent* event) const;
     /**
     * @param pos The position to be tested in global coordinates
     * @return True if the view contains the point, otherwise false.

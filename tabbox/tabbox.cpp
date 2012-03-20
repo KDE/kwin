@@ -749,9 +749,10 @@ void TabBox::grabbedKeyEvent(QKeyEvent* event)
     if (m_noModifierGrab) {
         if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Space) {
             accept();
+            return;
         }
     }
-    setCurrentIndex(m_tabBox->grabbedKeyEvent(event));
+    m_tabBox->grabbedKeyEvent(event);
 }
 
 /*!

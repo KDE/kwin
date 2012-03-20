@@ -28,6 +28,7 @@ Item {
     property alias count: iconsListView.count
     property alias margins: hoverItem.margins
     property alias currentItem: iconsListView.currentItem
+    focus: true
 
 
     function setModel(model) {
@@ -104,5 +105,19 @@ Item {
             height: iconSize + margins.top + margins.bottom
         }
         highlightMoveDuration: 250
+    }
+    /*
+     * Key navigation on outer item for two reasons:
+     * @li we have to emit the change signal
+     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
+     **/
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Left) {
+            iconsListView.decrementCurrentIndex();
+            iconsListView.currentIndexChanged(iconsListView.currentIndex);
+        } else if (event.key == Qt.Key_Right) {
+            iconsListView.incrementCurrentIndex();
+            iconsListView.currentIndexChanged(iconsListView.currentIndex);
+        }
     }
 }

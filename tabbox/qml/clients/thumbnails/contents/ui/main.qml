@@ -35,6 +35,7 @@ Item {
     width: Math.min(Math.max(screenWidth * 0.3, optimalWidth), screenWidth * 0.9)
     height: Math.min(Math.max(screenHeight * 0.15, optimalHeight), screenHeight * 0.7)
     clip: true
+    focus: true
 
 
     function setModel(model) {
@@ -157,6 +158,20 @@ Item {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
             }
+        }
+    }
+    /*
+     * Key navigation on outer item for two reasons:
+     * @li we have to emit the change signal
+     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
+     **/
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Left) {
+            thumbnailListView.decrementCurrentIndex();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
+        } else if (event.key == Qt.Key_Right) {
+            thumbnailListView.incrementCurrentIndex();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
         }
     }
 }

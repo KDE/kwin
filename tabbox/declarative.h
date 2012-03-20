@@ -57,6 +57,7 @@ public:
     virtual void showEvent(QShowEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
     void setCurrentIndex(const QModelIndex &index, bool disableAnimation = false);
+    bool sendKeyEvent(QKeyEvent *event);
 
 protected:
     virtual void hideEvent(QHideEvent *event);

@@ -21,6 +21,7 @@ import QtQuick 1.0
 
 Loader {
     id: loader
+    focus: true
     property int screenWidth : 0
     property int screenHeight : 0
     property bool allDesktops: true

@@ -34,6 +34,7 @@ Item {
     property bool canStretchY: false
     width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
     height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
+    focus: true
 
     property int textMargin: 2
 
@@ -206,5 +207,19 @@ Item {
             width: listView.width
         }
         highlightMoveDuration: 250
+    }
+    /*
+     * Key navigation on outer item for two reasons:
+     * @li we have to emit the change signal
+     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
+     **/
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Up) {
+            listView.decrementCurrentIndex();
+            listView.currentIndexChanged(listView.currentIndex);
+        } else if (event.key == Qt.Key_Down) {
+            listView.incrementCurrentIndex();
+            listView.currentIndexChanged(listView.currentIndex);
+        }
     }
 }

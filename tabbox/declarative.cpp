@@ -365,5 +365,10 @@ void DeclarativeView::slotWindowChanged(WId wId, unsigned int properties)
     }
 }
 
+bool DeclarativeView::sendKeyEvent(QKeyEvent *e)
+{
+    return event(e);
+}
+
 } // namespace TabBox
 } // namespace KWin

@@ -32,6 +32,7 @@ Item {
     property int standardMargin: 2
     width: optimalWidth
     height: optimalHeight
+    focus: true
 
     function setModel(model) {
         thumbnailListView.model = model;
@@ -167,6 +168,26 @@ Item {
             prefix: "hover"
             width: thumbnailListView.cellWidth
             height: thumbnailListView.cellHeight
+        }
+    }
+    /*
+     * Key navigation on outer item for two reasons:
+     * @li we have to emit the change signal
+     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
+     **/
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Left) {
+            thumbnailListView.moveCurrentIndexLeft();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
+        } else if (event.key == Qt.Key_Right) {
+            thumbnailListView.moveCurrentIndexRight();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
+        } else if (event.key == Qt.Key_Up) {
+            thumbnailListView.moveCurrentIndexUp();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
+        } else if (event.key == Qt.Key_Down) {
+            thumbnailListView.moveCurrentIndexDown();
+            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
         }
     }
 }

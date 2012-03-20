@@ -373,55 +373,13 @@ const QModelIndex& TabBoxHandler::currentIndex() const
     return d->index;
 }
 
-QModelIndex TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
+void TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
 {
-    QModelIndex ret;
-    QAbstractItemModel* model;
-    switch(d->config.tabBoxMode()) {
-    case TabBoxConfig::ClientTabBox:
-        model = d->clientModel();
-        break;
-    case TabBoxConfig::DesktopTabBox:
-        model = d->desktopModel();
-        break;
-    default:
-        return d->index;
+    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
+        d->m_declarativeView->sendKeyEvent(event);
+    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
+        d->m_declarativeDesktopView->sendKeyEvent(event);
     }
-    int column = d->index.column();
-    int row = d->index.row();
-    switch(event->key()) {
-    case Qt::Key_Left:
-        column--;
-        if (column < 0)
-            column = model->columnCount() - 1;
-        break;
-    case Qt::Key_Right:
-        column++;
-        if (column >= model->columnCount())
-            column = 0;
-        break;
-    case Qt::Key_Backtab:
-    case Qt::Key_Up:
-        row--;
-        if (row < 0)
-            row = model->rowCount() - 1;
-        break;
-    case Qt::Key_Tab:
-    case Qt::Key_Down:
-        row++;
-        if (row >= model->rowCount())
-            row = 0;
-        break;
-    default:
-        // do not do anything for any other key
-        break;
-    }
-    ret = model->index(row, column);
-
-    if (ret.isValid())
-        return ret;
-    else
-        return d->index;
 }
 
 bool TabBoxHandler::containsPos(const QPoint& pos) const
