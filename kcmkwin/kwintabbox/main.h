@@ -85,9 +85,8 @@ private:
 private:
     enum Mode {
         Layout = 0,
-        PresentWindows = 1,
-        CoverSwitch = 2,
-        FlipSwitch = 3
+        CoverSwitch = 1,
+        FlipSwitch = 2
     };
     KWinTabBoxConfigForm* m_primaryTabBoxUi;
     KWinTabBoxConfigForm* m_alternativeTabBoxUi;

@@ -101,12 +101,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     // TODO: way to recognize if a effect is not found
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List services;
-    QString presentwindows;
     QString coverswitch;
     QString flipswitch;
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
-    if (!services.isEmpty())
-        presentwindows = services.first()->name();
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_coverswitch'");
     if (!services.isEmpty())
         coverswitch = services.first()->name();
@@ -116,13 +112,11 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
 
     m_primaryTabBoxUi->effectCombo->addItem(i18nc("ComboBox item for window switcher based on layouts instead of a desktop effect",
                                                   "Layout based switcher"));
-    m_primaryTabBoxUi->effectCombo->addItem(presentwindows);
     m_primaryTabBoxUi->effectCombo->addItem(coverswitch);
     m_primaryTabBoxUi->effectCombo->addItem(flipswitch);
 
     m_alternativeTabBoxUi->effectCombo->addItem(i18nc("ComboBox item for window switcher based on layouts instead of a desktop effect",
                                                   "Layout based switcher"));
-    m_alternativeTabBoxUi->effectCombo->addItem(presentwindows);
     m_alternativeTabBoxUi->effectCombo->addItem(coverswitch);
     m_alternativeTabBoxUi->effectCombo->addItem(flipswitch);
 
@@ -201,13 +195,6 @@ void KWinTabBoxConfig::load()
     m_primaryTabBoxUi->effectCombo->setCurrentIndex(Layout);
     m_alternativeTabBoxUi->effectCombo->setCurrentIndex(Layout);
     KConfigGroup effectconfig(m_config, "Plugins");
-    KConfigGroup presentwindowsconfig(m_config, "Effect-PresentWindows");
-    if (effectEnabled("presentwindows", effectconfig)) {
-        if (presentwindowsconfig.readEntry("TabBox", false))
-            m_primaryTabBoxUi->effectCombo->setCurrentIndex(PresentWindows);
-        if (presentwindowsconfig.readEntry("TabBoxAlternative", false))
-            m_alternativeTabBoxUi->effectCombo->setCurrentIndex(PresentWindows);
-    }
     KConfigGroup coverswitchconfig(m_config, "Effect-CoverSwitch");
     if (effectEnabled("coverswitch", effectconfig)) {
         if (coverswitchconfig.readEntry("TabBox", false))
@@ -310,22 +297,16 @@ void KWinTabBoxConfig::save()
     bool coverSwitchAlternative             = false;
     bool flipSwitchAlternative              = false;
     switch(m_primaryTabBoxUi->effectCombo->currentIndex()) {
-    case 1:
-        presentWindowSwitching = true;
-        break;
-    case 2:
+    case CoverSwitch:
         coverSwitch = true;
         break;
-    case 3:
+    case FlipSwitch:
         flipSwitch = true;
         break;
     default:
         break; // nothing
     }
     switch(m_alternativeTabBoxUi->effectCombo->currentIndex()) {
-    case PresentWindows:
-        presentWindowSwitchingAlternative = true;
-        break;
     case CoverSwitch:
         coverSwitchAlternative = true;
         break;
@@ -347,10 +328,6 @@ void KWinTabBoxConfig::save()
     if (highlightWindows)
         effectconfig.writeEntry("kwin4_effect_highlightwindowEnabled", true);
     effectconfig.sync();
-    KConfigGroup presentwindowsconfig(m_config, "Effect-PresentWindows");
-    presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
-    presentwindowsconfig.writeEntry("TabBoxAlternative", presentWindowSwitchingAlternative);
-    presentwindowsconfig.sync();
     KConfigGroup coverswitchconfig(m_config, "Effect-CoverSwitch");
     coverswitchconfig.writeEntry("TabBox", coverSwitch);
     coverswitchconfig.writeEntry("TabBoxAlternative", coverSwitchAlternative);
@@ -487,13 +464,10 @@ void KWinTabBoxConfig::aboutEffectClicked(KWinTabBoxConfigForm* ui)
     KService::List services;
     QString effect;
     switch(ui->effectCombo->currentIndex()) {
-    case 1:
-        effect = "presentwindows";
-        break;
-    case 2:
+    case CoverSwitch:
         effect = "coverswitch";
         break;
-    case 3:
+    case FlipSwitch:
         effect = "flipswitch";
         break;
     default:
@@ -553,9 +527,6 @@ void KWinTabBoxConfig::configureEffectClicked(KWinTabBoxConfigForm* ui)
 {
     QString effect;
     switch(ui->effectCombo->currentIndex()) {
-    case PresentWindows:
-        effect = "presentwindows_config";
-        break;
     case CoverSwitch:
         effect = "coverswitch_config";
         break;
