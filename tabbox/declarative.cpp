@@ -273,13 +273,21 @@ void DeclarativeView::slotUpdateGeometry()
     }
 }
 
-void DeclarativeView::setCurrentIndex(const QModelIndex &index)
+void DeclarativeView::setCurrentIndex(const QModelIndex &index, bool disableAnimation)
 {
     if (tabBox->config().tabBoxMode() != m_mode) {
         return;
     }
     if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
+        QVariant durationRestore;
+        if (disableAnimation) {
+            durationRestore = item->property("highlightMoveDuration");
+            item->setProperty("highlightMoveDuration", QVariant(1));
+        }
         item->setProperty("currentIndex", index.row());
+        if (disableAnimation) {
+            item->setProperty("highlightMoveDuration", durationRestore);
+        }
     }
 }
 

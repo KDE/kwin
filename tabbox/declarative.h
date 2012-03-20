@@ -56,7 +56,7 @@ public:
     DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent = NULL);
     virtual void showEvent(QShowEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
-    void setCurrentIndex(const QModelIndex &index);
+    void setCurrentIndex(const QModelIndex &index, bool disableAnimation = false);
 
 protected:
     virtual void hideEvent(QHideEvent *event);

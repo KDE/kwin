@@ -235,7 +235,7 @@ void TabBoxHandler::show()
                 d->m_declarativeView = new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox);
             }
             d->m_declarativeView->show();
-            d->m_declarativeView->setCurrentIndex(d->index);
+            d->m_declarativeView->setCurrentIndex(d->index, true);
         } else {
             if (!d->m_declarativeDesktopView) {
                 d->m_declarativeDesktopView = new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox);
