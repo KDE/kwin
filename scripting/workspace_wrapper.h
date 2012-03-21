@@ -67,19 +67,19 @@ private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
 signals:
-    void desktopPresenceChanged(KWin::Client*, int);
-    void currentDesktopChanged(int);
-    void clientAdded(KWin::Client*);
-    void clientRemoved(KWin::Client*);
-    void clientManaging(KWin::Client*);
-    void clientMinimized(KWin::Client*);
-    void clientUnminimized(KWin::Client*);
-    void clientRestored(KWin::Client*);
-    void clientMaximizeSet(KWin::Client*, bool, bool);
-    void killWindowCalled(KWin::Client*);
-    void clientActivated(KWin::Client*);
-    void clientFullScreenSet(KWin::Client*, bool, bool);
-    void clientSetKeepAbove(KWin::Client*, bool);
+    void desktopPresenceChanged(KWin::Client *client, int desktop);
+    void currentDesktopChanged(int desktop);
+    void clientAdded(KWin::Client *client);
+    void clientRemoved(KWin::Client *client);
+    void clientManaging(KWin::Client *client);
+    void clientMinimized(KWin::Client *client);
+    void clientUnminimized(KWin::Client *client);
+    void clientRestored(KWin::Client *client);
+    void clientMaximizeSet(KWin::Client *client, bool h, bool v);
+    void killWindowCalled(KWin::Client *client);
+    void clientActivated(KWin::Client *client);
+    void clientFullScreenSet(KWin::Client *client, bool fullScreen, bool user);
+    void clientSetKeepAbove(KWin::Client *client, bool keepAbove);
     /**
      * Signal emitted whenever the number of desktops changed.
      * To get the current number of desktops use the property desktops.
@@ -91,7 +91,7 @@ signals:
      * @param c The Client for which demands attention changed
      * @param set New value of demands attention
      **/
-    void clientDemandsAttentionChanged(KWin::Client* c, bool set);
+    void clientDemandsAttentionChanged(KWin::Client *client, bool set);
 
 public:
 //------------------------------------------------------------------
