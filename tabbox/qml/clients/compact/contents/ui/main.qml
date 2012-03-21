@@ -89,9 +89,10 @@ Item {
             id: delegateItem
             width: compactListView.width
             height: compactListView.rowHeight
+            opacity: minimized ? 0.6 : 1.0
             Image {
                 id: iconItem
-                source: "image://client/" + index + "/" + compactTabBox.imagePathPrefix + "-" + compactListView.imageId + (index == compactListView.currentIndex ? "/selected" : "/disabled")
+                source: "image://client/" + index + "/" + compactTabBox.imagePathPrefix + "-" + compactListView.imageId + "/selected"
                 width: 16
                 height: 16
                 sourceSize {
@@ -109,8 +110,7 @@ Item {
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignBottom
                 text: itemCaption(caption, minimized)
-                font.bold: true
-                font.italic: minimized
+                font.bold: index == compactListView.currentIndex
                 color: theme.textColor
                 elide: Text.ElideMiddle
                 anchors {
