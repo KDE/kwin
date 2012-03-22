@@ -58,6 +58,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define GL_FRAMEBUFFER_COMPLETE GL_FRAMEBUFFER_COMPLETE_EXT
 #endif
 
+#ifndef GL_DRAW_FRAMEBUFFER
+#define GL_DRAW_FRAMEBUFFER               0x8CA9
+#endif
+
+#ifndef GL_READ_FRAMEBUFFER
+#define GL_READ_FRAMEBUFFER               0x8CA8
+#endif
+
+
 #include <fixx11h.h>
 
 namespace KWin
