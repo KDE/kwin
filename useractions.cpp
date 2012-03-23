@@ -27,6 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+///////////////////////////////////////////////////////////////////////////////
+// NOTE: if you change the menu, keep kde-workspace/libs/taskmanager/taskactions.cpp in sync
+//////////////////////////////////////////////////////////////////////////////
+
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
@@ -78,9 +82,22 @@ QMenu* Workspace::clientPopup()
         advanced_popup = new QMenu(popup);
         advanced_popup->setFont(KGlobalSettings::menuFont());
 
+        mMoveOpAction = advanced_popup->addAction(i18n("&Move"));
+        mMoveOpAction->setIcon(KIcon("transform-move"));
+        KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
+        if (kaction != 0)
+            mMoveOpAction->setShortcut(kaction->globalShortcut().primary());
+        mMoveOpAction->setData(Options::MoveOp);
+
+        mResizeOpAction = advanced_popup->addAction(i18n("Re&size"));
+        kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
+        if (kaction != 0)
+            mResizeOpAction->setShortcut(kaction->globalShortcut().primary());
+        mResizeOpAction->setData(Options::ResizeOp);
+
         mKeepAboveOpAction = advanced_popup->addAction(i18n("Keep &Above Others"));
         mKeepAboveOpAction->setIcon(KIcon("go-up"));
-        KAction *kaction = qobject_cast<KAction*>(keys->action("Window Above Other Windows"));
+        kaction = qobject_cast<KAction*>(keys->action("Window Above Other Windows"));
         if (kaction != 0)
             mKeepAboveOpAction->setShortcut(kaction->globalShortcut().primary());
         mKeepAboveOpAction->setCheckable(true);
@@ -102,12 +119,21 @@ QMenu* Workspace::clientPopup()
         mFullScreenOpAction->setCheckable(true);
         mFullScreenOpAction->setData(Options::FullScreenOp);
 
+        mShadeOpAction = advanced_popup->addAction(i18n("Sh&ade"));
+        kaction = qobject_cast<KAction*>(keys->action("Window Shade"));
+        if (kaction != 0)
+            mShadeOpAction->setShortcut(kaction->globalShortcut().primary());
+        mShadeOpAction->setCheckable(true);
+        mShadeOpAction->setData(Options::ShadeOp);
+
         mNoBorderOpAction = advanced_popup->addAction(i18n("&No Border"));
         kaction = qobject_cast<KAction*>(keys->action("Window No Border"));
         if (kaction != 0)
             mNoBorderOpAction->setShortcut(kaction->globalShortcut().primary());
         mNoBorderOpAction->setCheckable(true);
         mNoBorderOpAction->setData(Options::NoBorderOp);
+
+        advanced_popup->addSeparator();
 
         QAction *action = advanced_popup->addAction(i18n("Window &Shortcut..."));
         action->setIcon(KIcon("configure-shortcuts"));
@@ -132,19 +158,6 @@ QMenu* Workspace::clientPopup()
             connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
         }
 
-        mMoveOpAction = popup->addAction(i18n("&Move"));
-        mMoveOpAction->setIcon(KIcon("transform-move"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Move"));
-        if (kaction != 0)
-            mMoveOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMoveOpAction->setData(Options::MoveOp);
-
-        mResizeOpAction = popup->addAction(i18n("Re&size"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
-        if (kaction != 0)
-            mResizeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mResizeOpAction->setData(Options::ResizeOp);
-
         mMinimizeOpAction = popup->addAction(i18n("Mi&nimize"));
         kaction = qobject_cast<KAction*>(keys->action("Window Minimize"));
         if (kaction != 0)
@@ -157,13 +170,6 @@ QMenu* Workspace::clientPopup()
             mMaximizeOpAction->setShortcut(kaction->globalShortcut().primary());
         mMaximizeOpAction->setCheckable(true);
         mMaximizeOpAction->setData(Options::MaximizeOp);
-
-        mShadeOpAction = popup->addAction(i18n("Sh&ade"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Shade"));
-        if (kaction != 0)
-            mShadeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mShadeOpAction->setCheckable(true);
-        mShadeOpAction->setData(Options::ShadeOp);
 
         popup->addSeparator();
 
@@ -203,7 +209,7 @@ QMenu* Workspace::clientPopup()
         popup->addSeparator();
 
         action = popup->addMenu(advanced_popup);
-        action->setText(i18n("Ad&vanced"));
+        action->setText(i18n("More Actions"));
 
         popup->addSeparator();
 
@@ -392,7 +398,7 @@ void Workspace::initTabbingPopups()
     }
 
     if (!add_tabs_popup) {
-        add_tabs_popup = new QMenu(i18n("Tab behind..."), popup);
+        add_tabs_popup = new QMenu(i18n("Tab behind"), popup);
         add_tabs_popup->setFont(KGlobalSettings::menuFont());
         connect(add_tabs_popup, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
         connect(add_tabs_popup, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
@@ -415,8 +421,8 @@ void Workspace::initDesktopPopup()
 
     QAction *action = desk_popup->menuAction();
     // set it as the first item
-    popup->insertAction(mMoveOpAction, action);
-    action->setText(i18n("To &Desktop"));
+    popup->insertAction(mMinimizeOpAction, action);
+    action->setText(i18n("Move To &Desktop"));
 }
 
 /*!
@@ -438,7 +444,7 @@ void Workspace::initActivityPopup()
 
     QAction *action = activity_popup->menuAction();
     // set it as the first item
-    popup->insertAction(mMoveOpAction, action);
+    popup->insertAction(mMinimizeOpAction, action);
     action->setText(i18n("Ac&tivities"));   //FIXME is that a good string?
 }
 
