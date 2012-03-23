@@ -458,9 +458,11 @@ void Workspace::desktopPopupAboutToShow()
         return;
 
     desk_popup->clear();
+    QActionGroup *group = new QActionGroup(desk_popup);
     QAction *action = desk_popup->addAction(i18n("&All Desktops"));
     action->setData(0);
     action->setCheckable(true);
+    group->addAction(action);
 
     if (active_popup_client && active_popup_client->isOnAllDesktops())
         action->setChecked(true);
@@ -475,6 +477,7 @@ void Workspace::desktopPopupAboutToShow()
         action = desk_popup->addAction(basic_name.arg(i).arg(desktopName(i).replace('&', "&&")));
         action->setData(i);
         action->setCheckable(true);
+        group->addAction(action);
 
         if (active_popup_client &&
                 !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i)
