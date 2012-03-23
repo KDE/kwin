@@ -44,6 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActivities/Info>
 #endif
 
+#include <X11/extensions/Xrandr.h>
+#ifndef KWIN_NO_XF86VM
+#include <X11/extensions/xf86vmode.h>
+#endif
 #include <fixx11h.h>
 #include <QPushButton>
 #include <QSlider>
@@ -1613,6 +1617,80 @@ void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::UnrestrictedResizeOp);
+}
+
+void Workspace::slotInvertScreen()
+{
+    bool succeeded = false;
+
+    //BEGIN Xrandr inversion - does atm NOT work with the nvidia blob
+    XRRScreenResources *res = XRRGetScreenResources(display(), active_client ? active_client->window() : rootWindow());
+    if (res) {
+        for (int j = 0; j < res->ncrtc; ++j) {
+            XRRCrtcGamma *gamma = XRRGetCrtcGamma(display(), res->crtcs[j]);
+            if (gamma && gamma->size) {
+                kDebug(1212) << "inverting screen using XRRSetCrtcGamma";
+                const int half = gamma->size / 2 + 1;
+                unsigned short swap;
+                for (int i = 0; i < half; ++i) {
+#define INVERT(_C_) swap = gamma->_C_[i]; gamma->_C_[i] = gamma->_C_[gamma->size - 1 - i]; gamma->_C_[gamma->size - 1 - i] = swap
+                    INVERT(red);
+                    INVERT(green);
+                    INVERT(blue);
+#undef INVERT
+                }
+                XRRSetCrtcGamma(display(), res->crtcs[j], gamma);
+                XRRFreeGamma(gamma);
+                succeeded = true;
+            }
+        }
+        XRRFreeScreenResources(res);
+    }
+    if (succeeded)
+        return;
+
+    //BEGIN XF86VidMode inversion - only works if optionally libXxf86vm is linked
+#ifndef KWIN_NO_XF86VM
+    int size = 0;
+    // TODO: this doesn't work with screen numbers in twinview - probably relevant only for multihead?
+    const int scrn = 0; // active_screen
+    if (XF86VidModeGetGammaRampSize(display(), scrn, &size)) {
+        unsigned short *red, *green, *blue;
+        red = new unsigned short[size];
+        green = new unsigned short[size];
+        blue = new unsigned short[size];
+        if (XF86VidModeGetGammaRamp(display(), scrn, size, red, green, blue)) {
+            kDebug(1212) << "inverting screen using XF86VidModeSetGammaRamp";
+            const int half = size / 2 + 1;
+            unsigned short swap;
+            for (int i = 0; i < half; ++i) {
+                swap = red[i]; red[i] = red[size - 1 - i]; red[size - 1 - i] = swap;
+                swap = green[i]; green[i] = green[size - 1 - i]; green[size - 1 - i] = swap;
+                swap = blue[i]; blue[i] = blue[size - 1 - i]; blue[size - 1 - i] = swap;
+            }
+            XF86VidModeSetGammaRamp(display(), scrn, size, red, green, blue);
+            succeeded = true;
+        }
+        delete [] red;
+        delete [] green;
+        delete [] blue;
+    }
+
+    if (succeeded)
+        return;
+#endif
+
+    //BEGIN effect plugin inversion - atm only works with OpenGL and has an overhead to it
+    if (effects) {
+        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
+            kDebug(1212) << "inverting screen using Effect plugin";
+            QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
+        }
+    }
+
+    if (!succeeded)
+        kDebug(1212) << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
+
 }
 
 #undef USABLE_ACTIVE_CLIENT

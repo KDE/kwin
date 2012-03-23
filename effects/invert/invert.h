@@ -45,11 +45,12 @@ public:
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
     virtual bool isActive() const;
+    virtual bool provides(Feature);
 
     static bool supported();
 
 public slots:
-    void toggle();
+    void toggleScreenInversion();
     void toggleWindow();
     void slotWindowClosed(KWin::EffectWindow *w);
 

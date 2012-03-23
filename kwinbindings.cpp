@@ -191,6 +191,7 @@ a->setText(i18n("Miscellaneous"));
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow());
 DEF(I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());
+DEF(I18N_NOOP("Invert Screen Colors"),              0, slotInvertScreen());
 
 #undef DEF
 #undef DEF2

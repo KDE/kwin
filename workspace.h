@@ -622,6 +622,7 @@ public slots:
     void slotSetupWindowShortcut();
     void setupWindowShortcutDone(bool);
     void slotToggleCompositing();
+    void slotInvertScreen();
 
     void updateClientArea();
     void suspendCompositing();

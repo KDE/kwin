@@ -48,7 +48,7 @@ InvertEffect::InvertEffect()
     KAction* a = (KAction*)actionCollection->addAction("Invert");
     a->setText(i18n("Toggle Invert Effect"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleScreenInversion()));
 
     KAction* b = (KAction*)actionCollection->addAction("InvertWindow");
     b->setText(i18n("Toggle Invert Effect on Window"));
@@ -143,7 +143,7 @@ void InvertEffect::slotWindowClosed(EffectWindow* w)
     m_windows.removeOne(w);
 }
 
-void InvertEffect::toggle()
+void InvertEffect::toggleScreenInversion()
 {
     m_allWindows = !m_allWindows;
     effects->addRepaintFull();
@@ -161,6 +161,11 @@ void InvertEffect::toggleWindow()
 bool InvertEffect::isActive() const
 {
     return m_valid && (m_allWindows || !m_windows.isEmpty());
+}
+
+bool InvertEffect::provides(Feature f)
+{
+    return f == ScreenInversion;
 }
 
 } // namespace
