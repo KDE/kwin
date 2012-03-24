@@ -70,6 +70,7 @@ Item {
         objectName: "listView"
         cellWidth: Math.floor(width / columns)
         cellHeight: Math.floor(height / rows)
+        clip: true
         anchors {
             fill: parent
             leftMargin: background.margins.left

@@ -373,6 +373,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         // although TabBox does not make use of it so far
         QList<QGraphicsView*> views = item->scene()->views();
         QGraphicsView* declview = 0;
+        QPoint viewPos;
         foreach (QGraphicsView* view, views) {
             if (view->winId() == w->window()->window()) {
                 declview = view;
@@ -384,6 +385,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
                 // toplevel widget and check whether that is the window we are looking for.
                 if (parent->winId() == w->window()->window()) {
                     declview = view;
+                    viewPos = view->mapTo(parent, QPoint());
                     break;
                 }
             }
@@ -396,7 +398,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         if (declview == 0) {
             continue;
         }
-        const QPoint point = declview->mapFromScene(item->scenePos());
+        const QPoint point = viewPos + declview->mapFromScene(item->scenePos());
         const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         thumbData.xTranslate = x - thumb->x();
@@ -407,13 +409,17 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         } else {
             thumbMask |= PAINT_WINDOW_TRANSLUCENT;
         }
-        if (item->isClip() && (x < wImpl->x() || x + size.width() > wImpl->x() + wImpl->width() ||
-            y < wImpl->y() || y + size.height() > wImpl->y() + wImpl->height())) {
-            // don't render windows outside the containing window.
-            // TODO: improve by spliting out the window quads which do not fit
-            continue;
+        QRegion clippingRegion = region;
+        clippingRegion &= QRegion(wImpl->x(), wImpl->y(), wImpl->width(), wImpl->height());
+        QPainterPath path = item->clipPath();
+        if (!path.isEmpty()) {
+            // here we assume that the clippath consists of a single rectangle
+            const QPolygonF sceneBounds = item->mapToScene(path.boundingRect());
+            const QRect viewBounds = declview->mapFromScene(sceneBounds).boundingRect();
+            // shrinking the rect due to rounding errors
+            clippingRegion &= viewBounds.adjusted(0,0,-1,-1).translated(viewPos + w->pos());
         }
-        effects->drawWindow(thumb, thumbMask, QRegion(x, y, size.width(), size.height()), thumbData);
+        effects->drawWindow(thumb, thumbMask, clippingRegion, thumbData);
     }
 }
 
