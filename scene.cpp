@@ -359,11 +359,14 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         thumbData.opacity = data.opacity;
 
         QSizeF size = QSizeF(thumb->size());
-        size.scale(QSizeF(item->sceneBoundingRect().width(), item->sceneBoundingRect().height()), Qt::KeepAspectRatio);
+        size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
         thumbData.xScale = size.width() / static_cast<qreal>(thumb->width());
         thumbData.yScale = size.height() / static_cast<qreal>(thumb->height());
-        const int x = item->scenePos().x() + w->x() + (item->width() - size.width()) / 2;
-        const int y = item->scenePos().y() + w->y() + (item->height() - size.height()) / 2;
+        QGraphicsItem *topLevelItem = item->topLevelItem();
+        // TODO: positioning seems not to be 100 % perfect yet
+        const QPointF point = static_cast<QGraphicsItem*>(item)->mapToItem(topLevelItem, item->pos());
+        const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
+        const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         thumbData.xTranslate = x - thumb->x();
         thumbData.yTranslate = y - thumb->y();
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
