@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "meta.h"
 #include "workspace_wrapper.h"
+#include "../client.h"
 #include "../thumbnailitem.h"
 #include "../options.h"
 #include "../workspace.h"
@@ -217,6 +218,7 @@ void KWin::DeclarativeScript::run()
     installScriptFunctions(kdeclarative.scriptEngine());
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     qmlRegisterType<WorkspaceWrapper>("org.kde.kwin", 0, 1, "KWin");
+    qmlRegisterType<KWin::Client>();
 
     m_view->rootContext()->setContextProperty("workspace", workspace());
     m_view->rootContext()->setContextProperty("options", options);
