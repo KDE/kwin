@@ -37,6 +37,7 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     , m_wId(0)
     , m_clip(true)
     , m_parent(QWeakPointer<EffectWindowImpl>())
+    , m_parentWindow(0)
 {
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
     if (effects) {
@@ -58,9 +59,24 @@ void ThumbnailItem::init()
     }
 }
 
+void ThumbnailItem::setParentWindow(qulonglong parentWindow)
+{
+    m_parentWindow = parentWindow;
+    findParentEffectWindow();
+    if (!m_parent.isNull()) {
+        m_parent.data()->registerThumbnail(this);
+    }
+}
+
 void ThumbnailItem::findParentEffectWindow()
 {
     if (effects) {
+        if (m_parentWindow) {
+            if (EffectWindowImpl *w = static_cast<EffectWindowImpl*>(effects->findWindow(m_parentWindow))) {
+                m_parent = QWeakPointer<EffectWindowImpl>(w);
+                return;
+            }
+        }
         QDeclarativeContext *ctx = QDeclarativeEngine::contextForObject(this);
         if (!ctx) {
             kDebug(1212) << "No Context";
@@ -73,6 +89,7 @@ void ThumbnailItem::findParentEffectWindow()
         }
         if (EffectWindowImpl *w = static_cast<EffectWindowImpl*>(effects->findWindow(variant.value<qulonglong>()))) {
             m_parent = QWeakPointer<EffectWindowImpl>(w);
+            m_parentWindow = variant.value<qulonglong>();
         }
     }
 }
