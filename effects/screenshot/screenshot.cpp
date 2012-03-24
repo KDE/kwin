@@ -126,6 +126,7 @@ void ScreenShotEffect::postPaintScreen()
                 GLRenderTarget::popRenderTarget();
                 ScreenShotEffect::convertFromGLImage(img, width, height);
             }
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (effects->compositingType() == XRenderCompositing) {
                 setXRenderOffscreen(true);
                 effects->drawWindow(m_scheduledScreenshot, mask, QRegion(0, 0, width, height), d);
@@ -133,6 +134,7 @@ void ScreenShotEffect::postPaintScreen()
                     img = xRenderOffscreenTarget()->toImage().copy(0, 0, width, height);
                 setXRenderOffscreen(false);
             }
+#endif
 
             if (m_type & INCLUDE_CURSOR) {
                 grabPointerImage(img, m_scheduledScreenshot->x() + left, m_scheduledScreenshot->y() + top);
