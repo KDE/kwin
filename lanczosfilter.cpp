@@ -191,6 +191,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             int tw = width * data.xScale;
             int th = height * data.yScale;
             const QRect textureRect(tx, ty, tw, th);
+            const bool hardwareClipping = !(QRegion(textureRect)-region).isEmpty();
 
             int sw = width;
             int sh = height;
@@ -199,6 +200,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             if (cachedTexture) {
                 if (cachedTexture->width() == tw && cachedTexture->height() == th) {
                     cachedTexture->bind();
+                    if (hardwareClipping) {
+                        glEnable(GL_SCISSOR_TEST);
+                    }
                     if (ShaderManager::instance()->isValid()) {
                         glEnable(GL_BLEND);
                         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -212,14 +216,17 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                         shader->setUniform(GLShader::Saturation, data.saturation);
                         shader->setUniform(GLShader::AlphaToOne, 0);
 
-                        cachedTexture->render(textureRect, textureRect);
+                        cachedTexture->render(region, textureRect, hardwareClipping);
 
                         ShaderManager::instance()->popShader();
                         glDisable(GL_BLEND);
                     } else {
                         prepareRenderStates(cachedTexture, data.opacity, data.brightness, data.saturation);
-                        cachedTexture->render(textureRect, textureRect);
+                        cachedTexture->render(region, textureRect, hardwareClipping);
                         restoreRenderStates(cachedTexture, data.opacity, data.brightness, data.saturation);
+                    }
+                    if (hardwareClipping) {
+                        glDisable(GL_SCISSOR_TEST);
                     }
                     cachedTexture->unbind();
                     m_timer.start(5000, this);
@@ -330,6 +337,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th);
             GLRenderTarget::popRenderTarget();
 
+            if (hardwareClipping) {
+                glEnable(GL_SCISSOR_TEST);
+            }
             if (ShaderManager::instance()->isValid()) {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -343,14 +353,17 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 shader->setUniform(GLShader::Saturation, data.saturation);
                 shader->setUniform(GLShader::AlphaToOne, 0);
 
-                cache->render(textureRect, textureRect);
+                cache->render(region, textureRect, hardwareClipping);
 
                 ShaderManager::instance()->popShader();
                 glDisable(GL_BLEND);
             } else {
                 prepareRenderStates(cache, data.opacity, data.brightness, data.saturation);
-                cache->render(textureRect, textureRect);
+                cache->render(region, textureRect, hardwareClipping);
                 restoreRenderStates(cache, data.opacity, data.brightness, data.saturation);
+            }
+            if (hardwareClipping) {
+                glDisable(GL_SCISSOR_TEST);
             }
 
             cache->unbind();
