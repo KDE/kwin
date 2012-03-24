@@ -560,14 +560,6 @@ void Workspace::addClient(Client* c, allowed_t)
 
     KWindowInfo info = KWindowSystem::windowInfo(c->window(), -1U, NET::WM2WindowClass);
 
-    /*
-    if (info.windowClassName() == QString("krunner")) {
-    SWrapper::Workspace* ws_object = KWin::Scripting::workspace();
-    if (ws_object != 0) {
-        ws_object->sl_killWindowCalled(c);
-    }
-    }*/
-
     emit clientAdded(c);
 
     if (grp != NULL)
