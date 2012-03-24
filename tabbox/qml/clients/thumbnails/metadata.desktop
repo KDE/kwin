@@ -2,6 +2,7 @@
 Name=Thumbnails
 Name[cs]=Miniatury
 Name[de]=Vorschaubilder
+Name[ia]=Miniaturas
 Name[nl]=Miniaturen
 Name[pt]=Miniaturas
 Name[pt_BR]=Miniaturas
@@ -10,6 +11,7 @@ Name[uk]=Мініатюри
 Name[x-test]=xxThumbnailsxx
 Name[zh_TW]=縮圖
 Comment=A window switcher layout using live thumbnails
+Comment[ia]=Un disposition de commutator de fenestra usante miniaturas vive
 Comment[nl]=Een indeling van de vensterwisselaar met levende miniaturen
 Comment[pt]=Uma disposição de mudança de janelas que usa miniaturas geradas na hora
 Comment[pt_BR]=Um leiaute do seletor de janelas que usa miniaturas geradas na hora

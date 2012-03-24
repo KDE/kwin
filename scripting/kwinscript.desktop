@@ -4,6 +4,7 @@ X-KDE-ServiceType=KWin/Script
 
 Comment=KWin Script
 Comment[cs]=Skript KWinu
+Comment[ia]=Script de kwin
 Comment[nl]=KWin-scripts
 Comment[pt]=Programa do KWin
 Comment[pt_BR]=Script do KWin

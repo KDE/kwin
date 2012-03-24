@@ -2,6 +2,7 @@
 Name=Large Icons
 Name[cs]=Velké ikony
 Name[de]=Große Symbole
+Name[ia]=Icones grande
 Name[nl]=Grote pictogrammen
 Name[pt]=Ícones Grandes
 Name[pt_BR]=Ícones grandes
@@ -10,6 +11,7 @@ Name[uk]=Великі піктограми
 Name[x-test]=xxLarge Iconsxx
 Name[zh_TW]=大圖示
 Comment=A window switcher layout using large icons to represent the window
+Comment[ia]=Un disposition de commutator de fenestra usante icones grande pro representar le fenestra
 Comment[nl]=Een indeling van de vensterwisselaar die grote pictogrammen gebruikt om vensters te representeren
 Comment[pt]=Uma disposição de mudança de janelas que usa ícones grandes para representar a janela
 Comment[pt_BR]=Um leiaute do seletor de janelas que usa ícones grandes para representá-las

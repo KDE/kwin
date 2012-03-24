@@ -2,6 +2,7 @@
 Name=Informative
 Name[cs]=Informativní
 Name[de]=Informativ
+Name[ia]=Informative
 Name[nl]=Informatief
 Name[pt]=Informativa
 Name[pt_BR]=Informativo
@@ -10,6 +11,7 @@ Name[uk]=Інформативне
 Name[x-test]=xxInformativexx
 Name[zh_TW]=資訊提供
 Comment=An informative window switcher layout including desktop name
+Comment[ia]=Un disposition de commutator de fenestra informative includente nomine de scriptorio
 Comment[nl]=Een informatieve indeling van de vensterwisselaar inclusief de naam van het bureaublad
 Comment[pt]=Uma disposição de mudança de janelas que inclui o nome do ecrã
 Comment[pt_BR]=Um leiaute do seletor de janelas que inclui o nome da área de trabalho

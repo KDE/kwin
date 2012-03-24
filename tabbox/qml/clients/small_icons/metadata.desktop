@@ -2,6 +2,7 @@
 Name=Small Icons
 Name[cs]=Malé ikony
 Name[de]=Kleine Symbole
+Name[ia]=Icones parve
 Name[nl]=Kleine pictogrammen
 Name[pt]=Ícones Pequenos
 Name[pt_BR]=Ícones pequenos
@@ -10,6 +11,7 @@ Name[uk]=Малі піктограми
 Name[x-test]=xxSmall Iconsxx
 Name[zh_TW]=小圖示
 Comment=A window switcher layout using small icons to represent the window
+Comment[ia]=Un disposition de commutator de fenestra usante parve icones pro representar le fenestra
 Comment[nl]=Een indeling van de vensterwisselaar die kleine pictogrammen gebruikt om vensters te representeren
 Comment[pt]=Uma disposição de mudança de janelas que usa ícones pequenos para representar a janela
 Comment[pt_BR]=Um leiaute do seletor de janelas que usa ícones pequenos para representá-las

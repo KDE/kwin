@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Text Icons
 Name[de]=Text-Symbole
+Name[ia]=Icones de texto
 Name[nl]=Tekstpictogrammen
 Name[pt]=Ícones de Texto
 Name[pt_BR]=Ícones de texto
@@ -9,6 +10,7 @@ Name[uk]=Текстові піктограми
 Name[x-test]=xxText Iconsxx
 Name[zh_TW]=文字圖示
 Comment=A window switcher layout only showing window captions
+Comment[ia]=Un disposition de commutator de fenestra monstrante solo legendas de fenestra
 Comment[nl]=Een indeling van de vensterwisselaar die alleen bijschriften van vensters toont
 Comment[pt]=Uma disposição de mudança de janelas que só mostra os títulos das janelas
 Comment[pt_BR]=Um leiaute do seletor de janelas que mostra apenas os títulos das janelas
