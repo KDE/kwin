@@ -49,6 +49,7 @@ class Toplevel
     Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
     Q_PROPERTY(qulonglong frameId READ frameId)
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(QRect visibleRect READ visibleRect)
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(QPoint pos READ pos)
@@ -285,6 +286,7 @@ signals:
     void propertyNotify(KWin::Toplevel* toplevel, long a);
     void geometryChanged();
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
+    void paddingChanged(KWin::Toplevel* toplevel, const QRect& old);
     void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
     void windowShown(KWin::Toplevel* toplevel);
     /**

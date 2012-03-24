@@ -167,13 +167,15 @@ protected:
 private:
     float interpolated( const AniData&, int i = 0 ) const;
     float progress( const AniData& ) const;
+    void updateLayerRepaints();
 private Q_SLOTS:
     void init();
     void triggerRepaint();
     void _windowClosed( KWin::EffectWindow* w );
     void _windowDeleted( KWin::EffectWindow* w );
+    void _expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old);
 private:
-    typedef QMap< EffectWindow*, QList<AniData> > AniMap;
+    typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
     AnimationEffectPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)
 };

@@ -955,6 +955,13 @@ Q_SIGNALS:
      **/
     void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     /**
+     * Signal emitted when the padding of a window changed. (eg. shadow size)
+     * @param w The window whose geometry changed
+     * @param old The previous expandedGeometry()
+     * @since 4.9
+     **/
+    void windowPaddingChanged(KWin::EffectWindow *w, const QRect &old);
+    /**
      * Signal emitted when the windows opacity is changed.
      * @param w The window whose opacity level is changed.
      * @param oldOpacity The previous opacity level
@@ -1097,6 +1104,7 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_OBJECT
     Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
     Q_PROPERTY(QRect geometry READ geometry)
+    Q_PROPERTY(QRect expandedGeometry READ expandedGeometry)
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
     Q_PROPERTY(QPoint pos READ pos)
@@ -1332,6 +1340,12 @@ public:
      */
     QSize basicUnit() const;
     QRect geometry() const;
+    /**
+     * Geometry of the window including decoration and potentially shadows.
+     * May be different from geometry() if the window has a shadow.
+     * @since 4.9
+     */
+    QRect expandedGeometry() const;
     virtual QRegion shape() const = 0;
     int screen() const;
     /** @internal Do not use */
@@ -1344,6 +1358,7 @@ public:
     bool isUserMove() const;
     bool isUserResize() const;
     QRect iconGeometry() const;
+
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
