@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scriptedeffect.h"
 #include "meta.h"
+#include "scriptingutils.h"
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
@@ -75,6 +76,11 @@ QScriptValue kwinEffectDisplayHeight(QScriptContext *context, QScriptEngine *eng
     Q_UNUSED(context)
     Q_UNUSED(engine)
     return Effect::displayHeight();
+}
+
+QScriptValue kwinScriptGlobalShortcut(QScriptContext *context, QScriptEngine *engine)
+{
+    return globalShortcut<KWin::ScriptedEffect*>(context, engine);
 }
 
 QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
@@ -168,6 +174,8 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_engine->globalObject().setProperty("displayWidth", displayWidthFunc);
     QScriptValue displayHeightFunc = m_engine->newFunction(kwinEffectDisplayHeight);
     m_engine->globalObject().setProperty("displayHeight", displayHeightFunc);
+    // add global Shortcut
+    registerGlobalShortcutFunction(this, m_engine, kwinScriptGlobalShortcut);
 
     QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
 
@@ -236,6 +244,17 @@ void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 {
     AnimationEffect::reconfigure(flags);
     emit configChanged();
+}
+
+void ScriptedEffect::registerShortcut(QAction *a, QScriptValue callback)
+{
+    m_shortcutCallbacks.insert(a, callback);
+    connect(a, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
+}
+
+void ScriptedEffect::globalShortcutTriggered()
+{
+    callGlobalShortcutCallback<KWin::ScriptedEffect*>(this, sender());
 }
 
 QVariant ScriptedEffect::readConfig(const QString &key, const QVariant defaultValue)

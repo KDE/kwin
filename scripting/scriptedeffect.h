@@ -117,6 +117,10 @@ public:
      * @returns The config value if present
      **/
     Q_SCRIPTABLE QVariant readConfig(const QString &key, const QVariant defaultValue = QVariant());
+    void registerShortcut(QAction *a, QScriptValue callback);
+    const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
+        return m_shortcutCallbacks;
+    }
 
 public Q_SLOTS:
     void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve curve = QEasingCurve(), int delay = 0);
@@ -129,12 +133,14 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);
+    void globalShortcutTriggered();
 private:
     ScriptedEffect();
     bool init(const QString &effectName, const QString &pathToScript);
     QScriptEngine *m_engine;
     QString m_effectName;
     QString m_scriptFile;
+    QHash<QAction*, QScriptValue> m_shortcutCallbacks;
 };
 
 }

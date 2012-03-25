@@ -23,8 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTING_H
 
 #include <QtCore/QFile>
+#include <QtCore/QHash>
 #include <QtCore/QStringList>
 
+class QAction;
 class QDeclarativeView;
 class QScriptEngine;
 class QScriptValue;
@@ -48,12 +50,19 @@ public:
     }
 
     void printMessage(const QString &message);
+    void registerShortcut(QAction *a, QScriptValue callback);
 
     KConfigGroup config() const;
+    const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
+        return m_shortcutCallbacks;
+    }
 
 public Q_SLOTS:
     Q_SCRIPTABLE void stop();
     Q_SCRIPTABLE virtual void run() = 0;
+
+private Q_SLOTS:
+    void globalShortcutTriggered();
 
 Q_SIGNALS:
     Q_SCRIPTABLE void print(const QString &text);
@@ -84,6 +93,7 @@ private:
     QString m_pluginName;
     bool m_running;
     WorkspaceWrapper *m_workspace;
+    QHash<QAction*, QScriptValue> m_shortcutCallbacks;
 };
 
 class Script : public AbstractScript
