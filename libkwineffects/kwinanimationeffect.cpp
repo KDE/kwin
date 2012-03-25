@@ -207,7 +207,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 d->m_animated = true;
                 ++anim;
             } else {
-                animationEnded(entry.key(), anim->attribute);
+                animationEnded(entry.key(), anim->attribute, anim->meta);
                 anim = entry->first.erase(anim);
                 invalidateLayerRect = d->m_damageDirty = true;
                 animEnd = entry->first.end();
