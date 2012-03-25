@@ -73,6 +73,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
@@ -362,9 +365,25 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
         thumbData.xScale = size.width() / static_cast<qreal>(thumb->width());
         thumbData.yScale = size.height() / static_cast<qreal>(thumb->height());
-        QGraphicsItem *topLevelItem = item->topLevelItem();
-        // TODO: positioning seems not to be 100 % perfect yet
-        const QPointF point = static_cast<QGraphicsItem*>(item)->mapToItem(topLevelItem, item->pos());
+        // it can happen in the init/closing phase of the tabbox
+        // that the corresponding QGraphicsScene is not available
+        if (item->scene() == 0) {
+            continue;
+        }
+        // in principle there could be more than one QGraphicsView per QGraphicsScene,
+        // although TabBox does not make use of it so far
+        QList<QGraphicsView*> views = item->scene()->views();
+        QGraphicsView* declview = 0;
+        foreach (QGraphicsView* view, views) {
+            if (view->winId() == w->window()->window()) {
+                declview = view;
+                break;
+            }
+        }
+        if (declview == 0) {
+            continue;
+        }
+        const QPoint point = declview->mapFromScene(item->scenePos());
         const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         thumbData.xTranslate = x - thumb->x();
