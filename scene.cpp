@@ -379,6 +379,20 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
                 declview = view;
                 break;
             }
+            QWidget *parent = view;
+            while ((parent = parent->parentWidget())) {
+                // if the graphicsview is not the topmost widget we try to go up to the
+                // toplevel widget and check whether that is the window we are looking for.
+                if (parent->winId() == w->window()->window()) {
+                    declview = view;
+                    break;
+                }
+            }
+            if (declview) {
+                // our nested loop found it, so we can break this loop as well
+                // doesn't look nice, but still better than goto
+                break;
+            }
         }
         if (declview == 0) {
             continue;
