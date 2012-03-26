@@ -2,6 +2,7 @@
 Name=Video Wall
 Name[cs]=Video stěna
 Name[ia]=Muro de Video
+Name[nb]=Videovegg
 Name[nl]=Videomuur
 Name[pt]=Painel de Vídeo
 Name[pt_BR]=Painel de vídeo
@@ -11,6 +12,7 @@ Name[x-test]=xxVideo Wallxx
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
 Comment[ia]=Extende jocator de video de schermo plen super omne schermos attachate pro crea un Muro de Video
+Comment[nb]=Sprer  fullskjerms videospiller over alle tilkoblede skjermer for å lage en Videovegg
 Comment[nl]=Verdeelt de videospeler in modus volledig scherm over alle aangesloten schermen om een Videomuur te creëren
 Comment[pt]=Espalha o leitor de vídeo em todos os ecrãs ligados para criar um painel de vídeo
 Comment[pt_BR]=Espalha o reprodutor de vídeo em tela cheia sobre todas as telas ligadas para criar um painel de vídeo

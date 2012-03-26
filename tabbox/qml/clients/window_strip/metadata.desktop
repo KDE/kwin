@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Window Strip
 Name[ia]=Lista de fenestra
+Name[nb]=Vindusstripe
 Name[nl]=Vensterstrook
 Name[pt]=Barra da Janela
 Name[pt_BR]=Barra da janela
@@ -10,6 +11,7 @@ Name[x-test]=xxWindow Stripxx
 Name[zh_TW]=視窗帶
 Comment=Window switcher layout for Plasma Active
 Comment[ia]=Disposition de commutator de fenestra per Plasma Active
+Comment[nb]=Vindusbytterutforming for Plasma Active
 Comment[nl]=Indeling van de vensterwisselaar voor Plasma Active
 Comment[pt]=A disposição de mudança de janelas do Plasma Active
 Comment[pt_BR]=Um leiaute do seletor de janelas do Plasma Active
