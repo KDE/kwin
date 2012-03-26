@@ -245,6 +245,39 @@ private:
     T orig;
 };
 
+// Light weight scoped pointer class that stores a pointer to a
+// dynamically allocated object and automatically free()'s it
+// upon destruction.
+//
+// This class works the same way as QScopedPointer, but uses
+// free() instead of delete.
+template <typename T>
+class ScopedCPointer
+{
+public:
+    ScopedCPointer() : m_ptr(0) {}
+    ScopedCPointer(T *ptr) : m_ptr(ptr) {}
+    ~ScopedCPointer() { if (m_ptr) free(m_ptr); }
+
+    T *data() const { return m_ptr; }
+    bool isNull() const { return !m_ptr; }
+    void reset(T *other = 0) { m_ptr = other; }
+    T *take() { T *ret = m_ptr; m_ptr = 0; return ret; }
+
+    T ** operator & () { return &m_ptr; }
+    operator bool () const { return bool(m_ptr); }
+    bool operator ! () const { return !m_ptr; }
+    operator T * () const { return m_ptr; }
+    T * operator -> () const { return m_ptr; }
+    ScopedCPointer & operator = (T *ptr) { m_ptr = ptr; }
+
+private:
+    ScopedCPointer & operator = (const ScopedCPointer &);
+
+private:
+    T *m_ptr;
+};
+
 QByteArray getStringProperty(WId w, Atom prop, char separator = 0);
 void updateXTime();
 void grabXServer();
