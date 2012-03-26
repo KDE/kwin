@@ -397,26 +397,50 @@ void Workspace::init()
         // Begin updates blocker block
         StackingUpdatesBlocker blocker(this);
 
-        unsigned int i, nwins;
-        Window root_return, parent_return;
-        Window* wins;
-        XQueryTree(display(), rootWindow(), &root_return, &parent_return, &wins, &nwins);
         bool fixoffset = KCmdLineArgs::parsedArgs()->getOption("crashes").toInt() > 0;
-        for (i = 0; i < nwins; i++) {
-            XWindowAttributes attr;
-            XGetWindowAttributes(display(), wins[i], &attr);
-            if (attr.override_redirect) {
-                createUnmanaged(wins[i]);
+        xcb_connection_t *conn = connection();
+
+        xcb_query_tree_reply_t *tree = xcb_query_tree_reply(conn,
+                            xcb_query_tree_unchecked(conn, rootWindow()), 0);
+        xcb_window_t *wins = xcb_query_tree_children(tree);
+
+        QVector<xcb_get_window_attributes_cookie_t> attr_cookies;
+        QVector<xcb_get_geometry_cookie_t> geom_cookies;
+
+        attr_cookies.reserve(tree->children_len);
+        geom_cookies.reserve(tree->children_len);
+
+        // Request the attributes and geometries of all toplevel windows
+        for (int i = 0; i < tree->children_len; i++) {
+            attr_cookies << xcb_get_window_attributes(conn, wins[i]);
+            geom_cookies << xcb_get_geometry(conn, wins[i]);
+        }
+
+        // Get the replies
+        for (int i = 0; i < tree->children_len; i++) {
+            ScopedCPointer<xcb_get_window_attributes_reply_t> attr
+                        = xcb_get_window_attributes_reply(conn, attr_cookies[i], 0);
+            ScopedCPointer<xcb_get_geometry_reply_t> geometry
+                        = xcb_get_geometry_reply(conn, geom_cookies[i], 0);
+
+            if (!attr || !geometry)
                 continue;
-            }
-            if (attr.map_state != IsUnmapped) {
+
+            if (attr->override_redirect) {
+                if (attr->map_state == XCB_MAP_STATE_VIEWABLE &&
+                    attr->_class != XCB_WINDOW_CLASS_INPUT_ONLY)
+                    // ### This will request the attributes again
+                    createUnmanaged(wins[i]);
+            } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
                 if (fixoffset)
-                    fixPositionAfterCrash(wins[ i ], attr);
+                    fixPositionAfterCrash(wins[i], geometry);
+
+                // ### This will request the attributes again
                 createClient(wins[i], true);
             }
         }
-        if (wins)
-            XFree((void*)(wins));
+
+        free(tree);
 
         // Propagate clients, will really happen at the end of the updates blocker block
         updateStackingOrder(true);

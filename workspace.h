@@ -694,7 +694,7 @@ private:
     bool keepTransientAbove(const Client* mainwindow, const Client* transient);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
-    void fixPositionAfterCrash(Window w, const XWindowAttributes& attr);
+    void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
 
     /// This is the right way to create a new client
