@@ -17,7 +17,6 @@
     <method name="toggleCompositing">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
-    <method name="refresh"/>
     <method name="doNotManage">
       <arg name="name" type="s" direction="in"/>
     </method>

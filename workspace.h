@@ -538,7 +538,6 @@ public:
 
 public slots:
     void addRepaintFull();
-    void refresh();
 
     // Keybindings
     void slotSwitchDesktopNext();

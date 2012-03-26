@@ -1161,18 +1161,6 @@ bool Workspace::isNotManaged(const QString& title)
 }
 
 /**
- * Refreshes all the client windows
- */
-void Workspace::refresh()
-{
-    QWidget w(NULL, Qt::X11BypassWindowManagerHint);
-    w.setGeometry(Kephal::ScreenUtils::desktopGeometry());
-    w.show();
-    w.hide();
-    QApplication::flush();
-}
-
-/**
  * During virt. desktop switching, desktop areas covered by windows that are
  * going to be hidden are first obscured by new windows with no background
  * ( i.e. transparent ) placed right below the windows. These invisible windows
