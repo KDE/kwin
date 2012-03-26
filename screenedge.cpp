@@ -219,7 +219,10 @@ void ScreenEdge::check(const QPoint& pos, Time now)
     if (pushback_pixels == 0) {
         // no pushback so we have to activate at once
         m_screenEdgeTimeLast = now;
+        m_currentScreenEdge = border;
+        m_screenEdgePushPoint = pos;
     }
+
     if ((m_currentScreenEdge == border) &&
             (timestampDiff(m_screenEdgeTimeLast, now) < treshold_reset) &&
             (timestampDiff(m_screenEdgeTimeLastTrigger, now) > treshold_trigger) &&
