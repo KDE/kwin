@@ -61,7 +61,7 @@ class WorkspaceWrapper : public QObject
      **/
     Q_PROPERTY(int displayHeight READ displayHeight)
     Q_PROPERTY(int activeScreen READ activeScreen)
-    Q_PROPERTY(int numScreens READ numScreens)
+    Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -92,6 +92,11 @@ signals:
      * @param set New value of demands attention
      **/
     void clientDemandsAttentionChanged(KWin::Client *client, bool set);
+    /**
+     * Signal emitted when the number of screens changes.
+     * @param count The new number of screens
+     **/
+    void numberScreensChanged(int count);
 
 public:
 //------------------------------------------------------------------
