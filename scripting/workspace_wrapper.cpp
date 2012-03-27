@@ -186,6 +186,15 @@ QString WorkspaceWrapper::supportInformation() const
     return Workspace::self()->supportInformation();
 }
 
+QList< QObject* > WorkspaceWrapper::getClientList() const
+{
+    QList<QObject*> list;
+    foreach (Client* client, Workspace::self()->clientList()) {
+        list << client;
+    }
+    return list;
+}
+
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));

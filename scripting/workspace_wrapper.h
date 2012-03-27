@@ -136,6 +136,15 @@ void setter( rettype val );
     int activeScreen() const;
     int numScreens() const;
 
+    /**
+     * List of Clients currently managed by KWin.
+     * Use this method in QML scripts.
+     **/
+    Q_INVOKABLE QList< QObject* > getClientList() const;
+    /**
+     * List of Clients currently managed by KWin.
+     * Use this method in JavaScript scripts.
+     **/
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
     /**
      * Returns the geometry a Client can use with the specified option.
