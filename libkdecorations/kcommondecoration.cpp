@@ -39,8 +39,6 @@
 #include "kdecorationfactory.h"
 #include <klocale.h>
 
-#include <kephal/screens.h>
-
 #include "kcommondecoration.moc"
 
 /** @addtogroup kdecoration */

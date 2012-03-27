@@ -39,8 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingprefs.h"
 #include <kwinglplatform.h>
 
-#include <kephal/screens.h>
-
 #include <X11/extensions/Xrandr.h>
 #ifndef KWIN_HAVE_OPENGLES
 #ifndef KWIN_NO_XF86VM

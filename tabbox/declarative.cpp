@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/qdeclarative.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QGraphicsObject>
 #include <QtGui/QResizeEvent>
 #include <QX11Info>
@@ -39,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/Theme>
 #include <KDE/Plasma/WindowEffects>
 #include <kdeclarative.h>
-#include <kephal/screens.h>
 // KWin
 #include "thumbnailitem.h"
 #include <kwindowsystem.h>
@@ -160,7 +160,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
     }
 #endif
     updateQmlSource();
-    m_currentScreenGeometry = Kephal::ScreenUtils::screenGeometry(tabBox->activeScreen());
+    m_currentScreenGeometry = QApplication::desktop()->screenGeometry(tabBox->activeScreen());
     rootObject()->setProperty("screenWidth", m_currentScreenGeometry.width());
     rootObject()->setProperty("screenHeight", m_currentScreenGeometry.height());
     rootObject()->setProperty("allDesktops", tabBox->config().tabBoxMode() == TabBoxConfig::ClientTabBox &&

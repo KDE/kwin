@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QWhatsThis>
 #include <QApplication>
+#include <QtGui/QDesktopWidget>
 
 #include <kkeyserver.h>
 
@@ -48,8 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
-
-#include <kephal/screens.h>
 
 namespace KWin
 {
@@ -1323,14 +1322,14 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
 
     QuickTileMode mode = QuickTileNone;
-    foreach (Kephal::Screen * screen, Kephal::Screens::self()->screens()) {
+    for (int i=0; i<QApplication::desktop()->screenCount(); ++i) {
 
-        const QRect &area = screen->geom();
+        const QRect &area = QApplication::desktop()->screenGeometry(i);
         if (!area.contains(QPoint(xroot, yroot)))
             continue;
 
         if (options->electricBorderTiling()) {
-        if (xroot <= screen->geom().x() + 20)
+        if (xroot <= area.x() + 20)
             mode |= QuickTileLeft;
         else if (xroot >= area.x() + area.width() - 20)
             mode |= QuickTileRight;

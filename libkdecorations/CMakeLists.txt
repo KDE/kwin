@@ -9,7 +9,7 @@ set(kdecorations_LIB_SRCS
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
-target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS} kephal)
+target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS})
 target_link_libraries(kdecorations LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
 
 set_target_properties(kdecorations PROPERTIES

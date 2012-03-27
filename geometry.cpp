@@ -39,11 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "geometrytip.h"
 #include "rules.h"
 #include "effects.h"
+#include <QtGui/QDesktopWidget>
 #include <QPainter>
 #include <QVarLengthArray>
 #include <QX11Info>
 
-#include <kephal/screens.h>
 #include <KDE/KGlobalSettings>
 #include "outline.h"
 #ifdef KWIN_BUILD_TILING
@@ -65,7 +65,10 @@ extern bool is_multihead;
  */
 void Workspace::desktopResized()
 {
-    QRect geom = Kephal::ScreenUtils::desktopGeometry();
+    QRect geom;
+    for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+        geom |= QApplication::desktop()->screenGeometry(i);
+    }
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();
     desktop_geometry.height = geom.height();
@@ -105,17 +108,20 @@ void Workspace::saveOldScreenSizes()
 
 void Workspace::updateClientArea(bool force)
 {
-    int nscreens = Kephal::ScreenUtils::numScreens();
+    int nscreens = QApplication::desktop()->screenCount();
     kDebug(1212) << "screens: " << nscreens << "desktops: " << numberOfDesktops();
     QVector< QRect > new_wareas(numberOfDesktops() + 1);
     QVector< StrutRects > new_rmoveareas(numberOfDesktops() + 1);
     QVector< QVector< QRect > > new_sareas(numberOfDesktops() + 1);
     QVector< QRect > screens(nscreens);
-    QRect desktopArea = Kephal::ScreenUtils::desktopGeometry();
+    QRect desktopArea;
+    for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+        desktopArea |= QApplication::desktop()->screenGeometry(i);
+    }
     for (int iS = 0;
             iS < nscreens;
             iS ++) {
-        screens [iS] = Kephal::ScreenUtils::screenGeometry(iS);
+        screens [iS] = QApplication::desktop()->screenGeometry(iS);
     }
     for (int i = 1;
             i <= numberOfDesktops();
@@ -257,17 +263,17 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         sarea = (!screenarea.isEmpty()
                    && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
                   ? screenarea[ desktop ][ screen_number ]
-                  : Kephal::ScreenUtils::screenGeometry(screen_number);
+                  : QApplication::desktop()->screenGeometry(screen_number);
         warea = workarea[ desktop ].isNull()
-                ? Kephal::ScreenUtils::screenGeometry(screen_number)
+                ? QApplication::desktop()->screenGeometry(screen_number)
                 : workarea[ desktop ];
     } else {
         sarea = (!screenarea.isEmpty()
                 && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
                 ? screenarea[ desktop ][ screen ]
-                : Kephal::ScreenUtils::screenGeometry(screen);
+                : QApplication::desktop()->screenGeometry(screen);
         warea = workarea[ desktop ].isNull()
-                ? Kephal::ScreenUtils::desktopGeometry()
+                ? QRect(0, 0, displayWidth(), displayHeight())
                 : workarea[ desktop ];
     }
 
@@ -280,19 +286,16 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     case MovementArea:
     case ScreenArea:
         if (is_multihead)
-            return Kephal::ScreenUtils::screenGeometry(screen_number);
+            return QApplication::desktop()->screenGeometry(screen_number);
         else
-            return Kephal::ScreenUtils::screenGeometry(screen);
+            return QApplication::desktop()->screenGeometry(screen);
     case WorkArea:
         if (is_multihead)
             return sarea;
         else
             return warea;
     case FullArea:
-        if (is_multihead)
-            return Kephal::ScreenUtils::screenGeometry(screen_number);
-        else
-            return Kephal::ScreenUtils::desktopGeometry();
+        return QRect(0, 0, displayWidth(), displayHeight());
     }
     abort();
 }
@@ -300,7 +303,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {
-    int screen = Kephal::ScreenUtils::screenId(p);
+    int screen = QApplication::desktop()->screenNumber(p);
     return clientArea(opt, screen, desktop);
 }
 
@@ -876,7 +879,7 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
-    if (area == Kephal::ScreenUtils::desktopGeometry()) {
+    if (area == QRect(0, 0, displayWidth(), displayHeight())) {
         if (stareaL.left() < screenarea.left())
             stareaL = QRect();
         if (stareaR.right() > screenarea.right())
@@ -1011,9 +1014,9 @@ bool Client::hasOffscreenXineramaStrut() const
     region += strutRect(StrutAreaLeft);
 
     // Remove all visible areas so that only the invisible remain
-    int numScreens = Kephal::ScreenUtils::numScreens();
+    int numScreens = QApplication::desktop()->screenCount();
     for (int i = 0; i < numScreens; i ++)
-        region -= Kephal::ScreenUtils::screenGeometry(i);
+        region -= QApplication::desktop()->screenGeometry(i);
 
     // If there's anything left then we have an offscreen strut
     return !region.isEmpty();
@@ -2356,7 +2359,7 @@ void Client::setFullScreen(bool set, bool user)
 
 void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
-    int nscreens = Kephal::ScreenUtils::numScreens();
+    int nscreens = QApplication::desktop()->screenCount();
 
 //    kDebug( 1212 ) << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
 //                   << " left: " << topology.left << " right: " << topology.right
@@ -2384,10 +2387,10 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
 {
     QRect top, bottom, left, right, total;
 
-    top = Kephal::ScreenUtils::screenGeometry(requestedTopology.top);
-    bottom = Kephal::ScreenUtils::screenGeometry(requestedTopology.bottom);
-    left = Kephal::ScreenUtils::screenGeometry(requestedTopology.left);
-    right = Kephal::ScreenUtils::screenGeometry(requestedTopology.right);
+    top = QApplication::desktop()->screenGeometry(requestedTopology.top);
+    bottom = QApplication::desktop()->screenGeometry(requestedTopology.bottom);
+    left = QApplication::desktop()->screenGeometry(requestedTopology.left);
+    right = QApplication::desktop()->screenGeometry(requestedTopology.right);
     total = top.united(bottom.united(left.united(right)));
 
 //    kDebug( 1212 ) << "top: " << top << " bottom: " << bottom
@@ -3142,12 +3145,12 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise ignore the request to prevent corrupting geom_pretile.
         if (quick_tile_mode == mode) {
-            const int numScreens = Kephal::ScreenUtils::numScreens();
+            const int numScreens = QApplication::desktop()->screenCount();
             const int curScreen = screen();
             int nextScreen = curScreen;
             QVarLengthArray<QRect> screens(numScreens);
             for (int i = 0; i < numScreens; ++i)   // Cache
-                screens[i] = Kephal::ScreenUtils::screenGeometry(i);
+                screens[i] = QApplication::desktop()->screenGeometry(i);
             for (int i = 0; i < numScreens; ++i) {
                 if (i == curScreen)
                     continue;

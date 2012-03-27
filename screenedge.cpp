@@ -42,9 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTextStream>
 #include <QtDBus/QDBusInterface>
 
-// KDE-Workspace
-#include <kephal/screens.h>
-
 namespace KWin {
 
 ScreenEdge::ScreenEdge()
@@ -73,7 +70,7 @@ void ScreenEdge::update(bool force)
     m_screenEdgeTimeLast = xTime();
     m_screenEdgeTimeLastTrigger = xTime();
     m_currentScreenEdge = ElectricNone;
-    QRect r = Kephal::ScreenUtils::desktopGeometry();
+    QRect r = QRect(0, 0, displayWidth(), displayHeight());
     m_screenEdgeTop = r.top();
     m_screenEdgeBottom = r.bottom();
     m_screenEdgeLeft = r.left();
@@ -120,7 +117,7 @@ void ScreenEdge::restoreSize(ElectricBorder border)
 {
     if (m_screenEdgeWindows[border] == None)
         return;
-    QRect r = Kephal::ScreenUtils::desktopGeometry();
+    QRect r(0, 0, displayWidth(), displayHeight());
     int xywh[ELECTRIC_COUNT][4] = {
         { r.left() + 1, r.top(), r.width() - 2, 1 },   // Top
         { r.right(), r.top(), 1, 1 },                  // Top-right

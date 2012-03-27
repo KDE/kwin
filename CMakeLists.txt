@@ -54,7 +54,6 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/libkdecorations
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kephal
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kworkspace
     )
 
@@ -174,7 +173,7 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative kephal kworkspace kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
+set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative kworkspace kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
 
 find_library(XF86VM_LIBRARY Xxf86vm)
 if (XF86VM_LIBRARY)

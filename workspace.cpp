@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <QtGui/QDesktopWidget>
 #include <QRegExp>
 #include <QPainter>
 #include <QBitmap>
@@ -77,8 +78,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobalsettings.h>
 #include <kwindowsystem.h>
 #include <kwindowinfo.h>
-
-#include <kephal/screens.h>
 
 namespace KWin
 {
@@ -241,10 +240,8 @@ Workspace::Workspace(bool restore)
 
     init();
 
-    connect(Kephal::Screens::self(), SIGNAL(screenAdded(Kephal::Screen*)), &screenChangedTimer, SLOT(start()));
-    connect(Kephal::Screens::self(), SIGNAL(screenRemoved(int)), &screenChangedTimer, SLOT(start()));
-    connect(Kephal::Screens::self(), SIGNAL(screenResized(Kephal::Screen*,QSize,QSize)), &screenChangedTimer, SLOT(start()));
-    connect(Kephal::Screens::self(), SIGNAL(screenMoved(Kephal::Screen*,QPoint,QPoint)), &screenChangedTimer, SLOT(start()));
+    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), &screenChangedTimer, SLOT(start()));
+    connect(QApplication::desktop(), SIGNAL(resized(int)), &screenChangedTimer, SLOT(start()));
 
 #ifdef KWIN_BUILD_ACTIVITIES
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
@@ -441,7 +438,10 @@ void Workspace::init()
         NETPoint* viewports = new NETPoint[numberOfDesktops()];
         rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
         delete[] viewports;
-        QRect geom = Kephal::ScreenUtils::desktopGeometry();
+        QRect geom;
+        for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+            geom |= QApplication::desktop()->screenGeometry(i);
+        }
         NETSize desktop_geometry;
         desktop_geometry.width = geom.width();
         desktop_geometry.height = geom.height();
@@ -1658,7 +1658,7 @@ void Workspace::toggleClientOnActivity(Client* c, const QString &activity, bool 
 
 int Workspace::numScreens() const
 {
-    return Kephal::ScreenUtils::numScreens();
+    return QApplication::desktop()->screenCount();
 }
 
 int Workspace::activeScreen() const
@@ -1668,7 +1668,7 @@ int Workspace::activeScreen() const
             return activeClient()->screen();
         return active_screen;
     }
-    return Kephal::ScreenUtils::screenId(cursorPos());
+    return QApplication::desktop()->screenNumber(cursorPos());
 }
 
 /**
@@ -1689,17 +1689,17 @@ void Workspace::checkActiveScreen(const Client* c)
  */
 void Workspace::setActiveScreenMouse(const QPoint& mousepos)
 {
-    active_screen = Kephal::ScreenUtils::screenId(mousepos);
+    active_screen = QApplication::desktop()->screenNumber(mousepos);
 }
 
 QRect Workspace::screenGeometry(int screen) const
 {
-    return Kephal::ScreenUtils::screenGeometry(screen);
+    return QApplication::desktop()->screenGeometry(screen);
 }
 
 int Workspace::screenNumber(const QPoint& pos) const
 {
-    return Kephal::ScreenUtils::screenId(pos);
+    return QApplication::desktop()->screenNumber(pos);
 }
 
 void Workspace::sendClientToScreen(Client* c, int screen)

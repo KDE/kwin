@@ -55,7 +55,7 @@ public Q_SLOTS:
     /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
-     * @param screen Number of screen as numbered by kephal
+     * @param screen Number of screen as numbered by QDesktopWidget
      * @returns Path to stored screenshot, or null string in failure case.
      **/
     Q_SCRIPTABLE QString screenshotScreen(int screen);
