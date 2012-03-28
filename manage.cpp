@@ -617,48 +617,66 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
     assert(wrapper == None);
     client = w;
 
-    // We don't want the window to be destroyed when we are destroyed
-    XAddToSaveSet(display(), client);
-    XSelectInput(display(), client, NoEventMask);
-    XUnmapWindow(display(), client);
-    XWindowChanges wc; // Set the border width to 0
-    wc.border_width = 0; // TODO: Possibly save this, and also use it for initial configuring of the window
-    XConfigureWindow(display(), client, CWBorderWidth, &wc);
+    const xcb_visualid_t visualid = XVisualIDFromVisual(attr.visual);
+    const uint32_t zero_value = 0;
 
-    XSetWindowAttributes swa;
-    swa.colormap = attr.colormap;
-    swa.background_pixmap = None;
-    swa.border_pixel = 0;
+    xcb_connection_t *conn = connection();
 
-    Window frame = XCreateWindow(display(), rootWindow(), 0, 0, 1, 1, 0,
-                                 attr.depth, InputOutput, attr.visual, CWColormap | CWBackPixmap | CWBorderPixel, &swa);
+    // We don't want the window to be destroyed when we quit
+    xcb_change_save_set(conn, XCB_SET_MODE_INSERT, client);
+
+    xcb_change_window_attributes(conn, client, XCB_CW_EVENT_MASK, &zero_value);
+    xcb_unmap_window(conn, client);
+    xcb_configure_window(conn, client, XCB_CONFIG_WINDOW_BORDER_WIDTH, &zero_value);
+
+    // Note: These values must match the order in the xcb_cw_t enum
+    const uint32_t cw_values[] = {
+        0,                                // back_pixmap
+        0,                                // border_pixel
+        attr.colormap,                    // colormap
+        QCursor(Qt::ArrowCursor).handle() // cursor
+    };
+
+    const uint32_t cw_mask = XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL |
+                             XCB_CW_COLORMAP | XCB_CW_CURSOR;
+
+    const uint32_t common_event_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE |
+                                       XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW |
+                                       XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
+                                       XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION |
+                                       XCB_EVENT_MASK_KEYMAP_STATE |
+                                       XCB_EVENT_MASK_FOCUS_CHANGE |
+                                       XCB_EVENT_MASK_EXPOSURE |
+                                       XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+
+    const uint32_t frame_event_mask   = common_event_mask | XCB_EVENT_MASK_PROPERTY_CHANGE;
+    const uint32_t wrapper_event_mask = common_event_mask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+
+    const uint32_t client_event_mask = XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE |
+                                       XCB_EVENT_MASK_COLOR_MAP_CHANGE |
+                                       XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW |
+                                       XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE;
+
+    // Create the frame window
+    xcb_window_t frame = xcb_generate_id(conn);
+    xcb_create_window(conn, attr.depth, frame, rootWindow(), 0, 0, 1, 1, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
+
     setWindowHandles(client, frame);
-    wrapper = XCreateWindow(display(), frame, 0, 0, 1, 1, 0,
-                            attr.depth, InputOutput, attr.visual, CWColormap | CWBackPixmap | CWBorderPixel, &swa);
 
-    XDefineCursor(display(), frame, QCursor(Qt::ArrowCursor).handle());
-    // Some apps are stupid and don't define their own cursor - set the arrow one for them
-    XDefineCursor(display(), wrapper, QCursor(Qt::ArrowCursor).handle());
-    XReparentWindow(display(), client, wrapper, 0, 0);
-    XSelectInput(display(), frame,
-                 KeyPressMask | KeyReleaseMask |
-                 ButtonPressMask | ButtonReleaseMask |
-                 KeymapStateMask |
-                 ButtonMotionMask |
-                 PointerMotionMask |
-                 EnterWindowMask | LeaveWindowMask |
-                 FocusChangeMask |
-                 ExposureMask |
-                 PropertyChangeMask |
-                 StructureNotifyMask | SubstructureRedirectMask);
-    XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
-    XSelectInput(display(), client,
-                 FocusChangeMask |
-                 PropertyChangeMask |
-                 ColormapChangeMask |
-                 EnterWindowMask | LeaveWindowMask |
-                 KeyPressMask | KeyReleaseMask
-                );
+    // Create the wrapper window
+    wrapper = xcb_generate_id(conn);
+    xcb_create_window(conn, attr.depth, wrapper, frame, 0, 0, 1, 1, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
+
+    xcb_reparent_window(conn, client, wrapper, 0, 0);
+
+    // We could specify the event masks when we create the windows, but the original
+    // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
+    // receiving any unexpected events from the wrapper creation or the reparenting.
+    xcb_change_window_attributes(conn, frame,   XCB_CW_EVENT_MASK, &frame_event_mask);
+    xcb_change_window_attributes(conn, wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
+    xcb_change_window_attributes(conn, client,  XCB_CW_EVENT_MASK, &client_event_mask);
 
     updateMouseGrab();
 }
