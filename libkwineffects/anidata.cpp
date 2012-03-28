@@ -111,6 +111,7 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
     else if (animation.at(1) == "Rotation")     attribute = AnimationEffect::Rotation;
     else if (animation.at(1) == "Position")     attribute = AnimationEffect::Position;
     else if (animation.at(1) == "Size")         attribute = AnimationEffect::Size;
+    else if (animation.at(1) == "Clip")         attribute = AnimationEffect::Clip;
     else {
         kDebug(1212) << "Invalid attribute" << animation.at(1);
         return;
@@ -178,6 +179,7 @@ QString AniData::toString() const
     case AnimationEffect::Rotation:     ret += "Rotation:"; break;
     case AnimationEffect::Position:     ret += "Position:"; break;
     case AnimationEffect::Size:         ret += "Size:"; break;
+    case AnimationEffect::Clip:         ret += "Clip:"; break;
     default:                            ret += ':';
     }
     ret +=  QString::number(meta) + ':' + QString::number(duration) + ':' +

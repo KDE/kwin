@@ -98,7 +98,7 @@ public:
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
     enum Attribute {
         Opacity = 0, Brightness, Saturation, Scale, Rotation,
-        Position, Size, Translation, Generic,
+        Position, Size, Translation, Clip, Generic,
         NonFloatBase = Position
     };
     enum MetaType { SourceAnchor, TargetAnchor,
@@ -156,7 +156,7 @@ protected:
      * Called whenever an animation end, passes the transformed @class EffectWindow @enum Attribute and originally supplied @param meta
      * You can reimplement it to keep a constant transformation for the window (ie. keep it a this opacity or position) or to start another animation
      */
-    virtual void animationEnded( EffectWindow *, Attribute, uint meta ) {}
+    virtual void animationEnded( EffectWindow *, Attribute, uint meta ) {Q_UNUSED(meta);}
     /**
      * Called if the transformed @enum Attribute is Generic. You should reimplement it if you transform this "Attribute".
      * You could use the meta information to eg. support more than one additional animations
@@ -165,6 +165,8 @@ protected:
     {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
 
 private:
+    QRect clipRect(const QRect &windowRect, const AniData&) const;
+    void clipWindow(const EffectWindow *, const AniData &, WindowQuadList &) const;
     float interpolated( const AniData&, int i = 0 ) const;
     float progress( const AniData& ) const;
     void updateLayerRepaints();
