@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/Xdamage.h>
 
+#include <xcb/xfixes.h>
+
 class NETWinInfo2;
 
 namespace KWin
@@ -284,6 +286,22 @@ public:
 
     virtual Layer layer() const = 0;
 
+    /**
+     * Resets the damage state and sends a request for the damage region.
+     * A call to this function must be followed by a call to getDamageRegionReply(),
+     * or the reply will be leaked.
+     *
+     * Returns true if the window was damaged, and false otherwise.
+     */
+    bool resetAndFetchDamage();
+
+    /**
+     * Gets the reply from a previous call to resetAndFetchDamage().
+     * Calling this function is a no-op if there is no pending reply.
+     * Call damage() to return the fetched region.
+     */
+    void getDamageRegionReply();
+
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
@@ -313,8 +331,6 @@ protected:
     virtual void damageNotifyEvent(XDamageNotifyEvent* e);
     Pixmap createWindowPixmap();
     void discardWindowPixmap();
-    void addDamage(const QRect& r);
-    void addDamage(int x, int y, int w, int h);
     void addDamageFull();
     void getWmClientLeader();
     void getWmClientMachine();
@@ -345,6 +361,10 @@ protected:
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
     QRegion layer_repaints_region;
+
+protected:
+    bool m_isDamaged;
+
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);
@@ -358,7 +378,6 @@ private:
     Pixmap window_pix;
     Damage damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
-    float damageRatio;
     bool is_shape;
     EffectWindowImpl* effect_window;
     QByteArray resource_name;
@@ -368,7 +387,9 @@ private:
     QByteArray window_role;
     bool unredirect;
     bool unredirectSuspend; // when unredirected, but pixmap is needed temporarily
+    bool m_damageReplyPending;
     QRegion opaque_region;
+    xcb_xfixes_fetch_region_cookie_t m_regionCookie;
     // when adding new data members, check also copyToDeleted()
 };
 

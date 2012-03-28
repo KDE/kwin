@@ -1001,7 +1001,7 @@ Q_SIGNALS:
      * Signal emitted when an area of a window is scheduled for repainting.
      * Use this signal in an effect if another area needs to be synced as well.
      * @param w The window which is scheduled for repainting
-     * @param r The damaged rect
+     * @param r Always empty.
      * @since 4.7
      **/
     void windowDamaged(KWin::EffectWindow *w, const QRect &r);

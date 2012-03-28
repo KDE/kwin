@@ -44,6 +44,8 @@ Toplevel::Toplevel(Workspace* ws)
     , wmClientLeaderWin(0)
     , unredirect(false)
     , unredirectSuspend(false)
+    , m_isDamaged(false)
+    , m_damageReplyPending(false)
 {
     connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
 }

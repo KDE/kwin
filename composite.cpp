@@ -76,6 +76,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrandr.h>
 
+#include <xcb/damage.h>
+
 namespace KWin
 {
 
@@ -530,10 +532,46 @@ void Compositor::timerEvent(QTimerEvent *te)
 }
 
 static int s_pendingFlushes = 0;
+
 void Compositor::performCompositing()
 {
     if (!isOverlayWindowVisible())
         return; // nothing is visible anyway
+
+    // Create a list of all windows in the stacking order
+    ToplevelList windows = Workspace::self()->xStackingOrder();
+    ToplevelList damaged;
+
+    // Reset the damage state of each window and fetch the damage region
+    // without waiting for a reply
+    foreach (Toplevel *win, windows) {
+        if (win->resetAndFetchDamage())
+            damaged << win;
+    }
+
+    if (damaged.count() > 0)
+        xcb_flush(connection());
+
+    // Move elevated windows to the top of the stacking order
+    foreach (EffectWindow *c, static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
+        Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
+        windows.removeAll(t);
+        windows.append(t);
+    }
+
+    // Get the replies
+    foreach (Toplevel *win, damaged) {
+        // Discard the cached lanczos texture
+        if (win->effectWindow()) {
+            const QVariant texture = win->effectWindow()->data(LanczosCacheRole);
+            if (texture.isValid()) {
+                delete static_cast<GLTexture *>(texture.value<void*>());
+                win->effectWindow()->setData(LanczosCacheRole, QVariant());
+            }
+        }
+
+        win->getDamageRegionReply();
+    }
 
     bool pending = !repaints_region.isEmpty() || windowRepaintsPending();
     if (pending)
@@ -552,14 +590,6 @@ void Compositor::performCompositing()
         return;
     }
 
-    // create a list of all windows in the stacking order
-    ToplevelList windows = Workspace::self()->xStackingOrder();
-    foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
-        Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
-        windows.removeAll(t);
-        windows.append(t);
-    }
-
     // skip windows that are not yet ready for being painted
     // TODO ?
     // this cannot be used so carelessly - needs protections against broken clients, the window
@@ -573,9 +603,10 @@ void Compositor::performCompositing()
     repaints_region = QRegion();
 
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
-    // checkCompositeTime() would restart it again somewhen later, called from functions that
+    // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
     scheduleRepaint();
 }
@@ -810,21 +841,32 @@ bool Toplevel::setupCompositing()
 {
     if (!compositing())
         return false;
-    damageRatio = 0.0;
+
     if (damage_handle != None)
         return false;
-    damage_handle = XDamageCreate(display(), frameId(), XDamageReportRawRectangles);
+
+    damage_handle = xcb_generate_id(connection());
+    xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
     unredirect = false;
+
     Compositor::self()->checkUnredirect(true);
     Compositor::self()->scene()->windowAdded(this);
+
+    // With unmanaged windows there is a race condition between the client painting the window
+    // and us setting up damage tracking.  If the client wins we won't get a damage event even
+    // though the window has been painted.  To avoid this we mark the whole window as damaged
+    // and schedule a repaint immediately after creating the damage object.
+    if (dynamic_cast<Unmanaged*>(this))
+        addDamageFull();
+
     return true;
 }
 
 void Toplevel::finishCompositing()
 {
-    damageRatio = 0.0;
     if (damage_handle == None)
         return;
     Compositor::self()->checkUnredirect(true);
@@ -832,8 +874,10 @@ void Toplevel::finishCompositing()
         discardWindowPixmap();
         delete effect_window;
     }
-    XDamageDestroy(display(), damage_handle);
-    damage_handle = None;
+
+    xcb_damage_destroy(connection(), damage_handle);
+
+    damage_handle = XCB_NONE;
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
@@ -841,7 +885,6 @@ void Toplevel::finishCompositing()
 
 void Toplevel::discardWindowPixmap()
 {
-    damageRatio = 0.0;
     addDamageFull();
     if (window_pix == None)
         return;
@@ -856,7 +899,6 @@ Pixmap Toplevel::createWindowPixmap()
     assert(compositing());
     if (unredirected())
         return None;
-    damageRatio = 0.0;
     grabXServer();
     KXErrorHandler err;
     Pixmap pix = XCompositeNameWindowPixmap(display(), frameId());
@@ -874,69 +916,16 @@ Pixmap Toplevel::createWindowPixmap()
     return pix;
 }
 
-// We must specify that the two events are a union so the compiler doesn't
-// complain about strict aliasing rules.
-typedef union {
-    XEvent e;
-    XDamageNotifyEvent de;
-} EventUnion;
-
-static QVector<QRect> damageRects;
-
 void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 {
-    if (damageRatio == 1.0) { // we know that we're completely damaged, no need to tell us again
-        while (XPending(display())) { // drop events
-            EventUnion e2;
-            if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent() &&
-                    e2.e.xany.window == frameId()) {
-                XNextEvent(display(), &e2.e);
-                continue;
-            }
-            break;
-        }
+    Q_UNUSED(e)
 
-        return;
-    }
+    m_isDamaged = true;
 
-    const float area = rect().width()*rect().height();
-    damageRects.reserve(16);
-    damageRects.erase(damageRects.begin(), damageRects.end());
-    damageRects << QRect(e->area.x, e->area.y, e->area.width, e->area.height);
-
-    // we can not easily say anything about the overall ratio since the new rects may intersect the present
-    float newDamageRatio = damageRects.last().width()*damageRects.last().height() / area;
-
-    // compress
-    while (XPending(display())) {
-        EventUnion e2;
-        if (XPeekEvent(display(), &e2.e) && e2.e.type == Extensions::damageNotifyEvent()
-                && e2.e.xany.window == frameId()) {
-            XNextEvent(display(), &e2.e);
-            if (damageRatio >= 0.8 || newDamageRatio > 0.8 || damageRects.count() > 15) {
-                // If there are too many damage events in the queue, just discard them
-                // and damage the whole window. Otherwise the X server can just overload
-                // us with a flood of damage events. Should be probably optimized
-                // in the X server, as this is rather lame.
-                newDamageRatio = 1.0;
-                damageRects.clear();
-                continue;
-            }
-            damageRects << QRect(e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height);
-            newDamageRatio += damageRects.last().width()*damageRects.last().height() / area;
-            continue;
-        }
-        break;
-    }
-
-
-    if ((damageRects.count() == 1 && damageRects.last() == rect()) ||
-        (damageRects.isEmpty() && newDamageRatio == 1.0)) {
-        addDamageFull();
-    } else {
-        foreach (const QRect &r, damageRects)
-            addDamage(r);
-    }
+    // Note: The rect is supposed to specify the damage extents,
+    //       but we dont't know it at this point. No one who connects
+    //       to this signal uses the rect however.
+    emit damaged(this, QRect());
 }
 
 bool Toplevel::compositing() const
@@ -948,71 +937,94 @@ bool Toplevel::compositing() const
 void Client::damageNotifyEvent(XDamageNotifyEvent* e)
 {
 #ifdef HAVE_XSYNC
-    if (syncRequest.isPending && isResize())
+    if (syncRequest.isPending && isResize()) {
+        emit damaged(this, QRect());
+        m_isDamaged = true;
         return;
+    }
+
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
         if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
             setReadyForPainting();
     }
 #else
+    if (!ready_for_painting)
         setReadyForPainting();
 #endif
 
     Toplevel::damageNotifyEvent(e);
 }
 
-void Toplevel::addDamage(const QRect& r)
+bool Toplevel::resetAndFetchDamage()
 {
-    addDamage(r.x(), r.y(), r.width(), r.height());
+    if (!m_isDamaged)
+        return false;
+
+    xcb_connection_t *conn = connection();
+
+    // Create a new region and copy the damage region to it,
+    // resetting the damaged state.
+    xcb_xfixes_region_t region = xcb_generate_id(conn);
+    xcb_xfixes_create_region(conn, region, 0, 0);
+    xcb_damage_subtract(conn, damage_handle, 0, region);
+
+    // Send a fetch-region request and destroy the region
+    m_regionCookie = xcb_xfixes_fetch_region_unchecked(conn, region);
+    xcb_xfixes_destroy_region(conn, region);
+
+    m_isDamaged = false;
+    m_damageReplyPending = true;
+
+    return m_damageReplyPending;
 }
 
-void Toplevel::addDamage(int x, int y, int w, int h)
+void Toplevel::getDamageRegionReply()
 {
-    if (!compositing())
+    if (!m_damageReplyPending)
         return;
-    QRect r(x, y, w, h);
-    // resizing the decoration may lag behind a bit and when shrinking there
-    // may be a damage event coming with size larger than the current window size
-    r &= rect();
-    if (r.isEmpty())
+
+    m_damageReplyPending = false;
+
+    // Get the fetch-region reply
+    xcb_xfixes_fetch_region_reply_t *reply =
+            xcb_xfixes_fetch_region_reply(connection(), m_regionCookie, 0);
+
+    if (!reply)
         return;
-    damage_region += r;
-    int damageArea = 0;
-    foreach (const QRect &r2, damage_region.rects())
-        damageArea += r2.width()*r2.height();
-    damageRatio = float(damageArea) / float(rect().width()*rect().height());
-    repaints_region += r;
-    emit damaged(this, r);
-    // discard lanczos texture
-    if (effect_window) {
-        QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
-        if (cachedTextureVariant.isValid()) {
-            GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
-            delete cachedTexture;
-            cachedTexture = 0;
-            effect_window->setData(LanczosCacheRole, QVariant());
-        }
-    }
+
+    // Convert the reply to a QRegion
+    int count = xcb_xfixes_fetch_region_rectangles_length(reply);
+    QRegion region;
+
+    if (count > 1 && count < 16) {
+        xcb_rectangle_t *rects = xcb_xfixes_fetch_region_rectangles(reply);
+
+        QVector<QRect> qrects;
+        qrects.reserve(count);
+
+        for (int i = 0; i < count; i++)
+            qrects << QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+
+        region.setRects(qrects.constData(), count);
+    } else
+        region += QRect(reply->extents.x, reply->extents.y,
+                        reply->extents.width, reply->extents.height);
+
+    damage_region += region;
+    repaints_region += region;
+
+    free(reply);
 }
 
 void Toplevel::addDamageFull()
 {
     if (!compositing())
         return;
+
     damage_region = rect();
     repaints_region = rect();
-    damageRatio = 1.0;
+
     emit damaged(this, rect());
-    // discard lanczos texture
-    if (effect_window) {
-        QVariant cachedTextureVariant = effect_window->data(LanczosCacheRole);
-        if (cachedTextureVariant.isValid()) {
-            GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
-            delete cachedTexture;
-            cachedTexture = 0;
-            effect_window->setData(LanczosCacheRole, QVariant());
-        }
-    }
 }
 
 void Toplevel::resetDamage(const QRect& r)
@@ -1021,7 +1033,6 @@ void Toplevel::resetDamage(const QRect& r)
     int damageArea = 0;
     foreach (const QRect &r2, damage_region.rects())
         damageArea += r2.width()*r2.height();
-    damageRatio = float(damageArea) / float(rect().width()*rect().height());
 }
 
 void Toplevel::addRepaint(const QRect& r)
