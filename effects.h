@@ -61,6 +61,10 @@ public:
     virtual ~EffectsHandlerImpl();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    /**
+     * Special hook to perform a paintScreen but just with the windows on @p desktop.
+     **/
+    void paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
@@ -180,6 +184,19 @@ public:
     QList<EffectWindow*> elevatedWindows() const;
     QStringList activeEffects() const;
 
+    /**
+     * @returns Whether we are currently in a desktop rendering process triggered by paintDesktop hook
+     **/
+    bool isDesktopRendering() const {
+        return m_desktopRendering;
+    }
+    /**
+     * @returns the desktop currently being rendered in the paintDesktop hook.
+     **/
+    int currentRenderedDesktop() const {
+        return m_currentRenderedDesktop;
+    }
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);
@@ -248,6 +265,8 @@ private:
     Scene *m_scene;
     QList< InputWindowPair > input_windows;
     ScreenLockerWatcher *m_screenLockerWatcher;
+    bool m_desktopRendering;
+    int m_currentRenderedDesktop;
 };
 
 class EffectWindowImpl : public EffectWindow

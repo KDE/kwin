@@ -589,8 +589,14 @@ void Scene::Window::resetPaintingEnabled()
     disable_painting = 0;
     if (toplevel->isDeleted())
         disable_painting |= PAINT_DISABLED_BY_DELETE;
-    if (!toplevel->isOnCurrentDesktop())
-        disable_painting |= PAINT_DISABLED_BY_DESKTOP;
+    if (static_cast<EffectsHandlerImpl*>(effects)->isDesktopRendering()) {
+        if (!toplevel->isOnDesktop(static_cast<EffectsHandlerImpl*>(effects)->currentRenderedDesktop())) {
+            disable_painting |= PAINT_DISABLED_BY_DESKTOP;
+        }
+    } else {
+        if (!toplevel->isOnCurrentDesktop())
+            disable_painting |= PAINT_DISABLED_BY_DESKTOP;
+    }
     if (!toplevel->isOnCurrentActivity())
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
     if (toplevel->isClient()) {

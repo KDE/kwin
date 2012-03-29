@@ -215,6 +215,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_compositor(compositor)
     , m_scene(scene)
     , m_screenLockerWatcher(new ScreenLockerWatcher(this))
+    , m_desktopRendering(false)
+    , m_currentRenderedDesktop(0)
 {
     new EffectsAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -371,6 +373,22 @@ void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& 
         --m_currentPaintScreenIterator;
     } else
         m_scene->finalPaintScreen(mask, region, data);
+}
+
+void EffectsHandlerImpl::paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData &data)
+{
+    if (desktop < 1 || desktop > numberOfDesktops()) {
+        return;
+    }
+    m_currentRenderedDesktop = desktop;
+    m_desktopRendering = true;
+    // save the paint screen iterator
+    QList<Effect*>::iterator savedIterator = m_currentPaintScreenIterator;
+    m_currentPaintScreenIterator = m_activeEffects.begin();
+    effects->paintScreen(mask, region, data);
+    // restore the saved iterator
+    m_currentPaintScreenIterator = savedIterator;
+    m_desktopRendering = false;
 }
 
 void EffectsHandlerImpl::postPaintScreen()
