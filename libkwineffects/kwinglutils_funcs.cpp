@@ -49,6 +49,7 @@ glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 glXGetVideoSync_func glXGetVideoSync;
 glXWaitVideoSync_func glXWaitVideoSync;
+glXSwapInterval_func glXSwapInterval;
 // GLX_SGIX_fbconfig
 glXGetFBConfigAttrib_func glXGetFBConfigAttrib;
 glXGetVisualFromFBConfig_func glXGetVisualFromFBConfig;
@@ -160,6 +161,18 @@ void glxResolveFunctions()
     } else {
         glXGetVideoSync = NULL;
         glXWaitVideoSync = NULL;
+    }
+
+    if (hasGLExtension("GLX_SGI_swap_control")) {
+        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalSGI");
+    } else if (hasGLExtension("GLX_EXT_swap_control")) {
+        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalEXT");
+    } else if (hasGLExtension("GLX_MESA_swap_control")) {
+        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalMESA");
+    } else if (hasGLExtension("GLX_OML_sync_control")) {
+        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalOML");
+    } else {
+        glXSwapInterval = NULL;
     }
 
     GL_RESOLVE_WITH_EXT(glXGetFBConfigAttrib, glXGetFBConfigAttribSGIX);

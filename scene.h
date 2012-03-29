@@ -51,7 +51,9 @@ public:
     virtual CompositingType compositingType() const = 0;
     // Repaints the given screen areas, windows provides the stacking order.
     // The entry point for the main part of the painting pass.
-    virtual void paint(QRegion damage, ToplevelList windows) = 0;
+    // returns the time since the last vblank signal - if there's one
+    // ie. "what of this frame is lost to painting"
+    virtual int paint(QRegion damage, ToplevelList windows) = 0;
 
     // Notification function - KWin core informs about changes.
     // Used to mainly discard cached data.
@@ -91,11 +93,8 @@ public:
     };
     // types of filtering available
     enum ImageFilterType { ImageFilterFast, ImageFilterGood };
-    inline uint estimatedRenderTime() {
-        return lastRenderTime;
-    }
     // there's nothing to paint (adjust time_diff later)
-    void idle();
+    virtual void idle();
     bool waitSyncAvailable() {
         return has_waitSync;
     }
@@ -152,7 +151,6 @@ protected:
     QRegion painted_region;
     // time since last repaint
     int time_diff;
-    uint lastRenderTime;
     QElapsedTimer last_time;
     Workspace* wspace;
     bool has_waitSync;

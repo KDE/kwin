@@ -754,6 +754,15 @@ void Options::setRefreshRate(uint refreshRate)
     emit refreshRateChanged();
 }
 
+void Options::setVBlankTime(uint vBlankTime)
+{
+    if (m_vBlankTime == vBlankTime) {
+        return;
+    }
+    m_vBlankTime = vBlankTime;
+    emit vBlankTimeChanged();
+}
+
 void Options::setGlDirect(bool glDirect)
 {
     if (m_glDirect == glDirect) {
@@ -929,6 +938,7 @@ unsigned long Options::loadConfig()
     config = KConfigGroup(_config, "Compositing");
     setMaxFpsInterval(qRound(1000.0 / config.readEntry("MaxFPS", Options::defaultMaxFps())));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
+    setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()));
 
     return changed;
 }

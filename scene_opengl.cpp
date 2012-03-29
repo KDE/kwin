@@ -108,6 +108,12 @@ bool SceneOpenGL::db; // destination drawable is double-buffered
 #include "scene_opengl_glx.cpp"
 #endif
 
+void SceneOpenGL::idle()
+{
+    flushBuffer(m_lastMask, m_lastDamage);
+    Scene::idle();
+}
+
 bool SceneOpenGL::initFailed() const
 {
     return !init_ok;

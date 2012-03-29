@@ -111,6 +111,7 @@ Workspace::Workspace(bool restore)
     , m_screenEdgeOrientation(0)
 #endif
     // Unsorted
+    , m_nextFrameDelay(0)
     , active_popup(NULL)
     , active_popup_client(NULL)
     , temporaryRulesMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL, false)
@@ -232,7 +233,6 @@ Workspace::Workspace(bool restore)
     tab_box = new TabBox::TabBox(this);
 #endif
 
-    nextPaintReference.invalidate(); // Initialize the timer
     setupCompositing();
 
     // Compatibility

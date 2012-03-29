@@ -192,6 +192,7 @@ class Options : public QObject, public KDecorationOptions
     Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale WRITE setXrenderSmoothScale NOTIFY xrenderSmoothScaleChanged)
     Q_PROPERTY(uint maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
     Q_PROPERTY(uint refreshRate READ refreshRate WRITE setRefreshRate NOTIFY refreshRateChanged)
+    Q_PROPERTY(uint vBlankTime READ vBlankTime WRITE setVBlankTime NOTIFY vBlankTimeChanged)
     Q_PROPERTY(bool glDirect READ isGlDirect WRITE setGlDirect NOTIFY glDirectChanged)
     Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding WRITE setGlStrictBinding NOTIFY glStrictBindingChanged)
     /**
@@ -583,6 +584,9 @@ public:
     uint refreshRate() const {
         return m_refreshRate;
     }
+    uint vBlankTime() const {
+        return m_vBlankTime;
+    }
     bool isGlDirect() const {
         return m_glDirect;
     }
@@ -653,6 +657,7 @@ public:
     void setXrenderSmoothScale(bool xrenderSmoothScale);
     void setMaxFpsInterval(uint maxFpsInterval);
     void setRefreshRate(uint refreshRate);
+    void setVBlankTime(uint vBlankTime);
     void setGlDirect(bool glDirect);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
@@ -872,6 +877,9 @@ public:
     static uint defaultRefreshRate() {
         return 0;
     }
+    static uint defaultVBlankTime() {
+        return 6144;
+    }
     static bool defaultGlDirect() {
         return true;
     }
@@ -960,6 +968,7 @@ Q_SIGNALS:
     void xrenderSmoothScaleChanged();
     void maxFpsIntervalChanged();
     void refreshRateChanged();
+    void vBlankTimeChanged();
     void glDirectChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
@@ -1005,6 +1014,7 @@ private:
     uint m_maxFpsInterval;
     // Settings that should be auto-detected
     uint m_refreshRate;
+    uint m_vBlankTime;
     bool m_glDirect;
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;

@@ -46,10 +46,12 @@ public:
     virtual CompositingType compositingType() const {
         return OpenGLCompositing;
     }
-    virtual void paint(QRegion damage, ToplevelList windows);
+    virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
+
+    void idle();
 
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
@@ -101,6 +103,9 @@ private:
     QHash< Toplevel*, Window* > windows;
     bool init_ok;
     bool debug;
+    QElapsedTimer m_renderTimer;
+    QRegion m_lastDamage;
+    int m_lastMask;
 };
 
 class SceneOpenGL::TexturePrivate

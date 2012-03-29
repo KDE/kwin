@@ -533,6 +533,10 @@ public:
     void addRepaint(int x, int y, int w, int h);
     void checkUnredirect(bool force = false);
     void checkCompositeTimer();
+    // returns the _estimated_ delay to the next screen update
+    // good for having a rough idea to calculate transformations, bad to rely on.
+    // might happen few ms earlier, might be an entire frame to short. This is NOT deterministic.
+    int nextFrameDelay();
 
     // Mouse polling
     void startMousePolling();
@@ -766,6 +770,7 @@ private:
 
     bool windowRepaintsPending() const;
     void setCompositeTimer();
+    int m_timeSinceLastVBlank, m_nextFrameDelay;
 
     typedef QHash< QString, QVector<int> > DesktopFocusChains;
     DesktopFocusChains::Iterator m_desktopFocusChain;
@@ -909,9 +914,8 @@ private:
     KSelectionOwner* cm_selection;
     bool compositingSuspended, compositingBlocked;
     QBasicTimer compositeTimer;
-    QElapsedTimer nextPaintReference;
     QTimer mousePollingTimer;
-    uint vBlankInterval, vBlankPadding, fpsInterval, estimatedRenderTime;
+    uint vBlankInterval, fpsInterval;
     int xrrRefreshRate; // used only for compositing
     QRegion repaints_region;
     QSlider* transSlider;
@@ -1180,6 +1184,11 @@ inline void Workspace::checkCompositeTimer()
 {
     if (!compositeTimer.isActive())
         setCompositeTimer();
+}
+
+inline int Workspace::nextFrameDelay()
+{
+    return m_nextFrameDelay;
 }
 
 inline bool Workspace::hasDecorationPlugin() const

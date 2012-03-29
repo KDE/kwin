@@ -178,22 +178,20 @@ void Workspace::slotCompositingOptionsInitialized()
     fpsInterval = (options->maxFpsInterval() << 10);
     if (scene->waitSyncAvailable()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
         vBlankInterval = (1000 << 10) / xrrRefreshRate;
-        fpsInterval -= (fpsInterval % vBlankInterval);
-        fpsInterval = qMax(fpsInterval, vBlankInterval);
+        fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
-    vBlankPadding = 3; // vblank rounding errors... :-(
-    nextPaintReference.start();
+    m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we dont't have even a slight idea when the first vsync will occur
     checkCompositeTimer();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer
     addRepaintFull();
     foreach (Client * c, clients)
-    c->setupCompositing();
+        c->setupCompositing();
     foreach (Client * c, desktops)
-    c->setupCompositing();
+        c->setupCompositing();
     foreach (Unmanaged * c, unmanaged)
-    c->setupCompositing();
+        c->setupCompositing();
     discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
 
     // render at least once
@@ -394,12 +392,15 @@ void Workspace::timerEvent(QTimerEvent *te)
     } else
         QObject::timerEvent(te);
 }
-
+static bool s_pending = false;
+QElapsedTimer profiler;
 void Workspace::performCompositing()
 {
-    if (((repaints_region.isEmpty() && !windowRepaintsPending())  // no damage
-            || !scene->overlayWindow()->isVisible())) { // nothing is visible anyway
-        vBlankPadding += 3;
+    if (!scene->overlayWindow()->isVisible())
+        return; // nothing is visible anyway
+
+    bool pending = !repaints_region.isEmpty() || windowRepaintsPending();
+    if (!(pending || s_pending)) {
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
@@ -407,6 +408,8 @@ void Workspace::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
     }
+    profiler.start();
+    s_pending = pending;
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
     foreach (EffectWindow *c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
@@ -426,17 +429,8 @@ void Workspace::performCompositing()
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
-    if (scene->waitSyncAvailable()) {
-        // vsync: paint the scene, than rebase the timer and use the duration for next timeout estimation
-        scene->paint(repaints, windows);
-        nextPaintReference.start();
-    } else {
-        // no vsyc -> inversion: reset the timer, then paint the scene, this way we can provide a constant framerate
-        nextPaintReference.start();
-        scene->paint(repaints, windows);
-    }
-    // reset the roundin error corrective... :-(
-    vBlankPadding = 3;
+
+    m_timeSinceLastVBlank = scene->paint(repaints, windows);
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // checkCompositeTime() would restart it again somewhen later, called from functions that
@@ -471,19 +465,38 @@ void Workspace::setCompositeTimer()
     if (!compositing())  // should not really happen, but there may be e.g. some damage events still pending
         return;
 
-    // interval - "time since last paint completion" - "time we need to paint"
-    uint passed = nextPaintReference.elapsed() << 10;
-    uint delay = fpsInterval;
-    if (scene->waitSyncAvailable()) {
-        if (passed > fpsInterval) {
-            delay = vBlankInterval;
-            passed %= vBlankInterval;
-        }
-        delay -= ((passed + ((scene->estimatedRenderTime() + vBlankPadding) << 10)) % vBlankInterval);
-    } else
-        delay = qBound(0, int(delay - passed), 250 << 10);
+    uint padding = m_timeSinceLastVBlank << 10;
 
-    compositeTimer.start(delay >> 10, this);
+    if (scene->waitSyncAvailable()) {
+
+        // TODO: make vBlankTime dynamic?!
+        // It's required because glXWaitVideoSync will *likely* block a full frame if one enters
+        // a retrace pass which can last a variable amount of time, depending on the actual screen
+        // Now, my ooold 19" CRT can do such retrace so that 2ms are entirely sufficient,
+        // while another ooold 15" TFT requires about 6ms
+
+        if (padding > fpsInterval) {
+            // we're at low repaints or spent more time in painting than the user wanted to wait for that frame
+            padding = vBlankInterval - (padding%vBlankInterval); // -> align to next vblank
+        } else {  // -> align to the next maxFps tick
+            padding = ((vBlankInterval - padding%vBlankInterval) + (fpsInterval/vBlankInterval-1)*vBlankInterval);
+            //               "remaining time of the first vsync" + "time for the other vsyncs of the frame"
+        }
+
+        if (padding < options->vBlankTime()) { // we'll likely miss this frame
+            m_nextFrameDelay = (padding + vBlankInterval) >> 10;
+            padding = (padding + vBlankInterval - options->vBlankTime()) >> 10; // so we add one
+//             qDebug() << "WE LOST A FRAME";
+        } else {
+            m_nextFrameDelay = padding >> 10;
+            padding = (padding - options->vBlankTime()) >> 10;
+        }
+    }
+    else // w/o vsync we just jump to the next demanded tick
+        // the "1" will ensure we don't block out the eventloop - the system's just not faster
+        // "0" would be sufficient, but the compositor isn't the WMs only task
+        m_nextFrameDelay = padding = (padding > (int)fpsInterval) ? 1 : ((fpsInterval - padding) >> 10);
+    compositeTimer.start(qMin(padding, 250u), this); // force 4fps minimum
 }
 
 void Workspace::startMousePolling()

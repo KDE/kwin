@@ -44,7 +44,7 @@ public:
     virtual CompositingType compositingType() const {
         return XRenderCompositing;
     }
-    virtual void paint(QRegion damage, ToplevelList windows);
+    virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);

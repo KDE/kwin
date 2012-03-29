@@ -96,7 +96,6 @@ Scene* scene = 0;
 
 Scene::Scene(Workspace* ws)
     : QObject(ws)
-    , lastRenderTime(0)
     , wspace(ws)
     , has_waitSync(false)
     , lanczos_filter(new LanczosFilter())
@@ -168,7 +167,11 @@ void Scene::updateTimeDiff()
         time_diff = 1;
         last_time.start();
     } else
-        time_diff = last_time.restart();
+
+    // the extra wspace->nextFrameDelay() basically means that we lie to the effect about the passed
+    // time - as a result the (animated) effect will run up to a frame shorter but in return stick
+    // closer to the runtime from the trigger
+    time_diff = last_time.restart() + wspace->nextFrameDelay();
 
     if (time_diff < 0)   // check time rollback
         time_diff = 1;

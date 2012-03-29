@@ -62,6 +62,20 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return; // error
     }
     init_ok = true;
+
+// TODO: activate once this is resolved. currently the explicit invocation seems pointless
+#if 0
+    // - internet rumors say: it doesn't work with TBDR
+    // - eglSwapInterval has no impact on intel GMA chips
+    has_waitSync = options->isGlVSync();
+    if (has_waitSync) {
+        has_waitSync = (eglSwapInterval(dpy, 1) == EGL_TRUE);
+        if (!has_waitSync)
+            kWarning(1212) << "Could not activate EGL v'sync on this system";
+    }
+    if (!has_waitSync)
+        eglSwapInterval(dpy, 0); // deactivate syncing
+#endif
 }
 
 SceneOpenGL::~SceneOpenGL()
@@ -175,10 +189,11 @@ bool SceneOpenGL::initDrawableConfigs()
 }
 
 // the entry function for painting
-void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
+int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
-    QElapsedTimer renderTimer;
-    renderTimer.start();
+    if (!m_lastDamage.isEmpty())
+        flushBuffer(m_lastMask, m_lastDamage);
+    m_renderTimer.start();
 
     foreach (Toplevel * c, toplevels) {
         assert(windows.contains(c));
@@ -189,16 +204,17 @@ void SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     XSync(display(), false);
     int mask = 0;
     paintScreen(&mask, &damage);   // call generic implementation
-    ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
+    m_lastMask = mask;
+    m_lastDamage = damage;
+    glFlush();
+    ungrabXServer();
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
-    lastRenderTime = renderTimer.elapsed();
-    if (!damage.isEmpty()) {
-        flushBuffer(mask, damage);
-    }
+
     // do cleanup
     stacking_order.clear();
     checkGLError("PostPaint");
+    return m_renderTimer.elapsed();
 }
 
 void SceneOpenGL::waitSync()
@@ -208,7 +224,6 @@ void SceneOpenGL::waitSync()
 
 void SceneOpenGL::flushBuffer(int mask, QRegion damage)
 {
-    glFlush();
     if (mask & PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV) {
         QRect damageRect = damage.boundingRect();
 
