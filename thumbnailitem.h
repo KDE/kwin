@@ -77,14 +77,14 @@ private:
     qreal m_saturation;
 };
 
-class ThumbnailItem : public AbstractThumbnailItem
+class WindowThumbnailItem : public AbstractThumbnailItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(KWin::Client *client READ client WRITE setClient NOTIFY clientChanged)
 public:
-    explicit ThumbnailItem(QDeclarativeItem *parent = 0);
-    virtual ~ThumbnailItem();
+    explicit WindowThumbnailItem(QDeclarativeItem *parent = 0);
+    virtual ~WindowThumbnailItem();
 
     qulonglong wId() const {
         return m_wId;
@@ -116,7 +116,7 @@ qreal AbstractThumbnailItem::saturation() const
 }
 
 inline
-Client *ThumbnailItem::client() const
+Client *WindowThumbnailItem::client() const
 {
     return m_client;
 }

@@ -145,7 +145,7 @@ void AbstractThumbnailItem::setSaturation(qreal saturation)
 }
 
 
-ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
+WindowThumbnailItem::WindowThumbnailItem(QDeclarativeItem* parent)
     : AbstractThumbnailItem(parent)
     , m_wId(0)
     , m_client(NULL)
@@ -155,11 +155,11 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     }
 }
 
-ThumbnailItem::~ThumbnailItem()
+WindowThumbnailItem::~WindowThumbnailItem()
 {
 }
 
-void ThumbnailItem::setWId(qulonglong wId)
+void WindowThumbnailItem::setWId(qulonglong wId)
 {
     if (m_wId == wId) {
         return;
@@ -174,7 +174,7 @@ void ThumbnailItem::setWId(qulonglong wId)
     emit wIdChanged(wId);
 }
 
-void ThumbnailItem::setClient(Client *client)
+void WindowThumbnailItem::setClient(Client *client)
 {
     if (m_client == client) {
         return;
@@ -189,7 +189,7 @@ void ThumbnailItem::setClient(Client *client)
 }
 
 
-void ThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (effects) {
         QDeclarativeItem::paint(painter, option, widget);
@@ -206,7 +206,7 @@ void ThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                         pixmap);
 }
 
-void ThumbnailItem::repaint(KWin::EffectWindow *w)
+void WindowThumbnailItem::repaint(KWin::EffectWindow *w)
 {
     if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
         update();

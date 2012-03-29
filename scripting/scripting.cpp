@@ -555,7 +555,7 @@ void KWin::DeclarativeScript::run()
     kdeclarative.initialize();
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
-    qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
     qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 0, 1, "ClientModel");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 0, 1, "ClientModelByScreen");

@@ -1791,7 +1791,7 @@ EffectWindow* effectWindow(Scene::Window* w)
 
 void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 {
-    if (ThumbnailItem *thumb = qobject_cast<ThumbnailItem*>(item)) {
+    if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
         insertThumbnail(thumb);
         connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
         connect(thumb, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
@@ -1801,17 +1801,17 @@ void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 void EffectWindowImpl::thumbnailDestroyed(QObject *object)
 {
     // we know it is a ThumbnailItem
-    m_thumbnails.remove(static_cast<ThumbnailItem*>(object));
+    m_thumbnails.remove(static_cast<WindowThumbnailItem*>(object));
 }
 
 void EffectWindowImpl::thumbnailTargetChanged()
 {
-    if (ThumbnailItem *item = qobject_cast<ThumbnailItem*>(sender())) {
+    if (WindowThumbnailItem *item = qobject_cast<WindowThumbnailItem*>(sender())) {
         insertThumbnail(item);
     }
 }
 
-void EffectWindowImpl::insertThumbnail(ThumbnailItem *item)
+void EffectWindowImpl::insertThumbnail(WindowThumbnailItem *item)
 {
     EffectWindow *w = effects->findWindow(item->wId());
     if (w) {

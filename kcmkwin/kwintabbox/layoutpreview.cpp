@@ -60,7 +60,7 @@ LayoutPreview::LayoutPreview(QWidget* parent)
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
-    qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("clientModel", model);
     rootContext()->setContextProperty("sourcePath", QString());
     rootContext()->setContextProperty("name", QString());
@@ -157,13 +157,13 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
     case Qt::UserRole+4:
         const QString desktopFile = KDesktopFile(m_nameList.at(index.row())).fileName().split('/').last();
         if (desktopFile == "konqbrowser.desktop") {
-            return ThumbnailItem::Konqueror;
+            return WindowThumbnailItem::Konqueror;
         } else if (desktopFile == "KMail2.desktop") {
-            return ThumbnailItem::KMail;
+            return WindowThumbnailItem::KMail;
         } else if (desktopFile == "systemsettings.desktop") {
-            return ThumbnailItem::Systemsettings;
+            return WindowThumbnailItem::Systemsettings;
         } else if (desktopFile == "dolphin.desktop") {
-            return ThumbnailItem::Dolphin;
+            return WindowThumbnailItem::Dolphin;
         }
         return 0;
     }

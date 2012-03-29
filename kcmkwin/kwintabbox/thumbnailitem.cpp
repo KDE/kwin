@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
+WindowThumbnailItem::WindowThumbnailItem(QDeclarativeItem* parent)
     : QDeclarativeItem(parent)
     , m_wId(0)
     , m_image()
@@ -37,18 +37,18 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
 }
 
-ThumbnailItem::~ThumbnailItem()
+WindowThumbnailItem::~WindowThumbnailItem()
 {
 }
 
-void ThumbnailItem::setWId(qulonglong wId)
+void WindowThumbnailItem::setWId(qulonglong wId)
 {
     m_wId = wId;
     emit wIdChanged(wId);
     findImage();
 }
 
-void ThumbnailItem::findImage()
+void WindowThumbnailItem::findImage()
 {
     QString imagePath;
     switch (m_wId) {
@@ -75,7 +75,7 @@ void ThumbnailItem::findImage()
     }
 }
 
-void ThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (m_image.isNull()) {
         // no image: default behavior

@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class ThumbnailItem : public QDeclarativeItem
+class WindowThumbnailItem : public QDeclarativeItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
 public:
-    explicit ThumbnailItem(QDeclarativeItem *parent = 0);
-    virtual ~ThumbnailItem();
+    explicit WindowThumbnailItem(QDeclarativeItem *parent = 0);
+    virtual ~WindowThumbnailItem();
 
     qulonglong wId() const {
         return m_wId;

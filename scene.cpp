@@ -373,13 +373,13 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
     effects->paintWindow(effectWindow(w), mask, region, data);
     // paint thumbnails on top of window
     EffectWindowImpl *wImpl = static_cast<EffectWindowImpl*>(effectWindow(w));
-    for (QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
+    for (QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
             it != wImpl->thumbnails().constEnd();
             ++it) {
         if (it.value().isNull()) {
             continue;
         }
-        ThumbnailItem *item = it.key();
+        WindowThumbnailItem *item = it.key();
         if (!item->isVisible()) {
             continue;
         }

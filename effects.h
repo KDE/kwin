@@ -41,7 +41,7 @@ namespace KWin
 typedef QPair< Effect*, xcb_window_t > InputWindowPair;
 
 class AbstractThumbnailItem;
-class ThumbnailItem;
+class WindowThumbnailItem;
 
 class Client;
 class Compositor;
@@ -288,18 +288,18 @@ public:
     QVariant data(int role) const;
 
     void registerThumbnail(AbstractThumbnailItem *item);
-    QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
+    QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
         return m_thumbnails;
     }
 private Q_SLOTS:
     void thumbnailDestroyed(QObject *object);
     void thumbnailTargetChanged();
 private:
-    void insertThumbnail(ThumbnailItem *item);
+    void insertThumbnail(WindowThumbnailItem *item);
     Toplevel* toplevel;
     Scene::Window* sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
-    QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> > m_thumbnails;
+    QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > m_thumbnails;
 };
 
 class EffectWindowGroupImpl

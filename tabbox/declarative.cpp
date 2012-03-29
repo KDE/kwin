@@ -156,7 +156,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
-    qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
     rootContext()->setContextProperty("plasmaThemeVariant", plasmaThemeVariant());
     if (m_mode == TabBoxConfig::ClientTabBox) {
