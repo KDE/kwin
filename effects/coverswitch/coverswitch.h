@@ -57,6 +57,7 @@ public Q_SLOTS:
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
+    void slotTabBoxKeyEvent(QKeyEvent* event);
 
 private:
     void paintScene(EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,

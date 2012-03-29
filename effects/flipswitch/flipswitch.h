@@ -60,6 +60,7 @@ private Q_SLOTS:
     void slotTabBoxAdded(int mode);
     void slotTabBoxClosed();
     void slotTabBoxUpdated();
+    void slotTabBoxKeyEvent(QKeyEvent* event);
 
 private:
     class ItemInfo;

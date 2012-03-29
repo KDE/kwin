@@ -74,6 +74,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
 }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -1011,6 +1012,37 @@ void CoverSwitchEffect::updateCaption()
     } else {
         captionFrame->setText(selected_window->caption());
     }
+}
+
+void CoverSwitchEffect::slotTabBoxKeyEvent(QKeyEvent *event)
+{
+    if (!mActivated || !selected_window) {
+        return;
+    }
+    const int index = effects->currentTabBoxWindowList().indexOf(selected_window);
+    int newIndex = index;
+    if (event->type() == QEvent::KeyPress) {
+        switch (event->key()) {
+        case Qt::Key_Left:
+            newIndex = (index - 1);
+            break;
+        case Qt::Key_Right:
+            newIndex = (index + 1);
+            break;
+        default:
+            // nothing
+            break;
+        }
+    }
+    if (newIndex == effects->currentTabBoxWindowList().size()) {
+        newIndex = 0;
+    } else if (newIndex < 0) {
+        newIndex = effects->currentTabBoxWindowList().size() -1;
+    }
+    if (index == newIndex) {
+        return;
+    }
+    effects->setTabBoxWindow(effects->currentTabBoxWindowList().at(newIndex));
 }
 
 } // namespace
