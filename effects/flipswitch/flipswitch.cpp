@@ -564,7 +564,7 @@ void FlipSwitchEffect::slotTabBoxUpdated()
                     }
                 }
                 m_selectedWindow = effects->currentTabBoxWindow();
-                m_captionFrame->setText(m_selectedWindow->caption());
+                updateCaption();
                 m_captionFrame->setIcon(m_selectedWindow->icon());
             }
         }
@@ -662,7 +662,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
                                 QFontMetrics(m_captionFont).height());
         m_captionFrame->setGeometry(frameRect);
         m_captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
-        m_captionFrame->setText(m_selectedWindow->caption());
+        updateCaption();
         m_captionFrame->setIcon(m_selectedWindow->icon());
         effects->addRepaintFull();
     } else {
@@ -886,7 +886,7 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
                 }
             }
             if (found) {
-                m_captionFrame->setText(m_selectedWindow->caption());
+                updateCaption();
                 m_captionFrame->setIcon(m_selectedWindow->icon());
                 scheduleAnimation(DirectionForward);
             }
@@ -914,7 +914,7 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
                 }
             }
             if (found) {
-                m_captionFrame->setText(m_selectedWindow->caption());
+                updateCaption();
                 m_captionFrame->setIcon(m_selectedWindow->icon());
                 scheduleAnimation(DirectionBackward);
             }
@@ -937,6 +937,19 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
 bool FlipSwitchEffect::isActive() const
 {
     return m_active;
+}
+
+void FlipSwitchEffect::updateCaption()
+{
+    if (!m_selectedWindow) {
+        return;
+    }
+    if (m_selectedWindow->isDesktop()) {
+        m_captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
+                     "Show Desktop"));
+    } else {
+        m_captionFrame->setText(m_selectedWindow->caption());
+    }
 }
 
 //*************************************************************

@@ -65,6 +65,11 @@ private:
     void paintFrontWindow(EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow);
     void paintWindows(const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL);
     void abort();
+    /**
+     * Updates the caption of the caption frame.
+     * Taking care of rewording the desktop client.
+     **/
+    void updateCaption();
 
     bool mActivated;
     float angle;

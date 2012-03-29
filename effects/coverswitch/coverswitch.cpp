@@ -577,7 +577,7 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                     captionFrame->setGeometry(frameRect);
                     captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
                     // And initial contents
-                    captionFrame->setText(selected_window->caption());
+                    updateCaption();
                     captionFrame->setIcon(selected_window->icon());
                 }
 
@@ -657,7 +657,7 @@ void CoverSwitchEffect::slotTabBoxUpdated()
                 }
                 selected_window = effects->currentTabBoxWindow();
                 currentWindowList = effects->currentTabBoxWindowList();
-                captionFrame->setText(selected_window->caption());
+                updateCaption();
                 captionFrame->setIcon(selected_window->icon());
             }
         }
@@ -998,6 +998,19 @@ void CoverSwitchEffect::slotWindowClosed(EffectWindow* c)
 bool CoverSwitchEffect::isActive() const
 {
     return mActivated || stop || stopRequested;
+}
+
+void CoverSwitchEffect::updateCaption()
+{
+    if (!selected_window || !windowTitle) {
+        return;
+    }
+    if (selected_window->isDesktop()) {
+        captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
+                     "Show Desktop"));
+    } else {
+        captionFrame->setText(selected_window->caption());
+    }
 }
 
 } // namespace
