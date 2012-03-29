@@ -33,10 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
+
+AbstractThumbnailItem::AbstractThumbnailItem(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
-    , m_wId(0)
-    , m_client(NULL)
     , m_clip(true)
     , m_parent(QWeakPointer<EffectWindowImpl>())
     , m_parentWindow(0)
@@ -50,11 +49,11 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     QTimer::singleShot(0, this, SLOT(init()));
 }
 
-ThumbnailItem::~ThumbnailItem()
+AbstractThumbnailItem::~AbstractThumbnailItem()
 {
 }
 
-void ThumbnailItem::compositingToggled()
+void AbstractThumbnailItem::compositingToggled()
 {
     m_parent.clear();
     if (effects) {
@@ -64,7 +63,7 @@ void ThumbnailItem::compositingToggled()
     }
 }
 
-void ThumbnailItem::init()
+void AbstractThumbnailItem::init()
 {
     findParentEffectWindow();
     if (!m_parent.isNull()) {
@@ -72,7 +71,7 @@ void ThumbnailItem::init()
     }
 }
 
-void ThumbnailItem::setParentWindow(qulonglong parentWindow)
+void AbstractThumbnailItem::setParentWindow(qulonglong parentWindow)
 {
     m_parentWindow = parentWindow;
     findParentEffectWindow();
@@ -81,7 +80,7 @@ void ThumbnailItem::setParentWindow(qulonglong parentWindow)
     }
 }
 
-void ThumbnailItem::findParentEffectWindow()
+void AbstractThumbnailItem::findParentEffectWindow()
 {
     if (effects) {
         if (m_parentWindow) {
@@ -105,6 +104,59 @@ void ThumbnailItem::findParentEffectWindow()
             m_parentWindow = variant.value<qulonglong>();
         }
     }
+}
+
+void AbstractThumbnailItem::setClip(bool clip)
+{
+    m_clip = clip;
+    emit clipChanged(clip);
+}
+
+void AbstractThumbnailItem::effectWindowAdded()
+{
+    // the window might be added before the EffectWindow is created
+    // by using this slot we can register the thumbnail when it is finally created
+    if (m_parent.isNull()) {
+        findParentEffectWindow();
+        if (!m_parent.isNull()) {
+            m_parent.data()->registerThumbnail(this);
+        }
+    }
+}
+
+void AbstractThumbnailItem::setBrightness(qreal brightness)
+{
+    if (qFuzzyCompare(brightness, m_brightness)) {
+        return;
+    }
+    m_brightness = brightness;
+    update();
+    emit brightnessChanged();
+}
+
+void AbstractThumbnailItem::setSaturation(qreal saturation)
+{
+    if (qFuzzyCompare(saturation, m_saturation)) {
+        return;
+    }
+    m_saturation = saturation;
+    update();
+    emit saturationChanged();
+}
+
+
+ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
+    : AbstractThumbnailItem(parent)
+    , m_wId(0)
+    , m_client(NULL)
+{
+    if (effects) {
+        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
+    }
+}
+
+ThumbnailItem::~ThumbnailItem()
+{
 }
 
 void ThumbnailItem::setWId(qulonglong wId)
@@ -136,23 +188,6 @@ void ThumbnailItem::setClient(Client *client)
     emit clientChanged();
 }
 
-void ThumbnailItem::setClip(bool clip)
-{
-    m_clip = clip;
-    emit clipChanged(clip);
-}
-
-void ThumbnailItem::effectWindowAdded()
-{
-    // the window might be added before the EffectWindow is created
-    // by using this slot we can register the thumbnail when it is finally created
-    if (m_parent.isNull()) {
-        findParentEffectWindow();
-        if (!m_parent.isNull()) {
-            m_parent.data()->registerThumbnail(this);
-        }
-    }
-}
 
 void ThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -176,26 +211,6 @@ void ThumbnailItem::repaint(KWin::EffectWindow *w)
     if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
         update();
     }
-}
-
-void ThumbnailItem::setBrightness(qreal brightness)
-{
-    if (qFuzzyCompare(brightness, m_brightness)) {
-        return;
-    }
-    m_brightness = brightness;
-    update();
-    emit brightnessChanged();
-}
-
-void ThumbnailItem::setSaturation(qreal saturation)
-{
-    if (qFuzzyCompare(saturation, m_saturation)) {
-        return;
-    }
-    m_saturation = saturation;
-    update();
-    emit saturationChanged();
 }
 
 } // namespace KWin

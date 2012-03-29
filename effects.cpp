@@ -1789,11 +1789,13 @@ EffectWindow* effectWindow(Scene::Window* w)
     return ret;
 }
 
-void EffectWindowImpl::registerThumbnail(ThumbnailItem *item)
+void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 {
-    insertThumbnail(item);
-    connect(item, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
-    connect(item, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
+    if (ThumbnailItem *thumb = qobject_cast<ThumbnailItem*>(item)) {
+        insertThumbnail(thumb);
+        connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
+        connect(thumb, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
+    }
 }
 
 void EffectWindowImpl::thumbnailDestroyed(QObject *object)

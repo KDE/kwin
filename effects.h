@@ -40,6 +40,7 @@ namespace KWin
 {
 typedef QPair< Effect*, xcb_window_t > InputWindowPair;
 
+class AbstractThumbnailItem;
 class ThumbnailItem;
 
 class Client;
@@ -286,7 +287,7 @@ public:
     void setData(int role, const QVariant &data);
     QVariant data(int role) const;
 
-    void registerThumbnail(ThumbnailItem *item);
+    void registerThumbnail(AbstractThumbnailItem *item);
     QHash<ThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
         return m_thumbnails;
     }

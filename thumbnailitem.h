@@ -31,14 +31,56 @@ class Client;
 class EffectWindow;
 class EffectWindowImpl;
 
-class ThumbnailItem : public QDeclarativeItem
+class AbstractThumbnailItem : public QDeclarativeItem
 {
     Q_OBJECT
-    Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(bool clip READ isClip WRITE setClip NOTIFY clipChanged SCRIPTABLE true)
     Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
     Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
+public:
+    virtual ~AbstractThumbnailItem();
+    bool isClip() const {
+        return m_clip;
+    }
+    void setClip(bool clip);
+    qulonglong parentWindow() const {
+        return m_parentWindow;
+    }
+    void setParentWindow(qulonglong parentWindow);
+    qreal brightness() const;
+    qreal saturation() const;
+
+public Q_SLOTS:
+    void setBrightness(qreal brightness);
+    void setSaturation(qreal saturation);
+
+Q_SIGNALS:
+    void clipChanged(bool clipped);
+    void brightnessChanged();
+    void saturationChanged();
+
+protected:
+    explicit AbstractThumbnailItem(QDeclarativeItem *parent = 0);
+
+private Q_SLOTS:
+    void init();
+    void effectWindowAdded();
+    void compositingToggled();
+
+private:
+    void findParentEffectWindow();
+    bool m_clip;
+    QWeakPointer<EffectWindowImpl> m_parent;
+    qulonglong m_parentWindow;
+    qreal m_brightness;
+    qreal m_saturation;
+};
+
+class ThumbnailItem : public AbstractThumbnailItem
+{
+    Q_OBJECT
+    Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(KWin::Client *client READ client WRITE setClient NOTIFY clientChanged)
 public:
     explicit ThumbnailItem(QDeclarativeItem *parent = 0);
@@ -48,54 +90,27 @@ public:
         return m_wId;
     }
     void setWId(qulonglong wId);
-    bool isClip() const {
-        return m_clip;
-    }
-    void setClip(bool clip);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    qulonglong parentWindow() const {
-        return m_parentWindow;
-    }
-    void setParentWindow(qulonglong parentWindow);
-    qreal brightness() const;
-    qreal saturation() const;
     Client *client() const;
     void setClient(Client *client);
-
-public Q_SLOTS:
-    void setBrightness(qreal brightness);
-    void setSaturation(qreal saturation);
-
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
-    void clipChanged(bool clipped);
-    void brightnessChanged();
-    void saturationChanged();
     void clientChanged();
 private Q_SLOTS:
-    void init();
-    void effectWindowAdded();
     void repaint(KWin::EffectWindow* w);
-    void compositingToggled();
 private:
-    void findParentEffectWindow();
     qulonglong m_wId;
     Client *m_client;
-    bool m_clip;
-    QWeakPointer<EffectWindowImpl> m_parent;
-    qulonglong m_parentWindow;
-    qreal m_brightness;
-    qreal m_saturation;
 };
 
 inline
-qreal ThumbnailItem::brightness() const
+qreal AbstractThumbnailItem::brightness() const
 {
     return m_brightness;
 }
 
 inline
-qreal ThumbnailItem::saturation() const
+qreal AbstractThumbnailItem::saturation() const
 {
     return m_saturation;
 }
