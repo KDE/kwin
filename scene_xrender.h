@@ -53,6 +53,7 @@ public:
 protected:
     virtual void paintBackground(QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
+    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);

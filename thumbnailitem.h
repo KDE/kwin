@@ -63,6 +63,9 @@ Q_SIGNALS:
 protected:
     explicit AbstractThumbnailItem(QDeclarativeItem *parent = 0);
 
+protected Q_SLOTS:
+    virtual void repaint(KWin::EffectWindow* w) = 0;
+
 private Q_SLOTS:
     void init();
     void effectWindowAdded();
@@ -96,11 +99,32 @@ public:
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clientChanged();
-private Q_SLOTS:
-    void repaint(KWin::EffectWindow* w);
+protected Q_SLOTS:
+    virtual void repaint(KWin::EffectWindow* w);
 private:
     qulonglong m_wId;
     Client *m_client;
+};
+
+class DesktopThumbnailItem : public AbstractThumbnailItem
+{
+    Q_OBJECT
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+public:
+    DesktopThumbnailItem(QDeclarativeItem *parent = 0);
+    virtual ~DesktopThumbnailItem();
+
+    int desktop() const {
+        return m_desktop;
+    }
+    void setDesktop(int desktop);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+Q_SIGNALS:
+    void desktopChanged(int desktop);
+protected Q_SLOTS:
+    virtual void repaint(KWin::EffectWindow* w);
+private:
+    int m_desktop;
 };
 
 inline

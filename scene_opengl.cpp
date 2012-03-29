@@ -547,6 +547,15 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     ShaderManager::instance()->resetAllShaders();
 }
 
+void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
+{
+    const QRect r = region.boundingRect();
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+    KWin::Scene::paintDesktop(desktop, mask, region, data);
+    glDisable(GL_SCISSOR_TEST);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
@@ -621,6 +630,17 @@ void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
     binder.shader()->setUniform(GLShader::ScreenTransformation, transformation(mask, data));
 
     Scene::paintGenericScreen(mask, data);
+}
+
+void SceneOpenGL2::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
+{
+    ShaderBinder binder(ShaderManager::GenericShader);
+    GLShader *shader = binder.shader();
+    QMatrix4x4 screenTransformation = shader->getUniformMatrix4x4("screenTransformation");
+
+    KWin::SceneOpenGL::paintDesktop(desktop, mask, region, data);
+
+    shader->setUniform(GLShader::ScreenTransformation, screenTransformation);
 }
 
 void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
@@ -995,7 +1015,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (region.isEmpty())
         return;
 
-    bool hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED);
+    bool hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
     if (region != infiniteRegion() && !hardwareClipping) {
         WindowQuadList quads;
         const QRegion filterRegion = region.translated(-x(), -y());

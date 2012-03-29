@@ -25,9 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "kwineffects.h"
 
+class QGraphicsView;
+
 namespace KWin
 {
 
+class AbstractThumbnailItem;
 class Workspace;
 class Deleted;
 class EffectFrameImpl;
@@ -128,6 +131,7 @@ protected:
     // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
     // the default is NOOP
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
+    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
     // compute time since the last repaint
     void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting
@@ -156,6 +160,16 @@ protected:
     int time_diff;
     QElapsedTimer last_time;
     Workspace* wspace;
+private:
+    void paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation);
+    void paintDesktopThumbnails(Scene::Window *w);
+    /**
+    * Helper function to find the GraphicsView the ThumbnailItem @p item is rendered in which
+    * matches our Window @p w.
+    * If not found @c NULL is returned.
+    **/
+    QGraphicsView *findViewForThumbnailItem(AbstractThumbnailItem *item, Scene::Window *w);
+    QPoint findOffsetInWindow(QWidget *view, xcb_window_t idOfTopmostWindow);
 };
 
 // The base class for windows representations in composite backends

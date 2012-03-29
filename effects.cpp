@@ -1813,6 +1813,9 @@ void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
         insertThumbnail(thumb);
         connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
         connect(thumb, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
+    } else if (DesktopThumbnailItem *desktopThumb = qobject_cast<DesktopThumbnailItem*>(item)) {
+        m_desktopThumbnails.append(desktopThumb);
+        connect(desktopThumb, SIGNAL(destroyed(QObject*)), SLOT(desktopThumbnailDestroyed(QObject*)));
     }
 }
 
@@ -1837,6 +1840,12 @@ void EffectWindowImpl::insertThumbnail(WindowThumbnailItem *item)
     } else {
         m_thumbnails.insert(item, QWeakPointer<EffectWindowImpl>());
     }
+}
+
+void EffectWindowImpl::desktopThumbnailDestroyed(QObject *object)
+{
+    // we know it is a DesktopThumbnailItem
+    m_desktopThumbnails.removeAll(static_cast<DesktopThumbnailItem*>(object));
 }
 
 //****************************************

@@ -245,6 +245,13 @@ void SceneXrender::paintGenericScreen(int mask, ScreenPaintData data)
     Scene::paintGenericScreen(mask, data);
 }
 
+void SceneXrender::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
+{
+    PaintClipper::push(region);
+    KWin::Scene::paintDesktop(desktop, mask, region, data);
+    PaintClipper::pop(region);
+}
+
 // fill the screen background
 void SceneXrender::paintBackground(QRegion region)
 {

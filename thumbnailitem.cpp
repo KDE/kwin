@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailitem.h"
 // KWin
 #include "client.h"
+#include "composite.h"
 #include "effects.h"
 #include "workspace.h"
 #include "composite.h"
@@ -150,9 +151,6 @@ WindowThumbnailItem::WindowThumbnailItem(QDeclarativeItem* parent)
     , m_wId(0)
     , m_client(NULL)
 {
-    if (effects) {
-        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
-    }
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
@@ -188,7 +186,6 @@ void WindowThumbnailItem::setClient(Client *client)
     emit clientChanged();
 }
 
-
 void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (effects) {
@@ -209,6 +206,43 @@ void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 void WindowThumbnailItem::repaint(KWin::EffectWindow *w)
 {
     if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
+        update();
+    }
+}
+
+DesktopThumbnailItem::DesktopThumbnailItem(QDeclarativeItem *parent)
+    : AbstractThumbnailItem(parent)
+    , m_desktop(0)
+{
+}
+
+DesktopThumbnailItem::~DesktopThumbnailItem()
+{
+}
+
+void DesktopThumbnailItem::setDesktop(int desktop)
+{
+    desktop = qBound<int>(1, desktop, VirtualDesktopManager::self()->count());
+    if (desktop == m_desktop) {
+        return;
+    }
+    m_desktop = desktop;
+    update();
+    emit desktopChanged(m_desktop);
+}
+
+void DesktopThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    if (effects) {
+        QDeclarativeItem::paint(painter, option, widget);
+        return;
+    }
+    // TODO: render icon
+}
+
+void DesktopThumbnailItem::repaint(EffectWindow *w)
+{
+    if (w->isOnDesktop(m_desktop)) {
         update();
     }
 }
