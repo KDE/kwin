@@ -369,7 +369,7 @@ public:
         return DoNotShowDesktopClient;
     }
     static ClientMultiScreenMode defaultMultiScreenMode() {
-        return OnlyCurrentScreenClients;
+        return IgnoreMultiScreen;
     }
     static ClientSwitchingMode defaultSwitchingMode() {
         return FocusChainSwitching;

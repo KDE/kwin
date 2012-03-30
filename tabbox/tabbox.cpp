@@ -376,7 +376,7 @@ TabBox::TabBox(QObject *parent)
     m_defaultConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
     m_defaultConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
     m_defaultConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
-    m_defaultConfig.setClientMultiScreenMode(TabBoxConfig::OnlyCurrentScreenClients);
+    m_defaultConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
     m_defaultConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
     m_defaultConfig.setLayout(TabBoxConfig::VerticalLayout);
 
@@ -387,7 +387,7 @@ TabBox::TabBox(QObject *parent)
     m_alternativeConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
     m_alternativeConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
     m_alternativeConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
-    m_alternativeConfig.setClientMultiScreenMode(TabBoxConfig::OnlyCurrentScreenClients);
+    m_alternativeConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
     m_alternativeConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
     m_alternativeConfig.setLayout(TabBoxConfig::VerticalLayout);
 
