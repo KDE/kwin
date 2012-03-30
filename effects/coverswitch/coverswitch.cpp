@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
+#include <KDE/KIcon>
 
 #include <kwinglutils.h>
 
@@ -579,7 +580,6 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                     captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
                     // And initial contents
                     updateCaption();
-                    captionFrame->setIcon(selected_window->icon());
                 }
 
                 effects->addRepaintFull();
@@ -659,7 +659,6 @@ void CoverSwitchEffect::slotTabBoxUpdated()
                 selected_window = effects->currentTabBoxWindow();
                 currentWindowList = effects->currentTabBoxWindowList();
                 updateCaption();
-                captionFrame->setIcon(selected_window->icon());
             }
         }
         effects->addRepaintFull();
@@ -1009,8 +1008,11 @@ void CoverSwitchEffect::updateCaption()
     if (selected_window->isDesktop()) {
         captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
+        static QPixmap pix = KIcon("user-desktop").pixmap(captionFrame->iconSize());
+        captionFrame->setIcon(pix);
     } else {
         captionFrame->setText(selected_window->caption());
+        captionFrame->setIcon(selected_window->icon());
     }
 }
 

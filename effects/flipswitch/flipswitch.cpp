@@ -566,7 +566,6 @@ void FlipSwitchEffect::slotTabBoxUpdated()
                 }
                 m_selectedWindow = effects->currentTabBoxWindow();
                 updateCaption();
-                m_captionFrame->setIcon(m_selectedWindow->icon());
             }
         }
         effects->addRepaintFull();
@@ -664,7 +663,6 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         m_captionFrame->setGeometry(frameRect);
         m_captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
         updateCaption();
-        m_captionFrame->setIcon(m_selectedWindow->icon());
         effects->addRepaintFull();
     } else {
         // only deactivate if mode is current mode
@@ -888,7 +886,6 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             if (found) {
                 updateCaption();
-                m_captionFrame->setIcon(m_selectedWindow->icon());
                 scheduleAnimation(DirectionForward);
             }
             break;
@@ -916,7 +913,6 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             if (found) {
                 updateCaption();
-                m_captionFrame->setIcon(m_selectedWindow->icon());
                 scheduleAnimation(DirectionBackward);
             }
             break;
@@ -981,8 +977,11 @@ void FlipSwitchEffect::updateCaption()
     if (m_selectedWindow->isDesktop()) {
         m_captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
+        static QPixmap pix = KIcon("user-desktop").pixmap(m_captionFrame->iconSize());
+        m_captionFrame->setIcon(pix);
     } else {
         m_captionFrame->setText(m_selectedWindow->caption());
+        m_captionFrame->setIcon(m_selectedWindow->icon());
     }
 }
 

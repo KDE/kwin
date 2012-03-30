@@ -308,6 +308,9 @@ QString TabBoxClientImpl::caption() const
 
 QPixmap TabBoxClientImpl::icon(const QSize& size) const
 {
+    if (m_client->isDesktop()) {
+        return KIcon("user-desktop").pixmap(size);
+    }
     return m_client->icon(size);
 }
 
