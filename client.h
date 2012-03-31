@@ -259,6 +259,17 @@ class Client
      * (usually, that it got activated).
      **/
     Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
+    /**
+     * A client can block compositing. That is while the Client is alive and the state is set,
+     * Compositing is suspended and is resumed when there are no Clients blocking compositing any
+     * more.
+     *
+     * This is actually set by a window property, unfortunately not used by the target application
+     * group. For convenience it's exported as a property to the scripts.
+     *
+     * Use with care!
+     **/
+    Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -472,6 +483,7 @@ public:
 
     virtual void setupCompositing();
     virtual void finishCompositing();
+    void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
     void updateCompositeBlocking(bool readProperty = false);
 
@@ -705,6 +717,10 @@ signals:
      * Emitted whenever the demands attention state changes.
      **/
     void demandsAttentionChanged();
+    /**
+     * Emitted whenever the Client's block compositing state changes.
+     **/
+    void blockingCompositingChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
