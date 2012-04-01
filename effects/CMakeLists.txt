@@ -119,7 +119,6 @@ include( taskbarthumbnail/CMakeLists.txt )
 
 # Common effects only relevant to desktop
 if( NOT KWIN_MOBILE_EFFECTS )
-    include( boxswitch/CMakeLists.txt )
     include( dashboard/CMakeLists.txt )
     include( desktopgrid/CMakeLists.txt )
     include( diminactive/CMakeLists.txt )
