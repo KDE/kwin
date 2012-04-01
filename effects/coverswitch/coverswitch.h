@@ -45,8 +45,6 @@ class CoverSwitchEffect
     Q_PROPERTY(bool reflection READ isReflection)
     Q_PROPERTY(bool windowTitle READ isWindowTitle)
     Q_PROPERTY(qreal zPosition READ windowZPosition)
-    Q_PROPERTY(bool dynamicThumbnails READ isDynamicThumbnails)
-    Q_PROPERTY(int thumbnailWindows READ configurredThumbnailWindows)
     Q_PROPERTY(bool primaryTabBox READ isPrimaryTabBox)
     Q_PROPERTY(bool secondaryTabBox READ isSecondaryTabBox)
     // TODO: mirror colors
@@ -85,12 +83,6 @@ public:
     }
     qreal windowZPosition() const {
         return zPosition;
-    }
-    bool isDynamicThumbnails() const {
-        return dynamicThumbnails;
-    }
-    int configurredThumbnailWindows() const {
-        return thumbnailWindows;
     }
     bool isPrimaryTabBox() const {
         return primaryTabBox;
@@ -157,10 +149,6 @@ private:
 
     EffectFrame* captionFrame;
     QFont captionFont;
-
-    bool thumbnails;
-    bool dynamicThumbnails;
-    int thumbnailWindows;
 
     bool primaryTabBox;
     bool secondaryTabBox;

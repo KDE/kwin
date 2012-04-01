@@ -38,8 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#include "../boxswitch/boxswitch_proxy.h"
-
 namespace KWin
 {
 
@@ -98,9 +96,6 @@ void CoverSwitchEffect::reconfigure(ReconfigureFlags)
     reflection        = CoverSwitchConfig::reflection();
     windowTitle       = CoverSwitchConfig::windowTitle();
     zPosition         = CoverSwitchConfig::zPosition();
-    thumbnails        = CoverSwitchConfig::thumbnails();
-    dynamicThumbnails = CoverSwitchConfig::dynamicThumbnails();
-    thumbnailWindows  = CoverSwitchConfig::thumbnailWindows();
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(animationDuration);
 
@@ -393,15 +388,6 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 captionFrame->setCrossFadeProgress(timeLine.currentValue());
             captionFrame->render(region, opacity);
         }
-
-        if ((thumbnails && (!dynamicThumbnails ||
-                           (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)))
-                && !(start || stop)) {
-            BoxSwitchEffectProxy *proxy =
-                static_cast<BoxSwitchEffectProxy*>(effects->getProxy("boxswitch"));
-            if (proxy)
-                proxy->paintWindowsBox(region);
-        }
     }
 }
 
@@ -543,10 +529,6 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                 && effects->currentTabBoxWindowList().count() > 0) {
             input = effects->createFullScreenInputWindow(this, Qt::ArrowCursor);
             activeScreen = effects->activeScreen();
-            BoxSwitchEffectProxy *proxy =
-                static_cast<BoxSwitchEffectProxy*>(effects->getProxy("boxswitch"));
-            if (proxy)
-                proxy->activate(mode, true, false, 0.05f);
             if (!stop && !stopRequested) {
                 effects->refTabBox();
                 effects->setActiveFullScreenEffect(this);

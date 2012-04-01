@@ -172,50 +172,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Thumbnail Bar</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QCheckBox" name="kcfg_Thumbnails">
-         <property name="text">
-          <string>Use additional thumbnail bar</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="kcfg_DynamicThumbnails">
-         <property name="toolTip">
-          <string>Only show thumbnail bar if there are at least specified number of windows</string>
-         </property>
-         <property name="text">
-          <string>Dynamic mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="labelThumbnailWindows">
-           <property name="text">
-            <string>Number of windows:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>kcfg_ThumbnailWindows</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="KIntSpinBox" name="kcfg_ThumbnailWindows"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>Reflections</string>
@@ -276,14 +232,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
    <class>KColorButton</class>
    <extends>QPushButton</extends>
    <header>kcolorbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -349,54 +305,6 @@
     <hint type="destinationlabel">
      <x>209</x>
      <y>102</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_Thumbnails</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_DynamicThumbnails</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>103</x>
-     <y>58</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>107</x>
-     <y>74</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_Thumbnails</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>labelThumbnailWindows</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>181</x>
-     <y>53</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>259</x>
-     <y>106</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_Thumbnails</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_ThumbnailWindows</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>132</x>
-     <y>47</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>324</x>
-     <y>106</y>
     </hint>
    </hints>
   </connection>

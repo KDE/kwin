@@ -45,9 +45,6 @@ public:
 public slots:
     virtual void save();
 
-private slots:
-    void thumbnailsChanged();
-
 private:
     CoverSwitchEffectConfigForm* m_ui;
 };

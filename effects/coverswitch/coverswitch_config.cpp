@@ -44,9 +44,6 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->kcfg_Thumbnails, SIGNAL(stateChanged(int)), this, SLOT(thumbnailsChanged()));
-    connect(m_ui->kcfg_DynamicThumbnails, SIGNAL(stateChanged(int)), this, SLOT(thumbnailsChanged()));
-
     addConfig(CoverSwitchConfig::self(), m_ui);
 }
 
@@ -55,15 +52,6 @@ void CoverSwitchEffectConfig::save()
     KCModule::save();
     EffectsHandler::sendReloadMessage("coverswitch");
 }
-
-void CoverSwitchEffectConfig::thumbnailsChanged()
-{
-    bool enabled = m_ui->kcfg_Thumbnails->isChecked() && m_ui->kcfg_DynamicThumbnails->isChecked();
-    m_ui->kcfg_DynamicThumbnails->setEnabled(m_ui->kcfg_Thumbnails->isChecked());
-    m_ui->kcfg_ThumbnailWindows->setEnabled(enabled);
-    m_ui->labelThumbnailWindows->setEnabled(enabled);
-}
-
 
 } // namespace
 

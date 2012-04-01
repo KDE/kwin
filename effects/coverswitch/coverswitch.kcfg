@@ -29,15 +29,6 @@
         <entry name="WindowTitle" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="Thumbnails" type="Bool">
-            <default>true</default>
-        </entry>
-        <entry name="DynamicThumbnails" type="Bool">
-            <default>true</default>
-        </entry>
-        <entry name="ThumbnailWindows" type="UInt">
-            <default>8</default>
-        </entry>
         <entry name="zPosition" type="UInt">
             <default>900</default>
         </entry>
