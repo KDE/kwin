@@ -59,6 +59,8 @@ public:
         DemandAttentionOther,
         CompositingSuspendedDbus,
         TilingLayoutChanged,
+        FullScreen,
+        UnFullScreen,
         DesktopChange = 100
     };
 

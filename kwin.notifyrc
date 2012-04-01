@@ -7424,3 +7424,11 @@ Comment[x-test]=xxTiling Layout has been changedxx
 Comment[zh_CN]=已更改平铺布局
 Comment[zh_TW]=鋪排佈局已變更
 Action=Popup
+
+[Event/fullscreen]
+Name=Window Fullscreen Set
+Comment=A window has been set to fullscreen
+
+[Event/unfullscreen]
+Name=Window Fullscreen Restored
+Comment=A window has been restored from fullscreen

@@ -104,6 +104,12 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case TilingLayoutChanged:
         event = "tilinglayoutchanged";
         break;
+    case FullScreen:
+        event = "fullscreen";
+        break;
+    case UnFullScreen:
+        event = "unfullscreen";
+        break;
     default:
         if ((e > DesktopChange) && (e <= DesktopChange + 20)) {
             event = QString("desktop%1").arg(e - DesktopChange);
