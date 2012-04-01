@@ -1708,7 +1708,7 @@ void PresentWindowsEffect::elevateCloseWindow()
 
 void PresentWindowsEffect::updateCloseWindow()
 {
-    if (m_doNotCloseWindows)
+    if (!m_closeView || m_doNotCloseWindows)
         return;
     if (!m_highlightedWindow || m_highlightedWindow->isDesktop()) {
         m_closeView->hide();
