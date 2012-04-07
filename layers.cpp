@@ -115,7 +115,13 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
             blocked_propagating_new_clients = true;
         return;
     }
-    ClientList new_stacking_order = constrainedStackingOrder();
+    ToplevelList constrainedOrder = constrainedStackingOrder();
+    ClientList new_stacking_order;
+    foreach (Toplevel *t, constrainedOrder) {
+        if (Client *c = qobject_cast<Client*>(t)) {
+            new_stacking_order << c;
+        }
+    }
     bool changed = (new_stacking_order != stacking_order || force_restacking);
     force_restacking = false;
     stacking_order = new_stacking_order;
@@ -503,9 +509,9 @@ void Workspace::circulateDesktopApplications()
 /*!
   Returns a stacking order based upon \a list that fulfills certain contained.
  */
-ClientList Workspace::constrainedStackingOrder()
+ToplevelList Workspace::constrainedStackingOrder()
 {
-    ClientList layer[ NumLayers ];
+    ToplevelList layer[ NumLayers ];
 
 #if 0
     kDebug(1212) << "stacking1:";
@@ -534,7 +540,7 @@ ClientList Workspace::constrainedStackingOrder()
         }
         layer[ l ].append(*it);
     }
-    ClientList stacking;
+    ToplevelList stacking;
     for (Layer lay = FirstLayer;
             lay < NumLayers;
             ++lay)
@@ -551,13 +557,14 @@ ClientList Workspace::constrainedStackingOrder()
     for (int i = stacking.size() - 1;
             i >= 0;
        ) {
-        if (!stacking[ i ]->isTransient()) {
+        Client *current = qobject_cast<Client*>(stacking[i]);
+        if (!current || !current->isTransient()) {
             --i;
             continue;
         }
         int i2 = -1;
-        if (stacking[ i ]->groupTransient()) {
-            if (stacking[ i ]->group()->members().count() > 0) {
+        if (current->groupTransient()) {
+            if (current->group()->members().count() > 0) {
                 // find topmost client this one is transient for
                 for (i2 = stacking.size() - 1;
                         i2 >= 0;
@@ -566,8 +573,12 @@ ClientList Workspace::constrainedStackingOrder()
                         i2 = -1; // don't reorder, already the topmost in the group
                         break;
                     }
-                    if (stacking[ i2 ]->hasTransient(stacking[ i ], true)
-                            && keepTransientAbove(stacking[ i2 ], stacking[ i ]))
+                    Client *c2 = qobject_cast<Client*>(stacking[ i2 ]);
+                    if (!c2) {
+                        continue;
+                    }
+                    if (c2->hasTransient(current, true)
+                            && keepTransientAbove(c2, current))
                         break;
                 }
             } // else i2 remains pointing at -1
@@ -575,12 +586,16 @@ ClientList Workspace::constrainedStackingOrder()
             for (i2 = stacking.size() - 1;
                     i2 >= 0;
                     --i2) {
-                if (stacking[ i2 ] == stacking[ i ]) {
+                Client *c2 = qobject_cast<Client*>(stacking[ i2 ]);
+                if (!c2) {
+                    continue;
+                }
+                if (c2 == current) {
                     i2 = -1; // don't reorder, already on top of its mainwindow
                     break;
                 }
-                if (stacking[ i2 ] == stacking[ i ]->transientFor()
-                        && keepTransientAbove(stacking[ i2 ], stacking[ i ]))
+                if (c2 == current->transientFor()
+                        && keepTransientAbove(c2, current))
                     break;
             }
         }
@@ -588,7 +603,6 @@ ClientList Workspace::constrainedStackingOrder()
             --i;
             continue;
         }
-        Client* current = stacking[ i ];
         stacking.removeAt(i);
         --i; // move onto the next item (for next for () iteration)
         --i2; // adjust index of the mainwindow after the remove above

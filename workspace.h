@@ -714,7 +714,7 @@ private:
     void switchWindow(Direction direction);
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
-    ClientList constrainedStackingOrder();
+    ToplevelList constrainedStackingOrder();
     void raiseClientWithinApplication(Client* c);
     void lowerClientWithinApplication(Client* c);
     bool allowFullClientRaising(const Client* c, Time timestamp);
