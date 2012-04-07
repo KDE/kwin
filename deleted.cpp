@@ -35,6 +35,7 @@ Deleted::Deleted(Workspace* ws)
     , padding_top(0)
     , padding_right(0)
     , padding_bottom(0)
+    , m_layer(UnknownLayer)
 {
 }
 
@@ -79,6 +80,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     activityList = c->activities();
     contentsRect = QRect(c->clientPos(), c->clientSize());
     transparent_rect = c->transparentRect();
+    m_layer = c->layer();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);

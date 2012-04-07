@@ -277,6 +277,8 @@ public:
      **/
     const QRegion& opaqueRegion() const;
 
+    virtual Layer layer() const = 0;
+
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);

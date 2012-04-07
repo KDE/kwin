@@ -43,6 +43,9 @@ public:
     virtual QPoint clientPos() const;
     virtual QSize clientSize() const;
     virtual QRect transparentRect() const;
+    virtual Layer layer() const {
+        return UnmanagedLayer;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

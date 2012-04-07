@@ -402,7 +402,7 @@ public:
     void setKeepAbove(bool);
     bool keepBelow() const;
     void setKeepBelow(bool);
-    Layer layer() const;
+    virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
     int sessionStackingOrder() const;
