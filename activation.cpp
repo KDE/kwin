@@ -406,9 +406,12 @@ static inline bool isUsableFocusCandidate(Client *c, Client *prev, bool respectS
 
 Client *Workspace::clientUnderMouse(int screen) const
 {
-    QList<Client*>::const_iterator it = stackingOrder().constEnd();
+    ToplevelList::const_iterator it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        Client *client = *(--it);
+        Client *client = qobject_cast<Client*>(*(--it));
+        if (!client) {
+            continue;
+        }
 
         // rule out clients which are not really visible.
         // the screen test is rather superflous for xrandr & twinview since the geometry would differ -> TODO: might be dropped

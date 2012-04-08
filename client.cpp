@@ -1115,9 +1115,14 @@ void Client::setShade(ShadeMode mode)
         if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(input))
             setActive(true);
         if (shade_mode == ShadeHover) {
-            ClientList order = workspace()->stackingOrder();
-            int idx = order.indexOf(this) + 1;   // this is likely related to the index parameter?!
-            shade_below = (idx < order.count()) ? order.at(idx) : NULL;
+            ToplevelList order = workspace()->stackingOrder();
+            // this is likely related to the index parameter?!
+            for (int idx = order.indexOf(this) + 1; idx < order.count(); ++idx) {
+                shade_below = qobject_cast<Client*>(order.at(idx));
+                if (shade_below) {
+                    break;
+                }
+            }
             if (shade_below && shade_below->isNormalWindow())
                 workspace()->raiseClient(this);
             else

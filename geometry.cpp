@@ -772,8 +772,10 @@ void Workspace::cascadeDesktop()
     Q_ASSERT(block_stacking_updates == 0);
     initPositioning->reinitCascading(currentDesktop());
     QRect area = clientArea(PlacementArea, QPoint(0, 0), currentDesktop());
-    foreach (Client * client, stackingOrder()) {
-        if ((!client->isOnDesktop(currentDesktop())) ||
+    foreach (Toplevel *toplevel, stackingOrder()) {
+        Client *client = qobject_cast<Client*>(toplevel);
+        if (!client ||
+                (!client->isOnDesktop(currentDesktop())) ||
                 (client->isMinimized())                  ||
                 (client->isOnAllDesktops())              ||
                 (!client->isMovable()))

@@ -378,7 +378,7 @@ public:
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
      */
-    const ClientList& stackingOrder() const;
+    const ToplevelList& stackingOrder() const;
     ToplevelList xStackingOrder() const;
     ClientList ensureStackingOrder(const ClientList& clients) const;
 
@@ -790,8 +790,8 @@ private:
     UnmanagedList unmanaged;
     DeletedList deleted;
 
-    ClientList unconstrained_stacking_order; // Topmost last
-    ClientList stacking_order; // Topmost last
+    ToplevelList unconstrained_stacking_order; // Topmost last
+    ToplevelList stacking_order; // Topmost last
     bool force_restacking;
     mutable ToplevelList x_stacking; // From XQueryTree()
     mutable bool x_stacking_dirty;
@@ -1025,7 +1025,7 @@ inline void Workspace::removeGroup(Group* group, allowed_t)
     groups.removeAll(group);
 }
 
-inline const ClientList& Workspace::stackingOrder() const
+inline const ToplevelList& Workspace::stackingOrder() const
 {
     // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;

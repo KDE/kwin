@@ -195,9 +195,11 @@ void TilingLayout::reconfigureTiling()
     if (tiles().length() > 0)
         arrange(layoutArea(tiles().first()));
 
-    foreach (Client * c, workspace()->stackingOrder()) {
-        if (c->rules()->checkTilingOption(0) == 1)
-            workspace()->tiling()->createTile(c);
+    foreach (Toplevel * t, workspace()->stackingOrder()) {
+        if (Client *c = qobject_cast<Client*>(t)) {
+            if (c->rules()->checkTilingOption(0) == 1)
+                workspace()->tiling()->createTile(c);
+        }
     }
 
 }

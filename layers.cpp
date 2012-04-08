@@ -115,13 +115,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
             blocked_propagating_new_clients = true;
         return;
     }
-    ToplevelList constrainedOrder = constrainedStackingOrder();
-    ClientList new_stacking_order;
-    foreach (Toplevel *t, constrainedOrder) {
-        if (Client *c = qobject_cast<Client*>(t)) {
-            new_stacking_order << c;
-        }
-    }
+    ToplevelList new_stacking_order = constrainedStackingOrder();
     bool changed = (new_stacking_order != stacking_order || force_restacking);
     force_restacking = false;
     stacking_order = new_stacking_order;
@@ -169,8 +163,8 @@ void Workspace::propagateClients(bool propagate_new_clients)
     }
 #endif
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
-        Client *client = stacking_order.at(i);
-        if (client->hiddenPreview()) {
+        Client *client = qobject_cast<Client*>(stacking_order.at(i));
+        if (!client || client->hiddenPreview()) {
             continue;
         }
 
@@ -185,9 +179,10 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // (as far as pure X stacking order is concerned), in order to avoid having
     // these windows that should be unmapped to interfere with other windows
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
-        if (!stacking_order.at(i)->hiddenPreview())
+        Client *client = qobject_cast<Client*>(stacking_order.at(i));
+        if (!client || !client->hiddenPreview())
             continue;
-        newWindowStack << (Window*)stacking_order.at(i)->frameId();
+        newWindowStack << (Window*)client->frameId();
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
@@ -208,7 +203,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     cl = new Window[ stacking_order.count()];
     pos = 0;
-    for (ClientList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
         cl[pos++] = (*it)->window();
     rootInfo->setClientListStacking(cl, pos);
     delete [] cl;
@@ -227,7 +222,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
 Client* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
 {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
-    ClientList list;
+    ToplevelList list;
     if (!unconstrained)
         list = stacking_order;
     else
@@ -235,13 +230,17 @@ Client* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstraine
     for (int i = list.size() - 1;
             i >= 0;
             --i) {
-        if (list.at(i)->isOnDesktop(desktop) && list.at(i)->isShown(false) && list.at(i)->isOnCurrentActivity()) {
-            if (screen != -1 && list.at(i)->screen() != screen)
+        Client *c = qobject_cast<Client*>(list.at(i));
+        if (!c) {
+            continue;
+        }
+        if (c->isOnDesktop(desktop) && c->isShown(false) && c->isOnCurrentActivity()) {
+            if (screen != -1 && c->screen() != screen)
                 continue;
             if (!only_normal)
-                return list.at(i);
-            if (list.at(i)->wantsTabFocus() && !list.at(i)->isSpecialWindow())
-                return list.at(i);
+                return c;
+            if (c->wantsTabFocus() && !c->isSpecialWindow())
+                return c;
         }
     }
     return 0;
@@ -252,15 +251,17 @@ Client* Workspace::findDesktop(bool topmost, int desktop) const
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
-            if (stacking_order.at(i)->isOnDesktop(desktop) && stacking_order.at(i)->isDesktop()
-                    && stacking_order.at(i)->isShown(true))
-                return stacking_order.at(i);
-        }
-    } else { // bottom-most
-        foreach (Client * c, stacking_order) {
-            if (c->isOnDesktop(desktop) && c->isDesktop()
+            Client *c = qobject_cast<Client*>(stacking_order.at(i));
+            if (c && c->isOnDesktop(desktop) && c->isDesktop()
                     && c->isShown(true))
                 return c;
+        }
+    } else { // bottom-most
+        foreach (Toplevel * c, stacking_order) {
+            Client *client = qobject_cast<Client*>(c);
+            if (client && c->isOnDesktop(desktop) && c->isDesktop()
+                    && client->isShown(true))
+                return client;
         }
     }
     return NULL;
@@ -323,10 +324,10 @@ void Workspace::lowerClientWithinApplication(Client* c)
     unconstrained_stacking_order.removeAll(c);
     bool lowered = false;
     // first try to put it below the bottom-most window of the application
-    for (ClientList::Iterator it = unconstrained_stacking_order.begin();
+    for (ToplevelList::Iterator it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
             ++it)
-        if (Client::belongToSameApplication(*it, c)) {
+        if (Client::belongToSameApplication(qobject_cast<Client*>(*it), c)) {
             unconstrained_stacking_order.insert(it, c);
             lowered = true;
             break;
@@ -375,7 +376,10 @@ void Workspace::raiseClientWithinApplication(Client* c)
 
     // first try to put it above the top-most window of the application
     for (int i = unconstrained_stacking_order.size() - 1; i > -1 ; --i) {
-        Client *other = unconstrained_stacking_order.at(i);
+        Client *other = qobject_cast<Client*>(unconstrained_stacking_order.at(i));
+        if (!other) {
+            continue;
+        }
         if (other == c)     // don't lower it just because it asked to be raised
             return;
         if (Client::belongToSameApplication(other, c)) {
@@ -416,7 +420,7 @@ void Workspace::restack(Client* c, Client* under)
          // put in the stacking order below _all_ windows belonging to the active application
         Client *other = 0;
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) { // TODO ignore topmenus?
-            if (Client::belongToSameApplication(under, (other = unconstrained_stacking_order.at(i)))) {
+            if (Client::belongToSameApplication(under, (other = qobject_cast<Client*>(unconstrained_stacking_order.at(i))))) {
                 under = (c == other) ? 0 : other;
                 break;
             }
@@ -480,11 +484,14 @@ void Workspace::restoreSessionStackingOrder(Client* c)
         return;
     StackingUpdatesBlocker blocker(this);
     unconstrained_stacking_order.removeAll(c);
-    ClientList::Iterator best_pos = unconstrained_stacking_order.end();
-    for (ClientList::Iterator it = unconstrained_stacking_order.begin();  // from bottom
+    for (ToplevelList::Iterator it = unconstrained_stacking_order.begin();  // from bottom
             it != unconstrained_stacking_order.end();
             ++it) {
-        if ((*it)->sessionStackingOrder() > c->sessionStackingOrder()) {
+        Client *current = qobject_cast<Client*>(*it);
+        if (!current) {
+            continue;
+        }
+        if (current->sessionStackingOrder() > c->sessionStackingOrder()) {
             unconstrained_stacking_order.insert(it, c);
             return;
         }
@@ -522,12 +529,13 @@ ToplevelList Workspace::constrainedStackingOrder()
 #endif
     // build the order from layers
     QVector< QMap<Group*, Layer> > minimum_layer(numScreens());
-    for (ClientList::ConstIterator it = unconstrained_stacking_order.constBegin(),
+    for (ToplevelList::ConstIterator it = unconstrained_stacking_order.constBegin(),
                                   end = unconstrained_stacking_order.constEnd(); it != end; ++it) {
         Layer l = (*it)->layer();
 
         const int screen = (*it)->screen();
-        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find((*it)->group());
+        Client *c = qobject_cast<Client*>(*it);
+        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find(c ? c->group() : NULL);
         if (mLayer != minimum_layer[screen].end()) {
             // If a window is raised above some other window in the same window group
             // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
@@ -535,8 +543,8 @@ ToplevelList Workspace::constrainedStackingOrder()
             if (*mLayer == ActiveLayer && (l == NormalLayer || l == AboveLayer))
                 l = ActiveLayer;
             *mLayer = l;
-        } else {
-            minimum_layer[screen].insertMulti((*it)->group(), l);
+        } else if (c) {
+            minimum_layer[screen].insertMulti(c->group(), l);
         }
         layer[ l ].append(*it);
     }
@@ -644,11 +652,16 @@ ClientList Workspace::ensureStackingOrder(const ClientList& list) const
         return list;
     // TODO is this worth optimizing?
     ClientList result = list;
-    for (ClientList::ConstIterator it = stacking_order.constBegin();
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
-            ++it)
-        if (result.removeAll(*it) != 0)
-            result.append(*it);
+            ++it) {
+        Client *c = qobject_cast<Client*>(*it);
+        if (!c) {
+            continue;
+        }
+        if (result.removeAll(c) != 0)
+            result.append(c);
+    }
     return result;
 }
 
@@ -684,7 +697,7 @@ ToplevelList Workspace::xStackingOrder() const
     unsigned int count = 0;
     XQueryTree(display(), rootWindow(), &dummy, &dummy, &windows, &count);
     // use our own stacking order, not the X one, as they may differ
-    foreach (Client * c, stacking_order)
+    foreach (Toplevel * c, stacking_order)
     x_stacking.append(c);
     for (unsigned int i = 0;
             i < count;
@@ -692,6 +705,7 @@ ToplevelList Workspace::xStackingOrder() const
         if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(windows[ i ])))
             x_stacking.append(c);
     }
+    // TODO: remove after stacking_order contains Deleted
     foreach (Deleted * c, deleted)
     x_stacking.append(c);
     if (windows != NULL)
@@ -713,7 +727,7 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
             workspace()->raiseOrLowerClient(this);
             return;
         }
-        ClientList::const_iterator  it = workspace()->stackingOrder().constBegin(),
+        ToplevelList::const_iterator  it = workspace()->stackingOrder().constBegin(),
                                     end = workspace()->stackingOrder().constEnd();
         while (it != end) {
             if (*it == this) {
@@ -743,7 +757,7 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
         other = workspace()->findClient(WindowMatchPredicate(above));
 
     if (other && detail == Above) {
-        ClientList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+        ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                     begin = workspace()->stackingOrder().constBegin();
         while (--it != begin) {
             if (*it == this)
@@ -754,8 +768,9 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
                 src = NET::FromTool; // force
                 break;
             }
+            Client *c = qobject_cast<Client*>(*it);
 
-            if (!(  (*it)->isNormalWindow() && (*it)->isShown(true) &&
+            if (!(  (*it)->isNormalWindow() && c->isShown(true) &&
                     (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnScreen(screen()) ))
                 continue; // irrelevant clients
 
@@ -764,7 +779,7 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
         }
 
         if (it != begin && (*(it - 1) == other))
-            other = const_cast<Client*>(*it);
+            other = qobject_cast<Client*>(*it);
         else
             other = 0;
     }

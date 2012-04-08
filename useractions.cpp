@@ -847,12 +847,13 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         replay = isActive(); // for clickraise mode
         bool mustReplay = !rules()->checkAcceptFocus(input);
         if (mustReplay) {
-            ClientList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+            ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                      begin = workspace()->stackingOrder().constBegin();
             while (mustReplay && --it != begin && *it != this) {
-                if (((*it)->keepAbove() && !keepAbove()) || (keepBelow() && !(*it)->keepBelow()))
+                Client *c = qobject_cast<Client*>(*it);
+                if (!c || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow()))
                     continue; // can never raise above "it"
-                mustReplay = !((*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->geometry().intersects(geometry()));
+                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->geometry().intersects(geometry()));
             }
         }
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled && replay);
@@ -1467,13 +1468,17 @@ void Workspace::switchWindow(Direction direction)
     QPoint curPos(c->pos().x() + c->geometry().width() / 2,
                   c->pos().y() + c->geometry().height() / 2);
 
-    QList<Client *> clist = stackingOrder();
-    for (QList<Client *>::Iterator i = clist.begin(); i != clist.end(); ++i) {
-        if ((*i)->wantsTabFocus() && *i != c &&
-                (*i)->desktop() == d && !(*i)->isMinimized() && (*i)->isOnCurrentActivity()) {
+    ToplevelList clist = stackingOrder();
+    for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
+        Client *client = qobject_cast<Client*>(c);
+        if (!client) {
+            continue;
+        }
+        if (client->wantsTabFocus() && *i != c &&
+                client->desktop() == d && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window
-            QPoint other((*i)->pos().x() + (*i)->geometry().width() / 2,
-                         (*i)->pos().y() + (*i)->geometry().height() / 2);
+            QPoint other(client->pos().x() + client->geometry().width() / 2,
+                         client->pos().y() + client->geometry().height() / 2);
 
             int distance;
             int offset;
@@ -1503,7 +1508,7 @@ void Workspace::switchWindow(Direction direction)
                 // Inverse score
                 int score = distance + offset + ((offset * offset) / distance);
                 if (score < bestScore || !switchTo) {
-                    switchTo = *i;
+                    switchTo = client;
                     bestScore = score;
                 }
             }

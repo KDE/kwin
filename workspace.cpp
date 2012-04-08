@@ -490,14 +490,18 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    for (ClientList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
+    for (ToplevelList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
+        Client *c = qobject_cast<Client*>(*it);
+        if (!c) {
+            continue;
+        }
         // Only release the window
-        (*it)->releaseWindow(true);
+        c->releaseWindow(true);
         // No removeClient() is called, it does more than just removing.
         // However, remove from some lists to e.g. prevent performTransiencyCheck()
         // from crashing.
-        clients.removeAll(*it);
-        desktops.removeAll(*it);
+        clients.removeAll(c);
+        desktops.removeAll(c);
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release();
@@ -792,28 +796,32 @@ void Workspace::updateToolWindows(bool also_hide)
 
     // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
     ClientList to_show, to_hide;
-    for (ClientList::ConstIterator it = stacking_order.constBegin();
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
-        if ((*it)->isUtility() || (*it)->isMenu() || (*it)->isToolbar()) {
+        Client *c = qobject_cast<Client*>(*it);
+        if (!c) {
+            continue;
+        }
+        if (c->isUtility() || c->isMenu() || c->isToolbar()) {
             bool show = true;
-            if (!(*it)->isTransient()) {
-                if ((*it)->group()->members().count() == 1)   // Has its own group, keep always visible
+            if (!c->isTransient()) {
+                if (c->group()->members().count() == 1)   // Has its own group, keep always visible
                     show = true;
-                else if (client != NULL && (*it)->group() == client->group())
+                else if (client != NULL && c->group() == client->group())
                     show = true;
                 else
                     show = false;
             } else {
-                if (group != NULL && (*it)->group() == group)
+                if (group != NULL && c->group() == group)
                     show = true;
-                else if (client != NULL && client->hasTransient((*it), true))
+                else if (client != NULL && client->hasTransient(c, true))
                     show = true;
                 else
                     show = false;
             }
             if (!show && also_hide) {
-                const ClientList mainclients = (*it)->mainClients();
+                const ClientList mainclients = c->mainClients();
                 // Don't hide utility windows which are standalone(?) or
                 // have e.g. kicker as mainwindow
                 if (mainclients.isEmpty())
@@ -821,14 +829,14 @@ void Workspace::updateToolWindows(bool also_hide)
                 for (ClientList::ConstIterator it2 = mainclients.constBegin();
                         it2 != mainclients.constEnd();
                         ++it2) {
-                    if ((*it2)->isSpecialWindow())
+                    if (c->isSpecialWindow())
                         show = true;
                 }
                 if (!show)
-                    to_hide.append(*it);
+                    to_hide.append(c);
             }
             if (show)
-                to_show.append(*it);
+                to_show.append(c);
         }
     } // First show new ones, then hide
     for (int i = to_show.size() - 1;
@@ -1254,14 +1262,19 @@ bool Workspace::setCurrentDesktop(int new_desktop)
 
         currentDesktop_ = new_desktop; // Change the desktop (so that Client::updateVisibility() works)
 
-        for (ClientList::ConstIterator it = stacking_order.constBegin();
+        for (ToplevelList::ConstIterator it = stacking_order.constBegin();
                 it != stacking_order.constEnd();
-                ++it)
-            if (!(*it)->isOnDesktop(new_desktop) && (*it) != movingClient && (*it)->isOnCurrentActivity()) {
-                if ((*it)->isShown(true) && (*it)->isOnDesktop(old_desktop))
-                    obs_wins.create(*it);
-                (*it)->updateVisibility();
+                ++it) {
+            Client *c = qobject_cast<Client*>(*it);
+            if (!c) {
+                continue;
             }
+            if (!c->isOnDesktop(new_desktop) && c != movingClient && c->isOnCurrentActivity()) {
+                if (c->isShown(true) && c->isOnDesktop(old_desktop))
+                    obs_wins.create(c);
+                (c)->updateVisibility();
+            }
+        }
 
         // Now propagate the change, after hiding, before showing
         rootInfo->setCurrentDesktop(currentDesktop());
@@ -1281,9 +1294,14 @@ bool Workspace::setCurrentDesktop(int new_desktop)
 #endif
         }
 
-        for (int i = stacking_order.size() - 1; i >= 0 ; --i)
-            if (stacking_order.at(i)->isOnDesktop(new_desktop) && stacking_order.at(i)->isOnCurrentActivity())
-                stacking_order.at(i)->updateVisibility();
+        for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
+            Client *c = qobject_cast<Client*>(stacking_order.at(i));
+            if (!c) {
+                continue;
+            }
+            if (c->isOnDesktop(new_desktop) && c->isOnCurrentActivity())
+                c->updateVisibility();
+        }
 
         --block_showing_desktop;
         if (showingDesktop())   // Do this only after desktop change to avoid flicker
@@ -1302,9 +1320,12 @@ bool Workspace::setCurrentDesktop(int new_desktop)
             c = active_client; // The requestFocus below will fail, as the client is already active
         // from actiavtion.cpp
         if (!c && options->isNextFocusPrefersMouse()) {
-            QList<Client*>::const_iterator it = stackingOrder().constEnd();
+            ToplevelList::const_iterator it = stackingOrder().constEnd();
             while (it != stackingOrder().constBegin()) {
-                Client *client = *(--it);
+                Client *client = qobject_cast<Client*>(*(--it));
+                if (!client) {
+                    continue;
+                }
 
                 if (!(client->isShown(false) && client->isOnDesktop(new_desktop) &&
                     client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
@@ -1393,14 +1414,19 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         QString old_activity = activity_;
         activity_ = new_activity;
 
-        for (ClientList::ConstIterator it = stacking_order.constBegin();
+        for (ToplevelList::ConstIterator it = stacking_order.constBegin();
                 it != stacking_order.constEnd();
-                ++it)
-            if (!(*it)->isOnActivity(new_activity) && (*it) != movingClient && (*it)->isOnCurrentDesktop()) {
-                if ((*it)->isShown(true) && (*it)->isOnActivity(old_activity))
-                    obs_wins.create(*it);
-                (*it)->updateVisibility();
+                ++it) {
+            Client *c = qobject_cast<Client*>(*it);
+            if (!c) {
+                continue;
             }
+            if (!c->isOnActivity(new_activity) && c != movingClient && c->isOnCurrentDesktop()) {
+                if (c->isShown(true) && c->isOnActivity(old_activity))
+                    obs_wins.create(c);
+                c->updateVisibility();
+            }
+        }
 
         // Now propagate the change, after hiding, before showing
         //rootInfo->setCurrentDesktop( currentDesktop() );
@@ -1417,9 +1443,14 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
             }
             */
 
-        for (int i = stacking_order.size() - 1; i >= 0 ; --i)
-            if (stacking_order.at(i)->isOnActivity(new_activity))
-                stacking_order.at(i)->updateVisibility();
+        for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
+            Client *c = qobject_cast<Client*>(stacking_order.at(i));
+            if (!c) {
+                continue;
+            }
+            if (c->isOnActivity(new_activity))
+                c->updateVisibility();
+        }
 
         --block_showing_desktop;
         //FIXME not sure if I should do this either
@@ -1497,8 +1528,10 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 void Workspace::activityRemoved(const QString &activity)
 {
     allActivities_.removeOne(activity);
-    foreach (Client * client, stacking_order) {
-        client->setOnActivity(activity, false);
+    foreach (Toplevel * toplevel, stacking_order) {
+        if (Client *client = qobject_cast<Client*>(toplevel)) {
+            client->setOnActivity(activity, false);
+        }
     }
     //toss out any session data for it
     KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + activity);
@@ -1892,14 +1925,19 @@ void Workspace::setShowingDesktop(bool showing)
     if (showing_desktop) {
         showing_desktop_clients.clear();
         ++block_focus;
-        ClientList cls = stackingOrder();
+        ToplevelList cls = stackingOrder();
         // Find them first, then minimize, otherwise transients may get minimized with the window
         // they're transient for
-        for (ClientList::ConstIterator it = cls.constBegin();
+        for (ToplevelList::ConstIterator it = cls.constBegin();
                 it != cls.constEnd();
-                ++it)
-            if ((*it)->isOnCurrentActivity() && (*it)->isOnCurrentDesktop() && (*it)->isShown(true) && !(*it)->isSpecialWindow())
-                showing_desktop_clients.prepend(*it);   // Topmost first to reduce flicker
+                ++it) {
+            Client *c = qobject_cast<Client*>(*it);
+            if (!c) {
+                continue;
+            }
+            if (c->isOnCurrentActivity() && c->isOnCurrentDesktop() && c->isShown(true) && !c->isSpecialWindow())
+                showing_desktop_clients.prepend(c);   // Topmost first to reduce flicker
+        }
         for (ClientList::ConstIterator it = showing_desktop_clients.constBegin();
                 it != showing_desktop_clients.constEnd();
                 ++it)
