@@ -97,6 +97,11 @@ signals:
      * @param count The new number of screens
      **/
     void numberScreensChanged(int count);
+    /**
+     * This signal is emitted when the size of @p screen changes.
+     * Don't forget to fetch an updated client area.
+     **/
+    void screenResized(int screen);
 
 public:
 //------------------------------------------------------------------

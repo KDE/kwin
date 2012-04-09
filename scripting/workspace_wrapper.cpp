@@ -38,6 +38,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
     connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SIGNAL(numberScreensChanged(int)));
+    connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
     foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
     }
