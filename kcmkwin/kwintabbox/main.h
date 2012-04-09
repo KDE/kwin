@@ -35,7 +35,7 @@ namespace KWin
 namespace TabBox
 {
 
-class LayoutConfig;
+class LayoutPreview;
 }
 
 
@@ -62,31 +62,21 @@ public slots:
     virtual void defaults();
 
 private slots:
-    void slotEffectSelectionChanged(int index);
-    void slotAboutEffectClicked();
-    void slotConfigureEffectClicked();
-    void slotConfigureLayoutClicked();
-    void slotLayoutChanged();
-    void slotEffectSelectionChangedAlternative(int index);
-    void slotAboutEffectClickedAlternative();
-    void slotConfigureEffectClickedAlternative();
-    void slotConfigureLayoutClickedAlternative();
-    void slotLayoutChangedAlternative();
-
+    void effectSelectionChanged(int index);
+    void configureEffectClicked();
+    void tabBoxToggled(bool on);
+    void shortcutChanged(const QKeySequence &seq);
 private:
     void updateUiFromConfig(KWinTabBoxConfigForm* ui, const TabBox::TabBoxConfig& config);
     void updateConfigFromUi(const KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config);
     void loadConfig(const KConfigGroup& config, KWin::TabBox::TabBoxConfig& tabBoxConfig);
     void saveConfig(KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig);
-    void effectSelectionChanged(KWinTabBoxConfigForm* ui, int index);
-    void aboutEffectClicked(KWinTabBoxConfigForm* ui);
-    void configureEffectClicked(KWinTabBoxConfigForm* ui);
 
 private:
     enum Mode {
-        Layout = 0,
-        CoverSwitch = 1,
-        FlipSwitch = 2
+        CoverSwitch = 0,
+        FlipSwitch = 1,
+        Layout = 2
     };
     KWinTabBoxConfigForm* m_primaryTabBoxUi;
     KWinTabBoxConfigForm* m_alternativeTabBoxUi;
@@ -95,7 +85,7 @@ private:
     KShortcutsEditor* m_editor;
     TabBox::TabBoxConfig m_tabBoxConfig;
     TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
-    TabBox::LayoutConfig* m_configForm;
+    TabBox::LayoutPreview *m_layoutPreview;
 
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
 };

@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_TABBOX_LAYOUTCONFIG_H
-#define KWIN_TABBOX_LAYOUTCONFIG_H
+#ifndef KWIN_TABBOX_LAYOUTPREVIEW_H
+#define KWIN_TABBOX_LAYOUTPREVIEW_H
 
 #include <QtCore/QAbstractListModel>
 #include <QtDeclarative/QDeclarativeView>
@@ -30,20 +30,14 @@ namespace KWin
 namespace TabBox
 {
 
-class LayoutModel;
-
-class LayoutConfig : public QDeclarativeView
+class LayoutPreview : public QDeclarativeView
 {
     Q_OBJECT
 public:
-    LayoutConfig(QWidget *parent = NULL);
-    virtual ~LayoutConfig();
+    LayoutPreview(QWidget *parent = NULL);
+    virtual ~LayoutPreview();
 
-    void setLayout(const QString &layoutName);
-    QString selectedLayout() const;
-
-private:
-    LayoutModel *m_layoutsModels;
+    void setLayout(const QString &path, const QString &name);
 };
 
 class TabBoxImageProvider : public QDeclarativeImageProvider
@@ -70,26 +64,7 @@ private:
     QStringList m_nameList;
 };
 
-class LayoutModel : public QAbstractListModel
-{
-    Q_OBJECT
-public:
-    LayoutModel(QObject *parent = NULL);
-    virtual ~LayoutModel();
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-    QModelIndex indexForLayoutName(const QString &name) const;
-
-private:
-    void init();
-    QStringList m_nameList;
-    QStringList m_pathList;
-    QStringList m_layoutList;
-};
-
 } // namespace TabBox
 } // namespace KWin
 
-#endif // KWIN_TABBOX_LAYOUTCONFIG_H
+#endif // KWIN_TABBOX_LAYOUTPREVIEW_H

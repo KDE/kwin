@@ -18,74 +18,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 1.0
-import org.kde.plasma.components 0.1 as PlasmaComponents
+
 Item {
-    id: container
-    GridView {
-        property int lastMousePosX
-        property int lastMousePosY
-        id: view
-        objectName: "view"
-        model: layoutModel
-        cellWidth: Math.max(100, (container.width % 2 == 0 ? container.width : (container.width - 1)) / 2.0)
-        cellHeight: Math.max(100, container.height / (count % 2 == 0 ? count : (count+1)) * 2)
-        anchors.fill: parent
-        delegate: itemDelegate
-        highlight: PlasmaComponents.Highlight {
-            width: view.cellWidth
-            height: view.cellHeight
-            hover: true
-        }
-        MouseArea {
-            hoverEnabled: true
-            anchors.fill: parent
-            onPositionChanged: {
-                view.lastMousePosX = mouse.x;
-                view.lastMousePosY = mouse.y;
+    id : preview
+    Loader {
+        property int screenWidth : preview.width
+        property int screenHeight : preview.height
+        property bool allDesktops: true
+        width: preview.width
+        height: preview.height - textElement.height
+        source: sourcePath
+        anchors.centerIn: parent
+        onLoaded: {
+            if (item.allDesktops != undefined) {
+                item.allDesktops = allDesktops;
             }
-            onClicked: {
-                view.currentIndex = view.indexAt(mouse.x, mouse.y);
+            if (item.setModel) {
+                item.setModel(clientModel);
             }
+            if (item.screenWidth != undefined) {
+                item.screenWidth = screenWidth;
+            }
+            if (item.screenHeight != undefined) {
+                item.screenHeight = screenHeight;
+            }
+            item.width = preview.width;
+            item.height = preview.height - textElement.height;
         }
     }
-    Component {
-        id: itemDelegate
-        Item {
-            width: view.cellWidth
-            height: view.cellHeight
-            Loader {
-                property int screenWidth : container.width
-                property int screenHeight : container.height
-                property bool allDesktops: true
-                width: {
-                    if (item.canStretchX) {
-                        return Math.min(Math.max(item.optimalWidth, view.cellWidth), view.cellWidth)
-                    } else {
-                        return Math.min(item.optimalWidth, view.cellWidth);
-                    }
-                }
-                height: Math.min(item.optimalHeight, view.cellHeight)
-                source: sourcePath
-                anchors.centerIn: parent
-                onLoaded: {
-                    if (item.allDesktops != undefined) {
-                        item.allDesktops = allDesktops;
-                    }
-                    if (item.setModel) {
-                        item.setModel(clientModel);
-                    }
-                }
-            }
-            Text {
-                id: textElement
-                font.bold: true
-                text: name
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    bottom: parent.bottom
-                }
-                visible: view.indexAt(view.lastMousePosX, view.lastMousePosY) == index
-            }
+    Text {
+        id: textElement
+        font.bold: true
+        text: name
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
         }
+        visible: true
     }
 }

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
-#include "layoutconfig.h"
+#include "layoutpreview.h"
 #include "thumbnailitem.h"
 #include <QtDeclarative/qdeclarative.h>
 #include <QtDeclarative/QDeclarativeContext>
@@ -31,9 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIcon>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
-#include <KDE/KLocalizedString>
+// #include <KDE/KLocalizedString>
 #include <KDE/KService>
-#include <KDE/KServiceTypeTrader>
+// #include <KDE/KServiceTypeTrader>
 #include <KDE/KStandardDirs>
 
 namespace KWin
@@ -41,15 +41,15 @@ namespace KWin
 namespace TabBox
 {
 
-LayoutConfig::LayoutConfig(QWidget* parent)
+LayoutPreview::LayoutPreview(QWidget* parent)
     : QDeclarativeView(parent)
-    , m_layoutsModels(new LayoutModel(this))
 {
-    setAttribute(Qt::WA_TranslucentBackground);
+//     setAttribute(Qt::WA_TranslucentBackground);
+    setAutoFillBackground(false);
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    setMinimumSize(QSize(500, 500));
+    setMinimumSize(QSize(480, 300));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         engine()->addImportPath(importPath);
@@ -65,34 +65,19 @@ LayoutConfig::LayoutConfig(QWidget* parent)
     kdeclarative.setupBindings();
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("clientModel", model);
-    rootContext()->setContextProperty("layoutModel", m_layoutsModels);
+    rootContext()->setContextProperty("sourcePath", QString());
+    rootContext()->setContextProperty("name", QString());
     setSource(KStandardDirs::locate("data", "kwin/kcm_kwintabbox/main.qml"));
 }
 
-LayoutConfig::~LayoutConfig()
+LayoutPreview::~LayoutPreview()
 {
 }
 
-void LayoutConfig::setLayout(const QString &layoutName)
+void LayoutPreview::setLayout(const QString &path, const QString &name)
 {
-    const QModelIndex index = m_layoutsModels->indexForLayoutName(layoutName);
-    const int row = (index.isValid()) ? index.row() : -1;
-    if (QObject *item = rootObject()->findChild<QObject*>("view")) {
-        item->setProperty("currentIndex", row);
-    }
-}
-
-QString LayoutConfig::selectedLayout() const
-{
-    int row = 0;
-    if (QObject *item = rootObject()->findChild<QObject*>("view")) {
-        row = item->property("currentIndex").toInt();
-    }
-    const QModelIndex index = m_layoutsModels->index(row);
-    if (!index.isValid()) {
-        return QString();
-    }
-    return m_layoutsModels->data(index, Qt::UserRole+2).toString();
+    rootContext()->setContextProperty("sourcePath", path);
+    rootContext()->setContextProperty("name", name);
 }
 
 TabBoxImageProvider::TabBoxImageProvider(QAbstractListModel* model)
@@ -194,79 +179,6 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
     return m_nameList.size();
 }
 
-LayoutModel::LayoutModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-    QHash<int, QByteArray> roles;
-    roles[Qt::UserRole] = "name";
-    roles[Qt::UserRole+1] = "sourcePath";
-    setRoleNames(roles);
-    init();
-}
-
-LayoutModel::~LayoutModel()
-{
-}
-
-void LayoutModel::init()
-{
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher");
-    foreach (KService::Ptr service, offers) {
-        const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-        if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
-            continue;
-        }
-        if (service->property("X-KWin-Exclude-Listing").toBool()) {
-            continue;
-        }
-        const QString scriptName = service->property("X-Plasma-MainScript").toString();
-        const QString scriptFile = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
-        if (scriptFile.isNull()) {
-            continue;
-        }
-        m_nameList << service->name();
-        m_pathList << scriptFile;
-        m_layoutList << pluginName;
-    }
-}
-
-QVariant LayoutModel::data (const QModelIndex& index, int role) const
-{
-    if (!index.isValid()) {
-        return QVariant();
-    }
-    switch (role) {
-    case Qt::DisplayRole:
-    case Qt::UserRole:
-        return m_nameList.at(index.row());
-    case Qt::UserRole + 1:
-        return m_pathList.at(index.row());
-    case Qt::UserRole + 2:
-        return m_layoutList.at(index.row());
-    }
-    return QVariant();
-}
-
-int LayoutModel::rowCount (const QModelIndex& parent) const
-{
-    Q_UNUSED(parent)
-    return m_nameList.size();
-}
-
-QModelIndex LayoutModel::indexForLayoutName(const QString &name) const
-{
-    // fallback for default
-    QString normalizedName = name.toLower().replace(' ', '_');
-    if (name == "Default" || name.isEmpty()) {
-        normalizedName = "informative";
-    }
-    for (int i=0; i<m_layoutList.size(); ++i) {
-        if (normalizedName == m_layoutList.at(i)) {
-            return index(i);
-        }
-    }
-    return QModelIndex();
-}
 
 } // namespace KWin
 } // namespace TabBox

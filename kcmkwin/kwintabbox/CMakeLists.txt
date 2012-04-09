@@ -6,7 +6,7 @@ ADD_DEFINITIONS(-DTABBOX_KCM)
 
 set(kcm_kwintabbox_PART_SRCS
     main.cpp
-    layoutconfig.cpp
+    layoutpreview.cpp
     thumbnailitem.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/clientmodel.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/declarative.cpp
