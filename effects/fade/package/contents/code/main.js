@@ -33,9 +33,9 @@ function isLoginWindow(w) {
 
 var fadeInTime, fadeOutTime, fadeWindows;
 function loadConfig() {
-    fadeInTime = animationTime(effect.readConfig("FadeInTime"));
-    fadeOutTime = animationTime(effect.readConfig("FadeOutTime"));
-    fadeWindows = effect.readConfig("FadeWindows");
+    fadeInTime = animationTime(effect.readConfig("FadeInTime", 150));
+    fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 150));
+    fadeWindows = effect.readConfig("FadeWindows", true);
 }
 loadConfig();
 effect.configChanged.connect(function() {
