@@ -52,7 +52,7 @@ Deleted* Deleted::create(Toplevel* c)
 {
     Deleted* d = new Deleted(c->workspace());
     d->copyToDeleted(c);
-    d->workspace()->addDeleted(d, Allowed);
+    d->workspace()->addDeleted(d, c, Allowed);
     return d;
 }
 

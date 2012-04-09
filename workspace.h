@@ -481,7 +481,7 @@ public:
 
     void removeUnmanaged(Unmanaged*, allowed_t);   // Only called from Unmanaged::release()
     void removeDeleted(Deleted*, allowed_t);
-    void addDeleted(Deleted*, allowed_t);
+    void addDeleted(Deleted*, Toplevel*, allowed_t);
 
     bool checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data);
 

@@ -645,8 +645,6 @@ void Workspace::removeClient(Client* c, allowed_t)
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
     desktops.removeAll(c);
-    unconstrained_stacking_order.removeAll(c);
-    stacking_order.removeAll(c);
     x_stacking_dirty = true;
     for (int i = 1; i <= numberOfDesktops(); ++i)
         focus_chain[i].removeAll(c);
@@ -687,10 +685,22 @@ void Workspace::removeUnmanaged(Unmanaged* c, allowed_t)
     x_stacking_dirty = true;
 }
 
-void Workspace::addDeleted(Deleted* c, allowed_t)
+void Workspace::addDeleted(Deleted* c, Toplevel *orig, allowed_t)
 {
     assert(!deleted.contains(c));
     deleted.append(c);
+    const int unconstraintedIndex = unconstrained_stacking_order.indexOf(orig);
+    if (unconstraintedIndex != -1) {
+        unconstrained_stacking_order.replace(unconstraintedIndex, c);
+    } else {
+        unconstrained_stacking_order.append(c);
+    }
+    const int index = stacking_order.indexOf(orig);
+    if (index != -1) {
+        stacking_order.replace(index, c);
+    } else {
+        stacking_order.append(c);
+    }
     x_stacking_dirty = true;
 }
 
@@ -701,6 +711,8 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
         scene->windowDeleted(c);
     emit deletedRemoved(c);
     deleted.removeAll(c);
+    unconstrained_stacking_order.removeAll(c);
+    stacking_order.removeAll(c);
     x_stacking_dirty = true;
 }
 

@@ -705,9 +705,6 @@ ToplevelList Workspace::xStackingOrder() const
         if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(windows[ i ])))
             x_stacking.append(c);
     }
-    // TODO: remove after stacking_order contains Deleted
-    foreach (Deleted * c, deleted)
-    x_stacking.append(c);
     if (windows != NULL)
         XFree(windows);
     const_cast< Workspace* >(this)->checkUnredirect();
