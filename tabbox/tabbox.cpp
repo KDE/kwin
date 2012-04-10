@@ -254,6 +254,15 @@ void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
                                static_cast<TabBoxClientImpl*>(under)->client());
 }
 
+void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, bool b) const
+{
+    if (effects) {
+        const Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+        if (EffectWindow *w = static_cast<EffectsHandlerImpl*>(effects)->findWindow(cl->window()))
+            static_cast<EffectsHandlerImpl*>(effects)->setElevatedWindow(w, b);
+    }
+}
+
 
 TabBoxClient* TabBoxHandlerImpl::desktopClient() const
 {

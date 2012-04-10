@@ -137,6 +137,11 @@ public:
     virtual int nextDesktopFocusChain(int desktop) const = 0;
 
     /**
+    * De-/Elevate a client using the compositor (if enabled)
+    */
+    virtual void elevateClient(TabBoxClient* c, bool elevate) const = 0;
+
+    /**
     * Raise a client (w/o activating it)
     */
     virtual void raiseClient(TabBoxClient* c) const = 0;

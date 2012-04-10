@@ -135,7 +135,13 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     Display *dpy = QX11Info::display();
     TabBoxClient *currentClient = q->client(index);
 
-    if (!KWindowSystem::compositingActive()) {
+    if (KWindowSystem::compositingActive()) {
+        if (lastRaisedClient)
+            q->elevateClient(lastRaisedClient, false);
+        lastRaisedClient = currentClient;
+        if (currentClient)
+            q->elevateClient(currentClient, true);
+    } else {
         if (lastRaisedClient) {
             if (lastRaisedClientSucc)
                 q->restack(lastRaisedClient, lastRaisedClientSucc);
@@ -182,6 +188,9 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
+    TabBoxClient *currentClient = q->client(index);
+    if (currentClient)
+        q->elevateClient(currentClient, false);
     if (abort && lastRaisedClient && lastRaisedClientSucc)
         q->restack(lastRaisedClient, lastRaisedClientSucc);
     lastRaisedClient = 0;
