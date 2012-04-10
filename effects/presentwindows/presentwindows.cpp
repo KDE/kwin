@@ -254,7 +254,11 @@ void PresentWindowsEffect::postPaintScreen()
     for (i = m_windowData.constBegin(); i != m_windowData.constEnd(); ++i) {
         if (i.value().opacity > 0.0 && i.value().opacity < 1.0)
             i.key()->addRepaintFull();
-        if (i.value().highlight > 0.0 && i.value().highlight < 1.0)
+        if (i.key()->isDesktop() && !m_motionManager.isManaging(i.key())) {
+            if (i.value().highlight != 0.3)
+                i.key()->addRepaintFull();
+        }
+        else if (i.value().highlight > 0.0 && i.value().highlight < 1.0)
             i.key()->addRepaintFull();
     }
 
