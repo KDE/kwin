@@ -75,14 +75,14 @@ Item {
         height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
         spacing: 5
         highlightMoveDuration: 250
+        width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
         anchors {
             top: parent.top
-            left: parent.left
-            right: parent.right
             topMargin: background.margins.top
             leftMargin: background.margins.left
             rightMargin: background.margins.right
             bottomMargin: background.margins.bottom
+            horizontalCenter: parent.horizontalCenter
         }
         clip: true
         delegate: Item {
