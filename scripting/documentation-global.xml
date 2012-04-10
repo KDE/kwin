@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+    <!--  Documentation for global KWin scripting methods. In doxygen XML format as this can be converted to MediaWiki    -->
+    <!--  Use script and XSLT from kde:scratch/graesslin/kwin-scripting-api-generator to generate the documentation    -->
+    <!--  This xml is not meant to be doxygen complient    -->
+    <compounddef>
+        <compoundname>Global</compoundname>
+        <briefdescription>Methods and properties added to the global JavaScript object.</briefdescription>
+        <sectiondef kind="property">
+            <memberdef kind="property" writable="no">
+                <type>KWin::Options</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>options</name>
+                <read></read>
+                <detaileddescription>Global property to all configuration values of KWin core.</detaileddescription>
+            </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>KWin::Workspace</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>workspace</name>
+                <read></read>
+                <detaileddescription>Global property to the core wrapper of KWin.</detaileddescription>
+            </memberdef>
+        </sectiondef>
+        <sectiondef kind="public-func">
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE void</type>
+                <definition>void KWin::Scripting::print</definition>
+                <argsstring>(QVariant ... values)</argsstring>
+                <name>print</name>
+                <read></read>
+                <detaileddescription>Prints all provided values to kDebug and as a D-Bus signal</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE QVariant</type>
+                <definition>QVariant KWin::Scripting::readConfig</definition>
+                <argsstring>(QString key, QVariant defaultValue = QVariant())</argsstring>
+                <name>readConfig</name>
+                <read></read>
+                <detaileddescription>Reads the config value for key in the Script's configuration with the optional default value. If not providing a default value and no value stored in the configuration an undefined value is returned.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::registerShortcut</definition>
+                <argsstring>(QString title, QString text, QString keySequence, QScriptValue callback)</argsstring>
+                <name>registerShortcut</name>
+                <read></read>
+                <detaileddescription>Registers keySequence as a global shortcut. When the shortcut is invoked the callback will be called. Title and text are used to name the shortcut and make it available to the global shortcut configuration module.</detaileddescription>
+            </memberdef>
+        </sectiondef>
+    </compounddef>
+</doxygen>
