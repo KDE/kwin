@@ -448,9 +448,9 @@ bool Client::manage(Window w, bool isMapped)
         setSkipSwitcher(session->skipSwitcher);
         setShade(session->shaded ? ShadeNormal : ShadeNone);
         setOpacity(session->opacity);
+        geom_restore = session->restore;
         if (session->maximized != MaximizeRestore) {
             maximize(MaximizeMode(session->maximized));
-            geom_restore = session->restore;
         }
         if (session->fullscreen == FullScreenHack)
             ; // Nothing, this should be already set again above

@@ -823,7 +823,6 @@ private:
     /** The quick tile mode of this window.
      */
     int quick_tile_mode;
-    QRect geom_pretile;
 
     void readTransient();
     Window verifyTransientFor(Window transient_for, bool set);

@@ -140,7 +140,6 @@ Client::Client(Workspace* ws)
     // Set the initial mapping state
     mapping_state = Withdrawn;
     quick_tile_mode = QuickTileNone;
-    geom_pretile = QRect(0, 0, 0, 0);
     desk = 0; // No desktop yet
 
     mode = PositionCenter;
