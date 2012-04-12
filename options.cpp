@@ -127,6 +127,564 @@ Options::~Options()
 {
 }
 
+void Options::setFocusPolicy(FocusPolicy focusPolicy)
+{
+    if (m_focusPolicy == focusPolicy) {
+        return;
+    }
+    m_focusPolicy = focusPolicy;
+    emit focusPolicyChanged();
+}
+
+void Options::setNextFocusPrefersMouse(bool nextFocusPrefersMouse)
+{
+    if (m_nextFocusPrefersMouse == nextFocusPrefersMouse) {
+        return;
+    }
+    m_nextFocusPrefersMouse = nextFocusPrefersMouse;
+    emit nextFocusPrefersMouseChanged();
+}
+
+void Options::setClickRaise(bool clickRaise)
+{
+    if (m_clickRaise == clickRaise) {
+        return;
+    }
+    m_clickRaise = clickRaise;
+    emit clickRaiseChanged();
+}
+
+void Options::setAutoRaise(bool autoRaise)
+{
+    if (m_autoRaise == autoRaise) {
+        return;
+    }
+    m_autoRaise = autoRaise;
+    emit autoRaiseChanged();
+}
+
+void Options::setAutoRaiseInterval(int autoRaiseInterval)
+{
+    if (m_autoRaiseInterval == autoRaiseInterval) {
+        return;
+    }
+    m_autoRaiseInterval = autoRaiseInterval;
+    emit autoRaiseIntervalChanged();
+}
+
+void Options::setDelayFocusInterval(int delayFocusInterval)
+{
+    if (m_delayFocusInterval == delayFocusInterval) {
+        return;
+    }
+    m_delayFocusInterval = delayFocusInterval;
+    emit delayFocusIntervalChanged();
+}
+
+void Options::setShadeHover(bool shadeHover)
+{
+    if (m_shadeHover == shadeHover) {
+        return;
+    }
+    m_shadeHover = shadeHover;
+    emit shadeHoverChanged();
+}
+
+void Options::setShadeHoverInterval(int shadeHoverInterval)
+{
+    if (m_shadeHoverInterval == shadeHoverInterval) {
+        return;
+    }
+    m_shadeHoverInterval = shadeHoverInterval;
+    emit shadeHoverIntervalChanged();
+}
+
+void Options::setTiling(bool tiling)
+{
+    if (m_tilingOn == tiling) {
+        return;
+    }
+    m_tilingOn = tiling;
+    emit tilingChanged();
+}
+
+void Options::setTilingLayout(int tilingLayout)
+{
+    if (m_tilingLayout == static_cast<TilingLayoutFactory::Layouts>(tilingLayout)) {
+        return;
+    }
+    m_tilingLayout = static_cast<TilingLayoutFactory::Layouts>(tilingLayout);
+    emit tilingLayoutChanged();
+}
+
+void Options::setTilingRaisePolicy(int tilingRaisePolicy)
+{
+    if (m_tilingRaisePolicy == tilingRaisePolicy) {
+        return;
+    }
+    m_tilingRaisePolicy = tilingRaisePolicy;
+    emit tilingRaisePolicyChanged();
+}
+
+void Options::setSeparateScreenFocus(bool separateScreenFocus)
+{
+    if (m_separateScreenFocus == separateScreenFocus) {
+        return;
+    }
+    m_separateScreenFocus = separateScreenFocus;
+    emit separateScreenFocusChanged();
+}
+
+void Options::setActiveMouseScreen(bool activeMouseScreen)
+{
+    if (m_activeMouseScreen == activeMouseScreen) {
+        return;
+    }
+    m_activeMouseScreen = activeMouseScreen;
+    emit activeMouseScreenChanged();
+}
+
+void Options::setPlacement(int placement)
+{
+    if (m_placement == static_cast<Placement::Policy>(placement)) {
+        return;
+    }
+    m_placement = static_cast<Placement::Policy>(placement);
+    emit placementChanged();
+}
+
+void Options::setBorderSnapZone(int borderSnapZone)
+{
+    if (m_borderSnapZone == borderSnapZone) {
+        return;
+    }
+    m_borderSnapZone = borderSnapZone;
+    emit borderSnapZoneChanged();
+}
+
+void Options::setWindowSnapZone(int windowSnapZone)
+{
+    if (m_windowSnapZone == windowSnapZone) {
+        return;
+    }
+    m_windowSnapZone = windowSnapZone;
+    emit windowSnapZoneChanged();
+}
+
+void Options::setCenterSnapZone(int centerSnapZone)
+{
+    if (m_centerSnapZone == centerSnapZone) {
+        return;
+    }
+    m_centerSnapZone = centerSnapZone;
+    emit centerSnapZoneChanged();
+}
+
+void Options::setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping)
+{
+    if (m_snapOnlyWhenOverlapping == snapOnlyWhenOverlapping) {
+        return;
+    }
+    m_snapOnlyWhenOverlapping = snapOnlyWhenOverlapping;
+    emit snapOnlyWhenOverlappingChanged();
+}
+
+void Options::setShowDesktopIsMinimizeAll(bool showDesktopIsMinimizeAll)
+{
+    if (m_showDesktopIsMinimizeAll == showDesktopIsMinimizeAll) {
+        return;
+    }
+    m_showDesktopIsMinimizeAll = showDesktopIsMinimizeAll;
+    emit showDesktopIsMinimizeAllChanged();
+}
+
+void Options::setRollOverDesktops(bool rollOverDesktops)
+{
+    if (m_rollOverDesktops == rollOverDesktops) {
+        return;
+    }
+    m_rollOverDesktops = rollOverDesktops;
+    emit rollOverDesktopsChanged();
+}
+
+void Options::setFocusStealingPreventionLevel(int focusStealingPreventionLevel)
+{
+    if (m_focusStealingPreventionLevel == focusStealingPreventionLevel) {
+        return;
+    }
+    m_focusStealingPreventionLevel = focusStealingPreventionLevel;
+    emit focusStealingPreventionLevelChanged();
+}
+
+void Options::setLegacyFullscreenSupport(bool legacyFullscreenSupport)
+{
+    if (m_legacyFullscreenSupport == legacyFullscreenSupport) {
+        return;
+    }
+    m_legacyFullscreenSupport = legacyFullscreenSupport;
+    emit legacyFullscreenSupportChanged();
+}
+
+void Options::setOperationTitlebarDblClick(WindowOperation operationTitlebarDblClick)
+{
+    if (OpTitlebarDblClick == operationTitlebarDblClick) {
+        return;
+    }
+    OpTitlebarDblClick = operationTitlebarDblClick;
+    emit operationTitlebarDblClickChanged();
+}
+
+void Options::setCommandActiveTitlebar1(MouseCommand commandActiveTitlebar1)
+{
+    if (CmdActiveTitlebar1 == commandActiveTitlebar1) {
+        return;
+    }
+    CmdActiveTitlebar1 = commandActiveTitlebar1;
+    emit commandActiveTitlebar1Changed();
+}
+
+void Options::setCommandActiveTitlebar2(MouseCommand commandActiveTitlebar2)
+{
+    if (CmdActiveTitlebar2 == commandActiveTitlebar2) {
+        return;
+    }
+    CmdActiveTitlebar2 = commandActiveTitlebar2;
+    emit commandActiveTitlebar2Changed();
+}
+
+void Options::setCommandActiveTitlebar3(MouseCommand commandActiveTitlebar3)
+{
+    if (CmdActiveTitlebar3 == commandActiveTitlebar3) {
+        return;
+    }
+    CmdActiveTitlebar3 = commandActiveTitlebar3;
+    emit commandActiveTitlebar3Changed();
+}
+
+void Options::setCommandInactiveTitlebar1(MouseCommand commandInactiveTitlebar1)
+{
+    if (CmdInactiveTitlebar1 == commandInactiveTitlebar1) {
+        return;
+    }
+    CmdInactiveTitlebar1 = commandInactiveTitlebar1;
+    emit commandInactiveTitlebar1Changed();
+}
+
+void Options::setCommandInactiveTitlebar2(MouseCommand commandInactiveTitlebar2)
+{
+    if (CmdInactiveTitlebar2 == commandInactiveTitlebar2) {
+        return;
+    }
+    CmdInactiveTitlebar2 = commandInactiveTitlebar2;
+    emit commandInactiveTitlebar2Changed();
+}
+
+void Options::setCommandInactiveTitlebar3(MouseCommand commandInactiveTitlebar3)
+{
+    if (CmdInactiveTitlebar3 == commandInactiveTitlebar3) {
+        return;
+    }
+    CmdInactiveTitlebar3 = commandInactiveTitlebar3;
+    emit commandInactiveTitlebar3Changed();
+}
+
+void Options::setCommandWindow1(MouseCommand commandWindow1)
+{
+    if (CmdWindow1 == commandWindow1) {
+        return;
+    }
+    CmdWindow1 = commandWindow1;
+    emit commandWindow1Changed();
+}
+
+void Options::setCommandWindow2(MouseCommand commandWindow2)
+{
+    if (CmdWindow2 == commandWindow2) {
+        return;
+    }
+    CmdWindow2 = commandWindow2;
+    emit commandWindow2Changed();
+}
+
+void Options::setCommandWindow3(MouseCommand commandWindow3)
+{
+    if (CmdWindow3 == commandWindow3) {
+        return;
+    }
+    CmdWindow3 = commandWindow3;
+    emit commandWindow3Changed();
+}
+
+void Options::setCommandWindowWheel(MouseCommand commandWindowWheel)
+{
+    if (CmdWindowWheel == commandWindowWheel) {
+        return;
+    }
+    CmdWindowWheel = commandWindowWheel;
+    emit commandWindowWheelChanged();
+}
+
+void Options::setCommandAll1(MouseCommand commandAll1)
+{
+    if (CmdAll1 == commandAll1) {
+        return;
+    }
+    CmdAll1 = commandAll1;
+    emit commandAll1Changed();
+}
+
+void Options::setCommandAll2(MouseCommand commandAll2)
+{
+    if (CmdAll2 == commandAll2) {
+        return;
+    }
+    CmdAll2 = commandAll2;
+    emit commandAll2Changed();
+}
+
+void Options::setCommandAll3(MouseCommand commandAll3)
+{
+    if (CmdAll3 == commandAll3) {
+        return;
+    }
+    CmdAll3 = commandAll3;
+    emit commandAll3Changed();
+}
+
+void Options::setKeyCmdAllModKey(uint keyCmdAllModKey)
+{
+    if (CmdAllModKey == keyCmdAllModKey) {
+        return;
+    }
+    CmdAllModKey = keyCmdAllModKey;
+    emit keyCmdAllModKeyChanged();
+}
+
+void Options::setShowGeometryTip(bool showGeometryTip)
+{
+    if (show_geometry_tip == showGeometryTip) {
+        return;
+    }
+    show_geometry_tip = showGeometryTip;
+    emit showGeometryTipChanged();
+}
+
+void Options::setElectricBorderDelay(int electricBorderDelay)
+{
+    if (electric_border_delay == electricBorderDelay) {
+        return;
+    }
+    electric_border_delay = electricBorderDelay;
+    emit electricBorderDelayChanged();
+}
+
+void Options::setElectricBorderCooldown(int electricBorderCooldown)
+{
+    if (electric_border_cooldown == electricBorderCooldown) {
+        return;
+    }
+    electric_border_cooldown = electricBorderCooldown;
+    emit electricBorderCooldownChanged();
+}
+
+void Options::setElectricBorderPushbackPixels(int electricBorderPushbackPixels)
+{
+    if (electric_border_pushback_pixels == electricBorderPushbackPixels) {
+        return;
+    }
+    electric_border_pushback_pixels = electricBorderPushbackPixels;
+    emit electricBorderPushbackPixelsChanged();
+}
+
+void Options::setElectricBorderMaximize(bool electricBorderMaximize)
+{
+    if (electric_border_maximize == electricBorderMaximize) {
+        return;
+    }
+    electric_border_maximize = electricBorderMaximize;
+    emit electricBorderMaximizeChanged();
+}
+
+void Options::setElectricBorderTiling(bool electricBorderTiling)
+{
+    if (electric_border_tiling == electricBorderTiling) {
+        return;
+    }
+    electric_border_tiling = electricBorderTiling;
+    emit electricBorderTilingChanged();
+}
+
+void Options::setBorderlessMaximizedWindows(bool borderlessMaximizedWindows)
+{
+    if (borderless_maximized_windows == borderlessMaximizedWindows) {
+        return;
+    }
+    borderless_maximized_windows = borderlessMaximizedWindows;
+    emit borderlessMaximizedWindowsChanged();
+}
+
+void Options::setKillPingTimeout(int killPingTimeout)
+{
+    if (m_killPingTimeout == killPingTimeout) {
+        return;
+    }
+    m_killPingTimeout = killPingTimeout;
+    emit killPingTimeoutChanged();
+}
+
+void Options::setHideUtilityWindowsForInactive(bool hideUtilityWindowsForInactive)
+{
+    if (m_hideUtilityWindowsForInactive == hideUtilityWindowsForInactive) {
+        return;
+    }
+    m_hideUtilityWindowsForInactive = hideUtilityWindowsForInactive;
+    emit hideUtilityWindowsForInactiveChanged();
+}
+
+void Options::setInactiveTabsSkipTaskbar(bool inactiveTabsSkipTaskbar)
+{
+    if (m_inactiveTabsSkipTaskbar == inactiveTabsSkipTaskbar) {
+        return;
+    }
+    m_inactiveTabsSkipTaskbar = inactiveTabsSkipTaskbar;
+    emit inactiveTabsSkipTaskbarChanged();
+}
+
+void Options::setAutogroupSimilarWindows(bool autogroupSimilarWindows)
+{
+    if (m_autogroupSimilarWindows == autogroupSimilarWindows) {
+        return;
+    }
+    m_autogroupSimilarWindows = autogroupSimilarWindows;
+    emit autogroupSimilarWindowsChanged();
+}
+
+void Options::setAutogroupInForeground(bool autogroupInForeground)
+{
+    if (m_autogroupInForeground == autogroupInForeground) {
+        return;
+    }
+    m_autogroupInForeground = autogroupInForeground;
+    emit autogroupInForegroundChanged();
+}
+
+void Options::setCompositingMode(int compositingMode)
+{
+    if (m_compositingMode == static_cast<CompositingType>(compositingMode)) {
+        return;
+    }
+    m_compositingMode = static_cast<CompositingType>(compositingMode);
+    emit compositingModeChanged();
+}
+
+void Options::setUseCompositing(bool useCompositing)
+{
+    if (m_useCompositing == useCompositing) {
+        return;
+    }
+    m_useCompositing = useCompositing;
+    emit useCompositingChanged();
+}
+
+void Options::setCompositingInitialized(bool compositingInitialized)
+{
+    if (m_compositingInitialized == compositingInitialized) {
+        return;
+    }
+    m_compositingInitialized = compositingInitialized;
+    emit compositingInitializedChanged();
+}
+
+void Options::setHiddenPreviews(int hiddenPreviews)
+{
+    if (m_hiddenPreviews == static_cast<HiddenPreviews>(hiddenPreviews)) {
+        return;
+    }
+    m_hiddenPreviews = static_cast<HiddenPreviews>(hiddenPreviews);
+    emit hiddenPreviewsChanged();
+}
+
+void Options::setUnredirectFullscreen(bool unredirectFullscreen)
+{
+    if (m_unredirectFullscreen == unredirectFullscreen) {
+        return;
+    }
+    m_unredirectFullscreen = unredirectFullscreen;
+    emit unredirectFullscreenChanged();
+}
+
+void Options::setGlSmoothScale(int glSmoothScale)
+{
+    if (m_glSmoothScale == glSmoothScale) {
+        return;
+    }
+    m_glSmoothScale = glSmoothScale;
+    emit glSmoothScaleChanged();
+}
+
+void Options::setGlVSync(bool glVSync)
+{
+    if (m_glVSync == glVSync) {
+        return;
+    }
+    m_glVSync = glVSync;
+    emit glVSyncChanged();
+}
+
+void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
+{
+    if (m_xrenderSmoothScale == xrenderSmoothScale) {
+        return;
+    }
+    m_xrenderSmoothScale = xrenderSmoothScale;
+    emit xrenderSmoothScaleChanged();
+}
+
+void Options::setMaxFpsInterval(uint maxFpsInterval)
+{
+    if (m_maxFpsInterval == maxFpsInterval) {
+        return;
+    }
+    m_maxFpsInterval = maxFpsInterval;
+    emit maxFpsIntervalChanged();
+}
+
+void Options::setRefreshRate(uint refreshRate)
+{
+    if (m_refreshRate == refreshRate) {
+        return;
+    }
+    m_refreshRate = refreshRate;
+    emit refreshRateChanged();
+}
+
+void Options::setGlDirect(bool glDirect)
+{
+    if (m_glDirect == glDirect) {
+        return;
+    }
+    m_glDirect = glDirect;
+    emit glDirectChanged();
+}
+
+void Options::setGlStrictBinding(bool glStrictBinding)
+{
+    if (m_glStrictBinding == glStrictBinding) {
+        return;
+    }
+    m_glStrictBinding = glStrictBinding;
+    emit glStrictBindingChanged();
+}
+
+void Options::setElectricBorders(int borders)
+{
+    if (electric_borders == borders) {
+        return;
+    }
+    electric_borders = borders;
+    emit electricBordersChanged();
+}
+
 unsigned long Options::updateSettings()
 {
     KSharedConfig::Ptr _config = KGlobal::config();
