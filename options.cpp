@@ -204,6 +204,11 @@ void Options::setFocusPolicy(FocusPolicy focusPolicy)
     }
     m_focusPolicy = focusPolicy;
     emit focusPolicyChanged();
+    if (m_focusPolicy == ClickToFocus) {
+        setAutoRaise(false);
+        setAutoRaiseInterval(0);
+        setDelayFocusInterval(0);
+    }
 }
 
 void Options::setNextFocusPrefersMouse(bool nextFocusPrefersMouse)
@@ -217,6 +222,10 @@ void Options::setNextFocusPrefersMouse(bool nextFocusPrefersMouse)
 
 void Options::setClickRaise(bool clickRaise)
 {
+    if (m_autoRaise) {
+        // important: autoRaise implies ClickRaise
+        clickRaise = true;
+    }
     if (m_clickRaise == clickRaise) {
         return;
     }
@@ -226,15 +235,25 @@ void Options::setClickRaise(bool clickRaise)
 
 void Options::setAutoRaise(bool autoRaise)
 {
+    if (m_focusPolicy == ClickToFocus) {
+        autoRaise = false;
+    }
     if (m_autoRaise == autoRaise) {
         return;
     }
     m_autoRaise = autoRaise;
+    if (m_autoRaise) {
+        // important: autoRaise implies ClickRaise
+        setClickRaise(true);
+    }
     emit autoRaiseChanged();
 }
 
 void Options::setAutoRaiseInterval(int autoRaiseInterval)
 {
+    if (m_focusPolicy == ClickToFocus) {
+        autoRaiseInterval = 0;
+    }
     if (m_autoRaiseInterval == autoRaiseInterval) {
         return;
     }
@@ -244,6 +263,9 @@ void Options::setAutoRaiseInterval(int autoRaiseInterval)
 
 void Options::setDelayFocusInterval(int delayFocusInterval)
 {
+    if (m_focusPolicy == ClickToFocus) {
+        delayFocusInterval = 0;
+    }
     if (m_delayFocusInterval == delayFocusInterval) {
         return;
     }
@@ -379,10 +401,13 @@ void Options::setRollOverDesktops(bool rollOverDesktops)
 
 void Options::setFocusStealingPreventionLevel(int focusStealingPreventionLevel)
 {
+    if (!focusPolicyIsReasonable()) {
+        focusStealingPreventionLevel = 0;
+    }
     if (m_focusStealingPreventionLevel == focusStealingPreventionLevel) {
         return;
     }
-    m_focusStealingPreventionLevel = focusStealingPreventionLevel;
+    m_focusStealingPreventionLevel = qMax(0, qMin(4, focusStealingPreventionLevel));
     emit focusStealingPreventionLevelChanged();
 }
 
