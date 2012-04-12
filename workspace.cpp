@@ -61,6 +61,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#ifdef KWIN_BUILD_SCRIPTING
+#include "scripting/scripting.h"
+#endif
 #ifdef KWIN_BUILD_TILING
 #include "tiling/tile.h"
 #include "tiling/tilinglayout.h"
@@ -152,6 +155,7 @@ Workspace::Workspace(bool restore)
     , transButton(NULL)
     , forceUnredirectCheck(true)
     , m_finishingCompositing(false)
+    , m_scripting(NULL)
 {
     (void) new KWinAdaptor(this);
 
@@ -468,6 +472,12 @@ void Workspace::init()
 #ifdef KWIN_BUILD_TILING
     // Enable/disable tiling
     m_tiling->setEnabled(options->isTilingOn());
+#endif
+
+
+#ifdef KWIN_BUILD_SCRIPTING
+    m_scripting = new Scripting(this);
+    m_scripting->start();
 #endif
 
     // SELI TODO: This won't work with unreasonable focus policies,

@@ -86,6 +86,7 @@ class RootInfo;
 class PluginMgr;
 class Placement;
 class Rules;
+class Scripting;
 class WindowRules;
 
 class Workspace : public QObject, public KDecorationDefines
@@ -895,6 +896,8 @@ private:
     bool forceUnredirectCheck;
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
+
+    Scripting *m_scripting;
 
 private:
     friend bool performTransiencyCheck();

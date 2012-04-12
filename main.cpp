@@ -42,10 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMessageBox>
 #include <QEvent>
 
-#ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/scripting.h"
-#endif
-
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -525,9 +521,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup("kwin");
     KWin::Application a;
-#ifdef KWIN_BUILD_SCRIPTING
-    KWin::Scripting scripting;
-#endif
 
     ksmserver.resumeStartup("kwin");
     KWin::SessionManager weAreIndeed;
@@ -550,9 +543,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         appname, QDBusConnectionInterface::DontQueueService);
 
     KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
-#ifdef KWIN_BUILD_SCRIPTING
-    scripting.start();
-#endif
 
     return a.exec();
 }
