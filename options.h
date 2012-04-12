@@ -646,6 +646,230 @@ public:
     void setGlDirect(bool glDirect);
     void setGlStrictBinding(bool glStrictBinding);
 
+    // default values
+    static FocusPolicy defaultFocusPolicy() {
+        return ClickToFocus;
+    }
+    static bool defaultNextFocusPrefersMouse() {
+        return false;
+    }
+    static bool defaultClickRaise() {
+        return true;
+    }
+    static bool defaultAutoRaise() {
+        return false;
+    }
+    static int defaultAutoRaiseInterval() {
+        return 0;
+    }
+    static int defaultDelayFocusInterval() {
+        return 0;
+    }
+    static bool defaultShadeHover() {
+        return false;
+    }
+    static int defaultShadeHoverInterval() {
+        return 250;
+    }
+    static bool defaultTiling() {
+        return false;
+    }
+    static TilingLayoutFactory::Layouts defaultTilingLayout() {
+        return TilingLayoutFactory::DefaultLayout;
+    }
+    static int defaultTilingRaisePolicy() {
+        return 0;
+    }
+    static bool defaultSeparateScreenFocus() {
+        return false;
+    }
+    static bool defaultActiveMouseScreen() {
+        // TODO: used to be m_focusPolicy != ClickToFocus
+        return true;
+    }
+    static Placement::Policy defaultPlacement() {
+        return Placement::Default;
+    }
+    static int defaultBorderSnapZone() {
+        return 10;
+    }
+    static int defaultWindowSnapZone() {
+        return 10;
+    }
+    static int defaultCenterSnapZone() {
+        return 0;
+    }
+    static bool defaultSnapOnlyWhenOverlapping() {
+        return false;
+    }
+    static bool defaultShowDesktopIsMinimizeAll() {
+        return false;
+    }
+    static bool defaultRollOverDesktops() {
+        return true;
+    }
+    static int defaultFocusStealingPreventionLevel() {
+        return 1;
+    }
+    static bool defaultLegacyFullscreenSupport() {
+        return false;
+    }
+    static WindowOperation defaultOperationTitlebarDblClick() {
+        return MaximizeOp;
+    }
+    static MouseCommand defaultCommandActiveTitlebar1() {
+        return MouseRaise;
+    }
+    static MouseCommand defaultCommandActiveTitlebar2() {
+        return MouseDragTab;
+    }
+    static MouseCommand defaultCommandActiveTitlebar3() {
+        return MouseOperationsMenu;
+    }
+    static MouseCommand defaultCommandInactiveTitlebar1() {
+        return MouseActivateAndRaise;
+    }
+    static MouseCommand defaultCommandInactiveTitlebar2() {
+        return MouseDragTab;
+    }
+    static MouseCommand defaultCommandInactiveTitlebar3() {
+        return MouseOperationsMenu;
+    }
+    static MouseCommand defaultCommandWindow1() {
+        return MouseActivateRaiseAndPassClick;
+    }
+    static MouseCommand defaultCommandWindow2() {
+        return MouseActivateAndPassClick;
+    }
+    static MouseCommand defaultCommandWindow3() {
+        return MouseActivateAndPassClick;
+    }
+    static MouseCommand defaultCommandWindowWheel() {
+        return MouseNothing;
+    }
+    static MouseCommand defaultCommandAll1() {
+        return MouseUnrestrictedMove;
+    }
+    static MouseCommand defaultCommandAll2() {
+        return MouseToggleRaiseAndLower;
+    }
+    static MouseCommand defaultCommandAll3() {
+        return MouseUnrestrictedResize;
+    }
+    static MouseWheelCommand defaultCommandTitlebarWheel() {
+        return MouseWheelChangeCurrentTab;
+    }
+    static MouseWheelCommand defaultCommandAllWheel() {
+        return MouseWheelNothing;
+    }
+    static uint defaultKeyCmdAllModKey() {
+        return Qt::Key_Alt;
+    }
+    static bool defaultShowGeometryTip() {
+        return false;
+    }
+    static ElectricBorderAction defaultElectricBorderTop() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderTopRight() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderRight() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderBottomRight() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderBottom() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderBottomLeft() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderLeft() {
+        return ElectricActionNone;
+    }
+    static ElectricBorderAction defaultElectricBorderTopLeft() {
+        return ElectricActionNone;
+    }
+    static int defaultElectricBorders() {
+        return 0;
+    }
+    static int defaultElectricBorderDelay() {
+        return 150;
+    }
+    static int defaultElectricBorderCooldown() {
+        return 350;
+    }
+    static int defaultElectricBorderPushbackPixels() {
+        return 1;
+    }
+    static bool defaultElectricBorderMaximize() {
+        return true;
+    }
+    static bool defaultElectricBorderTiling() {
+        return true;
+    }
+    static bool defaultBorderlessMaximizedWindows() {
+        return false;
+    }
+    static int defaultKillPingTimeout() {
+        return 5000;
+    }
+    static bool defaultHideUtilityWindowsForInactive() {
+        return true;
+    }
+    static bool defaultInactiveTabsSkipTaskbar() {
+        return false;
+    }
+    static bool defaultAutogroupSimilarWindows() {
+        return false;
+    }
+    static bool defaultAutogroupInForeground() {
+        return true;
+    }
+    static CompositingType defaultCompositingMode() {
+        return OpenGLCompositing;
+    }
+    static bool defaultUseCompositing() {
+        return true;
+    }
+    static bool defaultCompositingInitialized() {
+        return false;
+    }
+    static HiddenPreviews defaultHiddenPreviews() {
+        return HiddenPreviewsShown;
+    }
+    static bool defaultUnredirectFullscreen() {
+        return false;
+    }
+    static int defaultGlSmoothScale() {
+        return 2;
+    }
+    static bool defaultGlVSync() {
+        return true;
+    }
+    static bool defaultXrenderSmoothScale() {
+        return false;
+    }
+    static uint defaultMaxFpsInterval() {
+        return qRound(1000.0/60.0);
+    }
+    static int defaultMaxFps() {
+        return 60;
+    }
+    static uint defaultRefreshRate() {
+        return 0;
+    }
+    static bool defaultGlDirect() {
+        return true;
+    }
+    static bool defaultGlStrictBinding() {
+        return true;
+    }
+    static int defaultAnimationSpeed() {
+        return 3;
+    }
     //----------------------
 Q_SIGNALS:
     void configChanged();
