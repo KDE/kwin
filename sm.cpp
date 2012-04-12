@@ -205,6 +205,9 @@ bool Workspace::stopActivity(const QString &id)
     }
 
     //ugly hack to avoid dbus deadlocks
+#ifdef KWIN_BUILD_ACTIVITIES
+    updateActivityList(true, false);
+#endif
     QMetaObject::invokeMethod(this, "reallyStopActivity", Qt::QueuedConnection, Q_ARG(QString, id));
     //then lie and assume it worked.
     return true;
@@ -212,13 +215,15 @@ bool Workspace::stopActivity(const QString &id)
 
 void Workspace::reallyStopActivity(const QString &id)
 {
+    if (sessionSaving())
+        return; //ksmserver doesn't queue requests (yet)
+
     kDebug() << id;
-    const QStringList openActivities = openActivityList();
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
-    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
-        Client* c = (*it);
+    for (ClientList::const_iterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+        const Client* c = (*it);
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {
             continue; //TODO support old wm_command apps too?
@@ -238,7 +243,7 @@ void Workspace::reallyStopActivity(const QString &id)
         foreach (const QString & activityId, activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;
-            } else if (openActivities.contains(activityId)) {
+            } else if (openActivities_.contains(activityId)) {
                 dontCloseSessionIds << sessionId;
             }
         }

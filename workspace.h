@@ -306,8 +306,7 @@ private:
     int* desktopGrid_;
     int currentDesktop_;
     QString activity_;
-    QStringList allActivities_;
-
+    QStringList allActivities_, openActivities_;
 #ifdef KWIN_BUILD_ACTIVITIES
     KActivities::Controller activityController_;
 #endif
@@ -336,14 +335,6 @@ public:
     QStringList activityList() const {
         return allActivities_;
     }
-    QStringList openActivityList() const {
-#ifdef KWIN_BUILD_ACTIVITIES
-        return activityController_.listActivities(KActivities::Info::Running);
-#else
-        return QStringList();
-#endif
-    }
-
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
@@ -664,12 +655,12 @@ private slots:
     void lostCMSelection();
     void resetCursorPosTime();
     void delayedCheckUnredirect();
-
     void updateCurrentActivity(const QString &new_activity);
     void activityRemoved(const QString &activity);
     void activityAdded(const QString &activity);
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
-
+    void handleActivityReply();
+    void showHideActivityMenu();
 protected:
     void timerEvent(QTimerEvent *te);
 
@@ -704,7 +695,9 @@ private:
     void discardPopup();
     void setupWindowShortcut(Client* c);
     void checkCursorPos();
-
+#ifdef KWIN_BUILD_ACTIVITIES
+    void updateActivityList(bool running, bool updateCurrent, QString slot = QString());
+#endif
     enum Direction {
         DirectionNorth,
         DirectionEast,

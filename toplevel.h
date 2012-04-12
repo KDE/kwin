@@ -210,7 +210,7 @@ public:
     bool isOnAllActivities() const;
 
     QByteArray windowRole() const;
-    QByteArray sessionId();
+    QByteArray sessionId() const;
     QByteArray resourceName() const;
     QByteArray resourceClass() const;
     QByteArray wmCommand();

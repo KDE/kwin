@@ -271,14 +271,9 @@ void Workspace::clientPopupAboutToShow()
     } else {
         initDesktopPopup();
     }
-    QStringList act = openActivityList();
-    kDebug() << "activities:" << act.size();
-    if (act.size() < 2) {
-        delete activity_popup;
-        activity_popup = 0;
-    } else {
-        initActivityPopup();
-    }
+#ifdef KWIN_BUILD_ACTIVITIES
+    updateActivityList(true, false, "showHideActivityMenu");
+#endif
 
     mResizeOpAction->setEnabled(active_popup_client->isResizable());
     mMoveOpAction->setEnabled(active_popup_client->isMovableAcrossScreens());
@@ -313,6 +308,19 @@ void Workspace::clientPopupAboutToShow()
         delete add_tabs_popup;
         add_tabs_popup = 0;
     }
+}
+
+void Workspace::showHideActivityMenu()
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    kDebug() << "activities:" << openActivities_.size();
+    if (openActivities_.size() < 2) {
+        delete activity_popup;
+        activity_popup = 0;
+    } else {
+        initActivityPopup();
+    }
+#endif
 }
 
 void Workspace::selectPopupClientTab(QAction* action)
@@ -510,7 +518,7 @@ void Workspace::activityPopupAboutToShow()
         action->setChecked(true);
     activity_popup->addSeparator();
 
-    foreach (const QString & id, openActivityList()) {
+    foreach (const QString &id, openActivities_) {
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");

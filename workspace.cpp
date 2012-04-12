@@ -379,8 +379,7 @@ void Workspace::init()
     if (!setCurrentDesktop(initial_desktop))
         setCurrentDesktop(1);
 #ifdef KWIN_BUILD_ACTIVITIES
-    allActivities_ = activityController_.listActivities();
-    updateCurrentActivity(activityController_.currentActivity());
+    updateActivityList(false, true);
 #endif
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
@@ -1401,12 +1400,81 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     return true;
 }
 
+#ifdef KWIN_BUILD_ACTIVITIES
+
+//BEGIN threaded activity list fetching
+typedef QPair<QStringList*, QStringList> AssignedList;
+typedef QPair<QString, QStringList> CurrentAndList;
+
+static AssignedList
+fetchActivityList(KActivities::Controller *controller, QStringList *target, bool running) // could be member function, but actually it's much simpler this way
+{
+    return AssignedList(target, running ? controller->listActivities(KActivities::Info::Running) :
+                                          controller->listActivities());
+}
+
+static CurrentAndList
+fetchActivityListAndCurrent(KActivities::Controller *controller)
+{
+    QStringList l   = controller->listActivities();
+    QString c       = controller->currentActivity();
+    return CurrentAndList(c, l);
+}
+
+void Workspace::updateActivityList(bool running, bool updateCurrent, QString slot)
+{
+    if (updateCurrent) {
+        QFutureWatcher<CurrentAndList>* watcher = new QFutureWatcher<CurrentAndList>;
+        connect( watcher, SIGNAL(finished()), SLOT(handleActivityReply()) );
+        if (!slot.isEmpty())
+            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
+        watcher->setFuture(QtConcurrent::run(fetchActivityListAndCurrent, &activityController_ ));
+    } else {
+        QFutureWatcher<AssignedList>* watcher = new QFutureWatcher<AssignedList>;
+        connect(watcher, SIGNAL(finished()), SLOT(handleActivityReply()));
+        if (!slot.isEmpty())
+            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
+        QStringList *target = running ? &openActivities_ : &allActivities_;
+        watcher->setFuture(QtConcurrent::run(fetchActivityList, &activityController_, target, running));
+    }
+}
+
+void Workspace::handleActivityReply()
+{
+    QObject *watcherObject = 0;
+    if (QFutureWatcher<AssignedList>* watcher = dynamic_cast< QFutureWatcher<AssignedList>* >(sender())) {
+        *(watcher->result().first) = watcher->result().second; // cool trick, ehh? :-)
+        watcherObject = watcher;
+    }
+
+    if (!watcherObject) {
+        if (QFutureWatcher<CurrentAndList>* watcher = dynamic_cast< QFutureWatcher<CurrentAndList>* >(sender())) {
+            allActivities_ = watcher->result().second;
+            updateCurrentActivity(watcher->result().first);
+            watcherObject = watcher;
+        }
+    }
+
+    if (watcherObject) {
+        QString slot = watcherObject->property("activityControllerCallback").toString();
+        watcherObject->deleteLater(); // has done it's job
+        if (!slot.isEmpty())
+            QMetaObject::invokeMethod(this, slot.toAscii().data(), Qt::DirectConnection);
+    }
+}
+//END threaded activity list fetching
+
+#else // make gcc happy - stupd moc cannot handle preproc defs so we MUST define
+void Workspace::handleActivityReply() {}
+#endif // KWIN_BUILD_ACTIVITIES
+
 /**
  * Updates the current activity when it changes
  * do *not* call this directly; it does not set the activity.
  *
  * Shows/Hides windows according to the stacking order
  */
+
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
 
