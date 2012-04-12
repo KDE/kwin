@@ -191,7 +191,6 @@ Options::Options(QObject *parent)
     , show_geometry_tip(Options::defaultShowGeometryTip())
     , animationSpeed(Options::defaultAnimationSpeed())
 {
-    updateSettings();
 }
 
 Options::~Options()
@@ -781,7 +780,33 @@ void Options::setElectricBorders(int borders)
     emit electricBordersChanged();
 }
 
+void Options::reparseConfiguration()
+{
+    KGlobal::config()->reparseConfiguration();
+}
+
 unsigned long Options::updateSettings()
+{
+    unsigned long changed = loadConfig();
+    // Read button tooltip animation effect from kdeglobals
+    // Since we want to allow users to enable window decoration tooltips
+    // and not kstyle tooltips and vise-versa, we don't read the
+    // "EffectNoTooltip" setting from kdeglobals.
+
+
+//    QToolTip::setGloballyEnabled( d->show_tooltips );
+// KDE4 this probably needs to be done manually in clients
+
+    // Driver-specific config detection
+    setCompositingInitialized(false);
+    reloadCompositingSettings();
+
+    emit configChanged();
+
+    return changed;
+}
+
+unsigned long Options::loadConfig()
 {
     KSharedConfig::Ptr _config = KGlobal::config();
     unsigned long changed = 0;
@@ -895,25 +920,10 @@ unsigned long Options::updateSettings()
     setMaxFpsInterval(qRound(1000.0 / config.readEntry("MaxFPS", Options::defaultMaxFps())));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
 
-    // Read button tooltip animation effect from kdeglobals
-    // Since we want to allow users to enable window decoration tooltips
-    // and not kstyle tooltips and vise-versa, we don't read the
-    // "EffectNoTooltip" setting from kdeglobals.
-
-
-//    QToolTip::setGloballyEnabled( d->show_tooltips );
-// KDE4 this probably needs to be done manually in clients
-
-    // Driver-specific config detection
-    setCompositingInitialized(false);
-    reloadCompositingSettings();
-
-    emit configChanged();
-
     return changed;
 }
 
-void Options::reloadCompositingSettings(bool force)
+bool Options::loadCompositingConfig (bool force)
 {
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup config(_config, "Compositing");
@@ -954,15 +964,22 @@ void Options::reloadCompositingSettings(bool force)
 
     if (m_compositingMode == NoCompositing) {
         setUseCompositing(false);
-        return; // do not even detect compositing preferences if explicitly disabled
+        return false; // do not even detect compositing preferences if explicitly disabled
     }
 
     // it's either enforced by env or by initial resume from "suspend" or we check the settings
     setUseCompositing(useCompositing || force || config.readEntry("Enabled", Options::defaultUseCompositing()));
 
     if (!m_useCompositing)
-        return; // not enforced or necessary and not "enabled" by setting
+        return false; // not enforced or necessary and not "enabled" by settings
+    return true;
+}
 
+void Options::reloadCompositingSettings(bool force)
+{
+    if (!loadCompositingConfig(force)) {
+        return;
+    }
     // from now on we've an initial setup and don't have to reload settings on compositing activation
     // see Workspace::setupCompositing(), composite.cpp
     setCompositingInitialized(true);
@@ -971,7 +988,9 @@ void Options::reloadCompositingSettings(bool force)
     CompositingPrefs prefs;
     prefs.detect();
 
-    setUseCompositing(config.readEntry("Enabled" , prefs.recommendCompositing()));
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config(_config, "Compositing");
+
     setGlDirect(prefs.enableDirectRendering());
     setGlVSync(config.readEntry("GLVSync", prefs.enableVSync()));
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));

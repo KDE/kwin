@@ -302,10 +302,9 @@ Application::Application()
     // Reset crashes count if we stay up for more that 15 seconds
     QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 
-    // If KWin was already running it saved its configuration after loosing the selection -> Reread
-    config->reparseConfiguration();
-
     initting = true; // Startup...
+    // first load options - done internally by a different thread
+    options = new Options;
 
     // Install X11 error handler
     XSetErrorHandler(x11ErrorHandler);
@@ -321,7 +320,6 @@ Application::Application()
     // This tries to detect compositing options and can use GLX. GLX problems
     // (X errors) shouldn't cause kwin to abort, so this is out of the
     // critical startup section where x errors cause kwin to abort.
-    options = new Options;
 
     // create workspace.
     (void) new Workspace(isSessionRestored());

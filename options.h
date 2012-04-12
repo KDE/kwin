@@ -871,6 +871,17 @@ public:
     static int defaultAnimationSpeed() {
         return 3;
     }
+
+    /**
+     * Performs loading all settings except compositing related.
+     **/
+    unsigned long loadConfig();
+    /**
+     * Performs loading of compositing settings which do not depend on OpenGL.
+     **/
+    bool loadCompositingConfig(bool force);
+    void reparseConfiguration();
+
     //----------------------
 Q_SIGNALS:
     void configChanged();

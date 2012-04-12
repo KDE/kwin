@@ -157,6 +157,9 @@ Workspace::Workspace(bool restore)
     , m_finishingCompositing(false)
     , m_scripting(NULL)
 {
+    // If KWin was already running it saved its configuration after loosing the selection -> Reread
+    QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
+
     (void) new KWinAdaptor(this);
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -171,6 +174,10 @@ Workspace::Workspace(bool restore)
     desktopGrid_[1] = 0;
 
     _self = this;
+    // PluginMgr needs access to the config file, so we need to wait for it for finishing
+    reparseConfigFuture.waitForFinished();
+    options->loadConfig();
+    options->loadCompositingConfig(false);
     mgr = new PluginMgr;
     QX11Info info;
     default_colormap = DefaultColormap(display(), info.screen());
