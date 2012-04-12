@@ -7427,8 +7427,24 @@ Action=Popup
 
 [Event/fullscreen]
 Name=Window Fullscreen Set
+Name[nl]=Venster in modus volledig scherm 
+Name[pt]=Ecrã Completo da Janela Activo
+Name[uk]=Повноекранний режим
+Name[x-test]=xxWindow Fullscreen Setxx
 Comment=A window has been set to fullscreen
+Comment[nl]=Een venster is ingesteld op volledig scherm
+Comment[pt]=Uma janela mudou para ocupar todo o ecrã
+Comment[uk]=Вікно переведено у повноекранний режим
+Comment[x-test]=xxA window has been set to fullscreenxx
 
 [Event/unfullscreen]
 Name=Window Fullscreen Restored
+Name[nl]=Venster terug uit modus volledig scherm
+Name[pt]=Ecrã Completo da Janela Reposto
+Name[uk]=Звичайний режим
+Name[x-test]=xxWindow Fullscreen Restoredxx
 Comment=A window has been restored from fullscreen
+Comment[nl]=Een venster is teruggebracht uit de instelling volledig scherm
+Comment[pt]=Uma janela foi reposta do estado de ecrã completo
+Comment[uk]=Вікно переведено у звичайний режим
+Comment[x-test]=xxA window has been restored from fullscreenxx
