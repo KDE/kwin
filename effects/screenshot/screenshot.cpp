@@ -176,6 +176,16 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
     }
 }
 
+void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
+{
+    m_type = (ScreenShotType) mask;
+    EffectWindow* w = effects->findWindow(winid);
+    if(w && !w->isMinimized() && !w->isDeleted()) {
+        m_scheduledScreenshot = w;
+        m_scheduledScreenshot->addRepaintFull();
+    }
+}
+
 QString ScreenShotEffect::screenshotFullscreen()
 {
     return blitScreenshot(QRect(0, 0, displayWidth(), displayHeight()));

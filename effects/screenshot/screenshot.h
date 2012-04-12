@@ -45,6 +45,7 @@ public:
     static bool supported();
     static void convertFromGLImage(QImage &img, int w, int h);
 public Q_SLOTS:
+    Q_SCRIPTABLE void screenshotForWindow(qulonglong winid, int mask = 0);
     Q_SCRIPTABLE void screenshotWindowUnderCursor(int mask = 0);
     /**
      * Saves a screenshot of all screen into a file and returns the path to the file.
