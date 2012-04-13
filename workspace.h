@@ -667,6 +667,11 @@ protected:
 
 Q_SIGNALS:
     Q_SCRIPTABLE void compositingToggled(bool active);
+    /**
+     * Emitted after the Workspace has setup the complete initialization process.
+     * This can be used to connect to for performing post-workspace initialization.
+     **/
+    void workspaceInitialized();
 
     //Signals required for the scripting interface
 signals:

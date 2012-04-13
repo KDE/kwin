@@ -252,6 +252,7 @@ KWin::Scripting::Scripting(QObject *parent)
     QDBusConnection::sessionBus().registerObject("/Scripting", this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
     QDBusConnection::sessionBus().registerService("org.kde.kwin.Scripting");
     connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
+    connect(Workspace::self(), SIGNAL(workspaceInitialized()), SLOT(start()));
 }
 
 void KWin::Scripting::start()
