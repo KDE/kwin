@@ -174,6 +174,10 @@ Workspace::Workspace(bool restore)
     desktopGrid_[1] = 0;
 
     _self = this;
+
+    // first initialize the extensions
+    Extensions::init();
+
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
     options->loadConfig();
@@ -219,7 +223,6 @@ Workspace::Workspace(bool restore)
                  ExposureMask
                 );
 
-    Extensions::init();
     compositingSuspended = !options->isUseCompositing();
 #ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
