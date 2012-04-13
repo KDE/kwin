@@ -892,7 +892,10 @@ void Client::finishCompositing()
 {
     Toplevel::finishCompositing();
     updateVisibility();
-    updateDecoration(true, true);
+    if (!deleting) {
+        // only recreate the decoration if we are not shutting down completely
+        updateDecoration(true, true);
+    }
     // for safety in case KWin is just resizing the window
     s_haveResizeEffect = false;
 }
