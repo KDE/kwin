@@ -645,6 +645,10 @@ private slots:
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
     void setupCompositing();
+    /**
+     * Called from setupCompositing() when the CompositingPrefs are ready.
+     **/
+    void slotCompositingOptionsInitialized();
     void finishCompositing();
     void fallbackToXRenderCompositing();
     void performCompositing();
