@@ -129,6 +129,10 @@ ZoomEffect::~ZoomEffect()
 {
     // switch off and free resources
     showCursor();
+    // Save the zoom value.
+    KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
+    conf.writeEntry("InitialZoom", target_zoom);
+    conf.sync();
 }
 
 void ZoomEffect::showCursor()
@@ -223,6 +227,10 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     focusDelay = qMax(0, conf.readEntry("FocusDelay", focusDelay));
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
     moveFactor = qMax(0.1, conf.readEntry("MoveFactor", moveFactor));
+    // Load the saved zoom value.
+    target_zoom = conf.readEntry("InitialZoom", target_zoom);
+    if (target_zoom > 1.0)
+        zoomIn(target_zoom);
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -368,9 +376,12 @@ void ZoomEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void ZoomEffect::zoomIn()
+void ZoomEffect::zoomIn(double to)
 {
-    target_zoom *= zoomFactor;
+    if (to < 0.0)
+        target_zoom *= zoomFactor;
+    else
+        target_zoom = to;
     if (!polling) {
         polling = true;
         effects->startMousePolling();

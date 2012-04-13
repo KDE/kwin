@@ -66,6 +66,10 @@ MagnifierEffect::~MagnifierEffect()
     delete m_fbo;
     delete m_texture;
     delete m_pixmap;
+    // Save the zoom value.
+    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
+    conf.writeEntry("InitialZoom", target_zoom);
+    conf.sync();
 }
 
 bool MagnifierEffect::supported()
@@ -81,6 +85,10 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     width = conf.readEntry("Width", 200);
     height = conf.readEntry("Height", 200);
     magnifier_size = QSize(width, height);
+    // Load the saved zoom value.
+    target_zoom = conf.readEntry("InitialZoom", target_zoom);
+    if (target_zoom != zoom)
+        toggle();
 }
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -256,8 +264,10 @@ void MagnifierEffect::zoomOut()
 
 void MagnifierEffect::toggle()
 {
-    if (target_zoom == 1.0) {
-        target_zoom = 2;
+    if (zoom == 1.0) {
+        if (target_zoom == 1.0) {
+            target_zoom = 2;
+        }
         if (!polling) {
             polling = true;
             effects->startMousePolling();

@@ -45,7 +45,8 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 private slots:
-    void zoomIn();
+    inline void zoomIn() { zoomIn(-1.0); };
+    void zoomIn(double to);
     void zoomOut();
     void actualSize();
     void moveZoomLeft();
