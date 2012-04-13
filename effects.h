@@ -216,6 +216,9 @@ protected:
     int next_window_quad_type;
     int mouse_poll_ref_count;
 
+private Q_SLOTS:
+    void slotEffectsQueried();
+
 private:
     QList< Effect* > m_activeEffects;
     QList< Effect* >::iterator m_currentDrawWindowIterator;

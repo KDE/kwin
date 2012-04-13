@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 
 #include <QFile>
+#include <QtCore/QFutureWatcher>
+#include <QtCore/QtConcurrentRun>
 
 #include "kdebug.h"
 #include "klibrary.h"
@@ -165,12 +167,25 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
 
 void EffectsHandlerImpl::reconfigure()
 {
-    KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup conf(_config, "Plugins");
+    // perform querying for the services in a thread
+    QFutureWatcher<KService::List> *watcher = new QFutureWatcher<KService::List>(this);
+    connect(watcher, SIGNAL(finished()), this, SLOT(slotEffectsQueried()));
+    watcher->setFuture(QtConcurrent::run(KServiceTypeTrader::self(), &KServiceTypeTrader::query, QString("KWin/Effect"), QString()));
+}
 
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+void EffectsHandlerImpl::slotEffectsQueried()
+{
+    QFutureWatcher<KService::List> *watcher = dynamic_cast< QFutureWatcher<KService::List>* >(sender());
+    if (!watcher) {
+        // slot invoked not from a FutureWatcher
+        return;
+    }
+
+    KService::List offers = watcher->result();
     QStringList effectsToBeLoaded;
     QStringList checkDefault;
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup conf(_config, "Plugins");
 
     // First unload necessary effects
     foreach (const KService::Ptr & service, offers) {
@@ -202,6 +217,7 @@ void EffectsHandlerImpl::reconfigure()
         if (!newLoaded.contains(ep.first))    // don't reconfigure newly loaded effects
             ep.second->reconfigure(Effect::ReconfigureAll);
     }
+    watcher->deleteLater();
 }
 
 // the idea is that effects call this function again which calls the next one
