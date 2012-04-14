@@ -14,7 +14,7 @@ target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES} kworkspace ${KDE4_PL
 install( TARGETS kcm_kwinscreenedges  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 # CompositingPrefs uses OpenGL
-if( OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
+if( OPENGL_FOUND )
   target_link_libraries( kcm_kwinscreenedges kwinglutils ${OPENGL_gl_LIBRARY} )
   set_target_properties(kcm_kwinscreenedges PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL)
 # -ldl used by OpenGL code
@@ -22,11 +22,11 @@ if( OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
   if( DL_LIBRARY )
     target_link_libraries( kcm_kwinscreenedges ${DL_LIBRARY} )
   endif( DL_LIBRARY )
-endif( OPENGL_FOUND AND NOT KWIN_HAVE_OPENGLES_COMPOSITING )
-if(KWIN_HAVE_OPENGLES_COMPOSITING)
+endif( OPENGL_FOUND )
+if(OPENGLES_FOUND)
   target_link_libraries(kcm_kwinscreenedges kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kcm_kwinscreenedges PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGL -DKWIN_HAVE_OPENGLES")
-endif(KWIN_HAVE_OPENGLES_COMPOSITING)
+endif(OPENGLES_FOUND)
 if( X11_Xrender_FOUND )
   target_link_libraries( kcm_kwinscreenedges ${X11_Xrender_LIB} )
 endif( X11_Xrender_FOUND )
