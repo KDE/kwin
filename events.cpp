@@ -1588,6 +1588,7 @@ bool Unmanaged::windowEvent(XEvent* e)
     }
     switch(e->type) {
     case UnmapNotify:
+        workspace()->updateFocusMousePosition(QCursor::pos());
         unmapNotifyEvent(&e->xunmap);
         break;
     case MapNotify:
