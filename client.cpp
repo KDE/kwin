@@ -1099,21 +1099,20 @@ void Client::setShade(ShadeMode mode)
         XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
         plainResize(s);
         shade_geometry_change = false;
-        if (isActive()) {
-            if (was_shade_mode == ShadeHover) {
-                if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
+        if (was_shade_mode == ShadeHover) {
+            if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
                     workspace()->restack(this, shade_below);
+            if (isActive())
                 workspace()->activateNextClient(this);
-            }
-            else
-                workspace()->focusToNull();
+        } else if (isActive()) {
+            workspace()->focusToNull();
         }
     } else {
         shade_geometry_change = true;
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);
-        if (shade_mode == ShadeHover || shade_mode == ShadeActivated)
+        if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(input))
             setActive(true);
         if (shade_mode == ShadeHover) {
             ClientList order = workspace()->stackingOrder();
