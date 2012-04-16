@@ -2684,10 +2684,10 @@ void Client::checkUnrestrictedMoveResize()
             unrestrictedMoveResize = true;
     }
     if (isMove()) {
-        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)   // titlebar mustn't go out
+        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)
             unrestrictedMoveResize = true;
         // no need to check top_marge, titlebar_marge already handles it
-        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge)
+        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge + 1) // titlebar mustn't go out
             unrestrictedMoveResize = true;
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
             unrestrictedMoveResize = true;
