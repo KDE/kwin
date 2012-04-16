@@ -675,7 +675,6 @@ private slots:
     void performMoveResize();
     void removeSyncSupport();
     void pingTimeout();
-    void processKillerExited();
     void demandAttentionKNotify();
     void repaintDecorationPending();
 
@@ -896,7 +895,7 @@ private:
     TabGroup* tab_group;
     Layer in_layer;
     QTimer* ping_timer;
-    QProcess* process_killer;
+    qint64 m_killHelperPID;
     Time ping_timestamp;
     Time user_time;
     unsigned long allowed_actions;

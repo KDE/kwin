@@ -106,7 +106,7 @@ Client::Client(Workspace* ws)
     , tab_group(NULL)
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
-    , process_killer(NULL)
+    , m_killHelperPID(0)
     , user_time(CurrentTime)   // Not known yet
     , allowed_actions(0)
     , block_geometry_updates(0)
@@ -1457,13 +1457,9 @@ void Client::gotPing(Time timestamp)
         return;
     delete ping_timer;
     ping_timer = NULL;
-    if (process_killer != NULL) {
-        process_killer->kill();
-        // Recycle when the process manager has noticed that the process exited
-        // a delete process_killer here sometimes causes a hang in waitForFinished
-        connect(process_killer, SIGNAL(finished(int,QProcess::ExitStatus)),
-                process_killer, SLOT(deleteLater()));
-        process_killer = NULL;
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
+        ::kill(m_killHelperPID, SIGTERM);
+        m_killHelperPID = 0;
     }
 }
 
@@ -1477,7 +1473,7 @@ void Client::pingTimeout()
 
 void Client::killProcess(bool ask, Time timestamp)
 {
-    if (process_killer != NULL)
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) // means the process is alive
         return;
     Q_ASSERT(!ask || timestamp != CurrentTime);
     QByteArray machine = wmClientMachine(true);
@@ -1493,23 +1489,14 @@ void Client::killProcess(bool ask, Time timestamp)
         } else
             ::kill(pid, SIGTERM);
     } else {
-        process_killer = new QProcess(this);
-        connect(process_killer, SIGNAL(error(QProcess::ProcessError)), SLOT(processKillerExited()));
-        connect(process_killer, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(processKillerExited()));
-        process_killer->start(KStandardDirs::findExe("kwin_killer_helper"),
-                              QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << machine
-                              << "--windowname" << caption()
-                              << "--applicationname" << resourceClass()
-                              << "--wid" << QString::number(window())
-                              << "--timestamp" << QString::number(timestamp));
+        QProcess::startDetached(KStandardDirs::findExe("kwin_killer_helper"),
+                                QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << machine
+                                << "--windowname" << caption()
+                                << "--applicationname" << resourceClass()
+                                << "--wid" << QString::number(window())
+                                << "--timestamp" << QString::number(timestamp),
+                                QString(), &m_killHelperPID);
     }
-}
-
-void Client::processKillerExited()
-{
-    kDebug(1212) << "Killer exited";
-    delete process_killer;
-    process_killer = NULL;
 }
 
 void Client::setSkipTaskbar(bool b, bool from_outside)
