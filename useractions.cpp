@@ -89,7 +89,7 @@ QMenu* Workspace::clientPopup()
         KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
         if (kaction != 0)
             mMoveOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMoveOpAction->setData(Options::MoveOp);
+        mMoveOpAction->setData(Options::UnrestrictedMoveOp);
 
         mResizeOpAction = advanced_popup->addAction(i18n("Re&size"));
         kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
