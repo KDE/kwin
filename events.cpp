@@ -879,7 +879,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         }
 #undef MOUSE_DRIVEN_FOCUS
 
-        if (options->focusPolicy() == Options::ClickToFocus)
+        if (options->focusPolicy() == Options::ClickToFocus || workspace()->windowMenuShown())
             return;
 
         if (options->isAutoRaise() && !isDesktop() &&

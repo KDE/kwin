@@ -415,6 +415,7 @@ public:
      */
     void showWindowMenu(int x, int y, Client* cl);
     void showWindowMenu(QPoint pos, Client* cl);
+    bool windowMenuShown();
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
@@ -1037,6 +1038,11 @@ inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
 inline void Workspace::showWindowMenu(int x, int y, Client* cl)
 {
     showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
+}
+
+inline bool Workspace::windowMenuShown()
+{
+    return popup && ((QWidget*)popup)->isVisible();
 }
 
 inline void Workspace::setWasUserInteraction()
