@@ -1779,6 +1779,8 @@ void Client::takeFocus(allowed_t)
 #endif
     if (rules()->checkAcceptFocus(input))
         XSetInputFocus(display(), window(), RevertToPointerRoot, xTime());
+    else
+        demandAttention(false); // window cannot take input, at least withdraw urgency
     if (Ptakefocus)
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     workspace()->setShouldGetFocus(this);
