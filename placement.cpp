@@ -548,7 +548,7 @@ Placement::Policy Placement::policyFromString(const QString& policy, bool no_spe
         return Centered;
     else if (policy == "ZeroCornered")
         return ZeroCornered;
-    else if (policy == "UnderMouse" && !no_special)
+    else if (policy == "UnderMouse")
         return UnderMouse;
     else if (policy == "OnMainWindow" && !no_special)
         return OnMainWindow;

@@ -594,16 +594,17 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, const KComp
 
     placementCombo = new KComboBox(this);
     placementCombo->setEditable(false);
-    placementCombo->addItem(i18n("Smart"), SMART_PLACEMENT);
-    placementCombo->addItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
-    placementCombo->addItem(i18n("Cascade"), CASCADE_PLACEMENT);
-    placementCombo->addItem(i18n("Random"), RANDOM_PLACEMENT);
-    placementCombo->addItem(i18n("Centered"), CENTERED_PLACEMENT);
-    placementCombo->addItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
+    placementCombo->addItem(i18n("Smart"), "Smart");
+    placementCombo->addItem(i18n("Maximizing"), "Maximizing");
+    placementCombo->addItem(i18n("Cascade"), "Cascade");
+    placementCombo->addItem(i18n("Random"), "Random");
+    placementCombo->addItem(i18n("Centered"), "Centered");
+    placementCombo->addItem(i18n("Zero-Cornered"), "ZeroCornered");
+    placementCombo->addItem(i18n("Under Mouse"), "UnderMouse");
     // CT: disabling is needed as long as functionality misses in kwin
     //placementCombo->addItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
     //placementCombo->addItem(i18n("Manual"), MANUAL_PLACEMENT);
-    placementCombo->setCurrentIndex(SMART_PLACEMENT);
+    placementCombo->setCurrentIndex(0); // default to "Smart"
 
     // FIXME, when more policies have been added to KWin
     wtstr = i18n("The placement policy determines where a new window"
@@ -617,6 +618,7 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, const KComp
                  " <li><em>Random</em> will use a random position</li>"
                  " <li><em>Centered</em> will place the window centered</li>"
                  " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
+                 " <li><em>Under Mouse</em> will place the window under the pointer</li>"
                  "</ul>") ;
 
     placementCombo->setWhatsThis(wtstr);
@@ -781,21 +783,10 @@ void KAdvancedConfig::load(void)
 //     interactiveTrigger->setValue(0);
 //     iTLabel->setEnabled(false);
 //     interactiveTrigger->hide();
-    if (key == "Random")
-        setPlacement(RANDOM_PLACEMENT);
-    else if (key == "Cascade")
-        setPlacement(CASCADE_PLACEMENT); //CT 31jan98
-    //CT 31mar98 manual placement
-    else if (key == "manual")
-        setPlacement(MANUAL_PLACEMENT);
-    else if (key == "Centered")
-        setPlacement(CENTERED_PLACEMENT);
-    else if (key == "ZeroCornered")
-        setPlacement(ZEROCORNERED_PLACEMENT);
-    else if (key == "Maximizing")
-        setPlacement(MAXIMIZING_PLACEMENT);
-    else
-        setPlacement(SMART_PLACEMENT);
+    int idx = placementCombo->findData(key);
+    if (idx < 0)
+        idx = placementCombo->findData("Smart");
+    placementCombo->setCurrentIndex(idx);
 //  }
 
     setHideUtilityWindowsForInactive(cg.readEntry(KWIN_HIDE_UTILITY, true));
@@ -822,17 +813,7 @@ void KAdvancedConfig::save(void)
     cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
 
     // placement policy --- CT 31jan98 ---
-    v = getPlacement();
-    if (v == RANDOM_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Random");
-    else if (v == CASCADE_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Cascade");
-    else if (v == CENTERED_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Centered");
-    else if (v == ZEROCORNERED_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "ZeroCornered");
-    else if (v == MAXIMIZING_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Maximizing");
+    cg.writeEntry(KWIN_PLACEMENT, placementCombo->itemData(placementCombo->currentIndex()).toString());
 //CT 13mar98 manual and interactive placement
 //   else if (v == MANUAL_PLACEMENT)
 //     cg.writeEntry(KWIN_PLACEMENT, "Manual");
@@ -840,8 +821,6 @@ void KAdvancedConfig::save(void)
 //       QString tmpstr = QString("Interactive,%1").arg(interactiveTrigger->value());
 //       cg.writeEntry(KWIN_PLACEMENT, tmpstr);
 //   }
-    else
-        cg.writeEntry(KWIN_PLACEMENT, "Smart");
 
     cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
     cg.writeEntry(KWIN_INACTIVE_SKIP_TASKBAR, inactiveTabsSkipTaskbar->isChecked());
@@ -867,7 +846,7 @@ void KAdvancedConfig::defaults()
 {
     setShadeHover(false);
     setShadeHoverInterval(250);
-    setPlacement(SMART_PLACEMENT);
+    placementCombo->setCurrentIndex(0); // default to Smart
     setHideUtilityWindowsForInactive(true);
     setTilingOn(false);
     setTilingLayout(0);
@@ -876,17 +855,6 @@ void KAdvancedConfig::defaults()
     setAutogroupSimilarWindows(false);
     setAutogroupInForeground(true);
     emit KCModule::changed(true);
-}
-
-// placement policy --- CT 31jan98 ---
-int KAdvancedConfig::getPlacement()
-{
-    return placementCombo->currentIndex();
-}
-
-void KAdvancedConfig::setPlacement(int plac)
-{
-    placementCombo->setCurrentIndex(plac);
 }
 
 
