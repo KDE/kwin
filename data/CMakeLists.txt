@@ -1,0 +1,5 @@
+if(KWIN_PLASMA_ACTIVE)
+    add_subdirectory(active)
+else(KWIN_PLASMA_ACTIVE)
+    add_subdirectory(desktop)
+endif(KWIN_PLASMA_ACTIVE)
