@@ -1,7 +1,7 @@
 ########### next target ###############
-set( kwin_update_tabbox_qml_settings_SRCS update_tabbox_qml_settings_active.cpp )
+set( kwin_update_tabbox_qml_settings_active_SRCS update_tabbox_qml_settings_active.cpp )
 
-kde4_add_executable( kwin_update_tabbox_qml_settings ${kwin_update_tabbox_qml_settings_SRCS} )
+kde4_add_executable( kwin_update_tabbox_qml_settings_active ${kwin_update_tabbox_qml_settings_active_SRCS} )
 
 target_link_libraries( kwin_update_tabbox_qml_settings_active ${KDE4_KDECORE_LIBS} )
 
