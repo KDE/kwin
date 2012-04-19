@@ -9,6 +9,7 @@ Name[pt_BR]=OSD de mudança de área de trabalho
 Name[sv]=Skärmvisning av skrivbordsändring
 Name[uk]=Панель зміни стільниць
 Name[x-test]=xxDesktop Change OSDxx
+Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
 Comment[ia]=Un monstrator sur le schermo indicante le modification de scriptorio
 Comment[nb]=En tekst på skjermen som viser skrivebordsbytte
@@ -19,6 +20,7 @@ Comment[pt_BR]=Uma apresentação que indica a mudança de área de trabalho
 Comment[sv]=En skärmvisning som anger skrivbordsändringen
 Comment[uk]=Екранна панель спостереження за зміною стільниць
 Comment[x-test]=xxAn on screen display indicating the desktop changexx
+Comment[zh_TW]=以螢幕顯示（OSD）指示桌面的變更
 Icon=preferences-system-windows-script-test
 
 X-Plasma-API=declarativescript
