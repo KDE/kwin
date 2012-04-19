@@ -148,12 +148,6 @@ void setter( rettype val );
 
     /**
      * List of Clients currently managed by KWin.
-     * Use this method in QML scripts.
-     **/
-    Q_INVOKABLE QList< QObject* > getClientList() const;
-    /**
-     * List of Clients currently managed by KWin.
-     * Use this method in JavaScript scripts.
      **/
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
     /**
