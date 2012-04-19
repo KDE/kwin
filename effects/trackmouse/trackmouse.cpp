@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "trackmouse.h"
 
 #include <QTime>
+#include <QMatrix4x4>
 
 #include <kwinconfig.h>
 #include <kwinglutils.h>
@@ -35,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocale>
 
 #include <math.h>
-
+#include <X11/extensions/Xrender.h>
 
 #include <kdebug.h>
 
@@ -44,65 +45,73 @@ namespace KWin
 
 KWIN_EFFECT(trackmouse, TrackMouseEffect)
 
-const int STARS = 5;
-const int DIST = 50;
-
 TrackMouseEffect::TrackMouseEffect()
-    : active(false)
-    , angle(0)
-    , texture(NULL)
+    : m_active(false)
+    , m_angle(0)
 {
-    mousePolling = false;
-    actionCollection = new KActionCollection(this);
-    action = static_cast< KAction* >(actionCollection->addAction("TrackMouse"));
-    action->setText(i18n("Track mouse"));
-    action->setGlobalShortcut(KShortcut());
+    m_texture[0] = m_texture[1] = 0;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    m_pixmap[0] = m_pixmap[1] = 0;
+    if ( effects->compositingType() == XRenderCompositing)
+        m_angleBase = 1.57079632679489661923; // Pi/2
+#endif
+    if ( effects->compositingType() == OpenGLCompositing)
+        m_angleBase = 90.0;
+    m_mousePolling = false;
+    KActionCollection *actionCollection = new KActionCollection(this);
+    m_action = static_cast< KAction* >(actionCollection->addAction("TrackMouse"));
+    m_action->setText(i18n("Track mouse"));
+    m_action->setGlobalShortcut(KShortcut());
 
-    connect(action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(m_action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+                     SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 }
 
 TrackMouseEffect::~TrackMouseEffect()
 {
-    if (mousePolling)
+    if (m_mousePolling)
         effects->stopMousePolling();
-    delete texture;
+    for (int i = 0; i < 2; ++i) {
+        delete m_texture[i]; m_texture[i] = 0;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+        delete m_pixmap[i]; m_pixmap[i] = 0;
+#endif
+    }
 }
 
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
+    m_modifiers = 0;
     KConfigGroup conf = effects->effectConfig("TrackMouse");
-    bool shift = conf.readEntry("Shift", false);
-    bool alt = conf.readEntry("Alt", false);
-    bool control = conf.readEntry("Control", true);
-    bool meta = conf.readEntry("Meta", true);
-    modifier = 0;
-    if (meta)
-        modifier |= Qt::MetaModifier;
-    if (control)
-        modifier |= Qt::ControlModifier;
-    if (alt)
-        modifier |= Qt::AltModifier;
-    if (shift)
-        modifier |= Qt::ShiftModifier;
-    if (modifier != 0 && action != NULL) {
-        if (!mousePolling)
+    if (conf.readEntry("Shift", false))
+        m_modifiers |= Qt::ShiftModifier;
+    if (conf.readEntry("Alt", false))
+        m_modifiers |= Qt::AltModifier;
+    if (conf.readEntry("Control", true))
+        m_modifiers |= Qt::ControlModifier;
+    if (conf.readEntry("Meta", true))
+        m_modifiers |= Qt::MetaModifier;
+
+    if (m_modifiers) {
+        if (!m_mousePolling)
             effects->startMousePolling();
-        mousePolling = true;
-    } else if (action != NULL) {
-        if (mousePolling)
+        m_mousePolling = true;
+    } else if (m_mousePolling) {
             effects->stopMousePolling();
-        mousePolling = false;
+        m_mousePolling = false;
     }
 }
 
 void TrackMouseEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (active) {
+    if (m_active) {
         QTime t = QTime::currentTime();
-        angle = ((t.second() % 4) * 90.0) + (t.msec() / 1000.0 * 90.0);
+        m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
+        m_lastRect[0].moveCenter(cursorPos());
+        m_lastRect[1].moveCenter(cursorPos());
+        data.paint |= m_lastRect[0].adjusted(-1,-1,1,1);
     }
     effects->prePaintScreen(data, time);
 }
@@ -110,100 +119,149 @@ void TrackMouseEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
-    if (!active)
+    if (!m_active)
         return;
-    if (texture) {
+
+    if ( effects->compositingType() == OpenGLCompositing && m_texture[0] && m_texture[1]) {
+        GLShader *shader(0);
+        QMatrix4x4 modelview;
         if (ShaderManager::instance()->isValid()) {
-            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+            ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
+            shader = ShaderManager::instance()->getBoundShader();
+            modelview = shader->getUniformMatrix4x4("modelview");
         }
-        texture->bind();
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        for (int i = 0;
-                i < STARS;
-                ++i) {
-            QRect r = starRect(i);
-            texture->render(region, r);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        QMatrix4x4 matrix(modelview);
+        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
+        for (int i = 0; i < 2; ++i) {
+            matrix.translate(p.x(), p.y(), 0.0);
+            matrix.rotate(i ? -2*m_angle : m_angle, 0, 0, 1.0);
+            matrix.translate(-p.x(), -p.y(), 0.0);
+            if (shader)
+                shader->setUniform(GLShader::ModelViewMatrix, matrix);
+            else
+                pushMatrix(matrix);
+            m_texture[i]->bind();
+            m_texture[i]->render(region, m_lastRect[i]);
+            m_texture[i]->unbind();
+            if (!shader)
+                popMatrix();
         }
-        texture->unbind();
         glDisable(GL_BLEND);
         if (ShaderManager::instance()->isValid()) {
+            shader->setUniform(GLShader::ModelViewMatrix, modelview);
             ShaderManager::instance()->popShader();
         }
     }
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if ( effects->compositingType() == XRenderCompositing && m_pixmap[0] && m_pixmap[1]) {
+        float sine = sin(m_angle);
+        const float cosine = cos(m_angle);
+        for (int i = 0; i < 2; ++i) {
+            if (i) sine = -sine;
+            const float dx = m_pixmap[i]->width()/2.0;
+            const float dy = m_pixmap[i]->height()/2.0;
+            XTransform xform = {{
+                { XDoubleToFixed( cosine ), XDoubleToFixed( -sine ), XDoubleToFixed( dx - cosine*dx + sine*dy ) },
+                { XDoubleToFixed( sine ), XDoubleToFixed( cosine ), XDoubleToFixed( dy - sine*dx - cosine*dy ) },
+                { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
+            }};
+            XRenderSetPictureTransform(display(), m_pixmap[i]->x11PictureHandle(), &xform );
+            XRenderSetPictureFilter( display(), m_pixmap[i]->x11PictureHandle(), FilterBilinear, 0, 0 );
+            XRenderComposite(display(), PictOpOver, m_pixmap[i]->x11PictureHandle(), 0,
+                             effects->xrenderBufferPicture(), 0, 0, 0, 0,
+                             m_lastRect[i].x(), m_lastRect[i].y(), m_lastRect[i].width(), m_lastRect[i].height());
+        }
+    }
+#endif
 }
 
 void TrackMouseEffect::postPaintScreen()
 {
-    if (active) {
-        for (int i = 0;
-                i < STARS;
-                ++i)
-            effects->addRepaint(starRect(i));
+    if (m_active) {
+        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
     }
     effects->postPaintScreen();
 }
 
+bool TrackMouseEffect::init()
+{
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if (!(m_texture[0] || m_pixmap[0])) {
+        loadTexture();
+        if (!(m_texture[0] || m_pixmap[0]))
+            return false;
+    }
+#else
+    if (!m_texture[0]) {
+        loadTexture();
+        if (!m_texture[0])
+            return false;
+    }
+#endif
+    m_lastRect[0].moveCenter(cursorPos());
+    m_lastRect[1].moveCenter(cursorPos());
+    m_active = true;
+    m_angle = 0;
+    return true;
+}
+
 void TrackMouseEffect::toggle()
 {
-    if (mousePolling)
+    if (m_mousePolling)
         return;
-    if (!active) {
-        if (texture == NULL)
-            loadTexture();
-        if (texture == NULL)
-            return;
-        active = true;
-        angle = 0;
-    } else
-        active = false;
-    for (int i = 0; i < STARS; ++i)
-        effects->addRepaint(starRect(i));
-}
 
-void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&, Qt::MouseButtons,
-                                    Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
-{
-    if (modifier != 0 && modifiers == modifier) {
-        if (!active) {
-            if (texture == NULL)
-                loadTexture();
-            if (texture == NULL)
-                return;
-            active = true;
-            angle = 0;
-        }
-        for (int i = 0; i < STARS; ++i)
-            effects->addRepaint(starRect(i));
-    } else if (active) {
-        for (int i = 0; i < STARS; ++i)
-            effects->addRepaint(starRect(i));
-        active = false;
+    if (m_active) {
+        m_active = false;
+    } else if (!init()) {
+        return;
     }
+    effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
 }
 
-QRect TrackMouseEffect::starRect(int num) const
+void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
+                                        Qt::MouseButtons, Qt::MouseButtons,
+                                        Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
-    int a = angle + 360 / STARS * num;
-    int x = cursorPos().x() + int(DIST * cos(a * (2 * M_PI / 360)));
-    int y = cursorPos().y() + int(DIST * sin(a * (2 * M_PI / 360)));
-    return QRect(QPoint(x - textureSize.width() / 2,
-                        y - textureSize.height() / 2), textureSize);
+    if (!m_mousePolling) // we didn't ask for it but maybe someone else did...
+        return;
+    if (m_modifiers && modifiers == m_modifiers) {
+        if (!m_active && !init()) {
+            return;
+        }
+        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
+    } else if (m_active) {
+        m_active = false;
+        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
+    }
 }
 
 void TrackMouseEffect::loadTexture()
 {
-    QString file = KGlobal::dirs()->findResource("appdata", "trackmouse.png");
-    if (file.isEmpty())
+    QString f[2] = {KGlobal::dirs()->findResource("appdata", "tm_outer.png"),
+                    KGlobal::dirs()->findResource("appdata", "tm_inner.png")};
+    if (f[0].isEmpty() || f[1].isEmpty())
         return;
-    QImage im(file);
-    texture = new GLTexture(im);
-    textureSize = im.size();
+
+    for (int i = 0; i < 2; ++i) {
+        if ( effects->compositingType() == OpenGLCompositing) {
+            QImage img(f[i]);
+            m_texture[i] = new GLTexture(img);
+            m_lastRect[i].setSize(img.size());
+        }
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+        if ( effects->compositingType() == XRenderCompositing) {
+            m_pixmap[i] = new QPixmap(f[i]);
+            m_lastRect[i].setSize(m_pixmap[i]->size());
+        }
+#endif
+    }
 }
 
 bool TrackMouseEffect::isActive() const
 {
-    return active;
+    return m_active;
 }
 
 } // namespace

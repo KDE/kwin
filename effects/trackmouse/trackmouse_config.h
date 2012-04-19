@@ -51,10 +51,9 @@ public slots:
     virtual void load();
     virtual void defaults();
 private slots:
-    virtual void enableEditor(bool);
+    void shortcutChanged(const QKeySequence &seq);
 private:
     TrackMouseEffectConfigForm* m_ui;
-    KAction *action;
     KActionCollection* m_actionCollection;
 };
 

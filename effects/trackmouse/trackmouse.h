@@ -48,15 +48,18 @@ private slots:
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 private:
-    QRect starRect(int num) const;
+    bool init();
     void loadTexture();
-    bool active, mousePolling;
-    int angle;
-    GLTexture* texture;
-    QSize textureSize;
-    KActionCollection* actionCollection;
-    KAction* action;
-    Qt::KeyboardModifiers modifier;
+    QRect m_lastRect[2];
+    bool m_active, m_mousePolling;
+    float m_angle;
+    float m_angleBase;
+    GLTexture* m_texture[2];
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    QPixmap *m_pixmap[2];
+#endif
+    KAction* m_action;
+    Qt::KeyboardModifiers m_modifiers;
 };
 
 } // namespace

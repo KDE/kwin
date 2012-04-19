@@ -13,7 +13,8 @@ install( FILES
 
 # Data files
 install( FILES
-    trackmouse/data/trackmouse.png
+    trackmouse/data/tm_inner.png
+    trackmouse/data/tm_outer.png
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
 
 #######################################
