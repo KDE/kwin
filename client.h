@@ -229,7 +229,7 @@ class Client
     /**
      * The "Window Tabs" Group this Client belongs to.
      **/
-    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged)
+    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
     /**
      * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
      * For change connect to the visibleChanged signal on the Client's Group.
