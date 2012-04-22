@@ -227,6 +227,19 @@ void TabGroup::setCurrent(Client* c, bool force)
         (*i)->setClientShown((*i) == m_current);
 }
 
+void TabGroup::sync(const char *property, Client *c)
+{
+    if (c->metaObject()->indexOfProperty(property) > -1) {
+        qWarning("caught attempt to sync non dynamic property: %s", property);
+        return;
+    }
+    QVariant v = c->property(property);
+    for (ClientList::iterator i = m_clients.begin(), end = m_clients.end(); i != end; ++i) {
+        if (*i != m_current)
+            (*i)->setProperty(property, v);
+    }
+}
+
 void TabGroup::updateMinMaxSize()
 {
     // Determine entire group's minimum and maximum sizes

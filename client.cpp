@@ -1965,6 +1965,12 @@ bool Client::isCurrentTab() const
     return !tab_group || tab_group->current() == this;
 }
 
+void Client::syncTabGroupFor(QString property, bool fromThisClient)
+{
+    if (tab_group)
+        tab_group->sync(property.toAscii().data(), fromThisClient ? this : tab_group->current());
+}
+
 void Client::dontMoveResize()
 {
     buttonDown = false;

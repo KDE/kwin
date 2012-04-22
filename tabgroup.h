@@ -107,6 +107,11 @@ public:
     void setCurrent(Client* c, bool force = false);
 
     /**
+     * Alignes the dynamic Qt @param property of all clients to the one of @param c
+     */
+    void sync(const char *property, Client *c);
+
+    /**
      * Returns combined minimum size of all clients in the group.
      */
     QSize minSize() const;

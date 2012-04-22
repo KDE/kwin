@@ -533,6 +533,18 @@ public:
     TabGroup* tabGroup() const; // Returns a pointer to client_group
     Q_INVOKABLE inline bool tabBefore(Client *other, bool activate) { return tabTo(other, false, activate); }
     Q_INVOKABLE inline bool tabBehind(Client *other, bool activate) { return tabTo(other, true, activate); }
+    /**
+     * Syncs the *dynamic* @param property @param fromThisClient or the @link currentTab() to
+     * all members of the @link tabGroup() (if there is one)
+     *
+     * eg. if you call:
+     * client->setProperty("kwin_tiling_floats", true);
+     * client->syncTabGroupFor("kwin_tiling_floats", true)
+     * all clients in this tabGroup will have ::property("kwin_tiling_floats").toBool() == true
+     *
+     * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
+     */
+    Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
     Q_INVOKABLE bool untab(const QRect &toGeometry = QRect());
     /**
      * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
