@@ -35,7 +35,7 @@ class Unmanaged
 public:
     Unmanaged(Workspace *ws);
     bool windowEvent(XEvent* e);
-    void release();
+    void release(bool on_shutdown = false);
     bool track(Window w);
     static void deleteUnmanaged(Unmanaged* c, allowed_t);
     virtual int desktop() const;

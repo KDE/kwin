@@ -503,7 +503,7 @@ Workspace::~Workspace()
         desktops.removeAll(c);
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
-        (*it)->release();
+        (*it)->release(true);
     delete m_outline;
     discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);

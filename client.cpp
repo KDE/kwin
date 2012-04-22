@@ -240,7 +240,10 @@ void Client::releaseWindow(bool on_shutdown)
 {
     assert(!deleting);
     deleting = true;
-    Deleted* del = Deleted::create(this);
+    Deleted* del = NULL;
+    if (!on_shutdown) {
+        del = Deleted::create(this);
+    }
     if (moveResizeMode)
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
@@ -291,8 +294,10 @@ void Client::releaseWindow(bool on_shutdown)
     XDestroyWindow(display(), frameId());
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    disownDataPassedToDeleted();
-    del->unrefWindow();
+    if (!on_shutdown) {
+        disownDataPassedToDeleted();
+        del->unrefWindow();
+    }
     checkNonExistentClients();
     deleteClient(this, Allowed);
     ungrabXServer();
