@@ -1953,7 +1953,7 @@ namespace Oxygen
 
         // adjust geometry for floatFrame when compositing is on.
         if( drawShadow )
-        { geometry.adjusted(-1, -1, 1, 1 ); }
+        { geometry.adjust(-1, -1, 1, 1 ); }
 
         // floating frame
         helper().drawFloatFrame(
