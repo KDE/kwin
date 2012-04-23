@@ -1713,7 +1713,7 @@ namespace Oxygen
             // note: the pixmap is moved just above the pointer on purpose
             // because overlapping pixmap and pointer slows down the pixmap a lot.
             QPoint hotSpot( QPoint( event->pos().x() - geometry.left(), -1 ) );
-            if( drawShadow ) hotSpot += QPoint( shadowSize, shadowSize );
+            if( drawShadow ) hotSpot += QPoint( 0, shadowSize );
 
             // make sure the horizontal hotspot position is not too far away (more than 1px)
             // from the pixmap
@@ -1904,11 +1904,11 @@ namespace Oxygen
         painter.translate( -geometry.topLeft() );
 
         // draw shadows
-        const int shadowSize( shadowCache().shadowSize() );
-        if( drawShadow && shadowSize > 0 )
+        if( drawShadow )
         {
 
             // shadow
+            const int shadowSize( shadowCache().shadowSize() );
             TileSet *tileSet( shadowCache().tileSet( ShadowCache::Key() ) );
             tileSet->render( geometry, &painter, TileSet::Ring);
             geometry.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
