@@ -2258,8 +2258,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax);
         QRect r = QRect(clientArea.topLeft(), adjSize);
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
-            if (isElectricBorderMaximizing())
-                r.moveLeft(qMax(clientArea.x(), QCursor::pos().x() - r.width()/2));
+            if (isElectricBorderMaximizing() && r.width() < clientArea.width())
+                r.moveLeft(QCursor::pos().x() - r.width()/2);
             else
                 r.moveCenter(clientArea.center());
         }
