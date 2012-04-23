@@ -1897,7 +1897,7 @@ namespace Oxygen
         renderWindowBackground( &painter, geometry, widget(), widget()->palette() );
 
         // darken background if item is inactive
-        const bool itemActive = !( itemValid && tabId(index) != currentTabId() );
+        const bool itemActive = (tabCount() <= 1) || !( itemValid && tabId(index) != currentTabId() );
         if( !itemActive )
         {
 
