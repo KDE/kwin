@@ -67,15 +67,6 @@ void Deleted::copyToDeleted(Toplevel* c)
 {
     assert(dynamic_cast< Deleted* >(c) == NULL);
     Toplevel::copyToDeleted(c);
-    // In some cases the window has been deleted before the sync request which marks
-    // the window ready for painting has finished. This is especially troublesome
-    // when effects reference the deleted window and the unreferencing is part of
-    // the rendering pass (e.g. Effect::postPaintScreen/postPaintWindow), which will
-    // never be executed because we remove it every time from the stacking list in
-    // Workspace::performCompositing.
-    if (!c->readyForPainting()) {
-        QTimer::singleShot(0, this, SLOT(discard()));
-    }
     desk = c->desktop();
     activityList = c->activities();
     contentsRect = QRect(c->clientPos(), c->clientSize());

@@ -35,6 +35,7 @@ public:
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
     void refWindow();
     void unrefWindow(bool delay = false);
+    void discard(allowed_t);
     virtual int desktop() const;
     virtual QStringList activities() const;
     virtual QPoint clientPos() const;
@@ -61,8 +62,6 @@ public:
     virtual Layer layer() const {
         return m_layer;
     }
-public slots:
-    void discard(allowed_t = Allowed);
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
