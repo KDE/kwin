@@ -337,7 +337,7 @@ namespace Oxygen
         { return _itemData.itemAt( position , between ); }
 
         //! return pixmap corresponding to a given tab, for dragging
-        QPixmap itemDragPixmap( int, const QRect& );
+        QPixmap itemDragPixmap( int, QRect, bool = false );
 
         //! return true when activity change are animated
         bool shadowAnimationsEnabled( void ) const

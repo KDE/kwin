@@ -1700,11 +1700,20 @@ namespace Oxygen
 
             }
 
-            drag->setPixmap( itemDragPixmap( clickedIndex, geometry ) );
+            // adjust geometry to include shadow size
+            const int shadowSize( shadowCache().shadowSize() );
+            const bool drawShadow( compositingActive() && shadowSize > 0 );
+
+            if( drawShadow )
+            { geometry.adjust( -shadowSize, -shadowSize, shadowSize, shadowSize ); }
+
+            // compute pixmap and assign
+            drag->setPixmap( itemDragPixmap( clickedIndex, geometry, drawShadow ) );
 
             // note: the pixmap is moved just above the pointer on purpose
             // because overlapping pixmap and pointer slows down the pixmap a lot.
             QPoint hotSpot( QPoint( event->pos().x() - geometry.left(), -1 ) );
+            if( drawShadow ) hotSpot += QPoint( shadowSize, shadowSize );
 
             // make sure the horizontal hotspot position is not too far away (more than 1px)
             // from the pixmap
@@ -1883,17 +1892,32 @@ namespace Oxygen
     }
 
     //________________________________________________________________
-    QPixmap Client::itemDragPixmap( int index, const QRect& geometry )
+    QPixmap Client::itemDragPixmap( int index, QRect geometry, bool drawShadow )
     {
         const bool itemValid( index >= 0 && index < tabCount() );
 
         QPixmap pixmap( geometry.size() );
+        pixmap.fill( Qt::transparent );
         QPainter painter( &pixmap );
         painter.setRenderHints(QPainter::SmoothPixmapTransform|QPainter::Antialiasing);
 
         painter.translate( -geometry.topLeft() );
 
+        // draw shadows
+        const int shadowSize( shadowCache().shadowSize() );
+        if( drawShadow && shadowSize > 0 )
+        {
+
+            // shadow
+            TileSet *tileSet( shadowCache().tileSet( ShadowCache::Key() ) );
+            tileSet->render( geometry, &painter, TileSet::Ring);
+            geometry.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
+
+        }
+
         // render window background
+        renderCorners( &painter, geometry, widget()->palette() );
+        painter.setClipRegion( helper().roundedMask( geometry ), Qt::IntersectClip );
         renderWindowBackground( &painter, geometry, widget(), widget()->palette() );
 
         // darken background if item is inactive
@@ -1926,24 +1950,12 @@ namespace Oxygen
 
         // floating frame
         helper().drawFloatFrame(
-            &painter, geometry, widget()->palette().window().color(),
-            true, false,
+            &painter, geometry.adjusted(-1, -1, 1, 1 ), widget()->palette().window().color(),
+            false, false,
             KDecoration::options()->color(ColorTitleBar)
             );
 
         painter.end();
-
-        // create pixmap mask
-        QBitmap bitmap( geometry.size() );
-        {
-            bitmap.clear();
-            QPainter painter( &bitmap );
-            QPainterPath path;
-            path.addRegion( helper().roundedMask( geometry.translated( -geometry.topLeft() ) ) );
-            painter.fillPath( path, Qt::color1 );
-        }
-
-        pixmap.setMask( bitmap );
         return pixmap;
 
     }
