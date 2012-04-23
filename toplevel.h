@@ -210,7 +210,7 @@ public:
     bool isOnAllActivities() const;
 
     QByteArray windowRole() const;
-    QByteArray sessionId();
+    QByteArray sessionId() const;
     QByteArray resourceName() const;
     QByteArray resourceClass() const;
     QByteArray wmCommand();
@@ -276,6 +276,8 @@ public:
      * @see hasAlpha
      **/
     const QRegion& opaqueRegion() const;
+
+    virtual Layer layer() const = 0;
 
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);

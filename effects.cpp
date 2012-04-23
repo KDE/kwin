@@ -270,12 +270,12 @@ void EffectsHandlerImpl::postPaintWindow(EffectWindow* w)
     // no special final code
 }
 
-bool EffectsHandlerImpl::provides(Effect::Feature ef)
+Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
 {
     for (int i = 0; i < loaded_effects.size(); ++i)
         if (loaded_effects.at(i).second->provides(ef))
-            return true;
-    return false;
+            return loaded_effects.at(i).second;
+    return NULL;
 }
 
 void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)

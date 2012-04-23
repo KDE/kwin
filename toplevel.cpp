@@ -240,7 +240,7 @@ void Toplevel::getWmClientLeader()
   Returns sessionId for this client,
   taken either from its window or from the leader window.
  */
-QByteArray Toplevel::sessionId()
+QByteArray Toplevel::sessionId() const
 {
     QByteArray result = staticSessionId(window());
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())

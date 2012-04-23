@@ -7427,28 +7427,40 @@ Action=Popup
 
 [Event/fullscreen]
 Name=Window Fullscreen Set
+Name[ia]=Fixation de fenestra a schermo plen
 Name[nl]=Venster in modus volledig scherm 
 Name[pt]=Ecrã Completo da Janela Activo
+Name[pt_BR]=Tela Cheia da Janela Ativa
 Name[sv]=Fullskärmsläge inställt för fönster
 Name[uk]=Повноекранний режим
 Name[x-test]=xxWindow Fullscreen Setxx
+Name[zh_TW]=已設定成全螢幕
 Comment=A window has been set to fullscreen
+Comment[ia]=Un fenestra ha essite fixate al modo de schermo plen
 Comment[nl]=Een venster is ingesteld op volledig scherm
 Comment[pt]=Uma janela mudou para ocupar todo o ecrã
+Comment[pt_BR]=Uma janela mudou para ocupar toda a tela
 Comment[sv]=Ett fönster har ändrats till fullskärmsläge
 Comment[uk]=Вікно переведено у повноекранний режим
 Comment[x-test]=xxA window has been set to fullscreenxx
+Comment[zh_TW]=已將視窗設定成全螢幕
 
 [Event/unfullscreen]
 Name=Window Fullscreen Restored
+Name[ia]=Fenestra de schermo plen restabilite
 Name[nl]=Venster terug uit modus volledig scherm
 Name[pt]=Ecrã Completo da Janela Reposto
+Name[pt_BR]=Tela Cheia da Janela Restaurado
 Name[sv]=Fullskärmsläge avslutat för fönster
 Name[uk]=Звичайний режим
 Name[x-test]=xxWindow Fullscreen Restoredxx
+Name[zh_TW]=已還原全螢幕
 Comment=A window has been restored from fullscreen
+Comment[ia]=Un fenestra ha essite restabilite ab schermo plen
 Comment[nl]=Een venster is teruggebracht uit de instelling volledig scherm
 Comment[pt]=Uma janela foi reposta do estado de ecrã completo
+Comment[pt_BR]=Uma janela foi restaurada do estado de tela cheia
 Comment[sv]=Ett fönster har återställts från fullskärmsläge
 Comment[uk]=Вікно переведено у звичайний режим
 Comment[x-test]=xxA window has been restored from fullscreenxx
+Comment[zh_TW]=已將視窗還原成全螢幕

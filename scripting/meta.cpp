@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "meta.h"
 #include "client.h"
-#include "tabgroup.h"
 
 #include <QtScript/QScriptEngine>
 

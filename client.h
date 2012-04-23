@@ -229,7 +229,7 @@ class Client
     /**
      * The "Window Tabs" Group this Client belongs to.
      **/
-    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged)
+    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
     /**
      * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
      * For change connect to the visibleChanged signal on the Client's Group.
@@ -402,7 +402,7 @@ public:
     void setKeepAbove(bool);
     bool keepBelow() const;
     void setKeepBelow(bool);
-    Layer layer() const;
+    virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
     int sessionStackingOrder() const;
@@ -675,7 +675,6 @@ private slots:
     void performMoveResize();
     void removeSyncSupport();
     void pingTimeout();
-    void processKillerExited();
     void demandAttentionKNotify();
     void repaintDecorationPending();
 
@@ -824,7 +823,6 @@ private:
     /** The quick tile mode of this window.
      */
     int quick_tile_mode;
-    QRect geom_pretile;
 
     void readTransient();
     Window verifyTransientFor(Window transient_for, bool set);
@@ -896,7 +894,7 @@ private:
     TabGroup* tab_group;
     Layer in_layer;
     QTimer* ping_timer;
-    QProcess* process_killer;
+    qint64 m_killHelperPID;
     Time ping_timestamp;
     Time user_time;
     unsigned long allowed_actions;

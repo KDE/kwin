@@ -142,6 +142,13 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     engine->globalObject().setProperty("readConfig", configFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
+    // global properties
+    engine->globalObject().setProperty("KWin", engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+    QScriptValue workspace = engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
+                                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
+    engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
+    // install meta functions
+    KWin::MetaScripting::registration(engine);
 }
 
 KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)
@@ -162,16 +169,11 @@ void KWin::Script::run()
         return;
     }
     if (scriptFile().open(QIODevice::ReadOnly)) {
-        QScriptValue workspace = m_engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
-                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
         QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
-        m_engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
         m_engine->globalObject().setProperty("options", optionsValue, QScriptValue::Undeletable);
         m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
-        m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
         QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
-        KWin::MetaScripting::registration(m_engine);
         KWin::MetaScripting::supplyConfig(m_engine);
         installScriptFunctions(m_engine);
 
@@ -236,10 +238,8 @@ void KWin::DeclarativeScript::run()
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
-    qmlRegisterType<WorkspaceWrapper>("org.kde.kwin", 0, 1, "KWin");
     qmlRegisterType<KWin::Client>();
 
-    m_view->rootContext()->setContextProperty("workspace", workspace());
     m_view->rootContext()->setContextProperty("options", options);
 
     m_view->setSource(QUrl::fromLocalFile(scriptFile().fileName()));

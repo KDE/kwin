@@ -772,8 +772,10 @@ void Workspace::cascadeDesktop()
     Q_ASSERT(block_stacking_updates == 0);
     initPositioning->reinitCascading(currentDesktop());
     QRect area = clientArea(PlacementArea, QPoint(0, 0), currentDesktop());
-    foreach (Client * client, stackingOrder()) {
-        if ((!client->isOnDesktop(currentDesktop())) ||
+    foreach (Toplevel *toplevel, stackingOrder()) {
+        Client *client = qobject_cast<Client*>(toplevel);
+        if (!client ||
+                (!client->isOnDesktop(currentDesktop())) ||
                 (client->isMinimized())                  ||
                 (client->isOnAllDesktops())              ||
                 (!client->isMovable()))
@@ -1096,7 +1098,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         int rightMax = screenArea.x() + screenArea.width();
         int bottomMax = screenArea.y() + screenArea.height();
         int leftMax = screenArea.x();
-        QRect newGeom = geometry();
+        QRect newGeom = geom_restore; // geometry();
         const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
         const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
         // Get the max strut point for each side where the window is (E.g. Highest point for
@@ -1683,6 +1685,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
             }
         }
     }
+    geom_restore = geometry();
     // No need to send synthetic configure notify event here, either it's sent together
     // with geometry change, or there's no need to send it.
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
@@ -2133,25 +2136,21 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         sz = sizeForClientSize(clientSize());
     else
         sz = size();
-    if (!adjust && !(old_mode & MaximizeVertical)) {
-        geom_restore.setTop(y());
-        geom_restore.setHeight(sz.height());
-        // we can fall from maximize to tiled
-        // TODO unify quicktiling and regular maximization
-        geom_pretile.setTop(y());
-        geom_pretile.setHeight(sz.height());
-    }
-    if (!adjust && !(old_mode & MaximizeHorizontal)) {
-        geom_restore.setLeft(x());
-        geom_restore.setWidth(sz.width());
-        // see above
-        geom_pretile.setLeft(x());
-        geom_pretile.setWidth(sz.width());
+
+    if (quick_tile_mode == QuickTileNone) {
+        if (!adjust && !(old_mode & MaximizeVertical)) {
+            geom_restore.setTop(y());
+            geom_restore.setHeight(sz.height());
+        }
+        if (!adjust && !(old_mode & MaximizeHorizontal)) {
+            geom_restore.setLeft(x());
+            geom_restore.setWidth(sz.width());
+        }
     }
 
     if (options->borderlessMaximizedWindows()) {
         // triggers a maximize change.
-        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore/pretile geometry
+        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
         setNoBorder(app_noborder || max_mode == MaximizeFull);
         changeMaximizeRecursion = false;
@@ -2177,7 +2176,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                 !clientArea.contains(geom_restore.center())) {
             // Not restoring on the same screen
             // TODO: The following doesn't work for some reason
-            //geom_restore = geom_pretile; // Restore to the pretiled geometry
             //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
         } else if ((old_mode == MaximizeVertical && max_mode == MaximizeRestore) ||
                   (old_mode == MaximizeFull && max_mode == MaximizeHorizontal)) {
@@ -2504,7 +2502,7 @@ bool Client::startMoveResize()
     if (maximizeMode() != MaximizeRestore && (maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows())) {
         // allow moveResize, but unset maximization state in resize case
         if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-            geom_restore = geom_pretile = geometry(); // "restore" to current geometry
+            geom_restore = geometry(); // "restore" to current geometry
             setMaximize(false, false);
         }
     } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
@@ -2537,7 +2535,7 @@ bool Client::startMoveResize()
             options->electricBorderTiling())
         workspace()->screenEdge()->reserveDesktopSwitching(true);
 #endif
-    if (fakeMove) // fix geom_pretile position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
+    if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
         handleMoveResize(QCursor::pos().x(), QCursor::pos().y(), QCursor::pos().x(), QCursor::pos().y());
     return true;
 }
@@ -2603,11 +2601,8 @@ void Client::finishMoveResize(bool cancel)
     Q_UNUSED(wasResize);
     Q_UNUSED(wasMove);
 #endif
-    if (cancel) // TODO: this looks like a patch bug - tiling gets the variable and non-tiling acts above
-        setGeometry(initialMoveResizeGeom);
 
     if (isElectricBorderMaximizing()) {
-        cancel = true;
         setQuickTileMode(electricMode);
         const ElectricBorder border = electricBorderFromMode(electricMode);
         if (border == ElectricNone)
@@ -2619,6 +2614,8 @@ void Client::finishMoveResize(bool cancel)
 #endif
         electricMaximizing = false;
         workspace()->outline()->hide();
+    } else if (!cancel) {
+        geom_restore = geometry();
     }
 // FRAME    update();
 
@@ -2684,10 +2681,10 @@ void Client::checkUnrestrictedMoveResize()
             unrestrictedMoveResize = true;
     }
     if (isMove()) {
-        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)   // titlebar mustn't go out
+        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)
             unrestrictedMoveResize = true;
         // no need to check top_marge, titlebar_marge already handles it
-        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge)
+        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge + 1) // titlebar mustn't go out
             unrestrictedMoveResize = true;
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
             unrestrictedMoveResize = true;
@@ -3140,7 +3137,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     // is the same as explicitly untiling this window, so allow it.
     if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
         // Untiling, so just restore geometry, and we're done.
-        setGeometry(geom_pretile);
+        setGeometry(geom_restore);
         quick_tile_mode = QuickTileNone;
         checkWorkspacePosition(); // Just in case it's a different screen
         return;
@@ -3148,7 +3145,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
-        // screen if it exists, otherwise ignore the request to prevent corrupting geom_pretile.
+        // screen if it exists, otherwise ignore the request to prevent corrupting geom_restore.
         if (quick_tile_mode == mode) {
             const int numScreens = QApplication::desktop()->screenCount();
             const int curScreen = screen();
@@ -3172,7 +3169,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 return; // No other screens
 
             // Move to other screen
-            geom_pretile.translate(
+            geom_restore.translate(
                 screens[nextScreen].x() - screens[curScreen].x(),
                 screens[nextScreen].y() - screens[curScreen].y());
             whichScreen = screens[nextScreen].center();
@@ -3185,7 +3182,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         } else
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
-            geom_pretile = geometry();
+            geom_restore = geometry();
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;

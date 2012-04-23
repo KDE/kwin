@@ -80,9 +80,12 @@ bool Unmanaged::track(Window w)
     return true;
 }
 
-void Unmanaged::release()
+void Unmanaged::release(bool on_shutdown)
 {
-    Deleted* del = Deleted::create(this);
+    Deleted* del = NULL;
+    if (!on_shutdown) {
+        del = Deleted::create(this);
+    }
     emit windowClosed(this, del);
     finishCompositing();
     workspace()->removeUnmanaged(this, Allowed);
@@ -91,9 +94,11 @@ void Unmanaged::release()
             XShapeSelectInput(display(), window(), NoEventMask);
         XSelectInput(display(), window(), NoEventMask);
     }
-    addWorkspaceRepaint(del->visibleRect());
-    disownDataPassedToDeleted();
-    del->unrefWindow();
+    if (!on_shutdown) {
+        addWorkspaceRepaint(del->visibleRect());
+        disownDataPassedToDeleted();
+        del->unrefWindow();
+    }
     deleteUnmanaged(this, Allowed);
 }
 

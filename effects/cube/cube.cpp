@@ -386,9 +386,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             }
         }
 
-#ifndef KWIN_HAVE_OPENGLES
-        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -552,9 +549,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         glDisable(GL_CULL_FACE);
 
         glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-        glPopAttrib();
-#endif
 
         // desktop name box - inspired from coverswitch
         if (displayDesktopName) {
@@ -1503,9 +1497,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             paint = paint.subtracted(QRegion(w->geometry()));
             // in case of free area in multiscreen setup fill it with cap color
             if (!paint.isEmpty()) {
-#ifndef KWIN_HAVE_OPENGLES
-                glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 QVector<float> verts;
@@ -1561,9 +1552,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     ShaderManager::instance()->popShader();
                 }
                 glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-                glPopAttrib();
-#endif
             }
         }
         if (!shader) {

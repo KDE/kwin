@@ -75,14 +75,14 @@ Item {
         height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
         spacing: 5
         highlightMoveDuration: 250
+        width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
         anchors {
             top: parent.top
-            left: parent.left
-            right: parent.right
             topMargin: background.margins.top
             leftMargin: background.margins.left
             rightMargin: background.margins.right
             bottomMargin: background.margins.bottom
+            horizontalCenter: parent.horizontalCenter
         }
         clip: true
         delegate: Item {
@@ -120,6 +120,7 @@ Item {
     }
     Item {
         height: 40
+        id: captionFrame
         anchors {
             top: thumbnailListView.bottom
             left: parent.left
@@ -146,17 +147,38 @@ Item {
             }
         }
         Text {
+            function constrainWidth() {
+                if (textItem.width > textItem.maxWidth && textItem.width > 0 && textItem.maxWidth > 0) {
+                    textItem.width = textItem.maxWidth;
+                } else {
+                    textItem.width = undefined;
+                }
+            }
+            function calculateMaxWidth() {
+                textItem.maxWidth = thumbnailTabBox.width - captionFrame.anchors.leftMargin - captionFrame.anchors.rightMargin - iconItem.width * 2 - captionFrame.anchors.rightMargin;
+            }
             id: textItem
+            property int maxWidth: 0
             text: thumbnailListView.currentItem ? thumbnailListView.currentItem.data.caption : ""
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: theme.textColor
+            elide: Text.ElideMiddle
             font {
                 bold: true
             }
             anchors {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
+            }
+            onTextChanged: textItem.constrainWidth()
+            Component.onCompleted: textItem.calculateMaxWidth()
+            Connections {
+                target: thumbnailTabBox
+                onWidthChanged: {
+                    textItem.calculateMaxWidth();
+                    textItem.constrainWidth();
+                }
             }
         }
     }

@@ -106,7 +106,7 @@ Client::Client(Workspace* ws)
     , tab_group(NULL)
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
-    , process_killer(NULL)
+    , m_killHelperPID(0)
     , user_time(CurrentTime)   // Not known yet
     , allowed_actions(0)
     , block_geometry_updates(0)
@@ -140,7 +140,6 @@ Client::Client(Workspace* ws)
     // Set the initial mapping state
     mapping_state = Withdrawn;
     quick_tile_mode = QuickTileNone;
-    geom_pretile = QRect(0, 0, 0, 0);
     desk = 0; // No desktop yet
 
     mode = PositionCenter;
@@ -241,7 +240,10 @@ void Client::releaseWindow(bool on_shutdown)
 {
     assert(!deleting);
     deleting = true;
-    Deleted* del = Deleted::create(this);
+    Deleted* del = NULL;
+    if (!on_shutdown) {
+        del = Deleted::create(this);
+    }
     if (moveResizeMode)
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
@@ -292,8 +294,10 @@ void Client::releaseWindow(bool on_shutdown)
     XDestroyWindow(display(), frameId());
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    disownDataPassedToDeleted();
-    del->unrefWindow();
+    if (!on_shutdown) {
+        disownDataPassedToDeleted();
+        del->unrefWindow();
+    }
     checkNonExistentClients();
     deleteClient(this, Allowed);
     ungrabXServer();
@@ -1099,26 +1103,30 @@ void Client::setShade(ShadeMode mode)
         XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
         plainResize(s);
         shade_geometry_change = false;
-        if (isActive()) {
-            if (was_shade_mode == ShadeHover) {
-                if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
+        if (was_shade_mode == ShadeHover) {
+            if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
                     workspace()->restack(this, shade_below);
+            if (isActive())
                 workspace()->activateNextClient(this);
-            }
-            else
-                workspace()->focusToNull();
+        } else if (isActive()) {
+            workspace()->focusToNull();
         }
     } else {
         shade_geometry_change = true;
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);
-        if (shade_mode == ShadeHover || shade_mode == ShadeActivated)
+        if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(input))
             setActive(true);
         if (shade_mode == ShadeHover) {
-            ClientList order = workspace()->stackingOrder();
-            int idx = order.indexOf(this) + 1;   // this is likely related to the index parameter?!
-            shade_below = (idx < order.count()) ? order.at(idx) : NULL;
+            ToplevelList order = workspace()->stackingOrder();
+            // this is likely related to the index parameter?!
+            for (int idx = order.indexOf(this) + 1; idx < order.count(); ++idx) {
+                shade_below = qobject_cast<Client*>(order.at(idx));
+                if (shade_below) {
+                    break;
+                }
+            }
             if (shade_below && shade_below->isNormalWindow())
                 workspace()->raiseClient(this);
             else
@@ -1458,13 +1466,9 @@ void Client::gotPing(Time timestamp)
         return;
     delete ping_timer;
     ping_timer = NULL;
-    if (process_killer != NULL) {
-        process_killer->kill();
-        // Recycle when the process manager has noticed that the process exited
-        // a delete process_killer here sometimes causes a hang in waitForFinished
-        connect(process_killer, SIGNAL(finished(int,QProcess::ExitStatus)),
-                process_killer, SLOT(deleteLater()));
-        process_killer = NULL;
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
+        ::kill(m_killHelperPID, SIGTERM);
+        m_killHelperPID = 0;
     }
 }
 
@@ -1478,7 +1482,7 @@ void Client::pingTimeout()
 
 void Client::killProcess(bool ask, Time timestamp)
 {
-    if (process_killer != NULL)
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) // means the process is alive
         return;
     Q_ASSERT(!ask || timestamp != CurrentTime);
     QByteArray machine = wmClientMachine(true);
@@ -1494,23 +1498,14 @@ void Client::killProcess(bool ask, Time timestamp)
         } else
             ::kill(pid, SIGTERM);
     } else {
-        process_killer = new QProcess(this);
-        connect(process_killer, SIGNAL(error(QProcess::ProcessError)), SLOT(processKillerExited()));
-        connect(process_killer, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(processKillerExited()));
-        process_killer->start(KStandardDirs::findExe("kwin_killer_helper"),
-                              QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << machine
-                              << "--windowname" << caption()
-                              << "--applicationname" << resourceClass()
-                              << "--wid" << QString::number(window())
-                              << "--timestamp" << QString::number(timestamp));
+        QProcess::startDetached(KStandardDirs::findExe("kwin_killer_helper"),
+                                QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << machine
+                                << "--windowname" << caption()
+                                << "--applicationname" << resourceClass()
+                                << "--wid" << QString::number(window())
+                                << "--timestamp" << QString::number(timestamp),
+                                QString(), &m_killHelperPID);
     }
-}
-
-void Client::processKillerExited()
-{
-    kDebug(1212) << "Killer exited";
-    delete process_killer;
-    process_killer = NULL;
 }
 
 void Client::setSkipTaskbar(bool b, bool from_outside)
@@ -1780,6 +1775,8 @@ void Client::takeFocus(allowed_t)
 #endif
     if (rules()->checkAcceptFocus(input))
         XSetInputFocus(display(), window(), RevertToPointerRoot, xTime());
+    else
+        demandAttention(false); // window cannot take input, at least withdraw urgency
     if (Ptakefocus)
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     workspace()->setShouldGetFocus(this);

@@ -103,6 +103,7 @@ enum Layer {
     DockLayer,
     AboveLayer,
     ActiveLayer, // active fullscreen, or active dialog
+    UnmanagedLayer, // layer for override redirect windows.
     NumLayers // number of layers, must be last
 };
 

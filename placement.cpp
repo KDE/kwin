@@ -181,22 +181,26 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
 
             cxl = x; cxr = x + cw;
             cyt = y; cyb = y + ch;
-            ClientList::ConstIterator l;
+            ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
-                if ((*l)->isOnDesktop(desktop) &&
-                        (*l)->isShown(false) && (*l) != c) {
+                Client *client = qobject_cast<Client*>(*l);
+                if (!client) {
+                    continue;
+                }
+                if (client->isOnDesktop(desktop) &&
+                        client->isShown(false) && client != c) {
 
-                    xl = (*l)->x();          yt = (*l)->y();
-                    xr = xl + (*l)->width(); yb = yt + (*l)->height();
+                    xl = client->x();          yt = client->y();
+                    xr = xl + client->width(); yb = yt + client->height();
 
                     //if windows overlap, calc the overall overlapping
                     if ((cxl < xr) && (cxr > xl) &&
                             (cyt < yb) && (cyb > yt)) {
                         xl = qMax(cxl, xl); xr = qMin(cxr, xr);
                         yt = qMax(cyt, yt); yb = qMin(cyb, yb);
-                        if ((*l)->keepAbove())
+                        if (client->keepAbove())
                             overlap += 16 * (xr - xl) * (yb - yt);
-                        else if ((*l)->keepBelow() && !(*l)->isDock()) // ignore KeepBelow windows
+                        else if (client->keepBelow() && !client->isDock()) // ignore KeepBelow windows
                             overlap += 0; // for placement (see Client::belongsToLayer() for Dock)
                         else
                             overlap += (xr - xl) * (yb - yt);
@@ -230,14 +234,18 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             if (possible - cw > x) possible -= cw;
 
             // compare to the position of each client on the same desk
-            ClientList::ConstIterator l;
+            ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
+                Client *client = qobject_cast<Client*>(*l);
+                if (!client) {
+                    continue;
+                }
 
-                if ((*l)->isOnDesktop(desktop) &&
-                        (*l)->isShown(false) && (*l) != c) {
+                if (client->isOnDesktop(desktop) &&
+                        client->isShown(false) && client != c) {
 
-                    xl = (*l)->x();          yt = (*l)->y();
-                    xr = xl + (*l)->width(); yb = yt + (*l)->height();
+                    xl = client->x();          yt = client->y();
+                    xr = xl + client->width(); yb = yt + client->height();
 
                     // if not enough room above or under the current tested client
                     // determine the first non-overlapped x position
@@ -261,13 +269,17 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             if (possible - ch > y) possible -= ch;
 
             //test the position of each window on the desk
-            ClientList::ConstIterator l;
+            ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
-                if ((*l)->isOnDesktop(desktop) &&
-                        (*l) != c   &&  c->isShown(false)) {
+                Client *client = qobject_cast<Client*>(*l);
+                if (!client) {
+                    continue;
+                }
+                if (client->isOnDesktop(desktop) &&
+                        client != c   &&  c->isShown(false)) {
 
-                    xl = (*l)->x();          yt = (*l)->y();
-                    xr = xl + (*l)->width(); yb = yt + (*l)->height();
+                    xl = client->x();          yt = client->y();
+                    xr = xl + client->width(); yb = yt + client->height();
 
                     // if not enough room to the left or right of the current tested client
                     // determine the first non-overlapped y position
@@ -536,7 +548,7 @@ Placement::Policy Placement::policyFromString(const QString& policy, bool no_spe
         return Centered;
     else if (policy == "ZeroCornered")
         return ZeroCornered;
-    else if (policy == "UnderMouse" && !no_special)
+    else if (policy == "UnderMouse")
         return UnderMouse;
     else if (policy == "OnMainWindow" && !no_special)
         return OnMainWindow;

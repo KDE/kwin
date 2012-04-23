@@ -235,10 +235,12 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int des
 
 TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
-    ClientList stacking = Workspace::self()->stackingOrder();
+    ToplevelList stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    foreach (const Client * client, stacking) {
-        ret.append(client->tabBoxClient());
+    foreach (Toplevel *toplevel, stacking) {
+        if (Client *client = qobject_cast<Client*>(toplevel)) {
+            ret.append(client->tabBoxClient());
+        }
     }
     return ret;
 }
@@ -254,11 +256,21 @@ void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
                                static_cast<TabBoxClientImpl*>(under)->client());
 }
 
+void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, bool b) const
+{
+    if (effects) {
+        const Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+        if (EffectWindow *w = static_cast<EffectsHandlerImpl*>(effects)->findWindow(cl->window()))
+            static_cast<EffectsHandlerImpl*>(effects)->setElevatedWindow(w, b);
+    }
+}
+
 
 TabBoxClient* TabBoxHandlerImpl::desktopClient() const
 {
-    foreach (const Client * client, Workspace::self()->stackingOrder()) {
-        if (client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == Workspace::self()->activeScreen()) {
+    foreach (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
+        Client *client = qobject_cast<Client*>(toplevel);
+        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == Workspace::self()->activeScreen()) {
             return client->tabBoxClient();
         }
     }
@@ -1101,8 +1113,8 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     for (int i = Workspace::self()->stackingOrder().size() - 1;
             i >= 0 ;
             --i) {
-        Client* it = Workspace::self()->stackingOrder().at(i);
-        if (it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
+        Client* it = qobject_cast<Client*>(Workspace::self()->stackingOrder().at(i));
+        if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
                 && it->isShown(false) && it->wantsTabFocus()
                 && !it->keepAbove() && !it->keepBelow()) {
             c = it;

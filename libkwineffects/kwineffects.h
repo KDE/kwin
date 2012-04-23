@@ -320,8 +320,7 @@ public:
     };
 
     enum Feature {
-        Nothing = 0, Resize, GeometryTip,
-        Outline
+        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion
     };
 
     /**
@@ -415,7 +414,7 @@ public:
 
     /**
      * Called on Transparent resizes.
-     * return true if your effect substitutes the XOR rubberband
+     * return true if your effect substitutes questioned feature
     */
     virtual bool provides(Feature);
 

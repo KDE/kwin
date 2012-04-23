@@ -65,57 +65,112 @@ MouseMarkEffect::~MouseMarkEffect()
     effects->stopMousePolling();
 }
 
+static int width_2 = 1;
 void MouseMarkEffect::reconfigure(ReconfigureFlags)
 {
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry("LineWidth", 3);
+    width_2 = width / 2;
     color = conf.readEntry("Color", QColor(Qt::red));
     color.setAlphaF(1.0);
 }
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+void MouseMarkEffect::addRect(const QPoint &p1, const QPoint &p2, XRectangle *r, XRenderColor *c)
+{
+    r->x = qMin(p1.x(), p2.x()) - width_2;
+    r->y = qMin(p1.y(), p2.y()) - width_2;
+    r->width = qAbs(p1.x()-p2.x()) + 1 + width_2;
+    r->height = qAbs(p1.y()-p2.y()) + 1 + width_2;
+    // fast move -> large rect, <strike>tess...</strike> interpolate a line
+    if (r->width > 3*width/2 && r->height > 3*width/2) {
+        const int n = sqrt(r->width*r->width + r->height*r->height) / width;
+        XRectangle *rects = new XRectangle[n-1];
+        const int w = p1.x() < p2.x() ? r->width : -r->width;
+        const int h = p1.y() < p2.y() ? r->height : -r->height;
+        for (int i = 1; i < n; ++i) {
+            rects[i-1].x = p1.x() + i*w/n;
+            rects[i-1].y = p1.y() + i*h/n;
+            rects[i-1].width = rects[i-1].height = width;
+        }
+        XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), c, rects, n - 1);
+        delete [] rects;
+        r->x = p1.x();
+        r->y = p1.y();
+        r->width = r->height = width;
+    }
+}
+#endif
 
 void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty())
         return;
+#ifdef KWIN_HAVE_OPENGL
+    if ( effects->compositingType() == OpenGLCompositing) {
 #ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT);
-    glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_LINE_SMOOTH);
 #endif
-    glLineWidth(width);
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setUseColor(true);
-    vbo->setColor(color);
-    if (ShaderManager::instance()->isValid()) {
-        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-    }
-    QVector<float> verts;
-    foreach (const Mark & mark, marks) {
-        verts.clear();
-        verts.reserve(mark.size() * 2);
-        foreach (const QPoint & p, mark) {
-            verts << p.x() << p.y();
+        glLineWidth(width);
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->reset();
+        vbo->setUseColor(true);
+        vbo->setColor(color);
+        if (ShaderManager::instance()->isValid()) {
+            ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
         }
-        vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
-        vbo->render(GL_LINE_STRIP);
-    }
-    if (!drawing.isEmpty()) {
-        verts.clear();
-        verts.reserve(drawing.size() * 2);
-        foreach (const QPoint & p, drawing) {
-            verts << p.x() << p.y();
+        QVector<float> verts;
+        foreach (const Mark & mark, marks) {
+            verts.clear();
+            verts.reserve(mark.size() * 2);
+            foreach (const QPoint & p, mark) {
+                verts << p.x() << p.y();
+            }
+            vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+            vbo->render(GL_LINE_STRIP);
         }
-        vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
-        vbo->render(GL_LINE_STRIP);
+        if (!drawing.isEmpty()) {
+            verts.clear();
+            verts.reserve(drawing.size() * 2);
+            foreach (const QPoint & p, drawing) {
+                verts << p.x() << p.y();
+            }
+            vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+            vbo->render(GL_LINE_STRIP);
+        }
+        if (ShaderManager::instance()->isValid()) {
+            ShaderManager::instance()->popShader();
+        }
+        glLineWidth(1.0);
+    #ifndef KWIN_HAVE_OPENGLES
+        glDisable(GL_LINE_SMOOTH);
+    #endif
     }
-    if (ShaderManager::instance()->isValid()) {
-        ShaderManager::instance()->popShader();
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if ( effects->compositingType() == XRenderCompositing) {
+        XRenderColor c = preMultiply(color);
+        for (int i = 0; i < marks.count(); ++i) {
+            const int n = marks[i].count() - 1;
+            if (n > 0) {
+                XRectangle *rects = new XRectangle[n];
+                for (int j = 0; j < marks[i].count()-1; ++j) {
+                    addRect(marks[i][j], marks[i][j+1], &rects[j], &c);
+                }
+                XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), &c, rects, n);
+                delete [] rects;
+            }
+        }
+        const int n = drawing.count() - 1;
+        if (n > 0) {
+            XRectangle *rects = new XRectangle[n];
+            for (int i = 0; i < n; ++i)
+                addRect(drawing[i], drawing[i+1], &rects[i], &c);
+            XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), &c, rects, n);
+            delete [] rects;
+        }
     }
-    glLineWidth(1.0);
-#ifndef KWIN_HAVE_OPENGLES
-    glDisable(GL_LINE_SMOOTH);
-    glPopAttrib();
 #endif
 }
 

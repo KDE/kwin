@@ -42,10 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMessageBox>
 #include <QEvent>
 
-#ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/scripting.h"
-#endif
-
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -306,10 +302,9 @@ Application::Application()
     // Reset crashes count if we stay up for more that 15 seconds
     QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 
-    // If KWin was already running it saved its configuration after loosing the selection -> Reread
-    config->reparseConfiguration();
-
     initting = true; // Startup...
+    // first load options - done internally by a different thread
+    options = new Options;
 
     // Install X11 error handler
     XSetErrorHandler(x11ErrorHandler);
@@ -325,7 +320,6 @@ Application::Application()
     // This tries to detect compositing options and can use GLX. GLX problems
     // (X errors) shouldn't cause kwin to abort, so this is out of the
     // critical startup section where x errors cause kwin to abort.
-    options = new Options;
 
     // create workspace.
     (void) new Workspace(isSessionRestored());
@@ -525,9 +519,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
     ksmserver.suspendStartup("kwin");
     KWin::Application a;
-#ifdef KWIN_BUILD_SCRIPTING
-    KWin::Scripting scripting;
-#endif
 
     ksmserver.resumeStartup("kwin");
     KWin::SessionManager weAreIndeed;
@@ -550,9 +541,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         appname, QDBusConnectionInterface::DontQueueService);
 
     KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
-#ifdef KWIN_BUILD_SCRIPTING
-    scripting.start();
-#endif
 
     return a.exec();
 }

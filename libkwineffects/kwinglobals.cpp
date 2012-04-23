@@ -76,6 +76,10 @@ void Extensions::addData(const char* name)
 
 void Extensions::init()
 {
+    static bool initPerformed = false;
+    if (initPerformed) {
+        return;
+    }
     int event_base, error_base;
     data_nextensions = 0;
     shape_version = 0;
@@ -135,6 +139,7 @@ void Extensions::init()
                  << " render: 0x" << QString::number(render_version, 16)
                  << " fixes: 0x" << QString::number(fixes_version, 16)
                  << " non_native_pixmaps: " << non_native_pixmaps << endl;
+    initPerformed = true;
 }
 
 void Extensions::fillExtensionsData(const char**& extensions, int& nextensions, int*&opcodes, int*& error_bases)

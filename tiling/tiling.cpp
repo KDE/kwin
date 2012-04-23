@@ -96,8 +96,10 @@ void Tiling::setEnabled(bool tiling)
         connect(m_workspace, SIGNAL(clientRemoved(KWin::Client*)), this, SLOT(removeTile(KWin::Client*)));
         connect(m_workspace, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(notifyTilingWindowActivated(KWin::Client*)));
         m_tilingLayouts.resize(Workspace::self()->numberOfDesktops() + 1);
-        foreach (Client * c, Workspace::self()->stackingOrder()) {
-            createTile(c);
+        foreach (Toplevel *t, Workspace::self()->stackingOrder()) {
+            if (Client *c = qobject_cast<Client*>(t)) {
+                createTile(c);
+            }
         }
     } else {
         disconnect(m_workspace, SIGNAL(clientAdded(KWin::Client*)));

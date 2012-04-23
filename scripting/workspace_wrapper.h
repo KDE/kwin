@@ -148,12 +148,6 @@ void setter( rettype val );
 
     /**
      * List of Clients currently managed by KWin.
-     * Use this method in QML scripts.
-     **/
-    Q_INVOKABLE QList< QObject* > getClientList() const;
-    /**
-     * List of Clients currently managed by KWin.
-     * Use this method in JavaScript scripts.
      **/
     Q_INVOKABLE QList< KWin::Client* > clientList() const;
     /**
@@ -251,6 +245,21 @@ public Q_SLOTS:
     void slotWindowToDesktopLeft();
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
+
+    /**
+     * Shows an outline at the specified @p geometry.
+     * If an outline is already shown the outline is moved to the new position.
+     * Use @link hideOutline to remove the outline again.
+     **/
+    void showOutline(const QRect &geometry);
+    /**
+     * Overloaded method for convenience.
+     **/
+    void showOutline(int x, int y, int width, int height);
+    /**
+     * Hides the outline previously shown by @link showOutline.
+     **/
+    void hideOutline();
 
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);

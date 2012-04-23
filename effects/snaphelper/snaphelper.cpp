@@ -76,9 +76,6 @@ void SnapHelperEffect::postPaintScreen()
     if (m_timeline.currentValue() != 0.0) {
         // Display the guide
         if (effects->compositingType() == OpenGLCompositing) {
-#ifndef KWIN_HAVE_OPENGLES
-            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setUseColor(true);
@@ -129,9 +126,6 @@ void SnapHelperEffect::postPaintScreen()
 
             glDisable(GL_BLEND);
             glLineWidth(1.0);
-#ifndef KWIN_HAVE_OPENGLES
-            glPopAttrib();
-#endif
         }
         if ( effects->compositingType() == XRenderCompositing ) {
             for ( int i = 0; i < effects->numScreens(); i++ ) {

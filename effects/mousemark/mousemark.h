@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 
 namespace KWin
 {
@@ -46,6 +47,9 @@ private slots:
 private:
     typedef QVector< QPoint > Mark;
     static Mark createArrow(QPoint arrow_start, QPoint arrow_end);
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    void addRect(const QPoint &p1, const QPoint &p2, XRectangle *r, XRenderColor *c);
+#endif
     QVector< Mark > marks;
     Mark drawing;
     QPoint arrow_start;

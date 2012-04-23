@@ -831,9 +831,6 @@ void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double
 void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
 {
     // setup blending of transparent windows
-#ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_ENABLE_BIT);
-#endif
     bool opaque = isOpaque() && opacity == 1.0;
     bool alpha = toplevel->hasAlpha() || type != Content;
     if (type != Content)
@@ -1042,9 +1039,6 @@ void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opa
         glDisable(GL_BLEND);
     }
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::AlphaToOne, 0);
-#ifndef KWIN_HAVE_OPENGLES
-    glPopAttrib();  // ENABLE_BIT
-#endif
 }
 
 void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex)
@@ -1189,17 +1183,11 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         shader->setUniform(GLShader::AlphaToOne, 0);
     }
 
-#ifndef KWIN_HAVE_OPENGLES
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
-#endif
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #ifndef KWIN_HAVE_OPENGLES
     if (!shader)
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-    // TODO: drop the push matrix
-    glPushMatrix();
 #endif
 
     // Render the actual frame
@@ -1472,10 +1460,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         ShaderManager::instance()->popShader();
     }
     glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-    glPopMatrix();
-    glPopAttrib();
-#endif
 }
 
 void SceneOpenGL::EffectFrame::updateTexture()

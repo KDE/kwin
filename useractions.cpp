@@ -44,6 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActivities/Info>
 #endif
 
+#include <X11/extensions/Xrandr.h>
+#ifndef KWIN_NO_XF86VM
+#include <X11/extensions/xf86vmode.h>
+#endif
 #include <fixx11h.h>
 #include <QPushButton>
 #include <QSlider>
@@ -89,7 +93,7 @@ QMenu* Workspace::clientPopup()
         KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
         if (kaction != 0)
             mMoveOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMoveOpAction->setData(Options::MoveOp);
+        mMoveOpAction->setData(Options::UnrestrictedMoveOp);
 
         mResizeOpAction = advanced_popup->addAction(i18n("Re&size"));
         kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
@@ -267,14 +271,9 @@ void Workspace::clientPopupAboutToShow()
     } else {
         initDesktopPopup();
     }
-    QStringList act = openActivityList();
-    kDebug() << "activities:" << act.size();
-    if (act.size() < 2) {
-        delete activity_popup;
-        activity_popup = 0;
-    } else {
-        initActivityPopup();
-    }
+#ifdef KWIN_BUILD_ACTIVITIES
+    updateActivityList(true, false, "showHideActivityMenu");
+#endif
 
     mResizeOpAction->setEnabled(active_popup_client->isResizable());
     mMoveOpAction->setEnabled(active_popup_client->isMovableAcrossScreens());
@@ -309,6 +308,19 @@ void Workspace::clientPopupAboutToShow()
         delete add_tabs_popup;
         add_tabs_popup = 0;
     }
+}
+
+void Workspace::showHideActivityMenu()
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    kDebug() << "activities:" << openActivities_.size();
+    if (openActivities_.size() < 2) {
+        delete activity_popup;
+        activity_popup = 0;
+    } else {
+        initActivityPopup();
+    }
+#endif
 }
 
 void Workspace::selectPopupClientTab(QAction* action)
@@ -506,7 +518,7 @@ void Workspace::activityPopupAboutToShow()
         action->setChecked(true);
     activity_popup->addSeparator();
 
-    foreach (const QString & id, openActivityList()) {
+    foreach (const QString &id, openActivities_) {
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
@@ -843,12 +855,13 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         replay = isActive(); // for clickraise mode
         bool mustReplay = !rules()->checkAcceptFocus(input);
         if (mustReplay) {
-            ClientList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+            ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                      begin = workspace()->stackingOrder().constBegin();
             while (mustReplay && --it != begin && *it != this) {
-                if (((*it)->keepAbove() && !keepAbove()) || (keepBelow() && !(*it)->keepBelow()))
+                Client *c = qobject_cast<Client*>(*it);
+                if (!c || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow()))
                     continue; // can never raise above "it"
-                mustReplay = !((*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->geometry().intersects(geometry()));
+                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->geometry().intersects(geometry()));
             }
         }
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled && replay);
@@ -1463,13 +1476,17 @@ void Workspace::switchWindow(Direction direction)
     QPoint curPos(c->pos().x() + c->geometry().width() / 2,
                   c->pos().y() + c->geometry().height() / 2);
 
-    QList<Client *> clist = stackingOrder();
-    for (QList<Client *>::Iterator i = clist.begin(); i != clist.end(); ++i) {
-        if ((*i)->wantsTabFocus() && *i != c &&
-                (*i)->desktop() == d && !(*i)->isMinimized() && (*i)->isOnCurrentActivity()) {
+    ToplevelList clist = stackingOrder();
+    for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
+        Client *client = qobject_cast<Client*>(c);
+        if (!client) {
+            continue;
+        }
+        if (client->wantsTabFocus() && *i != c &&
+                client->desktop() == d && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window
-            QPoint other((*i)->pos().x() + (*i)->geometry().width() / 2,
-                         (*i)->pos().y() + (*i)->geometry().height() / 2);
+            QPoint other(client->pos().x() + client->geometry().width() / 2,
+                         client->pos().y() + client->geometry().height() / 2);
 
             int distance;
             int offset;
@@ -1499,7 +1516,7 @@ void Workspace::switchWindow(Direction direction)
                 // Inverse score
                 int score = distance + offset + ((offset * offset) / distance);
                 if (score < bestScore || !switchTo) {
-                    switchTo = *i;
+                    switchTo = client;
                     bestScore = score;
                 }
             }
@@ -1613,6 +1630,80 @@ void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::UnrestrictedResizeOp);
+}
+
+void Workspace::slotInvertScreen()
+{
+    bool succeeded = false;
+
+    //BEGIN Xrandr inversion - does atm NOT work with the nvidia blob
+    XRRScreenResources *res = XRRGetScreenResources(display(), active_client ? active_client->window() : rootWindow());
+    if (res) {
+        for (int j = 0; j < res->ncrtc; ++j) {
+            XRRCrtcGamma *gamma = XRRGetCrtcGamma(display(), res->crtcs[j]);
+            if (gamma && gamma->size) {
+                kDebug(1212) << "inverting screen using XRRSetCrtcGamma";
+                const int half = gamma->size / 2 + 1;
+                unsigned short swap;
+                for (int i = 0; i < half; ++i) {
+#define INVERT(_C_) swap = gamma->_C_[i]; gamma->_C_[i] = gamma->_C_[gamma->size - 1 - i]; gamma->_C_[gamma->size - 1 - i] = swap
+                    INVERT(red);
+                    INVERT(green);
+                    INVERT(blue);
+#undef INVERT
+                }
+                XRRSetCrtcGamma(display(), res->crtcs[j], gamma);
+                XRRFreeGamma(gamma);
+                succeeded = true;
+            }
+        }
+        XRRFreeScreenResources(res);
+    }
+    if (succeeded)
+        return;
+
+    //BEGIN XF86VidMode inversion - only works if optionally libXxf86vm is linked
+#ifndef KWIN_NO_XF86VM
+    int size = 0;
+    // TODO: this doesn't work with screen numbers in twinview - probably relevant only for multihead?
+    const int scrn = 0; // active_screen
+    if (XF86VidModeGetGammaRampSize(display(), scrn, &size)) {
+        unsigned short *red, *green, *blue;
+        red = new unsigned short[size];
+        green = new unsigned short[size];
+        blue = new unsigned short[size];
+        if (XF86VidModeGetGammaRamp(display(), scrn, size, red, green, blue)) {
+            kDebug(1212) << "inverting screen using XF86VidModeSetGammaRamp";
+            const int half = size / 2 + 1;
+            unsigned short swap;
+            for (int i = 0; i < half; ++i) {
+                swap = red[i]; red[i] = red[size - 1 - i]; red[size - 1 - i] = swap;
+                swap = green[i]; green[i] = green[size - 1 - i]; green[size - 1 - i] = swap;
+                swap = blue[i]; blue[i] = blue[size - 1 - i]; blue[size - 1 - i] = swap;
+            }
+            XF86VidModeSetGammaRamp(display(), scrn, size, red, green, blue);
+            succeeded = true;
+        }
+        delete [] red;
+        delete [] green;
+        delete [] blue;
+    }
+
+    if (succeeded)
+        return;
+#endif
+
+    //BEGIN effect plugin inversion - atm only works with OpenGL and has an overhead to it
+    if (effects) {
+        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
+            kDebug(1212) << "inverting screen using Effect plugin";
+            QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
+        }
+    }
+
+    if (!succeeded)
+        kDebug(1212) << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
+
 }
 
 #undef USABLE_ACTIVE_CLIENT

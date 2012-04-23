@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace_wrapper.h"
 #include "../client.h"
+#include "../outline.h"
 
 #include <QtGui/QDesktopWidget>
 
@@ -190,15 +191,6 @@ QString WorkspaceWrapper::supportInformation() const
     return Workspace::self()->supportInformation();
 }
 
-QList< QObject* > WorkspaceWrapper::getClientList() const
-{
-    QList<QObject*> list;
-    foreach (Client* client, Workspace::self()->clientList()) {
-        list << client;
-    }
-    return list;
-}
-
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
     connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
@@ -206,6 +198,21 @@ void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
     connect(client, SIGNAL(clientManaging(KWin::Client*)), SIGNAL(clientManaging(KWin::Client*)));
     connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
     connect(client, SIGNAL(clientMaximizedStateChanged(KWin::Client*,bool,bool)), SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)));
+}
+
+void WorkspaceWrapper::showOutline(const QRect &geometry)
+{
+    Workspace::self()->outline()->show(geometry);
+}
+
+void WorkspaceWrapper::showOutline(int x, int y, int width, int height)
+{
+    Workspace::self()->outline()->show(QRect(x, y, width, height));
+}
+
+void WorkspaceWrapper::hideOutline()
+{
+    Workspace::self()->outline()->hide();
 }
 
 } // KWin

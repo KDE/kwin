@@ -86,9 +86,6 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 
 #ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == OpenGLCompositing) {
-#ifndef KWIN_HAVE_OPENGLES
-                glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-#endif
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 vbo->setUseColor(true);
@@ -115,9 +112,6 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                     ShaderManager::instance()->popShader();
                 }
                 glDisable(GL_BLEND);
-#ifndef KWIN_HAVE_OPENGLES
-                glPopAttrib();
-#endif
             }
 #endif
 

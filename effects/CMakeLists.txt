@@ -117,9 +117,9 @@ if( NOT KWIN_MOBILE_EFFECTS )
     include( windowgeometry/CMakeLists.txt )
     include( zoom/CMakeLists.txt )
 
-    if( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
+    if( NOT OPENGLES_FOUND )
     include( logout/CMakeLists.txt )
-    endif( NOT KWIN_HAVE_OPENGLES_COMPOSITING )
+    endif( NOT OPENGLES_FOUND )
 endif( NOT KWIN_MOBILE_EFFECTS )
 
 # OpenGL-specific effects
