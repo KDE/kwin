@@ -1913,11 +1913,14 @@ namespace Oxygen
             tileSet->render( geometry, &painter, TileSet::Ring);
             geometry.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
 
+            renderCorners( &painter, geometry, widget()->palette() );
+
         }
 
-        // render window background
-        renderCorners( &painter, geometry, widget()->palette() );
+        // mask
         painter.setClipRegion( helper().roundedMask( geometry ), Qt::IntersectClip );
+
+        // render window background
         renderWindowBackground( &painter, geometry, widget(), widget()->palette() );
 
         // darken background if item is inactive
@@ -1948,10 +1951,14 @@ namespace Oxygen
             titlebarTextColor( widget()->palette(), isActive() && itemActive ),
             titlebarContrastColor( widget()->palette() ) );
 
+        // adjust geometry for floatFrame when compositing is on.
+        if( drawShadow )
+        { geometry.adjusted(-1, -1, 1, 1 ); }
+
         // floating frame
         helper().drawFloatFrame(
-            &painter, geometry.adjusted(-1, -1, 1, 1 ), widget()->palette().window().color(),
-            false, false,
+            &painter, geometry, widget()->palette().window().color(),
+            !drawShadow, false,
             KDecoration::options()->color(ColorTitleBar)
             );
 
