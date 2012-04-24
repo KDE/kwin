@@ -99,7 +99,10 @@ void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
 QScriptValue Client::toScriptValue(QScriptEngine *eng, const KClientRef &client)
 {
     return eng->newQObject(client, QScriptEngine::QtOwnership,
-                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
+                           QScriptEngine::ExcludeChildObjects |
+                           QScriptEngine::ExcludeDeleteLater |
+                           QScriptEngine::PreferExistingWrapperObject |
+                           QScriptEngine::AutoCreateDynamicProperties);
 }
 
 void Client::fromScriptValue(const QScriptValue &value, KWin::Client* &client)
