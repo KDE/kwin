@@ -2246,6 +2246,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                 restore.moveLeft(geom_restore.x());
             if (geom_restore.height() > 0)
                 restore.moveTop(geom_restore.y());
+            geom_restore = restore; // relevant for mouse pos calculation, bug #298646
         }
         setGeometry(restore, geom_mode);
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
@@ -3137,6 +3138,8 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     // is the same as explicitly untiling this window, so allow it.
     if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
         // Untiling, so just restore geometry, and we're done.
+        if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
+            geom_restore = geometry();
         setGeometry(geom_restore);
         quick_tile_mode = QuickTileNone;
         checkWorkspacePosition(); // Just in case it's a different screen
