@@ -418,9 +418,9 @@ void Workspace::restack(Client* c, Client* under)
     assert(unconstrained_stacking_order.contains(under));
     if (!Client::belongToSameApplication(under, c)) {
          // put in the stacking order below _all_ windows belonging to the active application
-        Client *other = 0;
-        for (int i = 0; i < unconstrained_stacking_order.size(); ++i) { // TODO ignore topmenus?
-            if (Client::belongToSameApplication(under, (other = qobject_cast<Client*>(unconstrained_stacking_order.at(i))))) {
+        for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
+            Client *other = qobject_cast<Client*>(unconstrained_stacking_order.at(i));
+            if (other && Client::belongToSameApplication(under, other)) {
                 under = (c == other) ? 0 : other;
                 break;
             }
@@ -767,7 +767,7 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
             }
             Client *c = qobject_cast<Client*>(*it);
 
-            if (!(  (*it)->isNormalWindow() && c->isShown(true) &&
+            if (!c || !(  (*it)->isNormalWindow() && c->isShown(true) &&
                     (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnScreen(screen()) ))
                 continue; // irrelevant clients
 
