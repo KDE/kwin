@@ -99,10 +99,12 @@ enum ElectricBorderAction {
 //  or window were viewed.
 // DesktopListMode lists them in the order created.
 enum TabBoxMode {
-    TabBoxDesktopMode,           // Focus chain of desktops
-    TabBoxDesktopListMode,       // Static desktop order
-    TabBoxWindowsMode,           // Primary window switching mode
-    TabBoxWindowsAlternativeMode // Secondary window switching mode
+    TabBoxDesktopMode,                      // Focus chain of desktops
+    TabBoxDesktopListMode,                  // Static desktop order
+    TabBoxWindowsMode,                      // Primary window switching mode
+    TabBoxWindowsAlternativeMode,           // Secondary window switching mode
+    TabBoxCurrentAppWindowsMode,            // Same as primary window switching mode but only for windows of current application
+    TabBoxCurrentAppWindowsAlternativeMode, // Same as secondary switching mode but only for windows of current application
 };
 
 enum KWinOption {

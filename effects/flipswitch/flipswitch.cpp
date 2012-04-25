@@ -513,7 +513,9 @@ void FlipSwitchEffect::slotTabBoxAdded(int mode)
         return;
     // only for windows mode
     if (((mode == TabBoxWindowsMode && m_tabbox) ||
-            (mode == TabBoxWindowsAlternativeMode && m_tabboxAlternative))
+            (mode == TabBoxWindowsAlternativeMode && m_tabboxAlternative) ||
+            (mode == TabBoxCurrentAppWindowsMode && m_tabbox) ||
+            (mode == TabBoxCurrentAppWindowsAlternativeMode && m_tabboxAlternative))
             && (!m_active || (m_active && m_stop))
             && !effects->currentTabBoxWindowList().isEmpty()) {
         setActive(true, TabboxMode);

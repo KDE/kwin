@@ -533,7 +533,9 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
     if (!mActivated) {
         // only for windows mode
         if (((mode == TabBoxWindowsMode && primaryTabBox) ||
-                (mode == TabBoxWindowsAlternativeMode && secondaryTabBox))
+                (mode == TabBoxWindowsAlternativeMode && secondaryTabBox) ||
+                (mode == TabBoxCurrentAppWindowsMode && primaryTabBox) ||
+                (mode == TabBoxCurrentAppWindowsAlternativeMode && secondaryTabBox))
                 && effects->currentTabBoxWindowList().count() > 0) {
             input = effects->createFullScreenInputWindow(this, Qt::ArrowCursor);
             activeScreen = effects->activeScreen();

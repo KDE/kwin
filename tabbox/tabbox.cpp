@@ -408,6 +408,12 @@ TabBox::TabBox(QObject *parent)
     m_alternativeConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
     m_alternativeConfig.setLayout(TabBoxConfig::VerticalLayout);
 
+    m_defaultCurrentApplicationConfig = m_defaultConfig;
+    m_defaultCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
+
+    m_alternativeCurrentApplicationConfig = m_alternativeConfig;
+    m_alternativeCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
+
     m_desktopConfig = TabBoxConfig();
     m_desktopConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
     m_desktopConfig.setShowTabBox(true);
@@ -463,6 +469,10 @@ void TabBox::initShortcuts(KActionCollection* keys)
     KEY(I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT + Qt::SHIFT + Qt::Key_Backtab, slotWalkBackThroughWindows(), m_cutWalkThroughWindowsReverse, slotWalkBackThroughWindowsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternative, slotWalkThroughWindowsAlternativeKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternativeReverse, slotWalkBackThroughWindowsAlternativeKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows of Current Application"), Qt::ALT + Qt::Key_QuoteLeft, slotWalkThroughCurrentAppWindows(), m_cutWalkThroughCurrentAppWindows, slotWalkThroughCurrentAppWindowsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows of Current Application (Reverse)"), Qt::ALT + Qt::Key_AsciiTilde, slotWalkBackThroughCurrentAppWindows(), m_cutWalkThroughCurrentAppWindowsReverse, slotWalkBackThroughCurrentAppWindowsKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows of Current Application Alternative"), 0, slotWalkThroughCurrentAppWindowsAlternative(), m_cutWalkThroughCurrentAppWindowsAlternative, slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(QKeySequence))
+    KEY(I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)"), 0, slotWalkBackThroughCurrentAppWindowsAlternative(), m_cutWalkThroughCurrentAppWindowsAlternativeReverse, slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops(), m_cutWalkThroughDesktops, slotWalkThroughDesktopsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktops (Reverse)"),      0, slotWalkBackThroughDesktops(), m_cutWalkThroughDesktopsReverse, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
     KEY(I18N_NOOP("Walk Through Desktop List"),            0, slotWalkThroughDesktopList(), m_cutWalkThroughDesktopList, slotWalkThroughDesktopListKeyChanged(QKeySequence))
@@ -484,6 +494,12 @@ void TabBox::setMode(TabBoxMode mode)
         break;
     case TabBoxWindowsAlternativeMode:
         m_tabBox->setConfig(m_alternativeConfig);
+        break;
+    case TabBoxCurrentAppWindowsMode:
+        m_tabBox->setConfig(m_defaultCurrentApplicationConfig);
+        break;
+    case TabBoxCurrentAppWindowsAlternativeMode:
+        m_tabBox->setConfig(m_alternativeCurrentApplicationConfig);
         break;
     case TabBoxDesktopMode:
         m_tabBox->setConfig(m_desktopConfig);
@@ -658,6 +674,11 @@ void TabBox::reconfigure()
 
     loadConfig(c->group("TabBox"), m_defaultConfig);
     loadConfig(c->group("TabBoxAlternative"), m_alternativeConfig);
+
+    m_defaultCurrentApplicationConfig = m_defaultConfig;
+    m_defaultCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
+    m_alternativeCurrentApplicationConfig = m_alternativeConfig;
+    m_alternativeCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
 
     m_tabBox->setConfig(m_defaultConfig);
 
@@ -903,6 +924,38 @@ void TabBox::slotWalkBackThroughWindowsAlternative()
     navigatingThroughWindows(false, m_cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode);
 }
 
+void TabBox::slotWalkThroughCurrentAppWindows()
+{
+    if (!m_ready){
+        return;
+    }
+    navigatingThroughWindows(true, m_cutWalkThroughCurrentAppWindows, TabBoxCurrentAppWindowsMode);
+}
+
+void TabBox::slotWalkBackThroughCurrentAppWindows()
+{
+    if (!m_ready){
+        return;
+    }
+    navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsReverse, TabBoxCurrentAppWindowsMode);
+}
+
+void TabBox::slotWalkThroughCurrentAppWindowsAlternative()
+{
+    if (!m_ready){
+        return;
+    }
+    navigatingThroughWindows(true, m_cutWalkThroughCurrentAppWindowsAlternative, TabBoxCurrentAppWindowsAlternativeMode);
+}
+
+void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
+{
+    if (!m_ready){
+        return;
+    }
+    navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsAlternativeReverse, TabBoxCurrentAppWindowsAlternativeMode);
+}
+
 void TabBox::slotWalkThroughDesktops()
 {
     if (!m_ready){
@@ -1010,6 +1063,26 @@ void TabBox::slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq
 void TabBox::slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
 {
     m_cutWalkThroughWindowsAlternativeReverse = KShortcut(seq);
+}
+
+void TabBox::slotWalkThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq)
+{
+    m_cutWalkThroughCurrentAppWindows = KShortcut(seq);
+}
+
+void TabBox::slotWalkBackThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq)
+{
+    m_cutWalkThroughCurrentAppWindowsReverse = KShortcut(seq);
+}
+
+void TabBox::slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq)
+{
+    m_cutWalkThroughCurrentAppWindowsAlternative = KShortcut(seq);
+}
+
+void TabBox::slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq)
+{
+    m_cutWalkThroughCurrentAppWindowsAlternativeReverse = KShortcut(seq);
 }
 
 void TabBox::modalActionsSwitch(bool enabled)
@@ -1214,15 +1287,36 @@ void TabBox::keyPress(int keyQt)
     if (m_tabGrab) {
         KShortcut forwardShortcut;
         KShortcut backwardShortcut;
-        if (mode() == TabBoxWindowsMode) {
-            forwardShortcut = m_cutWalkThroughWindows;
-            backwardShortcut = m_cutWalkThroughWindowsReverse;
-        } else {
-            forwardShortcut = m_cutWalkThroughWindowsAlternative;
-            backwardShortcut = m_cutWalkThroughWindowsAlternativeReverse;
+        switch (mode()) {
+            case TabBoxWindowsMode:
+                forwardShortcut = m_cutWalkThroughWindows;
+                backwardShortcut = m_cutWalkThroughWindowsReverse;
+                break;
+            case TabBoxWindowsAlternativeMode:
+                forwardShortcut = m_cutWalkThroughWindowsAlternative;
+                backwardShortcut = m_cutWalkThroughWindowsAlternativeReverse;
+                break;
+            case TabBoxCurrentAppWindowsMode:
+                forwardShortcut = m_cutWalkThroughCurrentAppWindows;
+                backwardShortcut = m_cutWalkThroughCurrentAppWindowsReverse;
+                break;
+            case TabBoxCurrentAppWindowsAlternativeMode:
+                forwardShortcut = m_cutWalkThroughCurrentAppWindowsAlternative;
+                backwardShortcut = m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
+                break;
+            default:
+                kDebug(125) << "Invalid TabBoxMode";
+                return;
         }
         forward = forwardShortcut.contains(keyQt);
         backward = backwardShortcut.contains(keyQt);
+        if (!forward && !backward) {
+            // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
+            // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
+            keyQt &= ~Qt::ShiftModifier;
+            forward = forwardShortcut.contains(keyQt);
+            backward = backwardShortcut.contains(keyQt);
+        }
         if (forward || backward) {
             kDebug(125) << "== " << forwardShortcut.toString()
                         << " or " << backwardShortcut.toString() << endl;

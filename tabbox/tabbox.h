@@ -212,6 +212,10 @@ public slots:
     void slotWalkBackThroughWindows();
     void slotWalkThroughWindowsAlternative();
     void slotWalkBackThroughWindowsAlternative();
+    void slotWalkThroughCurrentAppWindows();
+    void slotWalkBackThroughCurrentAppWindows();
+    void slotWalkThroughCurrentAppWindowsAlternative();
+    void slotWalkBackThroughCurrentAppWindowsAlternative();
 
     void slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq);
     void slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq);
@@ -223,6 +227,10 @@ public slots:
     void slotMoveToTabRightKeyChanged(const QKeySequence& seq);
     void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
     void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
+    void slotWalkThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq);
+    void slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq);
+    void slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq);
 
     void handlerReady();
 
@@ -267,6 +275,8 @@ private:
 
     TabBoxConfig m_defaultConfig;
     TabBoxConfig m_alternativeConfig;
+    TabBoxConfig m_defaultCurrentApplicationConfig;
+    TabBoxConfig m_alternativeCurrentApplicationConfig;
     TabBoxConfig m_desktopConfig;
     TabBoxConfig m_desktopListConfig;
     // false if an effect has referenced the tabbox
@@ -281,6 +291,8 @@ private:
     KShortcut m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
     KShortcut m_cutWalkThroughGroupWindows, m_cutWalkThroughGroupWindowsReverse;
     KShortcut m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse;
+    KShortcut m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsReverse;
+    KShortcut m_cutWalkThroughCurrentAppWindowsAlternative, m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
     bool m_forcedGlobalMouseGrab;
     bool m_ready; // indicates whether the config is completely loaded
 };
