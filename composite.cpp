@@ -536,6 +536,22 @@ void Workspace::delayedCheckUnredirect()
     scene->overlayWindow()->setShape(reg);
 }
 
+
+bool Workspace::compositingPossible() const
+{
+    return CompositingPrefs::compositingPossible();
+}
+
+QString Workspace::compositingNotPossibleReason() const
+{
+    return CompositingPrefs::compositingNotPossibleReason();
+}
+
+bool Workspace::openGLIsBroken() const
+{
+    return CompositingPrefs::openGlIsBroken();
+}
+
 //****************************************
 // Toplevel
 //****************************************

@@ -447,6 +447,9 @@ public:
     bool startActivity(const QString &id);
     QStringList activeEffects() const;
     QString supportInformation() const;
+    bool compositingPossible() const;
+    QString compositingNotPossibleReason() const;
+    bool openGLIsBroken() const;
 
     void setCurrentScreen(int new_screen);
 

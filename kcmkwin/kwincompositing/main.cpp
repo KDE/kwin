@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 
 #include "kwin_interface.h"
+#include "kwinglobals.h"
 
 #include <kaboutdata.h>
 #include <kaction.h>
@@ -385,19 +386,18 @@ void KWinCompositingConfig::updateStatusUI(bool compositingIsPossible)
         ui.compositingOptionsContainer->show();
         ui.statusTitleWidget->hide();
         ui.rearmGlSupport->hide();
-
-        // Driver-specific config detection
-        mDefaultPrefs.detect();
     }
     else {
+        OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
         ui.compositingOptionsContainer->hide();
         QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
         text += "<hr>";
-        text += CompositingPrefs::compositingNotPossibleReason();
+        text += kwin.isValid() ? kwin.compositingNotPossibleReason() : i18nc("Reason shown when trying to activate desktop effects and KWin (most likely) crashes",
+                                                                             "Window Manager seems not to be running");
         ui.statusTitleWidget->setText(text);
         ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
         ui.statusTitleWidget->show();
-        ui.rearmGlSupport->setVisible(CompositingPrefs::openGlIsBroken());
+        ui.rearmGlSupport->setVisible(kwin.isValid() ? kwin.openGLIsBroken() : true);
     }
 }
 
@@ -405,7 +405,8 @@ void KWinCompositingConfig::load()
 {
     initEffectSelector();
     mKWinConfig->reparseConfiguration();
-    updateStatusUI(CompositingPrefs::compositingPossible());
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "compositingPossible");
+    QDBusConnection::sessionBus().callWithCallback(msg, this, SLOT(updateStatusUI(bool)));
 
     // Copy Plugins group to temp config file
     QMap<QString, QString> entries = mKWinConfig->entryMap("Plugins");
@@ -515,8 +516,9 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
 void KWinCompositingConfig::save()
 {
+    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
     if (ui.compositingType->currentIndex() == OPENGL_INDEX &&
-        CompositingPrefs::openGlIsBroken() && !ui.rearmGlSupport->isVisible())
+        kwin.openGLIsBroken() && !ui.rearmGlSupport->isVisible())
     {
         KConfigGroup config(mKWinConfig, "Compositing");
         QString oldBackend = config.readEntry("Backend", "OpenGL");

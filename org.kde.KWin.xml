@@ -85,6 +85,15 @@
     </method>
     <method name="supportInformation">
         <arg type="s" direction="out"/>
-    </medthod>
+    </method>
+    <method name="compositingPossible">
+        <arg type="b" direction="out"/>
+    </method>
+    <method name="compositingNotPossibleReason">
+        <arg type="s" direction="out"/>
+    </method>
+    <method name="openGLIsBroken">
+        <arg type="b" direction="out"/>
+    </method>
   </interface>
 </node>

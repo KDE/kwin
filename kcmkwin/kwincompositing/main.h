@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_interface.h"
 
 #include "ui_main.h"
-#include "compositingprefs.h"
 #include "ktimerdialog.h"
 
 class KPluginSelector;
@@ -80,14 +79,13 @@ private slots:
     void suggestGraphicsSystem();
     void toogleSmoothScaleUi(int compositingType);
     void toggleEffectShortcutChanged(const QKeySequence &seq);
+    void updateStatusUI(bool compositingIsPossible);
 
 private:
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
-    void updateStatusUI(bool compositingIsPossible);
 
     KSharedConfigPtr mKWinConfig;
     Ui::KWinCompositingConfig ui;
-    CompositingPrefs mDefaultPrefs;
 
     QMap<QString, QString> mPreviousConfig;
     KTemporaryFile mTmpConfigFile;
