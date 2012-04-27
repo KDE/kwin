@@ -124,7 +124,7 @@ void Workspace::slotCompositingOptionsInitialized()
         kDebug(1212) << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-        KSharedConfigPtr unsafeConfigPtr(KSharedConfig::openConfig("kwinrc"));
+        KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         if (unsafeConfig.readEntry("OpenGLIsUnsafe", false))
             kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
@@ -247,7 +247,7 @@ void Workspace::finishCompositing()
 void Workspace::fallbackToXRenderCompositing()
 {
     finishCompositing();
-    KConfigGroup config(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    KConfigGroup config(KGlobal::config(), "Compositing");
     config.writeEntry("Backend", "XRender");
     config.writeEntry("GraphicsSystem", "native");
     config.sync();

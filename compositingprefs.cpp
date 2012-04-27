@@ -48,15 +48,13 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::openGlIsBroken()
 {
-    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
-    return KConfigGroup(config, "Compositing").readEntry("OpenGLIsUnsafe", false);
+    return KConfigGroup(KGlobal::config(), "Compositing").readEntry("OpenGLIsUnsafe", false);
 }
 
 bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
-    KConfigGroup gl_workaround_group(config, "Compositing");
+    KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
         gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
         return false;
@@ -86,8 +84,7 @@ bool CompositingPrefs::compositingPossible()
 QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KSharedConfigPtr config = KSharedConfig::openConfig("kwinrc");
-    KConfigGroup gl_workaround_group(config, "Compositing");
+    KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
         gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"

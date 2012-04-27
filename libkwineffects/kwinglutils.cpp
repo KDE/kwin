@@ -105,8 +105,7 @@ void initGL()
 #ifdef KWIN_HAVE_OPENGLES
     legacyGl = false;
 #else
-    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig("kwinrc", KConfig::NoGlobals);
-    KConfigGroup config(kwinconfig, "Compositing");
+    KConfigGroup config(KGlobal::config(), "Compositing");
     legacyGl = config.readEntry<bool>("GLLegacy", false);
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 #endif

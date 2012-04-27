@@ -1054,7 +1054,7 @@ void Workspace::slotReinitCompositing()
 {
     // Reparse config. Config options will be reloaded by setupCompositing()
     KGlobal::config()->reparseConfiguration();
-    const QString graphicsSystem = KConfigGroup(KSharedConfig::openConfig("kwinrc"), "Compositing").readEntry("GraphicsSystem", "");
+    const QString graphicsSystem = KConfigGroup(KGlobal::config(), "Compositing").readEntry("GraphicsSystem", "");
     if ((Extensions::nonNativePixmaps() && graphicsSystem == "native") ||
         (!Extensions::nonNativePixmaps() && (graphicsSystem == "raster" || graphicsSystem == "opengl")) ) {
         restartKWin("explicitly reconfigured graphicsSystem change");
