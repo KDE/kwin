@@ -64,7 +64,6 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget* parent, const QVariantList
     connect(m_ui->quickMaximizeBox, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
     connect(m_ui->quickTileBox, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
 
-    m_defaultPrefs.detect(); // Driver-specific config detection
     load();
 }
 
@@ -412,7 +411,7 @@ void KWinScreenEdgesConfig::monitorShowEvent()
 {
     // Check if they are enabled
     KConfigGroup config(m_config, "Compositing");
-    if (config.readEntry("Enabled", m_defaultPrefs.recommendCompositing())) {
+    if (config.readEntry("Enabled", true)) {
         // Compositing enabled
         config = KConfigGroup(m_config, "Plugins");
 

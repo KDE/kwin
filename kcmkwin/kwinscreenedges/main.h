@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksharedconfig.h>
 
 #include "kwinglobals.h"
-#include "compositingprefs.h"
 
 #include "ui_main.h"
 
@@ -61,7 +60,6 @@ protected:
 private:
     KWinScreenEdgesConfigForm* m_ui;
     KSharedConfigPtr m_config;
-    CompositingPrefs m_defaultPrefs;
 
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
