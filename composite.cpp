@@ -883,8 +883,10 @@ bool Client::setupCompositing()
         return false;
     }
     updateVisibility(); // for internalKeep()
-    updateDecoration(true, true);
-    move(calculateGravitation(true)); // we just polluted the gravity because the window likely has no decoration yet
+    if (isManaged()) {
+        // only create the decoration when a client is managed
+        updateDecoration(true, true);
+    }
     return true;
 }
 
