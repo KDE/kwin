@@ -38,8 +38,7 @@ namespace KWin
 {
 
 CompositingPrefs::CompositingPrefs()
-    : mEnableVSync(true)
-    , mEnableDirectRendering(true)
+    : mEnableDirectRendering(true)
 {
 }
 
@@ -160,7 +159,6 @@ void CompositingPrefs::detect()
     }
     if (canDetect) {
         detectDriverAndVersion();
-        applyDriverSpecificOptions();
     }
     if (!haveContext) {
         deleteEGLContext();
@@ -206,7 +204,6 @@ void CompositingPrefs::detect()
 
     if (initGLXContext()) {
         detectDriverAndVersion();
-        applyDriverSpecificOptions();
     }
     if (hasglx13)
         glXMakeContextCurrent(display(), olddrawable, oldreaddrawable, oldcontext);
@@ -373,14 +370,6 @@ void CompositingPrefs::detectDriverAndVersion()
     GLPlatform *gl = GLPlatform::instance();
     gl->detect();
     gl->printResults();
-}
-
-// See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
-void CompositingPrefs::applyDriverSpecificOptions()
-{
-    GLPlatform *gl = GLPlatform::instance();
-    if (gl->driver() == Driver_Intel)
-        mEnableVSync = false;
 }
 
 } // namespace

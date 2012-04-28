@@ -50,9 +50,6 @@ public:
      * @returns @c true if GLX is available, @c false otherwise and if not build with OpenGL support.
      **/
     static bool hasGlx();
-    bool enableVSync() const  {
-        return mEnableVSync;
-    }
     bool enableDirectRendering() const  {
         return mEnableDirectRendering;
     }
@@ -62,7 +59,6 @@ public:
 protected:
 
     void detectDriverAndVersion();
-    void applyDriverSpecificOptions();
 
     bool initGLXContext();
     void deleteGLXContext();
@@ -71,7 +67,6 @@ protected:
 
 
 private:
-    bool mEnableVSync;
     bool mEnableDirectRendering;
 
 #ifdef KWIN_HAVE_OPENGLES

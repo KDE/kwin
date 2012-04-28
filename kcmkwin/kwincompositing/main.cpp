@@ -373,7 +373,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.xrScaleFilter->setCurrentIndex((int)config.readEntry("XRenderSmoothScale", false));
     ui.glScaleFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 2));
 
-    ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
+    ui.glVSync->setChecked(config.readEntry("GLVSync", true));
     ui.glShaders->setChecked(!config.readEntry<bool>("GLLegacy", false));
 
     toogleSmoothScaleUi(ui.compositingType->currentIndex());
@@ -486,7 +486,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
     if (config.readEntry("Backend", "OpenGL")
             != ((ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender")
-            || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
+            || config.readEntry("GLVSync", true) != ui.glVSync->isChecked()
             || config.readEntry<bool>("GLLegacy", false) == ui.glShaders->isChecked()) {
         m_showConfirmDialog = true;
         advancedChanged = true;
@@ -656,7 +656,7 @@ void KWinCompositingConfig::defaults()
     ui.unredirectFullscreen->setChecked(false);
     ui.xrScaleFilter->setCurrentIndex(0);
     ui.glScaleFilter->setCurrentIndex(2);
-    ui.glVSync->setChecked(mDefaultPrefs.enableVSync());
+    ui.glVSync->setChecked(true);
     ui.glShaders->setChecked(true);
 }
 

@@ -1002,7 +1002,7 @@ void Options::reloadCompositingSettings(bool force)
     KConfigGroup config(_config, "Compositing");
 
     setGlDirect(prefs.enableDirectRendering());
-    setGlVSync(config.readEntry("GLVSync", prefs.enableVSync()));
+    setGlVSync(config.readEntry("GLVSync", Options::defaultGlVSync()));
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));
     setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
     if (!isGlStrictBindingFollowsDriver()) {
