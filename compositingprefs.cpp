@@ -41,7 +41,6 @@ CompositingPrefs::CompositingPrefs()
     : mRecommendCompositing(false)
     , mEnableVSync(true)
     , mEnableDirectRendering(true)
-    , mStrictBinding(true)
 {
 }
 
@@ -389,7 +388,6 @@ void CompositingPrefs::applyDriverSpecificOptions()
     mRecommendCompositing = true;
 
     GLPlatform *gl = GLPlatform::instance();
-    mStrictBinding = !gl->supports(LooseBinding);
     if (gl->driver() == Driver_Intel)
         mEnableVSync = false;
 }

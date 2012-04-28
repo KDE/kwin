@@ -106,6 +106,11 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         kError(1212) << "OpenGL compositing setup failed";
         return; // error
     }
+
+    // set strict binding
+    if (options->isGlStrictBindingFollowsDriver()) {
+        options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
+    }
     kDebug(1212) << "DB:" << db << ", Direct:" << bool(glXIsDirect(display(), ctxbuffer)) << endl;
     init_ok = true;
 }

@@ -57,9 +57,6 @@ public:
     bool enableDirectRendering() const  {
         return mEnableDirectRendering;
     }
-    bool strictBinding() const {
-        return mStrictBinding;
-    }
 
     void detect();
 
@@ -78,7 +75,6 @@ private:
     bool mRecommendCompositing;
     bool mEnableVSync;
     bool mEnableDirectRendering;
-    bool mStrictBinding;
 
 #ifdef KWIN_HAVE_OPENGLES
     EGLDisplay mEGLDisplay;

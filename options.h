@@ -194,6 +194,12 @@ class Options : public QObject, public KDecorationOptions
     Q_PROPERTY(uint refreshRate READ refreshRate WRITE setRefreshRate NOTIFY refreshRateChanged)
     Q_PROPERTY(bool glDirect READ isGlDirect WRITE setGlDirect NOTIFY glDirectChanged)
     Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding WRITE setGlStrictBinding NOTIFY glStrictBindingChanged)
+    /**
+     * Whether strict binding follows the driver or has been overwritten by a user defined config value.
+     * If @c true @link glStrictBinding is set by the OpenGL Scene during initialization.
+     * If @c false @link glStrictBinding is set from a config value and not updated during scene initialization.
+     **/
+    Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
 public:
 
     Options(QObject *parent = NULL);
@@ -583,6 +589,9 @@ public:
     bool isGlStrictBinding() const {
         return m_glStrictBinding;
     }
+    bool isGlStrictBindingFollowsDriver() const {
+        return m_glStrictBindingFollowsDriver;
+    }
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
@@ -646,6 +655,7 @@ public:
     void setRefreshRate(uint refreshRate);
     void setGlDirect(bool glDirect);
     void setGlStrictBinding(bool glStrictBinding);
+    void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
 
     // default values
     static FocusPolicy defaultFocusPolicy() {
@@ -868,6 +878,9 @@ public:
     static bool defaultGlStrictBinding() {
         return true;
     }
+    static bool defaultGlStrictBindingFollowsDriver() {
+        return true;
+    }
     static int defaultAnimationSpeed() {
         return 3;
     }
@@ -949,6 +962,7 @@ Q_SIGNALS:
     void refreshRateChanged();
     void glDirectChanged();
     void glStrictBindingChanged();
+    void glStrictBindingFollowsDriverChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -993,6 +1007,7 @@ private:
     uint m_refreshRate;
     bool m_glDirect;
     bool m_glStrictBinding;
+    bool m_glStrictBindingFollowsDriver;
 
     WindowOperation OpTitlebarDblClick;
 

@@ -156,6 +156,7 @@ Options::Options(QObject *parent)
     , m_refreshRate(Options::defaultRefreshRate())
     , m_glDirect(Options::defaultGlDirect())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
+    , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -771,6 +772,15 @@ void Options::setGlStrictBinding(bool glStrictBinding)
     emit glStrictBindingChanged();
 }
 
+void Options::setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver)
+{
+    if (m_glStrictBindingFollowsDriver == glStrictBindingFollowsDriver) {
+        return;
+    }
+    m_glStrictBindingFollowsDriver = glStrictBindingFollowsDriver;
+    emit glStrictBindingFollowsDriverChanged();
+}
+
 void Options::setElectricBorders(int borders)
 {
     if (electric_borders == borders) {
@@ -994,7 +1004,10 @@ void Options::reloadCompositingSettings(bool force)
     setGlDirect(prefs.enableDirectRendering());
     setGlVSync(config.readEntry("GLVSync", prefs.enableVSync()));
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));
-    setGlStrictBinding(config.readEntry("GLStrictBinding", prefs.strictBinding()));
+    setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
+    if (!isGlStrictBindingFollowsDriver()) {
+        setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
+    }
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 
