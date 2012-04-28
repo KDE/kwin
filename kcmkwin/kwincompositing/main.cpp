@@ -259,7 +259,7 @@ void KWinCompositingConfig::currentTabChanged(int tab)
 void KWinCompositingConfig::loadGeneralTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
-    bool enabled = config.readEntry("Enabled", mDefaultPrefs.recommendCompositing());
+    bool enabled = config.readEntry("Enabled", true);
     ui.useCompositing->setChecked(enabled);
 
     // this works by global shortcut magics - it will pick the current sc
@@ -582,7 +582,7 @@ void KWinCompositingConfig::checkLoadedEffects()
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects");
     QDBusMessage reply = QDBusConnection::sessionBus().call(message);
     KConfigGroup effectConfig = KConfigGroup(mKWinConfig, "Compositing");
-    bool enabledAfter = effectConfig.readEntry("Enabled", mDefaultPrefs.recommendCompositing());
+    bool enabledAfter = effectConfig.readEntry("Enabled", true);
 
     if (reply.type() == QDBusMessage::ReplyMessage && enabledAfter && !getenv("KDE_FAILSAFE")) {
         effectConfig = KConfigGroup(mKWinConfig, "Plugins");
@@ -642,7 +642,7 @@ void KWinCompositingConfig::defaults()
 {
     ui.tabWidget->setCurrentIndex(0);
 
-    ui.useCompositing->setChecked(mDefaultPrefs.recommendCompositing());
+    ui.useCompositing->setChecked(true);
     ui.effectWinManagement->setChecked(true);
     ui.effectAnimations->setChecked(true);
 

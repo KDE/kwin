@@ -50,7 +50,6 @@ public:
      * @returns @c true if GLX is available, @c false otherwise and if not build with OpenGL support.
      **/
     static bool hasGlx();
-    bool recommendCompositing() const;
     bool enableVSync() const  {
         return mEnableVSync;
     }
@@ -72,7 +71,6 @@ protected:
 
 
 private:
-    bool mRecommendCompositing;
     bool mEnableVSync;
     bool mEnableDirectRendering;
 

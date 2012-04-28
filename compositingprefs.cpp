@@ -38,19 +38,13 @@ namespace KWin
 {
 
 CompositingPrefs::CompositingPrefs()
-    : mRecommendCompositing(false)
-    , mEnableVSync(true)
+    : mEnableVSync(true)
     , mEnableDirectRendering(true)
 {
 }
 
 CompositingPrefs::~CompositingPrefs()
 {
-}
-
-bool CompositingPrefs::recommendCompositing() const
-{
-    return mRecommendCompositing;
 }
 
 bool CompositingPrefs::openGlIsBroken()
@@ -384,9 +378,6 @@ void CompositingPrefs::detectDriverAndVersion()
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
 {
-    // Always recommend
-    mRecommendCompositing = true;
-
     GLPlatform *gl = GLPlatform::instance();
     if (gl->driver() == Driver_Intel)
         mEnableVSync = false;
