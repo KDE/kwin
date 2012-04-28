@@ -227,7 +227,7 @@ public:
     double opacity() const;
     int depth() const;
     bool hasAlpha() const;
-    virtual void setupCompositing();
+    virtual bool setupCompositing();
     virtual void finishCompositing();
     bool updateUnredirectedState();
     bool unredirected() const;

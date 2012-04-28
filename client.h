@@ -481,7 +481,7 @@ public:
     void hideClient(bool hide);
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
-    virtual void setupCompositing();
+    virtual bool setupCompositing();
     virtual void finishCompositing();
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }

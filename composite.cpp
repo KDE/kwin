@@ -520,19 +520,20 @@ void Workspace::delayedCheckUnredirect()
 // Toplevel
 //****************************************
 
-void Toplevel::setupCompositing()
+bool Toplevel::setupCompositing()
 {
     if (!compositing())
-        return;
+        return false;
     damageRatio = 0.0;
     if (damage_handle != None)
-        return;
+        return false;
     damage_handle = XDamageCreate(display(), frameId(), XDamageReportRawRectangles);
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
     unredirect = false;
     workspace()->checkUnredirect(true);
     scene->windowAdded(this);
+    return true;
 }
 
 void Toplevel::finishCompositing()
@@ -836,12 +837,15 @@ void Toplevel::suspendUnredirect(bool suspend)
 // Client
 //****************************************
 
-void Client::setupCompositing()
+bool Client::setupCompositing()
 {
-    Toplevel::setupCompositing();
+    if (!Toplevel::setupCompositing()){
+        return false;
+    }
     updateVisibility(); // for internalKeep()
     updateDecoration(true, true);
     move(calculateGravitation(true)); // we just polluted the gravity because the window likely has no decoration yet
+    return true;
 }
 
 void Client::finishCompositing()
