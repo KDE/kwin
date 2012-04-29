@@ -56,25 +56,8 @@ public:
 
     void detect();
 
-protected:
-
-    bool initGLXContext();
-    void deleteGLXContext();
-    bool initEGLContext();
-    void deleteEGLContext();
-
-
 private:
     bool mEnableDirectRendering;
-
-#ifdef KWIN_HAVE_OPENGLES
-    EGLDisplay mEGLDisplay;
-    EGLContext mEGLContext;
-    EGLSurface mEGLSurface;
-#else
-    GLXContext mGLContext;
-#endif
-    Window mGLWindow;
 };
 
 }
