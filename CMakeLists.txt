@@ -172,7 +172,7 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} kdeclarative kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
+set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} ${KDECLARATIVE_LIBRARIES} kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB})
 
 find_library(XF86VM_LIBRARY Xxf86vm)
 if (XF86VM_LIBRARY)
