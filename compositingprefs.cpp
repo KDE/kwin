@@ -157,9 +157,6 @@ void CompositingPrefs::detect()
     if (!haveContext) {
         canDetect = initEGLContext();
     }
-    if (canDetect) {
-        detectDriverAndVersion();
-    }
     if (!haveContext) {
         deleteEGLContext();
     }
@@ -202,9 +199,7 @@ void CompositingPrefs::detect()
     if (hasglx13)
         oldreaddrawable = glXGetCurrentReadDrawable();
 
-    if (initGLXContext()) {
-        detectDriverAndVersion();
-    }
+    initGLXContext();
     if (hasglx13)
         glXMakeContextCurrent(display(), olddrawable, oldreaddrawable, oldcontext);
     else
@@ -363,13 +358,6 @@ void CompositingPrefs::deleteEGLContext()
     eglReleaseThread();
     XDestroyWindow(display(), mGLWindow);
 #endif
-}
-
-void CompositingPrefs::detectDriverAndVersion()
-{
-    GLPlatform *gl = GLPlatform::instance();
-    gl->detect();
-    gl->printResults();
 }
 
 } // namespace

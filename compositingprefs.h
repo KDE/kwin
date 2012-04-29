@@ -58,8 +58,6 @@ public:
 
 protected:
 
-    void detectDriverAndVersion();
-
     bool initGLXContext();
     void deleteGLXContext();
     bool initEGLContext();

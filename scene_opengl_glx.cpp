@@ -55,9 +55,11 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     if (!initRenderingContext())
         return; // error
     // Initialize OpenGL
+    GLPlatform *glPlatform = GLPlatform::instance();
+    glPlatform->detect();
+    glPlatform->printResults();
     initGL();
 
-    GLPlatform *glPlatform = GLPlatform::instance();
     if (glPlatform->isSoftwareEmulation()) {
         kError(1212) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
         QTimer::singleShot(0, Workspace::self(), SLOT(fallbackToXRenderCompositing()));

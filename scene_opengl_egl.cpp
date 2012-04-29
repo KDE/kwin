@@ -42,6 +42,9 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         kError(1212) << "Required support for binding pixmaps to EGLImages not found, disabling compositing";
         return;
     }
+    GLPlatform *glPlatform = GLPlatform::instance();
+    glPlatform->detect();
+    glPlatform->printResults();
     initGL();
     if (!hasGLExtension("GL_OES_EGL_image")) {
         kError(1212) << "Required extension GL_OES_EGL_image not found, disabling compositing";
