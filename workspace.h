@@ -61,10 +61,6 @@ class KStartupInfoData;
 class QSlider;
 class QPushButton;
 
-namespace Kephal
-{
-    class Screen;
-}
 namespace KWin
 {
 
