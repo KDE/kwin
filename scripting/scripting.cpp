@@ -156,6 +156,7 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
 KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
     , m_engine(new QScriptEngine(this))
+    , m_starting(false)
 {
     QDBusConnection::sessionBus().registerObject('/' + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
@@ -167,26 +168,56 @@ KWin::Script::~Script()
 
 void KWin::Script::run()
 {
-    if (running()) {
+    if (running() || m_starting) {
         return;
     }
-    if (scriptFile().open(QIODevice::ReadOnly)) {
-        QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
-                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
-        m_engine->globalObject().setProperty("options", optionsValue, QScriptValue::Undeletable);
-        m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
-        QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
-        KWin::MetaScripting::supplyConfig(m_engine);
-        installScriptFunctions(m_engine);
+    m_starting = true;
+    QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
+    connect(watcher, SIGNAL(finished()), SLOT(slotScriptLoadedFromFile()));
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Script::loadScriptFromFile));
+}
 
-        QScriptValue ret = m_engine->evaluate(scriptFile().readAll());
-
-        if (ret.isError()) {
-            sigException(ret);
-            deleteLater();
-        }
+QByteArray KWin::Script::loadScriptFromFile()
+{
+    if (!scriptFile().open(QIODevice::ReadOnly)) {
+        return QByteArray();
     }
+    QByteArray result(scriptFile().readAll());
+    scriptFile().close();
+    return result;
+}
+
+void KWin::Script::slotScriptLoadedFromFile()
+{
+    QFutureWatcher<QByteArray> *watcher = dynamic_cast< QFutureWatcher< QByteArray>* >(sender());
+    if (!watcher) {
+        // not invoked from a QFutureWatcher
+        return;
+    }
+    if (watcher->result().isNull()) {
+        // do not load empty script
+        deleteLater();
+        watcher->deleteLater();
+        return;
+    }
+    QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
+                            QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
+    m_engine->globalObject().setProperty("options", optionsValue, QScriptValue::Undeletable);
+    m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
+    QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
+    KWin::MetaScripting::supplyConfig(m_engine);
+    installScriptFunctions(m_engine);
+
+    QScriptValue ret = m_engine->evaluate(watcher->result());
+
+    if (ret.isError()) {
+        sigException(ret);
+        deleteLater();
+    }
+
+    watcher->deleteLater();
     setRunning(true);
+    m_starting = false;
 }
 
 void KWin::Script::sigException(const QScriptValue& exception)

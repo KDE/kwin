@@ -121,9 +121,19 @@ private slots:
       * TODO: Log to file, show from notifier..
       */
     void sigException(const QScriptValue &exception);
+    /**
+     * Callback for when loadScriptFromFile has finished.
+     **/
+    void slotScriptLoadedFromFile();
 
 private:
+    /**
+     * Read the script from file into a byte array.
+     * If file cannot be read an empty byte array is returned.
+     **/
+    QByteArray loadScriptFromFile();
     QScriptEngine *m_engine;
+    bool m_starting;
 };
 
 class DeclarativeScript : public AbstractScript
