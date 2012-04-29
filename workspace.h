@@ -215,6 +215,10 @@ public:
      */
     int numberOfDesktops() const;
     /**
+     * @returns The maximum number of desktops that KWin supports.
+     */
+    int maxNumberOfDesktops() const;
+    /**
      * Set the number of available desktops to @a count. This function overrides any previous
      * grid layout.
      */

@@ -497,6 +497,13 @@ void Workspace::desktopPopupAboutToShow()
                 !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i)
             action->setChecked(true);
     }
+
+    desk_popup->addSeparator();
+    action = desk_popup->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
+    action->setData(numberOfDesktops() + 1);
+
+    if (numberOfDesktops() >= Workspace::self()->maxNumberOfDesktops())
+        action->setEnabled(false);
 }
 
 /*!
@@ -1435,6 +1442,8 @@ void Workspace::slotSendToDesktop(QAction *action)
         // the 'on_all_desktops' menu entry
         active_popup_client->setOnAllDesktops(!active_popup_client->isOnAllDesktops());
         return;
+    } else if (desk > numberOfDesktops()) {
+        setNumberOfDesktops(desk);
     }
 
     sendClientToDesktop(active_popup_client, desk, false);

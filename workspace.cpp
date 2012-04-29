@@ -1422,6 +1422,11 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     return true;
 }
 
+int Workspace::maxNumberOfDesktops() const
+{
+    return KWIN_MAX_NUMBER_DESKTOPS;
+}
+
 #ifdef KWIN_BUILD_ACTIVITIES
 
 //BEGIN threaded activity list fetching
