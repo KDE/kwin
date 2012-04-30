@@ -573,7 +573,10 @@ void KWinCompositingConfig::save()
 
     if (m_showConfirmDialog) {
         m_showConfirmDialog = false;
-        showConfirmDialog(advancedChanged);
+        if (advancedChanged)
+            QTimer::singleShot(1000, this, SLOT(confirmReInit()));
+        else
+            showConfirmDialog(false);
     }
 }
 

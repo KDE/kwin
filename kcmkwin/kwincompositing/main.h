@@ -75,6 +75,7 @@ public slots:
     void initEffectSelector();
 
 private slots:
+    void confirmReInit() { showConfirmDialog(true); }
     void rearmGlSupport();
     void suggestGraphicsSystem();
     void toogleSmoothScaleUi(int compositingType);
