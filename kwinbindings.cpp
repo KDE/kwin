@@ -27,21 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // normal human descriptions with DEF2() the others can use DEF()
 // new DEF3 allows to pass data to the action, replacing the %1 argument in the name
 
-#ifndef NOSLOTS
-#define KWIN_CONNECT(_FNSLOT_) connect(a,SIGNAL(triggered(bool)),SLOT(_FNSLOT_));
-#else
-#define KWIN_CONNECT(_FNSLOT_) /*noop*/
-#endif
-
 #define DEF2( name, descr, key, fnSlot )                            \
     a = actionCollection->addAction( name );                        \
     a->setText( i18n(descr) );                                      \
     qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
-    KWIN_CONNECT(fnSlot)
-
-#define DEF4( name, descr, key, fnSlot, value )                     \
-    DEF2(name, descr, key, fnSlot)                                  \
-    a->setData(value);
+    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
 
 #define DEF( name, key, fnSlot )                                    \
     DEF2(name, name, key, fnSlot)
@@ -51,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     a->setText( i18n(name, value) );                                \
     qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
     a->setData(value);                                              \
-    KWIN_CONNECT(fnSlot)
+    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
 
 
 a = actionCollection->addAction("Program:kwin");
@@ -195,5 +185,6 @@ DEF(I18N_NOOP("Invert Screen Colors"),              0, slotInvertScreen());
 
 #undef DEF
 #undef DEF2
+#undef DEF3
 
 //  }
