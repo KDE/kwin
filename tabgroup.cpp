@@ -149,6 +149,14 @@ bool TabGroup::remove(Client* c, const QRect& newGeom)
     m_clients.removeAt(index);
     updateMinMaxSize();
 
+    if (m_clients.count() == 1) { // split
+        remove(m_clients.at(0), m_clients.at(0)->geometry());
+    }
+    if (m_clients.isEmpty()) { // remaining singleton "tab"
+        c->setClientShown(true);
+        return true; // group is gonna be deleted after this anyway
+    }
+
     if (c == m_current) {
         m_current = index < m_clients.count() ? m_clients.at(index) : m_clients.last();
         m_current->setClientShown(true);
