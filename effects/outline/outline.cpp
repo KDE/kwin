@@ -28,8 +28,8 @@ KWIN_EFFECT(outline, OutlineEffect)
 OutlineEffect::OutlineEffect()
     : Effect()
     , m_active(false)
+    , m_outline(NULL)
 {
-    m_outline = effects->effectFrame(EffectFrameNone);
     connect(effects, SIGNAL(showOutline(QRect)), SLOT(slotShowOutline(QRect)));
     connect(effects, SIGNAL(hideOutline()), SLOT(slotHideOutline()));
 }
@@ -70,6 +70,9 @@ void OutlineEffect::slotShowOutline(const QRect& geometry)
     }
     m_active = true;
     m_geometry = geometry;
+    if (!m_outline) {
+        m_outline = effects->effectFrame(EffectFrameNone);
+    }
     m_outline->setGeometry(geometry);
     m_outline->setSelection(geometry);
     effects->addRepaint(geometry);

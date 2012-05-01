@@ -60,7 +60,7 @@ CubeEffect::CubeEffect()
     , cubeOpacity(1.0)
     , opacityDesktopOnly(true)
     , displayDesktopName(false)
-    , desktopNameFrame(effects->effectFrame(EffectFrameStyled))
+    , desktopNameFrame(NULL)
     , reflection(true)
     , rotating(false)
     , desktopChangedWhileRotating(false)
@@ -97,7 +97,6 @@ CubeEffect::CubeEffect()
 {
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
-    desktopNameFrame->setFont(desktopNameFont);
 
     const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/cube-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
@@ -592,6 +591,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             QRect screenRect = effects->clientArea(ScreenArea, activeScreen, frontDesktop);
             QRect frameRect = QRect(screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
                                     screenRect.width() * 0.34f, QFontMetrics(desktopNameFont).height());
+            if (!desktopNameFrame) {
+                desktopNameFrame = effects->effectFrame(EffectFrameStyled);
+                desktopNameFrame->setFont(desktopNameFont);
+            }
             desktopNameFrame->setGeometry(frameRect);
             desktopNameFrame->setText(effects->desktopName(frontDesktop));
             desktopNameFrame->render(region, opacity);

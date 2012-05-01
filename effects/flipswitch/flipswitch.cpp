@@ -47,15 +47,13 @@ FlipSwitchEffect::FlipSwitchEffect()
     , m_stop(false)
     , m_animation(false)
     , m_hasKeyboardGrab(false)
-    , m_captionFrame(effects->effectFrame(EffectFrameStyled))
+    , m_captionFrame(NULL)
 {
     reconfigure(ReconfigureAll);
 
     // Caption frame
     m_captionFont.setBold(true);
     m_captionFont.setPointSize(m_captionFont.pointSize() * 2);
-    m_captionFrame->setFont(m_captionFont);
-    m_captionFrame->enableCrossFade(true);
 
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = (KAction*)actionCollection->addAction("FlipSwitchCurrent");
@@ -660,6 +658,11 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
                                 m_screenArea.height() * 0.1f + m_screenArea.y() - QFontMetrics(m_captionFont).height(),
                                 m_screenArea.width() * 0.5f,
                                 QFontMetrics(m_captionFont).height());
+        if (!m_captionFrame) {
+            m_captionFrame = effects->effectFrame(EffectFrameStyled);
+            m_captionFrame->setFont(m_captionFont);
+            m_captionFrame->enableCrossFade(true);
+        }
         m_captionFrame->setGeometry(frameRect);
         m_captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
         updateCaption();

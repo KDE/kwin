@@ -61,7 +61,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_mode(ModeCurrentDesktop)
     , m_managerWindow(NULL)
     , m_highlightedWindow(NULL)
-    , m_filterFrame(effects->effectFrame(EffectFrameStyled, false))
+    , m_filterFrame(NULL)
     , m_closeView(NULL)
     , m_dragInProgress(false)
     , m_dragWindow(NULL)
@@ -77,11 +77,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     unsigned char dummy = 0;
     XChangeProperty(display(), rootWindow(), m_atomDesktop, m_atomDesktop, 8, PropModeReplace, &dummy, 1);
     XChangeProperty(display(), rootWindow(), m_atomWindows, m_atomWindows, 8, PropModeReplace, &dummy, 1);
-
-    QFont font;
-    font.setPointSize(font.pointSize() * 2);
-    font.setBold(true);
-    m_filterFrame->setFont(font);
 
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = (KAction*)actionCollection->addAction("Expose");
@@ -1635,6 +1630,13 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
 void PresentWindowsEffect::updateFilterFrame()
 {
     QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
+    if (!m_filterFrame){
+        m_filterFrame = effects->effectFrame(EffectFrameStyled, false);
+        QFont font;
+        font.setPointSize(font.pointSize() * 2);
+        font.setBold(true);
+        m_filterFrame->setFont(font);
+    }
     m_filterFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 2));
     m_filterFrame->setText(i18n("Filter:\n%1", m_windowFilter));
 }

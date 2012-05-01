@@ -57,7 +57,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , scaleFactor(0.0)
     , direction(Left)
     , selected_window(0)
-    , captionFrame(effects->effectFrame(EffectFrameStyled))
+    , captionFrame(NULL)
     , primaryTabBox(false)
     , secondaryTabBox(false)
 {
@@ -66,8 +66,6 @@ CoverSwitchEffect::CoverSwitchEffect()
     // Caption frame
     captionFont.setBold(true);
     captionFont.setPointSize(captionFont.pointSize() * 2);
-    captionFrame->setFont(captionFont);
-    captionFrame->enableCrossFade(true);
 
     const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
@@ -576,6 +574,11 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                                             area.height() * 0.9f + area.y(),
                                             area.width() * 0.5f,
                                             QFontMetrics(captionFont).height());
+                    if (!captionFrame) {
+                        captionFrame = effects->effectFrame(EffectFrameStyled);
+                        captionFrame->setFont(captionFont);
+                        captionFrame->enableCrossFade(true);
+                    }
                     captionFrame->setGeometry(frameRect);
                     captionFrame->setIconSize(QSize(frameRect.height(), frameRect.height()));
                     // And initial contents
