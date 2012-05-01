@@ -37,6 +37,7 @@
 #include <KLocale>
 #include <KColorUtils>
 #include <KDebug>
+#include <KStyle>
 
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
@@ -1702,7 +1703,10 @@ namespace Oxygen
 
             // adjust geometry to include shadow size
             const int shadowSize( shadowCache().shadowSize() );
-            const bool drawShadow( compositingActive() && shadowSize > 0 );
+            const bool drawShadow(
+                compositingActive() &&
+                KStyle::customStyleHint( "SH_ArgbDndWindow", widget() ) &&
+                shadowSize > 0 );
 
             if( drawShadow )
             { geometry.adjust( -shadowSize, -shadowSize, shadowSize, shadowSize ); }
