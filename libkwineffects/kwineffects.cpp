@@ -271,7 +271,8 @@ void EffectsHandler::sendReloadMessage(const QString& effectname)
 
 KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
 {
-    return KGlobal::config()->group("Effect-" + effectname);
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig("kwinrc", KConfig::NoGlobals);
+    return kwinconfig->group("Effect-" + effectname);
 }
 
 EffectsHandler* effects = 0;
