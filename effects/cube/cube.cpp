@@ -33,7 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QColor>
 #include <QRect>
 #include <QEvent>
+#include <QFutureWatcher>
 #include <QKeyEvent>
+#include <QtConcurrentRun>
 #include <QVector2D>
 
 #include <math.h>
@@ -177,31 +179,11 @@ void CubeEffect::loadConfig(QString config)
     invertMouse = conf.readEntry("InvertMouse", false);
     capDeformationFactor = conf.readEntry("CapDeformation", 0) / 100.0f;
     useZOrdering = conf.readEntry("ZOrdering", false);
-    QString file = conf.readEntry("Wallpaper", QString(""));
-    if (wallpaper)
-        wallpaper->discard();
     delete wallpaper;
     wallpaper = NULL;
-    if (!file.isEmpty()) {
-        QImage img = QImage(file);
-        if (!img.isNull()) {
-            wallpaper = new GLTexture(img);
-        }
-    }
     delete capTexture;
     capTexture = NULL;
     texturedCaps = conf.readEntry("TexturedCaps", true);
-    if (texturedCaps) {
-        QString capPath = conf.readEntry("CapPath", KGlobal::dirs()->findResource("appdata", "cubecap.png"));
-        QImage img = QImage(capPath);
-        if (!img.isNull()) {
-            capTexture = new GLTexture(img);
-            capTexture->setFilter(GL_LINEAR);
-#ifndef KWIN_HAVE_OPENGLES
-            capTexture->setWrapMode(GL_CLAMP_TO_BORDER);
-#endif
-        }
-    }
 
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);
@@ -260,6 +242,56 @@ CubeEffect::~CubeEffect()
     delete m_reflectionShader;
     delete m_capShader;
     delete m_cubeCapBuffer;
+}
+
+QImage CubeEffect::loadCubeCap(const QString &capPath)
+{
+    if (!texturedCaps) {
+        return QImage();
+    }
+    return QImage(capPath);
+}
+
+void CubeEffect::slotCubeCapLoaded()
+{
+    QFutureWatcher<QImage> *watcher = dynamic_cast<QFutureWatcher<QImage>*>(sender());
+    if (!watcher) {
+        // not invoked from future watcher
+        return;
+    }
+    QImage img = watcher->result();
+    if (!img.isNull()) {
+        capTexture = new GLTexture(img);
+        capTexture->setFilter(GL_LINEAR);
+#ifndef KWIN_HAVE_OPENGLES
+        capTexture->setWrapMode(GL_CLAMP_TO_BORDER);
+#endif
+        // need to recreate the VBO for the cube cap
+        delete m_cubeCapBuffer;
+        m_cubeCapBuffer = NULL;
+        effects->addRepaintFull();
+    }
+    watcher->deleteLater();
+}
+
+QImage CubeEffect::loadWallPaper(const QString &file)
+{
+    return QImage(file);
+}
+
+void CubeEffect::slotWallPaperLoaded()
+{
+    QFutureWatcher<QImage> *watcher = dynamic_cast<QFutureWatcher<QImage>*>(sender());
+    if (!watcher) {
+        // not invoked from future watcher
+        return;
+    }
+    QImage img = watcher->result();
+    if (!img.isNull()) {
+        wallpaper = new GLTexture(img);
+        effects->addRepaintFull();
+    }
+    watcher->deleteLater();
 }
 
 bool CubeEffect::loadShader()
@@ -1865,6 +1897,19 @@ void CubeEffect::setActive(bool active)
         inside->setActive(true);
     }
     if (active) {
+        KConfigGroup conf = effects->effectConfig("Cube");
+        QString capPath = conf.readEntry("CapPath", KGlobal::dirs()->findResource("appdata", "cubecap.png"));
+        if (texturedCaps && !capTexture && !capPath.isEmpty()) {
+            QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
+            connect(watcher, SIGNAL(finished()), SLOT(slotCubeCapLoaded()));
+            watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadCubeCap, capPath));
+        }
+        QString wallpaperPath = conf.readEntry("Wallpaper", QString(""));
+        if (!wallpaper && !wallpaperPath.isEmpty()) {
+            QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
+            connect(watcher, SIGNAL(finished()), SLOT(slotWallPaperLoaded()));
+            watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadWallPaper, wallpaperPath));
+        }
         if (!mousePolling) {
             effects->startMousePolling();
             mousePolling = true;

@@ -72,6 +72,8 @@ private slots:
     void slotTabBoxClosed();
     void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
                               Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotCubeCapLoaded();
+    void slotWallPaperLoaded();
 private:
     enum RotationDirection {
         Left,
@@ -100,6 +102,8 @@ private:
     void rotateCube();
     void rotateToDesktop(int desktop);
     void setActive(bool active);
+    QImage loadCubeCap(const QString &capPath);
+    QImage loadWallPaper(const QString &file);
     bool activated;
     bool mousePolling;
     bool cube_painting;
