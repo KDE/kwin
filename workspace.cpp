@@ -382,6 +382,9 @@ void Workspace::init()
     QX11Info info;
     rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen());
 
+    // Create an entry with empty activity name, it will be used if activities are not supported. Otherwise, it will be removed.
+    m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<int>(numberOfDesktops()));
+
     loadDesktopSettings();
     updateDesktopLayout();
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
@@ -1110,7 +1113,7 @@ void Workspace::loadDesktopSettings()
     for (int i = 1; i <= n; i++) {
         QString s = group.readEntry(QString("Name_%1").arg(i), i18n("Desktop %1", i));
         rootInfo->setDesktopName(i, s.toUtf8().data());
-        desktop_focus_chain[i-1] = i;
+        m_desktopFocusChain.value()[i-1] = i;
     }
 
     int rows = group.readEntry<int>("Rows", 2);
@@ -1416,9 +1419,10 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     //   Output: chain = { 3, 1, 2, 4 }.
     //kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
     //    .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
-    for (int i = desktop_focus_chain.indexOf(currentDesktop()); i > 0; i--)
-        desktop_focus_chain[i] = desktop_focus_chain[i-1];
-    desktop_focus_chain[0] = currentDesktop();
+    QVector<int> &chain = m_desktopFocusChain.value();
+    for (int i = chain.indexOf(currentDesktop()); i > 0; --i)
+        chain[i] = chain[i-1];
+    chain[0] = currentDesktop();
 
     //QString s = "desktop_focus_chain[] = { ";
     //for ( uint i = 0; i < desktop_focus_chain.size(); i++ )
@@ -1616,18 +1620,23 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         focusToNull();
 
     // Update focus chain:
-    //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
-    //   Output: chain = { 3, 1, 2, 4 }.
-    //kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-    //    .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
-    for (int i = desktop_focus_chain.indexOf(currentDesktop()); i > 0; i--)
-        desktop_focus_chain[i] = desktop_focus_chain[i-1];
-    desktop_focus_chain[0] = currentDesktop();
+#ifdef KWIN_BUILD_ACTIVITIES
+    // Replace initial dummy with actual activity, preserving the current chain.
+    if (m_desktopFocusChain.key().isNull()) {
+        QVector<int> val(m_desktopFocusChain.value());
+        m_activitiesDesktopFocusChain.erase(m_desktopFocusChain);
+        m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, val);
+    } else {
+        m_desktopFocusChain = m_activitiesDesktopFocusChain.find(activity_);
+        if (m_desktopFocusChain == m_activitiesDesktopFocusChain.end()) {
+            m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, QVector<int>(numberOfDesktops()));
 
-    //QString s = "desktop_focus_chain[] = { ";
-    //for ( uint i = 0; i < desktop_focus_chain.size(); i++ )
-    //    s += QString::number( desktop_focus_chain[i] ) + ", ";
-    //kDebug( 1212 ) << s << "}\n";
+            for (int i = 0; i < numberOfDesktops(); ++i) {
+                m_desktopFocusChain.value()[i] = i + 1;
+            }
+        }
+    }
+#endif
 
     // Not for the very first time, only if something changed and there are more than 1 desktops
 
@@ -1718,10 +1727,23 @@ void Workspace::setNumberOfDesktops(int n)
 
     updateClientArea(true);
 
-    // Resize and reset the desktop focus chain.
-    desktop_focus_chain.resize(n);
-    for (int i = 0; i < int(desktop_focus_chain.size()); i++)
-        desktop_focus_chain[i] = i + 1;
+    // Resize the desktop focus chain.
+    for (DesktopFocusChains::iterator it = m_activitiesDesktopFocusChain.begin(), end = m_activitiesDesktopFocusChain.end(); it != end; ++it) {
+        QVector<int> &chain = it.value();
+        chain.resize(n);
+
+        // We do not destroy the chain in case new desktops are added;
+        if (n >= old_number_of_desktops) {
+            for (int i = old_number_of_desktops; i < n; ++i)
+                chain[i] = i + 1;
+
+        // But when desktops are removed, we may have to modify the chain a bit,
+        // otherwise invalid desktops may show up.
+        } else {
+            for (int i = 0; i < chain.size(); ++i)
+               chain[i] = qMin(chain[i], n);
+        }
+    }
 
     saveDesktopSettings();
     emit numberDesktopsChanged(old_number_of_desktops);

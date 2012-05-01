@@ -352,7 +352,7 @@ public:
     bool hasTabBox() const;
 
     const QVector<int> &desktopFocusChain() const {
-        return desktop_focus_chain;
+        return m_desktopFocusChain.value();
     }
     const ClientList &globalFocusChain() const {
         return global_focus_chain;
@@ -758,7 +758,9 @@ private:
     bool windowRepaintsPending() const;
     void setCompositeTimer();
 
-    QVector<int> desktop_focus_chain;
+    typedef QHash< QString, QVector<int> > DesktopFocusChains;
+    DesktopFocusChains::Iterator m_desktopFocusChain;
+    DesktopFocusChains m_activitiesDesktopFocusChain;
 
     QWidget* active_popup;
     Client* active_popup_client;
