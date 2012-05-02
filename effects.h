@@ -182,7 +182,7 @@ public Q_SLOTS:
     void slotHideOutline();
 
 protected Q_SLOTS:
-    void slotDesktopChanged(int old);
+    void slotDesktopChanged(int old, KWin::Client *withClient);
     void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
     void slotUnmanagedAdded(KWin::Unmanaged *u);

@@ -68,7 +68,7 @@ private:
 
 signals:
     void desktopPresenceChanged(KWin::Client *client, int desktop);
-    void currentDesktopChanged(int desktop);
+    void currentDesktopChanged(int desktop, KWin::Client *client);
     void clientAdded(KWin::Client *client);
     void clientRemoved(KWin::Client *client);
     void clientManaging(KWin::Client *client);

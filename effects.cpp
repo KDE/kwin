@@ -106,7 +106,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     m_currentBuildQuadsIterator = m_activeEffects.end();
 
     Workspace *ws = Workspace::self();
-    connect(ws, SIGNAL(currentDesktopChanged(int)), this, SLOT(slotDesktopChanged(int)));
+    connect(ws, SIGNAL(currentDesktopChanged(int, KWin::Client*)), SLOT(slotDesktopChanged(int, KWin::Client*)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
@@ -460,10 +460,12 @@ void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfF
     emit tabRemoved(w, leaderOfFormerGroup);
 }
 
-void EffectsHandlerImpl::slotDesktopChanged(int old)
+void EffectsHandlerImpl::slotDesktopChanged(int old, Client *c)
 {
     const int newDesktop = Workspace::self()->currentDesktop();
     if (old != 0 && newDesktop != old) {
+        emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);
+        // TODO: remove in 4.10
         emit desktopChanged(old, newDesktop);
     }
 }

@@ -684,7 +684,7 @@ Q_SIGNALS:
     //Signals required for the scripting interface
 signals:
     void desktopPresenceChanged(KWin::Client*, int);
-    void currentDesktopChanged(int);
+    void currentDesktopChanged(int, KWin::Client*);
     void numberDesktopsChanged(int oldNumberOfDesktops);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);

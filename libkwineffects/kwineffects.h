@@ -846,8 +846,14 @@ Q_SIGNALS:
      * Signal emitted when the current desktop changed.
      * @param oldDesktop The previously current desktop
      * @param newDesktop The new current desktop
+     * @param with The window which is taken over to the new desktop, can be NULL
+     * @since 4.9
+     */
+    void desktopChanged(int oldDesktop, int newDesktop, KWin::EffectWindow *with);
+    /**
      * @since 4.7
-     **/
+     * @deprecated
+     */
     void desktopChanged(int oldDesktop, int newDesktop);
     /**
     * Signal emitted when the number of currently existing desktops is changed.

@@ -1426,7 +1426,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     if (compositing())
         addRepaintFull();
 
-    emit currentDesktopChanged(old_desktop);
+    emit currentDesktopChanged(old_desktop, movingClient);
     return true;
 }
 
