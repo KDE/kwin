@@ -583,7 +583,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         Client *client = dynamic_cast<Client*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = shape() - center;
+        QRegion decoration = (client && Workspace::self()->decorationHasAlpha() ?
+                              QRegion(client->decorationRect()) : shape()) - center;
         ret = makeQuads(WindowQuadContents, contents);
         if (!client || !(center.isEmpty() || client->isShade()))
             ret += makeQuads(WindowQuadDecoration, decoration);
