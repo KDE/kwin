@@ -480,7 +480,6 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
         DesktopButtonsView* view = it.key();
         if (!wasWindowMove && !wasDesktopMove && view->geometry().contains(me->pos())) {
             const QPoint widgetPos = view->mapFromGlobal(me->pos());
-            const QPointF scenePos = view->mapToScene(widgetPos);
             QMouseEvent event(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
             view->windowInputMouseEvent(&event);
             return;
@@ -848,17 +847,9 @@ int DesktopGridEffect::posToDesktop(const QPoint& pos) const
 {
     // Copied from unscalePos()
     int screen = effects->screenNumber(pos);
-    QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
-    //double progress = timeline.currentValue();
-    double scaledX = /*interpolate(
-        ( pos.x() - screenGeom.x() + unscaledBorder[screen] / 2.0 ) / ( screenGeom.width() + unscaledBorder[screen] ) + activeCell.x() - 1,*/
-        (pos.x() - scaledOffset[screen].x() + double(border) / 2.0) / (scaledSize[screen].width() + border)/*,
-        progress )*/;
-    double scaledY = /*interpolate(
-        ( pos.y() - screenGeom.y() + unscaledBorder[screen] / 2.0 ) / ( screenGeom.height() + unscaledBorder[screen] ) + activeCell.y() - 1,*/
-        (pos.y() - scaledOffset[screen].y() + double(border) / 2.0) / (scaledSize[screen].height() + border)/*,
-        progress )*/;
+    double scaledX = (pos.x() - scaledOffset[screen].x() + double(border) / 2.0) / (scaledSize[screen].width() + border);
+    double scaledY = (pos.y() - scaledOffset[screen].y() + double(border) / 2.0) / (scaledSize[screen].height() + border);
     int gx = qBound(0, int(scaledX), gridSize.width() - 1);     // Zero-based
     int gy = qBound(0, int(scaledY), gridSize.height() - 1);
     scaledX -= gx;
