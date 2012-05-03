@@ -1023,7 +1023,7 @@ void TabBox::modalActionsSwitch(bool enabled)
     action->setEnabled(enabled);
 }
 
-void TabBox::open(bool modal)
+void TabBox::open(bool modal, const QString &layout)
 {
     if (isDisplayed()) {
         return;
@@ -1038,11 +1038,17 @@ void TabBox::open(bool modal)
     }
     m_noModifierGrab = !modal;
     setMode(TabBoxWindowsMode);
+    if (!layout.isNull()) {
+        TabBoxConfig tempConfig;
+        tempConfig = tabBox->config();
+        tempConfig.setLayoutName(layout);
+        tabBox->setConfig(tempConfig);
+    }
     reset();
     show();
 }
 
-void TabBox::openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment)
+void TabBox::openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment, const QString &layout)
 {
     if (isDisplayed()) {
         return;
@@ -1054,6 +1060,12 @@ void TabBox::openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizon
     tabBox->setEmbeddedSize(size);
     tabBox->setEmbeddedAlignment(static_cast<Qt::AlignmentFlag>(horizontalAlignment) | static_cast<Qt::AlignmentFlag>(verticalAlignment));
     setMode(TabBoxWindowsMode);
+    if (!layout.isNull()) {
+        TabBoxConfig tempConfig;
+        tempConfig = tabBox->config();
+        tempConfig.setLayoutName(layout);
+        tabBox->setConfig(tempConfig);
+    }
     reset();
     show();
 }

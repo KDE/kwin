@@ -181,8 +181,9 @@ public slots:
      * Only for DBus Interface to start primary KDE Walk through windows.
      * @param modal Whether the TabBox should grab keyboard and mouse, that is go into modal
      * mode or whether the TabBox is controlled externally (e.g. through an effect).
+     * @param layout The name of the layout to use, if null string (default) the configured layout is used
      **/
-    Q_SCRIPTABLE void open(bool modal = true);
+    Q_SCRIPTABLE void open(bool modal = true, const QString &layout = QString());
     /**
      * Opens the TabBox view embedded on a different window. This implies non-modal mode.
      * The geometry of the TabBox is determined by offset, size and the alignment flags.
@@ -197,8 +198,9 @@ public slots:
      * @param size The size of the TabBox. To use the same size as the container, set alignment to center
      * @param horizontalAlignment Either Qt::AlignLeft, Qt::AlignHCenter or Qt::AlignRight
      * @param verticalAlignment Either Qt::AlignTop, Qt::AlignVCenter or Qt::AlignBottom
+     * @param layout The name of the layout to use, if null string (default) the configured layout is used
      **/
-    Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment);
+    Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment, const QString &layout = QString());
     Q_SCRIPTABLE void close(bool abort = false);
     Q_SCRIPTABLE void accept();
     Q_SCRIPTABLE void reject();
