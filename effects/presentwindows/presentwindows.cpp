@@ -1603,7 +1603,9 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
         // Move all windows back to their original position
         foreach (EffectWindow * w, m_motionManager.managedWindows())
         m_motionManager.moveWindow(w, w->geometry());
-        m_filterFrame->free();
+        if (m_filterFrame) {
+            m_filterFrame->free();
+        }
         m_windowFilter.clear();
         m_selectedWindows.clear();
 
@@ -1630,7 +1632,7 @@ void PresentWindowsEffect::setActive(bool active, bool closingTab)
 void PresentWindowsEffect::updateFilterFrame()
 {
     QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
-    if (!m_filterFrame){
+    if (!m_filterFrame) {
         m_filterFrame = effects->effectFrame(EffectFrameStyled, false);
         QFont font;
         font.setPointSize(font.pointSize() * 2);
