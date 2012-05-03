@@ -107,6 +107,7 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
+    , m_screenEdgeOrientation(0)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
@@ -958,7 +959,7 @@ void Workspace::slotReconfigure()
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.reserveActions(false);
     if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveDesktopSwitching(false);
+        m_screenEdge.reserveDesktopSwitching(false, m_screenEdgeOrientation);
 #endif
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
@@ -996,8 +997,15 @@ void Workspace::slotReconfigure()
 
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.reserveActions(true);
-    if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveDesktopSwitching(true);
+    if (options->electricBorders() == Options::ElectricAlways) {
+        QSize desktopMatrix = rootInfo->desktopLayoutColumnsRows();
+        m_screenEdgeOrientation = 0;
+        if (desktopMatrix.width() > 1)
+            m_screenEdgeOrientation |= Qt::Horizontal;
+        if (desktopMatrix.height() > 1)
+            m_screenEdgeOrientation |= Qt::Vertical;
+        m_screenEdge.reserveDesktopSwitching(true, m_screenEdgeOrientation);
+    }
     m_screenEdge.update();
 #endif
 

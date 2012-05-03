@@ -84,7 +84,7 @@ public:
      * Reserve desktop switching for screen edges, if reserve is true. Unreserve otherwise.
      * @param reserve indicated weather desktop switching should be reserved or unreseved
      */
-    void reserveDesktopSwitching(bool isToReserve);
+    void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
     /**
      * Raise electric border windows to the real top of the screen. We only need
      * to do this if an effect input window is active.

@@ -167,7 +167,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 182
+#define KWIN_EFFECT_API_VERSION_MINOR 183
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -645,7 +645,7 @@ public:
     virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
     virtual void reserveElectricBorder(ElectricBorder border) = 0;
     virtual void unreserveElectricBorder(ElectricBorder border) = 0;
-    virtual void reserveElectricBorderSwitching(bool reserve) = 0;
+    virtual void reserveElectricBorderSwitching(bool reserve, Qt::Orientations o) = 0;
 
     // functions that allow controlling windows/desktop
     virtual void activateWindow(KWin::EffectWindow* c) = 0;

@@ -1075,10 +1075,10 @@ void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border)
 #endif
 }
 
-void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve)
+void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve, Qt::Orientations o)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->reserveDesktopSwitching(reserve);
+    Workspace::self()->screenEdge()->reserveDesktopSwitching(reserve, o);
 #else
     Q_UNUSED(reserve)
 #endif

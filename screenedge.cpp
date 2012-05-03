@@ -58,9 +58,6 @@ ScreenEdge::~ScreenEdge()
 void ScreenEdge::init()
 {
     reserveActions(true);
-    if (options->electricBorders() == Options::ElectricAlways) {
-        reserveDesktopSwitching(true);
-    }
     update();
 }
 
@@ -143,13 +140,39 @@ void ScreenEdge::reserveActions(bool isToReserve)
         }
 }
 
-void ScreenEdge::reserveDesktopSwitching(bool isToReserve)
+void ScreenEdge::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 {
-    for (int pos = 0; pos < ELECTRIC_COUNT; ++pos)
-        if (isToReserve)
-            reserve(static_cast<ElectricBorder>(pos));
-        else
-            unreserve(static_cast<ElectricBorder>(pos));
+    if (!o)
+        return;
+    if (isToReserve) {
+        reserve(ElectricTopLeft);
+        reserve(ElectricTopRight);
+        reserve(ElectricBottomRight);
+        reserve(ElectricBottomLeft);
+
+        if (o & Qt::Horizontal) {
+            reserve(ElectricLeft);
+            reserve(ElectricRight);
+        }
+        if (o & Qt::Vertical) {
+            reserve(ElectricTop);
+            reserve(ElectricBottom);
+        }
+    } else {
+        unreserve(ElectricTopLeft);
+        unreserve(ElectricTopRight);
+        unreserve(ElectricBottomRight);
+        unreserve(ElectricBottomLeft);
+
+        if (o & Qt::Horizontal) {
+            unreserve(ElectricLeft);
+            unreserve(ElectricRight);
+        }
+        if (o & Qt::Vertical) {
+            unreserve(ElectricTop);
+            unreserve(ElectricBottom);
+        }
+    }
 }
 
 void ScreenEdge::reserve(ElectricBorder border)

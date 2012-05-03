@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "workspace.h"
+#include "options.h"
 
 #include "assert.h"
 
@@ -27,6 +28,11 @@ namespace KWin
 
 void Workspace::updateDesktopLayout()
 {
+#ifdef KWIN_BUILD_SCREENEDGES
+    if (options->electricBorders() == Options::ElectricAlways) {
+        m_screenEdge.reserveDesktopSwitching(false, m_screenEdgeOrientation);
+    }
+#endif
     // TODO: Is there a sane way to avoid overriding the existing grid?
     int width = rootInfo->desktopLayoutColumnsRows().width();
     int height = rootInfo->desktopLayoutColumnsRows().height();
@@ -36,6 +42,17 @@ void Workspace::updateDesktopLayout()
         rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
         width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
     );
+
+#ifdef KWIN_BUILD_SCREENEDGES
+    m_screenEdgeOrientation = 0;
+    if (width > 1)
+        m_screenEdgeOrientation |= Qt::Horizontal;
+    if (height > 1)
+        m_screenEdgeOrientation |= Qt::Vertical;
+    if (options->electricBorders() == Options::ElectricAlways) {
+        m_screenEdge.reserveDesktopSwitching(true, m_screenEdgeOrientation);
+    }
+#endif
 }
 
 void Workspace::setNETDesktopLayout(Qt::Orientation orientation, int width, int height,
