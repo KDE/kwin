@@ -107,7 +107,9 @@ Workspace::Workspace(bool restore)
     , desktopGridSize_(1, 2)   // Default to two rows
     , desktopGrid_(new int[2])
     , currentDesktop_(0)
+#ifdef KWIN_BUILD_SCREENEDGES
     , m_screenEdgeOrientation(0)
+#endif
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
