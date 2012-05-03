@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QKeyEvent>
 #include <QModelIndex>
+#include <QTimer>
 #include <QX11Info>
 #include <X11/Xlib.h>
 // KDE
@@ -134,13 +135,17 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 
     Display *dpy = QX11Info::display();
     TabBoxClient *currentClient = q->client(index);
+    QWidget *w = NULL;
+    if (m_declarativeView && m_declarativeView->isVisible()) {
+        w = m_declarativeView;
+    }
 
     if (KWindowSystem::compositingActive()) {
         if (lastRaisedClient)
-            q->elevateClient(lastRaisedClient, false);
+            q->elevateClient(lastRaisedClient, m_declarativeView ? m_declarativeView->winId() : 0, false);
         lastRaisedClient = currentClient;
         if (currentClient)
-            q->elevateClient(currentClient, true);
+            q->elevateClient(currentClient, m_declarativeView ? m_declarativeView->winId() : 0, true);
     } else {
         if (lastRaisedClient) {
             if (lastRaisedClientSucc)
@@ -161,10 +166,6 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 
     WId wId;
     QVector< WId > data;
-    QWidget *w = NULL;
-    if (m_declarativeView && m_declarativeView->isVisible()) {
-        w = m_declarativeView;
-    }
     if (config.isShowTabBox() && w) {
         wId = w->winId();
         data.resize(2);
@@ -190,7 +191,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     TabBoxClient *currentClient = q->client(index);
     if (currentClient)
-        q->elevateClient(currentClient, false);
+        q->elevateClient(currentClient, m_declarativeView ? m_declarativeView->winId() : 0, false);
     if (abort && lastRaisedClient && lastRaisedClientSucc)
         q->restack(lastRaisedClient, lastRaisedClientSucc);
     lastRaisedClient = 0;
@@ -254,8 +255,18 @@ void TabBoxHandler::show()
         }
     }
     if (d->config.isHighlightWindows()) {
-        d->updateHighlightWindows();
+        XSync(QX11Info::display(), false);
+        // TODO this should be
+        // QMetaObject::invokeMethod(this, "updateHighlightWindows", Qt::QueuedConnection);
+        // but we somehow need to cross > 1 event cycle (likely because of queued invocation in the effects)
+        // to ensure the EffectWindow is present when updateHighlightWindows, thus elevating the window/tabbox
+        QTimer::singleShot(1, this, SLOT(updateHighlightWindows()));
     }
+}
+
+void TabBoxHandler::updateHighlightWindows()
+{
+    d->updateHighlightWindows();
 }
 
 void TabBoxHandler::hide(bool abort)

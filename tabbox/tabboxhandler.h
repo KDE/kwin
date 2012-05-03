@@ -139,7 +139,7 @@ public:
     /**
     * De-/Elevate a client using the compositor (if enabled)
     */
-    virtual void elevateClient(TabBoxClient* c, bool elevate) const = 0;
+    virtual void elevateClient(TabBoxClient* c, WId tabbox, bool elevate) const = 0;
 
     /**
     * Raise a client (w/o activating it)
@@ -339,6 +339,9 @@ signals:
     void configChanged();
     void embeddedChanged(bool enabled);
     void selectedIndexChanged();
+
+private slots:
+    void updateHighlightWindows();
 
 private:
     friend class TabBoxHandlerPrivate;
