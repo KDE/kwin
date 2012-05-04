@@ -156,3 +156,4 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Library=kwin4_effect_builtins
 X-KDE-Ordering=45
+X-KWin-Requires-OpenGL=true

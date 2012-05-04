@@ -81,6 +81,7 @@ private slots:
     void toogleSmoothScaleUi(int compositingType);
     void toggleEffectShortcutChanged(const QKeySequence &seq);
     void updateStatusUI(bool compositingIsPossible);
+    void showDetailedEffectLoadingInformation();
 
 private:
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
@@ -94,6 +95,7 @@ private:
     bool m_showConfirmDialog;
     KActionCollection* m_actionCollection;
     QString originalGraphicsSystem;
+    QAction *m_showDetailedErrors;
 };
 
 } // namespace

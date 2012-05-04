@@ -455,6 +455,15 @@ public:
     bool compositingPossible() const;
     QString compositingNotPossibleReason() const;
     bool openGLIsBroken() const;
+    /**
+     * Returns the currently used Compositor (Scene):
+     * @li @c none No Compositing
+     * @li @c xrender XRender
+     * @li @c gl1 OpenGL 1
+     * @li @c gl2 OpenGL 2
+     * @li @c gles OpenGL ES 2
+     **/
+    QString compositingType();
 
     void setCurrentScreen(int new_screen);
 

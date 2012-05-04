@@ -556,6 +556,28 @@ bool Workspace::openGLIsBroken() const
     return CompositingPrefs::openGlIsBroken();
 }
 
+QString Workspace::compositingType()
+{
+    // the returned strings are considered as identifiers and may not be translated
+    if (!effects) {
+        return "none";
+    }
+    if (effects->compositingType() == XRenderCompositing) {
+        return "xrender";
+    } else if (effects->compositingType() == OpenGLCompositing) {
+#ifdef KWIN_HAVE_OPENGLES
+        return "gles";
+#else
+        if (ShaderManager::instance()->isValid()) {
+            return "gl2";
+        } else {
+            return "gl1";
+        }
+#endif
+    }
+    return "none";
+}
+
 //****************************************
 // Toplevel
 //****************************************

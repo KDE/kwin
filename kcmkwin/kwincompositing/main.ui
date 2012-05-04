@@ -6,15 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>483</height>
+    <width>557</width>
+    <height>530</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <widget class="KMessageWidget" name="messageBox">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -857,6 +867,12 @@ On legacy hardware disabling Shaders can improve the performance.</string>
    <class>KPluginSelector</class>
    <extends>QWidget</extends>
    <header>kpluginselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KMessageWidget</class>
+   <extends>QFrame</extends>
+   <header>kmessagewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

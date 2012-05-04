@@ -88,3 +88,12 @@ Comment[zh_TW]=KWin 效果
 
 [PropertyDef::X-KDE-Ordering]
 Type=int
+
+[PropertyDef::X-KWin-Requires-OpenGL]
+Type=bool
+
+[PropertyDef::X-KWin-Requires-OpenGL2]
+Type=bool
+
+[PropertyDef::X-KWin-Requires-Shaders]
+Type=bool
