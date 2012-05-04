@@ -148,7 +148,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void run();
 
 private:
-    QDeclarativeView *m_view;
+    QScopedPointer<QDeclarativeView> m_view;
 };
 
 /**
