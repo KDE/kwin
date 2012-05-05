@@ -147,10 +147,11 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleRect() const
 {
+    QRect r = decorationRect();
     if (hasShadow() && !shadow()->shadowRegion().isEmpty()) {
-        return shadow()->shadowRegion().boundingRect().translated(geometry().topLeft());
+        r |= shadow()->shadowRegion().boundingRect();
     }
-    return geometry();
+    return r.translated(geometry().topLeft());
 }
 
 NET::WindowType Toplevel::windowType(bool direct, int supported_types) const
