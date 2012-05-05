@@ -185,7 +185,7 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
-    LoadScriptList queryScriptsToLoad();
+    LoadScriptList queryScriptsToLoad(KConfigGroup &conf);
 };
 
 }

@@ -294,14 +294,13 @@ void KWin::Scripting::start()
     // perform querying for the services in a thread
     QFutureWatcher<LoadScriptList> *watcher = new QFutureWatcher<LoadScriptList>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(slotScriptsQueried()));
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad));
-}
-
-LoadScriptList KWin::Scripting::queryScriptsToLoad()
-{
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup conf(_config, "Plugins");
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, conf));
+}
 
+LoadScriptList KWin::Scripting::queryScriptsToLoad(KConfigGroup &conf)
+{
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
     LoadScriptList scriptsToLoad;
 
