@@ -61,9 +61,6 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
     connect(ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
 
-    // We have no help and defaults and apply buttons.
-    setButtons(buttons() ^ KCModule::Help ^ KCModule::Default ^ KCModule::Apply);
-
     updateListViewContents();
 }
 
