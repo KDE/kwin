@@ -26,7 +26,7 @@ loadConfig();
 effect.configChanged.connect(function() {
     loadConfig();
 });
-effects.desktopChanged.connect(function(oldDesktop, newDesktop) {
+effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
     var stackingOrder = effects.stackingOrder;
     for (var i=0; i<stackingOrder.length; i++) {
         var w = stackingOrder[i];
