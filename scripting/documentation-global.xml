@@ -49,6 +49,54 @@
                 <read></read>
                 <detaileddescription>Registers keySequence as a global shortcut. When the shortcut is invoked the callback will be called. Title and text are used to name the shortcut and make it available to the global shortcut configuration module.</detaileddescription>
             </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assert</definition>
+                <argsstring>(bool value, QString message = QString())</argsstring>
+                <name>assert</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if value does not evaluate to true. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assertTrue</definition>
+                <argsstring>(bool value, QString message = QString())</argsstring>
+                <name>assertTrue</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if value does not evaluate to true. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assertFalse</definition>
+                <argsstring>(bool value, QString message = QString())</argsstring>
+                <name>assertFalse</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if value does not evaluate to false. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assertEquals</definition>
+                <argsstring>(QVariant expected, QVariant actual, QString message = QString())</argsstring>
+                <name>assertEquals</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if the actual value is not equal to the expected value. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assertNull</definition>
+                <argsstring>(QVariant value, QString message = QString())</argsstring>
+                <name>assertNull</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if value is not null. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::assertNotNull</definition>
+                <argsstring>(QVariant value, QString message = QString())</argsstring>
+                <name>assertNotNull</name>
+                <read></read>
+                <detaileddescription>Aborts the execution of the script if value is null. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
+            </memberdef>
         </sectiondef>
     </compounddef>
 </doxygen>

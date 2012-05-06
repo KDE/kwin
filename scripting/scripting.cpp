@@ -88,6 +88,57 @@ QScriptValue kwinScriptGlobalShortcut(QScriptContext *context, QScriptEngine *en
     return KWin::globalShortcut<KWin::AbstractScript*>(context, engine);
 }
 
+QScriptValue kwinAssertTrue(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::scriptingAssert<bool>(context, engine, 1, 2, true);
+}
+
+QScriptValue kwinAssertFalse(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::scriptingAssert<bool>(context, engine, 1, 2, false);
+}
+
+QScriptValue kwinAssertEquals(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::scriptingAssert<QVariant>(context, engine, 2, 3);
+}
+
+QScriptValue kwinAssertNull(QScriptContext *context, QScriptEngine *engine)
+{
+    if (!KWin::validateParameters(context, 1, 2)) {
+        return engine->undefinedValue();
+    }
+    if (!context->argument(0).isNull()) {
+        if (context->argumentCount() == 2) {
+            context->throwError(QScriptContext::UnknownError, context->argument(1).toString());
+        } else {
+            context->throwError(QScriptContext::UnknownError,
+                                i18nc("Assertion failed in KWin script with given value",
+                                      "Assertion failed: %1 is not null", context->argument(0).toString()));
+        }
+        return engine->undefinedValue();
+    }
+    return true;
+}
+
+QScriptValue kwinAssertNotNull(QScriptContext *context, QScriptEngine *engine)
+{
+    if (!KWin::validateParameters(context, 1, 2)) {
+        return engine->undefinedValue();
+    }
+    if (context->argument(0).isNull()) {
+        if (context->argumentCount() == 2) {
+            context->throwError(QScriptContext::UnknownError, context->argument(1).toString());
+        } else {
+            context->throwError(QScriptContext::UnknownError,
+                                i18nc("Assertion failed in KWin script",
+                                      "Assertion failed: argument is null"));
+        }
+        return engine->undefinedValue();
+    }
+    return true;
+}
+
 KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : QObject(parent)
     , m_scriptId(id)
@@ -144,6 +195,19 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     engine->globalObject().setProperty("readConfig", configFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
+    // add assertions
+    QScriptValue assertTrueFunc = engine->newFunction(kwinAssertTrue);
+    engine->globalObject().setProperty("assertTrue", assertTrueFunc);
+    engine->globalObject().setProperty("assert", assertTrueFunc);
+    QScriptValue assertFalseFunc = engine->newFunction(kwinAssertFalse);
+    engine->globalObject().setProperty("assertFalse", assertFalseFunc);
+    QScriptValue assertEqualsFunc = engine->newFunction(kwinAssertEquals);
+    engine->globalObject().setProperty("assertEquals", assertEqualsFunc);
+    QScriptValue assertNullFunc = engine->newFunction(kwinAssertNull);
+    engine->globalObject().setProperty("assertNull", assertNullFunc);
+    engine->globalObject().setProperty("assertEquals", assertEqualsFunc);
+    QScriptValue assertNotNullFunc = engine->newFunction(kwinAssertNotNull);
+    engine->globalObject().setProperty("assertNotNull", assertNotNullFunc);
     // global properties
     engine->globalObject().setProperty("KWin", engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
     QScriptValue workspace = engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
