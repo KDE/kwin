@@ -36,7 +36,7 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
         if (w.minimized) {
             continue;
         }
-        if (!w.isOnActivity(currentActivity)){
+        if (!w.isOnActivity(effects.currentActivity)){
             continue;
         }
         if (w.desktop == oldDesktop) {
