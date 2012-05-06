@@ -53,6 +53,7 @@ protected slots:
      * Called when the import script button is clicked.
      */
     void importScript();
+    void slotGHNSClicked();
 
 private:
     /**

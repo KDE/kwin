@@ -31,6 +31,7 @@
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
 #include <KDE/Plasma/Package>
+#include <KNS3/DownloadDialog>
 
 #include "version.h"
 
@@ -51,9 +52,14 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     setAboutData(about);
 
     ui->setupUi(this);
+    ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
+
+    // TODO: remove once the category has been created.
+    ui->ghnsButton->setVisible(false);
 
     connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
+    connect(ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
 
     // We have no help and defaults and apply buttons.
     setButtons(buttons() ^ KCModule::Help ^ KCModule::Default ^ KCModule::Apply);
@@ -109,4 +115,15 @@ void Module::save()
     // TODO: reload scripts in KWin
 
     emit changed(false);
+}
+
+void Module::slotGHNSClicked()
+{
+    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("kwinscripts.knsrc", this);
+    if (downloadDialog->exec() == KDialog::Accepted) {
+        if (!downloadDialog->changedEntries().isEmpty()) {
+            updateListViewContents();
+        }
+    }
+    delete downloadDialog;
 }

@@ -38,7 +38,14 @@
        <item>
         <widget class="QPushButton" name="importScriptButton">
          <property name="text">
-          <string>Import KWin script</string>
+          <string>Import KWin script...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KPushButton" name="ghnsButton">
+         <property name="text">
+          <string>Get New Script...</string>
          </property>
         </widget>
        </item>
@@ -62,6 +69,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
   <customwidget>
    <class>KPluginSelector</class>
    <extends>QWidget</extends>
