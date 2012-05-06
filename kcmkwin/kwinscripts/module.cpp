@@ -21,6 +21,9 @@
 #include "ui_module.h"
 
 #include <QtCore/QStringList>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusPendingCall>
 
 #include <KDE/KAboutData>
 #include <KDE/KPluginFactory>
@@ -96,6 +99,7 @@ void Module::updateListViewContents()
 void Module::defaults()
 {
     ui->scriptSelector->defaults();
+    emit changed(true);
 }
 
 void Module::load()
@@ -109,7 +113,9 @@ void Module::load()
 void Module::save()
 {
     ui->scriptSelector->save();
-    // TODO: reload scripts in KWin
+    m_kwinConfig->sync();
+    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/Scripting", "org.kde.kwin.Scripting", "start");
+    QDBusConnection::sessionBus().asyncCall(message);
 
     emit changed(false);
 }

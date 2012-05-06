@@ -202,7 +202,7 @@ public:
 
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
-    void start();
+    Q_SCRIPTABLE void start();
 
 private Q_SLOTS:
     void slotScriptsQueried();
