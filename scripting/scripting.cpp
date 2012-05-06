@@ -157,6 +157,7 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* pa
     : AbstractScript(id, scriptName, pluginName, parent)
     , m_engine(new QScriptEngine(this))
     , m_starting(false)
+    , m_agent(new ScriptUnloaderAgent(this))
 {
     QDBusConnection::sessionBus().registerObject('/' + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
@@ -235,6 +236,19 @@ void KWin::Script::sigException(const QScriptValue& exception)
         }
     }
     emit printError(exception.toString());
+    stop();
+}
+
+KWin::ScriptUnloaderAgent::ScriptUnloaderAgent(KWin::Script *script)
+    : QScriptEngineAgent(script->engine())
+    , m_script(script)
+{
+    script->engine()->setAgent(this);
+}
+
+void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
+{
+    m_script->stop();
 }
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)

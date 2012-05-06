@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QFile>
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
+#include <QtScript/QScriptEngineAgent>
 
 class QAction;
 class QDeclarativeView;
@@ -38,6 +39,7 @@ typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
 
 namespace KWin
 {
+class ScriptUnloaderAgent;
 class WorkspaceWrapper;
 
 class AbstractScript : public QObject
@@ -108,6 +110,9 @@ public:
 
     Script(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
     virtual ~Script();
+    QScriptEngine *engine() {
+        return m_engine;
+    }
 
 public Q_SLOTS:
     Q_SCRIPTABLE void run();
@@ -134,6 +139,17 @@ private:
     QByteArray loadScriptFromFile();
     QScriptEngine *m_engine;
     bool m_starting;
+    QScopedPointer<ScriptUnloaderAgent> m_agent;
+};
+
+class ScriptUnloaderAgent : public QScriptEngineAgent
+{
+public:
+    ScriptUnloaderAgent(Script *script);
+    virtual void scriptUnload(qint64 id);
+
+private:
+    Script *m_script;
 };
 
 class DeclarativeScript : public AbstractScript
