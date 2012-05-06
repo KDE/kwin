@@ -33,6 +33,12 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
         if (w.desktop != oldDesktop && w.desktop != newDesktop) {
             continue;
         }
+        if (w.minimized) {
+            continue;
+        }
+        if (!w.isOnActivity(currentActivity)){
+            continue;
+        }
         if (w.desktop == oldDesktop) {
             effect.animate(w, Effect.Opacity, duration, 0.0);
         } else {
