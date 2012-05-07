@@ -307,10 +307,17 @@ void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, W
 
 void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
 {
+    static bool initIterator = true;
+    if (initIterator) {
+        m_currentBuildQuadsIterator = m_activeEffects.begin();
+        initIterator = false;
+    }
     if (m_currentBuildQuadsIterator != m_activeEffects.end()) {
         (*m_currentBuildQuadsIterator++)->buildQuads(w, quadList);
         --m_currentBuildQuadsIterator;
     }
+    if (m_currentBuildQuadsIterator == m_activeEffects.begin())
+        initIterator = true;
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
@@ -341,7 +348,6 @@ void EffectsHandlerImpl::startPaint()
     m_currentPaintWindowIterator = m_activeEffects.begin();
     m_currentPaintScreenIterator = m_activeEffects.begin();
     m_currentPaintEffectFrameIterator = m_activeEffects.begin();
-    m_currentBuildQuadsIterator = m_activeEffects.begin();
 }
 
 void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
