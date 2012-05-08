@@ -655,7 +655,7 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 
     const float area = rect().width()*rect().height();
     damageRects.reserve(16);
-    damageRects.clear();
+    damageRects.erase(damageRects.begin(), damageRects.end());
     damageRects << QRect(e->area.x, e->area.y, e->area.width, e->area.height);
 
     // we can not easily say anything about the overall ratio since the new rects may intersect the present
