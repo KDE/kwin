@@ -2537,8 +2537,10 @@ bool Client::startMoveResize()
     if (maximizeMode() != MaximizeRestore && (maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows())) {
         // allow moveResize, but unset maximization state in resize case
         if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-            geom_restore = geometry(); // "restore" to current geometry
-            setMaximize(false, false);
+            if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
+                geom_restore = geometry(); // "restore" to current geometry
+                setMaximize(false, false);
+            }
         }
     } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
                (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
@@ -2606,11 +2608,12 @@ static ElectricBorder electricBorderFromMode(QuickTileMode mode)
 
 void Client::finishMoveResize(bool cancel)
 {
+    const bool wasResize = isResize(); // store across leaveMoveResize
+    const bool wasMove = isMove();
+    leaveMoveResize();
+
 #ifdef KWIN_BUILD_TILING
     if (workspace()->tiling()->isEnabled()) {
-        const bool wasResize = isResize(); // store across leaveMoveResize
-        const bool wasMove = isMove();
-        leaveMoveResize();
         if (wasResize)
             workspace()->tiling()->notifyTilingWindowResizeDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
         else if (wasMove)
@@ -2618,11 +2621,19 @@ void Client::finishMoveResize(bool cancel)
     } else
 #endif
     {
-        leaveMoveResize();
         if (cancel)
             setGeometry(initialMoveResizeGeom);
-        else
+        else {
+            if (wasResize) {
+                const bool restoreH = maximizeMode() == MaximizeHorizontal &&
+                                      moveResizeGeom.width() != initialMoveResizeGeom.width();
+                const bool restoreV = maximizeMode() == MaximizeVertical &&
+                                      moveResizeGeom.height() != initialMoveResizeGeom.height();
+                if (restoreH || restoreV) // NOT setMaximize(restoreH, restoreV); !
+                    setMaximize(false, false);
+            }
             setGeometry(moveResizeGeom);
+        }
         if (screen() != moveResizeStartScreen && maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();
     }
@@ -2640,7 +2651,14 @@ void Client::finishMoveResize(bool cancel)
         electricMaximizing = false;
         workspace()->outline()->hide();
     } else if (!cancel) {
-        geom_restore = geometry();
+        if (!(maximizeMode() & MaximizeHorizontal)) {
+            geom_restore.setX(geometry().x());
+            geom_restore.setWidth(geometry().width());
+        }
+        if (!(maximizeMode() & MaximizeVertical)) {
+            geom_restore.setY(geometry().y());
+            geom_restore.setHeight(geometry().height());
+        }
     }
 // FRAME    update();
 
