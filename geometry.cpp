@@ -2606,19 +2606,19 @@ static ElectricBorder electricBorderFromMode(QuickTileMode mode)
 
 void Client::finishMoveResize(bool cancel)
 {
-    // store for notification
-    bool wasResize = isResize();
-    bool wasMove = isMove();
-
-    leaveMoveResize();
-
 #ifdef KWIN_BUILD_TILING
     if (workspace()->tiling()->isEnabled()) {
+        const bool wasResize = isResize(); // store across leaveMoveResize
+        const bool wasMove = isMove();
+        leaveMoveResize();
         if (wasResize)
             workspace()->tiling()->notifyTilingWindowResizeDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
         else if (wasMove)
             workspace()->tiling()->notifyTilingWindowMoveDone(this, moveResizeGeom, initialMoveResizeGeom, cancel);
-    } else {
+    } else
+#endif
+    {
+        leaveMoveResize();
         if (cancel)
             setGeometry(initialMoveResizeGeom);
         else
@@ -2626,14 +2626,6 @@ void Client::finishMoveResize(bool cancel)
         if (screen() != moveResizeStartScreen && maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();
     }
-#else
-    if (cancel)
-        setGeometry(initialMoveResizeGeom);
-    else
-        setGeometry(moveResizeGeom);
-    Q_UNUSED(wasResize);
-    Q_UNUSED(wasMove);
-#endif
 
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricMode);
