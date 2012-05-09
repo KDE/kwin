@@ -562,6 +562,13 @@
         </property>
        </spacer>
       </item>
+      <item row="2" column="3">
+       <widget class="KPushButton" name="ghns">
+        <property name="toolTip">
+         <string>Get New Window Switcher Layout</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

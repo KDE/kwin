@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
 #include <KStandardDirs>
+#include <KNS3/DownloadDialog>
 
 // own
 #include "tabboxconfig.h"
@@ -103,6 +104,65 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
                  m_alternativeTabBoxUi->scCurrentReverse);
 #undef ADD_SHORTCUT
 
+    initLayoutLists();
+    KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
+    for (int i = 0; i < 2; ++i) {
+        ui[i]->effectConfigButton->setIcon(KIcon("view-preview"));
+        ui[i]->ghns->setIcon(KIcon("get-hot-new-stuff"));
+
+        // TODO: remove once the category has been created.
+        ui[i]->ghns->setVisible(false);
+
+        connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->showOutlineCheck, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
+        connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
+        connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(effectSelectionChanged(int)));
+        connect(ui[i]->effectConfigButton, SIGNAL(clicked(bool)), SLOT(configureEffectClicked()));
+
+        connect(ui[i]->switchingModeCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
+        connect(ui[i]->showDesktop, SIGNAL(clicked(bool)), SLOT(changed()));
+
+        connect(ui[i]->filterDesktops, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->currentDesktop, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->otherDesktops, SIGNAL(clicked(bool)), SLOT(changed()));
+
+        connect(ui[i]->filterActivities, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->currentActivity, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->otherActivities, SIGNAL(clicked(bool)), SLOT(changed()));
+
+        connect(ui[i]->filterScreens, SIGNAL(clicked(bool)), SLOT(changed()));
+        if (QApplication::desktop()->screenCount() < 2) {
+            ui[i]->filterScreens->hide();
+            ui[i]->screenFilter->hide();
+        } else {
+            connect(ui[i]->currentScreen, SIGNAL(clicked(bool)), SLOT(changed()));
+            connect(ui[i]->otherScreens, SIGNAL(clicked(bool)), SLOT(changed()));
+        }
+
+        connect(ui[i]->oneAppWindow, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->filterMinimization, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->visibleWindows, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->hiddenWindows, SIGNAL(clicked(bool)), SLOT(changed()));
+        connect(ui[i]->ghns, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
+    }
+
+    // check focus policy - we don't offer configs for unreasonable focus policies
+    KConfigGroup config(m_config, "Windows");
+    QString policy = config.readEntry("FocusPolicy", "ClickToFocus");
+    if ((policy == "FocusUnderMouse") || (policy == "FocusStrictlyUnderMouse")) {
+        tabWidget->setEnabled(false);
+        infoLabel->show();
+    } else
+        infoLabel->hide();
+}
+
+KWinTabBoxConfig::~KWinTabBoxConfig()
+{
+}
+
+void KWinTabBoxConfig::initLayoutLists()
+{
     // search the effect names
     // TODO: way to recognize if a effect is not found
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
@@ -138,61 +198,22 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     }
 
     KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
-    for (int i = 0; i < 2; ++i) {
+    for (int i=0; i<2; ++i) {
+        int index = ui[i]->effectCombo->currentIndex();
+        QVariant data = ui[i]->effectCombo->itemData(index);
+        ui[i]->effectCombo->clear();
         ui[i]->effectCombo->addItem(coverswitch);
         ui[i]->effectCombo->addItem(flipswitch);
         for (int j = 0; j < layoutNames.count(); ++j) {
             ui[i]->effectCombo->addItem(layoutNames[j], layoutPlugins[j]);
             ui[i]->effectCombo->setItemData(ui[i]->effectCombo->count() - 1, layoutPaths[j], Qt::UserRole+1);
         }
-
-        ui[i]->effectConfigButton->setIcon(KIcon("view-preview"));
-
-        connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->showOutlineCheck, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
-        connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
-        connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(effectSelectionChanged(int)));
-        connect(ui[i]->effectConfigButton, SIGNAL(clicked(bool)), SLOT(configureEffectClicked()));
-
-        connect(ui[i]->switchingModeCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
-        connect(ui[i]->showDesktop, SIGNAL(clicked(bool)), SLOT(changed()));
-
-        connect(ui[i]->filterDesktops, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->currentDesktop, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->otherDesktops, SIGNAL(clicked(bool)), SLOT(changed()));
-
-        connect(ui[i]->filterActivities, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->currentActivity, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->otherActivities, SIGNAL(clicked(bool)), SLOT(changed()));
-
-        connect(ui[i]->filterScreens, SIGNAL(clicked(bool)), SLOT(changed()));
-        if (QApplication::desktop()->screenCount() < 2) {
-            ui[i]->filterScreens->hide();
-            ui[i]->screenFilter->hide();
-        } else {
-            connect(ui[i]->currentScreen, SIGNAL(clicked(bool)), SLOT(changed()));
-            connect(ui[i]->otherScreens, SIGNAL(clicked(bool)), SLOT(changed()));
+        if (data.isValid()) {
+            ui[i]->effectCombo->setCurrentIndex(ui[i]->effectCombo->findData(data));
+        } else if (index != -1) {
+            ui[i]->effectCombo->setCurrentIndex(index);
         }
-
-        connect(ui[i]->oneAppWindow, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->filterMinimization, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->visibleWindows, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->hiddenWindows, SIGNAL(clicked(bool)), SLOT(changed()));
     }
-
-    // check focus policy - we don't offer configs for unreasonable focus policies
-    KConfigGroup config(m_config, "Windows");
-    QString policy = config.readEntry("FocusPolicy", "ClickToFocus");
-    if ((policy == "FocusUnderMouse") || (policy == "FocusStrictlyUnderMouse")) {
-        tabWidget->setEnabled(false);
-        infoLabel->show();
-    } else
-        infoLabel->hide();
-}
-
-KWinTabBoxConfig::~KWinTabBoxConfig()
-{
 }
 
 void KWinTabBoxConfig::load()
@@ -539,6 +560,17 @@ void KWinTabBoxConfig::shortcutChanged(const QKeySequence &seq)
     if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(action)))
         a->setGlobalShortcut(KShortcut(seq), KAction::ActiveShortcut, KAction::NoAutoloading);
     m_actionCollection->writeSettings();
+}
+
+void KWinTabBoxConfig::slotGHNS()
+{
+    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("kwinswitcher.knsrc", this);
+    if (downloadDialog->exec() == KDialog::Accepted) {
+        if (!downloadDialog->changedEntries().isEmpty()) {
+            initLayoutLists();
+        }
+    }
+    delete downloadDialog;
 }
 
 } // namespace

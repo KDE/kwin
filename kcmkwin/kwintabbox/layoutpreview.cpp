@@ -179,7 +179,6 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
     return m_nameList.size();
 }
 
-
 } // namespace KWin
 } // namespace TabBox
 

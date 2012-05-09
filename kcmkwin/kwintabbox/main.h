@@ -66,11 +66,13 @@ private slots:
     void configureEffectClicked();
     void tabBoxToggled(bool on);
     void shortcutChanged(const QKeySequence &seq);
+    void slotGHNS();
 private:
     void updateUiFromConfig(KWinTabBoxConfigForm* ui, const TabBox::TabBoxConfig& config);
     void updateConfigFromUi(const KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config);
     void loadConfig(const KConfigGroup& config, KWin::TabBox::TabBoxConfig& tabBoxConfig);
     void saveConfig(KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig);
+    void initLayoutLists();
 
 private:
     enum Mode {
