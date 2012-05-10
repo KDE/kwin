@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_H
 #define KWIN_SCRIPTING_H
 
+#include <kwinglobals.h>
+
 #include <QtCore/QFile>
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
@@ -62,6 +64,9 @@ public:
     const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
         return m_shortcutCallbacks;
     }
+    QHash<int, QList<QScriptValue > > &screenEdgeCallbacks() {
+        return m_screenEdgeCallbacks;
+    }
 
 public Q_SLOTS:
     Q_SCRIPTABLE void stop();
@@ -69,6 +74,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void globalShortcutTriggered();
+    void borderActivated(ElectricBorder edge);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void print(const QString &text);
@@ -100,6 +106,7 @@ private:
     bool m_running;
     WorkspaceWrapper *m_workspace;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
+    QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
 };
 
 class Script : public AbstractScript

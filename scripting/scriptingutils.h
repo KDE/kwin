@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTINGUTILS_H
 #define KWIN_SCRIPTINGUTILS_H
 
+#include "workspace.h"
+
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
 #include <KDE/KDebug>
@@ -133,6 +135,50 @@ void callGlobalShortcutCallback(T script, QObject *sender)
 };
 
 template<class T>
+QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    T script = qobject_cast<T>(context->callee().data().toQObject());
+    if (!script) {
+        return engine->undefinedValue();
+    }
+    if (!validateParameters(context, 2, 2)) {
+        return engine->undefinedValue();
+    }
+    if (!validateArgumentType<int>(context)) {
+        return engine->undefinedValue();
+    }
+    if (!context->argument(1).isFunction()) {
+        context->throwError(QScriptContext::SyntaxError, i18nc("KWin Scripting error thrown due to incorrect argument",
+                                                               "Second argument to registerScreenEdge needs to be a callback"));
+    }
+
+    const int edge = context->argument(0).toVariant().toInt();
+    QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
+    if (it == script->screenEdgeCallbacks().end()) {
+        // not yet registered
+#ifdef KWIN_BUILD_SCREENEDGES
+        KWin::Workspace::self()->screenEdge()->reserve(static_cast<KWin::ElectricBorder>(edge));
+#endif
+        script->screenEdgeCallbacks().insert(edge, QList<QScriptValue>() << context->argument(1));
+    } else {
+        it->append(context->argument(1));
+    }
+    return engine->newVariant(true);
+};
+
+template<class T>
+void screenEdgeActivated(T *script, int edge)
+{
+    QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
+    if (it != script->screenEdgeCallbacks().end()) {
+        foreach (const QScriptValue &value, it.value()) {
+            QScriptValue callback(value);
+            callback.call();
+        }
+    }
+};
+
+template<class T>
 QScriptValue scriptingAssert(QScriptContext *context, QScriptEngine *engine, int min, int max, T defaultVal = T())
 {
     if (!validateParameters(context, min, max)) {
@@ -193,6 +239,13 @@ inline void registerGlobalShortcutFunction(QObject *parent, QScriptEngine *engin
     QScriptValue shortcutFunc = engine->newFunction(function);
     shortcutFunc.setData(engine->newQObject(parent));
     engine->globalObject().setProperty("registerShortcut", shortcutFunc);
+};
+
+inline void registerScreenEdgeFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
+{
+    QScriptValue shortcutFunc = engine->newFunction(function);
+    shortcutFunc.setData(engine->newQObject(parent));
+    engine->globalObject().setProperty("registerScreenEdge", shortcutFunc);
 };
 } // namespace KWin
 

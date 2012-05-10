@@ -289,8 +289,11 @@ void ScreenEdge::check(const QPoint& pos, Time now)
                     if (effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated(border))
                         {} // Handled by effects
                     else {
-                        switchDesktop(border, pos);
-                        return; // Don't reset cursor position
+                        if (options->electricBorders() == Options::ElectricAlways) {
+                            switchDesktop(border, pos);
+                            return; // Don't reset cursor position
+                        }
+                        emit activated(border);
                     }
                 }
                 }

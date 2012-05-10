@@ -103,6 +103,7 @@ public:
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
     static ScriptedEffect *create(const QString &effectName, const QString &pathToScript);
+    virtual ~ScriptedEffect();
     /**
      * Whether another effect has grabbed the @p w with the given @p grabRole.
      * @param w The window to check
@@ -121,6 +122,9 @@ public:
     const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
         return m_shortcutCallbacks;
     }
+    QHash<int, QList<QScriptValue > > &screenEdgeCallbacks() {
+        return m_screenEdgeCallbacks;
+    }
 
 public Q_SLOTS:
     void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve curve = QEasingCurve(), int delay = 0);
@@ -134,6 +138,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);
     void globalShortcutTriggered();
+    void slotBorderActivated(ElectricBorder edge);
 private:
     ScriptedEffect();
     bool init(const QString &effectName, const QString &pathToScript);
@@ -141,6 +146,7 @@ private:
     QString m_effectName;
     QString m_scriptFile;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
+    QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
 };
 
 }

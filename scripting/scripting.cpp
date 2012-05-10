@@ -139,6 +139,11 @@ QScriptValue kwinAssertNotNull(QScriptContext *context, QScriptEngine *engine)
     return true;
 }
 
+QScriptValue kwinRegisterScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::registerScreenEdge<KWin::AbstractScript*>(context, engine);
+}
+
 KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : QObject(parent)
     , m_scriptId(id)
@@ -150,10 +155,20 @@ KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginN
     if (m_pluginName.isNull()) {
         m_pluginName = scriptName;
     }
+#ifdef KWIN_BUILD_SCREENEDGES
+    connect(KWin::Workspace::self()->screenEdge(), SIGNAL(activated(ElectricBorder)), SLOT(borderActivated(ElectricBorder)));
+#endif
 }
 
 KWin::AbstractScript::~AbstractScript()
 {
+#ifdef KWIN_BUILD_SCREENEDGES
+    for (QHash<int, QList<QScriptValue> >::const_iterator it = m_screenEdgeCallbacks.constBegin();
+            it != m_screenEdgeCallbacks.constEnd();
+            ++it) {
+        KWin::Workspace::self()->screenEdge()->unreserve(static_cast<KWin::ElectricBorder>(it.key()));
+    }
+#endif
 }
 
 KConfigGroup KWin::AbstractScript::config() const
@@ -183,6 +198,11 @@ void KWin::AbstractScript::globalShortcutTriggered()
     callGlobalShortcutCallback<KWin::AbstractScript*>(this, sender());
 }
 
+void KWin::AbstractScript::borderActivated(KWin::ElectricBorder edge)
+{
+    screenEdgeActivated(this, edge);
+}
+
 void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
 {
     // add our print
@@ -195,6 +215,8 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     engine->globalObject().setProperty("readConfig", configFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
+    // add screen edge
+    registerScreenEdgeFunction(this, engine, kwinRegisterScreenEdge);
     // add assertions
     QScriptValue assertTrueFunc = engine->newFunction(kwinAssertTrue);
     engine->globalObject().setProperty("assertTrue", assertTrueFunc);

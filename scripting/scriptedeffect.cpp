@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scriptedeffect.h"
 #include "meta.h"
 #include "scriptingutils.h"
+#include "workspace_wrapper.h"
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
@@ -83,6 +84,11 @@ QScriptValue kwinScriptGlobalShortcut(QScriptContext *context, QScriptEngine *en
     return globalShortcut<KWin::ScriptedEffect*>(context, engine);
 }
 
+QScriptValue kwinScriptScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    return registerScreenEdge<KWin::ScriptedEffect*>(context, engine);
+}
+
 QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
 {
     return eng->newQObject(window, QScriptEngine::QtOwnership,
@@ -140,6 +146,20 @@ ScriptedEffect::ScriptedEffect()
     , m_scriptFile(QString())
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
+#ifdef KWIN_BUILD_SCREENEDGES
+    connect(Workspace::self()->screenEdge(), SIGNAL(activated(ElectricBorder)), SLOT(borderActivated(ElectricBorder)));
+#endif
+}
+
+ScriptedEffect::~ScriptedEffect()
+{
+#ifdef KWIN_BUILD_SCREENEDGES
+    for (QHash<int, QList<QScriptValue> >::const_iterator it = m_screenEdgeCallbacks.constBegin();
+            it != m_screenEdgeCallbacks.constEnd();
+            ++it) {
+        KWin::Workspace::self()->screenEdge()->unreserve(static_cast<KWin::ElectricBorder>(it.key()));
+    }
+#endif
 }
 
 bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript)
@@ -155,6 +175,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
+    m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
     m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("AnimationData", m_engine->scriptValueFromQMetaObject<AnimationData>());
     MetaScripting::registration(m_engine);
@@ -176,6 +197,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_engine->globalObject().setProperty("displayHeight", displayHeightFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, m_engine, kwinScriptGlobalShortcut);
+    registerScreenEdgeFunction(this, m_engine, kwinScriptScreenEdge);
 
     QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
 
@@ -255,6 +277,11 @@ void ScriptedEffect::registerShortcut(QAction *a, QScriptValue callback)
 void ScriptedEffect::globalShortcutTriggered()
 {
     callGlobalShortcutCallback<KWin::ScriptedEffect*>(this, sender());
+}
+
+void ScriptedEffect::slotBorderActivated(ElectricBorder edge)
+{
+    screenEdgeActivated(this, edge);
 }
 
 QVariant ScriptedEffect::readConfig(const QString &key, const QVariant defaultValue)

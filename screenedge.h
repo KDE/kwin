@@ -44,7 +44,7 @@ namespace KWin {
  * @author Arthur Arlt
  * @since 4.8
  */
-class ScreenEdge : QObject {
+class ScreenEdge : public QObject {
     Q_OBJECT
 public:
     ScreenEdge();
@@ -108,6 +108,13 @@ public Q_SLOTS:
      * actions or disabled desktop switching.
      */
     void update(bool force=false);
+Q_SIGNALS:
+    /**
+     * Emitted when the @p border got activated and there is neither an effect nor a global
+     * action configured for this @p border.
+     * @param border The border which got activated
+     **/
+    void activated(ElectricBorder border);
 private:
     /**
      * Switch the desktop if desktop switching is enabled and a screen edge
