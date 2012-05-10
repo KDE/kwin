@@ -312,6 +312,7 @@ KWin::ScriptUnloaderAgent::ScriptUnloaderAgent(KWin::Script *script)
 
 void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
 {
+    Q_UNUSED(id)
     m_script->stop();
 }
 
