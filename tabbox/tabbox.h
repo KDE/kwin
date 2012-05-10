@@ -77,7 +77,7 @@ private:
 class TabBoxClientImpl : public TabBoxClient
 {
 public:
-    TabBoxClientImpl();
+    TabBoxClientImpl(Client *client);
     virtual ~TabBoxClientImpl();
 
     virtual QString caption() const;
@@ -94,9 +94,6 @@ public:
 
     Client* client() const {
         return m_client;
-    }
-    void setClient(Client* client) {
-        m_client = client;
     }
 
 private:

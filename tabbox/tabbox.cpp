@@ -303,8 +303,9 @@ void TabBoxHandlerImpl::activateAndClose()
 * TabBoxClientImpl
 *********************************************************/
 
-TabBoxClientImpl::TabBoxClientImpl()
+TabBoxClientImpl::TabBoxClientImpl(Client *client)
     : TabBoxClient()
+    , m_client(client)
 {
 }
 

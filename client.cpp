@@ -187,8 +187,7 @@ Client::Client(Workspace* ws)
 
 #ifdef KWIN_BUILD_TABBOX
     // TabBoxClient
-    m_tabBoxClient = new TabBox::TabBoxClientImpl();
-    m_tabBoxClient->setClient(this);
+    m_tabBoxClient = new TabBox::TabBoxClientImpl(this);
 #endif
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
