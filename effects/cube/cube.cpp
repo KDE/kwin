@@ -599,6 +599,13 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             desktopNameFrame->setText(effects->desktopName(frontDesktop));
             desktopNameFrame->render(region, opacity);
         }
+        // restore the ScreenTransformation after all desktops are painted
+        // if not done GenericShader keeps the rotation data and transforms windows incorrectly in other rendering calls
+        if (ShaderManager::instance()->isValid()) {
+            GLShader *shader = ShaderManager::instance()->pushShader(KWin::ShaderManager::GenericShader);
+            shader->setUniform(GLShader::ScreenTransformation, QMatrix4x4());
+            ShaderManager::instance()->popShader();
+        }
     } else {
         effects->paintScreen(mask, region, data);
     }
