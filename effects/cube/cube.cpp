@@ -325,15 +325,15 @@ bool CubeEffect::loadShader()
         float xmin =  ymin * aspect;
         float xmax = ymax * aspect;
         projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        cylinderShader->setUniform("projection", projection);
+        cylinderShader->setUniform(GLShader::ProjectionMatrix, projection);
         QMatrix4x4 modelview;
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
         modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
         modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
-        cylinderShader->setUniform("modelview", modelview);
+        cylinderShader->setUniform(GLShader::ModelViewMatrix, modelview);
         const QMatrix4x4 identity;
-        cylinderShader->setUniform("screenTransformation", identity);
-        cylinderShader->setUniform("windowTransformation", identity);
+        cylinderShader->setUniform(GLShader::ScreenTransformation, identity);
+        cylinderShader->setUniform(GLShader::WindowTransformation, identity);
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
         shaderManager->popShader();
@@ -356,15 +356,15 @@ bool CubeEffect::loadShader()
         float xmin =  ymin * aspect;
         float xmax = ymax * aspect;
         projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        sphereShader->setUniform("projection", projection);
+        sphereShader->setUniform(GLShader::ProjectionMatrix, projection);
         QMatrix4x4 modelview;
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
         modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
         modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
-        sphereShader->setUniform("modelview", modelview);
+        sphereShader->setUniform(GLShader::ModelViewMatrix, modelview);
         const QMatrix4x4 identity;
-        sphereShader->setUniform("screenTransformation", identity);
-        sphereShader->setUniform("windowTransformation", identity);
+        sphereShader->setUniform(GLShader::ScreenTransformation, identity);
+        sphereShader->setUniform(GLShader::WindowTransformation, identity);
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         sphereShader->setUniform("width", (float)rect.width() * 0.5f);
         sphereShader->setUniform("height", (float)rect.height() * 0.5f);
@@ -796,11 +796,11 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         m_capShader->setUniform("u_opacity", opacity);
         m_capShader->setUniform("u_mirror", 1);
         if (reflectionPainting) {
-            m_capShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix);
+            m_capShader->setUniform(GLShader::ScreenTransformation, m_reflectionMatrix * m_rotationMatrix);
         } else {
-            m_capShader->setUniform("screenTransformation", m_rotationMatrix);
+            m_capShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix);
         }
-        m_capShader->setUniform("windowTransformation", capMatrix);
+        m_capShader->setUniform(GLShader::WindowTransformation, capMatrix);
         m_capShader->setUniform("u_untextured", texturedCaps ? 0 : 1);
         if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
             capTexture->bind();
@@ -1505,9 +1505,9 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 currentShader = sphereShader;
             }
             if (reflectionPainting) {
-                currentShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
+                currentShader->setUniform(GLShader::ScreenTransformation, m_reflectionMatrix * m_rotationMatrix * origMatrix);
             } else {
-                currentShader->setUniform("screenTransformation", m_rotationMatrix*origMatrix);
+                currentShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix*origMatrix);
             }
         }
     }
@@ -1517,7 +1517,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (mode == Cylinder || mode == Sphere) {
                 shaderManager->popShader();
             } else {
-                shader->setUniform("screenTransformation", origMatrix);
+                shader->setUniform(GLShader::ScreenTransformation, origMatrix);
             }
             shaderManager->popShader();
         }
@@ -1567,11 +1567,11 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     m_capShader->setUniform("u_mirror", 0);
                     m_capShader->setUniform("u_untextured", 1);
                     if (reflectionPainting) {
-                        m_capShader->setUniform("screenTransformation", m_reflectionMatrix * m_rotationMatrix * origMatrix);
+                        m_capShader->setUniform(GLShader::ScreenTransformation, m_reflectionMatrix * m_rotationMatrix * origMatrix);
                     } else {
-                        m_capShader->setUniform("screenTransformation", m_rotationMatrix * origMatrix);
+                        m_capShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix * origMatrix);
                     }
-                    m_capShader->setUniform("windowTransformation", QMatrix4x4());
+                    m_capShader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
                 }
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
