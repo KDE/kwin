@@ -1116,6 +1116,7 @@ void TabBox::open(bool modal, const QString &layout)
         TabBoxConfig tempConfig;
         tempConfig = tabBox->config();
         tempConfig.setLayoutName(layout);
+        tempConfig.setShowTabBox(true);
         tabBox->setConfig(tempConfig);
     }
     reset();
