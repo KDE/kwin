@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Text Icons
 Name[de]=Text-Symbole
+Name[et]=Tekstiikoonid
 Name[ia]=Icones de texto
 Name[nb]=Tekstikoner
 Name[nl]=Tekstpictogrammen
@@ -14,6 +15,7 @@ Name[uk]=Текстові піктограми
 Name[x-test]=xxText Iconsxx
 Name[zh_TW]=文字圖示
 Comment=A window switcher layout only showing window captions
+Comment[et]=Aknavahetaja paigutus ainult aknatiitlite näitamisega
 Comment[ia]=Un disposition de commutator de fenestra monstrante solo legendas de fenestra
 Comment[nb]=En vindusbytterutforming som bare viser vindustekster
 Comment[nl]=Een indeling van de vensterwisselaar die alleen bijschriften van vensters toont

@@ -2,6 +2,7 @@
 Name=Large Icons
 Name[cs]=Velké ikony
 Name[de]=Große Symbole
+Name[et]=Suured ikoonid
 Name[ia]=Icones grande
 Name[nb]=Store ikoner
 Name[nl]=Grote pictogrammen
@@ -15,6 +16,7 @@ Name[uk]=Великі піктограми
 Name[x-test]=xxLarge Iconsxx
 Name[zh_TW]=大圖示
 Comment=A window switcher layout using large icons to represent the window
+Comment[et]=Aknavahetaja paigutus suurte, aknaid tähistavate ikoonidega
 Comment[ia]=Un disposition de commutator de fenestra usante icones grande pro representar le fenestra
 Comment[nb]=En vindusbytterutforming som bruker store ikoner for å representere vinduer
 Comment[nl]=Een indeling van de vensterwisselaar die grote pictogrammen gebruikt om vensters te representeren

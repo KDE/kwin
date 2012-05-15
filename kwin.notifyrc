@@ -7427,6 +7427,7 @@ Action=Popup
 
 [Event/fullscreen]
 Name=Window Fullscreen Set
+Name[et]=Aken täisekraanirežiimis
 Name[ia]=Fixation de fenestra a schermo plen
 Name[nl]=Venster in modus volledig scherm 
 Name[pa]=ਵਿੰਡੋ ਪੂਰੀਸਕਰੀਨ ਸੈੱਟ
@@ -7439,6 +7440,7 @@ Name[uk]=Повноекранний режим
 Name[x-test]=xxWindow Fullscreen Setxx
 Name[zh_TW]=已設定成全螢幕
 Comment=A window has been set to fullscreen
+Comment[et]=Aken on viidud täisekraani
 Comment[ia]=Un fenestra ha essite fixate al modo de schermo plen
 Comment[nl]=Een venster is ingesteld op volledig scherm
 Comment[pa]=ਵਿੰਡੋ ਪੂਰੀ ਸਕਰੀਨ ਲਈ ਸੈੱਟ ਕੀਤੀ ਜਾ ਚੁੱਕੀ ਹੈ
@@ -7453,6 +7455,7 @@ Comment[zh_TW]=已將視窗設定成全螢幕
 
 [Event/unfullscreen]
 Name=Window Fullscreen Restored
+Name[et]=Aken on täisekraanist taastatud
 Name[ia]=Fenestra de schermo plen restabilite
 Name[nl]=Venster terug uit modus volledig scherm
 Name[pa]=ਵਿੰਡੋ ਪੂਰੀ ਸਕਰੀਨ ਰੀ-ਸਟੋਰ ਕੀਤੀ
@@ -7464,6 +7467,7 @@ Name[uk]=Звичайний режим
 Name[x-test]=xxWindow Fullscreen Restoredxx
 Name[zh_TW]=已還原全螢幕
 Comment=A window has been restored from fullscreen
+Comment[et]=Aken on täisekraanist taastatud
 Comment[ia]=Un fenestra ha essite restabilite ab schermo plen
 Comment[nl]=Een venster is teruggebracht uit de instelling volledig scherm
 Comment[pa]=ਵਿੰਡੋ ਨੂੰ ਪੂਰੀ ਸਕਰੀਨ ਨੂੰ ਮੁੜ ਕੇ ਸਟੋਰ ਕੀਤਾ ਗਿਆ

@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/WindowSwitcher
 
 Comment=KWin Window Switcher Layout
+Comment[et]=KWini aknavahetaja paigutus
 Comment[ia]=Disposition de commutator de fenestra de KWin
 Comment[nb]=Utforming av KWin vindusbytter
 Comment[nl]=KWin indeling van vensterwisselaar

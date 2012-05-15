@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Window Strip
+Name[et]=Aknariba
 Name[ia]=Lista de fenestra
 Name[nb]=Vindusstripe
 Name[nl]=Vensterstrook
@@ -13,6 +14,7 @@ Name[uk]=Стрічка-вікно
 Name[x-test]=xxWindow Stripxx
 Name[zh_TW]=視窗帶
 Comment=Window switcher layout for Plasma Active
+Comment[et]=Plasma Active'i aknavahetaja paigutus
 Comment[ia]=Disposition de commutator de fenestra per Plasma Active
 Comment[nb]=Vindusbytterutforming for Plasma Active
 Comment[nl]=Indeling van de vensterwisselaar voor Plasma Active

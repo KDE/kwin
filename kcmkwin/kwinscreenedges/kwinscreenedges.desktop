@@ -148,6 +148,7 @@ Comment[zh_CN]=配置活动窗口边缘
 Comment[zh_TW]=設定作用的螢幕邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords[et]=kwin,aken,haldur,efekt.serv,piire,toiming,lülitamine,töölaud,kwini ekraani servad,töölaua servad,ekraani servad,akende maksimeerimine,akende paanimine,ekraani äär,ekraani käitumine,töölaua lülitamine,virtuaalne töölaud,ekraani nurgad
 X-KDE-Keywords[hu]=kwin,ablak,kezelő,effektus,szél,szegély,művelet,váltás,asztal,kwin képernyőszél,asztalszél,képernyőszél,ablakok maximalizálása,ablakcím,képernyőoldal,képernyő működése,asztalváltás,virtuális asztal,képernyősarkok
 X-KDE-Keywords[ia]=kwin,fenestra,gerente,effecto,bordo,margine,action,commuta,scriptorio,bordos de schermo de kwin,bordos de scriptorio,bordos de scriptorio,maximisa fenestras,tegula fenestras,parte de schermo, comportamento de schermo,commuta scriptorio,scriptorio virtual,angulos de schermo
 X-KDE-Keywords[nb]=kwin,vindu,behandler,effekt,kant,ramme,handling,bytte,skrivebord,kwin skjermkanter,skrivebordkanter,skjermkanter,maksimere vinduer,flislegge vinduer,skjermside,skjermoppførsel,bytte skrivebord,virtuelt skrivebord,skjermhjørner

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Change OSD
+Name[et]=Töölaua muutmise ekraaniesitus
 Name[ia]=Modifica OSD de scriptorio
 Name[nb]=OSD for skrivebordsbytte
 Name[nl]=OSD voor bureaubladwijziging
@@ -13,6 +14,7 @@ Name[uk]=Панель зміни стільниць
 Name[x-test]=xxDesktop Change OSDxx
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
+Comment[et]=Töölaua muutumist näitab ekraanikuva
 Comment[ia]=Un monstrator sur le schermo indicante le modification de scriptorio
 Comment[nb]=En tekst på skjermen som viser skrivebordsbytte
 Comment[nl]=Een on screen display (OSD) die de wijziging van het bureaublad aangeeft

@@ -2,6 +2,7 @@
 Name=Compact
 Name[cs]=Kompaktní
 Name[de]=Kompakt
+Name[et]=Kompaktne
 Name[ia]=Compacte
 Name[nb]=Kompakt
 Name[nl]=Compact
@@ -15,6 +16,7 @@ Name[uk]=Компактне
 Name[x-test]=xxCompactxx
 Name[zh_TW]=簡潔模式
 Comment=A compact window switcher layout
+Comment[et]=Kompaktne aknavahetaja paigutus
 Comment[ia]=Un disposition de commutator de fenestra compacte
 Comment[nb]=En kompakt utforming av vindusbytter
 Comment[nl]=Een compacte indeling van de vensterwisselaar

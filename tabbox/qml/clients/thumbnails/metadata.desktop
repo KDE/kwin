@@ -2,6 +2,7 @@
 Name=Thumbnails
 Name[cs]=Miniatury
 Name[de]=Vorschaubilder
+Name[et]=Pisipildid
 Name[ia]=Miniaturas
 Name[nb]=Minibilder
 Name[nl]=Miniaturen
@@ -15,6 +16,7 @@ Name[uk]=Мініатюри
 Name[x-test]=xxThumbnailsxx
 Name[zh_TW]=縮圖
 Comment=A window switcher layout using live thumbnails
+Comment[et]=Aknavahetaja paigutus reaalajas pisipiltidega
 Comment[ia]=Un disposition de commutator de fenestra usante miniaturas vive
 Comment[nb]=En vindusbytterutforming som bruker sanntids minibilder
 Comment[nl]=Een indeling van de vensterwisselaar met levende miniaturen

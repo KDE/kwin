@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Video Wall
 Name[cs]=Video stěna
+Name[et]=Videosein
 Name[ia]=Muro de Video
 Name[nb]=Videovegg
 Name[nl]=Videomuur
@@ -14,6 +15,7 @@ Name[uk]=Відеостіна
 Name[x-test]=xxVideo Wallxx
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
+Comment[et]=Täisekraan-videomängija laiendamine kõigile ühendatud ekraanile videoseina loomiseks
 Comment[ia]=Extende jocator de video de schermo plen super omne schermos attachate pro crea un Muro de Video
 Comment[nb]=Sprer  fullskjerms videospiller over alle tilkoblede skjermer for å lage en Videovegg
 Comment[nl]=Verdeelt de videospeler in modus volledig scherm over alle aangesloten schermen om een Videomuur te creëren
