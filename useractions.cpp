@@ -412,7 +412,7 @@ void Workspace::initTabbingPopups()
     }
 
     if (!add_tabs_popup) {
-        add_tabs_popup = new QMenu(i18n("Tab behind"), popup);
+        add_tabs_popup = new QMenu(i18n("Attach as tab to"), popup);
         add_tabs_popup->setFont(KGlobalSettings::menuFont());
         connect(add_tabs_popup, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
         connect(add_tabs_popup, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
