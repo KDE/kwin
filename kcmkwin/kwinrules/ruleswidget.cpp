@@ -27,6 +27,7 @@
 #include <kwindowsystem.h>
 #include <klocale.h>
 #include <QRegExp>
+#include <KActivities/Consumer>
 
 #include <assert.h>
 #include <kmessagebox.h>
@@ -84,6 +85,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(position, set);
     SETUP(size, set);
     SETUP(desktop, set);
+    SETUP(activity, set);
     SETUP(maximizehoriz, set);
     SETUP(maximizevert, set);
     SETUP(minimize, set);
@@ -131,6 +133,12 @@ RulesWidget::RulesWidget(QWidget* parent)
             ++i)
         desktop->addItem(QString::number(i).rightJustified(2) + ':' + KWindowSystem::desktopName(i));
     desktop->addItem(i18n("All Desktops"));
+
+    static KActivities::Consumer activities;
+    foreach (const QString & activityId, activities.listActivities()) {
+        activity->addItem(KActivities::Info::name(activityId), activityId);
+    }
+    activity->addItem(i18n("All Activities"), QString::fromLatin1("ALL"));
 }
 
 #undef SETUP
@@ -146,6 +154,7 @@ RulesWidget::RulesWidget(QWidget* parent)
 UPDATE_ENABLE_SLOT(position)
 UPDATE_ENABLE_SLOT(size)
 UPDATE_ENABLE_SLOT(desktop)
+UPDATE_ENABLE_SLOT(activity)
 UPDATE_ENABLE_SLOT(maximizehoriz)
 UPDATE_ENABLE_SLOT(maximizevert)
 UPDATE_ENABLE_SLOT(minimize)
@@ -279,6 +288,27 @@ int RulesWidget::comboToDesktop(int val) const
     if (val == desktop->count() - 1)
         return NET::OnAllDesktops;
     return val + 1;
+}
+
+int RulesWidget::activityToCombo(QString d) const
+{
+    // TODO: ivan - do a multiselection list
+    for (int i = 0; i < activity->count(); i++) {
+        if (activity->itemData(i).toString() == d) {
+            return i;
+        }
+    }
+
+    return activity->count() - 1; // on all activities
+}
+
+QString RulesWidget::comboToActivity(int val) const
+{
+    // TODO: ivan - do a multiselection list
+    if (val < 0 || val >= activity->count())
+        return QString();
+
+    return activity->itemData(val).toString();
 }
 
 int RulesWidget::tilingToCombo(int t) const
@@ -423,6 +453,7 @@ void RulesWidget::setRules(Rules* rules)
     LINEEDIT_SET_RULE(position, positionToStr);
     LINEEDIT_SET_RULE(size, sizeToStr);
     COMBOBOX_SET_RULE(desktop, desktopToCombo);
+    COMBOBOX_SET_RULE(activity, activityToCombo);
     CHECKBOX_SET_RULE(maximizehoriz,);
     CHECKBOX_SET_RULE(maximizevert,);
     CHECKBOX_SET_RULE(minimize,);
@@ -517,6 +548,7 @@ Rules* RulesWidget::rules() const
     LINEEDIT_SET_RULE(position, strToPosition);
     LINEEDIT_SET_RULE(size, strToSize);
     COMBOBOX_SET_RULE(desktop, comboToDesktop);
+    COMBOBOX_SET_RULE(activity, comboToActivity);
     CHECKBOX_SET_RULE(maximizehoriz,);
     CHECKBOX_SET_RULE(maximizevert,);
     CHECKBOX_SET_RULE(minimize,);
@@ -635,6 +667,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     LINEEDIT_PREFILL(position, positionToStr, info.frameGeometry().topLeft());
     LINEEDIT_PREFILL(size, sizeToStr, info.frameGeometry().size());
     COMBOBOX_PREFILL(desktop, desktopToCombo, info.desktop());
+    // COMBOBOX_PREFILL(activity, activityToCombo, info.activity()); // TODO: ivan
     CHECKBOX_PREFILL(maximizehoriz, , info.state() & NET::MaxHoriz);
     CHECKBOX_PREFILL(maximizevert, , info.state() & NET::MaxVert);
     CHECKBOX_PREFILL(minimize, , info.isMinimized());

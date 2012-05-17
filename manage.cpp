@@ -205,6 +205,7 @@ bool Client::manage(Window w, bool isMapped)
             setOnActivity(Workspace::self()->currentActivity(), true);
         }
     }
+
     if (desk == 0)   // Assume window wants to be visible on the current desktop
         desk = isDesktop() ? NET::OnAllDesktops : workspace()->currentDesktop();
     desk = rules()->checkDesktop(desk, !isMapped);
@@ -213,6 +214,11 @@ bool Client::manage(Window w, bool isMapped)
     info->setDesktop(desk);
     workspace()->updateOnAllDesktopsOfTransients(this);   // SELI TODO
     //onAllDesktopsChange(); // Decoration doesn't exist here yet
+
+    QString activitiesList;
+    activitiesList = rules()->checkActivity(activitiesList, !isMapped);
+    if (!activitiesList.isEmpty())
+        setOnActivities(activitiesList.split(","));
 
     QRect geom(attr.x, attr.y, attr.width, attr.height);
     bool placementDone = false;

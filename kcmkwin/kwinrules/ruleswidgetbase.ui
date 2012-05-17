@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>547</width>
+    <width>569</width>
     <height>517</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <item row="0" column="1">
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="TabPage1">
       <attribute name="title">
@@ -489,13 +489,6 @@
        <string>&amp;Size &amp;&amp; Position</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="enable_position">
-         <property name="text">
-          <string>&amp;Position</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="2">
         <widget class="KComboBox" name="rule_position">
          <property name="enabled">
@@ -531,104 +524,6 @@
            <string>Force Temporarily</string>
           </property>
          </item>
-        </widget>
-       </item>
-       <item row="0" column="3" colspan="4">
-        <widget class="KRestrictedLine" name="position">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="placeholderText">
-          <string>x,y</string>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="enable_size">
-         <property name="text">
-          <string>&amp;Size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="KComboBox" name="rule_size">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="3" colspan="4">
-        <widget class="KRestrictedLine" name="size">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="placeholderText">
-          <string>width,height</string>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" rowspan="3" colspan="6">
-        <widget class="Line" name="line_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1" rowspan="2">
-        <widget class="QCheckBox" name="enable_maximizehoriz">
-         <property name="text">
-          <string>Maximized &amp;horizontally</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="3" rowspan="2" colspan="4">
-        <widget class="YesNoBox" name="maximizehoriz" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QCheckBox" name="enable_maximizevert">
-         <property name="text">
-          <string>Maximized &amp;vertically</string>
-         </property>
         </widget>
        </item>
        <item row="7" column="2">
@@ -668,43 +563,41 @@
          </item>
         </widget>
        </item>
-       <item row="7" column="3" colspan="4">
-        <widget class="YesNoBox" name="maximizevert" native="true">
+       <item row="0" column="3" colspan="2">
+        <widget class="KRestrictedLine" name="position">
          <property name="enabled">
           <bool>false</bool>
          </property>
-        </widget>
-       </item>
-       <item row="8" column="1" rowspan="3" colspan="6">
-        <widget class="Line" name="line_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+         <property name="placeholderText">
+          <string>x,y</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="1" rowspan="2">
-        <widget class="QCheckBox" name="enable_fullscreen">
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="enable_size">
          <property name="text">
-          <string>&amp;Fullscreen</string>
+          <string>&amp;Size</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="3" rowspan="2" colspan="4">
-        <widget class="YesNoBox" name="fullscreen" native="true">
+       <item row="1" column="3" colspan="2">
+        <widget class="KRestrictedLine" name="size">
          <property name="enabled">
           <bool>false</bool>
          </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="enable_desktop">
-         <property name="text">
-          <string>&amp;Desktop</string>
+         <property name="placeholderText">
+          <string>width,height</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="2">
-        <widget class="KComboBox" name="rule_desktop">
+       <item row="28" column="2" rowspan="4">
+        <widget class="KComboBox" name="rule_maxsize">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -715,22 +608,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Apply Initially</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Remember</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Apply Now</string>
           </property>
          </item>
          <item>
@@ -740,42 +618,21 @@
          </item>
         </widget>
        </item>
-       <item row="13" column="3" colspan="4">
-        <widget class="KComboBox" name="desktop">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1" rowspan="3" colspan="6">
-        <widget class="Line" name="line_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1" rowspan="2">
-        <widget class="QCheckBox" name="enable_minimize">
-         <property name="text">
-          <string>M&amp;inimized</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="3" rowspan="2" colspan="4">
-        <widget class="YesNoBox" name="minimize" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="1">
+       <item row="20" column="1">
         <widget class="QCheckBox" name="enable_shade">
          <property name="text">
           <string>Sh&amp;aded</string>
          </property>
         </widget>
        </item>
-       <item row="19" column="2">
+       <item row="18" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_minimize">
+         <property name="text">
+          <string>M&amp;inimized</string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="2">
         <widget class="KComboBox" name="rule_shade">
          <property name="enabled">
           <bool>false</bool>
@@ -812,32 +669,8 @@
          </item>
         </widget>
        </item>
-       <item row="19" column="3" colspan="4">
-        <widget class="YesNoBox" name="shade" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="20" column="1" rowspan="2" colspan="6">
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="22" column="1">
-        <widget class="QCheckBox" name="enable_placement">
-         <property name="toolTip">
-          <string/>
-         </property>
-         <property name="text">
-          <string>Initial p&amp;lacement</string>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="2" rowspan="2">
-        <widget class="KComboBox" name="rule_placement">
+       <item row="1" column="2">
+        <widget class="KComboBox" name="rule_size">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -848,7 +681,22 @@
          </item>
          <item>
           <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
           </property>
          </item>
          <item>
@@ -858,7 +706,58 @@
          </item>
         </widget>
        </item>
-       <item row="21" column="3" rowspan="2" colspan="4">
+       <item row="18" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_minimize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="18" column="3" rowspan="2" colspan="2">
+        <widget class="YesNoBox" name="minimize" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="3" colspan="2">
+        <widget class="YesNoBox" name="ignoreposition" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="3" rowspan="2" colspan="2">
         <widget class="KComboBox" name="placement">
          <property name="enabled">
           <bool>false</bool>
@@ -915,85 +814,7 @@
          </item>
         </widget>
        </item>
-       <item row="23" column="1">
-        <widget class="QCheckBox" name="enable_ignoreposition">
-         <property name="toolTip">
-          <string>Windows can ask to appear in a certain position.
-By default this overrides the placement strategy
-what might be nasty if the client abuses the feature
-to unconditionally popup in the middle of your screen.</string>
-         </property>
-         <property name="text">
-          <string>Ignore requested &amp;geometry</string>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="2">
-        <widget class="KComboBox" name="rule_ignoreposition">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="23" column="3" colspan="4">
-        <widget class="YesNoBox" name="ignoreposition" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="24" column="1" colspan="6">
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="27" column="1" rowspan="4">
-        <widget class="QCheckBox" name="enable_maxsize">
-         <property name="text">
-          <string>M&amp;aximum size</string>
-         </property>
-        </widget>
-       </item>
-       <item row="27" column="2" rowspan="4">
-        <widget class="KComboBox" name="rule_maxsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="27" column="3" rowspan="4" colspan="4">
+       <item row="28" column="3" rowspan="4" colspan="2">
         <widget class="KRestrictedLine" name="maxsize">
          <property name="enabled">
           <bool>false</bool>
@@ -1006,28 +827,112 @@ to unconditionally popup in the middle of your screen.</string>
          </property>
         </widget>
        </item>
-       <item row="31" column="3" rowspan="2" colspan="4">
+       <item row="28" column="1" rowspan="4">
+        <widget class="QCheckBox" name="enable_maxsize">
+         <property name="text">
+          <string>M&amp;aximum size</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1" colspan="4">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="1">
+        <widget class="QCheckBox" name="enable_placement">
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Initial p&amp;lacement</string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="3" colspan="2">
+        <widget class="YesNoBox" name="shade" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="3" rowspan="2" colspan="2">
         <widget class="YesNoBox" name="strictgeometry" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="33" column="2">
-        <spacer>
+       <item row="2" column="1" rowspan="3" colspan="4">
+        <widget class="Line" name="line_5">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
+        </widget>
+       </item>
+       <item row="12" column="0" rowspan="2">
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
-           <height>16</height>
+           <width>40</width>
+           <height>20</height>
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="32" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_strictgeometry">
+         <property name="toolTip">
+          <string>Eg. terminals or video players can ask to keep a certain aspect ratio
+or only grow by values larger than one
+(eg. by the dimensions of one character).
+This may be pointless and the restriction prevents arbitrary dimensions
+like your complete screen area.</string>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Obey geometry restrictions</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_minsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="21" column="1" rowspan="2" colspan="4">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item row="5" column="2" rowspan="2">
         <widget class="KComboBox" name="rule_maximizehoriz">
@@ -1103,8 +1008,127 @@ to unconditionally popup in the middle of your screen.</string>
          </item>
         </widget>
        </item>
-       <item row="17" column="2" rowspan="2">
-        <widget class="KComboBox" name="rule_minimize">
+       <item row="22" column="2" rowspan="2">
+        <widget class="KComboBox" name="rule_placement">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="3" colspan="2">
+        <widget class="YesNoBox" name="maximizevert" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1">
+        <widget class="QCheckBox" name="enable_ignoreposition">
+         <property name="toolTip">
+          <string>Windows can ask to appear in a certain position.
+By default this overrides the placement strategy
+what might be nasty if the client abuses the feature
+to unconditionally popup in the middle of your screen.</string>
+         </property>
+         <property name="text">
+          <string>Ignore requested &amp;geometry</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_maximizehoriz">
+         <property name="text">
+          <string>Maximized &amp;horizontally</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_fullscreen">
+         <property name="text">
+          <string>&amp;Fullscreen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="3" colspan="2">
+        <widget class="KComboBox" name="desktop">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="3" rowspan="2" colspan="2">
+        <widget class="YesNoBox" name="fullscreen" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="3" rowspan="2" colspan="2">
+        <widget class="KRestrictedLine" name="minsize">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="placeholderText">
+          <string>width,height</string>
+         </property>
+         <property name="validChars">
+          <string>0123456789-+,xX:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="2">
+        <widget class="KComboBox" name="rule_ignoreposition">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="enable_position">
+         <property name="text">
+          <string>&amp;Position</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="3" rowspan="2" colspan="2">
+        <widget class="YesNoBox" name="maximizehoriz" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="2">
+        <widget class="KComboBox" name="rule_desktop">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1140,49 +1164,28 @@ to unconditionally popup in the middle of your screen.</string>
          </item>
         </widget>
        </item>
-       <item row="25" column="3" rowspan="2" colspan="4">
-        <widget class="KRestrictedLine" name="minsize">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="placeholderText">
-          <string>width,height</string>
-         </property>
-         <property name="validChars">
-          <string>0123456789-+,xX:</string>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="enable_maximizevert">
+         <property name="text">
+          <string>Maximized &amp;vertically</string>
          </property>
         </widget>
        </item>
-       <item row="25" column="2" rowspan="2">
-        <widget class="KComboBox" name="rule_minsize">
-         <property name="enabled">
-          <bool>false</bool>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="enable_desktop">
+         <property name="text">
+          <string>&amp;Desktop</string>
          </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
         </widget>
        </item>
-       <item row="25" column="1" rowspan="2">
+       <item row="26" column="1" rowspan="2">
         <widget class="QCheckBox" name="enable_minsize">
          <property name="text">
           <string>M&amp;inimum size</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="7" rowspan="2">
+       <item row="12" column="5" rowspan="2">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -1195,40 +1198,14 @@ to unconditionally popup in the middle of your screen.</string>
          </property>
         </spacer>
        </item>
-       <item row="12" column="0" rowspan="2">
-        <spacer name="horizontalSpacer_7">
+       <item row="8" column="1" rowspan="3" colspan="4">
+        <widget class="Line" name="line_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="31" column="1" rowspan="2">
-        <widget class="QCheckBox" name="enable_strictgeometry">
-         <property name="toolTip">
-          <string>Eg. terminals or video players can ask to keep a certain aspect ratio
-or only grow by values larger than one
-(eg. by the dimensions of one character).
-This may be pointless and the restriction prevents arbitrary dimensions
-like your complete screen area.</string>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="text">
-          <string>Obey geometry restrictions</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
         </widget>
        </item>
-       <item row="31" column="2" rowspan="2">
+       <item row="32" column="2" rowspan="2">
         <widget class="KComboBox" name="rule_strictgeometry">
          <property name="enabled">
           <bool>false</bool>
@@ -1248,6 +1225,80 @@ like your complete screen area.</string>
            <string>Force Temporarily</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item row="15" column="1" rowspan="3" colspan="4">
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="34" column="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>16</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="enable_activity">
+         <property name="text">
+          <string>Activit&amp;y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="2">
+        <widget class="KComboBox" name="rule_activity">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="14" column="3" colspan="2">
+        <widget class="KComboBox" name="activity">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
       </layout>
