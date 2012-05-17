@@ -157,6 +157,25 @@ trydefaultlib:
     }
 
     create_ptr = NULL;
+    version_ptr = 0;
+    KLibrary::void_function_ptr version_func = library->resolveFunction("decoration_version");
+    if (version_func) {
+        // TODO for the moment we let unversioned decos through
+        // later on this function shall become mandatory!
+        version_ptr = (int(*)())version_func;
+        const int deco_version = version_ptr();
+        if (deco_version != KWIN_DECORATION_API_VERSION) {
+            if (nameStr != defaultPlugin) {
+                kWarning(1212) << i18n("The library %1 has wrong API version %2", path, deco_version);
+                library->unload();
+                library = NULL;
+                goto trydefaultlib;
+            }
+        }
+    } else {
+        kWarning(1212) << i18n("******\n\nThe library %1 has no API version\nPlease use the KWIN_DECORATION or future versions of kwin will no longer load this decoration!\n*******", path);
+    }
+
     KLibrary::void_function_ptr create_func = library->resolveFunction("create_factory");
     if (create_func)
         create_ptr = (KDecorationFactory * (*)())create_func;

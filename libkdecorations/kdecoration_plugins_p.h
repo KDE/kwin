@@ -59,6 +59,7 @@ protected:
     QString defaultPlugin; // FRAME normalne protected?
 private:
     KDecorationFactory*(*create_ptr)();
+    int (*version_ptr)();
     KLibrary *library;
     KDecorationFactory* fact;
     KLibrary *old_library;
@@ -71,6 +72,7 @@ private:
 
  Plugins API:
     KDecorationFactory* create_factory(); - called once after loading
+    int decoration_version(); - called once after loading
 
 */
 

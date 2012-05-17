@@ -78,10 +78,8 @@ static bool pixmaps_created = false;
 
 // =====================================
 
-extern "C" KDE_EXPORT KDecorationFactory* create_factory()
-{
-    return new Laptop::LaptopClientFactory();
-}
+KWIN_DECORATION(Laptop::LaptopClientFactory)
+
 
 // =====================================
 

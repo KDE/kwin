@@ -34,6 +34,19 @@ DEALINGS IN THE SOFTWARE.
 
 #define KWIN_EXPORT KDE_EXPORT
 
+#define KWIN_DECORATION_API_VERSION 1
+
+/**
+ * Defines the class to be used for decoration factory.
+ * The class must be namespace complete.
+ * E.g.  KWIN_EFFECT( Oxygen::Factory )
+ **/
+#define KWIN_DECORATION( classname ) \
+    extern "C" { \
+        KWIN_EXPORT KDecorationFactory* create_factory() { return new classname(); } \
+        KWIN_EXPORT int decoration_version() { return KWIN_DECORATION_API_VERSION; } \
+    }
+
 class KConfig;
 
 /** @defgroup kdecoration KWin decorations library */

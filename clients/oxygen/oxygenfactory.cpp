@@ -35,11 +35,7 @@
 #include <KWindowInfo>
 #include <kdeversion.h>
 
-extern "C"
-{
-    KDE_EXPORT KDecorationFactory* create_factory()
-    { return new Oxygen::Factory(); }
-}
+KWIN_DECORATION(Oxygen::Factory)
 
 namespace Oxygen
 {

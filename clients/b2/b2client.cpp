@@ -119,10 +119,7 @@ static bool drawSmallBorders = false;
 
 // =====================================
 
-extern "C" KDE_EXPORT KDecorationFactory* create_factory()
-{
-    return new B2::B2ClientFactory();
-}
+KWIN_DECORATION(B2::B2ClientFactory)
 
 // =====================================
 
