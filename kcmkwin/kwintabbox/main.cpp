@@ -371,8 +371,6 @@ void KWinTabBoxConfig::defaults()
         CONFIGURE(filterScreens, MultiScreen, !=, IgnoreMultiScreen);
         CONFIGURE(currentScreen, MultiScreen, ==, OnlyCurrentScreenClients);
         CONFIGURE(otherScreens, MultiScreen, ==, ExcludeCurrentScreenClients);
-//         CONFIGURE(filterApplication, Applications, !=, AllWindowsAllApplications);
-//         CONFIGURE(currentApplication, Applications, ==, AllWindowsCurrentApplication);
         CONFIGURE(oneAppWindow, Applications, ==, OneWindowPerApplication);
         CONFIGURE(filterMinimization, Minimized, !=, IgnoreMinimizedStatus);
         CONFIGURE(visibleWindows, Minimized, ==, ExcludeMinimizedClients);
@@ -430,8 +428,6 @@ void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm* ui, const KWin::
     CONFIGURE(filterScreens, clientMultiScreen, !=, IgnoreMultiScreen);
     CONFIGURE(currentScreen, clientMultiScreen, ==, OnlyCurrentScreenClients);
     CONFIGURE(otherScreens, clientMultiScreen, ==, ExcludeCurrentScreenClients);
-//     CONFIGURE(filterApplication, clientApplications, !=, AllWindowsAllApplications);
-//     CONFIGURE(currentApplication, clientApplications, ==, AllWindowsCurrentApplication);
     CONFIGURE(oneAppWindow, clientApplications, ==, OneWindowPerApplication);
     CONFIGURE(filterMinimization, clientMinimized, !=, IgnoreMinimizedStatus);
     CONFIGURE(visibleWindows, clientMinimized, ==, ExcludeMinimizedClients);
@@ -462,10 +458,7 @@ void KWinTabBoxConfig::updateConfigFromUi(const KWin::KWinTabBoxConfigForm* ui, 
         config.setClientMultiScreenMode(ui->currentScreen->isChecked() ? TabBoxConfig::OnlyCurrentScreenClients : TabBoxConfig::ExcludeCurrentScreenClients);
     else
         config.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
-//     if (ui->filterApplication->isChecked())
-        config.setClientApplicationsMode(ui->oneAppWindow->isChecked() ? TabBoxConfig::OneWindowPerApplication : TabBoxConfig::AllWindowsAllApplications/*AllWindowsCurrentApplication*/);
-//     else
-//         config.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
+    config.setClientApplicationsMode(ui->oneAppWindow->isChecked() ? TabBoxConfig::OneWindowPerApplication : TabBoxConfig::AllWindowsAllApplications);
     if (ui->filterMinimization->isChecked())
         config.setClientMinimizedMode(ui->visibleWindows->isChecked() ? TabBoxConfig::ExcludeMinimizedClients : TabBoxConfig::OnlyMinimizedClients);
     else
