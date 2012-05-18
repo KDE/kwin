@@ -1080,6 +1080,13 @@ bool Client::eventFilter(QObject* o, QEvent* e)
     return false;
 }
 
+static bool modKeyDown(int state) {
+    const uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
+                                                    KKeyServer::modXMeta() : KKeyServer::modXAlt();
+    return keyModX  && (state & KKeyServer::accelModMaskX()) == keyModX;
+}
+
+
 // return value matters only when filtering events before decoration gets them
 bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int x_root, int y_root)
 {
@@ -1093,10 +1100,7 @@ bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int
         // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime();
         workspace()->setWasUserInteraction();
-        uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-                       KKeyServer::modXMeta() :
-                       KKeyServer::modXAlt();
-        bool bModKeyHeld = keyModX != 0 && (state & KKeyServer::accelModMaskX()) == keyModX;
+        const bool bModKeyHeld = modKeyDown(state);
 
         if (isSplash()
                 && button == Button1 && !bModKeyHeld) {
@@ -1349,7 +1353,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 }
 
 // return value matters only when filtering events before decoration gets them
-bool Client::motionNotifyEvent(Window w, int /*state*/, int x, int y, int x_root, int y_root)
+bool Client::motionNotifyEvent(Window w, int state, int x, int y, int x_root, int y_root)
 {
     if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
@@ -1362,7 +1366,7 @@ bool Client::motionNotifyEvent(Window w, int /*state*/, int x, int y, int x_root
             int y = y_root - geometry().y() + padding_top;
             mousePos = QPoint(x, y);
         }
-        Position newmode = mousePosition(mousePos);
+        Position newmode = modKeyDown(state) ? PositionCenter : mousePosition(mousePos);
         if (newmode != mode) {
             mode = newmode;
             updateCursor();
