@@ -253,3 +253,5 @@ if( KWIN_BUILD_SCRIPTING )
 endif( KWIN_BUILD_SCRIPTING )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
+
+add_subdirectory(tests)
