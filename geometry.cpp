@@ -2345,7 +2345,9 @@ void Client::setFullScreen(bool set, bool user)
     set = rules()->checkFullScreen(set);
     setShade(ShadeNone);
     bool was_fs = isFullScreen();
-    if (!was_fs)
+    if (was_fs)
+        workspace()->updateFocusMousePosition(QCursor::pos());
+    else
         geom_fs_restore = geometry();
     fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
     if (was_fs == isFullScreen())
