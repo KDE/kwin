@@ -185,6 +185,164 @@ public:
         return m_decorationPosition;
     }
 
+    static QColor defaultActiveTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultActiveFocusedTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultActiveUnfocusedTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultInactiveTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultInactiveFocusedTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultInactiveUnfocusedTextColor() {
+        return QColor(Qt::black);
+    }
+    static QColor defaultActiveTextShadowColor() {
+        return QColor(Qt::white);
+    }
+    static QColor defaultInactiveTextShadowColor() {
+        return QColor(Qt::white);
+    }
+    static int defaultTextShadowOffsetX() {
+        return 0;
+    }
+    static int defaultTextShadowOffsetY() {
+        return 0;
+    }
+    static bool defaultUseTextShadow() {
+        return false;
+    }
+    static bool defaultHaloActive() {
+        return false;
+    }
+    static bool defaultHaloInactive() {
+        return false;
+    }
+    static Qt::Alignment defaultAlignment() {
+        return Qt::AlignLeft;
+    }
+    static Qt::Alignment defaultVerticalAlignment() {
+        return Qt::AlignVCenter;
+    }
+    // borders
+    static int defaultBorderLeft() {
+        return 5;
+    }
+    static int defaultBorderRight() {
+        return 5;
+    }
+    static int defaultBorderBottom() {
+        return 5;
+    }
+    static int defaultBorderTop() {
+        return 0;
+    }
+    // title
+    static int defaultTitleEdgeTop() {
+        return 5;
+    }
+    static int defaultTitleEdgeBottom() {
+        return 5;
+    }
+    static int defaultTitleEdgeLeft() {
+        return 5;
+    }
+    static int defaultTitleEdgeRight() {
+        return 5;
+    }
+    static int defaultTitleEdgeTopMaximized() {
+        return 0;
+    }
+    static int defaultTitleEdgeBottomMaximized() {
+        return 0;
+    }
+    static int defaultTitleEdgeLeftMaximized() {
+        return 0;
+    }
+    static int defaultTitleEdgeRightMaximized() {
+        return 0;
+    }
+    static int defaultTitleBorderLeft() {
+        return 5;
+    }
+    static int defaultTitleBorderRight() {
+        return 5;
+    }
+    static int defaultTitleHeight() {
+        return 20;
+    }
+    // buttons
+    static int defaultButtonWidth() {
+        return 20;
+    }
+    static int defaultButtonWidthMinimize() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthMaximizeRestore() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthClose() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthAllDesktops() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthKeepAbove() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthKeepBelow() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthShade() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthHelp() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonWidthMenu() {
+        return defaultButtonWidth();
+    }
+    static int defaultButtonHeight() {
+        return 20;
+    }
+    static int defaultButtonSpacing() {
+        return 5;
+    }
+    static int defaultButtonMarginTop() {
+        return 0;
+    }
+    static int defaultExplicitButtonSpacer() {
+        return 10;
+    }
+    // padding
+    static int defaultPaddingLeft() {
+        return 0;
+    }
+    static int defaultPaddingRight() {
+        return 0;
+    }
+    static int defaultPaddingTop() {
+        return 0;
+    }
+    static int defaultPaddingBottom() {
+        return 0;
+    }
+    static int defaultAnimationTime() {
+        return 0;
+    }
+    static bool defaultShadow() {
+        return true;
+    }
+    static int defaultDecorationPosition() {
+        return 0;
+    }
+
 private:
     QColor m_activeTextColor;
     QColor m_activeFocusedTextColor;

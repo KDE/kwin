@@ -24,25 +24,82 @@ namespace Aurorae
 {
 
 ThemeConfig::ThemeConfig()
+    : m_activeTextColor(defaultActiveTextColor())
+    , m_activeFocusedTextColor(defaultActiveFocusedTextColor())
+    , m_activeUnfocusedTextColor(defaultActiveUnfocusedTextColor())
+    , m_inactiveTextColor(defaultInactiveTextColor())
+    , m_inactiveFocusedTextColor(defaultInactiveFocusedTextColor())
+    , m_inactiveUnfocusedTextColor(defaultInactiveUnfocusedTextColor())
+    , m_activeTextShadowColor(defaultActiveTextShadowColor())
+    , m_inactiveTextShadowColor(defaultInactiveTextShadowColor())
+    , m_textShadowOffsetX(defaultTextShadowOffsetX())
+    , m_textShadowOffsetY(defaultTextShadowOffsetY())
+    , m_useTextShadow(defaultUseTextShadow())
+    , m_haloActive(defaultHaloActive())
+    , m_haloInactive(defaultHaloInactive())
+    , m_alignment(defaultAlignment())
+    , m_verticalAlignment(defaultVerticalAlignment())
+    // borders
+    , m_borderLeft(defaultBorderLeft())
+    , m_borderRight(defaultBorderRight())
+    , m_borderBottom(defaultBorderBottom())
+    , m_borderTop(defaultBorderTop())
+    // title
+    , m_titleEdgeTop(defaultTitleEdgeTop())
+    , m_titleEdgeBottom(defaultTitleEdgeBottom())
+    , m_titleEdgeLeft(defaultTitleEdgeLeft())
+    , m_titleEdgeRight(defaultTitleEdgeRight())
+    , m_titleEdgeTopMaximized(defaultTitleEdgeTopMaximized())
+    , m_titleEdgeBottomMaximized(defaultTitleEdgeBottomMaximized())
+    , m_titleEdgeLeftMaximized(defaultTitleEdgeLeftMaximized())
+    , m_titleEdgeRightMaximized(defaultTitleEdgeRightMaximized())
+    , m_titleBorderLeft(defaultTitleBorderLeft())
+    , m_titleBorderRight(defaultTitleBorderRight())
+    , m_titleHeight(defaultTitleHeight())
+    // buttons
+    , m_buttonWidth(defaultButtonWidth())
+    , m_buttonWidthMinimize(defaultButtonWidthMinimize())
+    , m_buttonWidthMaximizeRestore(defaultButtonWidthMaximizeRestore())
+    , m_buttonWidthClose(defaultButtonWidthClose())
+    , m_buttonWidthAllDesktops(defaultButtonWidthAllDesktops())
+    , m_buttonWidthKeepAbove(defaultButtonWidthKeepAbove())
+    , m_buttonWidthKeepBelow(defaultButtonWidthKeepBelow())
+    , m_buttonWidthShade(defaultButtonWidthShade())
+    , m_buttonWidthHelp(defaultButtonWidthHelp())
+    , m_buttonWidthMenu(defaultButtonWidthMenu())
+    , m_buttonHeight(defaultButtonHeight())
+    , m_buttonSpacing(defaultButtonSpacing())
+    , m_buttonMarginTop(defaultButtonMarginTop())
+    , m_explicitButtonSpacer(defaultExplicitButtonSpacer())
+    // padding
+    , m_paddingLeft(defaultPaddingLeft())
+    , m_paddingRight(defaultPaddingRight())
+    , m_paddingTop(defaultPaddingTop())
+    , m_paddingBottom(defaultPaddingBottom())
+    , m_animationTime(defaultAnimationTime())
+    , m_defaultButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft())
+    , m_defaultButtonsRight(KDecorationOptions::defaultTitleButtonsRight())
+    , m_shadow(defaultShadow())
+    , m_decorationPosition(defaultDecorationPosition())
 {
 }
 
 void ThemeConfig::load(const KConfig &conf)
 {
     KConfigGroup general(&conf, "General");
-    m_activeTextColor = general.readEntry("ActiveTextColor", QColor(Qt::black));
-    m_inactiveTextColor = general.readEntry("InactiveTextColor", QColor(Qt::black));
+    m_activeTextColor = general.readEntry("ActiveTextColor", defaultActiveTextColor());
+    m_inactiveTextColor = general.readEntry("InactiveTextColor", defaultInactiveTextColor());
     m_activeFocusedTextColor = general.readEntry("ActiveFocusedTabColor", m_activeTextColor);
     m_activeUnfocusedTextColor = general.readEntry("ActiveUnfocusedTabColor", m_inactiveTextColor);
     m_inactiveFocusedTextColor = general.readEntry("InactiveFocusedTabColor", m_inactiveTextColor);
     m_inactiveUnfocusedTextColor = general.readEntry("InactiveUnfocusedTabColor", m_inactiveTextColor);
-    m_useTextShadow = general.readEntry("UseTextShadow", false);
-    m_activeTextShadowColor = general.readEntry("ActiveTextShadowColor", QColor(Qt::white));
-    m_inactiveTextShadowColor = general.readEntry("InactiveTextShadowColor", QColor(Qt::white));
-    m_textShadowOffsetX = general.readEntry("TextShadowOffsetX", 0);
-    m_textShadowOffsetY = general.readEntry("TextShadowOffsetY", 0);
-    m_haloActive = general.readEntry("HaloActive", false);
-    m_haloInactive = general.readEntry("HaloInactive", false);
+    m_useTextShadow = general.readEntry("UseTextShadow", defaultUseTextShadow());
+    m_activeTextShadowColor = general.readEntry("ActiveTextShadowColor", defaultActiveTextColor());
+    m_inactiveTextShadowColor = general.readEntry("InactiveTextShadowColor", defaultInactiveTextColor());
+    m_textShadowOffsetX = general.readEntry("TextShadowOffsetX", defaultTextShadowOffsetX());
+    m_textShadowOffsetY = general.readEntry("TextShadowOffsetY", defaultTextShadowOffsetY());
+    m_haloActive = general.readEntry("HaloActive", defaultHaloActive());
+    m_haloInactive = general.readEntry("HaloInactive", defaultHaloInactive());
     QString alignment = (general.readEntry("TitleAlignment", "Left")).toLower();
     if (alignment == "left") {
         m_alignment = Qt::AlignLeft;
@@ -63,32 +120,32 @@ void ThemeConfig::load(const KConfig &conf)
     else {
         m_verticalAlignment = Qt::AlignBottom;
     }
-    m_animationTime = general.readEntry("Animation", 0);
+    m_animationTime = general.readEntry("Animation", defaultAnimationTime());
     m_defaultButtonsLeft = general.readEntry("LeftButtons", KDecorationOptions::defaultTitleButtonsLeft());
     m_defaultButtonsRight = general.readEntry("RightButtons", KDecorationOptions::defaultTitleButtonsRight());
-    m_shadow = general.readEntry("Shadow", true);
-    m_decorationPosition = general.readEntry("DecorationPosition", 0);
+    m_shadow = general.readEntry("Shadow", defaultShadow());
+    m_decorationPosition = general.readEntry("DecorationPosition", defaultDecorationPosition());
 
     KConfigGroup border(&conf, "Layout");
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
-    m_borderLeft = border.readEntry("BorderLeft", 5);
-    m_borderRight = border.readEntry("BorderRight", 5);
-    m_borderBottom = border.readEntry("BorderBottom", 5);
-    m_borderTop = border.readEntry("BorderTop", 0);
+    m_borderLeft = border.readEntry("BorderLeft", defaultBorderLeft());
+    m_borderRight = border.readEntry("BorderRight", defaultBorderRight());
+    m_borderBottom = border.readEntry("BorderBottom", defaultBorderBottom());
+    m_borderTop = border.readEntry("BorderTop", defaultBorderTop());
 
-    m_titleEdgeTop = border.readEntry("TitleEdgeTop", 5);
-    m_titleEdgeBottom = border.readEntry("TitleEdgeBottom", 5);
-    m_titleEdgeLeft = border.readEntry("TitleEdgeLeft", 5);
-    m_titleEdgeRight = border.readEntry("TitleEdgeRight", 5);
-    m_titleEdgeTopMaximized = border.readEntry("TitleEdgeTopMaximized", 0);
-    m_titleEdgeBottomMaximized = border.readEntry("TitleEdgeBottomMaximized", 0);
-    m_titleEdgeLeftMaximized = border.readEntry("TitleEdgeLeftMaximized", 0);
-    m_titleEdgeRightMaximized = border.readEntry("TitleEdgeRightMaximized", 0);
-    m_titleBorderLeft = border.readEntry("TitleBorderLeft", 5);
-    m_titleBorderRight = border.readEntry("TitleBorderRight", 5);
-    m_titleHeight = border.readEntry("TitleHeight", 20);
+    m_titleEdgeTop = border.readEntry("TitleEdgeTop", defaultTitleEdgeTop());
+    m_titleEdgeBottom = border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom());
+    m_titleEdgeLeft = border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft());
+    m_titleEdgeRight = border.readEntry("TitleEdgeRight", defaultTitleEdgeRight());
+    m_titleEdgeTopMaximized = border.readEntry("TitleEdgeTopMaximized", defaultTitleEdgeTopMaximized());
+    m_titleEdgeBottomMaximized = border.readEntry("TitleEdgeBottomMaximized", defaultTitleEdgeBottomMaximized());
+    m_titleEdgeLeftMaximized = border.readEntry("TitleEdgeLeftMaximized", defaultTitleEdgeLeftMaximized());
+    m_titleEdgeRightMaximized = border.readEntry("TitleEdgeRightMaximized", defaultTitleEdgeRightMaximized());
+    m_titleBorderLeft = border.readEntry("TitleBorderLeft", defaultTitleBorderLeft());
+    m_titleBorderRight = border.readEntry("TitleBorderRight", defaultTitleBorderRight());
+    m_titleHeight = border.readEntry("TitleHeight", defaultTitleHeight());
 
-    m_buttonWidth = border.readEntry("ButtonWidth", 20);
+    m_buttonWidth = border.readEntry("ButtonWidth", defaultButtonWidth());
     m_buttonWidthMinimize = border.readEntry("ButtonWidthMinimize", m_buttonWidth);
     m_buttonWidthMaximizeRestore = border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth);
     m_buttonWidthClose = border.readEntry("ButtonWidthClose", m_buttonWidth);
@@ -98,15 +155,15 @@ void ThemeConfig::load(const KConfig &conf)
     m_buttonWidthShade = border.readEntry("ButtonWidthShade", m_buttonWidth);
     m_buttonWidthHelp = border.readEntry("ButtonWidthHelp", m_buttonWidth);
     m_buttonWidthMenu = border.readEntry("ButtonWidthMenu", m_buttonWidth);
-    m_buttonHeight = border.readEntry("ButtonHeight", 20);
-    m_buttonSpacing = border.readEntry("ButtonSpacing", 5);
-    m_buttonMarginTop = border.readEntry("ButtonMarginTop", 0);
-    m_explicitButtonSpacer = border.readEntry("ExplicitButtonSpacer", 10);
+    m_buttonHeight = border.readEntry("ButtonHeight", defaultButtonHeight());
+    m_buttonSpacing = border.readEntry("ButtonSpacing", defaultButtonSpacing());
+    m_buttonMarginTop = border.readEntry("ButtonMarginTop", defaultButtonMarginTop());
+    m_explicitButtonSpacer = border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer());
 
-    m_paddingLeft = border.readEntry("PaddingLeft", 0);
-    m_paddingRight = border.readEntry("PaddingRight", 0);
-    m_paddingTop = border.readEntry("PaddingTop", 0);
-    m_paddingBottom = border.readEntry("PaddingBottom", 0);
+    m_paddingLeft = border.readEntry("PaddingLeft", defaultPaddingLeft());
+    m_paddingRight = border.readEntry("PaddingRight", defaultPaddingRight());
+    m_paddingTop = border.readEntry("PaddingTop", defaultPaddingTop());
+    m_paddingBottom = border.readEntry("PaddingBottom", defaultPaddingBottom());
 }
 
 QColor ThemeConfig::activeTextColor(bool useTabs, bool focused) const
