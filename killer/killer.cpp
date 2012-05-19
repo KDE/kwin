@@ -32,6 +32,8 @@ DEALINGS IN THE SOFTWARE.
 #include <X11/Xlib.h>
 #include <QX11Info>
 #include <QProcess>
+// TODO: remove with Qt 5, only for HTML escaping the caption
+#include <QTextDocument>
 #include <signal.h>
 #include <errno.h>
 
@@ -65,6 +67,9 @@ int main(int argc, char* argv[])
             || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
         KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
         return 1;
+    }
+    if (Qt::mightBeRichText(caption)) {
+        caption = Qt::escape(caption);
     }
     QString question = i18n(
                            "<p>The window \"<b>%2</b>\" is not responding. "

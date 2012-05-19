@@ -151,6 +151,7 @@ Decoration {
     Text {
         id: caption
         text: decoration.caption
+        textFormat: Text.PlainText
         horizontalAlignment: auroraeTheme.horizontalAlignment
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
