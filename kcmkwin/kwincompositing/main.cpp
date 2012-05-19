@@ -172,7 +172,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     if (!services.isEmpty())
         fadedesktop = services.first()->name();
 
-    ui.desktopSwitchingCombo->addItem(i18n("No Effect"));
+    ui.desktopSwitchingCombo->addItem(i18n("No effect"));
     ui.desktopSwitchingCombo->addItem(slide);
     ui.desktopSwitchingCombo->addItem(cube);
     ui.desktopSwitchingCombo->addItem(fadedesktop);
@@ -611,8 +611,8 @@ void KWinCompositingConfig::checkLoadedEffects()
         if (!disabledEffects.isEmpty()) {
             m_showDetailedErrors->setData(disabledEffects);
             ui.messageBox->setText(i18ncp("Error Message shown when a desktop effect could not be loaded",
-                                          "A desktop effect could not be loaded.",
-                                          "%1 desktop effects could not be loaded", disabledEffects.count()));
+                                          "One desktop effect could not be loaded.",
+                                          "%1 desktop effects could not be loaded.", disabledEffects.count()));
             ui.messageBox->animatedShow();
         }
     }
@@ -627,15 +627,15 @@ void KWinCompositingConfig::showDetailedEffectLoadingInformation()
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List services;
     const KLocalizedString unknownReason = ki18nc("Effect with given name could not be activated due to unknown reason",
-                                                    "%1 Effect failed to load due to unknown reason.");
+                                                    "%1 effect failed to load due to unknown reason.");
     const KLocalizedString requiresShaders = ki18nc("Effect with given name could not be activated as it requires hardware shaders",
-                                                    "%1 Effect requires hardware support.");
+                                                    "%1 effect requires hardware support.");
     const KLocalizedString requiresOpenGL = ki18nc("Effect with given name could not be activated as it requires OpenGL",
-                                                    "%1 Effect requires OpenGL.");
+                                                    "%1 effect requires OpenGL.");
     const KLocalizedString requiresOpenGL2 = ki18nc("Effect with given name could not be activated as it requires OpenGL 2",
                                                     "%1 effect requires OpenGL 2.");
     KDialog *dialog = new KDialog(this);
-    dialog->setWindowTitle(i18nc("Window title", "List of Effects which could not be loaded"));
+    dialog->setWindowTitle(i18nc("Window title", "List of effects which could not be loaded"));
     dialog->setButtons(KDialog::Ok);
     QWidget *mainWidget = new QWidget(dialog);
     dialog->setMainWidget(mainWidget);
@@ -705,8 +705,8 @@ void KWinCompositingConfig::showDetailedEffectLoadingInformation()
         label->setText(text);
     } else {
         // compositing is not active - no effect can be active
-        label->setText(i18nc("Error Message shown when Compositing is not active after tried activation",
-                             "Desktop Effect system is not running."));
+        label->setText(i18nc("Error Message shown when compositing is not active after tried activation",
+                             "Desktop effect system is not running."));
     }
     dialog->show();
 }
