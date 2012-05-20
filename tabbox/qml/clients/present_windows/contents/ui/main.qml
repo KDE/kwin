@@ -170,6 +170,7 @@ Item {
             width: thumbnailListView.cellWidth
             height: thumbnailListView.cellHeight
         }
+        boundsBehavior: Flickable.StopAtBounds
     }
     /*
      * Key navigation on outer item for two reasons:

@@ -105,6 +105,7 @@ Item {
             height: iconSize + margins.top + margins.bottom
         }
         highlightMoveDuration: 250
+        boundsBehavior: Flickable.StopAtBounds
     }
     /*
      * Key navigation on outer item for two reasons:

@@ -164,5 +164,6 @@ Item {
             width: listView.width
         }
         highlightMoveDuration: 250
+        boundsBehavior: Flickable.StopAtBounds
     }
 }

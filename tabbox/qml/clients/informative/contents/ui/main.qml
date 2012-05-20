@@ -207,6 +207,7 @@ Item {
             width: listView.width
         }
         highlightMoveDuration: 250
+        boundsBehavior: Flickable.StopAtBounds
     }
     /*
      * Key navigation on outer item for two reasons:

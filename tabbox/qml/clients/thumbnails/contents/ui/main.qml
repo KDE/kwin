@@ -117,6 +117,7 @@ Item {
             width: thumbnailListView.thumbnailWidth
             height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
         }
+        boundsBehavior: Flickable.StopAtBounds
     }
     Item {
         height: 40
