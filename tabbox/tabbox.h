@@ -46,19 +46,19 @@ public:
     virtual ~TabBoxHandlerImpl();
 
     virtual int activeScreen() const;
-    virtual TabBoxClient* activeClient() const;
+    virtual QWeakPointer< TabBoxClient > activeClient() const;
     virtual int currentDesktop() const;
     virtual QString desktopName(TabBoxClient* client) const;
     virtual QString desktopName(int desktop) const;
-    virtual TabBoxClient* nextClientFocusChain(TabBoxClient* client) const;
+    virtual QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const;
     virtual int nextDesktopFocusChain(int desktop) const;
     virtual int numberOfDesktops() const;
     virtual TabBoxClientList stackingOrder() const;
     virtual void elevateClient(TabBoxClient* c, WId tabbox, bool elevate) const;
     virtual void raiseClient(TabBoxClient *client) const;
     virtual void restack(TabBoxClient *c, TabBoxClient *under);
-    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop) const;
-    virtual TabBoxClient* desktopClient() const;
+    virtual QWeakPointer< TabBoxClient > clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop) const;
+    virtual QWeakPointer< TabBoxClient > desktopClient() const;
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
     virtual QVector< Window > outlineWindowIds() const;

@@ -71,7 +71,7 @@ public:
     * @return Returns the ModelIndex of given TabBoxClient or an invalid ModelIndex
     * if the model does not contain the given TabBoxClient.
     */
-    QModelIndex index(TabBoxClient* client) const;
+    QModelIndex index(QWeakPointer<TabBoxClient> client) const;
 
     /**
     * Generates a new list of TabBoxClients based on the current config.

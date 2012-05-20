@@ -187,7 +187,7 @@ Client::Client(Workspace* ws)
 
 #ifdef KWIN_BUILD_TABBOX
     // TabBoxClient
-    m_tabBoxClient = new TabBox::TabBoxClientImpl(this);
+    m_tabBoxClient = QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this));
 #endif
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
@@ -221,9 +221,6 @@ Client::~Client()
     assert(block_geometry_updates == 0);
     assert(!check_active_modal);
     delete bridge;
-#ifdef KWIN_BUILD_TABBOX
-    delete m_tabBoxClient;
-#endif
 }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly

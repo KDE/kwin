@@ -621,8 +621,8 @@ public:
     };
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
 
-    TabBox::TabBoxClientImpl* tabBoxClient() const {
-        return m_tabBoxClient;
+    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
+        return m_tabBoxClient.toWeakRef();
     }
     bool isFirstInTabBox() const {
         return m_firstInTabBox;
@@ -945,7 +945,7 @@ private:
     // we (instead of Qt) initialize the Pixmaps, and have to free them
     bool m_responsibleForDecoPixmap;
     PaintRedirector* paintRedirector;
-    TabBox::TabBoxClientImpl* m_tabBoxClient;
+    QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox;
 
     bool electricMaximizing;

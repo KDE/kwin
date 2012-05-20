@@ -81,7 +81,7 @@ class ClientModel;
 class TabBoxConfig;
 class TabBoxClient;
 class TabBoxHandlerPrivate;
-typedef QList< TabBoxClient* > TabBoxClientList;
+typedef QList< QWeakPointer< TabBoxClient > > TabBoxClientList;
 
 /**
 * This class is a wrapper around KWin Workspace. It is used for accessing the
@@ -105,12 +105,12 @@ public:
     * @return The current active TabBoxClient or NULL
     * if there is no active client.
     */
-    virtual TabBoxClient* activeClient() const = 0;
+    virtual QWeakPointer<TabBoxClient> activeClient() const = 0;
     /**
     * @param client The client which is starting point to find the next client
     * @return The next TabBoxClient in focus chain
     */
-    virtual TabBoxClient* nextClientFocusChain(TabBoxClient* client) const = 0;
+    virtual QWeakPointer<TabBoxClient> nextClientFocusChain(TabBoxClient* client) const = 0;
     /**
     * @param client The client whose desktop name should be retrieved
     * @return The desktop name of the given TabBoxClient. If the client is
@@ -172,11 +172,11 @@ public:
     * @param allDesktops Add clients from all desktops or only from current
     * @return The client to be included in the list or NULL if it isn't to be included
     */
-    virtual TabBoxClient* clientToAddToList(TabBoxClient* client, int desktop) const = 0;
+    virtual QWeakPointer<TabBoxClient> clientToAddToList(TabBoxClient* client, int desktop) const = 0;
     /**
     * @return The first desktop window in the stacking order.
     */
-    virtual TabBoxClient* desktopClient() const = 0;
+    virtual QWeakPointer<TabBoxClient> desktopClient() const = 0;
     /**
      * Activates the currently selected client and closes the TabBox.
      **/
@@ -278,7 +278,7 @@ public:
     * if the model does not contain the given TabBoxClient.
     * @see ClientModel::index
     */
-    QModelIndex index(TabBoxClient* client) const;
+    QModelIndex index(QWeakPointer<TabBoxClient> client) const;
     /**
     * @return Returns the current list of TabBoxClients.
     * If TabBoxMode is not TabBoxConfig::ClientTabBox an empty list will
