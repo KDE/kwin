@@ -106,7 +106,14 @@ Item {
             id: uparrowOver
             anchors.fill: parent
             hoverEnabled: true
-            onClicked: list.contentY -= itemHeight
+            onClicked: {
+                if (!list.atYBeginning) {
+                    list.contentY -= itemHeight;
+                    if (list.contentY < 0) {
+                        list.contentY = 0;
+                    }
+                }
+            }
         }
     }
 
@@ -141,7 +148,11 @@ Item {
             id: downarrowOver
             anchors.fill: parent
             hoverEnabled: true
-            onClicked: list.contentY += itemHeight
+            onClicked: {
+                if (!list.atYEnd) {
+                    list.contentY += itemHeight;
+                }
+            }
         }
     }
 }

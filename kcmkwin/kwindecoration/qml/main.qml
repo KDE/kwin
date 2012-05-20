@@ -47,6 +47,7 @@ BorderImage {
             opacity: 0.5
         }
         highlightMoveDuration: 250
+        boundsBehavior: Flickable.StopAtBounds
         delegate: Item {
             width: listView.width
             height: 150
