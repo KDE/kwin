@@ -46,6 +46,7 @@ BorderImage {
             color: highlightColor
             opacity: 0.5
         }
+        highlightMoveDuration: 250
         delegate: Item {
             width: listView.width
             height: 150
