@@ -43,7 +43,7 @@ BorderImage {
         highlight: Rectangle {
             width: listView.width
             height: 150
-            color: "lightsteelblue"
+            color: highlightColor
             opacity: 0.5
         }
         delegate: Item {
