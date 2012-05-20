@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Grid
 Name[cs]=Mřížka
+Name[de]=Raster
 Name[et]=Võrgustik
 Name[ia]=Grillia
 Name[nb]=Rutenett
@@ -16,6 +17,7 @@ Name[uk]=Ґратка
 Name[x-test]=xxGridxx
 Name[zh_TW]=格線
 Comment=A Window Switcher layout showing all windows as thumbnails in a grid
+Comment[de]=Ein Fensterwechsler-Layout, das Vorschauen aller Fenster in einem Raster anzeigt
 Comment[et]=Aknavahetaja paigutus kõigi akende näitamisega pisipiltidena võrgustikus
 Comment[ia]=Un disposition de commutator de fenestra monstrante fenestras como miniaturas in un grillia
 Comment[nb]=En vindusbytterutforming som viser alle vinduer som minibilder i et rutenett
