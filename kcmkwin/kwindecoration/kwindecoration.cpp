@@ -34,12 +34,15 @@
 #include "decorationmodel.h"
 #include "auroraetheme.h"
 // Qt
+#include <QTimer>
 #include <QtDBus/QtDBus>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QGraphicsObject>
+#include <QtGui/QScrollBar>
 // KDE
 #include <KAboutData>
 #include <KDialog>
@@ -89,10 +92,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    m_ui->decorationList->setAttribute(Qt::WA_TranslucentBackground);
-    QPalette pal = m_ui->decorationList->palette();
-    pal.setColor(m_ui->decorationList->backgroundRole(), Qt::transparent);
-    m_ui->decorationList->setPalette(pal);
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         m_ui->decorationList->engine()->addImportPath(importPath);
     }
@@ -106,10 +105,19 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
     connect(m_ui->decorationList->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
     connect(m_ui->decorationList->rootObject(), SIGNAL(widthChanged()), m_model, SLOT(regeneratePreviews()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
     connect(m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
+
+    m_ui->decorationList->disconnect(m_ui->decorationList->verticalScrollBar());
+    m_ui->decorationList->verticalScrollBar()->disconnect(m_ui->decorationList);
+    connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(rangeChanged(int, int )), SLOT(updateScrollbarRange()));
+    connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(updateViewPosition(int)));
+
+    m_ui->decorationList->installEventFilter(this);
 
     KAboutData *about =
         new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
@@ -119,6 +127,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
     setAboutData(about);
     m_model->regeneratePreviews();
+    QMetaObject::invokeMethod(this, "setSliderWidth", Qt::QueuedConnection);
 }
 
 
@@ -347,6 +356,40 @@ void KWinDecorationModule::slotConfigureDecoration()
         QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
+}
+
+bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == m_ui->decorationList && e->type() == QEvent::Resize)
+        updateScrollbarRange();
+    return KCModule::eventFilter(o, e);
+}
+void KWinDecorationModule::setSliderWidth()
+{
+    m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
+}
+
+void KWinDecorationModule::updateScrollbarRange()
+{
+    m_ui->decorationList->verticalScrollBar()->blockSignals(true);
+    const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
+    m_ui->decorationList->verticalScrollBar()->setRange(0, h - m_ui->decorationList->height());
+    m_ui->decorationList->verticalScrollBar()->setPageStep(m_ui->decorationList->verticalScrollBar()->maximum()/m_model->rowCount());
+    m_ui->decorationList->verticalScrollBar()->blockSignals(false);
+}
+
+void KWinDecorationModule::updateScrollbarValue()
+{
+    const int v = m_ui->decorationList->rootObject()->property("contentY").toInt();
+    m_ui->decorationList->verticalScrollBar()->blockSignals(true); // skippig this will kill kinetic scrolling but the scrollwidth is too low
+    m_ui->decorationList->verticalScrollBar()->setValue(v);
+    m_ui->decorationList->verticalScrollBar()->blockSignals(false);
+}
+
+void KWinDecorationModule::updateViewPosition(int v)
+{
+    QGraphicsObject *list = m_ui->decorationList->rootObject();
+    list->setProperty("contentY", v);
 }
 
 DecorationButtons::DecorationButtons(QObject *parent)

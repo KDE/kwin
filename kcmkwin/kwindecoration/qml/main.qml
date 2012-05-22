@@ -18,85 +18,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtra
 
-BorderImage {
-    property alias currentIndex: listView.currentIndex
-    source: "images/bg.png"
-    border {
-        left: 4
-        top: 4
-        right: 4
-        bottom: 4
+ListView {
+    id: listView
+    x: 0
+    y: 0
+    model: decorationModel
+    highlight: Rectangle {
+        width: listView.width - sliderWidth
+        height: 150
+        color: highlightColor
+        opacity: 0.5
     }
-
-    MouseArea {
-        id: focusOver
-        anchors.fill: parent
-        hoverEnabled: true
-    }
-
-    ListView {
-        id: listView
-        x: 3
-        height: parent.height - 1 // -1 on the account of the last pixel being a glow pixel
-        width: parent.width - 6 - scrollbar.width
-        model: decorationModel
-        highlight: Rectangle {
-            width: listView.width
-            height: 150
-            color: highlightColor
-            opacity: 0.5
+    highlightMoveDuration: 250
+    boundsBehavior: Flickable.StopAtBounds
+    delegate: Item {
+        width: listView.width - sliderWidth
+        height: 150
+        QtExtra.QPixmapItem {
+            pixmap: preview
+            anchors.fill: parent
+            visible: type == 0
         }
-        highlightMoveDuration: 250
-        boundsBehavior: Flickable.StopAtBounds
-        delegate: Item {
-            width: listView.width
-            height: 150
-            QtExtra.QPixmapItem {
-                pixmap: preview
-                anchors.fill: parent
-                visible: type == 0
-            }
-            Loader {
-                source: type == 1 ? "AuroraePreview.qml" : ""
-                anchors.fill: parent
-            }
-            MouseArea {
-                hoverEnabled: false
-                anchors.fill: parent
-                onClicked: {
-                    listView.currentIndex = index;
-                }
-            }
+        Loader {
+            source: type == 1 ? "AuroraePreview.qml" : ""
+            anchors.fill: parent
         }
-    }
-    OxygenScrollbar {
-        id: scrollbar
-        list: listView
-        itemHeight: 150
-    }
-
-    BorderImage {
-        id: shadow
-        source: "images/shadow.png"
-        anchors.fill:parent
-        border.left: 4; border.top: 4
-        border.right: 4; border.bottom: 5
-        opacity:focusOver.containsMouse? 0.01:1 //insert here a proper focus mechanism
-        Behavior on opacity {
-            NumberAnimation {  duration: 300 }
-        }
-
-    }
-
-    BorderImage {
-        id: glow
-        source: "images/glow.png"
-        anchors.fill:parent
-        border.left: 4; border.top: 4
-        border.right: 4; border.bottom: 5
-        opacity:focusOver.containsMouse? 1:0 //insert here a proper focus mechanism
-        Behavior on opacity {
-            NumberAnimation {  duration: 300 }
+        MouseArea {
+            hoverEnabled: false
+            anchors.fill: parent
+            onClicked: {
+                listView.currentIndex = index;
+            }
         }
     }
 }

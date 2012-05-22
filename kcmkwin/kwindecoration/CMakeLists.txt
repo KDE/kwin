@@ -30,5 +30,4 @@ install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES kwindecoration.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
-install( FILES qml/main.qml qml/AuroraeDecoration.qml qml/AuroraePreview.qml qml/OxygenScrollbar.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwindecoration)
-install( DIRECTORY qml/images/ DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwindecoration/images)
+install( FILES qml/main.qml qml/AuroraeDecoration.qml qml/AuroraePreview.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwindecoration)

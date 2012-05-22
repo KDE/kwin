@@ -105,6 +105,9 @@ signals:
     void pluginSave(KConfigGroup &conf);
     void pluginDefaults();
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e);
+
 protected slots:
     // Allows us to turn "save" on
     void slotSelectionChanged();
@@ -115,7 +118,12 @@ protected slots:
 private:
     void readConfig(const KConfigGroup& conf);
     void writeConfig(KConfigGroup &conf);
-
+private slots:
+    void setSliderWidth();
+    void updateScrollbarRange();
+    void updateScrollbarValue();
+    void updateViewPosition(int v);
+private:
     KSharedConfigPtr kwinConfig;
 
     KWinDecorationForm* m_ui;
