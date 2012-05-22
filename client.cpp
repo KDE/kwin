@@ -1627,7 +1627,7 @@ void Client::setOnActivities(QStringList newActivitiesList)
 {
     QString joinedActivitiesList = newActivitiesList.join(",");
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
-    newActivitiesList = joinedActivitiesList.split(',');
+    newActivitiesList = joinedActivitiesList.split(',', QString::SkipEmptyParts);
 
     QStringList allActivities = workspace()->activityList();
     if (newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty()) {
