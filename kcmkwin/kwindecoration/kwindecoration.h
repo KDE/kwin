@@ -119,7 +119,8 @@ private:
     void readConfig(const KConfigGroup& conf);
     void writeConfig(KConfigGroup &conf);
 private slots:
-    void setSliderWidth();
+    void updatePreviews();
+    void updatePreviewWidth();
     void updateScrollbarRange();
     void updateScrollbarValue();
     void updateViewPosition(int v);
@@ -133,6 +134,9 @@ private:
     QSortFilterProxyModel* m_proxyModel;
     bool m_configLoaded;
     DecorationButtons *m_decorationButtons;
+
+    int m_lastPreviewWidth;
+    QTimer *m_previewUpdateTimer;
 };
 
 } //namespace

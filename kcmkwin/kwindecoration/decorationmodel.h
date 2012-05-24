@@ -107,10 +107,12 @@ public:
     QModelIndex indexOfName(const QString& decoName) const;
     QModelIndex indexOfAuroraeName(const QString& auroraeName) const;
 
+    void regeneratePreviews(int firstIndex = 0);
+    void stopPreviewGeneration();
 public slots:
     void regeneratePreview(const QModelIndex& index, const QSize& size);
-    void regeneratePreviews();
-
+private slots:
+    void regenerateNextPreview();
 private:
     void findDecorations();
     void findAuroraeThemes();
@@ -123,6 +125,9 @@ private:
     QString m_rightButtons;
     KSharedConfigPtr m_config;
     QWidget* m_renderWidget;
+    int m_nextPreviewIndex;
+    int m_firstUpdateIndex;
+    int m_lastUpdateIndex;
 };
 
 } // namespace KWin

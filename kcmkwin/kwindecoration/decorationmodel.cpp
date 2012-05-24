@@ -255,11 +255,32 @@ void DecorationModel::setButtons(bool custom, const QString& left, const QString
     m_rightButtons = right;
 }
 
-void DecorationModel::regeneratePreviews()
+void DecorationModel::regenerateNextPreview()
 {
-    for (int i = 0; i < m_decorations.count(); i++) {
-        regeneratePreview(index(i), QSize(qobject_cast<KWinDecorationModule*>(QObject::parent())->itemWidth(), 150));
+    if (m_nextPreviewIndex < m_lastUpdateIndex && m_nextPreviewIndex < m_decorations.count())
+        regeneratePreview(index(m_nextPreviewIndex),
+                          QSize(qobject_cast<KWinDecorationModule*>(QObject::parent())->itemWidth(), 150));
+    ++m_nextPreviewIndex;
+    if (m_nextPreviewIndex >= m_lastUpdateIndex && m_firstUpdateIndex > 0) {
+        // do the above ones
+        m_lastUpdateIndex = qMin(m_firstUpdateIndex, m_decorations.count());
+        m_firstUpdateIndex = m_nextPreviewIndex = 0;
     }
+    if (m_nextPreviewIndex < m_lastUpdateIndex)
+        QMetaObject::invokeMethod(this, "regenerateNextPreview", Qt::QueuedConnection);
+}
+
+void DecorationModel::regeneratePreviews(int firstIndex)
+{
+    m_firstUpdateIndex = firstIndex;
+    m_lastUpdateIndex = m_decorations.count();
+    m_nextPreviewIndex = firstIndex;
+    regenerateNextPreview();
+}
+
+void DecorationModel::stopPreviewGeneration()
+{
+    m_firstUpdateIndex = m_lastUpdateIndex = m_nextPreviewIndex = 0;
 }
 
 void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& size)
@@ -286,7 +307,6 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         html = QString("<div style=\"color: %1\" align=\"center\">%2</div>").arg(color.name()).arg(html);
 
         document.setHtml(html);
-        m_plugins->reset(KDecoration::SettingDecoration);
         if (m_plugins->loadPlugin(data.libraryName) &&
                 m_preview->recreateDecoration(m_plugins))
             m_preview->enablePreview();

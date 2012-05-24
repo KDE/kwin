@@ -75,6 +75,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_showTooltips(false)
     , m_configLoaded(false)
     , m_decorationButtons(new DecorationButtons(this))
+    , m_lastPreviewWidth(-1)
+    , m_previewUpdateTimer(NULL)
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
@@ -98,15 +100,14 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
     m_ui->decorationList->rootContext()->setContextProperty("options", m_decorationButtons);
     m_ui->decorationList->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
+    m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
     m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml"));
     m_ui->decorationList->setSource(KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml"));
 
     readConfig(style);
 
     connect(m_ui->decorationList->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
-    connect(m_ui->decorationList->rootObject(), SIGNAL(widthChanged()), m_model, SLOT(regeneratePreviews()));
-    connect(m_ui->decorationList->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
-    connect(m_ui->decorationList->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(widthChanged()), SLOT(updatePreviewWidth()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
@@ -114,6 +115,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
     m_ui->decorationList->disconnect(m_ui->decorationList->verticalScrollBar());
     m_ui->decorationList->verticalScrollBar()->disconnect(m_ui->decorationList);
+    connect(m_ui->decorationList->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
+    connect(m_ui->decorationList->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(rangeChanged(int, int )), SLOT(updateScrollbarRange()));
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(updateViewPosition(int)));
 
@@ -126,8 +129,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
                        ki18n("(c) 2001 Karol Szwed"));
     about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
     setAboutData(about);
-    m_model->regeneratePreviews();
-    QMetaObject::invokeMethod(this, "setSliderWidth", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "updatePreviews", Qt::QueuedConnection);
 }
 
 
@@ -364,9 +366,29 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
         updateScrollbarRange();
     return KCModule::eventFilter(o, e);
 }
-void KWinDecorationModule::setSliderWidth()
+
+void KWinDecorationModule::updatePreviews()
 {
     m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
+    const int newWidth = m_ui->decorationList->rootObject()->property("width").toInt();
+    if (newWidth == m_lastPreviewWidth)
+        return;
+    m_lastPreviewWidth = newWidth;
+    const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
+    const int y = m_ui->decorationList->rootObject()->property("contentY").toInt();
+    // start at first element in sight
+    m_model->regeneratePreviews(y*m_model->rowCount()/h);
+}
+
+void KWinDecorationModule::updatePreviewWidth()
+{
+    if (!m_previewUpdateTimer) {
+        m_previewUpdateTimer = new QTimer(this);
+        m_previewUpdateTimer->setSingleShot(true);
+        connect(m_previewUpdateTimer, SIGNAL(timeout()), this, SLOT(updatePreviews()));
+    }
+    m_model->stopPreviewGeneration();
+    m_previewUpdateTimer->start(100);
 }
 
 void KWinDecorationModule::updateScrollbarRange()
