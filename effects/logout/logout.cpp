@@ -55,10 +55,8 @@ LogoutEffect::LogoutEffect()
     XChangeProperty(display(), sel, hack, hack, 8, PropModeReplace, (unsigned char*)&hack, 1);
     // the atom is not removed when effect is destroyed, this is temporary anyway
 
-#ifdef KWIN_HAVE_OPENGL
     blurTexture = NULL;
     blurTarget = NULL;
-#endif
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
@@ -68,15 +66,12 @@ LogoutEffect::LogoutEffect()
 
 LogoutEffect::~LogoutEffect()
 {
-#ifdef KWIN_HAVE_OPENGL
     delete blurTexture;
     delete blurTarget;
-#endif
 }
 
 void LogoutEffect::reconfigure(ReconfigureFlags)
 {
-#ifdef KWIN_HAVE_OPENGL
     frameDelay = 0;
     KConfigGroup conf = effects->effectConfig("Logout");
     useBlur = conf.readEntry("UseBlur", true);
@@ -85,12 +80,10 @@ void LogoutEffect::reconfigure(ReconfigureFlags)
     delete blurTarget;
     blurTarget = NULL;
     blurSupported = false;
-#endif
 }
 
 void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-#ifdef KWIN_HAVE_OPENGL
     if (!displayEffect && progress == 0.0) {
         if (blurTexture) {
             delete blurTexture;
@@ -123,20 +116,16 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
     if (frameDelay)
         --frameDelay;
-    else
-#endif
-    {
+    else {
         if (displayEffect)
             progress = qMin(1.0, progress + time / animationTime(2000.0));
         else if (progress > 0.0)
             progress = qMax(0.0, progress - time / animationTime(500.0));
     }
 
-#ifdef KWIN_HAVE_OPENGL
     if (blurSupported && progress > 0.0) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
-#endif
 
     effects->prePaintScreen(data, time);
 }
@@ -144,7 +133,6 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (progress > 0.0) {
-#ifdef KWIN_HAVE_OPENGL
         if (effects->compositingType() == KWin::OpenGLCompositing) {
             // In OpenGL mode we add vignetting and, if supported, a slight blur
             if (blurSupported) {
@@ -174,7 +162,6 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 // All other windows are unaltered
             }
         }
-#endif
         if (effects->compositingType() == KWin::XRenderCompositing) {
             // Since we can't do vignetting in XRender just do a stronger desaturation and darken
             if (w != logoutWindow && !logoutWindowPassed && !ignoredWindows.contains(w)) {
@@ -193,13 +180,10 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 
 void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-#ifdef KWIN_HAVE_OPENGL
     if (blurSupported && progress > 0.0)
         GLRenderTarget::pushRenderTarget(blurTarget);
-#endif
     effects->paintScreen(mask, region, data);
 
-#ifdef KWIN_HAVE_OPENGL
 #ifndef KWIN_HAVE_OPENGLES
     if (effects->compositingType() == KWin::OpenGLCompositing && progress > 0.0) {
         if (!blurSupported) {
@@ -290,18 +274,12 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         }
     }
 #endif
-#endif
 }
 
 void LogoutEffect::postPaintScreen()
 {
-#ifdef KWIN_HAVE_OPENGL
     if ((progress != 0.0 && progress != 1.0) || frameDelay)
         effects->addRepaintFull();
-#else
-    if (progress != 0.0 && progress != 1.0)
-        effects->addRepaintFull();
-#endif
 
     if (progress > 0.0)
         logoutWindowPassed = false;
@@ -334,9 +312,7 @@ void LogoutEffect::slotWindowClosed(EffectWindow* w)
 
 void LogoutEffect::slotWindowDeleted(EffectWindow* w)
 {
-#ifdef KWIN_HAVE_OPENGL
     windows.removeAll(w);
-#endif
     ignoredWindows.removeAll(w);
     if (w == logoutWindow)
         logoutWindow = NULL;
@@ -352,7 +328,6 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
     return false;
 }
 
-#ifdef KWIN_HAVE_OPENGL
 void LogoutEffect::renderVignetting()
 {
 #ifndef KWIN_HAVE_OPENGLES
@@ -381,7 +356,6 @@ void LogoutEffect::renderVignetting()
     glPopAttrib();
 #endif
 }
-#endif
 
 void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
 {

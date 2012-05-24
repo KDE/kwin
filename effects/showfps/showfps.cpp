@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobal.h>
 #include <ksharedconfig.h>
 
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
@@ -51,9 +49,7 @@ const int MAX_TIME = 100;
 ShowFpsEffect::ShowFpsEffect()
     : paints_pos(0)
     , frames_pos(0)
-#ifdef KWIN_HAVE_OPENGL
     , fpsText(0)
-#endif
 {
     for (int i = 0;
             i < NUM_PAINTS;
@@ -162,12 +158,10 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             ++fps; // count all frames in the last second
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height
-#ifdef KWIN_HAVE_OPENGL
     if (effects->compositingType() == OpenGLCompositing) {
         paintGL(fps);
         glFinish(); // make sure all rendering is done
     }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing) {
         paintXrender(fps);
@@ -176,7 +170,6 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #endif
 }
 
-#ifdef KWIN_HAVE_OPENGL
 void ShowFpsEffect::paintGL(int fps)
 {
     int x = this->x;
@@ -247,7 +240,6 @@ void ShowFpsEffect::paintGL(int fps)
     // Paint paint sizes
     glDisable(GL_BLEND);
 }
-#endif
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 /*
@@ -337,7 +329,6 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
 
 void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize)
 {
-#ifdef KWIN_HAVE_OPENGL
     if (effects->compositingType() == OpenGLCompositing) {
         QColor color(0, 0, 0);
         color.setAlphaF(alpha);
@@ -383,7 +374,6 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
             vbo->render(GL_LINES);
         }
     }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing) {
         Pixmap pixmap = XCreatePixmap(display(), rootWindow(), values.count(), MAX_TIME, 32);
@@ -452,7 +442,6 @@ void ShowFpsEffect::paintFPSText(int fps)
 {
     if (!fpsTextRect.isValid())
         return;
-#ifdef KWIN_HAVE_OPENGL
     QImage im(100, 100, QImage::Format_ARGB32);
     im.fill(0);
     QPainter painter(&im);
@@ -472,7 +461,6 @@ void ShowFpsEffect::paintFPSText(int fps)
     }
     fpsText->unbind();
     effects->addRepaint(fpsTextRect);
-#endif
 }
 
 } // namespace

@@ -185,10 +185,8 @@ void ZoomEffect::recreateTexture()
         imageWidth = ximg->width;
         imageHeight = ximg->height;
         QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-#ifdef KWIN_HAVE_OPENGL
         if (effects->compositingType() == OpenGLCompositing)
             texture = new GLTexture(img);
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
             xrenderPicture = new XRenderPicture(QPixmap::fromImage(img));
@@ -340,7 +338,6 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         QPoint p = QCursor::pos();
         QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
 
-#ifdef KWIN_HAVE_OPENGL
         if (texture) {
             texture->bind();
             glEnable(GL_BLEND);
@@ -349,7 +346,6 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             texture->unbind();
             glDisable(GL_BLEND);
         }
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (xrenderPicture) {
             if (mousePointer == MousePointerScale) {

@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
-#endif
 
 // This effect shows a preview inside a window that has a special property set
 // on it that says which window and where to render. It is used by the taskbar
@@ -87,13 +85,11 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
             thumbRect.translate(w->pos() + QPoint(data.xTranslate, data.yTranslate));
             thumbRect.setSize(QSize(thumbRect.width() * data.xScale, thumbRect.height() * data.yScale)); // QSize has no vector multiplicator... :-(
 
-#ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == KWin::OpenGLCompositing) {
                 if (data.shader) {
                     thumbData.shader = data.shader;
                 }
             } // if ( effects->compositingType() == KWin::OpenGLCompositing )
-#endif
             setPositionTransformations(thumbData, r, thumbw, thumbRect, Qt::KeepAspectRatio);
             effects->drawWindow(thumbw, mask, r, thumbData);
         }

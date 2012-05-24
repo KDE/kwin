@@ -20,9 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "resize.h"
 
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
@@ -84,7 +82,6 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
             float alpha = 0.8f;
             QColor color = KColorScheme(QPalette::Normal, KColorScheme::Selection).background().color();
 
-#ifdef KWIN_HAVE_OPENGL
             if (effects->compositingType() == OpenGLCompositing) {
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
@@ -113,7 +110,6 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 }
                 glDisable(GL_BLEND);
             }
-#endif
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (effects->compositingType() == XRenderCompositing) {

@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
@@ -75,7 +73,6 @@ void ShowPaintEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 
 void ShowPaintEffect::paintGL()
 {
-#ifdef KWIN_HAVE_OPENGL
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
@@ -103,7 +100,6 @@ void ShowPaintEffect::paintGL()
         ShaderManager::instance()->popShader();
     }
     glDisable(GL_BLEND);
-#endif
 }
 
 void ShowPaintEffect::paintXrender()

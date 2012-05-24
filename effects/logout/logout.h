@@ -63,7 +63,6 @@ private:
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 
-#ifdef KWIN_HAVE_OPENGL
     void renderVignetting();
     int frameDelay;
     bool blurSupported, useBlur;
@@ -72,7 +71,6 @@ private:
     double windowOpacity;
     EffectWindowList windows;
     QHash< EffectWindow*, double > windowsOpacities;
-#endif
 };
 
 } // namespace

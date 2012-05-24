@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "windowgeometry/windowgeometry_config.h"
 #include "zoom/zoom_config.h"
 
-#ifdef KWIN_HAVE_OPENGL
 #include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
@@ -49,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mousemark/mousemark_config.h"
 #include "trackmouse/trackmouse_config.h"
 #include "wobblywindows/wobblywindows_config.h"
-#endif
 
 #include <kwineffects.h>
 
@@ -73,7 +71,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(windowgeometry, WindowGeometryConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(zoom, ZoomEffectConfig)
 
-#ifdef KWIN_HAVE_OPENGL
                             KWIN_EFFECT_CONFIG_SINGLE(blur, BlurEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(coverswitch, CoverSwitchEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(cube, CubeEffectConfig)
@@ -86,7 +83,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(mousemark, MouseMarkEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(trackmouse, TrackMouseEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(wobblywindows, WobblyWindowsEffectConfig)
-#endif
                            )
 
 } // namespace

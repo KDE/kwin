@@ -29,9 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <kglobalsettings.h>
 
-#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils.h>
-#endif
 
 #include <QMouseEvent>
 #include <QtGui/QPainter>
@@ -401,24 +399,20 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 QPoint point(rect.x() + rect.width() * 0.95,
                              rect.y() + rect.height() * 0.95);
                 winData->iconFrame->setPosition(point);
-#ifdef KWIN_HAVE_OPENGL
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
-#endif
                 winData->iconFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
             }
             if (m_showCaptions) {
                 QPoint point(rect.x() + rect.width() / 2,
                              rect.y() + rect.height() / 2);
                 winData->textFrame->setPosition(point);
-#ifdef KWIN_HAVE_OPENGL
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
-#endif
                 winData->textFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
             }
         } else

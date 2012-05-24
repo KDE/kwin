@@ -42,9 +42,7 @@ public:
     virtual void postPaintScreen();
     enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
 private:
-#ifdef KWIN_HAVE_OPENGL
     void paintGL(int fps);
-#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     void paintXrender(int fps);
 #endif
@@ -64,9 +62,7 @@ private:
     int x;
     int y;
     QRect fps_rect;
-#ifdef KWIN_HAVE_OPENGL
     GLTexture *fpsText;
-#endif
     int textPosition;
     QFont textFont;
     QColor textColor;
