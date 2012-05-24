@@ -1157,7 +1157,9 @@ GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping)
 {
 #ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
+    Q_UNUSED(hardwareClipping)
 #else
     // Enable arrays
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -1230,7 +1232,9 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
 void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
 #ifdef KWIN_HAVE_OPENGLES
+    Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
+    Q_UNUSED(hardwareClipping)
 #else
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);

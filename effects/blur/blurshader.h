@@ -119,7 +119,7 @@ public:
     void bind();
     void unbind();
     void setTextureMatrix(const QMatrix4x4 &) {}
-    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) {}
+    void setModelViewProjectionMatrix(const QMatrix4x4 &) {}
 
     static bool supported();
 

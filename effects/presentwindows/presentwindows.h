@@ -131,7 +131,7 @@ public:
     };
 
 public slots:
-    void setActive(bool active, bool closingTab = false);   // HACK: closingTab shouldn't be needed
+    void setActive(bool active);
     void toggleActive()  {
         m_mode = ModeCurrentDesktop;
         setActive(!m_activated);

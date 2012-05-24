@@ -268,7 +268,6 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
 #ifndef KWIN_HAVE_OPENGLES
             glPolygonMode(GL_FRONT, GL_FILL);
 #endif
-            QRect fullRect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float reflectionScaleFactor = 100000 * tan(60.0 * M_PI / 360.0f) / area.width();
@@ -336,6 +335,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
             } else {
 #ifndef KWIN_HAVE_OPENGLES
                 glPushMatrix();
+                QRect fullRect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
                 if (effects->numScreens() > 1 && area.x() != fullRect.x()) {
                     // have to change the reflection area in horizontal layout and right screen
                     glTranslatef(-area.x(), 0.0, 0.0);
@@ -736,8 +736,6 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
                 data.rotation->angle *= (1.0 - timeLine.currentValue());
         }
     }
-
-    QRect thumbnail = infiniteRegion();
 
     if (reflectedWindow) {
         if (ShaderManager::instance()->isValid()) {

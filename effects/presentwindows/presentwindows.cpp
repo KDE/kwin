@@ -1487,7 +1487,7 @@ bool PresentWindowsEffect::isOverlappingAny(EffectWindow *w, const QHash<EffectW
 //-----------------------------------------------------------------------------
 // Activation
 
-void PresentWindowsEffect::setActive(bool active, bool closingTab)
+void PresentWindowsEffect::setActive(bool active)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
