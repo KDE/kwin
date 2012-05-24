@@ -547,6 +547,9 @@ void LanczosFilter::restoreRenderStates(GLTexture* tex, double opacity, double b
 LanczosShader::LanczosShader(QObject* parent)
     : QObject(parent)
     , m_shader(0)
+    , m_uTexUnit(0)
+    , m_uOffsets(0)
+    , m_uKernel(0)
     , m_arbProgram(0)
 {
 }
