@@ -582,7 +582,7 @@ void LanczosShader::unbind()
     else {
         int boundObject;
         glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
-        if (boundObject == m_arbProgram) {
+        if (boundObject == (int)m_arbProgram) {
             glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
             glDisable(GL_FRAGMENT_PROGRAM_ARB);
         }
