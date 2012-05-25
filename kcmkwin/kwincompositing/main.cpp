@@ -99,7 +99,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 #define XRENDER_INDEX 1
 #ifndef KWIN_HAVE_XRENDER_COMPOSITING
     ui.compositingType->removeItem(XRENDER_INDEX);
-    ui.xrenderGroup->setEnabled(false);
 #define XRENDER_INDEX -1
 #endif
 
