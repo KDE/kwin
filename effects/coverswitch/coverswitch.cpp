@@ -790,6 +790,7 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
     if (rightWindows == 0) {
         rightWindows = 1;
     }
+    RotationData rot; // this has to survive the if (animation) context as it's used as pointer - bug #297757
     if (animation) {
       float distance = 0.0;
       if (direction == Right) {
@@ -797,7 +798,6 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
             distance = -frontWindow->geometry().width() * 0.5f + area.width() * 0.5f +
                        (((float)displayWidth() * 0.5 * scaleFactor) - (float)area.width() * 0.5f) / rightWindows;
             data.xTranslate += distance * timeLine.currentValue();
-            RotationData rot;
             rot.axis = RotationData::YAxis;
             rot.angle = -angle * timeLine.currentValue();
             rot.xRotationPoint = frontWindow->geometry().width();
@@ -810,9 +810,9 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
             if (specialHandlingForward)
                 factor = 2.0;
             data.xTranslate += distance * timeLine.currentValue() * factor;
-            RotationData rot;
             rot.axis = RotationData::YAxis;
             rot.angle = angle * timeLine.currentValue();
+            rot.xRotationPoint = 0.0;
             data.rotation = &rot;
         }
     }
@@ -845,8 +845,10 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
         rot.angle = angle;
         rot.angle = angle * rotateFactor;
         WindowPaintData data(additionalWindow);
-        if (left)
+        if (left) {
             data.xTranslate += -xTranslate - additionalWindow->geometry().x();
+            rot.xRotationPoint = 0.0;
+        }
         else {
             data.xTranslate += xTranslate + area.width() -
                                additionalWindow->geometry().x() - additionalWindow->geometry().width();
