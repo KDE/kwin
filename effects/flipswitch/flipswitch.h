@@ -47,6 +47,7 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual bool isActive() const;
 
     static bool supported();
@@ -77,6 +78,9 @@ private:
     bool isSelectableWindow(EffectWindow *w) const;
     void scheduleAnimation(const SwitchingDirection& direction, int distance = 1);
     void adjustWindowMultiScreen(const EffectWindow *w, WindowPaintData& data);
+    void selectNextOrPreviousWindow(bool forward);
+    inline void selectNextWindow() { selectNextOrPreviousWindow(true); }
+    inline void selectPreviousWindow() { selectNextOrPreviousWindow(false); }
     /**
      * Updates the caption of the caption frame.
      * Taking care of rewording the desktop client.

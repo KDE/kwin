@@ -641,6 +641,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         switch(m_mode) {
         case TabboxMode:
             m_selectedWindow = effects->currentTabBoxWindow();
+            m_input = effects->createFullScreenInputWindow(this, Qt::ArrowCursor);
             break;
         case CurrentDesktopMode:
             m_selectedWindow = effects->activeWindow();
@@ -687,8 +688,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
             }
         } else
             m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
-        if (mode != TabboxMode)
-            effects->destroyInputWindow(m_input);
+        effects->destroyInputWindow(m_input);
         if (m_hasKeyboardGrab) {
             effects->ungrabKeyboard();
             m_hasKeyboardGrab = false;
@@ -835,6 +835,29 @@ void FlipSwitchEffect::adjustWindowMultiScreen(const KWin::EffectWindow* w, Wind
     }
 }
 
+void FlipSwitchEffect::selectNextOrPreviousWindow(bool forward)
+{
+    if (!m_active || !m_selectedWindow) {
+        return;
+    }
+    const int index = effects->currentTabBoxWindowList().indexOf(m_selectedWindow);
+    int newIndex = index;
+    if (forward) {
+        ++newIndex;
+    } else {
+        --newIndex;
+    }
+    if (newIndex == effects->currentTabBoxWindowList().size()) {
+        newIndex = 0;
+    } else if (newIndex < 0) {
+        newIndex = effects->currentTabBoxWindowList().size() -1;
+    }
+    if (index == newIndex) {
+        return;
+    }
+    effects->setTabBoxWindow(effects->currentTabBoxWindowList().at(newIndex));
+}
+
 
 //*************************************************************
 // Keyboard handling
@@ -937,35 +960,21 @@ void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)
 
 void FlipSwitchEffect::slotTabBoxKeyEvent(QKeyEvent *event)
 {
-    if (!m_active || !m_selectedWindow) {
-        return;
-    }
-    const int index = effects->currentTabBoxWindowList().indexOf(m_selectedWindow);
-    int newIndex = index;
     if (event->type() == QEvent::KeyPress) {
         switch (event->key()) {
         case Qt::Key_Up:
         case Qt::Key_Left:
-            newIndex = (index - 1);
+            selectPreviousWindow();
             break;
         case Qt::Key_Down:
         case Qt::Key_Right:
-            newIndex = (index + 1);
+            selectNextWindow();
             break;
         default:
             // nothing
             break;
         }
     }
-    if (newIndex == effects->currentTabBoxWindowList().size()) {
-        newIndex = 0;
-    } else if (newIndex < 0) {
-        newIndex = effects->currentTabBoxWindowList().size() -1;
-    }
-    if (index == newIndex) {
-        return;
-    }
-    effects->setTabBoxWindow(effects->currentTabBoxWindowList().at(newIndex));
 }
 
 bool FlipSwitchEffect::isActive() const
@@ -986,6 +995,37 @@ void FlipSwitchEffect::updateCaption()
     } else {
         m_captionFrame->setText(m_selectedWindow->caption());
         m_captionFrame->setIcon(m_selectedWindow->icon());
+    }
+}
+
+//*************************************************************
+// Mouse handling
+//*************************************************************
+
+void FlipSwitchEffect::windowInputMouseEvent(Window w, QEvent* e)
+{
+    assert(w == m_input);
+    Q_UNUSED(w);
+    if (e->type() != QEvent::MouseButtonPress)
+        return;
+    // we don't want click events during animations
+    if (m_animation)
+        return;
+    QMouseEvent* event = static_cast< QMouseEvent* >(e);
+
+    switch (event->button()) {
+    case Qt::XButton1: // wheel up
+        selectPreviousWindow();
+        break;
+    case Qt::XButton2: // wheel down
+        selectNextWindow();
+        break;
+    case Qt::LeftButton:
+    case Qt::RightButton:
+    case Qt::MidButton:
+    default:
+        // TODO: Change window on mouse button click
+        break;
     }
 }
 
