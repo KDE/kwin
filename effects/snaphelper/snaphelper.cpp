@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "snaphelper.h"
 
 #include "kwinglutils.h"
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "kwinxrenderutils.h"
+#endif
 
 namespace KWin
 {
@@ -128,6 +130,7 @@ void SnapHelperEffect::postPaintScreen()
             glLineWidth(1.0);
         }
         if ( effects->compositingType() == XRenderCompositing ) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
             for ( int i = 0; i < effects->numScreens(); i++ ) {
                 const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
                 int midX = rect.x() + rect.width() / 2;
@@ -168,6 +171,7 @@ void SnapHelperEffect::postPaintScreen()
                 XRenderColor c = preMultiply(QColor(128, 128, 128, m_timeline.currentValue()*128));
                 XRenderFillRectangles(display(), PictOpOver, effects->xrenderBufferPicture(), &c, rects, 6);
             }
+#endif
         }
     } else if (m_window && !m_active) {
         if (m_window->isDeleted())
