@@ -385,6 +385,9 @@ void Workspace::init()
     // Create an entry with empty activity name, it will be used if activities are not supported. Otherwise, it will be removed.
     m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<int>(numberOfDesktops()));
 
+    // Now we know how many desktops we'll have, thus we initialize the positioning object
+    initPositioning = new Placement(this);
+
     loadDesktopSettings();
     updateDesktopLayout();
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
@@ -401,9 +404,6 @@ void Workspace::init()
 #ifdef KWIN_BUILD_ACTIVITIES
     updateActivityList(false, true);
 #endif
-
-    // Now we know how many desktops we'll have, thus we initialize the positioning object
-    initPositioning = new Placement(this);
 
     reconfigureTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);
@@ -973,7 +973,6 @@ void Workspace::slotReconfigure()
     unsigned long changed = options->updateSettings();
 
     emit configChanged();
-    initPositioning->reinitCascading(0);
     discardPopup();
     updateToolWindows(true);
 
@@ -1698,6 +1697,7 @@ void Workspace::setNumberOfDesktops(int n)
         return;
     int old_number_of_desktops = numberOfDesktops();
     desktopCount_ = n;
+    initPositioning->reinitCascading(0);
     updateDesktopLayout(); // Make sure the layout is still valid
 
     if (currentDesktop() > n)
