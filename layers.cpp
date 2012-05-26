@@ -326,12 +326,17 @@ void Workspace::lowerClientWithinApplication(Client* c)
     // first try to put it below the bottom-most window of the application
     for (ToplevelList::Iterator it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
-            ++it)
-        if (Client::belongToSameApplication(qobject_cast<Client*>(*it), c)) {
+            ++it) {
+        Client *client = qobject_cast<Client*>(*it);
+        if (!client) {
+            continue;
+        }
+        if (Client::belongToSameApplication(client, c)) {
             unconstrained_stacking_order.insert(it, c);
             lowered = true;
             break;
         }
+    }
     if (!lowered)
         unconstrained_stacking_order.prepend(c);
     // ignore mainwindows
