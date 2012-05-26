@@ -30,7 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <kwinxrenderutils.h>
+#endif
 
 namespace KWin
 {
@@ -174,6 +176,7 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             }
         }
         if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (!m_pixmap || m_pixmap->size() != srcArea.size()) {
                 delete m_pixmap;
                 m_pixmap = new QPixmap(srcArea.size());
@@ -207,6 +210,7 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
                                           { area.x(), area.y(), FRAME_WIDTH, area.height()-FRAME_WIDTH} };
             XRenderColor c = preMultiply(QColor(0,0,0,255));
             XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), &c, rects, 4);
+#endif
         }
     }
 }
