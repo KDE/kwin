@@ -227,6 +227,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
     }
 
     if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         QPixmap buffer(geometry.size());
         if (buffer.handle() == 0) {
             Pixmap xpix = XCreatePixmap(display(), rootWindow(), geometry.width(), geometry.height(), 32);
@@ -235,6 +236,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
         XRenderComposite(display(), PictOpSrc, effects->xrenderBufferPicture(), None, buffer.x11PictureHandle(),
                                     0, 0, 0, 0, geometry.x(), geometry.y(), geometry.width(), geometry.height());
         img = buffer.toImage();
+#endif
     }
 
     KTemporaryFile temp;
