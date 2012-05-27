@@ -73,10 +73,30 @@ WindowPaintData::WindowPaintData(EffectWindow* w)
     , saturation(1)
     , brightness(1)
     , shader(NULL)
-    , rotation(NULL)
 {
     quads = w->buildQuads();
 }
+
+WindowPaintData::WindowPaintData(const WindowPaintData &other)
+    : opacity(other.opacity)
+    , contents_opacity(other.contents_opacity)
+    , decoration_opacity(other.decoration_opacity)
+    , xScale(other.xScale)
+    , yScale(other.yScale)
+    , zScale(other.zScale)
+    , xTranslate(other.xTranslate)
+    , yTranslate(other.yTranslate)
+    , zTranslate(other.zTranslate)
+    , saturation(other.saturation)
+    , brightness(other.brightness)
+    , quads(other.quads)
+    , shader(other.shader)
+{
+    rotation.setOrigin(other.rotation.origin());
+    rotation.setAxis(other.rotation.axis());
+    rotation.setAngle(other.rotation.angle());
+}
+
 
 ScreenPaintData::ScreenPaintData()
     : xScale(1)
@@ -85,17 +105,34 @@ ScreenPaintData::ScreenPaintData()
     , xTranslate(0)
     , yTranslate(0)
     , zTranslate(0)
-    , rotation(NULL)
 {
 }
 
-RotationData::RotationData()
-    : axis(ZAxis)
-    , angle(0.0)
-    , xRotationPoint(0.0)
-    , yRotationPoint(0.0)
-    , zRotationPoint(0.0)
+ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
+    : xScale(other.xScale)
+    , yScale(other.yScale)
+    , zScale(other.zScale)
+    , xTranslate(other.xTranslate)
+    , yTranslate(other.yTranslate)
+    , zTranslate(other.zTranslate)
 {
+    rotation.setOrigin(other.rotation.origin());
+    rotation.setAxis(other.rotation.axis());
+    rotation.setAngle(other.rotation.angle());
+}
+
+ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
+{
+    this->xScale = rhs.xScale;
+    this->yScale = rhs.yScale;
+    this->zScale = rhs.zScale;
+    this->xTranslate = rhs.xTranslate;
+    this->yTranslate = rhs.yTranslate;
+    this->zTranslate = rhs.zTranslate;
+    this->rotation.setOrigin(rhs.rotation.origin());
+    this->rotation.setAxis(rhs.rotation.axis());
+    this->rotation.setAngle(rhs.rotation.angle());
+    return *this;
 }
 
 //****************************************

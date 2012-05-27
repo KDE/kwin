@@ -89,10 +89,9 @@ void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
     InfoMap::const_iterator info = windows.constFind(w);
     if (info != windows.constEnd()) {
         const double progress = info->timeLine->currentValue();
-        RotationData rot;
-        rot.axis = RotationData::XAxis;
-        rot.angle = 60.0 * (1.0 - progress);
-        data.rotation = &rot;
+        QGraphicsRotation rot;
+        data.rotation.setAxis(Qt::XAxis);
+        data.rotation.setAngle(60.0 * (1.0 - progress));
         data.yScale *= progress;
         data.zScale *= progress;
         data.yTranslate -= (w->y() - info->parentY) * (1.0 - progress);

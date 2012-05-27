@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QPair>
 #include <QtCore/QSet>
 #include <QtCore/QRect>
+#include <QtGui/QGraphicsRotation>
 #include <QtGui/QRegion>
 
 #include <QtCore/QVector>
@@ -60,7 +61,6 @@ class Effect;
 class WindowQuad;
 class GLShader;
 class XRenderPicture;
-class RotationData;
 class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
@@ -1652,6 +1652,7 @@ class KWIN_EXPORT WindowPaintData
 {
 public:
     WindowPaintData(EffectWindow* w);
+    WindowPaintData(const WindowPaintData &other);
     /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * Opacity for contents is opacity*contents_opacity, the same
@@ -1686,20 +1687,22 @@ public:
      * Shader to be used for rendering, if any.
      */
     GLShader* shader;
-    RotationData* rotation;
+    QGraphicsRotation rotation;
 };
 
 class KWIN_EXPORT ScreenPaintData
 {
 public:
     ScreenPaintData();
+    ScreenPaintData(const ScreenPaintData &other);
     double xScale;
     double yScale;
     double zScale;
     int xTranslate;
     int yTranslate;
     double zTranslate;
-    RotationData* rotation;
+    QGraphicsRotation rotation;
+    ScreenPaintData& operator=(const ScreenPaintData &rhs);
 };
 
 class KWIN_EXPORT ScreenPrePaintData
@@ -1707,22 +1710,6 @@ class KWIN_EXPORT ScreenPrePaintData
 public:
     int mask;
     QRegion paint;
-};
-
-class KWIN_EXPORT RotationData
-{
-public:
-    RotationData();
-    enum RotationAxis {
-        XAxis,
-        YAxis,
-        ZAxis
-    };
-    RotationAxis axis;
-    float angle;
-    float xRotationPoint;
-    float yRotationPoint;
-    float zRotationPoint;
 };
 
 /**

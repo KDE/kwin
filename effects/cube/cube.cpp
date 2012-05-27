@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QtConcurrentRun>
 #include <QVector2D>
+#include <QVector3D>
 
 #include <math.h>
 
@@ -743,12 +744,9 @@ void CubeEffect::paintCube(int mask, QRegion region, ScreenPaintData& data)
             painting_desktop = effects->numberOfDesktops();
         }
         ScreenPaintData newData = data;
-        RotationData rot = RotationData();
-        rot.axis = RotationData::YAxis;
-        rot.angle = internalCubeAngle * i;
-        rot.xRotationPoint = rect.width() / 2;
-        rot.zRotationPoint = -point;
-        newData.rotation = &rot;
+        newData.rotation.setAxis(Qt::YAxis);
+        newData.rotation.setAngle(internalCubeAngle * i);
+        newData.rotation.setOrigin(QVector3D(rect.width() / 2, 0.0, -point));
         newData.zTranslate = -zTranslate;
         effects->paintScreen(mask, region, newData);
     }
@@ -1381,11 +1379,9 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (shader) {
                 data.xTranslate = -rect.width();
             } else {
-                RotationData rot = RotationData();
-                rot.axis = RotationData::YAxis;
-                rot.xRotationPoint = rect.width() - w->x();
-                rot.angle = 360.0f / effects->numberOfDesktops();
-                data.rotation = &rot;
+                data.rotation.setAxis(Qt::YAxis);
+                data.rotation.setOrigin(QVector3D(rect.width() - w->x(), 0.0, 0.0));
+                data.rotation.setAngle(-360.0f / effects->numberOfDesktops());
                 float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
                 float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
                 QMatrix4x4 matrix;
@@ -1407,11 +1403,9 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (shader) {
                 data.xTranslate = rect.width();
             } else {
-                RotationData rot = RotationData();
-                rot.axis = RotationData::YAxis;
-                rot.xRotationPoint = -w->x();
-                rot.angle = -360.0f / effects->numberOfDesktops();
-                data.rotation = &rot;
+                data.rotation.setAxis(Qt::YAxis);
+                data.rotation.setOrigin(QVector3D(-w->x(), 0.0, 0.0));
+                data.rotation.setAngle(-360.0f / effects->numberOfDesktops());
                 float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
                 float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
                 QMatrix4x4 matrix;

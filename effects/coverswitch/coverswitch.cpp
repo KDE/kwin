@@ -461,8 +461,6 @@ void CoverSwitchEffect::paintScene(EffectWindow* frontWindow, const EffectWindow
     int width = area.width();
     int leftWindowCount = leftWindows.count();
     int rightWindowCount = rightWindows.count();
-    RotationData rot;
-    rot.axis = RotationData::YAxis;
 
 
     // Problem during animation: a window which is painted after another window
@@ -701,8 +699,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
                 }
             }
             data.zTranslate *= timeLine.currentValue();
-            if (data.rotation)
-                data.rotation->angle *= timeLine.currentValue();
+            data.rotation.setAngle(data.rotation.angle() * timeLine.currentValue());
         }
     }
     if (stop) {
@@ -732,8 +729,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
                 }
             }
             data.zTranslate *= (1.0 - timeLine.currentValue());
-            if (data.rotation)
-                data.rotation->angle *= (1.0 - timeLine.currentValue());
+            data.rotation.setAngle(data.rotation.angle() * (1.0 - timeLine.currentValue()));
         }
     }
 
@@ -788,7 +784,6 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
     if (rightWindows == 0) {
         rightWindows = 1;
     }
-    RotationData rot; // this has to survive the if (animation) context as it's used as pointer - bug #297757
     if (animation) {
       float distance = 0.0;
       if (direction == Right) {
@@ -796,10 +791,9 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
             distance = -frontWindow->geometry().width() * 0.5f + area.width() * 0.5f +
                        (((float)displayWidth() * 0.5 * scaleFactor) - (float)area.width() * 0.5f) / rightWindows;
             data.xTranslate += distance * timeLine.currentValue();
-            rot.axis = RotationData::YAxis;
-            rot.angle = -angle * timeLine.currentValue();
-            rot.xRotationPoint = frontWindow->geometry().width();
-            data.rotation = &rot;
+            data.rotation.setAxis(Qt::YAxis);
+            data.rotation.setAngle(-angle * timeLine.currentValue());
+            data.rotation.setOrigin(QVector3D(frontWindow->geometry().width(), 0.0, 0.0));
         } else {
             // move to left
             distance = frontWindow->geometry().width() * 0.5f - area.width() * 0.5f +
@@ -808,10 +802,8 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
             if (specialHandlingForward)
                 factor = 2.0;
             data.xTranslate += distance * timeLine.currentValue() * factor;
-            rot.axis = RotationData::YAxis;
-            rot.angle = angle * timeLine.currentValue();
-            rot.xRotationPoint = 0.0;
-            data.rotation = &rot;
+            data.rotation.setAxis(Qt::YAxis);
+            data.rotation.setAngle(angle * timeLine.currentValue());
         }
     }
     if (specialHandlingForward) {
@@ -838,26 +830,20 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
     // handling for additional window from other side
     // has to appear on this side after half of the time
     if (animation && timeLine.currentValue() >= 0.5 && additionalWindow != NULL) {
-        RotationData rot;
-        rot.axis = RotationData::YAxis;
-        rot.angle = angle;
-        rot.angle = angle * rotateFactor;
         WindowPaintData data(additionalWindow);
+        data.rotation.setAxis(Qt::YAxis);
+        data.rotation.setAngle(angle * rotateFactor);
         if (left) {
             data.xTranslate += -xTranslate - additionalWindow->geometry().x();
-            rot.xRotationPoint = 0.0;
         }
         else {
             data.xTranslate += xTranslate + area.width() -
                                additionalWindow->geometry().x() - additionalWindow->geometry().width();
-            rot.xRotationPoint = additionalWindow->geometry().width();
+            data.rotation.setOrigin(QVector3D(additionalWindow->geometry().width(), 0.0, 0.0));
         }
-        data.rotation = &rot;
         data.opacity *= (timeLine.currentValue() - 0.5) * 2.0;
         paintWindowCover(additionalWindow, reflectedWindows, data);
     }
-    RotationData rot;
-    rot.axis = RotationData::YAxis;
     // normal behaviour
     for (int i = 0; i < windows.count(); i++) {
         window = windows.at(i);
@@ -865,7 +851,8 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
             continue;
         }
         WindowPaintData data(window);
-        rot.angle = angle;
+        data.rotation.setAxis(Qt::YAxis);
+        data.rotation.setAngle(angle);
         if (left)
             data.xTranslate += -xTranslate + xTranslate * i / windowCount - window->geometry().x();
         else
@@ -876,7 +863,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
                     // right most window on left side -> move to front
                     // have to move one window distance plus half the difference between the window and the desktop size
                     data.xTranslate += (xTranslate / windowCount + (width - window->geometry().width()) * 0.5f) * timeLine.currentValue();
-                    rot.angle = (angle - angle * timeLine.currentValue());
+                    data.rotation.setAngle(angle - angle * timeLine.currentValue());
                 }
                 // right most window does not have to be moved
                 else if (!left && (i == 0));     // do nothing
@@ -888,7 +875,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
                 if ((i == windowCount - 1) && !left) {
                     // left most window on right side -> move to front
                     data.xTranslate -= (xTranslate / windowCount + (width - window->geometry().width()) * 0.5f) * timeLine.currentValue();
-                    rot.angle = (angle - angle * timeLine.currentValue());
+                    data.rotation.setAngle(angle - angle * timeLine.currentValue());
                 }
                 // left most window does not have to be moved
                 else if (i == 0 && left); // do nothing
@@ -898,12 +885,9 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
                 }
             }
         }
-        if (left)
-            rot.xRotationPoint = 0.0;
-        else
-            rot.xRotationPoint = window->geometry().width();
-        rot.angle *= rotateFactor;
-        data.rotation = &rot;
+        if (!left)
+            data.rotation.setOrigin(QVector3D(window->geometry().width(), 0.0, 0.0));
+        data.rotation.setAngle(data.rotation.angle() * rotateFactor);
         // make window most to edge transparent if animation
         if (animation && i == 0 && ((direction == Left && left) || (direction == Right && !left))) {
             // only for the first half of the animation

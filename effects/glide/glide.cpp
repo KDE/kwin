@@ -98,10 +98,8 @@ void GlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
     InfoHash::const_iterator info = windows.constFind(w);
     if (info != windows.constEnd()) {
         const double progress = info->timeLine->currentValue();
-        RotationData rot;
-        rot.axis = RotationData::XAxis;
-        rot.angle = angle * (1 - progress);
-        data.rotation = &rot;
+        data.rotation.setAxis(Qt::XAxis);
+        data.rotation.setAngle(angle * (1 - progress));
         data.opacity *= progress;
         switch(effect) {
         default:

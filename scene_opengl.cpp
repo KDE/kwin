@@ -136,23 +136,15 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
     matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
     matrix.scale(data.xScale, data.yScale, data.zScale);
 
-    if (!data.rotation)
+    if (data.rotation.angle() == 0.0)
         return matrix;
 
     // Apply the rotation
-    const qreal xAxis = (data.rotation->axis == RotationData::XAxis ? 1.0 : 0.0);
-    const qreal yAxis = (data.rotation->axis == RotationData::YAxis ? 1.0 : 0.0);
-    const qreal zAxis = (data.rotation->axis == RotationData::ZAxis ? 1.0 : 0.0);
-
-    matrix.translate(data.rotation->xRotationPoint,
-                     data.rotation->yRotationPoint,
-                     data.rotation->zRotationPoint);
-
-    matrix.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
-
-    matrix.translate(-data.rotation->xRotationPoint,
-                     -data.rotation->yRotationPoint,
-                     -data.rotation->zRotationPoint);
+    // cannot use data.rotation->applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
+    matrix.translate(data.rotation.origin());
+    const QVector3D axis = data.rotation.axis();
+    matrix.rotate(data.rotation.angle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data.rotation.origin());
 
     return matrix;
 }
@@ -427,23 +419,15 @@ QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &
     matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
     matrix.scale(data.xScale, data.yScale, data.zScale);
 
-    if (!data.rotation)
+    if (data.rotation.angle() == 0.0)
         return matrix;
 
     // Apply the rotation
-    const qreal xAxis = (data.rotation->axis == RotationData::XAxis ? 1.0 : 0.0);
-    const qreal yAxis = (data.rotation->axis == RotationData::YAxis ? 1.0 : 0.0);
-    const qreal zAxis = (data.rotation->axis == RotationData::ZAxis ? 1.0 : 0.0);
-
-    matrix.translate(data.rotation->xRotationPoint,
-                     data.rotation->yRotationPoint,
-                     data.rotation->zRotationPoint);
-
-    matrix.rotate(data.rotation->angle, xAxis, yAxis, zAxis);
-
-    matrix.translate(-data.rotation->xRotationPoint,
-                     -data.rotation->yRotationPoint,
-                     -data.rotation->zRotationPoint);
+    // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
+    matrix.translate(data.rotation.origin());
+    const QVector3D axis = data.rotation.axis();
+    matrix.rotate(data.rotation.angle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data.rotation.origin());
 
     return matrix;
 }
