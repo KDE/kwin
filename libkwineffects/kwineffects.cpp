@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QFontMetrics>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
+#include <QtGui/QVector2D>
 
 #include <kdebug.h>
 #include <ksharedconfig.h>
@@ -64,9 +65,6 @@ WindowPaintData::WindowPaintData(EffectWindow* w)
     : opacity(w->opacity())
     , contents_opacity(1.0)
     , decoration_opacity(1.0)
-    , xScale(1)
-    , yScale(1)
-    , zScale(1)
     , xTranslate(0)
     , yTranslate(0)
     , zTranslate(0)
@@ -81,9 +79,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : opacity(other.opacity)
     , contents_opacity(other.contents_opacity)
     , decoration_opacity(other.decoration_opacity)
-    , xScale(other.xScale)
-    , yScale(other.yScale)
-    , zScale(other.zScale)
     , xTranslate(other.xTranslate)
     , yTranslate(other.yTranslate)
     , zTranslate(other.zTranslate)
@@ -92,30 +87,100 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     , quads(other.quads)
     , shader(other.shader)
 {
+    m_scale.setXScale(other.xScale());
+    m_scale.setYScale(other.yScale());
+    m_scale.setZScale(other.zScale());
     rotation.setOrigin(other.rotation.origin());
     rotation.setAxis(other.rotation.axis());
     rotation.setAngle(other.rotation.angle());
 }
 
+WindowPaintData &WindowPaintData::operator*=(qreal scale)
+{
+    this->setXScale(this->xScale() * scale);
+    this->setYScale(this->yScale() * scale);
+    this->setZScale(this->zScale() * scale);
+    return *this;
+}
+
+WindowPaintData &WindowPaintData::operator*=(const QVector2D &scale)
+{
+    this->setXScale(this->xScale() * scale.x());
+    this->setYScale(this->yScale() * scale.y());
+    return *this;
+}
+
+WindowPaintData &WindowPaintData::operator*=(const QVector3D &scale)
+{
+    this->setXScale(this->xScale() * scale.x());
+    this->setYScale(this->yScale() * scale.y());
+    this->setZScale(this->zScale() * scale.z());
+    return *this;
+}
+
+qreal WindowPaintData::xScale() const
+{
+    return this->m_scale.xScale();
+}
+
+qreal WindowPaintData::yScale() const
+{
+    return this->m_scale.yScale();
+}
+
+qreal WindowPaintData::zScale() const
+{
+    return this->m_scale.zScale();
+}
+
+void WindowPaintData::setXScale(qreal scale)
+{
+    this->m_scale.setXScale(scale);
+}
+
+void WindowPaintData::setYScale(qreal scale)
+{
+    this->m_scale.setYScale(scale);
+}
+
+void WindowPaintData::setZScale(qreal scale)
+{
+    this->m_scale.setZScale(scale);
+}
+
+void WindowPaintData::setScale(const QVector2D &scale)
+{
+    this->setXScale(scale.x());
+    this->setYScale(scale.y());
+}
+
+void WindowPaintData::setScale(const QVector3D &scale)
+{
+    this->setXScale(scale.x());
+    this->setYScale(scale.y());
+    this->setZScale(scale.z());
+}
+
+const QGraphicsScale &WindowPaintData::scale() const
+{
+    return m_scale;
+}
 
 ScreenPaintData::ScreenPaintData()
-    : xScale(1)
-    , yScale(1)
-    , zScale(1)
-    , xTranslate(0)
+    : xTranslate(0)
     , yTranslate(0)
     , zTranslate(0)
 {
 }
 
 ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
-    : xScale(other.xScale)
-    , yScale(other.yScale)
-    , zScale(other.zScale)
-    , xTranslate(other.xTranslate)
+    : xTranslate(other.xTranslate)
     , yTranslate(other.yTranslate)
     , zTranslate(other.zTranslate)
 {
+    m_scale.setXScale(other.xScale());
+    m_scale.setYScale(other.yScale());
+    m_scale.setZScale(other.zScale());
     rotation.setOrigin(other.rotation.origin());
     rotation.setAxis(other.rotation.axis());
     rotation.setAngle(other.rotation.angle());
@@ -123,9 +188,9 @@ ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
 {
-    this->xScale = rhs.xScale;
-    this->yScale = rhs.yScale;
-    this->zScale = rhs.zScale;
+    this->m_scale.setXScale(rhs.xScale());
+    this->m_scale.setYScale(rhs.yScale());
+    this->m_scale.setZScale(rhs.zScale());
     this->xTranslate = rhs.xTranslate;
     this->yTranslate = rhs.yTranslate;
     this->zTranslate = rhs.zTranslate;
@@ -133,6 +198,77 @@ ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
     this->rotation.setAxis(rhs.rotation.axis());
     this->rotation.setAngle(rhs.rotation.angle());
     return *this;
+}
+
+ScreenPaintData &ScreenPaintData::operator*=(qreal scale)
+{
+    this->m_scale.setXScale(this->xScale() * scale);
+    this->m_scale.setYScale(this->yScale() * scale);
+    this->m_scale.setZScale(this->zScale() * scale);
+    return *this;
+}
+
+ScreenPaintData &ScreenPaintData::operator*=(const QVector2D &scale)
+{
+    this->m_scale.setXScale(this->xScale() * scale.x());
+    this->m_scale.setYScale(this->yScale() * scale.y());
+    return *this;
+}
+
+ScreenPaintData &ScreenPaintData::operator*=(const QVector3D &scale)
+{
+    this->m_scale.setXScale(this->xScale() * scale.x());
+    this->m_scale.setYScale(this->yScale() * scale.y());
+    this->m_scale.setZScale(this->zScale() * scale.z());
+    return *this;
+}
+
+qreal ScreenPaintData::xScale() const
+{
+    return m_scale.xScale();
+}
+
+qreal ScreenPaintData::yScale() const
+{
+    return m_scale.yScale();
+}
+
+qreal ScreenPaintData::zScale() const
+{
+    return m_scale.zScale();
+}
+
+void ScreenPaintData::setScale(const QVector2D &scale)
+{
+    this->m_scale.setXScale(scale.x());
+    this->m_scale.setYScale(scale.y());
+}
+
+void ScreenPaintData::setScale(const QVector3D &scale)
+{
+    this->m_scale.setXScale(scale.x());
+    this->m_scale.setYScale(scale.y());
+    this->m_scale.setZScale(scale.z());
+}
+
+void ScreenPaintData::setXScale(qreal scale)
+{
+    this->m_scale.setXScale(scale);
+}
+
+void ScreenPaintData::setYScale(qreal scale)
+{
+    this->m_scale.setYScale(scale);
+}
+
+void ScreenPaintData::setZScale(qreal scale)
+{
+    this->m_scale.setZScale(scale);
+}
+
+const QGraphicsScale &ScreenPaintData::scale() const
+{
+    return this->m_scale;
 }
 
 //****************************************
@@ -229,10 +365,10 @@ void Effect::setPositionTransformations(WindowPaintData& data, QRect& region, Ef
 {
     QSize size = w->size();
     size.scale(r.size(), aspect);
-    data.xScale = size.width() / double(w->width());
-    data.yScale = size.height() / double(w->height());
-    int width = int(w->width() * data.xScale);
-    int height = int(w->height() * data.yScale);
+    data.setXScale(size.width() / double(w->width()));
+    data.setYScale(size.height() / double(w->height()));
+    int width = int(w->width() * data.xScale());
+    int height = int(w->height() * data.yScale());
     int x = r.x() + (r.width() - width) / 2;
     int y = r.y() + (r.height() - height) / 2;
     region = QRect(x, y, width, height);
@@ -1121,8 +1257,7 @@ void WindowMotionManager::apply(EffectWindow *w, WindowPaintData &data)
     WindowMotion *motion = &it.value();
     data.xTranslate += motion->translation.value().x() - w->x();
     data.yTranslate += motion->translation.value().y() - w->y();
-    data.xScale *= motion->scale.value().x();
-    data.yScale *= motion->scale.value().y();
+    data *= QVector2D(motion->scale.value());
 }
 
 void WindowMotionManager::moveWindow(EffectWindow *w, QPoint target, double scale, double yScale)

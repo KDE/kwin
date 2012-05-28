@@ -843,10 +843,10 @@ void BoxSwitchEffect::paintDesktopThumbnail(int iDesktop)
     QSize size = QSize(displayWidth(), displayHeight());
 
     size.scale(r.size(), Qt::KeepAspectRatio);
-    data.xScale = size.width() / double(displayWidth());
-    data.yScale = size.height() / double(displayHeight());
-    int width = int(displayWidth() * data.xScale);
-    int height = int(displayHeight() * data.yScale);
+    data.setXScale(size.width() / double(displayWidth()));
+    data.setYScale(size.height() / double(displayHeight()));
+    int width = int(displayWidth() * data.xScale());
+    int height = int(displayHeight() * data.yScale());
     int x = r.x() + (r.width() - width) / 2;
     int y = r.y() + (r.height() - height) / 2;
     region = QRect(x, y, width, height);

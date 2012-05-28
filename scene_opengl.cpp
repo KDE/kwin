@@ -134,7 +134,7 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
         return matrix;
 
     matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
-    matrix.scale(data.xScale, data.yScale, data.zScale);
+    data.scale().applyTo(&matrix);
 
     if (data.rotation.angle() == 0.0)
         return matrix;
@@ -417,7 +417,7 @@ QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &
         return matrix;
 
     matrix.translate(data.xTranslate, data.yTranslate, data.zTranslate);
-    matrix.scale(data.xScale, data.yScale, data.zScale);
+    data.scale().applyTo(&matrix);
 
     if (data.rotation.angle() == 0.0)
         return matrix;

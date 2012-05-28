@@ -49,6 +49,7 @@ class KConfigGroup;
 class KActionCollection;
 class QFont;
 class QKeyEvent;
+class QVector2D;
 
 namespace KWin
 {
@@ -1654,6 +1655,70 @@ public:
     WindowPaintData(EffectWindow* w);
     WindowPaintData(const WindowPaintData &other);
     /**
+     * Scales the window by @p scale factor.
+     * Multiplies all three components by the given factor.
+     * @since 4.10
+     **/
+    WindowPaintData& operator*=(qreal scale);
+    /**
+     * Scales the window by @p scale factor.
+     * Performs a component wise multiplication on x and y components.
+     * @since 4.10
+     **/
+    WindowPaintData& operator*=(const QVector2D &scale);
+    /**
+     * Scales the window by @p scale factor.
+     * Performs a component wise multiplication.
+     * @since 4.10
+     **/
+    WindowPaintData& operator*=(const QVector3D &scale);
+    /**
+     * @returns scale factor in X direction.
+     * @since 4.10
+     **/
+    qreal xScale() const;
+    /**
+     * @returns scale factor in Y direction.
+     * @since 4.10
+     **/
+    qreal yScale() const;
+    /**
+     * @returns scale factor in Z direction.
+     * @since 4.10
+     **/
+    qreal zScale() const;
+    /**
+     * Sets the scale factor in X direction to @p scale
+     * @param scale The scale factor in X direction
+     * @since 4.10
+     **/
+    void setXScale(qreal scale);
+    /**
+     * Sets the scale factor in Y direction to @p scale
+     * @param scale The scale factor in Y direction
+     * @since 4.10
+     **/
+    void setYScale(qreal scale);
+    /**
+     * Sets the scale factor in Z direction to @p scale
+     * @param scale The scale factor in Z direction
+     * @since 4.10
+     **/
+    void setZScale(qreal scale);
+    /**
+     * Sets the scale factor in X and Y direction.
+     * @param scale The scale factor for X and Y direction
+     * @since 4.10
+     **/
+    void setScale(const QVector2D &scale);
+    /**
+     * Sets the scale factor in X, Y and Z direction
+     * @param scale The scale factor for X, Y and Z direction
+     * @since 4.10
+     **/
+    void setScale(const QVector3D &scale);
+    const QGraphicsScale &scale() const;
+    /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * Opacity for contents is opacity*contents_opacity, the same
      * way for decoration.
@@ -1661,9 +1726,6 @@ public:
     double opacity;
     double contents_opacity;
     double decoration_opacity;
-    double xScale;
-    double yScale;
-    double zScale;
     int xTranslate;
     int yTranslate;
     double zTranslate;
@@ -1688,6 +1750,8 @@ public:
      */
     GLShader* shader;
     QGraphicsRotation rotation;
+private:
+    QGraphicsScale m_scale;
 };
 
 class KWIN_EXPORT ScreenPaintData
@@ -1695,14 +1759,77 @@ class KWIN_EXPORT ScreenPaintData
 public:
     ScreenPaintData();
     ScreenPaintData(const ScreenPaintData &other);
-    double xScale;
-    double yScale;
-    double zScale;
+    /**
+     * Scales the screen by @p scale factor.
+     * Multiplies all three components by the given factor.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator*=(qreal scale);
+    /**
+     * Scales the screen by @p scale factor.
+     * Performs a component wise multiplication on x and y components.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator*=(const QVector2D &scale);
+    /**
+     * Scales the screen by @p scale factor.
+     * Performs a component wise multiplication.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator*=(const QVector3D &scale);
+    /**
+     * @returns scale factor in X direction.
+     * @since 4.10
+     **/
+    qreal xScale() const;
+    /**
+     * @returns scale factor in Y direction.
+     * @since 4.10
+     **/
+    qreal yScale() const;
+    /**
+     * @returns scale factor in Z direction.
+     * @since 4.10
+     **/
+    qreal zScale() const;
+    /**
+     * Sets the scale factor in X direction to @p scale
+     * @param scale The scale factor in X direction
+     * @since 4.10
+     **/
+    void setXScale(qreal scale);
+    /**
+     * Sets the scale factor in Y direction to @p scale
+     * @param scale The scale factor in Y direction
+     * @since 4.10
+     **/
+    void setYScale(qreal scale);
+    /**
+     * Sets the scale factor in Z direction to @p scale
+     * @param scale The scale factor in Z direction
+     * @since 4.10
+     **/
+    void setZScale(qreal scale);
+    /**
+     * Sets the scale factor in X and Y direction.
+     * @param scale The scale factor for X and Y direction
+     * @since 4.10
+     **/
+    void setScale(const QVector2D &scale);
+    /**
+     * Sets the scale factor in X, Y and Z direction
+     * @param scale The scale factor for X, Y and Z direction
+     * @since 4.10
+     **/
+    void setScale(const QVector3D &scale);
+    const QGraphicsScale &scale() const;
     int xTranslate;
     int yTranslate;
     double zTranslate;
     QGraphicsRotation rotation;
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
+private:
+    QGraphicsScale m_scale;
 };
 
 class KWIN_EXPORT ScreenPrePaintData

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scalein.h"
 #include <QtCore/QTimeLine>
+#include <QtGui/QVector2D>
 
 namespace KWin
 {
@@ -58,8 +59,7 @@ void ScaleInEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Windo
     if (mTimeLineWindows.contains(w) && isScaleWindow(w)) {
         const qreal value = mTimeLineWindows[ w ]->currentValue();
         data.opacity *= value;
-        data.xScale *= value;
-        data.yScale *= value;
+        data *= QVector2D(value, value);
         data.xTranslate += int(w->width() / 2 * (1 - value));
         data.yTranslate += int(w->height() / 2 * (1 - value));
     }

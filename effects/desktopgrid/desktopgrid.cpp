@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobalsettings.h>
 #include <QtGui/QPainter>
 #include <QtGui/QGraphicsLinearLayout>
+#include <QtGui/QVector2D>
 #include <Plasma/FrameSvg>
 #include <Plasma/PushButton>
 #include <Plasma/WindowEffects>
@@ -190,8 +191,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         QPoint diff = cursorPos() - m_windowMoveStartPoint;
         QRect geo = m_windowMoveGeometry.translated(diff);
         WindowPaintData d(windowMove);
-        d.xScale *= (float)geo.width() / (float)windowMove->width();
-        d.yScale *= (float)geo.height() / (float)windowMove->height();
+        d *= QVector2D((qreal)geo.width() / (qreal)windowMove->width(), (qreal)geo.height() / (qreal)windowMove->height());
         d.xTranslate += qRound(geo.left() - windowMove->x());
         d.yTranslate += qRound(geo.top() - windowMove->y());
         effects->drawWindow(windowMove, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS, infiniteRegion(), d);
@@ -287,8 +287,8 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
         if (m_desktopButtonsViews.values().contains(w))
             return; // will be painted on top of all other windows
 
-        double xScale = data.xScale;
-        double yScale = data.yScale;
+        qreal xScale = data.xScale();
+        qreal yScale = data.yScale();
 
         // Don't change brightness of windows on all desktops as this causes flickering
         if (!w->isOnAllDesktops() || w->isDesktop())
@@ -333,8 +333,8 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
             QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
             double progress = timeline.currentValue();
-            d.xScale = interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->geometry().width(), progress);
-            d.yScale = interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->geometry().height(), progress);
+            d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->geometry().width(), progress));
+            d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->geometry().height(), progress));
             d.xTranslate += qRound(newPos.x() - w->x());
             d.yTranslate += qRound(newPos.y() - w->y());
 

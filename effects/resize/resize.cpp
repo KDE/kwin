@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KColorScheme>
 #include <KDE/KConfigGroup>
 
+#include <QtGui/QVector2D>
+
 namespace KWin
 {
 
@@ -68,11 +70,9 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
     if (m_active && w == m_resizeWindow) {
         if (m_features & TextureScale) {
             data.xTranslate += m_currentGeometry.x() - m_originalGeometry.x();
-            data.xScale *= m_currentGeometry.width();
-            data.xScale /= m_originalGeometry.width();
             data.yTranslate += m_currentGeometry.y() - m_originalGeometry.y();
-            data.yScale *= m_currentGeometry.height();
-            data.yScale /= m_originalGeometry.height();
+            data *= QVector2D(m_currentGeometry.width()/m_originalGeometry.width(),
+                              m_currentGeometry.height()/m_originalGeometry.height());
         }
         effects->paintWindow(w, mask, region, data);
 

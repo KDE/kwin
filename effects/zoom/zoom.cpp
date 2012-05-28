@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QX11Info>
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
+#include <QtGui/QVector2D>
 #include <QtDBus/QDBusConnection>
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -263,8 +264,7 @@ static XTransform xrenderIdentity = {{
 void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     if (zoom != 1.0) {
-        data.xScale *= zoom;
-        data.yScale *= zoom;
+        data *= QVector2D(zoom, zoom);
 
         // mouse-tracking allows navigation of the zoom-area using the mouse.
         switch(mouseTracking) {

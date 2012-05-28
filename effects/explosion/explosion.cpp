@@ -144,8 +144,8 @@ void ExplosionEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
     if (useshader) {
         double maxscaleadd = 1.5f;
         double scale = 1 + maxscaleadd * mWindows[w];
-        data.xScale = scale;
-        data.yScale = scale;
+        data.setXScale(scale);
+        data.setYScale(scale);
         data.xTranslate += int(w->width() / 2 * (1 - scale));
         data.yTranslate += int(w->height() / 2 * (1 - scale));
         data.opacity *= 0.99;  // Force blending

@@ -408,7 +408,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                         f1 = interpolated(*anim, 0);
                         f2 = geometryCompensation( anim->meta & AnimationEffect::Horizontal, f1 );
                         data.xTranslate += f2 * sz.width();
-                        data.xScale *= f1;
+                        data.setXScale(data.xScale() * f1);
                     }
                     if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // scale y
                         if (!anim->isOneDimensional()) {
@@ -418,7 +418,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                         else if ( ((anim->meta & AnimationEffect::Vertical)>>1) != (anim->meta & AnimationEffect::Horizontal) )
                             f2 = geometryCompensation( anim->meta & AnimationEffect::Vertical, f1 );
                         data.yTranslate += f2 * sz.height();
-                        data.yScale *= f1;
+                        data.setYScale(data.yScale() * f1);
                     }
                     break;
                 }
@@ -436,12 +436,12 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                     if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // resize x
                         f = dest[0]/sz.width();
                         data.xTranslate += geometryCompensation( anim->meta & AnimationEffect::Horizontal, f ) * sz.width();
-                        data.xScale *= f;
+                        data.setXScale(data.xScale() * f);
                     }
                     if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // resize y
                         f = dest[1]/sz.height();
                         data.yTranslate += geometryCompensation( anim->meta & AnimationEffect::Vertical, f ) * sz.height();
-                        data.yScale *= f;
+                        data.setYScale(data.yScale() * f);
                     }
                     break;
                 }

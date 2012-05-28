@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "minimizeanimation.h"
 #include <QtCore/QTimeLine>
+#include <QtGui/QVector2D>
 
 namespace KWin
 {
@@ -91,8 +92,8 @@ void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion reg
         if (!icon.isValid())
             icon = QRect(displayWidth() / 2, displayHeight() / 2, 0, 0);
 
-        data.xScale *= interpolate(1.0, icon.width() / (double)geo.width(), progress);
-        data.yScale *= interpolate(1.0, icon.height() / (double)geo.height(), progress);
+        data *= QVector2D(interpolate(1.0, icon.width() / (double)geo.width(), progress),
+                          interpolate(1.0, icon.height() / (double)geo.height(), progress));
         data.xTranslate = (int)interpolate(data.xTranslate, icon.x() - geo.x(), progress);
         data.yTranslate = (int)interpolate(data.yTranslate, icon.y() - geo.y(), progress);
         data.opacity *= 0.1 + (1 - progress) * 0.9;

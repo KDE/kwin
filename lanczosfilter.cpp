@@ -158,7 +158,7 @@ void LanczosShader::createOffsets(int count, float width, Qt::Orientation direct
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (effects->compositingType() == KWin::OpenGLCompositing && (data.xScale < 0.9 || data.yScale < 0.9) &&
+    if (effects->compositingType() == KWin::OpenGLCompositing && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
             KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
         if (!m_inited)
             init();
@@ -186,10 +186,10 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 width = w->width();
                 height = w->height();
             }
-            int tx = data.xTranslate + w->x() + left * data.xScale;
-            int ty = data.yTranslate + w->y() + top * data.yScale;
-            int tw = width * data.xScale;
-            int th = height * data.yScale;
+            int tx = data.xTranslate + w->x() + left * data.xScale();
+            int ty = data.yTranslate + w->y() + top * data.yScale();
+            int tw = width * data.xScale();
+            int th = height * data.yScale();
             const QRect textureRect(tx, ty, tw, th);
             const bool hardwareClipping = !(QRegion(textureRect)-region).isEmpty();
 
@@ -240,8 +240,8 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             }
 
             WindowPaintData thumbData = data;
-            thumbData.xScale = 1.0;
-            thumbData.yScale = 1.0;
+            thumbData.setXScale(1.0);
+            thumbData.setYScale(1.0);
             thumbData.xTranslate = -w->x() - left;
             thumbData.yTranslate = -w->y() - top;
             thumbData.brightness = 1.0;

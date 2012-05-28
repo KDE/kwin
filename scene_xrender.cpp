@@ -373,10 +373,10 @@ QRect SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, c
 
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         // Apply the window transformation
-        r.moveTo(r.x() * data.xScale + data.xTranslate,
-                 r.y() * data.yScale + data.yTranslate);
-        r.setWidth(r.width() * data.xScale);
-        r.setHeight(r.height() * data.yScale);
+        r.moveTo(r.x() * data.xScale() + data.xTranslate,
+                 r.y() * data.yScale() + data.yTranslate);
+        r.setWidth(r.width() * data.xScale());
+        r.setHeight(r.height() * data.yScale());
     }
 
     // Move the rectangle to the screen position
@@ -384,10 +384,10 @@ QRect SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, c
 
     if (mask & PAINT_SCREEN_TRANSFORMED) {
         // Apply the screen transformation
-        r.moveTo(r.x() * screen_paint.xScale + screen_paint.xTranslate,
-                 r.y() * screen_paint.yScale + screen_paint.yTranslate);
-        r.setWidth(r.width() * screen_paint.xScale);
-        r.setHeight(r.height() * screen_paint.yScale);
+        r.moveTo(r.x() * screen_paint.xScale() + screen_paint.xTranslate,
+                 r.y() * screen_paint.yScale() + screen_paint.yTranslate);
+        r.setWidth(r.width() * screen_paint.xScale());
+        r.setHeight(r.height() * screen_paint.yScale());
     }
 
     return r;
@@ -400,8 +400,8 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         // Apply the window transformation
-        pt.rx() = pt.x() * data.xScale + data.xTranslate;
-        pt.ry() = pt.y() * data.yScale + data.yTranslate;
+        pt.rx() = pt.x() * data.xScale() + data.xTranslate;
+        pt.ry() = pt.y() * data.yScale() + data.yTranslate;
     }
 
     // Move the point to the screen position
@@ -409,8 +409,8 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
     if (mask & PAINT_SCREEN_TRANSFORMED) {
         // Apply the screen transformation
-        pt.rx() = pt.x() * screen_paint.xScale + screen_paint.xTranslate;
-        pt.ry() = pt.y() * screen_paint.yScale + screen_paint.yTranslate;
+        pt.rx() = pt.x() * screen_paint.xScale() + screen_paint.xTranslate;
+        pt.ry() = pt.y() * screen_paint.yScale() + screen_paint.yTranslate;
     }
 
     return pt;
@@ -471,8 +471,8 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     // do required transformations
     const QRect wr = mapToScreen(mask, data, QRect(0, 0, width(), height()));
     QRect cr = QRect(toplevel->clientPos(), toplevel->clientSize()); // Client rect (in the window)
-    double xscale = 1;
-    double yscale = 1;
+    qreal xscale = 1;
+    qreal yscale = 1;
     bool scaled = false;
 
     Client *client = dynamic_cast<Client*>(toplevel);
@@ -503,12 +503,12 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     XRenderPictureAttributes attr;
 
     if (mask & PAINT_WINDOW_TRANSFORMED) {
-        xscale = data.xScale;
-        yscale = data.yScale;
+        xscale = data.xScale();
+        yscale = data.yScale();
     }
     if (mask & PAINT_SCREEN_TRANSFORMED) {
-        xscale *= screen_paint.xScale;
-        yscale *= screen_paint.yScale;
+        xscale *= screen_paint.xScale();
+        yscale *= screen_paint.yScale();
     }
     if (!qFuzzyCompare(xscale, 1.0) || !qFuzzyCompare(yscale, 1.0)) {
         scaled = true;

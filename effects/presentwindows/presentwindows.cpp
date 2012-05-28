@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <limits.h>
 #include <QTimer>
+#include <QVector2D>
 #include <QVector4D>
 
 namespace KWin
@@ -350,7 +351,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 // scale the window (interpolated by the highlight level) to at least 105% or to cover 1/16 of the screen size - yet keep it in screen bounds
                 QRect area = effects->clientArea(FullScreenArea, w);
 
-                QSizeF effSize(w->width()*data.xScale, w->height()*data.yScale);
+                QSizeF effSize(w->width()*data.xScale(), w->height()*data.yScale());
                 float tScale = sqrt((area.width()*area.height()) / (16.0*effSize.width()*effSize.height()));
                 if (tScale < 1.05) {
                     tScale = 1.05;
@@ -359,7 +360,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                     tScale = area.width() / effSize.width();
                 if (effSize.height()*tScale > area.height())
                     tScale = area.height() / effSize.height();
-                const float scale = interpolate(1.0, tScale, winData->highlight);
+                const qreal scale = interpolate(1.0, tScale, winData->highlight);
                 if (scale > 1.0) {
                     if (scale < tScale) // don't use lanczos during transition
                         mask &= ~PAINT_WINDOW_LANCZOS;
@@ -377,8 +378,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                     rect.setWidth(rect.width()*scale);
                     rect.setHeight(rect.height()*scale);
 
-                    data.xScale *= scale;
-                    data.yScale *= scale;
+                    data *= QVector2D(scale, scale);
                     data.xTranslate += tx;
                     data.yTranslate += ty;
                 }
