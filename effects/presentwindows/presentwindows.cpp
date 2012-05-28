@@ -379,8 +379,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                     rect.setHeight(rect.height()*scale);
 
                     data *= QVector2D(scale, scale);
-                    data.xTranslate += tx;
-                    data.yTranslate += ty;
+                    data += QPoint(tx, ty);
                 }
             }
 
@@ -388,9 +387,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 mask &= ~PAINT_WINDOW_LANCZOS;
             }
             if (m_dragInProgress && m_dragWindow == w) {
-                QPoint diff = cursorPos() - m_dragStart;
-                data.xTranslate += diff.x();
-                data.yTranslate += diff.y();
+                data += (cursorPos() - m_dragStart);
             }
             effects->paintWindow(w, mask, region, data);
 

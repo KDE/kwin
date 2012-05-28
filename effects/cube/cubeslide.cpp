@@ -301,7 +301,7 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             if (w->x() < rect.x() &&
                     (direction == Left || direction == Right)) {
                 WindowQuadList new_quads;
-                data.xTranslate = rect.width();
+                data.setXTranslation(rect.width());
                 foreach (const WindowQuad & quad, data.quads) {
                     if (quad.right() <= -w->x()) {
                         new_quads.append(quad);
@@ -312,7 +312,7 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             if (w->x() + w->width() > rect.x() + rect.width() &&
                     (direction == Left || direction == Right)) {
                 WindowQuadList new_quads;
-                data.xTranslate = -rect.width();
+                data.setXTranslation(-rect.width());
                 foreach (const WindowQuad & quad, data.quads) {
                     if (quad.right() > rect.width() - w->x()) {
                         new_quads.append(quad);
@@ -323,7 +323,7 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             if (w->y() < rect.y() &&
                     (direction == Upwards || direction == Downwards)) {
                 WindowQuadList new_quads;
-                data.yTranslate = rect.height();
+                data.setYTranslation(rect.height());
                 foreach (const WindowQuad & quad, data.quads) {
                     if (quad.bottom() <= -w->y()) {
                         new_quads.append(quad);
@@ -334,7 +334,7 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             if (w->y() + w->height() > rect.y() + rect.height() &&
                     (direction == Upwards || direction == Downwards)) {
                 WindowQuadList new_quads;
-                data.yTranslate = -rect.height();
+                data.setYTranslation(-rect.height());
                 foreach (const WindowQuad & quad, data.quads) {
                     if (quad.bottom() > rect.height() - w->y()) {
                         new_quads.append(quad);

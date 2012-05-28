@@ -186,8 +186,8 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 width = w->width();
                 height = w->height();
             }
-            int tx = data.xTranslate + w->x() + left * data.xScale();
-            int ty = data.yTranslate + w->y() + top * data.yScale();
+            int tx = data.xTranslation() + w->x() + left * data.xScale();
+            int ty = data.yTranslation() + w->y() + top * data.yScale();
             int tw = width * data.xScale();
             int th = height * data.yScale();
             const QRect textureRect(tx, ty, tw, th);
@@ -242,8 +242,8 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             WindowPaintData thumbData = data;
             thumbData.setXScale(1.0);
             thumbData.setYScale(1.0);
-            thumbData.xTranslate = -w->x() - left;
-            thumbData.yTranslate = -w->y() - top;
+            thumbData.setXTranslation(-w->x() - left);
+            thumbData.setYTranslation(-w->y() - top);
             thumbData.brightness = 1.0;
             thumbData.opacity = 1.0;
             thumbData.saturation = 1.0;

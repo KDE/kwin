@@ -60,8 +60,7 @@ void ScaleInEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Windo
         const qreal value = mTimeLineWindows[ w ]->currentValue();
         data.opacity *= value;
         data *= QVector2D(value, value);
-        data.xTranslate += int(w->width() / 2 * (1 - value));
-        data.yTranslate += int(w->height() / 2 * (1 - value));
+        data += QPoint(int(w->width() / 2 * (1 - value)), int(w->height() / 2 * (1 - value)));
     }
     effects->paintWindow(w, mask, region, data);
 }

@@ -365,7 +365,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
         return false;
 
     bool scaled = !qFuzzyCompare(data.xScale(), 1.0) && !qFuzzyCompare(data.yScale(), 1.0);
-    bool translated = data.xTranslate || data.yTranslate;
+    bool translated = data.xTranslation() || data.yTranslation();
 
     if (scaled || ((translated || (mask & PAINT_WINDOW_TRANSFORMED)) && !w->data(WindowForceBlurRole).toBool()))
         return false;
@@ -385,10 +385,10 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     if (shouldBlur(w, mask, data)) {
         QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
-        const bool translated = data.xTranslate || data.yTranslate;
+        const bool translated = data.xTranslation() || data.yTranslation();
         // let's do the evil parts - someone wants to blur behind a transformed window
         if (translated) {
-            shape = shape.translated(data.xTranslate, data.yTranslate);
+            shape = shape.translated(data.xTranslation(), data.yTranslation());
             shape = shape & region;
         }
 

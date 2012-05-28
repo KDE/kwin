@@ -129,8 +129,7 @@ void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data)
         return;
     const double progress = info->timeLine->currentValue();
     data *= progress;
-    data.xTranslate += int(w->width() / 2 * (1 - progress));
-    data.yTranslate += int(w->height() / 2 * (1 - progress));
+    data.translate(int(w->width() / 2 * (1 - progress)), int(w->height() / 2 * (1 - progress)));
 }
 
 void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data)
@@ -140,8 +139,7 @@ void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data)
         return;
     const double progress = info->timeLine->currentValue();
     data *= (2 - progress);
-    data.xTranslate -= int(w->width() / 2 * (1 - progress));
-    data.yTranslate -= int(w->height() / 2 * (1 - progress));
+    data.translate(- int(w->width() / 2 * (1 - progress)), - int(w->height() / 2 * (1 - progress)));
 }
 
 void GlideEffect::postPaintWindow(EffectWindow* w)

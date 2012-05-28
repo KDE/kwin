@@ -1673,6 +1673,29 @@ public:
      **/
     WindowPaintData& operator*=(const QVector3D &scale);
     /**
+     * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
+     * @since 4.10
+     **/
+    WindowPaintData& operator+=(const QPointF &translation);
+    /**
+     * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    WindowPaintData& operator+=(const QPoint &translation);
+    /**
+     * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    WindowPaintData& operator+=(const QVector2D &translation);
+    /**
+     * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    WindowPaintData& operator+=(const QVector3D &translation);
+    /**
      * @returns scale factor in X direction.
      * @since 4.10
      **/
@@ -1718,6 +1741,52 @@ public:
      **/
     void setScale(const QVector3D &scale);
     const QGraphicsScale &scale() const;
+    const QVector3D &translation() const;
+    /**
+     * @returns the translation in X direction.
+     * @since 4.10
+     **/
+    qreal xTranslation() const;
+    /**
+     * @returns the translation in Y direction.
+     * @since 4.10
+     **/
+    qreal yTranslation() const;
+    /**
+     * @returns the translation in Z direction.
+     * @since 4.10
+     **/
+    qreal zTranslation() const;
+    /**
+     * Sets the translation in X direction to @p translate.
+     * @since 4.10
+     **/
+    void setXTranslation(qreal translate);
+    /**
+     * Sets the translation in Y direction to @p translate.
+     * @since 4.10
+     **/
+    void setYTranslation(qreal translate);
+    /**
+     * Sets the translation in Z direction to @p translate.
+     * @since 4.10
+     **/
+    void setZTranslation(qreal translate);
+    /**
+     * Translates the window.
+     * @param x Translation in X direction
+     * @param y Translation in Y direction
+     * @param z Translation in Z direction
+     * @since 4.10
+     **/
+    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
+    /**
+     * Translates the window.
+     * Overloaded method for convenience.
+     * @param translate The translation
+     * @since 4.10
+     **/
+    void translate(const QVector3D &translate);
     /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * Opacity for contents is opacity*contents_opacity, the same
@@ -1726,9 +1795,6 @@ public:
     double opacity;
     double contents_opacity;
     double decoration_opacity;
-    int xTranslate;
-    int yTranslate;
-    double zTranslate;
     /**
      * Saturation of the window, in range [0; 1]
      * 1 means that the window is unchanged, 0 means that it's completely
@@ -1752,6 +1818,7 @@ public:
     QGraphicsRotation rotation;
 private:
     QGraphicsScale m_scale;
+    QVector3D m_translation;
 };
 
 class KWIN_EXPORT ScreenPaintData
@@ -1778,6 +1845,29 @@ public:
      **/
     ScreenPaintData& operator*=(const QVector3D &scale);
     /**
+     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator+=(const QPointF &translation);
+    /**
+     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator+=(const QPoint &translation);
+    /**
+     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator+=(const QVector2D &translation);
+    /**
+     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
+     * Overloaded method for convenience.
+     * @since 4.10
+     **/
+    ScreenPaintData& operator+=(const QVector3D &translation);
+    /**
      * @returns scale factor in X direction.
      * @since 4.10
      **/
@@ -1823,13 +1913,50 @@ public:
      **/
     void setScale(const QVector3D &scale);
     const QGraphicsScale &scale() const;
-    int xTranslate;
-    int yTranslate;
-    double zTranslate;
+    const QVector3D &translation() const;
+    /**
+     * @returns the translation in X direction.
+     * @since 4.10
+     **/
+    qreal xTranslation() const;
+    /**
+     * @returns the translation in Y direction.
+     * @since 4.10
+     **/
+    qreal yTranslation() const;
+    /**
+     * @returns the translation in Z direction.
+     * @since 4.10
+     **/
+    qreal zTranslation() const;
+    /**
+     * Sets the translation in X direction to @p translate.
+     * @since 4.10
+     **/
+    void setXTranslation(qreal translate);
+    /**
+     * Sets the translation in Y direction to @p translate.
+     * @since 4.10
+     **/
+    void setYTranslation(qreal translate);
+    /**
+     * Sets the translation in Z direction to @p translate.
+     * @since 4.10
+     **/
+    void setZTranslation(qreal translate);
+    /**
+     * Translates the screen.
+     * @param x Translation in X direction
+     * @param y Translation in Y direction
+     * @param z Translation in Z direction
+     * @since 4.10
+     **/
+    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
     QGraphicsRotation rotation;
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
 private:
     QGraphicsScale m_scale;
+    QVector3D m_translation;
 };
 
 class KWIN_EXPORT ScreenPrePaintData

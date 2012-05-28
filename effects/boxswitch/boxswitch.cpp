@@ -850,8 +850,8 @@ void BoxSwitchEffect::paintDesktopThumbnail(int iDesktop)
     int x = r.x() + (r.width() - width) / 2;
     int y = r.y() + (r.height() - height) / 2;
     region = QRect(x, y, width, height);
-    data.xTranslate = x;
-    data.yTranslate = y;
+    data.setXTranslation(x);
+    data.setYTranslation(y);
 
     effects->paintScreen(PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST,
                          region, data);

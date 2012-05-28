@@ -301,13 +301,13 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 data.saturation = info->saturation;
                 int distance = tempList.count() - 1;
                 float zDistance = 500.0f;
-                data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.currentValue();
-                data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue();
-                data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.currentValue();
+                data.translate(- (w->x() - m_screenArea.x() + data.xTranslation()) * m_startStopTimeLine.currentValue());
 
-                data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue();
-                data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue();
-                data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.currentValue();
+                data.translate(m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue(),
+                               (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslation())) * m_startStopTimeLine.currentValue());
+                data.translate(- (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue(),
+                               - (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue(),
+                               - (zDistance * distance) * m_startStopTimeLine.currentValue());
                 if (m_scheduledDirections.head() == DirectionForward)
                     data.opacity *= 0.8 * m_timeLine.currentValue();
                 else
@@ -353,24 +353,24 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 }
             }
             float zDistance = 500.0f;
-            data.xTranslate -= (w->x() - m_screenArea.x() + data.xTranslate) * m_startStopTimeLine.currentValue();
-            data.xTranslate += m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue();
-            data.yTranslate += (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslate)) * m_startStopTimeLine.currentValue();
+            data.translate(- (w->x() - m_screenArea.x() + data.xTranslation()) * m_startStopTimeLine.currentValue());
+            data.translate(m_screenArea.width() * m_xPosition * m_startStopTimeLine.currentValue(),
+                           (m_screenArea.y() + m_screenArea.height() * m_yPosition - (w->y() + w->height() + data.yTranslation())) * m_startStopTimeLine.currentValue());
 
-            data.xTranslate -= (m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue();
-            data.yTranslate -= (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue();
-            data.zTranslate -= (zDistance * distance) * m_startStopTimeLine.currentValue();
+            data.translate(-(m_screenArea.width() * 0.25f) * distance * m_startStopTimeLine.currentValue(),
+                           -(m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue(),
+                           -(zDistance * distance) * m_startStopTimeLine.currentValue());
             if (m_animation && !m_scheduledDirections.isEmpty()) {
                 if (m_scheduledDirections.head() == DirectionForward) {
-                    data.xTranslate += (m_screenArea.width() * 0.25f) * m_timeLine.currentValue();
-                    data.yTranslate += (m_screenArea.height() * 0.10f) * m_timeLine.currentValue();
-                    data.zTranslate += zDistance * m_timeLine.currentValue();
+                    data.translate((m_screenArea.width() * 0.25f) * m_timeLine.currentValue(),
+                                   (m_screenArea.height() * 0.10f) * m_timeLine.currentValue(),
+                                   zDistance * m_timeLine.currentValue());
                     if (distance == 0)
                         data.opacity *= (1.0 - m_timeLine.currentValue());
                 } else {
-                    data.xTranslate -= (m_screenArea.width() * 0.25f) * m_timeLine.currentValue();
-                    data.yTranslate -= (m_screenArea.height() * 0.10f) * m_timeLine.currentValue();
-                    data.zTranslate -= zDistance * m_timeLine.currentValue();
+                    data.translate(- (m_screenArea.width() * 0.25f) * m_timeLine.currentValue(),
+                                   - (m_screenArea.height() * 0.10f) * m_timeLine.currentValue(),
+                                   - zDistance * m_timeLine.currentValue());
                 }
             }
             data.opacity *= (0.8 + 0.2 * (1.0 - m_startStopTimeLine.currentValue()));
@@ -820,17 +820,17 @@ void FlipSwitchEffect::adjustWindowMultiScreen(const KWin::EffectWindow* w, Wind
     QRect fullRect = effects->clientArea(FullArea, m_activeScreen, effects->currentDesktop());
     if (w->screen() == m_activeScreen) {
         if (clientRect.width() != fullRect.width() && clientRect.x() != fullRect.x()) {
-            data.xTranslate -= clientRect.x();
+            data.translate(- clientRect.x());
         }
         if (clientRect.height() != fullRect.height() && clientRect.y() != fullRect.y()) {
-            data.yTranslate -= clientRect.y();
+            data.translate(0.0, - clientRect.y());
         }
     } else {
         if (clientRect.width() != fullRect.width() && clientRect.x() < rect.x()) {
-            data.xTranslate -= clientRect.width();
+            data.translate(- clientRect.width());
         }
         if (clientRect.height() != fullRect.height() && clientRect.y() < m_screenArea.y()) {
-            data.yTranslate -= clientRect.height();
+            data.translate(0.0, - clientRect.height());
         }
     }
 }

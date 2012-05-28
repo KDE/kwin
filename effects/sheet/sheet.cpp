@@ -93,7 +93,7 @@ void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
         data.rotation.setAxis(Qt::XAxis);
         data.rotation.setAngle(60.0 * (1.0 - progress));
         data *= QVector3D(1.0, progress, progress);
-        data.yTranslate -= (w->y() - info->parentY) * (1.0 - progress);
+        data.translate(0.0, - (w->y() - info->parentY) * (1.0 - progress));
     }
     effects->paintWindow(w, mask, region, data);
 }

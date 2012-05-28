@@ -166,8 +166,7 @@ void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
     if (slide) {
         // don't move windows on all desktops (compensate screen transformation)
         if (!w->isOnAllDesktops()) { // TODO also fix 'Workspace::movingClient'
-            data.xTranslate += slide_painting_diff.x();
-            data.yTranslate += slide_painting_diff.y();
+            data += slide_painting_diff;
         }
     }
     effects->paintWindow(w, mask, region, data);

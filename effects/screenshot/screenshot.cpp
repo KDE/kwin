@@ -108,8 +108,8 @@ void ScreenShotEffect::postPaintScreen()
             }
             int width = right - left;
             int height = bottom - top;
-            d.xTranslate = -m_scheduledScreenshot->x() - left;
-            d.yTranslate = -m_scheduledScreenshot->y() - top;
+            d.setXTranslation(-m_scheduledScreenshot->x() - left);
+            d.setYTranslation(-m_scheduledScreenshot->y() - top);
 
             // render window into offscreen texture
             int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;

@@ -373,8 +373,8 @@ QRect SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, c
 
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         // Apply the window transformation
-        r.moveTo(r.x() * data.xScale() + data.xTranslate,
-                 r.y() * data.yScale() + data.yTranslate);
+        r.moveTo(r.x() * data.xScale() + data.xTranslation(),
+                 r.y() * data.yScale() + data.yTranslation());
         r.setWidth(r.width() * data.xScale());
         r.setHeight(r.height() * data.yScale());
     }
@@ -384,8 +384,8 @@ QRect SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, c
 
     if (mask & PAINT_SCREEN_TRANSFORMED) {
         // Apply the screen transformation
-        r.moveTo(r.x() * screen_paint.xScale() + screen_paint.xTranslate,
-                 r.y() * screen_paint.yScale() + screen_paint.yTranslate);
+        r.moveTo(r.x() * screen_paint.xScale() + screen_paint.xTranslation(),
+                 r.y() * screen_paint.yScale() + screen_paint.yTranslation());
         r.setWidth(r.width() * screen_paint.xScale());
         r.setHeight(r.height() * screen_paint.yScale());
     }
@@ -400,8 +400,8 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         // Apply the window transformation
-        pt.rx() = pt.x() * data.xScale() + data.xTranslate;
-        pt.ry() = pt.y() * data.yScale() + data.yTranslate;
+        pt.rx() = pt.x() * data.xScale() + data.xTranslation();
+        pt.ry() = pt.y() * data.yScale() + data.yTranslation();
     }
 
     // Move the point to the screen position
@@ -409,8 +409,8 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
     if (mask & PAINT_SCREEN_TRANSFORMED) {
         // Apply the screen transformation
-        pt.rx() = pt.x() * screen_paint.xScale() + screen_paint.xTranslate;
-        pt.ry() = pt.y() * screen_paint.yScale() + screen_paint.yTranslate;
+        pt.rx() = pt.x() * screen_paint.xScale() + screen_paint.xTranslation();
+        pt.ry() = pt.y() * screen_paint.yScale() + screen_paint.yTranslation();
     }
 
     return pt;

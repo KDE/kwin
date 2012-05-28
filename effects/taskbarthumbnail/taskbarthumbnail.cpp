@@ -82,7 +82,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
             WindowPaintData thumbData(thumbw);
             thumbData.opacity *= data.opacity;
             QRect r, thumbRect(thumb.rect);
-            thumbRect.translate(w->pos() + QPoint(data.xTranslate, data.yTranslate));
+            thumbRect.translate(w->pos() + QPoint(data.xTranslation(), data.yTranslation()));
             thumbRect.setSize(QSize(thumbRect.width() * data.xScale(), thumbRect.height() * data.yScale())); // QSize has no vector multiplicator... :-(
 
             if (effects->compositingType() == KWin::OpenGLCompositing) {

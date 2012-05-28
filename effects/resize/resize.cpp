@@ -69,8 +69,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 {
     if (m_active && w == m_resizeWindow) {
         if (m_features & TextureScale) {
-            data.xTranslate += m_currentGeometry.x() - m_originalGeometry.x();
-            data.yTranslate += m_currentGeometry.y() - m_originalGeometry.y();
+            data += (m_currentGeometry.topLeft() - m_originalGeometry.topLeft());
             data *= QVector2D(m_currentGeometry.width()/m_originalGeometry.width(),
                               m_currentGeometry.height()/m_originalGeometry.height());
         }

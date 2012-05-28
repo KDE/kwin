@@ -406,8 +406,8 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         const QPoint point = viewPos + declview->mapFromScene(item->scenePos());
         const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
-        thumbData.xTranslate = x - thumb->x();
-        thumbData.yTranslate = y - thumb->y();
+        thumbData.setXTranslation(x - thumb->x());
+        thumbData.setYTranslation(y - thumb->y());
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
         if (thumbData.opacity == 1.0) {
             thumbMask |= PAINT_WINDOW_OPAQUE;

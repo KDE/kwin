@@ -269,16 +269,16 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         // mouse-tracking allows navigation of the zoom-area using the mouse.
         switch(mouseTracking) {
         case MouseTrackingProportional:
-            data.xTranslate = - int(cursorPoint.x() * (zoom - 1.0));
-            data.yTranslate = - int(cursorPoint.y() * (zoom - 1.0));
+            data.setXTranslation(- int(cursorPoint.x() * (zoom - 1.0)));
+            data.setYTranslation(- int(cursorPoint.y() * (zoom - 1.0)));
             prevPoint = cursorPoint;
             break;
         case MouseTrackingCentred:
             prevPoint = cursorPoint;
             // fall through
         case MouseTrackingDisabled:
-            data.xTranslate = qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - prevPoint.x() * zoom)));
-            data.yTranslate = qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - prevPoint.y() * zoom)));
+            data.setXTranslation(qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - prevPoint.x() * zoom))));
+            data.setYTranslation(qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - prevPoint.y() * zoom))));
             break;
         case MouseTrackingPush:
             if (timeline.state() != QTimeLine::Running) {
@@ -301,8 +301,8 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                     timeline.start();
                 }
             }
-            data.xTranslate = - int(prevPoint.x() * (zoom - 1.0));
-            data.yTranslate = - int(prevPoint.y() * (zoom - 1.0));
+            data.setXTranslation(- int(prevPoint.x() * (zoom - 1.0)));
+            data.setYTranslation(- int(prevPoint.y() * (zoom - 1.0)));
             break;
         }
 
@@ -316,8 +316,8 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 acceptFocus = msecs > focusDelay;
             }
             if (acceptFocus) {
-                data.xTranslate = - int(focusPoint.x() * (zoom - 1.0));
-                data.yTranslate = - int(focusPoint.y() * (zoom - 1.0));
+                data.setXTranslation(- int(focusPoint.x() * (zoom - 1.0)));
+                data.setYTranslation(- int(focusPoint.y() * (zoom - 1.0)));
                 prevPoint = focusPoint;
             }
         }
@@ -336,7 +336,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             h *= zoom;
         }
         QPoint p = QCursor::pos();
-        QRect rect(p.x() * zoom + data.xTranslate, p.y() * zoom + data.yTranslate, w, h);
+        QRect rect(p.x() * zoom + data.xTranslation(), p.y() * zoom + data.yTranslation(), w, h);
 
         if (texture) {
             texture->bind();

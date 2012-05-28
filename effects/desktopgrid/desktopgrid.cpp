@@ -192,8 +192,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         QRect geo = m_windowMoveGeometry.translated(diff);
         WindowPaintData d(windowMove);
         d *= QVector2D((qreal)geo.width() / (qreal)windowMove->width(), (qreal)geo.height() / (qreal)windowMove->height());
-        d.xTranslate += qRound(geo.left() - windowMove->x());
-        d.yTranslate += qRound(geo.top() - windowMove->y());
+        d += QPoint(qRound(geo.left() - windowMove->x()), qRound(geo.top() - windowMove->y()));
         effects->drawWindow(windowMove, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS, infiniteRegion(), d);
     }
 
@@ -335,8 +334,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             double progress = timeline.currentValue();
             d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->geometry().width(), progress));
             d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->geometry().height(), progress));
-            d.xTranslate += qRound(newPos.x() - w->x());
-            d.yTranslate += qRound(newPos.y() - w->y());
+            d += QPoint(qRound(newPos.x() - w->x()), qRound(newPos.y() - w->y()));
 
             if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
                 // fade out panels if present windows is used

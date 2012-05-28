@@ -195,23 +195,23 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         int splitPoint = 0;
         switch(mWindowsData[ w ].from) {
         case West:
-            data.xTranslate -= w->width() * progress;
+            data.translate(- w->width() * progress);
             splitPoint = w->width() - (w->x() + w->width() - screenRect.x() - start);
             region = QRegion(w->x() + splitPoint, w->y(), w->width() - splitPoint, w->height());
             break;
         case North:
-            data.yTranslate -= w->height() * progress;
+            data.translate(0.0, - w->height() * progress);
             splitPoint = w->height() - (w->y() + w->height() - screenRect.y() - start);
             region = QRegion(w->x(), w->y() + splitPoint, w->width(), w->height() - splitPoint);
             break;
         case East:
-            data.xTranslate += w->width() * progress;
+            data.translate(w->width() * progress);
             splitPoint = screenRect.x() + screenRect.width() - w->x() - start;
             region = QRegion(w->x(), w->y(), splitPoint, w->height());
             break;
         case South:
         default:
-            data.yTranslate += w->height() * progress;
+            data.translate(0.0, w->height() * progress);
             splitPoint = screenRect.y() + screenRect.height() - w->y() - start;
             region = QRegion(w->x(), w->y(), w->width(), splitPoint);
         }

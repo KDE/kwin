@@ -747,7 +747,7 @@ void CubeEffect::paintCube(int mask, QRegion region, ScreenPaintData& data)
         newData.rotation.setAxis(Qt::YAxis);
         newData.rotation.setAngle(internalCubeAngle * i);
         newData.rotation.setOrigin(QVector3D(rect.width() / 2, 0.0, -point));
-        newData.zTranslate = -zTranslate;
+        newData.setZTranslation(-zTranslate);
         effects->paintScreen(mask, region, newData);
     }
     cube_painting = false;
@@ -1355,7 +1355,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 zOrdering *= timeLine.currentValue();
             if (stop)
                 zOrdering *= (1.0 - timeLine.currentValue());
-            data.zTranslate += zOrdering;
+            data.translate(0.0, 0.0, zOrdering);
         }
         // check for windows belonging to the previous desktop
         int prev_desktop = painting_desktop - 1;
@@ -1377,7 +1377,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             }
             data.quads = new_quads;
             if (shader) {
-                data.xTranslate = -rect.width();
+                data.setXTranslation(-rect.width());
             } else {
                 data.rotation.setAxis(Qt::YAxis);
                 data.rotation.setOrigin(QVector3D(rect.width() - w->x(), 0.0, 0.0));
@@ -1401,7 +1401,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             }
             data.quads = new_quads;
             if (shader) {
-                data.xTranslate = rect.width();
+                data.setXTranslation(rect.width());
             } else {
                 data.rotation.setAxis(Qt::YAxis);
                 data.rotation.setOrigin(QVector3D(-w->x(), 0.0, 0.0));
