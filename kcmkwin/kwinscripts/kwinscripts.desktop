@@ -9,6 +9,7 @@ X-KDE-PluginKeyword=kwin-scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
+X-KDE-Keywords[ca]=script del kwin
 X-KDE-Keywords[cs]=skript kwinu
 X-KDE-Keywords[de]=KWin-Skript
 X-KDE-Keywords[el]=σενάριο kwin
@@ -29,6 +30,7 @@ X-KDE-Keywords[zh_TW]=KWin 文稿
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=KWin Scripts
+Name[ca]=KWin Scripts
 Name[cs]=Skripty KWinu
 Name[de]=KWin-Skripte
 Name[el]=Σενάρια KWin
@@ -45,8 +47,10 @@ Name[sv]=Kwin-skript
 Name[tr]=KWin Betikleri
 Name[uk]=Скрипти KWin
 Name[x-test]=xxKWin Scriptsxx
+Name[zh_CN]=KWin 脚本
 Name[zh_TW]=KWin 文稿
 Comment=Manage KWin scripts
+Comment[ca]=Gestiona scripts del KWin
 Comment[cs]=Spravovat skripty KWinu
 Comment[de]=KWin-Skripte verwalten
 Comment[et]=KWini skriptide haldamine
@@ -60,6 +64,7 @@ Comment[pt_BR]=Gerencia os scripts do KWin
 Comment[sv]=Hantera Kwin-skript
 Comment[uk]=Керування скриптами KWin
 Comment[x-test]=xxManage KWin scriptsxx
+Comment[zh_CN]=管理 KWin 脚本
 Comment[zh_TW]=管理 KWin 文稿
 
 Categories=KDE;X-KDE-settings-system;

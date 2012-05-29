@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Script
 
 Comment=KWin Script
+Comment[ca]=Script del KWin
 Comment[cs]=Skript KWinu
 Comment[de]=KWin-Skript
 Comment[el]=Σενάριο KWin
@@ -18,6 +19,7 @@ Comment[sv]=Kwin-skript
 Comment[tr]=KWin Betiği
 Comment[uk]=Скрипт KWin
 Comment[x-test]=xxKWin Scriptxx
+Comment[zh_CN]=KWin 脚本
 Comment[zh_TW]=KWin 文稿
 
 [PropertyDef::X-Plasma-API]

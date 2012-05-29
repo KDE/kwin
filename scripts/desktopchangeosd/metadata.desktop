@@ -13,6 +13,7 @@ Name[sv]=Skärmvisning av skrivbordsändring
 Name[tr]=Masaüstü Değiştirme Ekran Bildirimi
 Name[uk]=Панель зміни стільниць
 Name[x-test]=xxDesktop Change OSDxx
+Name[zh_CN]=桌面更改屏幕显示
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
 Comment[et]=Töölaua muutumist näitab ekraanikuva
