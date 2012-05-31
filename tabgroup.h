@@ -57,7 +57,7 @@ public:
     ~TabGroup();
 
     enum State {
-        Minimized = 1<<0, Maximized = 1<<1, Shaded = 1<<2,
+        None = 0, Minimized = 1<<0, Maximized = 1<<1, Shaded = 1<<2,
         Geometry = 1<<3, Desktop = 1<<4, Activity = 1<<5,
         Layer = 1<<6, QuickTile = 1<<7, All = 0xffffffff
     };
@@ -164,6 +164,7 @@ private:
     QSize m_minSize;
     QSize m_maxSize;
     int m_stateUpdatesBlocked;
+    States m_pendingUpdates;
 };
 
 inline bool TabGroup::contains(Client* c) const

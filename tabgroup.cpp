@@ -32,6 +32,7 @@ TabGroup::TabGroup(Client *c)
     , m_minSize(c->minSize())
     , m_maxSize(c->maxSize())
     , m_stateUpdatesBlocked(0)
+    , m_pendingUpdates(TabGroup::None)
 {
     QIcon icon(c->icon());
     icon.addPixmap(c->miniIcon());
@@ -291,8 +292,13 @@ void TabGroup::blockStateUpdates(bool more) {
 
 void TabGroup::updateStates(Client* main, States states, Client* only)
 {
-    if (m_stateUpdatesBlocked > 0)
+    if (m_stateUpdatesBlocked > 0) {
+        m_pendingUpdates |= states;
         return;
+    }
+
+    states |= m_pendingUpdates;
+    m_pendingUpdates = TabGroup::None;
 
     ClientList toBeRemoved;
     for (ClientList::const_iterator i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i) {
@@ -322,8 +328,9 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
                 if (c->desktop() != main->desktop())
                     c->setDesktop(main->desktop());
             }
-            if ((states & Activity) && c->activities() != main->activities())
+            if ((states & Activity) && c->activities() != main->activities()) {
                 c->setOnActivities(main->activities());
+            }
             if (states & Layer) {
                 if (c->keepAbove() != main->keepAbove())
                     c->setKeepAbove(main->keepAbove());
@@ -332,7 +339,8 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
             }
 
             // If it's not possible to have the same states then ungroup them, TODO: Check all states
-            if (c->geometry() != main->geometry() || c->desktop() != main->desktop())
+            if (((states & Geometry) && c->geometry() != main->geometry()) ||
+                ((states & Desktop) && c->desktop() != main->desktop()))
                 toBeRemoved << c;
         }
     }
