@@ -1630,7 +1630,8 @@ void Client::setOnActivities(QStringList newActivitiesList)
     newActivitiesList = joinedActivitiesList.split(',', QString::SkipEmptyParts);
 
     QStringList allActivities = workspace()->activityList();
-    if (newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty()) {
+    if (newActivitiesList.size() == allActivities.size() || newActivitiesList.isEmpty() ||
+        (newActivitiesList.count() == 1 && newActivitiesList.at(0) == "ALL")) {
         setOnAllActivities(true);
         activityList.clear();
         XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
