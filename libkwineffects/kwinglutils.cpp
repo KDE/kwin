@@ -164,11 +164,13 @@ static QString formatGLError(GLenum err)
 bool checkGLError(const char* txt)
 {
     GLenum err = glGetError();
-    if (err != GL_NO_ERROR) {
+    bool hasError = false;
+    while (err != GL_NO_ERROR) {
         kWarning(1212) << "GL error (" << txt << "): " << formatGLError(err);
-        return true;
+        hasError = true;
+        err = glGetError();
     }
-    return false;
+    return hasError;
 }
 
 int nearestPowerOfTwo(int x)
