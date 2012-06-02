@@ -208,7 +208,7 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
-    LoadScriptList queryScriptsToLoad(KConfigGroup &conf);
+    LoadScriptList queryScriptsToLoad(QMap<QString,QString> &pluginStates);
 };
 
 }

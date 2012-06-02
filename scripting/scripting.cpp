@@ -396,18 +396,19 @@ void KWin::Scripting::start()
     QFutureWatcher<LoadScriptList> *watcher = new QFutureWatcher<LoadScriptList>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(slotScriptsQueried()));
     KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup conf(_config, "Plugins");
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, conf));
+    QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates));
 }
 
-LoadScriptList KWin::Scripting::queryScriptsToLoad(KConfigGroup &conf)
+LoadScriptList KWin::Scripting::queryScriptsToLoad(QMap<QString,QString> &pluginStates)
 {
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
     LoadScriptList scriptsToLoad;
 
     foreach (const KService::Ptr & service, offers) {
         KPluginInfo plugininfo(service);
-        plugininfo.load(conf);
+        const QString value = pluginStates.value(plugininfo.pluginName() + QString::fromLatin1("Enabled"), QString());
+        plugininfo.setPluginEnabled(value.isNull() ? plugininfo.isPluginEnabledByDefault() : QVariant(value).toBool());
         const bool javaScript = service->property("X-Plasma-API").toString() == "javascript";
         const bool declarativeScript = service->property("X-Plasma-API").toString() == "declarativescript";
         if (!javaScript && !declarativeScript) {
