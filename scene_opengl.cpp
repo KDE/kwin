@@ -136,15 +136,15 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
     matrix.translate(data.translation());
     data.scale().applyTo(&matrix);
 
-    if (data.rotation.angle() == 0.0)
+    if (data.rotationAngle() == 0.0)
         return matrix;
 
     // Apply the rotation
     // cannot use data.rotation->applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data.rotation.origin());
-    const QVector3D axis = data.rotation.axis();
-    matrix.rotate(data.rotation.angle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data.rotation.origin());
+    matrix.translate(data.rotationOrigin());
+    const QVector3D axis = data.rotationAxis();
+    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data.rotationOrigin());
 
     return matrix;
 }
@@ -419,15 +419,15 @@ QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &
     matrix.translate(data.translation());
     data.scale().applyTo(&matrix);
 
-    if (data.rotation.angle() == 0.0)
+    if (data.rotationAngle() == 0.0)
         return matrix;
 
     // Apply the rotation
     // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data.rotation.origin());
-    const QVector3D axis = data.rotation.axis();
-    matrix.rotate(data.rotation.angle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data.rotation.origin());
+    matrix.translate(data.rotationOrigin());
+    const QVector3D axis = data.rotationAxis();
+    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data.rotationOrigin());
 
     return matrix;
 }

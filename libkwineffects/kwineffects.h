@@ -54,6 +54,8 @@ class QVector2D;
 namespace KWin
 {
 
+class PaintDataPrivate;
+
 class EffectWindow;
 class EffectWindowGroup;
 class EffectFrame;
@@ -1649,7 +1651,168 @@ public:
     void setTransformed();
 };
 
-class KWIN_EXPORT WindowPaintData
+class KWIN_EXPORT PaintData
+{
+public:
+    virtual ~PaintData();
+    /**
+     * @returns scale factor in X direction.
+     * @since 4.10
+     **/
+    qreal xScale() const;
+    /**
+     * @returns scale factor in Y direction.
+     * @since 4.10
+     **/
+    qreal yScale() const;
+    /**
+     * @returns scale factor in Z direction.
+     * @since 4.10
+     **/
+    qreal zScale() const;
+    /**
+     * Sets the scale factor in X direction to @p scale
+     * @param scale The scale factor in X direction
+     * @since 4.10
+     **/
+    void setXScale(qreal scale);
+    /**
+     * Sets the scale factor in Y direction to @p scale
+     * @param scale The scale factor in Y direction
+     * @since 4.10
+     **/
+    void setYScale(qreal scale);
+    /**
+     * Sets the scale factor in Z direction to @p scale
+     * @param scale The scale factor in Z direction
+     * @since 4.10
+     **/
+    void setZScale(qreal scale);
+    /**
+     * Sets the scale factor in X and Y direction.
+     * @param scale The scale factor for X and Y direction
+     * @since 4.10
+     **/
+    void setScale(const QVector2D &scale);
+    /**
+     * Sets the scale factor in X, Y and Z direction
+     * @param scale The scale factor for X, Y and Z direction
+     * @since 4.10
+     **/
+    void setScale(const QVector3D &scale);
+    const QGraphicsScale &scale() const;
+    const QVector3D &translation() const;
+    /**
+     * @returns the translation in X direction.
+     * @since 4.10
+     **/
+    qreal xTranslation() const;
+    /**
+     * @returns the translation in Y direction.
+     * @since 4.10
+     **/
+    qreal yTranslation() const;
+    /**
+     * @returns the translation in Z direction.
+     * @since 4.10
+     **/
+    qreal zTranslation() const;
+    /**
+     * Sets the translation in X direction to @p translate.
+     * @since 4.10
+     **/
+    void setXTranslation(qreal translate);
+    /**
+     * Sets the translation in Y direction to @p translate.
+     * @since 4.10
+     **/
+    void setYTranslation(qreal translate);
+    /**
+     * Sets the translation in Z direction to @p translate.
+     * @since 4.10
+     **/
+    void setZTranslation(qreal translate);
+    /**
+     * Performs a translation by adding the values component wise.
+     * @param x Translation in X direction
+     * @param y Translation in Y direction
+     * @param z Translation in Z direction
+     * @since 4.10
+     **/
+    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
+    /**
+     * Performs a translation by adding the values component wise.
+     * Overloaded method for convenience.
+     * @param translate The translation
+     * @since 4.10
+     **/
+    void translate(const QVector3D &translate);
+
+    /**
+     * Sets the rotation angle.
+     * @param angle The new rotation angle.
+     * @since 4.10
+     * @see rotationAngle()
+     **/
+    void setRotationAngle(qreal angle);
+    /**
+     * Returns the rotation angle.
+     * Initially 0.0.
+     * @returns The current rotation angle.
+     * @since 4.10
+     * @see setRotationAngle
+     **/
+    qreal rotationAngle() const;
+    /**
+     * Sets the rotation origin.
+     * @param origin The new rotation origin.
+     * @since 4.10
+     * @see rotationOrigin()
+     **/
+    void setRotationOrigin(const QVector3D &origin);
+    /**
+     * Returns the rotation origin. That is the point in space which is fixed during the rotation.
+     * Initially this is 0/0/0.
+     * @returns The rotation's origin
+     * @since 4.10
+     * @see setRotationOrigin()
+     **/
+    QVector3D rotationOrigin() const;
+    /**
+     * Sets the rotation axis.
+     * Set a component to 1.0 to rotate around this axis and to 0.0 to disable rotation around the
+     * axis.
+     * @param axis A vector holding information on which axis to rotate
+     * @since 4.10
+     * @see rotationAxis()
+     **/
+    void setRotationAxis(const QVector3D &axis);
+    /**
+     * Sets the rotation axis.
+     * Overloaded method for convenience.
+     * @param axis The axis around which should be rotated.
+     * @since 4.10
+     * @see rotationAxis()
+     **/
+    void setRotationAxis(Qt::Axis axis);
+    /**
+     * The current rotation axis.
+     * By default the rotation is (0/0/1) which means a rotation around the z axis.
+     * @returns The current rotation axis.
+     * @since 4.10
+     * @see setRotationAxis
+     **/
+    QVector3D rotationAxis() const;
+
+protected:
+    PaintData();
+    PaintData(const PaintData &other);
+
+private:
+    PaintDataPrivate * const d;
+};
+
+class KWIN_EXPORT WindowPaintData : public PaintData
 {
 public:
     WindowPaintData(EffectWindow* w);
@@ -1696,98 +1859,6 @@ public:
      **/
     WindowPaintData& operator+=(const QVector3D &translation);
     /**
-     * @returns scale factor in X direction.
-     * @since 4.10
-     **/
-    qreal xScale() const;
-    /**
-     * @returns scale factor in Y direction.
-     * @since 4.10
-     **/
-    qreal yScale() const;
-    /**
-     * @returns scale factor in Z direction.
-     * @since 4.10
-     **/
-    qreal zScale() const;
-    /**
-     * Sets the scale factor in X direction to @p scale
-     * @param scale The scale factor in X direction
-     * @since 4.10
-     **/
-    void setXScale(qreal scale);
-    /**
-     * Sets the scale factor in Y direction to @p scale
-     * @param scale The scale factor in Y direction
-     * @since 4.10
-     **/
-    void setYScale(qreal scale);
-    /**
-     * Sets the scale factor in Z direction to @p scale
-     * @param scale The scale factor in Z direction
-     * @since 4.10
-     **/
-    void setZScale(qreal scale);
-    /**
-     * Sets the scale factor in X and Y direction.
-     * @param scale The scale factor for X and Y direction
-     * @since 4.10
-     **/
-    void setScale(const QVector2D &scale);
-    /**
-     * Sets the scale factor in X, Y and Z direction
-     * @param scale The scale factor for X, Y and Z direction
-     * @since 4.10
-     **/
-    void setScale(const QVector3D &scale);
-    const QGraphicsScale &scale() const;
-    const QVector3D &translation() const;
-    /**
-     * @returns the translation in X direction.
-     * @since 4.10
-     **/
-    qreal xTranslation() const;
-    /**
-     * @returns the translation in Y direction.
-     * @since 4.10
-     **/
-    qreal yTranslation() const;
-    /**
-     * @returns the translation in Z direction.
-     * @since 4.10
-     **/
-    qreal zTranslation() const;
-    /**
-     * Sets the translation in X direction to @p translate.
-     * @since 4.10
-     **/
-    void setXTranslation(qreal translate);
-    /**
-     * Sets the translation in Y direction to @p translate.
-     * @since 4.10
-     **/
-    void setYTranslation(qreal translate);
-    /**
-     * Sets the translation in Z direction to @p translate.
-     * @since 4.10
-     **/
-    void setZTranslation(qreal translate);
-    /**
-     * Translates the window.
-     * @param x Translation in X direction
-     * @param y Translation in Y direction
-     * @param z Translation in Z direction
-     * @since 4.10
-     **/
-    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
-    /**
-     * Translates the window.
-     * Overloaded method for convenience.
-     * @param translate The translation
-     * @since 4.10
-     **/
-    void translate(const QVector3D &translate);
-    /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * Opacity for contents is opacity*contents_opacity, the same
      * way for decoration.
@@ -1815,13 +1886,9 @@ public:
      * Shader to be used for rendering, if any.
      */
     GLShader* shader;
-    QGraphicsRotation rotation;
-private:
-    QGraphicsScale m_scale;
-    QVector3D m_translation;
 };
 
-class KWIN_EXPORT ScreenPaintData
+class KWIN_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
@@ -1867,96 +1934,7 @@ public:
      * @since 4.10
      **/
     ScreenPaintData& operator+=(const QVector3D &translation);
-    /**
-     * @returns scale factor in X direction.
-     * @since 4.10
-     **/
-    qreal xScale() const;
-    /**
-     * @returns scale factor in Y direction.
-     * @since 4.10
-     **/
-    qreal yScale() const;
-    /**
-     * @returns scale factor in Z direction.
-     * @since 4.10
-     **/
-    qreal zScale() const;
-    /**
-     * Sets the scale factor in X direction to @p scale
-     * @param scale The scale factor in X direction
-     * @since 4.10
-     **/
-    void setXScale(qreal scale);
-    /**
-     * Sets the scale factor in Y direction to @p scale
-     * @param scale The scale factor in Y direction
-     * @since 4.10
-     **/
-    void setYScale(qreal scale);
-    /**
-     * Sets the scale factor in Z direction to @p scale
-     * @param scale The scale factor in Z direction
-     * @since 4.10
-     **/
-    void setZScale(qreal scale);
-    /**
-     * Sets the scale factor in X and Y direction.
-     * @param scale The scale factor for X and Y direction
-     * @since 4.10
-     **/
-    void setScale(const QVector2D &scale);
-    /**
-     * Sets the scale factor in X, Y and Z direction
-     * @param scale The scale factor for X, Y and Z direction
-     * @since 4.10
-     **/
-    void setScale(const QVector3D &scale);
-    const QGraphicsScale &scale() const;
-    const QVector3D &translation() const;
-    /**
-     * @returns the translation in X direction.
-     * @since 4.10
-     **/
-    qreal xTranslation() const;
-    /**
-     * @returns the translation in Y direction.
-     * @since 4.10
-     **/
-    qreal yTranslation() const;
-    /**
-     * @returns the translation in Z direction.
-     * @since 4.10
-     **/
-    qreal zTranslation() const;
-    /**
-     * Sets the translation in X direction to @p translate.
-     * @since 4.10
-     **/
-    void setXTranslation(qreal translate);
-    /**
-     * Sets the translation in Y direction to @p translate.
-     * @since 4.10
-     **/
-    void setYTranslation(qreal translate);
-    /**
-     * Sets the translation in Z direction to @p translate.
-     * @since 4.10
-     **/
-    void setZTranslation(qreal translate);
-    /**
-     * Translates the screen.
-     * @param x Translation in X direction
-     * @param y Translation in Y direction
-     * @param z Translation in Z direction
-     * @since 4.10
-     **/
-    void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
-    QGraphicsRotation rotation;
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
-private:
-    QGraphicsScale m_scale;
-    QVector3D m_translation;
 };
 
 class KWIN_EXPORT ScreenPrePaintData

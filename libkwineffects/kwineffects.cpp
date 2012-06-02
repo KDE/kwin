@@ -60,9 +60,154 @@ void WindowPrePaintData::setTransformed()
     mask |= Effect::PAINT_WINDOW_TRANSFORMED;
 }
 
+class PaintDataPrivate {
+public:
+    QGraphicsScale scale;
+    QVector3D translation;
+    QGraphicsRotation rotation;
+};
+
+PaintData::PaintData()
+    : d(new PaintDataPrivate())
+{
+}
+
+PaintData::~PaintData()
+{
+    delete d;
+}
+
+qreal PaintData::xScale() const
+{
+    return d->scale.xScale();
+}
+
+qreal PaintData::yScale() const
+{
+    return d->scale.yScale();
+}
+
+qreal PaintData::zScale() const
+{
+    return d->scale.zScale();
+}
+
+void PaintData::setScale(const QVector2D &scale)
+{
+    d->scale.setXScale(scale.x());
+    d->scale.setYScale(scale.y());
+}
+
+void PaintData::setScale(const QVector3D &scale)
+{
+    d->scale.setXScale(scale.x());
+    d->scale.setYScale(scale.y());
+    d->scale.setZScale(scale.z());
+}
+
+void PaintData::setXScale(qreal scale)
+{
+    d->scale.setXScale(scale);
+}
+
+void PaintData::setYScale(qreal scale)
+{
+    d->scale.setYScale(scale);
+}
+
+void PaintData::setZScale(qreal scale)
+{
+    d->scale.setZScale(scale);
+}
+
+const QGraphicsScale &PaintData::scale() const
+{
+    return d->scale;
+}
+
+void PaintData::setXTranslation(qreal translate)
+{
+    d->translation.setX(translate);
+}
+
+void PaintData::setYTranslation(qreal translate)
+{
+    d->translation.setY(translate);
+}
+
+void PaintData::setZTranslation(qreal translate)
+{
+    d->translation.setZ(translate);
+}
+
+void PaintData::translate(qreal x, qreal y, qreal z)
+{
+    translate(QVector3D(x, y, z));
+}
+
+void PaintData::translate(const QVector3D &t)
+{
+    d->translation += t;
+}
+
+qreal PaintData::xTranslation() const
+{
+    return d->translation.x();
+}
+
+qreal PaintData::yTranslation() const
+{
+    return d->translation.y();
+}
+
+qreal PaintData::zTranslation() const
+{
+    return d->translation.z();
+}
+
+const QVector3D &PaintData::translation() const
+{
+    return d->translation;
+}
+
+qreal PaintData::rotationAngle() const
+{
+    return d->rotation.angle();
+}
+
+QVector3D PaintData::rotationAxis() const
+{
+    return d->rotation.axis();
+}
+
+QVector3D PaintData::rotationOrigin() const
+{
+    return d->rotation.origin();
+}
+
+void PaintData::setRotationAngle(qreal angle)
+{
+    d->rotation.setAngle(angle);
+}
+
+void PaintData::setRotationAxis(Qt::Axis axis)
+{
+    d->rotation.setAxis(axis);
+}
+
+void PaintData::setRotationAxis(const QVector3D &axis)
+{
+    d->rotation.setAxis(axis);
+}
+
+void PaintData::setRotationOrigin(const QVector3D &origin)
+{
+    d->rotation.setOrigin(origin);
+}
 
 WindowPaintData::WindowPaintData(EffectWindow* w)
-    : opacity(w->opacity())
+    : PaintData()
+    , opacity(w->opacity())
     , contents_opacity(1.0)
     , decoration_opacity(1.0)
     , saturation(1)
@@ -73,21 +218,22 @@ WindowPaintData::WindowPaintData(EffectWindow* w)
 }
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
-    : opacity(other.opacity)
+    : PaintData()
+    , opacity(other.opacity)
     , contents_opacity(other.contents_opacity)
     , decoration_opacity(other.decoration_opacity)
     , saturation(other.saturation)
     , brightness(other.brightness)
     , quads(other.quads)
     , shader(other.shader)
-    , m_translation(other.translation())
 {
-    m_scale.setXScale(other.xScale());
-    m_scale.setYScale(other.yScale());
-    m_scale.setZScale(other.zScale());
-    rotation.setOrigin(other.rotation.origin());
-    rotation.setAxis(other.rotation.axis());
-    rotation.setAngle(other.rotation.angle());
+    setXScale(other.xScale());
+    setYScale(other.yScale());
+    setZScale(other.zScale());
+    translate(other.translation());
+    setRotationOrigin(other.rotationOrigin());
+    setRotationAxis(other.rotationAxis());
+    setRotationAngle(other.rotationAngle());
 }
 
 WindowPaintData &WindowPaintData::operator*=(qreal scale)
@@ -130,152 +276,61 @@ WindowPaintData &WindowPaintData::operator+=(const QVector2D &translation)
 
 WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
 {
-    this->m_translation += translation;
+    translate(translation);
     return *this;
 }
 
-qreal WindowPaintData::xScale() const
-{
-    return this->m_scale.xScale();
-}
-
-qreal WindowPaintData::yScale() const
-{
-    return this->m_scale.yScale();
-}
-
-qreal WindowPaintData::zScale() const
-{
-    return this->m_scale.zScale();
-}
-
-void WindowPaintData::setXScale(qreal scale)
-{
-    this->m_scale.setXScale(scale);
-}
-
-void WindowPaintData::setYScale(qreal scale)
-{
-    this->m_scale.setYScale(scale);
-}
-
-void WindowPaintData::setZScale(qreal scale)
-{
-    this->m_scale.setZScale(scale);
-}
-
-void WindowPaintData::setScale(const QVector2D &scale)
-{
-    this->setXScale(scale.x());
-    this->setYScale(scale.y());
-}
-
-void WindowPaintData::setScale(const QVector3D &scale)
-{
-    this->setXScale(scale.x());
-    this->setYScale(scale.y());
-    this->setZScale(scale.z());
-}
-
-const QGraphicsScale &WindowPaintData::scale() const
-{
-    return m_scale;
-}
-
-void WindowPaintData::setXTranslation(qreal translate)
-{
-    this->m_translation.setX(translate);
-}
-
-void WindowPaintData::setYTranslation(qreal translate)
-{
-    this->m_translation.setY(translate);
-}
-
-void WindowPaintData::setZTranslation(qreal translate)
-{
-    this->m_translation.setZ(translate);
-}
-
-void WindowPaintData::translate(qreal x, qreal y, qreal z)
-{
-    this->operator+=(QVector3D(x, y, z));
-}
-
-void WindowPaintData::translate(const QVector3D &translate)
-{
-    this->operator+=(translate);
-}
-
-qreal WindowPaintData::xTranslation() const
-{
-    return m_translation.x();
-}
-
-qreal WindowPaintData::yTranslation() const
-{
-    return m_translation.y();
-}
-
-qreal WindowPaintData::zTranslation() const
-{
-    return m_translation.z();
-}
-
-const QVector3D &WindowPaintData::translation() const
-{
-    return m_translation;
-}
-
 ScreenPaintData::ScreenPaintData()
+    : PaintData()
 {
 }
 
 ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
-    : m_translation(other.translation())
+    : PaintData()
 {
-    m_scale.setXScale(other.xScale());
-    m_scale.setYScale(other.yScale());
-    m_scale.setZScale(other.zScale());
-    rotation.setOrigin(other.rotation.origin());
-    rotation.setAxis(other.rotation.axis());
-    rotation.setAngle(other.rotation.angle());
+    translate(other.translation());
+    setXScale(other.xScale());
+    setYScale(other.yScale());
+    setZScale(other.zScale());
+    setRotationOrigin(other.rotationOrigin());
+    setRotationAxis(other.rotationAxis());
+    setRotationAngle(other.rotationAngle());
 }
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
 {
-    this->m_scale.setXScale(rhs.xScale());
-    this->m_scale.setYScale(rhs.yScale());
-    this->m_scale.setZScale(rhs.zScale());
-    this->m_translation.setX(rhs.xTranslation());
-    this->m_translation.setY(rhs.yTranslation());
-    this->m_translation.setZ(rhs.zTranslation());
-    this->rotation.setOrigin(rhs.rotation.origin());
-    this->rotation.setAxis(rhs.rotation.axis());
-    this->rotation.setAngle(rhs.rotation.angle());
+    setXScale(rhs.xScale());
+    setYScale(rhs.yScale());
+    setZScale(rhs.zScale());
+    setXTranslation(rhs.xTranslation());
+    setYTranslation(rhs.yTranslation());
+    setZTranslation(rhs.zTranslation());
+    setRotationOrigin(rhs.rotationOrigin());
+    setRotationAxis(rhs.rotationAxis());
+    setRotationAngle(rhs.rotationAngle());
     return *this;
 }
 
 ScreenPaintData &ScreenPaintData::operator*=(qreal scale)
 {
-    this->m_scale.setXScale(this->xScale() * scale);
-    this->m_scale.setYScale(this->yScale() * scale);
-    this->m_scale.setZScale(this->zScale() * scale);
+    setXScale(this->xScale() * scale);
+    setYScale(this->yScale() * scale);
+    setZScale(this->zScale() * scale);
     return *this;
 }
 
 ScreenPaintData &ScreenPaintData::operator*=(const QVector2D &scale)
 {
-    this->m_scale.setXScale(this->xScale() * scale.x());
-    this->m_scale.setYScale(this->yScale() * scale.y());
+    setXScale(this->xScale() * scale.x());
+    setYScale(this->yScale() * scale.y());
     return *this;
 }
 
 ScreenPaintData &ScreenPaintData::operator*=(const QVector3D &scale)
 {
-    this->m_scale.setXScale(this->xScale() * scale.x());
-    this->m_scale.setYScale(this->yScale() * scale.y());
-    this->m_scale.setZScale(this->zScale() * scale.z());
+    setXScale(this->xScale() * scale.x());
+    setYScale(this->yScale() * scale.y());
+    setZScale(this->zScale() * scale.z());
     return *this;
 }
 
@@ -296,96 +351,8 @@ ScreenPaintData &ScreenPaintData::operator+=(const QVector2D &translation)
 
 ScreenPaintData &ScreenPaintData::operator+=(const QVector3D &translation)
 {
-    m_translation += translation;
+    translate(translation);
     return *this;
-}
-
-qreal ScreenPaintData::xScale() const
-{
-    return m_scale.xScale();
-}
-
-qreal ScreenPaintData::yScale() const
-{
-    return m_scale.yScale();
-}
-
-qreal ScreenPaintData::zScale() const
-{
-    return m_scale.zScale();
-}
-
-void ScreenPaintData::setScale(const QVector2D &scale)
-{
-    this->m_scale.setXScale(scale.x());
-    this->m_scale.setYScale(scale.y());
-}
-
-void ScreenPaintData::setScale(const QVector3D &scale)
-{
-    this->m_scale.setXScale(scale.x());
-    this->m_scale.setYScale(scale.y());
-    this->m_scale.setZScale(scale.z());
-}
-
-void ScreenPaintData::setXScale(qreal scale)
-{
-    this->m_scale.setXScale(scale);
-}
-
-void ScreenPaintData::setYScale(qreal scale)
-{
-    this->m_scale.setYScale(scale);
-}
-
-void ScreenPaintData::setZScale(qreal scale)
-{
-    this->m_scale.setZScale(scale);
-}
-
-const QGraphicsScale &ScreenPaintData::scale() const
-{
-    return this->m_scale;
-}
-
-void ScreenPaintData::setXTranslation(qreal translate)
-{
-    m_translation.setX(translate);
-}
-
-void ScreenPaintData::setYTranslation(qreal translate)
-{
-    m_translation.setY(translate);
-}
-
-void ScreenPaintData::setZTranslation(qreal translate)
-{
-    m_translation.setZ(translate);
-}
-
-void ScreenPaintData::translate(qreal x, qreal y, qreal z)
-{
-    this->operator+=(QVector3D(x, y, z));
-}
-
-qreal ScreenPaintData::xTranslation() const
-{
-    return m_translation.x();
-}
-
-qreal ScreenPaintData::yTranslation() const
-{
-    return m_translation.y();
-}
-
-qreal ScreenPaintData::zTranslation() const
-{
-    return m_translation.z();
-}
-
-const QVector3D &ScreenPaintData::translation() const
-{
-    return m_translation;
 }
 
 //****************************************

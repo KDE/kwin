@@ -122,8 +122,8 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
     int secondDesktop;
     switch(direction) {
     case Left:
-        firstFaceData.rotation.setAxis(Qt::YAxis);
-        secondFaceData.rotation.setAxis(Qt::YAxis);
+        firstFaceData.setRotationAxis(Qt::YAxis);
+        secondFaceData.setRotationAxis(Qt::YAxis);
         if (usePagerLayout)
             secondDesktop = effects->desktopToLeft(front_desktop, true);
         else {
@@ -131,12 +131,12 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
             if (secondDesktop == 0)
                 secondDesktop = effects->numberOfDesktops();
         }
-        firstFaceData.rotation.setAngle(90.0f * timeLine.currentValue());
-        secondFaceData.rotation.setAngle(-90.0f * (1.0f - timeLine.currentValue()));
+        firstFaceData.setRotationAngle(90.0f * timeLine.currentValue());
+        secondFaceData.setRotationAngle(-90.0f * (1.0f - timeLine.currentValue()));
         break;
     case Right:
-        firstFaceData.rotation.setAxis(Qt::YAxis);
-        secondFaceData.rotation.setAxis(Qt::YAxis);
+        firstFaceData.setRotationAxis(Qt::YAxis);
+        secondFaceData.setRotationAxis(Qt::YAxis);
         if (usePagerLayout)
             secondDesktop = effects->desktopToRight(front_desktop, true);
         else {
@@ -144,23 +144,23 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
             if (secondDesktop > effects->numberOfDesktops())
                 secondDesktop = 1;
         }
-        firstFaceData.rotation.setAngle(-90.0f * timeLine.currentValue());
-        secondFaceData.rotation.setAngle(90.0f * (1.0f - timeLine.currentValue()));
+        firstFaceData.setRotationAngle(-90.0f * timeLine.currentValue());
+        secondFaceData.setRotationAngle(90.0f * (1.0f - timeLine.currentValue()));
         break;
     case Upwards:
-        firstFaceData.rotation.setAxis(Qt::XAxis);
-        secondFaceData.rotation.setAxis(Qt::XAxis);
+        firstFaceData.setRotationAxis(Qt::XAxis);
+        secondFaceData.setRotationAxis(Qt::XAxis);
         secondDesktop = effects->desktopAbove(front_desktop, true);
-        firstFaceData.rotation.setAngle(-90.0f * timeLine.currentValue());
-        secondFaceData.rotation.setAngle(90.0f * (1.0f - timeLine.currentValue()));
+        firstFaceData.setRotationAngle(-90.0f * timeLine.currentValue());
+        secondFaceData.setRotationAngle(90.0f * (1.0f - timeLine.currentValue()));
         point = rect.height() / 2 * tan(45.0f * M_PI / 180.0f);
         break;
     case Downwards:
-        firstFaceData.rotation.setAxis(Qt::XAxis);
-        secondFaceData.rotation.setAxis(Qt::XAxis);
+        firstFaceData.setRotationAxis(Qt::XAxis);
+        secondFaceData.setRotationAxis(Qt::XAxis);
         secondDesktop = effects->desktopBelow(front_desktop, true);
-        firstFaceData.rotation.setAngle(90.0f * timeLine.currentValue());
-        secondFaceData.rotation.setAngle(-90.0f * (1.0f - timeLine.currentValue()));
+        firstFaceData.setRotationAngle(90.0f * timeLine.currentValue());
+        secondFaceData.setRotationAngle(-90.0f * (1.0f - timeLine.currentValue()));
         point = rect.height() / 2 * tan(45.0f * M_PI / 180.0f);
         break;
     default:
@@ -168,7 +168,7 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
         return;
     }
     // front desktop
-    firstFaceData.rotation.setOrigin(QVector3D(rect.width() / 2, rect.height() / 2, -point));
+    firstFaceData.setRotationOrigin(QVector3D(rect.width() / 2, rect.height() / 2, -point));
     other_desktop = secondDesktop;
     firstDesktop = true;
     effects->paintScreen(mask, region, firstFaceData);
@@ -176,7 +176,7 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
     other_desktop = painting_desktop;
     painting_desktop = secondDesktop;
     firstDesktop = false;
-    secondFaceData.rotation.setOrigin(QVector3D(rect.width() / 2, rect.height() / 2, -point));
+    secondFaceData.setRotationOrigin(QVector3D(rect.width() / 2, rect.height() / 2, -point));
     effects->paintScreen(mask, region, secondFaceData);
     cube_painting = false;
     painting_desktop = effects->currentDesktop();

@@ -294,8 +294,8 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             EffectWindow* w = m_flipOrderedWindows.last();
             if (ItemInfo *info = m_windows.value(w,0)) {
                 WindowPaintData data(w);
-                data.rotation.setAxis(Qt::YAxis);
-                data.rotation.setAngle(m_angle * m_startStopTimeLine.currentValue());
+                data.setRotationAxis(Qt::YAxis);
+                data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
                 data.opacity = info->opacity;
                 data.brightness = info->brightness;
                 data.saturation = info->saturation;
@@ -325,8 +325,8 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             if (!info)
                 continue;
             WindowPaintData data(w);
-            data.rotation.setAxis(Qt::YAxis);
-            data.rotation.setAngle(m_angle * m_startStopTimeLine.currentValue());
+            data.setRotationAxis(Qt::YAxis);
+            data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
             data.opacity = info->opacity;
             data.brightness = info->brightness;
             data.saturation = info->saturation;

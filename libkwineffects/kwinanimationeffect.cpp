@@ -462,9 +462,9 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                     break;
                 }
                 case Rotation: {
-                    data.rotation.setAxis((Qt::Axis)metaData(Axis, anim->meta));
+                    data.setRotationAxis((Qt::Axis)metaData(Axis, anim->meta));
                     const float prgrs = progress(*anim);
-                    data.rotation.setAngle(anim->from[0] + prgrs*(anim->to[0] - anim->from[0]));
+                    data.setRotationAngle(anim->from[0] + prgrs*(anim->to[0] - anim->from[0]));
 
                     const QRect geo = w->rect();
                     const uint  sAnchor = metaData(SourceAnchor, anim->meta),
@@ -475,7 +475,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                         QPointF pt2(xCoord(geo, tAnchor), yCoord(geo, tAnchor));
                         pt += static_cast<qreal>(prgrs)*(pt2 - pt);
                     }
-                    data.rotation.setOrigin(QVector3D(pt));
+                    data.setRotationOrigin(QVector3D(pt));
                     break;
                 }
                 case Generic:

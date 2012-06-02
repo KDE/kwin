@@ -90,8 +90,8 @@ void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
     if (info != windows.constEnd()) {
         const double progress = info->timeLine->currentValue();
         QGraphicsRotation rot;
-        data.rotation.setAxis(Qt::XAxis);
-        data.rotation.setAngle(60.0 * (1.0 - progress));
+        data.setRotationAxis(Qt::XAxis);
+        data.setRotationAngle(60.0 * (1.0 - progress));
         data *= QVector3D(1.0, progress, progress);
         data.translate(0.0, - (w->y() - info->parentY) * (1.0 - progress));
     }
