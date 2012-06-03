@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Informative
+Name[ca]=Informativa
 Name[cs]=Informativní
 Name[de]=Informativ
 Name[el]=Ενημερωτικό
@@ -18,6 +19,7 @@ Name[x-test]=xxInformativexx
 Name[zh_CN]=信息
 Name[zh_TW]=資訊提供
 Comment=An informative window switcher layout including desktop name
+Comment[ca]=Una disposició del commutador de finestres informativa que inclou el nom d'escriptori
 Comment[et]=Informatiivne aknavahetaja paigutus koos töölauanimedega
 Comment[ia]=Un disposition de commutator de fenestra informative includente nomine de scriptorio
 Comment[nb]=En informativ utforming av vindusbytter som tar med skrivebordsnavnet

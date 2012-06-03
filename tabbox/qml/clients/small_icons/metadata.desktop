@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Small Icons
+Name[ca]=Icones petites
 Name[cs]=Malé ikony
 Name[de]=Kleine Symbole
 Name[el]=Μικρά εικονίδια
@@ -18,6 +19,7 @@ Name[x-test]=xxSmall Iconsxx
 Name[zh_CN]=小图标
 Name[zh_TW]=小圖示
 Comment=A window switcher layout using small icons to represent the window
+Comment[ca]=Una disposició del commutador de finestres que utilitza icones petites per representar la finestra
 Comment[de]=Ein Fensterwechsler-Layout, das kleine Symbole zur Darstellung der Fenster verwendet
 Comment[et]=Aknavahetaja paigutus väikeste, aknaid tähistavate ikoonidega
 Comment[ia]=Un disposition de commutator de fenestra usante parve icones pro representar le fenestra

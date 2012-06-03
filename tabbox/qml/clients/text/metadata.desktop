@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Text Icons
+Name[ca]=Icones de text
 Name[de]=Text-Symbole
 Name[et]=Tekstiikoonid
 Name[ia]=Icones de texto
@@ -16,6 +17,7 @@ Name[x-test]=xxText Iconsxx
 Name[zh_CN]=文本图标
 Name[zh_TW]=文字圖示
 Comment=A window switcher layout only showing window captions
+Comment[ca]=Una disposició del commutador de finestres que només mostra els títols de finestra
 Comment[de]=Ein Fensterwechsler-Layout, das nur die Titel der Fenster anzeigt
 Comment[et]=Aknavahetaja paigutus ainult aknatiitlite näitamisega
 Comment[ia]=Un disposition de commutator de fenestra monstrante solo legendas de fenestra

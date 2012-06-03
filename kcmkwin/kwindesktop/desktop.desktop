@@ -162,6 +162,7 @@ Comment[x-test]=xxYou can configure how many virtual desktops there are.xx
 Comment[zh_CN]=您可以在这里配置虚拟桌面的数量。
 Comment[zh_TW]=您可以在這裡設定要有多少個虛擬桌面。
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
+X-KDE-Keywords[ca]=escriptori,escriptoris,nombre,escriptori virtual,escriptoris múltiples,paginador,estri paginador,miniaplicació de paginació,arranjament de paginador
 X-KDE-Keywords[et]=töölaud,töölauad,arv,virtuaalne töölaud,mitu töölauda,töölauavahetaja,töölaudade vahetaja,töölauavahetaja aplett,töölauavahetaja vidin,töölauavahetaja seadistused
 X-KDE-Keywords[ia]=scriptorio,scriptorios,numero,scriptorio virtual,scriptorio multiple,pager, widget de pager, applet de pager, preferentias de pager
 X-KDE-Keywords[nb]=skrivebord,antall,virtuelt skrivebord,flere skrivebord,veksler,vekslerelement,veksler-miniprogram,vekslerinnstillinger
