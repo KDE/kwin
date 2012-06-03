@@ -1487,7 +1487,7 @@ void Workspace::switchWindow(Direction direction)
 
     ToplevelList clist = stackingOrder();
     for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
-        Client *client = qobject_cast<Client*>(c);
+        Client *client = qobject_cast<Client*>(*i);
         if (!client) {
             continue;
         }
