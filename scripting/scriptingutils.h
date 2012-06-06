@@ -117,7 +117,7 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
     a->setGlobalShortcut(KShortcut(context->argument(2).toString()));
     script->registerShortcut(a, context->argument(3));
     return engine->newVariant(true);
-};
+}
 
 template<class T>
 void callGlobalShortcutCallback(T script, QObject *sender)
@@ -132,7 +132,7 @@ void callGlobalShortcutCallback(T script, QObject *sender)
     }
     QScriptValue value(it.value());
     value.call();
-};
+}
 
 template<class T>
 QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
@@ -164,7 +164,7 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
         it->append(context->argument(1));
     }
     return engine->newVariant(true);
-};
+}
 
 template<class T>
 void screenEdgeActivated(T *script, int edge)
@@ -176,7 +176,7 @@ void screenEdgeActivated(T *script, int edge)
             callback.call();
         }
     }
-};
+}
 
 template<class T>
 QScriptValue scriptingAssert(QScriptContext *context, QScriptEngine *engine, int min, int max, T defaultVal = T())
@@ -239,14 +239,14 @@ inline void registerGlobalShortcutFunction(QObject *parent, QScriptEngine *engin
     QScriptValue shortcutFunc = engine->newFunction(function);
     shortcutFunc.setData(engine->newQObject(parent));
     engine->globalObject().setProperty("registerShortcut", shortcutFunc);
-};
+}
 
 inline void registerScreenEdgeFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
 {
     QScriptValue shortcutFunc = engine->newFunction(function);
     shortcutFunc.setData(engine->newQObject(parent));
     engine->globalObject().setProperty("registerScreenEdge", shortcutFunc);
-};
+}
 } // namespace KWin
 
 #endif // KWIN_SCRIPTINGUTILS_H
