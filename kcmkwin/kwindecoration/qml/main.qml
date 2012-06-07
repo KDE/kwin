@@ -32,6 +32,7 @@ ListView {
     highlightMoveDuration: 250
     boundsBehavior: Flickable.StopAtBounds
     delegate: Item {
+        objectName: "decorationItem"
         width: listView.width - sliderWidth
         height: 150
         QtExtra.QPixmapItem {
