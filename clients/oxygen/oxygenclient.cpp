@@ -193,7 +193,7 @@ namespace Oxygen
         {
 
             case DB_MenuClose:
-            return true;
+            return configuration().closeFromMenuButton();
 
             case DB_WindowMask:
             return false;

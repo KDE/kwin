@@ -44,6 +44,7 @@ namespace OxygenConfig
     static const QString HIDE_TITLEBAR = "HideTitleBar";
     static const QString ANIMATIONS_ENABLED = "AnimationsEnabled";
     static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
+    static const QString CLOSE_FROM_MENU_BUTTON = "CloseFromMenuButton";
 
     //!@name animation flags
     //@{
@@ -300,6 +301,14 @@ namespace Oxygen
         virtual void setUseOxygenShadows( bool value )
         { _useOxygenShadows = value; }
 
+        //! close from menu button
+        virtual bool closeFromMenuButton( void ) const
+        { return _closeFromMenuButton; }
+
+        //! close from menu button
+        virtual void setCloseFromMenuButton( bool value )
+        { _closeFromMenuButton = value; }
+
         //!@name animations
         //@{
 
@@ -411,6 +420,9 @@ namespace Oxygen
 
         //! oxygen shadows
         bool _useOxygenShadows;
+
+        //! close window from menu button
+        bool _closeFromMenuButton;
 
         //! narrow button spacing
         bool _useNarrowButtonSpacing;
