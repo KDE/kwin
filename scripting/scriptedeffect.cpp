@@ -147,7 +147,7 @@ ScriptedEffect::ScriptedEffect()
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
 #ifdef KWIN_BUILD_SCREENEDGES
-    connect(Workspace::self()->screenEdge(), SIGNAL(activated(ElectricBorder)), SLOT(borderActivated(ElectricBorder)));
+    connect(Workspace::self()->screenEdge(), SIGNAL(activated(ElectricBorder)), SLOT(slotBorderActivated(ElectricBorder)));
 #endif
 }
 
