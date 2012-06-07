@@ -377,7 +377,10 @@ void KWinDecorationModule::updatePreviews()
     const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
     const int y = m_ui->decorationList->rootObject()->property("contentY").toInt();
     // start at first element in sight
-    m_model->regeneratePreviews(y*m_model->rowCount()/h);
+    int row = 0;
+    if (h > 0)
+        row = qMin(qMax(0, y*m_model->rowCount()/h), m_model->rowCount());
+    m_model->regeneratePreviews(row);
 }
 
 void KWinDecorationModule::updatePreviewWidth()
