@@ -312,6 +312,8 @@ bool Client::manage(Window w, bool isMapped)
         const bool autogrouping = rules()->checkAutogrouping(options->isAutogroupSimilarWindows());
         const bool autogroupInFg = rules()->checkAutogroupInForeground(options->isAutogroupInForeground());
         // Automatically add to previous groups on session restore
+        if (session && session->tabGroupClient && !workspace()->hasClient(session->tabGroupClient))
+            session->tabGroupClient = NULL;
         if (session && session->tabGroupClient && session->tabGroupClient != this) {
             tabBehind(session->tabGroupClient, autogroupInFg);
         } else if (isMapped && autogrouping) {
