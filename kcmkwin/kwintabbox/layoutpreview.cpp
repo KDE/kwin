@@ -31,9 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIcon>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
-// #include <KDE/KLocalizedString>
 #include <KDE/KService>
-// #include <KDE/KServiceTypeTrader>
 #include <KDE/KStandardDirs>
 
 namespace KWin
@@ -44,7 +42,6 @@ namespace TabBox
 LayoutPreview::LayoutPreview(QWidget* parent)
     : QDeclarativeView(parent)
 {
-//     setAttribute(Qt::WA_TranslucentBackground);
     setAutoFillBackground(false);
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
