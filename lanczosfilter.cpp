@@ -642,6 +642,10 @@ bool LanczosShader::init()
     if (!hasGLExtension("GL_ARB_fragment_program"))
         return false;
 
+    // We allow Lanczos for SandyBridge or later, but only GLSL shaders are supported, see BUG 301729
+    if (gl->isIntel())
+        return false;
+
     QByteArray text;
     QTextStream stream(&text);
 
