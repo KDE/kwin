@@ -24,6 +24,7 @@ Comment[pt]=Esconde todas as janelas marcadas como 'Ignorar a Barra de Tarefas' 
 Comment[pt_BR]=Oculta todas as janelas marcadas como 'Ignorar a barra de tarefas' para também serem excluídas dos seletores de janelas (p.ex., Alt+Tab)
 Comment[sv]=Dölj alla fönster som är markerade att hoppa över aktivitetsraden så att de också utesluts vid fönsterbyte (t.ex. Alt+Tabulator)
 Comment[uk]=Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)
+Comment[vi]=Ẩn tất cả cửa sổ được đánh dấu "Bỏ qua trên thanh tác vụ" khỏi trình chuyển đổi cửa sổ (VD: Alt+Tab)
 Comment[x-test]=xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx
 Comment[zh_TW]=工作列中設定要忽略的視窗，在視窗切換器（如 Alt+Tab 切換）切換時也忽略
 Icon=preferences-system-windows-script-synchronizeskipswitcher

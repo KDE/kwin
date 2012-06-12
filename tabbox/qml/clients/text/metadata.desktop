@@ -28,6 +28,7 @@ Comment[pt]=Uma disposição de mudança de janelas que só mostra os títulos d
 Comment[pt_BR]=Um leiaute do seletor de janelas que mostra apenas os títulos das janelas
 Comment[sv]=En layout för fönsterbyte som bara visar fönsterrubriker
 Comment[uk]=Компонування засобу перемикання вікон з показом лише підписів вікон
+Comment[vi]=Một kiểu chuyển đổi cửa sổ chỉ hiển thị tiêu đề cửa sổ
 Comment[x-test]=xxA window switcher layout only showing window captionsxx
 Comment[zh_TW]=只顯示視窗標題的視窗切換器佈局
 Icon=preferences-system-windows-switcher-text

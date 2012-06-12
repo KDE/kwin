@@ -30,6 +30,7 @@ Comment[pt]=Uma disposição de mudança de janelas que usa miniaturas geradas n
 Comment[pt_BR]=Um leiaute do seletor de janelas que usa miniaturas geradas na hora
 Comment[sv]=En layout för fönsterbyte som använder direkta miniatyrbilder
 Comment[uk]=Компонування засобу перемикання вікон з мініатюрами поточного стану вікон
+Comment[vi]=Một kiểu chuyển đổi cửa sổ sử dụng các hình nhỏ của ứng dụng
 Comment[x-test]=xxA window switcher layout using live thumbnailsxx
 Comment[zh_TW]=使用即時縮圖的視窗切換器佈局
 Icon=preferences-system-windows-switcher-thumbnails
