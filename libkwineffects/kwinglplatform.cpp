@@ -488,7 +488,9 @@ GLPlatform::GLPlatform()
       m_looseBinding(false),
       m_directRendering(false),
       m_supportsGLSL(false),
-      m_limitedGLSL(false)
+      m_limitedGLSL(false),
+      m_textureNPOT(false),
+      m_limitedNPOT(false)
 {
 }
 
