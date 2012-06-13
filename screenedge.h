@@ -91,6 +91,11 @@ public:
      */
     void ensureOnTop();
     /**
+     * Raise FOREIGN border windows to the real top of the screen. We usually need
+     * to do this after an effect input window was active.
+     */
+    void raisePanelProxies();
+    /**
     * Called when the user entered an electric border with the mouse.
     * It may switch to another virtual desktop.
     * @param e the X event which is passed to this method.

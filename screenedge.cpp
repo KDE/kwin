@@ -398,6 +398,56 @@ void ScreenEdge::ensureOnTop()
     delete [] windows;
 }
 
+/*
+ * NOTICE THIS IS A HACK
+ * or at least a quite cumbersome way to handle conflictive electric borders
+ * (like for autohiding panels or whatever)
+ * the SANE solution is a central electric border daemon and a protocol
+ * what this function does is to search for windows on the screen edges that are
+ * * not our own screenedge
+ * * either very slim
+ * * or InputOnly
+ * and raises them on top of everything else, including our own screen borders
+ * this is typically (and for now ONLY) called when an effect input window is destroyed
+ * (which raised our electric borders)
+ */
+
+void ScreenEdge::raisePanelProxies()
+{
+    XWindowAttributes attr;
+    Window dummy;
+    Window* windows = NULL;
+    unsigned int count = 0;
+    QRect screen = QRect(0, 0, displayWidth(), displayHeight());
+    QVector<Window> proxies;
+    XQueryTree(display(), rootWindow(), &dummy, &dummy, &windows, &count);
+    for (unsigned int i = 0; i < count; ++i) {
+        if (m_screenEdgeWindows.contains(windows[i]))
+            continue;
+        if (XGetWindowAttributes(display(), windows[i], &attr)) {
+            if (attr.map_state == IsUnmapped) // a thousand Qt group leader dummies ...
+                continue;
+            const QRect geo(attr.x, attr.y, attr.width, attr.height);
+            if (geo.width() < 1 || geo.height() < 1)
+                continue;
+            if (!(geo.width() > 1 || geo.height() > 1))
+                continue; // random 1x1 dummy windows, all your corners are belong to us >-)
+            if (attr.c_class != InputOnly && (geo.width() > 3 && geo.height() > 3))
+                continue;
+            if (geo.x() != screen.x() && geo.right() != screen.right() &&
+                geo.y() != screen.y() && geo.bottom() != screen.bottom())
+                continue;
+            proxies << windows[i];
+        }
+    }
+    if (!proxies.isEmpty()) {
+        XRaiseWindow(display(), proxies.data()[ 0 ]);
+        XRestackWindows(display(), proxies.data(), proxies.count());
+    }
+    if (windows)
+        XFree(windows);
+}
+
 const QVector< Window >& ScreenEdge::windows()
 {
     return m_screenEdgeWindows;

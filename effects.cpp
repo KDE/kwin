@@ -985,6 +985,9 @@ void EffectsHandlerImpl::destroyInputWindow(Window w)
         if (pos.second == w) {
             input_windows.removeAll(pos);
             XDestroyWindow(display(), w);
+#ifdef KWIN_BUILD_SCREENEDGES
+            Workspace::self()->screenEdge()->raisePanelProxies();
+#endif
             return;
         }
     }
