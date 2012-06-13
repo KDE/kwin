@@ -2497,7 +2497,7 @@ void Client::positionGeometryTip()
         geometryTip->raise();
     }
 }
-static int s_lastScreen = 0;
+
 bool Client::startMoveResize()
 {
     assert(!moveResizeMode);
@@ -2559,7 +2559,6 @@ bool Client::startMoveResize()
     }
 
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
-    s_lastScreen = moveResizeStartScreen = screen();
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
@@ -2990,13 +2989,13 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
             if (!unrestrictedMoveResize) {
                 // Make sure the titlebar isn't behind a restricted area.
-                const QRegion fullArea = workspace()->clientArea(ScreenArea, s_lastScreen, 0);   // On the screen
-                const QRegion moveArea = workspace()->restrictedMoveArea(desktop());   // Strut areas
+                const QRegion fullArea = workspace()->clientArea(FullArea, this);   // On the screen
+                const QRegion strut = workspace()->restrictedMoveArea(desktop());   // Strut areas
                 for (;;) {
                     QRegion titlebarRegion(moveResizeGeom.left(), moveResizeGeom.top(),
                                            moveResizeGeom.width(), frameTop);
                     titlebarRegion &= fullArea;
-                    titlebarRegion -= moveArea;   // Strut areas
+                    titlebarRegion -= strut;   // Strut areas
                     // Now we have a region of all the visible areas of the titlebar
                     // Count the visible pixels and check to see if it's enough
                     int visiblePixels = 0;
@@ -3006,6 +3005,31 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     if (visiblePixels >= titlebarArea)
                         break; // We have reached a valid position
 
+                    // (esp.) if there're more screens with different struts (panels) it the titlebar
+                    // will be movable outside the movearea (covering one of the panels) until it
+                    // crosses the panel "too much" (not enough visiblePixels) and then stucks because
+                    // it's usually only pushed by 1px to either direction
+                    // so we first check whether we intersect suc strut and move the window below it
+                    // immediately (it's still possible to hit the visiblePixels >= titlebarArea break
+                    // by moving the window slightly downwards, but it won't stuck)
+                    // see bug #274466
+                    // and bug #301805 for why we can't just match the titlearea against the screen
+                    if (QApplication::desktop()->screenCount() > 1) { // optimization
+                        // TODO: could be useful on partial screen struts (half-width panels etc.)
+                        int newTitleTop = -1;
+                        foreach (const QRect &r, strut.rects()) {
+                            if (r.top() == 0 && r.width() > r.height() && // "top panel"
+                                r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
+                                newTitleTop = r.bottom();
+                                break;
+                            }
+                        }
+                        if (newTitleTop > -1) {
+                            moveResizeGeom.moveTop(newTitleTop); // invalid position, possibly on screen change
+                            break;
+                        }
+                    }
+
                     // Move it (Favour vertically)
                     if (previousMoveResizeGeom.y() != moveResizeGeom.y())
                         moveResizeGeom.translate(0,
@@ -3013,27 +3037,14 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     else
                         moveResizeGeom.translate(previousMoveResizeGeom.x() > moveResizeGeom.x() ? 1 : -1,
                                                  0);
-                    if (moveResizeGeom == previousMoveResizeGeom)
+                    if (moveResizeGeom == previousMoveResizeGeom) {
                         break; // Prevent lockup
+                    }
                 }
             }
         }
         if (moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
-        else if (screen() != s_lastScreen) {  // invalid position on screen change?
-            s_lastScreen = screen();
-            const QRect area = workspace()->clientArea(WorkArea, s_lastScreen, desktop());
-            if (moveResizeGeom.bottom() > area.bottom())
-                moveResizeGeom.moveBottom(area.bottom());
-            if (moveResizeGeom.right() > area.right())
-                moveResizeGeom.moveRight(area.right());
-            if (moveResizeGeom.top() < area.top())
-                moveResizeGeom.moveTop(area.top());
-            if (moveResizeGeom.left() < area.left())
-                moveResizeGeom.moveLeft(area.left());
-            if (moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
-                update = true;
-        }
     } else
         abort();
 
