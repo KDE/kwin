@@ -422,13 +422,6 @@ bool SceneOpenGL::initDrawableConfigs()
                                  GLX_DEPTH_SIZE, &depth_value);
             if (depth_value > depth)
                 continue;
-            int mipmap_value = -1;
-            if (GLTexture::framebufferObjectSupported()) {
-                glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                     GLX_BIND_TO_MIPMAP_TEXTURE_EXT, &mipmap_value);
-                if (mipmap_value < mipmap)
-                    continue;
-            }
             int caveat_value;
             glXGetFBConfigAttrib(display(), fbconfigs[ j ],
                                  GLX_CONFIG_CAVEAT, &caveat_value);
@@ -440,7 +433,7 @@ bool SceneOpenGL::initDrawableConfigs()
             back = back_value;
             stencil = stencil_value;
             depth = depth_value;
-            mipmap = mipmap_value;
+            mipmap = 0;
             glXGetFBConfigAttrib(display(), fbconfigs[ j ],
                                  GLX_BIND_TO_TEXTURE_TARGETS_EXT, &value);
             fbcdrawableinfo[ i ].texture_targets = value;
@@ -734,7 +727,7 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     // glXBindTexImageEXT() when the contents of the pixmap has changed.
     int attrs[] = {
         GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
-        GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
+        GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap > 0,
         None, None, None
     };
     // Specifying the texture target explicitly is reported to cause a performance
@@ -756,7 +749,8 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
 #endif
     findTarget();
     d->m_yInverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
-    d->m_canUseMipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
+    d->m_canUseMipmaps = fbcdrawableinfo[ depth ].mipmap > 0;
+    setFilter(fbcdrawableinfo[ depth ].mipmap > 0 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
     glBindTexture(d->m_target, d->m_texture);
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoadTFP2");

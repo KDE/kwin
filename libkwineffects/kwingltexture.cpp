@@ -118,7 +118,7 @@ GLTexturePrivate::GLTexturePrivate()
 {
     m_texture = 0;
     m_target = 0;
-    m_filter = GL_NEAREST_MIPMAP_LINEAR;
+    m_filter = GL_NEAREST;
     m_wrapMode = GL_REPEAT;
     m_yInverted = false;
     m_canUseMipmaps = false;
@@ -126,7 +126,7 @@ GLTexturePrivate::GLTexturePrivate()
     m_unnormalizeActive = 0;
     m_normalizeActive = 0;
     m_vbo = 0;
-    m_filterChanged = false;
+    m_filterChanged = true;
     m_wrapModeChanged = false;
 }
 
