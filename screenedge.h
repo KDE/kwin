@@ -58,8 +58,9 @@ public:
      * if one is enabled for the current region and the timeout is satisfied
      * @param pos the position of the mouse pointer
      * @param now the time when the function is called
+     * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
      */
-    void check(const QPoint& pos, Time now);
+    void check(const QPoint& pos, Time now, bool forceNoPushBack = false);
     /**
      * Restore the size of the specified screen edges
      * @param border the screen edge to restore the size of

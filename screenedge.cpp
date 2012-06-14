@@ -192,7 +192,7 @@ void ScreenEdge::unreserve(ElectricBorder border)
         QTimer::singleShot(0, this, SLOT(update()));
 }
 
-void ScreenEdge::check(const QPoint& pos, Time now)
+void ScreenEdge::check(const QPoint& pos, Time now, bool forceNoPushback)
 {
     if ((pos.x() != m_screenEdgeLeft) &&
             (pos.x() != m_screenEdgeRight) &&
@@ -211,7 +211,7 @@ void ScreenEdge::check(const QPoint& pos, Time now)
     Time treshold_reset = 250; // Reset timeout
     Time treshold_trigger = options->electricBorderCooldown(); // Minimum time between triggers
     int distance_reset = 30; // Mouse should not move more than this many pixels
-    int pushback_pixels = options->electricBorderPushbackPixels();
+    int pushback_pixels = forceNoPushback ? 0 : options->electricBorderPushbackPixels();
 
     ElectricBorder border;
     if (pos.x() == m_screenEdgeLeft && pos.y() == m_screenEdgeTop)
@@ -374,7 +374,7 @@ bool ScreenEdge::isEntered(XEvent* e)
             for (int i = 0; i < ELECTRIC_COUNT; ++i)
                 if (m_screenEdgeWindows[i] != None && e->xclient.window == m_screenEdgeWindows[i]) {
                     updateXTime();
-                    check(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime());
+                    check(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), xTime(), true);
                     return true;
                 }
         }
