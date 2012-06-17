@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Window Strip
 Name[ca]=Cinta de finestres
+Name[da]=Vinduesstribe
 Name[et]=Aknariba
 Name[ia]=Lista de fenestra
 Name[km]=ស្គ្រីប​វីនដូ
@@ -17,6 +18,7 @@ Name[x-test]=xxWindow Stripxx
 Name[zh_TW]=視窗帶
 Comment=Window switcher layout for Plasma Active
 Comment[ca]=Disposició del commutador de finestres pel Plasma Active
+Comment[da]=Et vinduesskifter-layout til Plasma Active
 Comment[et]=Plasma Active'i aknavahetaja paigutus
 Comment[ia]=Disposition de commutator de fenestra per Plasma Active
 Comment[nb]=Vindusbytterutforming for Plasma Active

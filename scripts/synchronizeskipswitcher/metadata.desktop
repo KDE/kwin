@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Synchronize Skip Switcher with Taskbar
 Name[ca]=Sincronitza el «Ignora el commutador» amb la barra de tasques
+Name[da]=Synkronisér skip-skifter med opgavelinjen
 Name[et]=Vahelejätmise lülitaja sünkroonimine tegumiribaga
 Name[ia]=Synchronisa Commutator de salto con Barra de carga
 Name[nb]=Synkroniser Hopp over bytter med Oppgavelinja
@@ -15,6 +16,7 @@ Name[x-test]=xxSynchronize Skip Switcher with Taskbarxx
 Name[zh_TW]=將工作列中設定要忽略的視窗也套用在視窗切換器
 Comment=Hides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)
 Comment[ca]=Oculta totes les finestres marcades com a «Ignora la barra de tasques» que també s'excloguin del commutador de finestres (p. ex. Alt+Tab)
+Comment[da]=Skjuler alle vinduer der er markeret som "Skip opgavelinje", så de også udelades fra vinduesskiftere (f.eks. Alt+Tab)
 Comment[et]=Kõigi tegumiribalt väljajäetavaks märgitud akende peitmine, et neid ei kaasataks ka aknavahetajatesse (nt Alt+Tab)
 Comment[ia]=Cela omne fenestras marcate como barra de cargas de salto pro anque esser excludite ex commutatores de fenestra (p.ex.Alt+Tab)
 Comment[nb]=Skjuler alle vinduer merket med Hopp over Oppgavelinja så de heller ikke blir tatt med i vindusbyttere (f.eks. Alt+TAB)

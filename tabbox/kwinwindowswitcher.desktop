@@ -4,6 +4,7 @@ X-KDE-ServiceType=KWin/WindowSwitcher
 
 Comment=KWin Window Switcher Layout
 Comment[ca]=Disposició del commutador de finestres del KWin
+Comment[da]=Layout til KWins vinduesskifter
 Comment[de]=Fensterwechsler-Layout
 Comment[et]=KWini aknavahetaja paigutus
 Comment[ia]=Disposition de commutator de fenestra de KWin

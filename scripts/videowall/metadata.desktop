@@ -2,6 +2,7 @@
 Name=Video Wall
 Name[ca]=Mur de vídeo
 Name[cs]=Video stěna
+Name[da]=Videovæg
 Name[de]=Video-Wand
 Name[el]=Τοίχος με οθόνες
 Name[et]=Videosein
@@ -19,6 +20,7 @@ Name[x-test]=xxVideo Wallxx
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
 Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per totes les pantalles enganxades per crear un mur de vídeo.
+Comment[da]=Udfolder videoafspiller i fuldskærm over alle tilsluttede skærme og danner derved en videovæg
 Comment[et]=Täisekraan-videomängija laiendamine kõigile ühendatud ekraanile videoseina loomiseks
 Comment[ia]=Extende jocator de video de schermo plen super omne schermos attachate pro crea un Muro de Video
 Comment[nb]=Sprer  fullskjerms videospiller over alle tilkoblede skjermer for å lage en Videovegg
