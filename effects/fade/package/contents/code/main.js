@@ -24,7 +24,7 @@ function isFadeWindow(w) {
     } else if (!w.deleted && effect.isGrabbed(w, Effect.WindowAddedGrabRole)) {
         return false;
     }
-    return !isLoginWindow(w) && !w.desktopWindow && !w.utility;
+    return w.isOnCurrentDesktop && !isLoginWindow(w) && !w.desktopWindow && !w.utility;
 }
 
 function isLoginWindow(w) {
