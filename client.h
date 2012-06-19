@@ -821,6 +821,7 @@ private:
     bool unrestrictedMoveResize;
     int moveResizeStartScreen;
     static bool s_haveResizeEffect;
+    bool m_managed;
 
     Position mode;
     QPoint moveOffset;
@@ -1184,7 +1185,7 @@ inline int Client::sessionStackingOrder() const
 
 inline bool Client::isManaged() const
 {
-    return mapping_state != Withdrawn;
+    return m_managed;
 }
 
 inline QPoint Client::clientPos() const

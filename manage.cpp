@@ -587,6 +587,7 @@ bool Client::manage(Window w, bool isMapped)
     else // doNotShow
         hideClient(true);   // SELI HACK !!!
     assert(mapping_state != Withdrawn);
+    m_managed = true;
     blockGeometryUpdates(false);
 
     if (user_time == CurrentTime || user_time == -1U) {

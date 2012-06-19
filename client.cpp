@@ -92,6 +92,7 @@ Client::Client(Workspace* ws)
     , bridge(new Bridge(this))
     , move_resize_grab_window(None)
     , move_resize_has_keyboard_grab(false)
+    , m_managed(false)
     , transient_for (NULL)
     , transient_for_id(None)
     , original_transient_for_id(None)
@@ -1210,7 +1211,7 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    if( workspace()->showingDesktop()) {
+    if (isManaged() && workspace()->showingDesktop()) {
         bool belongs_to_desktop = false;
         for (ClientList::ConstIterator it = group()->members().constBegin();
                 it != group()->members().constEnd();
