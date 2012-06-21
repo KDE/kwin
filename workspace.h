@@ -678,8 +678,8 @@ private slots:
     void resetCursorPosTime();
     void delayedCheckUnredirect();
     void updateCurrentActivity(const QString &new_activity);
-    void activityRemoved(const QString &activity);
-    void activityAdded(const QString &activity);
+    void slotActivityRemoved(const QString &activity);
+    void slotActivityAdded(const QString &activity);
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
     void handleActivityReply();
     void showHideActivityMenu();
@@ -711,6 +711,23 @@ signals:
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void propertyNotify(long a);
     void configChanged();
+    /**
+     * This signal is emitted when the global
+     * activity is changed
+     * @param id id of the new current activity
+     */
+    void currentActivityChanged(const QString &id);
+    /**
+     * This signal is emitted when a new activity is added
+     * @param id id of the new activity
+     */
+    void activityAdded(const QString &id);
+    /**
+     * This signal is emitted when the activity
+     * is removed
+     * @param id id of the removed activity
+     */
+    void activityRemoved(const QString &id);
 
 private:
     void init();

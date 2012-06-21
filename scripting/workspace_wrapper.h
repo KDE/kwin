@@ -63,6 +63,8 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int displayHeight READ displayHeight)
     Q_PROPERTY(int activeScreen READ activeScreen)
     Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
+    Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
+    Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -103,6 +105,26 @@ signals:
      * Don't forget to fetch an updated client area.
      **/
     void screenResized(int screen);
+    /**
+     * Signal emitted whenever the current activity changed.
+     **/
+    void currentActivityChanged();
+    /**
+     * Signal emitted whenever the list of activities changed.
+     * @param id id of the new activity
+     **/
+    void activitiesChanged(const QString &id);
+    /**
+     * This signal is emitted when a new activity is added
+     * @param id id of the new activity
+     */
+    void activityAdded(const QString &id);
+    /**
+     * This signal is emitted when the activity
+     * is removed
+     * @param id id of the removed activity
+     */
+    void activityRemoved(const QString &id);
 
 public:
 //------------------------------------------------------------------
@@ -158,6 +180,8 @@ void setter( rettype val );
     QSize displaySize() const;
     int activeScreen() const;
     int numScreens() const;
+    QString currentActivity() const;
+    QStringList activityList() const;
 
     /**
      * List of Clients currently managed by KWin.

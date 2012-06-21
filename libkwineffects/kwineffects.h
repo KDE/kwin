@@ -573,7 +573,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY desktopChanged)
-    Q_PROPERTY(QString currentActivity READ currentActivity)
+    Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(KWin::EffectWindow *activeWindow READ activeWindow WRITE activateWindow NOTIFY windowActivated)
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth)
@@ -1089,6 +1089,27 @@ Q_SIGNALS:
      * @since 4.8
      **/
     void screenGeometryChanged(const QSize &size);
+
+    /**
+     * This signal is emitted when the global
+     * activity is changed
+     * @param id id of the new current activity
+     * @since 4.9
+     **/
+    void currentActivityChanged(const QString &id);
+    /**
+     * This signal is emitted when a new activity is added
+     * @param id id of the new activity
+     * @since 4.9
+     */
+    void activityAdded(const QString &id);
+    /**
+     * This signal is emitted when the activity
+     * is removed
+     * @param id id of the removed activity
+     * @since 4.9
+     */
+    void activityRemoved(const QString &id);
 
 protected:
     QVector< EffectPair > loaded_effects;

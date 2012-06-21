@@ -262,8 +262,11 @@ Workspace::Workspace(bool restore)
 
 #ifdef KWIN_BUILD_ACTIVITIES
     connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
-    connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));
-    connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(activityAdded(QString)));
+    connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(slotActivityRemoved(QString)));
+    connect(&activityController_, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
+    connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(slotActivityAdded(QString)));
+    connect(&activityController_, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
+    connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
 #endif
 
     connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
@@ -1650,7 +1653,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
  * updates clients when an activity is destroyed.
  * this ensures that a client does not get 'lost' if the only activity it's on is removed.
  */
-void Workspace::activityRemoved(const QString &activity)
+void Workspace::slotActivityRemoved(const QString &activity)
 {
     allActivities_.removeOne(activity);
     foreach (Toplevel * toplevel, stacking_order) {
@@ -1663,7 +1666,7 @@ void Workspace::activityRemoved(const QString &activity)
     cg.deleteGroup();
 }
 
-void Workspace::activityAdded(const QString &activity)
+void Workspace::slotActivityAdded(const QString &activity)
 {
     allActivities_ << activity;
 }

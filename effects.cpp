@@ -115,6 +115,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
+    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
+    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
+    connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
 #ifdef KWIN_BUILD_TABBOX
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
