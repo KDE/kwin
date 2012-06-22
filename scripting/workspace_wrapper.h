@@ -196,6 +196,12 @@ void setter( rettype val );
      * Provides support information about the currently running KWin instance.
      **/
     Q_SCRIPTABLE QString supportInformation() const;
+    /**
+     * Finds the Client with the given @p windowId.
+     * @param windowId The window Id of the Client
+     * @return The found Client or @c null
+     **/
+    Q_SCRIPTABLE KWin::Client *getClient(qulonglong windowId);
 
 public Q_SLOTS:
     // all the available key bindings

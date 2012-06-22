@@ -215,4 +215,9 @@ void WorkspaceWrapper::hideOutline()
     Workspace::self()->outline()->hide();
 }
 
+Client *WorkspaceWrapper::getClient(qulonglong windowId)
+{
+    return Workspace::self()->findClient(WindowMatchPredicate(windowId));
+}
+
 } // KWin
