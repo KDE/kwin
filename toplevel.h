@@ -60,6 +60,10 @@ class Toplevel
     Q_PROPERTY(int x READ x)
     Q_PROPERTY(int y READ y)
     Q_PROPERTY(int desktop READ desktop)
+    /**
+     * Whether the window is on all desktops. That is desktop is -1.
+     **/
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
     Q_PROPERTY(QRect rect READ rect)
     Q_PROPERTY(QPoint clientPos READ clientPos)
     Q_PROPERTY(QSize clientSize READ clientSize)
