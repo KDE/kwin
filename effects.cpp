@@ -962,23 +962,52 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int 
 
 Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor)
 {
-    XSetWindowAttributes attrs;
-    attrs.override_redirect = True;
-    Window win = XCreateWindow(display(), rootWindow(), x, y, w, h, 0, 0, InputOnly, CopyFromParent,
-                               CWOverrideRedirect, &attrs);
-    // TODO keeping on top?
-    // TODO enter/leave notify?
-    XSelectInput(display(), win, ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
-    XDefineCursor(display(), win, cursor.handle());
-    XMapWindow(display(), win);
-    input_windows.append(qMakePair(e, win));
-
+    Window win = 0;
+    QList<InputWindowPair>::iterator it = input_windows.begin();
+    while (it != input_windows.end()) {
+        if (it->first != e) {
+            ++it;
+            continue;
+        }
+        XWindowAttributes attr;
+        if (!XGetWindowAttributes(display(), it->second, &attr)) {
+            // this is some random junk that certainly should no be here
+            kDebug(1212) << "found input window that is NOT on the server, something is VERY broken here";
+            Q_ASSERT(false); // exit in debug mode - for releases we'll be a bit more graceful
+            it = input_windows.erase(it);
+            continue;
+        }
+        if (attr.x == x && attr.y == y && attr.width == w && attr.height == h) {
+            win = it->second; // re-use
+            break;
+        } else if (attr.map_state == IsUnmapped) {
+            // probably old one, likely no longer of interest
+            XDestroyWindow(display(), it->second);
+            it = input_windows.erase(it);
+            continue;
+        }
+        ++it;
+    }
+    if (!win) {
+        XSetWindowAttributes attrs;
+        attrs.override_redirect = True;
+        win = XCreateWindow(display(), rootWindow(), x, y, w, h, 0, 0, InputOnly, CopyFromParent,
+                                CWOverrideRedirect, &attrs);
+        // TODO keeping on top?
+        // TODO enter/leave notify?
+        XSelectInput(display(), win, ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
+        XDefineCursor(display(), win, cursor.handle());
+        input_windows.append(qMakePair(e, win));
+    }
+    XMapRaised(display(), win);
     // Raise electric border windows above the input windows
     // so they can still be triggered.
 #ifdef KWIN_BUILD_SCREENEDGES
     Workspace::self()->screenEdge()->ensureOnTop();
 #endif
-
+    if (input_windows.count() > 10) // that sounds like some leak - could still be correct, thoug - so NO ABORT HERE!
+        kDebug() << "** warning ** there are now " << input_windows.count() <<
+                    "input windows what's a bit much - please have a look and if this counts up, better report a bug";
     return win;
 }
 
@@ -986,8 +1015,7 @@ void EffectsHandlerImpl::destroyInputWindow(Window w)
 {
     foreach (const InputWindowPair & pos, input_windows) {
         if (pos.second == w) {
-            input_windows.removeAll(pos);
-            XDestroyWindow(display(), w);
+            XUnmapWindow(display(), w);
 #ifdef KWIN_BUILD_SCREENEDGES
             Workspace::self()->screenEdge()->raisePanelProxies();
 #endif
@@ -1042,11 +1070,14 @@ void EffectsHandlerImpl::checkInputWindowStacking()
 {
     if (input_windows.count() == 0)
         return;
-    Window* wins = new Window[ input_windows.count()];
+    Window* wins = new Window[input_windows.count()];
     int pos = 0;
-    foreach (const InputWindowPair & it, input_windows)
-    wins[ pos++ ] = it.second;
-    XRaiseWindow(display(), wins[ 0 ]);
+    foreach (const InputWindowPair &it, input_windows) {
+        XWindowAttributes attr;
+        if (XGetWindowAttributes(display(), it.second, &attr) && attr.map_state != IsUnmapped)
+            wins[pos++] = it.second;
+    }
+    XRaiseWindow(display(), wins[0]);
     XRestackWindows(display(), wins, pos);
     delete[] wins;
     // Raise electric border windows above the input windows
