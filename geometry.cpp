@@ -2559,6 +2559,7 @@ bool Client::startMoveResize()
     }
 
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
+    moveResizeStartScreen = screen();
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
