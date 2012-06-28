@@ -158,22 +158,33 @@ trydefaultlib:
 
     create_ptr = NULL;
     version_ptr = 0;
+    int deco_version = 0;
     KLibrary::void_function_ptr version_func = library->resolveFunction("decoration_version");
     if (version_func) {
-        // TODO for the moment we let unversioned decos through
-        // later on this function shall become mandatory!
         version_ptr = (int(*)())version_func;
-        const int deco_version = version_ptr();
-        if (deco_version != KWIN_DECORATION_API_VERSION) {
-            if (nameStr != defaultPlugin) {
-                kWarning(1212) << i18n("The library %1 has wrong API version %2", path, deco_version);
-                library->unload();
-                library = NULL;
-                goto trydefaultlib;
-            }
-        }
+        deco_version = version_ptr();
     } else {
-        kWarning(1212) << i18n("******\n\nThe library %1 has no API version\nPlease use the KWIN_DECORATION or future versions of kwin will no longer load this decoration!\n*******", path);
+        // block some decos known to link the unstable API but (for now) let through other legacy stuff
+        const bool isLegacyStableABI = !(nameStr.contains("qtcurve", Qt::CaseInsensitive) ||
+                                         nameStr.contains("crystal", Qt::CaseInsensitive) ||
+                                         nameStr.contains("oxygen", Qt::CaseInsensitive));
+        if (isLegacyStableABI) {
+            // it's an old build of a legacy decoration that very likely uses the stable API
+            // so we just set the API version to the current one
+            // TODO: remove for 4.9.x or 4.10 - this is just to cover recompiles
+            deco_version = KWIN_DECORATION_API_VERSION;
+        }
+        kWarning(1212) << QString("****** The library %1 has no API version ******").arg(path);
+        kWarning(1212) << "****** Please use the KWIN_DECORATION macro in extern \"C\" to get this decoration loaded in future versions of kwin";
+    }
+    if (deco_version != KWIN_DECORATION_API_VERSION) {
+        if (nameStr != defaultPlugin) {
+            if (version_func)
+                kWarning(1212) << i18n("The library %1 has wrong API version %2", path, deco_version);
+            library->unload();
+            library = NULL;
+            goto trydefaultlib;
+        }
     }
 
     KLibrary::void_function_ptr create_func = library->resolveFunction("create_factory");
