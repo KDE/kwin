@@ -144,11 +144,7 @@ void DashboardEffect::postPaintScreen()
 
 bool DashboardEffect::isDashboard(EffectWindow *w)
 {
-    if (w->windowClass() == "dashboard dashboard") {
-        return true;
-    } else {
-        return false;
-    }
+    return w->windowRole() == "plasma-dashboard";
 }
 
 void DashboardEffect::slotWindowActivated(EffectWindow *w)
