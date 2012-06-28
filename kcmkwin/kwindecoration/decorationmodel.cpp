@@ -94,6 +94,10 @@ void DecorationModel::findDecorations()
                             findAuroraeThemes();
                             continue;
                         }
+                        if (m_plugins->loadPlugin(libName))
+                            m_plugins->destroyPreviousPlugin();
+                        else
+                            continue;
                         DecorationModelData data;
                         data.name = desktopFile.readName();
                         data.libraryName = libName;
@@ -307,16 +311,22 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         html = QString("<div style=\"color: %1\" align=\"center\">%2</div>").arg(color.name()).arg(html);
 
         document.setHtml(html);
-        if (m_plugins->loadPlugin(data.libraryName) &&
-                m_preview->recreateDecoration(m_plugins))
+        bool enabled = false;
+        if (m_plugins->loadPlugin(data.libraryName) && m_preview->recreateDecoration(m_plugins)) {
+            enabled = true;
             m_preview->enablePreview();
-        else
+        } else {
             m_preview->disablePreview();
+        }
         m_plugins->destroyPreviousPlugin();
-        m_preview->resize(size);
-        m_preview->setTempButtons(m_plugins, m_customButtons, m_leftButtons, m_rightButtons);
-        m_preview->setTempBorderSize(m_plugins, data.borderSize);
-        data.preview = m_preview->preview(&document, m_renderWidget);
+        if (enabled) {
+            m_preview->resize(size);
+            m_preview->setTempButtons(m_plugins, m_customButtons, m_leftButtons, m_rightButtons);
+            m_preview->setTempBorderSize(m_plugins, data.borderSize);
+            data.preview = m_preview->preview(&document, m_renderWidget);
+        } else {
+            m_decorations.removeAt(index.row());
+        }
         break;
     }
     default:
