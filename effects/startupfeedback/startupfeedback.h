@@ -74,7 +74,7 @@ private:
     GLTexture* m_bouncingTextures[5];
     GLTexture* m_texture; // for passive and blinking
     FeedbackType m_type;
-    QRect m_currentGeometry;
+    QRect m_currentGeometry, m_dirtyRect;
     GLShader *m_blinkingShader;
 };
 } // namespace

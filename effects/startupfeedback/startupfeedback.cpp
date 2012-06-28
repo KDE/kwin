@@ -163,8 +163,8 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         default:
             break; // nothing
         }
-        m_currentGeometry = feedbackRect();
-        data.paint.unite(m_currentGeometry);
+        data.paint.unite(m_dirtyRect);
+        m_dirtyRect = QRect();
     }
     effects->prePaintScreen(data, time);
 }
@@ -243,7 +243,8 @@ void StartupFeedbackEffect::postPaintScreen()
         case BouncingFeedback: // fall through
         case BlinkingFeedback:
             // repaint the icon
-            effects->addRepaint(m_currentGeometry);
+            m_dirtyRect = m_currentGeometry;
+            effects->addRepaint(m_dirtyRect);
             break;
         case PassiveFeedback: // fall through
         default:
@@ -264,8 +265,10 @@ void StartupFeedbackEffect::slotMouseChanged(const QPoint& pos, const QPoint& ol
     Q_UNUSED(modifiers)
     Q_UNUSED(oldmodifiers)
     if (m_active) {
-        effects->addRepaint(m_currentGeometry);
-        effects->addRepaint(feedbackRect());
+        m_dirtyRect |= m_currentGeometry;
+        m_currentGeometry = feedbackRect();
+        m_dirtyRect |= m_currentGeometry;
+        effects->addRepaint(m_dirtyRect);
     }
 }
 
@@ -308,6 +311,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (!m_active)
         effects->startMousePolling();
     m_active = true;
+    m_dirtyRect = m_currentGeometry = feedbackRect();
     QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
                          KIconLoader::DefaultState, QStringList(), 0, true);  // return null pixmap if not found
     if (iconPixmap.isNull())
