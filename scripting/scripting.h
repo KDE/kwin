@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QAction;
 class QDeclarativeView;
+class QDBusPendingCallWatcher;
 class QMutex;
 class QScriptEngine;
 class QScriptValue;
@@ -68,9 +69,12 @@ public:
         return m_screenEdgeCallbacks;
     }
 
+    int registerCallback(QScriptValue value);
+
 public Q_SLOTS:
     Q_SCRIPTABLE void stop();
     Q_SCRIPTABLE virtual void run() = 0;
+    void slotPendingDBusCall(QDBusPendingCallWatcher *watcher);
 
 private Q_SLOTS:
     void globalShortcutTriggered();
@@ -107,6 +111,7 @@ private:
     WorkspaceWrapper *m_workspace;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
+    QHash<int, QScriptValue> m_callbacks;
 };
 
 class Script : public AbstractScript

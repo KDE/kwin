@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdeclarative.h>
 // Qt
 #include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusPendingCallWatcher>
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QSettings>
 #include <QtCore/QtConcurrentRun>
@@ -144,6 +146,53 @@ QScriptValue kwinRegisterScreenEdge(QScriptContext *context, QScriptEngine *engi
     return KWin::registerScreenEdge<KWin::AbstractScript*>(context, engine);
 }
 
+QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
+{
+    KWin::AbstractScript *script = qobject_cast<KWin::AbstractScript*>(context->callee().data().toQObject());
+    if (!script) {
+        context->throwError(QScriptContext::UnknownError, "Internal Error: script not registered");
+        return engine->undefinedValue();
+    }
+    if (context->argumentCount() < 4) {
+        context->throwError(QScriptContext::SyntaxError,
+                            i18nc("Error in KWin Script",
+                                  "Invalid number of arguments. At least service, path, interface and method need to be provided"));
+        return engine->undefinedValue();
+    }
+    if (!KWin::validateArgumentType<QString, QString, QString, QString>(context)) {
+        context->throwError(QScriptContext::SyntaxError,
+                            i18nc("Error in KWin Script",
+                                  "Invalid type. Service, path, interface and method need to be string values"));
+        return engine->undefinedValue();
+    }
+    const QString service = context->argument(0).toString();
+    const QString path = context->argument(1).toString();
+    const QString interface = context->argument(2).toString();
+    const QString method = context->argument(3).toString();
+    int argumentsCount = context->argumentCount();
+    if (context->argument(argumentsCount-1).isFunction()) {
+        --argumentsCount;
+    }
+    QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
+    QVariantList arguments;
+    for (int i=4; i<argumentsCount; ++i) {
+        arguments << context->argument(i).toVariant();
+    }
+    if (!arguments.isEmpty()) {
+        msg.setArguments(arguments);
+    }
+    if (argumentsCount == context->argumentCount()) {
+        // no callback, just fire and forget
+        QDBusConnection::sessionBus().asyncCall(msg);
+    } else {
+        // with a callback
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(msg), script);
+        watcher->setProperty("callback", script->registerCallback(context->argument(context->argumentCount()-1)));
+        QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), script, SLOT(slotPendingDBusCall(QDBusPendingCallWatcher*)));
+    }
+    return engine->undefinedValue();
+}
+
 KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : QObject(parent)
     , m_scriptId(id)
@@ -213,6 +262,9 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     QScriptValue configFunc = engine->newFunction(kwinScriptReadConfig);
     configFunc.setData(engine->newQObject(this));
     engine->globalObject().setProperty("readConfig", configFunc);
+    QScriptValue dbusCallFunc = engine->newFunction(kwinCallDBus);
+    dbusCallFunc.setData(engine->newQObject(this));
+    engine->globalObject().setProperty("callDBus", dbusCallFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
     // add screen edge
@@ -237,6 +289,32 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
     // install meta functions
     KWin::MetaScripting::registration(engine);
+}
+
+int KWin::AbstractScript::registerCallback(QScriptValue value)
+{
+    int id = m_callbacks.size();
+    m_callbacks.insert(id, value);
+    return id;
+}
+
+void KWin::AbstractScript::slotPendingDBusCall(QDBusPendingCallWatcher* watcher)
+{
+    if (watcher->isError()) {
+        kDebug(1212) << "Received D-Bus message is error";
+        watcher->deleteLater();
+        return;
+    }
+    const int id = watcher->property("callback").toInt();
+    QDBusMessage reply = watcher->reply();
+    QScriptValue callback (m_callbacks.value(id));
+    QScriptValueList arguments;
+    foreach (const QVariant &argument, reply.arguments()) {
+        arguments << callback.engine()->newVariant(argument);
+    }
+    callback.call(QScriptValue(), arguments);
+    m_callbacks.remove(id);
+    watcher->deleteLater();
 }
 
 KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)

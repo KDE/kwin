@@ -105,6 +105,14 @@
                 <read></read>
                 <detaileddescription>Aborts the execution of the script if value is null. If message is provided an error is thrown with the given message, if not provided an error with default message is thrown.</detaileddescription>
             </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE void</type>
+                <definition>void KWin::Scripting::callDBus</definition>
+                <argsstring>(QString service, QString path, QString interface, QString method, QVariant arg..., QScriptValue callback = QScriptValue())</argsstring>
+                <name>callDBus</name>
+                <read></read>
+                <detaileddescription>Call a D-Bus method at (service, path, interface and method). A variable number of arguments can be added to the method call. The D-Bus call is always performed in an async way invoking the callback provided as the last (optional) argument. The reply values of the D-Bus method call are passed to the callback.</detaileddescription>
+            </memberdef>
         </sectiondef>
     </compounddef>
 </doxygen>
