@@ -84,28 +84,6 @@ DecorationButton {
             return "";
         }
     }
-    function toggledPressedStatusChange() {
-        if (pressed || toggled) {
-            // pressed comes after hovered (if supported)
-            if (!decoration.active && buttonSvg.supportsInactivePressed) {
-                // if inactive and the buttons supports pressed, we use it
-                // in case we have an inactive-hover but no pressed we stay in hovered state
-                state = "inactive-pressed";
-            } else if (decoration.active && state != "inactive-hover" && buttonSvg.supportsPressed) {
-                state = "active-pressed";
-            }
-        } else {
-            if (!decoration.active && hovered && buttonSvg.supportsInactiveHover) {
-                state = "inactive-hover";
-            } else if (!decoration.active && buttonSvg.supportsInactive) {
-                state = "inactive";
-            } else if (hovered && buttonSvg.supportsHover) {
-                state = "active-hover";
-            } else {
-                state = "active";
-            }
-        }
-    }
     width: widthForButton() * auroraeTheme.buttonSizeFactor
     height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor
     PlasmaCore.FrameSvg {
@@ -121,212 +99,113 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActive
+        property bool shown: (decoration.active || !buttonSvg.supportsInactive) && ((!pressed && !toggled) || !buttonSvg.supportsPressed) && (!hovered || !buttonSvg.supportsHover) && (enabled || !buttonSvg.supportsDeactivated)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "active"
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActiveHover
+        property bool shown: hovered && !pressed && !toggled && buttonSvg.supportsHover && (decoration.active || !buttonSvg.supportsInactiveHover)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "hover"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActivePressed
+        property bool shown: (toggled || pressed) && buttonSvg.supportsPressed && (decoration.active || !buttonSvg.supportsInactivePressed)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "pressed"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActiveDeactivated
+        property bool shown: !enabled && buttonSvg.supportsDeactivated && (decoration.active || !buttonSvg.supportsInactiveDeactivated)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "deactivated"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactive
+        property bool shown: !decoration.active && buttonSvg.supportsInactive && !hovered && !pressed && !toggled && enabled
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "inactive"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactiveHover
+        property bool shown: !decoration.active && hovered && !pressed && !toggled && buttonSvg.supportsInactiveHover
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "hover-inactive"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactivePressed
+        property bool shown: !decoration.active && (toggled || pressed) && buttonSvg.supportsInactivePressed
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "pressed-inactive"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactiveDeactivated
+        property bool shown: !decoration.active && !enabled && buttonSvg.supportsInactiveDeactivated
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "deactivated-inactive"
-        opacity: 0
+        opacity: shown ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     Component.onCompleted: {
-        if (!decoration.active && !enabled && buttonSvg.supportsInactiveDeactivated) {
-            state = "inactive-deactivated";
-        } else if (!enabled && buttonSvg.supportsDeactivated) {
-            state = "active-deactivated";
-        } else if (!decoration.active && (toggled || pressed) && buttonSvg.supportsInactivePressed) {
-            state = "inactive-pressed";
-        } else if ((toggled || pressed) && buttonSvg.supportsPressed) {
-            state = "active-pressed";
-        } else if (!decoration.active && buttonSvg.supportsInactive) {
-            state = "inactive";
-        } else {
-            state = "active";
-        }
         if (buttonType == "H" && !decoration.providesContextHelp) {
             visible = false;
         } else {
             visible = buttonSvg.imagePath != "";
-        }
-    }
-    onHoveredChanged: {
-        if (state == "active-pressed" || state == "inactive-pressed") {
-            // state change of hovered does not matter as the button is currently pressed
-            return;
-        }
-        if (hovered) {
-            if (state == "active" && buttonSvg.supportsHover) {
-                state = "active-hover";
-            } else if (state == "inactive" && buttonSvg.supportsInactiveHover) {
-                state = "inactive-hover";
-            }
-        } else {
-            if (!decoration.active && buttonSvg.supportsInactive) {
-                state = "inactive";
-            } else {
-                state = "active";
-            }
-        }
-    }
-    onPressedChanged: toggledPressedStatusChange()
-    onToggledChanged: toggledPressedStatusChange()
-    states: [
-        State { name: "active" },
-        State { name: "active-hover" },
-        State { name: "active-pressed" },
-        State { name: "active-deactivated" },
-        State { name: "inactive" },
-        State { name: "inactive-hover" },
-        State { name: "inactive-pressed" },
-        State { name: "inactive-deactivated" }
-    ]
-    transitions: [
-        Transition {
-            to: "active"
-            // Cross fade from somewhere to active
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "active-hover"
-            // Cross fade from active to hover
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActiveHover; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "active-pressed"
-            // Cross fade to pressed state
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActivePressed; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "inactive"
-            // Cross fade from hover/pressed/active to inactive
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "inactive-hover"
-            // Cross fade from inactive to hover
-            ParallelAnimation {
-                NumberAnimation { target: buttonActiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveHover; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "inactive-pressed"
-            // Cross fade to inactive pressed state
-            ParallelAnimation {
-                NumberAnimation { target: buttonActivePressed; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveHover; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactivePressed; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "active-deactivated"
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActiveDeactivated; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveDeactivated; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "inactive-deactivated"
-            ParallelAnimation {
-                NumberAnimation { target: buttonActive; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonActiveDeactivated; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: buttonInactiveDeactivated; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-            }
-        }
-    ]
-    Connections {
-        target: decoration
-        onActiveChanged: {
-            if (!decoration.active && !enabled && buttonSvg.supportsInactiveDeactivated) {
-                state = "inactive-deactivated";
-            } else if (!enabled && buttonSvg.supportsDeactivated) {
-                state = "active-deactivated";
-            } else if (!decoration.active && (pressed || toggled) && buttonSvg.supportsInactivePressed) {
-                state = "inactive-pressed";
-            } else if (!decoration.active && hovered && buttonSvg.supportsInactiveHover) {
-                state = "inactive-hover";
-            } else if (!decoration.active && buttonSvg.supportsInactive) {
-                state = "inactive";
-            } else if ((pressed || toggled) && buttonSvg.supportsPressed) {
-                state = "active-pressed";
-            } else if (hovered && buttonSvg.supportsHover) {
-                state = "active-hover";
-            } else {
-                state = "active";
-            }
         }
     }
 }

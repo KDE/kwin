@@ -17,50 +17,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 1.1
 
 Item {
-    function checkState() {
-        if (decoration.maximized && auroraeTheme.restoreButtonPath != "") {
-            button.state = "restore";
-        } else {
-            button.state = "maximize";
-        }
-    }
     id: button
     width: auroraeTheme.buttonWidthMaximizeRestore * auroraeTheme.buttonSizeFactor
     height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor
-    states: [
-        State { name: "maximize" },
-        State { name: "restore" }
-    ]
     AuroraeButton {
         id: maximizeButton
         anchors.fill: parent
         buttonType: "A"
+        opacity: (!decoration.maximized || auroraeTheme.restoreButtonPath == "") ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
+            }
+        }
     }
     AuroraeButton {
         id: restoreButton
         anchors.fill: parent
         buttonType: "R"
-        opacity: 0
-    }
-    transitions: [
-        Transition {
-            to: "maximize"
-            ParallelAnimation {
-                NumberAnimation { target: maximizeButton; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: restoreButton; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-            }
-        },
-        Transition {
-            to: "restore"
-            ParallelAnimation {
-                NumberAnimation { target: maximizeButton; property: "opacity"; to: 0; duration: auroraeTheme.animationTime }
-                NumberAnimation { target: restoreButton; property: "opacity"; to: 1; duration: auroraeTheme.animationTime }
+        opacity: (decoration.maximized && auroraeTheme.restoreButtonPath != "") ? 1 : 0
+        Behavior on opacity {
+            NumberAnimation {
+                duration: auroraeTheme.animationTime
             }
         }
-    ]
-    Connections {
-        target: decoration
-        onMaximizedChanged: button.checkState()
     }
-    Component.onCompleted: button.checkState()
 }

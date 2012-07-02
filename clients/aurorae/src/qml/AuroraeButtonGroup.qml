@@ -37,26 +37,24 @@ Item {
     }
     id: group
     property string buttons
-    states: [
-        State { name: "normal" },
-        State { name: "maximized" }
-    ]
 
-    Component.onCompleted: {
-        group.state = decoration.maximized ? "maximized" : "normal";
-    }
     Row {
         id: groupRow
         spacing: auroraeTheme.buttonSpacing * auroraeTheme.buttonSizeFactor
-    }
-    Connections {
-        target: decoration
-        onMaximizedChanged: group.state = decoration.maximized ? "maximized" : "normal"
     }
     onButtonsChanged: {
         for (i = 0; i < groupRow.children.length; i++) {
             groupRow.children[i].destroy();
         }
         createButtons();
+    }
+    anchors {
+        top: parent.top
+        topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop) + root.paddingTop + auroraeTheme.buttonMarginTop
+    }
+    Behavior on anchors.topMargin {
+        NumberAnimation {
+            duration: auroraeTheme.animationTime
+        }
     }
 }
