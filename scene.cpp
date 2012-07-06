@@ -75,6 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QDesktopWidget>
 
 #include "client.h"
 #include "deleted.h"
@@ -98,7 +99,6 @@ Scene::Scene(Workspace* ws)
     : QObject(ws)
     , wspace(ws)
     , has_waitSync(false)
-    , lanczos_filter(new LanczosFilter())
     , m_overlayWindow(new OverlayWindow())
 {
     last_time.invalidate(); // Initialize the timer
@@ -106,7 +106,6 @@ Scene::Scene(Workspace* ws)
 
 Scene::~Scene()
 {
-    delete lanczos_filter;
     delete m_overlayWindow;
 }
 
@@ -435,9 +434,15 @@ void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, Wind
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (mask & PAINT_WINDOW_LANCZOS)
-        lanczos_filter->performPaint(w, mask, region, data);
-    else
+    if (mask & PAINT_WINDOW_LANCZOS) {
+        if (lanczos_filter.isNull()) {
+            lanczos_filter = new LanczosFilter(this);
+            // recreate the lanczos filter when the screen gets resized
+            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), lanczos_filter.data(), SLOT(deleteLater()));
+            connect(QApplication::desktop(), SIGNAL(resized(int)), lanczos_filter.data(), SLOT(deleteLater()));
+        }
+        lanczos_filter.data()->performPaint(w, mask, region, data);
+    } else
         w->sceneWindow()->performPaint(mask, region, data);
 }
 

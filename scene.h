@@ -154,7 +154,7 @@ protected:
     QElapsedTimer last_time;
     Workspace* wspace;
     bool has_waitSync;
-    LanczosFilter* lanczos_filter;
+    QWeakPointer<LanczosFilter> lanczos_filter;
     OverlayWindow* m_overlayWindow;
 };
 
