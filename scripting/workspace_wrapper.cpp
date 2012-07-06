@@ -39,9 +39,9 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
     connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
     connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
-    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activitiesChanged()));
+    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activitiesChanged(QString)));
     connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
-    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activitiesChanged()));
+    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activitiesChanged(QString)));
     connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SIGNAL(numberScreensChanged(int)));
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));

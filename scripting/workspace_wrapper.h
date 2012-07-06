@@ -107,8 +107,9 @@ signals:
     void screenResized(int screen);
     /**
      * Signal emitted whenever the current activity changed.
+     * @param id id of the new activity
      **/
-    void currentActivityChanged();
+    void currentActivityChanged(const QString &id);
     /**
      * Signal emitted whenever the list of activities changed.
      * @param id id of the new activity
