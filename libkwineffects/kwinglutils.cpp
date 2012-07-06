@@ -191,6 +191,9 @@ int nearestPowerOfTwo(int x)
 void pushMatrix()
 {
 #ifndef KWIN_HAVE_OPENGLES
+    if (ShaderManager::instance()->isValid()) {
+        return;
+    }
     glPushMatrix();
 #endif
 }
@@ -200,6 +203,9 @@ void pushMatrix(const QMatrix4x4 &matrix)
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(matrix)
 #else
+    if (ShaderManager::instance()->isValid()) {
+        return;
+    }
     glPushMatrix();
     multiplyMatrix(matrix);
 #endif
@@ -210,6 +216,9 @@ void multiplyMatrix(const QMatrix4x4 &matrix)
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(matrix)
 #else
+    if (ShaderManager::instance()->isValid()) {
+        return;
+    }
     GLfloat m[16];
     const qreal *data = matrix.constData();
     for (int i = 0; i < 4; ++i) {
@@ -243,6 +252,9 @@ void loadMatrix(const QMatrix4x4 &matrix)
 void popMatrix()
 {
 #ifndef KWIN_HAVE_OPENGLES
+    if (ShaderManager::instance()->isValid()) {
+        return;
+    }
     glPopMatrix();
 #endif
 }
