@@ -815,7 +815,7 @@ void Client::updateShape()
         if (!app_noborder) {
             // Only when shape is detected for the first time, still let the user to override
             app_noborder = true;
-            noborder = true;
+            noborder = rules()->checkNoBorder(true);
             updateDecoration(true);
         }
         if (noBorder())
@@ -824,7 +824,7 @@ void Client::updateShape()
     } else if (app_noborder) {
         XShapeCombineMask(display(), frameId(), ShapeBounding, 0, 0, None, ShapeSet);
         detectNoBorder();
-        app_noborder = noborder;
+        app_noborder = noborder = rules()->checkNoBorder(noborder);
         updateDecoration(true);
     }
 
