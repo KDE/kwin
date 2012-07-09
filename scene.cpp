@@ -364,6 +364,9 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
 
         QSizeF size = QSizeF(thumb->size());
         size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
+        if (size.width() > thumb->width() || size.height() > thumb->height()) {
+            size = QSizeF(thumb->size());
+        }
         thumbData.xScale = size.width() / static_cast<qreal>(thumb->width());
         thumbData.yScale = size.height() / static_cast<qreal>(thumb->height());
         // it can happen in the init/closing phase of the tabbox
