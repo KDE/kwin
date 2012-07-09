@@ -48,6 +48,10 @@ class KWIN_EXPORT KDecorationPlugins
 public:
     KDecorationPlugins(const KSharedConfigPtr &cfg);
     virtual ~KDecorationPlugins();
+    /** Whether the plugin with @p name can be loaded
+     * if @p loadedLib is passed, the library is NOT unloaded and freed
+     * what is now your resposibility (intended for and used by below loadPlugin mainly) */
+    bool canLoad(QString name, KLibrary ** loadedLib = 0);
     bool loadPlugin(QString name);
     void destroyPreviousPlugin();
     KDecorationFactory* factory();
@@ -59,7 +63,6 @@ protected:
     QString defaultPlugin; // FRAME normalne protected?
 private:
     KDecorationFactory*(*create_ptr)();
-    int (*version_ptr)();
     KLibrary *library;
     KDecorationFactory* fact;
     KLibrary *old_library;
