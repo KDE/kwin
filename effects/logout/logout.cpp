@@ -27,6 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
+#include <KDE/KStandardDirs>
+
+#include <QtGui/QMatrix4x4>
+#include <QtGui/QVector2D>
 
 namespace KWin
 {
@@ -41,6 +45,8 @@ LogoutEffect::LogoutEffect()
     , logoutWindowPassed(false)
     , canDoPersistent(false)
     , ignoredWindows()
+    , m_vignettingShader(NULL)
+    , m_blurShader(NULL)
 {
     // Persistent effect
     logoutAtom = XInternAtom(display(), "_KDE_LOGGING_OUT", False);
@@ -68,6 +74,8 @@ LogoutEffect::~LogoutEffect()
 {
     delete blurTexture;
     delete blurTarget;
+    delete m_vignettingShader;
+    delete m_blurShader;
 }
 
 void LogoutEffect::reconfigure(ReconfigureFlags)
@@ -80,6 +88,8 @@ void LogoutEffect::reconfigure(ReconfigureFlags)
     delete blurTarget;
     blurTarget = NULL;
     blurSupported = false;
+    delete m_blurShader;
+    m_blurShader = NULL;
 }
 
 void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -95,7 +105,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     } else if (!blurTexture) {
         blurSupported = false;
         delete blurTarget; // catch as we just tested the texture ;-P
-        if (effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && useBlur) {
+        if (effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && GLRenderTarget::blitSupported() && useBlur) {
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target
@@ -180,11 +190,8 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 
 void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (blurSupported && progress > 0.0)
-        GLRenderTarget::pushRenderTarget(blurTarget);
     effects->paintScreen(mask, region, data);
 
-#ifndef KWIN_HAVE_OPENGLES
     if (effects->compositingType() == KWin::OpenGLCompositing && progress > 0.0) {
         if (!blurSupported) {
             if (!logoutWindowPassed)
@@ -193,64 +200,16 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 // is set as it may still be even if it wasn't rendered.
                 renderVignetting();
         } else {
-            GLRenderTarget* target = GLRenderTarget::popRenderTarget();
-            assert(target == blurTarget);
-            Q_UNUSED(target);
+            GLRenderTarget::pushRenderTarget(blurTarget);
+            blurTarget->blitFromFramebuffer();
+            GLRenderTarget::popRenderTarget();
 
             //--------------------------
             // Render the screen effect
-
-            // HACK: the GL code is still OpenGL 1, so we have to unbind the shader.
-            GLint shader = 0;
-            if (ShaderManager::instance()->isShaderBound()) {
-                glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-                glUseProgram(0);
-            }
-            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
-
-            // Unmodified base image
-            blurTexture->bind();
-            glBegin(GL_QUADS);
-            glTexCoord2f(0.0, 0.0);
-            glVertex2f(0.0, displayHeight());
-            glTexCoord2f(1.0, 0.0);
-            glVertex2f(displayWidth(), displayHeight());
-            glTexCoord2f(1.0, 1.0);
-            glVertex2f(displayWidth(), 0.0);
-            glTexCoord2f(0.0, 1.0);
-            glVertex2f(0.0, 0.0);
-            glEnd();
-
-            // Blurred image
-            GLfloat bias[1];
-            glGetTexEnvfv(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias);
-            glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4f(1.0f, 1.0f, 1.0f, progress * 0.4);
-            glBegin(GL_QUADS);
-            glTexCoord2f(0.0, 0.0);
-            glVertex2f(0.0, displayHeight());
-            glTexCoord2f(1.0, 0.0);
-            glVertex2f(displayWidth(), displayHeight());
-            glTexCoord2f(1.0, 1.0);
-            glVertex2f(displayWidth(), 0.0);
-            glTexCoord2f(0.0, 1.0);
-            glVertex2f(0.0, 0.0);
-            glEnd();
-            glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0]);
-            blurTexture->unbind();
+            renderBlurTexture();
 
             // Vignetting (Radial gradient with transparent middle and black edges)
             renderVignetting();
-
-            glPopAttrib();
-            // HACK: rebind previously bound shader
-            if (ShaderManager::instance()->isShaderBound()) {
-                glUseProgram(shader);
-            }
-
             //--------------------------
 
             // Render the logout window
@@ -273,7 +232,6 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             windowsOpacities.clear();
         }
     }
-#endif
 }
 
 void LogoutEffect::postPaintScreen()
@@ -330,6 +288,58 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
 
 void LogoutEffect::renderVignetting()
 {
+    if (!ShaderManager::instance()->isValid()) {
+        renderVignettingLegacy();
+        return;
+    }
+    if (!m_vignettingShader) {
+        m_vignettingShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::ColorShader,
+                                                                           KGlobal::dirs()->findResource("data", "kwin/vignetting.frag"));
+        if (!m_vignettingShader->isValid()) {
+            kDebug(1212) << "Vignetting Shader failed to load";
+            return;
+        }
+    } else if (!m_vignettingShader->isValid()) {
+        // shader broken
+        return;
+    }
+    // need to get the projection matrix from the ortho shader for the vignetting shader
+    QMatrix4x4 projection = ShaderManager::instance()->pushShader(KWin::ShaderManager::SimpleShader)->getUniformMatrix4x4("projection");
+    ShaderManager::instance()->popShader();
+
+    ShaderManager::instance()->pushShader(m_vignettingShader);
+    m_vignettingShader->setUniform(KWin::GLShader::ProjectionMatrix, projection);
+    m_vignettingShader->setUniform("u_progress", (float)progress * 0.9f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_SCISSOR_TEST);
+    const QRect fullArea = effects->clientArea(FullArea, 0, 0);
+    for (int screen = 0; screen < effects->numScreens(); screen++) {
+        const QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
+        glScissor(screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
+                  screenGeom.width(), screenGeom.height());  // GL coords are flipped
+        const float cenX = screenGeom.x() + screenGeom.width() / 2;
+        const float cenY = fullArea.height() - screenGeom.y() - screenGeom.height() / 2;
+        const float r = float((screenGeom.width() > screenGeom.height())
+                              ? screenGeom.width() : screenGeom.height()) * 0.8f;  // Radius
+        m_vignettingShader->setUniform("u_center", QVector2D(cenX, cenY));
+        m_vignettingShader->setUniform("u_radius", r);
+        QVector<float> vertices;
+        vertices << screenGeom.x() << screenGeom.y();
+        vertices << screenGeom.x() << screenGeom.y() + screenGeom.height();
+        vertices << screenGeom.x() + screenGeom.width() << screenGeom.y();
+        vertices << screenGeom.x() + screenGeom.width() << screenGeom.y() + screenGeom.height();
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->setData(vertices.count()/2, 2, vertices.constData(), NULL);
+        vbo->render(GL_TRIANGLE_STRIP);
+    }
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_BLEND);
+    ShaderManager::instance()->popShader();
+}
+
+void LogoutEffect::renderVignettingLegacy()
+{
 #ifndef KWIN_HAVE_OPENGLES
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
     glEnable(GL_BLEND);   // If not already (Such as when rendered straight to the screen)
@@ -357,6 +367,64 @@ void LogoutEffect::renderVignetting()
 #endif
 }
 
+void LogoutEffect::renderBlurTexture()
+{
+    if (!ShaderManager::instance()->isValid()) {
+        renderBlurTextureLegacy();
+        return;
+    }
+    if (!m_blurShader) {
+        m_blurShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::SimpleShader,
+                                                                     KGlobal::dirs()->findResource("data", "kwin/logout-blur.frag"));
+        if (!m_blurShader->isValid()) {
+            kDebug(1212) << "Logout blur shader failed to load";
+        }
+    } else if (!m_blurShader->isValid()) {
+        // shader is broken - no need to continue here
+        return;
+    }
+    // Unmodified base image
+    ShaderManager::instance()->pushShader(m_blurShader);
+    m_blurShader->setUniform(GLShader::Offset, QVector2D(0, 0));
+    m_blurShader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
+    m_blurShader->setUniform(GLShader::Saturation, 1.0);
+    m_blurShader->setUniform(GLShader::AlphaToOne, 1);
+    m_blurShader->setUniform("u_alphaProgress", (float)progress * 0.4f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    blurTexture->bind();
+    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+    blurTexture->unbind();
+    glDisable(GL_BLEND);
+    ShaderManager::instance()->popShader();
+    checkGLError("Render blur texture");
+}
+
+void LogoutEffect::renderBlurTextureLegacy()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+    // Unmodified base image
+    blurTexture->bind();
+    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+
+    // Blurred image
+    GLfloat bias[1];
+    glGetTexEnvfv(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias);
+    glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(1.0f, 1.0f, 1.0f, progress * 0.4);
+
+    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+
+    glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0]);
+    blurTexture->unbind();
+    glPopAttrib();
+#endif
+}
+
 void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
     if (w || a != logoutAtom)
@@ -372,11 +440,12 @@ void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)
     // We are using a compatible KSMServer therefore only terminate the effect when the
     // atom is deleted, not when the dialog is closed.
     canDoPersistent = true;
+    effects->addRepaintFull();
 }
 
 bool LogoutEffect::isActive() const
 {
-    return progress != 0;
+    return progress != 0 || logoutWindow;
 }
 
 } // namespace

@@ -118,10 +118,7 @@ if( NOT KWIN_MOBILE_EFFECTS )
     include( thumbnailaside/CMakeLists.txt )
     include( windowgeometry/CMakeLists.txt )
     include( zoom/CMakeLists.txt )
-
-    if( NOT OPENGLES_FOUND )
     include( logout/CMakeLists.txt )
-    endif( NOT OPENGLES_FOUND )
 endif( NOT KWIN_MOBILE_EFFECTS )
 
 # OpenGL-specific effects

@@ -64,6 +64,9 @@ private:
     EffectWindowList ignoredWindows;
 
     void renderVignetting();
+    void renderVignettingLegacy();
+    void renderBlurTexture();
+    void renderBlurTextureLegacy();
     int frameDelay;
     bool blurSupported, useBlur;
     GLTexture* blurTexture;
@@ -71,6 +74,8 @@ private:
     double windowOpacity;
     EffectWindowList windows;
     QHash< EffectWindow*, double > windowsOpacities;
+    GLShader *m_vignettingShader;
+    GLShader *m_blurShader;
 };
 
 } // namespace
