@@ -94,9 +94,7 @@ void DecorationModel::findDecorations()
                             findAuroraeThemes();
                             continue;
                         }
-                        if (m_plugins->loadPlugin(libName))
-                            m_plugins->destroyPreviousPlugin();
-                        else
+                        if (!m_plugins->canLoad(libName))
                             continue;
                         DecorationModelData data;
                         data.name = desktopFile.readName();
@@ -197,7 +195,8 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
         if (m_plugins->loadPlugin(m_decorations[ index.row()].libraryName) &&
                 m_plugins->factory() != NULL) {
             foreach (KDecorationDefines::BorderSize size, m_plugins->factory()->borderSizes())   // krazy:exclude=foreach
-            sizes << int(size) ;
+                sizes << int(size);
+            m_plugins->destroyPreviousPlugin();
         }
         return sizes;
     }
@@ -312,13 +311,15 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
 
         document.setHtml(html);
         bool enabled = false;
-        if (m_plugins->loadPlugin(data.libraryName) && m_preview->recreateDecoration(m_plugins)) {
+        bool loaded;
+        if ((loaded = m_plugins->loadPlugin(data.libraryName)) && m_preview->recreateDecoration(m_plugins)) {
             enabled = true;
             m_preview->enablePreview();
         } else {
             m_preview->disablePreview();
         }
-        m_plugins->destroyPreviousPlugin();
+        if (loaded)
+            m_plugins->destroyPreviousPlugin();
         if (enabled) {
             m_preview->resize(size);
             m_preview->setTempButtons(m_plugins, m_customButtons, m_leftButtons, m_rightButtons);
