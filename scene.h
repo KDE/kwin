@@ -124,7 +124,7 @@ protected:
     // shared implementation, starts painting the window
     virtual void paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads);
     // called after all effects had their drawWindow() called
-    void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     // compute time since the last repaint
     void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting

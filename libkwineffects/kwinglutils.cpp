@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // need to call GLTexturePrivate::initStatic()
 #include "kwingltexture_p.h"
 
+#include "kwinglcolorcorrection.h"
 #include "kwinglobals.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
@@ -304,10 +305,8 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
     return load(vertexSource, fragmentSource);
 }
 
-bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &source) const
+const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &source) const
 {
-    GLuint shader = glCreateShader(shaderType);
-
     // Prepare the source code
     QByteArray ba;
 #ifdef KWIN_HAVE_OPENGLES
@@ -318,7 +317,19 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
     }
     ba.append(source);
 
-    const char* src = ba.constData();
+    // Inject color correction code for fragment shaders, if possible
+    if (shaderType == GL_FRAGMENT_SHADER)
+        ba = ColorCorrection::instance()->prepareFragmentShader(ba);
+
+    return ba;
+}
+
+bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &source) const
+{
+    GLuint shader = glCreateShader(shaderType);
+
+    QByteArray preparedSource = prepareSource(shaderType, source);
+    const char* src = preparedSource.constData();
     glShaderSource(shader, 1, &src, NULL);
 
     // Compile the shader

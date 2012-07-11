@@ -191,6 +191,7 @@ Workspace::Workspace(bool restore)
     connect(&rulesUpdatedTimer, SIGNAL(timeout()), this, SLOT(writeWindowRules()));
     connect(&unredirectTimer, SIGNAL(timeout()), this, SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), this, SLOT(resetCompositing()));
+    connect(options, SIGNAL(glColorCorrectionChanged()), this, SLOT(resetCompositing()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
 

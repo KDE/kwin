@@ -211,6 +211,7 @@ public:
     qreal decorationOpacity;
     qreal saturation;
     qreal brightness;
+    qint32 screen;
 };
 
 WindowPaintData::WindowPaintData(EffectWindow* w)
@@ -223,6 +224,7 @@ WindowPaintData::WindowPaintData(EffectWindow* w)
     setDecorationOpacity(1.0);
     setSaturation(1.0);
     setBrightness(1.0);
+    setScreen(0);
 }
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
@@ -242,6 +244,7 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setDecorationOpacity(other.decorationOpacity());
     setSaturation(other.saturation());
     setBrightness(other.brightness());
+    setScreen(other.screen());
 }
 
 WindowPaintData::~WindowPaintData()
@@ -269,6 +272,11 @@ qreal WindowPaintData::brightness() const
     return d->brightness;
 }
 
+qint32 WindowPaintData::screen() const
+{
+    return d->screen;
+}
+
 void WindowPaintData::setDecorationOpacity(qreal opacity)
 {
     d->decorationOpacity = opacity;
@@ -287,6 +295,11 @@ void WindowPaintData::setSaturation(qreal saturation) const
 void WindowPaintData::setBrightness(qreal brightness)
 {
     d->brightness = brightness;
+}
+
+void WindowPaintData::setScreen(qint32 screen) const
+{
+    d->screen = screen;
 }
 
 qreal WindowPaintData::multiplyDecorationOpacity(qreal factor)

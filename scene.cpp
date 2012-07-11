@@ -75,12 +75,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QDesktopWidget>
 
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
-#include "lanczosfilter.h"
 #include "overlaywindow.h"
 #include "shadow.h"
 
@@ -437,16 +435,7 @@ void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, Wind
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (mask & PAINT_WINDOW_LANCZOS) {
-        if (lanczos_filter.isNull()) {
-            lanczos_filter = new LanczosFilter(this);
-            // recreate the lanczos filter when the screen gets resized
-            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), lanczos_filter.data(), SLOT(deleteLater()));
-            connect(QApplication::desktop(), SIGNAL(resized(int)), lanczos_filter.data(), SLOT(deleteLater()));
-        }
-        lanczos_filter.data()->performPaint(w, mask, region, data);
-    } else
-        w->sceneWindow()->performPaint(mask, region, data);
+    w->sceneWindow()->performPaint(mask, region, data);
 }
 
 OverlayWindow* Scene::overlayWindow()

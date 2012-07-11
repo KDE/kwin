@@ -70,12 +70,14 @@ Sources and other compositing managers:
 
 #include <kxerrorhandler.h>
 
+#include <kwinglcolorcorrection.h>
 #include <kwinglplatform.h>
 
 #include "utils.h"
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "lanczosfilter.h"
 #include "overlaywindow.h"
 
 #include <math.h>
@@ -87,6 +89,7 @@ Sources and other compositing managers:
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
+#include <QDesktopWidget>
 #include <QVector2D>
 #include <QVector4D>
 #include <QMatrix4x4>
@@ -203,6 +206,38 @@ void SceneOpenGL::paintBackground(QRegion region)
     if (useShader) {
         ShaderManager::instance()->popShader();
     }
+}
+
+void SceneOpenGL::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (options->isGlColorCorrection()) {
+        // Split the painting for separate screens
+        int numScreens = Workspace::self()->numScreens();
+        for (int screen = 0; screen < numScreens; ++ screen) {
+            QRegion regionForScreen(region);
+            if (numScreens > 1)
+                regionForScreen = region.intersected(Workspace::self()->screenGeometry(screen));
+
+            data.setScreen(screen);
+            performPaint(w, mask, regionForScreen, data);
+        }
+    } else {
+        performPaint(w, mask, region, data);
+    }
+}
+
+void SceneOpenGL::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+{
+    if (mask & PAINT_WINDOW_LANCZOS) {
+        if (lanczos_filter.isNull()) {
+            lanczos_filter = new LanczosFilter(this);
+            // recreate the lanczos filter when the screen gets resized
+            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), lanczos_filter.data(), SLOT(deleteLater()));
+            connect(QApplication::desktop(), SIGNAL(resized(int)), lanczos_filter.data(), SLOT(deleteLater()));
+        }
+        lanczos_filter.data()->performPaint(w, mask, region, data);
+    } else
+        w->sceneWindow()->performPaint(mask, region, data);
 }
 
 void SceneOpenGL::windowAdded(Toplevel* c)
@@ -489,6 +524,8 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
             data.shader->setUniform(GLShader::Offset, QVector2D(x(), y()));
         }
+        if (options->isGlColorCorrection())
+            ColorCorrection::instance()->setupForOutput(data.screen());
         sceneShader = true;
     }
 
@@ -573,9 +610,9 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
         texture.bind();
-        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
+        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
         renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
-        restoreStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
+        restoreStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (static_cast<SceneOpenGL*>(scene)->debug) {
@@ -646,10 +683,10 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     decorationTexture->setWrapMode(GL_CLAMP_TO_EDGE);
     decorationTexture->bind();
 
-    prepareStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.shader);
+    prepareStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
     makeDecorationArrays(quads, rect, decorationTexture);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
-    restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.shader);
+    restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
     decorationTexture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {
@@ -683,9 +720,9 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
         texture->setFilter(GL_NEAREST);
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
-    prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.shader, texture);
+    prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader, texture);
     renderQuads(0, region, quads, texture, true, hardwareClipping);
-    restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.shader, texture);
+    restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader, texture);
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {
@@ -781,10 +818,10 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     delete[] texcoords;
 }
 
-void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
+void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader)
 {
     if (shader)
-        prepareShaderRenderStates(type, opacity, brightness, saturation, shader);
+        prepareShaderRenderStates(type, opacity, brightness, saturation, screen, shader);
     else {
         Texture *tex = NULL;
         switch(type) {
@@ -806,20 +843,20 @@ void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double
         default:
             return;
         }
-        prepareStates(type, opacity, brightness, saturation, shader, tex);
+        prepareStates(type, opacity, brightness, saturation, screen, shader, tex);
     }
 }
 
-void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture)
+void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader, GLTexture *texture)
 {
     if (shader) {
-        prepareShaderRenderStates(type, opacity, brightness, saturation, shader);
+        prepareShaderRenderStates(type, opacity, brightness, saturation, screen, shader);
     } else {
-        prepareRenderStates(type, opacity, brightness, saturation, texture);
+        prepareRenderStates(type, opacity, brightness, saturation, screen, texture);
     }
 }
 
-void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
+void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader)
 {
     // setup blending of transparent windows
     bool opaque = isOpaque() && opacity == 1.0;
@@ -828,12 +865,15 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
         opaque = false;
     if (!opaque) {
         glEnable(GL_BLEND);
-        if (alpha) {
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        } else {
-            glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
-        }
+        if (!options->isGlColorCorrection()) {
+            if (alpha) {
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            } else {
+                glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
+            }
+        } else
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     const float rgb = brightness * opacity;
@@ -842,10 +882,14 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation,         saturation);
     shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
+
+    if (options->isGlColorCorrection())
+        ColorCorrection::instance()->setupForOutput(screen);
 }
 
-void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex)
+void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLTexture *tex)
 {
+    Q_UNUSED(screen)
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(type)
     Q_UNUSED(opacity)
@@ -980,10 +1024,10 @@ void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, 
 #endif
 }
 
-void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
+void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader)
 {
     if (shader)
-        restoreShaderRenderStates(type, opacity, brightness, saturation, shader);
+        restoreShaderRenderStates(type, opacity, brightness, saturation, screen, shader);
     else {
         Texture *tex = NULL;
         switch(type) {
@@ -1005,23 +1049,24 @@ void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double
         default:
             return;
         }
-        restoreStates(type, opacity, brightness, saturation, shader, tex);
+        restoreStates(type, opacity, brightness, saturation, screen, shader, tex);
     }
 }
 
-void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture)
+void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader, GLTexture *texture)
 {
     if (shader) {
-        restoreShaderRenderStates(type, opacity, brightness, saturation, shader);
+        restoreShaderRenderStates(type, opacity, brightness, saturation, screen, shader);
     } else {
-        restoreRenderStates(type, opacity, brightness, saturation, texture);
+        restoreRenderStates(type, opacity, brightness, saturation, screen, texture);
     }
 }
 
-void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader)
+void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader)
 {
     Q_UNUSED(brightness);
     Q_UNUSED(saturation);
+    Q_UNUSED(screen)
     Q_UNUSED(shader);
     bool opaque = isOpaque() && opacity == 1.0;
     if (type != Content)
@@ -1032,9 +1077,10 @@ void SceneOpenGL::Window::restoreShaderRenderStates(TextureType type, double opa
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::AlphaToOne, 0);
 }
 
-void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex)
+void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLTexture *tex)
 {
     Q_UNUSED(type)
+    Q_UNUSED(screen)
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(opacity)
     Q_UNUSED(brightness)

@@ -778,6 +778,17 @@ p, li { white-space: pre-wrap; }
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="glShaders">
+            <property name="toolTip">
+             <string>If enabled all rendering will be performed with Shaders written in the OpenGL Shading Language.
+On legacy hardware disabling Shaders can improve the performance.</string>
+            </property>
+            <property name="text">
+             <string>Use OpenGL 2 Shaders</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0" colspan="2">
            <widget class="QCheckBox" name="glVSync">
             <property name="text">
@@ -788,14 +799,16 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="glShaders">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="glColorCorrection">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="toolTip">
-             <string>If enabled all rendering will be performed with Shaders written in the OpenGL Shading Language.
-On legacy hardware disabling Shaders can improve the performance.</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activates color correction if possible, using the Kolor-Manager. Requires OpenGL 2 Shaders to be enabled and &lt;span style=&quot; text-decoration: underline;&quot;&gt;Kolor-Manager to be installed&lt;/span&gt;. May fail silently.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Experimental.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Use OpenGL 2 Shaders</string>
+             <string>Enable color correction (experimental)</string>
             </property>
            </widget>
           </item>
@@ -893,12 +906,28 @@ On legacy hardware disabling Shaders can improve the performance.</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>161</x>
-     <y>64</y>
+     <x>312</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel">
-     <x>194</x>
-     <y>119</y>
+     <x>345</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glShaders</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>glColorCorrection</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>358</y>
     </hint>
    </hints>
   </connection>

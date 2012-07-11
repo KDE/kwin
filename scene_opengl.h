@@ -56,6 +56,8 @@ public:
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
+    virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
@@ -184,14 +186,14 @@ protected:
     void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
-    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
-    void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
-    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
-    void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
+    void prepareStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader);
+    void prepareStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader, GLTexture *texture);
+    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLTexture *tex);
+    void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader);
+    void restoreStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader);
+    void restoreStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader, GLTexture *texture);
+    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLTexture *tex);
+    void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLShader* shader);
 
 private:
     Texture texture;
