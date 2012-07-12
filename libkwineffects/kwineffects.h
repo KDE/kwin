@@ -1864,7 +1864,6 @@ public:
      * way for decoration.
      */
     double opacity;
-    double contents_opacity;
     double decoration_opacity;
     /**
      * Saturation of the window, in range [0; 1]

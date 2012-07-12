@@ -573,9 +573,9 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
         texture.bind();
-        prepareStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+        prepareStates(Content, data.opacity, data.brightness, data.saturation, data.shader);
         renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
-        restoreStates(Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader);
+        restoreStates(Content, data.opacity, data.brightness, data.saturation, data.shader);
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (static_cast<SceneOpenGL*>(scene)->debug) {
