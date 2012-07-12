@@ -108,7 +108,7 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
 
 void HighlightWindowEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    data.opacity *= m_windowOpacity.value(w, 1.0f);
+    data.multiplyOpacity(m_windowOpacity.value(w, 1.0f));
     effects->paintWindow(w, mask, region, data);
 }
 

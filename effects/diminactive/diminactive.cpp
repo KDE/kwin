@@ -74,8 +74,8 @@ void DimInactiveEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             previous = previousActiveTimeline.currentValue();
         if (previousActiveTimeline.currentValue() == 1.0)
             previousActive = NULL;
-        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous);
-        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous);
+        data.multiplyBrightness((1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous));
+        data.multiplySaturation((1.0 - (dim_strength / 100.0) * timeline.currentValue() * previous));
     }
     effects->paintWindow(w, mask, region, data);
 }

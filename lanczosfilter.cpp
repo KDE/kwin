@@ -207,13 +207,13 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                         glEnable(GL_BLEND);
                         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                        const float rgb = data.brightness * data.opacity;
-                        const float a = data.opacity;
+                        const qreal rgb = data.brightness() * data.opacity();
+                        const qreal a = data.opacity();
 
                         GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
                         shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                         shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-                        shader->setUniform(GLShader::Saturation, data.saturation);
+                        shader->setUniform(GLShader::Saturation, data.saturation());
                         shader->setUniform(GLShader::AlphaToOne, 0);
 
                         cachedTexture->render(region, textureRect, hardwareClipping);
@@ -221,9 +221,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                         ShaderManager::instance()->popShader();
                         glDisable(GL_BLEND);
                     } else {
-                        prepareRenderStates(cachedTexture, data.opacity, data.brightness, data.saturation);
+                        prepareRenderStates(cachedTexture, data.opacity(), data.brightness(), data.saturation());
                         cachedTexture->render(region, textureRect, hardwareClipping);
-                        restoreRenderStates(cachedTexture, data.opacity, data.brightness, data.saturation);
+                        restoreRenderStates(cachedTexture, data.opacity(), data.brightness(), data.saturation());
                     }
                     if (hardwareClipping) {
                         glDisable(GL_SCISSOR_TEST);
@@ -244,9 +244,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             thumbData.setYScale(1.0);
             thumbData.setXTranslation(-w->x() - left);
             thumbData.setYTranslation(-w->y() - top);
-            thumbData.brightness = 1.0;
-            thumbData.opacity = 1.0;
-            thumbData.saturation = 1.0;
+            thumbData.setBrightness(1.0);
+            thumbData.setOpacity(1.0);
+            thumbData.setSaturation(1.0);
 
             // Bind the offscreen FBO and draw the window on it unscaled
             updateOffscreenSurfaces();
@@ -344,13 +344,13 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                const float rgb = data.brightness * data.opacity;
-                const float a = data.opacity;
+                const qreal rgb = data.brightness() * data.opacity();
+                const qreal a = data.opacity();
 
                 GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
                 shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-                shader->setUniform(GLShader::Saturation, data.saturation);
+                shader->setUniform(GLShader::Saturation, data.saturation());
                 shader->setUniform(GLShader::AlphaToOne, 0);
 
                 cache->render(region, textureRect, hardwareClipping);
@@ -358,9 +358,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 ShaderManager::instance()->popShader();
                 glDisable(GL_BLEND);
             } else {
-                prepareRenderStates(cache, data.opacity, data.brightness, data.saturation);
+                prepareRenderStates(cache, data.opacity(), data.brightness(), data.saturation());
                 cache->render(region, textureRect, hardwareClipping);
-                restoreRenderStates(cache, data.opacity, data.brightness, data.saturation);
+                restoreRenderStates(cache, data.opacity(), data.brightness(), data.saturation());
             }
             if (hardwareClipping) {
                 glDisable(GL_SCISSOR_TEST);

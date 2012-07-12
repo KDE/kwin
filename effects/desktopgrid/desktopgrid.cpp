@@ -180,7 +180,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         }
         if (it.value()) {
             WindowPaintData d(it.value());
-            d.opacity *= timeline.currentValue();
+            d.multiplyOpacity(timeline.currentValue());
             effects->drawWindow(it.value(), PAINT_WINDOW_TRANSLUCENT,
                                 infiniteRegion(), d);
         }
@@ -291,7 +291,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
         // Don't change brightness of windows on all desktops as this causes flickering
         if (!w->isOnAllDesktops() || w->isDesktop())
-            data.brightness *= 1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue()));
+            data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
 
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
@@ -338,10 +338,10 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
             if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
                 // fade out panels if present windows is used
-                d.opacity *= (1.0 - timeline.currentValue());
+                d.multiplyOpacity((1.0 - timeline.currentValue()));
             }
             if (isUsingPresentWindows() && w->isMinimized()) {
-                d.opacity *= timeline.currentValue();
+                d.multiplyOpacity(timeline.currentValue());
             }
 
             if (effects->compositingType() == XRenderCompositing) {

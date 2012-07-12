@@ -82,16 +82,14 @@ void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 {
     if (transformWindow && (w != window) && w->isManaged() && !isDashboard(w)) {
         // dashboard active, transform other windows
-        data.brightness *= (1 - ((1.0 - brightness) * timeline.currentValue()));
-        data.saturation *= (1 - ((1.0 - saturation) * timeline.currentValue()));
+        data.multiplyBrightness((1 - ((1.0 - brightness) * timeline.currentValue())));
+        data.multiplySaturation((1 - ((1.0 - saturation) * timeline.currentValue())));
     }
 
     else if (transformWindow && (w == window) && w->isManaged()) {
         // transform dashboard
         if ((timeline.currentValue() * 2) <= 1) {
-            data.opacity *= timeline.currentValue() * 2;
-        } else {
-            data.opacity *= 1;
+            data.multiplyOpacity(timeline.currentValue() * 2);
         }
     }
 

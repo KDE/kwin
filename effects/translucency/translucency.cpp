@@ -110,10 +110,10 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
     }
     // Handling active and inactive windows
     if (inactive != 1.0 && isInactive(w)) {
-        data.opacity *= inactive;
+        data.multiplyOpacity(inactive);
 
         if (w == previous) {
-            data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.currentValue())));
+            data.multiplyOpacity((inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.currentValue()))));
             if (activeinactive_timeline.currentValue() < 1.0)
                 w->addRepaintFull();
             else
@@ -122,22 +122,22 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
     } else {
         // Fading in
         if (!isInactive(w) && !w->isDesktop()) {
-            data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.currentValue()));
+            data.multiplyOpacity((inactive + ((1.0 - inactive) * activeinactive_timeline.currentValue())));
             if (activeinactive_timeline.currentValue() < 1.0)
                 w->addRepaintFull();
         }
         // decoration and dialogs
         if (decoration != 1.0 && w->hasDecoration())
-            data.decoration_opacity *= decoration;
+            data.multiplyDecorationOpacity(decoration);
         if (dialogs != 1.0 && w->isDialog())
-            data.opacity *= dialogs;
+            data.multiplyOpacity(dialogs);
 
         // Handling moving and resizing
         if (moveresize != 1.0 && !w->isDesktop() && !w->isDock()) {
             double progress = moveresize_timeline.currentValue();
             if (w->isUserMove() || w->isUserResize()) {
                 // Fading to translucent
-                data.opacity *= (moveresize + ((1.0 - moveresize) * (1.0 - progress)));
+                data.multiplyOpacity((moveresize + ((1.0 - moveresize) * (1.0 - progress))));
                 if (progress < 1.0 && progress > 0.0) {
                     w->addRepaintFull();
                     fadeout = w;
@@ -145,7 +145,7 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
             } else {
                 // Fading back to more opaque
                 if (w == fadeout && !w->isUserMove() && !w->isUserResize()) {
-                    data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
+                    data.multiplyOpacity((moveresize + ((1.0 - moveresize) * (progress))));
                     if (progress == 1.0 || progress == 0.0)
                         fadeout = NULL;
                     else
@@ -157,13 +157,13 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
 
         // Menus and combos
         if (dropdownmenus != 1.0 && w->isDropdownMenu())
-            data.opacity *= dropdownmenus;
+            data.multiplyOpacity(dropdownmenus);
         if (popupmenus != 1.0 && w->isPopupMenu())
-            data.opacity *= popupmenus;
+            data.multiplyOpacity(popupmenus);
         if (tornoffmenus != 1.0 && w->isMenu())
-            data.opacity *= tornoffmenus;
+            data.multiplyOpacity(tornoffmenus);
         if (comboboxpopups != 1.0 && w->isComboBox())
-            data.opacity *= comboboxpopups;
+            data.multiplyOpacity(comboboxpopups);
 
     }
     effects->paintWindow(w, mask, region, data);

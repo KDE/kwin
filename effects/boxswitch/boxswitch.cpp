@@ -213,9 +213,9 @@ void BoxSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         if (windows.contains(w) && w != selected_window) {
             if (w->isMinimized() || !w->isOnCurrentDesktop())
                 // TODO: When deactivating minimized windows are not painted at all
-                data.opacity *= activeTimeLine.currentValue() * bg_opacity;
+                data.multiplyOpacity(activeTimeLine.currentValue() * bg_opacity);
             else
-                data.opacity *= 1.0 - activeTimeLine.currentValue() * (1.0 - bg_opacity);
+                data.multiplyOpacity(1.0 - activeTimeLine.currentValue() * (1.0 - bg_opacity));
         }
     }
     effects->paintWindow(w, mask, region, data);

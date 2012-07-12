@@ -1438,7 +1438,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             opacity = 0.99f;
         if (opacityDesktopOnly && !w->isDesktop())
             opacity = 0.99f;
-        data.opacity *= opacity;
+        data.multiplyOpacity(opacity);
 
         if (w->isOnDesktop(painting_desktop) && w->x() < rect.x()) {
             WindowQuadList new_quads;

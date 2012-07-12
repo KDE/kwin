@@ -337,8 +337,8 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 
         mask |= PAINT_WINDOW_LANCZOS;
         // Apply opacity and brightness
-        data.opacity *= winData->opacity;
-        data.brightness *= interpolate(0.40, 1.0, winData->highlight);
+        data.multiplyOpacity(winData->opacity);
+        data.multiplyBrightness(interpolate(0.40, 1.0, winData->highlight));
 
         if (m_motionManager.isManaging(w)) {
             if (w->isDesktop()) {
@@ -397,20 +397,20 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                              rect.y() + rect.height() * 0.95);
                 winData->iconFrame->setPosition(point);
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
-                    const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
+                    const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
-                winData->iconFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
+                winData->iconFrame->render(region, 0.9 * data.opacity() * m_decalOpacity, 0.75);
             }
             if (m_showCaptions) {
                 QPoint point(rect.x() + rect.width() / 2,
                              rect.y() + rect.height() / 2);
                 winData->textFrame->setPosition(point);
                 if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
-                    const float a = 0.9 * data.opacity * m_decalOpacity * 0.75;
+                    const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
-                winData->textFrame->render(region, 0.9 * data.opacity * m_decalOpacity, 0.75);
+                winData->textFrame->render(region, 0.9 * data.opacity() * m_decalOpacity, 0.75);
             }
         } else
             effects->paintWindow(w, mask, region, data);

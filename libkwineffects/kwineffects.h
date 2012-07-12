@@ -55,6 +55,7 @@ namespace KWin
 {
 
 class PaintDataPrivate;
+class WindowPaintDataPrivate;
 
 class EffectWindow;
 class EffectWindowGroup;
@@ -1817,6 +1818,7 @@ class KWIN_EXPORT WindowPaintData : public PaintData
 public:
     WindowPaintData(EffectWindow* w);
     WindowPaintData(const WindowPaintData &other);
+    virtual ~WindowPaintData();
     /**
      * Scales the window by @p scale factor.
      * Multiplies all three components by the given factor.
@@ -1860,11 +1862,36 @@ public:
     WindowPaintData& operator+=(const QVector3D &translation);
     /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
-     * Opacity for contents is opacity*contents_opacity, the same
-     * way for decoration.
+     * Opacity for decoration is opacity*decorationOpacity
+     * @see decorationOpacity
+     * @see setOpacity
+     * @see setDecorationOpacity
+     * @since 4.10
      */
-    double opacity;
-    double decoration_opacity;
+    qreal opacity() const;
+    qreal decorationOpacity() const;
+    /**
+     * Sets the window opacity to the new @p opacity.
+     * If you want to modify the existing opacity level consider using multiplyOpacity.
+     * @param opacity The new opacity level
+     * @since 4.10
+     **/
+    void setOpacity(qreal opacity);
+    void setDecorationOpacity(qreal opacity);
+    /**
+     * Multiplies the current opacity with the @p factor.
+     * @param factor Factor with which the opacity should be multiplied
+     * @return New opacity level
+     * @since 4.10
+     **/
+    qreal multiplyOpacity(qreal factor);
+    /**
+     * Multiplies the current decoration opacity with the @p factor.
+     * @param factor Factor with which the opacity should be multiplied
+     * @return New decoration opacity level
+     * @since 4.10
+     **/
+    qreal multiplyDecorationOpacity(qreal factor);
     /**
      * Saturation of the window, in range [0; 1]
      * 1 means that the window is unchanged, 0 means that it's completely
@@ -1872,19 +1899,51 @@ public:
      *  but not completely grey
      * Use EffectsHandler::saturationSupported() to find out whether saturation
      * is supported by the system, otherwise this value has no effect.
+     * @return The current saturation
+     * @see setSaturation()
+     * @since 4.10
      **/
-    double saturation;
+    qreal saturation() const;
+    /**
+     * Sets the window saturation level to @p saturation.
+     * If you want to modify the existing saturation level consider using multiplySaturation.
+     * @param saturation The new saturation level
+     * @since 4.10
+     **/
+    void setSaturation(qreal saturation) const;
+    /**
+     * Multiplies the current saturation with @p factor.
+     * @param factor with which the saturation should be multiplied
+     * @return New saturation level
+     * @since 4.10
+     **/
+    qreal multiplySaturation(qreal factor);
     /**
      * Brightness of the window, in range [0; 1]
      * 1 means that the window is unchanged, 0 means that it's completely
      * black. 0.5 would make it 50% darker than usual
      **/
-    double brightness;
+    qreal brightness() const;
+    /**
+     * Sets the window brightness level to @p brightness.
+     * If you want to modify the existing brightness level consider using multiplyBrightness.
+     * @param brightness The new brightness level
+     **/
+    void setBrightness(qreal brightness);
+    /**
+     * Multiplies the current brightness level with @p factor.
+     * @param factor with which the brightness should be multiplied.
+     * @return New brightness level
+     * @since 4.10
+     **/
+    qreal multiplyBrightness(qreal factor);
     WindowQuadList quads;
     /**
      * Shader to be used for rendering, if any.
      */
     GLShader* shader;
+private:
+    WindowPaintDataPrivate * const d;
 };
 
 class KWIN_EXPORT ScreenPaintData : public PaintData

@@ -205,25 +205,31 @@ void PaintData::setRotationOrigin(const QVector3D &origin)
     d->rotation.setOrigin(origin);
 }
 
+class WindowPaintDataPrivate {
+public:
+    qreal opacity;
+    qreal decorationOpacity;
+    qreal saturation;
+    qreal brightness;
+};
+
 WindowPaintData::WindowPaintData(EffectWindow* w)
     : PaintData()
-    , opacity(w->opacity())
-    , decoration_opacity(1.0)
-    , saturation(1)
-    , brightness(1)
     , shader(NULL)
+    , d(new WindowPaintDataPrivate())
 {
     quads = w->buildQuads();
+    setOpacity(w->opacity());
+    setDecorationOpacity(1.0);
+    setSaturation(1.0);
+    setBrightness(1.0);
 }
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
-    , opacity(other.opacity)
-    , decoration_opacity(other.decoration_opacity)
-    , saturation(other.saturation)
-    , brightness(other.brightness)
     , quads(other.quads)
     , shader(other.shader)
+    , d(new WindowPaintDataPrivate())
 {
     setXScale(other.xScale());
     setYScale(other.yScale());
@@ -232,6 +238,79 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setRotationOrigin(other.rotationOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
+    setOpacity(other.opacity());
+    setDecorationOpacity(other.decorationOpacity());
+    setSaturation(other.saturation());
+    setBrightness(other.brightness());
+}
+
+WindowPaintData::~WindowPaintData()
+{
+    delete d;
+}
+
+qreal WindowPaintData::decorationOpacity() const
+{
+    return d->decorationOpacity;
+}
+
+qreal WindowPaintData::opacity() const
+{
+    return d->opacity;
+}
+
+qreal WindowPaintData::saturation() const
+{
+    return d->saturation;
+}
+
+qreal WindowPaintData::brightness() const
+{
+    return d->brightness;
+}
+
+void WindowPaintData::setDecorationOpacity(qreal opacity)
+{
+    d->decorationOpacity = opacity;
+}
+
+void WindowPaintData::setOpacity(qreal opacity)
+{
+    d->opacity = opacity;
+}
+
+void WindowPaintData::setSaturation(qreal saturation) const
+{
+    d->saturation = saturation;
+}
+
+void WindowPaintData::setBrightness(qreal brightness)
+{
+    d->brightness = brightness;
+}
+
+qreal WindowPaintData::multiplyDecorationOpacity(qreal factor)
+{
+    d->decorationOpacity *= factor;
+    return d->decorationOpacity;
+}
+
+qreal WindowPaintData::multiplyOpacity(qreal factor)
+{
+    d->opacity *= factor;
+    return d->opacity;
+}
+
+qreal WindowPaintData::multiplySaturation(qreal factor)
+{
+    d->saturation *= factor;
+    return d->saturation;
+}
+
+qreal WindowPaintData::multiplyBrightness(qreal factor)
+{
+    d->brightness *= factor;
+    return d->brightness;
 }
 
 WindowPaintData &WindowPaintData::operator*=(qreal scale)

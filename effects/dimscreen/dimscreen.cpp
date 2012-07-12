@@ -79,8 +79,8 @@ void DimScreenEffect::postPaintScreen()
 void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (mActivated && (w != window) && w->isManaged()) {
-        data.brightness *= (1.0 - 0.33 * timeline.currentValue());
-        data.saturation *= (1.0 - 0.33 * timeline.currentValue());
+        data.multiplyBrightness((1.0 - 0.33 * timeline.currentValue()));
+        data.multiplySaturation((1.0 - 0.33 * timeline.currentValue()));
     }
     effects->paintWindow(w, mask, region, data);
 }

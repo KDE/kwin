@@ -296,9 +296,9 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 WindowPaintData data(w);
                 data.setRotationAxis(Qt::YAxis);
                 data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
-                data.opacity = info->opacity;
-                data.brightness = info->brightness;
-                data.saturation = info->saturation;
+                data.setOpacity(info->opacity);
+                data.setBrightness(info->brightness);
+                data.setSaturation(info->saturation);
                 int distance = tempList.count() - 1;
                 float zDistance = 500.0f;
                 data.translate(- (w->x() - m_screenArea.x() + data.xTranslation()) * m_startStopTimeLine.currentValue());
@@ -309,9 +309,9 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                                - (m_screenArea.height() * 0.10f) * distance * m_startStopTimeLine.currentValue(),
                                - (zDistance * distance) * m_startStopTimeLine.currentValue());
                 if (m_scheduledDirections.head() == DirectionForward)
-                    data.opacity *= 0.8 * m_timeLine.currentValue();
+                    data.multiplyOpacity(0.8 * m_timeLine.currentValue());
                 else
-                    data.opacity *= 0.8 * (1.0 - m_timeLine.currentValue());
+                    data.multiplyOpacity(0.8 * (1.0 - m_timeLine.currentValue()));
 
                 if (effects->numScreens() > 1) {
                     adjustWindowMultiScreen(w, data);
@@ -327,9 +327,9 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             WindowPaintData data(w);
             data.setRotationAxis(Qt::YAxis);
             data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
-            data.opacity = info->opacity;
-            data.brightness = info->brightness;
-            data.saturation = info->saturation;
+            data.setOpacity(info->opacity);
+            data.setBrightness(info->brightness);
+            data.setSaturation(info->saturation);
             int windowIndex = tempList.indexOf(w);
             int distance;
             if (m_mode == TabboxMode) {
@@ -349,7 +349,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             if (!m_scheduledDirections.isEmpty() && m_scheduledDirections.head() == DirectionBackward) {
                 if (w == m_flipOrderedWindows.last()) {
                     distance = -1;
-                    data.opacity *= m_timeLine.currentValue();
+                    data.multiplyOpacity(m_timeLine.currentValue());
                 }
             }
             float zDistance = 500.0f;
@@ -366,14 +366,14 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                                    (m_screenArea.height() * 0.10f) * m_timeLine.currentValue(),
                                    zDistance * m_timeLine.currentValue());
                     if (distance == 0)
-                        data.opacity *= (1.0 - m_timeLine.currentValue());
+                        data.multiplyOpacity((1.0 - m_timeLine.currentValue()));
                 } else {
                     data.translate(- (m_screenArea.width() * 0.25f) * m_timeLine.currentValue(),
                                    - (m_screenArea.height() * 0.10f) * m_timeLine.currentValue(),
                                    - zDistance * m_timeLine.currentValue());
                 }
             }
-            data.opacity *= (0.8 + 0.2 * (1.0 - m_startStopTimeLine.currentValue()));
+            data.multiplyOpacity((0.8 + 0.2 * (1.0 - m_startStopTimeLine.currentValue())));
             if (effects->numScreens() > 1) {
                 adjustWindowMultiScreen(w, data);
             }
@@ -486,15 +486,15 @@ void FlipSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Wi
     if (m_active) {
         ItemInfo *info = m_windows.value(w,0);
         if (info) {
-            info->opacity = data.opacity;
-            info->brightness = data.brightness;
-            info->saturation = data.saturation;
+            info->opacity = data.opacity();
+            info->brightness = data.brightness();
+            info->saturation = data.saturation();
         }
 
         // fade out all windows not in window list except the desktops
         const bool isFader = (m_start || m_stop) && !info && !w->isDesktop();
         if (isFader)
-            data.opacity *= (1.0 - m_startStopTimeLine.currentValue());
+            data.multiplyOpacity((1.0 - m_startStopTimeLine.currentValue()));
 
         // if not a fader or the desktop, skip painting here to prevent flicker
         if (!(isFader || w->isDesktop()))

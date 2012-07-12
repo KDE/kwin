@@ -440,7 +440,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
 {
     setTransformedShape(QRegion());  // maybe nothing will be painted
     // check if there is something to paint
-    bool opaque = isOpaque() && qFuzzyCompare(data.opacity, 1.0);
+    bool opaque = isOpaque() && qFuzzyCompare(data.opacity(), 1.0);
     /* HACK: It seems this causes painting glitches, disable temporarily
     if (( mask & PAINT_WINDOW_OPAQUE ) ^ ( mask & PAINT_WINDOW_TRANSLUCENT ))
         { // We are only painting either opaque OR translucent windows, not both
@@ -652,7 +652,7 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
 
         //shadow
         if (wantShadow) {
-            Picture shadowAlpha = opaque ? None : alphaMask(data.opacity);
+            Picture shadowAlpha = opaque ? None : alphaMask(data.opacity());
             RENDER_SHADOW_TILE(TopLeft, stlr);
             RENDER_SHADOW_TILE(Top, str);
             RENDER_SHADOW_TILE(TopRight, strr);
@@ -666,7 +666,7 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
 
         // Paint the window contents
         if (!(client && client->isShade())) {
-            Picture clientAlpha = opaque ? None : alphaMask(data.opacity);
+            Picture clientAlpha = opaque ? None : alphaMask(data.opacity());
             XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
             if (!opaque)
                 transformed_shape = QRegion();
@@ -678,7 +678,7 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
 
         if (client || deleted) {
             if (!noBorder) {
-                Picture decorationAlpha = alphaMask(data.opacity * data.decoration_opacity);
+                Picture decorationAlpha = alphaMask(data.opacity() * data.decorationOpacity());
                 RENDER_DECO_PART(top, dtr);
                 RENDER_DECO_PART(left, dlr);
                 RENDER_DECO_PART(right, drr);
@@ -687,9 +687,9 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         }
 #undef RENDER_DECO_PART
 
-        if (data.brightness < 1.0) {
+        if (data.brightness() < 1.0) {
             // fake brightness change by overlaying black
-            XRenderColor col = { 0, 0, 0, 0xffff *(1 - data.brightness) * data.opacity };
+            XRenderColor col = { 0, 0, 0, 0xffff *(1 - data.brightness()) * data.opacity() };
             if (blitInTempPixmap) {
                 XRenderFillRectangle(display(), PictOpOver, renderTarget, &col,
                                      -temp_visibleRect.left(), -temp_visibleRect.top(), width(), height());

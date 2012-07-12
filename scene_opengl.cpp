@@ -573,9 +573,9 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
         texture.bind();
-        prepareStates(Content, data.opacity, data.brightness, data.saturation, data.shader);
+        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
         renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
-        restoreStates(Content, data.opacity, data.brightness, data.saturation, data.shader);
+        restoreStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (static_cast<SceneOpenGL*>(scene)->debug) {
@@ -646,10 +646,10 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     decorationTexture->setWrapMode(GL_CLAMP_TO_EDGE);
     decorationTexture->bind();
 
-    prepareStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
+    prepareStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.shader);
     makeDecorationArrays(quads, rect, decorationTexture);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
-    restoreStates(decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader);
+    restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.shader);
     decorationTexture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {
@@ -683,9 +683,9 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
         texture->setFilter(GL_NEAREST);
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
-    prepareStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
+    prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.shader, texture);
     renderQuads(0, region, quads, texture, true, hardwareClipping);
-    restoreStates(Shadow, data.opacity, data.brightness, data.saturation, data.shader, texture);
+    restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.shader, texture);
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (static_cast<SceneOpenGL*>(scene)->debug) {

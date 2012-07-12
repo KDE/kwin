@@ -394,9 +394,9 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
         if (!shape.isEmpty()) {
             if (m_shouldCache && !translated) {
-                doCachedBlur(w, region, data.opacity);
+                doCachedBlur(w, region, data.opacity());
             } else {
-                doBlur(shape, screen, data.opacity);
+                doBlur(shape, screen, data.opacity());
             }
         }
     }

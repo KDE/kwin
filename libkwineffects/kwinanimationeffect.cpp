@@ -396,11 +396,11 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 
                 switch (anim->attribute) {
                 case Opacity:
-                    data.opacity *= interpolated(*anim); break;
+                    data.multiplyOpacity(interpolated(*anim)); break;
                 case Brightness:
-                    data.brightness *= interpolated(*anim); break;
+                    data.multiplyBrightness(interpolated(*anim)); break;
                 case Saturation:
-                    data.saturation *= interpolated(*anim); break;
+                    data.multiplySaturation(interpolated(*anim)); break;
                 case Scale: {
                     const QSize sz = w->geometry().size();
                     float f1(1.0), f2(0.0);

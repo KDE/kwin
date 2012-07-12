@@ -67,13 +67,13 @@ void LoginEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
     if (w == login_window) {
         if (m_fadeToBlack) {
             if (progress < 0.5)
-                data.brightness *= (1.0 - progress * 2);
+                data.multiplyBrightness((1.0 - progress * 2));
             if (progress >= 0.5) {
-                data.opacity *= (1.0 - (progress - 0.5) * 2);
-                data.brightness = 0;
+                data.multiplyOpacity((1.0 - (progress - 0.5) * 2));
+                data.setBrightness(0);
             }
         } else if (progress < 1.0) {
-            data.opacity *= (1.0 - progress);
+            data.multiplyOpacity((1.0 - progress));
         }
     }
     

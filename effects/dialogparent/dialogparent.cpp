@@ -58,8 +58,8 @@ void DialogParentEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
 {
     const float s = effectStrength.value(w, 0.0);
     if (s > 0.0f) {
-        data.brightness *= (1.0f - 0.4*s); // [1.0; 0.6]
-        data.saturation *= (1.0f - 0.6*s); // [1.0; 0.4]
+        data.multiplyBrightness((1.0f - 0.4*s)); // [1.0; 0.6]
+        data.multiplySaturation((1.0f - 0.6*s)); // [1.0; 0.4]
     }
     effects->paintWindow(w, mask, region, data);
 }

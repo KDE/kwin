@@ -150,16 +150,16 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 // until after we render the FBO to the screen.
                 if (w == logoutWindow) {
                     // Window is rendered after the FBO
-                    windowOpacity = data.opacity;
-                    data.opacity = 0.0; // Cheat, we need the opacity for later but don't want to blur it
+                    windowOpacity = data.opacity();
+                    data.setOpacity(0.0); // Cheat, we need the opacity for later but don't want to blur it
                 } else {
                     if (logoutWindowPassed || ignoredWindows.contains(w)) {
                         // Window is rendered after the FBO
                         windows.append(w);
-                        windowsOpacities[ w ] = data.opacity;
-                        data.opacity = 0.0;
+                        windowsOpacities[ w ] = data.opacity();
+                        data.setOpacity(0.0);
                     } else // Window is added to the FBO
-                        data.saturation *= (1.0 - progress * 0.2);
+                        data.multiplySaturation((1.0 - progress * 0.2));
                 }
             } else {
                 // If we are not blurring then we are not rendering to an FBO
@@ -168,15 +168,15 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                     renderVignetting();
                 else if (!logoutWindowPassed && !ignoredWindows.contains(w))
                     // Window is in the background, desaturate
-                    data.saturation *= (1.0 - progress * 0.2);
+                    data.multiplySaturation((1.0 - progress * 0.2));
                 // All other windows are unaltered
             }
         }
         if (effects->compositingType() == KWin::XRenderCompositing) {
             // Since we can't do vignetting in XRender just do a stronger desaturation and darken
             if (w != logoutWindow && !logoutWindowPassed && !ignoredWindows.contains(w)) {
-                data.saturation *= (1.0 - progress * 0.8);
-                data.brightness *= (1.0 - progress * 0.3);
+                data.multiplySaturation((1.0 - progress * 0.8));
+                data.multiplyBrightness((1.0 - progress * 0.3));
             }
         }
         if (w == logoutWindow ||
@@ -216,7 +216,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             if (logoutWindow) {
                 int winMask = logoutWindow->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
                 WindowPaintData winData(logoutWindow);
-                winData.opacity = windowOpacity;
+                winData.setOpacity(windowOpacity);
                 effects->drawWindow(logoutWindow, winMask, region, winData);
             }
 
@@ -224,7 +224,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             foreach (EffectWindow * w, windows) {
                 int winMask = w->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
                 WindowPaintData winData(w);
-                winData.opacity = windowsOpacities[ w ];
+                winData.setOpacity(windowsOpacities[ w ]);
                 effects->drawWindow(w, winMask, region, winData);
             }
 

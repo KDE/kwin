@@ -343,9 +343,9 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 data.quads = new_quads;
             }
             if (firstDesktop)
-                data.opacity *= timeLine.currentValue();
+                data.multiplyOpacity(timeLine.currentValue());
             else
-                data.opacity *= (1.0 - timeLine.currentValue());
+                data.multiplyOpacity((1.0 - timeLine.currentValue()));
         }
     }
     effects->paintWindow(w, mask, region, data);

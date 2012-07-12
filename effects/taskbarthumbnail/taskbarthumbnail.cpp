@@ -70,7 +70,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
     if (thumbnails.contains(w)) {
         // paint thumbnails on it
         int mask = PAINT_WINDOW_TRANSFORMED;
-        if (data.opacity == 1.0)
+        if (data.opacity() == 1.0)
             mask |= PAINT_WINDOW_OPAQUE;
         else
             mask |= PAINT_WINDOW_TRANSLUCENT;
@@ -80,7 +80,7 @@ void TaskbarThumbnailEffect::paintWindow(EffectWindow* w, int mask, QRegion regi
             if (thumbw == NULL)
                 continue;
             WindowPaintData thumbData(thumbw);
-            thumbData.opacity *= data.opacity;
+            thumbData.multiplyOpacity(data.opacity());
             QRect r, thumbRect(thumb.rect);
             thumbRect.translate(w->pos() + QPoint(data.xTranslation(), data.yTranslation()));
             thumbRect.setSize(QSize(thumbRect.width() * data.xScale(), thumbRect.height() * data.yScale())); // QSize has no vector multiplicator... :-(

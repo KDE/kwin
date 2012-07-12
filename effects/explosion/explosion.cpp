@@ -147,7 +147,7 @@ void ExplosionEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         data.setXScale(scale);
         data.setYScale(scale);
         data.translate(int(w->width() / 2 * (1 - scale)), int(w->height() / 2 * (1 - scale)));
-        data.opacity *= 0.99;  // Force blending
+        data.multiplyOpacity(0.99);  // Force blending
         ShaderManager *manager = ShaderManager::instance();
         GLShader *shader = manager->pushShader(ShaderManager::GenericShader);
         QMatrix4x4 screenTransformation = shader->getUniformMatrix4x4("screenTransformation");

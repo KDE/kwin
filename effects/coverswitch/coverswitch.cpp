@@ -508,18 +508,18 @@ void CoverSwitchEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
     if (mActivated || stop || stopRequested) {
         if (!(mask & PAINT_WINDOW_TRANSFORMED) && !w->isDesktop()) {
             if ((start || stop) && w->isDock()) {
-                data.opacity = 1.0 - timeLine.currentValue();
+                data.setOpacity(1.0 - timeLine.currentValue());
                 if (stop)
-                    data.opacity = timeLine.currentValue();
+                    data.setOpacity(timeLine.currentValue());
             } else
                 return;
         }
     }
     if ((start || stop) && (!w->isOnCurrentDesktop() || w->isMinimized())) {
         if (stop)  // Fade out windows not on the current desktop
-            data.opacity = (1.0 - timeLine.currentValue());
+            data.setOpacity((1.0 - timeLine.currentValue()));
         else // Fade in Windows from other desktops when animation is started
-            data.opacity = timeLine.currentValue();
+            data.setOpacity(timeLine.currentValue());
     }
     effects->paintWindow(w, mask, region, data);
 }
@@ -675,7 +675,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
     data.setZTranslation(-zPosition);
     if (start) {
         if (w->isMinimized()) {
-            data.opacity *= timeLine.currentValue();
+            data.multiplyOpacity(timeLine.currentValue());
         } else {
             const QVector3D translation = data.translation() * timeLine.currentValue();
             data.setXTranslation(translation.x());
@@ -705,7 +705,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
     }
     if (stop) {
         if (w->isMinimized() && w != effects->activeWindow()) {
-            data.opacity *= (1.0 - timeLine.currentValue());
+            data.multiplyOpacity((1.0 - timeLine.currentValue()));
         } else {
             const QVector3D translation = data.translation() * (1.0 - timeLine.currentValue());
             data.setXTranslation(translation.x());
@@ -744,9 +744,9 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
             shader->setUniform("screenTransformation", origMatrix * reflectionMatrix);
             data.setYTranslation(- area.height() - windowRect.y() - windowRect.height());
             if (start) {
-                data.opacity *= timeLine.currentValue();
+                data.multiplyOpacity(timeLine.currentValue());
             } else if (stop) {
-                data.opacity *= 1.0 - timeLine.currentValue();
+                data.multiplyOpacity(1.0 - timeLine.currentValue());
             }
             effects->drawWindow(w,
                                  PAINT_WINDOW_TRANSFORMED,
@@ -809,7 +809,7 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
         }
     }
     if (specialHandlingForward) {
-        data.opacity *= (1.0 - timeLine.currentValue() * 2.0);
+        data.multiplyOpacity((1.0 - timeLine.currentValue() * 2.0));
         paintWindowCover(frontWindow, reflectedWindow, data);
     } else
         paintWindowCover(frontWindow, reflectedWindow, data);
@@ -843,7 +843,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
                            additionalWindow->geometry().x() - additionalWindow->geometry().width());
             data.setRotationOrigin(QVector3D(additionalWindow->geometry().width(), 0.0, 0.0));
         }
-        data.opacity *= (timeLine.currentValue() - 0.5) * 2.0;
+        data.multiplyOpacity((timeLine.currentValue() - 0.5) * 2.0);
         paintWindowCover(additionalWindow, reflectedWindows, data);
     }
     // normal behaviour
@@ -894,7 +894,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
         if (animation && i == 0 && ((direction == Left && left) || (direction == Right && !left))) {
             // only for the first half of the animation
             if (timeLine.currentValue() < 0.5) {
-                data.opacity *= (1.0 - timeLine.currentValue() * 2.0);
+                data.multiplyOpacity((1.0 - timeLine.currentValue() * 2.0));
                 paintWindowCover(window, reflectedWindows, data);
             }
         } else {

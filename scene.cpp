@@ -360,7 +360,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         }
         EffectWindowImpl *thumb = it.value().data();
         WindowPaintData thumbData(thumb);
-        thumbData.opacity = data.opacity;
+        thumbData.setOpacity(data.opacity());
 
         QSizeF size = QSizeF(thumb->size());
         size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
@@ -409,7 +409,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         thumbData.setXTranslation(x - thumb->x());
         thumbData.setYTranslation(y - thumb->y());
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
-        if (thumbData.opacity == 1.0) {
+        if (thumbData.opacity() == 1.0) {
             thumbMask |= PAINT_WINDOW_OPAQUE;
         } else {
             thumbMask |= PAINT_WINDOW_TRANSLUCENT;
