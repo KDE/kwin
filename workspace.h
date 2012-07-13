@@ -72,11 +72,6 @@ class TabBox;
 #endif
 
 class Client;
-#ifdef KWIN_BUILD_TILING
-class Tile;
-class Tiling;
-class TilingLayout;
-#endif
 class Outline;
 class RootInfo;
 class PluginMgr;
@@ -197,10 +192,6 @@ public:
         return unmanaged;
     }
 
-#ifdef KWIN_BUILD_TILING
-    Tiling* tiling();
-#endif
-
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge* screenEdge();
@@ -312,9 +303,6 @@ private:
     KActivities::Controller activityController_;
 #endif
 
-#ifdef KWIN_BUILD_TILING
-    Tiling* m_tiling;
-#endif
     Outline* m_outline;
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge m_screenEdge;
@@ -445,9 +433,6 @@ public:
     void circulateDesktopApplications();
     bool compositingActive();
     bool waitForCompositingSetup();
-    void toggleTiling();
-    void nextTileLayout();
-    void previousTileLayout();
     bool stopActivity(const QString &id);
     bool startActivity(const QString &id);
     QStringList activeEffects() const;
@@ -636,9 +621,6 @@ public slots:
     void updateClientArea();
     void suspendCompositing();
     void suspendCompositing(bool suspend);
-
-    // NOTE: debug method
-    void dumpTiles() const;
 
     void slotActivateNextTab(); // Slot to move left the active Client.
     void slotActivatePrevTab(); // Slot to move right the active Client.
@@ -873,7 +855,6 @@ private:
     QAction* mMoveOpAction;
     QAction* mMaximizeOpAction;
     QAction* mShadeOpAction;
-    QAction* mTilingStateOpAction;
     QAction* mKeepAboveOpAction;
     QAction* mKeepBelowOpAction;
     QAction* mFullScreenOpAction;

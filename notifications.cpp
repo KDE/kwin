@@ -101,9 +101,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case CompositingSuspendedDbus:
         event = "compositingsuspendeddbus";
         break;
-    case TilingLayoutChanged:
-        event = "tilinglayoutchanged";
-        break;
     case FullScreen:
         event = "fullscreen";
         break;

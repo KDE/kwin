@@ -61,7 +61,6 @@ public:
     QSize checkMaxSize(QSize s) const;
     int checkOpacityActive(int s) const;
     int checkOpacityInactive(int s) const;
-    int checkTilingOption(int s) const;
     bool checkIgnoreGeometry(bool ignore) const;
     int checkDesktop(int desktop, bool init = false) const;
     QString checkActivity(QString activity, bool init = false) const;
@@ -127,7 +126,6 @@ public:
     bool applyMaxSize(QSize& s) const;
     bool applyOpacityActive(int& s) const;
     bool applyOpacityInactive(int& s) const;
-    bool applyTilingOption(int& s) const;
     bool applyIgnoreGeometry(bool& ignore) const;
     bool applyDesktop(int& desktop, bool init) const;
     bool applyActivity(QString& activity, bool init) const;
@@ -223,8 +221,6 @@ private:
     ForceRule opacityactiverule;
     int opacityinactive;
     ForceRule opacityinactiverule;
-    int tilingoption;
-    ForceRule tilingoptionrule;
     bool ignoreposition;
     ForceRule ignorepositionrule;
     int desktop;

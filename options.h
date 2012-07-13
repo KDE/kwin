@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "placement.h"
 #include "utils.h"
-#include "tilinglayoutfactory.h"
 
 namespace KWin
 {
@@ -72,15 +71,6 @@ class Options : public QObject, public KDecorationOptions
        shade hover interval
      */
     Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval WRITE setShadeHoverInterval NOTIFY shadeHoverIntervalChanged)
-    /**
-     * Whether tiling is enabled or not
-     */
-    Q_PROPERTY(bool tiling READ isTilingOn WRITE setTilingOn WRITE setTiling NOTIFY tilingChanged)
-    Q_PROPERTY(int tilingLayout READ tilingLayout WRITE setTilingLayout NOTIFY tilingLayoutChanged)
-    /**
-     * Tiling window raise policy.
-     */
-    Q_PROPERTY(int tilingRaisePolicy READ tilingRaisePolicy WRITE setTilingRaisePolicy NOTIFY tilingRaisePolicyChanged)
     /**
      * whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      **/
@@ -288,30 +278,6 @@ public:
      */
     int shadeHoverInterval() {
         return m_shadeHoverInterval;
-    }
-
-    /**
-     * Whether tiling is enabled or not
-     */
-    bool isTilingOn() const {
-        return m_tilingOn;
-    }
-    void setTilingOn(bool enabled) {
-        m_tilingOn = enabled;
-    }
-
-    /**
-     * Tiling Layout
-     */
-    TilingLayoutFactory::Layouts tilingLayout() const {
-        return m_tilingLayout;
-    }
-
-    /**
-     * Tiling window raise policy.
-     */
-    int tilingRaisePolicy() const {
-        return m_tilingRaisePolicy;
     }
 
     // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
@@ -606,9 +572,6 @@ public:
     void setDelayFocusInterval(int delayFocusInterval);
     void setShadeHover(bool shadeHover);
     void setShadeHoverInterval(int shadeHoverInterval);
-    void setTiling(bool tiling);
-    void setTilingLayout(int tilingLayout);
-    void setTilingRaisePolicy(int tilingRaisePolicy);
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(int placement);
@@ -686,15 +649,6 @@ public:
     }
     static int defaultShadeHoverInterval() {
         return 250;
-    }
-    static bool defaultTiling() {
-        return false;
-    }
-    static TilingLayoutFactory::Layouts defaultTilingLayout() {
-        return TilingLayoutFactory::DefaultLayout;
-    }
-    static int defaultTilingRaisePolicy() {
-        return 0;
     }
     static bool defaultSeparateScreenFocus() {
         return false;
@@ -916,9 +870,6 @@ Q_SIGNALS:
     void delayFocusIntervalChanged();
     void shadeHoverChanged();
     void shadeHoverIntervalChanged();
-    void tilingChanged();
-    void tilingLayoutChanged();
-    void tilingRaisePolicyChanged();
     void separateScreenFocusChanged();
     void activeMouseScreenChanged();
     void placementChanged();
@@ -983,9 +934,6 @@ private:
     int m_delayFocusInterval;
     bool m_shadeHover;
     int m_shadeHoverInterval;
-    bool m_tilingOn;
-    TilingLayoutFactory::Layouts m_tilingLayout;
-    int m_tilingRaisePolicy;
     bool m_separateScreenFocus;
     bool m_activeMouseScreen;
     Placement::Policy m_placement;

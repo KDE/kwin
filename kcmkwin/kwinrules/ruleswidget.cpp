@@ -106,7 +106,6 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(autogroupid, force);
     SETUP(opacityactive, force);
     SETUP(opacityinactive, force);
-    SETUP(tilingoption, force);
     SETUP(shortcut, force);
     // workarounds tab
     SETUP(fsplevel, force);
@@ -118,7 +117,6 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(disableglobalshortcuts, force);
     SETUP(blockcompositing, force);
 
-    connect (title_match, SIGNAL(currentIndexChanged(int)), SLOT(titleMatchChanged()));
     connect (machine_match, SIGNAL(currentIndexChanged(int)), SLOT(machineMatchChanged()));
     connect (shortcut_edit, SIGNAL(clicked()), SLOT(shortcutEditClicked()));
 
@@ -175,7 +173,6 @@ UPDATE_ENABLE_SLOT(autogroupfg)
 UPDATE_ENABLE_SLOT(autogroupid)
 UPDATE_ENABLE_SLOT(opacityactive)
 UPDATE_ENABLE_SLOT(opacityinactive)
-UPDATE_ENABLE_SLOT(tilingoption)
 void RulesWidget::updateEnableshortcut()
 {
     shortcut->setEnabled(enable_shortcut->isChecked() && rule_shortcut->currentIndex() != 0);
@@ -309,16 +306,6 @@ QString RulesWidget::comboToActivity(int val) const
         return QString();
 
     return activity->itemData(val).toString();
-}
-
-int RulesWidget::tilingToCombo(int t) const
-{
-    return qBound(0, t, 1);
-}
-
-int RulesWidget::comboToTiling(int val) const
-{
-    return val; // 0 is tiling, 1 is floating
 }
 
 static int placementToCombo(Placement::Policy placement)
@@ -473,7 +460,6 @@ void RulesWidget::setRules(Rules* rules)
     LINEEDIT_FORCE_RULE(autogroupid,);
     SPINBOX_FORCE_RULE(opacityactive,);
     SPINBOX_FORCE_RULE(opacityinactive,);
-    COMBOBOX_FORCE_RULE(tilingoption, tilingToCombo);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
     COMBOBOX_FORCE_RULE(type, typeToCombo);
@@ -568,7 +554,6 @@ Rules* RulesWidget::rules() const
     LINEEDIT_FORCE_RULE(autogroupid,);
     SPINBOX_FORCE_RULE(opacityactive,);
     SPINBOX_FORCE_RULE(opacityinactive,);
-    COMBOBOX_FORCE_RULE(tilingoption, comboToTiling);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
     COMBOBOX_FORCE_RULE(type, comboToType);
@@ -688,7 +673,6 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     //LINEEDIT_PREFILL( autogroupid, );
     SPINBOX_PREFILL(opacityactive, , 100 /*get the actual opacity somehow*/);
     SPINBOX_PREFILL(opacityinactive, , 100 /*get the actual opacity somehow*/);
-    COMBOBOX_PREFILL(tilingoption, tilingToCombo, 0);
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
     COMBOBOX_PREFILL(type, typeToCombo, info.windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK));

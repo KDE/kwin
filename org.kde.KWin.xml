@@ -68,10 +68,6 @@
       <arg type="ai" direction="out"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;int>"/>
     </method>
-    <method name="toggleTiling"/>
-    <method name="nextTileLayout"/>
-    <method name="previousTileLayout"/>
-    <method name="dumpTiles"/>
     <method name="stopActivity">
       <arg type="s" direction="in"/>
       <arg type="b" direction="out"/>

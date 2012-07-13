@@ -4,7 +4,6 @@ OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
-OPTION(KWIN_BUILD_TILING "Enable building of KWin Tiling functionality" ON)
 OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
@@ -21,7 +20,6 @@ set(KWIN_NAME "kwin")
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
-    set(KWIN_BUILD_TILING OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_BUILD_SCRIPTING ON)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
@@ -142,26 +140,6 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
   )
 endif(KWIN_BUILD_TABBOX)
-
-if(KWIN_BUILD_TILING)
-    set(
-        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        tiling/tile.cpp
-        tiling/tiling.cpp
-        tiling/tilinglayout.cpp
-        tilinglayoutfactory.cpp
-
-        # tiling layouts
-        # spiral
-        tilinglayouts/spiral/spiral.cpp
-
-        # columns
-        tilinglayouts/columns/columns.cpp
-
-        # floating
-        tilinglayouts/floating/floating.cpp
-   )
-endif(KWIN_BUILD_TILING)
 
 if(KWIN_BUILD_SCREENEDGES)
     set(

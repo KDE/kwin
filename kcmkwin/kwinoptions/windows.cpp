@@ -62,9 +62,6 @@
 #define KWIN_AUTOGROUP_FOREGROUND  "AutogroupInForeground"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
-#define KWIN_TILINGON              "TilingOn"
-#define KWIN_TILING_DEFAULT_LAYOUT "TilingDefaultLayout"
-#define KWIN_TILING_RAISE_POLICY   "TilingRaisePolicy"
 
 //CT 15mar 98 - magics
 #define KWM_BRDR_SNAP_ZONE                   "BorderSnapZone"
@@ -640,58 +637,6 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, const KComp
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
     vLay->addWidget(hideUtilityWindowsForInactive, 1, 0, 1, 2);
 
-    tilBox = new KButtonGroup(this);
-    tilBox->setTitle(i18n("Tiling"));
-    QGridLayout *tilBoxLay = new QGridLayout(tilBox);
-
-    tilingOn = new QCheckBox(i18n("Enable Tiling"), tilBox);
-    tilingOn->setWhatsThis(
-        i18n("A tiling window manager lays out all the windows in a non-overlapping manner."
-             " This way all windows are always visible."));
-    tilBoxLay->addWidget(tilingOn);
-    connect(tilingOn, SIGNAL(toggled(bool)), SLOT(tilingOnChanged(bool)));
-    connect(tilingOn, SIGNAL(toggled(bool)), SLOT(changed()));
-
-    tilingLayoutLabel = new QLabel(i18n("Default Tiling &Layout"), tilBox);
-    tilBoxLay->addWidget(tilingLayoutLabel, 1, 0);
-
-    tilingLayoutCombo = new KComboBox(tilBox);
-
-    // NOTE: add your layout to the bottom of this list
-    tilingLayoutCombo->addItem(i18nc("Spiral tiling layout", "Spiral"));
-    tilingLayoutCombo->addItem(i18nc("Two-column horizontal tiling layout", "Columns"));
-    tilingLayoutCombo->addItem(i18nc("Floating layout, windows aren't tiled at all", "Floating"));
-
-    tilingLayoutLabel->setBuddy(tilingLayoutCombo);
-    connect(tilingLayoutCombo, SIGNAL(activated(int)), SLOT(changed()));
-    tilBoxLay->addWidget(tilingLayoutCombo, 1, 1);
-
-    tilingRaiseLabel = new QLabel(i18n("Floating &Windows Raising"), tilBox);
-    tilBoxLay->addWidget(tilingRaiseLabel, 2, 0);
-
-    tilingRaiseCombo = new KComboBox(tilBox);
-    // when a floating window is activated, all other floating
-    // windows are also brought to the front, above the tiled windows
-    // when a tiled window is focused, all floating windows go to the back.
-    // NOTE: If the user has explicitly set a client to "keep above others", that will be respected.
-    tilingRaiseCombo->addItem(i18nc("Window Raising Policy", "Raise/Lower all floating windows"));
-    tilingRaiseCombo->addItem(i18nc("Window Raising Policy", "Raise/Lower current window only"));
-    tilingRaiseCombo->addItem(i18nc("Window Raising Policy", "Floating windows are always on top"));
-    wtstr = i18n("The window raising policy determines how floating windows are stacked"
-                 " <ul>"
-                 " <li><em>Raise/Lower all</em> will raise all floating windows when a"
-                 " floating window is activated.</li>"
-                 " <li><em>Raise/Lower current</em> will raise only the current window.</li>"
-                 " <li><em>Floating windows on top</em> will always keep floating windows on top, even"
-                 " when a tiled window is activated."
-                 "</ul>") ;
-    tilingRaiseCombo->setWhatsThis(wtstr);
-    connect(tilingRaiseCombo, SIGNAL(activated(int)), SLOT(changed()));
-    tilingRaiseLabel->setBuddy(tilingRaiseCombo);
-    tilBoxLay->addWidget(tilingRaiseCombo, 2, 1);
-
-    lay->addWidget(tilBox);
-
     lay->addStretch();
     load();
 
@@ -719,33 +664,6 @@ void KAdvancedConfig::shadeHoverChanged(bool a)
 {
     shadeHoverLabel->setEnabled(a);
     shadeHover->setEnabled(a);
-}
-
-void KAdvancedConfig::setTilingOn(bool on)
-{
-    tilingOn->setChecked(on);
-    tilingLayoutLabel->setEnabled(on);
-    tilingLayoutCombo->setEnabled(on);
-    tilingRaiseLabel->setEnabled(on);
-    tilingRaiseCombo->setEnabled(on);
-}
-
-void KAdvancedConfig::setTilingLayout(int l)
-{
-    tilingLayoutCombo->setCurrentIndex(l);
-}
-
-void KAdvancedConfig::setTilingRaisePolicy(int l)
-{
-    tilingRaiseCombo->setCurrentIndex(l);
-}
-
-void KAdvancedConfig::tilingOnChanged(bool a)
-{
-    tilingLayoutLabel->setEnabled(a);
-    tilingLayoutCombo->setEnabled(a);
-    tilingRaiseLabel->setEnabled(a);
-    tilingRaiseCombo->setEnabled(a);
 }
 
 void KAdvancedConfig::showEvent(QShowEvent *ev)
@@ -794,10 +712,6 @@ void KAdvancedConfig::load(void)
     setAutogroupSimilarWindows(cg.readEntry(KWIN_AUTOGROUP_SIMILAR, false));
     setAutogroupInForeground(cg.readEntry(KWIN_AUTOGROUP_FOREGROUND, true));
 
-    setTilingOn(cg.readEntry(KWIN_TILINGON, false));
-    setTilingLayout(cg.readEntry(KWIN_TILING_DEFAULT_LAYOUT, 0));
-    setTilingRaisePolicy(cg.readEntry(KWIN_TILING_RAISE_POLICY, 0));
-
     emit KCModule::changed(false);
 }
 
@@ -835,10 +749,6 @@ void KAdvancedConfig::save(void)
         QDBusConnection::sessionBus().send(message);
 
     }
-
-    cg.writeEntry(KWIN_TILINGON, tilingOn->isChecked());
-    cg.writeEntry(KWIN_TILING_DEFAULT_LAYOUT, tilingLayoutCombo->currentIndex());
-    cg.writeEntry(KWIN_TILING_RAISE_POLICY, tilingRaiseCombo->currentIndex());
     emit KCModule::changed(false);
 }
 
@@ -848,9 +758,6 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     placementCombo->setCurrentIndex(0); // default to Smart
     setHideUtilityWindowsForInactive(true);
-    setTilingOn(false);
-    setTilingLayout(0);
-    setTilingRaisePolicy(0);
     setInactiveTabsSkipTaskbar(false);
     setAutogroupSimilarWindows(false);
     setAutogroupInForeground(true);

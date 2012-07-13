@@ -121,6 +121,7 @@ public:
         CloseTabGroupOp, // Close the group
         ActivateNextTabOp, // Move left in the group
         ActivatePreviousTabOp, // Move right in the group
+        ///< @deprecated, tiling got removed in 4.10
         ToggleClientTiledStateOp, // put a floating client into tiling
         TabDragOp,
 

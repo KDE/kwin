@@ -125,9 +125,6 @@ Options::Options(QObject *parent)
     , m_delayFocusInterval(Options::defaultDelayFocusInterval())
     , m_shadeHover(Options::defaultShadeHover())
     , m_shadeHoverInterval(Options::defaultShadeHoverInterval())
-    , m_tilingOn(Options::defaultTiling())
-    , m_tilingLayout(Options::defaultTilingLayout())
-    , m_tilingRaisePolicy(Options::defaultTilingRaisePolicy())
     , m_separateScreenFocus(Options::defaultSeparateScreenFocus())
     , m_activeMouseScreen(Options::defaultActiveMouseScreen())
     , m_placement(Options::defaultPlacement())
@@ -290,33 +287,6 @@ void Options::setShadeHoverInterval(int shadeHoverInterval)
     }
     m_shadeHoverInterval = shadeHoverInterval;
     emit shadeHoverIntervalChanged();
-}
-
-void Options::setTiling(bool tiling)
-{
-    if (m_tilingOn == tiling) {
-        return;
-    }
-    m_tilingOn = tiling;
-    emit tilingChanged();
-}
-
-void Options::setTilingLayout(int tilingLayout)
-{
-    if (m_tilingLayout == static_cast<TilingLayoutFactory::Layouts>(tilingLayout)) {
-        return;
-    }
-    m_tilingLayout = static_cast<TilingLayoutFactory::Layouts>(tilingLayout);
-    emit tilingLayoutChanged();
-}
-
-void Options::setTilingRaisePolicy(int tilingRaisePolicy)
-{
-    if (m_tilingRaisePolicy == tilingRaisePolicy) {
-        return;
-    }
-    m_tilingRaisePolicy = tilingRaisePolicy;
-    emit tilingRaisePolicyChanged();
 }
 
 void Options::setSeparateScreenFocus(bool separateScreenFocus)
@@ -870,10 +840,6 @@ unsigned long Options::loadConfig()
 
     setShadeHover(config.readEntry("ShadeHover", Options::defaultShadeHover()));
     setShadeHoverInterval(config.readEntry("ShadeHoverInterval", Options::defaultShadeHoverInterval()));
-
-    setTiling(config.readEntry("TilingOn", Options::defaultTiling()));
-    setTilingLayout(config.readEntry<int>("TilingDefaultLayout", Options::defaultTilingLayout()));
-    setTilingRaisePolicy(config.readEntry("TilingRaisePolicy", Options::defaultTilingRaisePolicy()));
 
     setClickRaise(config.readEntry("ClickRaise", Options::defaultClickRaise()));
 

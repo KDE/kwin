@@ -181,7 +181,6 @@ private slots:
         emit KCModule::changed(true);
     }
 
-    void tilingOnChanged(bool a);
 private:
 
     int getShadeHoverInterval(void);
@@ -210,19 +209,6 @@ private:
     QCheckBox* autogroupInForeground;
 
     KComboBox *placementCombo;
-
-    // ------------------------------
-    // Tiling related widgets/methods
-    // ------------------------------
-    KButtonGroup *tilBox;
-    QCheckBox *tilingOn;
-    QLabel *tilingLayoutLabel;
-    QLabel *tilingRaiseLabel;
-    KComboBox *tilingLayoutCombo;
-    KComboBox *tilingRaiseCombo;
-    void setTilingOn(bool);
-    void setTilingLayout(int);
-    void setTilingRaisePolicy(int);
 };
 
 #endif // KKWMWINDOWS_H
