@@ -780,6 +780,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         break;
     case Options::CloseTabGroupOp:
         c->tabGroup()->closeAll();
+        break;
     case Options::ToggleClientTiledStateOp: {
 #ifdef KWIN_BUILD_TILING
         int desktop = c->desktop();
