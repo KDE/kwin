@@ -427,6 +427,16 @@ int AuroraeClient::doubleClickInterval() const
     return QApplication::doubleClickInterval();
 }
 
+void AuroraeClient::closeWindow()
+{
+    QMetaObject::invokeMethod(qobject_cast< KDecorationUnstable* >(this), "doCloseWindow", Qt::QueuedConnection);
+}
+
+void AuroraeClient::doCloseWindow()
+{
+    KDecorationUnstable::closeWindow();
+}
+
 } // namespace Aurorae
 
 extern "C"
