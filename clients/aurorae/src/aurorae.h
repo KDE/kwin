@@ -143,9 +143,11 @@ public slots:
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
+    void closeWindow();
 
 private slots:
     void themeChanged();
+    void doCloseWindow();
 
 private:
     QGraphicsView *m_view;

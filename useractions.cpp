@@ -701,7 +701,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         c->performMouseCommand(Options::MouseUnrestrictedResize, cursorPos());
         break;
     case Options::CloseOp:
-        c->closeWindow();
+        QMetaObject::invokeMethod(c, "closeWindow", Qt::QueuedConnection);
         break;
     case Options::MaximizeOp:
         c->maximize(c->maximizeMode() == Client::MaximizeFull
