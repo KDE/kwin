@@ -1077,13 +1077,16 @@ void EffectsHandlerImpl::checkInputWindowStacking()
         if (XGetWindowAttributes(display(), it.second, &attr) && attr.map_state != IsUnmapped)
             wins[pos++] = it.second;
     }
-    XRaiseWindow(display(), wins[0]);
-    XRestackWindows(display(), wins, pos);
+    if (pos) {
+        XRaiseWindow(display(), wins[0]);
+        XRestackWindows(display(), wins, pos);
+    }
     delete[] wins;
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->ensureOnTop();
+    if (pos)
+        Workspace::self()->screenEdge()->ensureOnTop();
 #endif
 }
 
