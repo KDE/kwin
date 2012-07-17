@@ -392,8 +392,8 @@ void Workspace::timerEvent(QTimerEvent *te)
     } else
         QObject::timerEvent(te);
 }
+
 static bool s_pending = false;
-QElapsedTimer profiler;
 void Workspace::performCompositing()
 {
     if (!scene->overlayWindow()->isVisible())
@@ -408,7 +408,6 @@ void Workspace::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
     }
-    profiler.start();
     s_pending = pending;
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();

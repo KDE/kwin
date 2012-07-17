@@ -514,18 +514,19 @@ void SceneOpenGL::waitSync()
         // but this only leads to waiting for two frames??!?
         glXGetVideoSync(&sync);
         glXWaitVideoSync(2, (sync + 1) % 2, &sync);
-#endif
+#else
         glXWaitVideoSync(1, 0, &sync);
+#endif
 #if VSYNC_DEBUG
-        static int waitTime = 0, waitCounter = 0, crapCounter = 0;
+        static int waitTime = 0, waitCounter = 0, doubleSyncCounter = 0;
         if (m_renderTimer.elapsed() > 11)
-            ++crapCounter;
+            ++doubleSyncCounter;
         waitTime += m_renderTimer.elapsed();
         ++waitCounter;
         if (waitCounter > 99)
         {
-            qDebug() << "mean vsync wait time:" << float((float)waitTime / (float)waitCounter) << crapCounter << "/100";
-            crapCounter = waitTime = waitCounter = 0;
+            qDebug() << "mean vsync wait time:" << float((float)waitTime / (float)waitCounter) << doubleSyncCounter << "/100";
+            doubleSyncCounter = waitTime = waitCounter = 0;
         }
 #endif
     }
@@ -590,7 +591,7 @@ void SceneOpenGL::flushBuffer(int mask, QRegion damage)
             }
         } else {
             if (glXSwapInterval) {
-                glXSwapInterval(1);
+                glXSwapInterval(options->isGlVSync() ? 1 : 0);
                 glXSwapBuffers(display(), glxbuffer);
                 glXSwapInterval(0);
                 m_renderTimer.start(); // this is important so we don't assume to be loosing frames in the compositor timing calculation
