@@ -9,7 +9,7 @@ target_link_libraries( testUpdateKWin49 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY
 set( testScreenPaintData_SRCS test_screen_paint_data.cpp )
 kde4_add_unit_test( testScreenPaintData TESTNAME TestScreenPaintData ${testScreenPaintData_SRCS} )
 
-target_link_libraries( testScreenPaintData kwineffects ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testScreenPaintData kwineffects ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
 
 ########################################################
 # Test WindowPaintData
@@ -17,4 +17,4 @@ target_link_libraries( testScreenPaintData kwineffects ${QT_QTTEST_LIBRARY} )
 set( testWindowPaintData_SRCS test_window_paint_data.cpp )
 kde4_add_unit_test( testWindowPaintData TESTNAME TestWindowPaintData ${testWindowPaintData_SRCS} )
 
-target_link_libraries( testWindowPaintData kwineffects ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testWindowPaintData kwineffects ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTTEST_LIBRARY} )
