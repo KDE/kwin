@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTING_H
 
 #include <kwinglobals.h>
+#include <kservice.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QHash>
@@ -213,7 +214,7 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
-    LoadScriptList queryScriptsToLoad(QMap<QString,QString> &pluginStates);
+    LoadScriptList queryScriptsToLoad(QMap<QString,QString> &pluginStates, KService::List &);
 };
 
 }
