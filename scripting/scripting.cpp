@@ -475,12 +475,12 @@ void KWin::Scripting::start()
     connect(watcher, SIGNAL(finished()), this, SLOT(slotScriptsQueried()));
     KSharedConfig::Ptr _config = KGlobal::config();
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates));
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates, offers));
 }
 
-LoadScriptList KWin::Scripting::queryScriptsToLoad(QMap<QString,QString> &pluginStates)
+LoadScriptList KWin::Scripting::queryScriptsToLoad(QMap<QString,QString> &pluginStates, KService::List &offers)
 {
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
     LoadScriptList scriptsToLoad;
 
     foreach (const KService::Ptr & service, offers) {
