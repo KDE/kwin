@@ -36,6 +36,7 @@ Deleted::Deleted(Workspace* ws)
     , padding_right(0)
     , padding_bottom(0)
     , m_layer(UnknownLayer)
+    , m_minimized(false)
 {
 }
 
@@ -92,6 +93,7 @@ void Deleted::copyToDeleted(Toplevel* c)
             decorationPixmapTop = *client->topDecoPixmap();
             decorationPixmapBottom = *client->bottomDecoPixmap();
         }
+        m_minimized = client->isMinimized();
     }
 }
 
