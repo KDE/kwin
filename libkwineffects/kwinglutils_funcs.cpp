@@ -134,9 +134,13 @@ glGenBuffers_func glGenBuffers;
 glDeleteBuffers_func glDeleteBuffers;
 glBindBuffer_func glBindBuffer;
 glBufferData_func glBufferData;
+glBufferSubData_func glBufferSubData;
+glGetBufferSubData_func glGetBufferSubData;
 glEnableVertexAttribArray_func glEnableVertexAttribArray;
 glDisableVertexAttribArray_func glDisableVertexAttribArray;
 glVertexAttribPointer_func glVertexAttribPointer;
+glMapBuffer_func glMapBuffer;
+glUnmapBuffer_func glUnmapBuffer;
 
 
 // GL_ARB_vertex_array_object
@@ -500,16 +504,27 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glDeleteBuffers);
         GL_RESOLVE(glBindBuffer);
         GL_RESOLVE(glBufferData);
+        GL_RESOLVE(glBufferSubData);
+        GL_RESOLVE(glMapBuffer);
+        GL_RESOLVE(glUnmapBuffer);
     } else if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
         GL_RESOLVE_WITH_EXT(glGenBuffers, glGenBuffersARB);
         GL_RESOLVE_WITH_EXT(glDeleteBuffers, glDeleteBuffersARB);
         GL_RESOLVE_WITH_EXT(glBindBuffer, glBindBufferARB);
         GL_RESOLVE_WITH_EXT(glBufferData, glBufferDataARB);
+        GL_RESOLVE_WITH_EXT(glBufferSubData, glBufferSubDataARB);
+        GL_RESOLVE_WITH_EXT(glGetBufferSubData, glGetBufferSubDataARB);
+        GL_RESOLVE_WITH_EXT(glMapBuffer, glMapBufferARB);
+        GL_RESOLVE_WITH_EXT(glUnmapBuffer, glUnmapBufferARB);
     } else {
         glGenBuffers = NULL;
         glDeleteBuffers = NULL;
         glBindBuffer = NULL;
         glBufferData = NULL;
+        glBufferSubData = NULL;
+        glGetBufferSubData = NULL;
+        glMapBuffer = NULL;
+        glUnmapBuffer = NULL;
     }
 
     if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_vertex_array_object")) {

@@ -342,12 +342,20 @@ typedef void (*glBindBuffer_func)(GLenum, GLuint);
 extern KWIN_EXPORT glBindBuffer_func glBindBuffer;
 typedef void (*glBufferData_func)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
 extern KWIN_EXPORT glBufferData_func glBufferData;
+typedef void (*glBufferSubData_func)(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
+extern KWIN_EXPORT glBufferSubData_func glBufferSubData;
+typedef void (*glGetBufferSubData_func)(GLenum target, GLintptr offset, GLsizeiptr size, GLvoid *data);
+extern KWIN_EXPORT glGetBufferSubData_func glGetBufferSubData;
 typedef void (*glEnableVertexAttribArray_func)(GLuint);
 extern KWIN_EXPORT glEnableVertexAttribArray_func glEnableVertexAttribArray;
 typedef void (*glDisableVertexAttribArray_func)(GLuint);
 extern KWIN_EXPORT glDisableVertexAttribArray_func glDisableVertexAttribArray;
 typedef void (*glVertexAttribPointer_func)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
 extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
+typedef GLvoid *(*glMapBuffer_func)(GLenum target, GLenum access);
+extern KWIN_EXPORT glMapBuffer_func glMapBuffer;
+typedef GLboolean (*glUnmapBuffer_func)(GLenum target);
+extern KWIN_EXPORT glUnmapBuffer_func glUnmapBuffer;
 
 // GL_ARB_vertex_array_object
 typedef void (*glBindVertexArray_func)(GLuint array);
