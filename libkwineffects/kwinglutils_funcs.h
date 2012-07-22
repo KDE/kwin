@@ -437,6 +437,13 @@ extern KWIN_EXPORT glUniform1uiv_func          glUniform1uiv;
 extern KWIN_EXPORT glUniform2uiv_func          glUniform2uiv;
 extern KWIN_EXPORT glUniform3uiv_func          glUniform3uiv;
 
+// GL_ARB_map_buffer_range
+typedef GLvoid* (*glMapBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+typedef void (*glFlushMappedBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length);
+
+extern KWIN_EXPORT glMapBufferRange_func glMapBufferRange;
+extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES

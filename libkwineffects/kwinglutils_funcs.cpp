@@ -142,6 +142,9 @@ glVertexAttribPointer_func glVertexAttribPointer;
 glMapBuffer_func glMapBuffer;
 glUnmapBuffer_func glUnmapBuffer;
 
+// GL_ARB_map_buffer_range
+glMapBufferRange_func         glMapBufferRange;
+glFlushMappedBufferRange_func glFlushMappedBufferRange;
 
 // GL_ARB_vertex_array_object
 glBindVertexArray_func    glBindVertexArray;
@@ -643,6 +646,15 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glUniform1uiv          = NULL;
         glUniform2uiv          = NULL;
         glUniform3uiv          = NULL;
+    }
+
+    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_map_buffer_range")) {
+        // See http://www.opengl.org/registry/specs/ARB/map_buffer_range.txt
+        GL_RESOLVE(glMapBufferRange);
+        GL_RESOLVE(glFlushMappedBufferRange);
+    } else {
+        glMapBufferRange         = NULL;
+        glFlushMappedBufferRange = NULL;
     }
 #endif
 
