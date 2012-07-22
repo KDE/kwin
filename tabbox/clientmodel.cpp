@@ -93,6 +93,9 @@ QString ClientModel::longestCaption() const
     QString caption;
     foreach (QWeakPointer<TabBoxClient> clientPointer, m_clientList) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
+        if (!client) {
+            continue;
+        }
         if (client->caption().size() > caption.size()) {
             caption = client->caption();
         }
