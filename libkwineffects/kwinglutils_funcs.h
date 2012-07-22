@@ -360,6 +360,75 @@ extern KWIN_EXPORT glDeleteVertexArrays_func glDeleteVertexArrays;
 extern KWIN_EXPORT glGenVertexArrays_func    glGenVertexArrays;
 extern KWIN_EXPORT glIsVertexArray_func      glIsVertexArray;
 
+// GL_EXT_gpu_shader4 / GL 3.0
+typedef void (*glVertexAttribI1i_func)(GLuint index, GLint x_func);
+typedef void (*glVertexAttribI2i_func)(GLuint index, GLint x, GLint y_func);
+typedef void (*glVertexAttribI3i_func)(GLuint index, GLint x, GLint y, GLint z_func);
+typedef void (*glVertexAttribI4i_func)(GLuint index, GLint x, GLint y, GLint z, GLint w_func);
+typedef void (*glVertexAttribI1ui_func)(GLuint index, GLuint x_func);
+typedef void (*glVertexAttribI2ui_func)(GLuint index, GLuint x, GLuint y_func);
+typedef void (*glVertexAttribI3ui_func)(GLuint index, GLuint x, GLuint y, GLuint z_func);
+typedef void (*glVertexAttribI4ui_func)(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w_func);
+typedef void (*glVertexAttribI1iv_func)(GLuint index, const GLint *v_func);
+typedef void (*glVertexAttribI2iv_func)(GLuint index, const GLint *v_func);
+typedef void (*glVertexAttribI3iv_func)(GLuint index, const GLint *v_func);
+typedef void (*glVertexAttribI4iv_func)(GLuint index, const GLint *v_func);
+typedef void (*glVertexAttribI1uiv_func)(GLuint index, const GLuint *v_func);
+typedef void (*glVertexAttribI2uiv_func)(GLuint index, const GLuint *v_func);
+typedef void (*glVertexAttribI3uiv_func)(GLuint index, const GLuint *v_func);
+typedef void (*glVertexAttribI4uiv_func)(GLuint index, const GLuint *v_func);
+typedef void (*glVertexAttribI4bv_func)(GLuint index, const GLbyte *v_func);
+typedef void (*glVertexAttribI4sv_func)(GLuint index, const GLshort *v_func);
+typedef void (*glVertexAttribI4ubv_func)(GLuint index, const GLubyte *v_func);
+typedef void (*glVertexAttribI4usv_func)(GLuint index, const GLushort *v_func);
+typedef void (*glVertexAttribIPointer_func)(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid *pointer_func);
+typedef void (*glGetVertexAttribIiv_func)(GLuint index, GLenum pname, GLint *params_func);
+typedef void (*glGetVertexAttribIuiv_func)(GLuint index, GLenum pname, GLuint *params_func);
+typedef void (*glGetUniformuiv_func)(GLuint program, GLint location, GLuint *params);
+typedef void (*glBindFragDataLocation_func)(GLuint program, GLuint color, const GLchar *name);
+typedef GLint (*glGetFragDataLocation_func)(GLuint program, const GLchar *name);
+typedef void (*glUniform1ui_func)(GLint location, GLuint v0);
+typedef void (*glUniform2ui_func)(GLint location, GLuint v0, GLuint v1);
+typedef void (*glUniform3ui_func)(GLint location, GLuint v0, GLuint v1, GLuint v2);
+typedef void (*glUniform4ui_func)(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
+typedef void (*glUniform1uiv_func)(GLint location, GLsizei count, const GLuint *value);
+typedef void (*glUniform2uiv_func)(GLint location, GLsizei count, const GLuint *value);
+typedef void (*glUniform3uiv_func)(GLint location, GLsizei count, const GLuint *value);
+
+extern KWIN_EXPORT glVertexAttribI1i_func      glVertexAttribI1i;
+extern KWIN_EXPORT glVertexAttribI2i_func      glVertexAttribI2i;
+extern KWIN_EXPORT glVertexAttribI3i_func      glVertexAttribI3i;
+extern KWIN_EXPORT glVertexAttribI4i_func      glVertexAttribI4i;
+extern KWIN_EXPORT glVertexAttribI1ui_func     glVertexAttribI1ui;
+extern KWIN_EXPORT glVertexAttribI2ui_func     glVertexAttribI2ui;
+extern KWIN_EXPORT glVertexAttribI3ui_func     glVertexAttribI3ui;
+extern KWIN_EXPORT glVertexAttribI4ui_func     glVertexAttribI4ui;
+extern KWIN_EXPORT glVertexAttribI1iv_func     glVertexAttribI1iv;
+extern KWIN_EXPORT glVertexAttribI2iv_func     glVertexAttribI2iv;
+extern KWIN_EXPORT glVertexAttribI3iv_func     glVertexAttribI3iv;
+extern KWIN_EXPORT glVertexAttribI4iv_func     glVertexAttribI4iv;
+extern KWIN_EXPORT glVertexAttribI1uiv_func    glVertexAttribI1uiv;
+extern KWIN_EXPORT glVertexAttribI2uiv_func    glVertexAttribI2uiv;
+extern KWIN_EXPORT glVertexAttribI3uiv_func    glVertexAttribI3uiv;
+extern KWIN_EXPORT glVertexAttribI4uiv_func    glVertexAttribI4uiv;
+extern KWIN_EXPORT glVertexAttribI4bv_func     glVertexAttribI4bv;
+extern KWIN_EXPORT glVertexAttribI4sv_func     glVertexAttribI4sv;
+extern KWIN_EXPORT glVertexAttribI4ubv_func    glVertexAttribI4ubv;
+extern KWIN_EXPORT glVertexAttribI4usv_func    glVertexAttribI4usv;
+extern KWIN_EXPORT glVertexAttribIPointer_func glVertexAttribIPointer;
+extern KWIN_EXPORT glGetVertexAttribIiv_func   glGetVertexAttribIiv;
+extern KWIN_EXPORT glGetVertexAttribIuiv_func  glGetVertexAttribIuiv;
+extern KWIN_EXPORT glGetUniformuiv_func        glGetUniformuiv;
+extern KWIN_EXPORT glBindFragDataLocation_func glBindFragDataLocation;
+extern KWIN_EXPORT glGetFragDataLocation_func  glGetFragDataLocation;
+extern KWIN_EXPORT glUniform1ui_func           glUniform1ui;
+extern KWIN_EXPORT glUniform2ui_func           glUniform2ui;
+extern KWIN_EXPORT glUniform3ui_func           glUniform3ui;
+extern KWIN_EXPORT glUniform4ui_func           glUniform4ui;
+extern KWIN_EXPORT glUniform1uiv_func          glUniform1uiv;
+extern KWIN_EXPORT glUniform2uiv_func          glUniform2uiv;
+extern KWIN_EXPORT glUniform3uiv_func          glUniform3uiv;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES

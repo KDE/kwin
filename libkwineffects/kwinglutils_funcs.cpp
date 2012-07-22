@@ -145,6 +145,43 @@ glDeleteVertexArrays_func glDeleteVertexArrays;
 glGenVertexArrays_func    glGenVertexArrays;
 glIsVertexArray_func      glIsVertexArray;
 
+
+// GL_EXT_gpu_shader4
+glVertexAttribI1i_func      glVertexAttribI1i;
+glVertexAttribI2i_func      glVertexAttribI2i;
+glVertexAttribI3i_func      glVertexAttribI3i;
+glVertexAttribI4i_func      glVertexAttribI4i;
+glVertexAttribI1ui_func     glVertexAttribI1ui;
+glVertexAttribI2ui_func     glVertexAttribI2ui;
+glVertexAttribI3ui_func     glVertexAttribI3ui;
+glVertexAttribI4ui_func     glVertexAttribI4ui;
+glVertexAttribI1iv_func     glVertexAttribI1iv;
+glVertexAttribI2iv_func     glVertexAttribI2iv;
+glVertexAttribI3iv_func     glVertexAttribI3iv;
+glVertexAttribI4iv_func     glVertexAttribI4iv;
+glVertexAttribI1uiv_func    glVertexAttribI1uiv;
+glVertexAttribI2uiv_func    glVertexAttribI2uiv;
+glVertexAttribI3uiv_func    glVertexAttribI3uiv;
+glVertexAttribI4uiv_func    glVertexAttribI4uiv;
+glVertexAttribI4bv_func     glVertexAttribI4bv;
+glVertexAttribI4sv_func     glVertexAttribI4sv;
+glVertexAttribI4ubv_func    glVertexAttribI4ubv;
+glVertexAttribI4usv_func    glVertexAttribI4usv;
+glVertexAttribIPointer_func glVertexAttribIPointer;
+glGetVertexAttribIiv_func   glGetVertexAttribIiv;
+glGetVertexAttribIuiv_func  glGetVertexAttribIuiv;
+glGetUniformuiv_func        glGetUniformuiv;
+glBindFragDataLocation_func glBindFragDataLocation;
+glGetFragDataLocation_func  glGetFragDataLocation;
+glUniform1ui_func           glUniform1ui;
+glUniform2ui_func           glUniform2ui;
+glUniform3ui_func           glUniform3ui;
+glUniform4ui_func           glUniform4ui;
+glUniform1uiv_func          glUniform1uiv;
+glUniform2uiv_func          glUniform2uiv;
+glUniform3uiv_func          glUniform3uiv;
+
+
 static glXFuncPtr getProcAddress(const char* name)
 {
     glXFuncPtr ret = NULL;
@@ -486,6 +523,111 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glDeleteVertexArrays = NULL;
         glGenVertexArrays    = NULL;
         glIsVertexArray      = NULL;
+    }
+
+    if (hasGLVersion(3, 0)) {
+        GL_RESOLVE(glVertexAttribI1i);
+        GL_RESOLVE(glVertexAttribI2i);
+        GL_RESOLVE(glVertexAttribI3i);
+        GL_RESOLVE(glVertexAttribI4i);
+        GL_RESOLVE(glVertexAttribI1ui);
+        GL_RESOLVE(glVertexAttribI2ui);
+        GL_RESOLVE(glVertexAttribI3ui);
+        GL_RESOLVE(glVertexAttribI4ui);
+        GL_RESOLVE(glVertexAttribI1iv);
+        GL_RESOLVE(glVertexAttribI2iv);
+        GL_RESOLVE(glVertexAttribI3iv);
+        GL_RESOLVE(glVertexAttribI4iv);
+        GL_RESOLVE(glVertexAttribI1uiv);
+        GL_RESOLVE(glVertexAttribI2uiv);
+        GL_RESOLVE(glVertexAttribI3uiv);
+        GL_RESOLVE(glVertexAttribI4uiv);
+        GL_RESOLVE(glVertexAttribI4bv);
+        GL_RESOLVE(glVertexAttribI4sv);
+        GL_RESOLVE(glVertexAttribI4ubv);
+        GL_RESOLVE(glVertexAttribI4usv);
+        GL_RESOLVE(glVertexAttribIPointer);
+        GL_RESOLVE(glGetVertexAttribIiv);
+        GL_RESOLVE(glGetVertexAttribIuiv);
+        GL_RESOLVE(glGetUniformuiv);
+        GL_RESOLVE(glBindFragDataLocation);
+        GL_RESOLVE(glGetFragDataLocation);
+        GL_RESOLVE(glUniform1ui);
+        GL_RESOLVE(glUniform2ui);
+        GL_RESOLVE(glUniform3ui);
+        GL_RESOLVE(glUniform4ui);
+        GL_RESOLVE(glUniform1uiv);
+        GL_RESOLVE(glUniform2uiv);
+        GL_RESOLVE(glUniform3uiv);
+    } else if (hasGLExtension("GL_EXT_gpu_shader4")) {
+        // See http://www.opengl.org/registry/specs/EXT/gpu_shader4.txt
+        GL_RESOLVE_WITH_EXT(glVertexAttribI1i,      glVertexAttribI1iEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI2i,      glVertexAttribI2iEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI3i,      glVertexAttribI3iEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4i,      glVertexAttribI4iEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI1ui,     glVertexAttribI1uiEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI2ui,     glVertexAttribI2uiEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI3ui,     glVertexAttribI3uiEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4ui,     glVertexAttribI4uiEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI1iv,     glVertexAttribI1ivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI2iv,     glVertexAttribI2ivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI3iv,     glVertexAttribI3ivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4iv,     glVertexAttribI4ivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI1uiv,    glVertexAttribI1uivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI2uiv,    glVertexAttribI2uivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI3uiv,    glVertexAttribI3uivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4uiv,    glVertexAttribI4uivEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4bv,     glVertexAttribI4bvEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4sv,     glVertexAttribI4svEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4ubv,    glVertexAttribI4ubvEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribI4usv,    glVertexAttribI4usvEXT);
+        GL_RESOLVE_WITH_EXT(glVertexAttribIPointer, glVertexAttribIPointerEXT);
+        GL_RESOLVE_WITH_EXT(glGetVertexAttribIiv,   glGetVertexAttribIivEXT);
+        GL_RESOLVE_WITH_EXT(glGetVertexAttribIuiv,  glGetVertexAttribIuivEXT);
+        GL_RESOLVE_WITH_EXT(glGetUniformuiv,        glGetUniformuivEXT);
+        GL_RESOLVE_WITH_EXT(glBindFragDataLocation, glBindFragDataLocationEXT);
+        GL_RESOLVE_WITH_EXT(glGetFragDataLocation,  glGetFragDataLocationEXT);
+        GL_RESOLVE_WITH_EXT(glUniform1ui,           glUniform1uiEXT);
+        GL_RESOLVE_WITH_EXT(glUniform2ui,           glUniform2uiEXT);
+        GL_RESOLVE_WITH_EXT(glUniform3ui,           glUniform3uiEXT);
+        GL_RESOLVE_WITH_EXT(glUniform4ui,           glUniform4uiEXT);
+        GL_RESOLVE_WITH_EXT(glUniform1uiv,          glUniform1uivEXT);
+        GL_RESOLVE_WITH_EXT(glUniform2uiv,          glUniform2uivEXT);
+        GL_RESOLVE_WITH_EXT(glUniform3uiv,          glUniform3uivEXT);
+    } else {
+        glVertexAttribI1i      = NULL;
+        glVertexAttribI2i      = NULL;
+        glVertexAttribI3i      = NULL;
+        glVertexAttribI4i      = NULL;
+        glVertexAttribI1ui     = NULL;
+        glVertexAttribI2ui     = NULL;
+        glVertexAttribI3ui     = NULL;
+        glVertexAttribI4ui     = NULL;
+        glVertexAttribI1iv     = NULL;
+        glVertexAttribI2iv     = NULL;
+        glVertexAttribI3iv     = NULL;
+        glVertexAttribI4iv     = NULL;
+        glVertexAttribI1uiv    = NULL;
+        glVertexAttribI2uiv    = NULL;
+        glVertexAttribI3uiv    = NULL;
+        glVertexAttribI4uiv    = NULL;
+        glVertexAttribI4bv     = NULL;
+        glVertexAttribI4sv     = NULL;
+        glVertexAttribI4ubv    = NULL;
+        glVertexAttribI4usv    = NULL;
+        glVertexAttribIPointer = NULL;
+        glGetVertexAttribIiv   = NULL;
+        glGetVertexAttribIuiv  = NULL;
+        glGetUniformuiv        = NULL;
+        glBindFragDataLocation = NULL;
+        glGetFragDataLocation  = NULL;
+        glUniform1ui           = NULL;
+        glUniform2ui           = NULL;
+        glUniform3ui           = NULL;
+        glUniform4ui           = NULL;
+        glUniform1uiv          = NULL;
+        glUniform2uiv          = NULL;
+        glUniform3uiv          = NULL;
     }
 #endif
 
