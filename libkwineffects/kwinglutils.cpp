@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector3D>
 #include <QVector4D>
 #include <QMatrix4x4>
+#include <QVarLengthArray>
 
 #include <math.h>
 
@@ -275,24 +276,27 @@ void popMatrix()
 #endif
 }
 
+
 //****************************************
 // GLShader
 //****************************************
 
 bool GLShader::sColorCorrect = false;
 
-GLShader::GLShader()
-    : mProgram(0)
-    , mValid(false)
+GLShader::GLShader(unsigned int flags)
+    : mValid(false)
     , mLocationsResolved(false)
+    , mExplicitLinking(flags & ExplicitLinking)
 {
+    mProgram = glCreateProgram();
 }
 
-GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
-    : mProgram(0)
-    , mValid(false)
+GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile, unsigned int flags)
+    : mValid(false)
     , mLocationsResolved(false)
+    , mExplicitLinking(flags & ExplicitLinking)
 {
+    mProgram = glCreateProgram();
     loadFromFiles(vertexfile, fragmentfile);
 }
 
@@ -320,6 +324,34 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
     const QByteArray fragmentSource = ff.readAll();
 
     return load(vertexSource, fragmentSource);
+}
+
+bool GLShader::link()
+{
+    // Be optimistic
+    mValid = true;
+
+    glLinkProgram(mProgram);
+
+    // Get the program info log
+    int maxLength, length;
+    glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &maxLength);
+
+    QByteArray log(maxLength, 0);
+    glGetProgramInfoLog(mProgram, maxLength, &length, log.data());
+
+    // Make sure the program linked successfully
+    int status;
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
+
+    if (status == 0) {
+        kError(1212) << "Failed to link shader:" << endl << log << endl;
+        mValid = false;
+    } else if (length > 0) {
+        kDebug(1212) << "Shader link log:" << log;
+    }
+
+    return mValid;
 }
 
 const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &source) const
@@ -386,54 +418,45 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
     }
 #endif
 
-    // Create the shader program
-    mProgram = glCreateProgram();
+    mValid = false;
 
     // Compile the vertex shader
     if (!vertexSource.isEmpty()) {
         bool success = compile(mProgram, GL_VERTEX_SHADER, vertexSource);
 
-        if (!success) {
-            glDeleteProgram(mProgram);
-            mProgram = 0;
+        if (!success)
             return false;
-        }
     }
 
     // Compile the fragment shader
     if (!fragmentSource.isEmpty()) {
         bool success = compile(mProgram, GL_FRAGMENT_SHADER, fragmentSource);
 
-        if (!success) {
-            glDeleteProgram(mProgram);
-            mProgram = 0;
+        if (!success)
             return false;
-        }
     }
 
-    glLinkProgram(mProgram);
+    if (mExplicitLinking)
+        return true;
 
-    // Get the program info log
-    int maxLength, length;
-    glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &maxLength);
+    // link() sets mValid
+    return link();
+}
 
-    QByteArray log(maxLength, 0);
-    glGetProgramInfoLog(mProgram, maxLength, &length, log.data());
+void GLShader::bindAttributeLocation(const char *name, int index)
+{
+    glBindAttribLocation(mProgram, index, name);
+}
 
-    // Make sure the program linked successfully
-    int status;
-    glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
-
-    if (status == 0) {
-        kError(1212) << "Failed to link shader:" << endl << log << endl;
-        glDeleteProgram(mProgram);
-        mProgram = 0;
-        return false;
-    } else if (length > 0)
-        kDebug(1212) << "Shader link log:" << log;
-
-    mValid = true;
-    return true;
+void GLShader::bindFragDataLocation(const char *name, int index)
+{
+#ifndef KWIN_HAVE_OPENGLES
+    if (glBindFragDataLocation)
+        glBindFragDataLocation(mProgram, index, name);
+#else
+    Q_UNUSED(name)
+    Q_UNUSED(index)
+#endif
 }
 
 void GLShader::bind()

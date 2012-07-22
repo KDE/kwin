@@ -127,12 +127,22 @@ KWIN_EXPORT void popMatrix();
 class KWIN_EXPORT GLShader
 {
 public:
-    GLShader(const QString& vertexfile, const QString& fragmentfile);
+    enum Flags {
+        NoFlags         = 0,
+        ExplicitLinking = (1 << 0)
+    };
+
+    GLShader(const QString &vertexfile, const QString &fragmentfile, unsigned int flags = NoFlags);
     ~GLShader();
 
     bool isValid() const  {
         return mValid;
     }
+
+    void bindAttributeLocation(const char *name, int index);
+    void bindFragDataLocation(const char *name, int index);
+
+    bool link();
 
     int uniformLocation(const char* name);
 
@@ -196,7 +206,7 @@ public:
     bool setUniform(IntUniform uniform,    int value);
 
 protected:
-    GLShader();
+    GLShader(unsigned int flags = NoFlags);
     bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
     bool load(const QByteArray &vertexSource, const QByteArray &fragmentSource);
     const QByteArray prepareSource(GLenum shaderType, const QByteArray &sourceCode) const;
@@ -209,6 +219,7 @@ private:
     unsigned int mProgram;
     bool mValid:1;
     bool mLocationsResolved:1;
+    bool mExplicitLinking:1;
     int mMatrixLocation[MatrixCount];
     int mVec2Location[Vec2UniformCount];
     int mVec4Location[Vec4UniformCount];
