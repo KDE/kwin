@@ -29,6 +29,8 @@ class QDeclarativeItem;
 class QGraphicsSceneMouseEvent;
 class QGraphicsScene;
 class QGraphicsView;
+class KConfig;
+class KConfigGroup;
 
 namespace Aurorae
 {
@@ -64,8 +66,14 @@ public:
     QFont inactiveTitleFont();
 
 private:
+    enum EngineType {
+        AuroraeEngine,
+        QMLEngine
+    };
     AuroraeFactory();
     void init();
+    void initAurorae(KConfig &conf, KConfigGroup &group);
+    void initQML(const KConfigGroup& group);
 
 Q_SIGNALS:
     void buttonsChanged();
@@ -77,6 +85,7 @@ private:
     AuroraeTheme *m_theme;
     QDeclarativeEngine *m_engine;
     QDeclarativeComponent *m_component;
+    EngineType m_engineType;
 };
 
 class AuroraeClient : public KDecorationUnstable

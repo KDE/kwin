@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KWin/Decoration
+
+Comment=KWin Window Decoration
+
+[PropertyDef::X-Plasma-MainScript]
+Type=QString

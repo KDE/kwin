@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "aurorae.h"
 #include "auroraetheme.h"
+#include "config-kwin.h"
 
 #include <QApplication>
 #include <QtDeclarative/QDeclarativeComponent>
@@ -27,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KDebug>
+#include <KPluginInfo>
+#include <KServiceTypeTrader>
 #include <KStandardDirs>
 #include <Plasma/FrameSvg>
 
@@ -39,6 +43,7 @@ AuroraeFactory::AuroraeFactory()
         , m_theme(new AuroraeTheme(this))
         , m_engine(new QDeclarativeEngine(this))
         , m_component(new QDeclarativeComponent(m_engine, this))
+        , m_engineType(AuroraeEngine)
 {
     init();
 }
@@ -49,7 +54,23 @@ void AuroraeFactory::init()
 
     KConfig conf("auroraerc");
     KConfigGroup group(&conf, "Engine");
+    if (group.hasKey("EngineType")) {
+        const QString engineType = group.readEntry("EngineType", "aurorae").toLower();
+        if (engineType == "qml") {
+            initQML(group);
+        } else {
+            // fallback to classic Aurorae Themes
+            initAurorae(conf, group);
+        }
+    } else {
+        // fallback to classic Aurorae Themes
+        initAurorae(conf, group);
+    }
+}
 
+void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
+{
+    m_engineType = AuroraeEngine;
     const QString themeName = group.readEntry("ThemeName", "example-deco");
     KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
     KConfigGroup themeGroup(&conf, themeName);
@@ -64,6 +85,41 @@ void AuroraeFactory::init()
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
     m_engine->rootContext()->setContextProperty("options", this);
+}
+
+void AuroraeFactory::initQML(const KConfigGroup &group)
+{
+    // try finding the QML package
+    const QString themeName = group.readEntry("ThemeName");
+    kDebug(1212) << "Trying to load QML Decoration " << themeName;
+    const QString internalname = themeName.toLower();
+
+    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Decoration", constraint);
+    if (offers.isEmpty()) {
+        kError(1212) << "Couldn't find QML Decoration " << themeName << endl;
+        // TODO: what to do in error case?
+        return;
+    }
+    KService::Ptr service = offers.first();
+    KPluginInfo plugininfo(service);
+    const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
+    const QString scriptName = service->property("X-Plasma-MainScript").toString();
+    const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/decorations/" + pluginName + "/contents/" + scriptName);
+    if (file.isNull()) {
+        kDebug(1212) << "Could not find script file for " << pluginName;
+        // TODO: what to do in error case?
+        return;
+    }
+    m_engineType = QMLEngine;
+    // setup the QML engine
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        m_engine->addImportPath(importPath);
+    }
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("data", QLatin1String(KWIN_NAME) + "/aurorae/")) {
+        m_engine->addImportPath(importPath);
+    }
+    m_component->loadUrl(QUrl::fromLocalFile(file));
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -88,6 +144,7 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingFont){
         emit titleFontChanged();
     }
+    // TODO: adjust reset behavior
     const KConfig conf("auroraerc");
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");

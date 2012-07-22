@@ -26,3 +26,4 @@ install( FILES
     qml/DecorationButton.qml
     qml/MenuButton.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/aurorae )
+install( FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
