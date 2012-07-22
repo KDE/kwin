@@ -30,6 +30,7 @@ class Deleted
     : public Toplevel
 {
     Q_OBJECT
+    Q_PROPERTY(bool minimized READ isMinimized)
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
@@ -62,6 +63,9 @@ public:
     virtual Layer layer() const {
         return m_layer;
     }
+    bool isMinimized() const {
+        return m_minimized;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
@@ -87,6 +91,7 @@ private:
     QRect decoration_bottom;
     int padding_left, padding_top, padding_right, padding_bottom;
     Layer m_layer;
+    bool m_minimized;
 };
 
 inline void Deleted::refWindow()
