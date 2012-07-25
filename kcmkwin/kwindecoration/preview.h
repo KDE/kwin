@@ -50,6 +50,7 @@ public:
     bool recreateDecoration(KDecorationPlugins* plugin);
     void enablePreview();
     void disablePreview();
+    KDecorationFactory *factory() const;
     void setPreviewMask(const QRegion&, int, bool);
     QRegion unobscuredRegion(bool, const QRegion&) const;
     QRect windowGeometry(bool) const;
