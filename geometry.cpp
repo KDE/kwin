@@ -2541,7 +2541,8 @@ bool Client::startMoveResize()
                 geom_restore = geometry(); // "restore" to current geometry
                 setMaximize(false, false);
             }
-        }
+        } else if (quick_tile_mode != QuickTileNone) // no longer now - we move, resize is handled below
+            setQuickTileMode(QuickTileNone); // otherwise we mess every second tile, bug #303937
     } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
                (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
         // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
