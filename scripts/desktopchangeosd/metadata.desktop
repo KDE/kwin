@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Desktop Change OSD
 Name[ca]=OSD de canvi d'escriptori
+Name[cs]=OSD změny plochy
 Name[da]=OSD til skrivebordsskift
 Name[el]=OSD αλλαγής επιφάνειας εργασίας
 Name[es]=Información en pantalla sobre cambio de escritorio
@@ -30,6 +31,7 @@ Name[zh_CN]=桌面更改屏幕显示
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
 Comment[ca]=En un missatge per pantalla indicant el canvi d'escriptori
+Comment[cs]=Displej označující změnu plochy
 Comment[da]=Et on-screen-display som indikerer skift af skrivebord
 Comment[es]=Una información en pantalla que indica el cambio de escritorio
 Comment[et]=Töölaua muutumist näitab ekraanikuva
