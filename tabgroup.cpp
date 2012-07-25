@@ -104,6 +104,15 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->slotTabAdded(c->effectWindow(), other->effectWindow());
 
+    // next: aling the client states BEFORE adding it to the group
+    // otherwise the caused indirect state changes would be taken as the dominating ones and break
+    // the main client
+    // example: QuickTiling is aligned to None, this restores the former QuickTiled size and alignes
+    // all other windows in the group - including the actual main client! - to this size and thus
+    // breaks the actually required alignment to the main windows geometry (because that now has the
+    // restored geometry of the formerly Q'tiled window) - bug #303937
+    updateStates(m_current, All, c);
+
     int index = other ? m_clients.indexOf(other) : m_clients.size();
     index += after;
     if (index > m_clients.size())
@@ -114,7 +123,6 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
     c->setTabGroup(this);   // Let the client know which group it belongs to
 
     updateMinMaxSize();
-    updateStates(m_current, All, c);
 
     if (!becomeVisible)
         c->setClientShown(false);
@@ -292,6 +300,8 @@ void TabGroup::blockStateUpdates(bool more) {
 
 void TabGroup::updateStates(Client* main, States states, Client* only)
 {
+    if (main == only)
+        return; // there's no need to only align "us" to "us"
     if (m_stateUpdatesBlocked > 0) {
         m_pendingUpdates |= states;
         return;
@@ -300,10 +310,16 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
     states |= m_pendingUpdates;
     m_pendingUpdates = TabGroup::None;
 
-    ClientList toBeRemoved;
-    for (ClientList::const_iterator i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i) {
+    ClientList toBeRemoved, onlyDummy;
+    ClientList *list = &m_clients;
+    if (only) {
+        onlyDummy << only;
+        list = &onlyDummy;
+    }
+
+    for (ClientList::const_iterator i = list->constBegin(), end = list->constEnd(); i != end; ++i) {
         Client *c = (*i);
-        if (c != main && (!only || c == only)) {
+        if (c != main) {
             if ((states & Minimized) && c->isMinimized() != main->isMinimized()) {
                 if (main->isMinimized())
                     c->minimize(true);
