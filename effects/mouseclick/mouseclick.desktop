@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Mouse Click Animation
+Icon=preferences-system-windows-effect-mouseclick
+
+Comment=Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Filip Wieladek
+X-KDE-PluginInfo-Email=Wattos@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_mouseclick
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Accessibility
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
