@@ -14,4 +14,4 @@ set( testTabBoxClientModel_SRCS
 
 kde4_add_unit_test( testTabBoxClientModel TESTNAME testTabBoxClientModel ${testTabBoxClientModel_SRCS} )
 
-target_link_libraries( testTabBoxClientModel ${KDE4_KDEUI_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testTabBoxClientModel ${KDE4_KDEUI_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTTEST_LIBRARY} ${X11_LIBRARIES} )
