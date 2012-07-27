@@ -147,6 +147,7 @@ Q_SIGNALS:
     void shadeChanged();
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
+    void buttonsChanged();
 
 public slots:
     void menuClicked();

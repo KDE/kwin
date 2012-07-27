@@ -116,9 +116,6 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         m_engine->addImportPath(importPath);
     }
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("data", QLatin1String(KWIN_NAME) + "/aurorae/")) {
-        m_engine->addImportPath(importPath);
-    }
     m_component->loadUrl(QUrl::fromLocalFile(file));
 }
 
@@ -244,6 +241,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
 {
     connect(this, SIGNAL(keepAboveChanged(bool)), SIGNAL(keepAboveChangedWrapper()));
     connect(this, SIGNAL(keepBelowChanged(bool)), SIGNAL(keepBelowChangedWrapper()));
+    connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
 }
 
 AuroraeClient::~AuroraeClient()

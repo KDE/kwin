@@ -1,0 +1,6 @@
+plugin decorationplugin
+
+Decoration 0.1 Decoration.qml
+DecorationButton 0.1 DecorationButton.qml
+MenuButton 0.1 MenuButton.qml
+ButtonGroup 0.1 ButtonGroup.qml
