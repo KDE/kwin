@@ -44,6 +44,10 @@ ListView {
             source: type == 1 ? "AuroraePreview.qml" : ""
             anchors.fill: parent
         }
+        Loader {
+            source: type == 2 ? "DecorationPreview.qml" : ""
+            anchors.fill: parent
+        }
         MouseArea {
             hoverEnabled: false
             anchors.fill: parent

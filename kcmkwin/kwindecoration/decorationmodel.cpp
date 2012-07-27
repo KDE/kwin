@@ -34,7 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobalSettings>
 #include <KIcon>
 #include <KLocale>
+#include <KServiceTypeTrader>
 #include <KStandardDirs>
+#include <KPluginInfo>
 #include "kwindecoration.h"
 
 /* WARNING -------------------------------------------------------------------------
@@ -66,6 +68,7 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     roleNames[DecorationModel::PixmapRole] = "preview";
     roleNames[TypeRole] = "type";
     roleNames[AuroraeNameRole] = "auroraeThemeName";
+    roleNames[QmlMainScriptRole] = "mainScript";
     setRoleNames(roleNames);
     m_config = KSharedConfig::openConfig("auroraerc");
     findDecorations();
@@ -119,6 +122,31 @@ void DecorationModel::findDecorations()
                 }
             }
         }
+    }
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Decoration");
+    foreach (KService::Ptr service, offers) {
+        DecorationModelData data;
+        data.name = service->name();
+        data.libraryName = "kwin3_aurorae";
+        data.type = DecorationModelData::QmlDecoration;
+        data.auroraeName = service->property("X-KDE-PluginInfo-Name").toString();
+        QString scriptName = service->property("X-Plasma-MainScript").toString();
+        data.qmlPath = KStandardDirs::locate("data", "kwin/decorations/" + data.auroraeName + "/contents/" + scriptName);
+        if (data.qmlPath.isEmpty()) {
+            // not a valid QML theme
+            continue;
+        }
+        // TODO: read proper border sizes
+        data.borderSize = KDecorationDefines::BorderNormal;
+        data.buttonSize = KDecorationDefines::BorderNormal;
+        data.comment = service->comment();
+        KPluginInfo info(service);
+        data.author = info.author();
+        data.email= info.email();
+        data.version = info.version();
+        data.license = info.license();
+        data.website = info.website();
+        m_decorations.append(data);
     }
     qSort(m_decorations.begin(), m_decorations.end(), DecorationModelData::less);
     endResetModel();
@@ -219,6 +247,8 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
             return static_cast< int >(m_decorations[ index.row()].buttonSize);
         else
             return QVariant();
+    case QmlMainScriptRole:
+        return m_decorations[ index.row()].qmlPath;
     default:
         return QVariant();
     }
@@ -377,11 +407,14 @@ QModelIndex DecorationModel::indexOfName(const QString& decoName) const
     return QModelIndex();
 }
 
-QModelIndex DecorationModel::indexOfAuroraeName(const QString& auroraeName) const
+QModelIndex DecorationModel::indexOfAuroraeName(const QString &auroraeName, const QString &type) const
 {
     for (int i = 0; i < m_decorations.count(); i++) {
         const DecorationModelData& data = m_decorations.at(i);
-        if (data.type == DecorationModelData::AuroraeDecoration &&
+        if (type == "aurorae" && data.type == DecorationModelData::AuroraeDecoration &&
+                data.auroraeName.compare(auroraeName) == 0)
+            return index(i);
+        if (type == "qml" && data.type == DecorationModelData::QmlDecoration &&
                 data.auroraeName.compare(auroraeName) == 0)
             return index(i);
     }

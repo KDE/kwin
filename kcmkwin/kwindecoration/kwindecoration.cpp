@@ -102,6 +102,10 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_ui->decorationList->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
     m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
     m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml"));
+    m_ui->decorationList->rootContext()->setContextProperty("decorationActiveCaptionColor", KDecoration::options()->color(ColorFont, true));
+    m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveCaptionColor", KDecoration::options()->color(ColorFont, false));
+    m_ui->decorationList->rootContext()->setContextProperty("decorationActiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, true));
+    m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, false));
     m_ui->decorationList->setSource(KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml"));
 
     readConfig(style);
@@ -174,7 +178,8 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
         KConfig auroraeConfig("auroraerc");
         KConfigGroup group(&auroraeConfig, "Engine");
         const QString themeName = group.readEntry("ThemeName", "example-deco");
-        const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(themeName));
+        const QString type = group.readEntry("EngineType", "aurorae");
+        const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(themeName, type));
         if (index.isValid()) {
             m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
         }
@@ -221,10 +226,16 @@ void KWinDecorationModule::writeConfig(KConfigGroup & conf)
     conf.writeEntry("BorderSize",
                     static_cast<int>(m_model->data(index, DecorationModel::BorderSizeRole).toInt()));
 
-    if (m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration) {
+    if (m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration ||
+        m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
         KConfig auroraeConfig("auroraerc");
         KConfigGroup group(&auroraeConfig, "Engine");
         group.writeEntry("ThemeName", m_model->data(index, DecorationModel::AuroraeNameRole).toString());
+        if (m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
+            group.writeEntry("EngineType", "qml");
+        } else {
+            group.deleteEntry("EngineType");
+        }
         group.sync();
     }
 
@@ -306,10 +317,15 @@ void KWinDecorationModule::slotGHNSClicked()
             const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
             const QString libraryName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
             bool aurorae = m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration;
+            bool qml = m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration;
             const QString auroraeName = m_model->data(index, DecorationModel::AuroraeNameRole).toString();
             m_model->reload();
             if (aurorae) {
-                const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName));
+                const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName, "aurorae"));
+                if (proxyIndex.isValid())
+                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
+            } else if (qml) {
+                const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName, "qml"));
                 if (proxyIndex.isValid())
                     m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
             } else {

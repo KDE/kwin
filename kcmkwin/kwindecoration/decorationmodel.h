@@ -40,7 +40,8 @@ class DecorationModelData
 public:
     enum DecorationType {
         NativeDecoration = 0,
-        AuroraeDecoration = 1
+        AuroraeDecoration = 1,
+        QmlDecoration = 2
     };
     QString name;
     QString libraryName;
@@ -53,6 +54,7 @@ public:
     QString version;
     QString license;
     QString auroraeName;
+    QString qmlPath;
     KDecorationDefines::BorderSize borderSize;
     KDecorationDefines::BorderSize buttonSize;
 
@@ -79,7 +81,8 @@ public:
         PackageLicenseRole = Qt::UserRole + 10,
         BorderSizeRole = Qt::UserRole + 11,
         BorderSizesRole = Qt::UserRole + 12,
-        ButtonSizeRole = Qt::UserRole + 13
+        ButtonSizeRole = Qt::UserRole + 13,
+        QmlMainScriptRole = Qt::UserRole + 14
     };
     DecorationModel(KSharedConfigPtr config, QObject* parent = 0);
     ~DecorationModel();
@@ -105,7 +108,7 @@ public:
 
     QModelIndex indexOfLibrary(const QString& libraryName) const;
     QModelIndex indexOfName(const QString& decoName) const;
-    QModelIndex indexOfAuroraeName(const QString& auroraeName) const;
+    QModelIndex indexOfAuroraeName(const QString& auroraeName, const QString& type) const;
 
     void regeneratePreviews(int firstIndex = 0);
     void stopPreviewGeneration();
