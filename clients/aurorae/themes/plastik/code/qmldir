@@ -1,0 +1,4 @@
+plugin plastikplugin
+
+# we need to have at least one element of Qt is not able to find the plugin *shrug*
+Foo 1.0 Foo.qml
