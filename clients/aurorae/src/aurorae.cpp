@@ -141,18 +141,24 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingFont){
         emit titleFontChanged();
     }
-    // TODO: adjust reset behavior
     const KConfig conf("auroraerc");
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
     const KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
     const KConfigGroup themeGroup(&conf, themeName);
     if (themeName != m_theme->themeName()) {
-        m_theme->loadTheme(themeName, config);
-        resetDecorations(changed);
+        delete m_engine;
+        m_engine = new QDeclarativeEngine(this);
+        delete m_component;
+        m_component = new QDeclarativeComponent(m_engine, this);
+        init();
+        // recreate all decorations
+        return true;
     }
-    m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
-    m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+    if (m_engineType == AuroraeEngine) {
+        m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
+        m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+    }
     return false; // need hard reset
 }
 
@@ -279,7 +285,6 @@ void AuroraeClient::init()
     m_scene->addItem(m_item);
 
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
-    connect(AuroraeFactory::instance()->theme(), SIGNAL(themeChanged()), SLOT(themeChanged()));
 }
 
 bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
