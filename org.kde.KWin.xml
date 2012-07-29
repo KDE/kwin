@@ -68,6 +68,7 @@
     <method name="waitForCompositingSetup">
       <arg type="b" direction="out"/>
     </method>
+<!-- @deprecated, @todo remove KDE5     -->
     <method name="decorationSupportedColors">
       <arg type="ai" direction="out"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;int>"/>

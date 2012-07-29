@@ -448,6 +448,10 @@ public:
     void cascadeDesktop();
     void unclutterDesktop();
     void doNotManage(const QString&);
+    /**
+     * @deprecated
+     * @todo: remove KDE5
+     **/
     QList<int> decorationSupportedColors() const;
     void nextDesktop();
     void previousDesktop();
