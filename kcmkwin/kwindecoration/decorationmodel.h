@@ -112,6 +112,11 @@ public:
 
     void regeneratePreviews(int firstIndex = 0);
     void stopPreviewGeneration();
+
+    Q_INVOKABLE QVariant readConfig(const QString &themeName, const QString &key, const QVariant &defaultValue = QVariant());
+
+Q_SIGNALS:
+    void configChanged(QString themeName);
 public slots:
     void regeneratePreview(const QModelIndex& index, const QSize& size);
 private slots:

@@ -98,6 +98,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
         m_ui->decorationList->engine()->addImportPath(importPath);
     }
     m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
+    m_ui->decorationList->rootContext()->setContextProperty("decorationBaseModel", m_model);
     m_ui->decorationList->rootContext()->setContextProperty("options", m_decorationButtons);
     m_ui->decorationList->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
     m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
@@ -342,7 +343,8 @@ void KWinDecorationModule::slotConfigureDecoration()
 {
     const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
     bool reload = false;
-    if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration) {
+    if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration ||
+        index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
         QPointer< KDialog > dlg = new KDialog(this);
         dlg->setCaption(i18n("Decoration Options"));
         dlg->setButtons(KDialog::Ok | KDialog::Cancel);

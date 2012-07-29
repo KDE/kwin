@@ -61,6 +61,9 @@ public:
     QString leftButtons();
     QString rightButtons();
     bool customButtonPositions();
+    const QString &currentThemeName() const {
+        return m_themeName;
+    }
 
     QFont activeTitleFont();
     QFont inactiveTitleFont();
@@ -78,6 +81,7 @@ private:
 Q_SIGNALS:
     void buttonsChanged();
     void titleFontChanged();
+    void configChanged();
 
 private:
     static AuroraeFactory *s_instance;
@@ -86,6 +90,7 @@ private:
     QDeclarativeEngine *m_engine;
     QDeclarativeComponent *m_component;
     EngineType m_engineType;
+    QString m_themeName;
 };
 
 class AuroraeClient : public KDecorationUnstable
@@ -138,6 +143,8 @@ public:
     bool isMaximized() const;
     int doubleClickInterval() const;
 
+    Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
+
 Q_SIGNALS:
     void activeChanged();
     void captionChanged();
@@ -148,6 +155,11 @@ Q_SIGNALS:
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
     void buttonsChanged();
+    /**
+     * Signal emitted when the decoration's configuration might have changed.
+     * A decoration could reload it's configuration when this signal is emitted.
+     **/
+    void configChanged();
 
 public slots:
     void menuClicked();

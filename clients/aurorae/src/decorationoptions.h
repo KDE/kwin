@@ -51,6 +51,7 @@ namespace KWin
 class DecorationOptions : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(BorderSize)
     /**
      * The decoration Object for which this set of options should be used. The decoration is
      * required to get the correct colors and fonts depending on whether the decoration represents
@@ -112,6 +113,15 @@ class DecorationOptions : public QObject
      **/
     Q_PROPERTY(QString titleButtonsRight READ titleButtonsRight NOTIFY titleButtonsChanged)
 public:
+    enum BorderSize {
+        BorderTiny,      ///< Minimal borders
+        BorderNormal,    ///< Standard size borders, the default setting
+        BorderLarge,     ///< Larger borders
+        BorderVeryLarge, ///< Very large borders
+        BorderHuge,      ///< Huge borders
+        BorderVeryHuge,  ///< Very huge borders
+        BorderOversized ///< Oversized borders
+    };
     explicit DecorationOptions(QObject *parent = 0);
     virtual ~DecorationOptions();
 

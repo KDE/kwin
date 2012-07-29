@@ -69,6 +69,8 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     roleNames[TypeRole] = "type";
     roleNames[AuroraeNameRole] = "auroraeThemeName";
     roleNames[QmlMainScriptRole] = "mainScript";
+    roleNames[BorderSizeRole] = "borderSize";
+    roleNames[ButtonSizeRole] = "buttonSize";
     setRoleNames(roleNames);
     m_config = KSharedConfig::openConfig("auroraerc");
     findDecorations();
@@ -136,9 +138,9 @@ void DecorationModel::findDecorations()
             // not a valid QML theme
             continue;
         }
-        // TODO: read proper border sizes
-        data.borderSize = KDecorationDefines::BorderNormal;
-        data.buttonSize = KDecorationDefines::BorderNormal;
+        KConfigGroup config(m_config, data.auroraeName);
+        data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >("BorderSize", KDecorationDefines::BorderNormal);
+        data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >("ButtonSize", KDecorationDefines::BorderNormal);
         data.comment = service->comment();
         KPluginInfo info(service);
         data.author = info.author();
@@ -243,7 +245,8 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
         return sizes;
     }
     case ButtonSizeRole:
-        if (m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration)
+        if (m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration ||
+            m_decorations[ index.row()].type == DecorationModelData::QmlDecoration)
             return static_cast< int >(m_decorations[ index.row()].buttonSize);
         else
             return QVariant();
@@ -259,23 +262,27 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
     if (!index.isValid() || (role != BorderSizeRole && role != ButtonSizeRole))
         return QAbstractItemModel::setData(index, value, role);
 
+    const DecorationModelData::DecorationType type = m_decorations[ index.row()].type;
+
     if (role == BorderSizeRole) {
         m_decorations[ index.row()].borderSize = (KDecorationDefines::BorderSize)value.toInt();
-        if (m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration) {
+        if (type == DecorationModelData::AuroraeDecoration || type == DecorationModelData::QmlDecoration) {
             KConfigGroup config(m_config, m_decorations[ index.row()].auroraeName);
             config.writeEntry("BorderSize", value.toInt());
             config.sync();
         }
         emit dataChanged(index, index);
+        emit configChanged(m_decorations[ index.row()].auroraeName);
         regeneratePreview(index);
         return true;
     }
-    if (role == ButtonSizeRole && m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration) {
+    if (role == ButtonSizeRole && (type == DecorationModelData::AuroraeDecoration || type == DecorationModelData::QmlDecoration)) {
         m_decorations[ index.row()].buttonSize = (KDecorationDefines::BorderSize)value.toInt();
         KConfigGroup config(m_config, m_decorations[ index.row()].auroraeName);
         config.writeEntry("ButtonSize", value.toInt());
         config.sync();
         emit dataChanged(index, index);
+        emit configChanged(m_decorations[ index.row()].auroraeName);
         regeneratePreview(index);
         return true;
     }
@@ -423,9 +430,14 @@ QModelIndex DecorationModel::indexOfAuroraeName(const QString &auroraeName, cons
 
 void DecorationModel::setBorderSize(const QModelIndex& index, KDecorationDefines::BorderSize size)
 {
-    if (!index.isValid() || m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration)
+    if (!index.isValid() || m_decorations[ index.row()].type == DecorationModelData::AuroraeDecoration || m_decorations[ index.row()].type == DecorationModelData::QmlDecoration)
         return;
     m_decorations[ index.row()].borderSize = size;
+}
+
+QVariant DecorationModel::readConfig(const QString &themeName, const QString &key, const QVariant &defaultValue)
+{
+    return m_config->group(themeName).readEntry(key, defaultValue);
 }
 
 } // namespace KWin

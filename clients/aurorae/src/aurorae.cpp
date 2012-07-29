@@ -85,6 +85,7 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
     m_engine->rootContext()->setContextProperty("options", this);
+    m_themeName = themeName;
 }
 
 void AuroraeFactory::initQML(const KConfigGroup &group)
@@ -117,6 +118,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
         m_engine->addImportPath(importPath);
     }
     m_component->loadUrl(QUrl::fromLocalFile(file));
+    m_themeName = themeName;
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -159,6 +161,7 @@ bool AuroraeFactory::reset(unsigned long changed)
         m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
         m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     }
+    emit configChanged();
     return false; // need hard reset
 }
 
@@ -248,6 +251,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(this, SIGNAL(keepAboveChanged(bool)), SIGNAL(keepAboveChangedWrapper()));
     connect(this, SIGNAL(keepBelowChanged(bool)), SIGNAL(keepBelowChangedWrapper()));
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
+    connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
 }
 
 AuroraeClient::~AuroraeClient()
@@ -554,6 +558,12 @@ void AuroraeClient::titlebarDblClickOperation()
 void AuroraeClient::doTitlebarDblClickOperation()
 {
     KDecorationUnstable::titlebarDblClickOperation();
+}
+
+QVariant AuroraeClient::readConfig(const QString &key, const QVariant &defaultValue)
+{
+    KSharedConfigPtr config = KSharedConfig::openConfig("auroraerc");
+    return config->group(AuroraeFactory::instance()->currentThemeName()).readEntry(key, defaultValue);
 }
 
 } // namespace Aurorae
