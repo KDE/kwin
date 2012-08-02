@@ -105,6 +105,7 @@ class AuroraeClient : public KDecorationUnstable
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
+    virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void activeChange();
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void captionChange();
