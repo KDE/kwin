@@ -141,7 +141,7 @@ Decoration {
         horizontalAlignment: auroraeTheme.horizontalAlignment
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
-        height: auroraeTheme.titleHeight
+        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
         color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
         font: decoration.active ? options.activeTitleFont : options.inactiveTitleFont
         anchors {
