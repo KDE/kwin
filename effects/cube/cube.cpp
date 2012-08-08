@@ -1169,7 +1169,8 @@ void CubeEffect::postPaintScreen()
 
                 delete m_cubeCapBuffer;
                 m_cubeCapBuffer = NULL;
-                desktopNameFrame->free();
+                if (desktopNameFrame)
+                    desktopNameFrame->free();
             }
             effects->addRepaintFull();
         }
