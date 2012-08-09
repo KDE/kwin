@@ -828,10 +828,10 @@ void FlipSwitchEffect::adjustWindowMultiScreen(const KWin::EffectWindow* w, Wind
         }
     } else {
         if (clientRect.width() != fullRect.width() && clientRect.x() < rect.x()) {
-            data.xTranslate -= clientRect.width();
+            data.xTranslate -= (m_screenArea.x() - clientRect.x());
         }
         if (clientRect.height() != fullRect.height() && clientRect.y() < m_screenArea.y()) {
-            data.yTranslate -= clientRect.height();
+            data.yTranslate -= (m_screenArea.y() - clientRect.y());
         }
     }
 }
