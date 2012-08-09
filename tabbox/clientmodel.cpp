@@ -106,39 +106,13 @@ QString ClientModel::longestCaption() const
 int ClientModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    int count = 1;
-    switch(tabBox->config().layout()) {
-    case TabBoxConfig::HorizontalLayout:
-        count = m_clientList.count();
-        break;
-    case TabBoxConfig::VerticalLayout:
-        count = 1;
-        break;
-    case TabBoxConfig::HorizontalVerticalLayout:
-        count = qRound(sqrt(float(m_clientList.count())));
-        if (count * count < m_clientList.count())
-            count++;
-        break;
-    }
-    return qMax(count, 1);
+    return 1;
 }
 
 int ClientModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    int count = 1;
-    switch(tabBox->config().layout()) {
-    case TabBoxConfig::HorizontalLayout:
-        count = 1;
-        break;
-    case TabBoxConfig::VerticalLayout:
-        count = m_clientList.count();
-        break;
-    case TabBoxConfig::HorizontalVerticalLayout:
-        count = qRound(sqrt(float(m_clientList.count())));
-        break;
-    }
-    return qMax(count, 1);
+    return m_clientList.count();
 }
 
 QModelIndex ClientModel::parent(const QModelIndex& child) const

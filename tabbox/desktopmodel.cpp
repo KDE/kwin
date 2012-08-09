@@ -64,41 +64,13 @@ QVariant DesktopModel::data(const QModelIndex& index, int role) const
 int DesktopModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    int count = 1;
-    switch(tabBox->config().layout()) {
-    case TabBoxConfig::HorizontalLayout:
-        count = m_desktopList.count();
-        break;
-    case TabBoxConfig::VerticalLayout:
-        count = 1;
-        break;
-    case TabBoxConfig::HorizontalVerticalLayout:
-        count = qRound(sqrt(float(m_desktopList.count())));
-        if (count * count < m_desktopList.count())
-            count++;
-        // TODO: pager layout?
-        break;
-    }
-    return qMax(count, 1);
+    return 1;
 }
 
 int DesktopModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    int count = 1;
-    switch(tabBox->config().layout()) {
-    case TabBoxConfig::HorizontalLayout:
-        count = 1;
-        break;
-    case TabBoxConfig::VerticalLayout:
-        count = m_desktopList.count();
-        break;
-    case TabBoxConfig::HorizontalVerticalLayout:
-        count = qRound(sqrt(float(m_desktopList.count())));
-        // TODO: pager layout?
-        break;
-    }
-    return qMax(count, 1);
+    return m_desktopList.count();
 }
 
 QModelIndex DesktopModel::parent(const QModelIndex& child) const
