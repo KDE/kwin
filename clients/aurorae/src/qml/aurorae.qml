@@ -143,6 +143,7 @@ Decoration {
         elide: Text.ElideRight
         height: auroraeTheme.titleHeight
         color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
+        font: decoration.active ? options.activeTitleFont : options.inactiveTitleFont
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left

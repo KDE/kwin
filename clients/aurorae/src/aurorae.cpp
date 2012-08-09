@@ -85,6 +85,9 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingButtons) {
         emit buttonsChanged();
     }
+    if (changed & SettingFont){
+        emit titleFontChanged();
+    }
     const KConfig conf("auroraerc");
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
@@ -159,6 +162,16 @@ QString AuroraeFactory::leftButtons()
 bool AuroraeFactory::customButtonPositions()
 {
     return options()->customButtonPositions();
+}
+
+QFont AuroraeFactory::activeTitleFont()
+{
+    return options()->font();
+}
+
+QFont AuroraeFactory::inactiveTitleFont()
+{
+    return options()->font(false);
 }
 
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
