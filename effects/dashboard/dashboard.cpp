@@ -158,11 +158,6 @@ void DashboardEffect::slotWindowActivated(EffectWindow *w)
         transformWindow = true;
         window = w;
 
-        if (blur) {
-            w->setData(WindowBlurBehindRole, w->geometry());
-            w->setData(WindowForceBlurRole, QVariant(true));
-        }
-
         effects->addRepaintFull();
     } else {
         if (transformWindow) {
@@ -177,6 +172,10 @@ void DashboardEffect::slotWindowAdded(EffectWindow* w)
     if (isDashboard(w)) {
         // Tell other windowAdded() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        if (blur) {
+            w->setData(WindowBlurBehindRole, w->geometry());
+            w->setData(WindowForceBlurRole, QVariant(true));
+        }
 
         activateAnimation = true;
         deactivateAnimation = false;
