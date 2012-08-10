@@ -455,6 +455,34 @@ void AuroraeClient::doCloseWindow()
     KDecorationUnstable::closeWindow();
 }
 
+void AuroraeClient::maximize(int button)
+{
+    // a maximized window does not need to have a window decoration
+    // in that case we need to delay handling by one cycle
+    // BUG: 304870
+    QMetaObject::invokeMethod(qobject_cast< KDecorationUnstable* >(this),
+                              "doMaximzie",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, button));
+}
+
+void AuroraeClient::doMaximzie(int button)
+{
+    KDecorationUnstable::maximize(static_cast<Qt::MouseButton>(button));
+}
+
+void AuroraeClient::titlebarDblClickOperation()
+{
+    // the double click operation can result in a window being maximized
+    // see maximize
+    QMetaObject::invokeMethod(qobject_cast< KDecorationUnstable* >(this), "doTitlebarDblClickOperation", Qt::QueuedConnection);
+}
+
+void AuroraeClient::doTitlebarDblClickOperation()
+{
+    KDecorationUnstable::titlebarDblClickOperation();
+}
+
 } // namespace Aurorae
 
 extern "C"

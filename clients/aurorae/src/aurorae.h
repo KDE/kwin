@@ -145,10 +145,14 @@ public slots:
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
     void closeWindow();
+    void titlebarDblClickOperation();
+    void maximize(int button);
 
 private slots:
     void themeChanged();
     void doCloseWindow();
+    void doTitlebarDblClickOperation();
+    void doMaximzie(int button);
 
 private:
     QGraphicsView *m_view;
