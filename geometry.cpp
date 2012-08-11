@@ -64,7 +64,9 @@ void Workspace::desktopResized()
 {
     QRect geom;
     for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
-        geom |= QApplication::desktop()->screenGeometry(i);
+        //do NOT use - QApplication::desktop()->screenGeometry(i) there could be a virtual geometry
+        // see bug #302783
+        geom |= QApplication::desktop()->screen(i)->geometry();
     }
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();

@@ -82,6 +82,7 @@ TabBoxConfig& TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig& object)
     d->clientMinimizedMode = object.clientMinimizedMode();
     d->showDesktopMode = object.showDesktopMode();
     d->clientMultiScreenMode = object.clientMultiScreenMode();
+    d->clientSwitchingMode = object.clientSwitchingMode();
     d->desktopSwitchingMode = object.desktopSwitchingMode();
     d->layoutName = object.layoutName();
     return *this;
