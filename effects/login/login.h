@@ -31,6 +31,7 @@ class LoginEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool fadeToBlack READ isFadeToBlack)
 public:
     LoginEffect();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
@@ -40,6 +41,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual bool isActive() const;
 
+    // for properties
+    bool isFadeToBlack() const {
+        return m_fadeToBlack;
+    }
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
 

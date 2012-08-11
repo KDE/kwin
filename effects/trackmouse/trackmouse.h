@@ -34,6 +34,8 @@ class TrackMouseEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(Qt::KeyboardModifiers modifiers READ modifiers)
+    Q_PROPERTY(bool mousePolling READ isMousePolling)
 public:
     TrackMouseEffect();
     virtual ~TrackMouseEffect();
@@ -42,6 +44,14 @@ public:
     virtual void postPaintScreen();
     virtual void reconfigure(ReconfigureFlags);
     virtual bool isActive() const;
+
+    // for properties
+    Qt::KeyboardModifiers modifiers() const {
+        return m_modifiers;
+    }
+    bool isMousePolling() const {
+        return m_mousePolling;
+    }
 private slots:
     void toggle();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,

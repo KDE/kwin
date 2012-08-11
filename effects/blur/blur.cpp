@@ -672,5 +672,10 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     shader->unbind();
 }
 
+int BlurEffect::blurRadius() const
+{
+    return shader->radius();
+}
+
 } // namespace KWin
 

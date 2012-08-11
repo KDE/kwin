@@ -1052,6 +1052,13 @@ QStringList Workspace::listOfEffects() const
     return listModules;
 }
 
+QString Workspace::supportInformationForEffect(const QString& name) const
+{
+    if (effects)
+        return static_cast<EffectsHandlerImpl*>(effects)->supportInformation(name);
+    return QString();
+}
+
 void Workspace::slotActivateAttentionWindow()
 {
     if (attention_chain.count() > 0)

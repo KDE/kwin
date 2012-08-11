@@ -39,10 +39,28 @@ class ThumbnailAsideEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int maxWidth READ configuredMaxWidth)
+    Q_PROPERTY(int spacing READ configuredSpacing)
+    Q_PROPERTY(qreal opacity READ configuredOpacity)
+    Q_PROPERTY(int screen READ configuredScreen)
 public:
     ThumbnailAsideEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+
+    // for properties
+    int configuredMaxWidth() const {
+        return maxwidth;
+    }
+    int configuredSpacing() const {
+        return spacing;
+    }
+    qreal configuredOpacity() const {
+        return opacity;
+    }
+    int configuredScreen() const {
+        return screen;
+    }
 private slots:
     void toggleCurrentThumbnail();
     void slotWindowClosed(KWin::EffectWindow *w);

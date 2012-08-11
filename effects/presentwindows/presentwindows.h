@@ -67,6 +67,23 @@ class PresentWindowsEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int layoutMode READ layoutMode)
+    Q_PROPERTY(bool showCaptions READ isShowCaptions)
+    Q_PROPERTY(bool showIcons READ isShowIcons)
+    Q_PROPERTY(bool doNotCloseWindows READ isDoNotCloseWindows)
+    Q_PROPERTY(bool ignoreMinimized READ isIgnoreMinimized)
+    Q_PROPERTY(int accuracy READ accuracy)
+    Q_PROPERTY(bool fillGaps READ isFillGaps)
+    Q_PROPERTY(int fadeDuration READ fadeDuration)
+    Q_PROPERTY(bool showPanel READ isShowPanel)
+    Q_PROPERTY(int leftButtonWindow READ leftButtonWindow)
+    Q_PROPERTY(int rightButtonWindow READ rightButtonWindow)
+    Q_PROPERTY(int middleButtonWindow READ middleButtonWindow)
+    Q_PROPERTY(int leftButtonDesktop READ leftButtonDesktop)
+    Q_PROPERTY(int middleButtonDesktop READ middleButtonDesktop)
+    Q_PROPERTY(int rightButtonDesktop READ rightButtonDesktop)
+    Q_PROPERTY(bool dragToClose READ isDragToClose)
+    // TODO: electric borders
 private:
     // Structures
     struct WindowData {
@@ -130,6 +147,55 @@ public:
         DesktopShowDesktopAction = 3 // Minimizes all windows
     };
 
+    // for properties
+    int layoutMode() const {
+        return m_layoutMode;
+    }
+    bool isShowCaptions() const {
+        return m_showCaptions;
+    }
+    bool isShowIcons() const {
+        return m_showIcons;
+    }
+    bool isDoNotCloseWindows() const {
+        return m_doNotCloseWindows;
+    }
+    bool isIgnoreMinimized() const {
+        return m_ignoreMinimized;
+    }
+    int accuracy() const {
+        return m_accuracy;
+    }
+    bool isFillGaps() const {
+        return m_fillGaps;
+    }
+    int fadeDuration() const {
+        return m_fadeDuration;
+    }
+    bool isShowPanel() const {
+        return m_showPanel;
+    }
+    int leftButtonWindow() const {
+        return m_leftButtonWindow;
+    }
+    int rightButtonWindow() const {
+        return m_rightButtonWindow;
+    }
+    int middleButtonWindow() const {
+        return m_middleButtonWindow;
+    }
+    int leftButtonDesktop() const {
+        return m_leftButtonDesktop;
+    }
+    int middleButtonDesktop() const {
+        return m_middleButtonDesktop;
+    }
+    int rightButtonDesktop() const {
+        return m_rightButtonDesktop;
+    }
+    bool isDragToClose() const {
+        return m_dragToClose;
+    }
 public slots:
     void setActive(bool active);
     void toggleActive()  {

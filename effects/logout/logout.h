@@ -36,6 +36,7 @@ class LogoutEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool useBlur READ isUseBlur)
 public:
     LogoutEffect();
     ~LogoutEffect();
@@ -45,6 +46,11 @@ public:
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool isActive() const;
+
+    // for properties
+    bool isUseBlur() const {
+        return useBlur;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);

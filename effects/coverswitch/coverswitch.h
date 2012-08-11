@@ -38,6 +38,18 @@ class CoverSwitchEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int animationDuration READ configuredAnimationDuration)
+    Q_PROPERTY(bool animateSwitch READ isAnimateSwitch)
+    Q_PROPERTY(bool animateStart READ isAnimateStart)
+    Q_PROPERTY(bool animateStop READ isAnimateStop)
+    Q_PROPERTY(bool reflection READ isReflection)
+    Q_PROPERTY(bool windowTitle READ isWindowTitle)
+    Q_PROPERTY(qreal zPosition READ windowZPosition)
+    Q_PROPERTY(bool dynamicThumbnails READ isDynamicThumbnails)
+    Q_PROPERTY(int thumbnailWindows READ configurredThumbnailWindows)
+    Q_PROPERTY(bool primaryTabBox READ isPrimaryTabBox)
+    Q_PROPERTY(bool secondaryTabBox READ isSecondaryTabBox)
+    // TODO: mirror colors
 public:
     CoverSwitchEffect();
     ~CoverSwitchEffect();
@@ -51,6 +63,41 @@ public:
     virtual bool isActive() const;
 
     static bool supported();
+
+    // for properties
+    int configuredAnimationDuration() const {
+        return animationDuration;
+    }
+    bool isAnimateSwitch() const {
+        return animateSwitch;
+    }
+    bool isAnimateStart() const {
+        return animateStart;
+    }
+    bool isAnimateStop() const {
+        return animateStop;
+    }
+    bool isReflection() const {
+        return reflection;
+    }
+    bool isWindowTitle() const {
+        return windowTitle;
+    }
+    qreal windowZPosition() const {
+        return zPosition;
+    }
+    bool isDynamicThumbnails() const {
+        return dynamicThumbnails;
+    }
+    int configurredThumbnailWindows() const {
+        return thumbnailWindows;
+    }
+    bool isPrimaryTabBox() const {
+        return primaryTabBox;
+    }
+    bool isSecondaryTabBox() const {
+        return secondaryTabBox;
+    }
 
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);

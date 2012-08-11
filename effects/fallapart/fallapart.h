@@ -30,6 +30,7 @@ class FallApartEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int blockSize READ configuredBlockSize)
 public:
     FallApartEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -39,6 +40,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    // for properties
+    int configuredBlockSize() const {
+        return blockSize;
+    }
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);

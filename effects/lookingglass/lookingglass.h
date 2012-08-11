@@ -40,6 +40,7 @@ class GLVertexBuffer;
 class LookingGlassEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int initialRadius READ initialRadius)
 public:
     LookingGlassEffect();
     virtual ~LookingGlassEffect();
@@ -52,6 +53,10 @@ public:
 
     static bool supported();
 
+    // for properties
+    int initialRadius() const {
+        return initialradius;
+    }
 public slots:
     void toggle();
     void zoomIn();

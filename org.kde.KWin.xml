@@ -58,6 +58,10 @@
     <method name="listOfEffects">
       <arg type="as" direction="out"/>
     </method>
+    <method name="supportInformationForEffect">
+      <arg name="name" type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
     <method name="compositingActive">
       <arg type="b" direction="out"/>
     </method>

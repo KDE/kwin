@@ -36,6 +36,14 @@ class ZoomEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
+    Q_PROPERTY(int mousePointer READ configuredMousePointer)
+    Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
+    Q_PROPERTY(bool enableFocusTracking READ isEnableFocusTracking)
+    Q_PROPERTY(bool followFocus READ isFollowFocus)
+    Q_PROPERTY(int focusDelay READ configuredFocusDelay)
+    Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
+    Q_PROPERTY(qreal targetZoom READ targetZoom)
 public:
     ZoomEffect();
     virtual ~ZoomEffect();
@@ -44,6 +52,31 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual bool isActive() const;
+    // for properties
+    qreal configuredZoomFactor() const {
+        return zoomFactor;
+    }
+    int configuredMousePointer() const {
+        return mousePointer;
+    }
+    int configuredMouseTracking() const {
+        return mouseTracking;
+    }
+    bool isEnableFocusTracking() const {
+        return enableFocusTracking;
+    }
+    bool isFollowFocus() const {
+        return followFocus;
+    }
+    int configuredFocusDelay() const {
+        return focusDelay;
+    }
+    qreal configuredMoveFactor() const {
+        return moveFactor;
+    }
+    qreal targetZoom() const {
+        return target_zoom;
+    }
 private slots:
     inline void zoomIn() { zoomIn(-1.0); };
     void zoomIn(double to);

@@ -2439,6 +2439,12 @@ QString Workspace::supportInformation() const
         foreach (const QString &effect, activeEffects()) {
             support.append(effect % '\n');
         }
+        support.append("\nEffect Settings:\n");
+        support.append(  "----------------\n");
+        foreach (const QString &effect, loadedEffects()) {
+            support.append(supportInformationForEffect(effect));
+            support.append('\n');
+        }
     } else {
         support.append("Compositing is not active\n");
     }
