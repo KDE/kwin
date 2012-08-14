@@ -210,6 +210,10 @@ Client::Client(Workspace* ws)
  */
 Client::~Client()
 {
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
+        ::kill(m_killHelperPID, SIGTERM);
+        m_killHelperPID = 0;
+    }
     //SWrapper::Client::clientRelease(this);
 #ifdef HAVE_XSYNC
     if (syncRequest.alarm != None)
