@@ -47,7 +47,7 @@ class EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
 public:
-    EffectsHandlerImpl(CompositingType type);
+    EffectsHandlerImpl(Scene *scene);
     virtual ~EffectsHandlerImpl();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
@@ -228,6 +228,7 @@ private:
     QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
     QList< Effect* >::iterator m_currentPaintScreenIterator;
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    Scene *m_scene;
 };
 
 class EffectWindowImpl : public EffectWindow

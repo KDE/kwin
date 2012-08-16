@@ -93,8 +93,6 @@ namespace KWin
 // Scene
 //****************************************
 
-Scene* scene = 0;
-
 Scene::Scene(Workspace* ws)
     : QObject(ws)
     , wspace(ws)
@@ -102,6 +100,7 @@ Scene::Scene(Workspace* ws)
     , m_overlayWindow(new OverlayWindow())
 {
     last_time.invalidate(); // Initialize the timer
+    connect(Workspace::self(), SIGNAL(deletedRemoved(KWin::Deleted*)), SLOT(windowDeleted(KWin::Deleted*)));
 }
 
 Scene::~Scene()

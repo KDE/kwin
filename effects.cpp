@@ -96,12 +96,13 @@ static void deleteWindowProperty(Window win, long int atom)
 
 //---------------------
 
-EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
-    : EffectsHandler(type)
+EffectsHandlerImpl::EffectsHandlerImpl(Scene *scene)
+    : EffectsHandler(scene->compositingType())
     , keyboard_grab_effect(NULL)
     , fullscreen_effect(0)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , mouse_poll_ref_count(0)
+    , m_scene(scene)
 {
     // init is important, otherwise causes crashes when quads are build before the first painting pass start
     m_currentBuildQuadsIterator = m_activeEffects.end();
@@ -242,7 +243,7 @@ void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& 
         (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
         --m_currentPaintScreenIterator;
     } else
-        scene->finalPaintScreen(mask, region, data);
+        m_scene->finalPaintScreen(mask, region, data);
 }
 
 void EffectsHandlerImpl::postPaintScreen()
@@ -269,7 +270,7 @@ void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, 
         (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
         --m_currentPaintWindowIterator;
     } else
-        scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
+        m_scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
@@ -306,7 +307,7 @@ void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, W
         (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
         --m_currentDrawWindowIterator;
     } else
-        scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
+        m_scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
@@ -585,7 +586,7 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
 
 void EffectsHandlerImpl::desktopResized(const QSize &size)
 {
-    scene->screenGeometryChanged(size);
+    m_scene->screenGeometryChanged(size);
     emit screenGeometryChanged(size);
     Workspace::self()->compositor()->addRepaintFull();
 }
@@ -1136,7 +1137,7 @@ void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve, Qt::Orient
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (SceneXrender* s = dynamic_cast< SceneXrender* >(scene))
+    if (SceneXrender* s = dynamic_cast< SceneXrender* >(m_scene))
         return s->bufferPicture();
 #endif
     return None;

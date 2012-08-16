@@ -543,7 +543,7 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 
 Unmanaged* Workspace::createUnmanaged(Window w)
 {
-    if (compositing() && w == scene->overlayWindow()->window())
+    if (m_compositor && m_compositor->checkForOverlayWindow(w))
         return NULL;
     Unmanaged* c = new Unmanaged(this);
     if (!c->track(w)) {
@@ -705,8 +705,6 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig, allowed_t)
 void Workspace::removeDeleted(Deleted* c, allowed_t)
 {
     assert(deleted.contains(c));
-    if (scene)
-        scene->windowDeleted(c);
     emit deletedRemoved(c);
     deleted.removeAll(c);
     unconstrained_stacking_order.removeAll(c);
@@ -1165,8 +1163,6 @@ unsigned int ObscuringWindows::max_cache_size = 0;
 
 void ObscuringWindows::create(Client* c)
 {
-    if (compositing())
-        return; // Not needed with compositing
     if (cached == 0)
         cached = new QList<Window>;
     Window obs_win;
@@ -1244,7 +1240,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
                 continue;
             }
             if (!c->isOnDesktop(new_desktop) && c != movingClient && c->isOnCurrentActivity()) {
-                if (c->isShown(true) && c->isOnDesktop(old_desktop))
+                if (c->isShown(true) && c->isOnDesktop(old_desktop) && !compositing())
                     obs_wins.create(c);
                 (c)->updateVisibility();
             }
@@ -1465,7 +1461,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
                 continue;
             }
             if (!c->isOnActivity(new_activity) && c != movingClient && c->isOnCurrentDesktop()) {
-                if (c->isShown(true) && c->isOnActivity(old_activity))
+                if (c->isShown(true) && c->isOnActivity(old_activity) && !compositing())
                     obs_wins.create(c);
                 c->updateVisibility();
             }

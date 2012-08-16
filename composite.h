@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
+class Scene;
 
 class Compositor : public QObject {
     Q_OBJECT
@@ -56,6 +57,30 @@ public:
     // might happen few ms earlier, might be an entire frame to short. This is NOT deterministic.
     int nextFrameDelay() {
         return m_nextFrameDelay;
+    }
+    bool hasScene() const {
+        return m_scene != NULL;
+    }
+
+    /**
+     * Checks whether @p w is the Scene's overlay window.
+     **/
+    bool checkForOverlayWindow(WId w) const;
+    /**
+     * @returns The Scene's Overlay X Window.
+     **/
+    WId overlayWindow() const;
+    /**
+     * @returns Whether the Scene's Overlay X Window is visible.
+     **/
+    bool isOverlayWindowVisible() const;
+    /**
+     * Set's the Scene's Overlay X Window visibility to @p visible.
+     **/
+    void setOverlayWindowVisibility(bool visible);
+
+    Scene *scene() {
+        return m_scene;
     }
 
 public Q_SLOTS:
@@ -105,6 +130,7 @@ private:
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
     int m_timeSinceLastVBlank, m_nextFrameDelay;
+    Scene *m_scene;
 };
 }
 

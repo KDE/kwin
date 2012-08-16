@@ -60,8 +60,6 @@ public:
 
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
-    // a window has been destroyed
-    virtual void windowDeleted(Deleted*) = 0;
     /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
@@ -100,6 +98,8 @@ public:
     }
     OverlayWindow* overlayWindow();
 public Q_SLOTS:
+    // a window has been destroyed
+    virtual void windowDeleted(KWin::Deleted*) = 0;
     // opacity of a window changed
     virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
     // shape/size of a window changed
@@ -243,8 +243,6 @@ public:
 protected:
     EffectFrameImpl* m_effectFrame;
 };
-
-extern Scene* scene;
 
 inline
 int Scene::Window::x() const

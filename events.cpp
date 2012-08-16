@@ -443,17 +443,17 @@ bool Workspace::workspaceEvent(XEvent * e)
     case Expose:
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
-                    || (scene->overlayWindow()->window() != None && e->xexpose.window == scene->overlayWindow()->window()))) { // overlay needs repainting
+                    || (m_compositor->overlayWindow() != None && e->xexpose.window == m_compositor->overlayWindow()))) { // overlay needs repainting
             if (m_compositor) {
                 m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
             }
         }
         break;
     case VisibilityNotify:
-        if (compositing() && scene->overlayWindow()->window() != None && e->xvisibility.window == scene->overlayWindow()->window()) {
-            bool was_visible = scene->overlayWindow()->isVisible();
-            scene->overlayWindow()->setVisibility((e->xvisibility.state != VisibilityFullyObscured));
-            if (!was_visible && scene->overlayWindow()->isVisible()) {
+        if (compositing() && m_compositor->overlayWindow() != None && e->xvisibility.window == m_compositor->overlayWindow()) {
+            bool was_visible = m_compositor->isOverlayWindowVisible();
+            m_compositor->setOverlayWindowVisibility((e->xvisibility.state != VisibilityFullyObscured));
+            if (!was_visible && m_compositor->isOverlayWindowVisible()) {
                 // hack for #154825
                 if (m_compositor) {
                     m_compositor->addRepaintFull();

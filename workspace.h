@@ -761,6 +761,11 @@ private:
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
+    /**
+     * @returns Whether we have a Compositor and it is active (Scene created)
+     **/
+    bool compositing() const;
+
     Client* active_client;
     Client* last_active_client;
     Client* most_recently_raised; // Used ONLY by raiseOrLowerClient()

@@ -168,6 +168,9 @@ public:
     bool bindTexture();
     void discardTexture();
     void checkTextureSize();
+    void setScene(SceneOpenGL *scene) {
+        m_scene = scene;
+    }
 
 protected:
     enum TextureType {
@@ -199,6 +202,7 @@ private:
     Texture leftTexture;
     Texture rightTexture;
     Texture bottomTexture;
+    SceneOpenGL *m_scene;
 };
 
 class SceneOpenGL::EffectFrame
