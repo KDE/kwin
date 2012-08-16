@@ -193,7 +193,6 @@ void Workspace::slotCompositingOptionsInitialized()
         c->setupCompositing();
     foreach (Unmanaged * c, unmanaged)
         c->setupCompositing();
-    m_userActionsMenu->discard(); // force re-creation of the Alt+F3 popup (opacity option)
 
     // render at least once
     compositeTimer.stop();
