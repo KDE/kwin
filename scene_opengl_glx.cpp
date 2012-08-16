@@ -633,7 +633,7 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
         m_overlayWindow->setup(buffer);
         XSync(display(), false);  // ensure X11 stuff has applied ////
         glXMakeCurrent(display(), glxbuffer, ctxbuffer); // reactivate context ////
-        glViewport(0,0, size.width(), size.height()); // adjust viewport last - should btw. be superflous on the Pixmap buffer - iirc glXCreatePixmap sets the context anyway. ////
+        glViewport(0,0, size.width(), size.height()); // adjust viewport last - should btw. be superfluous on the Pixmap buffer - iirc glXCreatePixmap sets the context anyway. ////
     }
     ShaderManager::instance()->resetAllShaders();
     m_resetModelViewProjectionMatrix = true;

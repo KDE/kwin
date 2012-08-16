@@ -276,7 +276,7 @@ void TabGroup::updateMinMaxSize()
         m_maxSize = m_maxSize.boundedTo((*i)->maxSize());
     }
 
-    // TODO: this actually resolves a conflict that should be catched when adding?
+    // TODO: this actually resolves a conflict that should be caught when adding?
     m_maxSize = m_maxSize.expandedTo(m_minSize);
 
     // calculate this _once_ to get a common size.
@@ -294,7 +294,7 @@ void TabGroup::blockStateUpdates(bool more) {
     more ? ++m_stateUpdatesBlocked : --m_stateUpdatesBlocked;
     if (m_stateUpdatesBlocked < 0) {
         m_stateUpdatesBlocked = 0;
-        qWarning("TabGroup: Something is messed up with TabGroup::blockStateUpdates() invokation\nReleased more than blocked!");
+        qWarning("TabGroup: Something is messed up with TabGroup::blockStateUpdates() invocation\nReleased more than blocked!");
     }
 }
 
