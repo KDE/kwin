@@ -83,12 +83,11 @@ extern int currentRefreshRate();
 // Workspace
 //****************************************
 
-Compositor::Compositor(Workspace* workspace)
+Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , compositingSuspended(!options->isUseCompositing())
     , compositingBlocked(false)
     , m_xrrRefreshRate(0)
-    , m_workspace(workspace)
 {
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(resetCompositing()));
@@ -98,7 +97,11 @@ Compositor::Compositor(Workspace* workspace)
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
-    setupCompositing();
+    // delay the call to setupCompositing by one event cycle
+    // The ctor of this class is invoked from the Workspace ctor, that means before
+    // Workspace is completely constructed, so calling Workspace::self() would result
+    // in undefined behavior. This is fixed by using a delayed invocation.
+    QMetaObject::invokeMethod(this, "setupCompositing", Qt::QueuedConnection);
 }
 
 Compositor::~Compositor()
@@ -167,7 +170,7 @@ void Compositor::slotCompositingOptionsInitialized()
             }
 #endif
 
-            scene = new SceneOpenGL(m_workspace);
+            scene = new SceneOpenGL(Workspace::self());
 
             // TODO: Add 30 second delay to protect against screen freezes as well
             unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
@@ -185,7 +188,7 @@ void Compositor::slotCompositingOptionsInitialized()
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         kDebug(1212) << "Initializing XRender compositing";
-        scene = new SceneXrender(m_workspace);
+        scene = new SceneXrender(Workspace::self());
         break;
 #endif
     default:
@@ -213,11 +216,11 @@ void Compositor::slotCompositingOptionsInitialized()
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer
     addRepaintFull();
-    foreach (Client * c, m_workspace->clientList())
+    foreach (Client * c, Workspace::self()->clientList())
         c->setupCompositing();
-    foreach (Client * c,  m_workspace->desktopList())
+    foreach (Client * c,  Workspace::self()->desktopList())
         c->setupCompositing();
-    foreach (Unmanaged * c, m_workspace->unmanagedList())
+    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
         c->setupCompositing();
 
     // render at least once
@@ -237,21 +240,21 @@ void Compositor::finishCompositing()
         return;
     m_finishingCompositing = true;
     delete cm_selection;
-    foreach (Client * c, m_workspace->clientList())
+    foreach (Client * c, Workspace::self()->clientList())
     scene->windowClosed(c, NULL);
-    foreach (Client * c, m_workspace->desktopList())
+    foreach (Client * c, Workspace::self()->desktopList())
     scene->windowClosed(c, NULL);
-    foreach (Unmanaged * c, m_workspace->unmanagedList())
+    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
     scene->windowClosed(c, NULL);
-    foreach (Deleted * c, m_workspace->deletedList())
+    foreach (Deleted * c, Workspace::self()->deletedList())
     scene->windowDeleted(c);
-    foreach (Client * c, m_workspace->clientList())
+    foreach (Client * c, Workspace::self()->clientList())
     c->finishCompositing();
-    foreach (Client * c, m_workspace->desktopList())
+    foreach (Client * c, Workspace::self()->desktopList())
     c->finishCompositing();
-    foreach (Unmanaged * c, m_workspace->unmanagedList())
+    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
     c->finishCompositing();
-    foreach (Deleted * c, m_workspace->deletedList())
+    foreach (Deleted * c, Workspace::self()->deletedList())
     c->finishCompositing();
     XCompositeUnredirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     delete effects;
@@ -261,8 +264,8 @@ void Compositor::finishCompositing()
     compositeTimer.stop();
     mousePollingTimer.stop();
     repaints_region = QRegion();
-    for (ClientList::ConstIterator it = m_workspace->clientList().constBegin();
-            it != m_workspace->clientList().constEnd();
+    for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
+            it != Workspace::self()->clientList().constEnd();
             ++it) {
         // forward all opacity values to the frame in case there'll be other CM running
         if ((*it)->opacity() != 1.0) {
@@ -271,8 +274,8 @@ void Compositor::finishCompositing()
         }
     }
     // discard all Deleted windows (#152914)
-    while (!m_workspace->deletedList().isEmpty())
-        m_workspace->deletedList().first()->discard(Allowed);
+    while (!Workspace::self()->deletedList().isEmpty())
+        Workspace::self()->deletedList().first()->discard(Allowed);
     m_finishingCompositing = false;
 }
 
@@ -333,7 +336,7 @@ void Compositor::toggleCompositing()
     if (compositingSuspended) {
         // when disabled show a shortcut how the user can get back compositing
         QString shortcut, message;
-        if (KAction* action = qobject_cast<KAction*>(m_workspace->actionCollection()->action("Suspend Compositing")))
+        if (KAction* action = qobject_cast<KAction*>(Workspace::self()->actionCollection()->action("Suspend Compositing")))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
         if (!shortcut.isEmpty()) {
             // display notification only if there is the shortcut
@@ -364,7 +367,7 @@ void Compositor::updateCompositeBlocking(Client *c)
         // NOTICE do NOT check for "compositingSuspended" or "!compositing()"
         // only "resume" if it was really disabled for a block
         bool resume = true;
-        for (ClientList::ConstIterator it = m_workspace->clientList().constBegin(); it != m_workspace->clientList().constEnd(); ++it) {
+        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
                 resume = false;
                 break;
@@ -457,7 +460,7 @@ void Compositor::performCompositing()
     }
     s_pending = pending;
     // create a list of all windows in the stacking order
-    ToplevelList windows = m_workspace->xStackingOrder();
+    ToplevelList windows = Workspace::self()->xStackingOrder();
     foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
         Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
         windows.removeAll(t);
@@ -486,21 +489,21 @@ void Compositor::performCompositing()
 
 void Compositor::performMousePoll()
 {
-    m_workspace->checkCursorPos();
+    Workspace::self()->checkCursorPos();
 }
 
 bool Compositor::windowRepaintsPending() const
 {
-    foreach (Toplevel * c, m_workspace->clientList())
+    foreach (Toplevel * c, Workspace::self()->clientList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, m_workspace->desktopList())
+    foreach (Toplevel * c, Workspace::self()->desktopList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, m_workspace->unmanagedList())
+    foreach (Toplevel * c, Workspace::self()->unmanagedList())
     if (!c->repaints().isEmpty())
         return true;
-    foreach (Toplevel * c, m_workspace->deletedList())
+    foreach (Toplevel * c, Workspace::self()->deletedList())
     if (!c->repaints().isEmpty())
         return true;
     return false;
@@ -582,9 +585,9 @@ void Compositor::delayedCheckUnredirect()
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
-    foreach (Client * c, m_workspace->clientList())
+    foreach (Client * c, Workspace::self()->clientList())
     list.append(c);
-    foreach (Unmanaged * c, m_workspace->unmanagedList())
+    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
     list.append(c);
     foreach (Toplevel * c, list) {
         if (c->updateUnredirectedState())

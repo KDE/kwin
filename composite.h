@@ -25,16 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTimer>
 #include <QRegion>
 #include <kmanagerselection.h>
-#include "workspace.h"
 
 namespace KWin {
 
-class Workspace;
 
 class Compositor : public QObject {
     Q_OBJECT
 public:
-    Compositor(Workspace *workspace);
+    Compositor(QObject *workspace);
     ~Compositor();
     void checkCompositeTimer();
     // when adding repaints caused by a window, you probably want to use
@@ -101,7 +99,6 @@ private:
     QElapsedTimer nextPaintReference;
     QTimer mousePollingTimer;
     QRegion repaints_region;
-    Workspace* m_workspace;
 
     QTimer unredirectTimer;
     bool forceUnredirectCheck;
