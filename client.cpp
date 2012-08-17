@@ -613,7 +613,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapTop.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapTop = QPixmap(tr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -632,7 +632,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapBottom.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapBottom = QPixmap(br.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -651,7 +651,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapLeft.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapLeft = QPixmap(lr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -670,7 +670,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapRight.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapRight = QPixmap(rr.size());
             m_responsibleForDecoPixmap = false;
         } else {

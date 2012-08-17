@@ -911,7 +911,7 @@ bool Workspace::waitForCompositingSetup()
         slotReconfigure();
     }
     if (m_compositor) {
-        return m_compositor->compositingActive();
+        return m_compositor->isActive();
     }
     return false;
 }
@@ -2278,7 +2278,7 @@ void Workspace::slotCompositingToggled()
 bool Workspace::compositingActive()
 {
     if (m_compositor) {
-        return m_compositor->compositingActive();
+        return m_compositor->isActive();
     }
     return false;
 }

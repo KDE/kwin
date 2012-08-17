@@ -85,37 +85,37 @@ extern int currentRefreshRate();
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
-    , compositingSuspended(!options->isUseCompositing())
-    , compositingBlocked(false)
+    , m_suspended(!options->isUseCompositing())
+    , m_blocked(false)
     , m_xrrRefreshRate(0)
     , m_scene(NULL)
 {
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
-    connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(resetCompositing()));
+    connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
     connect(workspace, SIGNAL(reinitializeCompositing()), SLOT(slotReinitialize()));
     connect(&mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
-    // delay the call to setupCompositing by one event cycle
+    // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
-    QMetaObject::invokeMethod(this, "setupCompositing", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
 }
 
 Compositor::~Compositor()
 {
-    finishCompositing();
+    finish();
 }
 
 
-void Compositor::setupCompositing()
+void Compositor::setup()
 {
     if (hasScene())
         return;
-    if (compositingSuspended) {
+    if (m_suspended) {
         kDebug(1212) << "Compositing is suspended";
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
@@ -235,11 +235,11 @@ void Compositor::checkCompositeTimer()
         setCompositeTimer();
 }
 
-void Compositor::finishCompositing()
+void Compositor::finish()
 {
     if (!hasScene())
         return;
-    m_finishingCompositing = true;
+    m_finishing = true;
     delete cm_selection;
     foreach (Client * c, Workspace::self()->clientList())
         m_scene->windowClosed(c, NULL);
@@ -277,13 +277,13 @@ void Compositor::finishCompositing()
     // discard all Deleted windows (#152914)
     while (!Workspace::self()->deletedList().isEmpty())
         Workspace::self()->deletedList().first()->discard(Allowed);
-    m_finishingCompositing = false;
+    m_finishing = false;
 }
 
 // OpenGL self-check failed, fallback to XRender
 void Compositor::fallbackToXRenderCompositing()
 {
-    finishCompositing();
+    finish();
     KConfigGroup config(KGlobal::config(), "Compositing");
     config.writeEntry("Backend", "XRender");
     config.writeEntry("GraphicsSystem", "native");
@@ -293,7 +293,7 @@ void Compositor::fallbackToXRenderCompositing()
         return;
     } else {
         options->setCompositingMode(XRenderCompositing);
-        setupCompositing();
+        setup();
     }
 }
 
@@ -305,36 +305,36 @@ void Compositor::lostCMSelection()
 
 void Compositor::slotConfigChanged()
 {
-    if (!compositingSuspended) {
-        setupCompositing();
+    if (!m_suspended) {
+        setup();
         if (effects)   // setupCompositing() may fail
             effects->reconfigure();
         addRepaintFull();
     } else
-        finishCompositing();
+        finish();
 }
 
 void Compositor::slotReinitialize()
 {
     // Restart compositing
-    finishCompositing();
+    finish();
     // resume compositing if suspended
-    compositingSuspended = false;
+    m_suspended = false;
     options->setCompositingInitialized(false);
-    setupCompositing();
+    setup();
 }
 
 // for the shortcut
 void Compositor::slotToggleCompositing()
 {
-    suspendCompositing(!compositingSuspended);
+    suspendResume(!m_suspended);
 }
 
 // for the dbus call
 void Compositor::toggleCompositing()
 {
     slotToggleCompositing();
-    if (compositingSuspended) {
+    if (m_suspended) {
         // when disabled show a shortcut how the user can get back compositing
         QString shortcut, message;
         if (KAction* action = qobject_cast<KAction*>(Workspace::self()->actionCollection()->action("Suspend Compositing")))
@@ -359,13 +359,13 @@ void Compositor::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
-            if (!compositingBlocked) // do NOT attempt to call suspendCompositing(true); from within the eventchain!
+            if (!m_blocked) // do NOT attempt to call suspend(true); from within the eventchain!
                 QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
-            compositingBlocked = true;
+            m_blocked = true;
         }
     }
-    else if (compositingBlocked) {  // lost a client and we're blocked - can we resume?
-        // NOTICE do NOT check for "compositingSuspended" or "!compositing()"
+    else if (m_blocked) {  // lost a client and we're blocked - can we resume?
+        // NOTICE do NOT check for "m_Suspended" or "!compositing()"
         // only "resume" if it was really disabled for a block
         bool resume = true;
         for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
@@ -374,32 +374,27 @@ void Compositor::updateCompositeBlocking(Client *c)
                 break;
             }
         }
-        if (resume) { // do NOT attempt to call suspendCompositing(false); from within the eventchain!
-            compositingBlocked = false;
-            if (compositingSuspended)
+        if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
+            m_blocked = false;
+            if (m_suspended)
                 QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
         }
     }
 }
 
-void Compositor::suspendCompositing()
+void Compositor::suspendResume(bool suspend)
 {
-    suspendCompositing(true);
+    m_suspended = suspend;
+    finish();
+    setup(); // will do nothing if suspended
+    emit compositingToggled(!m_suspended);
 }
 
-void Compositor::suspendCompositing(bool suspend)
-{
-    compositingSuspended = suspend;
-    finishCompositing();
-    setupCompositing(); // will do nothing if suspended
-    emit compositingToggled(!compositingSuspended);
-}
-
-void Compositor::resetCompositing()
+void Compositor::restart()
 {
     if (hasScene()) {
-        finishCompositing();
-        QTimer::singleShot(0, this, SLOT(setupCompositing()));
+        finish();
+        QTimer::singleShot(0, this, SLOT(setup()));
     }
 }
 
@@ -564,9 +559,9 @@ void Compositor::stopMousePolling()
     mousePollingTimer.stop();
 }
 
-bool Compositor::compositingActive()
+bool Compositor::isActive()
 {
-    return !m_finishingCompositing && hasScene();
+    return !m_finishing && hasScene();
 }
 
 // force is needed when the list of windows changes (e.g. a window goes away)

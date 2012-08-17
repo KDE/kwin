@@ -42,20 +42,28 @@ public:
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
     void checkUnredirect(bool force = false);
+    /**
+     * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
+     * addition to show a notification on how to revert the compositing state.
+     **/
     void toggleCompositing();
     void updateCompositeBlocking(Client* c = NULL);
     // Mouse polling
     void startMousePolling();
     void stopMousePolling();
-    bool compositingActive();
-    int xrrRefreshRate() {
+    /**
+     * Whether the Compositor is active. That is a Scene is present and the Compositor is
+     * not shutting down itself.
+     **/
+    bool isActive();
+    int xrrRefreshRate() const {
         return m_xrrRefreshRate;
     }
     void setCompositeResetTimer(int msecs);
     // returns the _estimated_ delay to the next screen update
     // good for having a rough idea to calculate transformations, bad to rely on.
     // might happen few ms earlier, might be an entire frame to short. This is NOT deterministic.
-    int nextFrameDelay() {
+    int nextFrameDelay() const {
         return m_nextFrameDelay;
     }
     bool hasScene() const {
@@ -85,10 +93,14 @@ public:
 
 public Q_SLOTS:
     void addRepaintFull();
+    /**
+     * Actual slot to perform the toggling compositing.
+     * That is if the Compositor is suspended it will be resumed and if the Compositor is active
+     * it will be suspended.
+     * Invoked primarily by the keybinding.
+     * TODO: make private slot
+     **/
     void slotToggleCompositing();
-    void suspendCompositing();
-    void suspendCompositing(bool suspend);
-    void resetCompositing();
 
 Q_SIGNALS:
     void compositingToggled(bool active);
@@ -98,12 +110,17 @@ protected:
     void timerEvent(QTimerEvent *te);
 
 private Q_SLOTS:
-    void setupCompositing();
+    void setup();
     /**
      * Called from setupCompositing() when the CompositingPrefs are ready.
      **/
     void slotCompositingOptionsInitialized();
-    void finishCompositing();
+    void finish();
+    /**
+     * Restarts the Compositor if running.
+     * That is the Compositor will be stopped and started again.
+     **/
+    void restart();
     void fallbackToXRenderCompositing();
     void lostCMSelection();
     void performCompositing();
@@ -113,10 +130,24 @@ private Q_SLOTS:
     void slotReinitialize();
 
 private:
+    /**
+     * Suspends or Resumes the Compositor.
+     * That is stops the Scene in case of @p suspend and restores otherwise.
+     * @param suspend If @c true suspends the Compositor, if @c false starts the Compositor.
+     * TODO: split in two methods: suspend and resume
+     **/
+    void suspendResume(bool suspend = true);
     void setCompositeTimer();
     bool windowRepaintsPending() const;
 
-    bool compositingSuspended, compositingBlocked;
+    /**
+     * Whether the Compositor is currently suspended.
+     **/
+    bool m_suspended;
+    /**
+     * Whether the Compositor is currently blocked by at least one Client requesting full resources.
+     **/
+    bool m_blocked;
     QBasicTimer compositeTimer;
     KSelectionOwner* cm_selection;
     uint vBlankInterval, fpsInterval;
@@ -128,7 +159,7 @@ private:
     QTimer unredirectTimer;
     bool forceUnredirectCheck;
     QTimer compositeResetTimer; // for compressing composite resets
-    bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
+    bool m_finishing; // finish() sets this variable while shutting down
     int m_timeSinceLastVBlank, m_nextFrameDelay;
     Scene *m_scene;
 };

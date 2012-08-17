@@ -217,7 +217,7 @@ void Bridge::grabXServer(bool grab)
 bool Bridge::compositingActive() const
 {
     if (c->workspace()->compositor()) {
-        return c->workspace()->compositor()->compositingActive();
+        return c->workspace()->compositor()->isActive();
     }
     return false;
 }
