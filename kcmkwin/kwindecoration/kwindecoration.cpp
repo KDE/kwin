@@ -48,6 +48,7 @@
 #include <KAboutData>
 #include <KDialog>
 #include <KLocale>
+#include <KMessageBox>
 #include <KNS3/DownloadDialog>
 #include <KDE/KStandardDirs>
 #include <KDE/KConfigDialogManager>
@@ -81,6 +82,15 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_lastPreviewWidth(-1)
     , m_previewUpdateTimer(NULL)
 {
+    const QString mainQmlPath = KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml");
+    if (mainQmlPath.isNull()) {
+        // TODO 4.10 i18n this
+        KMessageBox::error(this, "<h1>Installation error</h1>"
+        "The resource<h2>kwin/kcm_kwindecoration/main.qml</h2>could not be located in any application data path."
+        "<h2>Please contact your distribution</h2>"
+        "The application will now abort", "Installation Error");
+        abort();
+    }
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
     m_ui->configureDecorationButton->setIcon(KIcon("configure"));
@@ -110,7 +120,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveCaptionColor", KDecoration::options()->color(ColorFont, false));
     m_ui->decorationList->rootContext()->setContextProperty("decorationActiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, true));
     m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, false));
-    m_ui->decorationList->setSource(KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml"));
+    m_ui->decorationList->setSource(mainQmlPath);
 
     readConfig(style);
 
