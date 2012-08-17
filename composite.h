@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QRegion>
-#include <kmanagerselection.h>
+
+class KSelectionOwner;
 
 namespace KWin {
 
@@ -122,7 +123,6 @@ private Q_SLOTS:
      **/
     void restart();
     void fallbackToXRenderCompositing();
-    void lostCMSelection();
     void performCompositing();
     void performMousePoll();
     void delayedCheckUnredirect();

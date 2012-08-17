@@ -147,7 +147,7 @@ void Compositor::slotCompositingOptionsInitialized()
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
     cm_selection = new KSelectionOwner(selection_name);
-    connect(cm_selection, SIGNAL(lostOwnership()), SLOT(lostCMSelection()));
+    connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
     cm_selection->claim(true);   // force claiming
 
     switch(options->compositingMode()) {
@@ -295,12 +295,6 @@ void Compositor::fallbackToXRenderCompositing()
         options->setCompositingMode(XRenderCompositing);
         setup();
     }
-}
-
-void Compositor::lostCMSelection()
-{
-    kDebug(1212) << "Lost compositing manager selection";
-    finishCompositing();
 }
 
 void Compositor::slotConfigChanged()
