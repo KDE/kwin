@@ -93,7 +93,6 @@ Compositor::Compositor(QObject* workspace)
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
-    connect(workspace, SIGNAL(reinitializeCompositing()), SLOT(slotReinitialize()));
     connect(&mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
@@ -289,7 +288,7 @@ void Compositor::fallbackToXRenderCompositing()
     config.writeEntry("GraphicsSystem", "native");
     config.sync();
     if (Extensions::nonNativePixmaps()) { // must restart to change the graphicssystem
-        emit signalRestartKWin("automatic graphicssystem change for XRender backend");
+        restartKWin("automatic graphicssystem change for XRender backend");
         return;
     } else {
         options->setCompositingMode(XRenderCompositing);
@@ -310,12 +309,30 @@ void Compositor::slotConfigChanged()
 
 void Compositor::slotReinitialize()
 {
+    // Reparse config. Config options will be reloaded by setup()
+    KGlobal::config()->reparseConfiguration();
+    const QString graphicsSystem = KConfigGroup(KGlobal::config(), "Compositing").readEntry("GraphicsSystem", "");
+    if ((Extensions::nonNativePixmaps() && graphicsSystem == "native") ||
+        (!Extensions::nonNativePixmaps() && (graphicsSystem == "raster" || graphicsSystem == "opengl")) ) {
+        restartKWin("explicitly reconfigured graphicsSystem change");
+        return;
+    }
+
+    // Update any settings that can be set in the compositing kcm.
+#ifdef KWIN_BUILD_SCREENEDGES
+    Workspace::self()->screenEdge()->update();
+#endif
     // Restart compositing
     finish();
     // resume compositing if suspended
     m_suspended = false;
     options->setCompositingInitialized(false);
     setup();
+
+    if (effects) { // setup() may fail
+        effects->reconfigure();
+    }
+    emit compositingToggled(!m_suspended);
 }
 
 // for the shortcut
@@ -638,6 +655,14 @@ void Compositor::setOverlayWindowVisibility(bool visible)
     if (hasScene() && m_scene->overlayWindow()) {
         m_scene->overlayWindow()->setVisibility(visible);
     }
+}
+
+void Compositor::restartKWin(const QString &reason)
+{
+    kDebug(1212) << "restarting kwin for:" << reason;
+    char cmd[1024]; // copied from crashhandler - maybe not the best way to do?
+    sprintf(cmd, "%s --replace &", QFile::encodeName(QCoreApplication::applicationFilePath()).constData());
+    system(cmd);
 }
 
 /*****************************************************

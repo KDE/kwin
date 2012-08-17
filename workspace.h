@@ -614,7 +614,6 @@ public slots:
 
     void reconfigure();
     void slotReconfigure();
-    void slotReinitCompositing();
     void slotCompositingToggled();
 
     void slotKillWindow();
@@ -646,7 +645,6 @@ private slots:
     void slotActivityAdded(const QString &activity);
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
     void handleActivityReply();
-    void slotRestartKwin(const QString &reason);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void compositingToggled(bool active);
@@ -695,7 +693,6 @@ signals:
 private:
     void init();
     void initShortcuts();
-    void restartKWin(const QString &reason);
     void setupWindowShortcut(Client* c);
     enum Direction {
         DirectionNorth,

@@ -153,8 +153,6 @@ Workspace::Workspace(bool restore)
     dbus.registerObject("/KWin", this);
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig",
                  this, SLOT(slotReloadConfig()));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
-                 this, SLOT(slotReinitCompositing()));
 
     // Initialize desktop grid array
     desktopGrid_[0] = 0;
@@ -209,7 +207,8 @@ Workspace::Workspace(bool restore)
     m_compositor = new Compositor(this);
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
-    connect(m_compositor, SIGNAL(signalRestartKWin(QString)), SLOT(slotRestartKwin(QString)));
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
+                 m_compositor, SLOT(slotReinitialize()));
 
     // Compatibility
     long data = 1;
@@ -1009,46 +1008,6 @@ void Workspace::slotReconfigure()
         rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
     } else {
         rootInfo->setSupported(NET::WM2FrameOverlap, false);
-    }
-}
-
-void Workspace::slotRestartKwin(const QString& reason)
-{
-    restartKWin(reason);
-}
-
-void Workspace::restartKWin(const QString &reason)
-{
-    kDebug(1212) << "restarting kwin for:" << reason;
-    char cmd[1024]; // copied from crashhandler - maybe not the best way to do?
-    sprintf(cmd, "%s --replace &", QFile::encodeName(QCoreApplication::applicationFilePath()).constData());
-    system(cmd);
-}
-
-void Workspace::slotReinitCompositing()
-{
-    // Reparse config. Config options will be reloaded by setupCompositing()
-    KGlobal::config()->reparseConfiguration();
-    const QString graphicsSystem = KConfigGroup(KGlobal::config(), "Compositing").readEntry("GraphicsSystem", "");
-    if ((Extensions::nonNativePixmaps() && graphicsSystem == "native") ||
-        (!Extensions::nonNativePixmaps() && (graphicsSystem == "raster" || graphicsSystem == "opengl")) ) {
-        restartKWin("explicitly reconfigured graphicsSystem change");
-        return;
-    }
-
-    // Update any settings that can be set in the compositing kcm.
-#ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge.update();
-#endif
-    emit reinitializeCompositing();
-    if (hasDecorationPlugin()) {
-        KDecorationFactory* factory = mgr->factory();
-        factory->reset(SettingCompositing);
-    }
-
-    if (effects) { // setupCompositing() may fail
-        effects->reconfigure();
-        emit compositingToggled(true);
     }
 }
 

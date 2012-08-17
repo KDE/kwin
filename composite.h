@@ -102,10 +102,14 @@ public Q_SLOTS:
      * TODO: make private slot
      **/
     void slotToggleCompositing();
+    /**
+     * Re-initializes the Compositor completely.
+     * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
+     **/
+    void slotReinitialize();
 
 Q_SIGNALS:
     void compositingToggled(bool active);
-    void signalRestartKWin(const QString &reason);
 
 protected:
     void timerEvent(QTimerEvent *te);
@@ -127,7 +131,6 @@ private Q_SLOTS:
     void performMousePoll();
     void delayedCheckUnredirect();
     void slotConfigChanged();
-    void slotReinitialize();
 
 private:
     /**
@@ -139,6 +142,13 @@ private:
     void suspendResume(bool suspend = true);
     void setCompositeTimer();
     bool windowRepaintsPending() const;
+
+    /**
+     * Restarts the Window Manager in case that the Qt's GraphicsSystem need to be changed
+     * for the chosen Compositing backend.
+     * @param reason The reason why the Window Manager is being restarted, this is logged
+     **/
+    void restartKWin(const QString &reason);
 
     /**
      * Whether the Compositor is currently suspended.
