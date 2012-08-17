@@ -380,6 +380,7 @@ public:
     void toggleEffect(const QString& name);
     void reconfigureEffect(const QString& name);
     void unloadEffect(const QString& name);
+    QString supportInformationForEffect(const QString& name) const;
     void updateCompositeBlocking(Client* c = NULL);
 
     QStringList loadedEffects() const;

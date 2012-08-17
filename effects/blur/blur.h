@@ -35,6 +35,8 @@ class BlurShader;
 class BlurEffect : public KWin::Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int blurRadius READ blurRadius)
+    Q_PROPERTY(bool cacheTexture READ isCacheTexture)
 public:
     BlurEffect();
     ~BlurEffect();
@@ -47,6 +49,12 @@ public:
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
+
+    // for dynamic setting extraction
+    int blurRadius() const;
+    bool isCacheTexture() const {
+        return m_shouldCache;
+    }
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);

@@ -124,7 +124,11 @@ void TabBoxHandlerPrivate::updateOutline()
         q->hideOutline();
         return;
     }
-    TabBoxClient* c = static_cast< TabBoxClient* >(m_clientModel->data(index, ClientModel::ClientRole).value<void *>());
+    const QVariant client = m_clientModel->data(index, ClientModel::ClientRole);
+    if (!client.isValid()) {
+        return;
+    }
+    TabBoxClient* c = static_cast< TabBoxClient* >(client.value<void *>());
     q->showOutline(QRect(c->x(), c->y(), c->width(), c->height()));
 }
 

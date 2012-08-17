@@ -34,6 +34,8 @@ class MagnifierEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(QSize magnifierSize READ magnifierSize)
+    Q_PROPERTY(qreal targetZoom READ targetZoom)
 public:
     MagnifierEffect();
     virtual ~MagnifierEffect();
@@ -43,6 +45,14 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
     static bool supported();
+
+    // for properties
+    QSize magnifierSize() const {
+        return magnifier_size;
+    }
+    qreal targetZoom() const {
+        return target_zoom;
+    }
 private slots:
     void zoomIn();
     void zoomOut();

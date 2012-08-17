@@ -30,6 +30,8 @@ class ResizeEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool textureScale READ isTextureScale)
+    Q_PROPERTY(bool outline READ isOutline)
 public:
     ResizeEffect();
     ~ResizeEffect();
@@ -41,6 +43,13 @@ public:
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void reconfigure(ReconfigureFlags);
+
+    bool isTextureScale() const {
+        return m_features & TextureScale;
+    }
+    bool isOutline() const {
+        return m_features & Outline;
+    }
 
 public Q_SLOTS:
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);

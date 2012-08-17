@@ -38,6 +38,7 @@ class DialogParentEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int changeTime READ configuredChangeTime)
 public:
     DialogParentEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -48,6 +49,10 @@ public:
 
     virtual bool isActive() const;
 
+    // for properties
+    int configuredChangeTime() const {
+        return changeTime;
+    }
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowActivated(KWin::EffectWindow *c);

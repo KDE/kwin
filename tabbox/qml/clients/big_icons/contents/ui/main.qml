@@ -63,6 +63,7 @@ Item {
         }
     }
     Item {
+        id: captionFrame
         anchors {
             top: icons.bottom
             left: parent.left
@@ -73,17 +74,38 @@ Item {
             bottomMargin: background.margins.bottom
         }
         Text {
+            function constrainWidth() {
+                if (textItem.width > textItem.maxWidth && textItem.width > 0 && textItem.maxWidth > 0) {
+                    textItem.width = textItem.maxWidth;
+                } else {
+                    textItem.width = undefined;
+                }
+            }
+            function calculateMaxWidth() {
+                textItem.maxWidth = bigIconsTabBox.width - captionFrame.anchors.leftMargin - captionFrame.anchors.rightMargin - captionFrame.anchors.rightMargin;
+            }
             id: textItem
+            property int maxWidth: 0
             text: icons.currentItem ? icons.currentItem.data.caption : ""
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: theme.textColor
+            elide: Text.ElideMiddle
             font {
                 bold: true
             }
             anchors {
                 verticalCenter: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
+            }
+            onTextChanged: textItem.constrainWidth()
+            Component.onCompleted: textItem.calculateMaxWidth()
+            Connections {
+                target: bigIconsTabBox
+                onWidthChanged: {
+                    textItem.calculateMaxWidth();
+                    textItem.constrainWidth();
+                }
             }
         }
     }

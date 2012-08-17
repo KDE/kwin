@@ -33,6 +33,7 @@ class SheetEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int duration READ configuredDuration)
 public:
     SheetEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -44,6 +45,10 @@ public:
 
     static bool supported();
 
+    // for properties
+    int configuredDuration() const {
+        return duration;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* c);
     void slotWindowClosed(KWin::EffectWindow *c);

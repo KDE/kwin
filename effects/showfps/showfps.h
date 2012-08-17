@@ -33,6 +33,14 @@ class GLTexture;
 class ShowFpsEffect
     : public Effect
 {
+    Q_OBJECT
+    Q_PROPERTY(qreal alpha READ configuredAlpha)
+    Q_PROPERTY(int x READ configuredX)
+    Q_PROPERTY(int y READ configuredY)
+    Q_PROPERTY(QRect fpsTextRect READ configuredFpsTextRect)
+    Q_PROPERTY(int textAlign READ configuredTextAlign)
+    Q_PROPERTY(QFont textFont READ configuredTextFont)
+    Q_PROPERTY(QColor textColor READ configuredTextColor)
 public:
     ShowFpsEffect();
     virtual void reconfigure(ReconfigureFlags);
@@ -41,6 +49,29 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintScreen();
     enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
+
+    // for properties
+    qreal configuredAlpha() const {
+        return alpha;
+    }
+    int configuredX() const {
+        return x;
+    }
+    int configuredY() const {
+        return y;
+    }
+    QRect configuredFpsTextRect() const {
+        return fpsTextRect;
+    }
+    int configuredTextAlign() const {
+        return textAlign;
+    }
+    QFont configuredTextFont() const {
+        return textFont;
+    }
+    QColor configuredTextColor() const {
+        return textColor;
+    }
 private:
     void paintGL(int fps);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

@@ -32,12 +32,22 @@ class MouseMarkEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int width READ configuredWidth)
+    Q_PROPERTY(QColor color READ configuredColor)
 public:
     MouseMarkEffect();
     ~MouseMarkEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual bool isActive() const;
+
+    // for properties
+    int configuredWidth() const {
+        return width;
+    }
+    QColor configuredColor() const {
+        return color;
+    }
 private slots:
     void clear();
     void clearLast();

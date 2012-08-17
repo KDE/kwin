@@ -32,6 +32,7 @@ class MagicLampEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int animationDuration READ animationDuration)
 public:
     MagicLampEffect();
 
@@ -44,6 +45,10 @@ public:
 
     static bool supported();
 
+    // for properties
+    int animationDuration() const {
+        return mAnimationDuration;
+    }
 public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);

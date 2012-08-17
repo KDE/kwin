@@ -33,6 +33,11 @@ class CubeSlideEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int rotationDuration READ configuredRotationDuration)
+    Q_PROPERTY(bool dontSlidePanels READ isDontSlidePanels)
+    Q_PROPERTY(bool dontSlideStickyWindows READ isDontSlideStickyWindows)
+    Q_PROPERTY(bool usePagerLayout READ isUsePagerLayout)
+    Q_PROPERTY(bool useWindowMoving READ isUseWindowMoving)
 public:
     CubeSlideEffect();
     ~CubeSlideEffect();
@@ -46,6 +51,22 @@ public:
 
     static bool supported();
 
+    // for properties
+    int configuredRotationDuration() const {
+        return rotationDuration;
+    }
+    bool isDontSlidePanels() const {
+        return dontSlidePanels;
+    }
+    bool isDontSlideStickyWindows() const {
+        return dontSlideStickyWindows;
+    }
+    bool isUsePagerLayout() const {
+        return usePagerLayout;
+    }
+    bool isUseWindowMoving() const {
+        return useWindowMoving;
+    }
 private Q_SLOTS:
     void slotDesktopChanged(int old, int current);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w);

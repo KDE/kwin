@@ -41,6 +41,8 @@ class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
     Q_PROPERTY(QString leftButtons READ leftButtons NOTIFY buttonsChanged)
     Q_PROPERTY(QString rightButtons READ rightButtons NOTIFY buttonsChanged)
     Q_PROPERTY(bool customButtonPositions READ customButtonPositions NOTIFY buttonsChanged)
+    Q_PROPERTY(QFont activeTitleFont READ activeTitleFont NOTIFY titleFontChanged)
+    Q_PROPERTY(QFont inactiveTitleFont READ inactiveTitleFont NOTIFY titleFontChanged)
 public:
     ~AuroraeFactory();
 
@@ -58,12 +60,16 @@ public:
     QString rightButtons();
     bool customButtonPositions();
 
+    QFont activeTitleFont();
+    QFont inactiveTitleFont();
+
 private:
     AuroraeFactory();
     void init();
 
 Q_SIGNALS:
     void buttonsChanged();
+    void titleFontChanged();
 
 private:
     static AuroraeFactory *s_instance;

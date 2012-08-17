@@ -34,6 +34,9 @@ namespace KWin
 class DashboardEffect : public KWin::Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal brightness READ configuredBrightness)
+    Q_PROPERTY(qreal saturation READ configuredSaturation)
+    Q_PROPERTY(bool blur READ isBlur)
 public:
     DashboardEffect();
     ~DashboardEffect();
@@ -45,6 +48,16 @@ public:
     virtual void unpropagate();
     virtual bool isActive() const;
 
+    // for properties
+    qreal configuredBrightness() const {
+        return brightness;
+    }
+    qreal configuredSaturation() const {
+        return saturation;
+    }
+    bool isBlur() const {
+        return blur;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* c);
     void slotWindowClosed(KWin::EffectWindow *c);
