@@ -59,6 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include "useractions.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #ifdef KWIN_BUILD_SCRIPTING
@@ -71,8 +72,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/cursorfont.h>
 #include <QX11Info>
 #include <stdio.h>
-#include <kauthorized.h>
-#include <ktoolinvocation.h>
 #include <kglobalsettings.h>
 #include <kwindowsystem.h>
 #include <kwindowinfo.h>
@@ -128,13 +127,7 @@ Workspace::Workspace(bool restore)
 #ifdef KWIN_BUILD_TABBOX
     , tab_box(0)
 #endif
-    , popup(0)
-    , advanced_popup(0)
-    , desk_popup(0)
-    , screen_popup(NULL)
-    , activity_popup(0)
-    , add_tabs_popup(0)
-    , switch_to_tab_popup(0)
+    , m_userActionsMenu(new UserActionsMenu(this))
     , keys(0)
     , client_keys(NULL)
     , disable_shortcuts_keys(NULL)
@@ -520,7 +513,6 @@ Workspace::~Workspace()
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(true);
     delete m_outline;
-    discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
     writeWindowRules();
@@ -632,6 +624,9 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     if (c == active_popup_client)
         closeActivePopup();
+    if (m_userActionsMenu->isMenuClient(c)) {
+        m_userActionsMenu->close();
+    }
 
     c->untab();
 
@@ -932,7 +927,7 @@ void Workspace::slotSettingsChanged(int category)
 {
     kDebug(1212) << "Workspace::slotSettingsChanged()";
     if (category == KGlobalSettings::SETTINGS_SHORTCUTS)
-        discardPopup();
+        m_userActionsMenu->discard();
 }
 
 /**
@@ -957,7 +952,7 @@ void Workspace::slotReconfigure()
     unsigned long changed = options->updateSettings();
 
     emit configChanged();
-    discardPopup();
+    m_userActionsMenu->discard();
     updateToolWindows(true);
 
     if (hasDecorationPlugin() && mgr->reset(changed)) {
@@ -1138,35 +1133,6 @@ void Workspace::saveDesktopSettings()
 
     // Save to disk
     group.sync();
-}
-
-QStringList Workspace::configModules(bool controlCenter)
-{
-    QStringList args;
-    args <<  "kwindecoration";
-    if (controlCenter)
-        args << "kwinoptions";
-    else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
-        args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing"
-#ifdef KWIN_BUILD_TABBOX
-             << "kwintabbox"
-#endif
-#ifdef KWIN_BUILD_SCREENEDGES
-             << "kwinscreenedges"
-#endif
-#ifdef KWIN_BUILD_SCRIPTING
-             << "kwinscripts"
-#endif
-             ;
-    return args;
-}
-
-void Workspace::configureWM()
-{
-    QStringList args;
-    args << "--icon" << "preferences-system-windows" << configModules(false);
-    KToolInvocation::kdeinitExec("kcmshell4", args);
 }
 
 /**
@@ -1429,19 +1395,23 @@ fetchActivityListAndCurrent(KActivities::Controller *controller)
     return CurrentAndList(c, l);
 }
 
-void Workspace::updateActivityList(bool running, bool updateCurrent, QString slot)
+void Workspace::updateActivityList(bool running, bool updateCurrent, QObject *target, QString slot)
 {
     if (updateCurrent) {
         QFutureWatcher<CurrentAndList>* watcher = new QFutureWatcher<CurrentAndList>;
         connect( watcher, SIGNAL(finished()), SLOT(handleActivityReply()) );
-        if (!slot.isEmpty())
+        if (!slot.isEmpty()) {
             watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
+            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
+        }
         watcher->setFuture(QtConcurrent::run(fetchActivityListAndCurrent, &activityController_ ));
     } else {
         QFutureWatcher<AssignedList>* watcher = new QFutureWatcher<AssignedList>;
         connect(watcher, SIGNAL(finished()), SLOT(handleActivityReply()));
-        if (!slot.isEmpty())
+        if (!slot.isEmpty()) {
             watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
+            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
+        }
         QStringList *target = running ? &openActivities_ : &allActivities_;
         watcher->setFuture(QtConcurrent::run(fetchActivityList, &activityController_, target, running));
     }
@@ -1465,9 +1435,10 @@ void Workspace::handleActivityReply()
 
     if (watcherObject) {
         QString slot = watcherObject->property("activityControllerCallback").toString();
+        QObject *target = static_cast<QObject*>(watcherObject->property("activityControllerCallbackTarget").value<void*>());
         watcherObject->deleteLater(); // has done it's job
         if (!slot.isEmpty())
-            QMetaObject::invokeMethod(this, slot.toAscii().data(), Qt::DirectConnection);
+            QMetaObject::invokeMethod(target, slot.toAscii().data(), Qt::DirectConnection);
     }
 }
 //END threaded activity list fetching
@@ -1969,49 +1940,6 @@ bool Workspace::checkStartupNotification(Window w, KStartupInfoId& id, KStartupI
 void Workspace::focusToNull()
 {
     XSetInputFocus(display(), null_focus_window, RevertToPointerRoot, xTime());
-}
-
-void Workspace::helperDialog(const QString& message, const Client* c)
-{
-    QStringList args;
-    QString type;
-    if (message == "noborderaltf3") {
-        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
-        assert(action != NULL);
-        QString shortcut = QString("%1 (%2)").arg(action->text())
-                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" << i18n(
-                 "You have selected to show a window without its border.\n"
-                 "Without the border, you will not be able to enable the border "
-                 "again using the mouse: use the window operations menu instead, "
-                 "activated using the %1 keyboard shortcut.",
-                 shortcut);
-        type = "altf3warning";
-    } else if (message == "fullscreenaltf3") {
-        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
-        assert(action != NULL);
-        QString shortcut = QString("%1 (%2)").arg(action->text())
-                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" << i18n(
-                 "You have selected to show a window in fullscreen mode.\n"
-                 "If the application itself does not have an option to turn the fullscreen "
-                 "mode off you will not be able to disable it "
-                 "again using the mouse: use the window operations menu instead, "
-                 "activated using the %1 keyboard shortcut.",
-                 shortcut);
-        type = "altf3warning";
-    } else
-        abort();
-    if (!type.isEmpty()) {
-        KConfig cfg("kwin_dialogsrc");
-        KConfigGroup cg(&cfg, "Notification Messages");  // Depends on KMessageBox
-        if (!cg.readEntry(type, true))
-            return;
-        args << "--dontagain" << "kwin_dialogsrc:" + type;
-    }
-    if (c != NULL)
-        args << "--embed" << QString::number(c->window());
-    KProcess::startDetached("kdialog", args);
 }
 
 void Workspace::setShowingDesktop(bool showing)

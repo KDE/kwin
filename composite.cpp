@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "shadow.h"
+#include "useractions.h"
 #include "compositingprefs.h"
 #include "notifications.h"
 
@@ -192,7 +193,7 @@ void Workspace::slotCompositingOptionsInitialized()
         c->setupCompositing();
     foreach (Unmanaged * c, unmanaged)
         c->setupCompositing();
-    discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
+    m_userActionsMenu->discard(); // force re-creation of the Alt+F3 popup (opacity option)
 
     // render at least once
     compositeTimer.stop();
@@ -238,7 +239,7 @@ void Workspace::finishCompositing()
             i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
         }
     }
-    discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
+    m_userActionsMenu->discard(); // force re-creation of the Alt+F3 popup (opacity option)
     // discard all Deleted windows (#152914)
     while (!deleted.isEmpty())
         deleted.first()->discard(Allowed);

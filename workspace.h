@@ -78,6 +78,7 @@ class PluginMgr;
 class Placement;
 class Rules;
 class Scripting;
+class UserActionsMenu;
 class WindowRules;
 
 class Workspace : public QObject, public KDecorationDefines
@@ -325,6 +326,12 @@ public:
     QStringList activityList() const {
         return allActivities_;
     }
+    const QStringList &openActivities() const {
+        return openActivities_;
+    }
+#ifdef KWIN_BUILD_ACTIVITIES
+    void updateActivityList(bool running, bool updateCurrent, QObject *target = NULL, QString slot = QString());
+#endif
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
@@ -397,7 +404,9 @@ public:
      */
     void showWindowMenu(int x, int y, Client* cl);
     void showWindowMenu(QPoint pos, Client* cl);
-    bool windowMenuShown();
+    const UserActionsMenu *userActionsMenu() const {
+        return m_userActionsMenu;
+    }
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
@@ -502,8 +511,6 @@ public:
     int packPositionRight(const Client* cl, int oldx, bool right_edge) const;
     int packPositionUp(const Client* cl, int oldy, bool top_edge) const;
     int packPositionDown(const Client* cl, int oldy, bool bottom_edge) const;
-
-    static QStringList configModules(bool controlCenter);
 
     void cancelDelayFocus();
     void requestDelayFocus(Client*);
@@ -628,19 +635,6 @@ public slots:
     void slotUntab(); // Slot to remove the active client from its group.
 
 private slots:
-    void rebuildTabGroupPopup();
-    void rebuildTabListPopup();
-    void entabPopupClient(QAction*);
-    void selectPopupClientTab(QAction*);
-    void desktopPopupAboutToShow();
-    void screenPopupAboutToShow();
-    void activityPopupAboutToShow();
-    void clientPopupAboutToShow();
-    void slotSendToDesktop(QAction*);
-    void slotSendToScreen(QAction*);
-    void slotToggleOnActivity(QAction*);
-    void clientPopupActivated(QAction*);
-    void configureWM();
     void desktopResized();
     void screenChangeTimeout();
     void slotUpdateToolWindows();
@@ -667,7 +661,6 @@ private slots:
     void slotActivityAdded(const QString &activity);
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
     void handleActivityReply();
-    void showHideActivityMenu();
 protected:
     void timerEvent(QTimerEvent *te);
 
@@ -717,17 +710,9 @@ signals:
 private:
     void init();
     void initShortcuts();
-    void initDesktopPopup();
-    void initScreenPopup();
-    void initActivityPopup();
-    void initTabbingPopups();
     void restartKWin(const QString &reason);
-    void discardPopup();
     void setupWindowShortcut(Client* c);
     void checkCursorPos();
-#ifdef KWIN_BUILD_ACTIVITIES
-    void updateActivityList(bool running, bool updateCurrent, QString slot = QString());
-#endif
     enum Direction {
         DirectionNorth,
         DirectionEast,
@@ -765,9 +750,6 @@ private:
 
     //---------------------------------------------------------------------
 
-    void helperDialog(const QString& message, const Client* c);
-
-    QMenu* clientPopup();
     void closeActivePopup();
     void updateClientArea(bool force);
 
@@ -843,31 +825,17 @@ private:
     TabBox::TabBox* tab_box;
 #endif
 
-    QMenu* popup;
-    QMenu* advanced_popup;
-    QMenu* desk_popup;
-    QMenu* screen_popup;
-    QMenu* activity_popup;
-    QMenu* add_tabs_popup; // Menu to add the group to other group
-    QMenu* switch_to_tab_popup; // Menu to change tab
+    /**
+     * Holds the menu containing the user actions which is shown
+     * on e.g. right click the window decoration.
+     **/
+    UserActionsMenu *m_userActionsMenu;
 
     void modalActionsSwitch(bool enabled);
 
     KActionCollection* keys;
     KActionCollection* client_keys;
     KActionCollection* disable_shortcuts_keys;
-    QAction* mResizeOpAction;
-    QAction* mMoveOpAction;
-    QAction* mMaximizeOpAction;
-    QAction* mShadeOpAction;
-    QAction* mKeepAboveOpAction;
-    QAction* mKeepBelowOpAction;
-    QAction* mFullScreenOpAction;
-    QAction* mNoBorderOpAction;
-    QAction* mMinimizeOpAction;
-    QAction* mCloseOpAction;
-    QAction* mRemoveFromTabGroup; // Remove client from group
-    QAction* mCloseTabGroup; // Close all clients in the group
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
     bool global_shortcuts_disabled;
@@ -1066,11 +1034,6 @@ inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
 inline void Workspace::showWindowMenu(int x, int y, Client* cl)
 {
     showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
-}
-
-inline bool Workspace::windowMenuShown()
-{
-    return popup && ((QWidget*)popup)->isVisible();
 }
 
 inline void Workspace::setWasUserInteraction()

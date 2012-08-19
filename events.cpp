@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "rules.h"
 #include "unmanaged.h"
+#include "useractions.h"
 #include "effects.h"
 
 #include <QWhatsThis>
@@ -879,7 +880,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         }
 #undef MOUSE_DRIVEN_FOCUS
 
-        if (options->focusPolicy() == Options::ClickToFocus || workspace()->windowMenuShown())
+        if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
             return;
 
         if (options->isAutoRaise() && !isDesktop() &&
