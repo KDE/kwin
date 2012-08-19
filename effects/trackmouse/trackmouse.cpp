@@ -138,9 +138,12 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             matrix.translate(p.x(), p.y(), 0.0);
             matrix.rotate(i ? -2*m_angle : m_angle, 0, 0, 1.0);
             matrix.translate(-p.x(), -p.y(), 0.0);
-            if (shader)
+            if (shader) {
                 shader->setUniform(GLShader::ModelViewMatrix, matrix);
-            else
+                shader->setUniform(GLShader::Saturation, 1.0);
+                shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
+                shader->setUniform(GLShader::AlphaToOne, 0);
+            } else
                 pushMatrix(matrix);
             m_texture[i]->bind();
             m_texture[i]->render(region, m_lastRect[i]);
