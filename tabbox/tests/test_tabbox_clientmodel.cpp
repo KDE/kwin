@@ -44,4 +44,23 @@ void TestTabBoxClientModel::testLongestCaptionWithNullClient()
     QCOMPARE(clientModel->longestCaption(), QString());
 }
 
+void TestTabBoxClientModel::testCreateClientListNoActiveClient()
+{
+    MockTabBoxHandler tabboxhandler;
+    tabboxhandler.setConfig(TabBox::TabBoxConfig());
+    TabBox::ClientModel *clientModel = new TabBox::ClientModel(&tabboxhandler);
+    clientModel->createClientList();
+    QCOMPARE(clientModel->rowCount(), 0);
+    // create two windows, rowCount() should go to two
+    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"), 1);
+    tabboxhandler.createMockWindow(QString("test2"), 2);
+    clientModel->createClientList();
+    QCOMPARE(clientModel->rowCount(), 2);
+    // let's ensure there is no active client
+    tabboxhandler.setActiveClient(QWeakPointer<TabBox::TabBoxClient>());
+    // now it should still have two members in the list
+    clientModel->createClientList();
+    QCOMPARE(clientModel->rowCount(), 2);
+}
+
 QTEST_MAIN(TestTabBoxClientModel)

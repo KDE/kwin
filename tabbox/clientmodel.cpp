@@ -138,7 +138,7 @@ int ClientModel::rowCount(const QModelIndex& parent) const
         count = qRound(sqrt(float(m_clientList.count())));
         break;
     }
-    return qMax(count, 1);
+    return count;
 }
 
 QModelIndex ClientModel::parent(const QModelIndex& child) const
@@ -188,6 +188,12 @@ void ClientModel::createClientList(int desktop, bool partialReset)
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
         TabBoxClient* c = tabBox->nextClientFocusChain(start).data();
+        if (!c) {
+            QSharedPointer<TabBoxClient> firstClient = tabBox->firstClientFocusChain().toStrongRef();
+            if (firstClient) {
+                c = firstClient.data();
+            }
+        }
         TabBoxClient* stop = c;
         while (c) {
             QWeakPointer<TabBoxClient> add = tabBox->clientToAddToList(c, desktop);

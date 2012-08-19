@@ -32,6 +32,7 @@ public:
     virtual void activateAndClose() {
     }
     virtual QWeakPointer< TabBox::TabBoxClient > activeClient() const;
+    void setActiveClient(const QWeakPointer<TabBox::TabBoxClient> &client);
     virtual int activeScreen() const {
         return 0;
     }
@@ -58,6 +59,7 @@ public:
     virtual void hideOutline() {
     }
     virtual QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const;
+    virtual QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const;
     virtual int nextDesktopFocusChain(int desktop) const {
         Q_UNUSED(desktop)
         return 1;
@@ -88,6 +90,7 @@ public:
     void closeWindow(TabBox::TabBoxClient *client);
 private:
     QList< QSharedPointer<TabBox::TabBoxClient> > m_windows;
+    QWeakPointer<TabBox::TabBoxClient> m_activeClient;
 };
 } // namespace KWin
 #endif
