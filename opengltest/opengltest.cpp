@@ -22,7 +22,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <GL/glx.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
+// Command to get Catalyst release version string
+// The output is similar as "String: 9.00-120629n-045581E-ATI"
+#define SHELL_COMMAND "aticonfig --get-pcs-key=LDC,ReleaseVersion"
+
+static bool getCatalystVersion(int *first, int *second)
+{
+    FILE *fp = NULL;
+
+    fp = popen(SHELL_COMMAND, "r");
+
+    if (!fp)
+        return false;
+
+    fscanf(fp, "String: %d.%d", first, second);
+
+    if (pclose(fp) != 0)
+        return false;
+
+    return true;
+}
 
 // Return 0 if we can use a direct context, 1 otherwise
 int main(int argc, char *argv[])
@@ -90,6 +111,19 @@ int main(int argc, char *argv[])
     const GLubyte *vendor = glGetString(GL_VENDOR);
     if (strstr((const char *)vendor, "NVIDIA"))
         return 0;
+
+    // Enable direct rendering for AMD Catalyst driver 8.973/8.98 and later. There are
+    // three kinds of Catalyst releases, major, minor and point releses. For example,
+    // 8.98 is one major release, 8.981 is one minor release based on 8.98, and 8.981.1
+    // is one point release based on 8.981, 8.98.1 is one point release based on 8.98
+    if (strstr((const char *)vendor, "ATI") || strstr((const char *)vendor, "AMD")) {
+        int first = 0, second = 0;
+        if (getCatalystVersion(&first, &second))
+            if ((first > 8) || // 9.xx and future releases
+                ((first == 8) && (second >= 98) && (second < 100)) || // 8.xx and 8.xx.z
+                ((first == 8) && (second >= 973))) //8.xxy and 8.xxy.z
+               return 0;
+    }
 
     return 1;
 }
