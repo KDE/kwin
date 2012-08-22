@@ -35,6 +35,14 @@ class FlipSwitchEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool tabBox READ isTabBox)
+    Q_PROPERTY(bool tabBoxAlternative READ isTabBoxAlternative)
+    Q_PROPERTY(int duration READ duration)
+    Q_PROPERTY(int angle READ angle)
+    Q_PROPERTY(qreal xPosition READ xPosition)
+    Q_PROPERTY(qreal yPosition READ yPosition)
+    Q_PROPERTY(bool windowTitle READ isWindowTitle)
+    // TODO: electric borders
 public:
     FlipSwitchEffect();
     ~FlipSwitchEffect();
@@ -47,9 +55,33 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
+    virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual bool isActive() const;
 
     static bool supported();
+
+    // for properties
+    bool isTabBox() const {
+        return m_tabbox;
+    }
+    bool isTabBoxAlternative() const {
+        return m_tabboxAlternative;
+    }
+    int duration() const {
+        return m_timeLine.duration();
+    }
+    int angle() const {
+        return m_angle;
+    }
+    qreal xPosition() const {
+        return m_xPosition;
+    }
+    qreal yPosition() const {
+        return m_yPosition;
+    }
+    bool isWindowTitle() const {
+        return m_windowTitle;
+    }
 private Q_SLOTS:
     void toggleActiveCurrent();
     void toggleActiveAllDesktops();
@@ -77,6 +109,9 @@ private:
     bool isSelectableWindow(EffectWindow *w) const;
     void scheduleAnimation(const SwitchingDirection& direction, int distance = 1);
     void adjustWindowMultiScreen(const EffectWindow *w, WindowPaintData& data);
+    void selectNextOrPreviousWindow(bool forward);
+    inline void selectNextWindow() { selectNextOrPreviousWindow(true); }
+    inline void selectPreviousWindow() { selectNextOrPreviousWindow(false); }
     /**
      * Updates the caption of the caption frame.
      * Taking care of rewording the desktop client.

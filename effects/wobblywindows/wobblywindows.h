@@ -25,6 +25,22 @@ struct ParameterSet;
 class WobblyWindowsEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal stiffness READ stiffness)
+    Q_PROPERTY(qreal drag READ drag)
+    Q_PROPERTY(qreal moveFactor READ moveFactor)
+    Q_PROPERTY(qreal xTesselation READ xTesselation)
+    Q_PROPERTY(qreal yTesselation READ yTesselation)
+    Q_PROPERTY(qreal minVelocity READ minVelocity)
+    Q_PROPERTY(qreal maxVelocity READ maxVelocity)
+    Q_PROPERTY(qreal stopVelocity READ stopVelocity)
+    Q_PROPERTY(qreal minAcceleration READ minAcceleration)
+    Q_PROPERTY(qreal maxAcceleration READ maxAcceleration)
+    Q_PROPERTY(qreal stopAcceleration READ stopAcceleration)
+    Q_PROPERTY(bool moveEffectEnabled READ isMoveEffectEnabled)
+    Q_PROPERTY(bool openEffectEnabled READ isOpenEffectEnabled)
+    Q_PROPERTY(bool closeEffectEnabled READ isCloseEffectEnabled)
+    Q_PROPERTY(bool moveWobble READ isMoveWobble)
+    Q_PROPERTY(bool resizeWobble READ isResizeWobble)
 public:
 
     WobblyWindowsEffect();
@@ -57,6 +73,55 @@ public:
 
     static bool supported();
 
+    // for properties
+    qreal stiffness() const {
+        return m_stiffness;
+    }
+    qreal drag() const {
+        return m_drag;
+    }
+    qreal moveFactor() const {
+        return m_move_factor;
+    }
+    qreal xTesselation() const {
+        return m_xTesselation;
+    }
+    qreal yTesselation() const {
+        return m_yTesselation;
+    }
+    qreal minVelocity() const {
+        return m_minVelocity;
+    }
+    qreal maxVelocity() const {
+        return m_maxVelocity;
+    }
+    qreal stopVelocity() const {
+        return m_stopVelocity;
+    }
+    qreal minAcceleration() const {
+        return m_minAcceleration;
+    }
+    qreal maxAcceleration() const {
+        return m_maxAcceleration;
+    }
+    qreal stopAcceleration() const {
+        return m_stopAcceleration;
+    }
+    bool isMoveEffectEnabled() const {
+        return m_moveEffectEnabled;
+    }
+    bool isOpenEffectEnabled() const {
+        return m_openEffectEnabled;
+    }
+    bool isCloseEffectEnabled() const {
+        return m_closeEffectEnabled;
+    }
+    bool isMoveWobble() const {
+        return m_moveWobble;
+    }
+    bool isResizeWobble() const {
+        return m_resizeWobble;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);

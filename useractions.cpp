@@ -214,6 +214,7 @@ void Workspace::discardPopup()
     delete popup;
     popup = NULL;
     desk_popup = NULL;
+    screen_popup = NULL;
     activity_popup = NULL;
     switch_to_tab_popup = NULL;
     add_tabs_popup = NULL;
@@ -250,6 +251,12 @@ void Workspace::clientPopupAboutToShow()
         desk_popup = 0;
     } else {
         initDesktopPopup();
+    }
+    if (numScreens() == 1 || (!active_popup_client->isMovable() && !active_popup_client->isMovableAcrossScreens())) {
+        delete screen_popup;
+        screen_popup = NULL;
+    } else {
+        initScreenPopup();
     }
 #ifdef KWIN_BUILD_ACTIVITIES
     updateActivityList(true, false, "showHideActivityMenu");
@@ -407,6 +414,23 @@ void Workspace::initDesktopPopup()
     action->setText(i18n("Move To &Desktop"));
 }
 
+void Workspace::initScreenPopup()
+{
+    if (screen_popup) {
+        return;
+    }
+
+    screen_popup = new QMenu(popup);
+    screen_popup->setFont(KGlobalSettings::menuFont());
+    connect(screen_popup, SIGNAL(triggered(QAction*)), SLOT(slotSendToScreen(QAction*)));
+    connect(screen_popup, SIGNAL(aboutToShow()), SLOT(screenPopupAboutToShow()));
+
+    QAction *action = screen_popup->menuAction();
+    // set it as the first item after desktop
+    popup->insertAction(activity_popup ? activity_popup->menuAction() : mMinimizeOpAction, action);
+    action->setText(i18n("Move To &Screen"));
+}
+
 /*!
   Creates activity popup.
   I'm going with checkable ones instead of "copy to" and "move to" menus; I *think* it's an easier way.
@@ -472,6 +496,33 @@ void Workspace::desktopPopupAboutToShow()
 
     if (numberOfDesktops() >= Workspace::self()->maxNumberOfDesktops())
         action->setEnabled(false);
+}
+
+/*!
+  Adjusts the screen popup to the current values and the location of
+  the popup client.
+ */
+void Workspace::screenPopupAboutToShow()
+{
+    if (!screen_popup) {
+        return;
+    }
+
+    screen_popup->clear();
+    QActionGroup *group = new QActionGroup(screen_popup);
+
+    for (int i = 0; i<numScreens(); ++i) {
+        // TODO: retrieve the screen name?
+        // assumption: there are not more than 9 screens attached.
+        QAction *action = screen_popup->addAction(i18nc("@item:inmenu List of all Screens to send a window to",
+                                                        "Screen &%1", (i+1)));
+        action->setData(i);
+        action->setCheckable(true);
+        if (active_popup_client && i == active_popup_client->screen()) {
+            action->setChecked(true);
+        }
+        group->addAction(action);
+    }
 }
 
 /*!
@@ -997,6 +1048,13 @@ QStringList Workspace::listOfEffects() const
     return listModules;
 }
 
+QString Workspace::supportInformationForEffect(const QString& name) const
+{
+    if (effects)
+        return static_cast<EffectsHandlerImpl*>(effects)->supportInformation(name);
+    return QString();
+}
+
 void Workspace::slotActivateAttentionWindow()
 {
     if (attention_chain.count() > 0)
@@ -1394,6 +1452,24 @@ void Workspace::slotSendToDesktop(QAction *action)
 
     sendClientToDesktop(active_popup_client, desk, false);
 
+}
+
+/*!
+  Sends the popup client to screen \a screen
+
+  Internal slot for the window operation menu
+ */
+void Workspace::slotSendToScreen(QAction *action)
+{
+    const int screen = action->data().toInt();
+    if (!active_popup_client) {
+        return;
+    }
+    if (screen >= numScreens()) {
+        return;
+    }
+
+    sendClientToScreen(active_popup_client, screen);
 }
 
 /*!

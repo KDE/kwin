@@ -121,6 +121,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(updateViewPosition(int)));
 
     m_ui->decorationList->installEventFilter(this);
+    m_ui->decorationList->viewport()->installEventFilter(this);
 
     KAboutData *about =
         new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
@@ -403,6 +404,10 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
                 m_ui->decorationList->rootObject()->setProperty("currentIndex", d);
                 return true;
             }
+        }
+    } else if (m_ui->decorationList->viewport()) {
+        if (e->type() == QEvent::Wheel) {
+            return static_cast<QWheelEvent*>(e)->orientation() == Qt::Horizontal;
         }
     }
     return KCModule::eventFilter(o, e);

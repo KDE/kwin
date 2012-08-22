@@ -52,15 +52,6 @@ class TabBoxConfig
 {
 public:
     /**
-    * LayoutMode defines how the items will be displayed in the
-    * main TableView of the TabBox.
-    */
-    enum LayoutMode {
-        VerticalLayout, ///< Items are laid out vertically
-        HorizontalLayout, ///< Items are laid out horizontally
-        HorizontalVerticalLayout ///< Items are laid out in a tabular. Number of columns might be greater by one than number of rows
-    };
-    /**
     * ClientDesktopMode defines whether windows from the current desktop or from all
     * desktops are included in the TabBoxClient List in the TabBoxClientModel
     */
@@ -169,12 +160,6 @@ public:
     */
     TabBoxMode tabBoxMode() const;
     /**
-    * @return The currently used layout
-    * @see setLayout
-    * @see defaultLayoutMode
-    */
-    LayoutMode layout() const;
-    /**
     * @return The current ClientDesktopMode
     * This option only applies for TabBoxMode ClientTabBox.
     * @see setClientDesktopMode
@@ -230,29 +215,10 @@ public:
     */
     DesktopSwitchingMode desktopSwitchingMode() const;
     /**
-    * @return The minimum width in percent of screen width the TabBox should use.
-    * @see setMinWidth
-    * @see minHeight
-    * @see defaultMinWidth
-    */
-    int minWidth() const;
-    /**
-    * @return The minimum height in percent of screen height the TabBox should use.
-    * @see setMinHeight
-    * @see minWidth
-    * @see defaultMinHeight
-    */
-    int minHeight() const;
-    /**
     * @return Then name of the current ItemLayout
     * @see setlayoutName
     */
     QString& layoutName() const;
-    /**
-    * @return Then name of the current ItemLayout for selected Item view
-    * @see setlayoutName
-    */
-    QString& selectedItemLayoutName() const;
 
     // setters
     /**
@@ -278,11 +244,6 @@ public:
     * @see tabBoxMode
     */
     void setTabBoxMode(TabBoxMode mode);
-    /**
-    * @param layout The new LayoutMode to be used.
-    * @see layout
-    */
-    void setLayout(LayoutMode layout);
     /**
     * @param desktopMode The new ClientDesktopMode to be used.
     * This option only applies for TabBoxMode ClientTabBox.
@@ -332,25 +293,10 @@ public:
     */
     void setDesktopSwitchingMode(DesktopSwitchingMode switchingMode);
     /**
-    * @param value The minimum width of TabBox in percent of screen width.
-    * @see minWidth
-    */
-    void setMinWidth(int value);
-    /**
-    * @param value The minimum height of TabBox in percent of screen height.
-    * @see minHeight
-    */
-    void setMinHeight(int value);
-    /**
     * @param name The new ItemLayout config name
     * @see layoutName
     */
     void setLayoutName(const QString& name);
-    /**
-    * @param name The new ItemLayout config name for the selected item view
-    * @see selectedItemLayoutName
-    */
-    void setSelectedItemLayoutName(const QString& name);
 
     // some static methods to access default values
     static ClientDesktopMode defaultDesktopMode() {
@@ -374,9 +320,6 @@ public:
     static ClientSwitchingMode defaultSwitchingMode() {
         return FocusChainSwitching;
     }
-    static LayoutMode defaultLayoutMode() {
-        return VerticalLayout;
-    }
     static bool defaultShowTabBox() {
         return true;
     }
@@ -386,17 +329,8 @@ public:
     static bool defaultHighlightWindow() {
         return true;
     }
-    static int defaultMinWidth() {
-        return 20;
-    }
-    static int defaultMinHeight() {
-        return 20;
-    }
     static QString defaultLayoutName() {
         return QString("thumbnails");
-    }
-    static QString defaultSelectedItemLayoutName() {
-        return QString("Text");
     }
 private:
     TabBoxConfigPrivate* d;

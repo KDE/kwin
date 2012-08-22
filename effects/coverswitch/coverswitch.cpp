@@ -912,47 +912,62 @@ void CoverSwitchEffect::windowInputMouseEvent(Window w, QEvent* e)
     // we don't want click events during animations
     if (animation)
         return;
-    QPoint pos = static_cast< QMouseEvent* >(e)->pos();
+    QMouseEvent* event = static_cast< QMouseEvent* >(e);
 
-    // determine if a window has been clicked
-    // not interested in events above a fullscreen window (ignoring panel size)
-    if (pos.y() < (area.height()*scaleFactor - area.height()) * 0.5f *(1.0f / scaleFactor))
-        return;
+    switch (event->button()) {
+    case Qt::XButton1: // wheel up
+        selectPreviousWindow();
+        break;
+    case Qt::XButton2: // wheel down
+        selectNextWindow();
+        break;
+    case Qt::LeftButton:
+    case Qt::RightButton:
+    case Qt::MidButton:
+    default:
+        QPoint pos = event->pos();
 
-    // if there is no selected window (that is no window at all) we cannot click it
-    if (!selected_window)
-        return;
-
-    if (pos.x() < (area.width()*scaleFactor - selected_window->width()) * 0.5f *(1.0f / scaleFactor)) {
-        float availableSize = (area.width() * scaleFactor - area.width()) * 0.5f * (1.0f / scaleFactor);
-        for (int i = 0; i < leftWindows.count(); i++) {
-            int windowPos = availableSize / leftWindows.count() * i;
-            if (pos.x() < windowPos)
-                continue;
-            if (i + 1 < leftWindows.count()) {
-                if (pos.x() > availableSize / leftWindows.count()*(i + 1))
-                    continue;
-            }
-
-            effects->setTabBoxWindow(leftWindows[i]);
+        // determine if a window has been clicked
+        // not interested in events above a fullscreen window (ignoring panel size)
+        if (pos.y() < (area.height()*scaleFactor - area.height()) * 0.5f *(1.0f / scaleFactor))
             return;
-        }
-    }
 
-    if (pos.x() > area.width() - (area.width()*scaleFactor - selected_window->width()) * 0.5f *(1.0f / scaleFactor)) {
-        float availableSize = (area.width() * scaleFactor - area.width()) * 0.5f * (1.0f / scaleFactor);
-        for (int i = 0; i < rightWindows.count(); i++) {
-            int windowPos = area.width() - availableSize / rightWindows.count() * i;
-            if (pos.x() > windowPos)
-                continue;
-            if (i + 1 < rightWindows.count()) {
-                if (pos.x() < area.width() - availableSize / rightWindows.count()*(i + 1))
-                    continue;
-            }
-
-            effects->setTabBoxWindow(rightWindows[i]);
+        // if there is no selected window (that is no window at all) we cannot click it
+        if (!selected_window)
             return;
+
+        if (pos.x() < (area.width()*scaleFactor - selected_window->width()) * 0.5f *(1.0f / scaleFactor)) {
+            float availableSize = (area.width() * scaleFactor - area.width()) * 0.5f * (1.0f / scaleFactor);
+            for (int i = 0; i < leftWindows.count(); i++) {
+                int windowPos = availableSize / leftWindows.count() * i;
+                if (pos.x() < windowPos)
+                    continue;
+                if (i + 1 < leftWindows.count()) {
+                    if (pos.x() > availableSize / leftWindows.count()*(i + 1))
+                        continue;
+                }
+
+                effects->setTabBoxWindow(leftWindows[i]);
+                return;
+            }
         }
+
+        if (pos.x() > area.width() - (area.width()*scaleFactor - selected_window->width()) * 0.5f *(1.0f / scaleFactor)) {
+            float availableSize = (area.width() * scaleFactor - area.width()) * 0.5f * (1.0f / scaleFactor);
+            for (int i = 0; i < rightWindows.count(); i++) {
+                int windowPos = area.width() - availableSize / rightWindows.count() * i;
+                if (pos.x() > windowPos)
+                    continue;
+                if (i + 1 < rightWindows.count()) {
+                    if (pos.x() < area.width() - availableSize / rightWindows.count()*(i + 1))
+                        continue;
+                }
+
+                effects->setTabBoxWindow(rightWindows[i]);
+                return;
+            }
+        }
+        break;
     }
 }
 
@@ -1009,23 +1024,32 @@ void CoverSwitchEffect::updateCaption()
 
 void CoverSwitchEffect::slotTabBoxKeyEvent(QKeyEvent *event)
 {
-    if (!mActivated || !selected_window) {
-        return;
-    }
-    const int index = effects->currentTabBoxWindowList().indexOf(selected_window);
-    int newIndex = index;
     if (event->type() == QEvent::KeyPress) {
         switch (event->key()) {
         case Qt::Key_Left:
-            newIndex = (index - 1);
+            selectPreviousWindow();
             break;
         case Qt::Key_Right:
-            newIndex = (index + 1);
+            selectNextWindow();
             break;
         default:
             // nothing
             break;
         }
+    }
+}
+
+void CoverSwitchEffect::selectNextOrPreviousWindow(bool forward)
+{
+    if (!mActivated || !selected_window) {
+        return;
+    }
+    const int index = effects->currentTabBoxWindowList().indexOf(selected_window);
+    int newIndex = index;
+    if (forward) {
+        ++newIndex;
+    } else {
+        --newIndex;
     }
     if (newIndex == effects->currentTabBoxWindowList().size()) {
         newIndex = 0;

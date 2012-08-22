@@ -38,6 +38,23 @@ class CubeEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal cubeOpacity READ configuredCubeOpacity)
+    Q_PROPERTY(bool opacityDesktopOnly READ isOpacityDesktopOnly)
+    Q_PROPERTY(bool displayDesktopName READ isDisplayDesktopName)
+    Q_PROPERTY(bool reflection READ isReflection)
+    Q_PROPERTY(int rotationDuration READ configuredRotationDuration)
+    Q_PROPERTY(QColor backgroundColor READ configuredBackgroundColor)
+    Q_PROPERTY(QColor capColor READ configuredCapColor)
+    Q_PROPERTY(bool paintCaps READ isPaintCaps)
+    Q_PROPERTY(bool closeOnMouseRelease READ isCloseOnMouseRelease)
+    Q_PROPERTY(qreal zPosition READ configuredZPosition)
+    Q_PROPERTY(bool useForTabBox READ isUseForTabBox)
+    Q_PROPERTY(bool invertKeys READ isInvertKeys)
+    Q_PROPERTY(bool invertMouse READ isInvertMouse)
+    Q_PROPERTY(qreal capDeformationFactor READ configuredCapDeformationFactor)
+    Q_PROPERTY(bool useZOrdering READ isUseZOrdering)
+    Q_PROPERTY(bool texturedCaps READ isTexturedCaps)
+    // TODO: electric borders: not a registered type
 public:
     CubeEffect();
     ~CubeEffect();
@@ -58,6 +75,56 @@ public:
     void unregisterCubeInsideEffect(CubeInsideEffect* effect);
 
     static bool supported();
+
+    // for properties
+    qreal configuredCubeOpacity() const {
+        return cubeOpacity;
+    }
+    bool isOpacityDesktopOnly() const {
+        return opacityDesktopOnly;
+    }
+    bool isDisplayDesktopName() const {
+        return displayDesktopName;
+    }
+    bool isReflection() const {
+        return reflection;
+    }
+    int configuredRotationDuration() const {
+        return rotationDuration;
+    }
+    QColor configuredBackgroundColor() const {
+        return backgroundColor;
+    }
+    QColor configuredCapColor() const {
+        return capColor;
+    }
+    bool isPaintCaps() const {
+        return paintCaps;
+    }
+    bool isCloseOnMouseRelease() const {
+        return closeOnMouseRelease;
+    }
+    qreal configuredZPosition() const {
+        return zPosition;
+    }
+    bool isUseForTabBox() const {
+        return useForTabBox;
+    }
+    bool isInvertKeys() const {
+        return invertKeys;
+    }
+    bool isInvertMouse() const {
+        return invertMouse;
+    }
+    qreal configuredCapDeformationFactor() const {
+        return capDeformationFactor;
+    }
+    bool isUseZOrdering() const {
+        return useZOrdering;
+    }
+    bool isTexturedCaps() const {
+        return texturedCaps;
+    }
 private slots:
     void toggleCube();
     void toggleCylinder();

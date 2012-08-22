@@ -267,18 +267,12 @@ void KWinTabBoxConfig::loadConfig(const KConfigGroup& config, KWin::TabBox::TabB
                                        config.readEntry<int>("MultiScreenMode", TabBoxConfig::defaultMultiScreenMode())));
     tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
                                             config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
-    tabBoxConfig.setLayout(TabBoxConfig::LayoutMode(
-                               config.readEntry<int>("LayoutMode", TabBoxConfig::defaultLayoutMode())));
 
     tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline", TabBoxConfig::defaultShowOutline()));
     tabBoxConfig.setShowTabBox(config.readEntry<bool>("ShowTabBox", TabBoxConfig::defaultShowTabBox()));
     tabBoxConfig.setHighlightWindows(config.readEntry<bool>("HighlightWindows", TabBoxConfig::defaultHighlightWindow()));
 
-    tabBoxConfig.setMinWidth(config.readEntry<int>("MinWidth", TabBoxConfig::defaultMinWidth()));
-    tabBoxConfig.setMinHeight(config.readEntry<int>("MinHeight", TabBoxConfig::defaultMinHeight()));
-
     tabBoxConfig.setLayoutName(config.readEntry<QString>("LayoutName", TabBoxConfig::defaultLayoutName()));
-    tabBoxConfig.setSelectedItemLayoutName(config.readEntry<QString>("SelectedLayoutName", TabBoxConfig::defaultSelectedItemLayoutName()));
 }
 
 void KWinTabBoxConfig::saveConfig(KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig)
@@ -291,18 +285,13 @@ void KWinTabBoxConfig::saveConfig(KConfigGroup& config, const KWin::TabBox::TabB
     config.writeEntry("ShowDesktopMode",    int(tabBoxConfig.showDesktopMode()));
     config.writeEntry("MultiScreenMode",    int(tabBoxConfig.clientMultiScreenMode()));
     config.writeEntry("SwitchingMode",      int(tabBoxConfig.clientSwitchingMode()));
-    config.writeEntry("LayoutMode",         int(tabBoxConfig.layout()));
     config.writeEntry("LayoutName",         tabBoxConfig.layoutName());
-    config.writeEntry("SelectedLayoutName", tabBoxConfig.selectedItemLayoutName());
 
     // check boxes
     config.writeEntry("ShowOutline",      tabBoxConfig.isShowOutline());
     config.writeEntry("ShowTabBox",       tabBoxConfig.isShowTabBox());
     config.writeEntry("HighlightWindows", tabBoxConfig.isHighlightWindows());
 
-    // spin boxes
-    config.writeEntry("MinWidth",  tabBoxConfig.minWidth());
-    config.writeEntry("MinHeight", tabBoxConfig.minHeight());
     config.sync();
 }
 

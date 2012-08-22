@@ -131,6 +131,7 @@ Workspace::Workspace(bool restore)
     , popup(0)
     , advanced_popup(0)
     , desk_popup(0)
+    , screen_popup(NULL)
     , activity_popup(0)
     , add_tabs_popup(0)
     , switch_to_tab_popup(0)
@@ -2342,6 +2343,12 @@ QString Workspace::supportInformation() const
         support.append(  "-------------------------\n");
         foreach (const QString &effect, activeEffects()) {
             support.append(effect % '\n');
+        }
+        support.append("\nEffect Settings:\n");
+        support.append(  "----------------\n");
+        foreach (const QString &effect, loadedEffects()) {
+            support.append(supportInformationForEffect(effect));
+            support.append('\n');
         }
     } else {
         support.append("Compositing is not active\n");

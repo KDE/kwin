@@ -32,7 +32,6 @@ public:
         , highlightWindows(TabBoxConfig::defaultHighlightWindow())
         , showOutline(TabBoxConfig::defaultShowOutline())
         , tabBoxMode(TabBoxConfig::ClientTabBox)
-        , layout(TabBoxConfig::defaultLayoutMode())
         , clientDesktopMode(TabBoxConfig::defaultDesktopMode())
         , clientActivitiesMode(TabBoxConfig::defaultActivitiesMode())
         , clientApplicationsMode(TabBoxConfig::defaultApplicationsMode())
@@ -41,10 +40,7 @@ public:
         , clientMultiScreenMode(TabBoxConfig::defaultMultiScreenMode())
         , clientSwitchingMode(TabBoxConfig::defaultSwitchingMode())
         , desktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching)
-        , minWidth(TabBoxConfig::defaultMinWidth())
-        , minHeight(TabBoxConfig::defaultMinHeight())
-        , layoutName(TabBoxConfig::defaultLayoutName())
-        , selectedItemLayoutName(TabBoxConfig::defaultSelectedItemLayoutName()) {
+        , layoutName(TabBoxConfig::defaultLayoutName()) {
     }
     ~TabBoxConfigPrivate() {
     }
@@ -53,7 +49,6 @@ public:
     bool showOutline;
 
     TabBoxConfig::TabBoxMode tabBoxMode;
-    TabBoxConfig::LayoutMode layout;
     TabBoxConfig::ClientDesktopMode clientDesktopMode;
     TabBoxConfig::ClientActivitiesMode clientActivitiesMode;
     TabBoxConfig::ClientApplicationsMode clientApplicationsMode;
@@ -62,10 +57,7 @@ public:
     TabBoxConfig::ClientMultiScreenMode clientMultiScreenMode;
     TabBoxConfig::ClientSwitchingMode clientSwitchingMode;
     TabBoxConfig::DesktopSwitchingMode desktopSwitchingMode;
-    int minWidth;
-    int minHeight;
     QString layoutName;
-    QString selectedItemLayoutName;
 };
 
 TabBoxConfig::TabBoxConfig()
@@ -84,17 +76,14 @@ TabBoxConfig& TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig& object)
     d->highlightWindows = object.isHighlightWindows();
     d->showOutline = object.isShowOutline();
     d->tabBoxMode = object.tabBoxMode();
-    d->layout = object.layout();
     d->clientDesktopMode = object.clientDesktopMode();
     d->clientActivitiesMode = object.clientActivitiesMode();
     d->clientApplicationsMode = object.clientApplicationsMode();
     d->clientMinimizedMode = object.clientMinimizedMode();
     d->showDesktopMode = object.showDesktopMode();
     d->clientMultiScreenMode = object.clientMultiScreenMode();
+    d->clientSwitchingMode = object.clientSwitchingMode();
     d->desktopSwitchingMode = object.desktopSwitchingMode();
-    d->selectedItemLayoutName = object.selectedItemLayoutName();
-    d->minWidth = object.minWidth();
-    d->minHeight = object.minHeight();
     d->layoutName = object.layoutName();
     return *this;
 }
@@ -137,16 +126,6 @@ void TabBoxConfig::setTabBoxMode(TabBoxConfig::TabBoxMode mode)
 TabBoxConfig::TabBoxMode TabBoxConfig::tabBoxMode() const
 {
     return d->tabBoxMode;
-}
-
-void TabBoxConfig::setLayout(TabBoxConfig::LayoutMode layout)
-{
-    d->layout = layout;
-}
-
-TabBoxConfig::LayoutMode TabBoxConfig::layout() const
-{
-    return d->layout;
 }
 
 TabBoxConfig::ClientDesktopMode TabBoxConfig::clientDesktopMode() const
@@ -229,26 +208,6 @@ void TabBoxConfig::setDesktopSwitchingMode(DesktopSwitchingMode switchingMode)
     d->desktopSwitchingMode = switchingMode;
 }
 
-int TabBoxConfig::minWidth() const
-{
-    return d->minWidth;
-}
-
-void TabBoxConfig::setMinWidth(int value)
-{
-    d->minWidth = value;
-}
-
-int TabBoxConfig::minHeight() const
-{
-    return d->minHeight;
-}
-
-void TabBoxConfig::setMinHeight(int value)
-{
-    d->minHeight = value;
-}
-
 QString& TabBoxConfig::layoutName() const
 {
     return d->layoutName;
@@ -257,16 +216,6 @@ QString& TabBoxConfig::layoutName() const
 void TabBoxConfig::setLayoutName(const QString& name)
 {
     d->layoutName = name;
-}
-
-QString& TabBoxConfig::selectedItemLayoutName() const
-{
-    return d->selectedItemLayoutName;
-}
-
-void TabBoxConfig::setSelectedItemLayoutName(const QString& name)
-{
-    d->selectedItemLayoutName = name;
 }
 
 } // namespace TabBox

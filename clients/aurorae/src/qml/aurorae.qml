@@ -141,8 +141,9 @@ Decoration {
         horizontalAlignment: auroraeTheme.horizontalAlignment
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
-        height: auroraeTheme.titleHeight
+        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
         color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
+        font: decoration.active ? options.activeTitleFont : options.inactiveTitleFont
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left
@@ -155,7 +156,13 @@ Decoration {
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             anchors.fill: parent
             onDoubleClicked: decoration.titlebarDblClickOperation()
-            onPressed: decoration.titlePressed(mouse.button, mouse.buttons)
+            onPressed: {
+                if (mouse.button == Qt.LeftButton) {
+                    mouse.accepted = false;
+                } else {
+                    decoration.titlePressed(mouse.button, mouse.buttons);
+                }
+            }
             onReleased: decoration.titleReleased(mouse.button, mouse.buttons)
         }
         Behavior on color {

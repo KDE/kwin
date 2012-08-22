@@ -167,7 +167,8 @@ public:
     void toggleEffect(const QString& name);
     void unloadEffect(const QString& name);
     void reconfigureEffect(const QString& name);
-    bool isEffectLoaded(const QString& name);
+    bool isEffectLoaded(const QString& name) const;
+    QString supportInformation(const QString& name) const;
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
 

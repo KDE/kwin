@@ -228,7 +228,7 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     if (!create_ptr) {  // this means someone probably attempted to load "some" kwin plugin/lib as deco
                         // and thus cheated on the "isLoaded" shortcut -> try the default and yell a warning
         if (nameStr != defaultPlugin) {
-            kWarning(1212) << i18n("The library %1 was attempted to be load as decoration plugin but is NOT", nameStr);
+            kWarning(1212) << i18n("The library %1 was attempted to be loaded as a decoration plugin but it is NOT", nameStr);
             return loadPlugin(defaultPlugin);
         } else {
             // big time trouble!

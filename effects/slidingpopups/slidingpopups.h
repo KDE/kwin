@@ -33,6 +33,8 @@ class SlidingPopupsEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int fadeInTime READ fadeInTime)
+    Q_PROPERTY(int fadeOutTime READ fadeOutTime)
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect();
@@ -44,6 +46,13 @@ public:
     virtual bool isActive() const;
     // TODO react also on virtual desktop changes
 
+    // for properties
+    int fadeInTime() const {
+        return mFadeInTime;
+    }
+    int fadeOutTime() const {
+        return mFadeOutTime;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *c);
     void slotWindowClosed(KWin::EffectWindow *c);

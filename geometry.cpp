@@ -64,7 +64,9 @@ void Workspace::desktopResized()
 {
     QRect geom;
     for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
-        geom |= QApplication::desktop()->screenGeometry(i);
+        //do NOT use - QApplication::desktop()->screenGeometry(i) there could be a virtual geometry
+        // see bug #302783
+        geom |= QApplication::desktop()->screen(i)->geometry();
     }
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();
@@ -2535,7 +2537,8 @@ bool Client::startMoveResize()
                 geom_restore = geometry(); // "restore" to current geometry
                 setMaximize(false, false);
             }
-        }
+        } else if (quick_tile_mode != QuickTileNone) // no longer now - we move, resize is handled below
+            setQuickTileMode(QuickTileNone); // otherwise we mess every second tile, bug #303937
     } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
                (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
         // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet

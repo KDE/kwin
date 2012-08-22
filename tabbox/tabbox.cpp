@@ -405,7 +405,6 @@ TabBox::TabBox(QObject *parent)
     m_defaultConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_defaultConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
     m_defaultConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
-    m_defaultConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_alternativeConfig = TabBoxConfig();
     m_alternativeConfig.setTabBoxMode(TabBoxConfig::ClientTabBox);
@@ -416,7 +415,6 @@ TabBox::TabBox(QObject *parent)
     m_alternativeConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_alternativeConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
     m_alternativeConfig.setClientSwitchingMode(TabBoxConfig::FocusChainSwitching);
-    m_alternativeConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_defaultCurrentApplicationConfig = m_defaultConfig;
     m_defaultCurrentApplicationConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsCurrentApplication);
@@ -429,14 +427,12 @@ TabBox::TabBox(QObject *parent)
     m_desktopConfig.setShowTabBox(true);
     m_desktopConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopConfig.setDesktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching);
-    m_desktopConfig.setLayout(TabBoxConfig::VerticalLayout);
 
     m_desktopListConfig = TabBoxConfig();
     m_desktopListConfig.setTabBoxMode(TabBoxConfig::DesktopTabBox);
     m_desktopListConfig.setShowTabBox(true);
     m_desktopListConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
-    m_desktopListConfig.setLayout(TabBoxConfig::VerticalLayout);
     m_tabBox = new TabBoxHandlerImpl(this);
     QTimer::singleShot(0, this, SLOT(handlerReady()));
     connect(m_tabBox, SIGNAL(selectedIndexChanged()), SIGNAL(itemSelected()));

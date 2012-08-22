@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Text Icons
 Name[ca]=Icones de text
+Name[cs]=Textové ikony
 Name[da]=Tekstikoner
 Name[de]=Text-Symbole
 Name[es]=Iconos de texto
@@ -32,10 +33,12 @@ Comment=A window switcher layout only showing window captions
 Comment[ca]=Una disposició del commutador de finestres que només mostra els títols de finestra
 Comment[da]=Et vinduesskifter-layout som kun viser vinduestitler
 Comment[de]=Ein Fensterwechsler-Layout, das nur die Titel der Fenster anzeigt
+Comment[es]=Un esquema de cambiador de ventanas que solo muestra los títulos de las ventanas
 Comment[et]=Aknavahetaja paigutus ainult aknatiitlite näitamisega
 Comment[fi]=Tehtävänvalitsimen asettelu, jossa näytetään vain ikkunoiden otsikot
 Comment[hu]=Egy ablakváltó elrendezés, amely csak az ablakfeliratokat jeleníti meg
 Comment[ia]=Un disposition de commutator de fenestra monstrante solo legendas de fenestra
+Comment[it]=Una disposizione di cambiafinestre che mostra solo i titoli delle finestre
 Comment[kk]=Тек атауын көрсететін терезе ауыстырғышының қалыпы
 Comment[km]=ប្លង់​កម្មវិធី​បង្អួច បង្ហាញ​តែ​ចំណង​ជើង​បង្អួច
 Comment[nb]=En vindusbytterutforming som bare viser vindustekster

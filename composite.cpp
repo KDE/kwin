@@ -187,7 +187,7 @@ void Workspace::slotCompositingOptionsInitialized()
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
-    m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we dont't have even a slight idea when the first vsync will occur
+    m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we don't have even a slight idea when the first vsync will occur
     checkCompositeTimer();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(scene->compositingType());   // sets also the 'effects' pointer

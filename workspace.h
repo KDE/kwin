@@ -380,6 +380,7 @@ public:
     void toggleEffect(const QString& name);
     void reconfigureEffect(const QString& name);
     void unloadEffect(const QString& name);
+    QString supportInformationForEffect(const QString& name) const;
     void updateCompositeBlocking(Client* c = NULL);
 
     QStringList loadedEffects() const;
@@ -632,9 +633,11 @@ private slots:
     void entabPopupClient(QAction*);
     void selectPopupClientTab(QAction*);
     void desktopPopupAboutToShow();
+    void screenPopupAboutToShow();
     void activityPopupAboutToShow();
     void clientPopupAboutToShow();
     void slotSendToDesktop(QAction*);
+    void slotSendToScreen(QAction*);
     void slotToggleOnActivity(QAction*);
     void clientPopupActivated(QAction*);
     void configureWM();
@@ -715,6 +718,7 @@ private:
     void init();
     void initShortcuts();
     void initDesktopPopup();
+    void initScreenPopup();
     void initActivityPopup();
     void initTabbingPopups();
     void restartKWin(const QString &reason);
@@ -842,6 +846,7 @@ private:
     QMenu* popup;
     QMenu* advanced_popup;
     QMenu* desk_popup;
+    QMenu* screen_popup;
     QMenu* activity_popup;
     QMenu* add_tabs_popup; // Menu to add the group to other group
     QMenu* switch_to_tab_popup; // Menu to change tab

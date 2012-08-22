@@ -34,12 +34,33 @@ class DimInactiveEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool dimPanels READ isDimPanels)
+    Q_PROPERTY(bool dimDesktop READ isDimDesktop)
+    Q_PROPERTY(bool dimKeepAbove READ isDimKeepAbove)
+    Q_PROPERTY(bool dimByGroup READ isDimByGroup)
+    Q_PROPERTY(int dimStrength READ configuredDimStrength)
 public:
     DimInactiveEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
+    // for properties
+    bool isDimPanels() const {
+        return dim_panels;
+    }
+    bool isDimDesktop() const {
+        return dim_desktop;
+    }
+    bool isDimKeepAbove() const {
+        return dim_keepabove;
+    }
+    bool isDimByGroup() const {
+        return dim_by_group;
+    }
+    int configuredDimStrength() const {
+        return dim_strength;
+    }
 public Q_SLOTS:
     void slotWindowActivated(KWin::EffectWindow* c);
     void slotWindowDeleted(KWin::EffectWindow *w);

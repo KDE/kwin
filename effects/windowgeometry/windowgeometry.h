@@ -29,6 +29,8 @@ namespace KWin
 class WindowGeometry : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(bool handlesMoves READ isHandlesMoves)
+    Q_PROPERTY(bool handlesResizes READ isHandlesResizes)
 public:
     WindowGeometry();
     ~WindowGeometry();
@@ -40,6 +42,13 @@ public:
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     virtual bool isActive() const;
 
+    // for properties
+    bool isHandlesMoves() const {
+        return iHandleMoves;
+    }
+    bool isHandlesResizes() const {
+        return iHandleResizes;
+    }
 private slots:
     void toggle();
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);

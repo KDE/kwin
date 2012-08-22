@@ -34,6 +34,9 @@ class GlideEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int duration READ configuredDuration)
+    Q_PROPERTY(int effect READ configuredEffect)
+    Q_PROPERTY(int angle READ configuredAngle)
 public:
     GlideEffect();
     ~GlideEffect();
@@ -45,6 +48,17 @@ public:
     virtual bool isActive() const;
 
     static bool supported();
+
+    // for properties
+    int configuredDuration() const {
+        return duration;
+    }
+    int configuredEffect() const {
+        return effect;
+    }
+    int configuredAngle() const {
+        return angle;
+    }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* c);
     void slotWindowClosed(KWin::EffectWindow *c);

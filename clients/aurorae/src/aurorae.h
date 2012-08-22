@@ -41,6 +41,8 @@ class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
     Q_PROPERTY(QString leftButtons READ leftButtons NOTIFY buttonsChanged)
     Q_PROPERTY(QString rightButtons READ rightButtons NOTIFY buttonsChanged)
     Q_PROPERTY(bool customButtonPositions READ customButtonPositions NOTIFY buttonsChanged)
+    Q_PROPERTY(QFont activeTitleFont READ activeTitleFont NOTIFY titleFontChanged)
+    Q_PROPERTY(QFont inactiveTitleFont READ inactiveTitleFont NOTIFY titleFontChanged)
 public:
     ~AuroraeFactory();
 
@@ -58,12 +60,16 @@ public:
     QString rightButtons();
     bool customButtonPositions();
 
+    QFont activeTitleFont();
+    QFont inactiveTitleFont();
+
 private:
     AuroraeFactory();
     void init();
 
 Q_SIGNALS:
     void buttonsChanged();
+    void titleFontChanged();
 
 private:
     static AuroraeFactory *s_instance;
@@ -105,6 +111,7 @@ class AuroraeClient : public KDecorationUnstable
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
+    virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void activeChange();
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void captionChange();
@@ -144,10 +151,14 @@ public slots:
     void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
     void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
     void closeWindow();
+    void titlebarDblClickOperation();
+    void maximize(int button);
 
 private slots:
     void themeChanged();
     void doCloseWindow();
+    void doTitlebarDblClickOperation();
+    void doMaximzie(int button);
 
 private:
     QGraphicsView *m_view;

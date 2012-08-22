@@ -103,6 +103,11 @@ void KDecorationPreview::disablePreview()
     no_preview->show();
 }
 
+KDecorationFactory *KDecorationPreview::factory() const
+{
+    return deco[Active] ? deco[Active]->factory() : 0;
+}
+
 void KDecorationPreview::paintEvent(QPaintEvent* e)
 {
     Q_UNUSED(e);

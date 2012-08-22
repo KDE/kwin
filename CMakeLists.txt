@@ -195,7 +195,7 @@ elseif(OPENGLES_FOUND)
 endif(OPENGL_FOUND)
 
 install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
-#install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 if(OPENGLES_FOUND)
   kde4_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})

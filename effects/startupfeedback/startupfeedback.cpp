@@ -165,6 +165,8 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         }
         data.paint.unite(m_dirtyRect);
         m_dirtyRect = QRect();
+        m_currentGeometry = feedbackRect();
+        data.paint.unite(m_currentGeometry);
     }
     effects->prePaintScreen(data, time);
 }
@@ -311,12 +313,12 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (!m_active)
         effects->startMousePolling();
     m_active = true;
-    m_dirtyRect = m_currentGeometry = feedbackRect();
     QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
                          KIconLoader::DefaultState, QStringList(), 0, true);  // return null pixmap if not found
     if (iconPixmap.isNull())
         iconPixmap = SmallIcon("system-run");
     prepareTextures(iconPixmap);
+    m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaintFull();
 }
 

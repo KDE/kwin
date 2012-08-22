@@ -37,6 +37,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KStandardDirs>
 #include "kwindecoration.h"
 
+/* WARNING -------------------------------------------------------------------------
+* it is *ABSOLUTELY* mandatory to manage loadPlugin() and destroyPreviousPlugin()
+* using disablePreview()
+*
+* loadPlugin() moves the present factory pointer to "old_fact" which is then deleted
+* by the succeeding destroyPreviousPlugin()
+*
+* So if you loaded a new plugin and that changed the current factory, call disablePreview()
+* BEFORE the following destroyPreviousPlugin() destroys the factory for the current m_preview->deco->factory
+* (which is invoked on deco deconstruction)
+* WARNING ------------------------------------------------------------------------ */
+
 namespace KWin
 {
 
@@ -192,10 +204,12 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
         return static_cast< int >(m_decorations[ index.row()].borderSize);
     case BorderSizesRole: {
         QList< QVariant > sizes;
-        if (m_plugins->loadPlugin(m_decorations[ index.row()].libraryName) &&
-                m_plugins->factory() != NULL) {
+        const bool mustDisablePreview = m_plugins->factory() && m_plugins->factory() == m_preview->factory();
+        if (m_plugins->loadPlugin(m_decorations[index.row()].libraryName) && m_plugins->factory()) {
             foreach (KDecorationDefines::BorderSize size, m_plugins->factory()->borderSizes())   // krazy:exclude=foreach
                 sizes << int(size);
+            if (mustDisablePreview) // it's nuked with destroyPreviousPlugin()
+                m_preview->disablePreview(); // so we need to get rid of m_preview->deco first
             m_plugins->destroyPreviousPlugin();
         }
         return sizes;
@@ -312,6 +326,9 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         document.setHtml(html);
         bool enabled = false;
         bool loaded;
+        // m_preview->deco management is not required
+        // either the deco loads and the following recreateDecoration will sanitize decos (on new factory)
+        // or the deco does not load and destroyPreviousPlugin() is not called
         if ((loaded = m_plugins->loadPlugin(data.libraryName)) && m_preview->recreateDecoration(m_plugins)) {
             enabled = true;
             m_preview->enablePreview();

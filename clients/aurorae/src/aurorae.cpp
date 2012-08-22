@@ -85,6 +85,9 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingButtons) {
         emit buttonsChanged();
     }
+    if (changed & SettingFont){
+        emit titleFontChanged();
+    }
     const KConfig conf("auroraerc");
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
@@ -161,6 +164,16 @@ bool AuroraeFactory::customButtonPositions()
     return options()->customButtonPositions();
 }
 
+QFont AuroraeFactory::activeTitleFont()
+{
+    return options()->font();
+}
+
+QFont AuroraeFactory::inactiveTitleFont()
+{
+    return options()->font(false);
+}
+
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
 
 /*******************************************************
@@ -193,6 +206,7 @@ void AuroraeClient::init()
     createMainWidget();
     widget()->setAttribute(Qt::WA_TranslucentBackground);
     widget()->setAttribute(Qt::WA_NoSystemBackground);
+    widget()->installEventFilter(this);
     m_view = new QGraphicsView(m_scene, widget());
     m_view->setAttribute(Qt::WA_TranslucentBackground);
     m_view->setWindowFlags(Qt::X11BypassWindowManagerHint);
@@ -211,6 +225,23 @@ void AuroraeClient::init()
 
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
     connect(AuroraeFactory::instance()->theme(), SIGNAL(themeChanged()), SLOT(themeChanged()));
+}
+
+bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
+{
+    // we need to filter the wheel events on the decoration
+    // QML does not yet provide a way to accept wheel events, this will change with Qt 5
+    // TODO: remove in KDE5
+    // see BUG: 304248
+    if (object != widget() || event->type() != QEvent::Wheel) {
+        return KDecorationUnstable::eventFilter(object, event);
+    }
+    QWheelEvent *wheel = static_cast<QWheelEvent*>(event);
+    if (mousePosition(wheel->pos()) == PositionCenter) {
+        titlebarMouseWheelOperation(wheel->delta());
+        return true;
+    }
+    return false;
 }
 
 void AuroraeClient::activeChange()
@@ -435,6 +466,34 @@ void AuroraeClient::closeWindow()
 void AuroraeClient::doCloseWindow()
 {
     KDecorationUnstable::closeWindow();
+}
+
+void AuroraeClient::maximize(int button)
+{
+    // a maximized window does not need to have a window decoration
+    // in that case we need to delay handling by one cycle
+    // BUG: 304870
+    QMetaObject::invokeMethod(qobject_cast< KDecorationUnstable* >(this),
+                              "doMaximzie",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, button));
+}
+
+void AuroraeClient::doMaximzie(int button)
+{
+    KDecorationUnstable::maximize(static_cast<Qt::MouseButton>(button));
+}
+
+void AuroraeClient::titlebarDblClickOperation()
+{
+    // the double click operation can result in a window being maximized
+    // see maximize
+    QMetaObject::invokeMethod(qobject_cast< KDecorationUnstable* >(this), "doTitlebarDblClickOperation", Qt::QueuedConnection);
+}
+
+void AuroraeClient::doTitlebarDblClickOperation()
+{
+    KDecorationUnstable::titlebarDblClickOperation();
 }
 
 } // namespace Aurorae
