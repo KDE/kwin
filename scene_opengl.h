@@ -46,6 +46,7 @@ public:
     virtual CompositingType compositingType() const {
         return OpenGLCompositing;
     }
+    virtual bool hasPendingFlush() const { return !m_lastDamage.isEmpty(); }
     virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);

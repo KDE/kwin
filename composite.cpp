@@ -463,14 +463,21 @@ void Compositor::timerEvent(QTimerEvent *te)
         QObject::timerEvent(te);
 }
 
-static bool s_pending = false;
+static int s_pendingFlushes = 0;
 void Compositor::performCompositing()
 {
     if (!isOverlayWindowVisible())
         return; // nothing is visible anyway
 
     bool pending = !repaints_region.isEmpty() || windowRepaintsPending();
-    if (!(pending || s_pending)) {
+    if (pending)
+        s_pendingFlushes = 3;
+    else if (m_scene->hasPendingFlush())
+        --s_pendingFlushes;
+    else
+        s_pendingFlushes = 0;
+    if (s_pendingFlushes < 1) {
+        s_pendingFlushes = 0;
         m_scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
@@ -478,7 +485,7 @@ void Compositor::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
     }
-    s_pending = pending;
+
     // create a list of all windows in the stacking order
     ToplevelList windows = Workspace::self()->xStackingOrder();
     foreach (EffectWindow * c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
