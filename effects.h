@@ -40,6 +40,7 @@ namespace KWin
 class ThumbnailItem;
 
 class Client;
+class Compositor;
 class Deleted;
 class Unmanaged;
 
@@ -47,7 +48,7 @@ class EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
 public:
-    EffectsHandlerImpl(Scene *scene);
+    EffectsHandlerImpl(Compositor *compositor, Scene *scene);
     virtual ~EffectsHandlerImpl();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
@@ -228,6 +229,7 @@ private:
     QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
     QList< Effect* >::iterator m_currentPaintScreenIterator;
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    Compositor *m_compositor;
     Scene *m_scene;
 };
 

@@ -214,7 +214,7 @@ void Compositor::slotCompositingOptionsInitialized()
     m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
-    new EffectsHandlerImpl(m_scene);   // sets also the 'effects' pointer
+    new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
     foreach (Client * c, Workspace::self()->clientList())
