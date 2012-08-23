@@ -393,14 +393,22 @@ void Workspace::timerEvent(QTimerEvent *te)
         QObject::timerEvent(te);
 }
 
-static bool s_pending = false;
+static int s_pendingFlushes = 0;
+
 void Workspace::performCompositing()
 {
     if (!scene->overlayWindow()->isVisible())
         return; // nothing is visible anyway
 
     bool pending = !repaints_region.isEmpty() || windowRepaintsPending();
-    if (!(pending || s_pending)) {
+    if (pending)
+        s_pendingFlushes = 3;
+    else if (scene->hasPendingFlush())
+        --s_pendingFlushes;
+    else
+        s_pendingFlushes = 0;
+    if (s_pendingFlushes < 1) {
+        s_pendingFlushes = 0;
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
@@ -408,7 +416,7 @@ void Workspace::performCompositing()
         // Otherwise the window would not be painted normally anyway.
         return;
     }
-    s_pending = pending;
+
     // create a list of all windows in the stacking order
     ToplevelList windows = xStackingOrder();
     foreach (EffectWindow *c, static_cast< EffectsHandlerImpl* >(effects)->elevatedWindows()) {
@@ -430,6 +438,7 @@ void Workspace::performCompositing()
     repaints_region = QRegion();
 
     m_timeSinceLastVBlank = scene->paint(repaints, windows);
+
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // checkCompositeTime() would restart it again somewhen later, called from functions that
