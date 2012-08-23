@@ -187,7 +187,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
 
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
-        TabBoxClient* c = tabBox->nextClientFocusChain(start).data();
+        TabBoxClient* c = start;
         if (!c) {
             QSharedPointer<TabBoxClient> firstClient = tabBox->firstClientFocusChain().toStrongRef();
             if (firstClient) {
@@ -195,23 +195,16 @@ void ClientModel::createClientList(int desktop, bool partialReset)
             }
         }
         TabBoxClient* stop = c;
-        while (c) {
+        do {
             QWeakPointer<TabBoxClient> add = tabBox->clientToAddToList(c, desktop);
             if (!add.isNull()) {
-                if (start == add.data()) {
-                    m_clientList.removeAll(add);
-                    m_clientList.prepend(add);
-                } else
-                    m_clientList += add;
+                m_clientList += add;
                 if (add.data()->isFirstInTabBox()) {
                     stickyClients << add;
                 }
             }
             c = tabBox->nextClientFocusChain(c).data();
-
-            if (c == stop)
-                break;
-        }
+        } while (c && c != stop);
         break;
     }
     case TabBoxConfig::StackingOrderSwitching: {

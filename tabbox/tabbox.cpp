@@ -225,6 +225,9 @@ bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int desktop) const
 {
+    if (!client) {
+        return QWeakPointer<TabBoxClient>();
+    }
     Client* ret = NULL;
     Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
 
