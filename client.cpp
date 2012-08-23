@@ -2339,9 +2339,8 @@ void Client::setBlockingCompositing(bool block)
 {
     const bool usedToBlock = blocks_compositing;
     blocks_compositing = rules()->checkBlockCompositing(block);
-    if (usedToBlock != blocks_compositing && workspace()->compositor()) {
-        workspace()->compositor()->updateCompositeBlocking(blocks_compositing ? this : 0);
-        emit blockingCompositingChanged();
+    if (usedToBlock != blocks_compositing) {
+        emit blockingCompositingChanged(blocks_compositing ? this : 0);
     }
 }
 

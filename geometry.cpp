@@ -1910,9 +1910,6 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     // to detect changes
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
-    }
 
     // need to regenerate decoration pixmaps when either
     // - size is changed
@@ -1986,9 +1983,6 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     updateWindowRules(Rules::Position|Rules::Size);
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
-    }
     discardWindowPixmap();
     emit geometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = visibleRect();
@@ -2034,6 +2028,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
     if (workspace()->compositor()) {
+        // TODO: move out of geometry.cpp, is this really needed here?
         workspace()->compositor()->checkUnredirect();
     }
     // client itself is not damaged
@@ -2381,9 +2376,6 @@ void Client::setFullScreen(bool set, bool user)
         }
     }
     updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
-    }
 
     if (was_fs != isFullScreen()) {
         emit clientFullScreenSet(this, set, user);

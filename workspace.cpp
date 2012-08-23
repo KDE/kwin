@@ -205,6 +205,7 @@ Workspace::Workspace(bool restore)
 #endif
 
     m_compositor = new Compositor(this);
+    connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
@@ -536,6 +537,12 @@ Client* Workspace::createClient(Window w, bool is_mapped)
         Client::deleteClient(c, Allowed);
         return NULL;
     }
+    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
+    connect(c, SIGNAL(activeChanged()), m_compositor, SLOT(checkUnredirect()));
+    connect(c, SIGNAL(fullScreenChanged()), m_compositor, SLOT(checkUnredirect()));
+    connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
+    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
+    connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
     addClient(c, Allowed);
     return c;
 }
@@ -549,6 +556,7 @@ Unmanaged* Workspace::createUnmanaged(Window w)
         Unmanaged::deleteUnmanaged(c, Allowed);
         return NULL;
     }
+    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
     addUnmanaged(c, Allowed);
     emit unmanagedAdded(c);
     return c;
@@ -699,6 +707,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig, allowed_t)
         stacking_order.append(c);
     }
     x_stacking_dirty = true;
+    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
 }
 
 void Workspace::removeDeleted(Deleted* c, allowed_t)
@@ -1300,9 +1309,6 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     //for ( uint i = 0; i < desktop_focus_chain.size(); i++ )
     //    s += QString::number( desktop_focus_chain[i] ) + ", ";
     //kDebug( 1212 ) << s << "}\n";
-
-    if (compositing() && m_compositor)
-        m_compositor->addRepaintFull();
 
     emit currentDesktopChanged(old_desktop, movingClient);
     return true;

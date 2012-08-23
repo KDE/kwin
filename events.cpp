@@ -461,7 +461,7 @@ bool Workspace::workspaceEvent(XEvent * e)
                 }
             }
             if (m_compositor) {
-                m_compositor->checkCompositeTimer();
+                m_compositor->scheduleRepaint();
             }
         }
         break;

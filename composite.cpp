@@ -212,9 +212,10 @@ void Compositor::slotCompositingOptionsInitialized()
     } else
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we don't have even a slight idea when the first vsync will occur
-    checkCompositeTimer();
+    scheduleRepaint();
     XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
     new EffectsHandlerImpl(m_scene);   // sets also the 'effects' pointer
+    connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
     foreach (Client * c, Workspace::self()->clientList())
         c->setupCompositing();
@@ -228,7 +229,7 @@ void Compositor::slotCompositingOptionsInitialized()
     performCompositing();
 }
 
-void Compositor::checkCompositeTimer()
+void Compositor::scheduleRepaint()
 {
     if (!compositeTimer.isActive())
         setCompositeTimer();
@@ -366,6 +367,11 @@ QStringList Workspace::activeEffects() const
     return QStringList();
 }
 
+void Compositor::updateCompositeBlocking()
+{
+    updateCompositeBlocking(NULL);
+}
+
 void Compositor::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume
@@ -414,7 +420,7 @@ void Compositor::addRepaint(int x, int y, int w, int h)
     if (!hasScene())
         return;
     repaints_region += QRegion(x, y, w, h);
-    checkCompositeTimer();
+    scheduleRepaint();
 }
 
 void Compositor::addRepaint(const QRect& r)
@@ -422,7 +428,7 @@ void Compositor::addRepaint(const QRect& r)
     if (!hasScene())
         return;
     repaints_region += r;
-    checkCompositeTimer();
+    scheduleRepaint();
 }
 
 void Compositor::addRepaint(const QRegion& r)
@@ -430,7 +436,7 @@ void Compositor::addRepaint(const QRegion& r)
     if (!hasScene())
         return;
     repaints_region += r;
-    checkCompositeTimer();
+    scheduleRepaint();
 }
 
 void Compositor::addRepaintFull()
@@ -438,7 +444,7 @@ void Compositor::addRepaintFull()
     if (!hasScene())
         return;
     repaints_region = QRegion(0, 0, displayWidth(), displayHeight());
-    checkCompositeTimer();
+    scheduleRepaint();
 }
 
 void Compositor::timerEvent(QTimerEvent *te)
@@ -491,7 +497,7 @@ void Compositor::performCompositing()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // checkCompositeTime() would restart it again somewhen later, called from functions that
     // would again add something pending.
-    checkCompositeTimer();
+    scheduleRepaint();
 }
 
 void Compositor::performMousePoll()
@@ -573,6 +579,11 @@ void Compositor::stopMousePolling()
 bool Compositor::isActive()
 {
     return !m_finishing && hasScene();
+}
+
+void Compositor::checkUnredirect()
+{
+    checkUnredirect(false);
 }
 
 // force is needed when the list of windows changes (e.g. a window goes away)
@@ -901,7 +912,6 @@ void Toplevel::addDamage(int x, int y, int w, int h)
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::addDamageFull()
@@ -922,7 +932,6 @@ void Toplevel::addDamageFull()
             effect_window->setData(LanczosCacheRole, QVariant());
         }
     }
-    workspace()->compositor()->checkCompositeTimer();
 }
 
 void Toplevel::resetDamage(const QRect& r)
@@ -940,7 +949,7 @@ void Toplevel::addRepaint(const QRect& r)
         return;
     }
     repaints_region += r;
-    workspace()->compositor()->checkCompositeTimer();
+    emit needsRepaint();
 }
 
 void Toplevel::addRepaint(int x, int y, int w, int h)
@@ -955,7 +964,7 @@ void Toplevel::addRepaint(const QRegion& r)
         return;
     }
     repaints_region += r;
-    workspace()->compositor()->checkCompositeTimer();
+    emit needsRepaint();
 }
 
 void Toplevel::addLayerRepaint(const QRect& r)
@@ -964,7 +973,7 @@ void Toplevel::addLayerRepaint(const QRect& r)
         return;
     }
     layer_repaints_region += r;
-    workspace()->compositor()->checkCompositeTimer();
+    emit needsRepaint();
 }
 
 void Toplevel::addLayerRepaint(int x, int y, int w, int h)
@@ -978,13 +987,13 @@ void Toplevel::addLayerRepaint(const QRegion& r)
     if (!compositing())
         return;
     layer_repaints_region += r;
-    workspace()->compositor()->checkCompositeTimer();
+    emit needsRepaint();
 }
 
 void Toplevel::addRepaintFull()
 {
     repaints_region = visibleRect().translated(-pos());
-    workspace()->compositor()->checkCompositeTimer();
+    emit needsRepaint();
 }
 
 void Toplevel::resetRepaints()

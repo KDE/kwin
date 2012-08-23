@@ -299,6 +299,11 @@ signals:
      * decoration.
      **/
     void shapedChanged();
+    /**
+     * Emitted whenever the state changes in a way, that the Compositor should
+     * schedule a repaint of the scene.
+     **/
+    void needsRepaint();
 
 protected:
     virtual ~Toplevel();

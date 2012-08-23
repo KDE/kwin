@@ -588,7 +588,6 @@ void EffectsHandlerImpl::desktopResized(const QSize &size)
 {
     m_scene->screenGeometryChanged(size);
     emit screenGeometryChanged(size);
-    Workspace::self()->compositor()->addRepaintFull();
 }
 
 void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)

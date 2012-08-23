@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Arthur Arlt <a.arlt@stud.uni-heidelberg.de>
+Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +30,7 @@ class KSelectionOwner;
 
 namespace KWin {
 
+class Client;
 class Scene;
 
 class Compositor : public QObject {
@@ -36,19 +38,16 @@ class Compositor : public QObject {
 public:
     Compositor(QObject *workspace);
     ~Compositor();
-    void checkCompositeTimer();
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
     void addRepaint(const QRect& r);
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
-    void checkUnredirect(bool force = false);
     /**
      * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
      * addition to show a notification on how to revert the compositing state.
      **/
     void toggleCompositing();
-    void updateCompositeBlocking(Client* c = NULL);
     // Mouse polling
     void startMousePolling();
     void stopMousePolling();
@@ -107,6 +106,14 @@ public Q_SLOTS:
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
      **/
     void slotReinitialize();
+    /**
+     * Schedules a new repaint if no repaint is currently scheduled.
+     **/
+    void scheduleRepaint();
+    void checkUnredirect();
+    void checkUnredirect(bool force);
+    void updateCompositeBlocking();
+    void updateCompositeBlocking(KWin::Client* c);
 
 Q_SIGNALS:
     void compositingToggled(bool active);

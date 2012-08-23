@@ -736,7 +736,7 @@ signals:
     /**
      * Emitted whenever the Client's block compositing state changes.
      **/
-    void blockingCompositingChanged();
+    void blockingCompositingChanged(KWin::Client *client);
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "useractions.h"
 #include <QX11Info>
-#include "composite.h"
 
 namespace KWin
 {
@@ -874,9 +873,6 @@ void Client::setActive(bool act)
     emit activeChanged();
     updateMouseGrab();
     updateUrgency(); // demand attention again if it's still urgent
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
-    }
 }
 
 void Client::startupIdChanged()

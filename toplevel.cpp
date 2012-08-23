@@ -45,6 +45,7 @@ Toplevel::Toplevel(Workspace* ws)
     , unredirect(false)
     , unredirectSuspend(false)
 {
+    connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
 }
 
 Toplevel::~Toplevel()
