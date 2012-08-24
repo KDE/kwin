@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ktoolinvocation.h>
 
 #ifndef KCMRULES
+#include <QDesktopWidget>
 #include "client.h"
 #include "workspace.h"
 #endif
@@ -52,6 +53,7 @@ Rules::Rules()
     , opacityinactiverule(UnusedForceRule)
     , ignorepositionrule(UnusedForceRule)
     , desktoprule(UnusedSetRule)
+    , screenrule(UnusedSetRule)
     , activityrule(UnusedSetRule)
     , typerule(UnusedForceRule)
     , maximizevertrule(UnusedSetRule)
@@ -157,6 +159,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
         opacityinactive = 100;
     READ_FORCE_RULE(ignoreposition, , false);
     READ_SET_RULE(desktop, , 0);
+    READ_SET_RULE(screen, , 0);
     READ_SET_RULE(activity, , QString());
     type = readType(cfg, "type");
     typerule = type != NET::Unknown ? readForceRule(cfg, "typerule") : UnusedForceRule;
@@ -246,6 +249,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_FORCE_RULE(opacityinactive,);
     WRITE_FORCE_RULE(ignoreposition,);
     WRITE_SET_RULE(desktop,);
+    WRITE_SET_RULE(screen,);
     WRITE_SET_RULE(activity,);
     WRITE_FORCE_RULE(type, int);
     WRITE_SET_RULE(maximizevert,);
@@ -287,6 +291,7 @@ bool Rules::isEmpty() const
            && opacityinactiverule == UnusedForceRule
            && ignorepositionrule == UnusedForceRule
            && desktoprule == UnusedSetRule
+           && screenrule == UnusedSetRule
            && activityrule == UnusedSetRule
            && typerule == UnusedForceRule
            && maximizevertrule == UnusedSetRule
@@ -459,6 +464,10 @@ bool Rules::update(Client* c, int selection)
         updated = updated || desktop != c->desktop();
         desktop = c->desktop();
     }
+    if NOW_REMEMBER(Screen, screen) {
+        updated = updated || screen != c->screen();
+        screen = c->screen();
+    }
     if NOW_REMEMBER(Activity, activity) {
         // TODO: ivan - multiple activities support
         const QString & joinedActivities = c->activities().join(",");
@@ -581,6 +590,7 @@ bool Rules::applyIgnoreGeometry(bool& ignore) const
 }
 
 APPLY_RULE(desktop, Desktop, int)
+APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QString)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
 
@@ -671,6 +681,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(opacityinactive);
     DISCARD_USED_FORCE_RULE(ignoreposition);
     DISCARD_USED_SET_RULE(desktop);
+    DISCARD_USED_SET_RULE(screen);
     DISCARD_USED_SET_RULE(activity);
     DISCARD_USED_FORCE_RULE(type);
     DISCARD_USED_SET_RULE(maximizevert);
@@ -798,6 +809,20 @@ KDecorationDefines::MaximizeMode WindowRules::checkMaximize(MaximizeMode mode, b
     return static_cast< MaximizeMode >((vert ? MaximizeVertical : 0) | (horiz ? MaximizeHorizontal : 0));
 }
 
+int WindowRules::checkScreen(int screen, bool init) const
+{
+    if ( rules.count() == 0 )
+        return screen;
+    int ret = screen;
+    for ( QVector< Rules* >::ConstIterator it = rules.constBegin(); it != rules.constEnd(); ++it ) {
+        if ( (*it)->applyScreen( ret, init ))
+            break;
+    }
+    if (ret >= QApplication::desktop()->screenCount())
+        ret = screen;
+    return ret;
+}
+
 CHECK_RULE(Minimize, bool)
 CHECK_RULE(Shade, ShadeMode)
 CHECK_RULE(SkipTaskbar, bool)
@@ -843,6 +868,7 @@ void Client::applyWindowRules()
     // MinSize, MaxSize handled by Geometry
     // IgnorePosition
     setDesktop(desktop());
+    workspace()->sendClientToScreen(this, screen());
     setOnActivities(activities());
     // Type
     maximize(maximizeMode());

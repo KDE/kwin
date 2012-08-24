@@ -232,6 +232,7 @@ bool Client::manage(Window w, bool isMapped)
         area = workspace()->clientArea(FullArea, geom.center(), desktop());
     else {
         int screen = asn_data.xinerama() == -1 ? workspace()->activeScreen() : asn_data.xinerama();
+        screen = rules()->checkScreen(screen, !isMapped);
         area = workspace()->clientArea(PlacementArea, workspace()->screenGeometry(screen).center(), desktop());
     }
 

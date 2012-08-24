@@ -1744,6 +1744,7 @@ int Workspace::screenNumber(const QPoint& pos) const
 
 void Workspace::sendClientToScreen(Client* c, int screen)
 {
+    screen = c->rules()->checkScreen(screen);
     if (c->screen() == screen)   // Don't use isOnScreen(), that's true even when only partially
         return;
     GeometryUpdatesBlocker blocker(c);
