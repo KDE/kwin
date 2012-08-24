@@ -313,7 +313,6 @@ protected:
     void addDamageFull();
     void getWmClientLeader();
     void getWmClientMachine();
-    void setReadyForPainting();
 
     /**
      * This function fetches the opaque region from this Toplevel.
@@ -334,8 +333,11 @@ protected:
     int bit_depth;
     NETWinInfo2* info;
     bool ready_for_painting;
+    QTimer *m_readyForPaintingTimer;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
     QRegion layer_repaints_region;
+protected slots:
+    void setReadyForPainting();
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);

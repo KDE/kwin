@@ -737,9 +737,19 @@ void Client::damageNotifyEvent(XDamageNotifyEvent* e)
             setReadyForPainting();
     }
 #else
+    if (!ready_for_painting) {
         setReadyForPainting();
+    }
 #endif
 
+    Toplevel::damageNotifyEvent(e);
+}
+
+void Unmanaged::damageNotifyEvent(XDamageNotifyEvent* e)
+{
+    if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
+        setReadyForPainting();
+    }
     Toplevel::damageNotifyEvent(e);
 }
 

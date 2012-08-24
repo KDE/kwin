@@ -2201,6 +2201,8 @@ void Client::getSyncCounter()
 void Client::sendSyncRequest()
 {
 #ifdef HAVE_XSYNC
+    delete m_readyForPaintingTimer;
+    m_readyForPaintingTimer = 0;
     if (syncRequest.counter == None || syncRequest.isPending)
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
 

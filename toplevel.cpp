@@ -33,7 +33,7 @@ namespace KWin
 Toplevel::Toplevel(Workspace* ws)
     : vis(NULL)
     , info(NULL)
-    , ready_for_painting(true)
+    , ready_for_painting(false)
     , client(None)
     , frame(None)
     , wspace(ws)
@@ -45,6 +45,10 @@ Toplevel::Toplevel(Workspace* ws)
     , unredirect(false)
     , unredirectSuspend(false)
 {
+    m_readyForPaintingTimer = new QTimer(this);
+    m_readyForPaintingTimer->setSingleShot(true);
+    connect(m_readyForPaintingTimer, SIGNAL(timeout()), SLOT(setReadyForPainting()));
+    m_readyForPaintingTimer->start(50);
 }
 
 Toplevel::~Toplevel()
@@ -334,6 +338,8 @@ void Toplevel::setOpacity(double new_opacity)
 void Toplevel::setReadyForPainting()
 {
     if (!ready_for_painting) {
+        delete m_readyForPaintingTimer;
+        m_readyForPaintingTimer = 0;
         ready_for_painting = true;
         if (compositing()) {
             addRepaintFull();
