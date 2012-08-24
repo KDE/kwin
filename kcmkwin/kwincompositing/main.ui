@@ -805,7 +805,7 @@ On legacy hardware disabling Shaders can improve the performance.</string>
              <bool>false</bool>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activates color correction if possible, using the Kolor-Manager. Requires OpenGL 2 Shaders to be enabled and &lt;span style=&quot; text-decoration: underline;&quot;&gt;Kolor-Manager to be installed&lt;/span&gt;. May fail silently.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Experimental.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;p&gt;Activates color correction if possible, using the Kolor-Manager. Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be installed. May fail silently.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Experimental&lt;/strong&gt;.&lt;/p&gt;</string>
             </property>
             <property name="text">
              <string>Enable color correction (experimental)</string>
