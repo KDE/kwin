@@ -101,10 +101,12 @@ void DecorationOptions::setDecoration(QObject *decoration)
         // disconnect from existing decoration
         disconnect(m_decoration, SIGNAL(activeChanged()), this, SLOT(slotActiveChanged()));
         disconnect(m_decoration, SIGNAL(buttonsChanged()), this, SIGNAL(titleButtonsChanged()));
+        disconnect(m_decoration, SIGNAL(fontChanged()), this, SIGNAL(fontChanged()));
     }
     m_decoration = decoration;
     connect(m_decoration, SIGNAL(activeChanged()), SLOT(slotActiveChanged()));
     connect(m_decoration, SIGNAL(buttonsChanged()), SIGNAL(titleButtonsChanged()));
+    connect(m_decoration, SIGNAL(fontChanged()), SIGNAL(fontChanged()));
     emit decorationChanged();
 }
 

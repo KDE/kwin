@@ -84,7 +84,6 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     }
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
-    m_engine->rootContext()->setContextProperty("options", this);
     m_themeName = themeName;
 }
 
@@ -212,31 +211,6 @@ QDeclarativeItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *cl
     return qobject_cast< QDeclarativeItem* >(m_component->create(context));
 }
 
-QString AuroraeFactory::rightButtons()
-{
-    return options()->titleButtonsRight();
-}
-
-QString AuroraeFactory::leftButtons()
-{
-    return options()->titleButtonsLeft();
-}
-
-bool AuroraeFactory::customButtonPositions()
-{
-    return options()->customButtonPositions();
-}
-
-QFont AuroraeFactory::activeTitleFont()
-{
-    return options()->font();
-}
-
-QFont AuroraeFactory::inactiveTitleFont()
-{
-    return options()->font(false);
-}
-
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
 
 /*******************************************************
@@ -252,6 +226,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(this, SIGNAL(keepBelowChanged(bool)), SIGNAL(keepBelowChangedWrapper()));
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
+    connect(AuroraeFactory::instance(), SIGNAL(titleFontChanged()), SIGNAL(fontChanged()));
 }
 
 AuroraeClient::~AuroraeClient()

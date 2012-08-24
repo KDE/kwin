@@ -40,11 +40,6 @@ class AuroraeClient;
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
     Q_OBJECT
-    Q_PROPERTY(QString leftButtons READ leftButtons NOTIFY buttonsChanged)
-    Q_PROPERTY(QString rightButtons READ rightButtons NOTIFY buttonsChanged)
-    Q_PROPERTY(bool customButtonPositions READ customButtonPositions NOTIFY buttonsChanged)
-    Q_PROPERTY(QFont activeTitleFont READ activeTitleFont NOTIFY titleFontChanged)
-    Q_PROPERTY(QFont inactiveTitleFont READ inactiveTitleFont NOTIFY titleFontChanged)
 public:
     ~AuroraeFactory();
 
@@ -58,15 +53,9 @@ public:
         return m_theme;
     }
     QDeclarativeItem *createQmlDecoration(AuroraeClient *client);
-    QString leftButtons();
-    QString rightButtons();
-    bool customButtonPositions();
     const QString &currentThemeName() const {
         return m_themeName;
     }
-
-    QFont activeTitleFont();
-    QFont inactiveTitleFont();
 
 private:
     enum EngineType {
@@ -160,6 +149,7 @@ Q_SIGNALS:
      * A decoration could reload it's configuration when this signal is emitted.
      **/
     void configChanged();
+    void fontChanged();
 
 public slots:
     void menuClicked();
