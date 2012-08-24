@@ -410,12 +410,6 @@ void EffectsHandlerImpl::slotClientAdded(Client *c)
         connect(c, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotClientShown(KWin::Toplevel*)));
 }
 
-void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{   // regardless, unmanaged windows are -yet?- not synced anyway
-    setupUnmanagedConnections(u);
-    emit windowAdded(u->effectWindow());
-}
-
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
     Q_ASSERT(dynamic_cast<Client*>(t));
@@ -423,6 +417,22 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
+{
+    if (u->readyForPainting())
+        slotUnmanagedShown(u);
+    else
+        connect(u, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotUnmanagedShown(KWin::Toplevel*)));
+}
+
+void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
+{
+    Q_ASSERT(dynamic_cast<Unmanaged*>(t));
+    Unmanaged *u = static_cast<Unmanaged*>(t);
+    setupUnmanagedConnections(u);
+    emit windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)

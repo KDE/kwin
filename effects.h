@@ -188,6 +188,7 @@ protected Q_SLOTS:
     void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
     void slotUnmanagedAdded(KWin::Unmanaged *u);
+    void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c);
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
