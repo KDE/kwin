@@ -112,6 +112,16 @@
      </item>
     </widget>
    </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QCheckBox" name="closeWindowsDoubleClick">
+     <property name="toolTip">
+      <string extracomment="Check this option if you want windows to be closed when you double click the menu button."/>
+     </property>
+     <property name="text">
+      <string>Close windows by double clicking the menu button</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

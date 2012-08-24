@@ -118,6 +118,7 @@ void DecorationModel::findDecorations()
                         data.libraryName = libName;
                         data.type = DecorationModelData::NativeDecoration;
                         data.borderSize = KDecorationDefines::BorderNormal;
+                        data.closeDblClick = false;
                         metaData(data, desktopFile);
                         m_decorations.append(data);
                     }
@@ -141,6 +142,7 @@ void DecorationModel::findDecorations()
         KConfigGroup config(m_config, data.auroraeName);
         data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >("BorderSize", KDecorationDefines::BorderNormal);
         data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >("ButtonSize", KDecorationDefines::BorderNormal);
+        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", true);
         data.comment = service->comment();
         KPluginInfo info(service);
         data.author = info.author();
@@ -180,6 +182,7 @@ void DecorationModel::findAuroraeThemes()
         KConfigGroup config(m_config, data.auroraeName);
         data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >("BorderSize", KDecorationDefines::BorderNormal);
         data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >("ButtonSize", KDecorationDefines::BorderNormal);
+        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", true);
         metaData(data, df);
         m_decorations.append(data);
     }
@@ -252,6 +255,8 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
             return QVariant();
     case QmlMainScriptRole:
         return m_decorations[ index.row()].qmlPath;
+    case CloseOnDblClickRole:
+        return m_decorations[index.row()].closeDblClick;
     default:
         return QVariant();
     }
@@ -259,7 +264,7 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
 
 bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || (role != BorderSizeRole && role != ButtonSizeRole))
+    if (!index.isValid() || (role != BorderSizeRole && role != ButtonSizeRole && role != CloseOnDblClickRole))
         return QAbstractItemModel::setData(index, value, role);
 
     const DecorationModelData::DecorationType type = m_decorations[ index.row()].type;
@@ -284,6 +289,18 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
         emit dataChanged(index, index);
         emit configChanged(m_decorations[ index.row()].auroraeName);
         regeneratePreview(index);
+        return true;
+    }
+    if (role == CloseOnDblClickRole && (type == DecorationModelData::AuroraeDecoration || type == DecorationModelData::QmlDecoration)) {
+        if (m_decorations[ index.row()].closeDblClick == value.toBool()) {
+            return false;
+        }
+        m_decorations[ index.row()].closeDblClick = value.toBool();
+        KConfigGroup config(m_config, m_decorations[ index.row()].auroraeName);
+        config.writeEntry("CloseOnDoubleClickMenuButton", value.toBool());
+        config.sync();
+        emit dataChanged(index, index);
+        emit configChanged(m_decorations[ index.row()].auroraeName);
         return true;
     }
     return QAbstractItemModel::setData(index, value, role);

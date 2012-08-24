@@ -57,6 +57,11 @@ public:
     QString qmlPath;
     KDecorationDefines::BorderSize borderSize;
     KDecorationDefines::BorderSize buttonSize;
+    /**
+     * Whether the window gets closed on double clicking the Menu Button.
+     * Only applies for Aurorae and QML Decoration.
+     **/
+    bool closeDblClick;
 
     static bool less(const DecorationModelData& a, const DecorationModelData& b) {
         return a.name < b.name;
@@ -82,7 +87,8 @@ public:
         BorderSizeRole = Qt::UserRole + 11,
         BorderSizesRole = Qt::UserRole + 12,
         ButtonSizeRole = Qt::UserRole + 13,
-        QmlMainScriptRole = Qt::UserRole + 14
+        QmlMainScriptRole = Qt::UserRole + 14,
+        CloseOnDblClickRole = Qt::UserRole + 15
     };
     DecorationModel(KSharedConfigPtr config, QObject* parent = 0);
     ~DecorationModel();

@@ -352,9 +352,11 @@ void KWinDecorationModule::slotConfigureDecoration()
         dlg->setMainWidget(form);
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
+        form->closeWindowsDoubleClick->setChecked(index.data(DecorationModel::CloseOnDblClickRole).toBool());
         if (dlg->exec() == KDialog::Accepted) {
             m_model->setData(index, form->borderSizesCombo->currentIndex(), DecorationModel::BorderSizeRole);
             m_model->setData(index, form->buttonSizesCombo->currentIndex(), DecorationModel::ButtonSizeRole);
+            m_model->setData(index, form->closeWindowsDoubleClick->isChecked(), DecorationModel::CloseOnDblClickRole);
             reload = true;
         }
         delete dlg;

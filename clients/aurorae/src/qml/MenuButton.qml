@@ -18,6 +18,8 @@ import QtQuick 1.1
 import org.kde.qtextracomponents 0.1 as QtExtra
 
 DecorationButton {
+    property bool closeOnDoubleClick: true
+    id: menuButton
     buttonType: "M"
     QtExtra.QIconItem {
         icon: decoration.icon
@@ -40,7 +42,7 @@ DecorationButton {
             // the double click delay to ensure that it was only a single click.
             if (timer.running) {
                 timer.stop();
-            } else {
+            } else if (menuButton.closeOnDoubleClick) {
                 timer.start();
             }
         }
@@ -59,11 +61,25 @@ DecorationButton {
         }
         onClicked: {
             // for right clicks we show the menu instantly
-            if (mouse.button == Qt.RightButton) {
+            // and if the option is disabled we always show menu directly
+            if (!menuButton.closeOnDoubleClick || mouse.button == Qt.RightButton) {
                 decoration.menuClicked();
                 timer.stop();
             }
         }
-        onDoubleClicked: decoration.closeWindow()
+        onDoubleClicked: {
+            if (menuButton.closeOnDoubleClick) {
+                decoration.closeWindow();
+            }
+        }
+    }
+    Component.onCompleted: {
+        menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", true);
+    }
+    Connections {
+        target: decoration
+        onConfigChanged: {
+            menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", true);
+        }
     }
 }
