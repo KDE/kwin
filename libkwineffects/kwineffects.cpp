@@ -211,7 +211,7 @@ public:
     qreal decorationOpacity;
     qreal saturation;
     qreal brightness;
-    qint32 screen;
+    int screen;
 };
 
 WindowPaintData::WindowPaintData(EffectWindow* w)
@@ -272,7 +272,7 @@ qreal WindowPaintData::brightness() const
     return d->brightness;
 }
 
-qint32 WindowPaintData::screen() const
+int WindowPaintData::screen() const
 {
     return d->screen;
 }
@@ -297,7 +297,7 @@ void WindowPaintData::setBrightness(qreal brightness)
     d->brightness = brightness;
 }
 
-void WindowPaintData::setScreen(qint32 screen) const
+void WindowPaintData::setScreen(int screen) const
 {
     d->screen = screen;
 }

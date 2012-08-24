@@ -1943,12 +1943,12 @@ public:
      * color correction lookup tables because they have different ICC profiles).
      * @return screen for which painting should be done
      */
-    qint32 screen() const;
+    int screen() const;
     /**
      * @param screen New screen number
      * A value less than 0 will indicate that a default profile should be done.
      */
-    void setScreen(qint32 screen) const;
+    void setScreen(int screen) const;
     WindowQuadList quads;
     /**
      * Shader to be used for rendering, if any.
