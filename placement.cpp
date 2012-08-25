@@ -319,6 +319,12 @@ void Placement::reinitCascading(int desktop)
     }
 }
 
+QPoint Workspace::cascadeOffset(const Client *c) const
+{
+    QRect area = clientArea(PlacementArea, c->geometry().center(), c->desktop());
+    return QPoint(area.width()/48, area.height()/48);
+}
+
 /*!
   Place windows in a cascading order, remembering positions for each desktop
 */
@@ -330,8 +336,7 @@ void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
     int xp, yp;
 
     //CT how do I get from the 'Client' class the size that NW squarish "handle"
-    const int delta_x = 24;
-    const int delta_y = 24;
+    const QPoint delta = m_WorkspacePtr->cascadeOffset(c);
 
     const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (m_WorkspacePtr->currentDesktop() - 1) : (c->desktop() - 1);
 
@@ -375,16 +380,16 @@ void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
          * egcs-2.91.66 on SuSE Linux 6.3. The equivalent forms compile fine.
          * 22-Dec-1999 CS
          *
-         * if (xp != X && yp == Y) xp = delta_x * (++(cci[dn].col));
-         * if (yp != Y && xp == X) yp = delta_y * (++(cci[dn].row));
+         * if (xp != X && yp == Y) xp = delta.x() * (++(cci[dn].col));
+         * if (yp != Y && xp == X) yp = delta.y() * (++(cci[dn].row));
          */
         if (xp != X && yp == Y) {
             ++(cci[dn].col);
-            xp = delta_x * cci[dn].col;
+            xp = delta.x() * cci[dn].col;
         }
         if (yp != Y && xp == X) {
             ++(cci[dn].row);
-            yp = delta_y * cci[dn].row;
+            yp = delta.y() * cci[dn].row;
         }
 
         // last resort: if still doesn't fit, smart place it
@@ -398,7 +403,7 @@ void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
     c->move(QPoint(xp, yp));
 
     // new position
-    cci[dn].pos = QPoint(xp + delta_x, yp + delta_y);
+    cci[dn].pos = QPoint(xp + delta.x(), yp + delta.y());
 }
 
 /*!

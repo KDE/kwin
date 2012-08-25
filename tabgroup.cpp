@@ -144,7 +144,7 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
     return true;
 }
 
-bool TabGroup::remove(Client* c, const QRect& newGeom)
+bool TabGroup::remove(Client* c)
 {
     if (!c)
         return false;
@@ -159,7 +159,7 @@ bool TabGroup::remove(Client* c, const QRect& newGeom)
     updateMinMaxSize();
 
     if (m_clients.count() == 1) { // split
-        remove(m_clients.at(0), m_clients.at(0)->geometry());
+        remove(m_clients.at(0));
     }
     if (m_clients.isEmpty()) { // remaining singleton "tab"
         c->setClientShown(true);
@@ -172,14 +172,6 @@ bool TabGroup::remove(Client* c, const QRect& newGeom)
 
         if (effects) // "c -> m_current" because c was m_current
             static_cast<EffectsHandlerImpl*>(effects)->slotCurrentTabAboutToChange(c->effectWindow(), m_current->effectWindow());
-    }
-
-    if (c->quickTileMode() != QuickTileNone)
-        c->setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
-    else if (newGeom.isValid()) {
-        c->maximize(Client::MaximizeRestore); // explicitly calling for a geometry -> unmaximize - in doubt
-        c->setGeometry(newGeom);
-        c->checkWorkspacePosition(); // oxygen has now twice kicked me a window out of the screen - better be safe then sorry
     }
 
     // Notify effects of removal

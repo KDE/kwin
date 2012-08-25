@@ -1948,11 +1948,35 @@ bool Client::tabTo(Client *other, bool behind, bool activate)
 bool Client::untab(const QRect &toGeometry)
 {
     TabGroup *group = tab_group;
-    if (group && group->remove(this, toGeometry)) { // remove sets the tabgroup to "0", therefore the pointer is cached
+    if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
         if (group->isEmpty()) {
             delete group;
         }
         setClientShown(!(isMinimized() || isShade()));
+        bool keepSize = toGeometry.size() == size();
+        bool changedSize = false;
+        if (quickTileMode() != QuickTileNone) {
+            changedSize = true;
+            setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
+        }
+        if (toGeometry.isValid()) {
+            if (maximizeMode() != Client::MaximizeRestore) {
+                changedSize = true;
+                maximize(Client::MaximizeRestore); // explicitly calling for a geometry -> unmaximize
+            }
+            if (keepSize && changedSize) {
+                geom_restore = geometry(); // checkWorkspacePosition() invokes it
+                QPoint cpoint = QCursor::pos();
+                QPoint point = cpoint;
+                point.setX((point.x() - toGeometry.x()) * geom_restore.width() / toGeometry.width());
+                point.setY((point.y() - toGeometry.y()) * geom_restore.height() / toGeometry.height());
+                geom_restore.moveTo(cpoint-point);
+            } else {
+                geom_restore = toGeometry; // checkWorkspacePosition() invokes it
+            }
+            setGeometry(geom_restore);
+            checkWorkspacePosition();
+        }
         return true;
     }
     return false;

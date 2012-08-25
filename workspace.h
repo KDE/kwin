@@ -306,6 +306,8 @@ public:
      */
     int desktopToLeft(int id = 0, bool wrap = true) const;
 
+    QPoint cascadeOffset(const Client *c) const;
+
 private:
     int desktopCount_;
     QSize desktopGridSize_;

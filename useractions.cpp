@@ -963,8 +963,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
     case Options::NoOp:
         break;
     case Options::RemoveTabFromGroupOp:
-        if (c->untab())
-        if (options->focusPolicyIsReasonable())
+        if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
              takeActivity(c, ActivityFocus | ActivityRaise, true);
         break;
     case Options::ActivateNextTabOp:
@@ -1613,7 +1612,7 @@ void Workspace::slotActivatePrevTab()
 void Workspace::slotUntab()
 {
     if (active_client)
-        active_client->untab();
+        active_client->untab(active_client->geometry().translated(cascadeOffset(active_client)));
 }
 
 /*!
