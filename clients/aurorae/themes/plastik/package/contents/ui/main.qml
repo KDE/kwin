@@ -44,6 +44,21 @@ Decoration {
             root.borderSize = 4;
             break;
         }
+        var titleAlignLeft = decoration.readConfig("titleAlignLeft", true);
+        var titleAlignCenter = decoration.readConfig("titleAlignCenter", false);
+        var titleAlignRight = decoration.readConfig("titleAlignRight", false);
+        if (titleAlignRight) {
+            root.titleAlignment = Text.AlignRight;
+        } else if (titleAlignCenter) {
+            root.titleAlignment = Text.AlignHCenter;
+        } else {
+            if (!titleAlignLeft) {
+                console.log("Error reading title alignment: all alignment options are false");
+            }
+            root.titleAlignment = Text.AlignLeft;
+        }
+        root.animateButtons = decoration.readConfig("animateButtons", true);
+        root.titleShadow = decoration.readConfig("titleShadow", true);
     }
     ColorHelper {
         id: colorHelper
@@ -53,8 +68,11 @@ Decoration {
         deco: decoration
     }
     property alias buttonSize: titleRow.captionHeight
+    property alias titleAlignment: caption.horizontalAlignment
     property color titleBarColor: options.titleBarColor
     property int animationDuration: 150
+    property bool animateButtons: true
+    property bool titleShadow: true
     Behavior on titleBarColor {
         ColorAnimation {
             duration: root.animationDuration
@@ -256,7 +274,7 @@ Decoration {
                     }
                     text: decoration.caption
                     font: options.titleFont
-                    style: Text.Raised
+                    style: root.titleShadow ? Text.Raised : Text.Normal
                     styleColor: colorHelper.shade(color, ColorHelper.ShadowShade)
                     elide: Text.ElideMiddle
                 }

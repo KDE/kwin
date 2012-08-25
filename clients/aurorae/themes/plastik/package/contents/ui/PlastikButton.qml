@@ -62,16 +62,16 @@ DecorationButton {
     property color baseSurfaceTop: colorHelper.shade(options.titleBarColor, ColorHelper.MidlightShade, colorHelper.contrast - 0.4)
     property color baseSurfaceBottom: colorHelper.shade(options.titleBarColor, ColorHelper.LightShade, colorHelper.contrast - 0.4)
     Behavior on conturTop {
-        ColorAnimation { duration: root.animationDuration }
+        ColorAnimation { duration: root.animateButtons ? root.animationDuration : 0 }
     }
     Behavior on conturBottom {
-        ColorAnimation { duration: root.animationDuration }
+        ColorAnimation { duration: root.animateButtons ? root.animationDuration : 0 }
     }
     Behavior on surfaceTop {
-        ColorAnimation { duration: root.animationDuration }
+        ColorAnimation { duration: root.animateButtons ? root.animationDuration : 0 }
     }
     Behavior on surfaceBottom {
-        ColorAnimation { duration: root.animationDuration }
+        ColorAnimation { duration: root.animateButtons ? root.animationDuration : 0 }
     }
     width: size
     height: size
