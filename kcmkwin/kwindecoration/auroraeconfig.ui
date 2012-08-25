@@ -6,113 +6,114 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>384</width>
+    <height>95</height>
    </rect>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <property name="fieldGrowthPolicy">
-    <enum>QFormLayout::ExpandingFieldsGrow</enum>
-   </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Border size:</string>
-     </property>
-     <property name="buddy">
-      <cstring>borderSizesCombo</cstring>
-     </property>
-    </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Border size:</string>
+       </property>
+       <property name="buddy">
+        <cstring>borderSizesCombo</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="KComboBox" name="borderSizesCombo">
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Tiny</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Normal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Large</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Very Large</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Huge</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Very Huge</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Border size:">Oversized</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Button size:</string>
+       </property>
+       <property name="buddy">
+        <cstring>buttonSizesCombo</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="KComboBox" name="buttonSizesCombo">
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Tiny</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Normal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Large</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Very Large</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Huge</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Very Huge</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox Button size:">Oversized</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="0" column="1">
-    <widget class="KComboBox" name="borderSizesCombo">
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Tiny</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Normal</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Large</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Very Large</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Huge</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Very Huge</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Border size:">Oversized</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Button size:</string>
-     </property>
-     <property name="buddy">
-      <cstring>buttonSizesCombo</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="KComboBox" name="buttonSizesCombo">
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Tiny</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Normal</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Large</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Very Large</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Huge</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Very Huge</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string comment="@item:inlistbox Button size:">Oversized</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item>
     <widget class="QCheckBox" name="closeWindowsDoubleClick">
      <property name="toolTip">
       <string extracomment="Check this option if you want windows to be closed when you double click the menu button."/>

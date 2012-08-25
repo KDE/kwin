@@ -457,4 +457,12 @@ QVariant DecorationModel::readConfig(const QString &themeName, const QString &ke
     return m_config->group(themeName).readEntry(key, defaultValue);
 }
 
+void DecorationModel::notifyConfigChanged(const QModelIndex &index)
+{
+    if (!index.isValid()) {
+        return;
+    }
+    emit configChanged(m_decorations[index.row()].auroraeName);
+}
+
 } // namespace KWin

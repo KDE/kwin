@@ -43,13 +43,16 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QGraphicsObject>
 #include <QtGui/QScrollBar>
+#include <QUiLoader>
 // KDE
 #include <KAboutData>
 #include <KDialog>
 #include <KLocale>
 #include <KNS3/DownloadDialog>
 #include <KDE/KStandardDirs>
+#include <KDE/KConfigDialogManager>
 #include <KPluginFactory>
+#include <Plasma/ConfigLoader>
 #include <qdeclarative.h>
 
 // KCModule plugin interface
@@ -353,10 +356,39 @@ void KWinDecorationModule::slotConfigureDecoration()
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
         form->closeWindowsDoubleClick->setChecked(index.data(DecorationModel::CloseOnDblClickRole).toBool());
+        // in case of QmlDecoration look for a config.ui in the package structure
+        KConfigDialogManager *configManager = NULL;
+        if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
+            const QString packageName = index.data(DecorationModel::AuroraeNameRole).toString();
+            const QString uiPath = KStandardDirs::locate("data", "kwin/decorations/" + packageName + "/contents/ui/config.ui");
+            const QString configPath = KStandardDirs::locate("data", "kwin/decorations/" + packageName + "/contents/config/main.xml");
+            if (!uiPath.isEmpty() && !configPath.isEmpty()) {
+                // load the KConfigSkeleton
+                QFile configFile(configPath);
+                KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig("auroraerc");
+                KConfigGroup configGroup = auroraeConfig->group(packageName);
+                Plasma::ConfigLoader *skeleton = new Plasma::ConfigLoader(&configGroup, &configFile, dlg);
+                // load the ui file
+                QUiLoader *loader = new QUiLoader(dlg);
+                QFile uiFile(uiPath);
+                uiFile.open(QFile::ReadOnly);
+                QWidget *customConfigForm = loader->load(&uiFile, form);
+                uiFile.close();
+                form->layout()->addWidget(customConfigForm);
+                // connect the ui file with the skeleton
+                configManager = new KConfigDialogManager(customConfigForm, skeleton);
+                configManager->updateWidgets();
+            }
+        }
         if (dlg->exec() == KDialog::Accepted) {
             m_model->setData(index, form->borderSizesCombo->currentIndex(), DecorationModel::BorderSizeRole);
             m_model->setData(index, form->buttonSizesCombo->currentIndex(), DecorationModel::ButtonSizeRole);
             m_model->setData(index, form->closeWindowsDoubleClick->isChecked(), DecorationModel::CloseOnDblClickRole);
+            if (configManager && configManager->hasChanged()) {
+                // we have a config manager and the settings changed
+                configManager->updateSettings();
+                m_model->notifyConfigChanged(index);
+            }
             reload = true;
         }
         delete dlg;

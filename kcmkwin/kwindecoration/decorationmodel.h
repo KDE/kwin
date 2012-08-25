@@ -121,6 +121,8 @@ public:
 
     Q_INVOKABLE QVariant readConfig(const QString &themeName, const QString &key, const QVariant &defaultValue = QVariant());
 
+    void notifyConfigChanged(const QModelIndex &index);
+
 Q_SIGNALS:
     void configChanged(QString themeName);
 public slots:
