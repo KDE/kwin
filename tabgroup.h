@@ -157,7 +157,7 @@ private:
     void move(KWin::Client* c, KWin::Client* before, bool behind);
 
 //     friend bool Client::untab(const QRect&);
-    bool remove(KWin::Client *c, const QRect &newGeom = QRect());
+    bool remove(KWin::Client *c);
 
     ClientList m_clients;
     Client *m_current;
