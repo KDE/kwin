@@ -326,8 +326,8 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
             if ((states & Maximized) && c->maximizeMode() != main->maximizeMode())
                 c->maximize(main->maximizeMode());
             // the order Shaded -> Geometry is somewhat important because one will change the other
-            if ((states & Shaded) && c->isShade() != main->isShade())
-                c->setShade(main->isShade() ? ShadeNormal : ShadeNone);
+            if ((states & Shaded))
+                c->setShade(main->shadeMode());
             if ((states & Geometry) && c->geometry() != main->geometry())
                 c->setGeometry(main->geometry());
             if (states & Desktop) {

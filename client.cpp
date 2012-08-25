@@ -1069,6 +1069,11 @@ void Client::setShade(ShadeMode mode)
     bool was_shade = isShade();
     ShadeMode was_shade_mode = shade_mode;
     shade_mode = mode;
+
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Shaded);
+
     if (was_shade == isShade()) {
         if (decoration != NULL)   // Decoration may want to update after e.g. hover-shade changes
             decoration->shadeChange();
@@ -1146,9 +1151,6 @@ void Client::setShade(ShadeMode mode)
         decoration->shadeChange();
     updateWindowRules(Rules::Shade);
 
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Shaded);
     emit shadeChanged();
 }
 
@@ -1160,7 +1162,9 @@ void Client::shadeHover()
 
 void Client::shadeUnhover()
 {
-    setShade(ShadeNormal);
+    if (!tabGroup() || tabGroup()->current() == this ||
+        tabGroup()->current()->shadeMode() == ShadeNormal)
+        setShade(ShadeNormal);
     cancelShadeHoverTimer();
 }
 
