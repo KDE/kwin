@@ -43,4 +43,4 @@ set( testTabBoxConfig_SRCS
 )
 
 kde4_add_unit_test( testTabBoxConfig TESTNAME testTabBoxConfig ${testTabBoxConfig_SRCS} )
-target_link_libraries( testTabBoxConfig ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testTabBoxConfig ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
