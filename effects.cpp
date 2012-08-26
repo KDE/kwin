@@ -1678,7 +1678,7 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
     if (effects->compositingType() == OpenGLCompositing) {
-        m_sceneFrame = new SceneOpenGL::EffectFrame(this);
+        m_sceneFrame = new SceneOpenGL::EffectFrame(this, static_cast<SceneOpenGL*>(Compositor::self()->scene()));
     } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         m_sceneFrame = new SceneXrender::EffectFrame(this);

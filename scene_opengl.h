@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class OpenGLBackend;
 
 class SceneOpenGL
     : public Scene
@@ -46,13 +47,23 @@ public:
     virtual CompositingType compositingType() const {
         return OpenGLCompositing;
     }
-    virtual bool hasPendingFlush() const { return !m_lastDamage.isEmpty(); }
+    virtual bool hasPendingFlush() const;
     virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
+    virtual OverlayWindow *overlayWindow();
+    virtual bool waitSyncAvailable() const;
 
     void idle();
+
+    /**
+     * @brief Factory method to create a backend specific texture.
+     *
+     * @return :SceneOpenGL::Texture*
+     **/
+    Texture *createTexture();
+    Texture *createTexture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
 
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
@@ -63,66 +74,27 @@ public Q_SLOTS:
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
-    bool selectMode();
-    bool initTfp();
-    bool initBuffer();
-    bool initRenderingContext();
-    bool initBufferConfigs();
-    bool initDrawableConfigs();
-    void waitSync();
-#ifndef KWIN_HAVE_OPENGLES
     void setupModelViewProjectionMatrix();
-#endif
-    void flushBuffer(int mask, QRegion damage);
-    GC gcroot;
-    class FBConfigInfo
-    {
-    public:
-#ifndef KWIN_HAVE_OPENGLES
-        GLXFBConfig fbconfig;
-#endif
-        int bind_texture_format;
-        int texture_targets;
-        int y_inverted;
-        int mipmap;
-    };
-#ifndef KWIN_HAVE_OPENGLES
-    Drawable buffer;
-    GLXFBConfig fbcbuffer;
     bool m_resetModelViewProjectionMatrix;
-#endif
-    static bool db;
-#ifndef KWIN_HAVE_OPENGLES
-    static GLXFBConfig fbcbuffer_db;
-    static GLXFBConfig fbcbuffer_nondb;
-    static FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
-    static GLXDrawable glxbuffer;
-    static GLXContext ctxbuffer;
-    static GLXContext ctxdrawable;
-    static GLXDrawable last_pixmap; // for a workaround in bindTexture()
-#endif
     QHash< Toplevel*, Window* > windows;
     bool init_ok;
     bool debug;
-    QElapsedTimer m_renderTimer;
-    QRegion m_lastDamage;
-    int m_lastMask;
+    OpenGLBackend *m_backend;
 };
 
 class SceneOpenGL::TexturePrivate
     : public GLTexturePrivate
 {
 public:
-    TexturePrivate();
     virtual ~TexturePrivate();
 
-    virtual void onDamage();
+    virtual void findTarget() = 0;
+    virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth) = 0;
+    virtual OpenGLBackend *backend() = 0;
 
-#ifndef KWIN_HAVE_OPENGLES
-    GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
-#else
-    EGLImageKHR m_image;
-#endif
+protected:
+    TexturePrivate();
+
 private:
     Q_DISABLE_COPY(TexturePrivate)
 };
@@ -131,9 +103,8 @@ class SceneOpenGL::Texture
     : public GLTexture
 {
 public:
-    Texture();
-    Texture(const Texture& tex);
-    Texture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
+    Texture(OpenGLBackend *backend);
+    Texture(OpenGLBackend *backend, const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
     virtual ~Texture();
 
     Texture & operator = (const Texture& tex);
@@ -144,7 +115,6 @@ public:
     virtual void discard();
 
 protected:
-    Texture(const Pixmap& pix, const QSize& size, int depth);
     void findTarget();
     virtual bool load(const Pixmap& pix, const QSize& size, int depth,
                       QRegion region);
@@ -198,11 +168,11 @@ protected:
     void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
 
 private:
-    Texture texture;
-    Texture topTexture;
-    Texture leftTexture;
-    Texture rightTexture;
-    Texture bottomTexture;
+    Texture *texture;
+    Texture *topTexture;
+    Texture *leftTexture;
+    Texture *rightTexture;
+    Texture *bottomTexture;
     SceneOpenGL *m_scene;
 };
 
@@ -210,7 +180,7 @@ class SceneOpenGL::EffectFrame
     : public Scene::EffectFrame
 {
 public:
-    EffectFrame(EffectFrameImpl* frame);
+    EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene);
     virtual ~EffectFrame();
 
     virtual void free();
@@ -237,8 +207,9 @@ private:
     Texture* m_oldIconTexture;
     Texture* m_selectionTexture;
     GLVertexBuffer* m_unstyledVBO;
+    SceneOpenGL *m_scene;
 
-    static Texture* m_unstyledTexture;
+    static GLTexture* m_unstyledTexture;
     static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
     static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
 };
@@ -265,6 +236,224 @@ protected:
 private:
     GLTexture *m_texture;
 };
+
+/**
+ * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
+ *
+ * The OpenGLBackend is an abstract base class used by the SceneOpenGL to abstract away the differences
+ * between various OpenGL windowing systems such as GLX and EGL.
+ *
+ * A concrete implementation has to create and release the OpenGL context in a way so that the
+ * SceneOpenGL does not have to care about it.
+ *
+ * In addition a major task for this class is to generate the SceneOpenGL::TexturePrivate which is
+ * able to perform the texture from pixmap operation in the given backend.
+ *
+ * @author Martin Gräßlin <mgraesslin@kde.org>
+ **/
+class OpenGLBackend
+{
+public:
+    OpenGLBackend();
+    virtual ~OpenGLBackend();
+    /**
+     * @return Time passes since start of rendering current frame.
+     * @see startRenderTimer
+     **/
+    qint64 renderTime() {
+        return m_renderTimer.elapsed();
+    }
+    virtual void screenGeometryChanged(const QSize &size) = 0;
+    virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) = 0;
+    /**
+     * @brief Backend specific code to prepare the rendering of a frame including flushing the
+     * previously rendered frame to the screen if the backend works this way.
+     **/
+    virtual void prepareRenderingFrame() = 0;
+    /**
+     * @brief Backend specific code to handle the end of rendering a frame.
+     *
+     * @param mask The rendering mask of this frame
+     * @param damage The actual updated region in this frame
+     **/
+    virtual void endRenderingFrame(int mask, const QRegion &damage) = 0;
+    /**
+     * @brief Compositor is going into idle mode, flushes any pending paints.
+     **/
+    void idle();
+    /**
+     * @return bool Whether the scene needs to flush a frame.
+     **/
+    bool hasPendingFlush() const {
+        return !m_lastDamage.isEmpty();
+    }
+
+    /**
+     * @brief Returns the OverlayWindow used by the backend.
+     *
+     * A backend does not have to use an OverlayWindow, this is mostly for the X world.
+     * In case the backend does not use an OverlayWindow it is allowed to return @c null.
+     * It's the task of the caller to check whether it is @c null.
+     *
+     * @return :OverlayWindow*
+     **/
+    OverlayWindow *overlayWindow() {
+        return m_overlayWindow;
+    }
+    /**
+     * @brief Whether the creation of the Backend failed.
+     *
+     * The SceneOpenGL should test whether the Backend got constructed correctly. If this method
+     * returns @c true, the SceneOpenGL should not try to start the rendering.
+     *
+     * @return bool @c true if the creation of the Backend failed, @c false otherwise.
+     **/
+    bool isFailed() const {
+        return m_failed;
+    }
+    /**
+     * @brief Whether the Backend provides VSync.
+     *
+     * Currently only the GLX backend can provide VSync.
+     *
+     * @return bool @c true if VSync support is available, @c false otherwise
+     **/
+    bool waitSyncAvailable() const {
+        return m_waitSync;
+    }
+    /**
+     * @brief Whether the backend uses direct rendering.
+     *
+     * Some OpenGLScene modes require direct rendering. E.g. the OpenGL 2 should not be used
+     * if direct rendering is not supported by the Scene.
+     *
+     * @return bool @c true if the GL context is direct, @c false if indirect
+     **/
+    bool isDirectRendering() const {
+        return m_directRendering;
+    }
+    /**
+     * @brief Whether the backend used double buffering.
+     *
+     * @return bool @c true if double buffered, @c false otherwise
+     **/
+    bool isDoubleBuffer() const {
+        return m_doubleBuffer;
+    }
+protected:
+    /**
+     * @brief Backend specific flushing of frame to screen.
+     **/
+    virtual void flushBuffer() = 0;
+    /**
+     * @brief Sets the backend initialization to failed.
+     *
+     * This method should be called by the concrete subclass in case the initialization failed.
+     * The given @p reason is logged as a warning.
+     *
+     * @param reason The reason why the initialization failed.
+     **/
+    void setFailed(const QString &reason);
+    /**
+     * @brief Sets whether the backend provides VSync.
+     *
+     * Should be called by the concrete subclass once it is determined whether VSync is supported.
+     * If the subclass does not call this method, the backend defaults to @c false.
+     * @param enabled @c true if VSync support available, @c false otherwise.
+     **/
+    void setHasWaitSync(bool enabled) {
+        m_waitSync = enabled;
+    }
+    /**
+     * @brief Sets whether the OpenGL context is direct.
+     *
+     * Should be called by the concrete subclass once it is determined whether the OpenGL context is
+     * direct or indirect.
+     * If the subclass does not call this method, the backend defaults to @c false.
+     *
+     * @param direct @c true if the OpenGL context is direct, @c false if indirect
+     **/
+    void setIsDirectRendering(bool direct) {
+        m_directRendering = direct;
+    }
+    /**
+     * @brief Sets whether the OpenGL context uses double buffering.
+     *
+     * Should be called by the concrete subclass once it is determined whether the OpenGL context
+     * uses double buffering.
+     * If the subclass does not call this method, the backend defaults to @c false.
+     *
+     * @param doubleBuffer @c true if double buffering, @c false otherwise
+     **/
+    void setDoubleBuffer(bool doubleBuffer) {
+        m_doubleBuffer = doubleBuffer;
+    }
+    /**
+     * @return const QRegion& Damage of previously rendered frame
+     **/
+    const QRegion &lastDamage() const {
+        return m_lastDamage;
+    }
+    void setLastDamage(const QRegion &damage) {
+        m_lastDamage = damage;
+    }
+    /**
+     * @return int Rendering mask of previously rendered frame
+     **/
+    int lastMask() const {
+        return m_lastMask;
+    }
+    void setLastMask(int mask) {
+        m_lastMask = mask;
+    }
+    /**
+     * @brief Starts the timer for how long it takes to render the frame.
+     *
+     * @see renderTime
+     **/
+    void startRenderTimer() {
+        m_renderTimer.start();
+    }
+
+private:
+    /**
+     * @brief The OverlayWindow used by this Backend.
+     **/
+    OverlayWindow *m_overlayWindow;
+    /**
+     * @brief Whether VSync is available, defaults to @c false.
+     **/
+    bool m_waitSync;
+    /**
+     * @brief Whether direct rendering is used, defaults to @c false.
+     **/
+    bool m_directRendering;
+    /**
+     * @brief Whether double bufferering is available, defaults to @c false.
+     **/
+    bool m_doubleBuffer;
+    /**
+     * @brief Whether the initialization failed, of course default to @c false.
+     **/
+    bool m_failed;
+    /**
+     * @brief Damaged region of previously rendered frame.
+     **/
+    QRegion m_lastDamage;
+    /**
+     * @brief Rendering mask of previously rendered frame.
+     **/
+    int m_lastMask;
+    /**
+     * @brief Timer to measure how long a frame renders.
+     **/
+    QElapsedTimer m_renderTimer;
+};
+
+inline bool SceneOpenGL::hasPendingFlush() const
+{
+    return m_backend->hasPendingFlush();
+}
 
 } // namespace
 

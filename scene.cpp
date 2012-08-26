@@ -96,8 +96,6 @@ namespace KWin
 Scene::Scene(Workspace* ws)
     : QObject(ws)
     , wspace(ws)
-    , has_waitSync(false)
-    , m_overlayWindow(new OverlayWindow())
 {
     last_time.invalidate(); // Initialize the timer
     connect(Workspace::self(), SIGNAL(deletedRemoved(KWin::Deleted*)), SLOT(windowDeleted(KWin::Deleted*)));
@@ -105,7 +103,6 @@ Scene::Scene(Workspace* ws)
 
 Scene::~Scene()
 {
-    delete m_overlayWindow;
 }
 
 // returns mask and possibly modified region
@@ -448,14 +445,14 @@ void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, Windo
         w->sceneWindow()->performPaint(mask, region, data);
 }
 
-OverlayWindow* Scene::overlayWindow()
+bool Scene::waitSyncAvailable() const
 {
-    return m_overlayWindow;
+    return false;
 }
 
 void Scene::screenGeometryChanged(const QSize &size)
 {
-    m_overlayWindow->resize(size);
+    overlayWindow()->resize(size);
 }
 
 //****************************************

@@ -96,10 +96,8 @@ public:
     enum ImageFilterType { ImageFilterFast, ImageFilterGood };
     // there's nothing to paint (adjust time_diff later)
     virtual void idle();
-    bool waitSyncAvailable() {
-        return has_waitSync;
-    }
-    OverlayWindow* overlayWindow();
+    virtual bool waitSyncAvailable() const;
+    virtual OverlayWindow* overlayWindow() = 0;
 public Q_SLOTS:
     // a window has been destroyed
     virtual void windowDeleted(KWin::Deleted*) = 0;
@@ -156,9 +154,7 @@ protected:
     int time_diff;
     QElapsedTimer last_time;
     Workspace* wspace;
-    bool has_waitSync;
     QWeakPointer<LanczosFilter> lanczos_filter;
-    OverlayWindow* m_overlayWindow;
 };
 
 // The base class for windows representations in composite backends

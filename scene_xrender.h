@@ -49,6 +49,9 @@ public:
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
     Picture bufferPicture();
+    virtual OverlayWindow *overlayWindow() {
+        return m_overlayWindow;
+    }
 protected:
     virtual void paintBackground(QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
@@ -66,6 +69,7 @@ private:
     static ScreenPaintData screen_paint;
     class Window;
     QHash< Toplevel*, Window* > windows;
+    OverlayWindow* m_overlayWindow;
     bool init_ok;
 };
 

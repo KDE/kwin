@@ -67,6 +67,11 @@ Sources and other compositing managers:
 */
 
 #include "scene_opengl.h"
+#ifdef KWIN_HAVE_OPENGLES
+#include "eglonxbackend.h"
+#else
+#include "glxbackend.h"
+#endif
 
 #include <kxerrorhandler.h>
 
@@ -99,18 +104,128 @@ extern int currentRefreshRate();
 //****************************************
 // SceneOpenGL
 //****************************************
+OpenGLBackend::OpenGLBackend()
+    : m_overlayWindow(new OverlayWindow()) // TODO: maybe create only if needed?
+    , m_waitSync(false)
+    , m_directRendering(false)
+    , m_doubleBuffer(false)
+    , m_failed(false)
+    , m_lastMask(0)
+{
+}
 
-bool SceneOpenGL::db; // destination drawable is double-buffered
+OpenGLBackend::~OpenGLBackend()
+{
+    if (isFailed()) {
+        m_overlayWindow->destroy();
+    }
+    delete m_overlayWindow;
+}
 
+void OpenGLBackend::setFailed(const QString &reason)
+{
+    kWarning(1212) << "Creating the OpenGL rendering failed: " << reason;
+    m_failed = true;
+}
+
+void OpenGLBackend::idle()
+{
+    flushBuffer();
+}
+
+/************************************************
+ * SceneOpenGL
+ ***********************************************/
+
+SceneOpenGL::SceneOpenGL(Workspace* ws)
+    : Scene(ws)
+    , m_resetModelViewProjectionMatrix(true)
+    , init_ok(false)
 #ifdef KWIN_HAVE_OPENGLES
-#include "scene_opengl_egl.cpp"
+    , m_backend(new EglOnXBackend())
 #else
-#include "scene_opengl_glx.cpp"
+    , m_backend(new GlxBackend())
 #endif
+{
+    if (m_backend->isFailed()) {
+        return;
+    }
+
+    // perform Scene specific checks
+    GLPlatform *glPlatform = GLPlatform::instance();
+    if (glPlatform->isSoftwareEmulation()) {
+        kError(1212) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
+        QTimer::singleShot(0, Workspace::self(), SLOT(fallbackToXRenderCompositing()));
+        return;
+    }
+    if (!hasGLExtension("GL_ARB_texture_non_power_of_two")
+            && !hasGLExtension("GL_ARB_texture_rectangle")) {
+        kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        return; // error
+    }
+    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(7, 10)) {
+        kError(1212) << "KWin requires at least Mesa 7.10 for OpenGL compositing.";
+        return;
+    }
+#ifndef KWIN_HAVE_OPENGLES
+    if (m_backend->isDoubleBuffer())
+        glDrawBuffer(GL_BACK);
+#endif
+
+    debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+
+    // scene shader setup
+    if (GLPlatform::instance()->supports(GLSL)) {
+        if (!ShaderManager::instance()->isValid()) {
+            kDebug(1212) << "No Scene Shaders available";
+#ifdef KWIN_HAVE_OPENGLES
+            // with OpenGL ES we need shaders, so let's break here
+            return;
+#endif
+        } else {
+            // push one shader on the stack so that one is always bound
+            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+        }
+    }
+
+    // OpenGL scene setup
+    setupModelViewProjectionMatrix();
+    if (checkGLError("Init")) {
+        kError(1212) << "OpenGL compositing setup failed";
+        return; // error
+    }
+
+    // set strict binding
+    if (options->isGlStrictBindingFollowsDriver()) {
+        options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
+    }
+    init_ok = true;
+}
+
+SceneOpenGL::~SceneOpenGL()
+{
+    delete m_backend;
+    foreach (Window * w, windows) {
+        delete w;
+    }
+    // do cleanup after initBuffer()
+    SceneOpenGL::EffectFrame::cleanup();
+    checkGLError("Cleanup");
+}
+
+OverlayWindow *SceneOpenGL::overlayWindow()
+{
+    return m_backend->overlayWindow();
+}
+
+bool SceneOpenGL::waitSyncAvailable() const
+{
+    return m_backend->waitSyncAvailable();
+}
 
 void SceneOpenGL::idle()
 {
-    flushBuffer(m_lastMask, m_lastDamage);
+    m_backend->idle();
     Scene::idle();
 }
 
@@ -119,11 +234,59 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-bool SceneOpenGL::selectMode()
+int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
-    if (!initDrawableConfigs())
-        return false;
-    return true;
+    // actually paint the frame, flushed with the NEXT frame
+    foreach (Toplevel * c, toplevels) {
+        // TODO: cache the stacking_order in case it has not changed
+        assert(windows.contains(c));
+        stacking_order.append(windows[ c ]);
+    }
+
+    m_backend->prepareRenderingFrame();
+    if (m_resetModelViewProjectionMatrix) {
+        // reset model view projection matrix if required
+        setupModelViewProjectionMatrix();
+    }
+    int mask = 0;
+#ifdef CHECK_GL_ERROR
+    checkGLError("Paint1");
+#endif
+    paintScreen(&mask, &damage);   // call generic implementation
+#ifdef CHECK_GL_ERROR
+    checkGLError("Paint2");
+#endif
+
+    m_backend->endRenderingFrame(mask, damage);
+
+    // do cleanup
+    stacking_order.clear();
+    checkGLError("PostPaint");
+    return m_backend->renderTime();
+}
+
+void SceneOpenGL::setupModelViewProjectionMatrix()
+{
+#ifndef KWIN_HAVE_OPENGLES
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float fovy = 60.0f;
+    float aspect = 1.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+    float ymin = -ymax;
+    float xmin =  ymin * aspect;
+    float xmax = ymax * aspect;
+    // swap top and bottom to have OpenGL coordinate system match X system
+    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
+    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+#endif
+    m_resetModelViewProjectionMatrix = false;
 }
 
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
@@ -265,30 +428,38 @@ void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
 #endif
 }
 
+SceneOpenGL::Texture *SceneOpenGL::createTexture()
+{
+    return new Texture(m_backend);
+}
+
+SceneOpenGL::Texture *SceneOpenGL::createTexture(const QPixmap &pix, GLenum target)
+{
+    return new Texture(m_backend, pix, target);
+}
+
+void SceneOpenGL::screenGeometryChanged(const QSize &size)
+{
+    Scene::screenGeometryChanged(size);
+    glViewport(0,0, size.width(), size.height());
+    m_backend->screenGeometryChanged(size);
+    ShaderManager::instance()->resetAllShaders();
+#ifndef KWIN_HAVE_OPENGLES
+    m_resetModelViewProjectionMatrix = true;
+#endif
+}
+
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
 
-SceneOpenGL::Texture::Texture() : GLTexture(*new TexturePrivate())
+SceneOpenGL::Texture::Texture(OpenGLBackend *backend)
+    : GLTexture(*backend->createBackendTexture(this))
 {
 }
 
-SceneOpenGL::Texture::Texture(TexturePrivate& dd) : GLTexture(dd)
-{
-}
-
-SceneOpenGL::Texture::Texture(const SceneOpenGL::Texture& tex) : GLTexture(*tex.d_ptr)
-{
-}
-
-SceneOpenGL::Texture::Texture(const Pixmap& pix, const QSize& size, int depth)
-    : GLTexture(*new TexturePrivate())
-{
-    load(pix, size, depth);
-}
-
-SceneOpenGL::Texture::Texture(const QPixmap& pix, GLenum target)
-    : GLTexture(*new TexturePrivate())
+SceneOpenGL::Texture::Texture(OpenGLBackend *backend, const QPixmap &pix, GLenum target)
+    : GLTexture(*backend->createBackendTexture(this))
 {
     load(pix, target);
 }
@@ -305,7 +476,7 @@ SceneOpenGL::Texture& SceneOpenGL::Texture::operator = (const SceneOpenGL::Textu
 
 void SceneOpenGL::Texture::discard()
 {
-    d_ptr = new TexturePrivate();
+    d_ptr = d_func()->backend()->createBackendTexture(this);
 }
 
 bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
@@ -338,33 +509,68 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
     return load(pixmap.handle(), pixmap.size(), pixmap.depth());
 }
 
+void SceneOpenGL::Texture::findTarget()
+{
+    Q_D(Texture);
+    d->findTarget();
+}
+
+bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
+                                int depth, QRegion region)
+{
+    Q_UNUSED(region)
+    // decrease the reference counter for the old texture
+    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
+
+    Q_D(Texture);
+    return d->loadTexture(pix, size, depth);
+}
+
+//****************************************
+// SceneOpenGL::Texture
+//****************************************
+SceneOpenGL::TexturePrivate::TexturePrivate()
+{
+}
+
+SceneOpenGL::TexturePrivate::~TexturePrivate()
+{
+}
+
 //****************************************
 // SceneOpenGL::Window
 //****************************************
 
 SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
-    , texture()
-    , topTexture()
-    , leftTexture()
-    , rightTexture()
-    , bottomTexture()
+    , texture(NULL)
+    , topTexture(NULL)
+    , leftTexture(NULL)
+    , rightTexture(NULL)
+    , bottomTexture(NULL)
     , m_scene(NULL)
 {
 }
 
 SceneOpenGL::Window::~Window()
 {
-    discardTexture();
+    delete texture;
+    delete topTexture;
+    delete leftTexture;
+    delete rightTexture;
+    delete bottomTexture;
 }
 
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
-    if (!texture.isNull()) {
+    if (!texture) {
+        texture = m_scene->createTexture();
+    }
+    if (!texture->isNull()) {
         if (!toplevel->damage().isEmpty()) {
             // mipmaps need to be updated
-            texture.setDirty();
+            texture->setDirty();
             toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
         }
         return true;
@@ -374,7 +580,7 @@ bool SceneOpenGL::Window::bindTexture()
     if (pix == None)
         return false;
 
-    bool success = texture.load(pix, toplevel->size(), toplevel->depth(),
+    bool success = texture->load(pix, toplevel->size(), toplevel->depth(),
                                 toplevel->damage());
 
     if (success)
@@ -386,11 +592,24 @@ bool SceneOpenGL::Window::bindTexture()
 
 void SceneOpenGL::Window::discardTexture()
 {
-    texture.discard();
-    topTexture.discard();
-    leftTexture.discard();
-    rightTexture.discard();
-    bottomTexture.discard();
+    if (texture) {
+        texture->discard();
+    }
+    if (!Extensions::nonNativePixmaps()) {
+        // only discard if the deco pixmaps use TFP
+        if (topTexture) {
+            topTexture->discard();
+        }
+        if (leftTexture) {
+            leftTexture->discard();
+        }
+        if (rightTexture) {
+            rightTexture->discard();
+        }
+        if (bottomTexture) {
+            bottomTexture->discard();
+        }
+    }
 }
 
 // This call is used in SceneOpenGL::windowGeometryShapeChanged(),
@@ -401,14 +620,20 @@ void SceneOpenGL::Window::discardTexture()
 // discard the texture only if size changes.
 void SceneOpenGL::Window::checkTextureSize()
 {
-    if (texture.size() != size())
+    if (!texture) {
+        return;
+    }
+    if (texture->size() != size())
         discardTexture();
 }
 
 // when the window's composite pixmap is discarded, undo binding it to the texture
 void SceneOpenGL::Window::pixmapDiscarded()
 {
-    texture.discard();
+    if (!texture) {
+        return;
+    }
+    texture->discard();
 }
 
 QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
@@ -480,7 +705,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     else
         filter = ImageFilterFast;
 
-    texture.setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+    texture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
 
     bool sceneShader = false;
 
@@ -575,15 +800,15 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     // paint the content
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
-        texture.bind();
+        texture->bind();
         prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
-        renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
+        renderQuads(mask, region, contentQuads, texture, false, hardwareClipping);
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation(), data.shader);
-        texture.unbind();
+        texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (m_scene && m_scene->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
+            renderQuads(mask, region, contentQuads, texture, false, hardwareClipping);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
@@ -608,21 +833,33 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     SceneOpenGL::Texture* decorationTexture;
     switch(decorationType) {
     case DecorationTop:
-        decorationTexture = &topTexture;
+        if (!topTexture) {
+            topTexture = m_scene->createTexture();
+        }
+        decorationTexture = topTexture;
         break;
     case DecorationLeft:
-        decorationTexture = &leftTexture;
+        if (!leftTexture) {
+            leftTexture = m_scene->createTexture();
+        }
+        decorationTexture = leftTexture;
         break;
     case DecorationRight:
-        decorationTexture = &rightTexture;
+        if (!rightTexture) {
+            rightTexture = m_scene->createTexture();
+        }
+        decorationTexture = rightTexture;
         break;
     case DecorationBottom:
-        decorationTexture = &bottomTexture;
+        if (!bottomTexture) {
+            bottomTexture = m_scene->createTexture();
+        }
+        decorationTexture = bottomTexture;
         break;
     default:
         return;
     }
-    if (decoration->isNull()) {
+    if (decoration->isNull() || !decorationTexture) {
         return;
     }
     if (decorationTexture->isNull() || updateDeco) {
@@ -792,19 +1029,19 @@ void SceneOpenGL::Window::prepareStates(TextureType type, double opacity, double
         Texture *tex = NULL;
         switch(type) {
         case Content:
-            tex = &texture;
+            tex = texture;
             break;
         case DecorationTop:
-            tex = &topTexture;
+            tex = topTexture;
             break;
         case DecorationLeft:
-            tex = &leftTexture;
+            tex = leftTexture;
             break;
         case DecorationRight:
-            tex = &rightTexture;
+            tex = rightTexture;
             break;
         case DecorationBottom:
-            tex = &bottomTexture;
+            tex = bottomTexture;
             break;
         default:
             return;
@@ -991,19 +1228,19 @@ void SceneOpenGL::Window::restoreStates(TextureType type, double opacity, double
         Texture *tex = NULL;
         switch(type) {
         case Content:
-            tex = &texture;
+            tex = texture;
             break;
         case DecorationTop:
-            tex = &topTexture;
+            tex = topTexture;
             break;
         case DecorationLeft:
-            tex = &leftTexture;
+            tex = leftTexture;
             break;
         case DecorationRight:
-            tex = &rightTexture;
+            tex = rightTexture;
             break;
         case DecorationBottom:
-            tex = &bottomTexture;
+            tex = bottomTexture;
             break;
         default:
             return;
@@ -1066,10 +1303,10 @@ void SceneOpenGL::Window::restoreRenderStates(TextureType type, double opacity, 
 // SceneOpenGL::EffectFrame
 //****************************************
 
-SceneOpenGL::Texture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
+GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
 QPixmap* SceneOpenGL::EffectFrame::m_unstyledPixmap = NULL;
 
-SceneOpenGL::EffectFrame::EffectFrame(EffectFrameImpl* frame)
+SceneOpenGL::EffectFrame::EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene)
     : Scene::EffectFrame(frame)
     , m_texture(NULL)
     , m_textTexture(NULL)
@@ -1079,6 +1316,7 @@ SceneOpenGL::EffectFrame::EffectFrame(EffectFrameImpl* frame)
     , m_oldIconTexture(NULL)
     , m_selectionTexture(NULL)
     , m_unstyledVBO(NULL)
+    , m_scene(scene)
 {
     if (m_effectFrame->style() == EffectFrameUnstyled && !m_unstyledTexture) {
         updateUnstyledTexture();
@@ -1346,7 +1584,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         if (!m_selectionTexture) { // Lazy creation
             QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
             if (!pixmap.isNull())
-                m_selectionTexture = new Texture(pixmap);
+                m_selectionTexture = m_scene->createTexture(pixmap);
         }
         if (m_selectionTexture) {
             if (shader) {
@@ -1403,7 +1641,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
 
         if (!m_iconTexture) { // lazy creation
-            m_iconTexture = new Texture(m_effectFrame->icon());
+            m_iconTexture = m_scene->createTexture(m_effectFrame->icon());
         }
         m_iconTexture->bind();
         m_iconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
@@ -1462,7 +1700,7 @@ void SceneOpenGL::EffectFrame::updateTexture()
     m_texture = 0L;
     if (m_effectFrame->style() == EffectFrameStyled) {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
-        m_texture = new Texture(pixmap);
+        m_texture = m_scene->createTexture(pixmap);
     }
 }
 
@@ -1498,7 +1736,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         p.setPen(Qt::white);
     p.drawText(rect, m_effectFrame->alignment(), text);
     p.end();
-    m_textTexture = new Texture(*m_textPixmap);
+    m_textTexture = m_scene->createTexture(*m_textPixmap);
 }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
@@ -1518,7 +1756,7 @@ void SceneOpenGL::EffectFrame::updateUnstyledTexture()
     p.drawEllipse(m_unstyledPixmap->rect());
     p.end();
 #undef CS
-    m_unstyledTexture = new Texture(*m_unstyledPixmap);
+    m_unstyledTexture = new GLTexture(*m_unstyledPixmap);
 }
 
 void SceneOpenGL::EffectFrame::cleanup()

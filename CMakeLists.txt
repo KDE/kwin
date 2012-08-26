@@ -109,6 +109,8 @@ set(kwin_KDEINIT_SRCS
    scene.cpp
    scene_xrender.cpp
    scene_opengl.cpp
+   eglonxbackend.cpp
+   glxbackend.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
    deleted.cpp
