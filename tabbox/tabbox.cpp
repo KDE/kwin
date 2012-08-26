@@ -103,6 +103,15 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient*
     return QWeakPointer<TabBoxClient>();
 }
 
+QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
+{
+    if (Client *c = m_tabBox->firstClientFocusChain()) {
+        return QWeakPointer<TabBoxClient>(c->tabBoxClient());
+    } else {
+        return QWeakPointer<TabBoxClient>();
+    }
+}
+
 int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
 {
     return m_tabBox->nextDesktopFocusChain(desktop);
@@ -216,6 +225,9 @@ bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* client, int desktop) const
 {
+    if (!client) {
+        return QWeakPointer<TabBoxClient>();
+    }
     Client* ret = NULL;
     Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
 
@@ -1513,6 +1525,14 @@ Client* TabBox::previousClientFocusChain(Client* c) const
     if (pos == globalFocusChain.count())
         return globalFocusChain.first();
     return globalFocusChain[ pos ];
+}
+
+Client *TabBox::firstClientFocusChain() const
+{
+    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
+    if (globalFocusChain.isEmpty())
+        return NULL;
+    return globalFocusChain.first();
 }
 
 /*!

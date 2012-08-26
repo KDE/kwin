@@ -112,6 +112,14 @@ public:
     */
     virtual QWeakPointer<TabBoxClient> nextClientFocusChain(TabBoxClient* client) const = 0;
     /**
+     * This method is used by the ClientModel to find an entrance into the focus chain in case
+     * there is no active Client.
+     *
+     * @return The first Client of the focus chain
+     * @since 4.9.1
+     **/
+    virtual QWeakPointer<TabBoxClient> firstClientFocusChain() const = 0;
+    /**
     * @param client The client whose desktop name should be retrieved
     * @return The desktop name of the given TabBoxClient. If the client is
     * on all desktops the name of current desktop will be returned.
