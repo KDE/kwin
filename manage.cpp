@@ -558,16 +558,7 @@ bool Client::manage(Window w, bool isMapped)
             }
         }
 
-        bool belongs_to_desktop = false;
-        for (ClientList::ConstIterator it = group()->members().constBegin();
-                it != group()->members().constEnd();
-                ++it)
-            if ((*it)->isDesktop()) {
-                belongs_to_desktop = true;
-                break;
-            }
-        if (!belongs_to_desktop && workspace()->showingDesktop())
-            workspace()->resetShowingDesktop(options->isShowDesktopIsMinimizeAll());
+        resetShowingDesktop(options->isShowDesktopIsMinimizeAll());
 
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0))
             workspace()->restackClientUnderActive(this);
