@@ -157,6 +157,7 @@ namespace Oxygen
         configuration.setUseDropShadows( ui->shadowConfigurations[1]->isChecked() );
         configuration.setUseOxygenShadows( ui->shadowConfigurations[0]->isChecked() );
         configuration.setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
+        configuration.setCloseFromMenuButton( ui->ui.closeFromMenuButton->isChecked() );
 
         if( ui->expertMode() )
         {
@@ -246,6 +247,7 @@ namespace Oxygen
         ui->shadowConfigurations[1]->setChecked( configuration.useDropShadows() );
         ui->ui.animationsEnabled->setChecked( configuration.animationsEnabled() );
         ui->ui.narrowButtonSpacing->setChecked( configuration.useNarrowButtonSpacing() );
+        ui->ui.closeFromMenuButton->setChecked( configuration.closeFromMenuButton() );
 
         ui->animationConfigWidget()->setConfiguration( configuration );
         ui->animationConfigWidget()->load();
