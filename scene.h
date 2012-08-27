@@ -32,7 +32,6 @@ class Workspace;
 class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
-class LanczosFilter;
 class OverlayWindow;
 class Shadow;
 
@@ -154,7 +153,6 @@ protected:
     QElapsedTimer last_time;
     Workspace* wspace;
     bool has_waitSync;
-    QWeakPointer<LanczosFilter> lanczos_filter;
     OverlayWindow* m_overlayWindow;
 };
 

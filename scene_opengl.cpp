@@ -229,13 +229,13 @@ void SceneOpenGL::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region,
 void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {
-        if (lanczos_filter.isNull()) {
-            lanczos_filter = new LanczosFilter(this);
+        if (m_lanczosFilter.isNull()) {
+            m_lanczosFilter = new LanczosFilter(this);
             // recreate the lanczos filter when the screen gets resized
-            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), lanczos_filter.data(), SLOT(deleteLater()));
-            connect(QApplication::desktop(), SIGNAL(resized(int)), lanczos_filter.data(), SLOT(deleteLater()));
+            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), m_lanczosFilter.data(), SLOT(deleteLater()));
+            connect(QApplication::desktop(), SIGNAL(resized(int)), m_lanczosFilter.data(), SLOT(deleteLater()));
         }
-        lanczos_filter.data()->performPaint(w, mask, region, data);
+        m_lanczosFilter.data()->performPaint(w, mask, region, data);
     } else
         w->sceneWindow()->performPaint(mask, region, data);
 }

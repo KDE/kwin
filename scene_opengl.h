@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class LanczosFilter;
+
 class SceneOpenGL
     : public Scene
 {
@@ -108,6 +110,7 @@ private:
     QElapsedTimer m_renderTimer;
     QRegion m_lastDamage;
     int m_lastMask;
+    QWeakPointer<LanczosFilter> m_lanczosFilter;
 };
 
 class SceneOpenGL::TexturePrivate
