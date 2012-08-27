@@ -214,7 +214,7 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
 static const char s_ccVars[] =
     "uniform sampler3D u_ccLookupTexture;\n";
 static const char s_ccAlteration[] =
-    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb * 63.0 / 64.0).rgb;\n";
+    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb).rgb;\n";
 
 
 /*
@@ -585,9 +585,9 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
     glEnable(GL_TEXTURE_3D);
     glBindTexture(GL_TEXTURE_3D, texture);
 
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
