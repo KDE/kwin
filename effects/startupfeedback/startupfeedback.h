@@ -64,6 +64,7 @@ private:
     void prepareTextures(const QPixmap& pix);
     QRect feedbackRect() const;
 
+    qreal m_bounceSizesRatio;
     KStartupInfo* m_startupInfo;
     KSelectionOwner* m_selection;
     KStartupInfoId m_currentStartup;
