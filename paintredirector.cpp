@@ -82,7 +82,7 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
         break;
     }
     case QEvent::Paint: {
-        if (Workspace::self()->compositingActive()) {
+        if (!Workspace::self()->compositingActive()) {
             return false;
         }
         if (!recursionCheck) {

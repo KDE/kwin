@@ -105,6 +105,7 @@ Workspace::Workspace(bool restore)
 #ifdef KWIN_BUILD_SCREENEDGES
     , m_screenEdgeOrientation(0)
 #endif
+    , m_compositor(NULL)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
@@ -482,6 +483,7 @@ void Workspace::init()
 Workspace::~Workspace()
 {
     delete m_compositor;
+    m_compositor = NULL;
     blockStackingUpdates(true);
 
     // TODO: grabXServer();
