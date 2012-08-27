@@ -148,7 +148,7 @@ Options::Options(QObject *parent)
     , m_unredirectFullscreen(Options::defaultUnredirectFullscreen())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_glVSync(Options::defaultGlVSync())
-    , m_glColorCorrection(Options::defaultGlColorCorrection())
+    , m_colorCorrected(Options::defaultColorCorrected())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
     , m_maxFpsInterval(Options::defaultMaxFpsInterval())
     , m_refreshRate(Options::defaultRefreshRate())
@@ -698,13 +698,13 @@ void Options::setGlVSync(bool glVSync)
     emit glVSyncChanged();
 }
 
-void Options::setGlColorCorrection(bool glColorCorrection)
+void Options::setColorCorrected(bool colorCorrected)
 {
-    if (m_glColorCorrection == glColorCorrection) {
+    if (m_colorCorrected == colorCorrected) {
         return;
     }
-    m_glColorCorrection = glColorCorrection;
-    emit glColorCorrectionChanged();
+    m_colorCorrected = colorCorrected;
+    emit colorCorrectedChanged();
 }
 
 void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
@@ -989,12 +989,13 @@ void Options::reloadCompositingSettings(bool force)
 
     setGlDirect(prefs.enableDirectRendering());
     setGlVSync(config.readEntry("GLVSync", Options::defaultGlVSync()));
-    setGlColorCorrection(config.readEntry("GLColorCorrection", Options::defaultGlColorCorrection()));
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));
     setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
     if (!isGlStrictBindingFollowsDriver()) {
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
+
+    setColorCorrected(config.readEntry("GLColorCorrection", Options::defaultColorCorrected()));
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 

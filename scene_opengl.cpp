@@ -210,7 +210,7 @@ void SceneOpenGL::paintBackground(QRegion region)
 
 void SceneOpenGL::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (options->isGlColorCorrection()) {
+    if (options->isColorCorrected()) {
         // Split the painting for separate screens
         int numScreens = Workspace::self()->numScreens();
         for (int screen = 0; screen < numScreens; ++ screen) {
@@ -524,7 +524,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
             data.shader->setUniform(GLShader::Offset, QVector2D(x(), y()));
         }
-        if (options->isGlColorCorrection())
+        if (options->isColorCorrected())
             ColorCorrection::instance()->setupForOutput(data.screen());
         sceneShader = true;
     }
@@ -865,7 +865,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
         opaque = false;
     if (!opaque) {
         glEnable(GL_BLEND);
-        if (!options->isGlColorCorrection()) {
+        if (!options->isColorCorrected()) {
             if (alpha) {
                 glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             } else {
@@ -883,7 +883,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     shader->setUniform(GLShader::Saturation,         saturation);
     shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
 
-    if (options->isGlColorCorrection())
+    if (options->isColorCorrected())
         ColorCorrection::instance()->setupForOutput(screen);
 }
 

@@ -179,7 +179,7 @@ class Options : public QObject, public KDecorationOptions
      **/
     Q_PROPERTY(int glSmoothScale READ glSmoothScale WRITE setGlSmoothScale NOTIFY glSmoothScaleChanged)
     Q_PROPERTY(bool glVSync READ isGlVSync WRITE setGlVSync NOTIFY glVSyncChanged)
-    Q_PROPERTY(bool glColorCorrection READ isGlColorCorrection WRITE setGlColorCorrection NOTIFY glColorCorrectionChanged)
+    Q_PROPERTY(bool colorCorrected READ isColorCorrected WRITE setColorCorrected NOTIFY colorCorrectedChanged)
     Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale WRITE setXrenderSmoothScale NOTIFY xrenderSmoothScaleChanged)
     Q_PROPERTY(uint maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
     Q_PROPERTY(uint refreshRate READ refreshRate WRITE setRefreshRate NOTIFY refreshRateChanged)
@@ -539,8 +539,8 @@ public:
     bool isGlVSync() const {
         return m_glVSync;
     }
-    bool isGlColorCorrection() const {
-        return m_glColorCorrection;
+    bool isColorCorrected() const {
+        return m_colorCorrected;
     }
     // XRender
     bool isXrenderSmoothScale() const {
@@ -621,7 +621,7 @@ public:
     void setUnredirectFullscreen(bool unredirectFullscreen);
     void setGlSmoothScale(int glSmoothScale);
     void setGlVSync(bool glVSync);
-    void setGlColorCorrection(bool glColorCorrection);
+    void setColorCorrected(bool colorCorrected);
     void setXrenderSmoothScale(bool xrenderSmoothScale);
     void setMaxFpsInterval(uint maxFpsInterval);
     void setRefreshRate(uint refreshRate);
@@ -824,7 +824,7 @@ public:
     static bool defaultGlVSync() {
         return true;
     }
-    static bool defaultGlColorCorrection() {
+    static bool defaultColorCorrected() {
         return false;
     }
     static bool defaultXrenderSmoothScale() {
@@ -924,7 +924,7 @@ Q_SIGNALS:
     void unredirectFullscreenChanged();
     void glSmoothScaleChanged();
     void glVSyncChanged();
-    void glColorCorrectionChanged();
+    void colorCorrectedChanged();
     void xrenderSmoothScaleChanged();
     void maxFpsIntervalChanged();
     void refreshRateChanged();
@@ -967,7 +967,7 @@ private:
     bool m_unredirectFullscreen;
     int m_glSmoothScale;
     bool m_glVSync;
-    bool m_glColorCorrection;
+    bool m_colorCorrected;
     bool m_xrenderSmoothScale;
     uint m_maxFpsInterval;
     // Settings that should be auto-detected

@@ -142,8 +142,8 @@ void Workspace::slotCompositingOptionsInitialized()
             }
 #endif
 
-            kDebug(1212) << "Color correction:" << options->isGlColorCorrection();
-            ColorCorrection::instance()->setEnabled(options->isGlColorCorrection());
+            kDebug(1212) << "Color correction:" << options->isColorCorrected();
+            ColorCorrection::instance()->setEnabled(options->isColorCorrected());
             connect(ColorCorrection::instance(), SIGNAL(changed()), this, SLOT(addRepaintFull()));
 
             scene = new SceneOpenGL(this);
