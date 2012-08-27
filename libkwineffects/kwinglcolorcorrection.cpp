@@ -268,7 +268,6 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
         this);
 
     m_outputCluts = &m_csi->outputCluts();
-    m_regionCluts = &m_csi->regionCluts();
 
     connect(m_csi, SIGNAL(updateSucceeded()), this, SLOT(colorServerUpdateSucceededSlot()));
     connect(m_csi, SIGNAL(updateFailed()), this, SLOT(colorServerUpdateFailedSlot()));
@@ -307,20 +306,6 @@ void ColorCorrection::setEnabled(bool enabled)
 
     d->m_enabled = enabled;
     kDebug(1212) << enabled;
-}
-
-QMap<Window, QRect>::const_iterator ColorCorrection::regionsBegin(Window w)
-{
-    Q_D(ColorCorrection);
-    return d->m_windowRegions.constFind(w);
-}
-
-QMap<Window, QRect>::const_iterator ColorCorrection::regionsEnd(Window w)
-{
-    Q_D(ColorCorrection);
-    QMap<Window, QRect>::const_iterator it = d->m_windowRegions.constFind(w);
-    while (it != d->m_windowRegions.constEnd() && it.key() == w) ++it;
-    return it;
 }
 
 void ColorCorrection::setupForOutput(int screen)
@@ -363,31 +348,6 @@ void ColorCorrection::setupForOutput(int screen)
 #endif // KWIN_HAVE_OPENGLES
 
     d->m_lastOutput = screen;
-}
-
-void ColorCorrection::setupForRegion(const QMap<Window, QRect>::const_iterator &regionIt)
-{
-#ifndef KWIN_HAVE_OPENGLES
-    Q_D(ColorCorrection);
-    const QRect *key = &(*regionIt);
-    GLuint tex = d->m_regionCCTextures.value(key, d->m_dummyCCTexture);
-
-    // Bind the correct color lookup texture
-    GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    glActiveTexture(GL_TEXTURE0 + d->m_ccTextureUnit);
-    glEnable(GL_TEXTURE_3D);
-    glBindTexture(GL_TEXTURE_3D, tex);
-    glActiveTexture(activeTexture);
-#else
-    Q_UNUSED(regionIt);
-#endif
-}
-
-void ColorCorrection::resetForRegion()
-{
-    Q_D(ColorCorrection);
-    setupForOutput(d->m_lastOutput);
 }
 
 void ColorCorrection::reset()
@@ -613,24 +573,6 @@ void ColorCorrectionPrivate::setupCCTextures()
             setupCCTexture(m_outputCCTextures[i], m_outputCluts->at(i));
     }
 
-    if (m_regionCCTextures.isEmpty() && !m_regionCluts->isEmpty()) {
-        Q_ASSERT(m_windowRegions.isEmpty());
-        kDebug(1212) << "setting up region color correction textures";
-
-        // Generate region textures (and place them inside a map)
-        RegionalClutMap::const_iterator rcit;
-        QMap<Window, QRect>::const_iterator rit;
-        for (rcit = m_regionCluts->begin(); rcit != m_regionCluts->end(); ++rcit) {
-            GLuint tex;
-            glGenTextures(1, &tex);
-            setupCCTexture(tex, rcit->c);
-
-            // Insert the new texture into the region maps
-            rit = m_windowRegions.insert(rcit.key(), rcit->r);    // this one maps Window -> QRect
-            m_regionCCTextures.insert(&(*rit), tex);        // this one maps QRect* -> texture
-        }
-    }
-
     // TODO Handle errors (what if a texture isn't generated?)
 }
 
@@ -646,13 +588,6 @@ void ColorCorrectionPrivate::deleteCCTextures()
     if (!m_outputCCTextures.isEmpty()) {
         glDeleteTextures(m_outputCCTextures.size(), m_outputCCTextures.data());
         m_outputCCTextures.clear();
-    }
-    if (!m_regionCCTextures.isEmpty()) {
-        QMap<const QRect*, GLuint>::const_iterator it;
-        for (it = m_regionCCTextures.begin(); it != m_regionCCTextures.end(); ++it)
-            glDeleteTextures(1, &(*it));
-        m_regionCCTextures.clear();
-        m_windowRegions.clear();
     }
 }
 

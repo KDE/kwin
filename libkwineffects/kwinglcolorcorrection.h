@@ -52,50 +52,10 @@ public:
     static void cleanup();
 
     /**
-     * The beginning of a region list for a window \param w
-     * \return Constant iterator to the beginning
-     * \see setupForRegion
-     *
-     * It can be used to indicate a particular region for which
-     * to set up color correction.
-     *
-     * These regions come from the applications, which communicate with the
-     * color server (kolor-server in kolor-manager), and this has no direct
-     * relation to KWin. Consequently, modifying these regions does not
-     * make sense inside KWin.
-     */
-    QMap<Window, QRect>::const_iterator regionsBegin(Window w);
-
-    /**
-     * The ending of a region list for a window \param w
-     * \return Constant iterator to the ending
-     * \see setupForRegion
-     */
-    QMap<Window, QRect>::const_iterator regionsEnd(Window w);
-
-    /**
      * Prepares color correction for the output number \param screen.
      * Sets up the appropriate color lookup texture for the output.
      */
     void setupForOutput(int screen);
-
-    /**
-     * Prepares color correction for one region of a window (in fact a rect),
-     * which is indicated by \param regionIt. This can be obtained by iterating
-     * between \ref regionsBegin and \ref regionsEnd, for that particular window.
-     *
-     * \note This should be called when drawing a window
-     */
-    void setupForRegion(const QMap<Window, QRect>::const_iterator &regionIt);
-
-    /**
-     * Disables color correction for a particular window region. Instead,
-     * color correction is set up again for the last output that was set
-     * with \ref setupForOutput.
-     *
-     * \note This should be called after finishing the drawing of a window.
-     */
-    void resetForRegion();
 
     /**
      * Unsets color correction by using a dummy color lookup texture. This

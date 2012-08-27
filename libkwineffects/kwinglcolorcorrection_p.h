@@ -96,9 +96,6 @@ public:
     ColorServerInterface *m_csi;
     const ClutList *m_outputCluts;
     QVector<GLuint> m_outputCCTextures;
-    const RegionalClutMap *m_regionCluts;
-    QMultiMap<Window, QRect> m_windowRegions;
-    QMap<const QRect*, GLuint> m_regionCCTextures; // keys from m_regions's values
     Clut m_dummyClut;
     GLuint m_dummyCCTexture;
 
