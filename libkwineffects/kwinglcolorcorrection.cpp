@@ -317,7 +317,6 @@ void ColorCorrection::setupForOutput(int screen)
     GLint activeTexture;
     glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
     glActiveTexture(GL_TEXTURE0 + d->m_ccTextureUnit);
-    glEnable(GL_TEXTURE_3D);
 
     if (screen < 0 || screen >= d->m_outputCCTextures.count()) {
         // Configure with a dummy texture in case something is wrong
@@ -582,7 +581,6 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
     kDebug(1212) << texture;
 
 #ifndef KWIN_HAVE_OPENGLES
-    glEnable(GL_TEXTURE_3D);
     glBindTexture(GL_TEXTURE_3D, texture);
 
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -595,7 +593,6 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
                  LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
                  0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
 
-    glDisable(GL_TEXTURE_3D);
 
     checkGLError("setupCCTexture");
 #else
