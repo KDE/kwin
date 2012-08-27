@@ -133,7 +133,7 @@ private:
     virtual ~ColorCorrection();
 
 private:
-    ColorCorrectionPrivate *d_ptr;
+    ColorCorrectionPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(ColorCorrection)
     static ColorCorrection *s_colorCorrection;
 };
