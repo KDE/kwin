@@ -46,10 +46,10 @@ namespace Oxygen {
 
         Q_OBJECT
 
-            public:
+        public:
 
-            //! constructor
-            Config( KConfig* conf, QWidget* parent );
+        //! constructor
+        Config( KConfig* conf, QWidget* parent );
 
         //! destructor
         ~Config();
