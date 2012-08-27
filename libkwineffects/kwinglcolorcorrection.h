@@ -48,8 +48,8 @@ class KWIN_EXPORT ColorCorrection : public QObject
     Q_OBJECT
 
 public:
-    static ColorCorrection *instance();
-    static void cleanup();
+    explicit ColorCorrection(QObject *parent = 0);
+    virtual ~ColorCorrection();
 
     /**
      * Prepares color correction for the output number \param screen.
@@ -65,14 +65,11 @@ public:
     void reset();
 
     /**
-     * When color correction is disabled, it does nothing and returns
-     * \param sourceCode.
-     *
-     * Else, it modifies \param sourceCode, making it suitable for performing
+     * Modifies \param sourceCode, making it suitable for performing
      * color correction. This is done by inserting a 3d texture lookup operation
      * just before the output fragment color is returned.
      */
-    QByteArray prepareFragmentShader(const QByteArray &sourceCode);
+    static QByteArray prepareFragmentShader(const QByteArray &sourceCode);
 
 public slots:
     /**
@@ -89,13 +86,8 @@ signals:
     void changed();
 
 private:
-    ColorCorrection();
-    virtual ~ColorCorrection();
-
-private:
     ColorCorrectionPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(ColorCorrection)
-    static ColorCorrection *s_colorCorrection;
 };
 
 } // KWin namespace

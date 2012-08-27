@@ -264,6 +264,8 @@ void popMatrix()
 // GLShader
 //****************************************
 
+bool GLShader::sColorCorrect = false;
+
 GLShader::GLShader()
     : mProgram(0)
     , mValid(false)
@@ -318,8 +320,8 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     ba.append(source);
 
     // Inject color correction code for fragment shaders, if possible
-    if (shaderType == GL_FRAGMENT_SHADER)
-        ba = ColorCorrection::instance()->prepareFragmentShader(ba);
+    if (shaderType == GL_FRAGMENT_SHADER && sColorCorrect)
+        ba = ColorCorrection::prepareFragmentShader(ba);
 
     return ba;
 }

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class ColorCorrection;
 class LanczosFilter;
 
 class SceneOpenGL
@@ -55,6 +56,8 @@ public:
 
     void idle();
 
+    ColorCorrection *colorCorrection();
+
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
@@ -71,6 +74,7 @@ private:
     bool initRenderingContext();
     bool initBufferConfigs();
     bool initDrawableConfigs();
+    void initColorCorrection();
     void waitSync();
 #ifndef KWIN_HAVE_OPENGLES
     void setupModelViewProjectionMatrix();
@@ -111,6 +115,7 @@ private:
     QRegion m_lastDamage;
     int m_lastMask;
     QWeakPointer<LanczosFilter> m_lanczosFilter;
+    ColorCorrection *m_colorCorrection;
 };
 
 class SceneOpenGL::TexturePrivate
@@ -166,7 +171,7 @@ class SceneOpenGL::Window
     : public Scene::Window
 {
 public:
-    Window(Toplevel* c);
+    Window(Toplevel* c, SceneOpenGL* scene);
     virtual ~Window();
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void pixmapDiscarded();
@@ -204,6 +209,7 @@ private:
     Texture leftTexture;
     Texture rightTexture;
     Texture bottomTexture;
+    SceneOpenGL *m_scene;
 };
 
 class SceneOpenGL::EffectFrame

@@ -220,6 +220,9 @@ private:
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
 
+    static bool sColorCorrect;
+
+    friend class ColorCorrection;
     friend class ShaderManager;
 };
 

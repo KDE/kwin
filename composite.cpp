@@ -55,8 +55,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingprefs.h"
 #include "notifications.h"
 
-#include <kwinglcolorcorrection.h>
-
 #include <stdio.h>
 
 #include <QtCore/QtConcurrentRun>
@@ -142,10 +140,6 @@ void Workspace::slotCompositingOptionsInitialized()
             }
 #endif
 
-            kDebug(1212) << "Color correction:" << options->isColorCorrected();
-            ColorCorrection::instance()->setEnabled(options->isColorCorrected());
-            connect(ColorCorrection::instance(), SIGNAL(changed()), this, SLOT(addRepaintFull()));
-
             scene = new SceneOpenGL(this);
 
             // TODO: Add 30 second delay to protect against screen freezes as well
@@ -210,7 +204,6 @@ void Workspace::finishCompositing()
     if (scene == NULL)
         return;
     m_finishingCompositing = true;
-    ColorCorrection::cleanup();
     delete cm_selection;
     foreach (Client * c, clients)
     scene->windowClosed(c, NULL);

@@ -122,6 +122,18 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
+ColorCorrection* SceneOpenGL::colorCorrection()
+{
+    return m_colorCorrection;
+}
+
+void SceneOpenGL::initColorCorrection()
+{
+    kDebug(1212) << "Color correction:" << options->isColorCorrected();
+    m_colorCorrection->setEnabled(options->isColorCorrected());
+    connect(m_colorCorrection, SIGNAL(changed()), wspace, SLOT(addRepaintFull()));
+}
+
 bool SceneOpenGL::selectMode()
 {
     if (!initDrawableConfigs())
@@ -243,7 +255,7 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, QRegion regi
 void SceneOpenGL::windowAdded(Toplevel* c)
 {
     assert(!windows.contains(c));
-    windows[ c ] = new Window(c);
+    windows[ c ] = new Window(c, this);
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
@@ -375,7 +387,7 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 // SceneOpenGL::Window
 //****************************************
 
-SceneOpenGL::Window::Window(Toplevel* c)
+SceneOpenGL::Window::Window(Toplevel* c, SceneOpenGL* scene)
     : Scene::Window(c)
     , texture()
     , topTexture()
@@ -383,6 +395,7 @@ SceneOpenGL::Window::Window(Toplevel* c)
     , rightTexture()
     , bottomTexture()
 {
+    m_scene = scene;
 }
 
 SceneOpenGL::Window::~Window()
@@ -524,8 +537,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
             data.shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
             data.shader->setUniform(GLShader::Offset, QVector2D(x(), y()));
         }
-        if (options->isColorCorrected())
-            ColorCorrection::instance()->setupForOutput(data.screen());
+        m_scene->colorCorrection()->setupForOutput(data.screen());
         sceneShader = true;
     }
 
@@ -883,8 +895,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
     shader->setUniform(GLShader::Saturation,         saturation);
     shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
 
-    if (options->isColorCorrected())
-        ColorCorrection::instance()->setupForOutput(screen);
+    m_scene->colorCorrection()->setupForOutput(screen);
 }
 
 void SceneOpenGL::Window::prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, int screen, GLTexture *tex)

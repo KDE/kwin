@@ -31,6 +31,7 @@ int surfaceHasSubPost;
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
+    , m_colorCorrection(new ColorCorrection(this))
 {
     if (!initRenderingContext())
         return;
@@ -51,6 +52,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         return;
     }
     debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+    initColorCorrection();
     if (!ShaderManager::instance()->isValid()) {
         kError(1212) << "Shaders not valid, ES compositing not possible";
         return;

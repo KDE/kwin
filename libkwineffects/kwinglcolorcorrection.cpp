@@ -221,23 +221,8 @@ static const char s_ccAlteration[] =
  * Color Correction
  */
 
-ColorCorrection *ColorCorrection::s_colorCorrection = NULL;
-
-ColorCorrection *ColorCorrection::instance()
-{
-    if (!s_colorCorrection)
-        s_colorCorrection = new ColorCorrection;
-    return s_colorCorrection;
-}
-
-void ColorCorrection::cleanup()
-{
-    delete s_colorCorrection;
-    s_colorCorrection = NULL;
-}
-
-ColorCorrection::ColorCorrection()
-    : QObject()
+ColorCorrection::ColorCorrection(QObject *parent)
+    : QObject(parent)
     , d_ptr(new ColorCorrectionPrivate(this))
 {
 
@@ -305,6 +290,7 @@ void ColorCorrection::setEnabled(bool enabled)
 #endif
 
     d->m_enabled = enabled;
+    GLShader::sColorCorrect = enabled;
     kDebug(1212) << enabled;
 }
 
@@ -357,11 +343,6 @@ void ColorCorrection::reset()
 
 QByteArray ColorCorrection::prepareFragmentShader(const QByteArray &sourceCode)
 {
-    Q_D(ColorCorrection);
-
-    if (!d->m_enabled)
-        return sourceCode;
-
     bool sourceIsValid = true;
 
     /*

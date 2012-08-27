@@ -39,6 +39,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , m_resetModelViewProjectionMatrix(true)
     , init_ok(false)
+    , m_colorCorrection(new ColorCorrection(this))
 {
     initGLX();
     // check for FBConfig support
@@ -101,6 +102,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     }
 
     debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+
+    initColorCorrection();
 
     // scene shader setup
     if (GLPlatform::instance()->supports(GLSL)) {
