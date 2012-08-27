@@ -219,14 +219,14 @@ void SceneOpenGL::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region,
                 regionForScreen = region.intersected(Workspace::self()->screenGeometry(screen));
 
             data.setScreen(screen);
-            performPaint(w, mask, regionForScreen, data);
+            performPaintWindow(w, mask, regionForScreen, data);
         }
     } else {
-        performPaint(w, mask, region, data);
+        performPaintWindow(w, mask, region, data);
     }
 }
 
-void SceneOpenGL::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {
         if (lanczos_filter.isNull()) {

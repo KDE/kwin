@@ -57,7 +57,6 @@ protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintBackground(QRegion region);
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
@@ -75,6 +74,7 @@ private:
     void setupModelViewProjectionMatrix();
 #endif
     void flushBuffer(int mask, QRegion damage);
+    void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     GC gcroot;
     class FBConfigInfo
     {
