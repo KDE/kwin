@@ -522,16 +522,6 @@ void ColorCorrectionPrivate::setupCCTextures()
     if (m_ccTextureUnit < 0) {
         GLint maxUnits = 0;
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
-
-        if (maxUnits < 2) {
-            kWarning(1212) << "insufficient maximum number of texture units allowed:" << maxUnits;
-            kWarning(1212) << "color correction will be disabled";
-            m_hasError = true;
-            m_ccTextureUnit = 0;
-            q->setEnabled(false);
-            return;
-        }
-
         m_ccTextureUnit = maxUnits - 1;
     }
 
