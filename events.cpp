@@ -444,9 +444,7 @@ bool Workspace::workspaceEvent(XEvent * e)
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
                     || (m_compositor->overlayWindow() != None && e->xexpose.window == m_compositor->overlayWindow()))) { // overlay needs repainting
-            if (m_compositor) {
-                m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
-            }
+            m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
         }
         break;
     case VisibilityNotify:
@@ -455,20 +453,16 @@ bool Workspace::workspaceEvent(XEvent * e)
             m_compositor->setOverlayWindowVisibility((e->xvisibility.state != VisibilityFullyObscured));
             if (!was_visible && m_compositor->isOverlayWindowVisible()) {
                 // hack for #154825
-                if (m_compositor) {
-                    m_compositor->addRepaintFull();
-                    QTimer::singleShot(2000, m_compositor, SLOT(addRepaintFull()));
-                }
+                m_compositor->addRepaintFull();
+                QTimer::singleShot(2000, m_compositor, SLOT(addRepaintFull()));
             }
-            if (m_compositor) {
-                m_compositor->scheduleRepaint();
-            }
+            m_compositor->scheduleRepaint();
         }
         break;
     default:
         if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
             XRRUpdateConfiguration(e);
-            if (compositing() && m_compositor) {
+            if (compositing()) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
                 // catch refresh rate changes
