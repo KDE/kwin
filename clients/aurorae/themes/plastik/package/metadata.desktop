@@ -1,6 +1,21 @@
 [Desktop Entry]
 Name=Plastik QML
+Name[cs]=Plastik QML
+Name[es]=Plastik QML
+Name[nl]=Plastik QML
+Name[pt]=Plastik QML
+Name[pt_BR]=Plastik QML
+Name[sv]=Plastik QML
+Name[uk]=Plastik QML
+Name[x-test]=xxPlastik QMLxx
 Comment=The classic theme known from KDE 3
+Comment[es]=El tema clásico conocido desde KDE 3
+Comment[nl]=Het klassieke thema bekend van KDE 3
+Comment[pt]=O tema clássico conhecido do KDE 3
+Comment[pt_BR]=Tema clássico do KDE 3
+Comment[sv]=Det klassiska temat känt från KDE 3
+Comment[uk]=Класична тема, відома з часів KDE 3
+Comment[x-test]=xxThe classic theme known from KDE 3xx
 
 X-Plasma-MainScript=ui/main.qml
 X-KDE-PluginInfo-Author=Martin Gräßlin
