@@ -77,11 +77,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+Compositor *Compositor::s_compositor = NULL;
 extern int currentRefreshRate();
 
 //****************************************
 // Workspace
 //****************************************
+
+Compositor *Compositor::createCompositor(QObject *parent)
+{
+    Q_ASSERT(!s_compositor);
+    s_compositor = new Compositor(parent);
+    return s_compositor;
+}
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
@@ -750,8 +758,8 @@ bool Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
     unredirect = false;
-    workspace()->compositor()->checkUnredirect(true);
-    workspace()->compositor()->scene()->windowAdded(this);
+    Compositor::self()->checkUnredirect(true);
+    Compositor::self()->scene()->windowAdded(this);
     return true;
 }
 
@@ -760,7 +768,7 @@ void Toplevel::finishCompositing()
     damageRatio = 0.0;
     if (damage_handle == None)
         return;
-    workspace()->compositor()->checkUnredirect(true);
+    Compositor::self()->checkUnredirect(true);
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         discardWindowPixmap();
         delete effect_window;
@@ -874,7 +882,7 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 
 bool Toplevel::compositing() const
 {
-    Compositor *c = workspace()->compositor();
+    Compositor *c = Compositor::self();
     return c && c->hasScene();
 }
 
@@ -1035,7 +1043,7 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
     if (!compositing())
         return;
-    workspace()->compositor()->addRepaint(r2);
+    Compositor::self()->addRepaint(r2);
 }
 
 bool Toplevel::updateUnredirectedState()
@@ -1063,7 +1071,7 @@ void Toplevel::suspendUnredirect(bool suspend)
     if (unredirectSuspend == suspend)
         return;
     unredirectSuspend = suspend;
-    workspace()->compositor()->checkUnredirect();
+    Compositor::self()->checkUnredirect();
 }
 
 //****************************************

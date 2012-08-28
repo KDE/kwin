@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COMPOSITE_H
 
 #include <QtCore/QObject>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QTimer>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QBasicTimer>
@@ -38,7 +39,6 @@ class Scene;
 class Compositor : public QObject {
     Q_OBJECT
 public:
-    Compositor(QObject *workspace);
     ~Compositor();
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
@@ -93,6 +93,52 @@ public:
         return m_scene;
     }
 
+    /**
+     * @brief Factory Method to create the Compositor singleton.
+     *
+     * This method is mainly used by Workspace to create the Compositor Singleton as a child
+     * of the Workspace.
+     *
+     * To actually access the Compositor instance use @link self.
+     *
+     * @param parent The parent object
+     * @return :Compositor* Created Compositor if not already created
+     * @warning This method is not Thread safe.
+     * @see self
+     **/
+    static Compositor *createCompositor(QObject *parent);
+    /**
+     * @brief Singleton getter for the Compositor object.
+     *
+     * Ensure that the Compositor has been created through createCompositor prior to access
+     * this method.
+     *
+     * @return :Compositor* The Compositor instance
+     * @see createCompositor
+     **/
+    static Compositor *self() {
+        Q_ASSERT(s_compositor);
+        return s_compositor;
+    }
+    /**
+     * @brief Checks whether the Compositor has already been created by the Workspace.
+     *
+     * This method can be used to check whether self will return the Compositor instance or @c null.
+     *
+     * @return bool @c true if the Compositor has been created, @c false otherwise
+     **/
+    static bool isCreated() {
+        return s_compositor != NULL;
+    }
+    /**
+     * @brief Static check to test whether the Compositor is available and active.
+     *
+     * @return bool @c true if there is a Compositor and it is active, @c false otherwise
+     **/
+    static bool compositing() {
+        return s_compositor != NULL && s_compositor->isActive();
+    }
+
 public Q_SLOTS:
     void addRepaintFull();
     /**
@@ -142,6 +188,7 @@ private Q_SLOTS:
     void slotConfigChanged();
 
 private:
+    Compositor(QObject *workspace);
     /**
      * Suspends or Resumes the Compositor.
      * That is stops the Scene in case of @p suspend and restores otherwise.
@@ -181,6 +228,8 @@ private:
     bool m_finishing; // finish() sets this variable while shutting down
     int m_timeSinceLastVBlank, m_nextFrameDelay;
     Scene *m_scene;
+
+    static Compositor *s_compositor;
 };
 }
 

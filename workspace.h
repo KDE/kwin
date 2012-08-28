@@ -537,10 +537,6 @@ public:
         return movingClient;
     }
 
-    Compositor* compositor() const {
-        return m_compositor;
-    }
-
 public slots:
     // Keybindings
     void slotSwitchDesktopNext();

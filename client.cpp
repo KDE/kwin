@@ -617,7 +617,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapTop.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
+        if (effects->compositingType() == OpenGLCompositing) {
             decorationPixmapTop = QPixmap(tr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -636,7 +636,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapBottom.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
+        if (effects->compositingType() == OpenGLCompositing) {
             decorationPixmapBottom = QPixmap(br.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -655,7 +655,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapLeft.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
+        if (effects->compositingType() == OpenGLCompositing) {
             decorationPixmapLeft = QPixmap(lr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -674,7 +674,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapRight.handle());
         }
 
-        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
+        if (effects->compositingType() == OpenGLCompositing) {
             decorationPixmapRight = QPixmap(rr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -1269,8 +1269,8 @@ void Client::internalShow(allowed_t)
             XMapWindow(display(), inputId());
         updateHiddenPreview();
     }
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
+    if (Compositor::isCreated()) {
+        Compositor::self()->checkUnredirect();
     }
 }
 
@@ -1286,8 +1286,8 @@ void Client::internalHide(allowed_t)
         updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
+    if (Compositor::isCreated()) {
+        Compositor::self()->checkUnredirect();
     }
 }
 
@@ -1305,8 +1305,8 @@ void Client::internalKeep(allowed_t)
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    if (workspace()->compositor()) {
-        workspace()->compositor()->checkUnredirect();
+    if (Compositor::isCreated()) {
+        Compositor::self()->checkUnredirect();
     }
 }
 

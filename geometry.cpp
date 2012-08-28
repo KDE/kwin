@@ -2027,9 +2027,9 @@ void Client::move(int x, int y, ForceGeometry_t force)
     updateWindowRules(Rules::Position);
     workspace()->checkActiveScreen(this);
     workspace()->updateStackingOrder();
-    if (workspace()->compositor()) {
+    if (Compositor::isCreated()) {
         // TODO: move out of geometry.cpp, is this really needed here?
-        workspace()->compositor()->checkUnredirect();
+        Compositor::self()->checkUnredirect();
     }
     // client itself is not damaged
     const QRect deco_rect = visibleRect();
