@@ -1,0 +1,15 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.kwin.Compositing">
+    <property name="active" type="b" access="read"/>
+    <property name="compositingPossible" type="b" access="read"/>
+    <property name="compositingNotPossibleReason" type="s" access="read"/>
+    <property name="openGLIsBroken" type="b" access="read"/>
+    <property name="compositingType" type="s" access="read"/>
+    <signal name="compositingToggled">
+      <arg name="active" type="b" direction="out"/>
+    </signal>
+    <method name="toggleCompositing">
+    </method>
+  </interface>
+</node>

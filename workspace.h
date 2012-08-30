@@ -397,15 +397,6 @@ public:
 
     // KDE4 remove me - And it's also in the DCOP interface :(
     void showWindowMenuAt(unsigned long id, int x, int y);
-    void toggleCompositing();
-    void loadEffect(const QString& name);
-    void toggleEffect(const QString& name);
-    void reconfigureEffect(const QString& name);
-    void unloadEffect(const QString& name);
-    QString supportInformationForEffect(const QString& name) const;
-
-    QStringList loadedEffects() const;
-    QStringList listOfEffects() const;
 
 
     /**
@@ -455,24 +446,10 @@ public:
     void nextDesktop();
     void previousDesktop();
     void circulateDesktopApplications();
-    bool compositingActive();
     bool waitForCompositingSetup();
     bool stopActivity(const QString &id);
     bool startActivity(const QString &id);
-    QStringList activeEffects() const;
     QString supportInformation() const;
-    bool compositingPossible() const;
-    QString compositingNotPossibleReason() const;
-    bool openGLIsBroken() const;
-    /**
-     * Returns the currently used Compositor (Scene):
-     * @li @c none No Compositing
-     * @li @c xrender XRender
-     * @li @c gl1 OpenGL 1
-     * @li @c gl2 OpenGL 2
-     * @li @c gles OpenGL ES 2
-     **/
-    QString compositingType();
 
     void setCurrentScreen(int new_screen);
 
@@ -645,7 +622,6 @@ private slots:
     void handleActivityReply();
 
 Q_SIGNALS:
-    Q_SCRIPTABLE void compositingToggled(bool active);
     /**
      * Emitted after the Workspace has setup the complete initialization process.
      * This can be used to connect to for performing post-workspace initialization.

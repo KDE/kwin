@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QTimer>
-#include <QtCore/QElapsedTimer>
 #include <QtCore/QBasicTimer>
 #include <QRegion>
 
@@ -38,6 +37,34 @@ class Scene;
 
 class Compositor : public QObject {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Compositing")
+    /**
+     * @brief Whether the Compositor is active. That is a Scene is present and the Compositor is
+     * not shutting down itself.
+     **/
+    Q_PROPERTY(bool active READ isActive)
+    /**
+     * @brief Whether compositing is possible. Mostly means whether the required X extensions
+     * are available.
+     **/
+    Q_PROPERTY(bool compositingPossible READ isCompositingPossible)
+    /**
+     * @brief The reason why compositing is not possible. Empty String if compositing is possible.
+     **/
+    Q_PROPERTY(QString compositingNotPossibleReason READ compositingNotPossibleReason)
+    /**
+     * @brief Whether OpenGL has failed badly in the past (crash) and is considered as broken.
+     **/
+    Q_PROPERTY(bool openGLIsBroken READ isOpenGLBroken)
+    /**
+     * The type of the currently used Scene:
+     * @li @c none No Compositing
+     * @li @c xrender XRender
+     * @li @c gl1 OpenGL 1
+     * @li @c gl2 OpenGL 2
+     * @li @c gles OpenGL ES 2
+     **/
+    Q_PROPERTY(QString compositingType READ compositingType)
 public:
     ~Compositor();
     // when adding repaints caused by a window, you probably want to use
@@ -45,11 +72,6 @@ public:
     void addRepaint(const QRect& r);
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
-    /**
-     * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
-     * addition to show a notification on how to revert the compositing state.
-     **/
-    void toggleCompositing();
     // Mouse polling
     void startMousePolling();
     void stopMousePolling();
@@ -139,8 +161,19 @@ public:
         return s_compositor != NULL && s_compositor->isActive();
     }
 
+    // D-Bus: getters for Properties, see documentation on the property
+    bool isCompositingPossible() const;
+    QString compositingNotPossibleReason() const;
+    bool isOpenGLBroken() const;
+    QString compositingType() const;
+
 public Q_SLOTS:
     void addRepaintFull();
+    /**
+     * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
+     * addition to show a notification on how to revert the compositing state.
+     **/
+    Q_SCRIPTABLE void toggleCompositing();
     /**
      * Actual slot to perform the toggling compositing.
      * That is if the Compositor is suspended it will be resumed and if the Compositor is active
@@ -163,8 +196,10 @@ public Q_SLOTS:
     void updateCompositeBlocking();
     void updateCompositeBlocking(KWin::Client* c);
 
+    // For the D-Bus interface
+
 Q_SIGNALS:
-    void compositingToggled(bool active);
+    Q_SCRIPTABLE void compositingToggled(bool active);
 
 protected:
     void timerEvent(QTimerEvent *te);

@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  http://ktown.kde.org/~fredrik/composite_howto.html
 
 */
+#include "composite.h"
+#include "compositingadaptor.h"
 
 #include <config-X11.h>
 
@@ -54,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
-#include "composite.h"
 #include "notifications.h"
 
 #include <stdio.h>
@@ -64,6 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QTimerEvent>
 #include <QDateTime>
+#include <QDBusConnection>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
@@ -105,6 +107,10 @@ Compositor::Compositor(QObject* workspace)
     , m_nextFrameDelay(0)
     , m_scene(NULL)
 {
+    new CompositingAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/Compositor", this);
+    dbus.registerService("org.kde.kwin.Compositing");
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
@@ -373,13 +379,6 @@ void Compositor::toggleCompositing()
             Notify::raise(Notify::CompositingSuspendedDbus, message);
         }
     }
-}
-
-QStringList Workspace::activeEffects() const
-{
-    if (effects)
-        return static_cast< EffectsHandlerImpl* >(effects)->activeEffects();
-    return QStringList();
 }
 
 void Compositor::updateCompositeBlocking()
@@ -698,33 +697,30 @@ void Compositor::restartKWin(const QString &reason)
     system(cmd);
 }
 
-/*****************************************************
- * Compositing related D-Bus interface from Workspace
- ****************************************************/
-bool Workspace::compositingPossible() const
+bool Compositor::isCompositingPossible() const
 {
     return CompositingPrefs::compositingPossible();
 }
 
-QString Workspace::compositingNotPossibleReason() const
+QString Compositor::compositingNotPossibleReason() const
 {
     return CompositingPrefs::compositingNotPossibleReason();
 }
 
-bool Workspace::openGLIsBroken() const
+bool Compositor::isOpenGLBroken() const
 {
     return CompositingPrefs::openGlIsBroken();
 }
 
-QString Workspace::compositingType()
+QString Compositor::compositingType() const
 {
-    // the returned strings are considered as identifiers and may not be translated
-    if (!effects) {
+    if (!hasScene()) {
         return "none";
     }
-    if (effects->compositingType() == XRenderCompositing) {
+    switch (m_scene->compositingType()) {
+    case XRenderCompositing:
         return "xrender";
-    } else if (effects->compositingType() == OpenGLCompositing) {
+    case OpenGLCompositing:
 #ifdef KWIN_HAVE_OPENGLES
         return "gles";
 #else
@@ -734,9 +730,15 @@ QString Workspace::compositingType()
             return "gl1";
         }
 #endif
+    case NoCompositing:
+    default:
+        return "none";
     }
-    return "none";
 }
+
+/*****************************************************
+ * Workspace
+ ****************************************************/
 
 bool Workspace::compositing() const
 {

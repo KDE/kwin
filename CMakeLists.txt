@@ -78,6 +78,7 @@ add_subdirectory( tabbox )
 
 set(kwin_KDEINIT_SRCS
    workspace.cpp 
+   dbusinterface.cpp
    client.cpp 
    tabgroup.cpp
    placement.cpp 
@@ -148,7 +149,9 @@ if(KWIN_BUILD_SCREENEDGES)
     )
 endif(KWIN_BUILD_SCREENEDGES)
 
-qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
+qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface )
+qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml composite.h KWin::Compositor )
+qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin::EffectsHandlerImpl )
 
 qt4_add_dbus_interface( kwin_KDEINIT_SRCS
   ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/org.kde.KSMServerInterface.xml ksmserver_interface)

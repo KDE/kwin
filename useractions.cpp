@@ -1200,53 +1200,6 @@ void Workspace::showWindowMenuAt(unsigned long, int, int)
     slotWindowOperations();
 }
 
-void Workspace::loadEffect(const QString& name)
-{
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->loadEffect(name);
-}
-
-void Workspace::toggleEffect(const QString& name)
-{
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->toggleEffect(name);
-}
-
-void Workspace::unloadEffect(const QString& name)
-{
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->unloadEffect(name);
-}
-
-void Workspace::reconfigureEffect(const QString& name)
-{
-    if (effects)
-        static_cast<EffectsHandlerImpl*>(effects)->reconfigureEffect(name);
-}
-
-QStringList Workspace::loadedEffects() const
-{
-    QStringList listModulesLoaded;
-    if (effects)
-        listModulesLoaded = static_cast<EffectsHandlerImpl*>(effects)->loadedEffects();
-    return listModulesLoaded;
-}
-
-QStringList Workspace::listOfEffects() const
-{
-    QStringList listModules;
-    if (effects)
-        listModules = static_cast<EffectsHandlerImpl*>(effects)->listOfEffects();
-    return listModules;
-}
-
-QString Workspace::supportInformationForEffect(const QString& name) const
-{
-    if (effects)
-        return static_cast<EffectsHandlerImpl*>(effects)->supportInformation(name);
-    return QString();
-}
-
 void Workspace::slotActivateAttentionWindow()
 {
     if (attention_chain.count() > 0)
