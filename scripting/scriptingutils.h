@@ -131,7 +131,9 @@ void callGlobalShortcutCallback(T script, QObject *sender)
         return;
     }
     QScriptValue value(it.value());
-    value.call();
+    QScriptValueList arguments;
+    arguments << value.engine()->newQObject(a);
+    value.call(QScriptValue(), arguments);
 }
 
 template<class T>
@@ -163,6 +165,25 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
     } else {
         it->append(context->argument(1));
     }
+    return engine->newVariant(true);
+}
+
+template<class T>
+QScriptValue registerUserActionsMenu(QScriptContext *context, QScriptEngine *engine)
+{
+    T script = qobject_cast<T>(context->callee().data().toQObject());
+    if (!script) {
+        return engine->undefinedValue();
+    }
+    if (!validateParameters(context, 1, 1)) {
+        return engine->undefinedValue();
+    }
+    if (!context->argument(0).isFunction()) {
+        context->throwError(QScriptContext::SyntaxError, i18nc("KWin Scripting error thrown due to incorrect argument",
+                                                               "Argument for registerUserActionsMenu needs to be a callback"));
+        return engine->undefinedValue();
+    }
+    script->registerUseractionsMenuCallback(context->argument(0));
     return engine->newVariant(true);
 }
 
@@ -247,6 +268,14 @@ inline void registerScreenEdgeFunction(QObject *parent, QScriptEngine *engine, Q
     shortcutFunc.setData(engine->newQObject(parent));
     engine->globalObject().setProperty("registerScreenEdge", shortcutFunc);
 }
+
+inline void regesterUserActionsMenuFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
+{
+    QScriptValue shortcutFunc = engine->newFunction(function);
+    shortcutFunc.setData(engine->newQObject(parent));
+    engine->globalObject().setProperty("registerUserActionsMenu", shortcutFunc);
+}
+
 } // namespace KWin
 
 #endif // KWIN_SCRIPTINGUTILS_H

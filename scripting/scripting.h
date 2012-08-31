@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QAction;
 class QDeclarativeView;
 class QDBusPendingCallWatcher;
+class QMenu;
 class QMutex;
 class QScriptEngine;
 class QScriptValue;
@@ -43,6 +44,7 @@ typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
 
 namespace KWin
 {
+class Client;
 class ScriptUnloaderAgent;
 class WorkspaceWrapper;
 
@@ -61,6 +63,59 @@ public:
 
     void printMessage(const QString &message);
     void registerShortcut(QAction *a, QScriptValue callback);
+    /**
+     * @brief Registers the given @p callback to be invoked whenever the UserActionsMenu is about
+     * to be showed. In the callback the script can create a further sub menu or menu entry to be
+     * added to the UserActionsMenu.
+     *
+     * @param callback Script method to execute when the UserActionsMenu is about to be shown.
+     * @return void
+     * @see actionsForUserActionMenu
+     **/
+    void registerUseractionsMenuCallback(QScriptValue callback);
+    /**
+     * @brief Creates actions for the UserActionsMenu by invoking the registered callbacks.
+     *
+     * This method invokes all the callbacks previously registered with registerUseractionsMenuCallback.
+     * The Client @p c is passed in as an argument to the invoked method.
+     *
+     * The invoked method is supposed to return a JavaScript object containing either the menu or
+     * menu entry to be added. In case the callback returns a null or undefined or any other invalid
+     * value, it is not considered for adding to the menu.
+     *
+     * The JavaScript object structure for a menu entry looks like the following:
+     * @code
+     * {
+     *     title: "My Menu Entry",
+     *     checkable: true,
+     *     checked: false,
+     *     triggered: function (action) {
+     *         // callback when the menu entry is triggered with the QAction as argument
+     *     }
+     * }
+     * @endcode
+     *
+     * To construct a complete Menu the JavaScript object looks like the following:
+     * @code
+     * {
+     *     title: "My Menu Title",
+     *     items: [{...}, {...}, ...] // list of menu entries as described above
+     * }
+     * @endcode
+     *
+     * The returned JavaScript object is introspected and for a menu entry a QAction is created,
+     * while for a menu a QMenu is created and QActions for the individual entries. Of course it
+     * is allowed to have nested structures.
+     *
+     * All created objects are (grand) children to the passed in @p parent menu, so that they get
+     * deleted whenever the menu is destroyed.
+     *
+     * @param c The Client for which the menu is invoked, passed to the callback
+     * @param parent The Parent for the created Menus or Actions
+     * @return QList< QAction* > List of QActions obtained from asking the registered callbacks
+     * @see registerUseractionsMenuCallback
+     **/
+    QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
 
     KConfigGroup config() const;
     const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
@@ -80,6 +135,13 @@ public Q_SLOTS:
 private Q_SLOTS:
     void globalShortcutTriggered();
     void borderActivated(ElectricBorder edge);
+    /**
+     * @brief Slot invoked when a menu action is destroyed. Used to remove the action and callback
+     * from the map of actions.
+     *
+     * @param object The destroyed action
+     **/
+    void actionDestroyed(QObject *object);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void print(const QString &text);
@@ -105,6 +167,38 @@ protected:
     void installScriptFunctions(QScriptEngine *engine);
 
 private:
+    /**
+     * @brief Parses the @p value to either a QMenu or QAction.
+     *
+     * @param value The ScriptValue describing either a menu or action
+     * @param parent The parent to use for the created menu or action
+     * @return QAction* The parsed action or menu action, if parsing fails returns @c null.
+     **/
+    QAction *scriptValueToAction(QScriptValue &value, QMenu *parent);
+    /**
+     * @brief Creates a new QAction from the provided data and registers it for invoking the
+     * @p callback when the action is triggered.
+     *
+     * The created action is added to the map of actions and callbacks shared with the global
+     * shortcuts.
+     *
+     * @param title The title of the action
+     * @param checkable Whether the action is checkable
+     * @param checked Whether the checkable action is checked
+     * @param callback The callback to invoke when the action is triggered
+     * @param parent The parent to be used for the new created action
+     * @return QAction* The created action
+     **/
+    QAction *createAction(const QString &title, bool checkable, bool checked, QScriptValue &callback, QMenu *parent);
+    /**
+     * @brief Parses the @p items and creates a QMenu from it.
+     *
+     * @param title The title of the Menu.
+     * @param items JavaScript Array containing Menu items.
+     * @param parent The parent to use for the new created menu
+     * @return QAction* The menu action for the new Menu
+     **/
+    QAction *createMenu(const QString &title, QScriptValue &items, QMenu *parent);
     int m_scriptId;
     QFile m_scriptFile;
     QString m_pluginName;
@@ -113,6 +207,11 @@ private:
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
     QHash<int, QScriptValue> m_callbacks;
+    /**
+     * @brief List of registered functions to call when the UserActionsMenu is about to show
+     * to add further entries.
+     **/
+    QList<QScriptValue> m_userActionsMenuCallbacks;
 };
 
 class Script : public AbstractScript
@@ -205,6 +304,15 @@ public:
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE bool isScriptLoaded(const QString &pluginName) const;
     Q_SCRIPTABLE Q_INVOKABLE bool unloadScript(const QString &pluginName);
+
+    /**
+     * @brief Invokes all registered callbacks to add actions to the UserActionsMenu.
+     *
+     * @param c The Client for which the UserActionsMenu is about to be shown
+     * @param parent The parent menu to which to add created child menus and items
+     * @return QList< QAction* > List of all actions aggregated from all scripts.
+     **/
+    QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
 
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);

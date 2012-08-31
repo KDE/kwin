@@ -378,6 +378,12 @@ public:
         return client_keys;
     }
 
+#ifdef KWIN_BUILD_SCRIPTING
+    Scripting *scripting() {
+        return m_scripting;
+    }
+#endif
+
     /**
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
