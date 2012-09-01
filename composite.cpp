@@ -245,6 +245,8 @@ void Compositor::slotCompositingOptionsInitialized()
     foreach (Unmanaged * c, Workspace::self()->unmanagedList())
         c->setupCompositing();
 
+    emit compositingToggled(true);
+
     // render at least once
     compositeTimer.stop();
     performCompositing();
@@ -299,6 +301,7 @@ void Compositor::finish()
     while (!Workspace::self()->deletedList().isEmpty())
         Workspace::self()->deletedList().first()->discard(Allowed);
     m_finishing = false;
+    emit compositingToggled(false);
 }
 
 // OpenGL self-check failed, fallback to XRender
@@ -354,13 +357,12 @@ void Compositor::slotReinitialize()
     if (effects) { // setup() may fail
         effects->reconfigure();
     }
-    emit compositingToggled(!m_suspended);
 }
 
 // for the shortcut
 void Compositor::slotToggleCompositing()
 {
-    suspendResume(!m_suspended);
+    setCompositing(m_suspended);
 }
 
 // for the dbus call
@@ -391,7 +393,7 @@ void Compositor::updateCompositeBlocking(Client *c)
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
             if (!m_blocked) // do NOT attempt to call suspend(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection);
             m_blocked = true;
         }
     }
@@ -408,17 +410,37 @@ void Compositor::updateCompositeBlocking(Client *c)
         if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
             m_blocked = false;
             if (m_suspended)
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection);
         }
     }
 }
 
-void Compositor::suspendResume(bool suspend)
+void Compositor::suspend()
 {
-    m_suspended = suspend;
+    if (m_suspended) {
+        return;
+    }
+    m_suspended = true;
     finish();
-    setup(); // will do nothing if suspended
-    emit compositingToggled(!m_suspended);
+}
+
+void Compositor::resume()
+{
+    if (!m_suspended && hasScene()) {
+        return;
+    }
+    m_suspended = false;
+    // signal toggled is eventually emitted from within setup
+    setup();
+}
+
+void Compositor::setCompositing(bool active)
+{
+    if (active) {
+        resume();
+    } else {
+        suspend();
+    }
 }
 
 void Compositor::restart()

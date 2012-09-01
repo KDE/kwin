@@ -172,8 +172,62 @@ public Q_SLOTS:
     /**
      * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
      * addition to show a notification on how to revert the compositing state.
+     * @see resume
+     * @see suspend
+     * @deprecated Use suspend or resume instead
      **/
     Q_SCRIPTABLE void toggleCompositing();
+    /**
+     * @brief Suspends the Compositor if it is currently active.
+     *
+     * Note: it is possible that the Compositor is not able to suspend. Use @link isActive to check
+     * whether the Compositor has been suspended.
+     *
+     * @return void
+     * @see resume
+     * @see isActive
+     **/
+    Q_SCRIPTABLE void suspend();
+    /**
+     * @brief Resumes the Compositor if it is currently suspended.
+     *
+     * Note: it is possible that the Compositor cannot be resumed, that is there might be Clients
+     * blocking the usage of Compositing or the Scene might be broken. Use @link isActive to check
+     * whether the Compositor has been resumed. Also check @link isCompositingPossible and
+     * @link isOpenGLBroken.
+     *
+     * Note: The starting of the Compositor can require some time and is partially done threaded.
+     * After this method returns the setup may not have been completed.
+     *
+     * @return void
+     * @see suspend
+     * @see isActive
+     * @see isCompositingPossible
+     * @see isOpenGLBroken
+     **/
+    Q_SCRIPTABLE void resume();
+    /**
+     * @brief Tries to suspend or resume the Compositor based on @p active.
+     *
+     * In case the Compositor is already in the asked for state this method is doing nothing. In
+     * case it does not match it is tried to either resume or suspend the Compositor.
+     *
+     * Note: these operations may fail. There is no guarantee that after calling this method to
+     * enable/disable the Compositor, it actually changes to the state. Use @link isActive to check
+     * the actual state of the Compositor.
+     *
+     * Note: The starting of the Compositor can require some time and is partially done threaded.
+     * After this method returns the setup may not have been completed.
+     *
+     * @param active Whether the Compositor should be resumed (@c true) or suspended (@c false)
+     * @return void
+     * @see suspend
+     * @see resume
+     * @see isActive
+     * @see isCompositingPossible
+     * @see isOpenGLBroken
+     **/
+    Q_SCRIPTABLE void setCompositing(bool active);
     /**
      * Actual slot to perform the toggling compositing.
      * That is if the Compositor is suspended it will be resumed and if the Compositor is active
@@ -224,13 +278,6 @@ private Q_SLOTS:
 
 private:
     Compositor(QObject *workspace);
-    /**
-     * Suspends or Resumes the Compositor.
-     * That is stops the Scene in case of @p suspend and restores otherwise.
-     * @param suspend If @c true suspends the Compositor, if @c false starts the Compositor.
-     * TODO: split in two methods: suspend and resume
-     **/
-    void suspendResume(bool suspend = true);
     void setCompositeTimer();
     bool windowRepaintsPending() const;
 
