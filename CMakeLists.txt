@@ -1,6 +1,7 @@
 ########### configure tests ###############
 
 OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+OPTION(KWIN_BUILD_OXYGEN "Enable building of default decoration Oxygen" ON)
 OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
 OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)

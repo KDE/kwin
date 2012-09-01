@@ -36,6 +36,9 @@ PluginMgr::PluginMgr()
 {
     defaultPlugin = (QPixmap::defaultDepth() > 8) ?
                     "kwin3_oxygen" : "kwin3_plastik";
+#ifndef KWIN_BUILD_OXYGEN
+    defaultPlugin = "kwin3_plastik";
+#endif
 #ifdef KWIN_BUILD_DECORATIONS
     loadPlugin("");   // load the plugin specified in cfg file
 #else

@@ -1,5 +1,7 @@
 add_subdirectory( aurorae )
-add_subdirectory( oxygen )
+if(KWIN_BUILD_OXYGEN)
+    add_subdirectory( oxygen )
+endif(KWIN_BUILD_OXYGEN)
 add_subdirectory( plastik )
 add_subdirectory( b2 )
 add_subdirectory( laptop )
