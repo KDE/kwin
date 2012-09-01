@@ -142,6 +142,9 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingFont){
         emit titleFontChanged();
     }
+    if (changed & SettingCompositing) {
+        return false;
+    }
     const KConfig conf("auroraerc");
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
