@@ -1,0 +1,5 @@
+File=translucency.kcfg
+ClassName=TranslucencyConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

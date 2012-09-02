@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "translucency.h"
+// KConfigSkeleton
+#include "translucencyconfig.h"
 
 #include <kconfiggroup.h>
 
@@ -47,18 +49,18 @@ TranslucencyEffect::TranslucencyEffect()
 
 void TranslucencyEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Translucency");
-    decoration = conf.readEntry("Decoration", 1.0);
-    moveresize = conf.readEntry("MoveResize", 0.8);
-    dialogs = conf.readEntry("Dialogs", 1.0);
-    inactive = conf.readEntry("Inactive", 1.0);
-    comboboxpopups = conf.readEntry("ComboboxPopups", 1.0);
-    menus = conf.readEntry("Menus", 1.0);
-    individualmenuconfig = conf.readEntry("IndividualMenuConfig", false);
+    TranslucencyConfig::self()->readConfig();
+    decoration = TranslucencyConfig::decoration()/100.0;
+    moveresize = TranslucencyConfig::moveResize()/100.0;
+    dialogs = TranslucencyConfig::dialogs()/100.0;
+    inactive = TranslucencyConfig::inactive()/100.0;
+    comboboxpopups = TranslucencyConfig::comboboxPopups()/100.0;
+    menus = TranslucencyConfig::menus()/100.0;
+    individualmenuconfig = TranslucencyConfig::individualMenuConfig();
     if (individualmenuconfig) {
-        dropdownmenus = conf.readEntry("DropdownMenus", 1.0);
-        popupmenus = conf.readEntry("PopupMenus", 1.0);
-        tornoffmenus = conf.readEntry("TornOffMenus", 1.0);
+        dropdownmenus = TranslucencyConfig::dropdownMenus()/100.0;
+        popupmenus = TranslucencyConfig::popupMenus()/100.0;
+        tornoffmenus = TranslucencyConfig::tornOffMenus()/100.0;
     } else {
         dropdownmenus = menus;
         popupmenus = menus;

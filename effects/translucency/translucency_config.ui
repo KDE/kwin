@@ -21,7 +21,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="4" column="1" colspan="2">
-       <widget class="QSlider" name="dialogs">
+       <widget class="QSlider" name="kcfg_Dialogs">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -54,7 +54,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>dialogs</cstring>
+         <cstring>kcfg_Dialogs</cstring>
         </property>
        </widget>
       </item>
@@ -73,12 +73,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>decorations</cstring>
+         <cstring>kcfg_Decoration</cstring>
         </property>
        </widget>
       </item>
       <item row="5" column="1" colspan="2">
-       <widget class="QSlider" name="comboboxpopup">
+       <widget class="QSlider" name="kcfg_ComboboxPopups">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -97,7 +97,7 @@
        </widget>
       </item>
       <item row="6" column="1" colspan="2">
-       <widget class="QSlider" name="menus">
+       <widget class="QSlider" name="kcfg_Menus">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -130,7 +130,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>inactive</cstring>
+         <cstring>kcfg_Inactive</cstring>
         </property>
        </widget>
       </item>
@@ -149,7 +149,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>moveresize</cstring>
+         <cstring>kcfg_MoveResize</cstring>
         </property>
        </widget>
       </item>
@@ -168,12 +168,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>comboboxpopup</cstring>
+         <cstring>kcfg_ComboboxPopups</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="1" colspan="2">
-       <widget class="QSlider" name="moveresize">
+       <widget class="QSlider" name="kcfg_MoveResize">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -205,7 +205,7 @@
        </spacer>
       </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QSlider" name="decorations">
+       <widget class="QSlider" name="kcfg_Decoration">
         <property name="minimumSize">
          <size>
           <width>170</width>
@@ -230,7 +230,7 @@
        </widget>
       </item>
       <item row="2" column="1" colspan="2">
-       <widget class="QSlider" name="inactive">
+       <widget class="QSlider" name="kcfg_Inactive">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -292,7 +292,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>menus</cstring>
+         <cstring>kcfg_Menus</cstring>
         </property>
        </widget>
       </item>
@@ -300,7 +300,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="individualmenuconfig">
+    <widget class="QGroupBox" name="kcfg_IndividualMenuConfig">
      <property name="title">
       <string>Set menu translucency independently</string>
      </property>
@@ -326,12 +326,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>dropdownmenus</cstring>
+         <cstring>kcfg_DropdownMenus</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QSlider" name="dropdownmenus">
+       <widget class="QSlider" name="kcfg_DropdownMenus">
         <property name="minimumSize">
          <size>
           <width>170</width>
@@ -370,12 +370,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>popupmenus</cstring>
+         <cstring>kcfg_PopupMenus</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1" colspan="2">
-       <widget class="QSlider" name="popupmenus">
+       <widget class="QSlider" name="kcfg_PopupMenus">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -408,12 +408,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>tornoffmenus</cstring>
+         <cstring>kcfg_TornOffMenus</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="1" colspan="2">
-       <widget class="QSlider" name="tornoffmenus">
+       <widget class="QSlider" name="kcfg_TornOffMenus">
         <property name="minimum">
          <number>10</number>
         </property>
@@ -479,23 +479,23 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>decorations</tabstop>
-  <tabstop>inactive</tabstop>
-  <tabstop>moveresize</tabstop>
-  <tabstop>dialogs</tabstop>
-  <tabstop>comboboxpopup</tabstop>
-  <tabstop>menus</tabstop>
-  <tabstop>individualmenuconfig</tabstop>
-  <tabstop>dropdownmenus</tabstop>
-  <tabstop>popupmenus</tabstop>
-  <tabstop>tornoffmenus</tabstop>
+  <tabstop>kcfg_Decoration</tabstop>
+  <tabstop>kcfg_Inactive</tabstop>
+  <tabstop>kcfg_MoveResize</tabstop>
+  <tabstop>kcfg_Dialogs</tabstop>
+  <tabstop>kcfg_ComboboxPopups</tabstop>
+  <tabstop>kcfg_Menus</tabstop>
+  <tabstop>kcfg_IndividualMenuConfig</tabstop>
+  <tabstop>kcfg_DropdownMenus</tabstop>
+  <tabstop>kcfg_PopupMenus</tabstop>
+  <tabstop>kcfg_TornOffMenus</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>individualmenuconfig</sender>
+   <sender>kcfg_IndividualMenuConfig</sender>
    <signal>toggled(bool)</signal>
-   <receiver>menus</receiver>
+   <receiver>kcfg_Menus</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
