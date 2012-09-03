@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QBasicTimer>
 #include <QRegion>
 
 class KSelectionOwner;
