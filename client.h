@@ -682,6 +682,7 @@ private:
     bool processDecorationButtonPress(int button, int state, int x, int y, int x_root, int y_root,
                                       bool ignoreMenu = false);
     Client* findAutogroupCandidate() const;
+    void resetShowingDesktop(bool keep_hidden);
 
 protected:
     virtual void debug(QDebug& stream) const;
@@ -736,7 +737,7 @@ signals:
     /**
      * Emitted whenever the Client's block compositing state changes.
      **/
-    void blockingCompositingChanged();
+    void blockingCompositingChanged(KWin::Client *client);
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1

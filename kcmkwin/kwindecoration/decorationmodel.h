@@ -40,7 +40,8 @@ class DecorationModelData
 public:
     enum DecorationType {
         NativeDecoration = 0,
-        AuroraeDecoration = 1
+        AuroraeDecoration = 1,
+        QmlDecoration = 2
     };
     QString name;
     QString libraryName;
@@ -53,8 +54,14 @@ public:
     QString version;
     QString license;
     QString auroraeName;
+    QString qmlPath;
     KDecorationDefines::BorderSize borderSize;
     KDecorationDefines::BorderSize buttonSize;
+    /**
+     * Whether the window gets closed on double clicking the Menu Button.
+     * Only applies for Aurorae and QML Decoration.
+     **/
+    bool closeDblClick;
 
     static bool less(const DecorationModelData& a, const DecorationModelData& b) {
         return a.name < b.name;
@@ -79,7 +86,9 @@ public:
         PackageLicenseRole = Qt::UserRole + 10,
         BorderSizeRole = Qt::UserRole + 11,
         BorderSizesRole = Qt::UserRole + 12,
-        ButtonSizeRole = Qt::UserRole + 13
+        ButtonSizeRole = Qt::UserRole + 13,
+        QmlMainScriptRole = Qt::UserRole + 14,
+        CloseOnDblClickRole = Qt::UserRole + 15
     };
     DecorationModel(KSharedConfigPtr config, QObject* parent = 0);
     ~DecorationModel();
@@ -105,10 +114,17 @@ public:
 
     QModelIndex indexOfLibrary(const QString& libraryName) const;
     QModelIndex indexOfName(const QString& decoName) const;
-    QModelIndex indexOfAuroraeName(const QString& auroraeName) const;
+    QModelIndex indexOfAuroraeName(const QString& auroraeName, const QString& type) const;
 
     void regeneratePreviews(int firstIndex = 0);
     void stopPreviewGeneration();
+
+    Q_INVOKABLE QVariant readConfig(const QString &themeName, const QString &key, const QVariant &defaultValue = QVariant());
+
+    void notifyConfigChanged(const QModelIndex &index);
+
+Q_SIGNALS:
+    void configChanged(QString themeName);
 public slots:
     void regeneratePreview(const QModelIndex& index, const QSize& size);
 private slots:

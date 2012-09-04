@@ -29,6 +29,8 @@ class QDeclarativeItem;
 class QGraphicsSceneMouseEvent;
 class QGraphicsScene;
 class QGraphicsView;
+class KConfig;
+class KConfigGroup;
 
 namespace Aurorae
 {
@@ -38,11 +40,6 @@ class AuroraeClient;
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
     Q_OBJECT
-    Q_PROPERTY(QString leftButtons READ leftButtons NOTIFY buttonsChanged)
-    Q_PROPERTY(QString rightButtons READ rightButtons NOTIFY buttonsChanged)
-    Q_PROPERTY(bool customButtonPositions READ customButtonPositions NOTIFY buttonsChanged)
-    Q_PROPERTY(QFont activeTitleFont READ activeTitleFont NOTIFY titleFontChanged)
-    Q_PROPERTY(QFont inactiveTitleFont READ inactiveTitleFont NOTIFY titleFontChanged)
 public:
     ~AuroraeFactory();
 
@@ -56,20 +53,24 @@ public:
         return m_theme;
     }
     QDeclarativeItem *createQmlDecoration(AuroraeClient *client);
-    QString leftButtons();
-    QString rightButtons();
-    bool customButtonPositions();
-
-    QFont activeTitleFont();
-    QFont inactiveTitleFont();
+    const QString &currentThemeName() const {
+        return m_themeName;
+    }
 
 private:
+    enum EngineType {
+        AuroraeEngine,
+        QMLEngine
+    };
     AuroraeFactory();
     void init();
+    void initAurorae(KConfig &conf, KConfigGroup &group);
+    void initQML(const KConfigGroup& group);
 
 Q_SIGNALS:
     void buttonsChanged();
     void titleFontChanged();
+    void configChanged();
 
 private:
     static AuroraeFactory *s_instance;
@@ -77,6 +78,8 @@ private:
     AuroraeTheme *m_theme;
     QDeclarativeEngine *m_engine;
     QDeclarativeComponent *m_component;
+    EngineType m_engineType;
+    QString m_themeName;
 };
 
 class AuroraeClient : public KDecorationUnstable
@@ -129,6 +132,8 @@ public:
     bool isMaximized() const;
     int doubleClickInterval() const;
 
+    Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
+
 Q_SIGNALS:
     void activeChanged();
     void captionChanged();
@@ -138,6 +143,13 @@ Q_SIGNALS:
     void shadeChanged();
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
+    void buttonsChanged();
+    /**
+     * Signal emitted when the decoration's configuration might have changed.
+     * A decoration could reload it's configuration when this signal is emitted.
+     **/
+    void configChanged();
+    void fontChanged();
 
 public slots:
     void menuClicked();

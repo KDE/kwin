@@ -51,6 +51,7 @@ public:
     virtual QString desktopName(TabBoxClient* client) const;
     virtual QString desktopName(int desktop) const;
     virtual QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const;
+    virtual QWeakPointer< TabBoxClient > firstClientFocusChain() const;
     virtual int nextDesktopFocusChain(int desktop) const;
     virtual int numberOfDesktops() const;
     virtual TabBoxClientList stackingOrder() const;
@@ -163,6 +164,7 @@ public:
 
     Client* nextClientFocusChain(Client*) const;
     Client* previousClientFocusChain(Client*) const;
+    Client* firstClientFocusChain() const;
     Client* nextClientStatic(Client*) const;
     Client* previousClientStatic(Client*) const;
     int nextDesktopFocusChain(int iDesktop) const;

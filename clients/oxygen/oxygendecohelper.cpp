@@ -55,7 +55,7 @@ namespace Oxygen
 
         Oxygen::Cache<QPixmap>::Value* cache( _windecoButtonCache.get( color ) );
 
-        const quint64 key( ( quint64( glow.rgba() ) << 32 ) | (sunken << 23 ) | size );
+        const quint64 key( ( colorKey(glow) << 32 ) | (sunken << 23 ) | size );
         QPixmap *pixmap = cache->object( key );
 
         if( !pixmap )
@@ -151,7 +151,7 @@ namespace Oxygen
     const QColor& DecoHelper::inactiveTitleBarTextColor( const QPalette& palette )
     {
 
-        const quint32 key( palette.color(QPalette::Active, QPalette::Window).rgba() );
+        const quint32 key( colorKey( palette.color(QPalette::Active, QPalette::Window) ) );
         QColor* out( _titleBarTextColorCache.object( key ) );
         if( !out )
         {
@@ -173,7 +173,7 @@ namespace Oxygen
     const QColor& DecoHelper::inactiveButtonTextColor( const QPalette& palette )
     {
 
-        const quint32 key( palette.color(QPalette::Active, QPalette::Window).rgba() );
+        const quint32 key( colorKey( palette.color(QPalette::Active, QPalette::Window) ) );
         QColor* out( _buttonTextColorCache.object( key ) );
         if( !out )
         {

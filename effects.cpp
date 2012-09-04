@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Plasma/Theme>
 
 #include <assert.h>
+#include "composite.h"
 
 
 namespace KWin
@@ -95,12 +96,14 @@ static void deleteWindowProperty(Window win, long int atom)
 
 //---------------------
 
-EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
-    : EffectsHandler(type)
+EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
+    : EffectsHandler(scene->compositingType())
     , keyboard_grab_effect(NULL)
     , fullscreen_effect(0)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , mouse_poll_ref_count(0)
+    , m_compositor(compositor)
+    , m_scene(scene)
 {
     // init is important, otherwise causes crashes when quads are build before the first painting pass start
     m_currentBuildQuadsIterator = m_activeEffects.end();
@@ -241,7 +244,7 @@ void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& 
         (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
         --m_currentPaintScreenIterator;
     } else
-        scene->finalPaintScreen(mask, region, data);
+        m_scene->finalPaintScreen(mask, region, data);
 }
 
 void EffectsHandlerImpl::postPaintScreen()
@@ -268,7 +271,7 @@ void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, 
         (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
         --m_currentPaintWindowIterator;
     } else
-        scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
+        m_scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
@@ -305,7 +308,7 @@ void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, W
         (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
         --m_currentDrawWindowIterator;
     } else
-        scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
+        m_scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
 void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
@@ -407,12 +410,6 @@ void EffectsHandlerImpl::slotClientAdded(Client *c)
         connect(c, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotClientShown(KWin::Toplevel*)));
 }
 
-void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{   // regardless, unmanaged windows are -yet?- not synced anyway
-    setupUnmanagedConnections(u);
-    emit windowAdded(u->effectWindow());
-}
-
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
     Q_ASSERT(dynamic_cast<Client*>(t));
@@ -420,6 +417,22 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
+{
+    if (u->readyForPainting())
+        slotUnmanagedShown(u);
+    else
+        connect(u, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotUnmanagedShown(KWin::Toplevel*)));
+}
+
+void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
+{
+    Q_ASSERT(dynamic_cast<Unmanaged*>(t));
+    Unmanaged *u = static_cast<Unmanaged*>(t);
+    setupUnmanagedConnections(u);
+    emit windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
@@ -509,7 +522,7 @@ void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
 {
     fullscreen_effect = e;
-    Workspace::self()->checkUnredirect();
+    m_compositor->checkUnredirect();
 }
 
 Effect* EffectsHandlerImpl::activeFullScreenEffect() const
@@ -565,7 +578,7 @@ void* EffectsHandlerImpl::getProxy(QString name)
 void EffectsHandlerImpl::startMousePolling()
 {
     if (!mouse_poll_ref_count)   // Start timer if required
-        Workspace::self()->startMousePolling();
+        m_compositor->startMousePolling();
     mouse_poll_ref_count++;
 }
 
@@ -574,7 +587,7 @@ void EffectsHandlerImpl::stopMousePolling()
     assert(mouse_poll_ref_count);
     mouse_poll_ref_count--;
     if (!mouse_poll_ref_count)   // Stop timer if required
-        Workspace::self()->stopMousePolling();
+        m_compositor->stopMousePolling();
 }
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const
@@ -584,9 +597,8 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
 
 void EffectsHandlerImpl::desktopResized(const QSize &size)
 {
-    scene->screenGeometryChanged(size);
+    m_scene->screenGeometryChanged(size);
     emit screenGeometryChanged(size);
-    Workspace::self()->addRepaintFull();
 }
 
 void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
@@ -908,22 +920,22 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 
 void EffectsHandlerImpl::addRepaintFull()
 {
-    Workspace::self()->addRepaintFull();
+    m_compositor->addRepaintFull();
 }
 
 void EffectsHandlerImpl::addRepaint(const QRect& r)
 {
-    Workspace::self()->addRepaint(r);
+    m_compositor->addRepaint(r);
 }
 
 void EffectsHandlerImpl::addRepaint(const QRegion& r)
 {
-    Workspace::self()->addRepaint(r);
+    m_compositor->addRepaint(r);
 }
 
 void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
 {
-    Workspace::self()->addRepaint(x, y, w, h);
+    m_compositor->addRepaint(x, y, w, h);
 }
 
 int EffectsHandlerImpl::activeScreen() const
@@ -1135,7 +1147,7 @@ void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve, Qt::Orient
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (SceneXrender* s = dynamic_cast< SceneXrender* >(scene))
+    if (SceneXrender* s = dynamic_cast< SceneXrender* >(m_scene))
         return s->bufferPicture();
 #endif
     return None;
@@ -1191,7 +1203,7 @@ QStringList EffectsHandlerImpl::listOfEffects() const
 
 bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 {
-    Workspace::self()->addRepaintFull();
+    m_compositor->addRepaintFull();
 
     if (!name.startsWith(QLatin1String("kwin4_effect_")))
         kWarning(1212) << "Effect names usually have kwin4_effect_ prefix" ;
@@ -1329,7 +1341,7 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
 
 void EffectsHandlerImpl::unloadEffect(const QString& name)
 {
-    Workspace::self()->addRepaintFull();
+    m_compositor->addRepaintFull();
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
         if (it.value().first == name) {

@@ -255,7 +255,9 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, QRegion regi
 void SceneOpenGL::windowAdded(Toplevel* c)
 {
     assert(!windows.contains(c));
-    windows[ c ] = new Window(c, this);
+    Window *w = new Window(c);
+    windows[ c ] = w;
+    w->setScene(this);
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
@@ -387,15 +389,15 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 // SceneOpenGL::Window
 //****************************************
 
-SceneOpenGL::Window::Window(Toplevel* c, SceneOpenGL* scene)
+SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
     , texture()
     , topTexture()
     , leftTexture()
     , rightTexture()
     , bottomTexture()
+    , m_scene(NULL)
 {
-    m_scene = scene;
 }
 
 SceneOpenGL::Window::~Window()
@@ -627,7 +629,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
         texture.unbind();
 #ifndef KWIN_HAVE_OPENGLES
-        if (static_cast<SceneOpenGL*>(scene)->debug) {
+        if (m_scene && m_scene->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             renderQuads(mask, region, contentQuads, &texture, false, hardwareClipping);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -701,7 +703,7 @@ void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType
     restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen(), data.shader);
     decorationTexture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
-    if (static_cast<SceneOpenGL*>(scene)->debug) {
+    if (m_scene && m_scene->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -737,7 +739,7 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
     restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen(), data.shader, texture);
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
-    if (static_cast<SceneOpenGL*>(scene)->debug) {
+    if (m_scene && m_scene->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         renderQuads(0, region, quads, texture, true, hardwareClipping);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

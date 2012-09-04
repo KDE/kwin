@@ -299,6 +299,11 @@ signals:
      * decoration.
      **/
     void shapedChanged();
+    /**
+     * Emitted whenever the state changes in a way, that the Compositor should
+     * schedule a repaint of the scene.
+     **/
+    void needsRepaint();
 
 protected:
     virtual ~Toplevel();
@@ -313,7 +318,10 @@ protected:
     void addDamageFull();
     void getWmClientLeader();
     void getWmClientMachine();
-    void setReadyForPainting();
+    /**
+     * @returns Whether there is a compositor and it is active.
+     **/
+    bool compositing() const;
 
     /**
      * This function fetches the opaque region from this Toplevel.
@@ -334,8 +342,11 @@ protected:
     int bit_depth;
     NETWinInfo2* info;
     bool ready_for_painting;
+    QTimer *m_readyForPaintingTimer;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
     QRegion layer_repaints_region;
+protected slots:
+    void setReadyForPainting();
 private:
     static QByteArray staticWindowRole(WId);
     static QByteArray staticSessionId(WId);

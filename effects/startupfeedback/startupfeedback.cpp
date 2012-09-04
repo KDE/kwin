@@ -73,7 +73,8 @@ static const QColor BLINKING_COLORS[] = {
 };
 
 StartupFeedbackEffect::StartupFeedbackEffect()
-    : m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
+    : m_bounceSizesRatio(1.0)
+    , m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
     , m_selection(new KSelectionOwner("_KDE_STARTUP_FEEDBACK", -1, this))
     , m_active(false)
     , m_frame(0)
@@ -313,6 +314,9 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (!m_active)
         effects->startMousePolling();
     m_active = true;
+    // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
+    if (m_type == BouncingFeedback)
+        m_bounceSizesRatio = IconSize(KIconLoader::Small) / 16.0;
     QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
                          KIconLoader::DefaultState, QStringList(), 0, true);  // return null pixmap if not found
     if (iconPixmap.isNull())
@@ -369,15 +373,16 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
 
 QImage StartupFeedbackEffect::scalePixmap(const QPixmap& pm, const QSize& size) const
 {
-    QImage scaled = pm.toImage().scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    const QSize& adjustedSize = size * m_bounceSizesRatio;
+    QImage scaled = pm.toImage().scaled(adjustedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32)
         scaled = scaled.convertToFormat(QImage::Format_ARGB32);
 
-    QImage result(20, 20, QImage::Format_ARGB32);
+    QImage result(20 * m_bounceSizesRatio, 20 * m_bounceSizesRatio, QImage::Format_ARGB32);
     QPainter p(&result);
     p.setCompositionMode(QPainter::CompositionMode_Source);
     p.fillRect(result.rect(), Qt::transparent);
-    p.drawImage((20 - size.width()) / 2, (20 - size.height()) / 2, scaled, 0, 0, size.width(), size.height());
+    p.drawImage((20 * m_bounceSizesRatio - adjustedSize.width()) / 2, (20*m_bounceSizesRatio - adjustedSize.height()) / 2, scaled, 0, 0, adjustedSize.width(), adjustedSize.height() * m_bounceSizesRatio);
     return result;
 }
 
@@ -400,7 +405,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
     switch(m_type) {
     case BouncingFeedback:
         texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]];
-        yOffset = FRAME_TO_BOUNCE_YOFFSET[ m_frame ];
+        yOffset = FRAME_TO_BOUNCE_YOFFSET[ m_frame ] * m_bounceSizesRatio;
         break;
     case BlinkingFeedback: // fall through
     case PassiveFeedback:

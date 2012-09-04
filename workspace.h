@@ -78,7 +78,9 @@ class PluginMgr;
 class Placement;
 class Rules;
 class Scripting;
+class UserActionsMenu;
 class WindowRules;
+class Compositor;
 
 class Workspace : public QObject, public KDecorationDefines
 {
@@ -191,6 +193,18 @@ public:
     const UnmanagedList &unmanagedList() const {
         return unmanaged;
     }
+    /**
+     * @return List of desktop "clients" currently managed by Workspace
+     **/
+    const ClientList &desktopList() const {
+        return desktops;
+    }
+    /**
+     * @return List of deleted "clients" currently managed by Workspace
+     **/
+    const DeletedList &deletedList() const {
+        return deleted;
+    }
 
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -292,6 +306,8 @@ public:
      */
     int desktopToLeft(int id = 0, bool wrap = true) const;
 
+    QPoint cascadeOffset(const Client *c) const;
+
 private:
     int desktopCount_;
     QSize desktopGridSize_;
@@ -308,6 +324,7 @@ private:
     ScreenEdge m_screenEdge;
     Qt::Orientations m_screenEdgeOrientation;
 #endif
+    Compositor *m_compositor;
 
     //-------------------------------------------------
     // Unsorted
@@ -325,6 +342,12 @@ public:
     QStringList activityList() const {
         return allActivities_;
     }
+    const QStringList &openActivities() const {
+        return openActivities_;
+    }
+#ifdef KWIN_BUILD_ACTIVITIES
+    void updateActivityList(bool running, bool updateCurrent, QObject *target = NULL, QString slot = QString());
+#endif
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
@@ -374,14 +397,12 @@ public:
 
     // KDE4 remove me - And it's also in the DCOP interface :(
     void showWindowMenuAt(unsigned long id, int x, int y);
-
     void toggleCompositing();
     void loadEffect(const QString& name);
     void toggleEffect(const QString& name);
     void reconfigureEffect(const QString& name);
     void unloadEffect(const QString& name);
     QString supportInformationForEffect(const QString& name) const;
-    void updateCompositeBlocking(Client* c = NULL);
 
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
@@ -397,7 +418,9 @@ public:
      */
     void showWindowMenu(int x, int y, Client* cl);
     void showWindowMenu(QPoint pos, Client* cl);
-    bool windowMenuShown();
+    const UserActionsMenu *userActionsMenu() const {
+        return m_userActionsMenu;
+    }
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
@@ -491,6 +514,7 @@ public:
     void disableGlobalShortcuts(bool disable);
     void disableGlobalShortcutsForClient(bool disable);
     QPoint cursorPos() const;
+    void checkCursorPos();
 
     void sessionSaveStarted();
     void sessionSaveDone();
@@ -503,38 +527,21 @@ public:
     int packPositionUp(const Client* cl, int oldy, bool top_edge) const;
     int packPositionDown(const Client* cl, int oldy, bool bottom_edge) const;
 
-    static QStringList configModules(bool controlCenter);
-
     void cancelDelayFocus();
     void requestDelayFocus(Client*);
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
     void toggleTopDockShadows(bool on);
-
-    // when adding repaints caused by a window, you probably want to use
-    // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
-    void addRepaint(const QRect& r);
-    void addRepaint(const QRegion& r);
-    void addRepaint(int x, int y, int w, int h);
-    void checkUnredirect(bool force = false);
-    void checkCompositeTimer();
-    // returns the _estimated_ delay to the next screen update
-    // good for having a rough idea to calculate transformations, bad to rely on.
-    // might happen few ms earlier, might be an entire frame to short. This is NOT deterministic.
-    int nextFrameDelay();
-
-    // Mouse polling
-    void startMousePolling();
-    void stopMousePolling();
-
     Client* getMovingClient() {
         return movingClient;
     }
 
-public slots:
-    void addRepaintFull();
+    Compositor* compositor() const {
+        return m_compositor;
+    }
 
+public slots:
     // Keybindings
     void slotSwitchDesktopNext();
     void slotSwitchDesktopPrevious();
@@ -609,8 +616,7 @@ public slots:
 
     void reconfigure();
     void slotReconfigure();
-    void slotReinitCompositing();
-    void resetCompositing();
+    void slotCompositingToggled();
 
     void slotKillWindow();
 
@@ -620,27 +626,12 @@ public slots:
     void slotInvertScreen();
 
     void updateClientArea();
-    void suspendCompositing();
-    void suspendCompositing(bool suspend);
 
     void slotActivateNextTab(); // Slot to move left the active Client.
     void slotActivatePrevTab(); // Slot to move right the active Client.
     void slotUntab(); // Slot to remove the active client from its group.
 
 private slots:
-    void rebuildTabGroupPopup();
-    void rebuildTabListPopup();
-    void entabPopupClient(QAction*);
-    void selectPopupClientTab(QAction*);
-    void desktopPopupAboutToShow();
-    void screenPopupAboutToShow();
-    void activityPopupAboutToShow();
-    void clientPopupAboutToShow();
-    void slotSendToDesktop(QAction*);
-    void slotSendToScreen(QAction*);
-    void slotToggleOnActivity(QAction*);
-    void clientPopupActivated(QAction*);
-    void configureWM();
     void desktopResized();
     void screenChangeTimeout();
     void slotUpdateToolWindows();
@@ -650,26 +641,12 @@ private slots:
     void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
-    void setupCompositing();
-    /**
-     * Called from setupCompositing() when the CompositingPrefs are ready.
-     **/
-    void slotCompositingOptionsInitialized();
-    void finishCompositing();
-    void fallbackToXRenderCompositing();
-    void performCompositing();
-    void performMousePoll();
-    void lostCMSelection();
     void resetCursorPosTime();
-    void delayedCheckUnredirect();
     void updateCurrentActivity(const QString &new_activity);
     void slotActivityRemoved(const QString &activity);
     void slotActivityAdded(const QString &activity);
     void reallyStopActivity(const QString &id);   //dbus deadlocks suck
     void handleActivityReply();
-    void showHideActivityMenu();
-protected:
-    void timerEvent(QTimerEvent *te);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void compositingToggled(bool active);
@@ -696,6 +673,7 @@ signals:
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void propertyNotify(long a);
     void configChanged();
+    void reinitializeCompositing();
     /**
      * This signal is emitted when the global
      * activity is changed
@@ -717,17 +695,7 @@ signals:
 private:
     void init();
     void initShortcuts();
-    void initDesktopPopup();
-    void initScreenPopup();
-    void initActivityPopup();
-    void initTabbingPopups();
-    void restartKWin(const QString &reason);
-    void discardPopup();
     void setupWindowShortcut(Client* c);
-    void checkCursorPos();
-#ifdef KWIN_BUILD_ACTIVITIES
-    void updateActivityList(bool running, bool updateCurrent, QString slot = QString());
-#endif
     enum Direction {
         DirectionNorth,
         DirectionEast,
@@ -765,15 +733,8 @@ private:
 
     //---------------------------------------------------------------------
 
-    void helperDialog(const QString& message, const Client* c);
-
-    QMenu* clientPopup();
     void closeActivePopup();
     void updateClientArea(bool force);
-
-    bool windowRepaintsPending() const;
-    void setCompositeTimer();
-    int m_timeSinceLastVBlank, m_nextFrameDelay;
 
     typedef QHash< QString, QVector<int> > DesktopFocusChains;
     DesktopFocusChains::Iterator m_desktopFocusChain;
@@ -798,6 +759,11 @@ private:
     static const char* windowTypeToTxt(NET::WindowType type);
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
+
+    /**
+     * @returns Whether we have a Compositor and it is active (Scene created)
+     **/
+    bool compositing() const;
 
     Client* active_client;
     Client* last_active_client;
@@ -843,31 +809,17 @@ private:
     TabBox::TabBox* tab_box;
 #endif
 
-    QMenu* popup;
-    QMenu* advanced_popup;
-    QMenu* desk_popup;
-    QMenu* screen_popup;
-    QMenu* activity_popup;
-    QMenu* add_tabs_popup; // Menu to add the group to other group
-    QMenu* switch_to_tab_popup; // Menu to change tab
+    /**
+     * Holds the menu containing the user actions which is shown
+     * on e.g. right click the window decoration.
+     **/
+    UserActionsMenu *m_userActionsMenu;
 
     void modalActionsSwitch(bool enabled);
 
     KActionCollection* keys;
     KActionCollection* client_keys;
     KActionCollection* disable_shortcuts_keys;
-    QAction* mResizeOpAction;
-    QAction* mMoveOpAction;
-    QAction* mMaximizeOpAction;
-    QAction* mShadeOpAction;
-    QAction* mKeepAboveOpAction;
-    QAction* mKeepBelowOpAction;
-    QAction* mFullScreenOpAction;
-    QAction* mNoBorderOpAction;
-    QAction* mMinimizeOpAction;
-    QAction* mCloseOpAction;
-    QAction* mRemoveFromTabGroup; // Remove client from group
-    QAction* mCloseTabGroup; // Close all clients in the group
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
     bool global_shortcuts_disabled;
@@ -914,19 +866,8 @@ private:
     bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
 
-    KSelectionOwner* cm_selection;
-    bool compositingSuspended, compositingBlocked;
-    QBasicTimer compositeTimer;
-    QTimer mousePollingTimer;
-    uint vBlankInterval, fpsInterval;
-    int xrrRefreshRate; // used only for compositing
-    QRegion repaints_region;
     QSlider* transSlider;
     QPushButton* transButton;
-    QTimer unredirectTimer;
-    bool forceUnredirectCheck;
-    QTimer compositeResetTimer; // for compressing composite resets
-    bool m_finishingCompositing; // finishCompositing() sets this variable while shutting down
 
     Scripting *m_scripting;
 
@@ -1068,11 +1009,6 @@ inline void Workspace::showWindowMenu(int x, int y, Client* cl)
     showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
 }
 
-inline bool Workspace::windowMenuShown()
-{
-    return popup && ((QWidget*)popup)->isVisible();
-}
-
 inline void Workspace::setWasUserInteraction()
 {
     was_user_interaction = true;
@@ -1181,17 +1117,6 @@ KWIN_COMPARE_PREDICATE(ClientMatchPredicate, Client, const Client*, cl == value)
 inline bool Workspace::hasClient(const Client* c)
 {
     return findClient(ClientMatchPredicate(c));
-}
-
-inline void Workspace::checkCompositeTimer()
-{
-    if (!compositeTimer.isActive())
-        setCompositeTimer();
-}
-
-inline int Workspace::nextFrameDelay()
-{
-    return m_nextFrameDelay;
 }
 
 inline bool Workspace::hasDecorationPlugin() const

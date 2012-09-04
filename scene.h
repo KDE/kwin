@@ -48,6 +48,9 @@ public:
     // Returns true if the ctor failed to properly initialize.
     virtual bool initFailed() const = 0;
     virtual CompositingType compositingType() const = 0;
+
+    virtual bool hasPendingFlush() const { return false; }
+
     // Repaints the given screen areas, windows provides the stacking order.
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
@@ -59,8 +62,6 @@ public:
 
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
-    // a window has been destroyed
-    virtual void windowDeleted(Deleted*) = 0;
     /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
@@ -99,6 +100,8 @@ public:
     }
     OverlayWindow* overlayWindow();
 public Q_SLOTS:
+    // a window has been destroyed
+    virtual void windowDeleted(KWin::Deleted*) = 0;
     // opacity of a window changed
     virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
     // shape/size of a window changed
@@ -241,8 +244,6 @@ public:
 protected:
     EffectFrameImpl* m_effectFrame;
 };
-
-extern Scene* scene;
 
 inline
 int Scene::Window::x() const

@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "rules.h"
 #include "unmanaged.h"
+#include "useractions.h"
 #include "effects.h"
 
 #include <QWhatsThis>
@@ -49,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+
+#include "composite.h"
 
 namespace KWin
 {
@@ -440,31 +443,37 @@ bool Workspace::workspaceEvent(XEvent * e)
     case Expose:
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
-                    || (scene->overlayWindow()->window() != None && e->xexpose.window == scene->overlayWindow()->window()))) { // overlay needs repainting
-            addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+                    || (m_compositor->overlayWindow() != None && e->xexpose.window == m_compositor->overlayWindow()))) { // overlay needs repainting
+            if (m_compositor) {
+                m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+            }
         }
         break;
     case VisibilityNotify:
-        if (compositing() && scene->overlayWindow()->window() != None && e->xvisibility.window == scene->overlayWindow()->window()) {
-            bool was_visible = scene->overlayWindow()->isVisible();
-            scene->overlayWindow()->setVisibility((e->xvisibility.state != VisibilityFullyObscured));
-            if (!was_visible && scene->overlayWindow()->isVisible()) {
+        if (compositing() && m_compositor->overlayWindow() != None && e->xvisibility.window == m_compositor->overlayWindow()) {
+            bool was_visible = m_compositor->isOverlayWindowVisible();
+            m_compositor->setOverlayWindowVisibility((e->xvisibility.state != VisibilityFullyObscured));
+            if (!was_visible && m_compositor->isOverlayWindowVisible()) {
                 // hack for #154825
-                addRepaintFull();
-                QTimer::singleShot(2000, this, SLOT(addRepaintFull()));
+                if (m_compositor) {
+                    m_compositor->addRepaintFull();
+                    QTimer::singleShot(2000, m_compositor, SLOT(addRepaintFull()));
+                }
             }
-            checkCompositeTimer();
+            if (m_compositor) {
+                m_compositor->scheduleRepaint();
+            }
         }
         break;
     default:
         if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
             XRRUpdateConfiguration(e);
-            if (compositing()) {
+            if (compositing() && m_compositor) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
                 // catch refresh rate changes
-                if (xrrRefreshRate != currentRefreshRate())
-                    compositeResetTimer.start(0);
+                if (m_compositor->xrrRefreshRate() != currentRefreshRate())
+                    m_compositor->setCompositeResetTimer(0);
             }
 
         } else if (e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable()) {
@@ -879,7 +888,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         }
 #undef MOUSE_DRIVEN_FOCUS
 
-        if (options->focusPolicy() == Options::ClickToFocus || workspace()->windowMenuShown())
+        if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
             return;
 
         if (options->isAutoRaise() && !isDesktop() &&

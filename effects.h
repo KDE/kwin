@@ -40,6 +40,7 @@ namespace KWin
 class ThumbnailItem;
 
 class Client;
+class Compositor;
 class Deleted;
 class Unmanaged;
 
@@ -47,7 +48,7 @@ class EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
 public:
-    EffectsHandlerImpl(CompositingType type);
+    EffectsHandlerImpl(Compositor *compositor, Scene *scene);
     virtual ~EffectsHandlerImpl();
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
@@ -187,6 +188,7 @@ protected Q_SLOTS:
     void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
     void slotUnmanagedAdded(KWin::Unmanaged *u);
+    void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c);
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
@@ -228,6 +230,8 @@ private:
     QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
     QList< Effect* >::iterator m_currentPaintScreenIterator;
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    Compositor *m_compositor;
+    Scene *m_scene;
 };
 
 class EffectWindowImpl : public EffectWindow

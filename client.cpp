@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 
 #include "bridge.h"
+#include "composite.h"
 #include "group.h"
 #include "workspace.h"
 #include "atoms.h"
@@ -209,6 +210,10 @@ Client::Client(Workspace* ws)
  */
 Client::~Client()
 {
+    if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
+        ::kill(m_killHelperPID, SIGTERM);
+        m_killHelperPID = 0;
+    }
     //SWrapper::Client::clientRelease(this);
 #ifdef HAVE_XSYNC
     if (syncRequest.alarm != None)
@@ -612,7 +617,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapTop.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapTop = QPixmap(tr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -631,7 +636,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapBottom.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapBottom = QPixmap(br.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -650,7 +655,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapLeft.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapLeft = QPixmap(lr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -669,7 +674,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapRight.handle());
         }
 
-        if (workspace()->compositingActive() && effects->compositingType() == OpenGLCompositing) {
+        if (workspace()->compositor() && workspace()->compositor()->isActive() && effects->compositingType() == OpenGLCompositing) {
             decorationPixmapRight = QPixmap(rr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -1211,19 +1216,23 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    if (isManaged() && workspace()->showingDesktop()) {
-        bool belongs_to_desktop = false;
-        for (ClientList::ConstIterator it = group()->members().constBegin();
-                it != group()->members().constEnd();
-                ++it)
-            if ((*it)->isDesktop()) {
-                belongs_to_desktop = true;
-                break;
-            }
-        if (!belongs_to_desktop)
-            workspace()->resetShowingDesktop(true);
-    }
+    resetShowingDesktop(true);
     internalShow(Allowed);
+}
+
+
+void Client::resetShowingDesktop(bool keep_hidden)
+{
+    if (isDock() || !workspace()->showingDesktop())
+        return;
+    bool belongs_to_desktop = false;
+    for (ClientList::ConstIterator it = group()->members().constBegin(),
+                                    end = group()->members().constEnd(); it != end; ++it)
+        if ((belongs_to_desktop == (*it)->isDesktop()))
+            break;
+
+    if (!belongs_to_desktop)
+        workspace()->resetShowingDesktop(keep_hidden);
 }
 
 /**
@@ -1260,7 +1269,9 @@ void Client::internalShow(allowed_t)
             XMapWindow(display(), inputId());
         updateHiddenPreview();
     }
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 void Client::internalHide(allowed_t)
@@ -1275,7 +1286,9 @@ void Client::internalHide(allowed_t)
         updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 void Client::internalKeep(allowed_t)
@@ -1292,7 +1305,9 @@ void Client::internalKeep(allowed_t)
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
-    workspace()->checkUnredirect();
+    if (workspace()->compositor()) {
+        workspace()->compositor()->checkUnredirect();
+    }
 }
 
 /**
@@ -1941,11 +1956,35 @@ bool Client::tabTo(Client *other, bool behind, bool activate)
 bool Client::untab(const QRect &toGeometry)
 {
     TabGroup *group = tab_group;
-    if (group && group->remove(this, toGeometry)) { // remove sets the tabgroup to "0", therefore the pointer is cached
+    if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
         if (group->isEmpty()) {
             delete group;
         }
         setClientShown(!(isMinimized() || isShade()));
+        bool keepSize = toGeometry.size() == size();
+        bool changedSize = false;
+        if (quickTileMode() != QuickTileNone) {
+            changedSize = true;
+            setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
+        }
+        if (toGeometry.isValid()) {
+            if (maximizeMode() != Client::MaximizeRestore) {
+                changedSize = true;
+                maximize(Client::MaximizeRestore); // explicitly calling for a geometry -> unmaximize
+            }
+            if (keepSize && changedSize) {
+                geom_restore = geometry(); // checkWorkspacePosition() invokes it
+                QPoint cpoint = QCursor::pos();
+                QPoint point = cpoint;
+                point.setX((point.x() - toGeometry.x()) * geom_restore.width() / toGeometry.width());
+                point.setY((point.y() - toGeometry.y()) * geom_restore.height() / toGeometry.height());
+                geom_restore.moveTo(cpoint-point);
+            } else {
+                geom_restore = toGeometry; // checkWorkspacePosition() invokes it
+            }
+            setGeometry(geom_restore);
+            checkWorkspacePosition();
+        }
         return true;
     }
     return false;
@@ -2202,6 +2241,8 @@ void Client::getSyncCounter()
 void Client::sendSyncRequest()
 {
 #ifdef HAVE_XSYNC
+    delete m_readyForPaintingTimer;
+    m_readyForPaintingTimer = 0;
     if (syncRequest.counter == None || syncRequest.isPending)
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
 
@@ -2333,8 +2374,7 @@ void Client::setBlockingCompositing(bool block)
     const bool usedToBlock = blocks_compositing;
     blocks_compositing = rules()->checkBlockCompositing(block);
     if (usedToBlock != blocks_compositing) {
-        workspace()->updateCompositeBlocking(blocks_compositing ? this : 0);
-        emit blockingCompositingChanged();
+        emit blockingCompositingChanged(blocks_compositing ? this : 0);
     }
 }
 

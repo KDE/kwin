@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // NOTE: if you change the menu, keep kde-workspace/libs/taskmanager/taskactions.cpp in sync
 //////////////////////////////////////////////////////////////////////////////
 
+#include "useractions.h"
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
@@ -38,6 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include <KActivities/Info>
 #endif
+
+#include <KDE/KProcess>
+#include <KDE/KToolInvocation>
 
 #include <X11/extensions/Xrandr.h>
 #ifndef KWIN_NO_XF86VM
@@ -68,157 +72,696 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+UserActionsMenu::UserActionsMenu(QObject *parent)
+    : QObject(parent)
+    , m_menu(NULL)
+    , m_desktopMenu(NULL)
+    , m_screenMenu(NULL)
+    , m_activityMenu(NULL)
+    , m_addTabsMenu(NULL)
+    , m_switchToTabMenu(NULL)
+    , m_resizeOperation(NULL)
+    , m_moveOperation(NULL)
+    , m_maximizeOperation(NULL)
+    , m_shadeOperation(NULL)
+    , m_keepAboveOperation(NULL)
+    , m_keepBelowOperation(NULL)
+    , m_fullScreenOperation(NULL)
+    , m_noBorderOperation(NULL)
+    , m_minimizeOperation(NULL)
+    , m_closeOperation(NULL)
+    , m_removeFromTabGroup(NULL)
+    , m_closeTabGroup(NULL)
+    , m_client(QWeakPointer<Client>())
+{
+}
+
+UserActionsMenu::~UserActionsMenu()
+{
+    discard();
+}
+
+bool UserActionsMenu::isShown() const
+{
+    return m_menu && m_menu->isVisible();
+}
+
+bool UserActionsMenu::hasClient() const
+{
+    return !m_client.isNull();
+}
+
+void UserActionsMenu::close()
+{
+    if (!m_menu) {
+        return;
+    }
+    m_menu->close();
+    m_client.clear();;
+}
+
+bool UserActionsMenu::isMenuClient(const Client *c) const
+{
+    if (!c || m_client.isNull()) {
+        return false;
+    }
+    return c == m_client.data();
+}
+
+void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
+{
+    if (!KAuthorized::authorizeKAction("kwin_rmb"))
+        return;
+    if (cl.isNull())
+        return;
+    if (!m_client.isNull())   // recursion
+        return;
+    if (cl.data()->isDesktop()
+            || cl.data()->isDock())
+        return;
+
+    m_client = cl;
+    init();
+    Workspace *ws = Workspace::self();
+    int x = pos.left();
+    int y = pos.bottom();
+    if (y == pos.top())
+        m_menu->exec(QPoint(x, y));
+    else {
+        QRect area = ws->clientArea(ScreenArea, QPoint(x, y), ws->currentDesktop());
+        menuAboutToShow(); // needed for sizeHint() to be correct :-/
+        int popupHeight = m_menu->sizeHint().height();
+        if (y + popupHeight < area.height())
+            m_menu->exec(QPoint(x, y));
+        else
+            m_menu->exec(QPoint(x, pos.top() - popupHeight));
+    }
+    m_client.clear();;
+}
+
+void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Client> &c)
+{
+    QStringList args;
+    QString type;
+    KActionCollection *keys = Workspace::self()->actionCollection();
+    if (message == "noborderaltf3") {
+        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
+        assert(action != NULL);
+        QString shortcut = QString("%1 (%2)").arg(action->text())
+                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
+        args << "--msgbox" << i18n(
+                 "You have selected to show a window without its border.\n"
+                 "Without the border, you will not be able to enable the border "
+                 "again using the mouse: use the window operations menu instead, "
+                 "activated using the %1 keyboard shortcut.",
+                 shortcut);
+        type = "altf3warning";
+    } else if (message == "fullscreenaltf3") {
+        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
+        assert(action != NULL);
+        QString shortcut = QString("%1 (%2)").arg(action->text())
+                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
+        args << "--msgbox" << i18n(
+                 "You have selected to show a window in fullscreen mode.\n"
+                 "If the application itself does not have an option to turn the fullscreen "
+                 "mode off you will not be able to disable it "
+                 "again using the mouse: use the window operations menu instead, "
+                 "activated using the %1 keyboard shortcut.",
+                 shortcut);
+        type = "altf3warning";
+    } else
+        abort();
+    if (!type.isEmpty()) {
+        KConfig cfg("kwin_dialogsrc");
+        KConfigGroup cg(&cfg, "Notification Messages");  // Depends on KMessageBox
+        if (!cg.readEntry(type, true))
+            return;
+        args << "--dontagain" << "kwin_dialogsrc:" + type;
+    }
+    if (!c.isNull())
+        args << "--embed" << QString::number(c.data()->window());
+    KProcess::startDetached("kdialog", args);
+}
+
+
+QStringList configModules(bool controlCenter)
+{
+    QStringList args;
+    args <<  "kwindecoration";
+    if (controlCenter)
+        args << "kwinoptions";
+    else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
+        args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
+             << "kwinrules" << "kwincompositing"
+#ifdef KWIN_BUILD_TABBOX
+             << "kwintabbox"
+#endif
+#ifdef KWIN_BUILD_SCREENEDGES
+             << "kwinscreenedges"
+#endif
+#ifdef KWIN_BUILD_SCRIPTING
+             << "kwinscripts"
+#endif
+             ;
+    return args;
+}
+
+void UserActionsMenu::configureWM()
+{
+    QStringList args;
+    args << "--icon" << "preferences-system-windows" << configModules(false);
+    KToolInvocation::kdeinitExec("kcmshell4", args);
+}
+
+void UserActionsMenu::init()
+{
+    if (m_menu) {
+        return;
+    }
+    m_menu = new QMenu;
+    m_menu->setFont(KGlobalSettings::menuFont());
+    connect(m_menu, SIGNAL(aboutToShow()), this, SLOT(menuAboutToShow()));
+    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)));
+
+    QMenu *advancedMenu = new QMenu(m_menu);
+    advancedMenu->setFont(KGlobalSettings::menuFont());
+
+    m_moveOperation = advancedMenu->addAction(i18n("&Move"));
+    m_moveOperation->setIcon(KIcon("transform-move"));
+    KActionCollection *keys = Workspace::self()->actionCollection();
+    KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
+    if (kaction != 0)
+        m_moveOperation->setShortcut(kaction->globalShortcut().primary());
+    m_moveOperation->setData(Options::UnrestrictedMoveOp);
+
+    m_resizeOperation = advancedMenu->addAction(i18n("Re&size"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
+    if (kaction != 0)
+        m_resizeOperation->setShortcut(kaction->globalShortcut().primary());
+    m_resizeOperation->setData(Options::ResizeOp);
+
+    m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
+    m_keepAboveOperation->setIcon(KIcon("go-up"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Above Other Windows"));
+    if (kaction != 0)
+        m_keepAboveOperation->setShortcut(kaction->globalShortcut().primary());
+    m_keepAboveOperation->setCheckable(true);
+    m_keepAboveOperation->setData(Options::KeepAboveOp);
+
+    m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
+    m_keepBelowOperation->setIcon(KIcon("go-down"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Below Other Windows"));
+    if (kaction != 0)
+        m_keepBelowOperation->setShortcut(kaction->globalShortcut().primary());
+    m_keepBelowOperation->setCheckable(true);
+    m_keepBelowOperation->setData(Options::KeepBelowOp);
+
+    m_fullScreenOperation = advancedMenu->addAction(i18n("&Fullscreen"));
+    m_fullScreenOperation->setIcon(KIcon("view-fullscreen"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Fullscreen"));
+    if (kaction != 0)
+        m_fullScreenOperation->setShortcut(kaction->globalShortcut().primary());
+    m_fullScreenOperation->setCheckable(true);
+    m_fullScreenOperation->setData(Options::FullScreenOp);
+
+    m_shadeOperation = advancedMenu->addAction(i18n("Sh&ade"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Shade"));
+    if (kaction != 0)
+        m_shadeOperation->setShortcut(kaction->globalShortcut().primary());
+    m_shadeOperation->setCheckable(true);
+    m_shadeOperation->setData(Options::ShadeOp);
+
+    m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
+    kaction = qobject_cast<KAction*>(keys->action("Window No Border"));
+    if (kaction != 0)
+        m_noBorderOperation->setShortcut(kaction->globalShortcut().primary());
+    m_noBorderOperation->setCheckable(true);
+    m_noBorderOperation->setData(Options::NoBorderOp);
+
+    advancedMenu->addSeparator();
+
+    QAction *action = advancedMenu->addAction(i18n("Window &Shortcut..."));
+    action->setIcon(KIcon("configure-shortcuts"));
+    kaction = qobject_cast<KAction*>(keys->action("Setup Window Shortcut"));
+    if (kaction != 0)
+        action->setShortcut(kaction->globalShortcut().primary());
+    action->setData(Options::SetupWindowShortcutOp);
+
+    action = advancedMenu->addAction(i18n("&Special Window Settings..."));
+    action->setIcon(KIcon("preferences-system-windows-actions"));
+    action->setData(Options::WindowRulesOp);
+
+    action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
+    action->setIcon(KIcon("preferences-system-windows-actions"));
+    action->setData(Options::ApplicationRulesOp);
+    if (!KGlobal::config()->isImmutable() &&
+            !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
+        advancedMenu->addSeparator();
+        action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
+                                        "Window &Manager Settings..."));
+        action->setIcon(KIcon("configure"));
+        connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
+    }
+
+    m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Minimize"));
+    if (kaction != 0)
+        m_minimizeOperation->setShortcut(kaction->globalShortcut().primary());
+    m_minimizeOperation->setData(Options::MinimizeOp);
+
+    m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Maximize"));
+    if (kaction != 0)
+        m_maximizeOperation->setShortcut(kaction->globalShortcut().primary());
+    m_maximizeOperation->setCheckable(true);
+    m_maximizeOperation->setData(Options::MaximizeOp);
+
+    m_menu->addSeparator();
+
+    // Actions for window tabbing
+    if (Workspace::self()->decorationSupportsTabbing()) {
+        m_removeFromTabGroup = m_menu->addAction(i18n("&Untab"));
+        kaction = qobject_cast<KAction*>(keys->action("Untab"));
+        if (kaction != 0)
+            m_removeFromTabGroup->setShortcut(kaction->globalShortcut().primary());
+        m_removeFromTabGroup->setData(Options::RemoveTabFromGroupOp);
+
+        m_closeTabGroup = m_menu->addAction(i18n("Close Entire &Group"));
+        m_closeTabGroup->setIcon(KIcon("window-close"));
+        kaction = qobject_cast<KAction*>(keys->action("Close TabGroup"));
+        if (kaction != 0)
+            m_closeTabGroup->setShortcut(kaction->globalShortcut().primary());
+        m_closeTabGroup->setData(Options::CloseTabGroupOp);
+
+        m_menu->addSeparator();
+    }
+
+    m_menu->addSeparator();
+
+    action = m_menu->addMenu(advancedMenu);
+    action->setText(i18n("More Actions"));
+
+    m_menu->addSeparator();
+
+    m_closeOperation = m_menu->addAction(i18n("&Close"));
+    m_closeOperation->setIcon(KIcon("window-close"));
+    kaction = qobject_cast<KAction*>(keys->action("Window Close"));
+    if (kaction != 0)
+        m_closeOperation->setShortcut(kaction->globalShortcut().primary());
+    m_closeOperation->setData(Options::CloseOp);
+}
+
+void UserActionsMenu::discard()
+{
+    delete m_menu;
+    m_menu = NULL;
+    m_desktopMenu = NULL;
+    m_screenMenu = NULL;
+    m_activityMenu = NULL;
+    m_switchToTabMenu = NULL;
+    m_addTabsMenu = NULL;
+}
+
+void UserActionsMenu::menuAboutToShow()
+{
+    if (m_client.isNull() || !m_menu)
+        return;
+    Workspace *ws = Workspace::self();
+
+    if (ws->numberOfDesktops() == 1) {
+        delete m_desktopMenu;
+        m_desktopMenu = 0;
+    } else {
+        initDesktopPopup();
+    }
+    if (ws->numScreens() == 1 || (!m_client.data()->isMovable() && !m_client.data()->isMovableAcrossScreens())) {
+        delete m_screenMenu;
+        m_screenMenu = NULL;
+    } else {
+        initScreenPopup();
+    }
+#ifdef KWIN_BUILD_ACTIVITIES
+    ws->updateActivityList(true, false, this, "showHideActivityMenu");
+#endif
+
+    m_resizeOperation->setEnabled(m_client.data()->isResizable());
+    m_moveOperation->setEnabled(m_client.data()->isMovableAcrossScreens());
+    m_maximizeOperation->setEnabled(m_client.data()->isMaximizable());
+    m_maximizeOperation->setChecked(m_client.data()->maximizeMode() == Client::MaximizeFull);
+    m_shadeOperation->setEnabled(m_client.data()->isShadeable());
+    m_shadeOperation->setChecked(m_client.data()->shadeMode() != ShadeNone);
+    m_keepAboveOperation->setChecked(m_client.data()->keepAbove());
+    m_keepBelowOperation->setChecked(m_client.data()->keepBelow());
+    m_fullScreenOperation->setEnabled(m_client.data()->userCanSetFullScreen());
+    m_fullScreenOperation->setChecked(m_client.data()->isFullScreen());
+    m_noBorderOperation->setEnabled(m_client.data()->userCanSetNoBorder());
+    m_noBorderOperation->setChecked(m_client.data()->noBorder());
+    m_minimizeOperation->setEnabled(m_client.data()->isMinimizable());
+    m_closeOperation->setEnabled(m_client.data()->isCloseable());
+
+    if (ws->decorationSupportsTabbing()) {
+        initTabbingPopups();
+    } else {
+        delete m_addTabsMenu;
+        m_addTabsMenu = 0;
+    }
+}
+
+void UserActionsMenu::showHideActivityMenu()
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    const QStringList &openActivities_ = Workspace::self()->openActivities();
+    kDebug() << "activities:" << openActivities_.size();
+    if (openActivities_.size() < 2) {
+        delete m_activityMenu;
+        m_activityMenu = 0;
+    } else {
+        initActivityPopup();
+    }
+#endif
+}
+
+void UserActionsMenu::selectPopupClientTab(QAction* action)
+{
+    if (!(!m_client.isNull() && m_client.data()->tabGroup()) || !action->data().isValid())
+        return;
+
+    if (Client *other = action->data().value<Client*>()) {
+        m_client.data()->tabGroup()->setCurrent(other);
+        return;
+    }
+
+    // failed conversion, try "1" & "2", being prev and next
+    int direction = action->data().toInt();
+    if (direction == 1)
+        m_client.data()->tabGroup()->activatePrev();
+    else if (direction == 2)
+        m_client.data()->tabGroup()->activateNext();
+}
+
+static QString shortCaption(const QString &s)
+{
+    if (s.length() < 64)
+        return s;
+    QString ss = s;
+    return ss.replace(32,s.length()-64,"...");
+}
+
+void UserActionsMenu::rebuildTabListPopup()
+{
+    Q_ASSERT(m_switchToTabMenu);
+
+    m_switchToTabMenu->clear();
+    // whatever happens "0x1" and "0x2" are no heap positions ;-)
+    m_switchToTabMenu->addAction(i18nc("Switch to tab -> Previous", "Previous"))->setData(1);
+    m_switchToTabMenu->addAction(i18nc("Switch to tab -> Next", "Next"))->setData(2);
+
+    m_switchToTabMenu->addSeparator();
+
+    for (QList<Client*>::const_iterator i = m_client.data()->tabGroup()->clients().constBegin(),
+                                        end = m_client.data()->tabGroup()->clients().constEnd(); i != end; ++i) {
+        if ((*i)->noBorder() || *i == m_client.data()->tabGroup()->current())
+            continue; // cannot tab there anyway
+        m_switchToTabMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
+    }
+
+}
+
+void UserActionsMenu::entabPopupClient(QAction* action)
+{
+    if (m_client.isNull() || !action->data().isValid())
+        return;
+    Client *other = action->data().value<Client*>();
+    if (!Workspace::self()->clientList().contains(other)) // might have been lost betwenn pop-up and selection
+        return;
+    m_client.data()->tabBehind(other, true);
+    if (options->focusPolicyIsReasonable())
+        Workspace::self()->requestFocus(m_client.data());
+}
+
+void UserActionsMenu::rebuildTabGroupPopup()
+{
+    Q_ASSERT(m_addTabsMenu);
+
+    m_addTabsMenu->clear();
+    QList<Client*> handled;
+    const ClientList &clientList = Workspace::self()->clientList();
+    for (QList<Client*>::const_iterator i = clientList.constBegin(), end = clientList.constEnd(); i != end; ++i) {
+        if (*i == m_client.data() || (*i)->noBorder())
+            continue;
+        m_addTabsMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
+    }
+}
+
+void UserActionsMenu::initTabbingPopups()
+{
+    bool needTabManagers = false;
+    if (m_client.data()->tabGroup() && m_client.data()->tabGroup()->count() > 1) {
+        needTabManagers = true;
+        if (!m_switchToTabMenu) {
+            m_switchToTabMenu = new QMenu(i18n("Switch to Tab"), m_menu);
+            m_switchToTabMenu->setFont(KGlobalSettings::menuFont());
+            connect(m_switchToTabMenu, SIGNAL(triggered(QAction*)), SLOT(selectPopupClientTab(QAction*)));
+            connect(m_switchToTabMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabListPopup()));
+            m_menu->insertMenu(m_removeFromTabGroup, m_switchToTabMenu);
+        }
+    } else {
+        delete m_switchToTabMenu;
+        m_switchToTabMenu = 0;
+    }
+
+    if (!m_addTabsMenu) {
+        m_addTabsMenu = new QMenu(i18n("Attach as tab to"), m_menu);
+        m_addTabsMenu->setFont(KGlobalSettings::menuFont());
+        connect(m_addTabsMenu, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
+        connect(m_addTabsMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
+        m_menu->insertMenu(m_removeFromTabGroup, m_addTabsMenu);
+    }
+
+    m_removeFromTabGroup->setVisible(needTabManagers);
+    m_closeTabGroup->setVisible(needTabManagers);
+}
+
+void UserActionsMenu::initDesktopPopup()
+{
+    if (m_desktopMenu)
+        return;
+
+    m_desktopMenu = new QMenu(m_menu);
+    m_desktopMenu->setFont(KGlobalSettings::menuFont());
+    connect(m_desktopMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToDesktop(QAction*)));
+    connect(m_desktopMenu, SIGNAL(aboutToShow()), SLOT(desktopPopupAboutToShow()));
+
+    QAction *action = m_desktopMenu->menuAction();
+    // set it as the first item
+    m_menu->insertAction(m_minimizeOperation, action);
+    action->setText(i18n("Move To &Desktop"));
+}
+
+void UserActionsMenu::initScreenPopup()
+{
+    if (m_screenMenu) {
+        return;
+    }
+
+    m_screenMenu = new QMenu(m_menu);
+    m_screenMenu->setFont(KGlobalSettings::menuFont());
+    connect(m_screenMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToScreen(QAction*)));
+    connect(m_screenMenu, SIGNAL(aboutToShow()), SLOT(screenPopupAboutToShow()));
+
+    QAction *action = m_screenMenu->menuAction();
+    // set it as the first item after desktop
+    m_menu->insertAction(m_activityMenu ? m_activityMenu->menuAction() : m_minimizeOperation, action);
+    action->setText(i18n("Move To &Screen"));
+}
+
+void UserActionsMenu::initActivityPopup()
+{
+    if (m_activityMenu)
+        return;
+
+    m_activityMenu = new QMenu(m_menu);
+    m_activityMenu->setFont(KGlobalSettings::menuFont());
+    connect(m_activityMenu, SIGNAL(triggered(QAction*)),
+            this, SLOT(slotToggleOnActivity(QAction*)));
+    connect(m_activityMenu, SIGNAL(aboutToShow()),
+            this, SLOT(activityPopupAboutToShow()));
+
+    QAction *action = m_activityMenu->menuAction();
+    // set it as the first item
+    m_menu->insertAction(m_minimizeOperation, action);
+    action->setText(i18n("Ac&tivities"));   //FIXME is that a good string?
+}
+
+void UserActionsMenu::desktopPopupAboutToShow()
+{
+    if (!m_desktopMenu)
+        return;
+    const Workspace *ws = Workspace::self();
+
+    m_desktopMenu->clear();
+    QActionGroup *group = new QActionGroup(m_desktopMenu);
+    QAction *action = m_desktopMenu->addAction(i18n("&All Desktops"));
+    action->setData(0);
+    action->setCheckable(true);
+    group->addAction(action);
+
+    if (!m_client.isNull() && m_client.data()->isOnAllDesktops())
+        action->setChecked(true);
+    m_desktopMenu->addSeparator();
+
+    const int BASE = 10;
+    for (int i = 1; i <= ws->numberOfDesktops(); ++i) {
+        QString basic_name("%1  %2");
+        if (i < BASE) {
+            basic_name.prepend('&');
+        }
+        action = m_desktopMenu->addAction(basic_name.arg(i).arg(ws->desktopName(i).replace('&', "&&")));
+        action->setData(i);
+        action->setCheckable(true);
+        group->addAction(action);
+
+        if (!m_client.isNull() &&
+                !m_client.data()->isOnAllDesktops() && m_client.data()->desktop()  == i)
+            action->setChecked(true);
+    }
+
+    m_desktopMenu->addSeparator();
+    action = m_desktopMenu->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
+    action->setData(ws->numberOfDesktops() + 1);
+
+    if (ws->numberOfDesktops() >= Workspace::self()->maxNumberOfDesktops())
+        action->setEnabled(false);
+}
+
+void UserActionsMenu::screenPopupAboutToShow()
+{
+    if (!m_screenMenu) {
+        return;
+    }
+
+    m_screenMenu->clear();
+    QActionGroup *group = new QActionGroup(m_screenMenu);
+
+    for (int i = 0; i<Workspace::self()->numScreens(); ++i) {
+        // TODO: retrieve the screen name?
+        // assumption: there are not more than 9 screens attached.
+        QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to",
+                                                        "Screen &%1", (i+1)));
+        action->setData(i);
+        action->setCheckable(true);
+        if (!m_client.isNull() && i == m_client.data()->screen()) {
+            action->setChecked(true);
+        }
+        group->addAction(action);
+    }
+}
+
+void UserActionsMenu::activityPopupAboutToShow()
+{
+    if (!m_activityMenu)
+        return;
+
+#ifdef KWIN_BUILD_ACTIVITIES
+    m_activityMenu->clear();
+    QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
+    action->setData(QString());
+    action->setCheckable(true);
+
+    if (!m_client.isNull() && m_client.data()->isOnAllActivities())
+        action->setChecked(true);
+    m_activityMenu->addSeparator();
+
+    foreach (const QString &id, Workspace::self()->openActivities()) {
+        KActivities::Info activity(id);
+        QString name = activity.name();
+        name.replace('&', "&&");
+        action = m_activityMenu->addAction(KIcon(activity.icon()), name);
+        action->setData(id);
+        action->setCheckable(true);
+
+        if (!m_client.isNull() &&
+                !m_client.data()->isOnAllActivities() && m_client.data()->isOnActivity(id))
+            action->setChecked(true);
+    }
+#endif
+}
+
+void UserActionsMenu::slotWindowOperation(QAction *action)
+{
+    if (!action->data().isValid())
+        return;
+
+    Options::WindowOperation op = static_cast< Options::WindowOperation >(action->data().toInt());
+    QWeakPointer<Client> c = (!m_client.isNull()) ? m_client : QWeakPointer<Client>(Workspace::self()->activeClient());
+    if (c.isNull())
+        return;
+    QString type;
+    switch(op) {
+    case Options::FullScreenOp:
+        if (!c.data()->isFullScreen() && c.data()->userCanSetFullScreen())
+            type = "fullscreenaltf3";
+        break;
+    case Options::NoBorderOp:
+        if (!c.data()->noBorder() && c.data()->userCanSetNoBorder())
+            type = "noborderaltf3";
+        break;
+    default:
+        break;
+    };
+    if (!type.isEmpty())
+        helperDialog(type, c);
+    Workspace::self()->performWindowOperation(c.data(), op);
+}
+
+void UserActionsMenu::slotSendToDesktop(QAction *action)
+{
+    int desk = action->data().toInt();
+    if (m_client.isNull())
+        return;
+    Workspace *ws = Workspace::self();
+    if (desk == 0) {
+        // the 'on_all_desktops' menu entry
+        m_client.data()->setOnAllDesktops(!m_client.data()->isOnAllDesktops());
+        return;
+    } else if (desk > ws->numberOfDesktops()) {
+        ws->setNumberOfDesktops(desk);
+    }
+
+    ws->sendClientToDesktop(m_client.data(), desk, false);
+}
+
+void UserActionsMenu::slotSendToScreen(QAction *action)
+{
+    const int screen = action->data().toInt();
+    if (m_client.isNull()) {
+        return;
+    }
+    Workspace *ws = Workspace::self();
+    if (screen >= ws->numScreens()) {
+        return;
+    }
+
+    ws->sendClientToScreen(m_client.data(), screen);
+}
+
+void UserActionsMenu::slotToggleOnActivity(QAction *action)
+{
+    QString activity = action->data().toString();
+    if (m_client.isNull())
+        return;
+    if (activity.isEmpty()) {
+        // the 'on_all_activities' menu entry
+        m_client.data()->setOnAllActivities(!m_client.data()->isOnAllActivities());
+        return;
+    }
+
+    Workspace::self()->toggleClientOnActivity(m_client.data(), activity, false);
+}
+
 //****************************************
 // Workspace
 //****************************************
-
-QMenu* Workspace::clientPopup()
-{
-    if (!popup) {
-        popup = new QMenu;
-        popup->setFont(KGlobalSettings::menuFont());
-        connect(popup, SIGNAL(aboutToShow()), this, SLOT(clientPopupAboutToShow()));
-        connect(popup, SIGNAL(triggered(QAction*)), this, SLOT(clientPopupActivated(QAction*)));
-
-        advanced_popup = new QMenu(popup);
-        advanced_popup->setFont(KGlobalSettings::menuFont());
-
-        mMoveOpAction = advanced_popup->addAction(i18n("&Move"));
-        mMoveOpAction->setIcon(KIcon("transform-move"));
-        KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
-        if (kaction != 0)
-            mMoveOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMoveOpAction->setData(Options::UnrestrictedMoveOp);
-
-        mResizeOpAction = advanced_popup->addAction(i18n("Re&size"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
-        if (kaction != 0)
-            mResizeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mResizeOpAction->setData(Options::ResizeOp);
-
-        mKeepAboveOpAction = advanced_popup->addAction(i18n("Keep &Above Others"));
-        mKeepAboveOpAction->setIcon(KIcon("go-up"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Above Other Windows"));
-        if (kaction != 0)
-            mKeepAboveOpAction->setShortcut(kaction->globalShortcut().primary());
-        mKeepAboveOpAction->setCheckable(true);
-        mKeepAboveOpAction->setData(Options::KeepAboveOp);
-
-        mKeepBelowOpAction = advanced_popup->addAction(i18n("Keep &Below Others"));
-        mKeepBelowOpAction->setIcon(KIcon("go-down"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Below Other Windows"));
-        if (kaction != 0)
-            mKeepBelowOpAction->setShortcut(kaction->globalShortcut().primary());
-        mKeepBelowOpAction->setCheckable(true);
-        mKeepBelowOpAction->setData(Options::KeepBelowOp);
-
-        mFullScreenOpAction = advanced_popup->addAction(i18n("&Fullscreen"));
-        mFullScreenOpAction->setIcon(KIcon("view-fullscreen"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Fullscreen"));
-        if (kaction != 0)
-            mFullScreenOpAction->setShortcut(kaction->globalShortcut().primary());
-        mFullScreenOpAction->setCheckable(true);
-        mFullScreenOpAction->setData(Options::FullScreenOp);
-
-        mShadeOpAction = advanced_popup->addAction(i18n("Sh&ade"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Shade"));
-        if (kaction != 0)
-            mShadeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mShadeOpAction->setCheckable(true);
-        mShadeOpAction->setData(Options::ShadeOp);
-
-        mNoBorderOpAction = advanced_popup->addAction(i18n("&No Border"));
-        kaction = qobject_cast<KAction*>(keys->action("Window No Border"));
-        if (kaction != 0)
-            mNoBorderOpAction->setShortcut(kaction->globalShortcut().primary());
-        mNoBorderOpAction->setCheckable(true);
-        mNoBorderOpAction->setData(Options::NoBorderOp);
-
-        advanced_popup->addSeparator();
-
-        QAction *action = advanced_popup->addAction(i18n("Window &Shortcut..."));
-        action->setIcon(KIcon("configure-shortcuts"));
-        kaction = qobject_cast<KAction*>(keys->action("Setup Window Shortcut"));
-        if (kaction != 0)
-            action->setShortcut(kaction->globalShortcut().primary());
-        action->setData(Options::SetupWindowShortcutOp);
-
-        action = advanced_popup->addAction(i18n("&Special Window Settings..."));
-        action->setIcon(KIcon("preferences-system-windows-actions"));
-        action->setData(Options::WindowRulesOp);
-
-        action = advanced_popup->addAction(i18n("S&pecial Application Settings..."));
-        action->setIcon(KIcon("preferences-system-windows-actions"));
-        action->setData(Options::ApplicationRulesOp);
-        if (!KGlobal::config()->isImmutable() &&
-                !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty()) {
-            advanced_popup->addSeparator();
-            action = advanced_popup->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
-                                            "Window &Manager Settings..."));
-            action->setIcon(KIcon("configure"));
-            connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
-        }
-
-        mMinimizeOpAction = popup->addAction(i18n("Mi&nimize"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Minimize"));
-        if (kaction != 0)
-            mMinimizeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMinimizeOpAction->setData(Options::MinimizeOp);
-
-        mMaximizeOpAction = popup->addAction(i18n("Ma&ximize"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Maximize"));
-        if (kaction != 0)
-            mMaximizeOpAction->setShortcut(kaction->globalShortcut().primary());
-        mMaximizeOpAction->setCheckable(true);
-        mMaximizeOpAction->setData(Options::MaximizeOp);
-
-        popup->addSeparator();
-
-        // Actions for window tabbing
-        if (decorationSupportsTabbing()) {
-            mRemoveFromTabGroup = popup->addAction(i18n("&Untab"));
-            kaction = qobject_cast<KAction*>(keys->action("Untab"));
-            if (kaction != 0)
-                mRemoveFromTabGroup->setShortcut(kaction->globalShortcut().primary());
-            mRemoveFromTabGroup->setData(Options::RemoveTabFromGroupOp);
-
-            mCloseTabGroup = popup->addAction(i18n("Close Entire &Group"));
-            mCloseTabGroup->setIcon(KIcon("window-close"));
-            kaction = qobject_cast<KAction*>(keys->action("Close TabGroup"));
-            if (kaction != 0)
-                mCloseTabGroup->setShortcut(kaction->globalShortcut().primary());
-            mCloseTabGroup->setData(Options::CloseTabGroupOp);
-
-            popup->addSeparator();
-        }
-
-        popup->addSeparator();
-
-        action = popup->addMenu(advanced_popup);
-        action->setText(i18n("More Actions"));
-
-        popup->addSeparator();
-
-        mCloseOpAction = popup->addAction(i18n("&Close"));
-        mCloseOpAction->setIcon(KIcon("window-close"));
-        kaction = qobject_cast<KAction*>(keys->action("Window Close"));
-        if (kaction != 0)
-            mCloseOpAction->setShortcut(kaction->globalShortcut().primary());
-        mCloseOpAction->setData(Options::CloseOp);
-    }
-    return popup;
-}
-
-void Workspace::discardPopup()
-{
-    delete popup;
-    popup = NULL;
-    desk_popup = NULL;
-    screen_popup = NULL;
-    activity_popup = NULL;
-    switch_to_tab_popup = NULL;
-    add_tabs_popup = NULL;
-}
 
 void Workspace::slotIncreaseWindowOpacity()
 {
@@ -236,329 +779,6 @@ void Workspace::slotLowerWindowOpacity()
     active_client->setOpacity(qMax(active_client->opacity() - 0.05, 0.05));
 }
 
-/*!
-  The client popup menu will become visible soon.
-
-  Adjust the items according to the respective popup client.
- */
-void Workspace::clientPopupAboutToShow()
-{
-    if (!active_popup_client || !popup)
-        return;
-
-    if (numberOfDesktops() == 1) {
-        delete desk_popup;
-        desk_popup = 0;
-    } else {
-        initDesktopPopup();
-    }
-    if (numScreens() == 1 || (!active_popup_client->isMovable() && !active_popup_client->isMovableAcrossScreens())) {
-        delete screen_popup;
-        screen_popup = NULL;
-    } else {
-        initScreenPopup();
-    }
-#ifdef KWIN_BUILD_ACTIVITIES
-    updateActivityList(true, false, "showHideActivityMenu");
-#endif
-
-    mResizeOpAction->setEnabled(active_popup_client->isResizable());
-    mMoveOpAction->setEnabled(active_popup_client->isMovableAcrossScreens());
-    mMaximizeOpAction->setEnabled(active_popup_client->isMaximizable());
-    mMaximizeOpAction->setChecked(active_popup_client->maximizeMode() == Client::MaximizeFull);
-    mShadeOpAction->setEnabled(active_popup_client->isShadeable());
-    mShadeOpAction->setChecked(active_popup_client->shadeMode() != ShadeNone);
-    mKeepAboveOpAction->setChecked(active_popup_client->keepAbove());
-    mKeepBelowOpAction->setChecked(active_popup_client->keepBelow());
-    mFullScreenOpAction->setEnabled(active_popup_client->userCanSetFullScreen());
-    mFullScreenOpAction->setChecked(active_popup_client->isFullScreen());
-    mNoBorderOpAction->setEnabled(active_popup_client->userCanSetNoBorder());
-    mNoBorderOpAction->setChecked(active_popup_client->noBorder());
-    mMinimizeOpAction->setEnabled(active_popup_client->isMinimizable());
-    mCloseOpAction->setEnabled(active_popup_client->isCloseable());
-
-    if (decorationSupportsTabbing()) {
-        initTabbingPopups();
-    } else {
-        delete add_tabs_popup;
-        add_tabs_popup = 0;
-    }
-}
-
-void Workspace::showHideActivityMenu()
-{
-#ifdef KWIN_BUILD_ACTIVITIES
-    kDebug() << "activities:" << openActivities_.size();
-    if (openActivities_.size() < 2) {
-        delete activity_popup;
-        activity_popup = 0;
-    } else {
-        initActivityPopup();
-    }
-#endif
-}
-
-void Workspace::selectPopupClientTab(QAction* action)
-{
-    if (!(active_popup_client && active_popup_client->tabGroup()) || !action->data().isValid())
-        return;
-
-    if (Client *other = action->data().value<Client*>()) {
-        active_popup_client->tabGroup()->setCurrent(other);
-        return;
-    }
-
-    // failed conversion, try "1" & "2", being prev and next
-    int direction = action->data().toInt();
-    if (direction == 1)
-        active_popup_client->tabGroup()->activatePrev();
-    else if (direction == 2)
-        active_popup_client->tabGroup()->activateNext();
-}
-
-static QString shortCaption(const QString &s)
-{
-    if (s.length() < 64)
-        return s;
-    QString ss = s;
-    return ss.replace(32,s.length()-64,"...");
-}
-
-void Workspace::rebuildTabListPopup()
-{
-    Q_ASSERT(switch_to_tab_popup);
-
-    switch_to_tab_popup->clear();
-    // whatever happens "0x1" and "0x2" are no heap positions ;-)
-    switch_to_tab_popup->addAction(i18nc("Switch to tab -> Previous", "Previous"))->setData(1);
-    switch_to_tab_popup->addAction(i18nc("Switch to tab -> Next", "Next"))->setData(2);
-
-    switch_to_tab_popup->addSeparator();
-
-    for (QList<Client*>::const_iterator i = active_popup_client->tabGroup()->clients().constBegin(),
-                                        end = active_popup_client->tabGroup()->clients().constEnd(); i != end; ++i) {
-        if ((*i)->noBorder() || *i == active_popup_client->tabGroup()->current())
-            continue; // cannot tab there anyway
-        switch_to_tab_popup->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
-    }
-
-}
-
-void Workspace::entabPopupClient(QAction* action)
-{
-    if (!active_popup_client || !action->data().isValid())
-        return;
-    Client *other = action->data().value<Client*>();
-    if (!clients.contains(other)) // might have been lost betwenn pop-up and selection
-        return;
-    active_popup_client->tabBehind(other, true);
-    if (options->focusPolicyIsReasonable())
-        requestFocus(active_popup_client);
-}
-
-void Workspace::rebuildTabGroupPopup()
-{
-    Q_ASSERT(add_tabs_popup);
-
-    add_tabs_popup->clear();
-    QList<Client*> handled;
-    for (QList<Client*>::const_iterator i = clientList().constBegin(), end = clientList().constEnd(); i != end; ++i) {
-        if (*i == active_popup_client || (*i)->noBorder())
-            continue;
-        add_tabs_popup->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
-    }
-}
-
-void Workspace::initTabbingPopups()
-{
-    bool needTabManagers = false;
-    if (active_popup_client->tabGroup() && active_popup_client->tabGroup()->count() > 1) {
-        needTabManagers = true;
-        if (!switch_to_tab_popup) {
-            switch_to_tab_popup = new QMenu(i18n("Switch to Tab"), popup);
-            switch_to_tab_popup->setFont(KGlobalSettings::menuFont());
-            connect(switch_to_tab_popup, SIGNAL(triggered(QAction*)), SLOT(selectPopupClientTab(QAction*)));
-            connect(switch_to_tab_popup, SIGNAL(aboutToShow()), SLOT(rebuildTabListPopup()));
-            popup->insertMenu(mRemoveFromTabGroup, switch_to_tab_popup);
-        }
-    } else {
-        delete switch_to_tab_popup;
-        switch_to_tab_popup = 0;
-    }
-
-    if (!add_tabs_popup) {
-        add_tabs_popup = new QMenu(i18n("Attach as tab to"), popup);
-        add_tabs_popup->setFont(KGlobalSettings::menuFont());
-        connect(add_tabs_popup, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
-        connect(add_tabs_popup, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
-        popup->insertMenu(mRemoveFromTabGroup, add_tabs_popup);
-    }
-
-    mRemoveFromTabGroup->setVisible(needTabManagers);
-    mCloseTabGroup->setVisible(needTabManagers);
-}
-
-void Workspace::initDesktopPopup()
-{
-    if (desk_popup)
-        return;
-
-    desk_popup = new QMenu(popup);
-    desk_popup->setFont(KGlobalSettings::menuFont());
-    connect(desk_popup, SIGNAL(triggered(QAction*)), SLOT(slotSendToDesktop(QAction*)));
-    connect(desk_popup, SIGNAL(aboutToShow()), SLOT(desktopPopupAboutToShow()));
-
-    QAction *action = desk_popup->menuAction();
-    // set it as the first item
-    popup->insertAction(mMinimizeOpAction, action);
-    action->setText(i18n("Move To &Desktop"));
-}
-
-void Workspace::initScreenPopup()
-{
-    if (screen_popup) {
-        return;
-    }
-
-    screen_popup = new QMenu(popup);
-    screen_popup->setFont(KGlobalSettings::menuFont());
-    connect(screen_popup, SIGNAL(triggered(QAction*)), SLOT(slotSendToScreen(QAction*)));
-    connect(screen_popup, SIGNAL(aboutToShow()), SLOT(screenPopupAboutToShow()));
-
-    QAction *action = screen_popup->menuAction();
-    // set it as the first item after desktop
-    popup->insertAction(activity_popup ? activity_popup->menuAction() : mMinimizeOpAction, action);
-    action->setText(i18n("Move To &Screen"));
-}
-
-/*!
-  Creates activity popup.
-  I'm going with checkable ones instead of "copy to" and "move to" menus; I *think* it's an easier way.
-  Oh, and an 'all' option too of course
- */
-void Workspace::initActivityPopup()
-{
-    if (activity_popup)
-        return;
-
-    activity_popup = new QMenu(popup);
-    activity_popup->setFont(KGlobalSettings::menuFont());
-    connect(activity_popup, SIGNAL(triggered(QAction*)),
-            this, SLOT(slotToggleOnActivity(QAction*)));
-    connect(activity_popup, SIGNAL(aboutToShow()),
-            this, SLOT(activityPopupAboutToShow()));
-
-    QAction *action = activity_popup->menuAction();
-    // set it as the first item
-    popup->insertAction(mMinimizeOpAction, action);
-    action->setText(i18n("Ac&tivities"));   //FIXME is that a good string?
-}
-
-/*!
-  Adjusts the desktop popup to the current values and the location of
-  the popup client.
- */
-void Workspace::desktopPopupAboutToShow()
-{
-    if (!desk_popup)
-        return;
-
-    desk_popup->clear();
-    QActionGroup *group = new QActionGroup(desk_popup);
-    QAction *action = desk_popup->addAction(i18n("&All Desktops"));
-    action->setData(0);
-    action->setCheckable(true);
-    group->addAction(action);
-
-    if (active_popup_client && active_popup_client->isOnAllDesktops())
-        action->setChecked(true);
-    desk_popup->addSeparator();
-
-    const int BASE = 10;
-    for (int i = 1; i <= numberOfDesktops(); i++) {
-        QString basic_name("%1  %2");
-        if (i < BASE) {
-            basic_name.prepend('&');
-        }
-        action = desk_popup->addAction(basic_name.arg(i).arg(desktopName(i).replace('&', "&&")));
-        action->setData(i);
-        action->setCheckable(true);
-        group->addAction(action);
-
-        if (active_popup_client &&
-                !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i)
-            action->setChecked(true);
-    }
-
-    desk_popup->addSeparator();
-    action = desk_popup->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
-    action->setData(numberOfDesktops() + 1);
-
-    if (numberOfDesktops() >= Workspace::self()->maxNumberOfDesktops())
-        action->setEnabled(false);
-}
-
-/*!
-  Adjusts the screen popup to the current values and the location of
-  the popup client.
- */
-void Workspace::screenPopupAboutToShow()
-{
-    if (!screen_popup) {
-        return;
-    }
-
-    screen_popup->clear();
-    QActionGroup *group = new QActionGroup(screen_popup);
-
-    for (int i = 0; i<numScreens(); ++i) {
-        // TODO: retrieve the screen name?
-        // assumption: there are not more than 9 screens attached.
-        QAction *action = screen_popup->addAction(i18nc("@item:inmenu List of all Screens to send a window to",
-                                                        "Screen &%1", (i+1)));
-        action->setData(i);
-        action->setCheckable(true);
-        if (active_popup_client && i == active_popup_client->screen()) {
-            action->setChecked(true);
-        }
-        group->addAction(action);
-    }
-}
-
-/*!
-  Adjusts the activity popup to the current values and the location of
-  the popup client.
- */
-void Workspace::activityPopupAboutToShow()
-{
-    if (!activity_popup)
-        return;
-
-#ifdef KWIN_BUILD_ACTIVITIES
-    activity_popup->clear();
-    QAction *action = activity_popup->addAction(i18n("&All Activities"));
-    action->setData(QString());
-    action->setCheckable(true);
-
-    if (active_popup_client && active_popup_client->isOnAllActivities())
-        action->setChecked(true);
-    activity_popup->addSeparator();
-
-    foreach (const QString &id, openActivities_) {
-        KActivities::Info activity(id);
-        QString name = activity.name();
-        name.replace('&', "&&");
-        action = activity_popup->addAction(KIcon(activity.icon()), name);
-        action->setData(id);
-        action->setCheckable(true);
-
-        if (active_popup_client &&
-                !active_popup_client->isOnAllActivities() && active_popup_client->isOnActivity(id))
-            action->setChecked(true);
-    }
-#endif
-}
-
 void Workspace::closeActivePopup()
 {
     if (active_popup) {
@@ -566,6 +786,7 @@ void Workspace::closeActivePopup()
         active_popup = NULL;
         active_popup_client = NULL;
     }
+    m_userActionsMenu->close();
 }
 
 /*!
@@ -590,7 +811,7 @@ void Workspace::initShortcuts()
         tab_box->initShortcuts(actionCollection);
     }
 #endif
-    discardPopup(); // so that it's recreated next time
+    m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
 void Workspace::setupWindowShortcut(Client* c)
@@ -654,34 +875,6 @@ void Workspace::clientShortcutUpdated(Client* c)
         delete action;
     }
 }
-
-void Workspace::clientPopupActivated(QAction *action)
-{
-    if (!action->data().isValid())
-        return;
-
-    WindowOperation op = static_cast< WindowOperation >(action->data().toInt());
-    Client* c = active_popup_client ? active_popup_client : active_client;
-    if (!c)
-        return;
-    QString type;
-    switch(op) {
-    case FullScreenOp:
-        if (!c->isFullScreen() && c->userCanSetFullScreen())
-            type = "fullscreenaltf3";
-        break;
-    case NoBorderOp:
-        if (!c->noBorder() && c->userCanSetNoBorder())
-            type = "noborderaltf3";
-        break;
-    default:
-        break;
-    };
-    if (!type.isEmpty())
-        helperDialog(type, c);
-    performWindowOperation(c, op);
-}
-
 
 void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
 {
@@ -770,8 +963,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
     case Options::NoOp:
         break;
     case Options::RemoveTabFromGroupOp:
-        if (c->untab())
-        if (options->focusPolicyIsReasonable())
+        if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
              takeActivity(c, ActivityFocus | ActivityRaise, true);
         break;
     case Options::ActivateNextTabOp:
@@ -1420,7 +1612,7 @@ void Workspace::slotActivatePrevTab()
 void Workspace::slotUntab()
 {
     if (active_client)
-        active_client->untab();
+        active_client->untab(active_client->geometry().translated(cascadeOffset(active_client)));
 }
 
 /*!
@@ -1430,66 +1622,6 @@ void Workspace::slotKillWindow()
 {
     KillWindow kill(this);
     kill.start();
-}
-
-/*!
-  Sends the popup client to desktop \a desk
-
-  Internal slot for the window operation menu
- */
-void Workspace::slotSendToDesktop(QAction *action)
-{
-    int desk = action->data().toInt();
-    if (!active_popup_client)
-        return;
-    if (desk == 0) {
-        // the 'on_all_desktops' menu entry
-        active_popup_client->setOnAllDesktops(!active_popup_client->isOnAllDesktops());
-        return;
-    } else if (desk > numberOfDesktops()) {
-        setNumberOfDesktops(desk);
-    }
-
-    sendClientToDesktop(active_popup_client, desk, false);
-
-}
-
-/*!
-  Sends the popup client to screen \a screen
-
-  Internal slot for the window operation menu
- */
-void Workspace::slotSendToScreen(QAction *action)
-{
-    const int screen = action->data().toInt();
-    if (!active_popup_client) {
-        return;
-    }
-    if (screen >= numScreens()) {
-        return;
-    }
-
-    sendClientToScreen(active_popup_client, screen);
-}
-
-/*!
-  Toggles whether the popup client is on the \a activity
-
-  Internal slot for the window operation menu
- */
-void Workspace::slotToggleOnActivity(QAction *action)
-{
-    QString activity = action->data().toString();
-    if (!active_popup_client)
-        return;
-    if (activity.isEmpty()) {
-        // the 'on_all_activities' menu entry
-        active_popup_client->setOnAllActivities(!active_popup_client->isOnAllActivities());
-        return;
-    }
-
-    toggleClientOnActivity(active_popup_client, activity, false);
-
 }
 
 /*!
@@ -1605,35 +1737,7 @@ void Workspace::slotWindowOperations()
 
 void Workspace::showWindowMenu(const QRect &pos, Client* cl)
 {
-    if (!KAuthorized::authorizeKAction("kwin_rmb"))
-        return;
-    if (!cl)
-        return;
-    if (active_popup_client != NULL)   // recursion
-        return;
-    if (cl->isDesktop()
-            || cl->isDock())
-        return;
-
-    active_popup_client = cl;
-    QMenu* p = clientPopup();
-    active_popup = p;
-    int x = pos.left();
-    int y = pos.bottom();
-    if (y == pos.top())
-        p->exec(QPoint(x, y));
-    else {
-        QRect area = clientArea(ScreenArea, QPoint(x, y), currentDesktop());
-        clientPopupAboutToShow(); // needed for sizeHint() to be correct :-/
-        int popupHeight = p->sizeHint().height();
-        if (y + popupHeight < area.height())
-            p->exec(QPoint(x, y));
-        else
-            p->exec(QPoint(x, pos.top() - popupHeight));
-    }
-    // active popup may be already changed (e.g. the window shortcut dialog)
-    if (active_popup == p)
-        closeActivePopup();
+    m_userActionsMenu->show(pos, cl);
 }
 
 /*!

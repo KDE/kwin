@@ -39,10 +39,12 @@ void MockTabBoxHandler::grabbedKeyEvent(QKeyEvent *event) const
 
 QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::activeClient() const
 {
-    if (!m_windows.isEmpty()) {
-        return QWeakPointer< TabBox::TabBoxClient >(m_windows.first());
-    }
-    return QWeakPointer<TabBox::TabBoxClient>();
+    return m_activeClient;
+}
+
+void MockTabBoxHandler::setActiveClient(const QWeakPointer< TabBox::TabBoxClient >& client)
+{
+    m_activeClient = client;
 }
 
 QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::clientToAddToList(TabBox::TabBoxClient *client, int desktop) const
@@ -59,11 +61,6 @@ QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::clientToAddToList(TabBox
 
 QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::nextClientFocusChain(TabBox::TabBoxClient *client) const
 {
-    if (!client) {
-        if (!m_windows.isEmpty()) {
-            return QWeakPointer< TabBox::TabBoxClient >(m_windows.first());
-        }
-    }
     QList< QSharedPointer< TabBox::TabBoxClient > >::const_iterator it = m_windows.constBegin();
     for (; it != m_windows.constEnd(); ++it) {
         if ((*it).data() == client) {
@@ -78,10 +75,19 @@ QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::nextClientFocusChain(Tab
     return QWeakPointer< TabBox::TabBoxClient >();
 }
 
+QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::firstClientFocusChain() const
+{
+    if (m_windows.isEmpty()) {
+        return QWeakPointer<TabBox::TabBoxClient>();
+    }
+    return m_windows.first();
+}
+
 QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::createMockWindow(const QString &caption, WId id)
 {
     QSharedPointer< TabBox::TabBoxClient > client(new MockTabBoxClient(caption, id));
     m_windows.append(client);
+    m_activeClient = client;
     return QWeakPointer< TabBox::TabBoxClient >(client);
 }
 

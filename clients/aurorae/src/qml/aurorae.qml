@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 1.1
+import org.kde.kwin.decoration 0.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 
 Decoration {
@@ -31,6 +32,10 @@ Decoration {
     paddingRight: auroraeTheme.paddingRight
     paddingBottom: auroraeTheme.paddingBottom
     paddingTop: auroraeTheme.paddingTop
+    DecorationOptions {
+        id: options
+        deco: decoration
+    }
     PlasmaCore.FrameSvg {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
         property bool supportsMaximized: hasElementPrefix("decoration-maximized")
@@ -108,7 +113,7 @@ Decoration {
     }
     AuroraeButtonGroup {
         id: leftButtonGroup
-        buttons: options.customButtonPositions ? options.leftButtons : auroraeTheme.defaultButtonsLeft
+        buttons: options.titleButtonsLeft
         width: childrenRect.width
         anchors {
             left: parent.left
@@ -122,7 +127,7 @@ Decoration {
     }
     AuroraeButtonGroup {
         id: rightButtonGroup
-        buttons: options.customButtonPositions ? options.rightButtons : auroraeTheme.defaultButtonsRight
+        buttons: options.titleButtonsRight
         width: childrenRect.width
         anchors {
             right: parent.right
@@ -143,7 +148,7 @@ Decoration {
         elide: Text.ElideRight
         height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
         color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
-        font: decoration.active ? options.activeTitleFont : options.inactiveTitleFont
+        font: options.titleFont
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left

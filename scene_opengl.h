@@ -49,6 +49,7 @@ public:
     virtual CompositingType compositingType() const {
         return OpenGLCompositing;
     }
+    virtual bool hasPendingFlush() const { return !m_lastDamage.isEmpty(); }
     virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
@@ -171,13 +172,16 @@ class SceneOpenGL::Window
     : public Scene::Window
 {
 public:
-    Window(Toplevel* c, SceneOpenGL* scene);
+    Window(Toplevel* c);
     virtual ~Window();
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void pixmapDiscarded();
     bool bindTexture();
     void discardTexture();
     void checkTextureSize();
+    void setScene(SceneOpenGL *scene) {
+        m_scene = scene;
+    }
 
 protected:
     enum TextureType {

@@ -20,6 +20,7 @@ Item {
     property alias active: decoration.active
     property alias source: auroraeLoader.source
     QtObject {
+        signal configChanged
         id: decoration
         property bool active: false
         property string caption: display
@@ -43,9 +44,26 @@ Item {
         property string leftButtons: "MS"
         property string rightButtons: "HIA__X"
         function titleMouseMoved() {}
+        function readConfig(key, defaultValue) {
+            if (key == "BorderSize") {
+                return borderSize;
+            } else if (key == "ButtonSize") {
+                return buttonSize;
+            } else {
+                return decorationBaseModel.readConfig(auroraeThemeName, key, defaultValue);
+            }
+        }
     }
     Loader {
         id: auroraeLoader
         anchors.fill: parent
+    }
+    Connections {
+        target: decorationBaseModel
+        onConfigChanged: {
+            if (auroraeThemeName == themeName) {
+                decoration.configChanged();
+            }
+        }
     }
 }

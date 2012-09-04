@@ -86,6 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include <QX11Info>
+#include "composite.h"
 
 namespace KWin
 {
@@ -130,7 +131,10 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
 #endif
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
-        addRepaintFull();
+        if (m_compositor) {
+            m_compositor->addRepaintFull();
+        }
+
         if (active_client)
             active_client->updateMouseGrab();
     }
@@ -712,7 +716,9 @@ ToplevelList Workspace::xStackingOrder() const
     }
     if (windows != NULL)
         XFree(windows);
-    const_cast< Workspace* >(this)->checkUnredirect();
+    if (m_compositor) {
+        const_cast< Workspace* >(this)->m_compositor->checkUnredirect();
+    }
     return x_stacking;
 }
 

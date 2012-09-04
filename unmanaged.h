@@ -47,6 +47,7 @@ public:
         return UnmanagedLayer;
     }
 protected:
+    virtual void damageNotifyEvent(XDamageNotifyEvent* e);
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
 private:
