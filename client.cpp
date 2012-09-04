@@ -1226,7 +1226,7 @@ void Client::resetShowingDesktop(bool keep_hidden)
     bool belongs_to_desktop = false;
     for (ClientList::ConstIterator it = group()->members().constBegin(),
                                     end = group()->members().constEnd(); it != end; ++it)
-        if ((belongs_to_desktop == (*it)->isDesktop()))
+        if ((belongs_to_desktop = (*it)->isDesktop()))
             break;
 
     if (!belongs_to_desktop)
