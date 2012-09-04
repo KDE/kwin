@@ -517,8 +517,6 @@ QByteArray ColorCorrection::prepareFragmentShader(const QByteArray &sourceCode)
 
 void ColorCorrectionPrivate::setupCCTextures()
 {
-    Q_Q(ColorCorrection);
-
     if (m_ccTextureUnit < 0) {
         GLint maxUnits = 0;
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
