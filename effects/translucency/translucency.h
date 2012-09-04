@@ -48,6 +48,7 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual bool isActive() const;
 
     // for properties
     qreal configuredDecoration() const {
@@ -90,6 +91,9 @@ public Q_SLOTS:
     void slotWindowActivated(KWin::EffectWindow* w);
     void slotWindowStartStopUserMovedResized(KWin::EffectWindow *w);
 
+private Q_SLOTS:
+    void checkIsActive();
+
 private:
     bool isInactive(const EffectWindow *w) const;
     bool individualmenuconfig;
@@ -111,6 +115,14 @@ private:
 
     QTimeLine moveresize_timeline;
     QTimeLine activeinactive_timeline;
+
+    bool m_activeDecorations;
+    bool m_activeMoveResize;
+    bool m_activeDialogs;
+    bool m_activeInactive;
+    bool m_activeCombobox;
+    bool m_activeMenus;
+    bool m_active;
 };
 
 } // namespace

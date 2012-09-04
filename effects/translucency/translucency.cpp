@@ -31,10 +31,19 @@ TranslucencyEffect::TranslucencyEffect()
     : fadeout(NULL)
     , current(NULL)
     , previous(NULL)
+    , m_activeDecorations(false)
+    , m_activeMoveResize(false)
+    , m_activeDialogs(false)
+    , m_activeInactive(false)
+    , m_activeCombobox(false)
+    , m_activeMenus(false)
+    , m_active(false)
 {
     reconfigure(ReconfigureAll);
     active = effects->activeWindow();
     connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(checkIsActive()));
+    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(checkIsActive()));
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartStopUserMovedResized(KWin::EffectWindow*)));
 }
@@ -63,8 +72,86 @@ void TranslucencyEffect::reconfigure(ReconfigureFlags)
     activeinactive_timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     activeinactive_timeline.setDuration(animationTime(conf, "Duration", 800));
 
+    m_activeDecorations = !qFuzzyCompare(decoration, 1.0);
+    m_activeMoveResize = !qFuzzyCompare(moveresize, 1.0);
+    m_activeDialogs = !qFuzzyCompare(dialogs, 1.0);
+    m_activeInactive = !qFuzzyCompare(inactive, 1.0);
+    m_activeCombobox = !qFuzzyCompare(comboboxpopups, 1.0);
+    m_activeMenus = !qFuzzyCompare(menus, 1.0);
+    if (!m_activeMenus && individualmenuconfig) {
+        m_activeMenus = !qFuzzyCompare(dropdownmenus, 1.0) ||
+                        !qFuzzyCompare(popupmenus, 1.0) ||
+                        !qFuzzyCompare(tornoffmenus, 1.0);
+    }
+    checkIsActive();
+
     // Repaint the screen just in case the user changed the inactive opacity
     effects->addRepaintFull();
+}
+
+void TranslucencyEffect::checkIsActive()
+{
+    m_active = m_activeDecorations ||
+               m_activeMoveResize ||
+               m_activeDialogs ||
+               m_activeInactive ||
+               m_activeCombobox ||
+               m_activeMenus;
+    if (!m_active) {
+        // all individual options are disabled, no window state can activate it
+        return;
+    }
+    if (m_activeDecorations) {
+        // we can assume that there is at least one decorated window, so the effect is active
+        return;
+    }
+    if (m_activeInactive) {
+        // we can assume that there is at least one inactive window, so the effect is active
+        // TODO: maybe only if inactive window is not obscured?
+        return;
+    }
+    // for all other options we go through the list of window and search for a Window being affected
+    bool activeDropdown, activePopup, activeTornoff;
+    activeDropdown = activePopup = activeTornoff = false;
+    if (individualmenuconfig) {
+        activeDropdown = !qFuzzyCompare(dropdownmenus, 1.0);
+        activePopup = !qFuzzyCompare(popupmenus, 1.0);
+        activeTornoff = !qFuzzyCompare(activeTornoff, 1.0);
+    }
+    foreach (EffectWindow *w, effects->stackingOrder()) {
+        if (w->isDeleted()) {
+            // ignore deleted windows
+            continue;
+        }
+        if (m_activeMoveResize && (w->isUserMove() || w->isUserResize())) {
+            return;
+        }
+        if (m_activeDialogs && w->isDialog()) {
+            return;
+        }
+        if (m_activeCombobox && w->isComboBox()) {
+            return;
+        }
+        if (m_activeMenus) {
+            if (individualmenuconfig) {
+                if (activeDropdown && w->isDropdownMenu()) {
+                    return;
+                }
+                if (activePopup && w->isPopupMenu()) {
+                    return;
+                }
+                if (activeTornoff && w->isMenu()) {
+                    return;
+                }
+            } else {
+                if (w->isMenu() || w->isDropdownMenu() || w->isPopupMenu()) {
+                    return;
+                }
+            }
+        }
+    }
+    // no matching window, disable effect
+    m_active = false;
 }
 
 void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
@@ -183,7 +270,8 @@ bool TranslucencyEffect::isInactive(const EffectWindow* w) const
 
 void TranslucencyEffect::slotWindowStartStopUserMovedResized(EffectWindow* w)
 {
-    if (moveresize != 1.0) {
+    if (m_activeMoveResize) {
+        checkIsActive();
         moveresize_timeline.setCurrentTime(0);
         w->addRepaintFull();
     }
@@ -213,6 +301,12 @@ void TranslucencyEffect::slotWindowActivated(EffectWindow* w)
         }
     }
     active = w;
+    checkIsActive();
+}
+
+bool TranslucencyEffect::isActive() const
+{
+    return m_active;
 }
 
 } // namespace
