@@ -28,10 +28,7 @@ namespace KWin
 KWIN_EFFECT(translucency, TranslucencyEffect)
 
 TranslucencyEffect::TranslucencyEffect()
-    : fadeout(NULL)
-    , current(NULL)
-    , previous(NULL)
-    , m_activeDecorations(false)
+    : m_activeDecorations(false)
     , m_activeMoveResize(false)
     , m_activeDialogs(false)
     , m_activeInactive(false)
@@ -67,10 +64,6 @@ void TranslucencyEffect::reconfigure(ReconfigureFlags)
         popupmenus = menus;
         tornoffmenus = menus;
     }
-    moveresize_timeline.setCurveShape(QTimeLine::EaseInOutCurve);
-    moveresize_timeline.setDuration(animationTime(conf, "Duration", 800));
-    activeinactive_timeline.setCurveShape(QTimeLine::EaseInOutCurve);
-    activeinactive_timeline.setDuration(animationTime(conf, "Duration", 800));
 
     m_activeDecorations = !qFuzzyCompare(decoration, 1.0);
     m_activeMoveResize = !qFuzzyCompare(moveresize, 1.0);
@@ -156,24 +149,14 @@ void TranslucencyEffect::checkIsActive()
 
 void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    // We keep track of the windows that was last active so we know
-    // which one to fade out and which ones to paint as fully inactive
-    if (w == active && w != current) {
-        previous = current;
-        current = w;
-    }
-
-    moveresize_timeline.setCurrentTime(moveresize_timeline.currentTime() + time);
-    activeinactive_timeline.setCurrentTime(activeinactive_timeline.currentTime() + time);
-
     if (m_activeDecorations && w->hasDecoration()) {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
         // don't clear PAINT_WINDOW_OPAQUE, contents are not affected
         data.clip &= w->contentsRect().translated(w->pos());  // decoration cannot clip
     }
-    if (m_activeInactive && (isInactive(w) || activeinactive_timeline.currentValue() < 1.0))
+    if (m_activeInactive && isInactive(w))
         data.setTranslucent();
-    else if (m_activeMoveResize && (w->isUserMove() || w->isUserResize() || w == fadeout)) {
+    else if (m_activeMoveResize && (w->isUserMove() || w->isUserResize())) {
         data.setTranslucent();
     }
     else if (m_activeDialogs && w->isDialog()) {
@@ -198,20 +181,10 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
     // Handling active and inactive windows
     if (m_activeInactive && isInactive(w)) {
         data.opacity *= inactive;
-
-        if (w == previous) {
-            data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.currentValue())));
-            if (activeinactive_timeline.currentValue() < 1.0)
-                w->addRepaintFull();
-            else
-                previous = NULL;
-        }
     } else {
         // Fading in
         if (!isInactive(w)) {
-            data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.currentValue()));
-            if (activeinactive_timeline.currentValue() < 1.0)
-                w->addRepaintFull();
+            data.opacity *= inactive;
         }
         // decoration and dialogs
         if (m_activeDecorations && w->hasDecoration())
@@ -220,23 +193,8 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
             data.opacity *= dialogs;
 
         // Handling moving and resizing
-        if (m_activeMoveResize) {
-            double progress = moveresize_timeline.currentValue();
-            if (w->isUserMove() || w->isUserResize()) {
-                // Fading to translucent
-                data.opacity *= (moveresize + ((1.0 - moveresize) * (1.0 - progress)));
-                if (progress < 1.0 && progress > 0.0) {
-                    w->addRepaintFull();
-                    fadeout = w;
-                }
-            } else if (w == fadeout && !w->isUserMove() && !w->isUserResize()) {
-                // Fading back to more opaque
-                data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
-                if (progress == 1.0 || progress == 0.0)
-                    fadeout = NULL;
-                else
-                    w->addRepaintFull();
-            }
+        if (m_activeMoveResize && (w->isUserMove() || w->isUserResize())) {
+            data.opacity *= moveresize;
         }
 
         // Menus and combos
@@ -271,7 +229,6 @@ void TranslucencyEffect::slotWindowStartStopUserMovedResized(EffectWindow* w)
 {
     if (m_activeMoveResize) {
         checkIsActive();
-        moveresize_timeline.setCurrentTime(0);
         w->addRepaintFull();
     }
 }
@@ -279,7 +236,6 @@ void TranslucencyEffect::slotWindowStartStopUserMovedResized(EffectWindow* w)
 void TranslucencyEffect::slotWindowActivated(EffectWindow* w)
 {
     if (m_activeInactive) {
-        activeinactive_timeline.setCurrentTime(0);
         if (NULL != active && active != w) {
             if ((NULL == w || w->group() != active->group()) &&
                     NULL != active->group()) {
