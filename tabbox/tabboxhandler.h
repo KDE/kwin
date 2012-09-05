@@ -120,6 +120,20 @@ public:
      **/
     virtual QWeakPointer<TabBoxClient> firstClientFocusChain() const = 0;
     /**
+     * Checks whether the given @p client is part of the focus chain at all.
+     * This is useful to figure out whether the currently active Client can be used
+     * as a starting point to construct the recently used list.
+     *
+     * In case the @p client is not in the focus chain it is recommended to use the
+     * Client returned by @link firstClientFocusChain.
+     *
+     * The method accepts a @c null Client and in that case @c false is returned.
+     * @param client The Client to check whether it is in the Focus Chain
+     * @return @c true in case the Client is part of the focus chain, @c false otherwise.
+     * @since 4.9.2
+     **/
+    virtual bool isInFocusChain(TabBoxClient* client) const = 0;
+    /**
     * @param client The client whose desktop name should be retrieved
     * @return The desktop name of the given TabBoxClient. If the client is
     * on all desktops the name of current desktop will be returned.

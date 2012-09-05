@@ -188,7 +188,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
         TabBoxClient* c = start;
-        if (!c) {
+        if (!tabBox->isInFocusChain(c)) {
             QSharedPointer<TabBoxClient> firstClient = tabBox->firstClientFocusChain().toStrongRef();
             if (firstClient) {
                 c = firstClient.data();
