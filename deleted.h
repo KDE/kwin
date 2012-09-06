@@ -58,7 +58,7 @@ public:
     bool noBorder() const {
         return no_border;
     }
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, int unused = 0) const;
     QRect decorationRect() const;
     virtual Layer layer() const {
         return m_layer;
@@ -67,6 +67,10 @@ public:
         return m_minimized;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    bool decorationPixmapRequiresRepaint() const {
+        return false;
+    }
+    void ensureDecorationPixmapsPainted() {}
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

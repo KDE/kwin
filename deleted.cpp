@@ -134,7 +134,7 @@ void Deleted::debug(QDebug& stream) const
     stream << "\'ID:" << window() << "\' (deleted)";
 }
 
-void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
+void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom, int) const
 {
     left = decoration_left;
     top = decoration_top;

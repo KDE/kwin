@@ -212,6 +212,8 @@ protected:
     GLTexture *textureForType(TextureType type);
 
 private:
+    template<class T>
+    void paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping);
     Texture *texture;
     Texture *topTexture;
     Texture *leftTexture;

@@ -720,8 +720,6 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     beginRenderWindow(mask, data);
 
-    WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
 
@@ -730,63 +728,10 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         paintShadow(region, data, hardwareClipping);
     }
     // decorations
-    Client *client = dynamic_cast<Client*>(toplevel);
-    Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
-    if (client || deleted) {
-        bool noBorder = true;
-        bool updateDeco = false;
-        const QPixmap *left = NULL;
-        const QPixmap *top = NULL;
-        const QPixmap *right = NULL;
-        const QPixmap *bottom = NULL;
-        QRect topRect, leftRect, rightRect, bottomRect;
-        if (client && !client->noBorder()) {
-            noBorder = false;
-            updateDeco = client->decorationPixmapRequiresRepaint();
-            client->ensureDecorationPixmapsPainted();
-
-            client->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
-
-            left   = client->leftDecoPixmap();
-            top    = client->topDecoPixmap();
-            right  = client->rightDecoPixmap();
-            bottom = client->bottomDecoPixmap();
-        }
-        if (deleted && !deleted->noBorder()) {
-            noBorder = false;
-            left   = deleted->leftDecoPixmap();
-            top    = deleted->topDecoPixmap();
-            right  = deleted->rightDecoPixmap();
-            bottom = deleted->bottomDecoPixmap();
-            deleted->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect);
-        }
-        if (!noBorder) {
-            WindowQuadList topList, leftList, rightList, bottomList;
-
-            foreach (const WindowQuad & quad, decoration) {
-                if (topRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-                    topList.append(quad);
-                    continue;
-                }
-                if (bottomRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-                    bottomList.append(quad);
-                    continue;
-                }
-                if (leftRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-                    leftList.append(quad);
-                    continue;
-                }
-                if (rightRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-                    rightList.append(quad);
-                    continue;
-                }
-            }
-
-            paintDecoration(top, DecorationTop, region, topRect, data, topList, updateDeco, hardwareClipping);
-            paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, updateDeco, hardwareClipping);
-            paintDecoration(right, DecorationRight, region, rightRect, data, rightList, updateDeco, hardwareClipping);
-            paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco, hardwareClipping);
-        }
+    if (toplevel->isClient()) {
+        paintDecorations<Client>(data, region, hardwareClipping);
+    } else if (toplevel->isDeleted()) {
+        paintDecorations<Deleted>(data, region, hardwareClipping);
     }
 
     // paint the content
@@ -812,6 +757,52 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     endRenderWindow(data);
 }
+
+template<class T>
+void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping)
+{
+    T* t = static_cast<T*>(toplevel);
+    if (t->noBorder()) {
+        return;
+    }
+    WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
+    QRect topRect, leftRect, rightRect, bottomRect;
+    const bool updateDeco = t->decorationPixmapRequiresRepaint();
+    t->ensureDecorationPixmapsPainted();
+
+    t->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
+
+    const QPixmap *left   = t->leftDecoPixmap();
+    const QPixmap *top    = t->topDecoPixmap();
+    const QPixmap *right  = t->rightDecoPixmap();
+    const QPixmap *bottom = t->bottomDecoPixmap();
+    WindowQuadList topList, leftList, rightList, bottomList;
+
+    foreach (const WindowQuad & quad, decoration) {
+        if (topRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
+            topList.append(quad);
+            continue;
+        }
+        if (bottomRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
+            bottomList.append(quad);
+            continue;
+        }
+        if (leftRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
+            leftList.append(quad);
+            continue;
+        }
+        if (rightRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
+            rightList.append(quad);
+            continue;
+        }
+    }
+
+    paintDecoration(top, DecorationTop, region, topRect, data, topList, updateDeco, hardwareClipping);
+    paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, updateDeco, hardwareClipping);
+    paintDecoration(right, DecorationRight, region, rightRect, data, rightList, updateDeco, hardwareClipping);
+    paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco, hardwareClipping);
+}
+
 
 void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType decorationType,
                                           const QRegion& region, const QRect& rect, const WindowPaintData& data,
