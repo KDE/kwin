@@ -173,11 +173,6 @@ NET::WindowType Toplevel::windowType(bool direct, int supported_types) const
         info->setWindowType(wt);   // force hint change
     }
     // hacks here
-    // TODO change this to rule
-    const char* const oo_prefix = "openoffice.org"; // QByteArray has no startsWith()
-    // oo_prefix is lowercase, because resourceClass() is forced to be lowercase
-    if (qstrncmp(resourceClass(), oo_prefix, strlen(oo_prefix)) == 0 && wt == NET::Dialog)
-        wt = NET::Normal; // see bug #66065
     if (wt == NET::Unknown && cl != NULL)   // this is more or less suggested in NETWM spec
         wt = cl->isTransient() ? NET::Dialog : NET::Normal;
     return wt;
