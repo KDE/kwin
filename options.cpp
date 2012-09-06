@@ -155,6 +155,7 @@ Options::Options(QObject *parent)
     , m_glDirect(Options::defaultGlDirect())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
+    , m_glLegacy(Options::defaultGlLegacy())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -761,6 +762,15 @@ void Options::setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver)
     emit glStrictBindingFollowsDriverChanged();
 }
 
+void Options::setGlLegacy(bool glLegacy)
+{
+    if (m_glLegacy == glLegacy) {
+        return;
+    }
+    m_glLegacy = glLegacy;
+    emit glLegacyChanged();
+}
+
 void Options::setElectricBorders(int borders)
 {
     if (electric_borders == borders) {
@@ -985,6 +995,7 @@ void Options::reloadCompositingSettings(bool force)
     if (!isGlStrictBindingFollowsDriver()) {
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
+    setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 

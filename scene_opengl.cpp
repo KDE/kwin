@@ -137,15 +137,10 @@ void OpenGLBackend::idle()
  * SceneOpenGL
  ***********************************************/
 
-SceneOpenGL::SceneOpenGL(Workspace* ws)
+SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     : Scene(ws)
-    , m_resetModelViewProjectionMatrix(true)
     , init_ok(false)
-#ifdef KWIN_HAVE_OPENGLES
-    , m_backend(new EglOnXBackend())
-#else
-    , m_backend(new GlxBackend())
-#endif
+    , m_backend(backend)
 {
     if (m_backend->isFailed()) {
         return;
@@ -158,11 +153,13 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
         QTimer::singleShot(0, Workspace::self(), SLOT(fallbackToXRenderCompositing()));
         return;
     }
+#ifndef KWIN_HAVE_OPENGLES
     if (!hasGLExtension("GL_ARB_texture_non_power_of_two")
             && !hasGLExtension("GL_ARB_texture_rectangle")) {
         kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         return; // error
     }
+#endif
     if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(7, 10)) {
         kError(1212) << "KWin requires at least Mesa 7.10 for OpenGL compositing.";
         return;
@@ -174,43 +171,63 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
 
     debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
 
-    // scene shader setup
-    if (GLPlatform::instance()->supports(GLSL)) {
-        if (!ShaderManager::instance()->isValid()) {
-            kDebug(1212) << "No Scene Shaders available";
-#ifdef KWIN_HAVE_OPENGLES
-            // with OpenGL ES we need shaders, so let's break here
-            return;
-#endif
-        } else {
-            // push one shader on the stack so that one is always bound
-            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-        }
-    }
-
-    // OpenGL scene setup
-    setupModelViewProjectionMatrix();
-    if (checkGLError("Init")) {
-        kError(1212) << "OpenGL compositing setup failed";
-        return; // error
-    }
-
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
         options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
     }
-    init_ok = true;
 }
 
 SceneOpenGL::~SceneOpenGL()
 {
-    delete m_backend;
+    if (init_ok) {
+        // backend might be still needed for a different scene
+        delete m_backend;
+    }
     foreach (Window * w, windows) {
         delete w;
     }
     // do cleanup after initBuffer()
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError("Cleanup");
+}
+
+SceneOpenGL *SceneOpenGL::createScene()
+{
+    OpenGLBackend *backend = NULL;
+#ifdef KWIN_HAVE_OPENGLES
+    backend = new EglOnXBackend();
+#else
+    backend = new GlxBackend();
+#endif
+    if (!backend || backend->isFailed()) {
+        delete backend;
+        return NULL;
+    }
+    SceneOpenGL *scene = NULL;
+    // first let's try an OpenGL 2 scene
+    if (SceneOpenGL2::supported(backend)) {
+        scene = new SceneOpenGL2(backend);
+        if (scene->initFailed()) {
+            delete scene;
+            scene = NULL;
+        } else {
+            return scene;
+        }
+    }
+#ifndef KWIN_HAVE_OPENGLES
+    if (SceneOpenGL1::supported(backend)) {
+        scene = new SceneOpenGL1(backend);
+        if (scene->initFailed()) {
+            delete scene;
+            scene = NULL;
+        }
+    }
+#endif
+    if (!scene) {
+        delete backend;
+    }
+
+    return scene;
 }
 
 OverlayWindow *SceneOpenGL::overlayWindow()
@@ -244,10 +261,6 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     }
 
     m_backend->prepareRenderingFrame();
-    if (m_resetModelViewProjectionMatrix) {
-        // reset model view projection matrix if required
-        setupModelViewProjectionMatrix();
-    }
     int mask = 0;
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint1");
@@ -263,30 +276,6 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     stacking_order.clear();
     checkGLError("PostPaint");
     return m_backend->renderTime();
-}
-
-void SceneOpenGL::setupModelViewProjectionMatrix()
-{
-#ifndef KWIN_HAVE_OPENGLES
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    float fovy = 60.0f;
-    float aspect = 1.0f;
-    float zNear = 0.1f;
-    float zFar = 100.0f;
-    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-    float ymin = -ymax;
-    float xmin =  ymin * aspect;
-    float xmax = ymax * aspect;
-    // swap top and bottom to have OpenGL coordinate system match X system
-    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
-#endif
-    m_resetModelViewProjectionMatrix = false;
 }
 
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
@@ -312,27 +301,6 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
     return matrix;
 }
 
-void SceneOpenGL::paintGenericScreen(int mask, ScreenPaintData data)
-{
-    ShaderManager *shaderManager = ShaderManager::instance();
-    const bool useShader = shaderManager->isValid();
-    const QMatrix4x4 matrix = transformation(mask, data);
-
-    if (useShader) {
-        GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
-        shader->setUniform(GLShader::ScreenTransformation, matrix);
-    } else {
-        pushMatrix(matrix);
-    }
-
-    Scene::paintGenericScreen(mask, data);
-
-    if (useShader)
-        shaderManager->popShader();
-    else
-        popMatrix();
-}
-
 void SceneOpenGL::paintBackground(QRegion region)
 {
     PaintClipper pc(region);
@@ -353,25 +321,13 @@ void SceneOpenGL::paintBackground(QRegion region)
         verts << r.x() + r.width() << r.y() + r.height();
         verts << r.x() + r.width() << r.y();
     }
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setUseColor(true);
-    vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
-    const bool useShader = ShaderManager::instance()->isValid();
-    if (useShader) {
-        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-        shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-    }
-    vbo->render(GL_TRIANGLES);
-    if (useShader) {
-        ShaderManager::instance()->popShader();
-    }
+    doPaintBackground(verts);
 }
 
 void SceneOpenGL::windowAdded(Toplevel* c)
 {
     assert(!windows.contains(c));
-    Window *w = Window::createWindow(c);
+    Window *w = createWindow(c);
     windows[ c ] = w;
     w->setScene(this);
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
@@ -444,10 +400,171 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
     ShaderManager::instance()->resetAllShaders();
-#ifndef KWIN_HAVE_OPENGLES
-    m_resetModelViewProjectionMatrix = true;
-#endif
 }
+
+//****************************************
+// SceneOpenGL2
+//****************************************
+bool SceneOpenGL2::supported(OpenGLBackend *backend)
+{
+    if (!backend->isDirectRendering()) {
+        return false;
+    }
+#ifndef KWIN_HAVE_OPENGLES
+    if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedNPOT)) {
+        return false;
+    }
+#endif
+    if (options->isGlLegacy()) {
+        kDebug(1212) << "OpenGL 2 disabled by config option";
+        return false;
+    }
+    return true;
+}
+
+SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
+    : SceneOpenGL(Workspace::self(), backend)
+{
+    if (!ShaderManager::instance()->isValid()) {
+        kDebug(1212) << "No Scene Shaders available";
+        return;
+    }
+
+    // push one shader on the stack so that one is always bound
+    ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+    if (checkGLError("Init")) {
+        kError(1212) << "OpenGL 2 compositing setup failed";
+        return; // error
+    }
+    kDebug(1212) << "OpenGL 2 compositing successfully initialized";
+
+    init_ok = true;
+}
+
+SceneOpenGL2::~SceneOpenGL2()
+{
+}
+
+void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
+{
+    ShaderManager *shaderManager = ShaderManager::instance();
+
+    GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+    shader->setUniform(GLShader::ScreenTransformation, transformation(mask, data));
+
+    Scene::paintGenericScreen(mask, data);
+
+    shaderManager->popShader();
+}
+
+void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
+{
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
+    vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
+
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+
+    vbo->render(GL_TRIANGLES);
+
+    ShaderManager::instance()->popShader();
+}
+
+SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)
+{
+    return new SceneOpenGL2Window(t);
+}
+
+//****************************************
+// SceneOpenGL1
+//****************************************
+#ifndef KWIN_HAVE_OPENGLES
+bool SceneOpenGL1::supported(OpenGLBackend *backend)
+{
+    // any OpenGL context will do
+    return !backend->isFailed();
+}
+
+SceneOpenGL1::SceneOpenGL1(OpenGLBackend *backend)
+    : SceneOpenGL(Workspace::self(), backend)
+    , m_resetModelViewProjectionMatrix(true)
+{
+    ShaderManager::disable();
+    setupModelViewProjectionMatrix();
+    if (checkGLError("Init")) {
+        kError(1212) << "OpenGL 1 compositing setup failed";
+        return; // error
+    }
+
+    kDebug(1212) << "OpenGL 1 compositing successfully initialized";
+    init_ok = true;
+}
+
+SceneOpenGL1::~SceneOpenGL1()
+{
+}
+
+int SceneOpenGL1::paint(QRegion damage, ToplevelList windows)
+{
+    if (m_resetModelViewProjectionMatrix) {
+        // reset model view projection matrix if required
+        setupModelViewProjectionMatrix();
+    }
+    return SceneOpenGL::paint(damage, windows);
+}
+
+void SceneOpenGL1::paintGenericScreen(int mask, ScreenPaintData data)
+{
+    pushMatrix(transformation(mask, data));
+    Scene::paintGenericScreen(mask, data);
+    popMatrix();
+}
+
+void SceneOpenGL1::doPaintBackground(const QVector< float >& vertices)
+{
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setUseColor(true);
+    vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
+    vbo->render(GL_TRIANGLES);
+}
+
+void SceneOpenGL1::setupModelViewProjectionMatrix()
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float fovy = 60.0f;
+    float aspect = 1.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
+    float ymin = -ymax;
+    float xmin =  ymin * aspect;
+    float xmax = ymax * aspect;
+    // swap top and bottom to have OpenGL coordinate system match X system
+    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
+    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+    m_resetModelViewProjectionMatrix = false;
+}
+
+void SceneOpenGL1::screenGeometryChanged(const QSize &size)
+{
+    SceneOpenGL::screenGeometryChanged(size);
+    m_resetModelViewProjectionMatrix = true;
+}
+
+SceneOpenGL::Window *SceneOpenGL1::createWindow(Toplevel *t)
+{
+    return new SceneOpenGL1Window(t);
+}
+
+#endif
 
 //****************************************
 // SceneOpenGL::Texture
@@ -559,17 +676,6 @@ SceneOpenGL::Window::~Window()
     delete leftTexture;
     delete rightTexture;
     delete bottomTexture;
-}
-
-SceneOpenGL::Window *SceneOpenGL::Window::createWindow(Toplevel *t)
-{
-    if (ShaderManager::instance()->isValid()) {
-        return new SceneOpenGL2Window(t);
-    }
-#ifndef KWIN_HAVE_OPENGLES
-    return new SceneOpenGL1Window(t);
-#endif
-    return NULL;
 }
 
 // Bind the window pixmap to an OpenGL texture.

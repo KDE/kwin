@@ -41,7 +41,6 @@ public:
     class Texture;
     class TexturePrivate;
     class Window;
-    SceneOpenGL(Workspace* ws);
     virtual ~SceneOpenGL();
     virtual bool initFailed() const;
     virtual CompositingType compositingType() const {
@@ -65,22 +64,62 @@ public:
     Texture *createTexture();
     Texture *createTexture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
 
+    static SceneOpenGL *createScene();
+
 protected:
-    virtual void paintGenericScreen(int mask, ScreenPaintData data);
+    SceneOpenGL(Workspace* ws, OpenGLBackend *backend);
     virtual void paintBackground(QRegion region);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
+
+    virtual void doPaintBackground(const QVector<float> &vertices) = 0;
+    virtual SceneOpenGL::Window *createWindow(Toplevel *t) = 0;
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
-private:
-    void setupModelViewProjectionMatrix();
-    bool m_resetModelViewProjectionMatrix;
-    QHash< Toplevel*, Window* > windows;
+protected:
     bool init_ok;
+private:
+    QHash< Toplevel*, Window* > windows;
     bool debug;
     OpenGLBackend *m_backend;
 };
+
+class SceneOpenGL2 : public SceneOpenGL
+{
+public:
+    SceneOpenGL2(OpenGLBackend *backend);
+    virtual ~SceneOpenGL2();
+
+    static bool supported(OpenGLBackend *backend);
+
+protected:
+    virtual void paintGenericScreen(int mask, ScreenPaintData data);
+    virtual void doPaintBackground(const QVector< float >& vertices);
+    virtual SceneOpenGL::Window *createWindow(Toplevel *t);
+};
+
+#ifndef KWIN_HAVE_OPENGLES
+class SceneOpenGL1 : public SceneOpenGL
+{
+public:
+    SceneOpenGL1(OpenGLBackend *backend);
+    virtual ~SceneOpenGL1();
+    virtual void screenGeometryChanged(const QSize &size);
+    virtual int paint(QRegion damage, ToplevelList windows);
+
+    static bool supported(OpenGLBackend *backend);
+
+protected:
+    virtual void paintGenericScreen(int mask, ScreenPaintData data);
+    virtual void doPaintBackground(const QVector< float >& vertices);
+    virtual SceneOpenGL::Window *createWindow(Toplevel *t);
+
+private:
+    void setupModelViewProjectionMatrix();
+    bool m_resetModelViewProjectionMatrix;
+};
+#endif
 
 class SceneOpenGL::TexturePrivate
     : public GLTexturePrivate
@@ -141,13 +180,6 @@ public:
     void setScene(SceneOpenGL *scene) {
         m_scene = scene;
     }
-    /**
-     * @brief Factory method to create a Window taking the OpenGL version into account.
-     *
-     * @param t The Toplevel for which a Scene Window should be created
-     * @return :SceneOpenGL::Window* OpenGL version aware Window
-     **/
-    static SceneOpenGL::Window *createWindow(Toplevel *t);
 
 protected:
     Window(Toplevel* c);

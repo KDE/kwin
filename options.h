@@ -191,6 +191,10 @@ class Options : public QObject, public KDecorationOptions
      * If @c false @link glStrictBinding is set from a config value and not updated during scene initialization.
      **/
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
+    /**
+     * Whether legacy OpenGL should be used or OpenGL (ES) 2
+     **/
+    Q_PROPERTY(bool glLegacy READ isGlLegacy WRITE setGlLegacy NOTIFY glLegacyChanged)
 public:
 
     Options(QObject *parent = NULL);
@@ -562,6 +566,9 @@ public:
     bool isGlStrictBindingFollowsDriver() const {
         return m_glStrictBindingFollowsDriver;
     }
+    bool isGlLegacy() const {
+        return m_glLegacy;
+    }
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
@@ -624,6 +631,7 @@ public:
     void setGlDirect(bool glDirect);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
+    void setGlLegacy(bool glLegacy);
 
     // default values
     static FocusPolicy defaultFocusPolicy() {
@@ -843,6 +851,9 @@ public:
     static bool defaultGlStrictBindingFollowsDriver() {
         return true;
     }
+    static bool defaultGlLegacy() {
+        return false;
+    }
     static int defaultAnimationSpeed() {
         return 3;
     }
@@ -923,6 +934,7 @@ Q_SIGNALS:
     void glDirectChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
+    void glLegacyChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -966,6 +978,7 @@ private:
     bool m_glDirect;
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
+    bool m_glLegacy;
 
     WindowOperation OpTitlebarDblClick;
 

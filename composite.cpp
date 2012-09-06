@@ -191,13 +191,13 @@ void Compositor::slotCompositingOptionsInitialized()
             }
 #endif
 
-            m_scene = new SceneOpenGL(Workspace::self());
+            m_scene = SceneOpenGL::createScene();
 
             // TODO: Add 30 second delay to protect against screen freezes as well
             unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
             unsafeConfig.sync();
 
-            if (!m_scene->initFailed())
+            if (m_scene && !m_scene->initFailed())
                 break; // -->
             delete m_scene;
             m_scene = NULL;
