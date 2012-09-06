@@ -132,7 +132,6 @@ class SceneOpenGL::Window
     : public Scene::Window
 {
 public:
-    Window(Toplevel* c);
     virtual ~Window();
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void pixmapDiscarded();
@@ -142,8 +141,16 @@ public:
     void setScene(SceneOpenGL *scene) {
         m_scene = scene;
     }
+    /**
+     * @brief Factory method to create a Window taking the OpenGL version into account.
+     *
+     * @param t The Toplevel for which a Scene Window should be created
+     * @return :SceneOpenGL::Window* OpenGL version aware Window
+     **/
+    static SceneOpenGL::Window *createWindow(Toplevel *t);
 
 protected:
+    Window(Toplevel* c);
     enum TextureType {
         Content,
         DecorationTop,
@@ -158,14 +165,51 @@ protected:
     void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
     void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void prepareStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
-    void prepareRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
-    void prepareShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
-    void restoreStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader, GLTexture *texture);
-    void restoreRenderStates(TextureType type, double opacity, double brightness, double saturation, GLTexture *tex);
-    void restoreShaderRenderStates(TextureType type, double opacity, double brightness, double saturation, GLShader* shader);
+    /**
+     * @brief Called from performPaint once it is determined whether the window will be painted.
+     * This method has to be implemented by the concrete sub class to perform operations for setting
+     * up the OpenGL state (e.g. pushing a matrix).
+     *
+     * @param mask The mask which is used to render the Window
+     * @param data The WindowPaintData for this frame
+     * @see performPaint
+     * @see endRenderWindow
+     **/
+    virtual void beginRenderWindow(int mask, const WindowPaintData &data) = 0;
+    /**
+     * @brief Called from performPaint once the window and decoration has been rendered.
+     * This method has to be implemented by the concrete sub class to perform operations for resetting
+     * the OpenGL state after rendering this window (e.g. pop matrix).
+     *
+     * @param data The WindowPaintData with which this window got rendered
+     **/
+    virtual void endRenderWindow(const WindowPaintData &data) = 0;
+    /**
+     * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
+     *
+     * @param type The type of the Texture which will be rendered
+     * @param opacity The opacity value to use for this rendering
+     * @param brightness The brightness value to use for this rendering
+     * @param saturation The saturation value to use for this rendering
+     **/
+    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
+    /**
+     * @brief Restores the OpenGL rendering state after the texture with @p type has been rendered.
+     *
+     * @param type The type of the Texture which has been rendered
+     * @param opacity The opacity value used for the rendering
+     * @param brightness The brightness value used for this rendering
+     * @param saturation The saturation value used for this rendering
+     **/
+    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
+
+    /**
+     * @brief Returns the texture for the given @p type.
+     *
+     * @param type The Texture Type for which the texture should be retrieved
+     * @return :GLTexture* the texture
+     **/
+    GLTexture *textureForType(TextureType type);
 
 private:
     Texture *texture;
@@ -175,6 +219,34 @@ private:
     Texture *bottomTexture;
     SceneOpenGL *m_scene;
 };
+
+class SceneOpenGL2Window : public SceneOpenGL::Window
+{
+public:
+    SceneOpenGL2Window(Toplevel *c);
+    virtual ~SceneOpenGL2Window();
+
+protected:
+    virtual void beginRenderWindow(int mask, const WindowPaintData &data);
+    virtual void endRenderWindow(const WindowPaintData &data);
+    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
+    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
+};
+
+#ifndef KWIN_HAVE_OPENGLES
+class SceneOpenGL1Window : public SceneOpenGL::Window
+{
+public:
+    SceneOpenGL1Window(Toplevel *c);
+    virtual ~SceneOpenGL1Window();
+
+protected:
+    virtual void beginRenderWindow(int mask, const WindowPaintData &data);
+    virtual void endRenderWindow(const WindowPaintData &data);
+    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
+    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
+};
+#endif
 
 class SceneOpenGL::EffectFrame
     : public Scene::EffectFrame
