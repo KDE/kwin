@@ -2523,6 +2523,27 @@ bool Client::isClient() const
     return true;
 }
 
+NET::WindowType Client::windowType(bool direct, int supportedTypes) const
+{
+    // TODO: does it make sense to cache the returned window type for SUPPORTED_MANAGED_WINDOW_TYPES_MASK?
+    if (supportedTypes == 0) {
+        supportedTypes = SUPPORTED_MANAGED_WINDOW_TYPES_MASK;
+    }
+    NET::WindowType wt = info->windowType(supportedTypes);
+    if (direct) {
+        return wt;
+    }
+    NET::WindowType wt2 = client_rules.checkType(wt);
+    if (wt != wt2) {
+        wt = wt2;
+        info->setWindowType(wt);   // force hint change
+    }
+    // hacks here
+    if (wt == NET::Unknown)   // this is more or less suggested in NETWM spec
+        wt = isTransient() ? NET::Dialog : NET::Normal;
+    return wt;
+}
+
 } // namespace
 
 #include "client.moc"

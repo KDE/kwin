@@ -66,6 +66,7 @@ public:
     bool isMinimized() const {
         return m_minimized;
     }
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

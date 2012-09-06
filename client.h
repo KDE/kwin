@@ -324,6 +324,7 @@ public:
 #ifdef HAVE_XSYNC
     void syncEvent(XSyncAlarmNotifyEvent* e);
 #endif
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 
     bool manage(Window w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);

@@ -159,26 +159,6 @@ QRect Toplevel::visibleRect() const
     return r.translated(geometry().topLeft());
 }
 
-NET::WindowType Toplevel::windowType(bool direct, int supported_types) const
-{
-    if (supported_types == 0)
-        supported_types = dynamic_cast< const Client* >(this) != NULL
-                          ? SUPPORTED_MANAGED_WINDOW_TYPES_MASK : SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
-    NET::WindowType wt = info->windowType(supported_types);
-    if (direct)
-        return wt;
-    const Client* cl = dynamic_cast< const Client* >(this);
-    NET::WindowType wt2 = cl ? cl->rules()->checkType(wt) : wt;
-    if (wt != wt2) {
-        wt = wt2;
-        info->setWindowType(wt);   // force hint change
-    }
-    // hacks here
-    if (wt == NET::Unknown && cl != NULL)   // this is more or less suggested in NETWM spec
-        wt = cl->isTransient() ? NET::Dialog : NET::Normal;
-    return wt;
-}
-
 void Toplevel::getWindowRole()
 {
     window_role = getStringProperty(window(), atoms->wm_window_role).toLower();
