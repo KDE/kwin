@@ -362,13 +362,15 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         WindowPaintData thumbData(thumb);
         thumbData.opacity = data.opacity;
 
-        QSizeF size = QSizeF(thumb->size());
+        const QRect visualThumbRect(thumb->expandedGeometry());
+
+        QSizeF size = QSizeF(visualThumbRect.size());
         size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
-        if (size.width() > thumb->width() || size.height() > thumb->height()) {
-            size = QSizeF(thumb->size());
+        if (size.width() > visualThumbRect.width() || size.height() > visualThumbRect.height()) {
+            size = QSizeF(visualThumbRect.size());
         }
-        thumbData.xScale = size.width() / static_cast<qreal>(thumb->width());
-        thumbData.yScale = size.height() / static_cast<qreal>(thumb->height());
+        thumbData.xScale = size.width() / static_cast<qreal>(visualThumbRect.width());
+        thumbData.yScale = size.height() / static_cast<qreal>(visualThumbRect.height());
         // it can happen in the init/closing phase of the tabbox
         // that the corresponding QGraphicsScene is not available
         if (item->scene() == 0) {
@@ -407,7 +409,10 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         thumbData.xTranslate = x - thumb->x();
+        // compensate shadow topleft padding
+        thumbData.xTranslate += (thumb->x()-visualThumbRect.x())*thumbData.xScale;
         thumbData.yTranslate = y - thumb->y();
+        thumbData.yTranslate += (thumb->y()-visualThumbRect.y())*thumbData.yScale;
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
         if (thumbData.opacity == 1.0) {
             thumbMask |= PAINT_WINDOW_OPAQUE;
