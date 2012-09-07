@@ -207,7 +207,7 @@ public:
     // is the window fully opaque
     bool isOpaque() const;
     // shape of the window
-    QRegion shape() const;
+    const QRegion &shape() const;
     QRegion clientShape() const;
     void discardShape();
     void updateToplevel(Toplevel* c);
