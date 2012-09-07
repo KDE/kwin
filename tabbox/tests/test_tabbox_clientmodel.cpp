@@ -63,4 +63,24 @@ void TestTabBoxClientModel::testCreateClientListNoActiveClient()
     QCOMPARE(clientModel->rowCount(), 2);
 }
 
+void TestTabBoxClientModel::testCreateClientListActiveClientNotInFocusChain()
+{
+    MockTabBoxHandler tabboxhandler;
+    tabboxhandler.setConfig(TabBox::TabBoxConfig());
+    TabBox::ClientModel *clientModel = new TabBox::ClientModel(&tabboxhandler);
+    // create two windows, rowCount() should go to two
+    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"), 1);
+    client = tabboxhandler.createMockWindow(QString("test2"), 2);
+    clientModel->createClientList();
+    QCOMPARE(clientModel->rowCount(), 2);
+
+    // simulate that the active client is not in the focus chain
+    // for that we use the closeWindow of the MockTabBoxHandler which
+    // removes the Client from the Focus Chain but leaves the active window as it is
+    QSharedPointer<TabBox::TabBoxClient> clientOwner = client.toStrongRef();
+    tabboxhandler.closeWindow(client.data());
+    clientModel->createClientList();
+    QCOMPARE(clientModel->rowCount(), 1);
+}
+
 QTEST_MAIN(TestTabBoxClientModel)

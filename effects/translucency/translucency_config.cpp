@@ -56,7 +56,6 @@ TranslucencyEffectConfig::TranslucencyEffectConfig(QWidget* parent, const QVaria
     connect(m_ui->dropdownmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->popupmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->tornoffmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->duration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     load();
 }
@@ -76,8 +75,6 @@ void TranslucencyEffectConfig::load()
     m_ui->dropdownmenus->setValue((int)(conf.readEntry("DropdownMenus", 1.0) * 100));
     m_ui->popupmenus->setValue((int)(conf.readEntry("PopupMenus", 1.0) * 100));
     m_ui->tornoffmenus->setValue((int)(conf.readEntry("TornOffMenus", 1.0) * 100));
-    m_ui->duration->setValue(conf.readEntry("Duration", 0));
-    m_ui->duration->setSuffix(ki18np(" millisecond", " milliseconds"));
 
     emit changed(false);
 }
@@ -97,7 +94,6 @@ void TranslucencyEffectConfig::save()
     conf.writeEntry("DropdownMenus", m_ui->dropdownmenus->value() / 100.0);
     conf.writeEntry("PopupMenus", m_ui->popupmenus->value() / 100.0);
     conf.writeEntry("TornOffMenus", m_ui->tornoffmenus->value() / 100.0);
-    conf.writeEntry("Duration", m_ui->duration->value());
     conf.sync();
 
     emit changed(false);
@@ -116,7 +112,6 @@ void TranslucencyEffectConfig::defaults()
     m_ui->dropdownmenus->setValue(100);
     m_ui->popupmenus->setValue(100);
     m_ui->tornoffmenus->setValue(100);
-    m_ui->duration->setValue(0);
     emit changed(true);
 }
 

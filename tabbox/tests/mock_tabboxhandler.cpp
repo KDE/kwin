@@ -72,6 +72,9 @@ QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::nextClientFocusChain(Tab
             }
         }
     }
+    if (!m_windows.isEmpty()) {
+        return QWeakPointer< TabBox::TabBoxClient >(m_windows.last());
+    }
     return QWeakPointer< TabBox::TabBoxClient >();
 }
 
@@ -81,6 +84,20 @@ QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::firstClientFocusChain() 
         return QWeakPointer<TabBox::TabBoxClient>();
     }
     return m_windows.first();
+}
+
+bool MockTabBoxHandler::isInFocusChain(TabBox::TabBoxClient *client) const
+{
+    if (!client) {
+        return false;
+    }
+    QList< QSharedPointer< TabBox::TabBoxClient > >::const_iterator it = m_windows.constBegin();
+    for (; it != m_windows.constEnd(); ++it) {
+        if ((*it).data() == client) {
+            return true;
+        }
+    }
+    return false;
 }
 
 QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::createMockWindow(const QString &caption, WId id)

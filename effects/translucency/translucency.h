@@ -41,13 +41,12 @@ class TranslucencyEffect
     Q_PROPERTY(qreal dropDownMenus READ configuredDropDownMenus)
     Q_PROPERTY(qreal popupMenus READ configuredPopupMenus)
     Q_PROPERTY(qreal tornOffMenus READ configuredTornOffMenus)
-    Q_PROPERTY(int moveResizeDuration READ configuredMoveResizeDuration)
-    Q_PROPERTY(int activeInactiveDuration READ configuredActiveInactiveDuration)
 public:
     TranslucencyEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual bool isActive() const;
 
     // for properties
     qreal configuredDecoration() const {
@@ -80,15 +79,12 @@ public:
     qreal configuredTornOffMenus() const {
         return tornoffmenus;
     }
-    int configuredMoveResizeDuration() const {
-        return moveresize_timeline.duration();
-    }
-    int configuredActiveInactiveDuration() const {
-        return activeinactive_timeline.duration();
-    }
 public Q_SLOTS:
     void slotWindowActivated(KWin::EffectWindow* w);
     void slotWindowStartStopUserMovedResized(KWin::EffectWindow *w);
+
+private Q_SLOTS:
+    void checkIsActive();
 
 private:
     bool isInactive(const EffectWindow *w) const;
@@ -104,13 +100,15 @@ private:
     double popupmenus;
     double tornoffmenus;
 
-    EffectWindow* fadeout;
-    EffectWindow* current;
-    EffectWindow* previous;
     EffectWindow* active;
 
-    QTimeLine moveresize_timeline;
-    QTimeLine activeinactive_timeline;
+    bool m_activeDecorations;
+    bool m_activeMoveResize;
+    bool m_activeDialogs;
+    bool m_activeInactive;
+    bool m_activeCombobox;
+    bool m_activeMenus;
+    bool m_active;
 };
 
 } // namespace
