@@ -182,10 +182,6 @@ void TranslucencyEffect::paintWindow(EffectWindow* w, int mask, QRegion region, 
     if (m_activeInactive && isInactive(w)) {
         data.opacity *= inactive;
     } else {
-        // Fading in
-        if (!isInactive(w)) {
-            data.opacity *= inactive;
-        }
         // decoration and dialogs
         if (m_activeDecorations && w->hasDecoration())
             data.decoration_opacity *= decoration;
