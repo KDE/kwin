@@ -134,6 +134,7 @@ private:
     void setupGrid();
     void finish();
     bool isMotionManagerMovingWindows() const;
+    bool isRelevantWithPresentWindows(EffectWindow *w) const;
     bool isUsingPresentWindows() const;
     QRectF moveGeometryToDesktop(int desktop) const;
     void desktopsAdded(int old);
