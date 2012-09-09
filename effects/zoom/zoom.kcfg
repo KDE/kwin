@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kwinrc"/>
+    <group name="Effect-Zoom">
+        <entry name="ZoomFactor" type="Double">
+            <default>1.2</default>
+        </entry>
+        <entry name="MousePointer" type="UInt">
+            <default>0</default>
+        </entry>
+        <entry name="MouseTracking" type="UInt">
+            <default>0</default>
+        </entry>
+        <entry name="EnableFocusTracking" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="EnableFollowFocus" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="FocusDelay" type="UInt">
+            <default>350</default>
+        </entry>
+        <entry name="MoveFactor" type="Double">
+            <default>20.0</default>
+        </entry>
+        <entry name="InitialZoom" type="Double">
+            <default>1.0</default>
+        </entry>
+    </group>
+</kcfg>

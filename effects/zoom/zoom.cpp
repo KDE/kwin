@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "zoom.h"
+// KConfigSkeleton
+#include "zoomconfig.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -202,15 +204,15 @@ void ZoomEffect::recreateTexture()
 
 void ZoomEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
+    ZoomConfig::self()->readConfig();
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
-    zoomFactor = qMax(0.1, conf.readEntry("ZoomFactor", zoomFactor));
+    zoomFactor = qMax(0.1, ZoomConfig::zoomFactor()/100.0);
     // Visibility of the mouse-pointer.
-    mousePointer = MousePointerType(conf.readEntry("MousePointer", int(mousePointer)));
+    mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
-    mouseTracking = MouseTrackingType(conf.readEntry("MouseTracking", int(mouseTracking)));
+    mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
     // Enable tracking of the focused location.
-    bool _enableFocusTracking = conf.readEntry("EnableFocusTracking", enableFocusTracking);
+    bool _enableFocusTracking = ZoomConfig::enableFocusTracking();
     if (enableFocusTracking != _enableFocusTracking) {
         enableFocusTracking = _enableFocusTracking;
         if (QDBusConnection::sessionBus().isConnected()) {
@@ -221,13 +223,13 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
         }
     }
     // When the focus changes, move the zoom area to the focused location.
-    followFocus = conf.readEntry("EnableFollowFocus", followFocus);
+    followFocus = ZoomConfig::enableFollowFocus();
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
-    focusDelay = qMax(0, conf.readEntry("FocusDelay", focusDelay));
+    focusDelay = qMax(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
-    moveFactor = qMax(0.1, conf.readEntry("MoveFactor", moveFactor));
+    moveFactor = qMax(0.1, ZoomConfig::moveFactor());
     // Load the saved zoom value.
-    target_zoom = conf.readEntry("InitialZoom", target_zoom);
+    target_zoom = ZoomConfig::initialZoom();
     if (target_zoom > 1.0)
         zoomIn(target_zoom);
 }

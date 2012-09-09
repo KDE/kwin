@@ -31,12 +31,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>zoomStepsSpinBox</cstring>
+           <cstring>kcfg_ZoomFactor</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="zoomStepsSpinBox">
+         <widget class="QDoubleSpinBox" name="kcfg_ZoomFactor">
           <property name="whatsThis">
            <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
           </property>
@@ -58,7 +58,7 @@
          </widget>
         </item>
         <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="focusTrackingCheckBox">
+         <widget class="QCheckBox" name="kcfg_EnableFocusTracking">
           <property name="toolTip">
            <string/>
           </property>
@@ -71,7 +71,7 @@
          </widget>
         </item>
         <item row="5" column="0" colspan="2">
-         <widget class="QCheckBox" name="followFocusCheckBox">
+         <widget class="QCheckBox" name="kcfg_EnableFollowFocus">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -92,12 +92,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>mousePointerComboBox</cstring>
+           <cstring>kcfg_MousePointer</cstring>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="mousePointerComboBox">
+         <widget class="QComboBox" name="kcfg_MousePointer">
           <property name="whatsThis">
            <string>Visibility of the mouse-pointer.</string>
           </property>
@@ -119,7 +119,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QComboBox" name="mouseTrackingComboBox">
+         <widget class="QComboBox" name="kcfg_MouseTracking">
           <property name="whatsThis">
            <string>Track moving of the mouse.</string>
           </property>
@@ -154,7 +154,7 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>mouseTrackingComboBox</cstring>
+           <cstring>kcfg_MouseTracking</cstring>
           </property>
          </widget>
         </item>
@@ -184,18 +184,18 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>zoomStepsSpinBox</tabstop>
-  <tabstop>mousePointerComboBox</tabstop>
-  <tabstop>mouseTrackingComboBox</tabstop>
-  <tabstop>focusTrackingCheckBox</tabstop>
-  <tabstop>followFocusCheckBox</tabstop>
+  <tabstop>kcfg_ZoomFactor</tabstop>
+  <tabstop>kcfg_MousePointer</tabstop>
+  <tabstop>kcfg_MouseTracking</tabstop>
+  <tabstop>kcfg_EnableFocusTracking</tabstop>
+  <tabstop>kcfg_EnableFollowFocus</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>focusTrackingCheckBox</sender>
+   <sender>kcfg_EnableFocusTracking</sender>
    <signal>toggled(bool)</signal>
-   <receiver>followFocusCheckBox</receiver>
+   <receiver>kcfg_EnableFollowFocus</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
