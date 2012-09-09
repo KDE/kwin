@@ -44,8 +44,6 @@ public:
 
 public slots:
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     ResizeEffectConfigForm* m_ui;

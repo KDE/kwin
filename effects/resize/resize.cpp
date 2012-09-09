@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "resize.h"
+// KConfigSkeleton
+#include "resizeconfig.h"
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -27,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <KColorScheme>
-#include <KDE/KConfigGroup>
 
 #include <QtGui/QVector2D>
 
@@ -129,11 +130,11 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 
 void ResizeEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Resize");
     m_features = 0;
-    if (conf.readEntry("TextureScale", true))
+    ResizeConfig::self()->readConfig();
+    if (ResizeConfig::textureScale())
         m_features |= TextureScale;
-    if (conf.readEntry("Outline", false))
+    if (ResizeConfig::outline())
         m_features |= Outline;
 }
 

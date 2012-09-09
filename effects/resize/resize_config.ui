@@ -12,14 +12,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="scaleBox">
+    <widget class="QCheckBox" name="kcfg_TextureScale">
      <property name="text">
       <string>Scale window</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="outlineBox">
+    <widget class="QCheckBox" name="kcfg_Outline">
      <property name="text">
       <string>Show outline</string>
      </property>
