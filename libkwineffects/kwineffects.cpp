@@ -1046,54 +1046,28 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     return ret;
 }
 
-void WindowQuadList::makeArrays(float** vertices, float** texcoords, const QSizeF& size, bool yInverted) const
+void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSizeF &size, bool yInverted) const
 {
-    *vertices = new float[ count() * 6 * 2 ];
-    *texcoords = new float[ count() * 6 * 2 ];
-    float* vpos = *vertices;
-    float* tpos = *texcoords;
-    for (int i = 0;
-            i < count();
-            ++i) {
-        *vpos++ = at(i)[ 1 ].x();
-        *vpos++ = at(i)[ 1 ].y();
-        *vpos++ = at(i)[ 0 ].x();
-        *vpos++ = at(i)[ 0 ].y();
-        *vpos++ = at(i)[ 3 ].x();
-        *vpos++ = at(i)[ 3 ].y();
-        *vpos++ = at(i)[ 3 ].x();
-        *vpos++ = at(i)[ 3 ].y();
-        *vpos++ = at(i)[ 2 ].x();
-        *vpos++ = at(i)[ 2 ].y();
-        *vpos++ = at(i)[ 1 ].x();
-        *vpos++ = at(i)[ 1 ].y();
+    *vertices = new float[count() * 6 * 2];
+    *texcoords = new float[count() * 6 * 2];
 
-        if (yInverted) {
-            *tpos++ = at(i)[ 1 ].tx / size.width();
-            *tpos++ = at(i)[ 1 ].ty / size.height();
-            *tpos++ = at(i)[ 0 ].tx / size.width();
-            *tpos++ = at(i)[ 0 ].ty / size.height();
-            *tpos++ = at(i)[ 3 ].tx / size.width();
-            *tpos++ = at(i)[ 3 ].ty / size.height();
-            *tpos++ = at(i)[ 3 ].tx / size.width();
-            *tpos++ = at(i)[ 3 ].ty / size.height();
-            *tpos++ = at(i)[ 2 ].tx / size.width();
-            *tpos++ = at(i)[ 2 ].ty / size.height();
-            *tpos++ = at(i)[ 1 ].tx / size.width();
-            *tpos++ = at(i)[ 1 ].ty / size.height();
-        } else {
-            *tpos++ = at(i)[ 1 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 1 ].ty / size.height();
-            *tpos++ = at(i)[ 0 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 0 ].ty / size.height();
-            *tpos++ = at(i)[ 3 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 3 ].ty / size.height();
-            *tpos++ = at(i)[ 3 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 3 ].ty / size.height();
-            *tpos++ = at(i)[ 2 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 2 ].ty / size.height();
-            *tpos++ = at(i)[ 1 ].tx / size.width();
-            *tpos++ = 1.0f - at(i)[ 1 ].ty / size.height();
+    float *vpos = *vertices;
+    float *tpos = *texcoords;
+
+     // Note: The positions in a WindowQuad are stored in clockwise order
+    const int index[] = { 1, 0, 3, 3, 2, 1 };
+
+    for (int i = 0; i < count(); i++) {
+        const WindowQuad &quad = at(i);
+
+        for (int j = 0; j < 6; j++) {
+            const WindowVertex &wv = quad[index[j]];
+
+            *vpos++ = wv.x();
+            *vpos++ = wv.y();
+
+            *tpos++ = wv.u() / size.width();
+            *tpos++ = yInverted ? (wv.v() / size.height()) : (1.0 - wv.v() / size.height());
         }
     }
 }
