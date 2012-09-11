@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "diminactive.h"
+// KConfigSkeleton
+#include "diminactiveconfig.h"
 
 #include <kconfiggroup.h>
 
@@ -41,12 +43,12 @@ DimInactiveEffect::DimInactiveEffect()
 
 void DimInactiveEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
-    dim_panels = conf.readEntry("DimPanels", false);
-    dim_desktop = conf.readEntry("DimDesktop", false);
-    dim_keepabove = conf.readEntry("DimKeepAbove", false);
-    dim_by_group = conf.readEntry("DimByGroup", true);
-    dim_strength = conf.readEntry("Strength", 25);
+    DimInactiveConfig::self()->readConfig();
+    dim_panels = DimInactiveConfig::dimPanels();
+    dim_desktop = DimInactiveConfig::dimDesktop();
+    dim_keepabove = DimInactiveConfig::dimKeepAbove();
+    dim_by_group = DimInactiveConfig::dimByGroup();
+    dim_strength = DimInactiveConfig::strength();
 }
 
 void DimInactiveEffect::prePaintScreen(ScreenPrePaintData& data, int time)

@@ -42,8 +42,6 @@ public:
     explicit DimInactiveEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     DimInactiveEffectConfigForm* m_ui;
