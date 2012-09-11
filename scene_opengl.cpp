@@ -1261,63 +1261,41 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
 #endif
 }
 
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, GLTexture *tex) const
+void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, const QRect &rect, GLTexture *texture) const
 {
     QVector<float> vertices;
     QVector<float> texcoords;
+
     vertices.reserve(quads.count() * 6 * 2);
     texcoords.reserve(quads.count() * 6 * 2);
-    float width = rect.width();
-    float height = rect.height();
-#ifndef KWIN_HAVE_OPENGLES
-    if (tex->target() == GL_TEXTURE_RECTANGLE_ARB) {
-        width = 1.0;
-        height = 1.0;
-    }
-#endif
-    foreach (const WindowQuad & quad, quads) {
-        vertices << quad[ 1 ].x();
-        vertices << quad[ 1 ].y();
-        vertices << quad[ 0 ].x();
-        vertices << quad[ 0 ].y();
-        vertices << quad[ 3 ].x();
-        vertices << quad[ 3 ].y();
-        vertices << quad[ 3 ].x();
-        vertices << quad[ 3 ].y();
-        vertices << quad[ 2 ].x();
-        vertices << quad[ 2 ].y();
-        vertices << quad[ 1 ].x();
-        vertices << quad[ 1 ].y();
 
-        if (tex->isYInverted()) {
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << (float)(quad.originalTop() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << (float)(quad.originalTop() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << (float)(quad.originalTop() - rect.y()) / height;
-        } else {
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalLeft() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalBottom() - rect.y()) / height;
-            texcoords << (float)(quad.originalRight() - rect.x()) / width;
-            texcoords << 1.0f - (float)(quad.originalTop() - rect.y()) / height;
+    // Since we know that the texture matrix just scales and translates
+    // we can use this information to optimize the transformation
+    QMatrix4x4 matrix = texture->matrix(UnnormalizedCoordinates);
+    matrix.translate(-rect.x(), -rect.y());
+
+    float uCoeff = matrix(0, 0);
+    float vCoeff = matrix(1, 1);
+
+    float uOffset = matrix(0, 3);
+    float vOffset = matrix(1, 3);
+
+    // Note: The positions in a WindowQuad are stored in clockwise order
+    const int index[] = { 1, 0, 3, 3, 2, 1 };
+
+    foreach (const WindowQuad &quad, quads) {
+        for (int i = 0; i < 6; i++) {
+            const WindowVertex &v = quad[index[i]];
+
+            vertices << v.x();
+            vertices << v.y();
+
+            texcoords << v.originalX() * uCoeff + uOffset;
+            texcoords << v.originalY() * vCoeff + vOffset;
         }
     }
-    GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.data(), texcoords.data());
+
+    GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.constData(), texcoords.constData());
 }
 
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
