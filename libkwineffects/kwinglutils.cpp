@@ -1184,10 +1184,13 @@ public:
         , dimension(2)
         , useColor(false)
         , useTexCoords(true)
-        , color(0, 0, 0, 255) {
-        if (GLVertexBufferPrivate::supported) {
-            glGenBuffers(2, buffers);
-        }
+        , color(0, 0, 0, 255)
+        , bufferSize(0)
+        , vertexAddress(0)
+        , texCoordAddress(0)
+    {
+        if (GLVertexBufferPrivate::supported)
+            glGenBuffers(1, &buffer);
 
         switch(usageHint) {
         case GLVertexBuffer::Dynamic:
@@ -1203,22 +1206,29 @@ public:
     }
 
     ~GLVertexBufferPrivate() {
-        if (GLVertexBufferPrivate::supported) {
-            glDeleteBuffers(2, buffers);
-        }
+        if (GLVertexBufferPrivate::supported)
+            glDeleteBuffers(1, &buffer);
     }
 
-    GLuint buffers[2];
+    void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
+    GLvoid *mapBufferRange(size_t size);
+
+    GLuint buffer;
     GLenum usage;
     int vertexCount;
     int dimension;
+    int stride;
     static bool supported;
     static GLVertexBuffer *streamingBuffer;
+    static bool hasMapBufferRange;
     QVector<float> legacyVertices;
     QVector<float> legacyTexCoords;
     bool useColor;
     bool useTexCoords;
     QColor color;
+    size_t bufferSize;
+    intptr_t vertexAddress;
+    intptr_t texCoordAddress;
 
     //! VBO is not supported
     void legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping);
@@ -1227,8 +1237,51 @@ public:
     //! VBO is supported, but shaders are not supported
     void fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping);
 };
+
 bool GLVertexBufferPrivate::supported = false;
+bool GLVertexBufferPrivate::hasMapBufferRange = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
+
+void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
+                                             const float *vertices, const float *texcoords,
+                                             int count)
+{
+    if (!texcoords) {
+        memcpy((void *) dst, vertices, dim * sizeof(float) * count);
+        return;
+    }
+
+    switch (dim)
+    {
+    case 2:
+        for (int i = 0; i < count; i++) {
+            *(dst++) = *(vertices++);
+            *(dst++) = *(vertices++);
+            *(dst++) = *(texcoords++);
+            *(dst++) = *(texcoords++);
+        }
+        break;
+
+    case 3:
+        for (int i = 0; i < count; i++) {
+            *(dst++) = *(vertices++);
+            *(dst++) = *(vertices++);
+            *(dst++) = *(vertices++);
+            *(dst++) = *(texcoords++);
+            *(dst++) = *(texcoords++);
+        }
+        break;
+
+    default:
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < dim; j++)
+                *(dst++) = *(vertices++);
+
+            *(dst++) = *(texcoords++);
+            *(dst++) = *(texcoords++);
+        }
+    }
+}
 
 void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping)
 {
@@ -1267,25 +1320,25 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode,
 
 void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
+    // FIXME Use glBindAttribLocation() to bind "vertex" and "texCoord" to the same
+    //       attribute index in all shaders.
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     GLint vertexAttrib = shader->attributeLocation("vertex");
     GLint texAttrib = shader->attributeLocation("texCoord");
 
-    glEnableVertexAttribArray(vertexAttrib);
-    if (useTexCoords) {
-        glEnableVertexAttribArray(texAttrib);
-    }
-
     if (useColor) {
+        // FIXME Store the uniform location in the shader so we don't have to look it up every time.
         shader->setUniform("geometryColor", color);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[ 0 ]);
-    glVertexAttribPointer(vertexAttrib, dimension, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+    glVertexAttribPointer(vertexAttrib, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
+    glEnableVertexAttribArray(vertexAttrib);
 
     if (texAttrib != -1 && useTexCoords) {
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[ 1 ]);
-        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
+        glEnableVertexAttribArray(texAttrib);
     }
 
     if (!hardwareClipping) {
@@ -1314,11 +1367,10 @@ void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primi
 #else
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[ 0 ]);
-    glVertexPointer(dimension, GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[ 1 ]);
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
+    glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
 
     if (useColor) {
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
@@ -1340,6 +1392,32 @@ void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primi
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 }
+
+template <typename T>
+T align(T value, int bytes)
+{
+    return (value + bytes - 1) & ~T(bytes - 1);
+}
+
+GLvoid *GLVertexBufferPrivate::mapBufferRange(size_t size)
+{
+    GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT;
+
+    if (size > bufferSize) {
+        // Reallocate the data store if it's too small.
+        // Round the size up to 4 Kb for streaming/dynamic buffers.
+        const size_t alloc = usage != GL_STATIC_DRAW ? align(size, 4096) : size;
+        glBufferData(GL_ARRAY_BUFFER, alloc, 0, usage);
+        bufferSize = alloc;
+    } else {
+        // Hint the GL that it may discard the whole resource if there is contention.
+        // This will pretty much always be the case.
+        access |= GL_MAP_INVALIDATE_BUFFER_BIT;
+    }
+
+    return glMapBufferRange(GL_ARRAY_BUFFER, 0, size, access);
+}
+
 
 //*********************************
 // GLVertexBuffer
@@ -1377,12 +1455,30 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
         return;
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, d->buffers[ 0 ]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vertexCount * d->dimension, vertices, d->usage);
+    d->vertexAddress = 0;
+    d->texCoordAddress = dim * sizeof(float);
+    d->stride = (dim + (texcoords ? 2 : 0)) * sizeof(float);
 
-    if (d->useTexCoords) {
-        glBindBuffer(GL_ARRAY_BUFFER, d->buffers[ 1 ]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vertexCount * 2, texcoords, d->usage);
+    size_t size = vertexCount * d->stride;
+
+    glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
+
+    if (d->hasMapBufferRange) {
+        float *map = (float *) d->mapBufferRange(size);
+        d->interleaveArrays(map, dim, vertices, texcoords, vertexCount);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+    } else {
+        // We always reallocate the data store when we can't map the buffer.
+        // The rationale is that there will almost always be contention
+        // in a glBufferSubData() call.
+        if (d->useTexCoords) {
+            QByteArray array;
+            array.resize(size);
+
+            d->interleaveArrays((float *) array.data(), dim, vertices, texcoords, vertexCount);
+            glBufferData(GL_ARRAY_BUFFER, size, array.data(), d->usage);
+        } else
+            glBufferData(GL_ARRAY_BUFFER, size, vertices, d->usage);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1438,8 +1534,10 @@ void GLVertexBuffer::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
     GLVertexBufferPrivate::supported = true;
+    GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension("GL_EXT_map_buffer_range");
 #else
     GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension("GL_ARB_vertex_buffer_object");
+    GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_map_buffer_range");
 #endif
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
 }
