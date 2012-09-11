@@ -1186,6 +1186,7 @@ public:
         , useTexCoords(true)
         , color(0, 0, 0, 255)
         , bufferSize(0)
+        , nextOffset(0)
         , vertexAddress(0)
         , texCoordAddress(0)
     {
@@ -1211,7 +1212,7 @@ public:
     }
 
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
-    GLvoid *mapBufferRange(size_t size);
+    GLvoid *mapNextFreeRange(size_t size);
 
     GLuint buffer;
     GLenum usage;
@@ -1227,6 +1228,7 @@ public:
     bool useTexCoords;
     QColor color;
     size_t bufferSize;
+    intptr_t nextOffset;
     intptr_t vertexAddress;
     intptr_t texCoordAddress;
 
@@ -1399,23 +1401,29 @@ T align(T value, int bytes)
     return (value + bytes - 1) & ~T(bytes - 1);
 }
 
-GLvoid *GLVertexBufferPrivate::mapBufferRange(size_t size)
+GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 {
-    GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT;
+    GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 
-    if (size > bufferSize) {
+    if ((nextOffset + size) > bufferSize) {
         // Reallocate the data store if it's too small.
-        // Round the size up to 4 Kb for streaming/dynamic buffers.
-        const size_t alloc = usage != GL_STATIC_DRAW ? align(size, 4096) : size;
-        glBufferData(GL_ARRAY_BUFFER, alloc, 0, usage);
-        bufferSize = alloc;
-    } else {
-        // Hint the GL that it may discard the whole resource if there is contention.
-        // This will pretty much always be the case.
-        access |= GL_MAP_INVALIDATE_BUFFER_BIT;
+        if (size > bufferSize) {
+            // Round the size up to 4 Kb for streaming/dynamic buffers.
+            const size_t minSize = 32768; // Minimum size for streaming buffers
+            const size_t alloc = usage != GL_STATIC_DRAW ? align(qMax(size, minSize), 4096) : size;
+
+            glBufferData(GL_ARRAY_BUFFER, alloc, 0, usage);
+
+            bufferSize = alloc;
+        } else {
+            access |= GL_MAP_INVALIDATE_BUFFER_BIT;
+            access ^= GL_MAP_UNSYNCHRONIZED_BIT;
+        }
+
+        nextOffset = 0;
     }
 
-    return glMapBufferRange(GL_ARRAY_BUFFER, 0, size, access);
+    return glMapBufferRange(GL_ARRAY_BUFFER, nextOffset, size, access);
 }
 
 
@@ -1464,9 +1472,14 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
     if (d->hasMapBufferRange) {
-        float *map = (float *) d->mapBufferRange(size);
+        // Upload the data into the next free range in the buffer
+        float *map = (float *) d->mapNextFreeRange(size);
         d->interleaveArrays(map, dim, vertices, texcoords, vertexCount);
         glUnmapBuffer(GL_ARRAY_BUFFER);
+
+        d->vertexAddress = d->nextOffset;
+        d->texCoordAddress = d->nextOffset + d->dimension * sizeof(float);
+        d->nextOffset += align(size, 16); // Align to 16 bytes for SSE
     } else {
         // We always reallocate the data store when we can't map the buffer.
         // The rationale is that there will almost always be contention
@@ -1479,6 +1492,9 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
             glBufferData(GL_ARRAY_BUFFER, size, array.data(), d->usage);
         } else
             glBufferData(GL_ARRAY_BUFFER, size, vertices, d->usage);
+
+        d->vertexAddress = 0;
+        d->texCoordAddress = d->dimension * sizeof(float);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
