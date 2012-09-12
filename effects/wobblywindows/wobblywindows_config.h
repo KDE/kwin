@@ -40,11 +40,8 @@ public:
 
 public slots:
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private slots:
-    void advancedChanged();
     void wobblinessChanged();
 
 private:

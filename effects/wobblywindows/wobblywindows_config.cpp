@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "wobblywindows_config.h"
+// KConfigSkeleton
+#include "wobblywindowsconfig.h"
 
 #include <kwineffects.h>
 
@@ -81,15 +83,8 @@ WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVar
 {
     m_ui.setupUi(this);
 
-    connect(m_ui.wobblinessSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui.wobblinessSlider, SIGNAL(valueChanged(int)), this, SLOT(wobblinessChanged()));
-    connect(m_ui.moveBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui.resizeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui.advancedBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui.advancedBox, SIGNAL(stateChanged(int)), this, SLOT(advancedChanged()));
-    connect(m_ui.stiffnessSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui.dragSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui.moveFactorSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    addConfig(WobblyWindowsConfig::self(), this);
+    connect(m_ui.kcfg_WobblynessLevel, SIGNAL(valueChanged(int)), this, SLOT(wobblinessChanged()));
 
     load();
 }
@@ -98,87 +93,20 @@ WobblyWindowsEffectConfig::~WobblyWindowsEffectConfig()
 {
 }
 
-void WobblyWindowsEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
-    bool change = true;
-
-    unsigned int wobblynessLevel = 0;
-    QString settingsMode = conf.readEntry("Settings", "Auto");
-    if (settingsMode != "Custom") {
-        wobblynessLevel = conf.readEntry("WobblynessLevel", 0);
-        change = false;
-    }
-    if (wobblynessLevel > 4) {
-        wobblynessLevel = 4;
-        change = true;
-    }
-    m_ui.wobblinessSlider->setSliderPosition(wobblynessLevel);
-
-    m_ui.moveBox->setChecked(conf.readEntry("MoveWobble", true));
-    m_ui.resizeBox->setChecked(conf.readEntry("ResizeWobble", true));
-    m_ui.advancedBox->setChecked(conf.readEntry("AdvancedMode", false));
-
-    m_ui.stiffnessSlider->setValue(conf.readEntry("Stiffness", pset[0].stiffness));
-    m_ui.dragSlider->setValue(conf.readEntry("Drag", pset[0].drag));
-    m_ui.moveFactorSlider->setValue(conf.readEntry("MoveFactor", pset[0].move_factor));
-
-    advancedChanged();
-
-    emit changed(change);
-}
-
 void WobblyWindowsEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
-    conf.writeEntry("Settings", "Auto");
+    KCModule::save();
 
-    conf.writeEntry("WobblynessLevel", m_ui.wobblinessSlider->value());
-
-    conf.writeEntry("MoveWobble", m_ui.moveBox->isChecked());
-    conf.writeEntry("ResizeWobble", m_ui.resizeBox->isChecked());
-    conf.writeEntry("AdvancedMode", m_ui.advancedBox->isChecked());
-
-    conf.writeEntry("Stiffness", m_ui.stiffnessSpin->value());
-    conf.writeEntry("Drag", m_ui.dragSpin->value());
-    conf.writeEntry("MoveFactor", m_ui.moveFactorSpin->value());
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("wobblywindows");
-}
-
-void WobblyWindowsEffectConfig::defaults()
-{
-    m_ui.wobblinessSlider->setSliderPosition(0);
-
-    m_ui.moveBox->setChecked(true);
-    m_ui.resizeBox->setChecked(true);
-    m_ui.advancedBox->setChecked(false);
-
-    m_ui.stiffnessSlider->setValue(pset[0].stiffness);
-    m_ui.dragSlider->setValue(pset[0].drag);
-    m_ui.moveFactorSlider->setValue(pset[0].move_factor);
-
-    emit changed(true);
-}
-
-void WobblyWindowsEffectConfig::advancedChanged()
-{
-    if (m_ui.advancedBox->isChecked())
-        m_ui.advancedGroup->setEnabled(true);
-    else
-        m_ui.advancedGroup->setEnabled(false);
 }
 
 void WobblyWindowsEffectConfig::wobblinessChanged()
 {
-    ParameterSet preset = pset[m_ui.wobblinessSlider->value()];
+    ParameterSet preset = pset[m_ui.kcfg_WobblynessLevel->value()];
 
-    m_ui.stiffnessSlider->setValue(preset.stiffness);
-    m_ui.dragSlider->setValue(preset.drag);
-    m_ui.moveFactorSlider->setValue(preset.move_factor);
+    m_ui.kcfg_Stiffness->setValue(preset.stiffness);
+    m_ui.kcfg_Drag->setValue(preset.drag);
+    m_ui.kcfg_MoveFactor->setValue(preset.move_factor);
 }
 
 } // namespace
