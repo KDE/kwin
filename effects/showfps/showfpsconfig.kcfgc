@@ -1,0 +1,5 @@
+File=showfps.kcfg
+ClassName=ShowFpsConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

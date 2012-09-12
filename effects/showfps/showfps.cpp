@@ -20,11 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "showfps.h"
 
-#include <kwinconfig.h>
+// KConfigSkeleton
+#include "showfpsconfig.h"
 
-#include <kconfiggroup.h>
-#include <kglobal.h>
-#include <ksharedconfig.h>
+#include <kwinconfig.h>
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -66,10 +65,10 @@ ShowFpsEffect::ShowFpsEffect()
 
 void ShowFpsEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup config(KGlobal::config(), "EffectShowFps");
-    alpha = config.readEntry("Alpha", 0.5);
-    x = config.readEntry("X", -10000);
-    y = config.readEntry("Y", 0);
+    ShowFpsConfig::self()->readConfig();
+    alpha = ShowFpsConfig::alpha();
+    x = ShowFpsConfig::x();
+    y = ShowFpsConfig::y();
     if (x == -10000)   // there's no -0 :(
         x = displayWidth() - 2 * NUM_PAINTS - FPS_WIDTH;
     else if (x < 0)
@@ -80,11 +79,10 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
         y = displayHeight() - MAX_TIME - y;
     fps_rect = QRect(x, y, FPS_WIDTH + 2 * NUM_PAINTS, MAX_TIME);
 
-    config = effects->effectConfig("ShowFps");
-    int textPosition = config.readEntry("TextPosition", int(INSIDE_GRAPH));
-    textFont = config.readEntry("TextFont", QFont());
-    textColor = config.readEntry("TextColor", QColor());
-    double textAlpha = config.readEntry("TextAlpha", 1.0);
+    int textPosition = ShowFpsConfig::textPosition();
+    textFont = ShowFpsConfig::textFont();
+    textColor = ShowFpsConfig::textColor();
+    double textAlpha = ShowFpsConfig::textAlpha();
 
     if (!textColor.isValid())
         textColor = QPalette().color(QPalette::Active, QPalette::WindowText);
