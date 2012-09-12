@@ -45,8 +45,6 @@ public:
     virtual ~MouseMarkEffectConfig();
 
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     MouseMarkEffectConfigForm* m_ui;

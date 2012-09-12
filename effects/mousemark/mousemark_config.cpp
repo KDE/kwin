@@ -20,11 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mousemark_config.h"
 
+// KConfigSkeleton
+#include "mousemarkconfig.h"
+
 #include <kwineffects.h>
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kconfiggroup.h>
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
@@ -46,13 +48,13 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 {
     m_ui = new MouseMarkEffectConfigForm(this);
 
+    m_ui->kcfg_LineWidth->setSuffix(ki18np(" pixel", " pixels"));
+
     QVBoxLayout* layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
-    connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->comboColors, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    addConfig(MouseMarkConfig::self(), m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
@@ -78,47 +80,16 @@ MouseMarkEffectConfig::~MouseMarkEffectConfig()
     m_ui->editor->undoChanges();
 }
 
-void MouseMarkEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
-
-    int width = conf.readEntry("LineWidth", 3);
-    QColor color = conf.readEntry("Color", QColor(Qt::red));
-    m_ui->spinWidth->setValue(width);
-    m_ui->spinWidth->setSuffix(ki18np(" pixel", " pixels"));
-    m_ui->comboColors->setColor(color);
-
-    emit changed(false);
-}
-
 void MouseMarkEffectConfig::save()
 {
     kDebug(1212) << "Saving config of MouseMark" ;
-    //KCModule::save();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
-
-    conf.writeEntry("LineWidth", m_ui->spinWidth->value());
-    conf.writeEntry("Color", m_ui->comboColors->color());
+    KCModule::save();
 
     m_actionCollection->writeSettings();
     m_ui->editor->save();   // undo() will restore to this state from now on
 
-    conf.sync();
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("mousemark");
 }
-
-void MouseMarkEffectConfig::defaults()
-{
-    m_ui->spinWidth->setValue(3);
-    m_ui->comboColors->setColor(Qt::red);
-    emit changed(true);
-}
-
 
 } // namespace
 
