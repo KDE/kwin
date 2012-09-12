@@ -468,7 +468,6 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         stacking_order.append(windows[ c ]);
     }
 
-    grabXServer();
     glXWaitX();
     if (m_resetModelViewProjectionMatrix) {
         // reset model view projection matrix if required
@@ -487,7 +486,6 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
     glFlush();
 
-    ungrabXServer();
     if (m_overlayWindow->window())  // show the window only after the first pass,
         m_overlayWindow->show();   // since that pass may take long
 
