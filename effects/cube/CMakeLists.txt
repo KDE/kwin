@@ -8,6 +8,11 @@ set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     cube/cubeslide.cpp
     )
 
+kde4_add_kcfg_files(kwin4_effect_builtins_sources
+    cube/cubeslideconfig.kcfgc
+    cube/cubeconfig.kcfgc
+    )
+
 # .desktop files
 install( FILES
     cube/cube.desktop
@@ -33,6 +38,11 @@ set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources
     cube/cube_config.ui
     cube/cubeslide_config.cpp
     cube/cubeslide_config.ui
+    )
+
+kde4_add_kcfg_files(kwin4_effect_builtins_config_sources
+    cube/cubeslideconfig.kcfgc
+    cube/cubeconfig.kcfgc
     )
 
 # .desktop files

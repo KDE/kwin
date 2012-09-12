@@ -18,16 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "cube.h"
+// KConfigSkeleton
+#include "cubeconfig.h"
+
 #include "cube_inside.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
 #include <kwinconfig.h>
-#include <kconfiggroup.h>
-#include <kcolorscheme.h>
-#include <kglobal.h>
-#include <kstandarddirs.h>
 #include <kdebug.h>
 
 #include <QColor>
@@ -126,7 +125,7 @@ void CubeEffect::reconfigure(ReconfigureFlags)
 
 void CubeEffect::loadConfig(QString config)
 {
-    KConfigGroup conf = effects->effectConfig(config);
+    CubeConfig::self()->readConfig();
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border);
     }
@@ -141,49 +140,47 @@ void CubeEffect::loadConfig(QString config)
     borderActivateSphere.clear();
     QList<int> borderList = QList<int>();
     borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivate", borderList);
+    borderList = CubeConfig::borderActivate();
     foreach (int i, borderList) {
         borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivateCylinder", borderList);
+    borderList = CubeConfig::borderActivateCylinder();
     foreach (int i, borderList) {
         borderActivateCylinder.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivateSphere", borderList);
+    borderList = CubeConfig::borderActivateSphere();
     foreach (int i, borderList) {
         borderActivateSphere.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
 
-    cubeOpacity = (float)conf.readEntry("Opacity", 80) / 100.0f;
-    opacityDesktopOnly = conf.readEntry("OpacityDesktopOnly", false);
-    displayDesktopName = conf.readEntry("DisplayDesktopName", true);
-    reflection = conf.readEntry("Reflection", true);
-    rotationDuration = animationTime(conf, "RotationDuration", 500);
-    backgroundColor = conf.readEntry("BackgroundColor", QColor(Qt::black));
-    capColor = conf.readEntry("CapColor", KColorScheme(QPalette::Active, KColorScheme::Window).background().color());
-    paintCaps = conf.readEntry("Caps", true);
-    closeOnMouseRelease = conf.readEntry("CloseOnMouseRelease", false);
-    float defaultZPosition = 100.0f;
-    if (config == "Sphere")
-        defaultZPosition = 450.0f;
-    zPosition = conf.readEntry("ZPosition", defaultZPosition);
-    useForTabBox = conf.readEntry("TabBox", false);
-    invertKeys = conf.readEntry("InvertKeys", false);
-    invertMouse = conf.readEntry("InvertMouse", false);
-    capDeformationFactor = conf.readEntry("CapDeformation", 0) / 100.0f;
-    useZOrdering = conf.readEntry("ZOrdering", false);
+    cubeOpacity = (float)CubeConfig::opacity() / 100.0f;
+    opacityDesktopOnly = CubeConfig::opacityDesktopOnly();
+    displayDesktopName = CubeConfig::displayDesktopName();
+    reflection = CubeConfig::reflection();
+    rotationDuration = animationTime(CubeConfig::rotationDuration() != 0 ? CubeConfig::rotationDuration() : 500);
+    backgroundColor = CubeConfig::backgroundColor();
+    capColor = CubeConfig::capColor();
+    paintCaps = CubeConfig::caps();
+    closeOnMouseRelease = CubeConfig::closeOnMouseRelease();
+    zPosition = CubeConfig::zPosition();
+
+    useForTabBox = CubeConfig::tabBox();
+    invertKeys = CubeConfig::invertKeys();
+    invertMouse = CubeConfig::invertMouse();
+    capDeformationFactor = (float)CubeConfig::capDeformation() / 100.0f;
+    useZOrdering = CubeConfig::zOrdering();
     delete wallpaper;
     wallpaper = NULL;
     delete capTexture;
     capTexture = NULL;
-    texturedCaps = conf.readEntry("TexturedCaps", true);
+    texturedCaps = CubeConfig::texturedCaps();
 
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);
@@ -1902,14 +1899,13 @@ void CubeEffect::setActive(bool active)
         inside->setActive(true);
     }
     if (active) {
-        KConfigGroup conf = effects->effectConfig("Cube");
-        QString capPath = conf.readEntry("CapPath", KGlobal::dirs()->findResource("appdata", "cubecap.png"));
+        QString capPath = CubeConfig::capPath();
         if (texturedCaps && !capTexture && !capPath.isEmpty()) {
             QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
             connect(watcher, SIGNAL(finished()), SLOT(slotCubeCapLoaded()));
             watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadCubeCap, capPath));
         }
-        QString wallpaperPath = conf.readEntry("Wallpaper", QString(""));
+        QString wallpaperPath = CubeConfig::wallpaper().toLocalFile();
         if (!wallpaper && !wallpaperPath.isEmpty()) {
             QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
             connect(watcher, SIGNAL(finished()), SLOT(slotWallPaperLoaded()));

@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "cubeslide.h"
+// KConfigSkeleton
+#include "cubeslideconfig.h"
 
 #include <kwinconfig.h>
-#include <kconfiggroup.h>
 
 #include <math.h>
 
@@ -55,14 +56,14 @@ bool CubeSlideEffect::supported()
 
 void CubeSlideEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("CubeSlide");
-    rotationDuration = animationTime(conf, "RotationDuration", 500);
+    CubeSlideConfig::self()->readConfig();
+    rotationDuration = animationTime(CubeSlideConfig::rotationDuration() != 0 ? CubeSlideConfig::rotationDuration() : 500);
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);
-    dontSlidePanels = conf.readEntry("DontSlidePanels", true);
-    dontSlideStickyWindows = conf.readEntry("DontSlideStickyWindows", false);
-    usePagerLayout = conf.readEntry("UsePagerLayout", true);
-    useWindowMoving = conf.readEntry("UseWindowMoving", false);
+    dontSlidePanels = CubeSlideConfig::dontSlidePanels();
+    dontSlideStickyWindows = CubeSlideConfig::dontSlideStickyWindows();
+    usePagerLayout = CubeSlideConfig::usePagerLayout();
+    useWindowMoving = CubeSlideConfig::useWindowMoving();
 }
 
 void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
