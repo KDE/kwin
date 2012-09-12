@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "glide.h"
+// KConfigSkeleton
+#include "glideconfig.h"
 
-#include <kconfiggroup.h>
 #include <QtCore/QTimeLine>
 
 // Effect is based on fade effect by Philip Falkner
@@ -58,10 +59,11 @@ bool GlideEffect::supported()
 
 void GlideEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Glide");
-    duration = animationTime(conf, "AnimationTime", 350);
-    effect = (EffectStyle) conf.readEntry("GlideEffect", 0);
-    angle = conf.readEntry("GlideAngle", -90);
+    // Fetch config with KConfigXT
+    GlideConfig::self()->readConfig();
+    duration = animationTime(GlideConfig::duration() != 0 ? GlideConfig::duration() : 350);
+    effect = (EffectStyle) GlideConfig::glideEffect();
+    angle = GlideConfig::glideAngle();
 }
 
 void GlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)

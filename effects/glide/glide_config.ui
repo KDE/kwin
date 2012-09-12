@@ -7,10 +7,10 @@
     <x>0</x>
     <y>0</y>
     <width>306</width>
-    <height>72</height>
+    <height>130</height>
    </rect>
   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="slider">
+      <widget class="QSlider" name="kcfg_GlideEffect">
        <property name="minimum">
         <number>0</number>
        </property>
@@ -78,6 +78,12 @@
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
      </property>
     </spacer>
    </item>
@@ -114,7 +120,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="slider2">
+      <widget class="QSlider" name="kcfg_GlideAngle">
        <property name="minimum">
         <number>-90</number>
        </property>
@@ -149,9 +155,15 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
     </spacer>
    </item>
- </layout>
+  </layout>
  </widget>
  <resources/>
  <connections/>
