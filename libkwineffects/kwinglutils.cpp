@@ -1222,8 +1222,7 @@ public:
     static bool supported;
     static GLVertexBuffer *streamingBuffer;
     static bool hasMapBufferRange;
-    QVector<float> legacyVertices;
-    QVector<float> legacyTexCoords;
+    QByteArray dataStore;
     bool useColor;
     bool useTexCoords;
     QColor color;
@@ -1294,10 +1293,11 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode,
 #else
     // Enable arrays
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(dimension, GL_FLOAT, 0, legacyVertices.constData());
-    if (!legacyTexCoords.isEmpty()) {
+    glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
+
+    if (useTexCoords) {
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glTexCoordPointer(2, GL_FLOAT, 0, legacyTexCoords.constData());
+        glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
     }
 
     if (useColor) {
@@ -1314,7 +1314,7 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode,
     }
 
     glDisableClientState(GL_VERTEX_ARRAY);
-    if (!legacyTexCoords.isEmpty()) {
+    if (useTexCoords) {
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 #endif
@@ -1445,29 +1445,22 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
     d->vertexCount = vertexCount;
     d->dimension = dim;
     d->useTexCoords = (texcoords != NULL);
-
-    if (!GLVertexBufferPrivate::supported) {
-        // legacy data
-        d->legacyVertices.clear();
-        d->legacyVertices.reserve(vertexCount * dim);
-        for (int i = 0; i < vertexCount * dim; ++i) {
-            d->legacyVertices << vertices[i];
-        }
-        d->legacyTexCoords.clear();
-        if (d->useTexCoords) {
-            d->legacyTexCoords.reserve(vertexCount * 2);
-            for (int i = 0; i < vertexCount * 2; ++i) {
-                d->legacyTexCoords << texcoords[i];
-            }
-        }
-        return;
-    }
-
-    d->vertexAddress = 0;
-    d->texCoordAddress = dim * sizeof(float);
     d->stride = (dim + (texcoords ? 2 : 0)) * sizeof(float);
 
     size_t size = vertexCount * d->stride;
+
+    if (!GLVertexBufferPrivate::supported) {
+        // Legacy data
+        if (size_t(d->dataStore.size()) < size)
+            d->dataStore.resize(size);
+
+        d->interleaveArrays((float *) d->dataStore.data(),
+                            dim, vertices, texcoords, vertexCount);
+
+        d->vertexAddress = intptr_t(d->dataStore.data());
+        d->texCoordAddress = d->vertexAddress + dim * sizeof(float);
+        return;
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
