@@ -1132,8 +1132,7 @@ class GLVertexBufferPrivate
 {
 public:
     GLVertexBufferPrivate(GLVertexBuffer::UsageHint usageHint)
-        : hint(usageHint)
-        , numberVertices(0)
+        : numberVertices(0)
         , dimension(2)
         , useColor(false)
         , useTexCoords(true)
@@ -1141,14 +1140,28 @@ public:
         if (GLVertexBufferPrivate::supported) {
             glGenBuffers(2, buffers);
         }
+
+        switch(usageHint) {
+        case GLVertexBuffer::Dynamic:
+            usage = GL_DYNAMIC_DRAW;
+            break;
+        case GLVertexBuffer::Static:
+            usage = GL_STATIC_DRAW;
+            break;
+        default:
+            usage = GL_STREAM_DRAW;
+            break;
+        }
     }
+
     ~GLVertexBufferPrivate() {
         if (GLVertexBufferPrivate::supported) {
             glDeleteBuffers(2, buffers);
         }
     }
-    GLVertexBuffer::UsageHint hint;
+
     GLuint buffers[2];
+    GLenum usage;
     int numberVertices;
     int dimension;
     static bool supported;
@@ -1298,6 +1311,7 @@ void GLVertexBuffer::setData(int numberVertices, int dim, const float* vertices,
     d->numberVertices = numberVertices;
     d->dimension = dim;
     d->useTexCoords = (texcoords != NULL);
+
     if (!GLVertexBufferPrivate::supported) {
         // legacy data
         d->legacyVertices.clear();
@@ -1314,28 +1328,13 @@ void GLVertexBuffer::setData(int numberVertices, int dim, const float* vertices,
         }
         return;
     }
-    GLenum hint;
-    switch(d->hint) {
-    case Dynamic:
-        hint = GL_DYNAMIC_DRAW;
-        break;
-    case Static:
-        hint = GL_STATIC_DRAW;
-        break;
-    case Stream:
-        hint = GL_STREAM_DRAW;
-        break;
-    default:
-        // just to make the compiler happy
-        hint = GL_STREAM_DRAW;
-        break;
-    }
+
     glBindBuffer(GL_ARRAY_BUFFER, d->buffers[ 0 ]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices * d->dimension, vertices, hint);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices * d->dimension, vertices, d->usage);
 
     if (d->useTexCoords) {
         glBindBuffer(GL_ARRAY_BUFFER, d->buffers[ 1 ]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices * 2, texcoords, hint);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*numberVertices * 2, texcoords, d->usage);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
