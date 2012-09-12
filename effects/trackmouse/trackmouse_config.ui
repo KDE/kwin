@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
-    <height>101</height>
+    <width>327</width>
+    <height>104</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
@@ -38,28 +38,28 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="alt">
+       <widget class="QCheckBox" name="kcfg_Alt">
         <property name="text">
          <string>Alt</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="control">
+       <widget class="QCheckBox" name="kcfg_Control">
         <property name="text">
          <string>Ctrl</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="shift">
+       <widget class="QCheckBox" name="kcfg_Shift">
         <property name="text">
          <string>Shift</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="meta">
+       <widget class="QCheckBox" name="kcfg_Meta">
         <property name="text">
          <string>Meta</string>
         </property>

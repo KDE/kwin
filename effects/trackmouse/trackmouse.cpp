@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "trackmouse.h"
 
+// KConfigSkeleton
+#include "trackmouseconfig.h"
+
 #include <QTime>
 #include <QMatrix4x4>
 
@@ -32,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <KDE/KConfigGroup>
 #include <KDE/KLocale>
 
 #include <math.h>
@@ -84,14 +86,14 @@ TrackMouseEffect::~TrackMouseEffect()
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
     m_modifiers = 0;
-    KConfigGroup conf = effects->effectConfig("TrackMouse");
-    if (conf.readEntry("Shift", false))
+    TrackMouseConfig::self()->readConfig();
+    if (TrackMouseConfig::shift())
         m_modifiers |= Qt::ShiftModifier;
-    if (conf.readEntry("Alt", false))
+    if (TrackMouseConfig::alt())
         m_modifiers |= Qt::AltModifier;
-    if (conf.readEntry("Control", true))
+    if (TrackMouseConfig::control())
         m_modifiers |= Qt::ControlModifier;
-    if (conf.readEntry("Meta", true))
+    if (TrackMouseConfig::meta())
         m_modifiers |= Qt::MetaModifier;
 
     if (m_modifiers) {
