@@ -20,12 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "presentwindows.h"
-
+//KConfigSkeleton
+#include "presentwindowsconfig.h"
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <klocale.h>
-#include <kcolorscheme.h>
-#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kglobalsettings.h>
 
@@ -122,7 +121,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
 
 void PresentWindowsEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("PresentWindows");
+    PresentWindowsConfig::self()->readConfig();
     foreach (ElectricBorder border, m_borderActivate) {
         effects->unreserveElectricBorder(border);
     }
@@ -131,43 +130,34 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     }
     m_borderActivate.clear();
     m_borderActivateAll.clear();
-    QList<int> borderList = QList<int>();
-    borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivate", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, PresentWindowsConfig::borderActivate()) {
         m_borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
-    borderList.clear();
-    borderList.append(int(ElectricTopLeft));
-    borderList = conf.readEntry("BorderActivateAll", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, PresentWindowsConfig::borderActivateAll()) {
         m_borderActivateAll.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
-    borderList.clear();
-    borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivateClass", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, PresentWindowsConfig::borderActivateClass()) {
         m_borderActivateClass.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
-    m_layoutMode = conf.readEntry("LayoutMode", int(LayoutNatural));
-    m_showCaptions = conf.readEntry("DrawWindowCaptions", true);
-    m_showIcons = conf.readEntry("DrawWindowIcons", true);
-    m_doNotCloseWindows = !conf.readEntry("AllowClosingWindows", true);
-    m_ignoreMinimized = conf.readEntry("IgnoreMinimized", false);
-    m_accuracy = conf.readEntry("Accuracy", 1) * 20;
-    m_fillGaps = conf.readEntry("FillGaps", true);
+    m_layoutMode = PresentWindowsConfig::layoutMode();
+    m_showCaptions = PresentWindowsConfig::drawWindowCaptions();
+    m_showIcons = PresentWindowsConfig::drawWindowIcons();
+    m_doNotCloseWindows = !PresentWindowsConfig::allowClosingWindows();
+    m_ignoreMinimized = PresentWindowsConfig::ignoreMinimized();
+    m_accuracy = PresentWindowsConfig::accuracy() * 20;
+    m_fillGaps = PresentWindowsConfig::fillGaps();
     m_fadeDuration = double(animationTime(150));
-    m_showPanel = conf.readEntry("ShowPanel", false);
-    m_leftButtonWindow = (WindowMouseAction)conf.readEntry("LeftButtonWindow", (int)WindowActivateAction);
-    m_middleButtonWindow = (WindowMouseAction)conf.readEntry("MiddleButtonWindow", (int)WindowNoAction);
-    m_rightButtonWindow = (WindowMouseAction)conf.readEntry("RightButtonWindow", (int)WindowExitAction);
-    m_leftButtonDesktop = (DesktopMouseAction)conf.readEntry("LeftButtonDesktop", (int)DesktopExitAction);
-    m_middleButtonDesktop = (DesktopMouseAction)conf.readEntry("MiddleButtonDesktop", (int)DesktopNoAction);
-    m_rightButtonDesktop = (DesktopMouseAction)conf.readEntry("RightButtonDesktop", (int)DesktopNoAction);
-    m_dragToClose = conf.readEntry("DragToClose", false);
+    m_showPanel = PresentWindowsConfig::showPanel();
+    m_leftButtonWindow = (WindowMouseAction)PresentWindowsConfig::leftButtonWindow();
+    m_middleButtonWindow = (WindowMouseAction)PresentWindowsConfig::middleButtonWindow();
+    m_rightButtonWindow = (WindowMouseAction)PresentWindowsConfig::rightButtonWindow();
+    m_leftButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::leftButtonDesktop();
+    m_middleButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::middleButtonDesktop();
+    m_rightButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::rightButtonDesktop();
+    m_dragToClose = PresentWindowsConfig::dragToClose();
 }
 
 void* PresentWindowsEffect::proxy()

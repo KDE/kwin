@@ -37,7 +37,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="1" column="0" colspan="3">
-       <widget class="QCheckBox" name="fillGapsBox">
+       <widget class="QCheckBox" name="kcfg_FillGaps">
         <property name="text">
          <string>Fill &amp;gaps</string>
         </property>
@@ -64,7 +64,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QSlider" name="accuracySlider">
+       <widget class="QSlider" name="kcfg_Accuracy">
         <property name="minimumSize">
          <size>
           <width>130</width>
@@ -125,12 +125,12 @@
          <string>Left button:</string>
         </property>
         <property name="buddy">
-         <cstring>leftButtonWindowCombo</cstring>
+         <cstring>kcfg_LeftButtonWindow</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="leftButtonWindowCombo">
+       <widget class="KComboBox" name="kcfg_LeftButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -174,12 +174,12 @@
          <string>Middle button:</string>
         </property>
         <property name="buddy">
-         <cstring>middleButtonWindowCombo</cstring>
+         <cstring>kcfg_MiddleButtonWindow</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="middleButtonWindowCombo">
+       <widget class="KComboBox" name="kcfg_MiddleButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -223,12 +223,12 @@
          <string>Right button:</string>
         </property>
         <property name="buddy">
-         <cstring>rightButtonWindowCombo</cstring>
+         <cstring>kcfg_RightButtonWindow</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="rightButtonWindowCombo">
+       <widget class="KComboBox" name="kcfg_RightButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -284,12 +284,12 @@
          <string>Left button:</string>
         </property>
         <property name="buddy">
-         <cstring>leftButtonDesktopCombo</cstring>
+         <cstring>kcfg_LeftButtonDesktop</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="leftButtonDesktopCombo">
+       <widget class="KComboBox" name="kcfg_LeftButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -318,12 +318,12 @@
          <string>Middle button:</string>
         </property>
         <property name="buddy">
-         <cstring>middleButtonDesktopCombo</cstring>
+         <cstring>kcfg_MiddleButtonDesktop</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="middleButtonDesktopCombo">
+       <widget class="KComboBox" name="kcfg_MiddleButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -352,12 +352,12 @@
          <string>Right button:</string>
         </property>
         <property name="buddy">
-         <cstring>rightButtonDesktopCombo</cstring>
+         <cstring>kcfg_RightButtonDesktop</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="rightButtonDesktopCombo">
+       <widget class="KComboBox" name="kcfg_RightButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -398,40 +398,40 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>layoutCombo</cstring>
+         <cstring>kcfg_LayoutMode</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="displayTitleBox">
+       <widget class="QCheckBox" name="kcfg_DrawWindowCaptions">
         <property name="text">
          <string>Display window &amp;titles</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0" colspan="2">
-       <widget class="QCheckBox" name="displayIconBox">
+       <widget class="QCheckBox" name="kcfg_DrawWindowIcons">
         <property name="text">
          <string>Display window &amp;icons</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="2">
-       <widget class="QCheckBox" name="ignoreMinimizedBox">
+       <widget class="QCheckBox" name="kcfg_IgnoreMinimized">
         <property name="text">
          <string>Ignore &amp;minimized windows</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0" colspan="2">
-       <widget class="QCheckBox" name="showPanelBox">
+       <widget class="QCheckBox" name="kcfg_ShowPanel">
         <property name="text">
          <string>Show &amp;panels</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="layoutCombo">
+       <widget class="KComboBox" name="kcfg_LayoutMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -456,7 +456,7 @@
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QCheckBox" name="allowClosing">
+       <widget class="QCheckBox" name="kcfg_AllowClosingWindows">
         <property name="text">
          <string>Provide buttons to close the windows</string>
         </property>
@@ -481,13 +481,13 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>layoutCombo</tabstop>
-  <tabstop>displayTitleBox</tabstop>
-  <tabstop>displayIconBox</tabstop>
-  <tabstop>allowClosing</tabstop>
-  <tabstop>ignoreMinimizedBox</tabstop>
-  <tabstop>accuracySlider</tabstop>
-  <tabstop>fillGapsBox</tabstop>
+  <tabstop>kcfg_LayoutMode</tabstop>
+  <tabstop>kcfg_DrawWindowCaptions</tabstop>
+  <tabstop>kcfg_DrawWindowIcons</tabstop>
+  <tabstop>kcfg_AllowClosingWindows</tabstop>
+  <tabstop>kcfg_IgnoreMinimized</tabstop>
+  <tabstop>kcfg_Accuracy</tabstop>
+  <tabstop>kcfg_FillGaps</tabstop>
  </tabstops>
  <resources/>
  <connections/>
