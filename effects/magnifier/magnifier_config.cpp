@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "magnifier_config.h"
+// KConfigSkeleton
+#include "magnifierconfig.h"
 
 #include <kwineffects.h>
 
@@ -51,9 +53,9 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
 
     layout->addWidget(m_ui);
 
+    addConfig(MagnifierConfig::self(), m_ui);
+
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
-    connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->spinHeight, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
@@ -75,6 +77,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     m_ui->editor->addCollection(m_actionCollection);
+    load();
 }
 
 MagnifierEffectConfig::~MagnifierEffectConfig()
@@ -83,47 +86,20 @@ MagnifierEffectConfig::~MagnifierEffectConfig()
     m_ui->editor->undoChanges();
 }
 
-void MagnifierEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
-
-    int width = conf.readEntry("Width", 200);
-    int height = conf.readEntry("Height", 200);
-    m_ui->spinWidth->setValue(width);
-    m_ui->spinHeight->setValue(height);
-
-
-    emit changed(false);
-}
-
 void MagnifierEffectConfig::save()
 {
     kDebug(1212) << "Saving config of Magnifier" ;
-    //KCModule::save();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
-
-    conf.writeEntry("Width", m_ui->spinWidth->value());
-    conf.writeEntry("Height", m_ui->spinHeight->value());
 
     m_ui->editor->save();   // undo() will restore to this state from now on
-
-    conf.sync();
-
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("magnifier");
 }
 
 void MagnifierEffectConfig::defaults()
 {
-    m_ui->spinWidth->setValue(200);
-    m_ui->spinHeight->setValue(200);
     m_ui->editor->allDefault();
-    emit changed(true);
+    KCModule::defaults();
 }
-
 
 } // namespace
 
