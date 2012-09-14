@@ -316,7 +316,6 @@ public:
     QSize basicUnit() const;
     virtual QPoint clientPos() const; // Inside of geometry()
     virtual QSize clientSize() const;
-    virtual QRect visibleRect() const;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(XEvent* e);
@@ -1196,11 +1195,6 @@ inline QPoint Client::clientPos() const
 inline QSize Client::clientSize() const
 {
     return client_size;
-}
-
-inline QRect Client::visibleRect() const
-{
-    return Toplevel::visibleRect().adjusted(-padding_left, -padding_top, padding_right, padding_bottom);
 }
 
 inline void Client::setGeometry(const QRect& r, ForceGeometry_t force)
