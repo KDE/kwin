@@ -18,12 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "flipswitch.h"
+// KConfigSkeleton
+#include "flipswitchconfig.h"
 
 #include <kwinconfig.h>
 #include <QFont>
 #include <QKeyEvent>
 #include <QMatrix4x4>
-#include <kconfiggroup.h>
 
 #include <kdebug.h>
 #include <KAction>
@@ -94,7 +95,7 @@ bool FlipSwitchEffect::supported()
 
 void FlipSwitchEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("FlipSwitch");
+    FlipSwitchConfig::self()->readConfig();
     foreach (ElectricBorder border, m_borderActivate) {
         effects->unreserveElectricBorder(border);
     }
@@ -103,30 +104,24 @@ void FlipSwitchEffect::reconfigure(ReconfigureFlags)
     }
     m_borderActivate.clear();
     m_borderActivateAll.clear();
-    QList<int> borderList = QList<int>();
-    borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivate", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, FlipSwitchConfig::borderActivate()) {
         m_borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
-    borderList.clear();
-    borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivateAll", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, FlipSwitchConfig::borderActivateAll()) {
         m_borderActivateAll.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
-    m_tabbox = conf.readEntry("TabBox", false);
-    m_tabboxAlternative = conf.readEntry("TabBoxAlternative", false);
-    float duration = animationTime(conf, "Duration", 200);
+    m_tabbox = FlipSwitchConfig::tabBox();
+    m_tabboxAlternative = FlipSwitchConfig::tabBoxAlternative();
+    const int duration = animationTime(FlipSwitchConfig::duration() != 0 ? FlipSwitchConfig::duration() : 200);
     m_timeLine.setDuration(duration);
     m_startStopTimeLine.setDuration(duration);
 
-    m_angle = conf.readEntry("Angle", 30);
-    m_xPosition = float(conf.readEntry("XPosition", 33)) / 100.0f;
-    m_yPosition = float(conf.readEntry("YPosition", 100)) / 100.0f;
-    m_windowTitle = conf.readEntry("WindowTitle", true);
+    m_angle = FlipSwitchConfig::angle();
+    m_xPosition = FlipSwitchConfig::xPosition() / 100.0f;
+    m_yPosition = FlipSwitchConfig::yPosition() / 100.0f;
+    m_windowTitle = FlipSwitchConfig::windowTitle();
 }
 
 void FlipSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
