@@ -21,12 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "lookingglass.h"
 
+// KConfigSkeleton
+#include "lookingglassconfig.h"
+
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 
 #include <kactioncollection.h>
 #include <kaction.h>
-#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <KDE/KGlobal>
@@ -88,8 +90,8 @@ bool LookingGlassEffect::supported()
 
 void LookingGlassEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
-    initialradius = conf.readEntry("Radius", 200);
+    LookingGlassConfig::self()->readConfig();
+    initialradius = LookingGlassConfig::radius();
     radius = initialradius;
     kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
     actionCollection->readSettings();

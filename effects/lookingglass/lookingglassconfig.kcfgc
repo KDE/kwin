@@ -1,0 +1,5 @@
+File=lookingglass.kcfg
+ClassName=LookingGlassConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

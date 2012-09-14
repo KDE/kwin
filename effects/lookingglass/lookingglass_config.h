@@ -45,7 +45,6 @@ public:
     virtual ~LookingGlassEffectConfig();
 
     virtual void save();
-    virtual void load();
     virtual void defaults();
 
 private:
