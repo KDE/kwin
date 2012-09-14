@@ -470,17 +470,34 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::start()
 {
+#if 0
+    // TODO make this threaded again once KConfigGroup is sufficiently thread safe, bug #305361 and friends
     // perform querying for the services in a thread
     QFutureWatcher<LoadScriptList> *watcher = new QFutureWatcher<LoadScriptList>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(slotScriptsQueried()));
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates, offers));
+#else
+    LoadScriptList scriptsToLoad = queryScriptsToLoad();
+    for (LoadScriptList::const_iterator it = scriptsToLoad.constBegin();
+            it != scriptsToLoad.constEnd();
+            ++it) {
+        if (it->first) {
+            loadScript(it->second.first, it->second.second);
+        } else {
+            loadDeclarativeScript(it->second.first, it->second.second);
+        }
+    }
+
+    runScripts();
+#endif
+}
+
+LoadScriptList KWin::Scripting::queryScriptsToLoad()
+{
     KSharedConfig::Ptr _config = KGlobal::config();
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates, offers));
-}
 
-LoadScriptList KWin::Scripting::queryScriptsToLoad(QMap<QString,QString> &pluginStates, KService::List &offers)
-{
     LoadScriptList scriptsToLoad;
 
     foreach (const KService::Ptr & service, offers) {
