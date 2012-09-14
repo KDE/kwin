@@ -18,6 +18,8 @@
  */
 
 #include "blur_config.h"
+// KConfigSkeleton
+#include "blurconfig.h"
 
 #include <kwineffects.h>
 
@@ -30,8 +32,7 @@ BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(EffectFactory::componentData(), parent, args)
 {
     ui.setupUi(this);
-    connect(ui.slider, SIGNAL(valueChanged(int)), SLOT(valueChanged(int)));
-    connect(ui.checkBox, SIGNAL(stateChanged(int)), SLOT(valueChanged(int)));
+    addConfig(BlurConfig::self(), this);
 
     load();
 }
@@ -40,40 +41,13 @@ BlurEffectConfig::~BlurEffectConfig()
 {
 }
 
-void BlurEffectConfig::load()
-{
-    KCModule::load();
-    KConfigGroup cg = EffectsHandler::effectConfig("Blur");
-    ui.slider->setValue(cg.readEntry("BlurRadius", 12) / 2);
-    ui.checkBox->setChecked(cg.readEntry("CacheTexture", true));
-    emit changed(false);
-}
-
 void BlurEffectConfig::save()
 {
     KCModule::save();
 
-    KConfigGroup cg = EffectsHandler::effectConfig("Blur");
-    cg.writeEntry("BlurRadius", ui.slider->value() * 2);
-    cg.writeEntry("CacheTexture", ui.checkBox->isChecked());
-    cg.sync();
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("blur");
-}
-
-void BlurEffectConfig::defaults()
-{
-    emit changed(true);
-}
-
-void BlurEffectConfig::valueChanged(int value)
-{
-    Q_UNUSED(value)
-    emit changed(true);
 }
 
 } // namespace KWin
 
 #include "blur_config.moc"
-

@@ -20,12 +20,13 @@
 
 #include "blur.h"
 #include "blurshader.h"
+// KConfigSkeleton
+#include "blurconfig.h"
 
 #include <X11/Xatom.h>
 
 #include <QMatrix4x4>
 #include <QLinkedList>
-#include <KConfigGroup>
 #include <KDebug>
 
 namespace KWin
@@ -86,11 +87,11 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
 
-    KConfigGroup cg = EffectsHandler::effectConfig("Blur");
-    int radius = qBound(2, cg.readEntry("BlurRadius", 12), 14);
+    BlurConfig::self()->readConfig();
+    int radius = qBound(2, BlurConfig::blurRadius(), 14);
     shader->setRadius(radius);
 
-    m_shouldCache = cg.readEntry("CacheTexture", true);
+    m_shouldCache = BlurConfig::cacheTexture();
 
     windows.clear();
 
