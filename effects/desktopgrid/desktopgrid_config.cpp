@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "desktopgrid_config.h"
+// KConfigSkeleton
+#include "desktopgridconfig.h"
+
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
@@ -60,37 +63,23 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
 
-    m_alignmentItems.append(Qt::Alignment(0));
-    m_ui->desktopNameAlignmentCombo->addItem(i18nc("Desktop name alignment:", "Disabled"));
-    m_alignmentItems.append(Qt::AlignHCenter | Qt::AlignTop);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top"));
-    m_alignmentItems.append(Qt::AlignRight | Qt::AlignTop);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top-Right"));
-    m_alignmentItems.append(Qt::AlignRight | Qt::AlignVCenter);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Right"));
-    m_alignmentItems.append(Qt::AlignRight | Qt::AlignBottom);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom-Right"));
-    m_alignmentItems.append(Qt::AlignHCenter | Qt::AlignBottom);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom"));
-    m_alignmentItems.append(Qt::AlignLeft | Qt::AlignBottom);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom-Left"));
-    m_alignmentItems.append(Qt::AlignLeft | Qt::AlignVCenter);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Left"));
-    m_alignmentItems.append(Qt::AlignLeft | Qt::AlignTop);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top-Left"));
-    m_alignmentItems.append(Qt::AlignCenter);
-    m_ui->desktopNameAlignmentCombo->addItem(i18n("Center"));
+    m_ui->desktopNameAlignmentCombo->addItem(i18nc("Desktop name alignment:", "Disabled"), QVariant(Qt::Alignment(0)));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top"), QVariant(Qt::AlignHCenter | Qt::AlignTop));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top-Right"), QVariant(Qt::AlignRight | Qt::AlignTop));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Right"), QVariant(Qt::AlignRight | Qt::AlignVCenter));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom-Right"), QVariant(Qt::AlignRight | Qt::AlignBottom));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom"), QVariant(Qt::AlignHCenter | Qt::AlignBottom));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Bottom-Left"), QVariant(Qt::AlignLeft | Qt::AlignBottom));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Left"), QVariant(Qt::AlignLeft | Qt::AlignVCenter));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Top-Left"), QVariant(Qt::AlignLeft | Qt::AlignTop));
+    m_ui->desktopNameAlignmentCombo->addItem(i18n("Center"), QVariant(Qt::AlignCenter));
 
-    connect(m_ui->zoomDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->borderWidthSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    addConfig(DesktopGridConfig::self(), m_ui);
+    connect(m_ui->kcfg_LayoutMode, SIGNAL(currentIndexChanged(int)), this, SLOT(layoutSelectionChanged()));
     connect(m_ui->desktopNameAlignmentCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->layoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->layoutCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(layoutSelectionChanged()));
-    connect(m_ui->layoutRowsSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    connect(m_ui->presentWindowsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
+    layoutSelectionChanged();
 }
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()
@@ -99,81 +88,39 @@ DesktopGridEffectConfig::~DesktopGridEffectConfig()
     m_ui->shortcutEditor->undoChanges();
 }
 
-void DesktopGridEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
-
-    m_ui->zoomDurationSpin->setValue(conf.readEntry("ZoomDuration", 0));
-    m_ui->zoomDurationSpin->setSuffix(ki18np(" millisecond", " milliseconds"));
-    m_ui->borderWidthSpin->setValue(conf.readEntry("BorderWidth", 10));
-    m_ui->borderWidthSpin->setSuffix(ki18np(" pixel", " pixels"));
-
-    Qt::Alignment alignment = Qt::Alignment(conf.readEntry("DesktopNameAlignment", 0));
-    m_ui->desktopNameAlignmentCombo->setCurrentIndex(m_alignmentItems.indexOf(alignment));
-
-    int layoutMode = conf.readEntry("LayoutMode", int(DesktopGridEffect::LayoutPager));
-    m_ui->layoutCombo->setCurrentIndex(layoutMode);
-    layoutSelectionChanged();
-
-    m_ui->layoutRowsSpin->setValue(conf.readEntry("CustomLayoutRows", 2));
-    m_ui->layoutRowsSpin->setSuffix(ki18np(" row", " rows"));
-
-    m_ui->presentWindowsCheckBox->setChecked(conf.readEntry("PresentWindows", true));
-
-    emit changed(false);
-}
-
 void DesktopGridEffectConfig::save()
 {
+    DesktopGridConfig::setDesktopNameAlignment(m_ui->desktopNameAlignmentCombo->itemData(m_ui->desktopNameAlignmentCombo->currentIndex()).toInt());
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
-
-    conf.writeEntry("ZoomDuration", m_ui->zoomDurationSpin->value());
-    conf.writeEntry("BorderWidth", m_ui->borderWidthSpin->value());
-
-    int alignment = m_ui->desktopNameAlignmentCombo->currentIndex();
-    alignment = int(m_alignmentItems[alignment]);
-    conf.writeEntry("DesktopNameAlignment", alignment);
-
-    int layoutMode = m_ui->layoutCombo->currentIndex();
-    conf.writeEntry("LayoutMode", layoutMode);
-
-    conf.writeEntry("CustomLayoutRows", m_ui->layoutRowsSpin->value());
-
-    conf.writeEntry("PresentWindows", m_ui->presentWindowsCheckBox->isChecked());
-
-    m_ui->shortcutEditor->save();
-
+    conf.writeEntry("DesktopNameAlignment", DesktopGridConfig::desktopNameAlignment());
     conf.sync();
 
-    emit changed(false);
     EffectsHandler::sendReloadMessage("desktopgrid");
 }
 
-void DesktopGridEffectConfig::defaults()
+void DesktopGridEffectConfig::load()
 {
-    m_ui->zoomDurationSpin->setValue(0);
-    m_ui->borderWidthSpin->setValue(10);
-    m_ui->desktopNameAlignmentCombo->setCurrentIndex(0);
-    m_ui->layoutCombo->setCurrentIndex(int(DesktopGridEffect::LayoutPager));
-    m_ui->layoutRowsSpin->setValue(2);
-    m_ui->shortcutEditor->allDefault();
-    m_ui->presentWindowsCheckBox->setChecked(true);
-    emit changed(true);
+    KCModule::load();
+    m_ui->desktopNameAlignmentCombo->setCurrentIndex(m_ui->desktopNameAlignmentCombo->findData(QVariant(DesktopGridConfig::desktopNameAlignment())));
 }
 
 void DesktopGridEffectConfig::layoutSelectionChanged()
 {
-    if (m_ui->layoutCombo->currentIndex() == DesktopGridEffect::LayoutCustom) {
+    if (m_ui->kcfg_LayoutMode->currentIndex() == DesktopGridEffect::LayoutCustom) {
         m_ui->layoutRowsLabel->setEnabled(true);
-        m_ui->layoutRowsSpin->setEnabled(true);
+        m_ui->kcfg_CustomLayoutRows->setEnabled(true);
     } else {
         m_ui->layoutRowsLabel->setEnabled(false);
-        m_ui->layoutRowsSpin->setEnabled(false);
+        m_ui->kcfg_CustomLayoutRows->setEnabled(false);
     }
+}
+
+void DesktopGridEffectConfig::defaults()
+{
+    KCModule::defaults();
+    m_ui->desktopNameAlignmentCombo->setCurrentIndex(0);
 }
 
 } // namespace

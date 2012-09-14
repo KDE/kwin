@@ -26,12 +26,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>zoomDurationSpin</cstring>
+         <cstring>kcfg_ZoomDuration</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KIntSpinBox" name="zoomDurationSpin">
+       <widget class="KIntSpinBox" name="kcfg_ZoomDuration">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -58,12 +58,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>borderWidthSpin</cstring>
+         <cstring>kcfg_BorderWidth</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KIntSpinBox" name="borderWidthSpin">
+       <widget class="KIntSpinBox" name="kcfg_BorderWidth">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -110,12 +110,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>layoutCombo</cstring>
+         <cstring>kcfg_LayoutMode</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="KComboBox" name="layoutCombo">
+       <widget class="KComboBox" name="kcfg_LayoutMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -148,12 +148,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>layoutRowsSpin</cstring>
+         <cstring>kcfg_CustomLayoutRows</cstring>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="KIntSpinBox" name="layoutRowsSpin">
+       <widget class="KIntSpinBox" name="kcfg_CustomLayoutRows">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -185,7 +185,7 @@
        </spacer>
       </item>
       <item row="5" column="0" colspan="2">
-       <widget class="QCheckBox" name="presentWindowsCheckBox">
+       <widget class="QCheckBox" name="kcfg_PresentWindows">
         <property name="text">
          <string>Use Present Windows effect to layout the windows</string>
         </property>
@@ -234,11 +234,11 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>zoomDurationSpin</tabstop>
-  <tabstop>borderWidthSpin</tabstop>
+  <tabstop>kcfg_ZoomDuration</tabstop>
+  <tabstop>kcfg_BorderWidth</tabstop>
   <tabstop>desktopNameAlignmentCombo</tabstop>
-  <tabstop>layoutCombo</tabstop>
-  <tabstop>layoutRowsSpin</tabstop>
+  <tabstop>kcfg_LayoutMode</tabstop>
+  <tabstop>kcfg_CustomLayoutRows</tabstop>
  </tabstops>
  <resources/>
  <connections/>
