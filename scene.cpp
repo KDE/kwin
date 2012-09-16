@@ -486,7 +486,7 @@ void Scene::Window::discardShape()
 
 // Find out the shape of the window using the XShape extension
 // or if shape is not set then simply it's the window geometry.
-QRegion Scene::Window::shape() const
+const QRegion &Scene::Window::shape() const
 {
     if (!shape_valid) {
         Client* c = dynamic_cast< Client* >(toplevel);
@@ -515,29 +515,28 @@ QRegion Scene::Window::shape() const
 
 QRegion Scene::Window::clientShape() const
 {
-    Client *c = dynamic_cast< Client* >(toplevel);
-    if (c && c->isShade())
-        return QRegion();
+    if (toplevel->isClient()) {
+        Client *c = static_cast< Client * > (toplevel);
+        if (c->isShade())
+            return QRegion();
+    }
 
+    // TODO: cache
     const QRegion r = shape() & QRect(toplevel->clientPos(), toplevel->clientSize());
     return r.isEmpty() ? QRegion() : r;
 }
 
 bool Scene::Window::isVisible() const
 {
-    if (dynamic_cast< Deleted* >(toplevel) != NULL)
+    if (toplevel->isDeleted())
         return false;
     if (!toplevel->isOnCurrentDesktop())
         return false;
     if (!toplevel->isOnCurrentActivity())
         return false;
-    if (Client* c = dynamic_cast< Client* >(toplevel))
-        return c->isShown(true);
+    if (toplevel->isClient())
+        return (static_cast< Client *>(toplevel))->isShown(true);
     return true; // Unmanaged is always visible
-    // TODO there may be transformations, so ignore this for now
-    return !toplevel->geometry()
-           .intersected(QRect(0, 0, displayWidth(), displayHeight()))
-           .isEmpty();
 }
 
 bool Scene::Window::isOpaque() const
@@ -553,13 +552,14 @@ bool Scene::Window::isPaintingEnabled() const
 void Scene::Window::resetPaintingEnabled()
 {
     disable_painting = 0;
-    if (dynamic_cast< Deleted* >(toplevel) != NULL)
+    if (toplevel->isDeleted())
         disable_painting |= PAINT_DISABLED_BY_DELETE;
     if (!toplevel->isOnCurrentDesktop())
         disable_painting |= PAINT_DISABLED_BY_DESKTOP;
     if (!toplevel->isOnCurrentActivity())
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
+    if (toplevel->isClient()) {
+        Client *c = static_cast<Client*>(toplevel);
         if (c->isMinimized())
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         if (c->tabGroup() && c != c->tabGroup()->current())
@@ -608,7 +608,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (m_shadow) {
         ret << m_shadow->shadowQuads();
     }
-    effects->buildQuads(static_cast<Client*>(toplevel)->effectWindow(), ret);
+    effects->buildQuads(toplevel->effectWindow(), ret);
     cached_quad_list = new WindowQuadList(ret);
     return ret;
 }
