@@ -201,7 +201,6 @@ Workspace::Workspace(bool restore)
     m_compositor = Compositor::createCompositor(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
-    connect(options, SIGNAL(glColorCorrectionChanged()), m_compositor, SLOT(resetCompositing()));
 
     new DBusInterface(this);
 

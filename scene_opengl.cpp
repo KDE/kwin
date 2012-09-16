@@ -75,6 +75,7 @@ Sources and other compositing managers:
 
 #include "utils.h"
 #include "client.h"
+#include "composite.h"
 #include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
@@ -131,7 +132,8 @@ void SceneOpenGL::initColorCorrection()
 {
     kDebug(1212) << "Color correction:" << options->isColorCorrected();
     m_colorCorrection->setEnabled(options->isColorCorrected());
-    connect(m_colorCorrection, SIGNAL(changed()), wspace, SLOT(addRepaintFull()));
+    connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
+    connect(options, SIGNAL(colorCorrectedChanged()), Compositor::self(), SLOT(slotReinitialize()));
 }
 
 bool SceneOpenGL::selectMode()
