@@ -31,7 +31,7 @@ int surfaceHasSubPost;
 SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , init_ok(false)
-    , m_colorCorrection(new ColorCorrection(this))
+    , m_colorCorrection(NULL)
 {
     if (!initRenderingContext())
         return;
@@ -97,6 +97,7 @@ SceneOpenGL::~SceneOpenGL()
     eglTerminate(dpy);
     eglReleaseThread();
     SceneOpenGL::EffectFrame::cleanup();
+    uninitColorCorrection();
     checkGLError("Cleanup");
     if (m_overlayWindow->window()) {
         m_overlayWindow->destroy();

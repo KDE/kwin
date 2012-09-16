@@ -214,7 +214,7 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
 static const char s_ccVars[] =
     "uniform sampler3D u_ccLookupTexture;\n";
 static const char s_ccAlteration[] =
-    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb / gl_FragColor.a).rgb;\n";
+    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb / min(gl_FragColor.a, 1.0)).rgb;\n";
 
 
 /*
@@ -298,9 +298,6 @@ void ColorCorrection::setupForOutput(int screen)
 {
     Q_D(ColorCorrection);
 
-    if (!d->m_enabled)
-        return;
-
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     if (!shader) {
         kError(1212) << "no bound shader for color correction setup";
@@ -308,6 +305,9 @@ void ColorCorrection::setupForOutput(int screen)
     }
 
     if (!shader->setUniform("u_ccLookupTexture", d->m_ccTextureUnit)) {
+        // This means the color correction shaders are probably not loaded
+        if (!d->m_enabled)
+            return;
         kError(1212) << "unable to set uniform for the color correction lookup texture";
     }
 
@@ -318,7 +318,7 @@ void ColorCorrection::setupForOutput(int screen)
     glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
     glActiveTexture(GL_TEXTURE0 + d->m_ccTextureUnit);
 
-    if (screen < 0 || screen >= d->m_outputCCTextures.count()) {
+    if (d->m_outputCCTextures.isEmpty() || screen < 0 || screen >= d->m_outputCCTextures.count()) {
         // Configure with a dummy texture in case something is wrong
         Q_ASSERT(d->m_dummyCCTexture != 0);
         glBindTexture(GL_TEXTURE_3D, d->m_dummyCCTexture);
@@ -331,6 +331,8 @@ void ColorCorrection::setupForOutput(int screen)
 #else
     Q_UNUSED(screen);
 #endif // KWIN_HAVE_OPENGLES
+
+    checkGLError("setupForOutput");
 
     d->m_lastOutput = screen;
 }
@@ -542,6 +544,7 @@ void ColorCorrectionPrivate::setupCCTextures()
     }
 
     // TODO Handle errors (what if a texture isn't generated?)
+    checkGLError("setupCCTextures");
 }
 
 void ColorCorrectionPrivate::deleteCCTextures()
@@ -557,6 +560,8 @@ void ColorCorrectionPrivate::deleteCCTextures()
         glDeleteTextures(m_outputCCTextures.size(), m_outputCCTextures.data());
         m_outputCCTextures.clear();
     }
+
+    checkGLError("deleteCCTextures");
 }
 
 void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)

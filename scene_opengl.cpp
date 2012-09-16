@@ -131,9 +131,25 @@ ColorCorrection* SceneOpenGL::colorCorrection()
 void SceneOpenGL::initColorCorrection()
 {
     kDebug(1212) << "Color correction:" << options->isColorCorrected();
+    m_colorCorrection = new ColorCorrection(this);
     m_colorCorrection->setEnabled(options->isColorCorrected());
     connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
-    connect(options, SIGNAL(colorCorrectedChanged()), Compositor::self(), SLOT(slotReinitialize()));
+    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()));
+}
+
+void SceneOpenGL::slotColorCorrectedChanged()
+{
+    m_colorCorrection->setEnabled(options->isColorCorrected());
+
+    // Reload all shaders
+    ShaderManager::cleanup();
+    ShaderManager::instance();
+}
+
+void SceneOpenGL::uninitColorCorrection()
+{
+    kDebug(1212);
+    disconnect(options, SIGNAL(colorCorrectedChanged()), Compositor::self(), SLOT(slotReinitialize()));
 }
 
 bool SceneOpenGL::selectMode()
@@ -881,15 +897,15 @@ void SceneOpenGL::Window::prepareShaderRenderStates(TextureType type, double opa
         opaque = false;
     if (!opaque) {
         glEnable(GL_BLEND);
-        if (!options->isColorCorrected()) {
+//         if (!options->isColorCorrected()) {
             if (alpha) {
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             } else {
                 glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
             }
-        } else
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//         } else
+//             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     const float rgb = brightness * opacity;

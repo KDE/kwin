@@ -39,7 +39,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws)
     : Scene(ws)
     , m_resetModelViewProjectionMatrix(true)
     , init_ok(false)
-    , m_colorCorrection(new ColorCorrection(this))
+    , m_colorCorrection(NULL)
 {
     initGLX();
     // check for FBConfig support
@@ -155,6 +155,7 @@ SceneOpenGL::~SceneOpenGL()
         XFreePixmap(display(), buffer);
     }
     SceneOpenGL::EffectFrame::cleanup();
+    uninitColorCorrection();
     checkGLError("Cleanup");
 }
 

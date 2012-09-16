@@ -68,6 +68,8 @@ public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
+private Q_SLOTS:
+    void slotColorCorrectedChanged();
 private:
     bool selectMode();
     bool initTfp();
@@ -76,6 +78,7 @@ private:
     bool initBufferConfigs();
     bool initDrawableConfigs();
     void initColorCorrection();
+    void uninitColorCorrection();
     void waitSync();
 #ifndef KWIN_HAVE_OPENGLES
     void setupModelViewProjectionMatrix();
