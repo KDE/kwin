@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outline.h"
 #include "group.h"
 #include "rules.h"
-#include "kwinadaptor.h"
+#include "dbusinterface.h"
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
@@ -148,13 +148,6 @@ Workspace::Workspace(bool restore)
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
 
-    (void) new KWinAdaptor(this);
-
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/KWin", this);
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig",
-                 this, SLOT(slotReloadConfig()));
-
     // Initialize desktop grid array
     desktopGrid_[0] = 0;
     desktopGrid_[1] = 0;
@@ -205,13 +198,12 @@ Workspace::Workspace(bool restore)
     tab_box = new TabBox::TabBox(this);
 #endif
 
-    m_compositor = new Compositor(this);
+    m_compositor = Compositor::createCompositor(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
-    connect(m_compositor, SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
     connect(options, SIGNAL(glColorCorrectionChanged()), m_compositor, SLOT(resetCompositing()));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
-                 m_compositor, SLOT(slotReinitialize()));
+
+    new DBusInterface(this);
 
     // Compatibility
     long data = 1;
@@ -2211,18 +2203,18 @@ QString Workspace::supportInformation() const
         }
         support.append("\nLoaded Effects:\n");
         support.append(  "---------------\n");
-        foreach (const QString &effect, loadedEffects()) {
+        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
             support.append(effect % '\n');
         }
         support.append("\nCurrently Active Effects:\n");
         support.append(  "-------------------------\n");
-        foreach (const QString &effect, activeEffects()) {
+        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->activeEffects()) {
             support.append(effect % '\n');
         }
         support.append("\nEffect Settings:\n");
         support.append(  "----------------\n");
-        foreach (const QString &effect, loadedEffects()) {
-            support.append(supportInformationForEffect(effect));
+        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
+            support.append(static_cast<EffectsHandlerImpl*>(effects)->supportInformation(effect));
             support.append('\n');
         }
     } else {
@@ -2237,27 +2229,6 @@ void Workspace::slotCompositingToggled()
     if (hasDecorationPlugin()) {
         KDecorationFactory* factory = mgr->factory();
         factory->reset(SettingCompositing);
-    }
-}
-
-/*
- * Called from D-BUS
- */
-bool Workspace::compositingActive()
-{
-    if (m_compositor) {
-        return m_compositor->isActive();
-    }
-    return false;
-}
-
-/*
- * Called from D-BUS
- */
-void Workspace::toggleCompositing()
-{
-    if (m_compositor) {
-        m_compositor->toggleCompositing();
     }
 }
 

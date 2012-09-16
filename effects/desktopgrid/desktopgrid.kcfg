@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+    http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kwinrc"/>
+    <group name="Effect-DesktopGrid">
+            <entry name="BorderActivate" type="IntList" />
+            <entry name="ZoomDuration" type="Int">
+                <default>0</default>
+            </entry>
+            <entry name="BorderWidth" type="Int">
+                <default>10</default>
+            </entry>
+            <entry name="DesktopNameAlignment" type="Int">
+                <default>0</default>
+            </entry>
+            <entry name="LayoutMode" type="Int">
+                <default code="true">0</default>
+            </entry>
+            <entry name="CustomLayoutRows" type="Int">
+                <default>2</default>
+            </entry>
+            <entry name="PresentWindows" type="Bool">
+                <default>true</default>
+            </entry>
+        </group>
+</kcfg>

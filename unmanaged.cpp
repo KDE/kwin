@@ -137,6 +137,17 @@ void Unmanaged::debug(QDebug& stream) const
     stream << "\'ID:" << window() << "\'";
 }
 
+NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
+{
+    // for unmanaged windows the direct does not make any difference
+    // as there are no rules to check and no hacks to apply
+    Q_UNUSED(direct)
+    if (supportedTypes == 0) {
+        supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
+    }
+    return info->windowType(supportedTypes);
+}
+
 } // namespace
 
 #include "unmanaged.moc"

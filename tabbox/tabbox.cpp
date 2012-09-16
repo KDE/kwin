@@ -112,6 +112,14 @@ QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
     }
 }
 
+bool TabBoxHandlerImpl::isInFocusChain(TabBoxClient *client) const
+{
+    if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl*>(client)) {
+        return Workspace::self()->globalFocusChain().contains(c->client());
+    }
+    return false;
+}
+
 int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
 {
     return m_tabBox->nextDesktopFocusChain(desktop);

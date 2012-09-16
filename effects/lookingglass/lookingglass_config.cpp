@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "lookingglass_config.h"
 
+// KConfigSkeleton
+#include "lookingglassconfig.h"
+
 #include <kwineffects.h>
 
 #include <klocale.h>
@@ -51,8 +54,8 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
 
     layout->addWidget(m_ui);
 
+    addConfig(LookingGlassConfig::self(), m_ui);
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
-    connect(m_ui->radiusSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
@@ -82,41 +85,21 @@ LookingGlassEffectConfig::~LookingGlassEffectConfig()
     m_ui->editor->undoChanges();
 }
 
-void LookingGlassEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
-
-    int radius = conf.readEntry("Radius", 200);
-    m_ui->radiusSpin->setValue(radius);
-    emit changed(false);
-}
-
 void LookingGlassEffectConfig::save()
 {
     kDebug(1212) << "Saving config of LookingGlass" ;
-    //KCModule::save();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
-
-    conf.writeEntry("Radius", m_ui->radiusSpin->value());
+    KCModule::save();
 
     m_ui->editor->save();   // undo() will restore to this state from now on
 
-    conf.sync();
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("lookingglass");
 }
 
 void LookingGlassEffectConfig::defaults()
 {
-    m_ui->radiusSpin->setValue(200);
     m_ui->editor->allDefault();
-    emit changed(true);
+    KCModule::defaults();
 }
-
 
 } // namespace
 

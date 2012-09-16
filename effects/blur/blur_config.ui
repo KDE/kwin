@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="slider">
+      <widget class="QSlider" name="kcfg_BlurRadius">
        <property name="minimum">
         <number>1</number>
        </property>
@@ -75,7 +75,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="kcfg_CacheTexture">
      <property name="toolTip">
       <string extracomment="Enables an internal texture cache which saves the background of the blurred area. This results in less repaints and in a slightly higher memory usage."/>
      </property>

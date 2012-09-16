@@ -46,8 +46,6 @@ public:
 
 public slots:
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     FlipSwitchEffectConfigForm* m_ui;

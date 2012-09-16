@@ -53,6 +53,7 @@ public slots:
 private slots:
     void shortcutChanged(const QKeySequence &seq);
 private:
+    void checkModifiers();
     TrackMouseEffectConfigForm* m_ui;
     KActionCollection* m_actionCollection;
 };

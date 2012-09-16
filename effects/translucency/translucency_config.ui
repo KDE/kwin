@@ -1,296 +1,202 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::TranslucencyEffectConfigForm</class>
- <widget class="QWidget" name="KWin::TranslucencyEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::TranslucencyEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>295</height>
+    <width>643</width>
+    <height>269</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Translucency</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" >
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QGroupBox" name="m_opacityGroupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="m_opacityGroupBox">
+     <property name="title">
       <string>General Translucency Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="1" column="0" >
-       <widget class="QLabel" name="decorations_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text" >
-         <string>Decorations:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>decorations</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2" >
-       <widget class="QSlider" name="decorations" >
-        <property name="minimumSize" >
-         <size>
-          <width>170</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="minimum" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="4" column="1" colspan="2">
+       <widget class="QSlider" name="dialogs">
+        <property name="minimum">
          <number>10</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="inactive_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+      <item row="4" column="0">
+       <widget class="QLabel" name="dialogs_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
-         <string>Inactive windows:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>inactive</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2" >
-       <widget class="QSlider" name="inactive" >
-        <property name="minimum" >
-         <number>10</number>
-        </property>
-        <property name="maximum" >
-         <number>100</number>
-        </property>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition" >
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval" >
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" >
-       <widget class="QLabel" name="moveresize_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text" >
-         <string>Moving windows:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>moveresize</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2" >
-       <widget class="QSlider" name="moveresize" >
-        <property name="minimum" >
-         <number>10</number>
-        </property>
-        <property name="maximum" >
-         <number>100</number>
-        </property>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition" >
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval" >
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" >
-       <widget class="QLabel" name="dialogs_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text" >
+        <property name="text">
          <string>Dialogs:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>dialogs</cstring>
         </property>
        </widget>
       </item>
-      <item row="4" column="1" colspan="2" >
-       <widget class="QSlider" name="dialogs" >
-        <property name="minimum" >
-         <number>10</number>
-        </property>
-        <property name="maximum" >
-         <number>100</number>
-        </property>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition" >
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval" >
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" >
-       <widget class="QLabel" name="comboboxpopup_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="decorations_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
-         <string>Combobox popups:</string>
+        <property name="text">
+         <string>Decorations:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
+         <cstring>decorations</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" colspan="2">
+       <widget class="QSlider" name="comboboxpopup">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" colspan="2">
+       <widget class="QSlider" name="menus">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="inactive_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Inactive windows:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>inactive</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="moveresize_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Moving windows:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>moveresize</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="comboboxpopup_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Combobox popups:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
          <cstring>comboboxpopup</cstring>
         </property>
        </widget>
       </item>
-      <item row="5" column="1" colspan="2" >
-       <widget class="QSlider" name="comboboxpopup" >
-        <property name="minimum" >
+      <item row="3" column="1" colspan="2">
+       <widget class="QSlider" name="moveresize">
+        <property name="minimum">
          <number>10</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="6" column="0" >
-       <widget class="QLabel" name="menus_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text" >
-         <string>Menus:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>menus</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1" colspan="2" >
-       <widget class="QSlider" name="menus" >
-        <property name="minimum" >
-         <number>10</number>
-        </property>
-        <property name="maximum" >
-         <number>100</number>
-        </property>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition" >
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval" >
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
-         <string>Fading duration:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>duration</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1" colspan="2" >
-       <widget class="KIntSpinBox" name="duration" >
-        <property name="minimumSize" >
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="specialValueText" >
-         <string comment="Duration of fading">Default</string>
-        </property>
-        <property name="maximum" >
-         <number>5000</number>
-        </property>
-        <property name="singleStep" >
-         <number>100</number>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0" colspan="2" >
-       <spacer name="verticalSpacer_2" >
-        <property name="orientation" >
+      <item row="7" column="0" colspan="2">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>0</height>
@@ -298,32 +204,95 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="label_2" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+      <item row="1" column="1" colspan="2">
+       <widget class="QSlider" name="decorations">
+        <property name="minimumSize">
+         <size>
+          <width>170</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QSlider" name="inactive">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Transparent</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="QLabel" name="label_3" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Opaque</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="menus_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Menus:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>menus</cstring>
         </property>
        </widget>
       </item>
@@ -331,143 +300,143 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="individualmenuconfig" >
-     <property name="title" >
+    <widget class="QGroupBox" name="individualmenuconfig">
+     <property name="title">
       <string>Set menu translucency independently</string>
      </property>
-     <property name="checkable" >
+     <property name="checkable">
       <bool>true</bool>
      </property>
-     <property name="checked" >
+     <property name="checked">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="1" column="0" >
-       <widget class="QLabel" name="dropdownmenus_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="dropdownmenus_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Dropdown menus:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>dropdownmenus</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2" >
-       <widget class="QSlider" name="dropdownmenus" >
-        <property name="minimumSize" >
+      <item row="1" column="1" colspan="2">
+       <widget class="QSlider" name="dropdownmenus">
+        <property name="minimumSize">
          <size>
           <width>170</width>
           <height>0</height>
          </size>
         </property>
-        <property name="minimum" >
+        <property name="minimum">
          <number>10</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="popupmenus_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="popupmenus_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Popup menus:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>popupmenus</cstring>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="2" >
-       <widget class="QSlider" name="popupmenus" >
-        <property name="minimum" >
+      <item row="2" column="1" colspan="2">
+       <widget class="QSlider" name="popupmenus">
+        <property name="minimum">
          <number>10</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" >
-       <widget class="QLabel" name="tornoffmenus_label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+      <item row="3" column="0">
+       <widget class="QLabel" name="tornoffmenus_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Torn-off menus:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>tornoffmenus</cstring>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2" >
-       <widget class="QSlider" name="tornoffmenus" >
-        <property name="minimum" >
+      <item row="3" column="1" colspan="2">
+       <widget class="QSlider" name="tornoffmenus">
+        <property name="minimum">
          <number>10</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="3" >
-       <spacer name="verticalSpacer" >
-        <property name="orientation" >
+      <item row="4" column="0" colspan="3">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>0</height>
@@ -475,31 +444,31 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="label_6" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_6">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Transparent</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="QLabel" name="label_7" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Opaque</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
@@ -516,19 +485,11 @@
   <tabstop>dialogs</tabstop>
   <tabstop>comboboxpopup</tabstop>
   <tabstop>menus</tabstop>
-  <tabstop>duration</tabstop>
   <tabstop>individualmenuconfig</tabstop>
   <tabstop>dropdownmenus</tabstop>
   <tabstop>popupmenus</tabstop>
   <tabstop>tornoffmenus</tabstop>
  </tabstops>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -537,11 +498,11 @@
    <receiver>menus</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>109</x>
      <y>316</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>212</x>
      <y>220</y>
     </hint>

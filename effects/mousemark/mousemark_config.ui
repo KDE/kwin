@@ -1,62 +1,71 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::MouseMarkEffectConfigForm</class>
- <widget class="QWidget" name="KWin::MouseMarkEffectConfigForm" >
-  <layout class="QVBoxLayout" >
+ <widget class="QWidget" name="KWin::MouseMarkEffectConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>279</width>
+    <height>178</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
          <string>&amp;Width:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>spinWidth</cstring>
+        <property name="buddy">
+         <cstring>kcfg_LineWidth</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="KIntSpinBox" name="spinWidth" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="0" column="1">
+       <widget class="KIntSpinBox" name="kcfg_LineWidth">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimum" >
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>10</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>3</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
          <string>&amp;Color:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>comboColors</cstring>
+        <property name="buddy">
+         <cstring>kcfg_Color</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="KColorCombo" name="comboColors" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="1" column="1">
+       <widget class="KColorCombo" name="kcfg_Color">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -67,17 +76,17 @@
     </widget>
    </item>
    <item>
-    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
+    <widget class="KWin::GlobalShortcutsEditor" name="editor" native="true"/>
    </item>
    <item>
-    <widget class="QLabel" name="label_3" >
-     <property name="text" >
+    <widget class="QLabel" name="label_3">
+     <property name="text">
       <string>Draw with the mouse by holding Shift+Meta keys and moving the mouse.</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
-     <property name="wordWrap" >
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
@@ -98,7 +107,7 @@
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global" >kwineffects.h</header>
+   <header location="global">kwineffects.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

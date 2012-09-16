@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "resize_config.h"
+// KConfigSkeleton
+#include "resizeconfig.h"
+
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
@@ -43,40 +46,15 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->scaleBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui->outlineBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    addConfig(ResizeConfig::self(), m_ui);
 
     load();
 }
 
-void ResizeEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("Resize");
-    m_ui->scaleBox->setChecked(conf.readEntry<bool>("TextureScale", true));
-    m_ui->outlineBox->setChecked(conf.readEntry<bool>("Outline" , false));
-
-    emit changed(false);
-}
-
 void ResizeEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("Resize");
-    conf.writeEntry("TextureScale", m_ui->scaleBox->isChecked());
-    conf.writeEntry("Outline", m_ui->outlineBox->isChecked());
-
-    conf.sync();
-
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("resize");
-}
-
-void ResizeEffectConfig::defaults()
-{
-    m_ui->scaleBox->setChecked(true);
-    m_ui->outlineBox->setChecked(false);
-    emit changed(true);
 }
 
 } // namespace

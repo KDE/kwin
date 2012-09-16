@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "effects.h"
 
+#include "effectsadaptor.h"
 #include "deleted.h"
 #include "client.h"
 #include "group.h"
@@ -105,6 +106,10 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_compositor(compositor)
     , m_scene(scene)
 {
+    new EffectsAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/Effects", this);
+    dbus.registerService("org.kde.kwin.Effects");
     // init is important, otherwise causes crashes when quads are build before the first painting pass start
     m_currentBuildQuadsIterator = m_activeEffects.end();
 

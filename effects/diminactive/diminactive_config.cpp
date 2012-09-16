@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "diminactive_config.h"
+// KConfigSkeleton
+#include "diminactiveconfig.h"
 
 #include <kwineffects.h>
 
@@ -50,62 +52,16 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->spinStrength, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->checkPanel, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(m_ui->checkDesktop, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(m_ui->checkKeepAbove, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(m_ui->checkGroup, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    addConfig(DimInactiveConfig::self(), m_ui);
 
     load();
 }
 
-void DimInactiveEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
-
-    int strength = conf.readEntry("Strength", 25);
-    bool panel = conf.readEntry("DimPanels", false);
-    bool desktop = conf.readEntry("DimDesktop", false);
-    bool keepabove = conf.readEntry("DimKeepAbove", false);
-    bool group = conf.readEntry("DimByGroup", true);
-    m_ui->spinStrength->setValue(strength);
-    m_ui->checkPanel->setChecked(panel);
-    m_ui->checkDesktop->setChecked(desktop);
-    m_ui->checkKeepAbove->setChecked(keepabove);
-    m_ui->checkGroup->setChecked(group);
-
-    emit changed(false);
-}
-
 void DimInactiveEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
-
-    conf.writeEntry("Strength", m_ui->spinStrength->value());
-    conf.writeEntry("DimPanels", m_ui->checkPanel->isChecked());
-    conf.writeEntry("DimDesktop", m_ui->checkDesktop->isChecked());
-    conf.writeEntry("DimKeepAbove", m_ui->checkKeepAbove->isChecked());
-    conf.writeEntry("DimByGroup", m_ui->checkGroup->isChecked());
-
-    conf.sync();
-
     KCModule::save();
-    emit changed(false);
     EffectsHandler::sendReloadMessage("diminactive");
 }
-
-void DimInactiveEffectConfig::defaults()
-{
-    m_ui->spinStrength->setValue(25);
-    m_ui->checkPanel->setChecked(false);
-    m_ui->checkDesktop->setChecked(false);
-    m_ui->checkKeepAbove->setChecked(false);
-    m_ui->checkGroup->setChecked(true);
-    emit changed(true);
-}
-
 
 } // namespace
 

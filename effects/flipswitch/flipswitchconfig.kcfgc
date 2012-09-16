@@ -1,0 +1,5 @@
+File=flipswitch.kcfg
+ClassName=FlipSwitchConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "desktopgrid.h"
+// KConfigSkeleton
+#include "desktopgridconfig.h"
 
 #include "../presentwindows/presentwindows_proxy.h"
 
@@ -30,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kconfiggroup.h>
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
@@ -100,29 +101,26 @@ DesktopGridEffect::~DesktopGridEffect()
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("DesktopGrid");
+    DesktopGridConfig::self()->readConfig();
 
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border);
     }
     borderActivate.clear();
-    QList<int> borderList = QList<int>();
-    borderList.append(int(ElectricNone));
-    borderList = conf.readEntry("BorderActivate", borderList);
-    foreach (int i, borderList) {
+    foreach (int i, DesktopGridConfig::borderActivate()) {
         borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i));
     }
 
-    zoomDuration = animationTime(conf, "ZoomDuration", 300);
+    zoomDuration = animationTime(DesktopGridConfig::zoomDuration() != 0 ? DesktopGridConfig::zoomDuration() : 300);
     timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     timeline.setDuration(zoomDuration);
 
-    border = conf.readEntry("BorderWidth", 10);
-    desktopNameAlignment = Qt::Alignment(conf.readEntry("DesktopNameAlignment", 0));
-    layoutMode = conf.readEntry("LayoutMode", int(LayoutPager));
-    customLayoutRows = conf.readEntry("CustomLayoutRows", 2);
-    m_usePresentWindows = conf.readEntry("PresentWindows", true);
+    border = DesktopGridConfig::borderWidth();
+    desktopNameAlignment = Qt::Alignment(DesktopGridConfig::desktopNameAlignment());
+    layoutMode = DesktopGridConfig::layoutMode();
+    customLayoutRows = DesktopGridConfig::customLayoutRows();
+    m_usePresentWindows = DesktopGridConfig::presentWindows();
 }
 
 //-----------------------------------------------------------------------------

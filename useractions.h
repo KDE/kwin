@@ -227,6 +227,10 @@ private:
      * Menu to change tab.
      **/
     QMenu* m_switchToTabMenu;
+    /**
+     * Menu for further entries added by scripts.
+     **/
+    QMenu* m_scriptsMenu;
     QAction* m_resizeOperation;
     QAction* m_moveOperation;
     QAction* m_maximizeOperation;

@@ -202,14 +202,13 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         stacking_order.append(windows[ c ]);
     }
 
-    grabXServer();
     XSync(display(), false);
     int mask = 0;
     paintScreen(&mask, &damage);   // call generic implementation
     m_lastMask = mask;
     m_lastDamage = damage;
     glFlush();
-    ungrabXServer();
+
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
 

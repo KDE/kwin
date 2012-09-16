@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "showfps_config.h"
+
+// KConfigSkeleton
+#include "showfpsconfig.h"
+
 #include "showfps.h"
 
 #include <kwineffects.h>
@@ -37,10 +41,7 @@ ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& ar
     m_ui = new Ui::ShowFpsEffectConfigForm;
     m_ui->setupUi(this);
 
-    connect(m_ui->textPosition, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->textFont, SIGNAL(fontSelected(QFont)), this, SLOT(changed()));
-    connect(m_ui->textColor, SIGNAL(changed(QColor)), this, SLOT(changed()));
-    connect(m_ui->textAlpha, SIGNAL(valueChanged(double)), this, SLOT(changed()));
+    addConfig(ShowFpsConfig::self(), this);
 
     load();
 }
@@ -50,61 +51,10 @@ ShowFpsEffectConfig::~ShowFpsEffectConfig()
     delete m_ui;
 }
 
-void ShowFpsEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
-
-    int position = conf.readEntry("TextPosition", int(ShowFpsEffect::INSIDE_GRAPH));
-    if (position > -1)
-        m_ui->textPosition->setCurrentIndex(position);
-
-    QFont font = conf.readEntry("TextFont", QFont());
-    m_ui->textFont->setFont(font);
-
-    QColor color = conf.readEntry("TextColor", QColor());
-    if (color.isValid())
-        m_ui->textColor->setColor(color);
-
-    double alpha = conf.readEntry("TextAlpha", 1.0);
-    m_ui->textAlpha->setValue(alpha);
-
-    emit changed(false);
-}
-
 void ShowFpsEffectConfig::save()
 {
     KCModule::save();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
-
-    int position = m_ui->textPosition->currentIndex();
-    conf.writeEntry("TextPosition", position);
-
-    QFont font = m_ui->textFont->font();
-    conf.writeEntry("TextFont", font);
-
-    QColor color = m_ui->textColor->color();
-    conf.writeEntry("TextColor", color);
-
-    double alpha = m_ui->textAlpha->value();
-    conf.writeEntry("TextAlpha", alpha);
-
-    conf.sync();
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("showfps");
-}
-
-void ShowFpsEffectConfig::defaults()
-{
-    m_ui->textPosition->setCurrentIndex(0);
-    m_ui->textFont->setFont(QFont());
-    m_ui->textColor->setColor(QColor());
-    m_ui->textAlpha->setValue(1.0);
-
-    emit changed(true);
 }
 
 } // namespace

@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "zoom_config.h"
+// KConfigSkeleton
+#include "zoomconfig.h"
 
 #include <kwineffects.h>
 
@@ -49,12 +51,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
-    connect(m_ui->zoomStepsSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changed()));
-    connect(m_ui->mousePointerComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->mouseTrackingComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui->focusTrackingCheckBox, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(m_ui->followFocusCheckBox, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
+    addConfig(ZoomConfig::self(), m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
@@ -120,42 +117,11 @@ ZoomEffectConfig::~ZoomEffectConfig()
     m_ui->editor->undoChanges();
 }
 
-void ZoomEffectConfig::load()
-{
-    KCModule::load();
-    KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
-    m_ui->zoomStepsSpinBox->setValue(conf.readEntry("ZoomFactor", 1.2));
-    m_ui->mousePointerComboBox->setCurrentIndex(conf.readEntry("MousePointer", 0));
-    m_ui->mouseTrackingComboBox->setCurrentIndex(conf.readEntry("MouseTracking", 0));
-    m_ui->focusTrackingCheckBox->setChecked(conf.readEntry("EnableFocusTracking", false));
-    m_ui->followFocusCheckBox->setChecked(conf.readEntry("EnableFollowFocus", true));
-    emit changed(false);
-}
-
 void ZoomEffectConfig::save()
 {
-    //KCModule::save();
-    KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
-    conf.writeEntry("ZoomFactor", m_ui->zoomStepsSpinBox->value());
-    conf.writeEntry("MousePointer", m_ui->mousePointerComboBox->currentIndex());
-    conf.writeEntry("MouseTracking", m_ui->mouseTrackingComboBox->currentIndex());
-    conf.writeEntry("EnableFocusTracking", m_ui->focusTrackingCheckBox->isChecked());
-    conf.writeEntry("EnableFollowFocus", m_ui->followFocusCheckBox->isChecked());
     m_ui->editor->save(); // undo() will restore to this state from now on
-    conf.sync();
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("zoom");
-}
-
-void ZoomEffectConfig::defaults()
-{
-    m_ui->zoomStepsSpinBox->setValue(1.25);
-    m_ui->mousePointerComboBox->setCurrentIndex(0);
-    m_ui->mouseTrackingComboBox->setCurrentIndex(0);
-    m_ui->focusTrackingCheckBox->setChecked(false);
-    m_ui->followFocusCheckBox->setChecked(true);
-    m_ui->editor->allDefault();
-    emit changed(true);
 }
 
 } // namespace

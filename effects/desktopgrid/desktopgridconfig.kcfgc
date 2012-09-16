@@ -1,0 +1,5 @@
+File=desktopgrid.kcfg
+ClassName=DesktopGridConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

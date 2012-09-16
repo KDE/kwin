@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/qdeclarative.h>
+#include <QtGui/QMenu>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 
@@ -144,6 +145,11 @@ QScriptValue kwinAssertNotNull(QScriptContext *context, QScriptEngine *engine)
 QScriptValue kwinRegisterScreenEdge(QScriptContext *context, QScriptEngine *engine)
 {
     return KWin::registerScreenEdge<KWin::AbstractScript*>(context, engine);
+}
+
+QScriptValue kwinRegisterUserActionsMenu(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::registerUserActionsMenu<KWin::AbstractScript*>(context, engine);
 }
 
 QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
@@ -269,6 +275,8 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
     // add screen edge
     registerScreenEdgeFunction(this, engine, kwinRegisterScreenEdge);
+    // add user actions menu register function
+    regesterUserActionsMenuFunction(this, engine, kwinRegisterUserActionsMenu);
     // add assertions
     QScriptValue assertTrueFunc = engine->newFunction(kwinAssertTrue);
     engine->globalObject().setProperty("assertTrue", assertTrueFunc);
@@ -315,6 +323,105 @@ void KWin::AbstractScript::slotPendingDBusCall(QDBusPendingCallWatcher* watcher)
     callback.call(QScriptValue(), arguments);
     m_callbacks.remove(id);
     watcher->deleteLater();
+}
+
+void KWin::AbstractScript::registerUseractionsMenuCallback(QScriptValue callback)
+{
+    m_userActionsMenuCallbacks.append(callback);
+}
+
+QList< QAction * > KWin::AbstractScript::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)
+{
+    QList<QAction*> returnActions;
+    for (QList<QScriptValue>::const_iterator it = m_userActionsMenuCallbacks.constBegin(); it != m_userActionsMenuCallbacks.constEnd(); ++it) {
+        QScriptValue callback(*it);
+        QScriptValueList arguments;
+        arguments << callback.engine()->newQObject(c);
+        QScriptValue actions = callback.call(QScriptValue(), arguments);
+        if (!actions.isValid() || actions.isUndefined() || actions.isNull()) {
+            // script does not want to handle this Client
+            continue;
+        }
+        if (actions.isObject()) {
+            QAction *a = scriptValueToAction(actions, parent);
+            if (a) {
+                returnActions << a;
+            }
+        }
+    }
+
+    return returnActions;
+}
+
+QAction *KWin::AbstractScript::scriptValueToAction(QScriptValue &value, QMenu *parent)
+{
+    QScriptValue titleValue = value.property("text");
+    QScriptValue checkableValue = value.property("checkable");
+    QScriptValue checkedValue = value.property("checked");
+    QScriptValue itemsValue = value.property("items");
+    QScriptValue triggeredValue = value.property("triggered");
+
+    if (!titleValue.isValid()) {
+        // title not specified - does not make any sense to include
+        return NULL;
+    }
+    const QString title = titleValue.toString();
+    const bool checkable = checkableValue.isValid() && checkableValue.toBool();
+    const bool checked = checkable && checkedValue.isValid() && checkedValue.toBool();
+    // either a menu or a menu item
+    if (itemsValue.isValid()) {
+        if (!itemsValue.isArray()) {
+            // not an array, so cannot be a menu
+            return NULL;
+        }
+        QScriptValue lengthValue = itemsValue.property("length");
+        if (!lengthValue.isValid() || !lengthValue.isNumber() || lengthValue.toInteger() == 0) {
+            // length property missing
+            return NULL;
+        }
+        return createMenu(title, itemsValue, parent);
+    } else if (triggeredValue.isValid()) {
+        // normal item
+        return createAction(title, checkable, checked, triggeredValue, parent);
+    }
+    return NULL;
+}
+
+QAction *KWin::AbstractScript::createAction(const QString &title, bool checkable, bool checked, QScriptValue &callback, QMenu *parent)
+{
+    QAction *action = new QAction(title, parent);
+    action->setCheckable(checkable);
+    action->setChecked(checked);
+    // TODO: rename m_shortcutCallbacks
+    m_shortcutCallbacks.insert(action, callback);
+    connect(action, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
+    connect(action, SIGNAL(destroyed(QObject*)), SLOT(actionDestroyed(QObject*)));
+    return action;
+}
+
+QAction *KWin::AbstractScript::createMenu(const QString &title, QScriptValue &items, QMenu *parent)
+{
+    QMenu *menu = new QMenu(title, parent);
+    const int length = static_cast<int>(items.property("length").toInteger());
+    for (int i=0; i<length; ++i) {
+        QScriptValue value = items.property(QString::number(i));
+        if (!value.isValid()) {
+            continue;
+        }
+        if (value.isObject()) {
+            QAction *a = scriptValueToAction(value, menu);
+            if (a) {
+                menu->addAction(a);
+            }
+        }
+    }
+    return menu->menuAction();
+}
+
+void KWin::AbstractScript::actionDestroyed(QObject *object)
+{
+    // TODO: Qt 5 - change to lambda function
+    m_shortcutCallbacks.remove(static_cast<QAction*>(object));
 }
 
 KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)
@@ -602,6 +709,15 @@ KWin::Scripting::~Scripting()
 {
     QDBusConnection::sessionBus().unregisterObject("/Scripting");
     QDBusConnection::sessionBus().unregisterService("org.kde.kwin.Scripting");
+}
+
+QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)
+{
+    QList<QAction*> actions;
+    foreach (AbstractScript *script, scripts) {
+        actions << script->actionsForUserActionMenu(c, parent);
+    }
+    return actions;
 }
 
 #include "scripting.moc"

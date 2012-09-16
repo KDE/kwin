@@ -47,6 +47,10 @@ class Unmanaged;
 class EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Effects")
+    Q_PROPERTY(QStringList activeEffects READ activeEffects)
+    Q_PROPERTY(QStringList loadedEffects READ loadedEffects)
+    Q_PROPERTY(QStringList listOfEffects READ listOfEffects)
 public:
     EffectsHandlerImpl(Compositor *compositor, Scene *scene);
     virtual ~EffectsHandlerImpl();
@@ -164,12 +168,6 @@ public:
     void desktopResized(const QSize &size);
 
     virtual void reloadEffect(Effect *effect);
-    bool loadEffect(const QString& name, bool checkDefault = false);
-    void toggleEffect(const QString& name);
-    void unloadEffect(const QString& name);
-    void reconfigureEffect(const QString& name);
-    bool isEffectLoaded(const QString& name) const;
-    QString supportInformation(const QString& name) const;
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
 
@@ -182,6 +180,14 @@ public Q_SLOTS:
     void slotTabRemoved(EffectWindow* c, EffectWindow* newActiveWindow);
     void slotShowOutline(const QRect &geometry);
     void slotHideOutline();
+
+    // slots for D-Bus interface
+    Q_SCRIPTABLE void reconfigureEffect(const QString& name);
+    Q_SCRIPTABLE bool loadEffect(const QString& name, bool checkDefault = false);
+    Q_SCRIPTABLE void toggleEffect(const QString& name);
+    Q_SCRIPTABLE void unloadEffect(const QString& name);
+    Q_SCRIPTABLE bool isEffectLoaded(const QString& name) const;
+    Q_SCRIPTABLE QString supportInformation(const QString& name) const;
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old, KWin::Client *withClient);

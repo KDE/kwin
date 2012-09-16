@@ -52,6 +52,7 @@ public:
     virtual QString desktopName(int desktop) const;
     virtual QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const;
     virtual QWeakPointer< TabBoxClient > firstClientFocusChain() const;
+    virtual bool isInFocusChain (TabBoxClient* client) const;
     virtual int nextDesktopFocusChain(int desktop) const;
     virtual int numberOfDesktops() const;
     virtual TabBoxClientList stackingOrder() const;

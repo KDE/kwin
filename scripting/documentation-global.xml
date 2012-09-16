@@ -113,6 +113,13 @@
                 <read></read>
                 <detaileddescription>Call a D-Bus method at (service, path, interface and method). A variable number of arguments can be added to the method call. The D-Bus call is always performed in an async way invoking the callback provided as the last (optional) argument. The reply values of the D-Bus method call are passed to the callback.</detaileddescription>
             </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE void</type>
+                <definition>void KWin::Scripting::registerUserActionsMenu</definition>
+                <argsstring>QScriptValue callback</argsstring>
+                <read></read>
+                <detaileddescription>Registers the passed in callback to be invoked whenever the User actions menu (Alt+F3 or right click on window decoration) is about to be shown. The callback is invoked with a reference to the Client for which the menu is shown. The callback can return either a single menu entry to be added to the menu or an own sub menu with multiple entries. The object for a menu entry should be {title: "My Menu entry", checkable: true, checked: false, triggered: function (action) { // callback with triggered QAction}}, for a menu it should be {title: "My menu", items: [{...}, {...}, ...] /*list with entries as described*/}</detaileddescription>
+            </memberdef>
         </sectiondef>
     </compounddef>
 </doxygen>

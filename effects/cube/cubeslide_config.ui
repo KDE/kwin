@@ -12,7 +12,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0" colspan="2">
-    <widget class="QCheckBox" name="dontSlideStickyWindowsBox">
+    <widget class="QCheckBox" name="kcfg_DontSlideStickyWindows">
      <property name="text">
       <string>Do not animate windows on all desktops</string>
      </property>
@@ -32,7 +32,7 @@
     </spacer>
    </item>
    <item row="0" column="1">
-    <widget class="KIntSpinBox" name="rotationDurationSpin">
+    <widget class="KIntSpinBox" name="kcfg_RotationDuration">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -60,7 +60,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QCheckBox" name="dontSlidePanelsBox">
+    <widget class="QCheckBox" name="kcfg_DontSlidePanels">
      <property name="text">
       <string>Do not animate panels</string>
      </property>
@@ -75,19 +75,19 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
-      <cstring>rotationDurationSpin</cstring>
+      <cstring>kcfg_RotationDuration</cstring>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="QCheckBox" name="usePagerBox">
+    <widget class="QCheckBox" name="kcfg_UsePagerLayout">
      <property name="text">
       <string>Use pager layout for animation</string>
      </property>
     </widget>
    </item>
    <item row="4" column="0" colspan="2">
-    <widget class="QCheckBox" name="windowsMovingBox">
+    <widget class="QCheckBox" name="kcfg_UseWindowMoving">
      <property name="text">
       <string>Start animation when moving windows towards screen edges</string>
      </property>
@@ -103,9 +103,9 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>rotationDurationSpin</tabstop>
-  <tabstop>dontSlidePanelsBox</tabstop>
-  <tabstop>dontSlideStickyWindowsBox</tabstop>
+  <tabstop>kcfg_RotationDuration</tabstop>
+  <tabstop>kcfg_DontSlidePanels</tabstop>
+  <tabstop>kcfg_DontSlideStickyWindows</tabstop>
  </tabstops>
  <resources/>
  <connections/>

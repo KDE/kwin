@@ -10,9 +10,9 @@ License. See the file "COPYING" for the exact licensing terms.
 
 
 #include "wobblywindows.h"
+#include "wobblywindowsconfig.h"
 
 #include <kdebug.h>
-#include <kconfiggroup.h>
 #include <math.h>
 
 #define USE_ASSERT
@@ -37,20 +37,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 namespace KWin
 {
-
-static const qreal STIFFNESS = 0.15;
-static const qreal DRAG = 0.80;
-static const qreal MOVEFACTOR = 0.10;
-
-static const int XTESSELATION = 20;
-static const int YTESSELATION = 20;
-
-static const qreal MINVELOCITY = 0.0;
-static const qreal MAXVELOCITY = 1000.0;
-static const qreal STOPVELOCITY = 0.5;
-static const qreal MINACCELERATION = 0.0;
-static const qreal MAXACCELERATION = 1000.0;
-static const qreal STOPACCELERATION = 5.0;
 
 struct ParameterSet {
     qreal stiffness;
@@ -188,46 +174,45 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
 
 void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Wobbly");
+    WobblyWindowsConfig::self()->readConfig();
 
-
-    QString settingsMode = conf.readEntry("Settings", "Auto");
+    QString settingsMode = WobblyWindowsConfig::settings();
     if (settingsMode != "Custom") {
-        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 0);
+        unsigned int wobblynessLevel = WobblyWindowsConfig::wobblynessLevel();
         if (wobblynessLevel > 4) {
             kDebug(1212) << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
             wobblynessLevel = 4;
         }
         setParameterSet(pset[wobblynessLevel]);
 
-        if (conf.readEntry("AdvancedMode", false)) {
-            m_stiffness = conf.readEntry("Stiffness", STIFFNESS * 100.0) / 100.0;
-            m_drag = conf.readEntry("Drag", DRAG * 100.0) / 100.0;
-            m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR * 100.0) / 100.0;
+        if (WobblyWindowsConfig::advancedMode()) {
+            m_stiffness = WobblyWindowsConfig::stiffness() / 100.0;
+            m_drag = WobblyWindowsConfig::drag() / 100.0;
+            m_move_factor = WobblyWindowsConfig::moveFactor() / 100.0;
         }
     } else { // Custom method, read all values from config file.
-        m_stiffness = conf.readEntry("Stiffness", STIFFNESS);
-        m_drag = conf.readEntry("Drag", DRAG);
-        m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR);
+        m_stiffness = WobblyWindowsConfig::stiffness() / 100.0;
+        m_drag = WobblyWindowsConfig::drag() / 100.0;
+        m_move_factor = WobblyWindowsConfig::moveFactor() / 100.0;
 
-        m_xTesselation = conf.readEntry("XTesselation", XTESSELATION);
-        m_yTesselation = conf.readEntry("YTesselation", YTESSELATION);
+        m_xTesselation = WobblyWindowsConfig::xTesselation();
+        m_yTesselation = WobblyWindowsConfig::yTesselation();
 
-        m_minVelocity = conf.readEntry("MinVelocity", MINVELOCITY);
-        m_maxVelocity = conf.readEntry("MaxVelocity", MAXVELOCITY);
-        m_stopVelocity = conf.readEntry("StopVelocity", STOPVELOCITY);
-        m_minAcceleration = conf.readEntry("MinAcceleration", MINACCELERATION);
-        m_maxAcceleration = conf.readEntry("MaxAcceleration", MAXACCELERATION);
-        m_stopAcceleration = conf.readEntry("StopAcceleration", STOPACCELERATION);
+        m_minVelocity = WobblyWindowsConfig::minVelocity();
+        m_maxVelocity = WobblyWindowsConfig::maxVelocity();
+        m_stopVelocity = WobblyWindowsConfig::stopVelocity();
+        m_minAcceleration = WobblyWindowsConfig::minAcceleration();
+        m_maxAcceleration = WobblyWindowsConfig::maxAcceleration();
+        m_stopAcceleration = WobblyWindowsConfig::stopAcceleration();
 
-        m_moveEffectEnabled = conf.readEntry("MoveEffect", true);
-        m_openEffectEnabled = conf.readEntry("OpenEffect", false);
+        m_moveEffectEnabled = WobblyWindowsConfig::moveEffect();
+        m_openEffectEnabled = WobblyWindowsConfig::openEffect();
         // disable close effect by default for now as it doesn't do what I want.
-        m_closeEffectEnabled = conf.readEntry("CloseEffect", false);
+        m_closeEffectEnabled = WobblyWindowsConfig::closeEffect();
     }
 
-    m_moveWobble = conf.readEntry("MoveWobble", true);
-    m_resizeWobble = conf.readEntry("ResizeWobble", true);
+    m_moveWobble = WobblyWindowsConfig::moveWobble();
+    m_resizeWobble = WobblyWindowsConfig::resizeWobble();
 
 #if defined VERBOSE_MODE
     kDebug(1212) << "Parameters :\n" <<

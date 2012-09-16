@@ -1,0 +1,5 @@
+File=resize.kcfg
+ClassName=ResizeConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

@@ -186,7 +186,7 @@ public:
     enum Ability {
         // announce
         AbilityAnnounceButtons = 0, ///< decoration supports AbilityButton* values (always use)
-        AbilityAnnounceColors = 1, ///< decoration supports AbilityColor* values (always use)
+        AbilityAnnounceColors = 1, ///< decoration supports AbilityColor* values (always use), @deprecated @todo remove KDE5
         // buttons
         AbilityButtonMenu = 1000,   ///< decoration supports the menu button
         AbilityButtonOnAllDesktops = 1001, ///< decoration supports the on all desktops button
@@ -200,15 +200,15 @@ public:
         AbilityButtonShade = 1009, ///< decoration supports a shade button
         AbilityButtonResize = 1010, ///< decoration supports a resize button
         // colors
-        AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color
-        ABILITYCOLOR_FIRST = AbilityColorTitleBack, ///< @internal
-        AbilityColorTitleFore = 2001, ///< decoration supports titlebar foreground color
-        AbilityColorTitleBlend = 2002, ///< decoration supports second titlebar background color
-        AbilityColorFrame = 2010, ///< decoration supports frame color
-        AbilityColorHandle = 2011, ///< decoration supports resize handle color
-        AbilityColorButtonBack = 2020, ///< decoration supports button background color
-        AbilityColorButtonFore = 2021, ///< decoration supports button foreground color
-        ABILITYCOLOR_END, ///< @internal
+        AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color, @deprecated @todo remove KDE5
+        ABILITYCOLOR_FIRST = AbilityColorTitleBack, ///< @internal, @deprecated @todo remove KDE5
+        AbilityColorTitleFore = 2001, ///< decoration supports titlebar foreground color, @deprecated @todo remove KDE5
+        AbilityColorTitleBlend = 2002, ///< decoration supports second titlebar background color, @deprecated @todo remove KDE5
+        AbilityColorFrame = 2010, ///< decoration supports frame color, @deprecated @todo remove KDE5
+        AbilityColorHandle = 2011, ///< decoration supports resize handle color, @deprecated @todo remove KDE5
+        AbilityColorButtonBack = 2020, ///< decoration supports button background color, @deprecated @todo remove KDE5
+        AbilityColorButtonFore = 2021, ///< decoration supports button foreground color, @deprecated @todo remove KDE5
+        ABILITYCOLOR_END, ///< @internal, @deprecated @todo remove KDE5
         // compositing
         AbilityProvidesShadow = 3000, ///< The decoration draws its own shadows.
         ///  @since 4.3

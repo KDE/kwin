@@ -1,143 +1,147 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>WobblyWindowsEffectConfigForm</class>
- <widget class="QWidget" name="WobblyWindowsEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="WobblyWindowsEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>375</width>
+    <width>399</width>
     <height>229</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="6" column="0" colspan="2" >
-    <widget class="QGroupBox" name="advancedGroup" >
-     <property name="title" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="6" column="0" colspan="2">
+    <widget class="QGroupBox" name="advancedGroup">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
       <string>Advanced</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label_4" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
          <string>&amp;Stiffness:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>stiffnessSlider</cstring>
+        <property name="buddy">
+         <cstring>kcfg_Stiffness</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QSlider" name="stiffnessSlider" >
-        <property name="minimum" >
+      <item row="0" column="1">
+       <widget class="QSlider" name="kcfg_Stiffness">
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>50</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>15</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="KIntSpinBox" name="stiffnessSpin" >
-        <property name="minimum" >
+      <item row="0" column="2">
+       <widget class="KIntSpinBox" name="stiffnessSpin">
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>50</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>15</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_5" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
          <string>Dra&amp;g:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>dragSlider</cstring>
+        <property name="buddy">
+         <cstring>kcfg_Drag</cstring>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="label_6" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
          <string>&amp;Move factor:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>moveFactorSlider</cstring>
+        <property name="buddy">
+         <cstring>kcfg_MoveFactor</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QSlider" name="dragSlider" >
-        <property name="minimum" >
+      <item row="1" column="1">
+       <widget class="QSlider" name="kcfg_Drag">
+        <property name="minimum">
          <number>50</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>85</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="1" column="2" >
-       <widget class="KIntSpinBox" name="dragSpin" >
-        <property name="minimum" >
+      <item row="1" column="2">
+       <widget class="KIntSpinBox" name="dragSpin">
+        <property name="minimum">
          <number>50</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>100</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>85</number>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QSlider" name="moveFactorSlider" >
-        <property name="minimum" >
+      <item row="2" column="1">
+       <widget class="QSlider" name="kcfg_MoveFactor">
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>25</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>10</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="2" column="2" >
-       <widget class="KIntSpinBox" name="moveFactorSpin" >
-        <property name="minimum" >
+      <item row="2" column="2">
+       <widget class="KIntSpinBox" name="moveFactorSpin">
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>25</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>10</number>
         </property>
        </widget>
@@ -145,26 +149,26 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="1" >
-    <widget class="QCheckBox" name="moveBox" >
-     <property name="text" >
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="kcfg_MoveWobble">
+     <property name="text">
       <string>Wo&amp;bble when moving</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" >
-    <widget class="QCheckBox" name="resizeBox" >
-     <property name="text" >
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="kcfg_ResizeWobble">
+     <property name="text">
       <string>Wobble when &amp;resizing</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1" >
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
+   <item row="4" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>0</height>
@@ -172,61 +176,61 @@
      </property>
     </spacer>
    </item>
-   <item row="5" column="1" >
-    <widget class="QCheckBox" name="advancedBox" >
-     <property name="text" >
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="kcfg_AdvancedMode">
+     <property name="text">
       <string>Enable &amp;advanced mode</string>
      </property>
     </widget>
    </item>
-   <item rowspan="5" row="1" column="0" >
-    <widget class="QGroupBox" name="basicGroup" >
-     <property name="enabled" >
+   <item row="1" column="0" rowspan="5">
+    <widget class="QGroupBox" name="basicGroup">
+     <property name="enabled">
       <bool>true</bool>
      </property>
-     <property name="title" >
+     <property name="title">
       <string>&amp;Wobbliness</string>
      </property>
-     <property name="checkable" >
+     <property name="checkable">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
          <string>Less</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QSlider" name="wobblinessSlider" >
-        <property name="minimumSize" >
+      <item row="0" column="1">
+       <widget class="QSlider" name="kcfg_WobblynessLevel">
+        <property name="minimumSize">
          <size>
           <width>120</width>
           <height>0</height>
          </size>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>4</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
          <string>More</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <spacer name="verticalSpacer_2" >
-        <property name="orientation" >
+      <item row="1" column="1">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>0</height>
@@ -238,11 +242,6 @@
     </widget>
    </item>
   </layout>
-  <zorder>advancedGroup</zorder>
-  <zorder>moveBox</zorder>
-  <zorder>resizeBox</zorder>
-  <zorder>advancedBox</zorder>
-  <zorder>basicGroup</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -252,30 +251,30 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>wobblinessSlider</tabstop>
-  <tabstop>moveBox</tabstop>
-  <tabstop>resizeBox</tabstop>
-  <tabstop>advancedBox</tabstop>
-  <tabstop>stiffnessSlider</tabstop>
+  <tabstop>kcfg_WobblynessLevel</tabstop>
+  <tabstop>kcfg_MoveWobble</tabstop>
+  <tabstop>kcfg_ResizeWobble</tabstop>
+  <tabstop>kcfg_AdvancedMode</tabstop>
+  <tabstop>kcfg_Stiffness</tabstop>
   <tabstop>stiffnessSpin</tabstop>
-  <tabstop>dragSlider</tabstop>
+  <tabstop>kcfg_Drag</tabstop>
   <tabstop>dragSpin</tabstop>
-  <tabstop>moveFactorSlider</tabstop>
+  <tabstop>kcfg_MoveFactor</tabstop>
   <tabstop>moveFactorSpin</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>stiffnessSlider</sender>
+   <sender>kcfg_Stiffness</sender>
    <signal>valueChanged(int)</signal>
    <receiver>stiffnessSpin</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>209</x>
-     <y>150</y>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>149</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>364</x>
      <y>150</y>
     </hint>
@@ -284,80 +283,96 @@
   <connection>
    <sender>stiffnessSpin</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>stiffnessSlider</receiver>
+   <receiver>kcfg_Stiffness</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>364</x>
      <y>150</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>209</x>
-     <y>150</y>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>dragSlider</sender>
+   <sender>kcfg_Drag</sender>
    <signal>valueChanged(int)</signal>
    <receiver>dragSpin</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>209</x>
-     <y>181</y>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>177</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>364</x>
-     <y>181</y>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>180</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>dragSpin</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>dragSlider</receiver>
+   <receiver>kcfg_Drag</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>364</x>
-     <y>181</y>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>180</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>209</x>
-     <y>181</y>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>moveFactorSlider</sender>
+   <sender>kcfg_MoveFactor</sender>
    <signal>valueChanged(int)</signal>
    <receiver>moveFactorSpin</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>209</x>
-     <y>212</y>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>205</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>364</x>
-     <y>212</y>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>208</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>moveFactorSpin</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>moveFactorSlider</receiver>
+   <receiver>kcfg_MoveFactor</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>364</x>
-     <y>212</y>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>208</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>209</x>
-     <y>212</y>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_AdvancedMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>advancedGroup</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>131</y>
     </hint>
    </hints>
   </connection>

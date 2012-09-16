@@ -157,6 +157,16 @@ bool Deleted::isDeleted() const
     return true;
 }
 
+NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
+{
+    Q_UNUSED(direct)
+    // TODO: maybe retrieve the actual window type when copying to deleted?
+    if (supportedTypes == 0) {
+        supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
+    }
+    return info->windowType(supportedTypes);
+}
+
 } // namespace
 
 #include "deleted.moc"

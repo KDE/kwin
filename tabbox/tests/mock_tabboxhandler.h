@@ -60,6 +60,7 @@ public:
     }
     virtual QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const;
     virtual QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const;
+    virtual bool isInFocusChain (TabBox::TabBoxClient* client) const;
     virtual int nextDesktopFocusChain(int desktop) const {
         Q_UNUSED(desktop)
         return 1;

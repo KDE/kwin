@@ -216,10 +216,7 @@ void Bridge::grabXServer(bool grab)
 
 bool Bridge::compositingActive() const
 {
-    if (c->workspace()->compositor()) {
-        return c->workspace()->compositor()->isActive();
-    }
-    return false;
+    return Compositor::compositing();
 }
 
 QRect Bridge::transparentRect() const

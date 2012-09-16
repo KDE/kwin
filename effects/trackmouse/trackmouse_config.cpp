@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "trackmouse_config.h"
 
+// KConfigSkeleton
+#include "trackmouseconfig.h"
+
 namespace KWin
 {
 
@@ -49,12 +52,8 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     m_ui = new TrackMouseEffectConfigForm(this);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
-    connect(m_ui->alt, SIGNAL(clicked(bool)), SLOT(changed()));
-    connect(m_ui->control, SIGNAL(clicked(bool)), SLOT(changed()));
-    connect(m_ui->meta, SIGNAL(clicked(bool)), SLOT(changed()));
-    connect(m_ui->shift, SIGNAL(clicked(bool)), SLOT(changed()));
-    connect(m_ui->modifierRadio, SIGNAL(clicked(bool)), SLOT(changed()));
-    connect(m_ui->shortcutRadio, SIGNAL(clicked(bool)), SLOT(changed()));
+
+    addConfig(TrackMouseConfig::self(), m_ui);
 
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
     m_actionCollection->setConfigGroup("TrackMouse");
@@ -74,44 +73,36 @@ TrackMouseEffectConfig::~TrackMouseEffectConfig()
 {
 }
 
+void TrackMouseEffectConfig::checkModifiers()
+{
+    const bool modifiers = m_ui->kcfg_Shift->isChecked() || m_ui->kcfg_Alt->isChecked() ||
+                           m_ui->kcfg_Control->isChecked() || m_ui->kcfg_Meta->isChecked();
+    m_ui->modifierRadio->setChecked(modifiers);
+    m_ui->shortcutRadio->setChecked(!modifiers);
+}
+
 void TrackMouseEffectConfig::load()
 {
     KCModule::load();
     if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action("TrackMouse")))
         m_ui->shortcut->setKeySequence(a->globalShortcut().primary());
-    KConfigGroup conf = EffectsHandler::effectConfig("TrackMouse");
-    m_ui->meta->setChecked(conf.readEntry("Meta", true));
-    m_ui->control->setChecked(conf.readEntry("Control", true));
-    m_ui->alt->setChecked(conf.readEntry("Alt", false));
-    m_ui->shift->setChecked(conf.readEntry("Shift", false));
-    const bool modifiers = m_ui->shift->isChecked() || m_ui->alt->isChecked() ||
-                           m_ui->control->isChecked() || m_ui->meta->isChecked();
-    m_ui->modifierRadio->setChecked(modifiers);
-    m_ui->shortcutRadio->setChecked(!modifiers);
+
+    checkModifiers();
     emit changed(false);
 }
 
 void TrackMouseEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("TrackMouse");
-    conf.writeEntry("Shift", m_ui->modifierRadio->isChecked() && m_ui->shift->isChecked());
-    conf.writeEntry("Alt", m_ui->modifierRadio->isChecked() && m_ui->alt->isChecked());
-    conf.writeEntry("Control", m_ui->modifierRadio->isChecked() && m_ui->control->isChecked());
-    conf.writeEntry("Meta", m_ui->modifierRadio->isChecked() && m_ui->meta->isChecked());
+    KCModule::save();
     m_actionCollection->writeSettings();
-    conf.sync();
-    emit changed(false);
     EffectsHandler::sendReloadMessage("trackmouse");
 }
 
 void TrackMouseEffectConfig::defaults()
 {
+    KCModule::defaults();
     m_ui->shortcut->clearKeySequence();
-    m_ui->meta->setChecked(true);
-    m_ui->control->setChecked(true);
-    m_ui->alt->setChecked(false);
-    m_ui->shift->setChecked(false);
-    emit changed(true);
+    checkModifiers();
 }
 
 void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
@@ -121,7 +112,6 @@ void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
 //     m_actionCollection->writeSettings();
     emit changed(true);
 }
-
 
 } // namespace
 

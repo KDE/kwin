@@ -36,11 +36,6 @@ public:
     ~GlideEffectConfig();
 
     void save();
-    void load();
-    void defaults();
-
-private slots:
-    void valueChanged(int value);
 
 private:
     ::Ui::GlideEffectConfig ui;

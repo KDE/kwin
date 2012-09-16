@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  http://ktown.kde.org/~fredrik/composite_howto.html
 
 */
+#include "composite.h"
+#include "compositingadaptor.h"
 
 #include <config-X11.h>
 
@@ -54,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
-#include "composite.h"
 #include "notifications.h"
 
 #include <stdio.h>
@@ -64,6 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QTimerEvent>
 #include <QDateTime>
+#include <QDBusConnection>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
@@ -77,11 +79,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+Compositor *Compositor::s_compositor = NULL;
 extern int currentRefreshRate();
 
 //****************************************
 // Workspace
 //****************************************
+
+Compositor *Compositor::createCompositor(QObject *parent)
+{
+    Q_ASSERT(!s_compositor);
+    s_compositor = new Compositor(parent);
+    return s_compositor;
+}
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
@@ -97,6 +107,10 @@ Compositor::Compositor(QObject* workspace)
     , m_nextFrameDelay(0)
     , m_scene(NULL)
 {
+    new CompositingAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/Compositor", this);
+    dbus.registerService("org.kde.kwin.Compositing");
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
@@ -231,6 +245,8 @@ void Compositor::slotCompositingOptionsInitialized()
     foreach (Unmanaged * c, Workspace::self()->unmanagedList())
         c->setupCompositing();
 
+    emit compositingToggled(true);
+
     // render at least once
     compositeTimer.stop();
     performCompositing();
@@ -285,6 +301,7 @@ void Compositor::finish()
     while (!Workspace::self()->deletedList().isEmpty())
         Workspace::self()->deletedList().first()->discard(Allowed);
     m_finishing = false;
+    emit compositingToggled(false);
 }
 
 // OpenGL self-check failed, fallback to XRender
@@ -340,13 +357,12 @@ void Compositor::slotReinitialize()
     if (effects) { // setup() may fail
         effects->reconfigure();
     }
-    emit compositingToggled(!m_suspended);
 }
 
 // for the shortcut
 void Compositor::slotToggleCompositing()
 {
-    suspendResume(!m_suspended);
+    setCompositing(m_suspended);
 }
 
 // for the dbus call
@@ -367,13 +383,6 @@ void Compositor::toggleCompositing()
     }
 }
 
-QStringList Workspace::activeEffects() const
-{
-    if (effects)
-        return static_cast< EffectsHandlerImpl* >(effects)->activeEffects();
-    return QStringList();
-}
-
 void Compositor::updateCompositeBlocking()
 {
     updateCompositeBlocking(NULL);
@@ -384,7 +393,7 @@ void Compositor::updateCompositeBlocking(Client *c)
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
             if (!m_blocked) // do NOT attempt to call suspend(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection);
             m_blocked = true;
         }
     }
@@ -401,17 +410,37 @@ void Compositor::updateCompositeBlocking(Client *c)
         if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
             m_blocked = false;
             if (m_suspended)
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection);
         }
     }
 }
 
-void Compositor::suspendResume(bool suspend)
+void Compositor::suspend()
 {
-    m_suspended = suspend;
+    if (m_suspended) {
+        return;
+    }
+    m_suspended = true;
     finish();
-    setup(); // will do nothing if suspended
-    emit compositingToggled(!m_suspended);
+}
+
+void Compositor::resume()
+{
+    if (!m_suspended && hasScene()) {
+        return;
+    }
+    m_suspended = false;
+    // signal toggled is eventually emitted from within setup
+    setup();
+}
+
+void Compositor::setCompositing(bool active)
+{
+    if (active) {
+        resume();
+    } else {
+        suspend();
+    }
 }
 
 void Compositor::restart()
@@ -690,33 +719,30 @@ void Compositor::restartKWin(const QString &reason)
     system(cmd);
 }
 
-/*****************************************************
- * Compositing related D-Bus interface from Workspace
- ****************************************************/
-bool Workspace::compositingPossible() const
+bool Compositor::isCompositingPossible() const
 {
     return CompositingPrefs::compositingPossible();
 }
 
-QString Workspace::compositingNotPossibleReason() const
+QString Compositor::compositingNotPossibleReason() const
 {
     return CompositingPrefs::compositingNotPossibleReason();
 }
 
-bool Workspace::openGLIsBroken() const
+bool Compositor::isOpenGLBroken() const
 {
     return CompositingPrefs::openGlIsBroken();
 }
 
-QString Workspace::compositingType()
+QString Compositor::compositingType() const
 {
-    // the returned strings are considered as identifiers and may not be translated
-    if (!effects) {
+    if (!hasScene()) {
         return "none";
     }
-    if (effects->compositingType() == XRenderCompositing) {
+    switch (m_scene->compositingType()) {
+    case XRenderCompositing:
         return "xrender";
-    } else if (effects->compositingType() == OpenGLCompositing) {
+    case OpenGLCompositing:
 #ifdef KWIN_HAVE_OPENGLES
         return "gles";
 #else
@@ -726,9 +752,15 @@ QString Workspace::compositingType()
             return "gl1";
         }
 #endif
+    case NoCompositing:
+    default:
+        return "none";
     }
-    return "none";
 }
+
+/*****************************************************
+ * Workspace
+ ****************************************************/
 
 bool Workspace::compositing() const
 {
@@ -750,8 +782,8 @@ bool Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
     unredirect = false;
-    workspace()->compositor()->checkUnredirect(true);
-    workspace()->compositor()->scene()->windowAdded(this);
+    Compositor::self()->checkUnredirect(true);
+    Compositor::self()->scene()->windowAdded(this);
     return true;
 }
 
@@ -760,7 +792,7 @@ void Toplevel::finishCompositing()
     damageRatio = 0.0;
     if (damage_handle == None)
         return;
-    workspace()->compositor()->checkUnredirect(true);
+    Compositor::self()->checkUnredirect(true);
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         discardWindowPixmap();
         delete effect_window;
@@ -874,7 +906,7 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 
 bool Toplevel::compositing() const
 {
-    Compositor *c = workspace()->compositor();
+    Compositor *c = Compositor::self();
     return c && c->hasScene();
 }
 
@@ -1035,7 +1067,7 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
     if (!compositing())
         return;
-    workspace()->compositor()->addRepaint(r2);
+    Compositor::self()->addRepaint(r2);
 }
 
 bool Toplevel::updateUnredirectedState()
@@ -1063,7 +1095,7 @@ void Toplevel::suspendUnredirect(bool suspend)
     if (unredirectSuspend == suspend)
         return;
     unredirectSuspend = suspend;
-    workspace()->compositor()->checkUnredirect();
+    Compositor::self()->checkUnredirect();
 }
 
 //****************************************

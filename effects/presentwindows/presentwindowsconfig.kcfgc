@@ -1,0 +1,6 @@
+File=presentwindows.kcfg
+ClassName=PresentWindowsConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true
+IncludeFiles=kwinglobals.h

@@ -1,94 +1,95 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::DimInactiveEffectConfigForm</class>
- <widget class="QWidget" name="KWin::DimInactiveEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::DimInactiveEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>249</width>
-    <height>120</height>
+    <width>298</width>
+    <height>161</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="1" column="0" colspan="3" >
-    <widget class="QCheckBox" name="checkPanel" >
-     <property name="text" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0" colspan="3">
+    <widget class="QCheckBox" name="kcfg_DimPanels">
+     <property name="text">
       <string>Apply effect to &amp;panels</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="3" >
-    <widget class="QCheckBox" name="checkDesktop" >
-     <property name="text" >
+   <item row="2" column="0" colspan="3">
+    <widget class="QCheckBox" name="kcfg_DimDesktop">
+     <property name="text">
       <string>Apply effect to the desk&amp;top</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="3" >
-    <widget class="QCheckBox" name="checkKeepAbove" >
-     <property name="text" >
+   <item row="3" column="0" colspan="3">
+    <widget class="QCheckBox" name="kcfg_DimKeepAbove">
+     <property name="text">
       <string>Apply effect to &amp;keep-above windows</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3" >
-    <widget class="QCheckBox" name="checkGroup" >
-     <property name="text" >
+   <item row="4" column="0" colspan="3">
+    <widget class="QCheckBox" name="kcfg_DimGroup">
+     <property name="text">
       <string>Apply effect to &amp;groups</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" >
-    <widget class="QLabel" name="label" >
-     <property name="text" >
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
       <string>&amp;Strength:</string>
      </property>
-     <property name="buddy" >
-      <cstring>spinStrength</cstring>
+     <property name="buddy">
+      <cstring>kcfg_Strength</cstring>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QSlider" name="sliderStrength" >
-     <property name="minimumSize" >
+   <item row="0" column="1">
+    <widget class="QSlider" name="kcfg_sliderStrength">
+     <property name="minimumSize">
       <size>
        <width>120</width>
        <height>0</height>
       </size>
      </property>
-     <property name="minimum" >
+     <property name="minimum">
       <number>1</number>
      </property>
-     <property name="maximum" >
+     <property name="maximum">
       <number>100</number>
      </property>
-     <property name="value" >
+     <property name="value">
       <number>25</number>
      </property>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="0" column="2" >
-    <widget class="KIntSpinBox" name="spinStrength" >
-     <property name="minimum" >
+   <item row="0" column="2">
+    <widget class="KIntSpinBox" name="kcfg_Strength">
+     <property name="minimum">
       <number>1</number>
      </property>
-     <property name="maximum" >
+     <property name="maximum">
       <number>100</number>
      </property>
-     <property name="value" >
+     <property name="value">
       <number>25</number>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="3" >
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
+   <item row="5" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>0</height>
@@ -106,43 +107,43 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>sliderStrength</tabstop>
-  <tabstop>spinStrength</tabstop>
-  <tabstop>checkPanel</tabstop>
-  <tabstop>checkDesktop</tabstop>
-  <tabstop>checkGroup</tabstop>
+  <tabstop>kcfg_sliderStrength</tabstop>
+  <tabstop>kcfg_Strength</tabstop>
+  <tabstop>kcfg_DimPanels</tabstop>
+  <tabstop>kcfg_DimDesktop</tabstop>
+  <tabstop>kcfg_DimGroup</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>spinStrength</sender>
+   <sender>kcfg_Strength</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>sliderStrength</receiver>
+   <receiver>kcfg_sliderStrength</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>193</x>
-     <y>52</y>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>29</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>128</x>
-     <y>46</y>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>26</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>sliderStrength</sender>
+   <sender>kcfg_sliderStrength</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinStrength</receiver>
+   <receiver>kcfg_Strength</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>69</x>
-     <y>45</y>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>26</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>200</x>
-     <y>42</y>
+    <hint type="destinationlabel">
+     <x>288</x>
+     <y>29</y>
     </hint>
    </hints>
   </connection>

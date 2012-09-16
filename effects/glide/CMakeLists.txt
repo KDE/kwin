@@ -6,6 +6,8 @@ set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     glide/glide.cpp
     )
 
+kde4_add_kcfg_files(kwin4_effect_builtins_sources glide/glideconfig.kcfgc)
+
 # .desktop files
 install( FILES
     glide/glide.desktop
@@ -18,6 +20,8 @@ install( FILES
 set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
      glide/glide_config.cpp
      glide/glide_config.ui )
+
+kde4_add_kcfg_files(kwin4_effect_builtins_config_sources glide/glideconfig.kcfgc)
 
 # .desktop files
 install( FILES

@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "paintredirector.h"
 
-#include "workspace.h"
+#include "composite.h"
 #include <kdebug.h>
 #include <qevent.h>
 #include <qpainter.h>
@@ -82,7 +82,7 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
         break;
     }
     case QEvent::Paint: {
-        if (!Workspace::self()->compositingActive()) {
+        if (!Compositor::compositing()) {
             return false;
         }
         if (!recursionCheck) {

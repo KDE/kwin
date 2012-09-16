@@ -44,8 +44,7 @@ public:
 
 public slots:
     virtual void save();
-    virtual void load();
-    virtual void defaults();
+
 private:
     CubeSlideEffectConfigForm* m_ui;
 };

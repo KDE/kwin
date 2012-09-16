@@ -55,7 +55,6 @@ private slots:
 private:
     DesktopGridEffectConfigForm* m_ui;
     KActionCollection* m_actionCollection;
-    QList<Qt::Alignment> m_alignmentItems;
 };
 
 } // namespace
