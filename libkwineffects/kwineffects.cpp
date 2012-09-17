@@ -1046,6 +1046,38 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     return ret;
 }
 
+void WindowQuadList::makeInterleavedArrays(GLVertex2D *vertices, const QMatrix4x4 &textureMatrix) const
+{
+    // Since we know that the texture matrix just scales and translates
+    // we can use this information to optimize the transformation
+    const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
+    const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
+
+    GLVertex2D *vertex = vertices;
+
+    for (int i = 0; i < count(); i++) {
+        const WindowQuad &quad = at(i);
+        GLVertex2D v[4]; // Four unique vertices / quad
+
+        for (int j = 0; j < 4; j++) {
+            const WindowVertex &wv = quad[j];
+
+            v[j].position = QVector2D(wv.x(), wv.y());
+            v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+        }
+
+        // First triangle
+        *(vertex++) = v[1]; // Top-right
+        *(vertex++) = v[0]; // Top-left
+        *(vertex++) = v[3]; // Bottom-left
+
+        // Second triangle
+        *(vertex++) = v[3]; // Bottom-left
+        *(vertex++) = v[2]; // Bottom-right
+        *(vertex++) = v[1]; // Top-right
+    }
+}
+
 void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSizeF &size, bool yInverted) const
 {
     *vertices = new float[count() * 6 * 2];

@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSet>
 #include <QRect>
 #include <QtGui/QRegion>
+#include <QtGui/QVector2D>
+#include <QtGui/QVector3D>
 
 #include <QVector>
 #include <QList>
@@ -49,7 +51,7 @@ class KActionCollection;
 class QFont;
 class QGraphicsScale;
 class QKeyEvent;
-class QVector2D;
+class QMatrix4x4;
 
 namespace KWin
 {
@@ -1664,6 +1666,20 @@ public:
     explicit GlobalShortcutsEditor(QWidget *parent);
 };
 
+
+struct GLVertex2D
+{
+    QVector2D position;
+    QVector2D texcoord;
+};
+
+struct GLVertex3D
+{
+    QVector3D position;
+    QVector2D texcoord;
+};
+
+
 /**
  * @short Vertex class
  *
@@ -1741,6 +1757,7 @@ public:
     WindowQuadList select(WindowQuadType type) const;
     WindowQuadList filterOut(WindowQuadType type) const;
     bool smoothNeeded() const;
+    void makeInterleavedArrays(GLVertex2D *vertices, const QMatrix4x4 &matrix) const;
     void makeArrays(float** vertices, float** texcoords, const QSizeF &size, bool yInverted) const;
     bool isTransformed() const;
 };
