@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 #include <unistd.h>
+#include <stddef.h>
 
 // turns on checks for opengl errors in various places (for easier finding of them)
 // normally only few of them are enabled
@@ -1263,39 +1264,47 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
 
 void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, const QRect &rect, GLTexture *texture) const
 {
-    QVector<float> vertices;
-    QVector<float> texcoords;
-
-    vertices.reserve(quads.count() * 6 * 2);
-    texcoords.reserve(quads.count() * 6 * 2);
-
-    // Since we know that the texture matrix just scales and translates
-    // we can use this information to optimize the transformation
     QMatrix4x4 matrix = texture->matrix(UnnormalizedCoordinates);
     matrix.translate(-rect.x(), -rect.y());
 
-    float uCoeff = matrix(0, 0);
-    float vCoeff = matrix(1, 1);
+    // Since we know that the texture matrix just scales and translates
+    // we can use this information to optimize the transformation
+    const QVector2D coeff(matrix(0, 0), matrix(1, 1));
+    const QVector2D offset(matrix(0, 3), matrix(1, 3));
 
-    float uOffset = matrix(0, 3);
-    float vOffset = matrix(1, 3);
+    const GLVertexAttrib attribs[] = {
+        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
+        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    };
 
-    // Note: The positions in a WindowQuad are stored in clockwise order
-    const int index[] = { 1, 0, 3, 3, 2, 1 };
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setVertexCount(quads.count() * 6);
+
+    GLVertex2D *vertex = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
 
     foreach (const WindowQuad &quad, quads) {
-        for (int i = 0; i < 6; i++) {
-            const WindowVertex &v = quad[index[i]];
+        GLVertex2D v[4]; // Four unique vertices / quad
 
-            vertices << v.x();
-            vertices << v.y();
+        for (int i = 0; i < 4; i++) {
+            const WindowVertex &wv = quad[i];
 
-            texcoords << v.originalX() * uCoeff + uOffset;
-            texcoords << v.originalY() * vCoeff + vOffset;
+            v[i].position = QVector2D(wv.x(), wv.y());
+            v[i].texcoord = QVector2D(wv.originalX(), wv.originalY()) * coeff + offset;
         }
+
+        // First triangle
+        *(vertex++) = v[1]; // Top-right
+        *(vertex++) = v[0]; // Top-left
+        *(vertex++) = v[3]; // Bottom-left
+
+        // Second triangle
+        *(vertex++) = v[3]; // Bottom-left
+        *(vertex++) = v[2]; // Bottom-right
+        *(vertex++) = v[1]; // Top-right
     }
 
-    GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices.constData(), texcoords.constData());
+    vbo->unmap();
 }
 
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
