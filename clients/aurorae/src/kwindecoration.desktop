@@ -4,6 +4,7 @@ X-KDE-ServiceType=KWin/Decoration
 
 Comment=KWin Window Decoration
 Comment[cs]=Dekorace oken KWin
+Comment[el]=Διακοσμήσεις παραθύρου KWin
 Comment[es]=Decoración de ventanas de KWin
 Comment[hu]=KWin ablakdekoráció
 Comment[ia]=Decorationes de fenestra de KWin

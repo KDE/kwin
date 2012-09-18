@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Plastik QML
 Name[cs]=Plastik QML
+Name[el]=Plastik QML
 Name[es]=Plastik QML
 Name[hu]=Plastik QML
 Name[ia]=Plastik QML
@@ -16,6 +17,7 @@ Name[uk]=Plastik QML
 Name[x-test]=xxPlastik QMLxx
 Name[zh_CN]=Plastik QML
 Comment=The classic theme known from KDE 3
+Comment[el]=Το γνωστό κλασικό θέμα από το KDE 3
 Comment[es]=El tema clásico conocido desde KDE 3
 Comment[hu]=A KDE 3-ból ismert klasszikus téma
 Comment[ia]=Le thema classic cognoscite ex KDE 3
