@@ -1312,25 +1312,24 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
 {
     if (quads.isEmpty())
         return;
+
+    const QMatrix4x4 matrix = tex->matrix(normalized ? NormalizedCoordinates : UnnormalizedCoordinates);
+
+    const GLVertexAttrib attribs[] = {
+        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
+        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    };
+
     // Render geometry
-    float* vertices;
-    float* texcoords;
-    QSizeF size(tex->size());
-    if (normalized) {
-        size.setWidth(1.0);
-        size.setHeight(1.0);
-    }
-#ifndef KWIN_HAVE_OPENGLES
-    if (tex->target() == GL_TEXTURE_RECTANGLE_ARB) {
-        size.setWidth(1.0);
-        size.setHeight(1.0);
-    }
-#endif
-    quads.makeArrays(&vertices, &texcoords, size, tex->isYInverted());
-    GLVertexBuffer::streamingBuffer()->setData(quads.count() * 6, 2, vertices, texcoords);
-    GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
-    delete[] vertices;
-    delete[] texcoords;
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setVertexCount(quads.count() * 6);
+
+    GLVertex2D *map = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
+    quads.makeInterleavedArrays(map, matrix);
+    vbo->unmap();
+
+    vbo->render(region, GL_TRIANGLES, hardwareClipping);
 }
 
 GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType type)
