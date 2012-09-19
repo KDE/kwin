@@ -1,0 +1,5 @@
+File=thumbnailaside.kcfg
+ClassName=ThumbnailAsideConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

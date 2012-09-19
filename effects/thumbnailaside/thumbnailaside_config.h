@@ -45,8 +45,6 @@ public:
     virtual ~ThumbnailAsideEffectConfig();
 
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     ThumbnailAsideEffectConfigForm* m_ui;
