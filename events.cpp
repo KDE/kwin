@@ -885,8 +885,10 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
             return;
 
+        QPoint currentPos(e->x_root, e->y_root);
         if (options->isAutoRaise() && !isDesktop() &&
                 !isDock() && workspace()->focusChangeEnabled() &&
+                currentPos != workspace()->focusMousePosition() &&
                 workspace()->topClientOnDesktop(workspace()->currentDesktop(),
                                                 options->isSeparateScreenFocus() ? screen() : -1) != this) {
             delete autoRaiseTimer;
@@ -896,7 +898,6 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
             autoRaiseTimer->start(options->autoRaiseInterval());
         }
 
-        QPoint currentPos(e->x_root, e->y_root);
         if (isDesktop() || isDock())
             return;
         // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus

@@ -322,7 +322,7 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
-    LoadScriptList queryScriptsToLoad(QMap<QString,QString> &pluginStates, KService::List &);
+    LoadScriptList queryScriptsToLoad();
 };
 
 }

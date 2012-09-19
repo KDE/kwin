@@ -358,13 +358,15 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         WindowPaintData thumbData(thumb);
         thumbData.setOpacity(data.opacity());
 
-        QSizeF size = QSizeF(thumb->size());
+        const QRect visualThumbRect(thumb->expandedGeometry());
+
+        QSizeF size = QSizeF(visualThumbRect.size());
         size.scale(QSizeF(item->width(), item->height()), Qt::KeepAspectRatio);
-        if (size.width() > thumb->width() || size.height() > thumb->height()) {
-            size = QSizeF(thumb->size());
+        if (size.width() > visualThumbRect.width() || size.height() > visualThumbRect.height()) {
+            size = QSizeF(visualThumbRect.size());
         }
-        thumbData.setXScale(size.width() / static_cast<qreal>(thumb->width()));
-        thumbData.setYScale(size.height() / static_cast<qreal>(thumb->height()));
+        thumbData.setXScale(size.width() / static_cast<qreal>(visualThumbRect.width()));
+        thumbData.setYScale(size.height() / static_cast<qreal>(visualThumbRect.height()));
         // it can happen in the init/closing phase of the tabbox
         // that the corresponding QGraphicsScene is not available
         if (item->scene() == 0) {
@@ -400,10 +402,15 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
             continue;
         }
         const QPoint point = viewPos + declview->mapFromScene(item->scenePos());
-        const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
-        const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
-        thumbData.setXTranslation(x - thumb->x());
-        thumbData.setYTranslation(y - thumb->y());
+        qreal x = point.x() + w->x() + (item->width() - size.width())/2;
+        qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
+        x -= thumb->x();
+        y -= thumb->y();
+        // compensate shadow topleft padding
+        thumbData.xTranslate += (thumb->x()-visualThumbRect.x())*thumbData.xScale();
+        thumbData.yTranslate += (thumb->y()-visualThumbRect.y())*thumbData.yScale();
+        thumbData.setXTranslation(x);
+        thumbData.setYTranslation(y);
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
         if (thumbData.opacity() == 1.0) {
             thumbMask |= PAINT_WINDOW_OPAQUE;

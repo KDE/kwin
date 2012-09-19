@@ -88,13 +88,13 @@ void Unmanaged::release(bool on_shutdown)
     }
     emit windowClosed(this, del);
     finishCompositing();
-    workspace()->removeUnmanaged(this, Allowed);
     if (!QWidget::find(window())) { // don't affect our own windows
         if (Extensions::shapeAvailable())
             XShapeSelectInput(display(), window(), NoEventMask);
         XSelectInput(display(), window(), NoEventMask);
     }
     if (!on_shutdown) {
+        workspace()->removeUnmanaged(this, Allowed);
         addWorkspaceRepaint(del->visibleRect());
         disownDataPassedToDeleted();
         del->unrefWindow();
