@@ -1,0 +1,5 @@
+File=login.kcfg
+ClassName=LoginConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

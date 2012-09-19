@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="fadetoblackBox">
+    <widget class="QCheckBox" name="kcfg_FadeToBlack">
      <property name="text">
       <string>Fade to black (fullscreen splash screens only)</string>
      </property>
