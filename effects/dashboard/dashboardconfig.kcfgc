@@ -1,0 +1,5 @@
+File=dashboard.kcfg
+ClassName=DashboardConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

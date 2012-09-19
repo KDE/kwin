@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>197</width>
-    <height>183</height>
+    <width>239</width>
+    <height>189</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="brightness">
+      <widget class="QSlider" name="kcfg_Brightness">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -110,7 +110,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="saturation">
+      <widget class="QSlider" name="kcfg_Saturation">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -166,7 +166,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="KIntSpinBox" name="duration">
+      <widget class="KIntSpinBox" name="kcfg_Duration">
        <property name="maximum">
         <number>3000</number>
        </property>
@@ -188,7 +188,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QCheckBox" name="blur">
+    <widget class="QCheckBox" name="kcfg_Blur">
      <property name="toolTip">
       <string>The blur effect must be enabled before it can be used.</string>
      </property>

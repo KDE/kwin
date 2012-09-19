@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "dashboard.h"
+// KConfigSkeleton
+#include "dashboardconfig.h"
+
 #include <KDE/KConfigGroup>
 
 namespace KWin
@@ -66,14 +69,10 @@ void DashboardEffect::unpropagate()
 
 void DashboardEffect::reconfigure(ReconfigureFlags)
 {
-    // read settings again
-    KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
-
-    brightness = qreal(config.readEntry<int>("Brightness", 50)) / 100.0;
-    saturation = qreal(config.readEntry<int>("Saturation", 50)) / 100.0;
-    duration = config.readEntry<int>("Duration", 500);
-
-    blur = config.readEntry("Blur", false);
+    brightness = DashboardConfig::brightness()/ 100.0;
+    saturation = DashboardConfig::saturation()/ 100.0;
+    duration = DashboardConfig::duration() != 0  ? DashboardConfig::duration() : 500;
+    blur = DashboardConfig::blur();
 
     timeline.setDuration(animationTime(duration));
 }

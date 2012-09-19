@@ -18,6 +18,9 @@
  */
 
 #include "dashboard_config.h"
+// KConfigSkeleton
+#include "dashboardconfig.h"
+
 #include <kwineffects.h>
 
 namespace KWin
@@ -30,10 +33,7 @@ DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList
 {
     ui.setupUi(this);
 
-    connect(ui.brightness, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(ui.saturation, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(ui.duration, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(ui.blur, SIGNAL(stateChanged(int)), SLOT(changed()));
+    addConfig(DashboardConfig::self(), this);
 
     load();
 }
@@ -42,50 +42,11 @@ DashboardEffectConfig::~DashboardEffectConfig()
 {
 }
 
-void DashboardEffectConfig::load()
-{
-    KCModule::load();
-    KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
-
-    const int brightness = config.readEntry<int>("Brightness", 50);
-    ui.brightness->setValue(brightness);
-
-    const int saturation = config.readEntry<int>("Saturation", 50);
-    ui.saturation->setValue(saturation);
-
-    const int duration = config.readEntry("Duration", 500);
-    ui.duration->setValue(duration);
-
-    bool blur = config.readEntry("Blur", false);
-    ui.blur->setChecked(blur);
-
-    emit changed(false);
-}
-
 void DashboardEffectConfig::save()
 {
     KCModule::save();
 
-    KConfigGroup config = EffectsHandler::effectConfig("Dashboard");
-
-    config.writeEntry("Brightness", ui.brightness->value());
-    config.writeEntry("Saturation", ui.saturation->value());
-    config.writeEntry("Duration", ui.duration->value());
-    config.writeEntry("Blur", ui.blur->isChecked());
-
-    config.sync();
-
-    emit changed(false);
     EffectsHandler::sendReloadMessage("dashboard");
-}
-
-void DashboardEffectConfig::defaults()
-{
-    ui.brightness->setValue(50);
-    ui.saturation->setValue(50);
-    ui.duration->setValue(500);
-    ui.blur->setChecked(false);
-    emit changed(true);
 }
 
 } // namespace KWin
