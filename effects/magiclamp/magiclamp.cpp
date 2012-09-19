@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // based on minimize animation by Rivo Laks <rivolaks@hot.ee>
 
 #include "magiclamp.h"
+// KConfigSkeleton
+#include "magiclampconfig.h"
+
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <QtCore/QTimeLine>
@@ -48,8 +51,10 @@ bool MagicLampEffect::supported()
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)
 {
+    MagicLampConfig::self()->readConfig();
+    mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
+
     KConfigGroup conf = effects->effectConfig("MagicLamp");
-    mAnimationDuration = animationTime(conf, "AnimationDuration", 250);
     conf = effects->effectConfig("Shadow");
     int v = conf.readEntry("Size", 5);
     v += conf.readEntry("Fuzzyness", 10);

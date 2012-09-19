@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "magiclamp_config.h"
+// KConfigSkeleton
+#include "magiclampconfig.h"
+
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
@@ -43,39 +46,17 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->animationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    addConfig(MagicLampConfig::self(), m_ui);
+
     load();
-}
-
-void MagicLampEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("MagicLamp");
-
-    int duration       = conf.readEntry("AnimationDuration", 0);
-    m_ui->animationDurationSpin->setValue(duration);
-    m_ui->animationDurationSpin->setSuffix(ki18np(" millisecond", " milliseconds"));
-    emit changed(false);
 }
 
 void MagicLampEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("MagicLamp");
-
-    conf.writeEntry("AnimationDuration", m_ui->animationDurationSpin->value());
-
-    conf.sync();
-
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("magiclamp");
 }
 
-void MagicLampEffectConfig::defaults()
-{
-    m_ui->animationDurationSpin->setValue(0);
-    emit changed(true);
-}
 } // namespace
 
 #include "magiclamp_config.moc"

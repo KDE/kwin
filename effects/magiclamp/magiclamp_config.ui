@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::MagicLampEffectConfigForm</class>
- <widget class="QWidget" name="KWin::MagicLampEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::MagicLampEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,48 +10,44 @@
     <height>300</height>
    </rect>
   </property>
-  <layout class="QFormLayout" name="formLayout" >
-   <item row="0" column="0" >
-    <widget class="QLabel" name="label_3" >
-     <property name="text" >
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
       <string>Animation duration:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
-     <property name="buddy" >
-      <cstring>animationDurationSpin</cstring>
+     <property name="buddy">
+      <cstring>kcfg_AnimationDuration</cstring>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="KIntSpinBox" name="animationDurationSpin" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+   <item row="0" column="1">
+    <widget class="QSpinBox" name="kcfg_AnimationDuration">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="specialValueText" >
-      <string comment="Duration of rotation" >Default</string>
+     <property name="specialValueText">
+      <string comment="Duration of rotation">Default</string>
      </property>
-     <property name="maximum" >
+     <property name="suffix">
+      <string>milliseconds</string>
+     </property>
+     <property name="maximum">
       <number>5000</number>
      </property>
-     <property name="singleStep" >
+     <property name="singleStep">
       <number>10</number>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
