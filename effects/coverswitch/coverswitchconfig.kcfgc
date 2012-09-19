@@ -1,0 +1,5 @@
+File=coverswitch.kcfg
+ClassName=CoverSwitchConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

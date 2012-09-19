@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "coverswitch.h"
+// KConfigSkeleton
+#include "coverswitchconfig.h"
 
 #include <kwinconfig.h>
 #include <QFont>
@@ -26,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>
-#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <KDE/KIcon>
@@ -89,27 +90,30 @@ bool CoverSwitchEffect::supported()
 
 void CoverSwitchEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("CoverSwitch");
-    animationDuration = animationTime(conf, "Duration", 200);
-    animateSwitch     = conf.readEntry("AnimateSwitch", true);
-    animateStart      = conf.readEntry("AnimateStart", true);
-    animateStop       = conf.readEntry("AnimateStop", true);
-    reflection        = conf.readEntry("Reflection", true);
-    windowTitle       = conf.readEntry("WindowTitle", true);
-    zPosition         = conf.readEntry("ZPosition", 900.0);
-    thumbnails        = conf.readEntry("Thumbnails", true);
-    dynamicThumbnails = conf.readEntry("DynamicThumbnails", true);
-    thumbnailWindows  = conf.readEntry("ThumbnailWindows", 8);
+    CoverSwitchConfig::self()->readConfig();
+    animationDuration = animationTime(CoverSwitchConfig::duration());
+    animateSwitch     = CoverSwitchConfig::animateSwitch();
+    animateStart      = CoverSwitchConfig::animateStart();
+    animateStop       = CoverSwitchConfig::animateStop();
+    reflection        = CoverSwitchConfig::reflection();
+    windowTitle       = CoverSwitchConfig::windowTitle();
+    zPosition         = CoverSwitchConfig::zPosition();
+    thumbnails        = CoverSwitchConfig::thumbnails();
+    dynamicThumbnails = CoverSwitchConfig::dynamicThumbnails();
+    thumbnailWindows  = CoverSwitchConfig::thumbnailWindows();
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(animationDuration);
-    primaryTabBox = conf.readEntry("TabBox", false);
-    secondaryTabBox = conf.readEntry("TabBoxAlternative", false);
-    QColor tmp        = conf.readEntry("MirrorFrontColor", QColor(0, 0, 0));
+
+    // Defined outside the ui
+    primaryTabBox     = CoverSwitchConfig::tabBox();
+    secondaryTabBox   = CoverSwitchConfig::tabBoxAlternative();
+
+    QColor tmp        = CoverSwitchConfig::mirrorFrontColor();
     mirrorColor[0][0] = tmp.redF();
     mirrorColor[0][1] = tmp.greenF();
     mirrorColor[0][2] = tmp.blueF();
     mirrorColor[0][3] = 1.0;
-    tmp               = conf.readEntry("MirrorRearColor", QColor(0, 0, 0));
+    tmp               = CoverSwitchConfig::mirrorRearColor();
     mirrorColor[1][0] = tmp.redF();
     mirrorColor[1][1] = tmp.greenF();
     mirrorColor[1][2] = tmp.blueF();

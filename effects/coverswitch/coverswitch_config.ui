@@ -7,12 +7,12 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>264</height>
+    <height>270</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
-    <widget class="QCheckBox" name="checkWindowTitle">
+    <widget class="QCheckBox" name="kcfg_WindowTitle">
      <property name="text">
       <string>Display window &amp;titles</string>
      </property>
@@ -34,7 +34,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="zPositionSlider">
+      <widget class="QSlider" name="kcfg_zPosition">
        <property name="toolTip">
         <string>Define how far away the windows should appear</string>
        </property>
@@ -111,21 +111,21 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QCheckBox" name="checkAnimateSwitch">
+        <widget class="QCheckBox" name="kcfg_AnimateSwitch">
          <property name="text">
           <string>Animate switch</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkAnimateStart">
+        <widget class="QCheckBox" name="kcfg_AnimateStart">
          <property name="text">
           <string>Animation on tab box open</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkAnimateStop">
+        <widget class="QCheckBox" name="kcfg_AnimateStop">
          <property name="text">
           <string>Animation on tab box close</string>
          </property>
@@ -142,12 +142,12 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="buddy">
-            <cstring>spinDuration</cstring>
+            <cstring>kcfg_Duration</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KIntSpinBox" name="spinDuration">
+          <widget class="KIntSpinBox" name="kcfg_Duration">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -156,6 +156,9 @@
            </property>
            <property name="specialValueText">
             <string comment="Duration of rotation">Default</string>
+           </property>
+           <property name="suffix">
+            <string> milliseconds</string>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -175,14 +178,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QCheckBox" name="checkThumbnails">
+        <widget class="QCheckBox" name="kcfg_Thumbnails">
          <property name="text">
           <string>Use additional thumbnail bar</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkDynamicThumbnails">
+        <widget class="QCheckBox" name="kcfg_DynamicThumbnails">
          <property name="toolTip">
           <string>Only show thumbnail bar if there are at least specified number of windows</string>
          </property>
@@ -202,12 +205,12 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="buddy">
-            <cstring>spinThumbnailWindows</cstring>
+            <cstring>kcfg_ThumbnailWindows</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KIntSpinBox" name="spinThumbnailWindows"/>
+          <widget class="KIntSpinBox" name="kcfg_ThumbnailWindows"/>
          </item>
         </layout>
        </item>
@@ -219,7 +222,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QCheckBox" name="checkReflection">
+        <widget class="QCheckBox" name="kcfg_Reflection">
          <property name="text">
           <string>Reflections</string>
          </property>
@@ -238,7 +241,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="KColorButton" name="colorRear"/>
+          <widget class="KColorButton" name="kcfg_MirrorRearColor"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label">
@@ -248,7 +251,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="KColorButton" name="colorFront"/>
+          <widget class="KColorButton" name="kcfg_MirrorFrontColor"/>
          </item>
         </layout>
        </item>
@@ -286,9 +289,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>checkReflection</sender>
+   <sender>kcfg_Reflection</sender>
    <signal>toggled(bool)</signal>
-   <receiver>colorFront</receiver>
+   <receiver>kcfg_MirrorFrontColor</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -302,9 +305,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkReflection</sender>
+   <sender>kcfg_Reflection</sender>
    <signal>toggled(bool)</signal>
-   <receiver>colorRear</receiver>
+   <receiver>kcfg_MirrorRearColor</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -318,7 +321,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkReflection</sender>
+   <sender>kcfg_Reflection</sender>
    <signal>toggled(bool)</signal>
    <receiver>label_2</receiver>
    <slot>setEnabled(bool)</slot>
@@ -334,7 +337,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkReflection</sender>
+   <sender>kcfg_Reflection</sender>
    <signal>toggled(bool)</signal>
    <receiver>label</receiver>
    <slot>setEnabled(bool)</slot>
@@ -350,9 +353,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkThumbnails</sender>
+   <sender>kcfg_Thumbnails</sender>
    <signal>toggled(bool)</signal>
-   <receiver>checkDynamicThumbnails</receiver>
+   <receiver>kcfg_DynamicThumbnails</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -366,7 +369,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkThumbnails</sender>
+   <sender>kcfg_Thumbnails</sender>
    <signal>toggled(bool)</signal>
    <receiver>labelThumbnailWindows</receiver>
    <slot>setEnabled(bool)</slot>
@@ -382,9 +385,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkThumbnails</sender>
+   <sender>kcfg_Thumbnails</sender>
    <signal>toggled(bool)</signal>
-   <receiver>spinThumbnailWindows</receiver>
+   <receiver>kcfg_ThumbnailWindows</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
