@@ -155,6 +155,10 @@ class Options : public QObject, public KDecorationOptions
     * Whether a window is tiled to half screen when reaching left or right screen edge while been moved
     */
     Q_PROPERTY(bool electricBorderTiling READ electricBorderTiling WRITE setElectricBorderTiling NOTIFY electricBorderTilingChanged)
+    /**
+    * Whether a window is tiled to half screen when reaching left or right screen edge while been moved
+    */
+    Q_PROPERTY(float electricBorderCornerRatio READ electricBorderCornerRatio WRITE setElectricBorderCornerRatio NOTIFY electricBorderCornerRatioChanged)
     Q_PROPERTY(bool borderlessMaximizedWindows READ borderlessMaximizedWindows WRITE setBorderlessMaximizedWindows NOTIFY borderlessMaximizedWindowsChanged)
     /**
      * timeout before non-responding application will be killed after attempt to close
@@ -480,6 +484,12 @@ public:
     bool electricBorderTiling() const {
         return electric_border_tiling;
     }
+    /**
+    * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
+    */
+    float electricBorderCornerRatio() const {
+        return electric_border_corner_ratio;
+    }
 
     bool borderlessMaximizedWindows() const {
         return borderless_maximized_windows;
@@ -611,6 +621,7 @@ public:
     void setElectricBorderPushbackPixels(int electricBorderPushbackPixels);
     void setElectricBorderMaximize(bool electricBorderMaximize);
     void setElectricBorderTiling(bool electricBorderTiling);
+    void setElectricBorderCornerRatio(float electricBorderCornerRatio);
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
     void setKillPingTimeout(int killPingTimeout);
     void setHideUtilityWindowsForInactive(bool hideUtilityWindowsForInactive);
@@ -788,6 +799,9 @@ public:
     static bool defaultElectricBorderTiling() {
         return true;
     }
+    static float defaultElectricBorderCornerRatio() {
+        return 0.25;
+    }
     static bool defaultBorderlessMaximizedWindows() {
         return false;
     }
@@ -914,6 +928,7 @@ Q_SIGNALS:
     void electricBorderPushbackPixelsChanged();
     void electricBorderMaximizeChanged();
     void electricBorderTilingChanged();
+    void electricBorderCornerRatioChanged();
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
     void hideUtilityWindowsForInactiveChanged();
@@ -1014,6 +1029,7 @@ private:
     int electric_border_pushback_pixels;
     bool electric_border_maximize;
     bool electric_border_tiling;
+    float electric_border_corner_ratio;
     bool borderless_maximized_windows;
     bool show_geometry_tip;
     int animationSpeed; // 0 - instant, 5 - very slow

@@ -1344,9 +1344,9 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
         }
 
         if (mode != QuickTileNone) {
-            if (yroot <= area.y() + area.height() / 4)
+            if (yroot <= area.y() + area.height() * options->electricBorderCornerRatio())
                 mode |= QuickTileTop;
-            else if (yroot >= area.y() + area.height() - area.height() / 4)
+            else if (yroot >= area.y() + area.height() - area.height()  * options->electricBorderCornerRatio())
                 mode |= QuickTileBottom;
         } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable())
             mode = QuickTileMaximize;

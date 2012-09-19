@@ -187,6 +187,7 @@ Options::Options(QObject *parent)
     , electric_border_pushback_pixels(Options::defaultElectricBorderPushbackPixels())
     , electric_border_maximize(Options::defaultElectricBorderMaximize())
     , electric_border_tiling(Options::defaultElectricBorderTiling())
+    , electric_border_corner_ratio(Options::defaultElectricBorderCornerRatio())
     , borderless_maximized_windows(Options::defaultBorderlessMaximizedWindows())
     , show_geometry_tip(Options::defaultShowGeometryTip())
     , animationSpeed(Options::defaultAnimationSpeed())
@@ -582,6 +583,15 @@ void Options::setElectricBorderTiling(bool electricBorderTiling)
     emit electricBorderTilingChanged();
 }
 
+void Options::setElectricBorderCornerRatio(float electricBorderCornerRatio)
+{
+    if (electric_border_corner_ratio == electricBorderCornerRatio) {
+        return;
+    }
+    electric_border_corner_ratio = electricBorderCornerRatio;
+    emit electricBorderCornerRatioChanged();
+}
+
 void Options::setBorderlessMaximizedWindows(bool borderlessMaximizedWindows)
 {
     if (borderless_maximized_windows == borderlessMaximizedWindows) {
@@ -876,6 +886,8 @@ unsigned long Options::loadConfig()
     setElectricBorderPushbackPixels(config.readEntry("ElectricBorderPushbackPixels", Options::defaultElectricBorderPushbackPixels()));
     setElectricBorderMaximize(config.readEntry("ElectricBorderMaximize", Options::defaultElectricBorderMaximize()));
     setElectricBorderTiling(config.readEntry("ElectricBorderTiling", Options::defaultElectricBorderTiling()));
+    const float ebr = config.readEntry("ElectricBorderCornerRatio", Options::defaultElectricBorderCornerRatio());
+    setElectricBorderCornerRatio(qMin(qMax(ebr, 0.0f), 1.0f));
 
     OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
     setOpMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
