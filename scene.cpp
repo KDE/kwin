@@ -407,8 +407,8 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         x -= thumb->x();
         y -= thumb->y();
         // compensate shadow topleft padding
-        thumbData.xTranslate += (thumb->x()-visualThumbRect.x())*thumbData.xScale();
-        thumbData.yTranslate += (thumb->y()-visualThumbRect.y())*thumbData.yScale();
+        x += (thumb->x()-visualThumbRect.x())*thumbData.xScale();
+        y += (thumb->y()-visualThumbRect.y())*thumbData.yScale();
         thumbData.setXTranslation(x);
         thumbData.setYTranslation(y);
         int thumbMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS;
