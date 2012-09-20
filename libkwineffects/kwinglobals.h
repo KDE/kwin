@@ -40,8 +40,17 @@ namespace KWin
 
 enum CompositingType {
     NoCompositing = 0,
-    OpenGLCompositing,
-    XRenderCompositing
+    /**
+     * Used as a flag whether OpenGL based compositing is used.
+     * The flag is or-ed to the enum values of the specific OpenGL types.
+     * The actual Compositors use the @c OpenGL1Compositing or @c OpenGL2Compositing
+     * flags. If you need to know whether OpenGL is used, either and the flag or
+     * use EffectsHandler::isOpenGLCompositing().
+     **/
+    OpenGLCompositing = 1,
+    XRenderCompositing = 1<<1,
+    OpenGL1Compositing = 1<<2 | OpenGLCompositing,
+    OpenGL2Compositing = 1<<3 | OpenGLCompositing
 };
 
 enum clientAreaOption {

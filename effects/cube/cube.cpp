@@ -115,7 +115,7 @@ CubeEffect::CubeEffect()
 
 bool CubeEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void CubeEffect::reconfigure(ReconfigureFlags)
@@ -294,7 +294,7 @@ void CubeEffect::slotWallPaperLoaded()
 bool CubeEffect::loadShader()
 {
     if (!(GLPlatform::instance()->supports(GLSL) &&
-            (effects->compositingType() == OpenGLCompositing)))
+            (effects->compositingType() == OpenGL2Compositing)))
         return false;
     QString fragmentshader       =  KGlobal::dirs()->findResource("data", "kwin/cylinder.frag");
     QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", "kwin/cylinder.vert");

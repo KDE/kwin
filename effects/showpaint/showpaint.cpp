@@ -55,7 +55,7 @@ void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
 {
     painted = QRegion();
     effects->paintScreen(mask, region, data);
-    if (effects->compositingType() == OpenGLCompositing)
+    if (effects->isOpenGLCompositing())
         paintGL();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)

@@ -43,9 +43,6 @@ public:
     class Window;
     virtual ~SceneOpenGL();
     virtual bool initFailed() const;
-    virtual CompositingType compositingType() const {
-        return OpenGLCompositing;
-    }
     virtual bool hasPendingFlush() const;
     virtual int paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
@@ -90,6 +87,9 @@ class SceneOpenGL2 : public SceneOpenGL
 public:
     SceneOpenGL2(OpenGLBackend *backend);
     virtual ~SceneOpenGL2();
+    virtual CompositingType compositingType() const {
+        return OpenGL2Compositing;
+    }
 
     static bool supported(OpenGLBackend *backend);
 
@@ -107,6 +107,9 @@ public:
     virtual ~SceneOpenGL1();
     virtual void screenGeometryChanged(const QSize &size);
     virtual int paint(QRegion damage, ToplevelList windows);
+    virtual CompositingType compositingType() const {
+        return OpenGL1Compositing;
+    }
 
     static bool supported(OpenGLBackend *backend);
 

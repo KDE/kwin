@@ -617,7 +617,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapTop.handle());
         }
 
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             decorationPixmapTop = QPixmap(tr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -636,7 +636,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapBottom.handle());
         }
 
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             decorationPixmapBottom = QPixmap(br.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -655,7 +655,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapLeft.handle());
         }
 
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             decorationPixmapLeft = QPixmap(lr.size());
             m_responsibleForDecoPixmap = false;
         } else {
@@ -674,7 +674,7 @@ void Client::resizeDecorationPixmaps()
             XFreePixmap(display(), decorationPixmapRight.handle());
         }
 
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             decorationPixmapRight = QPixmap(rr.size());
             m_responsibleForDecoPixmap = false;
         } else {

@@ -82,7 +82,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
             float alpha = 0.8f;
             QColor color = KColorScheme(QPalette::Normal, KColorScheme::Selection).background().color();
 
-            if (effects->compositingType() == OpenGLCompositing) {
+            if (effects->isOpenGLCompositing()) {
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 vbo->setUseColor(true);

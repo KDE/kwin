@@ -44,7 +44,7 @@ SheetEffect::SheetEffect()
 
 bool SheetEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void SheetEffect::reconfigure(ReconfigureFlags)

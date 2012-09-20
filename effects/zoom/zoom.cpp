@@ -188,7 +188,7 @@ void ZoomEffect::recreateTexture()
         imageWidth = ximg->width;
         imageHeight = ximg->height;
         QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-        if (effects->compositingType() == OpenGLCompositing)
+        if (effects->isOpenGLCompositing())
             texture = new GLTexture(img);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)

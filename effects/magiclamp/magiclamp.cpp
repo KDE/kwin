@@ -46,7 +46,7 @@ MagicLampEffect::MagicLampEffect()
 
 bool MagicLampEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)

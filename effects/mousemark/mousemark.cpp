@@ -107,7 +107,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty())
         return;
-    if ( effects->compositingType() == OpenGLCompositing) {
+    if ( effects->isOpenGLCompositing()) {
 #ifndef KWIN_HAVE_OPENGLES
         glEnable(GL_LINE_SMOOTH);
 #endif

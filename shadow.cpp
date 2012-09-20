@@ -49,7 +49,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     QVector<long> data = Shadow::readX11ShadowProperty(toplevel->window());
     if (!data.isEmpty()) {
         Shadow *shadow = NULL;
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             shadow = new SceneOpenGLShadow(toplevel);
         } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

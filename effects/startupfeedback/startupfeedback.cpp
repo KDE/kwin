@@ -109,7 +109,7 @@ StartupFeedbackEffect::~StartupFeedbackEffect()
 
 bool StartupFeedbackEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)

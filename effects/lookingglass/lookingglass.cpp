@@ -81,11 +81,7 @@ LookingGlassEffect::~LookingGlassEffect()
 
 bool LookingGlassEffect::supported()
 {
-    if (effects->compositingType() == OpenGLCompositing) {
-        return ShaderManager::instance()->isValid() && GLRenderTarget::supported();
-    } else {
-        return false;
-    }
+    return effects->compositingType() == OpenGL2Compositing;
 }
 
 void LookingGlassEffect::reconfigure(ReconfigureFlags)

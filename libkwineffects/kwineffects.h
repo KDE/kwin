@@ -783,6 +783,12 @@ public:
     Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
 
     CompositingType compositingType() const;
+    /**
+     * @brief Whether the Compositor is OpenGL based (either GL 1 or 2).
+     *
+     * @return bool @c true in case of OpenGL based Compositor, @c false otherwise
+     **/
+    bool isOpenGLCompositing() const;
     virtual unsigned long xrenderBufferPicture() = 0;
     virtual void reconfigure() = 0;
 

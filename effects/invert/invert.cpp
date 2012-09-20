@@ -64,11 +64,7 @@ InvertEffect::~InvertEffect()
 
 bool InvertEffect::supported()
 {
-    if (effects->compositingType() == OpenGLCompositing) {
-        return ShaderManager::instance()->isValid();
-    } else {
-        return false;
-    }
+    return effects->compositingType() == OpenGL2Compositing;
 }
 
 bool InvertEffect::loadData()

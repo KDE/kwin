@@ -39,7 +39,7 @@ KWIN_EFFECT_SUPPORTED(screenshot, ScreenShotEffect::supported())
 bool ScreenShotEffect::supported()
 {
     return  effects->compositingType() == XRenderCompositing ||
-            (effects->compositingType() == KWin::OpenGLCompositing && GLRenderTarget::supported());
+            (effects->isOpenGLCompositing() && GLRenderTarget::supported());
 }
 
 ScreenShotEffect::ScreenShotEffect()
@@ -64,7 +64,7 @@ void ScreenShotEffect::postPaintScreen()
         bool validTarget = true;
         GLTexture* offscreenTexture = 0;
         GLRenderTarget* target = 0;
-        if (effects->compositingType() == KWin::OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             if (!GLTexture::NPOTTextureSupported()) {
                 w = nearestPowerOfTwo(w);
                 h = nearestPowerOfTwo(h);
@@ -114,7 +114,7 @@ void ScreenShotEffect::postPaintScreen()
             // render window into offscreen texture
             int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
             QImage img;
-            if (effects->compositingType() == KWin::OpenGLCompositing) {
+            if (effects->isOpenGLCompositing()) {
                 GLRenderTarget::pushRenderTarget(target);
                 glClearColor(0.0, 0.0, 0.0, 0.0);
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -209,7 +209,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
     return QString();
 #else
     QImage img;
-    if (effects->compositingType() == KWin::OpenGLCompositing)
+    if (effects->isOpenGLCompositing())
     {
         if (!GLRenderTarget::blitSupported()) {
             kDebug(1212) << "Framebuffer Blit not supported";

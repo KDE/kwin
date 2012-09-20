@@ -742,15 +742,13 @@ QString Compositor::compositingType() const
     switch (m_scene->compositingType()) {
     case XRenderCompositing:
         return "xrender";
-    case OpenGLCompositing:
+    case OpenGL1Compositing:
+            return "gl1";
+    case OpenGL2Compositing:
 #ifdef KWIN_HAVE_OPENGLES
         return "gles";
 #else
-        if (ShaderManager::instance()->isValid()) {
-            return "gl2";
-        } else {
-            return "gl1";
-        }
+        return "gl2";
 #endif
     case NoCompositing:
     default:

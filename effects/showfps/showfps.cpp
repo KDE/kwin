@@ -156,7 +156,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             ++fps; // count all frames in the last second
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height
-    if (effects->compositingType() == OpenGLCompositing) {
+    if (effects->isOpenGLCompositing()) {
         paintGL(fps);
         glFinish(); // make sure all rendering is done
     }
@@ -327,7 +327,7 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
 
 void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize)
 {
-    if (effects->compositingType() == OpenGLCompositing) {
+    if (effects->isOpenGLCompositing()) {
         QColor color(0, 0, 0);
         color.setAlphaF(alpha);
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();

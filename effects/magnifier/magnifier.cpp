@@ -78,7 +78,7 @@ MagnifierEffect::~MagnifierEffect()
 bool MagnifierEffect::supported()
 {
     return  effects->compositingType() == XRenderCompositing ||
-            (effects->compositingType() == OpenGLCompositing && GLRenderTarget::blitSupported());
+            (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported());
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -129,7 +129,7 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         QRect srcArea(cursor.x() - (double)area.width() / (zoom*2),
                       cursor.y() - (double)area.height() / (zoom*2),
                       (double)area.width() / zoom, (double)area.height() / zoom);
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             m_fbo->blitFromFramebuffer(srcArea);
             // paint magnifier
             m_texture->bind();

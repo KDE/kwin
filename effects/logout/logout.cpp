@@ -105,7 +105,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     } else if (!blurTexture) {
         blurSupported = false;
         delete blurTarget; // catch as we just tested the texture ;-P
-        if (effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && GLRenderTarget::blitSupported() && useBlur) {
+        if (effects->isOpenGLCompositing() && GLTexture::NPOTTextureSupported() && GLRenderTarget::blitSupported() && useBlur) {
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target
@@ -143,7 +143,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (progress > 0.0) {
-        if (effects->compositingType() == KWin::OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             // In OpenGL mode we add vignetting and, if supported, a slight blur
             if (blurSupported) {
                 // When using blur we render everything to an FBO and as such don't do the vignetting
@@ -192,7 +192,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
 
-    if (effects->compositingType() == KWin::OpenGLCompositing && progress > 0.0) {
+    if (effects->isOpenGLCompositing() && progress > 0.0) {
         if (!blurSupported) {
             if (!logoutWindowPassed)
                 // The logout window has been deleted but we still want to fade out the vignetting, thus

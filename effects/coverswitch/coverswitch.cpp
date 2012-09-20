@@ -84,7 +84,7 @@ CoverSwitchEffect::~CoverSwitchEffect()
 
 bool CoverSwitchEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void CoverSwitchEffect::reconfigure(ReconfigureFlags)

@@ -77,7 +77,7 @@ void SnapHelperEffect::postPaintScreen()
     effects->postPaintScreen();
     if (m_timeline.currentValue() != 0.0) {
         // Display the guide
-        if (effects->compositingType() == OpenGLCompositing) {
+        if (effects->isOpenGLCompositing()) {
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setUseColor(true);

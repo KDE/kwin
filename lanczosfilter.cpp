@@ -158,7 +158,7 @@ void LanczosShader::createOffsets(int count, float width, Qt::Orientation direct
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (effects->compositingType() == KWin::OpenGLCompositing && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
+    if (effects->isOpenGLCompositing() && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
             KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
         if (!m_inited)
             init();

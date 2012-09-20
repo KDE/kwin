@@ -51,7 +51,7 @@ CubeSlideEffect::~CubeSlideEffect()
 
 bool CubeSlideEffect::supported()
 {
-    return effects->compositingType() == OpenGLCompositing;
+    return effects->isOpenGLCompositing();
 }
 
 void CubeSlideEffect::reconfigure(ReconfigureFlags)

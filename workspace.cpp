@@ -2121,6 +2121,8 @@ QString Workspace::supportInformation() const
     if (effects) {
         support.append("Compositing is active\n");
         switch (effects->compositingType()) {
+        case OpenGL1Compositing:
+        case OpenGL2Compositing:
         case OpenGLCompositing: {
 #ifdef KWIN_HAVE_OPENGLES
             support.append("Compositing Type: OpenGL ES 2.0\n");

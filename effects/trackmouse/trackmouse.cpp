@@ -57,7 +57,7 @@ TrackMouseEffect::TrackMouseEffect()
     if ( effects->compositingType() == XRenderCompositing)
         m_angleBase = 1.57079632679489661923; // Pi/2
 #endif
-    if ( effects->compositingType() == OpenGLCompositing)
+    if ( effects->isOpenGLCompositing())
         m_angleBase = 90.0;
     m_mousePolling = false;
     KActionCollection *actionCollection = new KActionCollection(this);
@@ -124,7 +124,7 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
     if (!m_active)
         return;
 
-    if ( effects->compositingType() == OpenGLCompositing && m_texture[0] && m_texture[1]) {
+    if ( effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
         GLShader *shader(0);
         QMatrix4x4 modelview;
         if (ShaderManager::instance()->isValid()) {
@@ -250,7 +250,7 @@ void TrackMouseEffect::loadTexture()
         return;
 
     for (int i = 0; i < 2; ++i) {
-        if ( effects->compositingType() == OpenGLCompositing) {
+        if ( effects->isOpenGLCompositing()) {
             QImage img(f[i]);
             m_texture[i] = new GLTexture(img);
             m_lastRect[i].setSize(img.size());
