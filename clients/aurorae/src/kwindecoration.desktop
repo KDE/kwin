@@ -11,6 +11,7 @@ Comment[ia]=Decorationes de fenestra de KWin
 Comment[nl]=KWin vensterdecoratie
 Comment[pt]=Decoração das Janelas do KWin
 Comment[pt_BR]=Decorações de janelas do KWin
+Comment[sk]=Dekorácie okien KWin
 Comment[sr]=К‑винова декорација прозора
 Comment[sr@ijekavian]=К‑винова декорација прозора
 Comment[sr@ijekavianlatin]=KWinova dekoracija prozora
@@ -19,6 +20,7 @@ Comment[sv]=Kwin-fönsterdekorationer
 Comment[uk]=Обрамлення вікон KWin
 Comment[x-test]=xxKWin Window Decorationxx
 Comment[zh_CN]=KWin 窗口装饰
+Comment[zh_TW]=KWin 視窗裝飾
 
 [PropertyDef::X-Plasma-MainScript]
 Type=QString
