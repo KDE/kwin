@@ -69,7 +69,7 @@ public:
 KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     : KCModule(KWinOptionsFactory::componentData(), parent)
 {
-    mConfig = new KConfig("kwinrc", KConfig::IncludeGlobals);
+    mConfig = new KConfig("kwinrc");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -182,7 +182,7 @@ void KWinOptions::moduleChanged(bool state)
 KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     : KCModule(KWinOptionsFactory::componentData(), parent)
 {
-    mConfig = new KConfig("kwinrc", KConfig::IncludeGlobals);
+    mConfig = new KConfig("kwinrc");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
