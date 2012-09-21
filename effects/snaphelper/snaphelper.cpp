@@ -81,9 +81,7 @@ void SnapHelperEffect::postPaintScreen()
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setUseColor(true);
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-            }
+            ShaderBinder binder(ShaderManager::ColorShader);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -122,9 +120,6 @@ void SnapHelperEffect::postPaintScreen()
             }
             vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
             vbo->render(GL_LINES);
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderManager::instance()->popShader();
-            }
 
             glDisable(GL_BLEND);
             glLineWidth(1.0);

@@ -210,7 +210,8 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                         const qreal rgb = data.brightness() * data.opacity();
                         const qreal a = data.opacity();
 
-                        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+                        ShaderBinder binder(ShaderManager::SimpleShader);
+                        GLShader *shader = binder.shader();
                         shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                         shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                         shader->setUniform(GLShader::Saturation, data.saturation());
@@ -218,7 +219,6 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
                         cachedTexture->render(region, textureRect, hardwareClipping);
 
-                        ShaderManager::instance()->popShader();
                         glDisable(GL_BLEND);
                     } else {
                         prepareRenderStates(cachedTexture, data.opacity(), data.brightness(), data.saturation());
@@ -347,7 +347,8 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 const qreal rgb = data.brightness() * data.opacity();
                 const qreal a = data.opacity();
 
-                GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+                ShaderBinder binder(ShaderManager::SimpleShader);
+                GLShader *shader = binder.shader();
                 shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                 shader->setUniform(GLShader::Saturation, data.saturation());
@@ -355,7 +356,6 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
                 cache->render(region, textureRect, hardwareClipping);
 
-                ShaderManager::instance()->popShader();
                 glDisable(GL_BLEND);
             } else {
                 prepareRenderStates(cache, data.opacity(), data.brightness(), data.saturation());
@@ -621,11 +621,10 @@ bool LanczosShader::init()
             !(gl->isRadeon() && gl->chipClass() < R600)) {
         m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");
         if (m_shader->isValid()) {
-            ShaderManager::instance()->pushShader(m_shader);
+            ShaderBinder binder(m_shader);
             m_uTexUnit    = m_shader->uniformLocation("texUnit");
             m_uKernel     = m_shader->uniformLocation("kernel");
             m_uOffsets    = m_shader->uniformLocation("offsets");
-            ShaderManager::instance()->popShader();
             return true;
         } else {
             kDebug(1212) << "Shader is not valid";

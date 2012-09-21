@@ -86,9 +86,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 vbo->setUseColor(true);
-                if (effects->compositingType() == OpenGL2Compositing) {
-                    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-                }
+                ShaderBinder binder(ShaderManager::ColorShader);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 color.setAlphaF(alpha);
@@ -105,9 +103,6 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 }
                 vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
                 vbo->render(GL_TRIANGLES);
-                if (effects->compositingType() == OpenGL2Compositing) {
-                    ShaderManager::instance()->popShader();
-                }
                 glDisable(GL_BLEND);
             }
 

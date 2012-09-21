@@ -125,11 +125,10 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         return;
 
     if ( effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
-        GLShader *shader(0);
+        ShaderBinder binder(ShaderManager::GenericShader);
+        GLShader *shader(binder.shader());
         QMatrix4x4 modelview;
-        if (effects->compositingType() == OpenGL2Compositing) {
-            ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-            shader = ShaderManager::instance()->getBoundShader();
+        if (shader) {
             modelview = shader->getUniformMatrix4x4("modelview");
         }
         glEnable(GL_BLEND);
@@ -154,9 +153,8 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 popMatrix();
         }
         glDisable(GL_BLEND);
-        if (effects->compositingType() == OpenGL2Compositing) {
+        if (shader) {
             shader->setUniform(GLShader::ModelViewMatrix, modelview);
-            ShaderManager::instance()->popShader();
         }
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

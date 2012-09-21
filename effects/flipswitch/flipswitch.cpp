@@ -219,7 +219,6 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         // TODO: move to kwinglutils
         QMatrix4x4 origProjection;
         QMatrix4x4 origModelview;
-        ShaderManager *shaderManager = ShaderManager::instance();
         if (effects->numScreens() > 1) {
             // unfortunatelly we have to change the projection matrix in dual screen mode
             QRect fullRect = effects->clientArea(FullArea, effects->activeScreen(), effects->currentDesktop());
@@ -265,13 +264,13 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             projection.frustum(xmin * xminFactor, xmax * xmaxFactor, ymin * yminFactor, ymax * ymaxFactor, zNear, zFar);
             QMatrix4x4 modelview;
             modelview.translate(xTranslate, yTranslate, 0.0);
-            if (shaderManager->isShaderBound()) {
-                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+            if (effects->compositingType() == OpenGL2Compositing) {
+                ShaderBinder binder(ShaderManager::GenericShader);
+                GLShader *shader = binder.shader();
                 origProjection = shader->getUniformMatrix4x4("projection");
                 origModelview = shader->getUniformMatrix4x4("modelview");
                 shader->setUniform("projection", projection);
                 shader->setUniform("modelview", origModelview * modelview);
-                shaderManager->popShader();
             } else {
 #ifndef KWIN_HAVE_OPENGLES
                 glMatrixMode(GL_PROJECTION);
@@ -377,11 +376,11 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         }
 
         if (effects->numScreens() > 1) {
-            if (shaderManager->isShaderBound())  {
-                GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
+            if (effects->compositingType() == OpenGL2Compositing)  {
+                ShaderBinder binder(ShaderManager::GenericShader);
+                GLShader *shader = binder.shader();
                 shader->setUniform("projection", origProjection);
                 shader->setUniform("modelview", origModelview);
-                shaderManager->popShader();
             } else {
 #ifndef KWIN_HAVE_OPENGLES
                 popMatrix();

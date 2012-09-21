@@ -119,9 +119,8 @@ bool LookingGlassEffect::loadData()
     const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/lookingglass.frag");
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
     if (m_shader->isValid()) {
-        ShaderManager::instance()->pushShader(m_shader);
+        ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(displayWidth(), displayHeight()));
-        ShaderManager::instance()->popShader();
     } else {
         kError(1212) << "The shader failed to load!" << endl;
         return false;
@@ -242,12 +241,11 @@ void LookingGlassEffect::postPaintScreen()
         m_texture->bind();
 
         // Use the shader
-        ShaderManager::instance()->pushShader(m_shader);
+        ShaderBinder binder(m_shader);
         m_shader->setUniform("u_zoom", (float)zoom);
         m_shader->setUniform("u_radius", (float)radius);
         m_shader->setUniform("u_cursor", QVector2D(cursorPos().x(), cursorPos().y()));
         m_vbo->render(GL_TRIANGLES);
-        ShaderManager::instance()->popShader();
         m_texture->unbind();
     }
 }

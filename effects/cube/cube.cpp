@@ -213,10 +213,9 @@ void CubeEffect::loadConfig(QString config)
     }
 
     // set the cap color on the shader
-    if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
-        ShaderManager::instance()->pushShader(m_capShader);
+    if (m_capShader->isValid()) {
+        ShaderBinder binder(m_capShader);
         m_capShader->setUniform("u_capColor", capColor);
-        ShaderManager::instance()->popShader();
     }
 }
 
@@ -311,7 +310,7 @@ bool CubeEffect::loadShader()
         kError(1212) << "The cylinder shader failed to load!" << endl;
         return false;
     } else {
-        shaderManager->pushShader(cylinderShader);
+        ShaderBinder binder(cylinderShader);
         cylinderShader->setUniform("sampler", 0);
         QMatrix4x4 projection;
         float fovy = 60.0f;
@@ -334,7 +333,6 @@ bool CubeEffect::loadShader()
         cylinderShader->setUniform(GLShader::WindowTransformation, identity);
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
-        shaderManager->popShader();
     }
     // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     sphereShader = new GLShader(sphereVertexshader, fragmentshader);
@@ -342,7 +340,7 @@ bool CubeEffect::loadShader()
         kError(1212) << "The sphere shader failed to load!" << endl;
         return false;
     } else {
-        shaderManager->pushShader(sphereShader);
+        ShaderBinder binder(sphereShader);
         sphereShader->setUniform("sampler", 0);
         QMatrix4x4 projection;
         float fovy = 60.0f;
@@ -367,7 +365,6 @@ bool CubeEffect::loadShader()
         sphereShader->setUniform("width", (float)rect.width() * 0.5f);
         sphereShader->setUniform("height", (float)rect.height() * 0.5f);
         sphereShader->setUniform("u_offset", QVector2D(0, 0));
-        shaderManager->popShader();
         checkGLError("Loading Sphere Shader");
     }
     return true;
@@ -404,15 +401,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
         // wallpaper
         if (wallpaper) {
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-            }
+            ShaderBinder binder(ShaderManager::SimpleShader);
             wallpaper->bind();
             wallpaper->render(region, rect);
             wallpaper->unbind();
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderManager::instance()->popShader();
-            }
         }
 
         glEnable(GL_BLEND);
@@ -500,7 +492,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             ShaderManager *shaderManager = ShaderManager::instance();
             if (shaderManager->isValid() && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
-                shaderManager->pushShader(m_reflectionShader);
+                ShaderBinder binder(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
                 windowTransformation.translate(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
                 m_reflectionShader->setUniform("windowTransformation", windowTransformation);
@@ -525,8 +517,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 vbo->reset();
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
-
-                shaderManager->popShader();
             } else {
 #ifndef KWIN_HAVE_OPENGLES
                 glColor4f(0.0, 0.0, 0.0, alpha);

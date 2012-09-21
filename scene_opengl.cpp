@@ -447,14 +447,11 @@ SceneOpenGL2::~SceneOpenGL2()
 
 void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
 {
-    ShaderManager *shaderManager = ShaderManager::instance();
+    ShaderBinder binder(ShaderManager::GenericShader);
 
-    GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
-    shader->setUniform(GLShader::ScreenTransformation, transformation(mask, data));
+    binder.shader()->setUniform(GLShader::ScreenTransformation, transformation(mask, data));
 
     Scene::paintGenericScreen(mask, data);
-
-    shaderManager->popShader();
 }
 
 void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
@@ -464,12 +461,10 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->setUseColor(true);
     vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
 
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+    ShaderBinder binder(ShaderManager::ColorShader);
+    binder.shader()->setUniform(GLShader::Offset, QVector2D(0, 0));
 
     vbo->render(GL_TRIANGLES);
-
-    ShaderManager::instance()->popShader();
 }
 
 SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)

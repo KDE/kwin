@@ -124,11 +124,10 @@ void InvertEffect::paintEffectFrame(KWin::EffectFrame* frame, QRegion region, do
 {
     if (m_valid && m_allWindows) {
         frame->setShader(m_shader);
-        ShaderManager::instance()->pushShader(m_shader);
+        ShaderBinder binder(m_shader);
         m_shader->setUniform("screenTransformation", QMatrix4x4());
         m_shader->setUniform("windowTransformation", QMatrix4x4());
         effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-        ShaderManager::instance()->popShader();
     } else {
         effects->paintEffectFrame(frame, region, opacity, frameOpacity);
     }

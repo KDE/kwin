@@ -116,9 +116,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         vbo->reset();
         vbo->setUseColor(true);
         vbo->setColor(color);
-        if (effects->compositingType() == OpenGL2Compositing) {
-            ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-        }
+        ShaderBinder binder(ShaderManager::ColorShader);
         QVector<float> verts;
         foreach (const Mark & mark, marks) {
             verts.clear();
@@ -137,9 +135,6 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
             vbo->render(GL_LINE_STRIP);
-        }
-        if (effects->compositingType() == OpenGL2Compositing) {
-            ShaderManager::instance()->popShader();
         }
         glLineWidth(1.0);
     #ifndef KWIN_HAVE_OPENGLES

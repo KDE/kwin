@@ -307,7 +307,7 @@ void LogoutEffect::renderVignetting()
     QMatrix4x4 projection = ShaderManager::instance()->pushShader(KWin::ShaderManager::SimpleShader)->getUniformMatrix4x4("projection");
     ShaderManager::instance()->popShader();
 
-    ShaderManager::instance()->pushShader(m_vignettingShader);
+    ShaderBinder binder(m_vignettingShader);
     m_vignettingShader->setUniform(KWin::GLShader::ProjectionMatrix, projection);
     m_vignettingShader->setUniform("u_progress", (float)progress * 0.9f);
     glEnable(GL_BLEND);
@@ -335,7 +335,6 @@ void LogoutEffect::renderVignetting()
     }
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_BLEND);
-    ShaderManager::instance()->popShader();
 }
 
 void LogoutEffect::renderVignettingLegacy()
@@ -384,7 +383,7 @@ void LogoutEffect::renderBlurTexture()
         return;
     }
     // Unmodified base image
-    ShaderManager::instance()->pushShader(m_blurShader);
+    ShaderBinder binder(m_blurShader);
     m_blurShader->setUniform(GLShader::Offset, QVector2D(0, 0));
     m_blurShader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
     m_blurShader->setUniform(GLShader::Saturation, 1.0);
@@ -396,7 +395,6 @@ void LogoutEffect::renderBlurTexture()
     blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
     blurTexture->unbind();
     glDisable(GL_BLEND);
-    ShaderManager::instance()->popShader();
     checkGLError("Render blur texture");
 }
 

@@ -176,9 +176,7 @@ void ShowFpsEffect::paintGL(int fps)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // TODO painting first the background white and then the contents
     // means that the contents also blend with the background, I guess
-    if (effects->compositingType() == OpenGL2Compositing) {
-        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-    }
+    ShaderBinder binder(ShaderManager::ColorShader);
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     QColor color(255, 255, 255);
@@ -228,9 +226,6 @@ void ShowFpsEffect::paintGL(int fps)
 
     // Paint amount of rendered pixels graph
     paintDrawSizeGraph(x, y);
-    if (effects->compositingType() == OpenGL2Compositing) {
-        ShaderManager::instance()->popShader();
-    }
 
     // Paint FPS numerical value
     paintFPSText(fps);
@@ -449,14 +444,11 @@ void ShowFpsEffect::paintFPSText(int fps)
     delete fpsText;
     fpsText = new GLTexture(im);
     fpsText->bind();
+    ShaderBinder binder(ShaderManager::SimpleShader);
     if (effects->compositingType() == OpenGL2Compositing) {
-        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-        shader->setUniform("offset", QVector2D(0, 0));
+        binder.shader()->setUniform("offset", QVector2D(0, 0));
     }
     fpsText->render(QRegion(fpsTextRect), fpsTextRect);
-    if (effects->compositingType() == OpenGL2Compositing) {
-        ShaderManager::instance()->popShader();
-    }
     fpsText->unbind();
     effects->addRepaint(fpsTextRect);
 }

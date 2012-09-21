@@ -80,10 +80,9 @@ bool ExplosionEffect::loadData()
         kError(1212) << "The shader failed to load!" << endl;
         return false;
     } else {
-        ShaderManager::instance()->pushShader(mShader);
+        ShaderBinder binder(mShader);
         mShader->setUniform("startOffsetTexture", 4);
         mShader->setUniform("endOffsetTexture", 5);
-        ShaderManager::instance()->popShader();
     }
 
     mStartOffsetTex = new GLTexture(starttexture);
