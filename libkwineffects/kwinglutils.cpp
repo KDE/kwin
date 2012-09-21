@@ -666,6 +666,11 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
 //****************************************
 ShaderManager *ShaderManager::s_shaderManager = NULL;
 
+enum VertexAttribute {
+    VA_Position = 0,
+    VA_TexCoord = 1
+};
+
 ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
@@ -793,6 +798,12 @@ void ShaderManager::bindFragDataLocations(GLShader *shader)
     shader->bindFragDataLocation("fragColor", 0);
 }
 
+void ShaderManager::bindAttributeLocations(GLShader *shader) const
+{
+    shader->bindAttributeLocation("vertex",   VA_Position);
+    shader->bindAttributeLocation("texCoord", VA_TexCoord);
+}
+
 GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
 {
     const char *vertexFile[] = {
@@ -802,6 +813,7 @@ GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fr
     };
 
     GLShader *shader = new GLShader(m_shaderDir + vertexFile[vertex], fragmentFile, GLShader::ExplicitLinking);
+    bindAttributeLocations(shader);
     bindFragDataLocations(shader);
     shader->link();
 
@@ -824,6 +836,7 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
     };
 
     GLShader *shader = new GLShader(vertexFile, m_shaderDir + fragmentFile[fragment], GLShader::ExplicitLinking);
+    bindAttributeLocations(shader);
     bindFragDataLocations(shader);
     shader->link();
 
@@ -840,6 +853,7 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 {
     GLShader *shader = new GLShader(GLShader::ExplicitLinking);
     shader->load(vertexSource, fragmentSource);
+    bindAttributeLocations(shader);
     bindFragDataLocations(shader);
     shader->link();
     return shader;
@@ -872,6 +886,7 @@ void ShaderManager::initShaders()
     for (int i = 0; i < 3; i++) {
         m_shader[i] = new GLShader(m_shaderDir + vertexFile[i], m_shaderDir + fragmentFile[i],
                                    GLShader::ExplicitLinking);
+        bindAttributeLocations(m_shader[i]);
         bindFragDataLocations(m_shader[i]);
         m_shader[i]->link();
 
@@ -1322,11 +1337,7 @@ void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode,
 
 void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
-    // FIXME Use glBindAttribLocation() to bind "vertex" and "texCoord" to the same
-    //       attribute index in all shaders.
     GLShader *shader = ShaderManager::instance()->getBoundShader();
-    GLint vertexAttrib = shader->attributeLocation("vertex");
-    GLint texAttrib = shader->attributeLocation("texCoord");
 
     if (useColor) {
         // FIXME Store the uniform location in the shader so we don't have to look it up every time.
@@ -1335,12 +1346,12 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
 
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-    glVertexAttribPointer(vertexAttrib, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
-    glEnableVertexAttribArray(vertexAttrib);
+    glVertexAttribPointer(VA_Position, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
+    glEnableVertexAttribArray(VA_Position);
 
-    if (texAttrib != -1 && useTexCoords) {
-        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
-        glEnableVertexAttribArray(texAttrib);
+    if (useTexCoords) {
+        glVertexAttribPointer(VA_TexCoord, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
+        glEnableVertexAttribArray(VA_TexCoord);
     }
 
     if (!hardwareClipping) {
@@ -1355,9 +1366,9 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     if (useTexCoords) {
-        glDisableVertexAttribArray(texAttrib);
+        glDisableVertexAttribArray(VA_TexCoord);
     }
-    glDisableVertexAttribArray(vertexAttrib);
+    glDisableVertexAttribArray(VA_Position);
 }
 
 void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
