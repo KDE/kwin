@@ -288,7 +288,7 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
 
 void LogoutEffect::renderVignetting()
 {
-    if (!ShaderManager::instance()->isValid()) {
+    if (effects->compositingType() == OpenGL1Compositing) {
         renderVignettingLegacy();
         return;
     }
@@ -369,7 +369,7 @@ void LogoutEffect::renderVignettingLegacy()
 
 void LogoutEffect::renderBlurTexture()
 {
-    if (!ShaderManager::instance()->isValid()) {
+    if (effects->compositingType() == OpenGL1Compositing) {
         renderBlurTextureLegacy();
         return;
     }

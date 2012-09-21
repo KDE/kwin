@@ -129,7 +129,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         m_type = BouncingFeedback;
     else if (busyBlinking) {
         m_type = BlinkingFeedback;
-        if (ShaderManager::instance()->isValid()) {
+        if (effects->compositingType() == OpenGL2Compositing) {
             delete m_blinkingShader;
             m_blinkingShader = 0;
             const QString shader = KGlobal::dirs()->findResource("data", "kwin/blinking-startup-fragment.glsl");
@@ -216,7 +216,7 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
                 glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 #endif
             }
-        } else if (ShaderManager::instance()->isValid()) {
+        } else if (effects->compositingType() == OpenGL2Compositing) {
             useShader = true;
             ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         }

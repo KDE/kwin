@@ -168,11 +168,11 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
             verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
             vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
             }
             vbo->render(GL_TRIANGLES);
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 ShaderManager::instance()->popShader();
             }
         }

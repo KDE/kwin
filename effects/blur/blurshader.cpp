@@ -129,7 +129,7 @@ bool GLSLBlurShader::supported()
 {
     if (!GLPlatform::instance()->supports(GLSL))
         return false;
-    if (!ShaderManager::instance()->isValid())
+    if (effects->compositingType() == OpenGL1Compositing)
         return false;
 
     (void) glGetError(); // Clear the error state

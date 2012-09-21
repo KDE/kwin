@@ -66,9 +66,6 @@ bool ExplosionEffect::supported()
 bool ExplosionEffect::loadData()
 {
     mInited = true;
-    if (!ShaderManager::instance()->isValid()) {
-        return false;
-    }
     QString shadername("explosion");
     const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.frag");
     QString starttexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-start.png");

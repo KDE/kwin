@@ -261,7 +261,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         if (reflection) {
             // no reflections during start and stop animation
             // except when using a shader
-            if ((!start && !stop) || ShaderManager::instance()->isValid())
+            if ((!start && !stop) || effects->compositingType() == OpenGL2Compositing)
                 paintScene(frontWindow, leftWindows, rightWindows, true);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -736,7 +736,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
     }
 
     if (reflectedWindow) {
-        if (ShaderManager::instance()->isValid()) {
+        if (effects->compositingType() == OpenGL2Compositing) {
             GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
             QMatrix4x4 origMatrix = shader->getUniformMatrix4x4("screenTransformation");
             QMatrix4x4 reflectionMatrix;

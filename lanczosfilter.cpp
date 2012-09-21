@@ -203,7 +203,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     if (hardwareClipping) {
                         glEnable(GL_SCISSOR_TEST);
                     }
-                    if (ShaderManager::instance()->isValid()) {
+                    if (effects->compositingType() == OpenGL2Compositing) {
                         glEnable(GL_BLEND);
                         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -340,7 +340,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             if (hardwareClipping) {
                 glEnable(GL_SCISSOR_TEST);
             }
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -616,7 +616,7 @@ bool LanczosShader::init()
 {
     GLPlatform *gl = GLPlatform::instance();
     if (gl->supports(GLSL) &&
-            ShaderManager::instance()->isValid() &&
+            effects->compositingType() == OpenGL2Compositing &&
             GLRenderTarget::supported() &&
             !(gl->isRadeon() && gl->chipClass() < R600)) {
         m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");

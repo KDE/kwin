@@ -213,7 +213,7 @@ void CubeEffect::loadConfig(QString config)
     }
 
     // set the cap color on the shader
-    if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+    if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
         ShaderManager::instance()->pushShader(m_capShader);
         m_capShader->setUniform("u_capColor", capColor);
         ShaderManager::instance()->popShader();
@@ -404,13 +404,13 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
         // wallpaper
         if (wallpaper) {
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
             }
             wallpaper->bind();
             wallpaper->render(region, rect);
             wallpaper->unbind();
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 ShaderManager::instance()->popShader();
             }
         }
@@ -599,7 +599,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         }
         // restore the ScreenTransformation after all desktops are painted
         // if not done GenericShader keeps the rotation data and transforms windows incorrectly in other rendering calls
-        if (ShaderManager::instance()->isValid()) {
+        if (effects->compositingType() == OpenGL2Compositing) {
             GLShader *shader = ShaderManager::instance()->pushShader(KWin::ShaderManager::GenericShader);
             shader->setUniform(GLShader::ScreenTransformation, QMatrix4x4());
             ShaderManager::instance()->popShader();
@@ -786,7 +786,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     }
 
     bool capShader = false;
-    if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+    if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
         capShader = true;
         ShaderManager::instance()->pushShader(m_capShader);
         float opacity = cubeOpacity;
@@ -1560,7 +1560,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     }
                 }
                 bool capShader = false;
-                if (ShaderManager::instance()->isValid() && m_capShader->isValid()) {
+                if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
                     capShader = true;
                     ShaderManager::instance()->pushShader(m_capShader);
                     m_capShader->setUniform("u_mirror", 0);

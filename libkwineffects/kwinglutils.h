@@ -283,6 +283,13 @@ public:
      **/
     bool isShaderBound() const;
     /**
+     * Allows to query whether Shaders are supported by the compositor, that is
+     * whether the Shaders compiled successfully.
+     *
+     * With OpenGL 1 compositing this method will always return @c false.
+     *
+     * Do not use this method to check whether the compositor uses OpenGL 1 or 2,
+     * use @link EffectsHandler::compositingType instead.
      * @return @c true if the built-in shaders are valid, @c false otherwise
      **/
     bool isValid() const;

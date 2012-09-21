@@ -70,9 +70,6 @@ bool InvertEffect::supported()
 bool InvertEffect::loadData()
 {
     m_inited = true;
-    if (!ShaderManager::instance()->isValid()) {
-        return false;
-    }
 
     const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/invert.frag");
 

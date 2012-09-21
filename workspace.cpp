@@ -2189,7 +2189,7 @@ QString Workspace::supportInformation() const
                 support.append(" no\n");
             }
 
-            if (ShaderManager::instance()->isValid()) {
+            if (effects->compositingType() == OpenGL2Compositing) {
                 support.append("OpenGL 2 Shaders are used\n");
             } else {
                 support.append("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n");
