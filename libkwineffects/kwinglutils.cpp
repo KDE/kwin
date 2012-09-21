@@ -680,6 +680,7 @@ void ShaderManager::disable()
 {
     // for safety do a Cleanup first
     ShaderManager::cleanup();
+
     // create a new ShaderManager and set it to inited without calling init
     // that will ensure that the ShaderManager is not valid
     s_shaderManager = new ShaderManager();
@@ -693,12 +694,12 @@ void ShaderManager::cleanup()
 }
 
 ShaderManager::ShaderManager()
-    : m_orthoShader(NULL)
-    , m_genericShader(NULL)
-    , m_colorShader(NULL)
-    , m_inited(false)
+    : m_inited(false)
     , m_valid(false)
 {
+    for (int i = 0; i < 3; i++)
+       m_shader[i] = 0;
+
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
 }
 
@@ -707,9 +708,9 @@ ShaderManager::~ShaderManager()
     while (!m_boundShaders.isEmpty()) {
         popShader();
     }
-    delete m_orthoShader;
-    delete m_genericShader;
-    delete m_colorShader;
+
+    for (int i = 0; i < 3; i++)
+        delete m_shader[i];
 }
 
 GLShader *ShaderManager::getBoundShader() const
@@ -741,27 +742,13 @@ GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
     if (m_inited && !m_valid) {
         return NULL;
     }
-    GLShader *shader;
-    switch(type) {
-    case SimpleShader:
-        shader = m_orthoShader;
-        break;
-    case GenericShader:
-        shader = m_genericShader;
-        break;
-    case ColorShader:
-        shader = m_colorShader;
-        break;
-    default:
-        return NULL;
-    }
 
-    pushShader(shader);
+    pushShader(m_shader[type]);
     if (reset) {
         resetShader(type);
     }
 
-    return shader;
+    return m_shader[type];
 }
 
 void ShaderManager::resetAllShaders()
@@ -769,12 +756,11 @@ void ShaderManager::resetAllShaders()
     if (!m_inited || !m_valid) {
         return;
     }
-    pushShader(SimpleShader, true);
-    pushShader(GenericShader, true);
-    pushShader(ColorShader, true);
-    popShader();
-    popShader();
-    popShader();
+
+    for (int i = 0; i < 3; i++) {
+        pushShader(ShaderType(i), true);
+        popShader();
+    }
 }
 
 
@@ -804,46 +790,40 @@ void ShaderManager::popShader()
 
 GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
 {
-    QString vertexShader;
-    switch(vertex) {
-    case SimpleShader:
-        vertexShader = ":/resources/scene-vertex.glsl";
-        break;
-    case GenericShader:
-        vertexShader = ":/resources/scene-generic-vertex.glsl";
-        break;
-    case ColorShader:
-        vertexShader = ":/resources/scene-color-vertex.glsl";
-        break;
-    }
-    GLShader *shader = new GLShader(vertexShader, fragmentFile);
+    const char *vertexFile[] = {
+        ":/resources/scene-vertex.glsl",
+        ":/resources/scene-generic-vertex.glsl",
+        ":/resources/scene-color-vertex.glsl"
+    };
+
+    GLShader *shader = new GLShader(vertexFile[vertex], fragmentFile);
+
     if (shader->isValid()) {
         pushShader(shader);
         resetShader(vertex);
         popShader();
     }
+
     return shader;
 }
 
 GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &vertexFile)
 {
-    QString fragmentShader;
-    switch(fragment) {
-        // Simple and Generic Shader use same fragment Shader
-    case SimpleShader:
-    case GenericShader:
-        fragmentShader = ":/resources/scene-fragment.glsl";
-        break;
-    case ColorShader:
-        fragmentShader = ":/resources/scene-color-fragment.glsl";
-        break;
-    }
-    GLShader *shader = new GLShader(vertexFile, fragmentShader);
+    // The Simple and Generic shaders use same fragment shader
+    const char *fragmentFile[] = {
+        ":/resources/scene-fragment.glsl",
+        ":/resources/scene-fragment.glsl",
+        ":/resources/scene-color-fragment.glsl"
+    };
+
+    GLShader *shader = new GLShader(vertexFile, fragmentFile[fragment]);
+
     if (shader->isValid()) {
         pushShader(shader);
         resetShader(fragment);
         popShader();
     }
+
     return shader;
 }
 
@@ -856,46 +836,40 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 
 void ShaderManager::initShaders()
 {
-    m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
-    if (m_orthoShader->isValid()) {
-        pushShader(SimpleShader, true);
-        popShader();
-        kDebug(1212) << "Ortho Shader is valid";
-    } else {
-        delete m_orthoShader;
-        m_orthoShader = NULL;
-        kDebug(1212) << "Orho Shader is not valid";
-        return;
-    }
-    m_genericShader = new GLShader(":/resources/scene-generic-vertex.glsl", ":/resources/scene-fragment.glsl");
-    if (m_genericShader->isValid()) {
-        pushShader(GenericShader, true);
-        popShader();
-        kDebug(1212) << "Generic Shader is valid";
-    } else {
-        delete m_genericShader;
-        m_genericShader = NULL;
-        delete m_orthoShader;
-        m_orthoShader = NULL;
-        kDebug(1212) << "Generic Shader is not valid";
-        return;
-    }
-    m_colorShader = new GLShader(":/resources/scene-color-vertex.glsl", ":/resources/scene-color-fragment.glsl");
-    if (m_colorShader->isValid()) {
-        pushShader(ColorShader, true);
-        popShader();
-        kDebug(1212) << "Color Shader is valid";
-    } else {
-        delete m_genericShader;
-        m_genericShader = NULL;
-        delete m_orthoShader;
-        m_orthoShader = NULL;
-        delete m_colorShader;
-        m_colorShader = NULL;
-        kDebug(1212) << "Color Scene Shader is not valid";
-        return;
-    }
+    const char *vertexFile[] = {
+        ":/resources/scene-vertex.glsl",
+        ":/resources/scene-generic-vertex.glsl",
+        ":/resources/scene-color-vertex.glsl",
+    };
+
+    const char *fragmentFile[] = {
+        ":/resources/scene-fragment.glsl",
+        ":/resources/scene-fragment.glsl",
+        ":/resources/scene-color-fragment.glsl",
+    };
+
+    // Be optimistic
     m_valid = true;
+
+    for (int i = 0; i < 3; i++) {
+        m_shader[i] = new GLShader(vertexFile[i], fragmentFile[i]);
+
+        if (!m_shader[i]->isValid()) {
+            m_valid = false;
+            break;
+        }
+
+        pushShader(m_shader[i]);
+        resetShader(ShaderType(i));
+        popShader();
+    }
+
+    if (!m_valid) {
+        for (int i = 0; i < 3; i++) {
+            delete m_shader[i];
+            m_shader[i] = 0;
+        }
+    }
 }
 
 void ShaderManager::resetShader(ShaderType type)

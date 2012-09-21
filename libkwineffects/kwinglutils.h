@@ -260,7 +260,7 @@ public:
          * The sampler uniform is @c sample and defaults to @c 0.
          * The shader uses two vertex attributes @c vertex and @c texCoord.
          **/
-        SimpleShader,
+        SimpleShader = 0,
         /**
          * A generic shader able to render transformed, textured geometries.
          * This shader is mostly needed by the scene and not of much interest for effects.
@@ -392,9 +392,7 @@ private:
     void resetShader(ShaderType type);
 
     QStack<GLShader*> m_boundShaders;
-    GLShader *m_orthoShader;
-    GLShader *m_genericShader;
-    GLShader *m_colorShader;
+    GLShader *m_shader[3];
     bool m_inited;
     bool m_valid;
     bool m_debug;
