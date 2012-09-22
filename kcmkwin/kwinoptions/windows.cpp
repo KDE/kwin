@@ -83,190 +83,30 @@ KFocusConfig::~KFocusConfig()
         delete config;
 }
 
+KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
+
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
 KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+    , m_ui(new KWinFocusConfigForm(this))
 {
-    QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout(this);
-    QLabel *label;
-
-    //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
-    //                         "(% of desktop space)"),
-    //             plcBox);
-    //iTLabel->setAlignment(AlignTop|AlignHCenter);
-    //pLay->addWidget(iTLabel,1,1);
-
-    //interactiveTrigger = new QSpinBox(0, 500, 1, plcBox);
-    //pLay->addWidget(interactiveTrigger,1,2);
-
-    //pLay->addRowSpacing(2,KDialog::spacingHint());
-
-    //lay->addWidget(plcBox);
-
-    // focus policy
-    //fcsBox = new QGroupBox(i18n("Focus"),this);
-    fcsBox = new QWidget(this);
-
-    QGridLayout *gLay = new QGridLayout();
-
-    fcsBox->setLayout(gLay);
-
-    focusCombo =  new KComboBox(fcsBox);
-    focusCombo->setEditable(false);
-    focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
-    focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
-    focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
-    focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
-    focusCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("&Policy:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(focusCombo);
-    gLay->addWidget(label, 0, 0, 1, 2);
-    gLay->addWidget(focusCombo, 0, 2);
-
-
-    // FIXME, when more policies have been added to KWin
-    wtstr = i18n("The focus policy is used to determine the active window, i.e."
-    " the window you can work in. <ul>"
-    " <li><em>Click to focus:</em> A window becomes active when you click into it."
-    " This is the behavior you might know from other operating systems.</li>"
-    " <li><em>Focus follows mouse:</em> Moving the mouse pointer actively on to a"
-    " normal window activates it. New windows will receive the focus,"
-    " without you having to point the mouse at them explicitly."
-    " Very practical if you are using the mouse a lot.</li>"
-    " <li><em>Focus under mouse:</em> The window that happens to be under the"
-    " mouse pointer is active. If the mouse points nowhere, the last window"
-    " that was under the mouse has focus."
-    " New windows will not automatically receive the focus.</li>"
-    " <li><em>Focus strictly under mouse:</em> Only the window under the mouse pointer is"
-    " active. If the mouse points nowhere, nothing has focus.</li>"
-    " </ul>"
-    "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent certain"
-    " features such as the Alt+Tab walk through windows dialog in the KDE mode"
-    " from working properly."
-    );
-    focusCombo->setWhatsThis(wtstr);
-
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(focusPolicyChanged()));
-
-    focusStealing = new KComboBox(this);
-    focusStealing->addItem(i18nc("Focus Stealing Prevention Level", "None"));
-    focusStealing->addItem(i18nc("Focus Stealing Prevention Level", "Low"));
-    focusStealing->addItem(i18nc("Focus Stealing Prevention Level", "Medium"));
-    focusStealing->addItem(i18nc("Focus Stealing Prevention Level", "High"));
-    focusStealing->addItem(i18nc("Focus Stealing Prevention Level", "Extreme"));
-    wtstr = i18n("<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
-                 "caused by unexpected activation of new windows. (Note: This feature does not "
-                 "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
-                 "<ul>"
-                 "<li><em>None:</em> Prevention is turned off "
-                 "and new windows always become activated.</li>"
-                 "<li><em>Low:</em> Prevention is enabled; when some window does not have support "
-                 "for the underlying mechanism and KWin cannot reliably decide whether to "
-                 "activate the window or not, it will be activated. This setting may have both "
-                 "worse and better results than the medium level, depending on the applications.</li>"
-                 "<li><em>Medium:</em> Prevention is enabled.</li>"
-                 "<li><em>High:</em> New windows get activated only if no window is currently active "
-                 "or if they belong to the currently active application. This setting is probably "
-                 "not really usable when not using mouse focus policy.</li>"
-                 "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
-                 "</ul></p>"
-                 "<p>Windows that are prevented from stealing focus are marked as demanding attention, "
-                 "which by default means their taskbar entry will be highlighted. This can be changed "
-                 "in the Notifications control module.</p>");
-    focusStealing->setWhatsThis(wtstr);
-    connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    focusStealing->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("Focus stealing prevention level:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(focusStealing);
-    gLay->addWidget(label, 1, 0, 1, 2);
-    gLay->addWidget(focusStealing, 1, 2);
-
-    focusNextToMouse = new QCheckBox(/*TODO 4.9 i__18n*/("When the active window disappears, pass focus to window under mouse"), this);
-    gLay->addWidget(focusNextToMouse, 2, 2, 1, 1);
-    focusNextToMouse->hide();
-
-    // autoraise delay
-    autoRaiseOn = new QCheckBox(fcsBox);
-    connect(autoRaiseOn, SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
-    autoRaise = new KIntNumInput(500, fcsBox);
-    autoRaise->setRange(0, 3000, 100);
-    autoRaise->setSteps(100, 100);
-    autoRaise->setSuffix(i18n(" ms"));
-    autoRaise->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    autoRaiseOnLabel = new QLabel(i18n("&Raise, with the following delay:"), this);
-    autoRaiseOnLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    autoRaiseOnLabel->setBuddy(autoRaise);
-    gLay->addWidget(autoRaiseOn, 3, 0);
-    gLay->addWidget(autoRaiseOnLabel, 3, 1);
-    gLay->addWidget(autoRaise, 3, 2);
-
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()));
-
-    delayFocus = new KIntNumInput(500, fcsBox);
-    delayFocus->setRange(0, 3000, 100);
-    delayFocus->setSteps(100, 100);
-    delayFocus->setSuffix(i18n(" ms"));
-    delayFocus->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    delayFocusOnLabel = new QLabel(i18n("Delay focus by:"), this);
-    delayFocusOnLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    delayFocusOnLabel->setBuddy(delayFocus);
-
-    gLay->addWidget(delayFocusOnLabel, 4, 1);
-    gLay->addWidget(delayFocus, 4, 2);
-
-    clickRaiseOn = new QCheckBox(i18n("C&lick raises active window"), fcsBox);
-    connect(clickRaiseOn, SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
-    gLay->addWidget(clickRaiseOn, 5, 0, 1, 3);
-
-    autoRaiseOn->setWhatsThis(i18n("When this option is enabled, a window in the background will automatically"
-                                   " come to the front when the mouse pointer has been over it for some time."));
-    wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
-                 " come to the front.");
-    autoRaise->setWhatsThis(wtstr);
-
-    clickRaiseOn->setWhatsThis(i18n("When this option is enabled, the active window will be brought to the"
-                                    " front when you click somewhere into the window contents. To change"
-                                    " it for inactive windows, you need to change the settings"
-                                    " in the Actions tab."));
-
-    delayFocus->setWhatsThis(i18n("This is the delay after which the window the mouse pointer is over"
-                                  " will automatically receive focus."));
-
-    separateScreenFocus = new QCheckBox(i18n("S&eparate screen focus"), fcsBox);
-    gLay->addWidget(separateScreenFocus, 6, 0, 1, 3);
-    wtstr = i18n("When this option is enabled, focus operations are limited only to the active Xinerama screen");
-    separateScreenFocus->setWhatsThis(wtstr);
-
-    activeMouseScreen = new QCheckBox(i18n("Active screen follows &mouse"), fcsBox);
-    gLay->addWidget(activeMouseScreen, 7, 0, 1, 3);
-    wtstr = i18n("When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
-                 " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
-                 " screen containing the focused window. By default this option is disabled for Click to focus and"
-                 " enabled for other focus policies.");
-    activeMouseScreen->setWhatsThis(wtstr);
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
-
-    if (QApplication::desktop()->screenCount() == 1) { // No Ximerama
-        separateScreenFocus->hide();
-        activeMouseScreen->hide();
-    }
-
-    lay->addWidget(fcsBox);
-
-    lay->addStretch();
-
-    // Any changes goes to slotChanged()
-    connect(focusCombo, SIGNAL(activated(int)), SLOT(changed()));
-    connect(autoRaiseOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(clickRaiseOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(separateScreenFocus, SIGNAL(clicked()), SLOT(changed()));
-    connect(activeMouseScreen, SIGNAL(clicked()), SLOT(changed()));
-    connect(focusNextToMouse, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->focusStealing, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->focusCombo, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->focusCombo, SIGNAL(activated(int)), this, SLOT(focusPolicyChanged()));
+    connect(m_ui->focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()));
+    connect(m_ui->focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
+    connect(m_ui->autoRaiseOn, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->autoRaiseOn, SIGNAL(toggled(bool)), SLOT(autoRaiseOnTog(bool)));
+    connect(m_ui->clickRaiseOn, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->separateScreenFocus, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->activeMouseScreen, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->focusNextToMouse, SIGNAL(clicked()), SLOT(changed()));
 
     load();
 }
@@ -274,12 +114,12 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentD
 
 int KFocusConfig::getFocus()
 {
-    return focusCombo->currentIndex();
+    return m_ui->focusCombo->currentIndex();
 }
 
 void KFocusConfig::setFocus(int foc)
 {
-    focusCombo->setCurrentIndex(foc);
+    m_ui->focusCombo->setCurrentIndex(foc);
 
     // this will disable/hide the auto raise delay widget if focus==click
     focusPolicyChanged();
@@ -287,87 +127,82 @@ void KFocusConfig::setFocus(int foc)
 
 void KFocusConfig::setAutoRaiseInterval(int tb)
 {
-    autoRaise->setValue(tb);
+    m_ui->autoRaise->setValue(tb);
 }
 
 void KFocusConfig::setDelayFocusInterval(int tb)
 {
-    delayFocus->setValue(tb);
+    m_ui->delayFocus->setValue(tb);
 }
 
 int KFocusConfig::getAutoRaiseInterval()
 {
-    return autoRaise->value();
+    return m_ui->autoRaise->value();
 }
 
 int KFocusConfig::getDelayFocusInterval()
 {
-    return delayFocus->value();
+    return m_ui->delayFocus->value();
 }
 
 void KFocusConfig::setAutoRaise(bool on)
 {
-    autoRaiseOn->setChecked(on);
+    m_ui->autoRaiseOn->setChecked(on);
 }
 
 void KFocusConfig::setClickRaise(bool on)
 {
-    clickRaiseOn->setChecked(on);
+    m_ui->clickRaiseOn->setChecked(on);
 }
 
 void KFocusConfig::focusPolicyChanged()
 {
-    int policyIndex = focusCombo->currentIndex();
+    int policyIndex = m_ui->focusCombo->currentIndex();
 
     // the auto raise related widgets are: autoRaise
-    autoRaiseOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
-    autoRaiseOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
-    autoRaiseOnTog(policyIndex != CLICK_TO_FOCUS && autoRaiseOn->isChecked());
+    m_ui->autoRaiseOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    autoRaiseOnTog(policyIndex != CLICK_TO_FOCUS && m_ui->autoRaiseOn->isChecked());
 
-    focusStealing->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
+    m_ui->focusStealing->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
 
-    focusNextToMouse->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
+    m_ui->focusNextToMouse->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
 
 }
 
 void KFocusConfig::setDelayFocusEnabled()
 {
-    int policyIndex = focusCombo->currentIndex();
+    int policyIndex = m_ui->focusCombo->currentIndex();
 
     // the delayed focus related widgets are: delayFocus
-    delayFocusOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    m_ui->delayFocusOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
     delayFocusOnTog(policyIndex != CLICK_TO_FOCUS);
 }
 
 void KFocusConfig::autoRaiseOnTog(bool a)
 {
-    autoRaise->setEnabled(a);
-    clickRaiseOn->setEnabled(!a);
+    m_ui->autoRaise->setEnabled(a);
+    m_ui->clickRaiseOn->setEnabled(!a);
 }
 
 void KFocusConfig::delayFocusOnTog(bool a)
 {
-    delayFocus->setEnabled(a);
-}
-
-void KFocusConfig::clickRaiseOnTog(bool)
-{
+    m_ui->delayFocus->setEnabled(a);
 }
 
 void KFocusConfig::setFocusStealing(int l)
 {
     l = qMax(0, qMin(4, l));
-    focusStealing->setCurrentIndex(l);
+    m_ui->focusStealing->setCurrentIndex(l);
 }
 
 void KFocusConfig::setSeparateScreenFocus(bool s)
 {
-    separateScreenFocus->setChecked(s);
+    m_ui->separateScreenFocus->setChecked(s);
 }
 
 void KFocusConfig::setActiveMouseScreen(bool a)
 {
-    activeMouseScreen->setChecked(a);
+    m_ui->activeMouseScreen->setChecked(a);
 }
 
 void KFocusConfig::updateActiveMouseScreen()
@@ -375,7 +210,7 @@ void KFocusConfig::updateActiveMouseScreen()
     // on by default for non click to focus policies
     KConfigGroup cfg(config, "Windows");
     if (!cfg.hasKey(KWIN_ACTIVE_MOUSE_SCREEN))
-        setActiveMouseScreen(focusCombo->currentIndex() != 0);
+        setActiveMouseScreen(m_ui->focusCombo->currentIndex() != 0);
 }
 
 void KFocusConfig::showEvent(QShowEvent *ev)
@@ -416,13 +251,13 @@ void KFocusConfig::load(void)
 
     setSeparateScreenFocus(cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, false));
     // on by default for non click to focus policies
-    setActiveMouseScreen(cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentIndex() != 0));
+    setActiveMouseScreen(cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, m_ui->focusCombo->currentIndex() != 0));
 
 //    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
     setFocusStealing(cg.readEntry(KWIN_FOCUS_STEALING, 1));
 
-    focusNextToMouse->setChecked(cg.readEntry("NextFocusPrefersMouse", false));
+    m_ui->focusNextToMouse->setChecked(cg.readEntry("NextFocusPrefersMouse", false));
 
     emit KCModule::changed(false);
 }
@@ -451,19 +286,19 @@ void KFocusConfig::save(void)
     if (v < 0) v = 0;
     cg.writeEntry(KWIN_DELAYFOCUS_INTERVAL, v);
 
-    cg.writeEntry(KWIN_AUTORAISE, autoRaiseOn->isChecked());
+    cg.writeEntry(KWIN_AUTORAISE, m_ui->autoRaiseOn->isChecked());
 
-    cg.writeEntry(KWIN_CLICKRAISE, clickRaiseOn->isChecked());
+    cg.writeEntry(KWIN_CLICKRAISE, m_ui->clickRaiseOn->isChecked());
 
-    cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, separateScreenFocus->isChecked());
-    cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, activeMouseScreen->isChecked());
+    cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, m_ui->separateScreenFocus->isChecked());
+    cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, m_ui->activeMouseScreen->isChecked());
 
-    cg.writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
+    cg.writeEntry(KWIN_FOCUS_STEALING, m_ui->focusStealing->currentIndex());
 
-    cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, separateScreenFocus->isChecked());
-    cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, activeMouseScreen->isChecked());
+    cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, m_ui->separateScreenFocus->isChecked());
+    cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, m_ui->activeMouseScreen->isChecked());
 
-    cg.writeEntry("NextFocusPrefersMouse", focusNextToMouse->isChecked());
+    cg.writeEntry("NextFocusPrefersMouse", m_ui->focusNextToMouse->isChecked());
 
     if (standAlone) {
         config->sync();
@@ -489,9 +324,9 @@ void KFocusConfig::defaults()
     setFocusStealing(1);
 
     // on by default for non click to focus policies
-    setActiveMouseScreen(focusCombo->currentIndex() != 0);
+    setActiveMouseScreen(m_ui->focusCombo->currentIndex() != 0);
     setDelayFocusEnabled();
-    focusNextToMouse->setChecked(false);
+    m_ui->focusNextToMouse->setChecked(false);
     emit KCModule::changed(true);
 }
 

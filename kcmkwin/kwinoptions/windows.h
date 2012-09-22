@@ -26,6 +26,8 @@
 #include <kcmodule.h>
 #include <config-workspace.h>
 
+#include "ui_focus.h"
+
 class QRadioButton;
 class QCheckBox;
 class QPushButton;
@@ -50,6 +52,15 @@ class KIntNumInput;
 #define  FOCUS_UNDER_MOUSE            2
 #define  FOCUS_STRICTLY_UNDER_MOUSE   3
 
+
+class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
+{
+    Q_OBJECT
+
+public:
+    explicit KWinFocusConfigForm(QWidget* parent);
+};
+
 class KFocusConfig : public KCModule
 {
     Q_OBJECT
@@ -69,7 +80,6 @@ private slots:
     void focusPolicyChanged();
     void autoRaiseOnTog(bool);//CT 23Oct1998
     void delayFocusOnTog(bool);
-    void clickRaiseOnTog(bool);
     void updateActiveMouseScreen();
     void changed() {
         emit KCModule::changed(true);
@@ -91,24 +101,11 @@ private:
     void setActiveMouseScreen(bool);
 
     void setFocusStealing(int);
-    KComboBox* focusStealing;
-
-    //QGroupBox *fcsBox;
-    QWidget* fcsBox;
-    KComboBox *focusCombo;
-    QLabel *autoRaiseOnLabel;
-    QCheckBox *autoRaiseOn;
-    QLabel *delayFocusOnLabel;
-    QCheckBox *clickRaiseOn;
-    KIntNumInput *autoRaise;
-    KIntNumInput *delayFocus;
-    QCheckBox *separateScreenFocus;
-    QCheckBox *activeMouseScreen;
-    QWidget *focusNextToMouseContainer;
-    QCheckBox *focusNextToMouse;
 
     KConfig *config;
     bool     standAlone;
+
+    KWinFocusConfigForm *m_ui;
 };
 
 class KMovingConfig : public KCModule

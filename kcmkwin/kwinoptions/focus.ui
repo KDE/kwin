@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWinFocusConfigForm</class>
+ <widget class="QWidget" name="KWinFocusConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>470</width>
+    <height>224</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="1">
+    <widget class="KComboBox" name="focusCombo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>The focus policy is used to determine the active window, i.e. the window you can work in. &lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Click to focus:&lt;/em&gt; A window becomes active when you click into it. This is the behavior you might know from other operating systems.&lt;/li&gt; &lt;li&gt;&lt;em&gt;Focus follows mouse:&lt;/em&gt; Moving the mouse pointer actively on to a normal window activates it. New windows will receive the focus, without you having to point the mouse at them explicitly. Very practical if you are using the mouse a lot.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Focus under mouse:&lt;/em&gt; The window that happens to be under the mouse pointer is active. If the mouse points nowhere, the last window that was under the mouse has focus. New windows will not automatically receive the focus.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Focus strictly under mouse:&lt;/em&gt; Only the window under the mouse pointer is active. If the mouse points nowhere, nothing has focus.&lt;/li&gt;
+&lt;/ul&gt;
+Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent certain features such as the Alt+Tab walk through windows dialog in the KDE mode from working properly.</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Click to Focus</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Focus Follows Mouse</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Focus Under Mouse</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Focus Strictly Under Mouse</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="delayFocusOnLabel">
+     <property name="text">
+      <string>&amp;Delay focus by:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>delayFocus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="KIntNumInput" name="delayFocus">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>This is the delay after which the window the mouse pointer is over will automatically receive focus.</string>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>3000</number>
+     </property>
+     <property name="singleStep">
+      <number>100</number>
+     </property>
+     <property name="suffix">
+      <string> ms</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="separateScreenFocus">
+     <property name="whatsThis">
+      <string>When this option is enabled, focus operations are limited only to the active Xinerama screen</string>
+     </property>
+     <property name="text">
+      <string>S&amp;eparate screen focus</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="autoRaiseOn">
+     <property name="whatsThis">
+      <string>When this option is enabled, a window in the background will automatically come to the front when the mouse pointer has been over it for some time.</string>
+     </property>
+     <property name="text">
+      <string>&amp;Raise, with the following delay:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QCheckBox" name="activeMouseScreen">
+     <property name="whatsThis">
+      <string>When this option is enabled, the active Xinerama screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the screen containing the focused window. By default this option is disabled for Click to focus and enabled for other focus policies.</string>
+     </property>
+     <property name="text">
+      <string>Active screen follows &amp;mouse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QCheckBox" name="focusNextToMouse">
+     <property name="text">
+      <string>&amp;When the active window disappears, pass focus to window under mouse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Focus &amp;stealing prevention level:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>focusStealing</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&amp;Policy:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>focusCombo</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="KComboBox" name="focusStealing">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>&lt;p&gt;This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;None:&lt;/em&gt; Prevention is turned off and new windows always become activated.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Low:&lt;/em&gt; Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Medium:&lt;/em&gt; Prevention is enabled.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;High:&lt;/em&gt; New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Extreme:&lt;/em&gt; All windows must be explicitly activated by the user.&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.&lt;/p&gt;</string>
+     </property>
+     <item>
+      <property name="text">
+       <string extracomment="Focus Stealing Prevention Level">None</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="Focus Stealing Prevention Level">Low</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="Focus Stealing Prevention Level">Medium</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="Focus Stealing Prevention Level">High</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="Focus Stealing Prevention Level">Extreme</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QCheckBox" name="clickRaiseOn">
+     <property name="whatsThis">
+      <string>When this option is enabled, the active window will be brought to the front when you click somewhere into the window contents. To change it for inactive windows, you need to change the settings in the Actions tab.</string>
+     </property>
+     <property name="text">
+      <string>C&amp;lick raises active window</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="KIntNumInput" name="autoRaise">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>This is the delay after which the window that the mouse pointer is over will automatically come to the front.</string>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>3000</number>
+     </property>
+     <property name="singleStep">
+      <number>100</number>
+     </property>
+     <property name="suffix">
+      <string> ms</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntNumInput</class>
+   <extends>QWidget</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>focusCombo</tabstop>
+  <tabstop>focusStealing</tabstop>
+  <tabstop>autoRaiseOn</tabstop>
+  <tabstop>autoRaise</tabstop>
+  <tabstop>delayFocus</tabstop>
+  <tabstop>focusNextToMouse</tabstop>
+  <tabstop>clickRaiseOn</tabstop>
+  <tabstop>separateScreenFocus</tabstop>
+  <tabstop>activeMouseScreen</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
