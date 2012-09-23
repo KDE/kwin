@@ -255,7 +255,6 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-
 int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame

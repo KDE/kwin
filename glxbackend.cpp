@@ -45,7 +45,6 @@ GlxBackend::GlxBackend()
     init();
 }
 
-
 GlxBackend::~GlxBackend()
 {
     // TODO: cleanup in error case
