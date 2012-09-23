@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "windowgeometry.h"
+// KConfigSkeleton
+#include "windowgeometryconfig.h"
+
 #include <QStringBuilder>
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
@@ -73,9 +76,9 @@ WindowGeometry::~WindowGeometry()
 
 void WindowGeometry::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("WindowGeometry");
-    iHandleMoves = conf.readEntry("Move", true);
-    iHandleResizes = conf.readEntry("Resize", true);
+    WindowGeometryConfiguration::self()->readConfig();
+    iHandleMoves = WindowGeometryConfiguration::move();
+    iHandleResizes = WindowGeometryConfiguration::resize();
 }
 
 void WindowGeometry::paintScreen(int mask, QRegion region, ScreenPaintData &data)

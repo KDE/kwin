@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::MagnifierEffectConfigForm</class>
- <widget class="QWidget" name="KWin::MagnifierEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::MagnifierEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,73 +10,73 @@
     <height>181</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="groupSize" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupSize">
+     <property name="title">
       <string>Size</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
          <string>&amp;Width:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>spinWidth</cstring>
+        <property name="buddy">
+         <cstring>kcfg_Width</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="KIntSpinBox" name="spinWidth" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="0" column="1">
+       <widget class="KIntSpinBox" name="kcfg_Width">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="suffix" >
+        <property name="suffix">
          <string> px</string>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>9999</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
          <string>&amp;Height:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
-         <cstring>spinHeight</cstring>
+        <property name="buddy">
+         <cstring>kcfg_Height</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="KIntSpinBox" name="spinHeight" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="1" column="1">
+       <widget class="KIntSpinBox" name="kcfg_Height">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="suffix" >
+        <property name="suffix">
          <string> px</string>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>9999</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>10</number>
         </property>
        </widget>
@@ -84,7 +85,7 @@
     </widget>
    </item>
    <item>
-    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
+    <widget class="KWin::GlobalShortcutsEditor" name="editor" native="true"/>
    </item>
   </layout>
  </widget>
@@ -97,7 +98,7 @@
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global" >kwineffects.h</header>
+   <header location="global">kwineffects.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

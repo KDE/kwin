@@ -45,7 +45,6 @@ public:
 
 public slots:
     void save();
-    void load();
     void defaults();
 
 private:

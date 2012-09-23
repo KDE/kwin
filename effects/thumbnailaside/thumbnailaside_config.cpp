@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "thumbnailaside_config.h"
+// KConfigSkeleton
+#include "thumbnailasideconfig.h"
 
 #include <kwineffects.h>
 
@@ -52,9 +54,8 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     layout->addWidget(m_ui);
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
-    connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->spinSpacing, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->spinOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+
+    addConfig(ThumbnailAsideConfig::self(), this);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
@@ -69,6 +70,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     m_ui->editor->addCollection(m_actionCollection);
 
+    load();
 }
 
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
@@ -77,55 +79,11 @@ ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
     m_ui->editor->undoChanges();
 }
 
-void ThumbnailAsideEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
-
-    int width = conf.readEntry("MaxWidth", 200);
-    int spacing = conf.readEntry("Spacing", 10);
-    int opacity = conf.readEntry("Opacity", 50);
-    m_ui->spinWidth->setValue(width);
-    m_ui->spinWidth->setSuffix(ki18np(" pixel", " pixels"));
-    m_ui->spinSpacing->setValue(spacing);
-    m_ui->spinSpacing->setSuffix(ki18np(" pixel", " pixels"));
-    m_ui->spinOpacity->setValue(opacity);
-
-    emit changed(false);
-}
-
 void ThumbnailAsideEffectConfig::save()
 {
-    kDebug(1212) << "Saving config of ThumbnailAside" ;
-    //KCModule::save();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
-
-    conf.writeEntry("MaxWidth", m_ui->spinWidth->value());
-    conf.writeEntry("Spacing", m_ui->spinSpacing->value());
-    conf.writeEntry("Opacity", m_ui->spinOpacity->value());
-
-    m_actionCollection->writeSettings();
-    m_ui->editor->save();   // undo() will restore to this state from now on
-
-    conf.sync();
-
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("thumbnailaside");
 }
-
-void ThumbnailAsideEffectConfig::defaults()
-{
-    m_ui->spinWidth->setValue(200);
-    m_ui->spinSpacing->setValue(10);
-    m_ui->spinOpacity->setValue(50);
-    m_ui->editor->allDefault();
-    emit changed(true);
-
-
-}
-
 
 } // namespace
 

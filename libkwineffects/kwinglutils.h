@@ -359,6 +359,15 @@ public:
      * @return a pointer to the ShaderManager instance
      **/
     static ShaderManager *instance();
+    /**
+     * @brief Ensures that the ShaderManager is disabled.
+     *
+     * Used only by an OpenGL 1 Scene which does not use OpenGL 2 Shaders.
+     *
+     * @internal
+     * @since 4.10
+     **/
+    static void disable();
 
     /**
      * @internal

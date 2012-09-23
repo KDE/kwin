@@ -85,6 +85,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(position, set);
     SETUP(size, set);
     SETUP(desktop, set);
+    SETUP(screen, set);
     SETUP(activity, set);
     SETUP(maximizehoriz, set);
     SETUP(maximizevert, set);
@@ -152,6 +153,7 @@ RulesWidget::RulesWidget(QWidget* parent)
 UPDATE_ENABLE_SLOT(position)
 UPDATE_ENABLE_SLOT(size)
 UPDATE_ENABLE_SLOT(desktop)
+UPDATE_ENABLE_SLOT(screen)
 UPDATE_ENABLE_SLOT(activity)
 UPDATE_ENABLE_SLOT(maximizehoriz)
 UPDATE_ENABLE_SLOT(maximizevert)
@@ -403,6 +405,7 @@ static NET::WindowType comboToType(int val)
 #define CHECKBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setChecked, setChecked( false ))
 #define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setText, setText( "" ))
 #define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setCurrentIndex, setCurrentIndex( 0 ))
+#define SPINBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setValue, setValue(0))
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setChecked, setChecked( false ))
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setText, setText( "" ))
 #define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setCurrentIndex, setCurrentIndex( 0 ))
@@ -440,6 +443,7 @@ void RulesWidget::setRules(Rules* rules)
     LINEEDIT_SET_RULE(position, positionToStr);
     LINEEDIT_SET_RULE(size, sizeToStr);
     COMBOBOX_SET_RULE(desktop, desktopToCombo);
+    SPINBOX_SET_RULE(screen, inc);
     COMBOBOX_SET_RULE(activity, activityToCombo);
     CHECKBOX_SET_RULE(maximizehoriz,);
     CHECKBOX_SET_RULE(maximizevert,);
@@ -475,6 +479,7 @@ void RulesWidget::setRules(Rules* rules)
 #undef CHECKBOX_SET_RULE
 #undef LINEEDIT_SET_RULE
 #undef COMBOBOX_SET_RULE
+#undef SPINBOX_SET_RULE
 #undef CHECKBOX_FORCE_RULE
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE
@@ -492,6 +497,7 @@ void RulesWidget::setRules(Rules* rules)
 #define CHECKBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, isChecked )
 #define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, text )
 #define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, currentIndex )
+#define SPINBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, value)
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, isChecked )
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, text )
 #define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, currentIndex )
@@ -534,6 +540,7 @@ Rules* RulesWidget::rules() const
     LINEEDIT_SET_RULE(position, strToPosition);
     LINEEDIT_SET_RULE(size, strToSize);
     COMBOBOX_SET_RULE(desktop, comboToDesktop);
+    SPINBOX_SET_RULE(screen, dec);
     COMBOBOX_SET_RULE(activity, comboToActivity);
     CHECKBOX_SET_RULE(maximizehoriz,);
     CHECKBOX_SET_RULE(maximizevert,);
@@ -570,6 +577,7 @@ Rules* RulesWidget::rules() const
 #undef CHECKBOX_SET_RULE
 #undef LINEEDIT_SET_RULE
 #undef COMBOBOX_SET_RULE
+#undef SPINBOX_SET_RULE
 #undef CHECKBOX_FORCE_RULE
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE

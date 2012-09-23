@@ -2607,7 +2607,6 @@ static ElectricBorder electricBorderFromMode(QuickTileMode mode)
 void Client::finishMoveResize(bool cancel)
 {
     const bool wasResize = isResize(); // store across leaveMoveResize
-    const bool wasMove = isMove();
     leaveMoveResize();
 
     if (cancel)
@@ -2623,8 +2622,12 @@ void Client::finishMoveResize(bool cancel)
         }
         setGeometry(moveResizeGeom);
     }
-    if (screen() != moveResizeStartScreen && maximizeMode() != MaximizeRestore)
-        checkWorkspacePosition();
+    const int newScreen = screen();
+    if (newScreen != moveResizeStartScreen) {
+        workspace()->sendClientToScreen(this, newScreen); // checks rule validity
+        if (maximizeMode() != MaximizeRestore)
+            checkWorkspacePosition();
+    }
 
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricMode);

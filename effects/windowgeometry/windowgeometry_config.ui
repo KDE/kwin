@@ -12,14 +12,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="handleMove">
+    <widget class="QCheckBox" name="kcfg_Move">
      <property name="text">
       <string>Display for moving windows</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="handleResize">
+    <widget class="QCheckBox" name="kcfg_Resize">
      <property name="text">
       <string>Display for resizing windows</string>
      </property>

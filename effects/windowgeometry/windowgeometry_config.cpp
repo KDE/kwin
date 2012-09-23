@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "windowgeometry_config.h"
+// KConfigSkeleton
+#include "windowgeometryconfig.h"
+
 #include <kwineffects.h>
 #include <KActionCollection>
 #include <kaction.h>
@@ -50,8 +53,9 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
     myUi->shortcuts->addCollection(myActionCollection);
     connect(myUi->shortcuts,    SIGNAL(keyChange()), this, SLOT(changed()));
 
-    connect(myUi->handleMove,   SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(myUi->handleResize, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    addConfig(WindowGeometryConfiguration::self(), myUi);
+
+    load();
 }
 
 WindowGeometryConfig::~WindowGeometryConfig()
@@ -60,32 +64,18 @@ WindowGeometryConfig::~WindowGeometryConfig()
     myUi->shortcuts->undoChanges();
 }
 
-void WindowGeometryConfig::load()
-{
-    KCModule::load();
-    KConfigGroup conf = EffectsHandler::effectConfig("WindowGeometry");
-    myUi->handleMove->setChecked(conf.readEntry("Move", true));
-    myUi->handleResize->setChecked(conf.readEntry("Resize", true));
-    emit changed(false);
-}
-
 void WindowGeometryConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("WindowGeometry");
-    conf.writeEntry("Move",   myUi->handleMove->isChecked());
-    conf.writeEntry("Resize", myUi->handleResize->isChecked());
+    KCModule::save();
     myUi->shortcuts->save();   // undo() will restore to this state from now on
-    conf.sync();
-    emit changed(false);
     EffectsHandler::sendReloadMessage("windowgeometry");
 }
 
 void WindowGeometryConfig::defaults()
 {
-    myUi->handleMove->setChecked(true);
-    myUi->handleResize->setChecked(true);
     myUi->shortcuts->allDefault();
     emit changed(true);
 }
+
 } //namespace
 #include "windowgeometry_config.moc"

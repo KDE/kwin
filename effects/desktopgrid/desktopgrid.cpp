@@ -379,7 +379,7 @@ void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
     if (!activated)
         return;
     if (isUsingPresentWindows()) {
-        if (w->isDesktop() || w->isDock() || !w->isCurrentTab())
+        if (!isRelevantWithPresentWindows(w))
             return; // don't add
         if (w->isOnAllDesktops()) {
             for (int i = 0; i < effects->numberOfDesktops(); i++) {
@@ -1101,8 +1101,7 @@ void DesktopGridEffect::setup()
             for (int j = 0; j < effects->numScreens(); j++) {
                 WindowMotionManager manager;
                 foreach (EffectWindow * w, effects->stackingOrder()) {
-                    if (w->isOnDesktop(i) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                            w->isCurrentTab() && !w->isSkipSwitcher() && w->isOnCurrentActivity()) {
+                    if (w->isOnDesktop(i) && w->screen() == j &&isRelevantWithPresentWindows(w)) {
                         manager.manage(w);
                     }
                 }
@@ -1313,12 +1312,11 @@ void DesktopGridEffect::desktopsAdded(int old)
     }
 
     if (isUsingPresentWindows()) {
-        for (int i = old; i <= effects->numberOfDesktops(); i++) {
-            for (int j = 0; j < effects->numScreens(); j++) {
+        for (int i = old+1; i <= effects->numberOfDesktops(); ++i) {
+            for (int j = 0; j < effects->numScreens(); ++j) {
                 WindowMotionManager manager;
                 foreach (EffectWindow * w, effects->stackingOrder()) {
-                    if (w->isOnDesktop(i) && w->screen() == j && !w->isDesktop() && !w->isDock() &&
-                            w->isCurrentTab()) {
+                    if (w->isOnDesktop(i) && w->screen() == j &&isRelevantWithPresentWindows(w)) {
                         manager.manage(w);
                     }
                 }
@@ -1356,8 +1354,9 @@ void DesktopGridEffect::desktopsRemoved(int old)
         for (int j = 0; j < effects->numScreens(); ++j) {
             WindowMotionManager& manager = m_managers[(desktop-1)*(effects->numScreens())+j ];
             foreach (EffectWindow * w, effects->stackingOrder()) {
-                if (!manager.isManaging(w) && w->isOnDesktop(desktop) && w->screen() == j &&
-                        !w->isDesktop() && !w->isDock() && w->isCurrentTab()) {
+                if (manager.isManaging(w))
+                    continue;
+                if (w->isOnDesktop(desktop) && w->screen() == j && isRelevantWithPresentWindows(w)) {
                     manager.manage(w);
                 }
             }
@@ -1374,6 +1373,12 @@ void DesktopGridEffect::desktopsRemoved(int old)
 bool DesktopGridEffect::isActive() const
 {
     return timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows());
+}
+
+bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
+{
+    return !(w->isDesktop() || w->isDock() || w->isSkipSwitcher()) &&
+            w->isCurrentTab() && w->isOnCurrentActivity();
 }
 
 /************************************************

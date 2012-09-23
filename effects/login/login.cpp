@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "login.h"
 
+// KConfigSkeleton
+#include "loginconfig.h"
+
 #include <kdebug.h>
 
 #include <KDE/KConfigGroup>
@@ -89,8 +92,8 @@ void LoginEffect::postPaintScreen()
 
 void LoginEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Login");
-    m_fadeToBlack = (conf.readEntry("FadeToBlack", false));
+    LoginConfig::self()->readConfig();
+    m_fadeToBlack = LoginConfig::fadeToBlack();
 }
 
 void LoginEffect::slotWindowClosed(EffectWindow* w)

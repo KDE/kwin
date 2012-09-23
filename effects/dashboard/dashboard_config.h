@@ -35,8 +35,6 @@ public:
     ~DashboardEffectConfig();
 
     void save();
-    void load();
-    void defaults();
 
 private:
     bool isBlurEffectAvailable();

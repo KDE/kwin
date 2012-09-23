@@ -62,7 +62,6 @@ static int eglVersion;
 static QStringList glExtensions;
 static QStringList glxExtensions;
 static QStringList eglExtension;
-static bool legacyGl;
 
 int glTextureUnitsCount;
 
@@ -103,11 +102,7 @@ void initGL()
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
     while (glversioninfo.count() < 3)
         glversioninfo << "0";
-#ifdef KWIN_HAVE_OPENGLES
-    legacyGl = false;
-#else
-    KConfigGroup config(KGlobal::config(), "Compositing");
-    legacyGl = config.readEntry<bool>("GLLegacy", false);
+#ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 #endif
     // Get list of supported OpenGL extensions
@@ -640,6 +635,16 @@ ShaderManager *ShaderManager::instance()
     return s_shaderManager;
 }
 
+void ShaderManager::disable()
+{
+    // for safety do a Cleanup first
+    ShaderManager::cleanup();
+    // create a new ShaderManager and set it to inited without calling init
+    // that will ensure that the ShaderManager is not valid
+    s_shaderManager = new ShaderManager();
+    s_shaderManager->m_inited = true;
+}
+
 void ShaderManager::cleanup()
 {
     delete s_shaderManager;
@@ -810,10 +815,6 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 
 void ShaderManager::initShaders()
 {
-    if (legacyGl) {
-        kDebug(1212) << "OpenGL Shaders disabled by config option";
-        return;
-    }
     m_orthoShader = new GLShader(":/resources/scene-vertex.glsl", ":/resources/scene-fragment.glsl");
     if (m_orthoShader->isValid()) {
         pushShader(SimpleShader, true);

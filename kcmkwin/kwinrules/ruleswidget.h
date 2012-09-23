@@ -57,6 +57,7 @@ private slots:
     void updateEnableposition();
     void updateEnablesize();
     void updateEnabledesktop();
+    void updateEnablescreen();
     void updateEnableactivity();
     void updateEnablemaximizehoriz();
     void updateEnablemaximizevert();
@@ -96,6 +97,8 @@ private:
     int activityToCombo(QString d) const;
     QString comboToActivity(int val) const;
     int comboToTiling(int val) const;
+    int inc(int i) const { return i+1; }
+    int dec(int i) const { return i-1; }
     void prefillUnusedValues(const KWindowInfo& info);
     DetectDialog* detect_dlg;
     bool detect_dlg_ok;

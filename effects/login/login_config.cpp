@@ -19,6 +19,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "login_config.h"
+
+// KConfigSkeleton
+#include "loginconfig.h"
+
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
@@ -44,36 +48,15 @@ LoginEffectConfig::LoginEffectConfig(QWidget* parent, const QVariantList& args) 
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->fadetoblackBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    addConfig(LoginConfig::self(), m_ui);
 
     load();
 }
 
-void LoginEffectConfig::load()
-{
-    KCModule::load();
-
-    KConfigGroup conf = EffectsHandler::effectConfig("Login");
-    m_ui->fadetoblackBox->setChecked(conf.readEntry<bool>("FadeToBlack", false));
-
-    emit changed(false);
-}
-
 void LoginEffectConfig::save()
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("Login");
-    conf.writeEntry("FadeToBlack", m_ui->fadetoblackBox->isChecked());
-
-    conf.sync();
-
-    emit changed(false);
+    KCModule::save();
     EffectsHandler::sendReloadMessage("login");
-}
-
-void LoginEffectConfig::defaults()
-{
-    m_ui->fadetoblackBox->setChecked(true);
-    emit changed(true);
 }
 
 } // namespace

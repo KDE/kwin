@@ -21,12 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "magnifier.h"
+// KConfigSkeleton
+#include "magnifierconfig.h"
 
 #include <kwinconfig.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kconfiggroup.h>
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
@@ -82,13 +83,13 @@ bool MagnifierEffect::supported()
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
+    MagnifierConfig::self()->readConfig();
     int width, height;
-    width = conf.readEntry("Width", 200);
-    height = conf.readEntry("Height", 200);
+    width = MagnifierConfig::width();
+    height = MagnifierConfig::height();
     magnifier_size = QSize(width, height);
     // Load the saved zoom value.
-    target_zoom = conf.readEntry("InitialZoom", target_zoom);
+    target_zoom = MagnifierConfig::initialZoom();
     if (target_zoom != zoom)
         toggle();
 }

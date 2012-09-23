@@ -1,0 +1,5 @@
+File=windowgeometry.kcfg
+ClassName=WindowGeometryConfiguration
+NameSpace=KWin
+Singleton=true
+Mutators=true

@@ -89,6 +89,7 @@ ScreenPaintData SceneXrender::screen_paint;
 SceneXrender::SceneXrender(Workspace* ws)
     : Scene(ws)
     , front(None)
+    , m_overlayWindow(new OverlayWindow())
     , init_ok(false)
 {
     if (!Extensions::renderAvailable()) {
@@ -115,6 +116,7 @@ SceneXrender::~SceneXrender()
     m_overlayWindow->destroy();
     foreach (Window * w, windows)
     delete w;
+    delete m_overlayWindow;
 }
 
 void SceneXrender::initXRender(bool createOverlay)
