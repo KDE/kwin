@@ -108,8 +108,6 @@ private Q_SLOTS:
     void slotColorCorrectedChanged();
 
 private:
-    void initColorCorrection();
-    void uninitColorCorrection();
     void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 
 private:

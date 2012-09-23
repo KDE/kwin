@@ -429,9 +429,13 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 
 SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     : SceneOpenGL(Workspace::self(), backend)
-    , m_colorCorrection(NULL)
+    , m_colorCorrection(new ColorCorrection(this))
 {
-    initColorCorrection();  // NOTE is this the right place?
+    // Initialize color correction before the shaders
+    kDebug(1212) << "Color correction:" << options->isColorCorrected();
+    m_colorCorrection->setEnabled(options->isColorCorrected());
+    connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
+    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()));
 
     if (!ShaderManager::instance()->isValid()) {
         kDebug(1212) << "No Scene Shaders available";
@@ -451,7 +455,6 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
 
 SceneOpenGL2::~SceneOpenGL2()
 {
-    uninitColorCorrection();
 }
 
 void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
@@ -523,15 +526,6 @@ ColorCorrection *SceneOpenGL2::colorCorrection()
     return m_colorCorrection;
 }
 
-void SceneOpenGL2::initColorCorrection()
-{
-    kDebug(1212) << "Color correction:" << options->isColorCorrected();
-    m_colorCorrection = new ColorCorrection(this);
-    m_colorCorrection->setEnabled(options->isColorCorrected());
-    connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
-    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()));
-}
-
 void SceneOpenGL2::slotColorCorrectedChanged()
 {
     m_colorCorrection->setEnabled(options->isColorCorrected());
@@ -539,12 +533,6 @@ void SceneOpenGL2::slotColorCorrectedChanged()
     // Reload all shaders
     ShaderManager::cleanup();
     ShaderManager::instance();
-}
-
-void SceneOpenGL2::uninitColorCorrection()
-{
-    kDebug(1212);
-    disconnect(options, SIGNAL(colorCorrectedChanged()), Compositor::self(), SLOT(slotReinitialize()));
 }
 
 //****************************************
