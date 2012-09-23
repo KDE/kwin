@@ -919,5 +919,14 @@ bool GLPlatform::isLooseBinding() const
     return m_looseBinding;
 }
 
+bool GLPlatform::isGLES() const
+{
+#ifdef KWIN_HAVE_OPENGLES
+    return true;
+#else
+    return false;
+#endif
+}
+
 } // namespace KWin
 

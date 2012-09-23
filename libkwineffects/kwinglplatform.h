@@ -272,6 +272,10 @@ public:
      * @since 4.9
      **/
     bool isLooseBinding() const;
+    /**
+     * @returns Whether OpenGL ES is used
+     */
+    bool isGLES() const;
 
     /**
      * @returns a human readable form of the @p version.

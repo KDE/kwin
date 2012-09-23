@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglcolorcorrection.h"
 #include "kwinglcolorcorrection_p.h"
 
+#include "kwinglplatform.h"
 #include "kwinglutils.h"
 
 #include <KDebug>
@@ -32,6 +33,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusPendingCallWatcher>
 #include <QPair>
 #include <QVector3D>
+
+#ifdef KWIN_HAVE_OPENGLES
+#define CC_TEXTURE_INTERNAL_FORMAT GL_RGB
+
+/*
+ * A bit of ugliness to allow building with OpenGL ES < 3, without
+ * ifdef's everywhere in the code. These should not actually be used anywhere.
+ */
+#ifndef GL_TEXTURE_3D
+#define GL_TEXTURE_3D              0x806F    // From OES_texture_3D extension
+#define GL_TEXTURE_WRAP_R          0x8072    // From OES_texture_3D extension
+void glTexImage3D(GLenum, int, GLenum, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const void *)
+{
+    Q_ASSERT(false); // Execution must not reach here
+}
+#endif // defined(GL_TEXTURE_3D)
+
+#else  // KWIN_HAVE_OPENGLES
+#define CC_TEXTURE_INTERNAL_FORMAT GL_RGB16
+#endif // KWIN_HAVE_OPENGLES
 
 
 namespace KWin {
@@ -275,19 +296,18 @@ void ColorCorrection::setEnabled(bool enabled)
         return;
     }
 
-#ifdef KWIN_HAVE_OPENGLES
-    if (enabled) {
-        kWarning(1212) << "color correction is not supported with OpenGL ES at the moment.";
+    const GLPlatform *gl = GLPlatform::instance();
+    if (enabled && gl->isGLES() && (gl->glVersion() >> 32) < 3) {
+        kError(1212) << "color correction is not supported with OpenGL ES < 3.0";
         return;
     }
-#else
+
     if (enabled) {
         // Update all profiles and regions
         d->m_csi->update();
     } else {
         d->deleteCCTextures();
     }
-#endif
 
     d->m_enabled = enabled;
     GLShader::sColorCorrect = enabled;
@@ -311,7 +331,6 @@ void ColorCorrection::setupForOutput(int screen)
         kError(1212) << "unable to set uniform for the color correction lookup texture";
     }
 
-#ifndef KWIN_HAVE_OPENGLES
     d->setupCCTextures();
 
     GLint activeTexture;
@@ -328,9 +347,6 @@ void ColorCorrection::setupForOutput(int screen)
     }
 
     glActiveTexture(activeTexture);
-#else
-    Q_UNUSED(screen);
-#endif // KWIN_HAVE_OPENGLES
 
     checkGLError("setupForOutput");
 
@@ -573,7 +589,6 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
 
     kDebug(1212) << texture;
 
-#ifndef KWIN_HAVE_OPENGLES
     glBindTexture(GL_TEXTURE_3D, texture);
 
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -582,15 +597,12 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB16,
+    glTexImage3D(GL_TEXTURE_3D, 0, CC_TEXTURE_INTERNAL_FORMAT,
                  LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
                  0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
 
 
     checkGLError("setupCCTexture");
-#else
-    Q_UNUSED(texture);
-#endif // KWIN_HAVE_OPENGLES
 }
 
 void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
