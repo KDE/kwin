@@ -26,6 +26,7 @@
 #include <kcmodule.h>
 #include <config-workspace.h>
 
+#include "ui_advanced.h"
 #include "ui_focus.h"
 #include "ui_moving.h"
 
@@ -68,6 +69,14 @@ class KWinMovingConfigForm : public QWidget, public Ui::KWinMovingConfigForm
 
 public:
     explicit KWinMovingConfigForm(QWidget* parent);
+};
+
+class KWinAdvancedConfigForm : public QWidget, public Ui::KWinAdvancedConfigForm
+{
+    Q_OBJECT
+
+public:
+    explicit KWinAdvancedConfigForm(QWidget* parent);
 };
 
 class KFocusConfig : public KCModule
@@ -182,28 +191,14 @@ private:
     void setShadeHover(bool);
     void setShadeHoverInterval(int);
 
-    KButtonGroup *shBox;
-    KButtonGroup *wtBox;
-    QCheckBox *shadeHoverOn;
-    QLabel *shadeHoverLabel;
-    KIntNumInput *shadeHover;
-
     KConfig *config;
     bool     standAlone;
+    KWinAdvancedConfigForm *m_ui;
 
     void setHideUtilityWindowsForInactive(bool);
-    QCheckBox* hideUtilityWindowsForInactive;
-
     void setInactiveTabsSkipTaskbar(bool);
-    QCheckBox* inactiveTabsSkipTaskbar;
-
     void setAutogroupSimilarWindows(bool);
-    QCheckBox* autogroupSimilarWindows;
-
     void setAutogroupInForeground(bool);
-    QCheckBox* autogroupInForeground;
-
-    KComboBox *placementCombo;
 };
 
 #endif // KKWMWINDOWS_H

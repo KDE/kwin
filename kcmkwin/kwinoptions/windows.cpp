@@ -330,6 +330,12 @@ void KFocusConfig::defaults()
     emit KCModule::changed(true);
 }
 
+KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
+
 KAdvancedConfig::~KAdvancedConfig()
 {
     if (standAlone)
@@ -338,167 +344,51 @@ KAdvancedConfig::~KAdvancedConfig()
 
 KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+    , m_ui(new KWinAdvancedConfigForm(this))
 {
-    QString wtstr;
-    QLabel *label;
-    QVBoxLayout *lay = new QVBoxLayout(this);
+    m_ui->placementCombo->setItemData(0, "Smart");
+    m_ui->placementCombo->setItemData(1, "Maximizing");
+    m_ui->placementCombo->setItemData(2, "Cascade");
+    m_ui->placementCombo->setItemData(3, "Random");
+    m_ui->placementCombo->setItemData(4, "Centered");
+    m_ui->placementCombo->setItemData(5, "ZeroCornered");
+    m_ui->placementCombo->setItemData(6, "UnderMouse");
 
-    //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
-    //                         "(% of desktop space)"),
-    //             plcBox);
-    //iTLabel->setAlignment(AlignTop|AlignHCenter);
-    //pLay->addWidget(iTLabel,1,1);
-
-    //interactiveTrigger = new QSpinBox(0, 500, 1, plcBox);
-    //pLay->addWidget(interactiveTrigger,1,2);
-
-    //pLay->addRowSpacing(2,KDialog::spacingHint());
-
-    //lay->addWidget(plcBox);
-
-    shBox = new KButtonGroup(this);
-    shBox->setTitle(i18n("Shading"));
-    QGridLayout *kLay = new QGridLayout(shBox);
-
-    shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
-
-    connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
-    kLay->addWidget(shadeHoverOn, 0, 0, 1, 2);
-
-    shadeHover = new KIntNumInput(500, shBox);
-    shadeHover->setRange(0, 3000, 100);
-    shadeHover->setSteps(100, 100);
-    shadeHover->setSuffix(i18n(" ms"));
-
-    shadeHoverOn->setWhatsThis(i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
-                                    "when the mouse pointer has been over the title bar for some time."));
-
-    wtstr = i18n("Sets the time in milliseconds before the window unshades "
-                 "when the mouse pointer goes over the shaded window.");
-    shadeHover->setWhatsThis(wtstr);
-    shadeHover->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    shadeHoverLabel = new QLabel(i18n("Dela&y:"), this);
-    shadeHoverLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    shadeHoverLabel->setBuddy(shadeHover);
-    kLay->addWidget(shadeHoverLabel, 1, 0);
-    kLay->addWidget(shadeHover, 1, 1);
-
-    lay->addWidget(shBox);
-
-    //----------------
-    // Window tabbing
-
-    wtBox = new KButtonGroup(this);
-    wtBox->setTitle(i18n("Window Tabbing"));
-    QVBoxLayout *wtLay = new QVBoxLayout(wtBox);
-
-    inactiveTabsSkipTaskbar = new QCheckBox(i18n("Hide inactive window tabs from the taskbar"), this);
-    inactiveTabsSkipTaskbar->setVisible(false);   // TODO: We want translations in case this is fixed...
-    inactiveTabsSkipTaskbar->setWhatsThis(
-        i18n("When turned on hide all tabs that are not active from the taskbar."));
-    connect(inactiveTabsSkipTaskbar, SIGNAL(toggled(bool)), SLOT(changed()));
-    wtLay->addWidget(inactiveTabsSkipTaskbar);
-
-    autogroupSimilarWindows = new QCheckBox(i18n("Automatically group similar windows"), this);
-    autogroupSimilarWindows->setWhatsThis(
-        i18n("When turned on attempt to automatically detect when a newly opened window is related"
-             " to an existing one and place them in the same window group."));
-    connect(autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
-    wtLay->addWidget(autogroupSimilarWindows);
-
-    autogroupInForeground = new QCheckBox(i18n("Switch to automatically grouped windows immediately"), this);
-    autogroupInForeground->setWhatsThis(
-        i18n("When turned on immediately switch to any new window tabs that were automatically added"
-             " to the current group."));
-    connect(autogroupInForeground, SIGNAL(toggled(bool)), SLOT(changed()));
-    wtLay->addWidget(autogroupInForeground);
-
-    lay->addWidget(wtBox);
-
-    //----------------
-
-    // Any changes goes to slotChanged()
-    connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
-
-    QGridLayout *vLay = new QGridLayout();
-    lay->addLayout(vLay);
-
-    placementCombo = new KComboBox(this);
-    placementCombo->setEditable(false);
-    placementCombo->addItem(i18n("Smart"), "Smart");
-    placementCombo->addItem(i18n("Maximizing"), "Maximizing");
-    placementCombo->addItem(i18n("Cascade"), "Cascade");
-    placementCombo->addItem(i18n("Random"), "Random");
-    placementCombo->addItem(i18n("Centered"), "Centered");
-    placementCombo->addItem(i18n("Zero-Cornered"), "ZeroCornered");
-    placementCombo->addItem(i18n("Under Mouse"), "UnderMouse");
-    // CT: disabling is needed as long as functionality misses in kwin
-    //placementCombo->addItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
-    //placementCombo->addItem(i18n("Manual"), MANUAL_PLACEMENT);
-    placementCombo->setCurrentIndex(0); // default to "Smart"
-
-    // FIXME, when more policies have been added to KWin
-    wtstr = i18n("The placement policy determines where a new window"
-                 " will appear on the desktop."
-                 " <ul>"
-                 " <li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
-                 " <li><em>Maximizing</em> will try to maximize every window to fill the whole screen."
-                 " It might be useful to selectively affect placement of some windows using"
-                 " the window-specific settings.</li>"
-                 " <li><em>Cascade</em> will cascade the windows</li>"
-                 " <li><em>Random</em> will use a random position</li>"
-                 " <li><em>Centered</em> will place the window centered</li>"
-                 " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
-                 " <li><em>Under Mouse</em> will place the window under the pointer</li>"
-                 "</ul>") ;
-
-    placementCombo->setWhatsThis(wtstr);
-
-    placementCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("&Placement:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(placementCombo);
-    vLay->addWidget(label, 0, 0);
-    vLay->addWidget(placementCombo, 0, 1);
-
-    connect(placementCombo, SIGNAL(activated(int)), SLOT(changed()));
-
-    hideUtilityWindowsForInactive = new QCheckBox(i18n("Hide utility windows for inactive applications"), this);
-    hideUtilityWindowsForInactive->setWhatsThis(
-        i18n("When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be"
-             " hidden and will be shown only when the application becomes active. Note that applications"
-             " have to mark the windows with the proper window type for this feature to work."));
-    connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
-    vLay->addWidget(hideUtilityWindowsForInactive, 1, 0, 1, 2);
-
-    lay->addStretch();
+    connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
+    connect(m_ui->inactiveTabsSkipTaskbar, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(m_ui->autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(m_ui->autogroupInForeground, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(m_ui->shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->placementCombo, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
+    m_ui->inactiveTabsSkipTaskbar->setVisible(false);   // TODO: We want translations in case this is fixed...
     load();
 
 }
 
 void KAdvancedConfig::setShadeHover(bool on)
 {
-    shadeHoverOn->setChecked(on);
-    shadeHoverLabel->setEnabled(on);
-    shadeHover->setEnabled(on);
+    m_ui->shadeHoverOn->setChecked(on);
+    m_ui->shadeHoverLabel->setEnabled(on);
+    m_ui->shadeHover->setEnabled(on);
 }
 
 void KAdvancedConfig::setShadeHoverInterval(int k)
 {
-    shadeHover->setValue(k);
+    m_ui->shadeHover->setValue(k);
 }
 
 int KAdvancedConfig::getShadeHoverInterval()
 {
 
-    return shadeHover->value();
+    return m_ui->shadeHover->value();
 }
 
 void KAdvancedConfig::shadeHoverChanged(bool a)
 {
-    shadeHoverLabel->setEnabled(a);
-    shadeHover->setEnabled(a);
+    m_ui->shadeHoverLabel->setEnabled(a);
+    m_ui->shadeHover->setEnabled(a);
 }
 
 void KAdvancedConfig::showEvent(QShowEvent *ev)
@@ -518,29 +408,11 @@ void KAdvancedConfig::load(void)
     setShadeHoverInterval(cg.readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
     QString key;
-    // placement policy --- CT 19jan98 ---
     key = cg.readEntry(KWIN_PLACEMENT);
-    //CT 13mar98 interactive placement
-//   if ( key.left(11) == "interactive") {
-//     setPlacement(INTERACTIVE_PLACEMENT);
-//     int comma_pos = key.find(',');
-//     if (comma_pos < 0)
-//       interactiveTrigger->setValue(0);
-//     else
-//       interactiveTrigger->setValue (key.right(key.length()
-//                           - comma_pos).toUInt(0));
-//     iTLabel->setEnabled(true);
-//     interactiveTrigger->show();
-//   }
-//   else {
-//     interactiveTrigger->setValue(0);
-//     iTLabel->setEnabled(false);
-//     interactiveTrigger->hide();
-    int idx = placementCombo->findData(key);
+    int idx = m_ui->placementCombo->findData(key);
     if (idx < 0)
-        idx = placementCombo->findData("Smart");
-    placementCombo->setCurrentIndex(idx);
-//  }
+        idx = m_ui->placementCombo->findData("Smart");
+    m_ui->placementCombo->setCurrentIndex(idx);
 
     setHideUtilityWindowsForInactive(cg.readEntry(KWIN_HIDE_UTILITY, true));
     setInactiveTabsSkipTaskbar(cg.readEntry(KWIN_INACTIVE_SKIP_TASKBAR, false));
@@ -555,26 +427,18 @@ void KAdvancedConfig::save(void)
     int v;
 
     KConfigGroup cg(config, "Windows");
-    cg.writeEntry(KWIN_SHADEHOVER, shadeHoverOn->isChecked());
+    cg.writeEntry(KWIN_SHADEHOVER, m_ui->shadeHoverOn->isChecked());
 
     v = getShadeHoverInterval();
     if (v < 0) v = 0;
     cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
 
-    // placement policy --- CT 31jan98 ---
-    cg.writeEntry(KWIN_PLACEMENT, placementCombo->itemData(placementCombo->currentIndex()).toString());
-//CT 13mar98 manual and interactive placement
-//   else if (v == MANUAL_PLACEMENT)
-//     cg.writeEntry(KWIN_PLACEMENT, "Manual");
-//   else if (v == INTERACTIVE_PLACEMENT) {
-//       QString tmpstr = QString("Interactive,%1").arg(interactiveTrigger->value());
-//       cg.writeEntry(KWIN_PLACEMENT, tmpstr);
-//   }
+    cg.writeEntry(KWIN_PLACEMENT, m_ui->placementCombo->itemData(m_ui->placementCombo->currentIndex()).toString());
 
-    cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
-    cg.writeEntry(KWIN_INACTIVE_SKIP_TASKBAR, inactiveTabsSkipTaskbar->isChecked());
-    cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, autogroupSimilarWindows->isChecked());
-    cg.writeEntry(KWIN_AUTOGROUP_FOREGROUND, autogroupInForeground->isChecked());
+    cg.writeEntry(KWIN_HIDE_UTILITY, m_ui->hideUtilityWindowsForInactive->isChecked());
+    cg.writeEntry(KWIN_INACTIVE_SKIP_TASKBAR, m_ui->inactiveTabsSkipTaskbar->isChecked());
+    cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, m_ui->autogroupSimilarWindows->isChecked());
+    cg.writeEntry(KWIN_AUTOGROUP_FOREGROUND, m_ui->autogroupInForeground->isChecked());
 
     if (standAlone) {
         config->sync();
@@ -591,7 +455,7 @@ void KAdvancedConfig::defaults()
 {
     setShadeHover(false);
     setShadeHoverInterval(250);
-    placementCombo->setCurrentIndex(0); // default to Smart
+    m_ui->placementCombo->setCurrentIndex(0); // default to Smart
     setHideUtilityWindowsForInactive(true);
     setInactiveTabsSkipTaskbar(false);
     setAutogroupSimilarWindows(false);
@@ -602,22 +466,22 @@ void KAdvancedConfig::defaults()
 
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s)
 {
-    hideUtilityWindowsForInactive->setChecked(s);
+    m_ui->hideUtilityWindowsForInactive->setChecked(s);
 }
 
 void KAdvancedConfig::setInactiveTabsSkipTaskbar(bool s)
 {
-    inactiveTabsSkipTaskbar->setChecked(s);
+    m_ui->inactiveTabsSkipTaskbar->setChecked(s);
 }
 
 void KAdvancedConfig::setAutogroupSimilarWindows(bool s)
 {
-    autogroupSimilarWindows->setChecked(s);
+    m_ui->autogroupSimilarWindows->setChecked(s);
 }
 
 void KAdvancedConfig::setAutogroupInForeground(bool s)
 {
-    autogroupInForeground->setChecked(s);
+    m_ui->autogroupInForeground->setChecked(s);
 }
 
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
