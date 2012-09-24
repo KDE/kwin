@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWinMouseConfigForm</class>
+ <widget class="QWidget" name="KWinMouseConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>446</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&amp;Titlebar double-click:</string>
+       </property>
+       <property name="buddy">
+        <cstring>coTiDbl</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Titlebar wheel event:</string>
+       </property>
+       <property name="buddy">
+        <cstring>coTiAct4</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="KComboBox" name="coTiDbl">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="whatsThis">
+        <string>Behavior on &lt;em&gt;double&lt;/em&gt; click into the titlebar.</string>
+       </property>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Maximize</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Maximize (vertical only)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Maximize (horizontal only)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Minimize</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Shade</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Lower</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Close</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">On All Desktops</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox behavior on double click">Nothing</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="KComboBox" name="coTiAct4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="whatsThis">
+        <string>Handle mouse wheel events</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Raise/Lower</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Shade/Unshade</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Maximize/Restore</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Keep Above/Below</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Move to Previous/Next Desktop</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Change Opacity</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to Window Tab to the Left/Right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Nothing</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="whatsThis">
+      <string>Here you can customize mouse click behavior when clicking on the titlebar or the frame of a window.</string>
+     </property>
+     <property name="title">
+      <string>Titlebar &amp;&amp; Frame</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="1">
+       <widget class="KComboBox" name="coTiAct1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;active&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="whatsThis">
+         <string>In this row you can customize left click behavior when clicking into the titlebar or the frame.</string>
+        </property>
+        <property name="text">
+         <string>Left button:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_6">
+        <property name="whatsThis">
+         <string>In this column you can customize mouse clicks into the titlebar or the frame of an active window.</string>
+        </property>
+        <property name="text">
+         <string>Active</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="KComboBox" name="coTiAct2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;middle&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;active&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="whatsThis">
+         <string>In this row you can customize right click behavior when clicking into the titlebar or the frame.</string>
+        </property>
+        <property name="text">
+         <string>Right button:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="KComboBox" name="coTiAct3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;right&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;active&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="whatsThis">
+         <string>In this row you can customize middle click behavior when clicking into the titlebar or the frame.</string>
+        </property>
+        <property name="text">
+         <string>Middle button:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="whatsThis">
+         <string>In this column you can customize mouse clicks into the titlebar or the frame of an inactive window.</string>
+        </property>
+        <property name="text">
+         <string>Inactive</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="KComboBox" name="coTiInAct1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="KComboBox" name="coTiInAct2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="KComboBox" name="coTiInAct3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toggle Raise &amp; Lower</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Minimize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Shade</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Operations Menu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Start Window Tab Drag</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="whatsThis">
+      <string>Here you can customize behavior when clicking on the maximize button.</string>
+     </property>
+     <property name="title">
+      <string>Maximize Button</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+        <property name="text">
+         <string>Left button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>leftClickMaximizeButton</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KComboBox" name="leftClickMaximizeButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;left&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>5</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;middle&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+        <property name="text">
+         <string>Middle button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>middleClickMaximizeButton</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KComboBox" name="middleClickMaximizeButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;middle&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>5</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;right&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+        <property name="text">
+         <string>Right button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>rightClickMaximizeButton</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KComboBox" name="rightClickMaximizeButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Behavior on &lt;em&gt;right&lt;/em&gt; click onto the maximize button.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

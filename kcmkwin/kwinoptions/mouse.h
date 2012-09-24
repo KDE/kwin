@@ -28,26 +28,15 @@ class KConfig;
 #include <KComboBox>
 #include <klocale.h>
 
+#include "ui_mouse.h"
 
-class ToolTipComboBox: public KComboBox
+class KWinMouseConfigForm : public QWidget, public Ui::KWinMouseConfigForm
 {
     Q_OBJECT
 
 public:
-    ToolTipComboBox(QWidget * owner, char const * const * toolTips_)
-        : KComboBox(owner)
-        , toolTips(toolTips_) {}
-
-public slots:
-    void changed() {
-        this->setToolTip(i18n(toolTips[currentIndex()]));
-    }
-
-protected:
-    char const * const * toolTips;
+    explicit KWinMouseConfigForm(QWidget* parent);
 };
-
-
 
 class KTitleBarActionsConfig : public KCModule
 {
@@ -71,20 +60,11 @@ public slots:
     }
 
 private:
-    KComboBox* coTiDbl;
-
-    KComboBox* coTiAct1;
-    KComboBox* coTiAct2;
-    KComboBox* coTiAct3;
-    KComboBox* coTiAct4;
-    KComboBox* coTiInAct1;
-    KComboBox* coTiInAct2;
-    KComboBox* coTiInAct3;
-
-    ToolTipComboBox * coMax[3];
 
     KConfig *config;
     bool standAlone;
+
+    KWinMouseConfigForm *m_ui;
 
     const char* functionTiDbl(int);
     const char* functionTiAc(int);
@@ -93,6 +73,7 @@ private:
     const char* functionMax(int);
 
     void setComboText(KComboBox* combo, const char* text);
+    void createMaximizeButtonTooltips(KComboBox* combo);
     const char* fixup(const char* s);
 
 private slots:

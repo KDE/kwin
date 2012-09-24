@@ -132,279 +132,51 @@ void createMaxButtonPixmaps()
 
 } // namespace
 
+KWinMouseConfigForm::KWinMouseConfigForm(QWidget *parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
+
+
 void KTitleBarActionsConfig::paletteChanged()
 {
     createMaxButtonPixmaps();
-    for (int b = 0; b < 3; ++b)
-        for (int t = 0; t < 3; ++t)
-            coMax[b]->setItemIcon(t, maxButtonPixmaps[t]);
+    for (int i=0; i<3; ++i) {
+        m_ui->leftClickMaximizeButton->setItemIcon(i, maxButtonPixmaps[i]);
+        m_ui->middleClickMaximizeButton->setItemIcon(i, maxButtonPixmaps[i]);
+        m_ui->rightClickMaximizeButton->setItemIcon(i, maxButtonPixmaps[i]);
+    }
 
 }
 
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+    , m_ui(new KWinMouseConfigForm(this))
 {
-    QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
-    QGridLayout *grid;
-    QGroupBox *box;
-    QLabel *label;
-    QString strMouseButton1, strMouseButton3;
-    QString txtButton1, txtButton3;
-    QStringList items;
-    bool leftHandedMouse = (KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    /** Titlebar doubleclick ************/
-
-    QWidget *titlebarActions = new QWidget(this);
-    QGridLayout *gLayout = new QGridLayout(titlebarActions);
-    layout->addWidget(titlebarActions);
-
-    KComboBox* combo = new KComboBox(this);
-    combo->addItem(i18nc("@item:inlistbox behavior on double click", "Maximize"));
-    combo->addItem(i18n("Maximize (vertical only)"));
-    combo->addItem(i18n("Maximize (horizontal only)"));
-    combo->addItem(i18nc("@item:inlistbox behavior on double click", "Minimize"));
-    combo->addItem(i18n("Shade"));
-    combo->addItem(i18n("Lower"));
-    combo->addItem(i18nc("@item:inlistbox behavior on double click", "Close"));
-    combo->addItem(i18nc("@item:inlistbox behavior on double click", "On All Desktops"));
-    combo->addItem(i18n("Nothing"));
-    combo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiDbl = combo;
-    combo->setWhatsThis(i18n("Behavior on <em>double</em> click into the titlebar."));
-
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("&Titlebar double-click:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gLayout->addWidget(label, 0, 0);
-    gLayout->addWidget(combo, 0, 1);
-
-    /** Mouse Wheel Events  **************/
-    // Titlebar and frame mouse Wheel
-    KComboBox* comboW = new KComboBox(this);
-    comboW->addItem(i18n("Raise/Lower"));
-    comboW->addItem(i18n("Shade/Unshade"));
-    comboW->addItem(i18n("Maximize/Restore"));
-    comboW->addItem(i18n("Keep Above/Below"));
-    comboW->addItem(i18n("Move to Previous/Next Desktop"));
-    comboW->addItem(i18n("Change Opacity"));
-    comboW->addItem(i18n("Switch to Window Tab to the Left/Right"));
-    comboW->addItem(i18n("Nothing"));
-    comboW->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
-    coTiAct4 = comboW;
-    comboW->setWhatsThis(i18n("Handle mouse wheel events"));
-
-    comboW->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("Titlebar wheel event:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(comboW);
-    gLayout->addWidget(label, 1, 0);
-    gLayout->addWidget(comboW, 1, 1);
-
-    /** Titlebar and frame  **************/
-
-    box = new QGroupBox(i18n("Titlebar && Frame"), this);
-    layout->addWidget(box);
-    box->setObjectName(QString::fromLatin1("Titlebar and Frame"));
-    box->setWhatsThis(i18n("Here you can customize mouse click behavior when clicking on the"
-                           " titlebar or the frame of a window."));
-
-    grid = new QGridLayout(box);
-
-    strMouseButton1 = i18n("Left button:");
-    txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
-                      " the titlebar or the frame.");
-
-    strMouseButton3 = i18n("Right button:");
-    txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
-                      " the titlebar or the frame.");
-
-    if (leftHandedMouse) {
-        qSwap(strMouseButton1, strMouseButton3);
-        qSwap(txtButton1, txtButton3);
-    }
-
-    label = new QLabel(strMouseButton1, box);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    grid->addWidget(label, 1, 0);
-    label->setWhatsThis(txtButton1);
-
-    label = new QLabel(i18n("Middle button:"), box);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    grid->addWidget(label, 2, 0);
-    label->setWhatsThis(i18n("In this row you can customize middle click behavior when clicking into"
-                             " the titlebar or the frame."));
-
-    label = new QLabel(strMouseButton3, box);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    grid->addWidget(label, 3, 0);
-    label->setWhatsThis(txtButton3);
-
-
-    label = new QLabel(i18n("Active"), box);
-    grid->addWidget(label, 0, 1);
-    label->setAlignment(Qt::AlignCenter);
-    label->setWhatsThis(i18n("In this column you can customize mouse clicks into the titlebar"
-                             " or the frame of an active window."));
-
-    // Items for titlebar and frame, active windows
-    items << i18n("Raise")
-          << i18n("Lower")
-          << i18n("Toggle Raise & Lower")
-          << i18n("Minimize")
-          << i18n("Shade")
-          << i18n("Close")
-          << i18n("Operations Menu")
-          << i18n("Start Window Tab Drag")
-          << i18n("Nothing");
-
-    // Titlebar and frame, active, mouse button 1
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 1, 1);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiAct1 = combo;
-
-    txtButton1 = i18n("Behavior on <em>left</em> click into the titlebar or frame of an "
-                      "<em>active</em> window.");
-
-    txtButton3 = i18n("Behavior on <em>right</em> click into the titlebar or frame of an "
-                      "<em>active</em> window.");
-
-    // Be nice to left handed users
-    if (leftHandedMouse) qSwap(txtButton1, txtButton3);
-
-    combo->setWhatsThis(txtButton1);
-
-    // Titlebar and frame, active, mouse button 2
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 2, 1);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiAct2 = combo;
-    combo->setWhatsThis(i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>active</em> window."));
-
-    // Titlebar and frame, active, mouse button 3
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 3, 1);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiAct3 =  combo;
-    combo->setWhatsThis(txtButton3);
-
-    txtButton1 = i18n("Behavior on <em>left</em> click into the titlebar or frame of an "
-                      "<em>inactive</em> window.");
-
-    txtButton3 = i18n("Behavior on <em>right</em> click into the titlebar or frame of an "
-                      "<em>inactive</em> window.");
-
-    // Be nice to left handed users
-    if (leftHandedMouse) qSwap(txtButton1, txtButton3);
-
-    label = new QLabel(i18n("Inactive"), box);
-    grid->addWidget(label, 0, 2);
-    label->setAlignment(Qt::AlignCenter);
-    label->setWhatsThis(i18n("In this column you can customize mouse clicks into the titlebar"
-                             " or the frame of an inactive window."));
-
-    // Items for titlebar and frame, inactive windows
-    items.clear();
-    items  << i18n("Activate & Raise")
-           << i18n("Activate & Lower")
-           << i18n("Activate")
-           << i18n("Raise")
-           << i18n("Lower")
-           << i18n("Toggle Raise & Lower")
-           << i18n("Minimize")
-           << i18n("Shade")
-           << i18n("Close")
-           << i18n("Operations Menu")
-           << i18n("Start Window Tab Drag")
-           << i18n("Nothing");
-
-    // Titlebar and frame, inactive, mouse button 1
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 1, 2);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiInAct1 = combo;
-    combo->setWhatsThis(txtButton1);
-
-    // Titlebar and frame, inactive, mouse button 2
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 2, 2);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiInAct2 = combo;
-    combo->setWhatsThis(i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
-
-    // Titlebar and frame, inactive, mouse button 3
-    combo = new KComboBox(box);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    grid->addWidget(combo, 3, 2);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coTiInAct3 = combo;
-    combo->setWhatsThis(txtButton3);
-
-    /**  Maximize Button ******************/
-
-    box = new QGroupBox(i18n("Maximize Button"), this);
-    layout->addWidget(box);
-    box->setObjectName(QString::fromLatin1("Maximize Button"));
-    box->setWhatsThis(
-        i18n("Here you can customize behavior when clicking on the maximize button."));
-
-    QHBoxLayout* hlayout = new QHBoxLayout(box);
-
-    QString strMouseButton[] = {
-        i18n("Left button:"),
-        i18n("Middle button:"),
-        i18n("Right button:")
-    };
-
-    QString txtButton[] = {
-        i18n("Behavior on <em>left</em> click onto the maximize button."),
-        i18n("Behavior on <em>middle</em> click onto the maximize button."),
-        i18n("Behavior on <em>right</em> click onto the maximize button.")
-    };
-
-    if (leftHandedMouse) {  // Be nice to lefties
-        qSwap(strMouseButton[0], strMouseButton[2]);
-        qSwap(txtButton[0], txtButton[2]);
-    }
-
+    // create the items for the maximize button actions
     createMaxButtonPixmaps();
-    for (int b = 0; b < 3; ++b) {
-        if (b != 0) hlayout->addItem(new QSpacerItem(5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum));  // Spacer
-
-        QLabel * label = new QLabel(strMouseButton[b], box);
-        hlayout->addWidget(label);
-        label->setWhatsThis(txtButton[b]);
-        label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-
-        coMax[b] = new ToolTipComboBox(box, tbl_Max);
-        hlayout->addWidget(coMax[b]);
-        for (int t = 0; t < 3; ++t) coMax[b]->addItem(maxButtonPixmaps[t], QString());
-        connect(coMax[b], SIGNAL(activated(int)), SLOT(changed()));
-        connect(coMax[b], SIGNAL(activated(int)), coMax[b], SLOT(changed()));
-        coMax[b]->setWhatsThis(txtButton[b]);
-        coMax[b]->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+    for (int i=0; i<3; ++i) {
+        m_ui->leftClickMaximizeButton->addItem(maxButtonPixmaps[i], QString());
+        m_ui->middleClickMaximizeButton->addItem(maxButtonPixmaps[i], QString());
+        m_ui->rightClickMaximizeButton->addItem(maxButtonPixmaps[i], QString());
     }
+    createMaximizeButtonTooltips(m_ui->leftClickMaximizeButton);
+    createMaximizeButtonTooltips(m_ui->middleClickMaximizeButton);
+    createMaximizeButtonTooltips(m_ui->rightClickMaximizeButton);
 
+    connect(m_ui->coTiDbl, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiAct1, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiAct2, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiAct3, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiAct4, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiInAct1, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiInAct2, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coTiInAct3, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->leftClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->middleClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->rightClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
-
-    layout->addStretch();
 
     load();
 }
@@ -413,6 +185,13 @@ KTitleBarActionsConfig::~KTitleBarActionsConfig()
 {
     if (standAlone)
         delete config;
+}
+
+void KTitleBarActionsConfig::createMaximizeButtonTooltips(KComboBox *combo)
+{
+    combo->setItemData(0, i18n("Maximize"), Qt::ToolTipRole);
+    combo->setItemData(1, i18n("Maximize (vertical only)"), Qt::ToolTipRole);
+    combo->setItemData(2, i18n("Maximize (horizontal only)"), Qt::ToolTipRole);
 }
 
 // do NOT change the texts below, they are written to config file
@@ -546,17 +325,18 @@ static int tbl_txt_lookup(const char* const arr[], const char* txt)
 
 void KTitleBarActionsConfig::setComboText(KComboBox* combo, const char*txt)
 {
-    if (combo == coTiDbl)
+    if (combo == m_ui->coTiDbl)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_TiDbl, txt));
-    else if (combo == coTiAct1 || combo == coTiAct2 || combo == coTiAct3)
+    else if (combo == m_ui->coTiAct1 || combo == m_ui->coTiAct2 || combo == m_ui->coTiAct3)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_TiAc, txt));
-    else if (combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3)
+    else if (combo == m_ui->coTiInAct1 || combo == m_ui->coTiInAct2 || combo == m_ui->coTiInAct3)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_TiInAc, txt));
-    else if (combo == coTiAct4)
+    else if (combo == m_ui->coTiAct4)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_TiWAc, txt));
-    else if (combo == coMax[0] || combo == coMax[1] || combo == coMax[2]) {
+    else if (combo == m_ui->leftClickMaximizeButton ||
+                combo == m_ui->middleClickMaximizeButton ||
+                combo == m_ui->rightClickMaximizeButton) {
         combo->setCurrentIndex(tbl_txt_lookup(tbl_Max, txt));
-        static_cast<ToolTipComboBox *>(combo)->changed();
     } else
         abort();
 }
@@ -599,35 +379,37 @@ void KTitleBarActionsConfig::showEvent(QShowEvent *ev)
 void KTitleBarActionsConfig::load()
 {
     KConfigGroup windowsConfig(config, "Windows");
-    setComboText(coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand", "Maximize").toAscii());
-    for (int t = 0; t < 3; ++t)
-        setComboText(coMax[t], windowsConfig.readEntry(cnf_Max[t], tbl_Max[t]).toAscii());
+    setComboText(m_ui->coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand", "Maximize").toAscii());
+    setComboText(m_ui->leftClickMaximizeButton, windowsConfig.readEntry(cnf_Max[0], tbl_Max[0]).toAscii());
+    setComboText(m_ui->middleClickMaximizeButton, windowsConfig.readEntry(cnf_Max[1], tbl_Max[1]).toAscii());
+    setComboText(m_ui->rightClickMaximizeButton, windowsConfig.readEntry(cnf_Max[2], tbl_Max[2]).toAscii());
 
     KConfigGroup cg(config, "MouseBindings");
-    setComboText(coTiAct1, cg.readEntry("CommandActiveTitlebar1", "Raise").toAscii());
-    setComboText(coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag").toAscii());
-    setComboText(coTiAct3, cg.readEntry("CommandActiveTitlebar3", "Operations menu").toAscii());
-    setComboText(coTiAct4, cg.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right").toAscii());
-    setComboText(coTiInAct1, cg.readEntry("CommandInactiveTitlebar1", "Activate and raise").toAscii());
-    setComboText(coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Start Window Tab Drag").toAscii());
-    setComboText(coTiInAct3, cg.readEntry("CommandInactiveTitlebar3", "Operations menu").toAscii());
+    setComboText(m_ui->coTiAct1, cg.readEntry("CommandActiveTitlebar1", "Raise").toAscii());
+    setComboText(m_ui->coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag").toAscii());
+    setComboText(m_ui->coTiAct3, cg.readEntry("CommandActiveTitlebar3", "Operations menu").toAscii());
+    setComboText(m_ui->coTiAct4, cg.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right").toAscii());
+    setComboText(m_ui->coTiInAct1, cg.readEntry("CommandInactiveTitlebar1", "Activate and raise").toAscii());
+    setComboText(m_ui->coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Start Window Tab Drag").toAscii());
+    setComboText(m_ui->coTiInAct3, cg.readEntry("CommandInactiveTitlebar3", "Operations menu").toAscii());
 }
 
 void KTitleBarActionsConfig::save()
 {
     KConfigGroup windowsConfig(config, "Windows");
-    windowsConfig.writeEntry("TitlebarDoubleClickCommand", functionTiDbl(coTiDbl->currentIndex()));
-    for (int t = 0; t < 3; ++t)
-        windowsConfig.writeEntry(cnf_Max[t], functionMax(coMax[t]->currentIndex()));
+    windowsConfig.writeEntry("TitlebarDoubleClickCommand", functionTiDbl(m_ui->coTiDbl->currentIndex()));
+    windowsConfig.writeEntry(cnf_Max[0], functionMax(m_ui->leftClickMaximizeButton->currentIndex()));
+    windowsConfig.writeEntry(cnf_Max[1], functionMax(m_ui->middleClickMaximizeButton->currentIndex()));
+    windowsConfig.writeEntry(cnf_Max[2], functionMax(m_ui->rightClickMaximizeButton->currentIndex()));
 
     KConfigGroup cg(config, "MouseBindings");
-    cg.writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentIndex()));
-    cg.writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentIndex()));
-    cg.writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentIndex()));
-    cg.writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentIndex()));
-    cg.writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentIndex()));
-    cg.writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentIndex()));
-    cg.writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentIndex()));
+    cg.writeEntry("CommandActiveTitlebar1", functionTiAc(m_ui->coTiAct1->currentIndex()));
+    cg.writeEntry("CommandActiveTitlebar2", functionTiAc(m_ui->coTiAct2->currentIndex()));
+    cg.writeEntry("CommandActiveTitlebar3", functionTiAc(m_ui->coTiAct3->currentIndex()));
+    cg.writeEntry("CommandInactiveTitlebar1", functionTiInAc(m_ui->coTiInAct1->currentIndex()));
+    cg.writeEntry("CommandTitlebarWheel", functionTiWAc(m_ui->coTiAct4->currentIndex()));
+    cg.writeEntry("CommandInactiveTitlebar2", functionTiInAc(m_ui->coTiInAct2->currentIndex()));
+    cg.writeEntry("CommandInactiveTitlebar3", functionTiInAc(m_ui->coTiInAct3->currentIndex()));
 
     if (standAlone) {
         config->sync();
@@ -641,16 +423,17 @@ void KTitleBarActionsConfig::save()
 
 void KTitleBarActionsConfig::defaults()
 {
-    setComboText(coTiDbl, "Shade");
-    setComboText(coTiAct1, "Raise");
-    setComboText(coTiAct2, "Start Window Tab Drag");
-    setComboText(coTiAct3, "Operations menu");
-    setComboText(coTiAct4, "Switch to Window Tab to the Left/Right");
-    setComboText(coTiInAct1, "Activate and raise");
-    setComboText(coTiInAct2, "Start Window Tab Drag");
-    setComboText(coTiInAct3, "Operations menu");
-    for (int t = 0; t < 3; ++t)
-        setComboText(coMax[t], tbl_Max[t]);
+    setComboText(m_ui->coTiDbl, "Shade");
+    setComboText(m_ui->coTiAct1, "Raise");
+    setComboText(m_ui->coTiAct2, "Start Window Tab Drag");
+    setComboText(m_ui->coTiAct3, "Operations menu");
+    setComboText(m_ui->coTiAct4, "Switch to Window Tab to the Left/Right");
+    setComboText(m_ui->coTiInAct1, "Activate and raise");
+    setComboText(m_ui->coTiInAct2, "Start Window Tab Drag");
+    setComboText(m_ui->coTiInAct3, "Operations menu");
+    setComboText(m_ui->leftClickMaximizeButton, tbl_Max[0]);
+    setComboText(m_ui->middleClickMaximizeButton, tbl_Max[1]);
+    setComboText(m_ui->rightClickMaximizeButton, tbl_Max[2]);
 }
 
 
