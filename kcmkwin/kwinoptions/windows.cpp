@@ -620,6 +620,12 @@ void KAdvancedConfig::setAutogroupInForeground(bool s)
     autogroupInForeground->setChecked(s);
 }
 
+KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
+
 KMovingConfig::~KMovingConfig()
 {
     if (standAlone)
@@ -628,154 +634,32 @@ KMovingConfig::~KMovingConfig()
 
 KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+    , m_ui(new KWinMovingConfigForm(this))
 {
-    QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout(this);
-
-    windowsBox = new KButtonGroup(this);
-    windowsBox->setTitle(i18n("Windows"));
-
-    QBoxLayout *wLay = new QVBoxLayout(windowsBox);
-
-    QBoxLayout *bLay = new QVBoxLayout;
-    wLay->addLayout(bLay);
-
-    geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
-    bLay->addWidget(geometryTipOn);
-    geometryTipOn->setWhatsThis(i18n("Enable this option if you want a window's geometry to be displayed"
-                                     " while it is being moved or resized. The window position relative"
-                                     " to the top-left corner of the screen is displayed together with"
-                                     " its size."));
-
-    moveResizeMaximized = new QCheckBox(i18n("Display borders on &maximized windows"), windowsBox);
-    bLay->addWidget(moveResizeMaximized);
-    moveResizeMaximized->setWhatsThis(i18n("When enabled, this feature activates the border of maximized windows"
-                                           " and allows you to move or resize them,"
-                                           " just like for normal windows"));
-
-
-    lay->addWidget(windowsBox);
-
-    //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
-    //                         "(% of desktop space)"),
-    //             plcBox);
-    //iTLabel->setAlignment(AlignTop|AlignHCenter);
-    //pLay->addWidget(iTLabel,1,1);
-
-    //interactiveTrigger = new QSpinBox(0, 500, 1, plcBox);
-    //pLay->addWidget(interactiveTrigger,1,2);
-
-    //pLay->addRowSpacing(2,KDialog::spacingHint());
-
-    //lay->addWidget(plcBox);
-
-
-
-
-
-    //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
-    MagicBox = new KButtonGroup(this);
-    MagicBox->setTitle(i18n("Snap Zones"));
-    QGridLayout *kLay = new QGridLayout(MagicBox);
-
-    BrdrSnap = new KIntNumInput(10, MagicBox);
-    BrdrSnap->setSpecialValueText(i18nc("no border snap zone", "none"));
-    BrdrSnap->setRange(0, MAX_BRDR_SNAP);
-    BrdrSnap->setSteps(1, 10);
-    BrdrSnap->setWhatsThis(i18n("Here you can set the snap zone for screen borders, i.e."
-                                " the 'strength' of the magnetic field which will make windows snap to the border when"
-                                " moved near it."));
-    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    BrdrSnapLabel = new QLabel(i18n("&Border snap zone:"), this);
-    BrdrSnapLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    BrdrSnapLabel->setBuddy(BrdrSnap);
-    kLay->addWidget(BrdrSnapLabel, 0, 0);
-    kLay->addWidget(BrdrSnap, 0, 1);
-
-    WndwSnap = new KIntNumInput(10, MagicBox);
-    WndwSnap->setSpecialValueText(i18nc("no window snap zone", "none"));
-    WndwSnap->setRange(0, MAX_WNDW_SNAP);
-    WndwSnap->setSteps(1, 10);
-    WndwSnap->setWhatsThis(i18n("Here you can set the snap zone for windows, i.e."
-                                " the 'strength' of the magnetic field which will make windows snap to each other when"
-                                " they are moved near another window."));
-    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    WndwSnapLabel = new QLabel(i18n("&Window snap zone:"), this);
-    WndwSnapLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    WndwSnapLabel->setBuddy(WndwSnap);
-    kLay->addWidget(WndwSnapLabel, 1, 0);
-    kLay->addWidget(WndwSnap, 1, 1);
-
-    CntrSnap = new KIntNumInput(10, MagicBox);
-    CntrSnap->setSpecialValueText(i18nc("no center snap zone", "none"));
-    CntrSnap->setRange(0, MAX_CNTR_SNAP);
-    CntrSnap->setSteps(1, 10);
-    CntrSnap->setWhatsThis(i18n("Here you can set the snap zone for the screen center, i.e."
-                                " the 'strength' of the magnetic field which will make windows snap to the center of"
-                                " the screen when moved near it."));
-    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    CntrSnapLabel = new QLabel(i18n("&Center snap zone:"), this);
-    CntrSnapLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    CntrSnapLabel->setBuddy(CntrSnap);
-    kLay->addWidget(CntrSnapLabel, 2, 0);
-    kLay->addWidget(CntrSnap, 2, 1);
-
-    OverlapSnap = new QCheckBox(i18n("Snap windows onl&y when overlapping"), MagicBox);
-    OverlapSnap->setWhatsThis(i18n("Here you can set that windows will be only"
-                                   " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
-                                   " comes only near another window or border."));
-    kLay->addWidget(OverlapSnap, 3, 0, 1, 2);
-
-    lay->addWidget(MagicBox);
-    lay->addStretch();
+    // Any changes goes to slotChanged()
+    connect(m_ui->geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
+    connect(m_ui->moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(m_ui->borderSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->windowSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->centerSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(m_ui->OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
 
     load();
-
-    // Any changes goes to slotChanged()
-    connect(geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect(BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(BrdrSnap, SIGNAL(valueChanged(int)), SLOT(slotBrdrSnapChanged(int)));
-    connect(WndwSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(WndwSnap, SIGNAL(valueChanged(int)), SLOT(slotWndwSnapChanged(int)));
-    connect(CntrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(CntrSnap, SIGNAL(valueChanged(int)), SLOT(slotCntrSnapChanged(int)));
-    connect(OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
-
-    // To get suffix to BrdrSnap, WndwSnap and CntrSnap inputs with default values.
-    slotBrdrSnapChanged(BrdrSnap->value());
-    slotWndwSnapChanged(WndwSnap->value());
-    slotCntrSnapChanged(CntrSnap->value());
 }
 
 void KMovingConfig::setGeometryTip(bool showGeometryTip)
 {
-    geometryTipOn->setChecked(showGeometryTip);
+    m_ui->geometryTipOn->setChecked(showGeometryTip);
 }
 
 bool KMovingConfig::getGeometryTip()
 {
-    return geometryTipOn->isChecked();
+    return m_ui->geometryTipOn->isChecked();
 }
 
 void KMovingConfig::setMoveResizeMaximized(bool a)
 {
-    moveResizeMaximized->setChecked(a);
-}
-
-void KMovingConfig::slotBrdrSnapChanged(int value)
-{
-    BrdrSnap->setSuffix(i18np(" pixel", " pixels", value));
-}
-
-void KMovingConfig::slotWndwSnapChanged(int value)
-{
-    WndwSnap->setSuffix(i18np(" pixel", " pixels", value));
-}
-
-void KMovingConfig::slotCntrSnapChanged(int value)
-{
-    CntrSnap->setSuffix(i18np(" pixel", " pixels", value));
+    m_ui->moveResizeMaximized->setChecked(a);
 }
 
 void KMovingConfig::showEvent(QShowEvent *ev)
@@ -817,7 +701,7 @@ void KMovingConfig::load(void)
     else if (v < 0) setCenterSnapZone(0);
     else setCenterSnapZone(v);
 
-    OverlapSnap->setChecked(cg.readEntry("SnapOnlyWhenOverlapping", false));
+    m_ui->OverlapSnap->setChecked(cg.readEntry("SnapOnlyWhenOverlapping", false));
     emit KCModule::changed(false);
 }
 
@@ -825,13 +709,13 @@ void KMovingConfig::save(void)
 {
     KConfigGroup cg(config, "Windows");
     cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
-    cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, moveResizeMaximized->isChecked());
+    cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, m_ui->moveResizeMaximized->isChecked());
 
 
     cg.writeEntry(KWM_BRDR_SNAP_ZONE, getBorderSnapZone());
     cg.writeEntry(KWM_WNDW_SNAP_ZONE, getWindowSnapZone());
     cg.writeEntry(KWM_CNTR_SNAP_ZONE, getCenterSnapZone());
-    cg.writeEntry("SnapOnlyWhenOverlapping", OverlapSnap->isChecked());
+    cg.writeEntry("SnapOnlyWhenOverlapping", m_ui->OverlapSnap->isChecked());
 
     KConfigGroup(config, "Plugins").writeEntry("kwin4_effect_windowgeometryEnabled", getGeometryTip());
 
@@ -854,39 +738,39 @@ void KMovingConfig::defaults()
     setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);
     setBorderSnapZone(KWM_BRDR_SNAP_ZONE_DEFAULT);
     setCenterSnapZone(KWM_CNTR_SNAP_ZONE_DEFAULT);
-    OverlapSnap->setChecked(false);
+    m_ui->OverlapSnap->setChecked(false);
 
     emit KCModule::changed(true);
 }
 
 int KMovingConfig::getBorderSnapZone()
 {
-    return BrdrSnap->value();
+    return m_ui->borderSnap->value();
 }
 
 void KMovingConfig::setBorderSnapZone(int pxls)
 {
-    BrdrSnap->setValue(pxls);
+    m_ui->borderSnap->setValue(pxls);
 }
 
 int KMovingConfig::getWindowSnapZone()
 {
-    return WndwSnap->value();
+    return m_ui->windowSnap->value();
 }
 
 void KMovingConfig::setWindowSnapZone(int pxls)
 {
-    WndwSnap->setValue(pxls);
+    m_ui->windowSnap->setValue(pxls);
 }
 
 int KMovingConfig::getCenterSnapZone()
 {
-    return CntrSnap->value();
+    return m_ui->centerSnap->value();
 }
 
 void KMovingConfig::setCenterSnapZone(int pxls)
 {
-    CntrSnap->setValue(pxls);
+    m_ui->centerSnap->setValue(pxls);
 }
 
 #include "windows.moc"

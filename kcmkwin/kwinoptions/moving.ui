@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWinMovingConfigForm</class>
+ <widget class="QWidget" name="KWinMovingConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>404</width>
+    <height>329</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="lay">
+   <item>
+    <widget class="KButtonGroup" name="windowsBox">
+     <property name="title">
+      <string>Windows</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Display window &amp;geometry when moving or resizing</string>
+        </property>
+        <property name="buddy">
+         <cstring>geometryTipOn</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="geometryTipOn">
+        <property name="whatsThis">
+         <string>Enable this option if you want a window's geometry to be displayed while it is being moved or resized. The window position relative to the top-left corner of the screen is displayed together with its size.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="moveResizeMaximized">
+        <property name="whatsThis">
+         <string>When enabled, this feature activates the border of maximized windows and allows you to move or resize them, just like for normal windows</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Display borders on &amp;maximized windows</string>
+        </property>
+        <property name="buddy">
+         <cstring>moveResizeMaximized</cstring>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="KButtonGroup" name="snapZonesBox">
+     <property name="title">
+      <string>Snap Zones</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="borderSnapLabel">
+        <property name="text">
+         <string>&amp;Border snap zone:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>borderSnap</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="KIntNumInput" name="borderSnap">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Here you can set the snap zone for screen borders, i.e. the 'strength' of the magnetic field which will make windows snap to the border when moved near it.</string>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="suffix">
+         <string> pixel</string>
+        </property>
+        <property name="specialValueText">
+         <string>no border snap zone</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="windowSnapLabel">
+        <property name="text">
+         <string>&amp;Window snap zone:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>windowSnap</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="KIntNumInput" name="windowSnap">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Here you can set the snap zone for windows, i.e. the 'strength' of the magnetic field which will make windows snap to each other when they are moved near another window.</string>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="suffix">
+         <string> pixel</string>
+        </property>
+        <property name="specialValueText">
+         <string>no window snap zone</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="centerSnapLabel">
+        <property name="text">
+         <string>&amp;Center snap zone:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>centerSnap</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="KIntNumInput" name="centerSnap">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Here you can set the snap zone for the screen center, i.e. the 'strength' of the magnetic field which will make windows snap to the center of the screen when moved near it.</string>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="suffix">
+         <string> pixel</string>
+        </property>
+        <property name="specialValueText">
+         <string>no center snap zone</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="OverlapSnap">
+        <property name="whatsThis">
+         <string>Here you can set that windows will be only snapped if you try to overlap them, i.e. they will not be snapped if the windows comes only near another window or border.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Snap windows onl&amp;y when overlapping</string>
+        </property>
+        <property name="buddy">
+         <cstring>OverlapSnap</cstring>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KIntNumInput</class>
+   <extends>QWidget</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

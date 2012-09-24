@@ -27,6 +27,7 @@
 #include <config-workspace.h>
 
 #include "ui_focus.h"
+#include "ui_moving.h"
 
 class QRadioButton;
 class QCheckBox;
@@ -59,6 +60,14 @@ class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
 
 public:
     explicit KWinFocusConfigForm(QWidget* parent);
+};
+
+class KWinMovingConfigForm : public QWidget, public Ui::KWinMovingConfigForm
+{
+    Q_OBJECT
+
+public:
+    explicit KWinMovingConfigForm(QWidget* parent);
 };
 
 class KFocusConfig : public KCModule
@@ -126,9 +135,6 @@ private slots:
     void changed() {
         emit KCModule::changed(true);
     }
-    void slotBrdrSnapChanged(int);
-    void slotWndwSnapChanged(int);
-    void slotCntrSnapChanged(int);
 
 private:
     bool getGeometryTip(void);   //KS
@@ -136,12 +142,9 @@ private:
     void setGeometryTip(bool); //KS
     void setMoveResizeMaximized(bool);
 
-    KButtonGroup *windowsBox;
-    QCheckBox *geometryTipOn;
-    QCheckBox *moveResizeMaximized;
-
     KConfig *config;
     bool     standAlone;
+    KWinMovingConfigForm *m_ui;
 
     int getBorderSnapZone();
     void setBorderSnapZone(int);
@@ -149,11 +152,6 @@ private:
     void setWindowSnapZone(int);
     int getCenterSnapZone();
     void setCenterSnapZone(int);
-
-    KButtonGroup *MagicBox;
-    QLabel *BrdrSnapLabel, *WndwSnapLabel, *CntrSnapLabel;
-    KIntNumInput *BrdrSnap, *WndwSnap, *CntrSnap;
-    QCheckBox *OverlapSnap;
 
 };
 
