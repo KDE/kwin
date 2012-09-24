@@ -138,6 +138,11 @@ KWinMouseConfigForm::KWinMouseConfigForm(QWidget *parent)
     setupUi(this);
 }
 
+KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
+    : QWidget(parent)
+{
+    setupUi(this);
+}
 
 void KTitleBarActionsConfig::paletteChanged()
 {
@@ -439,243 +444,17 @@ void KTitleBarActionsConfig::defaults()
 
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+    , m_ui(new KWinActionsConfigForm(this))
 {
-    QString strWin1, strWin2, strWin3, strWinWheel, strAllKey, strAll1, strAll2, strAll3, strAllW;
-    QGroupBox *box;
-    QString strMouseButton1, strMouseButton2, strMouseButton3, strMouseWheel;
-    QString txtButton1, txtButton2, txtButton3, txtWheel;
-    QStringList items;
-    bool leftHandedMouse = (KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    /**  Inactive inner window ******************/
-
-    box = new QGroupBox(i18n("Inactive Inner Window"), this);
-    layout->addWidget(box);
-    box->setObjectName(QString::fromLatin1("Inactive Inner Window"));
-    box->setWhatsThis(i18n("Here you can customize mouse click behavior when clicking on an inactive"
-                           " inner window ('inner' means: not titlebar, not frame)."));
-
-    QGridLayout *gridLayout = new QGridLayout(box);
-
-    strMouseButton1 = i18n("Left button:");
-    txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
-                      " the titlebar or the frame.");
-
-    strMouseButton2 = i18n("Middle button:");
-    txtButton2 = i18n("In this row you can customize middle click behavior when clicking into"
-                      " the titlebar or the frame.");
-
-    strMouseButton3 = i18n("Right button:");
-    txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
-                      " the titlebar or the frame.");
-
-    strMouseWheel = i18n("Wheel");
-
-    if (leftHandedMouse) {
-        qSwap(strMouseButton1, strMouseButton3);
-        qSwap(txtButton1, txtButton3);
-    }
-
-    strWin1 = i18n("In this row you can customize left click behavior when clicking into"
-                   " an inactive inner window ('inner' means: not titlebar, not frame).");
-
-    strWin2 = i18n("In this row you can customize middle click behavior when clicking into"
-                   " an inactive inner window ('inner' means: not titlebar, not frame).");
-
-    strWin3 = i18n("In this row you can customize right click behavior when clicking into"
-                   " an inactive inner window ('inner' means: not titlebar, not frame).");
-
-    strWinWheel = i18n("In this row you can customize behavior when scrolling into"
-                       " an inactive inner window ('inner' means: not titlebar, not frame).");
-
-    // Be nice to lefties
-    if (leftHandedMouse) qSwap(strWin1, strWin3);
-
-    items.clear();
-    items   << i18n("Activate, Raise & Pass Click")
-            << i18n("Activate & Pass Click")
-            << i18n("Activate")
-            << i18n("Activate & Raise");
-
-    KComboBox* combo = new KComboBox(box);
-    coWin1 = combo;
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    combo->setWhatsThis(strWin1);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QLabel* label = new QLabel(strMouseButton1, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 0, 0);
-    gridLayout->addWidget(combo, 0, 1);
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coWin2 = combo;
-    combo->setWhatsThis(strWin2);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseButton2, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 1, 0);
-    gridLayout->addWidget(combo, 1, 1);
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coWin3 = combo;
-    combo->setWhatsThis(strWin3);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseButton3, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 2, 0);
-    gridLayout->addWidget(combo, 2, 1);
-
-    items.clear();
-    items   << i18n("Scroll")
-            << i18n("Activate & Scroll")
-            << i18n("Activate, Raise & Scroll");
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coWinWheel = combo;
-    combo->setWhatsThis(strWinWheel);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseWheel, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 3, 0);
-    gridLayout->addWidget(combo, 3, 1);
-
-
-
-
-    /** Inner window, titlebar and frame **************/
-
-    box = new QGroupBox(i18n("Inner Window, Titlebar && Frame"), this);
-    layout->addWidget(box);
-    box->setObjectName(QString::fromLatin1("Inner Window, Titlebar and Frame"));
-    box->setWhatsThis(i18n("Here you can customize KDE's behavior when clicking somewhere into"
-                           " a window while pressing a modifier key."));
-
-    QHBoxLayout* innerLay = new QHBoxLayout(box);
-    QHBoxLayout* fLay = new QHBoxLayout;
-    gridLayout = new QGridLayout;
-    innerLay->addLayout(fLay);
-    innerLay->addLayout(gridLayout);
-
-    // Labels
-    strMouseButton1 = i18n("Left button:");
-    strAll1 = i18n("In this row you can customize left click behavior when clicking into"
-                   " the titlebar or the frame.");
-
-    strMouseButton2 = i18n("Middle button:");
-    strAll2 = i18n("In this row you can customize middle click behavior when clicking into"
-                   " the titlebar or the frame.");
-
-    strMouseButton3 = i18n("Right button:");
-    strAll3 = i18n("In this row you can customize right click behavior when clicking into"
-                   " the titlebar or the frame.");
-
-    if (leftHandedMouse) {
-        qSwap(strMouseButton1, strMouseButton3);
-        qSwap(strAll1, strAll3);
-    }
-
-    // Combo's
-    combo = new KComboBox(box);
-    combo->addItem(i18n("Meta"));
-    combo->addItem(i18n("Alt"));
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coAllKey = combo;
-    combo->setWhatsThis(i18n("Here you select whether holding the Meta key or Alt key "
-                             "will allow you to perform the following actions."));
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("Modifier key:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    fLay->addWidget(label);
-    fLay->addWidget(combo);
-    fLay->addWidget(new QLabel("   + ", this));
-
-
-    items.clear();
-    items << i18n("Move")
-          << i18n("Activate, Raise and Move")
-          << i18n("Toggle Raise & Lower")
-          << i18n("Resize")
-          << i18n("Raise")
-          << i18n("Lower")
-          << i18n("Minimize")
-          << i18n("Decrease Opacity")
-          << i18n("Increase Opacity")
-          << i18n("Nothing");
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coAll1 = combo;
-    combo->setWhatsThis(strAll1);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseButton1, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 0, 0);
-    gridLayout->addWidget(combo, 0, 1);
-
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coAll2 = combo;
-    combo->setWhatsThis(strAll2);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseButton2, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 1, 0);
-    gridLayout->addWidget(combo, 1, 1);
-
-    combo = new KComboBox(box);
-    combo->addItems(items);
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coAll3 =  combo;
-    combo->setWhatsThis(strAll3);
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(strMouseButton3, this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 2, 0);
-    gridLayout->addWidget(combo, 2, 1);
-
-
-    combo = new KComboBox(box);
-    combo->addItem(i18n("Raise/Lower"));
-    combo->addItem(i18n("Shade/Unshade"));
-    combo->addItem(i18n("Maximize/Restore"));
-    combo->addItem(i18n("Keep Above/Below"));
-    combo->addItem(i18n("Move to Previous/Next Desktop"));
-    combo->addItem(i18n("Change Opacity"));
-    combo->addItem(i18n("Switch to Window Tab to the Left/Right"));
-    combo->addItem(i18n("Nothing"));
-    connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-    coAllW =  combo;
-    combo->setWhatsThis(i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
-                             " in a window while pressing the modifier key."));
-    combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    label = new QLabel(i18n("Mouse wheel:"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    label->setBuddy(combo);
-    gridLayout->addWidget(label, 3, 0);
-    gridLayout->addWidget(combo, 3, 1);
-
-
-    layout->addStretch();
+    connect(m_ui->coWin1, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coWin2, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coWin3, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coWinWheel, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coAllKey, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coAll1, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coAll2, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coAll3, SIGNAL(activated(int)), SLOT(changed()));
+    connect(m_ui->coAllW, SIGNAL(activated(int)), SLOT(changed()));
     load();
 }
 
@@ -687,15 +466,15 @@ KWindowActionsConfig::~KWindowActionsConfig()
 
 void KWindowActionsConfig::setComboText(KComboBox* combo, const char*txt)
 {
-    if (combo == coWin1 || combo == coWin2 || combo == coWin3)
+    if (combo == m_ui->coWin1 || combo == m_ui->coWin2 || combo == m_ui->coWin3)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_Win, txt));
-    else if (combo == coWinWheel)
+    else if (combo == m_ui->coWinWheel)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_WinWheel, txt));
-    else if (combo == coAllKey)
+    else if (combo == m_ui->coAllKey)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_AllKey, txt));
-    else if (combo == coAll1 || combo == coAll2 || combo == coAll3)
+    else if (combo == m_ui->coAll1 || combo == m_ui->coAll2 || combo == m_ui->coAll3)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_All, txt));
-    else if (combo == coAllW)
+    else if (combo == m_ui->coAllW)
         combo->setCurrentIndex(tbl_txt_lookup(tbl_AllW, txt));
     else
         abort();
@@ -738,29 +517,29 @@ void KWindowActionsConfig::showEvent(QShowEvent *ev)
 void KWindowActionsConfig::load()
 {
     KConfigGroup cg(config, "MouseBindings");
-    setComboText(coWin1, cg.readEntry("CommandWindow1", "Activate, raise and pass click").toAscii());
-    setComboText(coWin2, cg.readEntry("CommandWindow2", "Activate and pass click").toAscii());
-    setComboText(coWin3, cg.readEntry("CommandWindow3", "Activate and pass click").toAscii());
-    setComboText(coWinWheel, cg.readEntry("CommandWindowWheel", "Scroll").toAscii());
-    setComboText(coAllKey, cg.readEntry("CommandAllKey", "Alt").toAscii());
-    setComboText(coAll1, cg.readEntry("CommandAll1", "Move").toAscii());
-    setComboText(coAll2, cg.readEntry("CommandAll2", "Toggle raise and lower").toAscii());
-    setComboText(coAll3, cg.readEntry("CommandAll3", "Resize").toAscii());
-    setComboText(coAllW, cg.readEntry("CommandAllWheel", "Nothing").toAscii());
+    setComboText(m_ui->coWin1, cg.readEntry("CommandWindow1", "Activate, raise and pass click").toAscii());
+    setComboText(m_ui->coWin2, cg.readEntry("CommandWindow2", "Activate and pass click").toAscii());
+    setComboText(m_ui->coWin3, cg.readEntry("CommandWindow3", "Activate and pass click").toAscii());
+    setComboText(m_ui->coWinWheel, cg.readEntry("CommandWindowWheel", "Scroll").toAscii());
+    setComboText(m_ui->coAllKey, cg.readEntry("CommandAllKey", "Alt").toAscii());
+    setComboText(m_ui->coAll1, cg.readEntry("CommandAll1", "Move").toAscii());
+    setComboText(m_ui->coAll2, cg.readEntry("CommandAll2", "Toggle raise and lower").toAscii());
+    setComboText(m_ui->coAll3, cg.readEntry("CommandAll3", "Resize").toAscii());
+    setComboText(m_ui->coAllW, cg.readEntry("CommandAllWheel", "Nothing").toAscii());
 }
 
 void KWindowActionsConfig::save()
 {
     KConfigGroup cg(config, "MouseBindings");
-    cg.writeEntry("CommandWindow1", functionWin(coWin1->currentIndex()));
-    cg.writeEntry("CommandWindow2", functionWin(coWin2->currentIndex()));
-    cg.writeEntry("CommandWindow3", functionWin(coWin3->currentIndex()));
-    cg.writeEntry("CommandWindowWheel", functionWinWheel(coWinWheel->currentIndex()));
-    cg.writeEntry("CommandAllKey", functionAllKey(coAllKey->currentIndex()));
-    cg.writeEntry("CommandAll1", functionAll(coAll1->currentIndex()));
-    cg.writeEntry("CommandAll2", functionAll(coAll2->currentIndex()));
-    cg.writeEntry("CommandAll3", functionAll(coAll3->currentIndex()));
-    cg.writeEntry("CommandAllWheel", functionAllW(coAllW->currentIndex()));
+    cg.writeEntry("CommandWindow1", functionWin(m_ui->coWin1->currentIndex()));
+    cg.writeEntry("CommandWindow2", functionWin(m_ui->coWin2->currentIndex()));
+    cg.writeEntry("CommandWindow3", functionWin(m_ui->coWin3->currentIndex()));
+    cg.writeEntry("CommandWindowWheel", functionWinWheel(m_ui->coWinWheel->currentIndex()));
+    cg.writeEntry("CommandAllKey", functionAllKey(m_ui->coAllKey->currentIndex()));
+    cg.writeEntry("CommandAll1", functionAll(m_ui->coAll1->currentIndex()));
+    cg.writeEntry("CommandAll2", functionAll(m_ui->coAll2->currentIndex()));
+    cg.writeEntry("CommandAll3", functionAll(m_ui->coAll3->currentIndex()));
+    cg.writeEntry("CommandAllWheel", functionAllW(m_ui->coAllW->currentIndex()));
 
     if (standAlone) {
         config->sync();
@@ -773,13 +552,13 @@ void KWindowActionsConfig::save()
 
 void KWindowActionsConfig::defaults()
 {
-    setComboText(coWin1, "Activate, raise and pass click");
-    setComboText(coWin2, "Activate and pass click");
-    setComboText(coWin3, "Activate and pass click");
-    setComboText(coWinWheel, "Scroll");
-    setComboText(coAllKey, "Alt");
-    setComboText(coAll1, "Move");
-    setComboText(coAll2, "Toggle raise and lower");
-    setComboText(coAll3, "Resize");
-    setComboText(coAllW, "Nothing");
+    setComboText(m_ui->coWin1, "Activate, raise and pass click");
+    setComboText(m_ui->coWin2, "Activate and pass click");
+    setComboText(m_ui->coWin3, "Activate and pass click");
+    setComboText(m_ui->coWinWheel, "Scroll");
+    setComboText(m_ui->coAllKey, "Alt");
+    setComboText(m_ui->coAll1, "Move");
+    setComboText(m_ui->coAll2, "Toggle raise and lower");
+    setComboText(m_ui->coAll3, "Resize");
+    setComboText(m_ui->coAllW, "Nothing");
 }

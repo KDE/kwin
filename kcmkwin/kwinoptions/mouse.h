@@ -28,6 +28,7 @@ class KConfig;
 #include <KComboBox>
 #include <klocale.h>
 
+#include "ui_actions.h"
 #include "ui_mouse.h"
 
 class KWinMouseConfigForm : public QWidget, public Ui::KWinMouseConfigForm
@@ -36,6 +37,14 @@ class KWinMouseConfigForm : public QWidget, public Ui::KWinMouseConfigForm
 
 public:
     explicit KWinMouseConfigForm(QWidget* parent);
+};
+
+class KWinActionsConfigForm : public QWidget, public Ui::KWinActionsConfigForm
+{
+    Q_OBJECT
+
+public:
+    explicit KWinActionsConfigForm(QWidget* parent);
 };
 
 class KTitleBarActionsConfig : public KCModule
@@ -103,19 +112,10 @@ public slots:
     }
 
 private:
-    KComboBox* coWin1;
-    KComboBox* coWin2;
-    KComboBox* coWin3;
-    KComboBox* coWinWheel;
-
-    KComboBox* coAllKey;
-    KComboBox* coAll1;
-    KComboBox* coAll2;
-    KComboBox* coAll3;
-    KComboBox* coAllW;
-
     KConfig *config;
     bool standAlone;
+
+    KWinActionsConfigForm *m_ui;
 
     const char* functionWin(int);
     const char* functionWinWheel(int);

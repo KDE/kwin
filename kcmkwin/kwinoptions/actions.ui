@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWinActionsConfigForm</class>
+ <widget class="QWidget" name="KWinActionsConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>556</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="whatsThis">
+      <string>Here you can customize mouse click behavior when clicking on an inactive inner window ('inner' means: not titlebar, not frame).</string>
+     </property>
+     <property name="title">
+      <string>Inactive Inner Window</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>&amp;Left button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>coWin1</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="KComboBox" name="coWin1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate, Raise &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>M&amp;iddle button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>coWin2</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="KComboBox" name="coWin2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>In this row you can customize middle click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate, Raise &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>&amp;Right button:</string>
+        </property>
+        <property name="buddy">
+         <cstring>coWin3</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="KComboBox" name="coWin3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>In this row you can customize right click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Activate, Raise &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Pass Click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Raise</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>&amp;Wheel</string>
+        </property>
+        <property name="buddy">
+         <cstring>coWinWheel</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="KComboBox" name="coWinWheel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>In this row you can customize behavior when scrolling into an inactive inner window ('inner' means: not titlebar, not frame).</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Scroll</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate &amp; Scroll</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate, Raise &amp; Scroll</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="whatsThis">
+      <string>Here you can customize KDE's behavior when clicking somewhere into a window while pressing a modifier key.</string>
+     </property>
+     <property name="title">
+      <string>Inner Window, Titlebar &amp;&amp; Frame</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Modifier &amp;key:</string>
+        </property>
+        <property name="buddy">
+         <cstring>coAllKey</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KComboBox" name="coAllKey">
+        <property name="whatsThis">
+         <string>Here you select whether holding the Meta key or Alt key will allow you to perform the following actions.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Meta</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Alt</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>   + </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Left &amp;button</string>
+          </property>
+          <property name="buddy">
+           <cstring>coAll1</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="coAll1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="whatsThis">
+           <string>In this row you can customize left click behavior when clicking into the titlebar or the frame.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Activate, Raise &amp; Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toggle Raise &amp; Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Resize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Raise</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Minimize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Decrease Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Increase Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Nothing</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="coAll2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="whatsThis">
+           <string>In this row you can customize middle click behavior when clicking into the titlebar or the frame.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Activate, Raise &amp; Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toggle Raise &amp; Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Resize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Raise</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Minimize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Decrease Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Increase Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Nothing</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KComboBox" name="coAll3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="whatsThis">
+           <string>In this row you can customize right click behavior when clicking into the titlebar or the frame.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Activate, Raise &amp; Move</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toggle Raise &amp; Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Resize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Raise</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Minimize</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Decrease Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Increase Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Nothing</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Middle b&amp;utton:</string>
+          </property>
+          <property name="buddy">
+           <cstring>coAll2</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Ri&amp;ght button:</string>
+          </property>
+          <property name="buddy">
+           <cstring>coAll3</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>M&amp;ouse wheel:</string>
+          </property>
+          <property name="buddy">
+           <cstring>coAllW</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="KComboBox" name="coAllW">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="whatsThis">
+           <string>Here you can customize KDE's behavior when scrolling with the mouse wheel in a window while pressing the modifier key.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Raise/Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Shade/Unshade</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Maximize/Restore</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Keep Above/Below</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Move to Previous/Next Desktop</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Change Opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Switch to Window Tab to the Left/Right</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Nothing</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
