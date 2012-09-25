@@ -117,7 +117,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
         return;
     }
     ToplevelList new_stacking_order = constrainedStackingOrder();
-    bool changed = (new_stacking_order != stacking_order || force_restacking);
+    bool changed = (force_restacking || new_stacking_order != stacking_order);
     force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
@@ -207,8 +207,10 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     cl = new Window[ stacking_order.count()];
     pos = 0;
-    for (ToplevelList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
-        cl[pos++] = (*it)->window();
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
+        if ((*it)->isClient())
+            cl[pos++] = (*it)->window();
+    }
     rootInfo->setClientListStacking(cl, pos);
     delete [] cl;
 
