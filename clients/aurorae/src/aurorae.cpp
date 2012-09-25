@@ -313,6 +313,10 @@ void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
+    if (maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows()) {
+        left = right = top = bottom = 0;
+        return;
+    }
     left = m_item->property("paddingLeft").toInt();
     right = m_item->property("paddingRight").toInt();
     top = m_item->property("paddingTop").toInt();
