@@ -509,6 +509,20 @@ extern KWIN_EXPORT eglPostSubBufferNV_func eglPostSubBufferNV;
 typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
 extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
+
+#ifdef KWIN_HAVE_OPENGLES
+
+// GL_OES_mapbuffer
+typedef GLvoid *(*glMapBuffer_func)(GLenum target, GLenum access);
+typedef GLboolean (*glUnmapBuffer_func)(GLenum target);
+typedef void (*glGetBufferPointerv_func)(GLenum target, GLenum pname, GLvoid **params);
+
+extern KWIN_EXPORT glMapBuffer_func         glMapBuffer;
+extern KWIN_EXPORT glUnmapBuffer_func       glUnmapBuffer;
+extern KWIN_EXPORT glGetBufferPointerv_func glGetBufferPointerv;
+
+#endif // KWIN_HAVE_OPENGLES
+
 } // namespace
 
 #endif // KWIN_HAVE_EGL

@@ -243,9 +243,15 @@ void glxResolveFunctions()
     else
         glXCreateContextAttribsARB = NULL;
 }
-#endif
 
+#else
 
+// GL_OES_mapbuffer
+glMapBuffer_func         glMapBuffer;
+glUnmapBuffer_func       glUnmapBuffer;
+glGetBufferPointerv_func glGetBufferPointerv;
+
+#endif // KWIN_HAVE_OPENGLES
 
 #ifdef KWIN_HAVE_EGL
 
@@ -656,7 +662,21 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glMapBufferRange         = NULL;
         glFlushMappedBufferRange = NULL;
     }
-#endif
+
+#else
+
+    if (hasGLExtension("GL_OES_mapbuffer")) {
+        // See http://www.khronos.org/registry/gles/extensions/OES/OES_mapbuffer.txt
+        glMapBuffer         = (glMapBuffer_func)         eglGetProcAddress("glMapBufferOES");
+        glUnmapBuffer       = (glUnmapBuffer_func)       eglGetProcAddress("glUnmapBufferOES");
+        glGetBufferPointerv = (glGetBufferPointerv_func) eglGetProcAddress("glGetBufferPointervOES");
+    } else {
+        glMapBuffer         = NULL;
+        glUnmapBuffer       = NULL;
+        glGetBufferPointerv = NULL;
+    }
+
+#endif // KWIN_HAVE_OPENGLES
 
 #ifdef KWIN_HAVE_EGL
     if (platformInterface == EglPlatformInterface) {
