@@ -493,10 +493,21 @@ extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
 #define EGL_OPENGL_ES3_BIT_KHR                              0x00000040
 #endif
 
+#ifndef __gl3_h_
+#define GL_MAP_READ_BIT                   0x0001
+#define GL_MAP_WRITE_BIT                  0x0002
+#define GL_MAP_INVALIDATE_RANGE_BIT       0x0004
+#define GL_MAP_INVALIDATE_BUFFER_BIT      0x0008
+#define GL_MAP_FLUSH_EXPLICIT_BIT         0x0010
+#define GL_MAP_UNSYNCHRONIZED_BIT         0x0020
+#endif
+
 namespace KWin
 {
 
 void KWIN_EXPORT eglResolveFunctions();
+void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
+
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
@@ -520,6 +531,13 @@ typedef void (*glGetBufferPointerv_func)(GLenum target, GLenum pname, GLvoid **p
 extern KWIN_EXPORT glMapBuffer_func         glMapBuffer;
 extern KWIN_EXPORT glUnmapBuffer_func       glUnmapBuffer;
 extern KWIN_EXPORT glGetBufferPointerv_func glGetBufferPointerv;
+
+// GL_EXT_map_buffer_range
+typedef GLvoid *(*glMapBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+typedef void (*glFlushMappedBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length);
+
+extern KWIN_EXPORT glMapBufferRange_func         glMapBufferRange;
+extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
 
 #endif // KWIN_HAVE_OPENGLES
 

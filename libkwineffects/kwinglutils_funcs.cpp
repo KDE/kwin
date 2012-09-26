@@ -251,6 +251,10 @@ glMapBuffer_func         glMapBuffer;
 glUnmapBuffer_func       glUnmapBuffer;
 glGetBufferPointerv_func glGetBufferPointerv;
 
+// GL_EXT_map_buffer_range
+glMapBufferRange_func         glMapBufferRange;
+glFlushMappedBufferRange_func glFlushMappedBufferRange;
+
 #endif // KWIN_HAVE_OPENGLES
 
 #ifdef KWIN_HAVE_EGL
@@ -674,6 +678,15 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glMapBuffer         = NULL;
         glUnmapBuffer       = NULL;
         glGetBufferPointerv = NULL;
+    }
+
+    if (hasGLExtension("GL_EXT_map_buffer_range")) {
+        // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_map_buffer_range.txt
+        glMapBufferRange         = (glMapBufferRange_func)         eglGetProcAddress("glMapBufferRangeEXT");
+        glFlushMappedBufferRange = (glFlushMappedBufferRange_func) eglGetProcAddress("glFlushMappedBufferRangeEXT");
+    } else {
+        glMapBufferRange         = NULL;
+        glFlushMappedBufferRange = NULL;
     }
 
 #endif // KWIN_HAVE_OPENGLES
