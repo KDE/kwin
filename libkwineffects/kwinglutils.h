@@ -681,6 +681,32 @@ public:
      * Size must equal 2 * @a numberVertices.
      */
     void setData(int numberVertices, int dim, const float* vertices, const float* texcoords);
+
+    /**
+     * Maps an unused range of the data store into the client's address space.
+     *
+     * The data store will be reallocated if it is smaller than the given size.
+     *
+     * The buffer object is mapped for writing, not reading. Attempts to read from
+     * the mapped buffer range may result in system errors, including program
+     * termination. The data in the mapped region is undefined until it has been
+     * written to. If subsequent GL calls access unwritten memory, the results are
+     * undefined and system errors, including program termination, may occur.
+     *
+     * No GL calls that access the buffer object must be made while the buffer
+     * object is mapped. The returned pointer must not be passed as a parameter
+     * value to any GL function.
+     *
+     * It is assumed that the GL_ARRAY_BUFFER_BINDING will not be changed while
+     * the buffer object is mapped.
+     */
+    GLvoid *map(size_t size);
+
+    /**
+     * Flushes the mapped buffer range and unmaps the buffer.
+     */
+    void unmap();
+
     /**
      * Renders the vertex data in given @a primitiveMode.
      * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed

@@ -1296,6 +1296,7 @@ public:
         , useColor(false)
         , color(0, 0, 0, 255)
         , bufferSize(0)
+        , mappedSize(0)
         , nextOffset(0)
         , baseAddress(0)
     {
@@ -1336,6 +1337,7 @@ public:
     bool useColor;
     QVector4D color;
     size_t bufferSize;
+    size_t mappedSize;
     intptr_t nextOffset;
     intptr_t baseAddress;
     VertexAttrib attrib[VertexAttributeCount];
@@ -1583,6 +1585,54 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+GLvoid *GLVertexBuffer::map(size_t size)
+{
+    d->mappedSize = size;
+
+    if (GLVertexBufferPrivate::supported)
+        glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
+
+    if (GLVertexBufferPrivate::hasMapBufferRange)
+        return (GLvoid *) d->mapNextFreeRange(size);
+
+    // If we can't map the buffer we allocate local memory to hold the
+    // buffer data and return a pointer to it.  The data will be submitted
+    // to the actual buffer object when the user calls unmap().
+    if (size_t(d->dataStore.size()) < size)
+        d->dataStore.resize(size);
+
+    return (GLvoid *) d->dataStore.data();
+}
+
+void GLVertexBuffer::unmap()
+{
+    if (GLVertexBufferPrivate::hasMapBufferRange) {
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        d->baseAddress = d->nextOffset;
+        d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
+    } else {
+        if (GLVertexBufferPrivate::supported) {
+            // Upload the data from local memory to the buffer object
+            glBufferData(GL_ARRAY_BUFFER, d->mappedSize, d->dataStore.data(), d->usage);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            // Free the local memory buffer if it's unlikely to be used again
+            if (d->usage == GL_STATIC_DRAW)
+                d->dataStore = QByteArray();
+
+            d->baseAddress = 0;
+        } else {
+            // If buffer objects aren't supported we just need to update
+            // the client memory pointer and we're done.
+            d->baseAddress = intptr_t(d->dataStore.data());
+        }
+    }
+
+    d->mappedSize = 0;
 }
 
 void GLVertexBuffer::setVertexCount(int count)
