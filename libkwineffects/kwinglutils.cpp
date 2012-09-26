@@ -1237,6 +1237,8 @@ public:
     }
 
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
+    void bindArrays();
+    void unbindArrays();
     GLvoid *mapNextFreeRange(size_t size);
 
     GLuint buffer;
@@ -1255,13 +1257,6 @@ public:
     intptr_t nextOffset;
     intptr_t vertexAddress;
     intptr_t texCoordAddress;
-
-    //! VBO is not supported
-    void legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping);
-    //! VBO and shaders are both supported
-    void corePainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping);
-    //! VBO is supported, but shaders are not supported
-    void fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping);
 };
 
 bool GLVertexBufferPrivate::supported = false;
@@ -1309,110 +1304,69 @@ void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
     }
 }
 
-void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping)
+void GLVertexBufferPrivate::bindArrays()
 {
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(region)
-    Q_UNUSED(primitiveMode)
-    Q_UNUSED(hardwareClipping)
-#else
-    // Enable arrays
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
+#ifndef KWIN_HAVE_OPENGLES
+    if (ShaderManager::instance()->isShaderBound()) {
+#endif
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
 
-    if (useTexCoords) {
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
-    }
-
-    if (useColor) {
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-    }
-
-    if (!hardwareClipping) {
-        glDrawArrays(primitiveMode, 0, vertexCount);
-    } else {
-        foreach (const QRect& r, region.rects()) {
-            glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays(primitiveMode, 0, vertexCount);
+        if (useColor) {
+            // FIXME Store the uniform location in the shader so we don't have to look it up every time.
+            shader->setUniform("geometryColor", color);
         }
-    }
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    if (useTexCoords) {
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+        glVertexAttribPointer(VA_Position, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
+        glEnableVertexAttribArray(VA_Position);
+
+        if (useTexCoords) {
+            glVertexAttribPointer(VA_TexCoord, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
+            glEnableVertexAttribArray(VA_TexCoord);
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+#ifndef KWIN_HAVE_OPENGLES
+    } else {
+        if (GLVertexBufferPrivate::supported)
+            glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+        // FIXME Is there any good reason to not leave this array permanently enabled?
+        //       When do we not use it in the GL 1.x path?
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
+
+        if (useTexCoords) {
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
+        }
+
+        if (useColor)
+            glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+
+        if (GLVertexBufferPrivate::supported)
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 #endif
 }
 
-void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
+void GLVertexBufferPrivate::unbindArrays()
 {
-    GLShader *shader = ShaderManager::instance()->getBoundShader();
+#ifndef KWIN_HAVE_OPENGLES
+    if (ShaderManager::instance()->isShaderBound()) {
+#endif
+        glDisableVertexAttribArray(VA_Position);
 
-    if (useColor) {
-        // FIXME Store the uniform location in the shader so we don't have to look it up every time.
-        shader->setUniform("geometryColor", color);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-    glVertexAttribPointer(VA_Position, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
-    glEnableVertexAttribArray(VA_Position);
-
-    if (useTexCoords) {
-        glVertexAttribPointer(VA_TexCoord, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
-        glEnableVertexAttribArray(VA_TexCoord);
-    }
-
-    if (!hardwareClipping) {
-        glDrawArrays(primitiveMode, 0, vertexCount);
-    } else {
-        foreach (const QRect& r, region.rects()) {
-            glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays(primitiveMode, 0, vertexCount);
+        if (useTexCoords) {
+            glDisableVertexAttribArray(VA_TexCoord);
         }
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    if (useTexCoords) {
-        glDisableVertexAttribArray(VA_TexCoord);
-    }
-    glDisableVertexAttribArray(VA_Position);
-}
-
-void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
-{
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(region)
-    Q_UNUSED(primitiveMode)
-    Q_UNUSED(hardwareClipping)
-#else
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
-    glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
-
-    if (useColor) {
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-    }
-
-    // Clip using scissoring
-    if (!hardwareClipping) {
-        glDrawArrays(primitiveMode, 0, vertexCount);
+#ifndef KWIN_HAVE_OPENGLES
     } else {
-        foreach (const QRect& r, region.rects()) {
-            glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays(primitiveMode, 0, vertexCount);
-        }
+        // Assume that the conventional arrays were enabled
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 }
 
@@ -1521,13 +1475,19 @@ void GLVertexBuffer::render(GLenum primitiveMode)
 
 void GLVertexBuffer::render(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
-    if (!GLVertexBufferPrivate::supported) {
-        d->legacyPainting(region, primitiveMode, hardwareClipping);
-    } else if (ShaderManager::instance()->isShaderBound()) {
-        d->corePainting(region, primitiveMode, hardwareClipping);
+    d->bindArrays();
+
+    if (!hardwareClipping) {
+        glDrawArrays(primitiveMode, 0, d->vertexCount);
     } else {
-        d->fallbackPainting(region, primitiveMode, hardwareClipping);
+        // Clip using scissoring
+        foreach (const QRect &r, region.rects()) {
+            glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+            glDrawArrays(primitiveMode, 0, d->vertexCount);
+        }
     }
+
+    d->unbindArrays();
 }
 
 bool GLVertexBuffer::isSupported()
