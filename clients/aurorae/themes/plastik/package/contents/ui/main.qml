@@ -59,6 +59,7 @@ Decoration {
         }
         root.animateButtons = decoration.readConfig("animateButtons", true);
         root.titleShadow = decoration.readConfig("titleShadow", true);
+        root.animationDuration = 150;
     }
     ColorHelper {
         id: colorHelper
@@ -70,7 +71,8 @@ Decoration {
     property alias buttonSize: titleRow.captionHeight
     property alias titleAlignment: caption.horizontalAlignment
     property color titleBarColor: options.titleBarColor
-    property int animationDuration: 150
+    // set by readConfig after Component completed, ensures that buttons do not flicker
+    property int animationDuration: 0
     property bool animateButtons: true
     property bool titleShadow: true
     Behavior on titleBarColor {
