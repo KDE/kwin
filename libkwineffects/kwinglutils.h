@@ -586,6 +586,27 @@ private:
     GLuint mFramebuffer;
 };
 
+enum VertexAttributeType {
+    VA_Position = 0,
+    VA_TexCoord = 1,
+    VertexAttributeCount = 2
+};
+
+/**
+ * Describes the format of a vertex attribute stored in a buffer object.
+ *
+ * The attribute format consists of the attribute index, the number of
+ * vector components, the data type, and the offset of the first element
+ * relative to the start of the vertex data.
+ */
+struct GLVertexAttrib
+{
+    int index;            /** The attribute index */
+    int size;             /** The number of components [1..4] */
+    GLenum type;          /** The type (e.g. GL_FLOAT) */
+    int relativeOffset;   /** The relative offset of the attribute */
+};
+
 /**
  * @short Vertex Buffer Object
  *
@@ -613,6 +634,43 @@ public:
 
     explicit GLVertexBuffer(UsageHint hint);
     ~GLVertexBuffer();
+
+    /**
+     * Specifies how interleaved vertex attributes are laid out in
+     * the buffer object.
+     *
+     * Note that the attributes and the stride should be 32 bit aligned
+     * or a performance penalty may be incurred.
+     *
+     * For some hardware the optimal stride is a multiple of 32 bytes.
+     *
+     * Example:
+     *
+     *     struct Vertex {
+     *         QVector3D position;
+     *         QVector2D texcoord;
+     *     };
+     *
+     *     const GLVertexAttrib attribs[] = {
+     *         { VA_Position, 3, GL_FLOAT, offsetof(Vertex, position) },
+     *         { VA_TexCoord, 2, GL_FLOAT, offsetof(Vertex, texcoord) }
+     *     };
+     *
+     *     Vertex vertices[6];
+     *     vbo->setAttribLayout(attribs, 2, sizeof(Vertex));
+     *     vbo->setData(vertices, sizeof(vertices));
+     */
+    void setAttribLayout(const GLVertexAttrib *attribs, int count, int stride);
+
+    /**
+     * Uploads data into the buffer object's data store.
+     */
+    void setData(const void *data, size_t sizeInBytes);
+
+    /**
+     * Sets the number of vertices that will be drawn by the render() method.
+     */
+    void setVertexCount(int count);
 
     /**
      * Sets the vertex data.

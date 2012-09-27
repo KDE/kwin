@@ -687,11 +687,6 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
 //****************************************
 ShaderManager *ShaderManager::s_shaderManager = NULL;
 
-enum VertexAttribute {
-    VA_Position = 0,
-    VA_TexCoord = 1
-};
-
 ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
@@ -1343,7 +1338,7 @@ public:
     size_t bufferSize;
     intptr_t nextOffset;
     intptr_t baseAddress;
-    VertexAttrib attrib[2];
+    VertexAttrib attrib[VertexAttributeCount];
     Bitfield enabledArrays;
 };
 
@@ -1503,6 +1498,35 @@ GLVertexBuffer::~GLVertexBuffer()
     delete d;
 }
 
+void GLVertexBuffer::setData(const void *data, size_t size)
+{
+    if (!GLVertexBufferPrivate::supported) {
+        // Legacy data
+        if (size_t(d->dataStore.size()) < size)
+            d->dataStore.resize(size);
+
+        d->baseAddress = intptr_t(d->dataStore.data());
+        memcpy((void *) d->baseAddress, data, size);
+        return;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
+
+    if (!d->hasMapBufferRange) {
+        glBufferData(GL_ARRAY_BUFFER, size, data, d->usage);
+        d->baseAddress = 0;
+    } else {
+        void *map = d->mapNextFreeRange(size);
+        memcpy(map, data, size);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+
+        d->baseAddress = d->nextOffset;
+        d->nextOffset += align(size, 16);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, const float* texcoords)
 {
     d->vertexCount = vertexCount;
@@ -1559,6 +1583,32 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void GLVertexBuffer::setVertexCount(int count)
+{
+    d->vertexCount = count;
+}
+
+void GLVertexBuffer::setAttribLayout(const GLVertexAttrib *attribs, int count, int stride)
+{
+    // Start by disabling all arrays
+    d->enabledArrays = 0;
+
+    for (int i = 0; i < count; i++) {
+        const int index = attribs[i].index;
+
+        assert(index >= 0 && index < VertexAttributeCount);
+        assert(!d->enabledArrays[index]);
+
+        d->attrib[index].size   = attribs[i].size;
+        d->attrib[index].type   = attribs[i].type;
+        d->attrib[index].offset = attribs[i].relativeOffset;
+
+        d->enabledArrays[index] = true;
+    }
+
+    d->stride = stride;
 }
 
 void GLVertexBuffer::render(GLenum primitiveMode)
