@@ -22,7 +22,7 @@ Item {
             var component = undefined;
             switch (buttons.charAt(i)) {
             case "_":
-                var button = Qt.createQmlObject("import QtQuick 1.1; Item{ width: " + group.explicitSpacer + "; height: parent.height}", groupRow, "dynamicGroup_" + buttons + i);
+                component = explicitSpacerComponent;
                 break;
             case "A":
                 component = group.maximizeButton;
@@ -84,5 +84,13 @@ Item {
             groupRow.children[i].destroy();
         }
         createButtons();
+    }
+
+    Component {
+        id: explicitSpacerComponent
+        Item {
+            width: group.explicitSpacer
+            height: groupRow.height
+        }
     }
 }
