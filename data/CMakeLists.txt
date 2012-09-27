@@ -37,10 +37,19 @@ target_link_libraries( kwin_update_settings_49 ${KDE4_KDECORE_LIBS} )
 
 install( TARGETS kwin_update_settings_49 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 
+########### next target ###############
+set( kwin_update_settings_410_SRCS update_kwin_410.cpp )
+
+kde4_add_executable( kwin_update_settings_410 ${kwin_update_settings_410_SRCS} )
+
+target_link_libraries( kwin_update_settings_410 ${KDE4_KDECORE_LIBS} )
+
+install( TARGETS kwin_update_settings_410 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
+
 ########### install files ###############
 
 install( FILES fsp_workarounds_1.kwinrules  DESTINATION  ${DATA_INSTALL_DIR}/kwin/default_rules )
 install( FILES pop.wav  DESTINATION  ${SOUND_INSTALL_DIR} )
-install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
+install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd kwin_update_410.upd DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 install( PROGRAMS kwin_remove_delay_focus.sh DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 
