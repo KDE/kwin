@@ -1278,6 +1278,18 @@ private:
 
 
 
+// ------------------------------------------------------------------
+
+
+
+struct VertexAttrib
+{
+    int size;
+    GLenum type;
+    int offset;
+};
+
+
 //*********************************
 // GLVertexBufferPrivate
 //*********************************
@@ -1286,14 +1298,11 @@ class GLVertexBufferPrivate
 public:
     GLVertexBufferPrivate(GLVertexBuffer::UsageHint usageHint)
         : vertexCount(0)
-        , dimension(2)
         , useColor(false)
-        , useTexCoords(true)
         , color(0, 0, 0, 255)
         , bufferSize(0)
         , nextOffset(0)
-        , vertexAddress(0)
-        , texCoordAddress(0)
+        , baseAddress(0)
     {
         if (GLVertexBufferPrivate::supported)
             glGenBuffers(1, &buffer);
@@ -1323,20 +1332,19 @@ public:
 
     GLuint buffer;
     GLenum usage;
-    int vertexCount;
-    int dimension;
     int stride;
+    int vertexCount;
     static bool supported;
     static GLVertexBuffer *streamingBuffer;
     static bool hasMapBufferRange;
     QByteArray dataStore;
     bool useColor;
-    bool useTexCoords;
     QVector4D color;
     size_t bufferSize;
     intptr_t nextOffset;
-    intptr_t vertexAddress;
-    intptr_t texCoordAddress;
+    intptr_t baseAddress;
+    VertexAttrib attrib[2];
+    Bitfield enabledArrays;
 };
 
 bool GLVertexBufferPrivate::supported = false;
@@ -1396,12 +1404,12 @@ void GLVertexBufferPrivate::bindArrays()
 
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-        glVertexAttribPointer(VA_Position, dimension, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) vertexAddress);
-        glEnableVertexAttribArray(VA_Position);
-
-        if (useTexCoords) {
-            glVertexAttribPointer(VA_TexCoord, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid *) texCoordAddress);
-            glEnableVertexAttribArray(VA_TexCoord);
+        BitfieldIterator it(enabledArrays);
+        while (it.hasNext()) {
+            const int index = it.next();
+            glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
+                                 (const GLvoid *) (baseAddress + attrib[index].offset));
+            glEnableVertexAttribArray(index);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1413,11 +1421,13 @@ void GLVertexBufferPrivate::bindArrays()
         // FIXME Is there any good reason to not leave this array permanently enabled?
         //       When do we not use it in the GL 1.x path?
         glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(dimension, GL_FLOAT, stride, (const GLvoid *) vertexAddress);
+        glVertexPointer(attrib[VA_Position].size, attrib[VA_Position].type, stride,
+                        (const GLvoid *) (baseAddress + attrib[VA_Position].offset));
 
-        if (useTexCoords) {
+        if (enabledArrays[VA_TexCoord]) {
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, stride, (const GLvoid *) texCoordAddress);
+            glTexCoordPointer(attrib[VA_TexCoord].size, attrib[VA_TexCoord].type, stride,
+                              (const GLvoid *) (baseAddress + attrib[VA_TexCoord].offset));
         }
 
         if (useColor)
@@ -1434,16 +1444,16 @@ void GLVertexBufferPrivate::unbindArrays()
 #ifndef KWIN_HAVE_OPENGLES
     if (ShaderManager::instance()->isShaderBound()) {
 #endif
-        glDisableVertexAttribArray(VA_Position);
-
-        if (useTexCoords) {
-            glDisableVertexAttribArray(VA_TexCoord);
-        }
+        BitfieldIterator it(enabledArrays);
+        while (it.hasNext())
+            glDisableVertexAttribArray(it.next());
 #ifndef KWIN_HAVE_OPENGLES
     } else {
         // Assume that the conventional arrays were enabled
         glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        if (enabledArrays[VA_TexCoord])
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 #endif
 }
@@ -1496,9 +1506,18 @@ GLVertexBuffer::~GLVertexBuffer()
 void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, const float* texcoords)
 {
     d->vertexCount = vertexCount;
-    d->dimension = dim;
-    d->useTexCoords = (texcoords != NULL);
     d->stride = (dim + (texcoords ? 2 : 0)) * sizeof(float);
+
+    d->attrib[VA_Position].size = dim;
+    d->attrib[VA_Position].type = GL_FLOAT;
+    d->attrib[VA_Position].offset = 0;
+
+    d->attrib[VA_TexCoord].size = 2;
+    d->attrib[VA_TexCoord].type = GL_FLOAT;
+    d->attrib[VA_TexCoord].offset = dim * sizeof(float);
+
+    d->enabledArrays[VA_Position] = true;
+    d->enabledArrays[VA_TexCoord] = texcoords != 0;
 
     size_t size = vertexCount * d->stride;
 
@@ -1507,11 +1526,9 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
         if (size_t(d->dataStore.size()) < size)
             d->dataStore.resize(size);
 
-        d->interleaveArrays((float *) d->dataStore.data(),
+        d->baseAddress = intptr_t(d->dataStore.data());
+        d->interleaveArrays((float *) d->baseAddress,
                             dim, vertices, texcoords, vertexCount);
-
-        d->vertexAddress = intptr_t(d->dataStore.data());
-        d->texCoordAddress = d->vertexAddress + dim * sizeof(float);
         return;
     }
 
@@ -1523,14 +1540,13 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
         d->interleaveArrays(map, dim, vertices, texcoords, vertexCount);
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
-        d->vertexAddress = d->nextOffset;
-        d->texCoordAddress = d->nextOffset + d->dimension * sizeof(float);
+        d->baseAddress = d->nextOffset;
         d->nextOffset += align(size, 16); // Align to 16 bytes for SSE
     } else {
         // We always reallocate the data store when we can't map the buffer.
         // The rationale is that there will almost always be contention
         // in a glBufferSubData() call.
-        if (d->useTexCoords) {
+        if (texcoords) {
             QByteArray array;
             array.resize(size);
 
@@ -1539,8 +1555,7 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
         } else
             glBufferData(GL_ARRAY_BUFFER, size, vertices, d->usage);
 
-        d->vertexAddress = 0;
-        d->texCoordAddress = d->dimension * sizeof(float);
+        d->baseAddress = 0;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1594,8 +1609,6 @@ void GLVertexBuffer::reset()
     d->useColor       = false;
     d->color          = QVector4D(0, 0, 0, 1);
     d->vertexCount    = 0;
-    d->dimension      = 2;
-    d->useTexCoords   = true;
 }
 
 void GLVertexBuffer::initStatic()
