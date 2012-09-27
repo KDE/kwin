@@ -48,13 +48,16 @@ public:
 
     QImage convertToGLFormat(const QImage& img) const;
 
+    void updateMatrix();
+
     GLuint m_texture;
     GLenum m_target;
     GLenum m_filter;
     GLenum m_wrapMode;
     QSize m_size;
     QSizeF m_scale; // to un-normalize GL_TEXTURE_2D
-    bool m_yInverted; // texture has y inverted
+    QMatrix4x4 m_matrix[2];
+    bool m_yInverted; // texture is y-inverted
     bool m_canUseMipmaps;
     bool m_markedDirty;
     bool m_filterChanged;

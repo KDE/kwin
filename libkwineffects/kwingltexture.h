@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRegion>
 #include <QSharedPointer>
 #include <QExplicitlySharedDataPointer>
+#include <QtGui/QMatrix4x4>
 
 class QImage;
 class QPixmap;
@@ -40,6 +41,11 @@ namespace KWin
 
 class GLVertexBuffer;
 class GLTexturePrivate;
+
+enum TextureCoordinateType {
+    NormalizedCoordinates = 0,
+    UnnormalizedCoordinates
+};
 
 class KWIN_EXPORT GLTexture
 {
@@ -66,6 +72,14 @@ public:
      * @since 4.8
      **/
     void setYInverted(bool inverted);
+
+    /**
+     * Returns a matrix that transforms texture coordinates of the given type,
+     * taking the texture target and the y-inversion flag into account.
+     *
+     * @since 4.11
+     */
+    QMatrix4x4 matrix(TextureCoordinateType type) const;
 
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);

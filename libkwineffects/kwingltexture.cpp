@@ -92,6 +92,8 @@ GLTexture::GLTexture(int width, int height)
         d->m_size = QSize(width, height);
         d->m_canUseMipmaps = true;
 
+        d->updateMatrix();
+
         glGenTextures(1, &d->m_texture);
         bind();
 #ifdef KWIN_HAVE_OPENGLES
@@ -203,6 +205,8 @@ bool GLTexture::load(const QImage& image, GLenum target)
 #endif
     d->m_size = img.size();
     d->m_yInverted = true;
+
+    d->updateMatrix();
 
     img = d->convertToGLFormat(img);
 
@@ -526,6 +530,27 @@ QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
     return res;
 }
 
+void GLTexturePrivate::updateMatrix()
+{
+    m_matrix[NormalizedCoordinates].setToIdentity();
+    m_matrix[UnnormalizedCoordinates].setToIdentity();
+
+#ifndef KWIN_HAVE_OPENGLES
+    if (m_target == GL_TEXTURE_RECTANGLE_ARB)
+        m_matrix[NormalizedCoordinates].scale(m_size.width(), m_size.height());
+    else
+#endif
+        m_matrix[UnnormalizedCoordinates].scale(1.0 / m_size.width(), 1.0 / m_size.height());
+
+    if (!m_yInverted) {
+        m_matrix[NormalizedCoordinates].translate(0.0, 1.0);
+        m_matrix[NormalizedCoordinates].scale(1.0, -1.0);
+
+        m_matrix[UnnormalizedCoordinates].translate(0.0, m_size.height());
+        m_matrix[UnnormalizedCoordinates].scale(1.0, -1.0);
+    }
+}
+
 bool GLTexture::isYInverted() const
 {
     Q_D(const GLTexture);
@@ -536,6 +561,7 @@ void GLTexture::setYInverted(bool inverted)
 {
     Q_D(GLTexture);
     d->m_yInverted = inverted;
+    d->updateMatrix();
 }
 
 int GLTexture::width() const
@@ -548,6 +574,12 @@ int GLTexture::height() const
 {
     Q_D(const GLTexture);
     return d->m_size.height();
+}
+
+QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
+{
+    Q_D(const GLTexture);
+    return d->m_matrix[type];
 }
 
 bool GLTexture::NPOTTextureSupported()

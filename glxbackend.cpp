@@ -612,6 +612,9 @@ bool GlxTexture::loadTexture(const Pixmap& pix, const QSize& size, int depth)
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoad0");
 #endif
+
+    updateMatrix();
+
     unbind();
     return true;
 }

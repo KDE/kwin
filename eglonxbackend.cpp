@@ -376,6 +376,7 @@ bool EglTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
     checkGLError("load texture");
     q->setYInverted(true);
     m_size = size;
+    updateMatrix();
     return true;
 }
 
