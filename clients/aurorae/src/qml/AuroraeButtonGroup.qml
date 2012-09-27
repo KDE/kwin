@@ -50,7 +50,7 @@ Item {
     }
     anchors {
         top: parent.top
-        topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop) + root.paddingTop + auroraeTheme.buttonMarginTop
+        topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop + root.paddingTop) + auroraeTheme.buttonMarginTop
     }
     Behavior on anchors.topMargin {
         NumberAnimation {

@@ -52,6 +52,7 @@ Decoration {
         imagePath: backgroundSvg.imagePath
         prefix: "decoration"
         opacity: shown ? 1 : 0
+        enabledBorders: decoration.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
         Behavior on opacity {
             NumberAnimation {
                 duration: auroraeTheme.animationTime
@@ -64,6 +65,7 @@ Decoration {
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-inactive"
         opacity: (!decoration.active && backgroundSvg.supportsInactive) ? 1 : 0
+        enabledBorders: decoration.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
         Behavior on opacity {
             NumberAnimation {
                 duration: auroraeTheme.animationTime
@@ -85,6 +87,7 @@ Decoration {
         prefix: "decoration-maximized"
         height: parent.borderTopMaximized
         opacity: shown ? 1 : 0
+        enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
             NumberAnimation {
                 duration: auroraeTheme.animationTime
@@ -105,6 +108,7 @@ Decoration {
         prefix: "decoration-maximized-inactive"
         height: parent.borderTopMaximized
         opacity: (!decoration.active && decoration.maximized && backgroundSvg.supportsMaximizedInactive) ? 1 : 0
+        enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
             NumberAnimation {
                 duration: auroraeTheme.animationTime
@@ -117,7 +121,7 @@ Decoration {
         width: childrenRect.width
         anchors {
             left: parent.left
-            leftMargin: (decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : auroraeTheme.titleEdgeLeft) + root.paddingLeft
+            leftMargin: decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.paddingLeft)
         }
         Behavior on anchors.leftMargin {
             NumberAnimation {
@@ -131,7 +135,7 @@ Decoration {
         width: childrenRect.width
         anchors {
             right: parent.right
-            rightMargin: (decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : auroraeTheme.titleEdgeRight) + root.paddingRight
+            rightMargin: decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.paddingRight)
         }
         Behavior on anchors.rightMargin {
             NumberAnimation {
@@ -153,7 +157,7 @@ Decoration {
             left: leftButtonGroup.right
             right: rightButtonGroup.left
             top: root.top
-            topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop) + root.paddingTop
+            topMargin: decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.paddingTop)
             leftMargin: auroraeTheme.titleBorderLeft
             rightMargin: auroraeTheme.titleBorderRight
         }
