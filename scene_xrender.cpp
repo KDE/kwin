@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include "paintredirector.h"
 #include "kwinxrenderutils.h"
 
 #include <X11/extensions/Xcomposite.h>
@@ -584,24 +585,25 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     const QPixmap *top = NULL;
     const QPixmap *right = NULL;
     const QPixmap *bottom = NULL;
+    PaintRedirector *redirector = NULL;
     QRect dtr, dlr, drr, dbr;
     if (client || deleted) {
         if (client && !client->noBorder()) {
-            client->ensureDecorationPixmapsPainted();
+            redirector = client->decorationPaintRedirector();
             noBorder = client->noBorder();
-            left   = client->leftDecoPixmap();
-            top    = client->topDecoPixmap();
-            right  = client->rightDecoPixmap();
-            bottom = client->bottomDecoPixmap();
             client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
         }
         if (deleted && !deleted->noBorder()) {
             noBorder = deleted->noBorder();
-            left   = deleted->leftDecoPixmap();
-            top    = deleted->topDecoPixmap();
-            right  = deleted->rightDecoPixmap();
-            bottom = deleted->bottomDecoPixmap();
+            redirector = deleted->decorationPaintRedirector();
             deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
+        }
+        if (redirector) {
+            redirector->ensurePixmapsPainted();
+            left   = redirector->leftDecoPixmap();
+            top    = redirector->topDecoPixmap();
+            right  = redirector->rightDecoPixmap();
+            bottom = redirector->bottomDecoPixmap();
         }
         if (!noBorder) {
             MAP_RECT_TO_TARGET(dtr);
@@ -685,6 +687,9 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
                 RENDER_DECO_PART(left, dlr);
                 RENDER_DECO_PART(right, drr);
                 RENDER_DECO_PART(bottom, dbr);
+            }
+            if (redirector) {
+                redirector->markAsRepainted();
             }
         }
 #undef RENDER_DECO_PART

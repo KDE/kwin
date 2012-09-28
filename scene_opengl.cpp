@@ -83,6 +83,7 @@ Sources and other compositing managers:
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include "paintredirector.h"
 
 #include <math.h>
 
@@ -894,20 +895,21 @@ template<class T>
 void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping)
 {
     T* t = static_cast<T*>(toplevel);
-    if (t->noBorder()) {
+    PaintRedirector *redirector = t->decorationPaintRedirector();
+    if (t->noBorder() || !redirector) {
         return;
     }
     WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
     QRect topRect, leftRect, rightRect, bottomRect;
-    const bool updateDeco = t->decorationPixmapRequiresRepaint();
-    t->ensureDecorationPixmapsPainted();
+    const bool updateDeco = redirector->requiresRepaint();
 
     t->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
 
-    const QPixmap *left   = t->leftDecoPixmap();
-    const QPixmap *top    = t->topDecoPixmap();
-    const QPixmap *right  = t->rightDecoPixmap();
-    const QPixmap *bottom = t->bottomDecoPixmap();
+    const QPixmap *left   = redirector->leftDecoPixmap();
+    const QPixmap *top    = redirector->topDecoPixmap();
+    const QPixmap *right  = redirector->rightDecoPixmap();
+    const QPixmap *bottom = redirector->bottomDecoPixmap();
+
     WindowQuadList topList, leftList, rightList, bottomList;
 
     foreach (const WindowQuad & quad, decoration) {
@@ -929,10 +931,13 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
         }
     }
 
+    redirector->ensurePixmapsPainted();
     paintDecoration(top, DecorationTop, region, topRect, data, topList, updateDeco, hardwareClipping);
     paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, updateDeco, hardwareClipping);
     paintDecoration(right, DecorationRight, region, rightRect, data, rightList, updateDeco, hardwareClipping);
     paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco, hardwareClipping);
+
+    redirector->markAsRepainted();
 }
 
 

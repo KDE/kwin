@@ -584,17 +584,8 @@ public:
     }
 
     // Decorations <-> Effects
-    const QPixmap *topDecoPixmap() const {
-        return &decorationPixmapTop;
-    }
-    const QPixmap *leftDecoPixmap() const {
-        return &decorationPixmapLeft;
-    }
-    const QPixmap *bottomDecoPixmap() const {
-        return &decorationPixmapBottom;
-    }
-    const QPixmap *rightDecoPixmap() const {
-        return &decorationPixmapRight;
+    PaintRedirector *decorationPaintRedirector() {
+        return paintRedirector;
     }
 
     int paddingLeft() const {
@@ -609,9 +600,6 @@ public:
     int paddingBottom() const {
         return padding_bottom;
     }
-
-    bool decorationPixmapRequiresRepaint();
-    void ensureDecorationPixmapsPainted();
 
     QRect decorationRect() const;
 
@@ -694,7 +682,6 @@ private slots:
     void removeSyncSupport();
     void pingTimeout();
     void demandAttentionKNotify();
-    void repaintDecorationPending();
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication
@@ -795,8 +782,6 @@ private:
     void updateHiddenPreview();
 
     void updateInputShape();
-    void repaintDecorationPixmap(QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg);
-    void resizeDecorationPixmaps();
 
     Time readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
                                   bool session) const;
@@ -947,9 +932,6 @@ private:
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
     QTimer* demandAttentionKNotifyTimer;
-    QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
-    // we (instead of Qt) initialize the Pixmaps, and have to free them
-    bool m_responsibleForDecoPixmap;
     PaintRedirector* paintRedirector;
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox;

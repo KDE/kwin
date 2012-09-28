@@ -124,7 +124,6 @@ Client::Client(Workspace* ws)
     , padding_bottom(0)
     , sm_stacking_order(-1)
     , demandAttentionKNotifyTimer(NULL)
-    , m_responsibleForDecoPixmap(false)
     , paintRedirector(0)
     , m_firstInTabBox(false)
     , electricMaximizing(false)
@@ -414,11 +413,10 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         XMoveWindow(display(), decoration->widget()->winId(), -padding_left, -padding_top);
         move(calculateGravitation(false));
         plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
-        paintRedirector = new PaintRedirector(decoration->widget());
-        connect(paintRedirector, SIGNAL(paintPending()), SLOT(repaintDecorationPending()));
-        resizeDecorationPixmaps();
-        if (compositing())
+        if (Compositor::compositing()) {
+            paintRedirector = new PaintRedirector(this, decoration->widget());
             discardWindowPixmap();
+        }
         emit geometryShapeChanged(this, oldgeom);
     } else
         destroyDecoration();
@@ -437,21 +435,12 @@ void Client::destroyDecoration()
     if (decoration != NULL) {
         delete decoration;
         decoration = NULL;
+        paintRedirector = NULL;
         QPoint grav = calculateGravitation(true);
         border_left = border_right = border_top = border_bottom = 0;
         setMask(QRegion());  // Reset shape mask
         plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
         move(grav);
-        delete paintRedirector;
-        paintRedirector = NULL;
-        if (m_responsibleForDecoPixmap) {
-            XFreePixmap(display(), decorationPixmapTop.handle());
-            XFreePixmap(display(), decorationPixmapBottom.handle());
-            XFreePixmap(display(), decorationPixmapLeft.handle());
-            XFreePixmap(display(), decorationPixmapRight.handle());
-            m_responsibleForDecoPixmap = false;
-        }
-        decorationPixmapLeft = decorationPixmapRight = decorationPixmapTop = decorationPixmapBottom = QPixmap();
         if (compositing())
             discardWindowPixmap();
         if (!deleting) {
@@ -543,162 +532,6 @@ QRegion Client::decorationPendingRegion() const
     return paintRedirector->scheduledRepaintRegion().translated(x() - padding_left, y() - padding_top);
 }
 
-void Client::repaintDecorationPending()
-{
-    if (compositing()) {
-        // The scene will update the decoration pixmaps in the next painting pass
-        // if it has not been already repainted before
-        const QRegion r = paintRedirector->scheduledRepaintRegion();
-        if (!r.isEmpty()) {
-            addRepaint(r.translated(-padding_left,-padding_top));
-        }
-    }
-}
-
-bool Client::decorationPixmapRequiresRepaint()
-{
-    if (!paintRedirector)
-        return false;
-    QRegion r = paintRedirector->pendingRegion();
-    return !r.isEmpty();
-}
-
-void Client::ensureDecorationPixmapsPainted()
-{
-    if (!paintRedirector || !compositing())
-        return;
-
-    QRegion r = paintRedirector->pendingRegion();
-    if (r.isEmpty())
-        return;
-
-    QPixmap p = paintRedirector->performPendingPaint();
-
-    QRect lr, rr, tr, br;
-    layoutDecorationRects(lr, tr, rr, br, DecorationRelative);
-
-    repaintDecorationPixmap(decorationPixmapLeft, lr, p, r);
-    repaintDecorationPixmap(decorationPixmapRight, rr, p, r);
-    repaintDecorationPixmap(decorationPixmapTop, tr, p, r);
-    repaintDecorationPixmap(decorationPixmapBottom, br, p, r);
-
-    XSync(display(), false);
-}
-
-void Client::repaintDecorationPixmap(QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg)
-{
-    if (!r.isValid())
-        return;
-    QRect b = reg.boundingRect();
-    reg &= r;
-    if (reg.isEmpty())
-        return;
-    QPainter pt(&pix);
-    pt.translate(-r.topLeft());
-    pt.setCompositionMode(QPainter::CompositionMode_Source);
-    pt.setClipRegion(reg);
-    pt.drawPixmap(b.topLeft(), src);
-    pt.end();
-}
-
-void Client::resizeDecorationPixmaps()
-{
-    if (!compositing()) {
-        // compositing disabled - we render directly on screen
-        triggerDecorationRepaint();
-        return;
-    }
-    QRect lr, rr, tr, br;
-    layoutDecorationRects(lr, tr, rr, br, DecorationRelative);
-
-    if (decorationPixmapTop.size() != tr.size()) {
-        if (m_responsibleForDecoPixmap && !decorationPixmapTop.isNull() &&
-              decorationPixmapTop.paintEngine()->type() == QPaintEngine::X11) {
-            XFreePixmap(display(), decorationPixmapTop.handle());
-        }
-
-        if (effects->isOpenGLCompositing()) {
-            decorationPixmapTop = QPixmap(tr.size());
-            m_responsibleForDecoPixmap = false;
-        } else {
-            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
-                                        tr.size().width(), tr.height(),
-                                        32);
-            decorationPixmapTop = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
-            decorationPixmapTop.fill(Qt::transparent);
-            m_responsibleForDecoPixmap= true;
-        }
-    }
-
-    if (decorationPixmapBottom.size() != br.size()) {
-        if (m_responsibleForDecoPixmap && !decorationPixmapBottom.isNull() &&
-              decorationPixmapBottom.paintEngine()->type() == QPaintEngine::X11) {
-            XFreePixmap(display(), decorationPixmapBottom.handle());
-        }
-
-        if (effects->isOpenGLCompositing()) {
-            decorationPixmapBottom = QPixmap(br.size());
-            m_responsibleForDecoPixmap = false;
-        } else {
-            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
-                                        br.size().width(), br.height(),
-                                        32);
-            decorationPixmapBottom = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
-            decorationPixmapBottom.fill(Qt::transparent);
-            m_responsibleForDecoPixmap = true;
-        }
-    }
-
-    if (decorationPixmapLeft.size() != lr.size()) {
-        if (m_responsibleForDecoPixmap && !decorationPixmapLeft.isNull() &&
-              decorationPixmapLeft.paintEngine()->type() == QPaintEngine::X11) {
-            XFreePixmap(display(), decorationPixmapLeft.handle());
-        }
-
-        if (effects->isOpenGLCompositing()) {
-            decorationPixmapLeft = QPixmap(lr.size());
-            m_responsibleForDecoPixmap = false;
-        } else {
-            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
-                                        lr.size().width(), lr.height(),
-                                        32);
-            decorationPixmapLeft = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
-            decorationPixmapLeft.fill(Qt::transparent);
-            m_responsibleForDecoPixmap = true;
-        }
-    }
-
-    if (decorationPixmapRight.size() != rr.size()) {
-        if (m_responsibleForDecoPixmap && !decorationPixmapRight.isNull() &&
-              decorationPixmapRight.paintEngine()->type() == QPaintEngine::X11) {
-            XFreePixmap(display(), decorationPixmapRight.handle());
-        }
-
-        if (effects->isOpenGLCompositing()) {
-            decorationPixmapRight = QPixmap(rr.size());
-            m_responsibleForDecoPixmap = false;
-        } else {
-            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
-                                        rr.size().width(), rr.height(),
-                                        32);
-            decorationPixmapRight = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
-            decorationPixmapRight.fill(Qt::transparent);
-            m_responsibleForDecoPixmap = true;
-        }
-    }
-
-#ifdef HAVE_XRENDER
-    if (Extensions::renderAvailable()) {
-        // Make sure the pixmaps are created with alpha channels
-        decorationPixmapLeft.fill(Qt::transparent);
-        decorationPixmapRight.fill(Qt::transparent);
-        decorationPixmapTop.fill(Qt::transparent);
-        decorationPixmapBottom.fill(Qt::transparent);
-    }
-#endif
-    triggerDecorationRepaint();
-}
-
 QRect Client::transparentRect() const
 {
     if (isShade())
@@ -781,8 +614,10 @@ void Client::resizeDecoration(const QSize& s)
     if (oldSize == newSize) {
         QResizeEvent e(newSize, oldSize);
         QApplication::sendEvent(decoration->widget(), &e);
-    } else { // oldSize != newSize
-        resizeDecorationPixmaps();
+    } else if (paintRedirector) { // oldSize != newSize
+        paintRedirector->resizePixmaps();
+    } else {
+        triggerDecorationRepaint();
     }
     updateInputWindow();
 }

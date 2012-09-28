@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
+#include "paintredirector.h"
 #include "shadow.h"
 
 namespace KWin
@@ -37,6 +38,7 @@ Deleted::Deleted(Workspace* ws)
     , padding_bottom(0)
     , m_layer(UnknownLayer)
     , m_minimized(false)
+    , m_paintRedirector(NULL)
 {
 }
 
@@ -88,10 +90,11 @@ void Deleted::copyToDeleted(Toplevel* c)
                                           decoration_right,
                                           decoration_bottom,
                                           Client::WindowRelative);
-            decorationPixmapLeft = *client->leftDecoPixmap();
-            decorationPixmapRight = *client->rightDecoPixmap();
-            decorationPixmapTop = *client->topDecoPixmap();
-            decorationPixmapBottom = *client->bottomDecoPixmap();
+            if (PaintRedirector *redirector = client->decorationPaintRedirector()) {
+                redirector->ensurePixmapsPainted();
+                redirector->reparent(this);
+                m_paintRedirector = redirector;
+            }
         }
         m_minimized = client->isMinimized();
     }

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class PaintRedirector;
 
 class Deleted
     : public Toplevel
@@ -43,18 +44,6 @@ public:
     virtual QSize clientSize() const;
     virtual QRect transparentRect() const;
     virtual bool isDeleted() const;
-    const QPixmap *topDecoPixmap() const {
-        return &decorationPixmapTop;
-    }
-    const QPixmap *leftDecoPixmap() const {
-        return &decorationPixmapLeft;
-    }
-    const QPixmap *bottomDecoPixmap() const {
-        return &decorationPixmapBottom;
-    }
-    const QPixmap *rightDecoPixmap() const {
-        return &decorationPixmapRight;
-    }
     bool noBorder() const {
         return no_border;
     }
@@ -67,10 +56,9 @@ public:
         return m_minimized;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
-    bool decorationPixmapRequiresRepaint() const {
-        return false;
+    PaintRedirector *decorationPaintRedirector() {
+        return m_paintRedirector;
     }
-    void ensureDecorationPixmapsPainted() {}
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
@@ -85,10 +73,6 @@ private:
     QRect contentsRect; // for clientPos()/clientSize()
     QRect transparent_rect;
 
-    QPixmap decorationPixmapLeft;
-    QPixmap decorationPixmapRight;
-    QPixmap decorationPixmapTop;
-    QPixmap decorationPixmapBottom;
     bool no_border;
     QRect decoration_left;
     QRect decoration_right;
@@ -97,6 +81,7 @@ private:
     int padding_left, padding_top, padding_right, padding_bottom;
     Layer m_layer;
     bool m_minimized;
+    PaintRedirector *m_paintRedirector;
 };
 
 inline void Deleted::refWindow()
