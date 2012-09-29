@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLPLATFORM_H
 #define KWIN_GLPLATFORM_H
 
+#include <kwinglobals.h>
 #include <kwinglutils_funcs.h>
 
 #include <QSet>
@@ -139,7 +140,7 @@ public:
     /**
      * Runs the detection code using the current OpenGL context.
      */
-    void detect();
+    void detect(OpenGLPlatformInterface platformInterface);
 
     /**
      * Prints the results of the detection code.

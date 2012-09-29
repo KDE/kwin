@@ -38,6 +38,11 @@ if(OPENGL_FOUND)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
 
+if(OPENGL_EGL_FOUND)
+    include_directories(${OPENGLES_EGL_INCLUDE_DIR})
+    set(KWIN_HAVE_EGL 1)
+endif(OPENGL_EGL_FOUND)
+
 if(OPENGLES_FOUND)
   include_directories(${OPENGLES_INCLUDE_DIR})
 endif(OPENGLES_FOUND)
@@ -110,7 +115,6 @@ set(kwin_KDEINIT_SRCS
    scene.cpp
    scene_xrender.cpp
    scene_opengl.cpp
-   eglonxbackend.cpp
    glxbackend.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
@@ -152,6 +156,10 @@ if(KWIN_BUILD_SCREENEDGES)
     )
 endif(KWIN_BUILD_SCREENEDGES)
 
+if(KWIN_HAVE_EGL)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
+endif(KWIN_HAVE_EGL)
+
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface )
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml composite.h KWin::Compositor )
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin::EffectsHandlerImpl )
@@ -177,6 +185,10 @@ endif(KWIN_BUILD_SCRIPTING)
 if(KWIN_BUILD_ACTIVITIES)
     set(kwinLibs ${kwinLibs} ${KACTIVITIES_LIBRARY})
 endif(KWIN_BUILD_ACTIVITIES)
+
+if(OPENGL_EGL_FOUND)
+    set(kwinLibs ${kwinLibs} ${OPENGLES_EGL_LIBRARY})
+endif(OPENGL_EGL_FOUND)
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 

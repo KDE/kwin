@@ -498,7 +498,7 @@ GLPlatform::~GLPlatform()
 {
 }
 
-void GLPlatform::detect()
+void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 {
     m_vendor       = (const char*)glGetString(GL_VENDOR);
     m_renderer     = (const char*)glGetString(GL_RENDERER);
@@ -521,21 +521,32 @@ void GLPlatform::detect()
         m_mesaVersion = parseVersionString(version);
     }
 
+    if (platformInterface == EglPlatformInterface) {
+        m_directRendering = true;
 #ifdef KWIN_HAVE_OPENGLES
-    m_directRendering = true;
-    m_supportsGLSL = true;
-    m_textureNPOT = true;
+        m_supportsGLSL = true;
+        m_textureNPOT = true;
 #else
-    GLXContext ctx = glXGetCurrentContext();
-    m_directRendering = glXIsDirect(display(), ctx);
+        m_supportsGLSL = m_extensions.contains("GL_ARB_shading_language_100") &&
+                        m_extensions.contains("GL_ARB_shader_objects") &&
+                        m_extensions.contains("GL_ARB_fragment_shader") &&
+                        m_extensions.contains("GL_ARB_vertex_shader");
 
-    m_supportsGLSL = m_extensions.contains("GL_ARB_shading_language_100") &&
-                     m_extensions.contains("GL_ARB_shader_objects") &&
-                     m_extensions.contains("GL_ARB_fragment_shader") &&
-                     m_extensions.contains("GL_ARB_vertex_shader");
-
-    m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+        m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
 #endif
+    } else if (platformInterface == GlxPlatformInterface) {
+#ifndef KWIN_HAVE_OPENGLES
+        GLXContext ctx = glXGetCurrentContext();
+        m_directRendering = glXIsDirect(display(), ctx);
+
+        m_supportsGLSL = m_extensions.contains("GL_ARB_shading_language_100") &&
+                        m_extensions.contains("GL_ARB_shader_objects") &&
+                        m_extensions.contains("GL_ARB_fragment_shader") &&
+                        m_extensions.contains("GL_ARB_vertex_shader");
+
+        m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+#endif
+    }
 
     m_serverVersion = getXServerVersion();
     m_kernelVersion = getKernelVersion();
@@ -728,14 +739,12 @@ void GLPlatform::detect()
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
     }
 
-#ifdef KWIN_HAVE_OPENGLES
-    if (isMesaDriver()) {
+    if (isMesaDriver() && platformInterface == EglPlatformInterface) {
         // According to the reference implementation in
         // mesa/demos/src/egl/opengles1/texture_from_pixmap
         // the mesa egl implementation does not require a strict binding (so far).
         m_looseBinding = true;
     }
-#endif
 
     // Loose binding is broken with Gallium drivers in Mesa 7.10
     if (isGalliumDriver() && mesaVersion() == kVersionNumber(7, 10, 0))

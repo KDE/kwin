@@ -58,7 +58,7 @@ void KWIN_EXPORT initGLX();
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
-void KWIN_EXPORT initGL();
+void KWIN_EXPORT initGL(OpenGLPlatformInterface platformInterface);
 // Initializes EGL function pointers
 void KWIN_EXPORT initEGL();
 // Cleans up all resources hold by the GL Context

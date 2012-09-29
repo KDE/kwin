@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLUTILS_FUNCS_H
 
 #include <kdemacros.h>
+#include <kwinconfig.h>
+#include <kwinglobals.h>
 
 #define KWIN_EXPORT KDE_EXPORT
 
@@ -352,11 +354,17 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 
 } // namespace
 
-#else
+#endif // not KWIN_HAVE_OPENGLES
+
+#ifdef KWIN_HAVE_EGL
 #define EGL_EGLEXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES
+
+#ifdef KWIN_HAVE_OPENGLES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#endif
+
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <fixx11h.h>
@@ -369,7 +377,7 @@ namespace KWin
 {
 
 void KWIN_EXPORT eglResolveFunctions();
-void KWIN_EXPORT glResolveFunctions();
+void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
@@ -384,6 +392,6 @@ extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOE
 
 } // namespace
 
-#endif
+#endif // KWIN_HAVE_EGL
 
-#endif
+#endif // KWIN_GLUTILS_FUNCS_H

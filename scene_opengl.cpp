@@ -67,9 +67,10 @@ Sources and other compositing managers:
 */
 
 #include "scene_opengl.h"
-#ifdef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"
-#else
+#endif
+#ifndef KWIN_HAVE_OPENGLES
 #include "glxbackend.h"
 #endif
 
@@ -194,11 +195,41 @@ SceneOpenGL::~SceneOpenGL()
 SceneOpenGL *SceneOpenGL::createScene()
 {
     OpenGLBackend *backend = NULL;
-#ifdef KWIN_HAVE_OPENGLES
-    backend = new EglOnXBackend();
-#else
-    backend = new GlxBackend();
+    OpenGLPlatformInterface platformInterface = NoOpenGLPlatformInterface;
+    // should we use glx?
+#ifndef KWIN_HAVE_OPENGLES
+    // on OpenGL we default to glx
+    platformInterface = GlxPlatformInterface;
 #endif
+
+#ifdef KWIN_HAVE_EGL
+#ifdef KWIN_HAVE_OPENGLES
+    // for OpenGL ES we need to use the Egl Backend
+    platformInterface = EglPlatformInterface;
+#else
+    // check environment variable
+    if (qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl") == 0) {
+        kDebug(1212) << "Forcing EGL native interface through environment variable";
+        platformInterface = EglPlatformInterface;
+    }
+#endif
+#endif
+
+    switch (platformInterface) {
+    case GlxPlatformInterface:
+#ifndef KWIN_HAVE_OPENGLES
+        backend = new GlxBackend();
+#endif
+        break;
+    case EglPlatformInterface:
+#ifdef KWIN_HAVE_EGL
+        backend = new EglOnXBackend();
+#endif
+        break;
+    default:
+        // no backend available
+        return NULL;
+    }
     if (!backend || backend->isFailed()) {
         delete backend;
         return NULL;

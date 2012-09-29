@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifdef KWIN_HAVE_OPENGLES
 #include "eglonxbackend.h"
 // kwin
 #include "options.h"
@@ -67,9 +66,9 @@ void EglOnXBackend::init()
         return;
     }
     GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect();
+    glPlatform->detect(EglPlatformInterface);
     glPlatform->printResults();
-    initGL();
+    initGL(EglPlatformInterface);
     if (!hasGLExtension("GL_OES_EGL_image")) {
         setFailed("Required extension GL_OES_EGL_image not found, disabling compositing");
         return;
@@ -99,7 +98,14 @@ bool EglOnXBackend::initRenderingContext()
     EGLint major, minor;
     if (eglInitialize(dpy, &major, &minor) == EGL_FALSE)
         return false;
+#ifdef KWIN_HAVE_OPENGLES
     eglBindAPI(EGL_OPENGL_ES_API);
+#else
+    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
+        kError(1212) << "bind OpenGL API failed";
+        return false;
+    }
+#endif
     initBufferConfigs();
     if (!overlayWindow()->create()) {
         kError(1212) << "Could not get overlay window";
@@ -111,18 +117,27 @@ bool EglOnXBackend::initRenderingContext()
 
     eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
 
-    eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost);
+    if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
+        kError(1212) << "query surface failed";
+        return false;
+    }
 
     const EGLint context_attribs[] = {
+#ifdef KWIN_HAVE_OPENGLES
         EGL_CONTEXT_CLIENT_VERSION, 2,
+#endif
         EGL_NONE
     };
 
     ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs);
-    if (ctx == EGL_NO_CONTEXT)
+    if (ctx == EGL_NO_CONTEXT) {
+        kError(1212) << "Create Context failed";
         return false;
-    if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE)
+    }
+    if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE) {
+        kError(1212) << "Make Context Current failed";
         return false;
+    }
     kDebug(1212) << "EGL version: " << major << "." << minor;
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
@@ -140,21 +155,30 @@ bool EglOnXBackend::initBufferConfigs()
         EGL_GREEN_SIZE,           1,
         EGL_BLUE_SIZE,            1,
         EGL_ALPHA_SIZE,           0,
+#ifdef KWIN_HAVE_OPENGLES
         EGL_RENDERABLE_TYPE,      EGL_OPENGL_ES2_BIT,
+#else
+        EGL_RENDERABLE_TYPE,      EGL_OPENGL_BIT,
+#endif
         EGL_CONFIG_CAVEAT,        EGL_NONE,
         EGL_NONE,
     };
 
     EGLint count;
     EGLConfig configs[1024];
-    eglChooseConfig(dpy, config_attribs, configs, 1024, &count);
+    if (eglChooseConfig(dpy, config_attribs, configs, 1024, &count) == EGL_FALSE) {
+        kError(1212) << "choose config failed";
+        return false;
+    }
 
     EGLint visualId = XVisualIDFromVisual((Visual*)QX11Info::appVisual());
 
     config = configs[0];
     for (int i = 0; i < count; i++) {
         EGLint val;
-        eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val);
+        if (eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
+            kError(1212) << "egl get config attrib failed";
+        }
         if (visualId == val) {
             config = configs[i];
             break;
@@ -189,14 +213,14 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
     return new EglTexture(texture, this);
 }
 
-void KWin::EglOnXBackend::prepareRenderingFrame()
+void EglOnXBackend::prepareRenderingFrame()
 {
     if (!lastDamage().isEmpty())
         flushBuffer();
     startRenderTimer();
 }
 
-void KWin::EglOnXBackend::endRenderingFrame(int mask, const QRegion &damage)
+void EglOnXBackend::endRenderingFrame(int mask, const QRegion &damage)
 {
     setLastDamage(damage);
     setLastMask(mask);
@@ -281,4 +305,3 @@ void KWin::EglTexture::onDamage()
 }
 
 } // namespace
-#endif

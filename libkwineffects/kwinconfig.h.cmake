@@ -19,5 +19,7 @@
 /* KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available */
 #cmakedefine KWIN_HAVE_XRENDER_COMPOSITING
 
+#cmakedefine KWIN_HAVE_EGL
+
 
 #endif

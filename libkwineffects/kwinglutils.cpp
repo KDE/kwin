@@ -83,7 +83,7 @@ void initGLX()
 
 void initEGL()
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_EGL
     EGLDisplay dpy = eglGetCurrentDisplay();
     int major, minor;
     eglInitialize(dpy, &major, &minor);
@@ -94,7 +94,7 @@ void initEGL()
 #endif
 }
 
-void initGL()
+void initGL(OpenGLPlatformInterface platformInterface)
 {
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
@@ -108,7 +108,7 @@ void initGL()
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
-    glResolveFunctions();
+    glResolveFunctions(platformInterface);
 
     GLTexturePrivate::initStatic();
     GLRenderTarget::initStatic();

@@ -89,9 +89,9 @@ void GlxBackend::init()
     }
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect();
+    glPlatform->detect(GlxPlatformInterface);
     glPlatform->printResults();
-    initGL();
+    initGL(GlxPlatformInterface);
     // Check whether certain features are supported
     if (options->isGlVSync()) {
         if (glXGetVideoSync && glXSwapInterval && glXIsDirect(display(), ctxbuffer)) {

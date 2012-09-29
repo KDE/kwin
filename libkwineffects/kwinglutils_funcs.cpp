@@ -24,19 +24,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // Resolves given function, using getProcAddress
-#define GL_RESOLVE( function )  function = (function ## _func)getProcAddress( #function );
+#ifdef KWIN_HAVE_EGL
+#define GL_RESOLVE( function ) \
+    if (platformInterface == GlxPlatformInterface) \
+        function = (function ## _func)getProcAddress( #function ); \
+    else if (platformInterface == EglPlatformInterface) \
+        function = (function ## _func)eglGetProcAddress( #function );
 // Same as above but tries to use function "backup" if "function" doesn't exist
 // Useful when same functionality is also defined in an extension
+#define GL_RESOLVE_WITH_EXT( function, backup ) \
+    if (platformInterface == GlxPlatformInterface) { \
+        function = (function ## _func)getProcAddress( #function ); \
+        if ( !function ) \
+            function = (function ## _func)getProcAddress( #backup ); \
+    } else if (platformInterface == EglPlatformInterface) { \
+        function = (function ## _func)eglGetProcAddress( #function ); \
+        if ( !function ) \
+            function = (function ## _func)eglGetProcAddress( #backup ); \
+    }
+#else
+// same without the switch to egl
+#define GL_RESOLVE( function ) function = (function ## _func)getProcAddress( #function );
+
 #define GL_RESOLVE_WITH_EXT( function, backup ) \
     function = (function ## _func)getProcAddress( #function ); \
     if ( !function ) \
         function = (function ## _func)getProcAddress( #backup );
+#endif
 
-#ifndef KWIN_HAVE_OPENGLES
+#define EGL_RESOLVE( function )  function = (function ## _func)eglGetProcAddress( #function );
+
 
 namespace KWin
 {
 
+#ifndef KWIN_HAVE_OPENGLES
 // Function pointers
 glXGetProcAddress_func glXGetProcAddress;
 // GLX 1.3
@@ -175,6 +197,7 @@ void glxResolveFunctions()
         glXSwapInterval = NULL;
     }
 
+    OpenGLPlatformInterface platformInterface = GlxPlatformInterface;
     GL_RESOLVE_WITH_EXT(glXGetFBConfigAttrib, glXGetFBConfigAttribSGIX);
     GL_RESOLVE_WITH_EXT(glXGetVisualFromFBConfig, glXGetVisualFromFBConfigSGIX);
     GL_RESOLVE(glXGetFBConfigs);
@@ -183,9 +206,42 @@ void glxResolveFunctions()
     GL_RESOLVE(glXCreatePixmap);
     GL_RESOLVE(glXDestroyPixmap);
 }
+#endif
 
-void glResolveFunctions()
+
+
+#ifdef KWIN_HAVE_EGL
+
+// EGL
+eglCreateImageKHR_func eglCreateImageKHR;
+eglDestroyImageKHR_func eglDestroyImageKHR;
+eglPostSubBufferNV_func eglPostSubBufferNV;
+// GLES
+glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+
+void eglResolveFunctions()
 {
+    if (hasGLExtension("EGL_KHR_image") ||
+        (hasGLExtension("EGL_KHR_image_base") &&
+         hasGLExtension("EGL_KHR_image_pixmap"))) {
+        eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
+        eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
+    } else {
+        eglCreateImageKHR = NULL;
+        eglDestroyImageKHR = NULL;
+    }
+
+    if (hasGLExtension("EGL_NV_post_sub_buffer")) {
+        eglPostSubBufferNV = (eglPostSubBufferNV_func)eglGetProcAddress("eglPostSubBufferNV");
+    } else {
+        eglPostSubBufferNV = NULL;
+    }
+}
+#endif
+
+void glResolveFunctions(OpenGLPlatformInterface platformInterface)
+{
+#ifndef KWIN_HAVE_OPENGLES
     if (hasGLExtension("GL_ARB_multitexture")) {
         GL_RESOLVE_WITH_EXT(glActiveTexture, glActiveTextureARB);
         // Get number of texture units
@@ -195,31 +251,31 @@ void glResolveFunctions()
         glTextureUnitsCount = 0;
     }
     if (hasGLExtension("GL_EXT_framebuffer_object")) {
-        glIsRenderbuffer = (glIsRenderbuffer_func) getProcAddress("glIsRenderbufferEXT");
-        glBindRenderbuffer = (glBindRenderbuffer_func) getProcAddress("glBindRenderbufferEXT");
-        glDeleteRenderbuffers = (glDeleteRenderbuffers_func) getProcAddress("glDeleteRenderbuffersEXT");
-        glGenRenderbuffers = (glGenRenderbuffers_func) getProcAddress("glGenRenderbuffersEXT");
+        GL_RESOLVE_WITH_EXT(glIsRenderbuffer, glIsRenderbufferEXT);
+        GL_RESOLVE_WITH_EXT(glBindRenderbuffer, glBindRenderbufferEXT);
+        GL_RESOLVE_WITH_EXT(glDeleteRenderbuffers, glDeleteRenderbuffersEXT);
+        GL_RESOLVE_WITH_EXT(glGenRenderbuffers, glGenRenderbuffersEXT);
 
-        glRenderbufferStorage = (glRenderbufferStorage_func) getProcAddress("glRenderbufferStorageEXT");
+        GL_RESOLVE_WITH_EXT(glRenderbufferStorage, glRenderbufferStorageEXT);
 
-        glGetRenderbufferParameteriv = (glGetRenderbufferParameteriv_func) getProcAddress("glGetRenderbufferParameterivEXT");
+        GL_RESOLVE_WITH_EXT(glGetRenderbufferParameteriv, glGetRenderbufferParameterivEXT);
 
-        glIsFramebuffer = (glIsFramebuffer_func) getProcAddress("glIsFramebufferEXT");
-        glBindFramebuffer = (glBindFramebuffer_func) getProcAddress("glBindFramebufferEXT");
-        glDeleteFramebuffers = (glDeleteFramebuffers_func) getProcAddress("glDeleteFramebuffersEXT");
-        glGenFramebuffers = (glGenFramebuffers_func) getProcAddress("glGenFramebuffersEXT");
+        GL_RESOLVE_WITH_EXT(glIsFramebuffer, glIsFramebufferEXT);
+        GL_RESOLVE_WITH_EXT(glBindFramebuffer, glBindFramebufferEXT);
+        GL_RESOLVE_WITH_EXT(glDeleteFramebuffers, glDeleteFramebuffersEXT);
+        GL_RESOLVE_WITH_EXT(glGenFramebuffers, glGenFramebuffersEXT);
 
-        glCheckFramebufferStatus = (glCheckFramebufferStatus_func) getProcAddress("glCheckFramebufferStatusEXT");
+        GL_RESOLVE_WITH_EXT(glCheckFramebufferStatus, glCheckFramebufferStatusEXT);
 
-        glFramebufferTexture1D = (glFramebufferTexture1D_func) getProcAddress("glFramebufferTexture1DEXT");
-        glFramebufferTexture2D = (glFramebufferTexture2D_func) getProcAddress("glFramebufferTexture2DEXT");
-        glFramebufferTexture3D = (glFramebufferTexture3D_func) getProcAddress("glFramebufferTexture3DEXT");
+        GL_RESOLVE_WITH_EXT(glFramebufferTexture1D, glFramebufferTexture1DEXT);
+        GL_RESOLVE_WITH_EXT(glFramebufferTexture2D, glFramebufferTexture2DEXT);
+        GL_RESOLVE_WITH_EXT(glFramebufferTexture3D, glFramebufferTexture3DEXT);
 
-        glFramebufferRenderbuffer = (glFramebufferRenderbuffer_func) getProcAddress("glFramebufferRenderbufferEXT");
+        GL_RESOLVE_WITH_EXT(glFramebufferRenderbuffer, glFramebufferRenderbufferEXT);
 
-        glGetFramebufferAttachmentParameteriv = (glGetFramebufferAttachmentParameteriv_func) getProcAddress("glGetFramebufferAttachmentParameterivEXT");
+        GL_RESOLVE_WITH_EXT(glGetFramebufferAttachmentParameteriv, glGetFramebufferAttachmentParameterivEXT);
 
-        glGenerateMipmap = (glGenerateMipmap_func) getProcAddress("glGenerateMipmapEXT");
+        GL_RESOLVE_WITH_EXT(glGenerateMipmap, glGenerateMipmapEXT);
     } else {
         glIsRenderbuffer = NULL;
         glBindRenderbuffer = NULL;
@@ -241,9 +297,9 @@ void glResolveFunctions()
     }
 
     if (hasGLExtension("GL_ARB_framebuffer_object")) {
-        glBlitFramebuffer = (glBlitFramebuffer_func) getProcAddress("glBlitFramebuffer");
+        GL_RESOLVE(glBlitFramebuffer);
     } else if (hasGLExtension("GL_EXT_framebuffer_blit")) {
-        glBlitFramebuffer = (glBlitFramebuffer_func) getProcAddress("glBlitFramebufferEXT");
+        GL_RESOLVE_WITH_EXT(glBlitFramebuffer, glBlitFramebufferEXT);
     } else {
         glBlitFramebuffer = NULL;
     }
@@ -302,48 +358,17 @@ void glResolveFunctions()
         glBindBuffer = NULL;
         glBufferData = NULL;
     }
-}
-
-} // namespace
-
-#else
-namespace KWin
-{
-
-// EGL
-eglCreateImageKHR_func eglCreateImageKHR;
-eglDestroyImageKHR_func eglDestroyImageKHR;
-eglPostSubBufferNV_func eglPostSubBufferNV;
-// GLES
-glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
-
-void eglResolveFunctions()
-{
-    if (hasGLExtension("EGL_KHR_image") ||
-        (hasGLExtension("EGL_KHR_image_base") &&
-         hasGLExtension("EGL_KHR_image_pixmap"))) {
-        eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
-        eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
-    } else {
-        eglCreateImageKHR = NULL;
-        eglDestroyImageKHR = NULL;
-    }
-
-    if (hasGLExtension("EGL_NV_post_sub_buffer")) {
-        eglPostSubBufferNV = (eglPostSubBufferNV_func)eglGetProcAddress("eglPostSubBufferNV");
-    } else {
-        eglPostSubBufferNV = NULL;
-    }
-}
-
-void glResolveFunctions()
-{
-    if (hasGLExtension("GL_OES_EGL_image")) {
-        glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
-    } else {
-        glEGLImageTargetTexture2DOES = NULL;
-    }
-}
-
-} // namespace
 #endif
+
+#ifdef KWIN_HAVE_EGL
+    if (platformInterface == EglPlatformInterface) {
+        if (hasGLExtension("GL_OES_EGL_image")) {
+            glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+        } else {
+            glEGLImageTargetTexture2DOES = NULL;
+        }
+    }
+#endif
+}
+
+} // namespace
