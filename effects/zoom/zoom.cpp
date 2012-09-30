@@ -206,7 +206,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 {
     ZoomConfig::self()->readConfig();
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
-    zoomFactor = qMax(0.1, ZoomConfig::zoomFactor()/100.0);
+    zoomFactor = qMax(0.1, ZoomConfig::zoomFactor());
     // Visibility of the mouse-pointer.
     mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
