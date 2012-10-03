@@ -42,7 +42,7 @@ BoxSwitchEffect::BoxSwitchEffect()
     , painting_desktop(0)
     , animation(false)
     , highlight_is_set(false)
-    , primaryTabBox(true)
+    , primaryTabBox(false)
     , secondaryTabBox(false)
     , mProxy(this)
     , mProxyActivated(0)
@@ -86,8 +86,9 @@ void BoxSwitchEffect::reconfigure(ReconfigureFlags)
     elevate_window = conf.readEntry("ElevateSelected", true);
     mAnimateSwitch = conf.readEntry("AnimateSwitch", false);
 
-    primaryTabBox = conf.readEntry("TabBox", false);
-    secondaryTabBox = conf.readEntry("TabBoxAlternative", false);
+    // the tabbox merely exists as CoverSwitch sidearm, force it to be not the tabbox
+    primaryTabBox = false;
+    secondaryTabBox = false;
 }
 
 void BoxSwitchEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
