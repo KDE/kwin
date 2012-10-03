@@ -1011,6 +1011,15 @@ protected Q_SLOTS:
      * @since 4.10
      **/
     void setAlphaEnabled(bool enabled);
+    /**
+     * This slot can be reimplemented to return the regions defined
+     * by KDecorationDefines::Region.
+     *
+     * The default implementation always returns an empty region.
+     *
+     * @since 4.8
+     */
+    QRegion region(KDecorationDefines::Region r);
 
 private:
     KDecorationBridge* bridge_;
@@ -1121,17 +1130,6 @@ public:
      * a button press was for window tab dragging or for displaying the client menu.
      */
     WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
-
-public Q_SLOTS:
-    /**
-     * This slot can be reimplemented to return the regions defined
-     * by KDecorationDefines::Region.
-     *
-     * The default implementation always returns an empty region.
-     *
-     * @since 4.8
-     */
-    QRegion region(KDecorationDefines::Region r);
 };
 
 inline
