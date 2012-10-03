@@ -77,7 +77,6 @@ glXGetFBConfigs_func glXGetFBConfigs;
 
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
-glBlendColor_func glBlendColor;
 // framebuffer_object extension functions
 glIsRenderbuffer_func glIsRenderbuffer;
 glBindRenderbuffer_func glBindRenderbuffer;
@@ -417,7 +416,6 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glProgramLocalParameter4fARB = NULL;
         glGetProgramivARB = NULL;
     }
-    GL_RESOLVE_WITH_EXT(glBlendColor, glBlendColorARB);
     if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
         // see http://www.opengl.org/registry/specs/ARB/vertex_buffer_object.txt
         GL_RESOLVE_WITH_EXT(glGenBuffers, glGenBuffersARB);

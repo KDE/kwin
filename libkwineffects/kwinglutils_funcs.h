@@ -225,8 +225,6 @@ extern KWIN_EXPORT glXGetFBConfigs_func glXGetFBConfigs;
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
 extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
-typedef void (*glBlendColor_func)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
-extern KWIN_EXPORT glBlendColor_func glBlendColor;
 // framebuffer_object extension functions
 typedef GLboolean(*glIsRenderbuffer_func)(GLuint renderbuffer);
 typedef void (*glBindRenderbuffer_func)(GLenum target, GLuint renderbuffer);
