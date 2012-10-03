@@ -66,14 +66,6 @@ glXCopySubBuffer_func glXCopySubBuffer;
 glXGetVideoSync_func glXGetVideoSync;
 glXWaitVideoSync_func glXWaitVideoSync;
 glXSwapInterval_func glXSwapInterval;
-// GLX_SGIX_fbconfig
-glXGetFBConfigAttrib_func glXGetFBConfigAttrib;
-glXGetVisualFromFBConfig_func glXGetVisualFromFBConfig;
-glXCreateWindow_func glXCreateWindow;
-glXDestroyWindow_func glXDestroyWindow;
-glXCreatePixmap_func glXCreatePixmap;
-glXDestroyPixmap_func glXDestroyPixmap;
-glXGetFBConfigs_func glXGetFBConfigs;
 
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
@@ -189,15 +181,6 @@ void glxResolveFunctions()
     } else {
         glXSwapInterval = NULL;
     }
-
-    OpenGLPlatformInterface platformInterface = GlxPlatformInterface;
-    GL_RESOLVE_WITH_EXT(glXGetFBConfigAttrib, glXGetFBConfigAttribSGIX);
-    GL_RESOLVE_WITH_EXT(glXGetVisualFromFBConfig, glXGetVisualFromFBConfigSGIX);
-    GL_RESOLVE(glXGetFBConfigs);
-    GL_RESOLVE(glXCreateWindow);
-    GL_RESOLVE(glXDestroyWindow);
-    GL_RESOLVE(glXCreatePixmap);
-    GL_RESOLVE(glXDestroyPixmap);
 }
 #endif
 

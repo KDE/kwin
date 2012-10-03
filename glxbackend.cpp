@@ -68,12 +68,10 @@ GlxBackend::~GlxBackend()
 void GlxBackend::init()
 {
     initGLX();
-    // check for FBConfig support
-    if (!hasGLExtension("GLX_SGIX_fbconfig") || !glXGetFBConfigAttrib || !glXGetFBConfigs ||
-            !glXGetVisualFromFBConfig || !glXCreatePixmap || !glXDestroyPixmap ||
-            !glXCreateWindow || !glXDestroyWindow) {
-        setFailed("GLX_SGIX_fbconfig or required GLX functions missing");
-        return; // error
+    // require at least GLX 1.3
+    if (!hasGLXVersion(1, 3)) {
+        setFailed("Requires at least GLX 1.3");
+        return;
     }
     if (!initDrawableConfigs()) {
         setFailed("Could not initialize the drawable configs");

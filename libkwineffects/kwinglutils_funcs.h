@@ -203,24 +203,6 @@ typedef int (*glXSwapInterval_func)(int ratio);
 extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
 extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
 extern KWIN_EXPORT glXSwapInterval_func glXSwapInterval;
-// GLX_SGIX_fbconfig and misc GLX 1.3 stuff
-typedef int (*glXGetFBConfigAttrib_func)(Display *dpy, GLXFBConfig config,
-        int attribute, int *value);
-typedef XVisualInfo*(*glXGetVisualFromFBConfig_func)(Display *dpy, GLXFBConfig config);
-extern KWIN_EXPORT glXGetFBConfigAttrib_func glXGetFBConfigAttrib;
-extern KWIN_EXPORT glXGetVisualFromFBConfig_func glXGetVisualFromFBConfig;
-typedef GLXWindow(*glXCreateWindow_func)(Display *dpy, GLXFBConfig config,
-        Window win, const int *attribList);
-typedef void (*glXDestroyWindow_func)(Display *dpy, GLXWindow window);
-typedef GLXPixmap(*glXCreatePixmap_func)(Display *dpy, GLXFBConfig config,
-        Pixmap pixmap, const int *attribList);
-typedef void (*glXDestroyPixmap_func)(Display *dpy, GLXPixmap pixmap);
-typedef GLXFBConfig*(*glXGetFBConfigs_func)(Display *dpy, int screen, int *nelements);
-extern KWIN_EXPORT glXCreateWindow_func glXCreateWindow;
-extern KWIN_EXPORT glXDestroyWindow_func glXDestroyWindow;
-extern KWIN_EXPORT glXCreatePixmap_func glXCreatePixmap;
-extern KWIN_EXPORT glXDestroyPixmap_func glXDestroyPixmap;
-extern KWIN_EXPORT glXGetFBConfigs_func glXGetFBConfigs;
 
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
