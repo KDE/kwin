@@ -30,26 +30,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         function = (function ## _func)getProcAddress( #function ); \
     else if (platformInterface == EglPlatformInterface) \
         function = (function ## _func)eglGetProcAddress( #function );
-// Same as above but tries to use function "backup" if "function" doesn't exist
-// Useful when same functionality is also defined in an extension
-#define GL_RESOLVE_WITH_EXT( function, backup ) \
+// Same as above but tries to use function "symbolName"
+// Useful when functionality is defined in an extension with a different name
+#define GL_RESOLVE_WITH_EXT( function, symbolName ) \
     if (platformInterface == GlxPlatformInterface) { \
-        function = (function ## _func)getProcAddress( #function ); \
-        if ( !function ) \
-            function = (function ## _func)getProcAddress( #backup ); \
+        function = (function ## _func)getProcAddress( #symbolName ); \
     } else if (platformInterface == EglPlatformInterface) { \
-        function = (function ## _func)eglGetProcAddress( #function ); \
-        if ( !function ) \
-            function = (function ## _func)eglGetProcAddress( #backup ); \
+        function = (function ## _func)eglGetProcAddress( #symbolName ); \
     }
 #else
 // same without the switch to egl
 #define GL_RESOLVE( function ) function = (function ## _func)getProcAddress( #function );
 
-#define GL_RESOLVE_WITH_EXT( function, backup ) \
-    function = (function ## _func)getProcAddress( #function ); \
-    if ( !function ) \
-        function = (function ## _func)getProcAddress( #backup );
+#define GL_RESOLVE_WITH_EXT( function, symbolName ) \
+    function = (function ## _func)getProcAddress( #symbolName );
 #endif
 
 #define EGL_RESOLVE( function )  function = (function ## _func)eglGetProcAddress( #function );
@@ -250,7 +244,36 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glActiveTexture = NULL;
         glTextureUnitsCount = 0;
     }
-    if (hasGLExtension("GL_EXT_framebuffer_object")) {
+
+    if (hasGLExtension("GL_ARB_framebuffer_object")) {
+        // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
+        GL_RESOLVE(glIsRenderbuffer);
+        GL_RESOLVE(glBindRenderbuffer);
+        GL_RESOLVE(glDeleteRenderbuffers);
+        GL_RESOLVE(glGenRenderbuffers);
+
+        GL_RESOLVE(glRenderbufferStorage);
+
+        GL_RESOLVE(glGetRenderbufferParameteriv);
+
+        GL_RESOLVE(glIsFramebuffer);
+        GL_RESOLVE(glBindFramebuffer);
+        GL_RESOLVE(glDeleteFramebuffers);
+        GL_RESOLVE(glGenFramebuffers);
+
+        GL_RESOLVE(glCheckFramebufferStatus);
+
+        GL_RESOLVE(glFramebufferTexture1D);
+        GL_RESOLVE(glFramebufferTexture2D);
+        GL_RESOLVE(glFramebufferTexture3D);
+
+        GL_RESOLVE(glFramebufferRenderbuffer);
+
+        GL_RESOLVE(glGetFramebufferAttachmentParameteriv);
+
+        GL_RESOLVE(glGenerateMipmap);
+    } else if (hasGLExtension("GL_EXT_framebuffer_object")) {
+        // see http://www.opengl.org/registry/specs/EXT/framebuffer_object.txt
         GL_RESOLVE_WITH_EXT(glIsRenderbuffer, glIsRenderbufferEXT);
         GL_RESOLVE_WITH_EXT(glBindRenderbuffer, glBindRenderbufferEXT);
         GL_RESOLVE_WITH_EXT(glDeleteRenderbuffers, glDeleteRenderbuffersEXT);
@@ -297,14 +320,17 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
     }
 
     if (hasGLExtension("GL_ARB_framebuffer_object")) {
+        // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
         GL_RESOLVE(glBlitFramebuffer);
     } else if (hasGLExtension("GL_EXT_framebuffer_blit")) {
+        // see http://www.opengl.org/registry/specs/EXT/framebuffer_blit.txt
         GL_RESOLVE_WITH_EXT(glBlitFramebuffer, glBlitFramebufferEXT);
     } else {
         glBlitFramebuffer = NULL;
     }
 
-    if (hasGLExtension("GL_ARB_shading_language_100") && hasGLExtension("GL_ARB_fragment_shader")) {
+    if (hasGLExtension("GL_ARB_shader_objects")) {
+        // see http://www.opengl.org/registry/specs/ARB/shader_objects.txt
         GL_RESOLVE_WITH_EXT(glCreateShader, glCreateShaderObjectARB);
         GL_RESOLVE_WITH_EXT(glShaderSource, glShaderSourceARB);
         GL_RESOLVE_WITH_EXT(glCompileShader, glCompileShaderARB);
@@ -330,28 +356,74 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE_WITH_EXT(glUniformMatrix4fv, glUniformMatrix4fvARB);
         GL_RESOLVE_WITH_EXT(glValidateProgram, glValidateProgramARB);
         GL_RESOLVE_WITH_EXT(glGetUniformLocation, glGetUniformLocationARB);
-        GL_RESOLVE_WITH_EXT(glVertexAttrib1f, glVertexAttrib1fARB);
-        GL_RESOLVE_WITH_EXT(glGetAttribLocation, glGetAttribLocationARB);
-        GL_RESOLVE_WITH_EXT(glBindAttribLocation, glBindAttribLocationARB);
         GL_RESOLVE_WITH_EXT(glGetUniformfv, glGetUniformfvARB);
+    } else {
+        glCreateShader = NULL;
+        glShaderSource = NULL;
+        glCompileShader = NULL;
+        glDeleteShader = NULL;
+        glCreateProgram = NULL;
+        glAttachShader = NULL;
+        glLinkProgram = NULL;
+        glUseProgram = NULL;
+        glDeleteProgram = NULL;
+        glGetShaderInfoLog = NULL;
+        glGetProgramInfoLog = NULL;
+        glGetProgramiv = NULL;
+        glGetShaderiv = NULL;
+        glUniform1f = NULL;
+        glUniform2f = NULL;
+        glUniform3f = NULL;
+        glUniform4f = NULL;
+        glUniform1i = NULL;
+        glUniform1fv = NULL;
+        glUniform2fv = NULL;
+        glUniform3fv = NULL;
+        glUniform4fv = NULL;
+        glUniformMatrix4fv = NULL;
+        glValidateProgram = NULL;
+        glGetUniformLocation = NULL;
+        glGetUniformfv = NULL;
+    }
+    if (hasGLExtension("GL_ARB_vertex_shader")) {
+        // see http://www.opengl.org/registry/specs/ARB/vertex_shader.txt
+        GL_RESOLVE_WITH_EXT(glVertexAttrib1f, glVertexAttrib1fARB);
+        GL_RESOLVE_WITH_EXT(glBindAttribLocation, glBindAttribLocationARB);
+        GL_RESOLVE_WITH_EXT(glGetAttribLocation, glGetAttribLocationARB);
+        GL_RESOLVE_WITH_EXT(glEnableVertexAttribArray, glEnableVertexAttribArrayARB);
+        GL_RESOLVE_WITH_EXT(glDisableVertexAttribArray, glDisableVertexAttribArrayARB);
+        GL_RESOLVE_WITH_EXT(glVertexAttribPointer, glVertexAttribPointerARB);
+    } else {
+        glVertexAttrib1f = NULL;
+        glBindAttribLocation = NULL;
+        glGetAttribLocation = NULL;
+        glEnableVertexAttribArray = NULL;
+        glDisableVertexAttribArray = NULL;
+        glVertexAttribPointer = NULL;
     }
     if (hasGLExtension("GL_ARB_fragment_program") && hasGLExtension("GL_ARB_vertex_program")) {
+        // see http://www.opengl.org/registry/specs/ARB/fragment_program.txt
         GL_RESOLVE(glProgramStringARB);
         GL_RESOLVE(glBindProgramARB);
         GL_RESOLVE(glDeleteProgramsARB);
         GL_RESOLVE(glGenProgramsARB);
         GL_RESOLVE(glProgramLocalParameter4fARB);
         GL_RESOLVE(glGetProgramivARB);
+    } else {
+        glProgramStringARB = NULL;
+        glBindProgramARB = NULL;
+        glDeleteProgramsARB = NULL;
+        glGenProgramsARB = NULL;
+        glProgramLocalParameter4fARB = NULL;
+        glGetProgramivARB = NULL;
     }
     GL_RESOLVE_WITH_EXT(glBlendColor, glBlendColorARB);
     if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
+        // see http://www.opengl.org/registry/specs/ARB/vertex_buffer_object.txt
         GL_RESOLVE_WITH_EXT(glGenBuffers, glGenBuffersARB);
         GL_RESOLVE_WITH_EXT(glDeleteBuffers, glDeleteBuffersARB);
         GL_RESOLVE_WITH_EXT(glBindBuffer, glBindBufferARB);
         GL_RESOLVE_WITH_EXT(glBufferData, glBufferDataARB);
-        GL_RESOLVE_WITH_EXT(glEnableVertexAttribArray, glEnableVertexAttribArrayARB);
-        GL_RESOLVE_WITH_EXT(glDisableVertexAttribArray, glDisableVertexAttribArrayARB);
-        GL_RESOLVE_WITH_EXT(glVertexAttribPointer, glVertexAttribPointerARB);
     } else {
         glGenBuffers = NULL;
         glDeleteBuffers = NULL;
