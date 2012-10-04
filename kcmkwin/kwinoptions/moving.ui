@@ -10,9 +10,6 @@
     <height>329</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="lay">
    <item>
     <widget class="KButtonGroup" name="windowsBox">
