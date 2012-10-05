@@ -502,6 +502,7 @@ QString GLPlatform::chipClassToString(ChipClass chipClass)
 GLPlatform::GLPlatform()
     : m_driver(Driver_Unknown),
       m_chipClass(UnknownChipClass),
+      m_recommendedCompositor(XRenderCompositing),
       m_mesaVersion(0),
       m_galliumVersion(0),
       m_looseBinding(false),
@@ -753,6 +754,16 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_limitedGLSL = m_supportsGLSL;
         }
 
+        if (m_chipClass < R300) {
+            // fallback to XRender for R100 and R200
+            m_recommendedCompositor = XRenderCompositing;
+        } else if (m_chipClass < R600) {
+            // OpenGL 1 due to NPOT limitations not supported by KWin's shaders
+            m_recommendedCompositor = OpenGL1Compositing;
+        } else {
+            m_recommendedCompositor = OpenGL2Compositing;
+        }
+
         if (driver() == Driver_R600G ||
                 (driver() == Driver_R600C && m_renderer.contains("DRI2"))) {
             m_looseBinding = true;
@@ -766,6 +777,14 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         if (m_driver == Driver_NVidia)
             m_looseBinding = true;
 
+        if (m_chipClass < NV20) {
+            m_recommendedCompositor = XRenderCompositing;
+        } else if (m_chipClass < NV40) {
+            m_recommendedCompositor = OpenGL1Compositing;
+        } else {
+            m_recommendedCompositor = OpenGL2Compositing;
+        }
+
         m_limitedNPOT = m_textureNPOT && m_chipClass < NV40;
         m_limitedGLSL = m_supportsGLSL && m_chipClass < G80;
     }
@@ -775,6 +794,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_supportsGLSL = false;
 
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
+
+        if (m_chipClass < I965) {
+            m_recommendedCompositor = OpenGL1Compositing;
+        } else {
+            m_recommendedCompositor = OpenGL2Compositing;
+        }
     }
 
     if (isMesaDriver() && platformInterface == EglPlatformInterface) {
@@ -789,8 +814,22 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_looseBinding = false;
 
     if (isSoftwareEmulation()) {
-        // Software emulation does not provide GLSL
-        m_limitedGLSL = m_supportsGLSL = false;
+        // we recommend XRender
+        m_recommendedCompositor = XRenderCompositing;
+        if (m_driver < Driver_Llvmpipe) {
+            // Software emulation does not provide GLSL
+            m_limitedGLSL = m_supportsGLSL = false;
+        } else {
+            // llvmpipe does support GLSL
+            m_limitedGLSL = false;
+            m_supportsGLSL = true;
+        }
+    }
+
+    if (m_chipClass == UnknownChipClass && m_driver == Driver_Unknown) {
+        // we don't know the hardware. Let's be optimistic and assume OpenGL compatible hardware
+        m_recommendedCompositor = OpenGL2Compositing;
+        m_supportsGLSL = true;
     }
 
     if (isVirtualBox()) {
@@ -988,6 +1027,11 @@ bool GLPlatform::isLooseBinding() const
 bool GLPlatform::isVirtualMachine() const
 {
     return m_virtualMachine;
+}
+
+CompositingType GLPlatform::recommendedCompositor() const
+{
+    return m_recommendedCompositor;
 }
 
 } // namespace KWin

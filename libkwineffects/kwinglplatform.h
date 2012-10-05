@@ -297,6 +297,12 @@ public:
     bool isLooseBinding() const;
 
     /**
+     * @returns The CompositingType recommended by the driver.
+     * @since 4.10
+     **/
+    CompositingType recommendedCompositor() const;
+
+    /**
      * @returns a human readable form of the @p version.
      * @since 4.9
      * @see glVersion
@@ -333,6 +339,7 @@ private:
     QSet<QByteArray> m_extensions;
     Driver m_driver;
     ChipClass m_chipClass;
+    CompositingType m_recommendedCompositor;
     qint64 m_glVersion;
     qint64 m_glslVersion;
     qint64 m_mesaVersion;

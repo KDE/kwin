@@ -80,6 +80,7 @@ Sources and other compositing managers:
 
 #include "utils.h"
 #include "client.h"
+#include "composite.h"
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
@@ -150,11 +151,6 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
 
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
-    if (glPlatform->isSoftwareEmulation()) {
-        kError(1212) << "OpenGL Software Rasterizer detected. Falling back to XRender.";
-        QTimer::singleShot(0, Workspace::self(), SLOT(fallbackToXRenderCompositing()));
-        return;
-    }
 #ifndef KWIN_HAVE_OPENGLES
     if (!hasGLExtension("GL_ARB_texture_non_power_of_two")
             && !hasGLExtension("GL_ARB_texture_rectangle")) {
@@ -256,6 +252,12 @@ SceneOpenGL *SceneOpenGL::createScene()
     }
 #endif
     if (!scene) {
+        if (GLPlatform::instance()->recommendedCompositor() == XRenderCompositing) {
+            kError(1212) << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
+            kError(1212) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
+            kError(1212) << "For more information see http://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
+            QTimer::singleShot(0, Compositor::self(), SLOT(fallbackToXRenderCompositing()));
+        }
         delete backend;
     }
 
@@ -439,14 +441,23 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
 //****************************************
 bool SceneOpenGL2::supported(OpenGLBackend *backend)
 {
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (!forceEnv.isEmpty()) {
+        if (qstrcmp(forceEnv, "O2") == 0) {
+            kDebug(1212) << "OpenGL 2 compositing enforced by environment variable";
+            return true;
+        } else {
+            // OpenGL 2 disabled by environment variable
+            return false;
+        }
+    }
     if (!backend->isDirectRendering()) {
         return false;
     }
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedNPOT)) {
+    if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
+        kDebug(1212) << "Driver does not recommend OpenGL 2 compositing";
         return false;
     }
-#endif
     if (options->isGlLegacy()) {
         kDebug(1212) << "OpenGL 2 disabled by config option";
         return false;
@@ -510,8 +521,21 @@ SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)
 #ifdef KWIN_HAVE_OPENGL_1
 bool SceneOpenGL1::supported(OpenGLBackend *backend)
 {
-    // any OpenGL context will do
-    return !backend->isFailed();
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (!forceEnv.isEmpty()) {
+        if (qstrcmp(forceEnv, "O1") == 0) {
+            kDebug(1212) << "OpenGL 1 compositing enforced by environment variable";
+            return true;
+        } else {
+            // OpenGL 1 disabled by environment variable
+            return false;
+        }
+    }
+    if (GLPlatform::instance()->recommendedCompositor() < OpenGL1Compositing) {
+        kDebug(1212) << "Driver does not recommend OpenGL 1 compositing";
+        return false;
+    }
+    return true;
 }
 
 SceneOpenGL1::SceneOpenGL1(OpenGLBackend *backend)
