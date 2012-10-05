@@ -108,7 +108,7 @@ private:
 // ----------------------------------------------------------------------------
 
 
-
+#ifdef KWIN_HAVE_OPENGL_1
 class ARBBlurShader : public BlurShader
 {
 public:
@@ -131,6 +131,7 @@ protected:
 private:
     GLuint program;
 };
+#endif
 
 } // namespace KWin
 

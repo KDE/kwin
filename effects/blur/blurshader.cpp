@@ -47,7 +47,11 @@ BlurShader *BlurShader::create()
     if (GLSLBlurShader::supported())
         return new GLSLBlurShader();
 
+#ifdef KWIN_HAVE_OPENGL_1
     return new ARBBlurShader();
+#else
+    return NULL;
+#endif
 }
 
 void BlurShader::setRadius(int radius)
@@ -299,7 +303,7 @@ void GLSLBlurShader::init()
 // ----------------------------------------------------------------------------
 
 
-
+#ifdef KWIN_HAVE_OPENGL_1
 ARBBlurShader::ARBBlurShader()
     : BlurShader(), program(0)
 {
@@ -312,21 +316,16 @@ ARBBlurShader::~ARBBlurShader()
 
 void ARBBlurShader::reset()
 {
-#ifdef KWIN_HAVE_OPENGL_1
     if (program) {
         glDeleteProgramsARB(1, &program);
         program = 0;
     }
 
     setIsValid(false);
-#endif
 }
 
 bool ARBBlurShader::supported()
 {
-#ifdef KWIN_HAVE_OPENGLES
-    return false;
-#else
     if (!hasGLExtension("GL_ARB_fragment_program"))
         return false;
 
@@ -359,14 +358,10 @@ bool ARBBlurShader::supported()
         return false;
 
     return true;
-#endif
 }
 
 void ARBBlurShader::setPixelDistance(float val)
 {
-#ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(val)
-#else
     float firstStep = val * 1.5;
     float nextStep = val * 2.0;
 
@@ -377,37 +372,29 @@ void ARBBlurShader::setPixelDistance(float val)
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 0, 0, firstStep, 0, 0);
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 1, 0, nextStep, 0, 0);
     }
-#endif
 }
 
 void ARBBlurShader::bind()
 {
-#ifdef KWIN_HAVE_OPENGL_1
     if (!isValid())
         return;
 
     glEnable(GL_FRAGMENT_PROGRAM_ARB);
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, program);
-#endif
 }
 
 void ARBBlurShader::unbind()
 {
-#ifdef KWIN_HAVE_OPENGL_1
     int boundObject;
     glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
     if (boundObject == (int)program) {
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
         glDisable(GL_FRAGMENT_PROGRAM_ARB);
     }
-#endif
 }
 
 int ARBBlurShader::maxKernelSize() const
 {
-#ifdef KWIN_HAVE_OPENGLES
-    return 0;
-#else
     int value;
     int result;
 
@@ -418,12 +405,10 @@ int ARBBlurShader::maxKernelSize() const
     result = qMin(result, value / 3); // We need 3 instructions / sample
 
     return result;
-#endif
 }
 
 void ARBBlurShader::init()
 {
-#ifdef KWIN_HAVE_OPENGL_1
     QVector<float> kernel = gaussianKernel();
     const int size = kernel.size();
     const int center = size / 2;
@@ -480,6 +465,6 @@ void ARBBlurShader::init()
         setIsValid(true);
 
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
-#endif
 }
+#endif
 

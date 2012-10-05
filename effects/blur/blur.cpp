@@ -55,7 +55,7 @@ BlurEffect::BlurEffect()
 
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
-    if (shader->isValid() && target->valid()) {
+    if (shader && shader->isValid() && target->valid()) {
         XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
                         32, PropModeReplace, 0, 0);
     } else {
@@ -89,13 +89,14 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
     BlurConfig::self()->readConfig();
     int radius = qBound(2, BlurConfig::blurRadius(), 14);
-    shader->setRadius(radius);
+    if (shader)
+        shader->setRadius(radius);
 
     m_shouldCache = BlurConfig::cacheTexture();
 
     windows.clear();
 
-    if (!shader->isValid())
+    if (!shader || !shader->isValid())
         XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
 }
 
@@ -164,8 +165,12 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
-                     (GLSLBlurShader::supported() || ARBBlurShader::supported());
+    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && GLSLBlurShader::supported();
+#ifdef KWIN_HAVE_OPENGL_1
+    if (effects->compositingType() == OpenGL1Compositing) {
+        supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && ARBBlurShader::supported();
+    }
+#endif
 
     if (supported) {
         int maxTexSize;
@@ -262,6 +267,9 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     if (!w->isPaintingEnabled()) {
         return;
     }
+    if (!shader || !shader->isValid()) {
+        return;
+    }
 
     // to blur an area partially we have to shrink the opaque area of a window
     QRegion newClip;
@@ -356,7 +364,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    if (!target->valid() || !shader->isValid())
+    if (!target->valid() || !shader || !shader->isValid())
         return false;
 
     if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool())
@@ -409,7 +417,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity)
 {
     const QRect screen(0, 0, displayWidth(), displayHeight());
-    bool valid = target->valid() && shader->isValid();
+    bool valid = target->valid() && shader && shader->isValid();
     QRegion shape = frame->geometry().adjusted(-5, -5, 5, 5) & screen;
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
         doBlur(shape, screen, opacity * frameOpacity);
@@ -675,6 +683,9 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
 int BlurEffect::blurRadius() const
 {
+    if (!shader) {
+        return 0;
+    }
     return shader->radius();
 }
 
