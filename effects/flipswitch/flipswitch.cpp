@@ -272,7 +272,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 shader->setUniform("projection", projection);
                 shader->setUniform("modelview", origModelview * modelview);
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 glMatrixMode(GL_PROJECTION);
                 pushMatrix();
                 loadMatrix(projection);
@@ -382,7 +382,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 shader->setUniform("projection", origProjection);
                 shader->setUniform("modelview", origModelview);
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 popMatrix();
                 // revert change of projection matrix
                 glMatrixMode(GL_PROJECTION);

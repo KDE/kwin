@@ -339,7 +339,7 @@ void LogoutEffect::renderVignetting()
 
 void LogoutEffect::renderVignettingLegacy()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
     glEnable(GL_BLEND);   // If not already (Such as when rendered straight to the screen)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -400,7 +400,7 @@ void LogoutEffect::renderBlurTexture()
 
 void LogoutEffect::renderBlurTextureLegacy()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
     // Unmodified base image
     blurTexture->bind();

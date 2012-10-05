@@ -57,6 +57,10 @@ if(OPENGL_FOUND)
     KWIN4_ADD_GLUTILS_BACKEND(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
     set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
+    if( KWIN_BUILD_OPENGL_1_COMPOSITING )
+        set_target_properties(kwinglutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
+    endif( KWIN_BUILD_OPENGL_1_COMPOSITING )
+
     target_link_libraries(kwinglutils ${OPENGL_gl_LIBRARY})
     target_link_libraries(kwinglutils LINK_INTERFACE_LIBRARIES ${OPENGL_gl_LIBRARY})
     # -ldl used by OpenGL code

@@ -199,7 +199,7 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
                 ShaderManager::instance()->pushShader(m_blinkingShader);
                 m_blinkingShader->setUniform("u_color", blinkingColor);
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 // texture transformation
                 float color[4] = { blinkingColor.redF(), blinkingColor.greenF(), blinkingColor.blueF(), 1.0f };
                 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -225,7 +225,7 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
             ShaderManager::instance()->popShader();
         }
         if (m_type == BlinkingFeedback && !useShader) {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
             // resture states
             glActiveTexture(GL_TEXTURE1);
             texture->unbind();

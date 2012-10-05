@@ -451,7 +451,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             popMatrix();
 
             // call the inside cube effects
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
             foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
                 pushMatrix(m_rotationMatrix);
                 glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
@@ -518,7 +518,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 glColor4f(0.0, 0.0, 0.0, alpha);
                 glPushMatrix();
                 glTranslatef(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
@@ -548,7 +548,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
 
         // call the inside cube effects
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
         foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
             pushMatrix(m_rotationMatrix);
             glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
@@ -798,14 +798,12 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
             capTexture->bind();
         }
     } else {
+#ifdef KWIN_HAVE_OPENGL_1
         pushMatrix(m_rotationMatrix * capMatrix);
 
-#ifndef KWIN_HAVE_OPENGLES
         glMatrixMode(GL_TEXTURE);
-#endif
         pushMatrix();
         loadMatrix(m_textureMirrorMatrix);
-#ifndef KWIN_HAVE_OPENGLES
         glMatrixMode(GL_MODELVIEW);
 
         glColor4f(capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity);

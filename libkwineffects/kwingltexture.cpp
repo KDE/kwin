@@ -239,7 +239,7 @@ void GLTexture::discard()
 
 void GLTexturePrivate::bind()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid())
         glEnable(m_target);
 #endif
@@ -287,7 +287,7 @@ void GLTexture::bind()
 void GLTexturePrivate::unbind()
 {
     glBindTexture(m_target, 0);
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid())
         glDisable(m_target);
 #endif

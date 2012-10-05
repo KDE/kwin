@@ -400,7 +400,7 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
 
 void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(tex)
     Q_UNUSED(opacity)
     Q_UNUSED(brightness)
@@ -519,7 +519,7 @@ void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double b
 
 void LanczosFilter::restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(tex)
     Q_UNUSED(opacity)
     Q_UNUSED(brightness)
@@ -559,7 +559,7 @@ LanczosShader::LanczosShader(QObject* parent)
 LanczosShader::~LanczosShader()
 {
     delete m_shader;
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (m_arbProgram) {
         glDeleteProgramsARB(1, &m_arbProgram);
         m_arbProgram = 0;
@@ -571,7 +571,7 @@ void LanczosShader::bind()
 {
     if (m_shader)
         ShaderManager::instance()->pushShader(m_shader);
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     else {
         glEnable(GL_FRAGMENT_PROGRAM_ARB);
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
@@ -583,7 +583,7 @@ void LanczosShader::unbind()
 {
     if (m_shader)
         ShaderManager::instance()->popShader();
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     else {
         int boundObject;
         glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
@@ -602,7 +602,7 @@ void LanczosShader::setUniforms()
         glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
         glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
     }
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     else {
         for (int i = 0; i < 16; ++i) {
             glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, i, m_offsets[i].x(), m_offsets[i].y(), 0, 0);
@@ -635,7 +635,7 @@ bool LanczosShader::init()
         }
     }
 
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     // no ARB shader in GLES
     return false;
 #else

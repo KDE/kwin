@@ -191,7 +191,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 shader->setUniform("modelview", origModelview * modelview);
                 shaderManager->popShader();
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 glMatrixMode(GL_PROJECTION);
                 pushMatrix();
                 loadMatrix(projection);
@@ -333,7 +333,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
 
                 shaderManager->popShader();
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 glPushMatrix();
                 QRect fullRect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
                 if (effects->numScreens() > 1 && area.x() != fullRect.x()) {
@@ -366,7 +366,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 shader->setUniform("modelview", origModelview);
                 shaderManager->popShader();
             } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
                 popMatrix();
                 // revert change of projection matrix
                 glMatrixMode(GL_PROJECTION);
@@ -754,7 +754,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
             shader->setUniform("screenTransformation", origMatrix);
             ShaderManager::instance()->popShader();
         } else {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
             glPushMatrix();
             glScalef(1.0, -1.0, 1.0);
             data.setYTranslation(- area.height() - windowRect.y() - windowRect.height());

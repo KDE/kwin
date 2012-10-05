@@ -99,7 +99,7 @@ protected:
     virtual SceneOpenGL::Window *createWindow(Toplevel *t);
 };
 
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
 class SceneOpenGL1 : public SceneOpenGL
 {
 public:
@@ -270,7 +270,7 @@ protected:
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 };
 
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
 class SceneOpenGL1Window : public SceneOpenGL::Window
 {
 public:

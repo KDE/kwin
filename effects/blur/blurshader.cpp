@@ -134,7 +134,7 @@ bool GLSLBlurShader::supported()
 
     (void) glGetError(); // Clear the error state
 
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     // These are the minimum values the implementation is required to support
     int value = 0;
 
@@ -312,7 +312,7 @@ ARBBlurShader::~ARBBlurShader()
 
 void ARBBlurShader::reset()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (program) {
         glDeleteProgramsARB(1, &program);
         program = 0;
@@ -382,7 +382,7 @@ void ARBBlurShader::setPixelDistance(float val)
 
 void ARBBlurShader::bind()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!isValid())
         return;
 
@@ -393,7 +393,7 @@ void ARBBlurShader::bind()
 
 void ARBBlurShader::unbind()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     int boundObject;
     glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
     if (boundObject == (int)program) {
@@ -423,7 +423,7 @@ int ARBBlurShader::maxKernelSize() const
 
 void ARBBlurShader::init()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     QVector<float> kernel = gaussianKernel();
     const int size = kernel.size();
     const int center = size / 2;

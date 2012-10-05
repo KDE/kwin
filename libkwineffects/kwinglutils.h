@@ -446,7 +446,7 @@ inline
 ShaderBinder::ShaderBinder(ShaderManager::ShaderType type, bool reset)
     : m_shader(NULL)
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid()) {
         return;
     }
@@ -458,7 +458,7 @@ inline
 ShaderBinder::ShaderBinder(GLShader *shader)
     : m_shader(shader)
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid()) {
         return;
     }
@@ -469,7 +469,7 @@ ShaderBinder::ShaderBinder(GLShader *shader)
 inline
 ShaderBinder::~ShaderBinder()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid()) {
         return;
     }

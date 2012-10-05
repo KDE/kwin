@@ -185,7 +185,7 @@ int nearestPowerOfTwo(int x)
 
 void pushMatrix()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (ShaderManager::instance()->isValid()) {
         return;
     }
@@ -195,7 +195,7 @@ void pushMatrix()
 
 void pushMatrix(const QMatrix4x4 &matrix)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(matrix)
 #else
     if (ShaderManager::instance()->isValid()) {
@@ -208,7 +208,7 @@ void pushMatrix(const QMatrix4x4 &matrix)
 
 void multiplyMatrix(const QMatrix4x4 &matrix)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(matrix)
 #else
     if (ShaderManager::instance()->isValid()) {
@@ -227,7 +227,7 @@ void multiplyMatrix(const QMatrix4x4 &matrix)
 
 void loadMatrix(const QMatrix4x4 &matrix)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(matrix)
 #else
     if (ShaderManager::instance()->isValid()) {
@@ -246,7 +246,7 @@ void loadMatrix(const QMatrix4x4 &matrix)
 
 void popMatrix()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (ShaderManager::instance()->isValid()) {
         return;
     }
@@ -1171,7 +1171,7 @@ GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
 
 void GLVertexBufferPrivate::legacyPainting(QRegion region, GLenum primitiveMode, bool hardwareClipping)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
     Q_UNUSED(hardwareClipping)
@@ -1246,7 +1246,7 @@ void GLVertexBufferPrivate::corePainting(const QRegion& region, GLenum primitive
 
 void GLVertexBufferPrivate::fallbackPainting(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
-#ifdef KWIN_HAVE_OPENGLES
+#ifndef KWIN_HAVE_OPENGL_1
     Q_UNUSED(region)
     Q_UNUSED(primitiveMode)
     Q_UNUSED(hardwareClipping)

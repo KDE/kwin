@@ -442,7 +442,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (effects->compositingType() == OpenGL1Compositing) {
         glMatrixMode(GL_TEXTURE);
         pushMatrix();
@@ -484,7 +484,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     drawRegion(shape);
 
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (effects->compositingType() == OpenGL1Compositing) {
         popMatrix();
         glMatrixMode(GL_MODELVIEW);
@@ -531,7 +531,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     shader->bind();
     QMatrix4x4 textureMatrix;
     QMatrix4x4 modelViewProjectionMatrix;
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (effects->compositingType() == OpenGL1Compositing) {
         glMatrixMode(GL_MODELVIEW);
         pushMatrix();
@@ -603,7 +603,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         // to texture coordinates.
         textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
         textureMatrix.translate(-updateRect.x(), -updateRect.height() - updateRect.y(), 0);
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
         if (effects->compositingType() == OpenGL1Compositing) {
             glMatrixMode(GL_TEXTURE);
             loadMatrix(textureMatrix);
@@ -644,7 +644,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     textureMatrix.setToIdentity();
     textureMatrix.scale(1.0 / targetTexture.width(), -1.0 / targetTexture.height(), 1);
     textureMatrix.translate(-r.x(), -targetTexture.height() - r.y(), 0);
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (effects->compositingType() == OpenGL1Compositing) {
         glMatrixMode(GL_TEXTURE);
         loadMatrix(textureMatrix);
@@ -655,7 +655,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
     drawRegion(blurredRegion & region);
 
-#ifndef KWIN_HAVE_OPENGLES
+#ifdef KWIN_HAVE_OPENGL_1
     if (effects->compositingType() == OpenGL1Compositing) {
         popMatrix();
         glMatrixMode(GL_TEXTURE);
