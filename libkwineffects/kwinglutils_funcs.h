@@ -27,6 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EXPORT KDE_EXPORT
 
+// common functionality
+namespace KWin {
+
+void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
+
+}
+
 #ifndef KWIN_HAVE_OPENGLES
 
 #include <GL/gl.h>
@@ -75,7 +82,6 @@ namespace KWin
 {
 
 void KWIN_EXPORT glxResolveFunctions();
-void KWIN_EXPORT glResolveFunctions();
 
 
 // Defines
@@ -357,7 +363,6 @@ namespace KWin
 {
 
 void KWIN_EXPORT eglResolveFunctions();
-void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
