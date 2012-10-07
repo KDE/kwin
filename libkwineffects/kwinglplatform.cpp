@@ -726,6 +726,7 @@ void GLPlatform::detect()
             m_supportsGLSL = false;
 
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
+        m_looseBinding = true;
     }
 
 #ifdef KWIN_HAVE_OPENGLES
