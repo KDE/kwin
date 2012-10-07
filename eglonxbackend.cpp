@@ -187,7 +187,7 @@ bool EglOnXBackend::initBufferConfigs()
     return true;
 }
 
-void EglOnXBackend::flushBuffer()
+void EglOnXBackend::present()
 {
     if (lastMask() & Scene::PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV) {
         const QRect damageRect = lastDamage().boundingRect();
@@ -216,7 +216,7 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
 void EglOnXBackend::prepareRenderingFrame()
 {
     if (!lastDamage().isEmpty())
-        flushBuffer();
+        present();
     startRenderTimer();
 }
 

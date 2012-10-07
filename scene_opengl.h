@@ -453,7 +453,7 @@ protected:
     /**
      * @brief Backend specific flushing of frame to screen.
      **/
-    virtual void flushBuffer() = 0;
+    virtual void present() = 0;
     /**
      * @brief Sets the backend initialization to failed.
      *

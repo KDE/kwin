@@ -189,14 +189,14 @@ int SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
 
-    flushBuffer(mask, damage);
+    present(mask, damage);
     // do cleanup
     stacking_order.clear();
 
     return renderTimer.elapsed();
 }
 
-void SceneXrender::flushBuffer(int mask, QRegion damage)
+void SceneXrender::present(int mask, QRegion damage)
 {
     if (mask & PAINT_SCREEN_REGION) {
         // Use the damage region as the clip region for the root window

@@ -48,7 +48,7 @@ public:
     virtual void endRenderingFrame(int mask, const QRegion &damage);
 
 protected:
-    virtual void flushBuffer();
+    virtual void present();
 
 private:
     void init();

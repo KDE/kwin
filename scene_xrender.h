@@ -61,7 +61,7 @@ public Q_SLOTS:
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
     void createBuffer();
-    void flushBuffer(int mask, QRegion damage);
+    void present(int mask, QRegion damage);
     void initXRender(bool createOverlay);
     XRenderPictFormat* format;
     Picture front;

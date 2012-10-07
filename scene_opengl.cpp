@@ -133,7 +133,7 @@ void OpenGLBackend::setFailed(const QString &reason)
 
 void OpenGLBackend::idle()
 {
-    flushBuffer();
+    present();
 }
 
 /************************************************

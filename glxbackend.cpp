@@ -429,7 +429,7 @@ void GlxBackend::waitSync()
 
 #undef VSYNC_DEBUG
 
-void GlxBackend::flushBuffer()
+void GlxBackend::present()
 {
     if (isDoubleBuffer()) {
         if (lastMask() & Scene::PAINT_SCREEN_REGION) {
@@ -535,7 +535,7 @@ SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Textu
 void GlxBackend::prepareRenderingFrame()
 {
     if (!lastDamage().isEmpty())
-        flushBuffer();
+        present();
     glXWaitX();
 }
 
