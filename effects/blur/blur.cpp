@@ -154,7 +154,7 @@ bool BlurEffect::enabledByDefault()
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge)
         return false;
-    if (gl->driver() == Driver_Catalyst) {
+    if (gl->driver() == Driver_Catalyst && effects->compositingType() == OpenGL1Compositing) {
         // fglrx supports only ARB shaders and those tend to crash KWin (see Bug #270818 and #286795)
         return false;
     }
