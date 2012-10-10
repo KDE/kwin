@@ -809,10 +809,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_looseBinding = true;
     }
 
-    // Loose binding is broken with Gallium drivers in Mesa 7.10
-    if (isGalliumDriver() && mesaVersion() == kVersionNumber(7, 10, 0))
-        m_looseBinding = false;
-
     if (isSoftwareEmulation()) {
         // we recommend XRender
         m_recommendedCompositor = XRenderCompositing;

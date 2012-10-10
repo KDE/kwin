@@ -158,8 +158,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
         return; // error
     }
 #endif
-    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(7, 10)) {
-        kError(1212) << "KWin requires at least Mesa 7.10 for OpenGL compositing.";
+    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(8, 0)) {
+        kError(1212) << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
         return;
     }
 #ifndef KWIN_HAVE_OPENGLES
