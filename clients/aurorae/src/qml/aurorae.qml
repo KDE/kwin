@@ -74,9 +74,9 @@ Decoration {
             left: parent.left
             right: parent.right
             top: parent.top
-            leftMargin: parent.paddingLeft
-            rightMargin: parent.paddingRight
-            topMargin: parent.paddingTop
+            leftMargin: 0
+            rightMargin: 0
+            topMargin: 0
         }
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized"
@@ -95,9 +95,9 @@ Decoration {
             left: parent.left
             right: parent.right
             top: parent.top
-            leftMargin: parent.paddingLeft
-            rightMargin: parent.paddingRight
-            topMargin: parent.paddingTop
+            leftMargin: 0
+            rightMargin: 0
+            topMargin: 0
         }
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized-inactive"
