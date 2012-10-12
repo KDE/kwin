@@ -54,7 +54,10 @@ void AuroraeFactory::init()
 
     KConfig conf("auroraerc");
     KConfigGroup group(&conf, "Engine");
-    if (group.hasKey("EngineType")) {
+    if (!group.hasKey("EngineType") && !group.hasKey("ThemeName")) {
+        // neither engine type and theme name are configured, use the only available theme
+        initQML(group);
+    } else if (group.hasKey("EngineType")) {
         const QString engineType = group.readEntry("EngineType", "aurorae").toLower();
         if (engineType == "qml") {
             initQML(group);
@@ -71,7 +74,12 @@ void AuroraeFactory::init()
 void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
 {
     m_engineType = AuroraeEngine;
-    const QString themeName = group.readEntry("ThemeName", "example-deco");
+    const QString themeName = group.readEntry("ThemeName");
+    if (themeName.isEmpty()) {
+        // no theme configured, fall back to Plastik QML theme
+        initQML(group);
+        return;
+    }
     KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
     KConfigGroup themeGroup(&conf, themeName);
     m_theme->loadTheme(themeName, config);
@@ -90,7 +98,7 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
 void AuroraeFactory::initQML(const KConfigGroup &group)
 {
     // try finding the QML package
-    const QString themeName = group.readEntry("ThemeName");
+    const QString themeName = group.readEntry("ThemeName", "kwin4_decoration_qml_plastik");
     kDebug(1212) << "Trying to load QML Decoration " << themeName;
     const QString internalname = themeName.toLower();
 
