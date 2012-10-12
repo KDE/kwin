@@ -47,6 +47,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags)
     dim_keepabove = conf.readEntry("DimKeepAbove", false);
     dim_by_group = conf.readEntry("DimByGroup", true);
     dim_strength = conf.readEntry("Strength", 25);
+    effects->addRepaintFull();
 }
 
 void DimInactiveEffect::prePaintScreen(ScreenPrePaintData& data, int time)
