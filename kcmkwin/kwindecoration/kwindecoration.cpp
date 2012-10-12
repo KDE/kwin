@@ -176,12 +176,11 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
     // Find the corresponding decoration name to that of
     // the current plugin library name
 
-    QString libraryName = conf.readEntry("PluginLib",
-                                         ((QPixmap::defaultDepth() > 8) ? "kwin3_oxygen" : "kwin3_plastik"));
+    QString libraryName = conf.readEntry("PluginLib", "kwin3_oxygen");
 
     if (libraryName.isEmpty()) {
         // Selected decoration doesn't exist, use the default
-        libraryName = ((QPixmap::defaultDepth() > 8) ? "kwin3_oxygen" : "kwin3_plastik");
+        libraryName = "kwin3_oxygen";
     }
 
     const int bsize = conf.readEntry("BorderSize", (int)BorderNormal);
