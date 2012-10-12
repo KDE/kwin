@@ -94,6 +94,7 @@ Decoration {
     paddingRight: 0
     paddingBottom: 0
     paddingTop: 0
+    alpha: false
     Rectangle {
         color: root.titleBarColor
         anchors {

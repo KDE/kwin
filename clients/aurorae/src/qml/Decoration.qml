@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 1.1
 
 Item {
+    signal alphaChanged()
+
     property int paddingLeft
     property int paddingRight
     property int paddingTop
@@ -29,6 +31,9 @@ Item {
     property int borderRightMaximized
     property int borderTopMaximized
     property int borderBottomMaximized
+    property bool alpha: true
+    onAlphaChanged: alphaChanged()
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true

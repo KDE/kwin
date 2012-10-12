@@ -258,8 +258,22 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         if (w->isOpaque()) {
+            Client *c = NULL;
+            if (topw->isClient()) {
+                c = static_cast<Client*>(topw);
+            }
             // the window is fully opaque
-            data.clip = w->clientShape().translated(w->x(), w->y());
+            if (c && c->decorationHasAlpha()) {
+                // decoration uses alpha channel, so we may not exclude it in clipping
+                data.clip = w->clientShape().translated(w->x(), w->y());
+            } else {
+                // decoration is fully opaque
+                if (c && c->isShade()) {
+                    data.clip = QRegion();
+                } else {
+                    data.clip = w->shape().translated(w->x(), w->y());
+                }
+            }
         } else if (topw->hasAlpha() && topw->opacity() == 1.0) {
             // the window is partially opaque
             data.clip = (w->clientShape() & topw->opaqueRegion().translated(topw->clientPos())).translated(w->x(), w->y());

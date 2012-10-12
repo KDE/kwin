@@ -60,6 +60,8 @@ public:
     virtual void reset(unsigned long changed);
 
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
+
+    void wrapSetAlphaEnabled(bool enabled);
 private:
     KCommonDecoration* decoration;
 };

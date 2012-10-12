@@ -2422,6 +2422,20 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
     return wt;
 }
 
+bool Client::decorationHasAlpha() const
+{
+    if (!decoration || !workspace()->decorationHasAlpha()) {
+        // either no decoration or decoration has alpha disabled
+        return false;
+    }
+    if (workspace()->decorationSupportsAnnounceAlpha()) {
+        return decoration->isAlphaEnabled();
+    } else {
+        // decoration has alpha enabled and does not support alpha announcement
+        return true;
+    }
+}
+
 } // namespace
 
 #include "client.moc"

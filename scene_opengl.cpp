@@ -1247,6 +1247,7 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
 //***************************************
 SceneOpenGL2Window::SceneOpenGL2Window(Toplevel *c)
     : SceneOpenGL::Window(c)
+    , m_blendingEnabled(false)
 {
 }
 
@@ -1284,8 +1285,18 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
     // setup blending of transparent windows
     bool opaque = isOpaque() && opacity == 1.0;
     bool alpha = toplevel->hasAlpha() || type != Content;
-    if (type != Content)
-        opaque = false;
+    if (type != Content) {
+        if (type == Shadow) {
+            opaque = false;
+        } else {
+            if (opacity == 1.0 && toplevel->isClient()) {
+                opaque = !(static_cast<Client*>(toplevel)->decorationHasAlpha());
+            } else {
+                // TODO: add support in Deleted
+                opaque = false;
+            }
+        }
+    }
     if (!opaque) {
         glEnable(GL_BLEND);
         if (options->isColorCorrected()) {
@@ -1299,6 +1310,7 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
             }
         }
     }
+    m_blendingEnabled = !opaque;
 
     const qreal rgb = brightness * opacity;
     const qreal a = opacity;
@@ -1313,13 +1325,12 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
 
 void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)
 {
+    Q_UNUSED(type);
+    Q_UNUSED(opacity);
     Q_UNUSED(brightness);
     Q_UNUSED(saturation);
     Q_UNUSED(screen);
-    bool opaque = isOpaque() && opacity == 1.0;
-    if (type != Content)
-        opaque = false;
-    if (!opaque) {
+    if (m_blendingEnabled) {
         glDisable(GL_BLEND);
     }
     ShaderManager::instance()->getBoundShader()->setUniform(GLShader::AlphaToOne, 0);

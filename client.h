@@ -274,6 +274,10 @@ class Client
      * Use with care!
      **/
     Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
+    /**
+     * Whether the decoration is currently using an alpha channel.
+     **/
+    Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 public:
     Client(Workspace* ws);
     Window wrapperId() const;
@@ -606,6 +610,8 @@ public:
     QRect transparentRect() const;
 
     QRegion decorationPendingRegion() const;
+
+    bool decorationHasAlpha() const;
 
     enum CoordinateMode {
         DecorationRelative, // Relative to the top left corner of the decoration

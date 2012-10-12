@@ -171,6 +171,7 @@ private slots:
     void doCloseWindow();
     void doTitlebarDblClickOperation();
     void doMaximzie(int button);
+    void slotAlphaChanged();
 
 private:
     QGraphicsView *m_view;

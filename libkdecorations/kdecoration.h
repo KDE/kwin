@@ -220,6 +220,8 @@ public:
         ///  @since 4.4
         AbilityUsesBlurBehind = 3003, ///< The decoration wants the background to be blurred, when the blur plugin is enabled.
         /// @since 4.6
+        AbilityAnnounceAlphaChannel = 4004, ///< The decoration can tell whether it currently uses an alpha channel or not. Requires AbilityUsesAlphaChannel.
+        /// @since 4.10
         // Tabbing
         AbilityTabbing = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types
@@ -706,6 +708,22 @@ public:
      */
     void processMousePressEvent(QMouseEvent* e);
 
+    /**
+     * Whether the alpha channel is currently enabled. The value of this property is
+     * only relevant in case the decoration provides the AbilityAnnounceAlphaChannel.
+     *
+     * The compositor can make use of this information to optimize the rendering of the
+     * decoration.
+     *
+     * The default value of this property is @c false. That means if a decoration wants to make
+     * use alpha channel it has to call setAlphaEnabled with @c true.
+     *
+     * @see setAlphaEnabled
+     * @see alphaEnabledChanged
+     * @since 4.10
+     **/
+    bool isAlphaEnabled() const;
+
     // requests to decoration
 
     /**
@@ -789,6 +807,17 @@ Q_SIGNALS:
      * This signal is emitted whenever the window's keep-below state changes.
      */
     void keepBelowChanged(bool);
+
+    /**
+     * This signal is emitted whenever the decoration changes it's alpha enabled
+     * change. Only relevant in case the decoration provides AbilityAnnounceAlphaChannel.
+     *
+     * @param enabled The new state of alpha channel usage
+     * @see setAlphaEnabled
+     * @see isAlphaEnabled
+     * @since 4.10
+     **/
+    void alphaEnabledChanged(bool enabled);
 
 public:
     /**
@@ -940,6 +969,20 @@ public Q_SLOTS:
      * @internal
      */
     void emitKeepBelowChanged(bool below);
+
+protected Q_SLOTS:
+    /**
+     * A decoration providing AbilityAnnounceAlphaChannel can use this method to enable/disable the
+     * use of alpha channel. This is useful if for a normal window the decoration renders its own
+     * shadows or round corners and thus needs alpha channel. But in maximized state the decoration
+     * is fully opaque. By disabling the alpha channel the Compositor can optimize the rendering.
+     *
+     * @param enabled If @c true alpha channel is enabled, if @c false alpha channel is disabled
+     * @see isAlphaEnabled
+     * @see alphaEnabledChanged
+     * @since 4.10
+     **/
+    void setAlphaEnabled(bool enabled);
 
 private:
     KDecorationBridge* bridge_;

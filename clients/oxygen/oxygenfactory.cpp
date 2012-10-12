@@ -164,6 +164,7 @@ namespace Oxygen
             return true;
 
             case AbilityUsesAlphaChannel:
+            case AbilityAnnounceAlphaChannel:
             return true;
 
             // tabs

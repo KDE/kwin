@@ -1281,6 +1281,10 @@ void KCommonDecoration::setKeepBelow(bool set)
 {
     return wrapper->setKeepBelow(set);
 }
+void KCommonDecoration::setAlphaEnabled(bool enabled)
+{
+    wrapper->wrapSetAlphaEnabled(enabled);
+}
 // *** end of wrapping of everything from KDecoration *** //
 
 const KDecoration* KCommonDecoration::decoration() const

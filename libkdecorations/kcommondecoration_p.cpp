@@ -121,3 +121,8 @@ void KCommonDecorationWrapper::padding(int &left, int &right, int &top, int &bot
     bottom = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingBottom);
 }
 
+void KCommonDecorationWrapper::wrapSetAlphaEnabled(bool enabled)
+{
+    setAlphaEnabled(enabled);
+}
+

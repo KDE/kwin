@@ -440,6 +440,7 @@ public:
     bool hasDecorationShadows() const;
     Qt::Corner decorationCloseButtonCorner();
     bool decorationHasAlpha() const;
+    bool decorationSupportsAnnounceAlpha() const;
     bool decorationSupportsTabbing() const; // Returns true if the decoration supports tabs.
     bool decorationSupportsFrameOverlap() const;
     bool decorationSupportsBlurBehind() const;
@@ -1131,6 +1132,14 @@ inline bool Workspace::decorationHasAlpha() const
         return false;
     }
     return mgr->factory()->supports(AbilityUsesAlphaChannel);
+}
+
+inline bool Workspace::decorationSupportsAnnounceAlpha() const
+{
+    if (!hasDecorationPlugin()) {
+        return false;
+    }
+    return mgr->factory()->supports(AbilityAnnounceAlphaChannel);
 }
 
 inline bool Workspace::decorationSupportsTabbing() const

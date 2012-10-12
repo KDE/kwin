@@ -125,6 +125,8 @@ namespace Oxygen
 
         }
 
+        setAlphaEnabled(!isMaximized());
+
         _initialized = true;
 
         // first reset is needed to store Oxygen configuration
@@ -1257,6 +1259,7 @@ namespace Oxygen
     void Client::maximizeChange( void  )
     {
         if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
+        setAlphaEnabled(!isMaximized());
         KCommonDecorationUnstable::maximizeChange();
     }
 

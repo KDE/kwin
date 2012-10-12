@@ -207,7 +207,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            if (w->hasDecoration() && effects->decorationSupportsBlurBehind()) {
+            if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
                 region = w->shape();
                 region -= w->decorationInnerRect();
             }
@@ -218,7 +218,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
             // for the whole window.
             region = w->shape();
         }
-    } else if (w->hasDecoration() && effects->decorationSupportsBlurBehind()) {
+    } else if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
         // If the client hasn't specified a blur region, we'll only enable
         // the effect behind the decoration.
         region = w->shape();

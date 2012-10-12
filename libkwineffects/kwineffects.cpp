@@ -736,6 +736,7 @@ WINDOW_HELPER_DEFAULT(bool, acceptsFocus, "wantsInput", true) // We don't actual
 WINDOW_HELPER_DEFAULT(QPixmap, icon, "icon", QPixmap())
 WINDOW_HELPER_DEFAULT(bool, isSkipSwitcher, "skipSwitcher", false)
 WINDOW_HELPER_DEFAULT(bool, isCurrentTab, "isCurrentTab", false)
+WINDOW_HELPER_DEFAULT(bool, decorationHasAlpha, "decorationHasAlpha", false)
 
 #undef WINDOW_HELPER_DEFAULT
 

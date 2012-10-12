@@ -288,6 +288,12 @@ protected:
     virtual void endRenderWindow(const WindowPaintData &data);
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
+
+private:
+    /**
+     * Whether prepareStates enabled blending and restore states should disable again.
+     **/
+    bool m_blendingEnabled;
 };
 
 #ifdef KWIN_HAVE_OPENGL_1

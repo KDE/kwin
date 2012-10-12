@@ -355,6 +355,19 @@ public:
 protected:
     virtual void timerEvent(QTimerEvent *event);
 
+protected Q_SLOTS:
+    /**
+     * A decoration providing AbilityAnnounceAlphaChannel can use this method to enable/disable the
+     * use of alpha channel. This is useful if for a normal window the decoration renders its own
+     * shadows or round corners and thus needs alpha channel. But in maximized state the decoration
+     * is fully opaque. By disabling the alpha channel the Compositor can optimize the rendering.
+     *
+     * @param enabled If @c true alpha channel is enabled, if @c false alpha channel is disabled
+     * @see KDecoration::setAlphaEnabled
+     * @since 4.10
+     **/
+    void setAlphaEnabled(bool enabled);
+
 private Q_SLOTS:
     /* look out for buttons that have been destroyed. */
     void objDestroyed(QObject *obj);
