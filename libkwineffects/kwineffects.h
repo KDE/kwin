@@ -1642,7 +1642,7 @@ public:
      **/
     QRegion paint;
     /**
-     * The clip region will be substracted from paint region of following windows.
+     * The clip region will be subtracted from paint region of following windows.
      * I.e. window will definitely cover it's clip region
      **/
     QRegion clip;
