@@ -1102,8 +1102,14 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     beginRenderWindow(mask, data);
 
+    const GLVertexAttrib attribs[] = {
+        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
+        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    };
+
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
 
     // shadow
     if (m_shadow) {
@@ -1272,13 +1278,7 @@ void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, cons
     const QVector2D coeff(matrix(0, 0), matrix(1, 1));
     const QVector2D offset(matrix(0, 3), matrix(1, 3));
 
-    const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
-    };
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
     vbo->setVertexCount(quads.count() * 6);
 
     GLVertex2D *vertex = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
@@ -1315,14 +1315,8 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
 
     const QMatrix4x4 matrix = tex->matrix(normalized ? NormalizedCoordinates : UnnormalizedCoordinates);
 
-    const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
-    };
-
     // Render geometry
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
     vbo->setVertexCount(quads.count() * 6);
 
     GLVertex2D *map = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
