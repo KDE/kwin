@@ -126,6 +126,8 @@ enum ChipClass {
     I915,                   // GL1.4/1.5     DX9/DX9c  SM 2.0      2004
     I965,                   // GL2.0/2.1     DX9/DX10  SM 3.0/4.0  2006
     SandyBridge,            // GL3.1  CL1.1  DX10.1    SM 4.0      2010
+    IvyBridge,              // GL4.0  CL1.1  DX11      SM 5.0      2012
+    Haswell,                // GL4.0  CL1.2  DX11.1    SM 5.0      2013
     UnknownIntel  = 2999,
 
     UnknownChipClass = 99999

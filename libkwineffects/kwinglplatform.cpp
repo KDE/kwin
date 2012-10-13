@@ -335,6 +335,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
 
 static ChipClass detectIntelClass(const QByteArray &chipset)
 {
+    // see mesa repository: src/mesa/drivers/dri/intel/intel_context.c
     // GL 1.3, DX8? SM ?
     if (chipset.contains("845G")        ||
             chipset.contains("830M")        ||
@@ -372,6 +373,16 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
     // GL 3.1, CL 1.1, DX 10.1
     if (chipset.contains("Sandybridge")) {
         return SandyBridge;
+    }
+
+    // GL4.0, CL1.1, DX11, SM 5.0
+    if (chipset.contains("Ivybridge")) {
+        return IvyBridge;
+    }
+
+    // GL4.0, CL1.2, DX11.1, SM 5.0
+    if (chipset.contains("Haswell")) {
+        return Haswell;
     }
 
     return UnknownIntel;
@@ -468,6 +479,10 @@ QString GLPlatform::chipClassToString(ChipClass chipClass)
         return "i965";
     case SandyBridge:
         return "SandyBridge";
+    case IvyBridge:
+        return "IvyBridge";
+    case Haswell:
+        return "Haswell";
 
     default:
         return "Unknown";
