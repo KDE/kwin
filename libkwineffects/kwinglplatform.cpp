@@ -432,6 +432,8 @@ QString GLPlatform::driverToString(Driver driver)
         return "LLVMpipe";
     case Driver_VirtualBox:
         return "VirtualBox (Chromium)";
+    case Driver_VMware:
+        return "VMware (SVGA3D)";
 
     default:
         return "Unknown";
@@ -680,6 +682,11 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         else if (m_vendor == "VMware, Inc." && m_chipset == "llvmpipe") {
             m_driver = Driver_Llvmpipe;
         }
+
+        // SVGA3D
+        else if (m_vendor == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
+            m_driver = Driver_VMware;
+        }
     }
 
 
@@ -787,6 +794,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     if (isVirtualBox()) {
+        m_virtualMachine = true;
+    }
+
+    if (isVMware()) {
         m_virtualMachine = true;
     }
 }
@@ -932,6 +943,11 @@ bool GLPlatform::isIntel() const
 bool GLPlatform::isVirtualBox() const
 {
     return m_driver == Driver_VirtualBox;
+}
+
+bool GLPlatform::isVMware() const
+{
+    return m_driver == Driver_VMware;
 }
 
 bool GLPlatform::isSoftwareEmulation() const

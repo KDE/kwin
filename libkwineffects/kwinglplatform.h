@@ -97,6 +97,7 @@ enum Driver {
     Driver_Softpipe,
     Driver_Llvmpipe,
     Driver_VirtualBox,
+    Driver_VMware,
     Driver_Unknown
 };
 
@@ -244,6 +245,12 @@ public:
      * @since 4.10
      **/
     bool isVirtualBox() const;
+
+    /**
+     * @returns @c true if the "GPU" is a VMWare GPU, and @c false otherwise.
+     * @since 4.10
+     **/
+    bool isVMware() const;
 
     /**
      * @returns @c true if OpenGL is emulated in software.
