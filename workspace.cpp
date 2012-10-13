@@ -2188,6 +2188,12 @@ QString Workspace::supportInformation() const
             } else {
                 support.append(" no\n");
             }
+            support.append("Virtual Machine: ");
+            if (platform->isVirtualMachine()) {
+                support.append(" yes\n");
+            } else {
+                support.append(" no\n");
+            }
 
             if (effects->compositingType() == OpenGL2Compositing) {
                 support.append("OpenGL 2 Shaders are used\n");

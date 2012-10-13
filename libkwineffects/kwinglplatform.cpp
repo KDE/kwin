@@ -430,6 +430,8 @@ QString GLPlatform::driverToString(Driver driver)
         return "softpipe";
     case Driver_Llvmpipe:
         return "LLVMpipe";
+    case Driver_VirtualBox:
+        return "VirtualBox (Chromium)";
 
     default:
         return "Unknown";
@@ -505,7 +507,8 @@ GLPlatform::GLPlatform()
       m_supportsGLSL(false),
       m_limitedGLSL(false),
       m_textureNPOT(false),
-      m_limitedNPOT(false)
+      m_limitedNPOT(false),
+      m_virtualMachine(false)
 {
 }
 
@@ -709,6 +712,19 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_driver = Driver_Swrast;
     }
 
+    // Virtual Hardware
+    // ====================================================
+    else if (m_vendor == "Humper" && m_renderer == "Chromium") {
+        // Virtual Box
+        m_driver = Driver_VirtualBox;
+
+        const int index = versionTokens.indexOf("Chromium");
+        if (versionTokens.count() > index)
+            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
+        else
+            m_driverVersion = 0;
+    }
+
 
     // Driver/GPU specific features
     // ====================================================
@@ -769,6 +785,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         // Software emulation does not provide GLSL
         m_limitedGLSL = m_supportsGLSL = false;
     }
+
+    if (isVirtualBox()) {
+        m_virtualMachine = true;
+    }
 }
 
 static void print(const QString &label, const QString &setting)
@@ -810,6 +830,7 @@ void GLPlatform::printResults() const
     print("Requires strict binding:", !m_looseBinding ? "yes" : "no");
     print("GLSL shaders:", m_supportsGLSL ? (m_limitedGLSL ? "limited" : "yes") : "no");
     print("Texture NPOT support:", m_textureNPOT ? (m_limitedNPOT ? "limited" : "yes") : "no");
+    print("Virtual Machine:", m_virtualMachine ? "yes" : "no");
 }
 
 bool GLPlatform::supports(GLFeature feature) const
@@ -908,6 +929,11 @@ bool GLPlatform::isIntel() const
     return m_chipClass >= I8XX && m_chipClass <= UnknownIntel;
 }
 
+bool GLPlatform::isVirtualBox() const
+{
+    return m_driver == Driver_VirtualBox;
+}
+
 bool GLPlatform::isSoftwareEmulation() const
 {
     return m_driver == Driver_Softpipe || m_driver == Driver_Swrast || m_driver == Driver_Llvmpipe;
@@ -941,6 +967,11 @@ bool GLPlatform::isDirectRendering() const
 bool GLPlatform::isLooseBinding() const
 {
     return m_looseBinding;
+}
+
+bool GLPlatform::isVirtualMachine() const
+{
+    return m_virtualMachine;
 }
 
 } // namespace KWin

@@ -112,6 +112,12 @@ void GlxBackend::init()
             qWarning() << "NO VSYNC! glXGetVideoSync, glXSwapInterval, glXIsDirect" <<
                         bool(glXGetVideoSync) << bool(glXSwapInterval) << glXIsDirect(display(), ctxbuffer);
     }
+    if (glPlatform->isVirtualBox()) {
+        // VirtualBox does not support glxQueryDrawable
+        // this should actually be in kwinglutils_funcs, but QueryDrawable seems not to be provided by an extension
+        // and the GLPlatform has not been initialized at the moment when initGLX() is called.
+        glXQueryDrawable = NULL;
+    }
     setIsDirectRendering(bool(glXIsDirect(display(), ctxbuffer)));
     kDebug(1212) << "DB:" << isDoubleBuffer() << ", Direct:" << isDirectRendering() << endl;
 }

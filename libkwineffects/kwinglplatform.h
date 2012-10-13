@@ -96,6 +96,7 @@ enum Driver {
     Driver_Swrast,
     Driver_Softpipe,
     Driver_Llvmpipe,
+    Driver_VirtualBox,
     Driver_Unknown
 };
 
@@ -239,10 +240,22 @@ public:
     bool isIntel() const;
 
     /**
+     * @returns @c true if the "GPU" is a VirtualBox GPU, and @c false otherwise.
+     * @since 4.10
+     **/
+    bool isVirtualBox() const;
+
+    /**
      * @returns @c true if OpenGL is emulated in software.
      * @since 4.7
      **/
     bool isSoftwareEmulation() const;
+
+    /**
+     * @returns @c true if the driver is known to be from a virtual machine.
+     * @since 4.10
+     **/
+    bool isVirtualMachine() const;
 
     /**
      * @returns the GL_VERSION string as provided by the driver.
@@ -326,6 +339,7 @@ private:
     bool m_limitedGLSL: 1;
     bool m_textureNPOT: 1;
     bool m_limitedNPOT: 1;
+    bool m_virtualMachine: 1;
     static GLPlatform *s_platform;
 };
 

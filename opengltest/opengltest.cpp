@@ -125,6 +125,11 @@ int main(int argc, char *argv[])
                return 0;
     }
 
+    // Direct context also works with VirtualBox's  driver
+    const GLubyte *renderer = glGetString(GL_RENDERER);
+    if (strstr((const char *)vendor, "Humper") && strstr((const char *)renderer, "Chromium"))
+        return 0;
+
     return 1;
 }
 
