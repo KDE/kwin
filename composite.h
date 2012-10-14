@@ -275,6 +275,7 @@ private Q_SLOTS:
     void performMousePoll();
     void delayedCheckUnredirect();
     void slotConfigChanged();
+    void releaseCompositorSelection();
 
 private:
     Compositor(QObject *workspace);
@@ -298,6 +299,7 @@ private:
     bool m_blocked;
     QBasicTimer compositeTimer;
     KSelectionOwner* cm_selection;
+    QTimer m_releaseSelectionTimer;
     uint vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
     QElapsedTimer nextPaintReference;
@@ -308,6 +310,7 @@ private:
     bool forceUnredirectCheck;
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishing; // finish() sets this variable while shutting down
+    bool m_starting; // start() sets this variable while starting
     int m_timeSinceLastVBlank, m_nextFrameDelay;
     Scene *m_scene;
 

@@ -118,6 +118,11 @@ Compositor::Compositor(QObject* workspace)
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
+
+    m_releaseSelectionTimer.setSingleShot(true);
+    // 2 sec which should be enough to restart the compositor
+    m_releaseSelectionTimer.setInterval(2000);
+    connect(&m_releaseSelectionTimer, SIGNAL(timeout()), SLOT(releaseCompositorSelection()));
     // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
@@ -128,6 +133,7 @@ Compositor::Compositor(QObject* workspace)
 Compositor::~Compositor()
 {
     finish();
+    delete cm_selection;
 }
 
 
@@ -142,6 +148,7 @@ void Compositor::setup()
         kError(1212) << "Compositing is not possible";
         return;
     }
+    m_starting = true;
 
     if (!options->isCompositingInitialized()) {
 #ifndef KWIN_HAVE_OPENGLES
@@ -166,8 +173,10 @@ void Compositor::slotCompositingOptionsInitialized()
 {
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
-    cm_selection = new KSelectionOwner(selection_name);
-    connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
+    if (!cm_selection) {
+        cm_selection = new KSelectionOwner(selection_name);
+        connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
+    }
     cm_selection->claim(true);   // force claiming
 
     switch(options->compositingMode()) {
@@ -214,7 +223,8 @@ void Compositor::slotCompositingOptionsInitialized()
 #endif
     default:
         kDebug(1212) << "No compositing enabled";
-        delete cm_selection;
+        m_starting = false;
+        cm_selection->release();
         return;
     }
     if (m_scene == NULL || m_scene->initFailed()) {
@@ -222,7 +232,8 @@ void Compositor::slotCompositingOptionsInitialized()
         kError(1212) << "Consult http://techbase.kde.org/Projects/KWin/4.0-release-notes#Setting_up";
         delete m_scene;
         m_scene = NULL;
-        delete cm_selection;
+        m_starting = false;
+        cm_selection->release();
         return;
     }
     m_xrrRefreshRate = KWin::currentRefreshRate();
@@ -247,6 +258,11 @@ void Compositor::slotCompositingOptionsInitialized()
 
     emit compositingToggled(true);
 
+    m_starting = false;
+    if (m_releaseSelectionTimer.isActive()) {
+        m_releaseSelectionTimer.stop();
+    }
+
     // render at least once
     compositeTimer.stop();
     performCompositing();
@@ -263,7 +279,7 @@ void Compositor::finish()
     if (!hasScene())
         return;
     m_finishing = true;
-    delete cm_selection;
+    m_releaseSelectionTimer.start();
     foreach (Client * c, Workspace::self()->clientList())
         m_scene->windowClosed(c, NULL);
     foreach (Client * c, Workspace::self()->desktopList())
@@ -302,6 +318,27 @@ void Compositor::finish()
         Workspace::self()->deletedList().first()->discard(Allowed);
     m_finishing = false;
     emit compositingToggled(false);
+}
+
+void Compositor::releaseCompositorSelection()
+{
+    if (hasScene() && !m_finishing) {
+        // compositor is up and running again, no need to release the selection
+        return;
+    }
+    if (m_starting) {
+        // currently still starting the compositor, it might fail, so restart the timer to test again
+        m_releaseSelectionTimer.start();
+        return;
+    }
+
+    if (m_finishing) {
+        // still shutting down, a restart might follow, so restart the timer to test again
+        m_releaseSelectionTimer.start();
+        return;
+    }
+    kDebug(1212) << "Releasing compositor selection";
+    cm_selection->release();
 }
 
 // OpenGL self-check failed, fallback to XRender
