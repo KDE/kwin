@@ -527,16 +527,16 @@ Client* Workspace::createClient(Window w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client(this);
-    if (!c->manage(w, is_mapped)) {
-        Client::deleteClient(c, Allowed);
-        return NULL;
-    }
     connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
     connect(c, SIGNAL(activeChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(fullScreenChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
+    if (!c->manage(w, is_mapped)) {
+        Client::deleteClient(c, Allowed);
+        return NULL;
+    }
     addClient(c, Allowed);
     return c;
 }
