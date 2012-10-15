@@ -149,8 +149,8 @@ Comment[zh_TW]=縮放所有開啟的視窗，讓它們排排站
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
-X-KDE-PluginInfo-Author=Rivo Laks & Lucas Murray
-X-KDE-PluginInfo-Email=rivolaks@hot.ee & lmurray@undefinedfire.com
+X-KDE-PluginInfo-Author=Rivo Laks, Lucas Murray
+X-KDE-PluginInfo-Email=rivolaks@hot.ee, lmurray@undefinedfire.com
 X-KDE-PluginInfo-Name=kwin4_effect_presentwindows
 X-KDE-PluginInfo-Version=0.3.0
 X-KDE-PluginInfo-Category=Window Management

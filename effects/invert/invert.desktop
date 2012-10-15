@@ -155,8 +155,8 @@ Icon=preferences-system-windows-effect-invert
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
-X-KDE-PluginInfo-Author=Rivo Laks & Lucas Murray
-X-KDE-PluginInfo-Email=rivolaks@hot.ee & lmurray@undefinedfire.com
+X-KDE-PluginInfo-Author=Rivo Laks, Lucas Murray
+X-KDE-PluginInfo-Email=rivolaks@hot.ee, lmurray@undefinedfire.com
 X-KDE-PluginInfo-Name=kwin4_effect_invert
 X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Category=Accessibility

@@ -146,8 +146,8 @@ Comment[zh_TW]=縮放所有桌面，讓它們排排站
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
-X-KDE-PluginInfo-Author=Luboš Luňák & Lucas Murray
-X-KDE-PluginInfo-Email=l.lunak@kde.org & lmurray@undefinedfire.com
+X-KDE-PluginInfo-Author=Luboš Luňák, Lucas Murray
+X-KDE-PluginInfo-Email=l.lunak@kde.org, lmurray@undefinedfire.com
 X-KDE-PluginInfo-Name=kwin4_effect_desktopgrid
 X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Category=Window Management
