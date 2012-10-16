@@ -191,6 +191,7 @@ Options::Options(QObject *parent)
     , electric_border_corner_ratio(Options::defaultElectricBorderCornerRatio())
     , borderless_maximized_windows(Options::defaultBorderlessMaximizedWindows())
     , show_geometry_tip(Options::defaultShowGeometryTip())
+    , condensed_title(Options::defaultCondensedTitle())
     , animationSpeed(Options::defaultAnimationSpeed())
 {
 }
@@ -539,6 +540,15 @@ void Options::setShowGeometryTip(bool showGeometryTip)
     emit showGeometryTipChanged();
 }
 
+void Options::setCondensedTitle(bool condensedTitle)
+{
+    if (condensed_title == condensedTitle) {
+        return;
+    }
+    condensed_title = condensedTitle;
+    emit condensedTitleChanged();
+}
+
 void Options::setElectricBorderDelay(int electricBorderDelay)
 {
     if (electric_border_delay == electricBorderDelay) {
@@ -834,6 +844,7 @@ unsigned long Options::loadConfig()
 
     KConfigGroup config(_config, "Windows");
     setShowGeometryTip(config.readEntry("GeometryTip", Options::defaultShowGeometryTip()));
+    setCondensedTitle(config.readEntry("CondensedTitle", Options::defaultCondensedTitle()));
 
     QString val;
 
@@ -1127,6 +1138,11 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
 bool Options::showGeometryTip() const
 {
     return show_geometry_tip;
+}
+
+bool Options::condensedTitle() const
+{
+    return condensed_title;
 }
 
 ElectricBorderAction Options::electricBorderAction(ElectricBorder edge) const

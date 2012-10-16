@@ -492,7 +492,7 @@ public:
     inline bool isBlockingCompositing() { return blocks_compositing; }
     void updateCompositeBlocking(bool readProperty = false);
 
-    QString caption(bool full = true) const;
+    QString caption(bool full = true, bool stripped = false) const;
     void updateCaption();
 
     void keyPressEvent(uint key_code);   // FRAME ??
@@ -892,7 +892,7 @@ private:
     QTimer* shadeHoverTimer;
     QTimer* delayedMoveResizeTimer;
     Colormap cmap;
-    QString cap_normal, cap_iconic, cap_suffix;
+    QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;
     Window window_group;
     TabGroup* tab_group;

@@ -130,6 +130,10 @@ class Options : public QObject, public KDecorationOptions
     */
     Q_PROPERTY(bool showGeometryTip READ showGeometryTip WRITE setShowGeometryTip NOTIFY showGeometryTipChanged)
     /**
+    * whether the visible name should be condensed
+    */
+    Q_PROPERTY(bool condensedTitle READ condensedTitle WRITE setCondensedTitle NOTIFY condensedTitleChanged)
+    /**
     * Whether electric borders are enabled. With electric borders
     * you can change desktop by moving the mouse pointer towards the edge
     * of the screen
@@ -445,6 +449,11 @@ public:
     */
     bool showGeometryTip() const;
 
+    /**
+     * returns whether the user prefers his caption clean
+     */
+    bool condensedTitle() const;
+
     enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
     /**
     * @returns The action assigned to the specified electric border
@@ -620,6 +629,7 @@ public:
     void setCommandAll3(MouseCommand commandAll3);
     void setKeyCmdAllModKey(uint keyCmdAllModKey);
     void setShowGeometryTip(bool showGeometryTip);
+    void setCondensedTitle(bool condensedTitle);
     void setElectricBorderDelay(int electricBorderDelay);
     void setElectricBorderCooldown(int electricBorderCooldown);
     void setElectricBorderPushbackPixels(int electricBorderPushbackPixels);
@@ -760,6 +770,9 @@ public:
         return Qt::Key_Alt;
     }
     static bool defaultShowGeometryTip() {
+        return false;
+    }
+    static bool defaultCondensedTitle() {
         return false;
     }
     static ElectricBorderAction defaultElectricBorderTop() {
@@ -930,6 +943,7 @@ Q_SIGNALS:
     void commandAll3Changed();
     void keyCmdAllModKeyChanged();
     void showGeometryTipChanged();
+    void condensedTitleChanged();
     void electricBordersChanged();
     void electricBorderDelayChanged();
     void electricBorderCooldownChanged();
@@ -1042,6 +1056,7 @@ private:
     float electric_border_corner_ratio;
     bool borderless_maximized_windows;
     bool show_geometry_tip;
+    bool condensed_title;
     int animationSpeed; // 0 - instant, 5 - very slow
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;

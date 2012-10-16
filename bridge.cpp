@@ -53,7 +53,6 @@ BRIDGE_HELPER(bool, keepAbove, , , const)
 BRIDGE_HELPER(bool, keepBelow, , , const)
 BRIDGE_HELPER(bool, isMovable, , , const)
 BRIDGE_HELPER(bool, isResizable, , , const)
-BRIDGE_HELPER(QString, caption, , , const)
 BRIDGE_HELPER(void, processMousePressEvent, QMouseEvent* e, e,)
 BRIDGE_HELPER(QRect, geometry, , , const)
 BRIDGE_HELPER(void, closeWindow, , ,)
@@ -261,11 +260,16 @@ QIcon Bridge::icon(int idx) const
     return icon();
 }
 
+QString Bridge::caption() const
+{
+    return c->caption(true, true);
+}
+
 QString Bridge::caption(int idx) const
 {
     if (c->tabGroup())
-        return c->tabGroup()->clients().at(idx)->caption();
-    return c->caption();
+        return c->tabGroup()->clients().at(idx)->caption(true, true);
+    return c->caption(true, true);
 }
 
 long Bridge::currentTabId() const

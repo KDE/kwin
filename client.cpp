@@ -26,6 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <QProcess>
 #include <QPaintEngine>
+#ifdef KWIN_BUILD_SCRIPTING
+#include <QScriptEngine>
+#include <QScriptProgram>
+#endif
 #include <unistd.h>
 #include <kstandarddirs.h>
 #include <QWhatsThis>
@@ -1699,41 +1703,72 @@ QChar PDF(0x202C);
 
 void Client::setCaption(const QString& _s, bool force)
 {
-    QString s = _s;
-    if (s != cap_normal || force) {
-        bool reset_name = force;
-        for (int i = 0; i < s.length(); ++i)
-            if (!s[i].isPrint())
-                s[i] = QChar(' ');
-        cap_normal = s;
-        bool was_suffix = (!cap_suffix.isEmpty());
-        QString machine_suffix;
+    if (!force && _s == cap_normal)
+        return;
+    QString s(_s);
+    for (int i = 0; i < s.length(); ++i)
+        if (!s[i].isPrint())
+            s[i] = QChar(' ');
+    cap_normal = s;
+#ifdef KWIN_BUILD_SCRIPTING
+    if (options->condensedTitle()) {
+        static QScriptEngine engine;
+        static QScriptProgram stripTitle;
+        static QScriptValue script;
+        if (stripTitle.isNull()) {
+            const QString scriptFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/stripTitle.js");
+            if (!scriptFile.isEmpty()) {
+                QFile f(scriptFile);
+                if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+                    f.reset();
+                    stripTitle = QScriptProgram(QString::fromLocal8Bit(f.readAll()), "stripTitle.js");
+                    f.close();
+                }
+            }
+            if (stripTitle.isNull())
+                stripTitle = QScriptProgram("(function(title, wm_name, wm_class){ return title ; })", "stripTitle.js");
+            script = engine.evaluate(stripTitle);
+        }
+        QScriptValueList args;
+        args << _s << QString(resourceName()) << QString(resourceClass());
+        s = script.call(QScriptValue(), args).toString();
+    }
+#endif
+    if (!force && s == cap_deco)
+        return;
+    cap_deco = s;
+
+    bool reset_name = force;
+    bool was_suffix = (!cap_suffix.isEmpty());
+    cap_suffix.clear();
+    QString machine_suffix;
+    if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
         if (wmClientMachine(false) != "localhost" && !isLocalMachine(wmClientMachine(false)))
             machine_suffix = QString(" <@") + wmClientMachine(true) + '>' + LRM;
-        QString shortcut_suffix = !shortcut().isEmpty() ? (" {" + shortcut().toString() + '}') : QString();
-        cap_suffix = machine_suffix + shortcut_suffix;
-        if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(FetchNameInternalPredicate(this))) {
-            int i = 2;
-            do {
-                cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + LRM + shortcut_suffix;
-                i++;
-            } while (workspace()->findClient(FetchNameInternalPredicate(this)));
-            info->setVisibleName(caption().toUtf8());
-            reset_name = false;
-        }
-        if ((was_suffix && cap_suffix.isEmpty()) || reset_name) {
-            // If it was new window, it may have old value still set, if the window is reused
-            info->setVisibleName("");
-            info->setVisibleIconName("");
-        } else if (!cap_suffix.isEmpty() && !cap_iconic.isEmpty())
-            // Keep the same suffix in iconic name if it's set
-            info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
-
-        if (isManaged() && decoration) {
-            decoration->captionChange();
-        }
-        emit captionChanged();
     }
+    QString shortcut_suffix = !shortcut().isEmpty() ? (" {" + shortcut().toString() + '}') : QString();
+    cap_suffix = machine_suffix + shortcut_suffix;
+    if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(FetchNameInternalPredicate(this))) {
+        int i = 2;
+        do {
+            cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + LRM;
+            i++;
+        } while (workspace()->findClient(FetchNameInternalPredicate(this)));
+        info->setVisibleName(caption().toUtf8());
+        reset_name = false;
+    }
+    if ((was_suffix && cap_suffix.isEmpty()) || reset_name) {
+        // If it was new window, it may have old value still set, if the window is reused
+        info->setVisibleName("");
+        info->setVisibleIconName("");
+    } else if (!cap_suffix.isEmpty() && !cap_iconic.isEmpty())
+        // Keep the same suffix in iconic name if it's set
+        info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
+
+    if (isManaged() && decoration) {
+        decoration->captionChange();
+    }
+    emit captionChanged();
 }
 
 void Client::updateCaption()
@@ -1763,9 +1798,12 @@ void Client::fetchIconicName()
 /**
  * \reimp
  */
-QString Client::caption(bool full) const
+QString Client::caption(bool full, bool stripped) const
 {
-    return full ? cap_normal + cap_suffix : cap_normal;
+    QString cap = stripped ? cap_deco : cap_normal;
+    if (full)
+        cap += cap_suffix;
+    return cap;
 }
 
 bool Client::tabTo(Client *other, bool behind, bool activate)
