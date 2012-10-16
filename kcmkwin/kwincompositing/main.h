@@ -74,6 +74,8 @@ public slots:
     void configChanged(bool reinitCompositing);
     void initEffectSelector();
 
+    void warn(QString message, QString details, QString dontAgainKey);
+
 private slots:
     void confirmReInit() { showConfirmDialog(true); }
     void rearmGlSupport();
@@ -82,6 +84,7 @@ private slots:
     void toggleEffectShortcutChanged(const QKeySequence &seq);
     void updateStatusUI(bool compositingIsPossible);
     void showDetailedEffectLoadingInformation();
+    void blockFutureWarnings();
     void slotGHNS();
 
 private:
@@ -97,6 +100,8 @@ private:
     KActionCollection* m_actionCollection;
     QString originalGraphicsSystem;
     QAction *m_showDetailedErrors;
+    QAction *m_dontShowAgain;
+    QString m_externErrorDetails;
 };
 
 } // namespace

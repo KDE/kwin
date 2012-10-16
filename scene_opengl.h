@@ -79,6 +79,8 @@ public Q_SLOTS:
 protected:
     bool init_ok;
 private:
+    bool viewportLimitsMatched(const QSize &size) const;
+private:
     QHash< Toplevel*, Window* > windows;
     bool debug;
     OpenGLBackend *m_backend;

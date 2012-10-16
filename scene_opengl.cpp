@@ -52,10 +52,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
 #include <QDesktopWidget>
+#include <QStringList>
 #include <QVector2D>
 #include <QVector4D>
 #include <QMatrix4x4>
+
+#include <KLocale>
+#include <KProcess>
 
 namespace KWin
 {
@@ -107,6 +114,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
         init_ok = false;
         return;
     }
+    if (!viewportLimitsMatched(QSize(displayWidth(), displayHeight())))
+        return;
 
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
@@ -389,8 +398,75 @@ SceneOpenGL::Texture *SceneOpenGL::createTexture(const QPixmap &pix, GLenum targ
     return new Texture(m_backend, pix, target);
 }
 
+bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
+    GLint limit[2];
+    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, limit);
+    if (limit[0] < size.width() || limit[1] < size.height()) {
+        QMetaObject::invokeMethod(Compositor::self(), "suspend",
+                                  Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, Compositor::AllReasonSuspend));
+        const QString message = i18n("<h1>OpenGL desktop effects not possible</h1>"
+                                     "Your system cannot perform OpenGL Desktop Effects at the "
+                                     "current resolution<br><br>"
+                                     "You can try to select the XRender backend , but it "
+                                     "might be very slow for this resolution as well.<br>"
+                                     "Alternatively, lower the combined resolution of all screens "
+                                     "to %1x%2 ", limit[0], limit[1]);
+        const QString details = i18n("The demanded resolution exceeds the GL_MAX_VIEWPORT_DIMS "
+                                     "limitation of your GPU and is therefore not compatible "
+                                     "with the OpenGL compositor.<br>"
+                                     "XRender does not know such limitation, but the performance "
+                                     "will usually be impacted by the hardware limitations that"
+                                     "restrict the OpenGL viewport size.");
+        const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
+        QDBusConnection::sessionBus().interface()->setTimeout(500);
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kwinCompositingDialog").value()) {
+            QDBusInterface dialog( "org.kde.kwinCompositingDialog", "/CompositorSettings", "org.kde.kwinCompositingDialog" );
+            dialog.asyncCall("warn", message, details, "");
+        } else {
+            const QString args = "warn " + message.toLocal8Bit().toBase64() + " details " + details.toLocal8Bit().toBase64();
+            KProcess::startDetached("kcmshell4", QStringList() << "kwincompositing" << "--args" << args);
+        }
+        QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
+        return false;
+    }
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, limit);
+    if (limit[0] < size.width() || limit[0] < size.height()) {
+        KConfig cfg("kwin_dialogsrc");
+
+        if (!KConfigGroup(&cfg, "Notification Messages").readEntry("max_tex_warning", true))
+            return true;
+
+        const QString message = i18n("<h1>OpenGL desktop effects might be unusable</h1>"
+                                     "OpenGL Desktop Effects at the current resolution are supported "
+                                     "but might be exceptionally slow.<br>"
+                                     "Also large windows will turn entirely black.<br><br>"
+                                     "Consider to suspend compositing, switch to the XRender backend "
+                                     "or lower the resolution to %1x%1." , limit[0]);
+        const QString details = i18n("The demanded resolution exceeds the GL_MAX_TEXTURE_SIZE "
+                                     "limitation of your GPU, thus windows of that size cannot be "
+                                     "assigned to textures and will be entirely black.<br>"
+                                     "Also this limit will often be a performance level barrier despite "
+                                     "below GL_MAX_VIEWPORT_DIMS, because the driver might fall back to "
+                                     "software rendering in this case.");
+        const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
+        QDBusConnection::sessionBus().interface()->setTimeout(500);
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kwinCompositingDialog").value()) {
+            QDBusInterface dialog( "org.kde.kwinCompositingDialog", "/CompositorSettings", "org.kde.kwinCompositingDialog" );
+            dialog.asyncCall("warn", message, details, "kwin_dialogsrc:max_tex_warning");
+        } else {
+            const QString args = "warn " + message.toLocal8Bit().toBase64() + " details " +
+                                 details.toLocal8Bit().toBase64() + " dontagain kwin_dialogsrc:max_tex_warning";
+            KProcess::startDetached("kcmshell4", QStringList() << "kwincompositing" << "--args" << args);
+        }
+        QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
+    }
+    return true;
+}
+
 void SceneOpenGL::screenGeometryChanged(const QSize &size)
 {
+    if (!viewportLimitsMatched(size))
+        return;
     Scene::screenGeometryChanged(size);
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
