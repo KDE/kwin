@@ -1635,6 +1635,9 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
             nh = rh;
         QSize ns = sizeForClientSize(QSize(nw, nh));     // enforces size if needed
         new_pos = rules()->checkPosition(new_pos);
+        int newScreen = workspace()->screenNumber(QRect(new_pos, ns).center());
+        if (newScreen != rules()->checkScreen(newScreen))
+            return; // not allowed by rule
 
         QRect orig_geometry = geometry();
         GeometryUpdatesBlocker blocker(this);
