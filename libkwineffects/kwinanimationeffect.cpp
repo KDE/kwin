@@ -66,7 +66,8 @@ bool AnimationEffect::isActive() const
 }
 
 
-#define RELATIVE_XY(_FIELD_) const bool relative[2] = { metaData(Relative##_FIELD_##X, meta), metaData(Relative##_FIELD_##Y, meta) }
+#define RELATIVE_XY(_FIELD_) const bool relative[2] = { static_cast<bool>(metaData(Relative##_FIELD_##X, meta)), \
+                                                        static_cast<bool>(metaData(Relative##_FIELD_##Y, meta)) }
 
 void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from )
 {
