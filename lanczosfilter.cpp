@@ -432,7 +432,8 @@ void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double b
         // Note that both operands have to be in range [0.5; 1] since opengl
         //  automatically substracts 0.5 from them
         glActiveTexture(GL_TEXTURE1);
-        float saturation_constant[] = { 0.5 + 0.5 * 0.30, 0.5 + 0.5 * 0.59, 0.5 + 0.5 * 0.11, saturation };
+        float saturation_constant[] = { 0.5 + 0.5 * 0.30, 0.5 + 0.5 * 0.59, 0.5 + 0.5 * 0.11,
+                                        static_cast<float>(saturation) };
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
         glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
         glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
@@ -500,7 +501,8 @@ void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double b
                       opacity);
         } else {
             // Multiply color by brightness and replace alpha by opacity
-            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity };
+            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness,
+                                 static_cast<float>(opacity) };
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
             glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
             glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);

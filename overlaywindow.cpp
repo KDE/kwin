@@ -142,7 +142,7 @@ void OverlayWindow::destroy()
     if (m_window == None)
         return;
     // reset the overlay shape
-    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
+    XRectangle rec = { 0, 0, static_cast<unsigned short>(displayWidth()), static_cast<unsigned short>(displayHeight()) };
     XShapeCombineRectangles(display(), m_window, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted);
     XShapeCombineRectangles(display(), m_window, ShapeInput, 0, 0, &rec, 1, ShapeSet, Unsorted);
 #ifdef KWIN_HAVE_XCOMPOSITE_OVERLAY

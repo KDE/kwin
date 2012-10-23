@@ -744,7 +744,8 @@ void Client::setMask(const QRegion& reg, int mode)
     }
     if (shape()) {
         // The rest of the applyign using a temporary window
-        XRectangle rec = { 0, 0, clientSize().width(), clientSize().height() };
+        XRectangle rec = { 0, 0, static_cast<unsigned short>(clientSize().width()),
+                           static_cast<unsigned short>(clientSize().height()) };
         XShapeCombineRectangles(display(), shape_helper_window, ShapeBounding,
                                 clientPos().x(), clientPos().y(), &rec, 1, ShapeSubtract, Unsorted);
         XShapeCombineShape(display(), shape_helper_window, ShapeBounding,

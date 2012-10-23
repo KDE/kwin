@@ -311,10 +311,10 @@ void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
         }
         const float verts[ 4 * 2 ] = {
             // NOTICE: r.x/y could be replaced by "0", but that would make it unreadable...
-            r.x(), r.y(),
-            r.x(), r.y() + rect.height(),
-            r.x() + rect.width(), r.y(),
-            r.x() + rect.width(), r.y() + rect.height()
+            static_cast<float>(r.x()), static_cast<float>(r.y()),
+            static_cast<float>(r.x()), static_cast<float>(r.y() + rect.height()),
+            static_cast<float>(r.x() + rect.width()), static_cast<float>(r.y()),
+            static_cast<float>(r.x() + rect.width()), static_cast<float>(r.y() + rect.height())
         };
 #ifdef KWIN_HAVE_OPENGLES
         const float texWidth = 1.0f;

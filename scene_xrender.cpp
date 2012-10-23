@@ -696,7 +696,7 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
 
         if (data.brightness() < 1.0) {
             // fake brightness change by overlaying black
-            XRenderColor col = { 0, 0, 0, 0xffff *(1 - data.brightness()) * data.opacity() };
+            XRenderColor col = { 0, 0, 0, static_cast<unsigned short>(0xffff *(1 - data.brightness()) * data.opacity()) };
             if (blitInTempPixmap) {
                 XRenderFillRectangle(display(), PictOpOver, renderTarget, &col,
                                      -temp_visibleRect.left(), -temp_visibleRect.top(), width(), height());
