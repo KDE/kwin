@@ -110,9 +110,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         ui[i]->effectConfigButton->setIcon(KIcon("view-preview"));
         ui[i]->ghns->setIcon(KIcon("get-hot-new-stuff"));
 
-        // TODO: remove once the category has been created.
-        ui[i]->ghns->setVisible(false);
-
         connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showOutlineCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));

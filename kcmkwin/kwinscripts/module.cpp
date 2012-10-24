@@ -57,9 +57,6 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui->setupUi(this);
     ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
 
-    // TODO: remove once the category has been created.
-    ui->ghnsButton->setVisible(false);
-
     connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
     connect(ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
