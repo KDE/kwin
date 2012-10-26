@@ -82,6 +82,7 @@ private slots:
     void toggleEffectShortcutChanged(const QKeySequence &seq);
     void updateStatusUI(bool compositingIsPossible);
     void showDetailedEffectLoadingInformation();
+    void slotGHNS();
 
 private:
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
