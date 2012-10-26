@@ -88,6 +88,16 @@ class MouseClickEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(QColor color1 READ color1)
+    Q_PROPERTY(QColor color2 READ color2)
+    Q_PROPERTY(QColor color3 READ color3)
+    Q_PROPERTY(qreal lineWidth READ lineWidth)
+    Q_PROPERTY(int ringLife READ ringLife)
+    Q_PROPERTY(int ringSize READ ringSize)
+    Q_PROPERTY(int ringCount READ ringCount)
+    Q_PROPERTY(bool showText READ isShowText)
+    Q_PROPERTY(QFont font READ font)
+    Q_PROPERTY(bool enabled READ isEnabled)
 public:
     MouseClickEffect();
     ~MouseClickEffect();
@@ -96,6 +106,38 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual bool isActive() const;
+
+    // for properties
+    QColor color1() const {
+        return m_colors[0];
+    }
+    QColor color2() const {
+        return m_colors[1];
+    }
+    QColor color3() const {
+        return m_colors[2];
+    }
+    qreal lineWidth() const {
+        return m_lineWidth;
+    }
+    int ringLife() const {
+        return m_ringLife;
+    }
+    int ringSize() const {
+        return m_ringMaxSize;
+    }
+    int ringCount() const {
+        return m_ringCount;
+    }
+    bool isShowText() const {
+        return m_showText;
+    }
+    QFont font() const {
+        return m_font;
+    }
+    bool isEnabled() const {
+        return m_enabled;
+    }
 
     static bool supported();
 private slots:
