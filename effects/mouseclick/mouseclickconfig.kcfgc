@@ -1,0 +1,5 @@
+File=mouseclick.kcfg
+ClassName=MouseClickConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

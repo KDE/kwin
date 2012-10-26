@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "mouseclick.h"
+// KConfigSkeleton
+#include "mouseclickconfig.h"
 
-#include <kwinconfig.h>
 #include <kwinglutils.h>
 
 #include <KDE/KAction>
@@ -72,16 +73,16 @@ bool MouseClickEffect::supported()
 
 void MouseClickEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = EffectsHandler::effectConfig("MouseClick");
-    m_colors[0] = conf.readEntry("Color1", QColor(Qt::red));
-    m_colors[1] = conf.readEntry("Color2", QColor(Qt::green));
-    m_colors[2] = conf.readEntry("Color3", QColor(Qt::blue));
-    m_lineWidth = conf.readEntry("LineWidth", 1.f);
-    m_ringLife = conf.readEntry("RingLife", 300);
-    m_ringMaxSize = conf.readEntry("RingSize", 20);
-    m_ringCount = conf.readEntry("RingCount", 2);
-    m_showText = conf.readEntry("ShowText", true);
-    m_font = conf.readEntry("Font", QFont());
+    MouseClickConfig::self()->readConfig();
+    m_colors[0] = MouseClickConfig::color1();
+    m_colors[1] = MouseClickConfig::color2();
+    m_colors[2] = MouseClickConfig::color3();
+    m_lineWidth = MouseClickConfig::lineWidth();
+    m_ringLife = MouseClickConfig::ringLife();
+    m_ringMaxSize = MouseClickConfig::ringSize();
+    m_ringCount = MouseClickConfig::ringCount();
+    m_showText = MouseClickConfig::showText();
+    m_font = MouseClickConfig::font();
 }
 
 void MouseClickEffect::prePaintScreen(ScreenPrePaintData& data, int time)

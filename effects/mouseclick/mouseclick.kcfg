@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kwinrc"/>
+    <group name="Effect-MouseClick">
+        <entry name="Color1" type="Color">
+            <default code="true">QColor(Qt::red)</default>
+        </entry>
+        <entry name="Color2" type="Color">
+            <default code="true">QColor(Qt::green)</default>
+        </entry>
+        <entry name="Color3" type="Color">
+            <default code="true">QColor(Qt::blue)</default>
+        </entry>
+        <entry name="LineWidth" type="Double">
+            <default>1.0</default>
+        </entry>
+        <entry name="RingLife" type="UInt">
+            <default>300</default>
+        </entry>
+        <entry name="RingSize" type="UInt">
+            <default>20</default>
+        </entry>
+        <entry name="RingCount" type="UInt">
+            <default>2</default>
+        </entry>
+        <entry name="ShowText" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Font" type="Font"/>
+    </group>
+</kcfg>

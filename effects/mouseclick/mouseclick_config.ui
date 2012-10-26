@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>292</width>
+    <width>335</width>
     <height>378</height>
    </rect>
   </property>
@@ -22,7 +22,7 @@
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
        <item row="1" column="1">
-        <widget class="KColorCombo" name="button1_color_input">
+        <widget class="KColorCombo" name="kcfg_Color1">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -40,7 +40,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>button1_color_input</cstring>
+          <cstring>kcfg_Color1</cstring>
          </property>
         </widget>
        </item>
@@ -50,12 +50,12 @@
           <string>Middle Mouse Button Color:</string>
          </property>
          <property name="buddy">
-          <cstring>button2_color_input</cstring>
+          <cstring>kcfg_Color2</cstring>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="KColorCombo" name="button2_color_input">
+        <widget class="KColorCombo" name="kcfg_Color2">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -70,12 +70,12 @@
           <string>Right Mouse Button Color:</string>
          </property>
          <property name="buddy">
-          <cstring>button3_color_input</cstring>
+          <cstring>kcfg_Color3</cstring>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="KColorCombo" name="button3_color_input">
+        <widget class="KColorCombo" name="kcfg_Color3">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -103,27 +103,33 @@
              <string>Line Width:</string>
             </property>
             <property name="buddy">
-             <cstring>ring_line_width_input</cstring>
+             <cstring>kcfg_LineWidth</cstring>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="KDoubleNumInput" name="ring_line_width_input">
+           <widget class="KDoubleNumInput" name="kcfg_LineWidth">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="suffix">
+             <string> pixel</string>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="KIntSpinBox" name="ring_duration_input">
+           <widget class="KIntSpinBox" name="kcfg_RingLife">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="suffix">
+             <string> msec</string>
             </property>
             <property name="minimum">
              <number>50</number>
@@ -139,7 +145,7 @@
              <string>Ring Duration:</string>
             </property>
             <property name="buddy">
-             <cstring>ring_duration_input</cstring>
+             <cstring>kcfg_RingLife</cstring>
             </property>
            </widget>
           </item>
@@ -149,17 +155,20 @@
              <string>Ring Radius:</string>
             </property>
             <property name="buddy">
-             <cstring>ring_radius_input</cstring>
+             <cstring>kcfg_RingSize</cstring>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="KIntSpinBox" name="ring_radius_input">
+           <widget class="KIntSpinBox" name="kcfg_RingSize">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="suffix">
+             <string> pixel</string>
             </property>
             <property name="minimum">
              <number>1</number>
@@ -175,12 +184,12 @@
              <string>Ring Count:</string>
             </property>
             <property name="buddy">
-             <cstring>ring_count_input</cstring>
+             <cstring>kcfg_RingCount</cstring>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KIntNumInput" name="ring_count_input">
+           <widget class="KIntNumInput" name="kcfg_RingCount">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -209,10 +218,10 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KFontRequester" name="font_input"/>
+           <widget class="KFontRequester" name="kcfg_Font"/>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="showtext_input">
+           <widget class="QCheckBox" name="kcfg_ShowText">
             <property name="text">
              <string/>
             </property>
@@ -224,7 +233,7 @@
              <string>Show Text:</string>
             </property>
             <property name="buddy">
-             <cstring>showtext_input</cstring>
+             <cstring>kcfg_ShowText</cstring>
             </property>
            </widget>
           </item>

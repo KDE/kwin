@@ -45,8 +45,6 @@ public:
     virtual ~MouseClickEffectConfig();
 
     virtual void save();
-    virtual void load();
-    virtual void defaults();
 
 private:
     MouseClickEffectConfigForm* m_ui;
