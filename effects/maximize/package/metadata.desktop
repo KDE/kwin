@@ -1,0 +1,21 @@
+[Desktop Entry]
+Comment=Animation for a window going to maximize/restore from maximize
+Encoding=UTF-8
+Icon=preferences-system-windows-effect-maximize
+Name=Maximize
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Email=mgraesslin@kde.org
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=kwin4_effect_maximize
+X-KDE-PluginInfo-Version=1
+X-KDE-PluginInfo-Website=
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-DefaultSize=200,100
+X-Plasma-MainScript=code/maximize.js
+X-Plasma-RemoteLocation=

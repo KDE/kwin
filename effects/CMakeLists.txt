@@ -84,6 +84,7 @@ add_subdirectory( fade )
 # scripted effects only relevant to desktop
 if( NOT KWIN_MOBILE_EFFECTS )
     add_subdirectory( fadedesktop )
+    add_subdirectory( maximize )
 endif( NOT KWIN_MOBILE_EFFECTS )
 
 ###############################################################################
