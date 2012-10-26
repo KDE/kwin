@@ -74,6 +74,7 @@ FlipSwitchEffectConfig::~FlipSwitchEffectConfig()
 void FlipSwitchEffectConfig::save()
 {
     KCModule::save();
+    m_ui->shortcutEditor->save();
 
     EffectsHandler::sendReloadMessage("flipswitch");
 }
