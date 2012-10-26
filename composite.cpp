@@ -304,7 +304,7 @@ void Workspace::updateCompositeBlocking(Client *c)
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
             if (!compositingBlocked) // do NOT attempt to call suspendCompositing(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(this, "suspendCompositing", Qt::QueuedConnection, Q_ARG(bool, true));
             compositingBlocked = true;
         }
     }
@@ -320,8 +320,7 @@ void Workspace::updateCompositeBlocking(Client *c)
         }
         if (resume) { // do NOT attempt to call suspendCompositing(false); from within the eventchain!
             compositingBlocked = false;
-            if (compositingSuspended)
-                QMetaObject::invokeMethod(this, "slotToggleCompositing", Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, "suspendCompositing", Qt::QueuedConnection, Q_ARG(bool, false));
         }
     }
 }
@@ -333,6 +332,10 @@ void Workspace::suspendCompositing()
 
 void Workspace::suspendCompositing(bool suspend)
 {
+    if (compositingSuspended == suspend) {
+        // nothing actually changes
+        return;
+    }
     compositingSuspended = suspend;
     finishCompositing();
     setupCompositing(); // will do nothing if suspended
