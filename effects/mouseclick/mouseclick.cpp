@@ -196,7 +196,10 @@ void MouseClickEffect::repaint()
         int ymax = 0;
         int yfontMax = 0;
         foreach (MouseEvent* click, m_clicks) {
-            QRect fontGeo = click->m_frame->geometry();
+            QRect fontGeo;
+            if (click->m_frame) {
+                fontGeo = click->m_frame->geometry();
+            }
             xmin = qMin<int>(xmin, click->m_pos.x());
             ymin = qMin<int>(ymin, click->m_pos.y());
             xmax = qMax<int>(xmax, click->m_pos.x() + (fontGeo.width() + 10));
