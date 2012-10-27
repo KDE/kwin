@@ -43,6 +43,39 @@
         <sectiondef kind="public-func">
             <memberdef kind="function">
                 <type>Q_SCRIPTABLE void</type>
+                <definition>void KWin::ScriptedEffect::animate</definition>
+                <argsstring>(settings)</argsstring>
+                <name>animate</name>
+                <read></read>
+                <detaileddescription>
+Schedules one or many animations for one window. The animations are defined through the settings object providing
+a more declarative way to specify the animations than the animate call on the effect object. The settings object
+supports the following attributes:
+&lt;syntaxhighlight lang="javascript"&gt;
+{
+    window: EffectWindow, /* the window to animate, required */
+    duration: int, /* duration in msec, required */
+    curve: QEasingCurve.Type, /* global easing curve, optional */
+    type: Effect.Attribute, /* for first animation, optional */
+    from: FPx2, /* for first animation, optional */
+    to: FPx2, /* for first animation, optional */
+    delay: int, /* for first animation, optional */
+    animations: [ /* additional animations, optional */
+        {
+        curve: QEasingCurve.Type, /* overrides global */
+        type: Effect.Attribute,
+        from: FPx2,
+        to: FPx2,
+        delay: int
+        }
+    ]
+}
+&lt;/syntaxhighlight&gt;
+At least one animation needs to be specified either with the top-level properties or in the animations list.
+                </detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE void</type>
                 <definition>void KWin::ScriptedEffect::print</definition>
                 <argsstring>(QVariant ... values)</argsstring>
                 <name>print</name>

@@ -89,6 +89,128 @@ QScriptValue kwinScriptScreenEdge(QScriptContext *context, QScriptEngine *engine
     return registerScreenEdge<KWin::ScriptedEffect*>(context, engine);
 }
 
+struct AnimationSettings {
+    AnimationEffect::Attribute a;
+    QEasingCurve curve;
+    bool curveSet;
+    FPx2 from;
+    FPx2 to;
+    int delay;
+    bool valid;
+};
+
+AnimationSettings animationSettingsFromObject(QScriptValue &object)
+{
+    AnimationSettings settings;
+    settings.valid = true;
+    settings.curveSet = false;
+
+    settings.to = qscriptvalue_cast<FPx2>(object.property("to"));
+    settings.from = qscriptvalue_cast<FPx2>(object.property("from"));
+
+    QScriptValue delay = object.property("delay");
+    if (delay.isValid() && delay.isNumber()) {
+        settings.delay = delay.toInt32();
+    } else {
+        settings.delay = 0;
+    }
+
+    QScriptValue curve = object.property("curve");
+    if (curve.isValid() && curve.isNumber()) {
+        settings.curve = QEasingCurve(static_cast<QEasingCurve::Type>(curve.toInt32()));
+        settings.curveSet = true;
+    }
+
+    QScriptValue type = object.property("type");
+    if (!type.isValid() || !type.isNumber()) {
+        settings.valid = false;
+    }
+    settings.a = static_cast<AnimationEffect::Attribute>(type.toInt32());
+
+    return settings;
+}
+
+QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
+{
+    ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
+    if (!effect) {
+        context->throwError(QScriptContext::ReferenceError, "Internal Scripted KWin Effect error");
+        return engine->undefinedValue();
+    }
+    if (context->argumentCount() != 1) {
+        context->throwError(QScriptContext::SyntaxError, "Exactly one argument expected");
+        return engine->undefinedValue();
+    }
+    if (!context->argument(0).isObject()) {
+        context->throwError(QScriptContext::TypeError, "Argument needs to be an object");
+        return engine->undefinedValue();
+    }
+    QScriptValue object = context->argument(0);
+    QScriptValue windowProperty = object.property("window");
+    if (!windowProperty.isValid() || !windowProperty.isObject()) {
+        context->throwError(QScriptContext::TypeError, "Window property missing in animation options");
+        return engine->undefinedValue();
+    }
+    EffectWindow *window = qobject_cast<EffectWindow*>(windowProperty.toQObject());
+    if (!window) {
+        context->throwError(QScriptContext::TypeError, "Window property does not contain an EffectWindow");
+        return engine->undefinedValue();
+    }
+    QScriptValue durationProperty = object.property("duration");
+    if (!durationProperty.isValid() || !durationProperty.isNumber()) {
+        context->throwError(QScriptContext::TypeError, "Duration property missing in animation options");
+        return engine->undefinedValue();
+    }
+    const int duration = durationProperty.toInt32();
+
+    QEasingCurve curve;
+    QList<AnimationSettings> settings;
+    AnimationSettings globalSettings = animationSettingsFromObject(object);
+    if (globalSettings.valid) {
+        settings << globalSettings;
+        if (globalSettings.curveSet) {
+            curve = globalSettings.curve;
+        }
+    }
+    QScriptValue animations = object.property("animations");
+    if (animations.isValid()) {
+        if (!animations.isArray()) {
+            context->throwError(QScriptContext::TypeError, "Animations provided but not an array");
+            return engine->undefinedValue();
+        }
+        const int length = static_cast<int>(animations.property("length").toInteger());
+        for (int i=0; i<length; ++i) {
+            QScriptValue value = animations.property(QString::number(i));
+            if (!value.isValid()) {
+                continue;
+            }
+            if (value.isObject()) {
+                AnimationSettings s = animationSettingsFromObject(value);
+                if (s.valid) {
+                    settings << s;
+                }
+            }
+        }
+    }
+
+    if (settings.empty()) {
+        context->throwError(QScriptContext::TypeError, "No animations provided");
+        return engine->undefinedValue();
+    }
+    foreach (const AnimationSettings &setting, settings) {
+        effect->animate(window,
+                        setting.a,
+                        duration,
+                        setting.to,
+                        setting.from,
+                        NULL,
+                        setting.curveSet ? setting.curve : curve,
+                        setting.delay);
+    }
+
+    return engine->newVariant(true);
+}
+
 QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
 {
     return eng->newQObject(window, QScriptEngine::QtOwnership,
@@ -198,6 +320,10 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     // add global Shortcut
     registerGlobalShortcutFunction(this, m_engine, kwinScriptGlobalShortcut);
     registerScreenEdgeFunction(this, m_engine, kwinScriptScreenEdge);
+    // add the animate method
+    QScriptValue animateFunc = m_engine->newFunction(kwinEffectAnimate);
+    animateFunc.setData(m_engine->newQObject(this));
+    m_engine->globalObject().setProperty("animate", animateFunc);
 
     QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
 
