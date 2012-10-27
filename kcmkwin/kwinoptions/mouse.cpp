@@ -135,13 +135,13 @@ void createMaxButtonPixmaps()
 KWinMouseConfigForm::KWinMouseConfigForm(QWidget *parent)
     : QWidget(parent)
 {
-    setupUi(this);
+    setupUi(parent);
 }
 
 KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
     : QWidget(parent)
 {
-    setupUi(this);
+    setupUi(parent);
 }
 
 void KTitleBarActionsConfig::paletteChanged()

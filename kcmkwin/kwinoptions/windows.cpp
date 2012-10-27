@@ -86,7 +86,7 @@ KFocusConfig::~KFocusConfig()
 KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
     : QWidget(parent)
 {
-    setupUi(this);
+    setupUi(parent);
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
@@ -333,7 +333,7 @@ void KFocusConfig::defaults()
 KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
     : QWidget(parent)
 {
-    setupUi(this);
+    setupUi(parent);
 }
 
 KAdvancedConfig::~KAdvancedConfig()
@@ -487,7 +487,7 @@ void KAdvancedConfig::setAutogroupInForeground(bool s)
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
     : QWidget(parent)
 {
-    setupUi(this);
+    setupUi(parent);
 }
 
 KMovingConfig::~KMovingConfig()
