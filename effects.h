@@ -193,6 +193,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void unloadEffect(const QString& name);
     Q_SCRIPTABLE bool isEffectLoaded(const QString& name) const;
     Q_SCRIPTABLE QString supportInformation(const QString& name) const;
+    Q_SCRIPTABLE QString debug(const QString& name, const QString& parameter = QString()) const;
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old, KWin::Client *withClient);

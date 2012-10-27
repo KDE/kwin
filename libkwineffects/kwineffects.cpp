@@ -527,6 +527,11 @@ bool Effect::isActive() const
     return true;
 }
 
+QString Effect::debug(const QString &) const
+{
+    return QString();
+}
+
 void Effect::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     effects->drawWindow(w, mask, region, data);

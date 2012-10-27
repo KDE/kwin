@@ -23,7 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDateTime>
 #include <QTimer>
+#include <QtDebug>
 #include <QVector3D>
+
+QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2)
+{
+    dbg.nospace() << fpx2[0] << "," << fpx2[1] << QString(fpx2.isValid() ? " (valid)" : " (invalid)");
+    return dbg.space();
+}
 
 namespace KWin {
 
@@ -821,6 +828,28 @@ void AnimationEffect::_windowDeleted( EffectWindow* w )
     Q_D(AnimationEffect);
     d->m_zombies.removeAll( w ); // TODO this line is a workaround for a bug in KWin 4.8.0 & 4.8.1
     d->m_animations.remove( w );
+}
+
+
+QString AnimationEffect::debug(const QString &/*parameter*/) const
+{
+    Q_D(const AnimationEffect);
+    QString dbg;
+    if (d->m_animations.isEmpty())
+        dbg = "No window is animated";
+    else {
+        AniMap::const_iterator entry = d->m_animations.constBegin(), mapEnd = d->m_animations.constEnd();
+        for (; entry != mapEnd; ++entry) {
+            QString caption = entry.key()->isDeleted() ? "[Deleted]" : entry.key()->caption();
+            if (caption.isEmpty())
+                caption = "[Untitled]";
+            dbg += "Animating window: " + caption + '\n';
+            QList<AniData>::const_iterator anim = entry->first.constBegin(), animEnd = entry->first.constEnd();
+            for (; anim != animEnd; ++anim)
+                dbg += anim->debugInfo();
+        }
+    }
+    return dbg;
 }
 
 

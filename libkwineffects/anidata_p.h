@@ -40,6 +40,7 @@ public:
     }
     static QList<AniData> list(const QString &str);
     QString toString() const;
+    QString debugInfo() const;
     AnimationEffect::Attribute attribute;
     QEasingCurve curve;
     int customCurve;
@@ -52,5 +53,7 @@ public:
 };
 
 } // namespace
+
+QDebug operator<<(QDebug dbg, const KWin::AniData &a);
 
 #endif // ANIDATA_H

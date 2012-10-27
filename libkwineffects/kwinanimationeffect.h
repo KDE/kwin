@@ -81,6 +81,7 @@ public:
 
     inline void set(float v) { f[0] = v; valid = true; }
     inline void set(float v1, float v2) { f[0] = v1; f[1] = v2; valid = true; }
+
 private:
     float f[2];
     bool valid;
@@ -125,6 +126,7 @@ public:
     /**
      * Reimplemented from KWIn::Effect
      */
+    QString debug(const QString &parameter) const;
     virtual void prePaintScreen( ScreenPrePaintData& data, int time );
     virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
     virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
@@ -211,6 +213,7 @@ private:
 
 
 } // namespace
+QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2);
 Q_DECLARE_METATYPE(KWin::FPx2)
 
 #endif // ANIMATION_EFFECT_H

@@ -30,5 +30,10 @@
       <arg type="s" direction="out"/>
       <arg name="name" type="s" direction="in"/>
     </method>
+    <method name="debug">
+      <arg type="s" direction="out"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

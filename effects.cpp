@@ -1638,9 +1638,21 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
     return QString();
 }
 
+
 bool EffectsHandlerImpl::isScreenLocked() const
 {
     return m_screenLockerWatcher->isLocked();
+}
+
+QString EffectsHandlerImpl::debug(const QString& name, const QString& parameter) const
+{
+    QString internalName = name.startsWith("kwin4_effect_") ? name : "kwin4_effect_" + name;
+    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if ((*it).first == internalName) {
+            return it->second->debug(parameter);
+        }
+    }
+    return QString();
 }
 
 //****************************************
