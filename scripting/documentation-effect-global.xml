@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+    <!--  Documentation for global KWin effect methods. In doxygen XML format as this can be converted to MediaWiki    -->
+    <!--  Use script and XSLT from kde:scratch/graesslin/kwin-scripting-api-generator to generate the documentation    -->
+    <!--  This xml is not meant to be doxygen complient    -->
+    <compounddef>
+        <compoundname>Global</compoundname>
+        <briefdescription>Methods and properties added to the global JavaScript object.</briefdescription>
+        <sectiondef kind="property">
+            <memberdef kind="property" writable="no">
+                <type>KWin::EffectsHandler</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>effects</name>
+                <read></read>
+                <detaileddescription>Global property to the core wrapper of KWin Effects</detaileddescription>
+            </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>KWin::ScriptedEffect</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>effect</name>
+                <read></read>
+                <detaileddescription>Global property to the actual Effect</detaileddescription>
+            </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>object</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>Effect</name>
+                <read></read>
+                <detaileddescription>Provides access to enums defined in KWin::AnimationEffect and KWin::ScriptedEffect</detaileddescription>
+            </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>object</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>KWin</name>
+                <read></read>
+                <detaileddescription>Provides access to enums defined in KWin::WorkspaceWrapper</detaileddescription>
+            </memberdef>
+        </sectiondef>
+        <sectiondef kind="public-func">
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE void</type>
+                <definition>void KWin::ScriptedEffect::print</definition>
+                <argsstring>(QVariant ... values)</argsstring>
+                <name>print</name>
+                <read></read>
+                <detaileddescription>Prints all provided values to kDebug and as a D-Bus signal</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE int</type>
+                <definition>int KWin::ScriptedEffect::animationTime</definition>
+                <argsstring>(int duration)</argsstring>
+                <name>animationTime</name>
+                <read></read>
+                <detaileddescription>Adjusts the passed in duration to the global animation time facator.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE int</type>
+                <definition>int KWin::ScriptedEffect::displayWidth</definition>
+                <argsstring>()</argsstring>
+                <name>displayWidth</name>
+                <read></read>
+                <detaileddescription>Width of the complete display (all screens).</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE int</type>
+                <definition>int KWin::ScriptedEffect::displayHeight</definition>
+                <argsstring>()</argsstring>
+                <name>displayHeight</name>
+                <read></read>
+                <detaileddescription>Height of the complete display (all screens).</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::ScriptedEffect::registerScreenEdge</definition>
+                <argsstring>(ElectricBorder border, QScriptValue callback)</argsstring>
+                <name>registerScreenEdge</name>
+                <read></read>
+                <detaileddescription>Registers the callback for the screen edge. When the mouse gets pushed against the given edge the callback will be invoked.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::ScriptedEffect::registerShortcut</definition>
+                <argsstring>(QString title, QString text, QString keySequence, QScriptValue callback)</argsstring>
+                <name>registerShortcut</name>
+                <read></read>
+                <detaileddescription>Registers keySequence as a global shortcut. When the shortcut is invoked the callback will be called. Title and text are used to name the shortcut and make it available to the global shortcut configuration module.</detaileddescription>
+            </memberdef>
+        </sectiondef>
+    </compounddef>
+    <compounddef>
+        <compoundname>KWin::FPx2</compoundname>
+        <briefdescription>This class is used to describe the animation end points, that is from which FPx2 values to which FPx2 values an animation goes. This class contains two properties to describe two animation components individually (e.g. width and height). But it's also possible to just have one value (e.g. opacity). In this case the definition of an FPx2 can be replaced by a single value.</briefdescription>
+        <sectiondef kind="property">
+            <memberdef kind="property" writable="yes">
+                <type>qreal</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>value1</name>
+                <read></read>
+                <detaileddescription></detaileddescription>
+            </memberdef>
+            <memberdef kind="property" writable="yes">
+                <type>qreal</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>value2</name>
+                <read></read>
+                <detaileddescription></detaileddescription>
+            </memberdef>
+        </sectiondef>
+    </compounddef>
+</doxygen>
