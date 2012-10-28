@@ -143,7 +143,6 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 shader->setUniform(GLShader::ModelViewMatrix, matrix);
                 shader->setUniform(GLShader::Saturation, 1.0);
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
-                shader->setUniform(GLShader::AlphaToOne, 0);
             } else
                 pushMatrix(matrix);
             m_texture[i]->bind();

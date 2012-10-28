@@ -387,7 +387,6 @@ void LogoutEffect::renderBlurTexture()
     m_blurShader->setUniform(GLShader::Offset, QVector2D(0, 0));
     m_blurShader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
     m_blurShader->setUniform(GLShader::Saturation, 1.0);
-    m_blurShader->setUniform(GLShader::AlphaToOne, 1);
     m_blurShader->setUniform("u_alphaProgress", (float)progress * 0.4f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

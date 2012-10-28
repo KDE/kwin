@@ -215,7 +215,6 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                         shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                         shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                         shader->setUniform(GLShader::Saturation, data.saturation());
-                        shader->setUniform(GLShader::AlphaToOne, 0);
 
                         cachedTexture->render(region, textureRect, hardwareClipping);
 
@@ -352,7 +351,6 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 shader->setUniform(GLShader::Offset, QVector2D(0, 0));
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                 shader->setUniform(GLShader::Saturation, data.saturation());
-                shader->setUniform(GLShader::AlphaToOne, 0);
 
                 cache->render(region, textureRect, hardwareClipping);
 

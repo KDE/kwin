@@ -1256,7 +1256,6 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation,         saturation);
-    shader->setUniform(GLShader::AlphaToOne,         opaque ? 1 : 0);
 }
 
 void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation)
@@ -1269,7 +1268,6 @@ void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal br
     if (m_blendingEnabled) {
         glDisable(GL_BLEND);
     }
-    ShaderManager::instance()->getBoundShader()->setUniform(GLShader::AlphaToOne, 0);
 }
 
 //***************************************
@@ -1561,7 +1559,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
         shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
-        shader->setUniform(GLShader::AlphaToOne, 0);
     }
 
     glEnable(GL_BLEND);
