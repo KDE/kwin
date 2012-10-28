@@ -2679,6 +2679,8 @@ void Client::leaveMoveResize()
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
 #ifdef HAVE_XSYNC
+    if (syncRequest.counter == None) // don't forget to sanitize since the timeout will no more fire
+        syncRequest.isPending = false;
     delete syncRequest.timeout;
     syncRequest.timeout = NULL;
 #endif
@@ -3032,14 +3034,19 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         return;
 
 #ifdef HAVE_XSYNC
-    if (isResize() && syncRequest.counter != None && !s_haveResizeEffect) {
+    if (isResize() && !s_haveResizeEffect) {
         if (!syncRequest.timeout) {
             syncRequest.timeout = new QTimer(this);
             connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
             syncRequest.timeout->setSingleShot(true);
         }
-        syncRequest.timeout->start(250);
-        sendSyncRequest();
+        if (syncRequest.counter != None) {
+            syncRequest.timeout->start(250);
+            sendSyncRequest();
+        } else {                            // for clients not supporting the XSYNC protocol, we
+            syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
+            syncRequest.timeout->start(33); // and the client, the mouse is still moved a full speed
+        }                                   // and no human can control faster resizes anyway
         XMoveResizeWindow(display(), window(), 0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
     } else
 #endif
@@ -3058,7 +3065,10 @@ void Client::performMoveResize()
         setGeometry(moveResizeGeom);
     }
 #ifdef HAVE_XSYNC
-    if (isResize() && syncRequest.counter != None)
+    if (syncRequest.counter == None)   // client w/o XSYNC support. allow the next resize event
+        syncRequest.isPending = false; // NEVER do this for clients with a valid counter
+                                       // (leads to sync request races in some clients)
+    if (isResize())
         addRepaintFull();
 #endif
     positionGeometryTip();
