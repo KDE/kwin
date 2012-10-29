@@ -1502,89 +1502,27 @@ GLVertexBuffer::~GLVertexBuffer()
 
 void GLVertexBuffer::setData(const void *data, size_t size)
 {
-    if (!GLVertexBufferPrivate::supported) {
-        // Legacy data
-        if (size_t(d->dataStore.size()) < size)
-            d->dataStore.resize(size);
-
-        d->baseAddress = intptr_t(d->dataStore.data());
-        memcpy((void *) d->baseAddress, data, size);
-        return;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
-
-    if (!d->hasMapBufferRange) {
-        glBufferData(GL_ARRAY_BUFFER, size, data, d->usage);
-        d->baseAddress = 0;
-    } else {
-        void *map = d->mapNextFreeRange(size);
-        memcpy(map, data, size);
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-
-        d->baseAddress = d->nextOffset;
-        d->nextOffset += align(size, 16);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    GLvoid *ptr = map(size);
+    memcpy(ptr, data, size);
+    unmap();
 }
 
 void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, const float* texcoords)
 {
-    d->vertexCount = vertexCount;
-    d->stride = (dim + (texcoords ? 2 : 0)) * sizeof(float);
+    const GLVertexAttrib layout[] = {
+        { VA_Position, dim, GL_FLOAT, 0                        },
+        { VA_TexCoord, 2,   GL_FLOAT, int(dim * sizeof(float)) }
+    };
 
-    d->attrib[VA_Position].size = dim;
-    d->attrib[VA_Position].type = GL_FLOAT;
-    d->attrib[VA_Position].offset = 0;
+    int stride       = (texcoords ? dim + 2 : dim) * sizeof(float);
+    int attribCount  = texcoords ? 2 : 1;
 
-    d->attrib[VA_TexCoord].size = 2;
-    d->attrib[VA_TexCoord].type = GL_FLOAT;
-    d->attrib[VA_TexCoord].offset = dim * sizeof(float);
+    setAttribLayout(layout, attribCount, stride);
+    setVertexCount(vertexCount);
 
-    d->enabledArrays[VA_Position] = true;
-    d->enabledArrays[VA_TexCoord] = texcoords != 0;
-
-    size_t size = vertexCount * d->stride;
-
-    if (!GLVertexBufferPrivate::supported) {
-        // Legacy data
-        if (size_t(d->dataStore.size()) < size)
-            d->dataStore.resize(size);
-
-        d->baseAddress = intptr_t(d->dataStore.data());
-        d->interleaveArrays((float *) d->baseAddress,
-                            dim, vertices, texcoords, vertexCount);
-        return;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
-
-    if (d->hasMapBufferRange) {
-        // Upload the data into the next free range in the buffer
-        float *map = (float *) d->mapNextFreeRange(size);
-        d->interleaveArrays(map, dim, vertices, texcoords, vertexCount);
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-
-        d->baseAddress = d->nextOffset;
-        d->nextOffset += align(size, 16); // Align to 16 bytes for SSE
-    } else {
-        // We always reallocate the data store when we can't map the buffer.
-        // The rationale is that there will almost always be contention
-        // in a glBufferSubData() call.
-        if (texcoords) {
-            QByteArray array;
-            array.resize(size);
-
-            d->interleaveArrays((float *) array.data(), dim, vertices, texcoords, vertexCount);
-            glBufferData(GL_ARRAY_BUFFER, size, array.data(), d->usage);
-        } else
-            glBufferData(GL_ARRAY_BUFFER, size, vertices, d->usage);
-
-        d->baseAddress = 0;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    GLvoid *ptr = map(vertexCount * stride);
+    d->interleaveArrays((float *) ptr, dim, vertices, texcoords, vertexCount);
+    unmap();
 }
 
 GLvoid *GLVertexBuffer::map(size_t size)
