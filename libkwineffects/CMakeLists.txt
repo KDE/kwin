@@ -34,7 +34,7 @@ set(kwin_GLUTILSLIB_SRCS
 macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     include_directories(${glinclude})
     if(OPENGL_EGL_FOUND)
-        include_directories(OPENGLES_EGL_INCLUDE_DIR)
+        include_directories(${OPENGLES_EGL_INCLUDE_DIR})
     endif(OPENGL_EGL_FOUND)
     kde4_add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
     target_link_libraries(${name} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES} kwineffects)
