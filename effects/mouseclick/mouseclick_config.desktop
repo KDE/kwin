@@ -7,8 +7,11 @@ X-KDE-ParentComponents=kwin4_effect_mouseclick
 X-KDE-PluginKeyword=mouseclick
 
 Name=Mouse Click Animation
+Name[cs]=Animace kliknutí myši
 Name[el]=Εφέ κίνησης με κλικ του ποντικιού
 Name[es]=Animación del clic de ratón
+Name[et]=Hiireklõpsu animeerimine
+Name[hu]=Egérkattintás animáció
 Name[nl]=Animatie van muisklik
 Name[pt]=Animação do Botão do Rato
 Name[pt_BR]=Animação de clique do mouse

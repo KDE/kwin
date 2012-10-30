@@ -1,8 +1,26 @@
 [Desktop Entry]
 Comment=Animation for a window going to maximize/restore from maximize
+Comment[et]=Maksimeeritava või maksimeeritust taastatava akna animatsioon
+Comment[hu]=Ablakanimáció maximalizáláskor / maximális méretről való visszaállításkor
+Comment[nl]=Animatie voor een venster dat gaat naar maximaliseren/herstellen vanuit maximaliseren
+Comment[pt]=Animação para um janela que se vai maximizar/repor da maximização
+Comment[pt_BR]=Animação para uma janela a ser maximizada/restaurada
+Comment[sk]=Animácia pre okno pri maximalizácii/obnovení z maximalizácie
+Comment[uk]=Анімація для вікно під час максимізації/відновлення з максимізації
+Comment[x-test]=xxAnimation for a window going to maximize/restore from maximizexx
 Encoding=UTF-8
 Icon=preferences-system-windows-effect-maximize
 Name=Maximize
+Name[cs]=Maximalizovat
+Name[es]=Maximizar
+Name[et]=Maksimeerimine
+Name[hu]=Maximalizálás
+Name[nl]=Maximaliseren
+Name[pt]=Maximização
+Name[pt_BR]=Maximizar
+Name[sk]=Maximalizovať
+Name[uk]=Максимізація
+Name[x-test]=xxMaximizexx
 Type=Service
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Martin Gräßlin
