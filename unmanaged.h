@@ -48,7 +48,6 @@ public:
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 protected:
-    virtual void damageNotifyEvent(XDamageNotifyEvent* e);
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
 private:
