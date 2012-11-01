@@ -156,7 +156,7 @@ namespace Oxygen
 
         // retrieve selection
         QModelIndex current( ui.exceptionListView->selectionModel()->currentIndex() );
-        if( !current.isValid() ) return;
+        if( ! model().contains( current ) ) return;
 
         Exception& exception( model().get( current ) );
 
@@ -203,6 +203,7 @@ namespace Oxygen
         // remove
         model().remove( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
         resizeColumns();
+        updateButtons();
         emit changed();
         return;
 
@@ -212,7 +213,7 @@ namespace Oxygen
     void ExceptionListWidget::toggle( const QModelIndex& index )
     {
 
-        if( !index.isValid() ) return;
+        if( !model().contains( index ) ) return;
         if( index.column() != ExceptionModel::ENABLED ) return;
 
         // get matching exception
