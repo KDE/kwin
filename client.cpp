@@ -908,6 +908,11 @@ void Client::setShade(ShadeMode mode)
     ShadeMode was_shade_mode = shade_mode;
     shade_mode = mode;
 
+    // Decorations may turn off some borders when shaded
+    // this has to happen _before_ the tab alignment since it will restrict the minimum geometry
+    if (decoration)
+        decoration->borders(border_left, border_right, border_top, border_bottom);
+
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Shaded);
@@ -928,9 +933,6 @@ void Client::setShade(ShadeMode mode)
 
     assert(decoration != NULL);   // noborder windows can't be shaded
     GeometryUpdatesBlocker blocker(this);
-    // Decorations may turn off some borders when shaded
-    if (decoration)
-        decoration->borders(border_left, border_right, border_top, border_bottom);
 
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if (isShade()) {
