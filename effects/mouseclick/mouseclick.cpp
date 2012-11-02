@@ -24,6 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#include <kwinxrenderutils.h>
+#include <QPainter>
+#endif
+
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
@@ -35,6 +40,10 @@ namespace KWin
 
 KWIN_EFFECT(mouseclick, MouseClickEffect)
 KWIN_EFFECT_SUPPORTED(mouseclick, MouseClickEffect::supported())
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+static QPixmap s_XrBuffer;
+#endif
 
 MouseClickEffect::MouseClickEffect()
 {
@@ -55,6 +64,10 @@ MouseClickEffect::MouseClickEffect()
 
 MouseClickEffect::~MouseClickEffect()
 {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if (!s_XrBuffer.isNull())
+        XFreePixmap(display(), s_XrBuffer.handle());
+#endif
     effects->stopMousePolling();
     foreach (const MouseEvent* click, m_clicks) {
         delete click;
@@ -68,7 +81,7 @@ MouseClickEffect::~MouseClickEffect()
 
 bool MouseClickEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return true;
 }
 
 void MouseClickEffect::reconfigure(ReconfigureFlags)
@@ -252,17 +265,22 @@ bool MouseClickEffect::isActive() const
 
 void MouseClickEffect::drawCircle(const QColor& color, float cx, float cy, float r)
 {
-    drawCircleGl(color, cx, cy, r);
+    if (effects->isOpenGLCompositing())
+        drawCircleGl(color, cx, cy, r);
+    if (effects->compositingType() == XRenderCompositing)
+        drawCircleXr(color, cx, cy, r);
 }
 
 void MouseClickEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData& data)
 {
-    paintScreenSetupGl(mask, region, data);
+    if (effects->isOpenGLCompositing())
+        paintScreenSetupGl(mask, region, data);
 }
 
 void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData& data)
 {
-    paintScreenFinishGl(mask, region, data);
+    if (effects->isOpenGLCompositing())
+        paintScreenFinishGl(mask, region, data);
 }
 
 void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, float r)
@@ -292,6 +310,35 @@ void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, flo
     }
     vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
     vbo->render(GL_LINE_LOOP);
+}
+
+void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, float r)
+{
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    const int bufferSize = qRound(1.41421356*(2*m_ringMaxSize + m_lineWidth)) | 1;
+    if (bufferSize < 0) // should not happen, but we neither want to leak XPixmaps
+        return;
+    if (s_XrBuffer.size() != QSize(bufferSize, bufferSize)) {
+        if (!s_XrBuffer.isNull()) {
+            XFreePixmap(display(), s_XrBuffer.handle());
+        }
+        Pixmap xpix = XCreatePixmap(display(), rootWindow(), bufferSize, bufferSize, 32);
+        s_XrBuffer = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+    }
+    s_XrBuffer.fill(Qt::transparent);
+    QRect rct(s_XrBuffer.rect());
+    QPainter p(&s_XrBuffer);
+    p.setBrush(Qt::NoBrush);
+    p.setPen(QPen(color, m_lineWidth));
+    p.setRenderHint(QPainter::Antialiasing);
+    const int ir = qRound(r);
+    p.drawEllipse(rct.center(), ir, ir);
+    p.end();
+    rct.moveCenter(QPoint(qRound(cx), qRound(cy)));
+    XRenderComposite( display(), PictOpOver,
+                      s_XrBuffer.x11PictureHandle(), 0, effects->xrenderBufferPicture(),
+                      0, 0, 0, 0, rct.x(), rct.y(), rct.width(), rct.height() );
+#endif
 }
 
 void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData&)
