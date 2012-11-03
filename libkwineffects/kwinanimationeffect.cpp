@@ -21,10 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinanimationeffect.h"
 #include "anidata_p.h"
 
-#include <QTime>
+#include <QDateTime>
 #include <QTimer>
 
 namespace KWin {
+
+QElapsedTimer AnimationEffect::s_clock;
+
 struct AnimationEffectPrivate {
 public:
     AnimationEffectPrivate() { m_animated = m_damageDirty = false; }
@@ -40,6 +43,8 @@ AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
 {
     Q_D(AnimationEffect);
     d->m_animated = false;
+    if (!s_clock.isValid())
+        s_clock.start();
     /* this is the same as the QTimer::singleShot(0, SLOT(init())) kludge
      * defering the init and esp. the connection to the windowClosed slot */
     QMetaObject::invokeMethod( this, "init", Qt::QueuedConnection );
@@ -202,7 +207,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         bool invalidateLayerRect = false;
         QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end();
         while (anim != animEnd) {
-            if (QTime::currentTime() < anim->startTime) {
+            if (anim->startTime > clock()) {
                 if (!anim->waitAtSource) {
                     ++anim;
                     continue;
@@ -347,7 +352,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
         if ( entry != d->m_animations.constEnd() ) {
             bool isUsed = false;
             for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
-                if (QTime::currentTime() < anim->startTime && !anim->waitAtSource)
+                if (anim->startTime > clock() && !anim->waitAtSource)
                     continue;
 
                 isUsed = true;
@@ -392,7 +397,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         if ( entry != d->m_animations.constEnd() ) {
             for ( QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim ) {
 
-                if (QTime::currentTime() < anim->startTime && !anim->waitAtSource)
+                if (anim->startTime > clock() && !anim->waitAtSource)
                     continue;
 
                 switch (anim->attribute) {
@@ -511,14 +516,14 @@ void AnimationEffect::postPaintScreen()
 
 float AnimationEffect::interpolated( const AniData &a, int i ) const
 {
-    if (QTime::currentTime() < a.startTime)
+    if (a.startTime > clock())
         return a.from[i];
     return a.from[i] + a.curve.valueForProgress( ((float)a.time)/a.duration )*(a.to[i] - a.from[i]);
 }
 
 float AnimationEffect::progress( const AniData &a ) const
 {
-    if (QTime::currentTime() < a.startTime)
+    if (a.startTime > clock())
         return 0.0;
     return a.curve.valueForProgress( ((float)a.time)/a.duration );
 }
@@ -630,7 +635,7 @@ void AnimationEffect::updateLayerRepaints()
         QList<QRect> rects;
         QRect *layerRect = const_cast<QRect*>(&(entry->second));
         for (QList<AniData>::const_iterator anim = entry->first.constBegin(), animEnd = entry->first.constEnd(); anim != animEnd; ++anim) {
-            if (QTime::currentTime() < anim->startTime)
+            if (anim->startTime > clock())
                 continue;
             switch (anim->attribute) {
                 case Opacity:

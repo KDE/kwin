@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinanimationeffect.h"
 #include <QEasingCurve>
-#include <QTime>
 #include <netwm.h>
 
 namespace KWin {
@@ -47,7 +46,7 @@ public:
     FPx2 from, to;
     int time, duration;
     uint meta;
-    QTime startTime;
+    qint64 startTime;
     NET::WindowTypeMask windowType;
     bool waitAtSource;
 };

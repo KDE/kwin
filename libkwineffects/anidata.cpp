@@ -29,7 +29,7 @@ AniData::AniData()
 {
     attribute = AnimationEffect::Opacity;
     windowType = (NET::WindowTypeMask)0;
-    duration = time = meta = 0;
+    duration = time = meta = startTime = 0;
     waitAtSource = false;
 }
 
@@ -37,7 +37,6 @@ AniData::AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
                  QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource )
 {
     attribute = a;
-    startTime = QTime::currentTime().addMSecs(delay);
     this->from = from;
     this->to = to;
     this->curve = curve;
@@ -45,6 +44,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
     time = 0;
     this->meta = meta;
     this->waitAtSource = waitAtSource;
+    startTime = AnimationEffect::clock() + delay;
 }
 
 AniData::AniData(const AniData &other)
@@ -54,11 +54,11 @@ AniData::AniData(const AniData &other)
     to = other.to;
     time = other.time;
     duration = other.duration;
-    startTime = other.startTime;
     curve = other.curve;
     customCurve = other.customCurve;
     windowType = other.windowType;
     meta = other.meta;
+    startTime = other.startTime;
 }
 
 static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
