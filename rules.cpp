@@ -965,7 +965,7 @@ void Workspace::loadWindowRules()
         delete rules.front();
         rules.pop_front();
     }
-    KConfig cfg("kwinrulesrc", KConfig::NoGlobals);
+    KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
     int count = cfg.group("General").readEntry("count", 0);
     for (int i = 1;
             i <= count;
@@ -979,7 +979,7 @@ void Workspace::loadWindowRules()
 void Workspace::writeWindowRules()
 {
     rulesUpdatedTimer.stop();
-    KConfig cfg("kwinrulesrc", KConfig::NoGlobals);
+    KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
     QStringList groups = cfg.groupList();
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
