@@ -78,7 +78,7 @@ namespace Oxygen
     //__________________________________________________________
     void ExceptionListWidget::setExceptions( const ExceptionList& exceptions )
     {
-        model().set( ExceptionModel::List( exceptions.begin(), exceptions.end() ) );
+        model().set( exceptions );
         resizeColumns();
     }
 
@@ -252,10 +252,10 @@ namespace Oxygen
                 ) )
             {
                 Exception last( newExceptions.back() );
-                newExceptions.pop_back();
-                newExceptions.push_back( *iter );
-                newExceptions.push_back( last );
-            } else newExceptions.push_back( *iter );
+                newExceptions.removeLast();
+                newExceptions.append( *iter );
+                newExceptions.append( last );
+            } else newExceptions.append( *iter );
 
         }
 
@@ -283,30 +283,34 @@ namespace Oxygen
         QModelIndexList selectedIndices( ui.exceptionListView->selectionModel()->selectedIndexes() );
         ExceptionModel::List selectedExceptions( model().get( selectedIndices ) );
 
-        ExceptionModel::List currentException( model().get() );
+        ExceptionModel::List currentExceptions( model().get() );
         ExceptionModel::List newExceptions;
 
-        for( ExceptionModel::List::reverse_iterator iter = currentException.rbegin(); iter != currentException.rend(); ++iter )
+        ExceptionModel::ListIterator iter( currentExceptions );
+        iter.toBack();
+        while( iter.hasPrevious() )
         {
+
+            const Exception& current( iter.previous() );
 
             // check if new list is not empty, current index is selected and last index is not.
             // if yes, move.
             if(
                 !( newExceptions.empty() ||
-                selectedIndices.indexOf( model().index( *iter ) ) == -1 ||
-                selectedIndices.indexOf( model().index( newExceptions.back() ) ) != -1
+                selectedIndices.indexOf( model().index( current ) ) == -1 ||
+                selectedIndices.indexOf( model().index( newExceptions.front() ) ) != -1
                 ) )
             {
 
-                Exception last( newExceptions.back() );
-                newExceptions.pop_back();
-                newExceptions.push_back( *iter );
-                newExceptions.push_back( last );
+                Exception first( newExceptions.front() );
+                newExceptions.removeFirst();
+                newExceptions.prepend( current );
+                newExceptions.prepend( first );
 
-            } else newExceptions.push_back( *iter );
+            } else newExceptions.prepend( current );
         }
 
-        model().set( ExceptionModel::List( newExceptions.rbegin(), newExceptions.rend() ) );
+        model().set( newExceptions );
 
         // restore selection
         ui.exceptionListView->selectionModel()->select( model().index( selectedExceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
