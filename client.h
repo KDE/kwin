@@ -987,6 +987,7 @@ private:
     bool activitiesDefined; //whether the x property was actually set
 
     bool needsSessionInteract;
+    bool needsXWindowMove;
 
 #ifdef KWIN_BUILD_KAPPMENU
     bool m_menuAvailable;

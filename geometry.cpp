@@ -1902,7 +1902,14 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         }
         updateShape();
     } else {
-        XMoveWindow(display(), frameId(), x, y);
+        if (moveResizeMode && compositing()) {
+            // Defer the X update until we leave this mode
+            needsXWindowMove = true;
+        } else {
+            XMoveWindow(display(), frameId(), x, y);
+        }
+
+        // Unconditionally move the input window: it won't affect rendering
         if (inputId()) {
             const QPoint pos = QPoint(x, y) + inputPos();
             XMoveWindow(display(), inputId(), pos.x(), pos.y());
@@ -2665,6 +2672,11 @@ void Client::finishMoveResize(bool cancel)
 
 void Client::leaveMoveResize()
 {
+    if (needsXWindowMove) {
+        // Do the deferred move
+        XMoveWindow(display(), frameId(), geom.x(), geom.y());
+        needsXWindowMove = false;
+    }
     if (geometryTip) {
         geometryTip->hide();
         delete geometryTip;

@@ -135,6 +135,7 @@ Client::Client(Workspace* ws)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
+    , needsXWindowMove(false)
 #ifdef KWIN_BUILD_KAPPMENU
     , m_menuAvailable(false)
 #endif
