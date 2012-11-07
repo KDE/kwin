@@ -148,6 +148,7 @@ Options::Options(QObject *parent)
     , m_unredirectFullscreen(Options::defaultUnredirectFullscreen())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_glVSync(Options::defaultGlVSync())
+    , m_colorCorrected(Options::defaultColorCorrected())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
     , m_maxFpsInterval(Options::defaultMaxFpsInterval())
     , m_refreshRate(Options::defaultRefreshRate())
@@ -709,6 +710,15 @@ void Options::setGlVSync(bool glVSync)
     emit glVSyncChanged();
 }
 
+void Options::setColorCorrected(bool colorCorrected)
+{
+    if (m_colorCorrected == colorCorrected) {
+        return;
+    }
+    m_colorCorrected = colorCorrected;
+    emit colorCorrectedChanged();
+}
+
 void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
 {
     if (m_xrenderSmoothScale == xrenderSmoothScale) {
@@ -1008,6 +1018,8 @@ void Options::reloadCompositingSettings(bool force)
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
     setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
+
+    setColorCorrected(config.readEntry("GLColorCorrection", Options::defaultColorCorrected()));
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 

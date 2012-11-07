@@ -1031,5 +1031,14 @@ CompositingType GLPlatform::recommendedCompositor() const
     return m_recommendedCompositor;
 }
 
+bool GLPlatform::isGLES() const
+{
+#ifdef KWIN_HAVE_OPENGLES
+    return true;
+#else
+    return false;
+#endif
+}
+
 } // namespace KWin
 

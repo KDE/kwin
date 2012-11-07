@@ -29,6 +29,7 @@ set(kwin_GLUTILSLIB_SRCS
     kwingltexture.cpp
     kwinglutils_funcs.cpp
     kwinglplatform.cpp
+    kwinglcolorcorrection.cpp
     )
 
 macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
