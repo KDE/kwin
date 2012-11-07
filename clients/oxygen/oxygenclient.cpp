@@ -1429,6 +1429,27 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    QRegion Client::region( KDecorationDefines::Region r )
+    {
+
+        if( r == KDecorationDefines::ExtendedBorderRegion && configuration().frameBorder() <= Configuration::BorderNoSide )
+        {
+
+            const QRect rect = widget()->rect().adjusted(
+                0, 0,
+                -layoutMetric( LM_OuterPaddingLeft ) - layoutMetric( LM_OuterPaddingRight ),
+                -layoutMetric( LM_OuterPaddingTop ) - layoutMetric( LM_OuterPaddingBottom ) );
+
+            // only return non-empty region on the sides for which there is no border
+            if( configuration().frameBorder() == Configuration::BorderNone ) return QRegion( rect.adjusted( -3, 0, 3, 3 ) ) - rect;
+            else return QRegion( rect.adjusted( -3, 0, 3, 0 ) ) - rect;
+
+        } else return QRegion();
+
+    }
+
+
+    //_________________________________________________________
     void Client::paintEvent( QPaintEvent* event )
     {
 

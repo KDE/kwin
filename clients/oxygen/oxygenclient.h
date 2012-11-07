@@ -234,6 +234,9 @@ namespace Oxygen
         void updateTitleRect( void )
         { widget()->update( titleRect().adjusted( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 1 ) ); }
 
+        //! return region for a given defines. This allows to implement extended borders
+        QRegion region( KDecorationDefines::Region );
+
         protected:
 
         //! return shadow cache key associated to this client
