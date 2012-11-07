@@ -334,6 +334,11 @@ void KCommonDecoration::objDestroyed(QObject *obj)
         m_previewWidget = 0;
 }
 
+QRegion KCommonDecoration::region(KDecorationDefines::Region r)
+{
+    return QRegion();
+}
+
 int KCommonDecoration::buttonsLeftWidth() const
 {
     return buttonContainerWidth(m_buttonsLeft);

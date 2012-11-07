@@ -376,6 +376,16 @@ private Q_SLOTS:
     /* look out for buttons that have been destroyed. */
     void objDestroyed(QObject *obj);
 
+    /**
+     * This slot can be reimplemented to return the regions defined
+     * by KDecorationDefines::Region.
+     *
+     * The default implementation always returns an empty region.
+     *
+     * @since 4.10
+     */
+    QRegion region(KDecorationDefines::Region r);
+
 private:
     void resetLayout();
 

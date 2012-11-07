@@ -62,6 +62,16 @@ public:
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
 
     void wrapSetAlphaEnabled(bool enabled);
+
+public Q_SLOTS:
+    /**
+     * This slot can be reimplemented to return the regions defined
+     * by KDecorationDefines::Region.
+     *
+     * @since 4.10
+     */
+    QRegion region(KDecorationDefines::Region r);
+
 private:
     KCommonDecoration* decoration;
 };
