@@ -39,6 +39,14 @@
                 <read></read>
                 <detaileddescription>Provides access to enums defined in KWin::WorkspaceWrapper</detaileddescription>
             </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>object</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>QEasingCurve</name>
+                <read></read>
+                <detaileddescription>Provides access to enums defined in QEasingCurve</detaileddescription>
+            </memberdef>
         </sectiondef>
         <sectiondef kind="public-func">
             <memberdef kind="function">

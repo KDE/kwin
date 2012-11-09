@@ -91,7 +91,7 @@ QScriptValue kwinScriptScreenEdge(QScriptContext *context, QScriptEngine *engine
 
 struct AnimationSettings {
     AnimationEffect::Attribute a;
-    QEasingCurve curve;
+    QEasingCurve::Type curve;
     bool curveSet;
     FPx2 from;
     FPx2 to;
@@ -102,6 +102,7 @@ struct AnimationSettings {
 AnimationSettings animationSettingsFromObject(QScriptValue &object)
 {
     AnimationSettings settings;
+    settings.curve = QEasingCurve::Linear;
     settings.valid = true;
     settings.curveSet = false;
 
@@ -117,7 +118,7 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
 
     QScriptValue curve = object.property("curve");
     if (curve.isValid() && curve.isNumber()) {
-        settings.curve = QEasingCurve(static_cast<QEasingCurve::Type>(curve.toInt32()));
+        settings.curve = static_cast<QEasingCurve::Type>(curve.toInt32());
         settings.curveSet = true;
     }
 
@@ -163,7 +164,7 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
     }
     const int duration = durationProperty.toInt32();
 
-    QEasingCurve curve;
+    QEasingCurve::Type curve = QEasingCurve::Linear;
     QList<AnimationSettings> settings;
     AnimationSettings globalSettings = animationSettingsFromObject(object);
     if (globalSettings.valid) {
@@ -298,6 +299,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
     m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+    m_engine->globalObject().setProperty("QEasingCurve", m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
     m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     m_engine->globalObject().setProperty("AnimationData", m_engine->scriptValueFromQMetaObject<AnimationData>());
     MetaScripting::registration(m_engine);
@@ -349,7 +351,7 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
     }
 }
 
-void ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, KWin::AnimationData* data, QEasingCurve curve, int delay)
+void ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, KWin::AnimationData* data, QEasingCurve::Type curve, int delay)
 {
     uint meta = 0;
     if (data) {
@@ -375,7 +377,7 @@ void ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attri
             AnimationEffect::setMetaData(AnimationEffect::RelativeTargetY, data->relativeTargetY(), meta);
         }
     }
-    AnimationEffect::animate(w, a, meta, ms, to, curve, delay, from);
+    AnimationEffect::animate(w, a, meta, ms, to, QEasingCurve(curve), delay, from);
 }
 
 bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)

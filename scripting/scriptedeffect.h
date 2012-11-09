@@ -127,7 +127,7 @@ public:
     }
 
 public Q_SLOTS:
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve curve = QEasingCurve(), int delay = 0);
+    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
 
 Q_SIGNALS:
     /**
