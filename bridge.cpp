@@ -113,6 +113,22 @@ void Bridge::showWindowMenu(const QRect &p)
     c->workspace()->showWindowMenu(p, c);
 }
 
+void Bridge::showApplicationMenu(const QPoint &p)
+{
+#ifdef KWIN_BUILD_KAPPMENU
+    c->showApplicationMenu(p);
+#endif
+}
+
+bool Bridge::menuAvailable() const
+{
+#ifdef KWIN_BUILD_KAPPMENU
+    return c->menuAvailable();
+#else
+    return false;
+#endif
+}
+
 void Bridge::performWindowOperation(WindowOperation op)
 {
     c->workspace()->performWindowOperation(c, op);

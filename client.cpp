@@ -26,10 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <QProcess>
 #include <QPaintEngine>
+
 #ifdef KWIN_BUILD_SCRIPTING
 #include <QScriptEngine>
 #include <QScriptProgram>
 #endif
+
 #include <unistd.h>
 #include <kstandarddirs.h>
 #include <QWhatsThis>
@@ -133,6 +135,9 @@ Client::Client(Workspace* ws)
     , electricMaximizing(false)
     , activitiesDefined(false)
     , needsSessionInteract(false)
+#ifdef KWIN_BUILD_KAPPMENU
+    , m_menuAvailable(false)
+#endif
     , input_window(None)
 {
     // TODO: Do all as initialization
@@ -405,6 +410,12 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
     if (!noBorder()) {
         setMask(QRegion());  // Reset shape mask
         decoration = workspace()->createDecoration(bridge);
+#ifdef KWIN_BUILD_KAPPMENU
+        connect(this, SIGNAL(showRequest()), decoration, SIGNAL(showRequest()));
+        connect(this, SIGNAL(appMenuAvailable()), decoration, SIGNAL(appMenuAvailable()));
+        connect(this, SIGNAL(appMenuUnavailable()), decoration, SIGNAL(appMenuUnavailable()));
+        connect(this, SIGNAL(menuHidden()), decoration, SIGNAL(menuHidden()));
+#endif
         // TODO: Check decoration's minimum size?
         decoration->init();
         decoration->widget()->installEventFilter(this);
@@ -2400,6 +2411,25 @@ bool Client::isClient() const
 {
     return true;
 }
+
+#ifdef KWIN_BUILD_KAPPMENU
+void Client::setAppMenuAvailable()
+{
+    m_menuAvailable = true;
+    emit appMenuAvailable();
+}
+
+void Client::setAppMenuUnavailable()
+{
+    m_menuAvailable = false;
+    emit appMenuUnavailable();
+}
+
+void Client::showApplicationMenu(const QPoint &p)
+{
+    workspace()->showApplicationMenu(p, window());
+}
+#endif
 
 NET::WindowType Client::windowType(bool direct, int supportedTypes) const
 {

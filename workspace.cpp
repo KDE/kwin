@@ -83,6 +83,12 @@ namespace KWin
 extern int screen_number;
 static const int KWIN_MAX_NUMBER_DESKTOPS = 20;
 
+#ifdef KWIN_BUILD_KAPPMENU
+static const char *KDED_SERVICE = "org.kde.kded";
+static const char *KDED_APPMENU_PATH = "/modules/appmenu";
+static const char *KDED_INTERFACE = "org.kde.kded";
+#endif
+
 Workspace* Workspace::_self = 0;
 
 //-----------------------------------------------------------------------------
@@ -147,6 +153,18 @@ Workspace::Workspace(bool restore)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
+
+#ifdef KWIN_BUILD_KAPPMENU
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "showRequest",
+                 this, SLOT(slotShowRequest(qulonglong)));
+    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "menuAvailable",
+                 this, SLOT(slotMenuAvailable(qulonglong)));
+    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "menuHidden",
+                 this, SLOT(slotMenuHidden(qulonglong)));
+    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "clearMenus",
+                 this, SLOT(slotClearMenus()));
+#endif
 
     // Initialize desktop grid array
     desktopGrid_[0] = 0;
@@ -622,6 +640,10 @@ void Workspace::addClient(Client* c, allowed_t)
     if (tabBox()->isDisplayed())
         tab_box->reset(true);
 #endif
+#ifdef KWIN_BUILD_KAPPMENU
+        if (m_windowsMenu.removeOne(c->window()))
+            c->setAppMenuAvailable();
+#endif
 }
 
 void Workspace::addUnmanaged(Unmanaged* c, allowed_t)
@@ -918,7 +940,34 @@ void Workspace::slotReloadConfig()
 {
     reconfigure();
 }
+#ifdef KWIN_BUILD_KAPPMENU
+void Workspace::slotShowRequest(qulonglong wid)
+{
+    if (Client *c = findClient(WindowMatchPredicate(wid)))
+        c->emitShowRequest();
+}
 
+void Workspace::slotMenuAvailable(qulonglong wid)
+{
+    if (Client *c = findClient(WindowMatchPredicate(wid)))
+        c->setAppMenuAvailable();
+    else
+        m_windowsMenu.append(wid);
+}
+
+void Workspace::slotMenuHidden(qulonglong wid)
+{
+    if (Client *c = findClient(WindowMatchPredicate(wid)))
+        c->emitMenuHidden();
+}
+
+void Workspace::slotClearMenus()
+{
+    foreach (Client *c, clients) {
+       c->setAppMenuUnavailable();
+    }
+}
+#endif
 void Workspace::reconfigure()
 {
     reconfigureTimer.start(200);

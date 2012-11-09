@@ -419,6 +419,8 @@ public:
         return m_userActionsMenu;
     }
 
+    void showApplicationMenu(const QPoint &, const WId);
+
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
     void updateOnAllActivitiesOfTransients(Client*);
@@ -625,6 +627,12 @@ private slots:
     void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
+#ifdef KWIN_BUILD_KAPPMENU
+    void slotShowRequest(qulonglong wid);
+    void slotMenuAvailable(qulonglong wid);
+    void slotMenuHidden(qulonglong wid);
+    void slotClearMenus();
+#endif
     void resetCursorPosTime();
     void updateCurrentActivity(const QString &new_activity);
     void slotActivityRemoved(const QString &activity);
@@ -851,6 +859,11 @@ private:
 
     QSlider* transSlider;
     QPushButton* transButton;
+
+#ifdef KWIN_BUILD_KAPPMENU
+    //used for menu available before window is mapped
+    QList<WId> m_windowsMenu;
+#endif
 
     Scripting *m_scripting;
 

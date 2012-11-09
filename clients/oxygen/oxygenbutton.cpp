@@ -215,9 +215,11 @@ namespace Oxygen
     //___________________________________________________
     void Button::mouseReleaseEvent( QMouseEvent* event )
     {
-
-        _status &= ~Pressed;
-        parentUpdate();
+        if (_type != ButtonApplicationMenu)
+        {
+            _status &= ~Pressed;
+            parentUpdate();
+        }
 
         KCommonDecorationButton::mouseReleaseEvent( event );
     }
@@ -338,6 +340,12 @@ namespace Oxygen
             painter->translate(-1.5, -1.5);
             break;
 
+            case ButtonApplicationMenu:
+            painter->drawLine(QPointF(7.5, 7.5), QPointF(13.5, 7.5));
+            painter->drawLine(QPointF(7.5, 10.5), QPointF(13.5, 10.5));
+            painter->drawLine(QPointF(7.5, 13.5), QPointF(13.5, 13.5));
+            break;
+
             case ButtonMin:
             painter->drawLine(QPointF( 7.5, 9.5), QPointF(10.5,12.5));
             painter->drawLine(QPointF(10.5,12.5), QPointF(13.5, 9.5));
@@ -408,6 +416,12 @@ namespace Oxygen
         }
         painter->restore();
         return;
+    }
+
+    void Button::slotAppMenuHidden()
+    {
+        _status = Normal;
+        update();
     }
 
 }

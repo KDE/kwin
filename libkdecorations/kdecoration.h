@@ -188,7 +188,7 @@ public:
         AbilityAnnounceButtons = 0, ///< decoration supports AbilityButton* values (always use)
         AbilityAnnounceColors = 1, ///< decoration supports AbilityColor* values (always use), @deprecated @todo remove KDE5
         // buttons
-        AbilityButtonMenu = 1000,   ///< decoration supports the menu button
+        AbilityButtonMenu = 1000,   ///< decoration supports the window menu button
         AbilityButtonOnAllDesktops = 1001, ///< decoration supports the on all desktops button
         AbilityButtonSpacer = 1002, ///< decoration supports inserting spacers between buttons
         AbilityButtonHelp = 1003,   ///< decoration supports what's this help button
@@ -199,6 +199,7 @@ public:
         AbilityButtonBelowOthers = 1008, ///< decoration supports a below button
         AbilityButtonShade = 1009, ///< decoration supports a shade button
         AbilityButtonResize = 1010, ///< decoration supports a resize button
+        AbilityButtonApplicationMenu = 1011,   ///< decoration supports the application menu button
         // colors
         AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color, @deprecated @todo remove KDE5
         ABILITYCOLOR_FIRST = AbilityColorTitleBack, ///< @internal, @deprecated @todo remove KDE5
@@ -354,7 +355,8 @@ public:
      * If customButtonPositions() returns true, titleButtonsLeft
      * returns which buttons should be on the left side of the titlebar from left
      * to right. Characters in the returned string have this meaning :
-     * @li 'M' menu button
+     * @li 'N' application menu button
+     * @li 'M' window menu button
      * @li 'S' on_all_desktops button
      * @li 'H' quickhelp button
      * @li 'I' minimize ( iconify ) button
@@ -624,6 +626,14 @@ public:
      */
     void showWindowMenu(QPoint pos);
     /**
+     * show application menu at p
+     */
+    void showApplicationMenu(const QPoint& p);
+    /**
+     * Returns @a true if menu available for client
+     */
+    bool menuAvailable() const;
+    /**
      * This function performs the given window operation. This function may destroy
      * the current decoration object, just like showWindowMenu().
      */
@@ -807,6 +817,24 @@ Q_SIGNALS:
      * This signal is emitted whenever the window's keep-below state changes.
      */
     void keepBelowChanged(bool);
+
+    /**
+     * This signal is emitted whenever application menu is closed
+     * Application menu button may need to be modified on this signal
+     */
+    void menuHidden();
+    /**
+     * This signal is emitted whenever application want to show it menu
+     */
+    void showRequest();
+    /**
+     * This signal is emitted whenever application menu becomes available
+     */
+    void appMenuAvailable();
+    /**
+     * This signal is emitted whenever application menu becomes unavailable
+     */
+    void appMenuUnavailable();
 
     /**
      * This signal is emitted whenever the decoration changes it's alpha enabled

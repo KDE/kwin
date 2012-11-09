@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <config-X11.h>
 
+#include "config-kwin.h"
+
 #include <QFrame>
 #include <QPixmap>
 #include <netwm.h>
@@ -634,6 +636,22 @@ public:
     void setSessionInteract(bool needed);
     virtual bool isClient() const;
 
+#ifdef KWIN_BUILD_KAPPMENU
+    // Used by workspace
+    void emitShowRequest() {
+        emit showRequest();
+    }
+    void emitMenuHidden() {
+        emit menuHidden();
+    }
+    void setAppMenuAvailable();
+    void setAppMenuUnavailable();
+    void showApplicationMenu(const QPoint&);
+    bool menuAvailable() {
+        return m_menuAvailable;
+    }
+#endif
+
 public slots:
     void closeWindow();
 
@@ -723,6 +741,24 @@ signals:
      * another group, but not when a Client gets added or removed to the Client's ClientGroup.
      **/
     void tabGroupChanged();
+
+    /**
+     * Emitted whenever the Client want to show it menu
+     */
+    void showRequest();
+    /**
+     * Emitted whenever the Client's menu is closed
+     */
+    void menuHidden();
+    /**
+     * Emitted whenever the Client's menu is available
+     **/
+    void appMenuAvailable();
+    /**
+     * Emitted whenever the Client's menu is unavailable
+     */
+    void appMenuUnavailable();
+
     /**
      * Emitted whenever the demands attention state changes.
      **/
@@ -952,6 +988,9 @@ private:
 
     bool needsSessionInteract;
 
+#ifdef KWIN_BUILD_KAPPMENU
+    bool m_menuAvailable;
+#endif
     Window input_window;
     QPoint input_offset;
 };

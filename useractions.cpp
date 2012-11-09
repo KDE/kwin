@@ -73,8 +73,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox.h"
 #endif
 
+#ifdef KWIN_BUILD_KAPPMENU
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusPendingCall>
+#endif
+
 namespace KWin
 {
+
+#ifdef KWIN_BUILD_KAPPMENU
+static const char *KDED_SERVICE = "org.kde.kded";
+static const char *KDED_APPMENU_PATH = "/modules/appmenu";
+static const char *KDED_INTERFACE = "org.kde.kded";
+#endif
 
 UserActionsMenu::UserActionsMenu(QObject *parent)
     : QObject(parent)
@@ -1229,6 +1241,14 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
 void Workspace::showWindowMenuAt(unsigned long, int, int)
 {
     slotWindowOperations();
+}
+
+void Workspace::showApplicationMenu(const QPoint &p, const WId id)
+{
+    QList<QVariant> args = QList<QVariant>() << p.x() << p.y() << qulonglong(id);
+    QDBusMessage method = QDBusMessage::createMethodCall(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "showMenu");
+    method.setArguments(args);
+    QDBusConnection::sessionBus().asyncCall(method);
 }
 
 void Workspace::slotActivateAttentionWindow()

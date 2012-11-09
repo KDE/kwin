@@ -31,6 +31,7 @@
 
 #include "buttons.h"
 #include "pixmaps.h"
+#include "config-kwin.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -41,6 +42,11 @@
 
 #include <klocale.h>
 #include <kglobalsettings.h>
+
+#ifdef KWIN_BUILD_KAPPMENU
+#include <KConfigGroup>
+#include <KConfig>
+#endif
 
 #include <kdecorationfactory.h>
 
@@ -680,7 +686,19 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
 
     // insert all possible buttons into the source (backwards to keep the preferred order...)
     bool dummy;
-    m_supportedButtons = "MSHIAX_FBLR"; // support all buttons
+
+    m_supportedButtons = "MSHIAX_FBLR";
+#ifdef KWIN_BUILD_KAPPMENU
+    KConfig config("kdeglobals", KConfig::FullConfig);
+    KConfigGroup configGroup = config.group("Appmenu Style");
+    QString style = configGroup.readEntry("Style", "InApplication");
+
+    if (style == "ButtonVertical") {
+        m_supportedButtons = "MNSHIAX_FBLR"; // support all buttons
+        new ButtonSourceItem(m_buttonSource, getButton('N', dummy));
+    }
+#endif
+
     new ButtonSourceItem(m_buttonSource, getButton('R', dummy));
     new ButtonSourceItem(m_buttonSource, getButton('L', dummy));
     new ButtonSourceItem(m_buttonSource, getButton('B', dummy));
@@ -741,7 +759,13 @@ Button ButtonPositionWidget::getButton(QChar type, bool& success)
     } else if (type == 'M') {
         QBitmap bmp = QBitmap::fromData(QSize(menu_width, menu_height), menu_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Menu"), bmp, 'M', false, m_supportedButtons.contains('M'));
+        return Button(i18nc("Button showing window actions menu", "Window Menu"), bmp, 'M', false, m_supportedButtons.contains('M'));
+#ifdef KWIN_BUILD_KAPPMENU
+    } else if (type == 'N') {
+        QBitmap bmp = QBitmap::fromData(QSize(menu_width, menu_height), menu_bits);
+        bmp.createMaskFromColor(Qt::white);
+        return Button(i18nc("Button showing application menu imported from dbusmenu", "Application Menu"), bmp, 'N', false, m_supportedButtons.contains('N'));
+#endif
     } else if (type == '_') {
         QBitmap bmp = QBitmap::fromData(QSize(spacer_width, spacer_height), spacer_bits);
         bmp.createMaskFromColor(Qt::white);

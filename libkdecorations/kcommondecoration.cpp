@@ -377,7 +377,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                 if (!m_button[MenuButton]) {
                     btn = createButton(MenuButton);
                     if (!btn) break;
-                    btn->setTipText(i18n("Menu"));
+                    btn->setTipText(i18nc("Button showing window actions menu", "Window Menu"));
                     btn->setRealizeButtons(Qt::LeftButton | Qt::RightButton);
                     connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
                     connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
@@ -386,6 +386,27 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                     connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
 
                     m_button[MenuButton] = btn;
+                }
+                break;
+             case 'N': // Application Menu button
+                if (!m_button[AppMenuButton]) {
+                    btn = createButton(AppMenuButton);
+                    if (!btn) break;
+                    btn->setTipText(i18nc("Button showing application menu", "Application Menu"));
+                    btn->setRealizeButtons(Qt::LeftButton);
+                    connect(btn, SIGNAL(pressed()), SLOT(appMenuButtonPressed()));
+                    // Application want to show it menu
+                    connect(decoration(), SIGNAL(showRequest()), this, SLOT(appMenuButtonPressed()), Qt::UniqueConnection);
+                    // Wait for menu to become available before displaying any button
+                    connect(decoration(), SIGNAL(appMenuAvailable()), this, SLOT(slotAppMenuAvailable()), Qt::UniqueConnection);
+                    // On Kded module shutdown, hide application menu button
+                    connect(decoration(), SIGNAL(appMenuUnavailable()), this, SLOT(slotAppMenuUnavailable()), Qt::UniqueConnection);
+                    // Application menu button may need to be modified on this signal
+                    connect(decoration(), SIGNAL(menuHidden()), btn, SLOT(slotAppMenuHidden()), Qt::UniqueConnection);
+
+                    // fix double deletion, see objDestroyed()
+                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+                    m_button[AppMenuButton] = btn;
                 }
                 break;
             case 'S': // OnAllDesktops button
@@ -516,7 +537,13 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
             if (btn) {
                 btn->setLeft(isLeft);
                 btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn), layoutMetric(LM_ButtonHeight, true, btn)));
-                btn->show();
+                // will be shown later on window registration
+                if (btn->type() == AppMenuButton && !wrapper->menuAvailable()) {
+                    btn->hide();
+                } else {
+                    btn->show();
+                }
+
                 btnContainer.append(btn);
             }
 
@@ -532,7 +559,7 @@ void KCommonDecoration::calcHiddenButtons()
     btnHideLastWidth = width();
 
     //Hide buttons in the following order:
-    KCommonDecorationButton* btnArray[] = { m_button[HelpButton], m_button[ShadeButton], m_button[BelowButton],
+    KCommonDecorationButton* btnArray[] = { m_button[HelpButton], m_button[AppMenuButton], m_button[ShadeButton], m_button[BelowButton],
                                             m_button[AboveButton], m_button[OnAllDesktopsButton], m_button[MaxButton],
                                             m_button[MinButton], m_button[MenuButton], m_button[CloseButton]
                                           };
@@ -557,7 +584,8 @@ void KCommonDecoration::calcHiddenButtons()
             if (! btnArray[i]->isHidden())
                 break; // all buttons shown...
 
-            btnArray[i]->show();
+            if (btnArray[i]->type() != AppMenuButton || wrapper->menuAvailable())
+                btnArray[i]->show();
         }
     }
 }
@@ -753,6 +781,34 @@ void KCommonDecoration::doShowWindowMenu()
     QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
     QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight()) + QPoint(0, 2);
     showWindowMenu(QRect(menutop, menubottom));
+}
+
+
+void KCommonDecoration::appMenuButtonPressed()
+{
+    QRect menuRect = m_button[AppMenuButton]->rect();
+    wrapper->showApplicationMenu(m_button[AppMenuButton]->mapToGlobal(menuRect.bottomLeft()));
+
+    KDecorationFactory* f = factory();
+    if (!f->exists(decoration()))   // 'this' was deleted
+        return;
+    m_button[AppMenuButton]->setDown(false);
+}
+
+void KCommonDecoration::slotAppMenuAvailable()
+{
+    if (m_button[AppMenuButton]) {
+        m_button[AppMenuButton]->show();
+        updateLayout();
+    }
+}
+
+void KCommonDecoration::slotAppMenuUnavailable()
+{
+    if (m_button[AppMenuButton]) {
+        m_button[AppMenuButton]->hide();
+        updateLayout();
+    }
 }
 
 void KCommonDecoration::resizeEvent(QResizeEvent */*e*/)
