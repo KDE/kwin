@@ -101,6 +101,42 @@ void migratePlastikSettings()
     aurorae.sync();
 }
 
+void migrateTranslucencySetting(KConfigGroup &group, const QString &key, qreal oldDefault)
+{
+    if (!group.hasKey(key)) {
+        return;
+    }
+    const qreal value = group.readEntry(key, oldDefault);
+    if (value == oldDefault) {
+        group.deleteEntry(key);
+        return;
+    }
+    if (value > 1.0) {
+        // already migrated to new settings
+        return;
+    }
+    const int newValue = qBound<int>(0, qRound(value * 100), 100);
+    group.writeEntry(key, newValue);
+}
+
+void migrateTranslucencySettings(KConfig &config)
+{
+    if (!config.hasGroup("Effect-Translucency")) {
+        return;
+    }
+    KConfigGroup cg = config.group("Effect-Translucency");
+    migrateTranslucencySetting(cg, "Decoration", 1.0);
+    migrateTranslucencySetting(cg, "MoveResize", 0.8);
+    migrateTranslucencySetting(cg, "Dialogs", 1.0);
+    migrateTranslucencySetting(cg, "Inactive", 1.0);
+    migrateTranslucencySetting(cg, "ComboboxPopups", 1.0);
+    migrateTranslucencySetting(cg, "Menus", 1.0);
+    migrateTranslucencySetting(cg, "DropdownMenus", 1.0);
+    migrateTranslucencySetting(cg, "PopupMenus", 1.0);
+    migrateTranslucencySetting(cg, "TornOffMenus", 1.0);
+    cg.sync();
+}
+
 int main( int argc, char* argv[] )
 {
     KAboutData about( "kwin_update_settings_4_10", "kwin", KLocalizedString(), 0 );
@@ -110,6 +146,7 @@ int main( int argc, char* argv[] )
     KConfig config("kwinrc");
     migratePlastikToAurorae(config);
     migratePlastikSettings();
+    migrateTranslucencySettings(config);
     config.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
