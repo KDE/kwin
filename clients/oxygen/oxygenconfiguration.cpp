@@ -49,6 +49,7 @@ namespace Oxygen
         _useOxygenShadows( true ),
         _closeFromMenuButton( false ),
         _useNarrowButtonSpacing( false ),
+        _useExtendedWindowBorder( true ),
         _animationsEnabled( true ),
         _buttonAnimationsEnabled( true ),
         _titleAnimationsEnabled( true ),
@@ -138,6 +139,11 @@ namespace Oxygen
             OxygenConfig::NARROW_BUTTON_SPACING,
             defaultConfiguration.useNarrowButtonSpacing() ) );
 
+        // extended window border
+        setUseExtendedWindowBorder( group.readEntry(
+            OxygenConfig::EXTENDED_WINDOW_BORDERS,
+            defaultConfiguration.useExtendedWindowBorder() ) );
+
         // animations
         setAnimationsEnabled( group.readEntry(
             OxygenConfig::ANIMATIONS_ENABLED,
@@ -215,6 +221,7 @@ namespace Oxygen
         if( useOxygenShadows() != defaultConfiguration.useOxygenShadows() ) group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
         if( closeFromMenuButton() != defaultConfiguration.closeFromMenuButton() ) group.writeEntry( OxygenConfig::CLOSE_FROM_MENU_BUTTON, closeFromMenuButton() );
         if( useNarrowButtonSpacing() != defaultConfiguration.useNarrowButtonSpacing() ) group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
+        if( useExtendedWindowBorder() != defaultConfiguration.useExtendedWindowBorder() ) group.writeEntry( OxygenConfig::EXTENDED_WINDOW_BORDERS, useExtendedWindowBorder() );
 
         // animations
         if( animationsEnabled() != defaultConfiguration.animationsEnabled() ) group.writeEntry( OxygenConfig::ANIMATIONS_ENABLED, animationsEnabled() );
@@ -409,6 +416,7 @@ namespace Oxygen
             useOxygenShadows() == other.useOxygenShadows() &&
             closeFromMenuButton() == other.closeFromMenuButton() &&
             useNarrowButtonSpacing() == other.useNarrowButtonSpacing() &&
+            useExtendedWindowBorder() == other.useExtendedWindowBorder() &&
             animationsEnabled() == other.animationsEnabled() &&
             buttonAnimationsEnabled() == other.buttonAnimationsEnabled() &&
             titleAnimationsEnabled() == other.titleAnimationsEnabled() &&

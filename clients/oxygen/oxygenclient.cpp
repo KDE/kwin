@@ -1432,7 +1432,10 @@ namespace Oxygen
     QRegion Client::region( KDecorationDefines::Region r )
     {
 
-        if( r == KDecorationDefines::ExtendedBorderRegion && configuration().frameBorder() <= Configuration::BorderNoSide )
+        if(
+            (r == KDecorationDefines::ExtendedBorderRegion) &&
+            configuration().useExtendedWindowBorder() &&
+            configuration().frameBorder() <= Configuration::BorderNoSide )
         {
 
             const QRect rect = widget()->rect().adjusted(

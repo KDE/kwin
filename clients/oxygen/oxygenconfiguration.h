@@ -45,6 +45,7 @@ namespace OxygenConfig
     static const QString ANIMATIONS_ENABLED = "AnimationsEnabled";
     static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
     static const QString CLOSE_FROM_MENU_BUTTON = "CloseFromMenuButton";
+    static const QString EXTENDED_WINDOW_BORDERS = "UseExtendedWindowBorders";
 
     //!@name animation flags
     //@{
@@ -214,6 +215,12 @@ namespace Oxygen
 
         virtual void setFrameBorder( QString value, bool translated )
         { _frameBorder = frameBorder( value, translated ); }
+
+        virtual bool useExtendedWindowBorder( void ) const
+        { return _useExtendedWindowBorder; }
+
+        virtual void setUseExtendedWindowBorder( bool value )
+        { _useExtendedWindowBorder = value; }
 
         //@}
 
@@ -426,6 +433,9 @@ namespace Oxygen
 
         //! narrow button spacing
         bool _useNarrowButtonSpacing;
+
+        //! extended window borders
+        bool _useExtendedWindowBorder;
 
         //!@name animation flags
         //@{
