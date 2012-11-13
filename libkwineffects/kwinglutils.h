@@ -204,6 +204,7 @@ protected:
     GLShader();
     bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
     bool load(const QByteArray &vertexSource, const QByteArray &fragmentSource);
+    const QByteArray prepareSource(GLenum shaderType, const QByteArray &sourceCode) const;
     bool compile(GLuint program, GLenum shaderType, const QByteArray &sourceCode) const;
     void bind();
     void unbind();
@@ -219,6 +220,9 @@ private:
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
 
+    static bool sColorCorrect;
+
+    friend class ColorCorrection;
     friend class ShaderManager;
 };
 
