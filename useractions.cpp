@@ -1243,6 +1243,7 @@ void Workspace::showWindowMenuAt(unsigned long, int, int)
     slotWindowOperations();
 }
 
+#ifdef KWIN_BUILD_KAPPMENU
 void Workspace::showApplicationMenu(const QPoint &p, const WId id)
 {
     QList<QVariant> args = QList<QVariant>() << p.x() << p.y() << qulonglong(id);
@@ -1250,6 +1251,7 @@ void Workspace::showApplicationMenu(const QPoint &p, const WId id)
     method.setArguments(args);
     QDBusConnection::sessionBus().asyncCall(method);
 }
+#endif
 
 void Workspace::slotActivateAttentionWindow()
 {
