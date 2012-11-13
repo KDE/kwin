@@ -419,7 +419,9 @@ public:
         return m_userActionsMenu;
     }
 
+#ifdef KWIN_BUILD_KAPPMENU
     void showApplicationMenu(const QPoint &, const WId);
+#endif
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
