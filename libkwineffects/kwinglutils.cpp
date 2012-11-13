@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // need to call GLTexturePrivate::initStatic()
 #include "kwingltexture_p.h"
 
-#include "kwinglcolorcorrection.h"
 #include "kwinglobals.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
@@ -259,8 +258,6 @@ void popMatrix()
 // GLShader
 //****************************************
 
-bool GLShader::sColorCorrect = false;
-
 GLShader::GLShader()
     : mProgram(0)
     , mValid(false)
@@ -302,8 +299,10 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
     return load(vertexSource, fragmentSource);
 }
 
-const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &source) const
+bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &source) const
 {
+    GLuint shader = glCreateShader(shaderType);
+
     // Prepare the source code
     QByteArray ba;
 #ifdef KWIN_HAVE_OPENGLES
@@ -314,19 +313,7 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     }
     ba.append(source);
 
-    // Inject color correction code for fragment shaders, if possible
-    if (shaderType == GL_FRAGMENT_SHADER && sColorCorrect)
-        ba = ColorCorrection::prepareFragmentShader(ba);
-
-    return ba;
-}
-
-bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &source) const
-{
-    GLuint shader = glCreateShader(shaderType);
-
-    QByteArray preparedSource = prepareSource(shaderType, source);
-    const char* src = preparedSource.constData();
+    const char* src = ba.constData();
     glShaderSource(shader, 1, &src, NULL);
 
     // Compile the shader

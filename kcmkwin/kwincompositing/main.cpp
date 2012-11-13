@@ -130,7 +130,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glShaders, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(ui.glColorCorrection, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(m_showDetailedErrors, SIGNAL(triggered(bool)), SLOT(showDetailedEffectLoadingInformation()));
     connect(ui.ghns, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
 
@@ -385,7 +384,6 @@ void KWinCompositingConfig::loadAdvancedTab()
 
     ui.glVSync->setChecked(config.readEntry("GLVSync", true));
     ui.glShaders->setChecked(!config.readEntry<bool>("GLLegacy", false));
-    ui.glColorCorrection->setChecked(config.readEntry("GLColorCorrection", false));
 
     toogleSmoothScaleUi(ui.compositingType->currentIndex());
 }
@@ -519,7 +517,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
     config.writeEntry("GLLegacy", !ui.glShaders->isChecked());
-    config.writeEntry("GLColorCorrection", ui.glColorCorrection->isChecked());
+
 
     return advancedChanged;
 }
@@ -757,7 +755,6 @@ void KWinCompositingConfig::defaults()
     ui.glScaleFilter->setCurrentIndex(2);
     ui.glVSync->setChecked(true);
     ui.glShaders->setChecked(true);
-    ui.glColorCorrection->setChecked(false);
 }
 
 QString KWinCompositingConfig::quickHelp() const

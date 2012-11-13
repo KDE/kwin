@@ -1949,18 +1949,6 @@ public:
      * @since 4.10
      **/
     qreal multiplyBrightness(qreal factor);
-    /**
-     * The screen number for which the painting should be done.
-     * This affects color correction (different screens may need different
-     * color correction lookup tables because they have different ICC profiles).
-     * @return screen for which painting should be done
-     */
-    int screen() const;
-    /**
-     * @param screen New screen number
-     * A value less than 0 will indicate that a default profile should be done.
-     */
-    void setScreen(int screen) const;
     WindowQuadList quads;
     /**
      * Shader to be used for rendering, if any.
