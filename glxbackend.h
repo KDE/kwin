@@ -57,6 +57,7 @@ private:
     void waitSync();
     bool initRenderingContext();
     bool initBufferConfigs();
+    void setSwapInterval(int interval);
 
     GC gcroot;
     Drawable buffer;
@@ -66,6 +67,7 @@ private:
     GLXFBConfig fbcbuffer;
     GLXDrawable glxbuffer;
     GLXContext ctxbuffer;
+    bool haveSwapInterval;
     friend class GlxTexture;
 };
 

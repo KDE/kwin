@@ -205,10 +205,14 @@ extern KWIN_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 typedef int (*glXGetVideoSync_func)(unsigned int *count);
 typedef int (*glXWaitVideoSync_func)(int divisor, int remainder, unsigned int *count);
-typedef int (*glXSwapInterval_func)(int ratio);
+typedef int (*glXSwapIntervalMESA_func)(unsigned int interval);
+typedef void (*glXSwapIntervalEXT_func)(Display *dpy, GLXDrawable drawable, int interval);
+typedef int (*glXSwapIntervalSGI_func)(int interval);
 extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
 extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
-extern KWIN_EXPORT glXSwapInterval_func glXSwapInterval;
+extern KWIN_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
+extern KWIN_EXPORT glXSwapIntervalEXT_func glXSwapIntervalEXT;
+extern KWIN_EXPORT glXSwapIntervalSGI_func glXSwapIntervalSGI;
 
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);

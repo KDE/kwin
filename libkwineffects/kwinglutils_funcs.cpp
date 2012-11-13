@@ -65,7 +65,9 @@ glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 glXGetVideoSync_func glXGetVideoSync;
 glXWaitVideoSync_func glXWaitVideoSync;
-glXSwapInterval_func glXSwapInterval;
+glXSwapIntervalMESA_func glXSwapIntervalMESA;
+glXSwapIntervalEXT_func glXSwapIntervalEXT;
+glXSwapIntervalSGI_func glXSwapIntervalSGI;
 
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
@@ -170,17 +172,18 @@ void glxResolveFunctions()
         glXWaitVideoSync = NULL;
     }
 
-    if (hasGLExtension("GLX_SGI_swap_control")) {
-        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalSGI");
-    } else if (hasGLExtension("GLX_EXT_swap_control")) {
-        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalEXT");
-    } else if (hasGLExtension("GLX_MESA_swap_control")) {
-        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalMESA");
-    } else if (hasGLExtension("GLX_OML_sync_control")) {
-        glXSwapInterval = (glXSwapInterval_func) getProcAddress("glXSwapIntervalOML");
-    } else {
-        glXSwapInterval = NULL;
-    }
+    if (hasGLExtension("GLX_SGI_swap_control"))
+        glXSwapIntervalSGI = (glXSwapIntervalSGI_func) getProcAddress("glXSwapIntervalSGI");
+    else
+        glXSwapIntervalSGI = NULL;
+    if (hasGLExtension("GLX_EXT_swap_control"))
+        glXSwapIntervalEXT = (glXSwapIntervalEXT_func) getProcAddress("glXSwapIntervalEXT");
+    else
+        glXSwapIntervalEXT = NULL;
+    if (hasGLExtension("GLX_MESA_swap_control"))
+        glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
+    else
+        glXSwapIntervalMESA = NULL;
 }
 #endif
 

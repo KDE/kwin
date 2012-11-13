@@ -41,6 +41,7 @@ namespace KWin
 GlxBackend::GlxBackend()
     : OpenGLBackend()
     , glxbuffer(None)
+    , haveSwapInterval(false)
 {
     init();
 }
@@ -91,8 +92,9 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported
+    haveSwapInterval = glXSwapIntervalMESA || glXSwapIntervalEXT || glXSwapIntervalSGI;
     if (options->isGlVSync()) {
-        if (glXGetVideoSync && glXSwapInterval && glXIsDirect(display(), ctxbuffer)) {
+        if (glXGetVideoSync && haveSwapInterval && glXIsDirect(display(), ctxbuffer)) {
             unsigned int sync;
             if (glXGetVideoSync(&sync) == 0) {
                 if (glXWaitVideoSync(1, 0, &sync) == 0) {
@@ -102,15 +104,15 @@ void GlxBackend::init()
                     // However mesa/dri will return a range error (6) because deactivating the
                     // swapinterval (as of today) seems completely unsupported
                     setHasWaitSync(true);
-                    glXSwapInterval(0);
+                    setSwapInterval(0);
                 }
                 else
                     qWarning() << "NO VSYNC! glXWaitVideoSync(1,0,&uint) isn't 0 but" << glXWaitVideoSync(1, 0, &sync);
             } else
                 qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync(&sync);
         } else
-            qWarning() << "NO VSYNC! glXGetVideoSync, glXSwapInterval, glXIsDirect" <<
-                        bool(glXGetVideoSync) << bool(glXSwapInterval) << glXIsDirect(display(), ctxbuffer);
+            qWarning() << "NO VSYNC! glXGetVideoSync, haveSwapInterval, glXIsDirect" <<
+                        bool(glXGetVideoSync) << haveSwapInterval << glXIsDirect(display(), ctxbuffer);
     }
     if (glPlatform->isVirtualBox()) {
         // VirtualBox does not support glxQueryDrawable
@@ -411,6 +413,16 @@ bool GlxBackend::initDrawableConfigs()
     return true;
 }
 
+void GlxBackend::setSwapInterval(int interval)
+{
+    if (glXSwapIntervalEXT)
+        glXSwapIntervalEXT(display(), glxbuffer, interval);
+    else if (glXSwapIntervalMESA)
+        glXSwapIntervalMESA(interval);
+    else if (glXSwapIntervalSGI)
+        glXSwapIntervalSGI(interval);
+}
+
 #define VSYNC_DEBUG 0
 
 void GlxBackend::waitSync()
@@ -502,10 +514,10 @@ void GlxBackend::present()
                 }
             }
         } else {
-            if (glXSwapInterval) {
-                glXSwapInterval(options->isGlVSync() ? 1 : 0);
+            if (haveSwapInterval) {
+                setSwapInterval(options->isGlVSync() ? 1 : 0);
                 glXSwapBuffers(display(), glxbuffer);
-                glXSwapInterval(0);
+                setSwapInterval(0);
                 startRenderTimer(); // this is important so we don't assume to be loosing frames in the compositor timing calculation
             } else {
                 waitSync();
