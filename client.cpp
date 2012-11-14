@@ -357,7 +357,7 @@ void Client::updateInputWindow()
 {
     QRegion region;
 
-    if (!noBorder() && dynamic_cast<KDecorationUnstable*>(decoration)) {
+    if (!noBorder()) {
         // This function is implemented as a slot to avoid breaking binary
         // compatibility
         QMetaObject::invokeMethod(decoration, "region", Qt::DirectConnection,
@@ -391,6 +391,8 @@ void Client::updateInputWindow()
         input_window = XCreateWindow(display(), rootWindow(), bounds.x(), bounds.y(),
                                      bounds.width(), bounds.height(), 0, 0,
                                      InputOnly, 0, CWEventMask | CWOverrideRedirect, &attr);
+        if (mapping_state == Mapped)
+            XMapWindow(display(), inputId());
     } else {
         XMoveResizeWindow(display(), input_window, bounds.x(), bounds.y(),
                           bounds.width(), bounds.height());

@@ -457,16 +457,24 @@ bool Workspace::activateNextClient(Client* c)
 
     Client* get_focus = NULL;
 
-    if (options->isNextFocusPrefersMouse()) {
+    // precedence on keeping the current tabgroup active. to the user that's the same window
+    if (c && c->tabGroup()) {
+        if (c == c->tabGroup()->current())
+            c->tabGroup()->activateNext();
+        get_focus = c->tabGroup()->current();
+        if (get_focus == c) // single tab case - should not happen
+            get_focus = NULL;
+    }
+
+    if (!get_focus && options->isNextFocusPrefersMouse()) {
         get_focus = clientUnderMouse(c ? c->screen() : activeScreen());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
             // should rather not happen, but it cannot get the focus. rest of usability is tested above
-            get_focus = 0;
+            get_focus = NULL;
         }
     }
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
-
         // first try to pass the focus to the (former) active clients leader
         if (c  && (get_focus = c->transientFor()) && isUsableFocusCandidate(get_focus, c, options->isSeparateScreenFocus())) {
             raiseClient(get_focus);   // also raise - we don't know where it came from

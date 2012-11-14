@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ANIMATION_EFFECT_H
 
 #include <QEasingCurve>
+#include <QElapsedTimer>
 #include <QtCore/qmath.h>
 #include <kwineffects.h>
 
@@ -139,6 +140,10 @@ public:
         return qExp(progress);
     }
 
+    static inline qint64 clock() {
+        return s_clock.elapsed();
+    }
+
 protected:
     /**
      * The central function of this class - call it to create an animated transition of any supported attribute
@@ -177,6 +182,7 @@ private Q_SLOTS:
     void _windowDeleted( KWin::EffectWindow* w );
     void _expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old);
 private:
+    static QElapsedTimer s_clock;
     typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
     AnimationEffectPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)

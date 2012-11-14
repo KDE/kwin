@@ -1180,16 +1180,17 @@ bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int
         XAllowEvents(display(), ReplayPointer, CurrentTime);  //xTime());
         return true;
     }
-    if (w == decorationId() || w == inputId()) {
-        if (w == inputId()) {
-            x = x_root - geometry().x() + padding_left;
-            y = y_root - geometry().y() + padding_top;
-        }
+    if (w == inputId()) {
+        x = x_root - geometry().x() + padding_left;
+        y = y_root - geometry().y() + padding_top;
+        // New API processes core events FIRST and only passes unused ones to the decoration
+        return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
+    }
+    if (w == decorationId()) {
         if (dynamic_cast<KDecorationUnstable*>(decoration))
             // New API processes core events FIRST and only passes unused ones to the decoration
             return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
-        else
-            return false; // Don't eat old API decoration events
+        return false;
     }
     if (w == frameId())
         processDecorationButtonPress(button, state, x, y, x_root, y_root);
