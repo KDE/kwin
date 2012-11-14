@@ -103,7 +103,7 @@ public:
 
 private:
     ColorCorrection *q_ptr;
-    Q_DECLARE_PUBLIC(ColorCorrection);
+    Q_DECLARE_PUBLIC(ColorCorrection)
 };
 
 
