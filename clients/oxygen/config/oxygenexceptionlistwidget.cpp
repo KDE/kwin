@@ -88,7 +88,7 @@ namespace Oxygen
 
         ExceptionModel::List exceptions( model().get() );
         ExceptionList out;
-        for( ExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); ++iter )
+        for( ExceptionModel::List::const_iterator iter = exceptions.constBegin(); iter != exceptions.constEnd(); ++iter )
         { out.push_back( *iter ); }
         return out;
 
@@ -240,7 +240,7 @@ namespace Oxygen
         ExceptionModel::List currentException( model().get() );
         ExceptionModel::List newExceptions;
 
-        for( ExceptionModel::List::const_iterator iter = currentException.begin(); iter != currentException.end(); ++iter )
+        for( ExceptionModel::List::const_iterator iter = currentException.constBegin(); iter != currentException.constEnd(); ++iter )
         {
 
             // check if new list is not empty, current index is selected and last index is not.
@@ -263,7 +263,7 @@ namespace Oxygen
 
         // restore selection
         ui.exceptionListView->selectionModel()->select( model().index( selectedExceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        for( ExceptionModel::List::const_iterator iter = selectedExceptions.begin(); iter != selectedExceptions.end(); ++iter )
+        for( ExceptionModel::List::const_iterator iter = selectedExceptions.constBegin(); iter != selectedExceptions.constEnd(); ++iter )
         { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
         emit changed();
@@ -314,7 +314,7 @@ namespace Oxygen
 
         // restore selection
         ui.exceptionListView->selectionModel()->select( model().index( selectedExceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        for( ExceptionModel::List::const_iterator iter = selectedExceptions.begin(); iter != selectedExceptions.end(); ++iter )
+        for( ExceptionModel::List::const_iterator iter = selectedExceptions.constBegin(); iter != selectedExceptions.constEnd(); ++iter )
         { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
         emit changed();
