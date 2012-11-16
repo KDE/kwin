@@ -18,6 +18,7 @@ Name[sr@ijekavianlatin]=Animacija na klik mišem
 Name[sr@latin]=Animacija na klik mišem
 Name[uk]=Анімація за клацанням миші
 Name[x-test]=xxMouse Click Animationxx
+Name[zh_TW]=滑鼠點擊動畫
 Icon=preferences-system-windows-effect-mouseclick
 
 Comment=Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.
@@ -38,6 +39,7 @@ Comment[sr@ijekavianlatin]=Animacija svaki put kada se pritisne dugme miša. Kor
 Comment[sr@latin]=Animacija svaki put kada se pritisne dugme miša. Korisno pri snimanjima ekrana i izlaganjima.
 Comment[uk]=Створення анімацій у відповідь на клацання кнопкою миші. Корисне для записів демонстрацій та презентацій.
 Comment[x-test]=xxCreates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.xx
+Comment[zh_TW]=建立當滑鼠點擊時要顯示的動畫。在螢幕錄影或展示時相當有用。
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
