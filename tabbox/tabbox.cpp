@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "client.h"
 #include "effects.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 // Qt
 #include <QAction>
@@ -76,21 +77,21 @@ int TabBoxHandlerImpl::activeScreen() const
 
 int TabBoxHandlerImpl::currentDesktop() const
 {
-    return Workspace::self()->currentDesktop();
+    return VirtualDesktopManager::self()->current();
 }
 
 QString TabBoxHandlerImpl::desktopName(TabBoxClient* client) const
 {
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
         if (!c->client()->isOnAllDesktops())
-            return Workspace::self()->desktopName(c->client()->desktop());
+            return VirtualDesktopManager::self()->name(c->client()->desktop());
     }
-    return Workspace::self()->desktopName(Workspace::self()->currentDesktop());
+    return VirtualDesktopManager::self()->name(VirtualDesktopManager::self()->current());
 }
 
 QString TabBoxHandlerImpl::desktopName(int desktop) const
 {
-    return Workspace::self()->desktopName(desktop);
+    return VirtualDesktopManager::self()->name(desktop);
 }
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) const
@@ -127,7 +128,7 @@ int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
 
 int TabBoxHandlerImpl::numberOfDesktops() const
 {
-    return Workspace::self()->numberOfDesktops();
+    return VirtualDesktopManager::self()->count();
 }
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::activeClient() const
@@ -561,7 +562,7 @@ void TabBox::reset(bool partial_reset)
         m_tabBox->createModel();
 
         if (!partial_reset)
-            setCurrentDesktop(Workspace::self()->currentDesktop());
+            setCurrentDesktop(VirtualDesktopManager::self()->current());
         break;
     }
 
@@ -1499,14 +1500,14 @@ void TabBox::keyRelease(const XKeyEvent& ev)
         m_tabGrab = old_tab_grab;
         if (desktop != -1) {
             setCurrentDesktop(desktop);
-            Workspace::self()->setCurrentDesktop(desktop);
+            VirtualDesktopManager::self()->setCurrent(desktop);
         }
     }
 }
 
 int TabBox::nextDesktopFocusChain(int iDesktop) const
 {
-    const QVector<int> &desktopFocusChain = Workspace::self()->desktopFocusChain();
+    const QVector<uint> &desktopFocusChain = Workspace::self()->desktopFocusChain();
     int i = desktopFocusChain.indexOf(iDesktop);
     if (i >= 0 && i + 1 < desktopFocusChain.size())
         return desktopFocusChain[i+1];
@@ -1518,30 +1519,26 @@ int TabBox::nextDesktopFocusChain(int iDesktop) const
 
 int TabBox::previousDesktopFocusChain(int iDesktop) const
 {
-    const QVector<int> &desktopFocusChain = Workspace::self()->desktopFocusChain();
+    const QVector<uint> &desktopFocusChain = Workspace::self()->desktopFocusChain();
     int i = desktopFocusChain.indexOf(iDesktop);
     if (i - 1 >= 0)
         return desktopFocusChain[i-1];
     else if (desktopFocusChain.size() > 0)
         return desktopFocusChain[desktopFocusChain.size()-1];
     else
-        return Workspace::self()->numberOfDesktops();
+        return VirtualDesktopManager::self()->count();
 }
 
 int TabBox::nextDesktopStatic(int iDesktop) const
 {
-    int i = ++iDesktop;
-    if (i > Workspace::self()->numberOfDesktops())
-        i = 1;
-    return i;
+    DesktopNext functor;
+    return functor(iDesktop, true);
 }
 
 int TabBox::previousDesktopStatic(int iDesktop) const
 {
-    int i = --iDesktop;
-    if (i < 1)
-        i = Workspace::self()->numberOfDesktops();
-    return i;
+    DesktopPrevious functor;
+    return functor(iDesktop, true);
 }
 
 /*!

@@ -128,8 +128,8 @@ set(kwin_KDEINIT_SRCS
    deleted.cpp
    effects.cpp
    compositingprefs.cpp
-   desktoplayout.cpp
    paintredirector.cpp
+   virtualdesktops.cpp
    )
 
 if(KWIN_BUILD_SCRIPTING)

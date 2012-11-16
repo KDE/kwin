@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "kwinadaptor.h"
 #include "workspace.h"
+#include "virtualdesktops.h"
 
 // Qt
 #include <QDBusServiceWatcher>
@@ -72,16 +73,17 @@ DBusInterface::~DBusInterface()
 void DBusInterface::circulateDesktopApplications()
 {
     Workspace *ws = Workspace::self();
+    const uint desktop = VirtualDesktopManager::self()->current();
     const QList<Client*> &desktops = ws->desktopList();
     if (desktops.count() > 1) {
         bool change_active = ws->activeClient()->isDesktop();
-        ws->raiseClient(ws->findDesktop(false, currentDesktop()));
+        ws->raiseClient(ws->findDesktop(false, desktop));
         if (change_active)   // if the previously topmost Desktop was active, activate this new one
-            ws->activateClient(ws->findDesktop(true, currentDesktop()));
+            ws->activateClient(ws->findDesktop(true, desktop));
     }
     // if there's no active client, make desktop the active one
     if (desktops.count() > 0 && ws->activeClient() == NULL && ws->mostRecentlyActivatedClient() == NULL)
-        ws->activateClient(ws->findDesktop(true, currentDesktop()));
+        ws->activateClient(ws->findDesktop(true, desktop));
 }
 
 // wrap void methods with no arguments to Workspace
@@ -92,8 +94,6 @@ void DBusInterface::name() \
 }
 
 WRAP(killWindow)
-WRAP(nextDesktop)
-WRAP(previousDesktop)
 WRAP(reconfigure)
 
 #undef WRAP
@@ -116,7 +116,6 @@ rettype DBusInterface::name( ) \
     return Workspace::self()->name(); \
 }
 
-WRAP(int, currentDesktop)
 WRAP(QList<int>, decorationSupportedColors)
 WRAP(QString, supportInformation)
 WRAP(bool, waitForCompositingSetup)
@@ -130,7 +129,6 @@ rettype DBusInterface::name( argtype arg ) \
     return Workspace::self()->name(arg); \
 }
 
-WRAP(bool, setCurrentDesktop, int)
 WRAP(bool, startActivity, const QString &)
 WRAP(bool, stopActivity, const QString &)
 
@@ -216,6 +214,26 @@ QString DBusInterface::supportInformationForEffect(const QString &name)
         static_cast< EffectsHandlerImpl* >(effects)->supportInformation(name);
     }
     return QString();
+}
+
+int DBusInterface::currentDesktop()
+{
+    return VirtualDesktopManager::self()->current();
+}
+
+bool DBusInterface::setCurrentDesktop(int desktop)
+{
+    return VirtualDesktopManager::self()->setCurrent(desktop);
+}
+
+void DBusInterface::nextDesktop()
+{
+    VirtualDesktopManager::self()->moveTo<DesktopNext>();
+}
+
+void DBusInterface::previousDesktop()
+{
+    VirtualDesktopManager::self()->moveTo<DesktopPrevious>();
 }
 
 } // namespace

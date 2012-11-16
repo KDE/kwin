@@ -877,7 +877,7 @@ Q_SIGNALS:
     * @see EffectsHandler::numberOfDesktops.
     * @since 4.7
     */
-    void numberDesktopsChanged(int old);
+    void numberDesktopsChanged(uint old);
     /**
      * Signal emitted when a new window has been added to the Workspace.
      * @param w The added window

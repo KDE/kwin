@@ -109,10 +109,11 @@ void Workspace::saveOldScreenSizes()
 void Workspace::updateClientArea(bool force)
 {
     int nscreens = QApplication::desktop()->screenCount();
-    kDebug(1212) << "screens: " << nscreens << "desktops: " << numberOfDesktops();
-    QVector< QRect > new_wareas(numberOfDesktops() + 1);
-    QVector< StrutRects > new_rmoveareas(numberOfDesktops() + 1);
-    QVector< QVector< QRect > > new_sareas(numberOfDesktops() + 1);
+    const int numberOfDesktops = VirtualDesktopManager::self()->count();
+    kDebug(1212) << "screens: " << nscreens << "desktops: " << numberOfDesktops;
+    QVector< QRect > new_wareas(numberOfDesktops + 1);
+    QVector< StrutRects > new_rmoveareas(numberOfDesktops + 1);
+    QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
     QVector< QRect > screens(nscreens);
     QRect desktopArea;
     for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
@@ -124,7 +125,7 @@ void Workspace::updateClientArea(bool force)
         screens [iS] = QApplication::desktop()->screenGeometry(iS);
     }
     for (int i = 1;
-            i <= numberOfDesktops();
+            i <= numberOfDesktops;
             ++i) {
         new_wareas[ i ] = desktopArea;
         new_sareas[ i ].resize(nscreens);
@@ -149,7 +150,7 @@ void Workspace::updateClientArea(bool force)
 
         if ((*it)->isOnAllDesktops()) {
             for (int i = 1;
-                    i <= numberOfDesktops();
+                    i <= numberOfDesktops;
                     ++i) {
                 if (!hasOffscreenXineramaStrut)
                     new_wareas[ i ] = new_wareas[ i ].intersected(r);
@@ -192,7 +193,7 @@ void Workspace::updateClientArea(bool force)
         changed = true;
 
     for (int i = 1;
-            !changed && i <= numberOfDesktops();
+            !changed && i <= numberOfDesktops;
             ++i) {
         if (workarea[ i ] != new_wareas[ i ])
             changed = true;
@@ -213,7 +214,7 @@ void Workspace::updateClientArea(bool force)
         restrictedmovearea = new_rmoveareas;
         screenarea = new_sareas;
         NETRect r;
-        for (int i = 1; i <= numberOfDesktops(); i++) {
+        for (int i = 1; i <= numberOfDesktops; i++) {
             r.pos.x = workarea[ i ].x();
             r.pos.y = workarea[ i ].y();
             r.size.width = workarea[ i ].width();
@@ -253,7 +254,7 @@ void Workspace::updateClientArea()
 QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
-        desktop = currentDesktop();
+        desktop = VirtualDesktopManager::self()->current();
     if (screen == -1)
         screen = activeScreen();
 
@@ -315,7 +316,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Client* c) const
 QRegion Workspace::restrictedMoveArea(int desktop, StrutAreas areas) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
-        desktop = currentDesktop();
+        desktop = VirtualDesktopManager::self()->current();
     QRegion region;
     foreach (const StrutRect & rect, restrictedmovearea[desktop])
     if (areas & rect.area())
@@ -331,7 +332,7 @@ bool Workspace::inUpdateClientArea() const
 QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
-        desktop = currentDesktop();
+        desktop = VirtualDesktopManager::self()->current();
     QRegion region;
     foreach (const StrutRect & rect, oldrestrictedmovearea.at(desktop))
     if (areas & rect.area())
@@ -417,7 +418,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
                 if ((((*l)->isOnDesktop(c->desktop()) && !(*l)->isMinimized())
-                        || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(Workspace::currentDesktop())
+                        || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(VirtualDesktopManager::self()->current())
                             && !(*l)->isMinimized()))
                         && (!(*l)->tabGroup() || (*l) == (*l)->tabGroup()->current())
                         && (*l) != c) {
@@ -612,7 +613,7 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
             deltaY = int(snap);
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
-                if ((*l)->isOnDesktop(currentDesktop()) &&
+                if ((*l)->isOnDesktop(VirtualDesktopManager::self()->current()) &&
                         !(*l)->isMinimized()
                         && (*l) != c) {
                     lx = (*l)->x() - 1;

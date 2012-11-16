@@ -183,7 +183,7 @@ bool Client::manage(Window w, bool isMapped)
             if (on_all)
                 desk = NET::OnAllDesktops;
             else if (on_current)
-                desk = workspace()->currentDesktop();
+                desk = VirtualDesktopManager::self()->current();
             else if (maincl != NULL)
                 desk = maincl->desktop();
 
@@ -207,10 +207,10 @@ bool Client::manage(Window w, bool isMapped)
     }
 
     if (desk == 0)   // Assume window wants to be visible on the current desktop
-        desk = isDesktop() ? NET::OnAllDesktops : workspace()->currentDesktop();
+        desk = isDesktop() ? NET::OnAllDesktops : VirtualDesktopManager::self()->current();
     desk = rules()->checkDesktop(desk, !isMapped);
     if (desk != NET::OnAllDesktops)   // Do range check
-        desk = qMax(1, qMin(workspace()->numberOfDesktops(), desk));
+        desk = qBound(1, desk, static_cast<int>(VirtualDesktopManager::self()->count()));
     info->setDesktop(desk);
     workspace()->updateOnAllDesktopsOfTransients(this);   // SELI TODO
     //onAllDesktopsChange(); // Decoration doesn't exist here yet
@@ -551,7 +551,7 @@ bool Client::manage(Window w, bool isMapped)
             } else if (allow) {
                 // also force if activation is allowed
                 if (!isOnCurrentDesktop()) {
-                    workspace()->setCurrentDesktop(desktop());
+                    VirtualDesktopManager::self()->setCurrent(desktop());
                 }
                 /*if (!isOnCurrentActivity()) {
                     workspace()->setCurrentActivity( activities().first() );

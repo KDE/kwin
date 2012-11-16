@@ -924,7 +924,7 @@ Q_SIGNALS:
     void centerSnapZoneChanged();
     void snapOnlyWhenOverlappingChanged();
     void showDesktopIsMinimizeAllChanged();
-    void rollOverDesktopsChanged();
+    void rollOverDesktopsChanged(bool enabled);
     void focusStealingPreventionLevelChanged();
     void legacyFullscreenSupportChanged();
     void operationTitlebarDblClickChanged();

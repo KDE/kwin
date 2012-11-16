@@ -18,3 +18,18 @@ set( testWindowPaintData_SRCS test_window_paint_data.cpp )
 kde4_add_unit_test( testWindowPaintData TESTNAME kwin-TestWindowPaintData ${testWindowPaintData_SRCS} )
 
 target_link_libraries( testWindowPaintData kwineffects ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTTEST_LIBRARY} )
+
+########################################################
+# Test VirtualDesktopManager
+########################################################
+set( testVirtualDesktops_SRCS
+     test_virtual_desktops.cpp
+     ../virtualdesktops.cpp
+)
+kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${testVirtualDesktops_SRCS} )
+
+target_link_libraries( testVirtualDesktops
+                       ${KDE4_KDEUI_LIBS}
+                       ${QT_QTCORE_LIBRARY}
+                       ${QT_QTTEST_LIBRARY}
+)

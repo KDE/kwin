@@ -166,7 +166,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
-    int desktop = c->desktop() == 0 || c->isOnAllDesktops() ? m_WorkspacePtr->currentDesktop() : c->desktop();
+    int desktop = c->desktop() == 0 || c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
 
     int cxl, cxr, cyt, cyb;     //temp coords
     int  xl, xr, yt, yb;     //temp coords
@@ -320,7 +320,7 @@ void Placement::reinitCascading(int desktop)
     // desktop == 0 - reinit all
     if (desktop == 0) {
         cci.clear();
-        for (int i = 0; i < m_WorkspacePtr->numberOfDesktops(); i++) {
+        for (uint i = 0; i < VirtualDesktopManager::self()->count(); ++i) {
             DesktopCascadingInfo inf;
             inf.pos = QPoint(-1, -1);
             inf.col = 0;
@@ -352,7 +352,7 @@ void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
     //CT how do I get from the 'Client' class the size that NW squarish "handle"
     const QPoint delta = m_WorkspacePtr->cascadeOffset(c);
 
-    const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (m_WorkspacePtr->currentDesktop() - 1) : (c->desktop() - 1);
+    const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (VirtualDesktopManager::self()->current() - 1) : (c->desktop() - 1);
 
     // get the maximum allowed windows space and desk's origin
     QRect maxRect = checkArea(c, area);
@@ -547,7 +547,7 @@ void Placement::cascadeDesktop()
 {
 // TODO XINERAMA this probably is not right for xinerama
     Workspace *ws = Workspace::self();
-    const int desktop = ws->currentDesktop();
+    const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
     // TODO: make area const once placeFoo methods are fixed to take a const QRect&
     QRect area = ws->clientArea(PlacementArea, QPoint(0, 0), desktop);

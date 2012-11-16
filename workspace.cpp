@@ -61,6 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "useractions.h"
+#include "virtualdesktops.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #ifdef KWIN_BUILD_SCRIPTING
@@ -81,7 +82,6 @@ namespace KWin
 {
 
 extern int screen_number;
-static const int KWIN_MAX_NUMBER_DESKTOPS = 20;
 
 #ifdef KWIN_BUILD_KAPPMENU
 static const char *KDED_SERVICE = "org.kde.kded";
@@ -93,11 +93,6 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
     : QObject(0)
-    // Desktop layout
-    , desktopCount_(0)   // This is an invalid state
-    , desktopGridSize_(1, 2)   // Default to two rows
-    , desktopGrid_(new int[2])
-    , currentDesktop_(0)
 #ifdef KWIN_BUILD_SCREENEDGES
     , m_screenEdgeOrientation(0)
 #endif
@@ -154,10 +149,6 @@ Workspace::Workspace(bool restore)
                  this, SLOT(slotClearMenus()));
 #endif
 
-    // Initialize desktop grid array
-    desktopGrid_[0] = 0;
-    desktopGrid_[1] = 0;
-
     _self = this;
 
     // first initialize the extensions
@@ -209,6 +200,10 @@ Workspace::Workspace(bool restore)
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
 
     new DBusInterface(this);
+
+    // VirtualDesktopManager needs to be created prior to init shortcuts
+    // actual initialization happens in init()
+    VirtualDesktopManager::create(this);
 
     // Compatibility
     long data = 1;
@@ -357,13 +352,25 @@ void Workspace::init()
     rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen());
 
     // Create an entry with empty activity name, it will be used if activities are not supported. Otherwise, it will be removed.
-    m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<int>(numberOfDesktops()));
+    m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<uint>());
+
+    // create VirtualDesktopManager and perform dependency injection
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    connect(vds, SIGNAL(desktopsRemoved(uint)), SLOT(moveClientsFromRemovedDesktops()));
+    connect(vds, SIGNAL(countChanged(uint,uint)), SLOT(slotDesktopCountChanged(uint,uint)));
+    connect(vds, SIGNAL(currentChanged(uint,uint)), SLOT(slotCurrentDesktopChanged(uint,uint)));
+    vds->setNavigationWrappingAround(options->isRollOverDesktops());
+    connect(options, SIGNAL(rollOverDesktopsChanged(bool)), vds, SLOT(setNavigationWrappingAround(bool)));
+    vds->setRootInfo(rootInfo);
+    vds->setConfig(KGlobal::config());
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
     Placement::create(this);
 
-    loadDesktopSettings();
-    updateDesktopLayout();
+    // positioning object needs to be created before the virtual desktops are loaded.
+    vds->load();
+    vds->updateLayout();
+
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
@@ -373,8 +380,8 @@ void Workspace::init()
         KConfigGroup group(kapp->sessionConfig(), "Session");
         initial_desktop = group.readEntry("desktop", 1);
     }
-    if (!setCurrentDesktop(initial_desktop))
-        setCurrentDesktop(1);
+    if (!VirtualDesktopManager::self()->setCurrent(initial_desktop))
+        VirtualDesktopManager::self()->setCurrent(1);
 #ifdef KWIN_BUILD_ACTIVITIES
     updateActivityList(false, true);
 #endif
@@ -451,8 +458,8 @@ void Workspace::init()
         updateClientArea();
 
         // NETWM spec says we have to set it to (0,0) if we don't support it
-        NETPoint* viewports = new NETPoint[numberOfDesktops()];
-        rootInfo->setDesktopViewport(numberOfDesktops(), *viewports);
+        NETPoint* viewports = new NETPoint[VirtualDesktopManager::self()->count()];
+        rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
         delete[] viewports;
         QRect geom;
         for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
@@ -475,9 +482,9 @@ void Workspace::init()
             && activeClient() == NULL && should_get_focus.count() == 0) {
         // No client activated in manage()
         if (new_active_client == NULL)
-            new_active_client = topClientOnDesktop(currentDesktop(), -1);
+            new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->current(), -1);
         if (new_active_client == NULL && !desktops.isEmpty())
-            new_active_client = findDesktop(true, currentDesktop());
+            new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
     }
     if (new_active_client != NULL)
         activateClient(new_active_client);
@@ -543,8 +550,6 @@ Workspace::~Workspace()
     XDestroyWindow(display(), null_focus_window);
 
     // TODO: ungrabXServer();
-
-    delete[] desktopGrid_;
 
     _self = 0;
 }
@@ -612,7 +617,7 @@ void Workspace::addClient(Client* c, allowed_t)
         raiseClient(c);
         // If there's no active client, make this desktop the active one
         if (activeClient() == NULL && should_get_focus.count() == 0)
-            activateClient(findDesktop(true, currentDesktop()));
+            activateClient(findDesktop(true, VirtualDesktopManager::self()->current()));
     }
     c->checkActiveModal();
     checkTransients(c->window());   // SELI TODO: Does this really belong here?
@@ -673,7 +678,7 @@ void Workspace::removeClient(Client* c, allowed_t)
     clients.removeAll(c);
     desktops.removeAll(c);
     x_stacking_dirty = true;
-    for (int i = 1; i <= numberOfDesktops(); ++i)
+    for (uint i = 1; i <= VirtualDesktopManager::self()->count(); ++i)
         focus_chain[i].removeAll(c);
     global_focus_chain.removeAll(c);
     attention_chain.removeAll(c);
@@ -747,16 +752,16 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
 void Workspace::updateFocusChains(Client* c, FocusChainChange change)
 {
     if (!c->wantsTabFocus()) { // Doesn't want tab focus, remove
-        for (int i = 1; i <= numberOfDesktops(); ++i)
+        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); ++i)
             focus_chain[i].removeAll(c);
         global_focus_chain.removeAll(c);
         return;
     }
     if (c->desktop() == NET::OnAllDesktops) {
         // Now on all desktops, add it to focus_chains it is not already in
-        for (int i = 1; i <= numberOfDesktops(); i++) {
+        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); i++) {
             // Making first/last works only on current desktop, don't affect all desktops
-            if (i == currentDesktop()
+            if (i == VirtualDesktopManager::self()->current()
                     && (change == FocusChainMakeFirst || change == FocusChainMakeLast)) {
                 focus_chain[i].removeAll(c);
                 if (change == FocusChainMakeFirst)
@@ -773,8 +778,8 @@ void Workspace::updateFocusChains(Client* c, FocusChainChange change)
             }
         }
     } else { // Now only on desktop, remove it anywhere else
-        for (int i = 1; i <= numberOfDesktops(); i++) {
-            if (i == c->desktop()) {
+        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); i++) {
+            if (c->isOnDesktop(i)) {
                 if (change == FocusChainMakeFirst) {
                     focus_chain[i].removeAll(c);
                     focus_chain[i].append(c);
@@ -1071,71 +1076,6 @@ void Workspace::slotReconfigure()
     }
 }
 
-static bool _loading_desktop_settings = false;
-void Workspace::loadDesktopSettings()
-{
-    _loading_desktop_settings = true;
-    KSharedConfig::Ptr c = KGlobal::config();
-    QString groupname;
-    if (screen_number == 0)
-        groupname = "Desktops";
-    else
-        groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroup group(c, groupname);
-    const int n = group.readEntry("Number", 1);
-    setNumberOfDesktops(n);
-    for (int i = 1; i <= n; i++) {
-        QString s = group.readEntry(QString("Name_%1").arg(i), i18n("Desktop %1", i));
-        rootInfo->setDesktopName(i, s.toUtf8().data());
-        m_desktopFocusChain.value()[i-1] = i;
-    }
-
-    int rows = group.readEntry<int>("Rows", 2);
-    rows = qBound(1, rows, n);
-    // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
-    int columns = n / rows;
-    if (n % rows > 0) {
-        columns++;
-    }
-    rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
-    rootInfo->activate();
-    _loading_desktop_settings = false;
-}
-
-void Workspace::saveDesktopSettings()
-{
-    if (_loading_desktop_settings)
-        return;
-    KSharedConfig::Ptr c = KGlobal::config();
-    QString groupname;
-    if (screen_number == 0)
-        groupname = "Desktops";
-    else
-        groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroup group(c, groupname);
-
-    group.writeEntry("Number", numberOfDesktops());
-    for (int i = 1; i <= numberOfDesktops(); i++) {
-        QString s = desktopName(i);
-        QString defaultvalue = i18n("Desktop %1", i);
-        if (s.isEmpty()) {
-            s = defaultvalue;
-            rootInfo->setDesktopName(i, s.toUtf8().data());
-        }
-
-        if (s != defaultvalue) {
-            group.writeEntry(QString("Name_%1").arg(i), s);
-        } else {
-            QString currentvalue = group.readEntry(QString("Name_%1").arg(i), QString());
-            if (currentvalue != defaultvalue)
-                group.writeEntry(QString("Name_%1").arg(i), "");
-        }
-    }
-
-    // Save to disk
-    group.sync();
-}
-
 /**
  * Avoids managing a window with title \a title
  */
@@ -1223,109 +1163,62 @@ ObscuringWindows::~ObscuringWindows()
     }
 }
 
-/**
- * Sets the current desktop to \a new_desktop
- *
- * Shows/Hides windows according to the stacking order and finally
- * propages the new desktop to the world
- */
-bool Workspace::setCurrentDesktop(int new_desktop)
+void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 {
-    if (new_desktop < 1 || new_desktop > numberOfDesktops())
-        return false;
-
     closeActivePopup();
     ++block_focus;
-    // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
     StackingUpdatesBlocker blocker(this);
-
-    int old_desktop = currentDesktop();
-    int old_active_screen = activeScreen();
-    if (new_desktop != currentDesktop()) {
-        ++block_showing_desktop;
-        // Optimized Desktop switching: unmapping done from back to front
-        // mapping done from front to back => less exposure events
-        Notify::raise((Notify::Event)(Notify::DesktopChange + new_desktop));
-
-        ObscuringWindows obs_wins;
-
-        currentDesktop_ = new_desktop; // Change the desktop (so that Client::updateVisibility() works)
-
-        for (ToplevelList::ConstIterator it = stacking_order.constBegin();
-                it != stacking_order.constEnd();
-                ++it) {
-            Client *c = qobject_cast<Client*>(*it);
-            if (!c) {
-                continue;
-            }
-            if (!c->isOnDesktop(new_desktop) && c != movingClient && c->isOnCurrentActivity()) {
-                if (c->isShown(true) && c->isOnDesktop(old_desktop) && !compositing())
-                    obs_wins.create(c);
-                (c)->updateVisibility();
-            }
-        }
-
-        // Now propagate the change, after hiding, before showing
-        rootInfo->setCurrentDesktop(currentDesktop());
-
-        if (movingClient && !movingClient->isOnDesktop(new_desktop)) {
-            movingClient->setDesktop(new_desktop);
-        }
-
-        for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
-            Client *c = qobject_cast<Client*>(stacking_order.at(i));
-            if (!c) {
-                continue;
-            }
-            if (c->isOnDesktop(new_desktop) && c->isOnCurrentActivity())
-                c->updateVisibility();
-        }
-
-        --block_showing_desktop;
-        if (showingDesktop())   // Do this only after desktop change to avoid flicker
-            resetShowingDesktop(false);
-    }
-
+    updateClientVisibilityOnDesktopChange(oldDesktop, newDesktop);
     // Restore the focus on this desktop
     --block_focus;
-    Client* c = 0;
 
-    if (options->focusPolicyIsReasonable()) {
-        // Search in focus chain
-        if (movingClient != NULL && active_client == movingClient &&
-                focus_chain[currentDesktop()].contains(active_client) &&
-                active_client->isShown(true) && active_client->isOnCurrentDesktop())
-            c = active_client; // The requestFocus below will fail, as the client is already active
-        // from actiavtion.cpp
-        if (!c && options->isNextFocusPrefersMouse()) {
-            ToplevelList::const_iterator it = stackingOrder().constEnd();
-            while (it != stackingOrder().constBegin()) {
-                Client *client = qobject_cast<Client*>(*(--it));
-                if (!client) {
-                    continue;
-                }
+    activateClientOnNewDesktop(newDesktop);
+    updateDesktopFocusChain(newDesktop);
+    emit currentDesktopChanged(oldDesktop, movingClient);
+}
 
-                if (!(client->isShown(false) && client->isOnDesktop(new_desktop) &&
-                    client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
-                    continue;
-
-                if (client->geometry().contains(QCursor::pos())) {
-                    if (!client->isDesktop())
-                        c = client;
-                break; // unconditional break  - we do not pass the focus to some client below an unusable one
-                }
-            }
-        }
+void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop)
+{
+    ++block_showing_desktop;
+    ObscuringWindows obs_wins;
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
+            it != stacking_order.constEnd();
+            ++it) {
+        Client *c = qobject_cast<Client*>(*it);
         if (!c) {
-            for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
-                Client* tmp = focus_chain[currentDesktop()].at(i);
-                if (tmp->isShown(false) && tmp->isOnCurrentActivity()
-                    && ( !options->isSeparateScreenFocus() || tmp->screen() == old_active_screen )) {
-                    c = tmp;
-                    break;
-                }
-            }
+            continue;
         }
+        if (!c->isOnDesktop(newDesktop) && c != movingClient && c->isOnCurrentActivity()) {
+            if (c->isShown(true) && c->isOnDesktop(oldDesktop) && !compositing())
+                obs_wins.create(c);
+            (c)->updateVisibility();
+        }
+    }
+    // Now propagate the change, after hiding, before showing
+    rootInfo->setCurrentDesktop(VirtualDesktopManager::self()->current());
+
+    if (movingClient && !movingClient->isOnDesktop(newDesktop)) {
+        movingClient->setDesktop(newDesktop);
+    }
+
+    for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
+        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        if (!c) {
+            continue;
+        }
+        if (c->isOnDesktop(newDesktop) && c->isOnCurrentActivity())
+            c->updateVisibility();
+    }
+    --block_showing_desktop;
+    if (showingDesktop())   // Do this only after desktop change to avoid flicker
+        resetShowingDesktop(false);
+}
+
+void Workspace::activateClientOnNewDesktop(uint desktop)
+{
+    Client* c = NULL;
+    if (options->focusPolicyIsReasonable()) {
+        c = findClientToActivateOnDesktop(desktop);
     }
     // If "unreasonable focus policy" and active_client is on_all_desktops and
     // under mouse (Hence == old_active_client), conserve focus.
@@ -1334,7 +1227,7 @@ bool Workspace::setCurrentDesktop(int new_desktop)
         c = active_client;
 
     if (c == NULL && !desktops.isEmpty())
-        c = findDesktop(true, currentDesktop());
+        c = findDesktop(true, desktop);
 
     if (c != active_client)
         setActiveClient(NULL, Allowed);
@@ -1342,32 +1235,55 @@ bool Workspace::setCurrentDesktop(int new_desktop)
     if (c)
         requestFocus(c);
     else if (!desktops.isEmpty())
-        requestFocus(findDesktop(true, currentDesktop()));
+        requestFocus(findDesktop(true, desktop));
     else
         focusToNull();
-
-    // Update focus chain:
-    //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
-    //   Output: chain = { 3, 1, 2, 4 }.
-    //kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-    //    .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
-    QVector<int> &chain = m_desktopFocusChain.value();
-    for (int i = chain.indexOf(currentDesktop()); i > 0; --i)
-        chain[i] = chain[i-1];
-    chain[0] = currentDesktop();
-
-    //QString s = "desktop_focus_chain[] = { ";
-    //for ( uint i = 0; i < desktop_focus_chain.size(); i++ )
-    //    s += QString::number( desktop_focus_chain[i] ) + ", ";
-    //kDebug( 1212 ) << s << "}\n";
-
-    emit currentDesktopChanged(old_desktop, movingClient);
-    return true;
 }
 
-int Workspace::maxNumberOfDesktops() const
+Client *Workspace::findClientToActivateOnDesktop(uint desktop)
 {
-    return KWIN_MAX_NUMBER_DESKTOPS;
+    if (movingClient != NULL && active_client == movingClient &&
+        focus_chain[desktop].contains(active_client) &&
+        active_client->isShown(true) && active_client->isOnCurrentDesktop()) {
+        // A requestFocus call will fail, as the client is already active
+        return active_client;
+    }
+    // from actiavtion.cpp
+    if (options->isNextFocusPrefersMouse()) {
+        ToplevelList::const_iterator it = stackingOrder().constEnd();
+        while (it != stackingOrder().constBegin()) {
+            Client *client = qobject_cast<Client*>(*(--it));
+            if (!client) {
+                continue;
+            }
+
+            if (!(client->isShown(false) && client->isOnDesktop(desktop) &&
+                client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
+                continue;
+
+            if (client->geometry().contains(QCursor::pos())) {
+                if (!client->isDesktop())
+                    return client;
+            break; // unconditional break  - we do not pass the focus to some client below an unusable one
+            }
+        }
+    }
+    for (int i = focus_chain[desktop].size() - 1; i >= 0; --i) {
+        Client* tmp = focus_chain[desktop].at(i);
+        if (tmp->isShown(false) && tmp->isOnCurrentActivity()
+            && ( !options->isSeparateScreenFocus() || tmp->screen() == activeScreen() )) {
+            return tmp;
+        }
+    }
+    return NULL;
+}
+
+void Workspace::updateDesktopFocusChain(uint desktop)
+{
+    QVector<uint> &chain = m_desktopFocusChain.value();
+    for (int i = chain.indexOf(desktop); i > 0; --i)
+        chain[i] = chain[i-1];
+    chain[0] = desktop;
 }
 
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -1515,14 +1431,14 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
         if (movingClient != NULL && active_client == movingClient &&
-                focus_chain[currentDesktop()].contains(active_client) &&
+                focus_chain[VirtualDesktopManager::self()->current()].contains(active_client) &&
                 active_client->isShown(true) && active_client->isOnCurrentDesktop())
             c = active_client; // The requestFocus below will fail, as the client is already active
         if (!c) {
-            for (int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i) {
-                if (focus_chain[currentDesktop()].at(i)->isShown(false) &&
-                        focus_chain[currentDesktop()].at(i)->isOnCurrentActivity()) {
-                    c = focus_chain[currentDesktop()].at(i);
+            for (int i = focus_chain[VirtualDesktopManager::self()->current()].size() - 1; i >= 0; --i) {
+                if (focus_chain[VirtualDesktopManager::self()->current()].at(i)->isShown(false) &&
+                        focus_chain[VirtualDesktopManager::self()->current()].at(i)->isOnCurrentActivity()) {
+                    c = focus_chain[VirtualDesktopManager::self()->current()].at(i);
                     break;
                 }
             }
@@ -1535,7 +1451,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         c = active_client;
 
     if (c == NULL && !desktops.isEmpty())
-        c = findDesktop(true, currentDesktop());
+        c = findDesktop(true, VirtualDesktopManager::self()->current());
 
     if (c != active_client)
         setActiveClient(NULL, Allowed);
@@ -1543,7 +1459,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     if (c)
         requestFocus(c);
     else if (!desktops.isEmpty())
-        requestFocus(findDesktop(true, currentDesktop()));
+        requestFocus(findDesktop(true, VirtualDesktopManager::self()->current()));
     else
         focusToNull();
 
@@ -1551,15 +1467,15 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 #ifdef KWIN_BUILD_ACTIVITIES
     // Replace initial dummy with actual activity, preserving the current chain.
     if (m_desktopFocusChain.key().isNull()) {
-        QVector<int> val(m_desktopFocusChain.value());
+        QVector<uint> val(m_desktopFocusChain.value());
         m_activitiesDesktopFocusChain.erase(m_desktopFocusChain);
         m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, val);
     } else {
         m_desktopFocusChain = m_activitiesDesktopFocusChain.find(activity_);
         if (m_desktopFocusChain == m_activitiesDesktopFocusChain.end()) {
-            m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, QVector<int>(numberOfDesktops()));
+            m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, QVector<uint>(VirtualDesktopManager::self()->count()));
 
-            for (int i = 0; i < numberOfDesktops(); ++i) {
+            for (uint i = 0; i < VirtualDesktopManager::self()->count(); ++i) {
                 m_desktopFocusChain.value()[i] = i + 1;
             }
         }
@@ -1597,85 +1513,54 @@ void Workspace::slotActivityAdded(const QString &activity)
     allActivities_ << activity;
 }
 
-/**
- * Called only from D-Bus
- */
-void Workspace::nextDesktop()
+void Workspace::moveClientsFromRemovedDesktops()
 {
-    int desktop = currentDesktop() + 1;
-    setCurrentDesktop(desktop > numberOfDesktops() ? 1 : desktop);
-}
-
-/**
- * Called only from D-Bus
- */
-void Workspace::previousDesktop()
-{
-    int desktop = currentDesktop() - 1;
-    setCurrentDesktop(desktop > 0 ? desktop : numberOfDesktops());
-}
-
-/**
- * Sets the number of virtual desktops to \a n
- */
-void Workspace::setNumberOfDesktops(int n)
-{
-    if (n > KWIN_MAX_NUMBER_DESKTOPS)
-        n = KWIN_MAX_NUMBER_DESKTOPS;
-    if (n < 1 || n == numberOfDesktops())
-        return;
-    int old_number_of_desktops = numberOfDesktops();
-    desktopCount_ = n;
-    Placement::self()->reinitCascading(0);
-    updateDesktopLayout(); // Make sure the layout is still valid
-
-    if (currentDesktop() > n)
-        setCurrentDesktop(n);
-
-    // move all windows that would be hidden to the last visible desktop
-    if (old_number_of_desktops > numberOfDesktops()) {
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
-            if (!(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops())
-                sendClientToDesktop(*it, numberOfDesktops(), true);
-            // TODO: Tile should have a method allClients, push them into other tiles
-        }
+    for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+        if (!(*it)->isOnAllDesktops() && (*it)->desktop() > static_cast<int>(VirtualDesktopManager::self()->count()))
+            sendClientToDesktop(*it, VirtualDesktopManager::self()->count(), true);
     }
-    rootInfo->setNumberOfDesktops(n);
-    NETPoint* viewports = new NETPoint[n];
-    rootInfo->setDesktopViewport(n, *viewports);
-    delete[] viewports;
+}
 
+void Workspace::slotDesktopCountChanged(uint previousCount, uint newCount)
+{
+    Placement::self()->reinitCascading(0);
     // Make it +1, so that it can be accessed as [1..numberofdesktops]
-    focus_chain.resize(n + 1);
+    focus_chain.resize(newCount + 1);
 
-    workarea.clear();
-    workarea.resize(n + 1);
-    restrictedmovearea.clear();
-    restrictedmovearea.resize(n + 1);
-    screenarea.clear();
+    resetClientAreas(newCount);
+    resizeDesktopFocusChain(previousCount, newCount);
+}
 
-    updateClientArea(true);
-
-    // Resize the desktop focus chain.
+void Workspace::resizeDesktopFocusChain(uint previousCount, uint newCount)
+{
     for (DesktopFocusChains::iterator it = m_activitiesDesktopFocusChain.begin(), end = m_activitiesDesktopFocusChain.end(); it != end; ++it) {
-        QVector<int> &chain = it.value();
-        chain.resize(n);
+        QVector<uint> &chain = it.value();
+        chain.resize(newCount);
 
         // We do not destroy the chain in case new desktops are added;
-        if (n >= old_number_of_desktops) {
-            for (int i = old_number_of_desktops; i < n; ++i)
+        if (newCount >= previousCount) {
+            for (uint i = previousCount; i < newCount; ++i)
                 chain[i] = i + 1;
 
         // But when desktops are removed, we may have to modify the chain a bit,
         // otherwise invalid desktops may show up.
         } else {
             for (int i = 0; i < chain.size(); ++i)
-               chain[i] = qMin(chain[i], n);
+               chain[i] = qMin(chain[i], newCount);
         }
     }
+}
 
-    saveDesktopSettings();
-    emit numberDesktopsChanged(old_number_of_desktops);
+void Workspace::resetClientAreas(uint desktopCount)
+{
+    // Make it +1, so that it can be accessed as [1..numberofdesktops]
+    workarea.clear();
+    workarea.resize(desktopCount + 1);
+    restrictedmovearea.clear();
+    restrictedmovearea.resize(desktopCount + 1);
+    screenarea.clear();
+
+    updateClientArea(true);
 }
 
 /**
@@ -1685,7 +1570,7 @@ void Workspace::setNumberOfDesktops(int n)
  */
 void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 {
-    if ((desk < 1 && desk != NET::OnAllDesktops) || desk > numberOfDesktops())
+    if ((desk < 1 && desk != NET::OnAllDesktops) || desk > static_cast<int>(VirtualDesktopManager::self()->count()))
         return;
     int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
@@ -1696,7 +1581,7 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 
     emit desktopPresenceChanged(c, old_desktop);
 
-    if (c->isOnDesktop(currentDesktop())) {
+    if (c->isOnDesktop(VirtualDesktopManager::self()->current())) {
         if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
                 !was_on_desktop && // for stickyness changes
                 !dont_activate)
@@ -1920,11 +1805,6 @@ QList<int> Workspace::decorationSupportedColors() const
     return ret;
 }
 
-QString Workspace::desktopName(int desk) const
-{
-    return QString::fromUtf8(rootInfo->desktopName(desk));
-}
-
 bool Workspace::checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data)
 {
     return startup->checkStartup(w, id, data) == KStartupInfo::Match;
@@ -1965,7 +1845,7 @@ void Workspace::setShowingDesktop(bool showing)
                 ++it)
             (*it)->minimize();
         --block_focus;
-        if (Client* desk = findDesktop(true, currentDesktop()))
+        if (Client* desk = findDesktop(true, VirtualDesktopManager::self()->current()))
             requestFocus(desk);
     } else {
         for (ClientList::ConstIterator it = showing_desktop_clients.constBegin();

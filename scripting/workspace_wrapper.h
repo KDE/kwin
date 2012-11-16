@@ -89,7 +89,7 @@ signals:
      * To get the current number of desktops use the property desktops.
      * @param oldNumberOfDesktops The previous number of desktops.
      **/
-    void numberDesktopsChanged(int oldNumberOfDesktops);
+    void numberDesktopsChanged(uint oldNumberOfDesktops);
     /**
      * The demands attention state for Client @p c changed to @p set.
      * @param c The Client for which demands attention changed

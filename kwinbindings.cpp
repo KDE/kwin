@@ -153,23 +153,6 @@ for (int i = 0; i < 8; ++i) {
 DEF(I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen());
 DEF(I18N_NOOP("Show Desktop"),                     0, slotToggleShowDesktop());
 
-a = actionCollection->addAction("Group:Desktop Switching");
-a->setText(i18n("Desktop Switching"));
-DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F1,   slotSwitchToDesktop(), 1);
-DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F2,   slotSwitchToDesktop(), 2);
-DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F3,   slotSwitchToDesktop(), 3);
-DEF3("Switch to Desktop %1", Qt::CTRL + Qt::Key_F4,   slotSwitchToDesktop(), 4);
-for (int i = 5; i < 21; ++i) {
-    DEF3(I18N_NOOP("Switch to Desktop %1"),        0, slotSwitchToDesktop(), i);
-}
-
-DEF(I18N_NOOP("Switch to Next Desktop"),           0, slotSwitchDesktopNext());
-DEF(I18N_NOOP("Switch to Previous Desktop"),       0, slotSwitchDesktopPrevious());
-DEF(I18N_NOOP("Switch One Desktop to the Right"),  0, slotSwitchDesktopRight());
-DEF(I18N_NOOP("Switch One Desktop to the Left"),   0, slotSwitchDesktopLeft());
-DEF(I18N_NOOP("Switch One Desktop Up"),            0, slotSwitchDesktopUp());
-DEF(I18N_NOOP("Switch One Desktop Down"),          0, slotSwitchDesktopDown());
-
 for (int i = 0; i < 8; ++i) {
     DEF3(I18N_NOOP("Switch to Screen %1"),         0, slotSwitchToScreen(), i);
 }

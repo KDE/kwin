@@ -372,7 +372,7 @@ void Options::setRollOverDesktops(bool rollOverDesktops)
         return;
     }
     m_rollOverDesktops = rollOverDesktops;
-    emit rollOverDesktopsChanged();
+    emit rollOverDesktopsChanged(m_rollOverDesktops);
 }
 
 void Options::setFocusStealingPreventionLevel(int focusStealingPreventionLevel)

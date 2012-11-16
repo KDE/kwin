@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
+#include "virtualdesktops.h"
 
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
@@ -167,7 +168,7 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
     if (y == pos.top())
         m_menu->exec(QPoint(x, y));
     else {
-        QRect area = ws->clientArea(ScreenArea, QPoint(x, y), ws->currentDesktop());
+        QRect area = ws->clientArea(ScreenArea, QPoint(x, y), VirtualDesktopManager::self()->current());
         menuAboutToShow(); // needed for sizeHint() to be correct :-/
         int popupHeight = m_menu->sizeHint().height();
         if (y + popupHeight < area.height())
@@ -409,7 +410,7 @@ void UserActionsMenu::menuAboutToShow()
         return;
     Workspace *ws = Workspace::self();
 
-    if (ws->numberOfDesktops() == 1) {
+    if (VirtualDesktopManager::self()->count() == 1) {
         delete m_desktopMenu;
         m_desktopMenu = 0;
     } else {
@@ -639,7 +640,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
 {
     if (!m_desktopMenu)
         return;
-    const Workspace *ws = Workspace::self();
+    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
 
     m_desktopMenu->clear();
     QActionGroup *group = new QActionGroup(m_desktopMenu);
@@ -652,27 +653,27 @@ void UserActionsMenu::desktopPopupAboutToShow()
         action->setChecked(true);
     m_desktopMenu->addSeparator();
 
-    const int BASE = 10;
-    for (int i = 1; i <= ws->numberOfDesktops(); ++i) {
+    const uint BASE = 10;
+    for (uint i = 1; i <= vds->count(); ++i) {
         QString basic_name("%1  %2");
         if (i < BASE) {
             basic_name.prepend('&');
         }
-        action = m_desktopMenu->addAction(basic_name.arg(i).arg(ws->desktopName(i).replace('&', "&&")));
+        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace('&', "&&")));
         action->setData(i);
         action->setCheckable(true);
         group->addAction(action);
 
         if (!m_client.isNull() &&
-                !m_client.data()->isOnAllDesktops() && m_client.data()->desktop()  == i)
+                !m_client.data()->isOnAllDesktops() && m_client.data()->isOnDesktop(i))
             action->setChecked(true);
     }
 
     m_desktopMenu->addSeparator();
     action = m_desktopMenu->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
-    action->setData(ws->numberOfDesktops() + 1);
+    action->setData(vds->count() + 1);
 
-    if (ws->numberOfDesktops() >= Workspace::self()->maxNumberOfDesktops())
+    if (vds->count() >= vds->maximum())
         action->setEnabled(false);
 }
 
@@ -758,16 +759,21 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
 
 void UserActionsMenu::slotSendToDesktop(QAction *action)
 {
-    int desk = action->data().toInt();
+    bool ok = false;
+    uint desk = action->data().toUInt(&ok);
+    if (!ok) {
+        return;
+    }
     if (m_client.isNull())
         return;
     Workspace *ws = Workspace::self();
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
     if (desk == 0) {
         // the 'on_all_desktops' menu entry
         m_client.data()->setOnAllDesktops(!m_client.data()->isOnAllDesktops());
         return;
-    } else if (desk > ws->numberOfDesktops()) {
-        ws->setNumberOfDesktops(desk);
+    } else if (desk > vds->count()) {
+        vds->setCount(desk);
     }
 
     ws->sendClientToDesktop(m_client.data(), desk, false);
@@ -853,6 +859,7 @@ void Workspace::initShortcuts()
         tab_box->initShortcuts(actionCollection);
     }
 #endif
+    VirtualDesktopManager::self()->initShortcuts(actionCollection);
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
@@ -1258,67 +1265,10 @@ void Workspace::slotActivateAttentionWindow()
         activateClient(attention_chain.first());
 }
 
-void Workspace::slotSwitchDesktopNext()
-{
-    int d = currentDesktop() + 1;
-    if (d > numberOfDesktops()) {
-        if (options->isRollOverDesktops()) {
-            d = 1;
-        } else {
-            return;
-        }
-    }
-    setCurrentDesktop(d);
-}
-
-void Workspace::slotSwitchDesktopPrevious()
-{
-    int d = currentDesktop() - 1;
-    if (d <= 0) {
-        if (options->isRollOverDesktops())
-            d = numberOfDesktops();
-        else
-            return;
-    }
-    setCurrentDesktop(d);
-}
-
-void Workspace::slotSwitchDesktopRight()
-{
-    int desktop = desktopToRight(currentDesktop(), options->isRollOverDesktops());
-    if (desktop == currentDesktop())
-        return;
-    setCurrentDesktop(desktop);
-}
-
-void Workspace::slotSwitchDesktopLeft()
-{
-    int desktop = desktopToLeft(currentDesktop(), options->isRollOverDesktops());
-    if (desktop == currentDesktop())
-        return;
-    setCurrentDesktop(desktop);
-}
-
-void Workspace::slotSwitchDesktopUp()
-{
-    int desktop = desktopAbove(currentDesktop(), options->isRollOverDesktops());
-    if (desktop == currentDesktop())
-        return;
-    setCurrentDesktop(desktop);
-}
-
-void Workspace::slotSwitchDesktopDown()
-{
-    int desktop = desktopBelow(currentDesktop(), options->isRollOverDesktops());
-    if (desktop == currentDesktop())
-        return;
-    setCurrentDesktop(desktop);
-}
-
-static int senderValue(QObject *sender)
+static uint senderValue(QObject *sender)
 {
     QAction *act = qobject_cast<QAction*>(sender);
-    bool ok = false; int i = -1;
+    bool ok = false; uint i = -1;
     if (act)
         i = act->data().toUInt(&ok);
     if (ok)
@@ -1326,23 +1276,16 @@ static int senderValue(QObject *sender)
     return -1;
 }
 
-void Workspace::slotSwitchToDesktop()
-{
-    const int i = senderValue(sender());
-    if (i > 0)
-        setCurrentDesktop(i);
-}
-
 #define USABLE_ACTIVE_CLIENT (active_client && !(active_client->isDesktop() || active_client->isDock()))
 
 void Workspace::slotWindowToDesktop()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        const int i = senderValue(sender());
+        const uint i = senderValue(sender());
         if (i < 1)
             return;
 
-        if (i >= 1 && i <= numberOfDesktops())
+        if (i >= 1 && i <= VirtualDesktopManager::self()->count())
             sendClientToDesktop(active_client, i, true);
     }
 }
@@ -1448,7 +1391,7 @@ void Workspace::slotWindowLower()
                 if (next && next != active_client)
                     requestFocus(next, false);
             } else {
-                activateClient(topClientOnDesktop(currentDesktop(), -1));
+                activateClient(topClientOnDesktop(VirtualDesktopManager::self()->current(), -1));
             }
         }
     }
@@ -1506,6 +1449,22 @@ void Workspace::slotToggleShowDesktop()
     setShowingDesktop(!showingDesktop());
 }
 
+template <typename Direction>
+void windowToDesktop(Client *c)
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    Workspace *ws = Workspace::self();
+    Direction functor;
+    // TODO: why is options->isRollOverDesktops() not honored?
+    const int desktop = functor(0, true);
+    if (c && !c->isDesktop()
+            && !c->isDock()) {
+        ws->setClientIsMoving(c);
+        vds->setCurrent(desktop);
+        ws->setClientIsMoving(NULL);
+    }
+}
+
 /*!
   Move window to next desktop
  */
@@ -1517,15 +1476,7 @@ void Workspace::slotWindowToNextDesktop()
 
 void Workspace::windowToNextDesktop(Client* c)
 {
-    int d = currentDesktop() + 1;
-    if (d > numberOfDesktops())
-        d = 1;
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
-    }
+    windowToDesktop<DesktopNext>(c);
 }
 
 /*!
@@ -1539,66 +1490,50 @@ void Workspace::slotWindowToPreviousDesktop()
 
 void Workspace::windowToPreviousDesktop(Client* c)
 {
-    int d = currentDesktop() - 1;
-    if (d <= 0)
-        d = numberOfDesktops();
-    if (c && !c->isDesktop()
-            && !c->isDock()) {
-        setClientIsMoving(c);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
+    windowToDesktop<DesktopPrevious>(c);
+}
+
+template <typename Direction>
+void activeClientToDesktop()
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    Workspace *ws = Workspace::self();
+    const int current = vds->current();
+    Direction functor;
+    const int d = functor(current, options->isRollOverDesktops());
+    if (d == current) {
+        return;
     }
+    ws->setClientIsMoving(ws->activeClient());
+    vds->setCurrent(d);
+    ws->setClientIsMoving(NULL);
 }
 
 void Workspace::slotWindowToDesktopRight()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopToRight(currentDesktop(), options->isRollOverDesktops());
-        if (d == currentDesktop())
-            return;
-
-        setClientIsMoving(active_client);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
+        activeClientToDesktop<DesktopRight>();
     }
 }
 
 void Workspace::slotWindowToDesktopLeft()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopToLeft(currentDesktop(), options->isRollOverDesktops());
-        if (d == currentDesktop())
-            return;
-
-        setClientIsMoving(active_client);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
+        activeClientToDesktop<DesktopLeft>();
     }
 }
 
 void Workspace::slotWindowToDesktopUp()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopAbove(currentDesktop(), options->isRollOverDesktops());
-        if (d == currentDesktop())
-            return;
-
-        setClientIsMoving(active_client);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
+        activeClientToDesktop<DesktopAbove>();
     }
 }
 
 void Workspace::slotWindowToDesktopDown()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        int d = desktopBelow(currentDesktop(), options->isRollOverDesktops());
-        if (d == currentDesktop())
-            return;
-
-        setClientIsMoving(active_client);
-        setCurrentDesktop(d);
-        setClientIsMoving(NULL);
+        activeClientToDesktop<DesktopBelow>();
     }
 }
 

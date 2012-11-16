@@ -115,7 +115,7 @@ private slots:
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotNumberDesktopsChanged(int old);
+    void slotNumberDesktopsChanged(uint old);
     void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
 
 private:

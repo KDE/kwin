@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scripting/scriptedeffect.h"
 #endif
 #include "thumbnailitem.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -116,12 +117,13 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     m_currentBuildQuadsIterator = m_activeEffects.end();
 
     Workspace *ws = Workspace::self();
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(ws, SIGNAL(currentDesktopChanged(int, KWin::Client*)), SLOT(slotDesktopChanged(int, KWin::Client*)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
-    connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
+    connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
     connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
@@ -482,7 +484,7 @@ void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfF
 
 void EffectsHandlerImpl::slotDesktopChanged(int old, Client *c)
 {
-    const int newDesktop = Workspace::self()->currentDesktop();
+    const int newDesktop = VirtualDesktopManager::self()->current();
     if (old != 0 && newDesktop != old) {
         emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);
         // TODO: remove in 4.10
@@ -682,87 +684,90 @@ QString EffectsHandlerImpl::currentActivity() const
 
 int EffectsHandlerImpl::currentDesktop() const
 {
-    return Workspace::self()->currentDesktop();
+    return VirtualDesktopManager::self()->current();
 }
 
 int EffectsHandlerImpl::numberOfDesktops() const
 {
-    return Workspace::self()->numberOfDesktops();
+    return VirtualDesktopManager::self()->count();
 }
 
 void EffectsHandlerImpl::setCurrentDesktop(int desktop)
 {
-    Workspace::self()->setCurrentDesktop(desktop);
+    VirtualDesktopManager::self()->setCurrent(desktop);
 }
 
 void EffectsHandlerImpl::setNumberOfDesktops(int desktops)
 {
-    Workspace::self()->setNumberOfDesktops(desktops);
+    VirtualDesktopManager::self()->setCount(desktops);
 }
 
 QSize EffectsHandlerImpl::desktopGridSize() const
 {
-    return Workspace::self()->desktopGridSize();
+    return VirtualDesktopManager::self()->grid().size();
 }
 
 int EffectsHandlerImpl::desktopGridWidth() const
 {
-    return Workspace::self()->desktopGridWidth();
+    return desktopGridSize().width();
 }
 
 int EffectsHandlerImpl::desktopGridHeight() const
 {
-    return Workspace::self()->desktopGridHeight();
+    return desktopGridSize().height();
 }
 
 int EffectsHandlerImpl::workspaceWidth() const
 {
-    return Workspace::self()->workspaceWidth();
+    return desktopGridWidth() * displayWidth();
 }
 
 int EffectsHandlerImpl::workspaceHeight() const
 {
-    return Workspace::self()->workspaceHeight();
+    return desktopGridHeight() * displayHeight();
 }
 
 int EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
 {
-    return Workspace::self()->desktopAtCoords(coords);
+    return VirtualDesktopManager::self()->grid().at(coords);
 }
 
 QPoint EffectsHandlerImpl::desktopGridCoords(int id) const
 {
-    return Workspace::self()->desktopGridCoords(id);
+    return VirtualDesktopManager::self()->grid().gridCoords(id);
 }
 
 QPoint EffectsHandlerImpl::desktopCoords(int id) const
 {
-    return Workspace::self()->desktopCoords(id);
+    QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(id);
+    if (coords.x() == -1)
+        return QPoint(-1, -1);
+    return QPoint(coords.x() * displayWidth(), coords.y() * displayHeight());
 }
 
 int EffectsHandlerImpl::desktopAbove(int desktop, bool wrap) const
 {
-    return Workspace::self()->desktopAbove(desktop, wrap);
+    return getDesktop<DesktopAbove>(desktop, wrap);
 }
 
 int EffectsHandlerImpl::desktopToRight(int desktop, bool wrap) const
 {
-    return Workspace::self()->desktopToRight(desktop, wrap);
+    return getDesktop<DesktopRight>(desktop, wrap);
 }
 
 int EffectsHandlerImpl::desktopBelow(int desktop, bool wrap) const
 {
-    return Workspace::self()->desktopBelow(desktop, wrap);
+    return getDesktop<DesktopBelow>(desktop, wrap);
 }
 
 int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
 {
-    return Workspace::self()->desktopToLeft(desktop, wrap);
+    return getDesktop<DesktopLeft>(desktop, wrap);
 }
 
 QString EffectsHandlerImpl::desktopName(int desktop) const
 {
-    return Workspace::self()->desktopName(desktop);
+    return VirtualDesktopManager::self()->name(desktop);
 }
 
 bool EffectsHandlerImpl::optionRollOverDesktops() const
@@ -962,7 +967,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c
     if (const Client* cl = dynamic_cast< const Client* >(t))
         return Workspace::self()->clientArea(opt, cl);
     else
-        return Workspace::self()->clientArea(opt, t->geometry().center(), Workspace::self()->currentDesktop());
+        return Workspace::self()->clientArea(opt, t->geometry().center(), VirtualDesktopManager::self()->current());
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const

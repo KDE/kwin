@@ -1184,8 +1184,9 @@ bool Unmanaged::shouldUnredirect() const
             )
         return false;
 // it must cover whole display or one xinerama screen, and be the topmost there
-    if (geometry() == workspace()->clientArea(FullArea, geometry().center(), workspace()->currentDesktop())
-            || geometry() == workspace()->clientArea(ScreenArea, geometry().center(), workspace()->currentDesktop())) {
+    const int desktop = VirtualDesktopManager::self()->current();
+    if (geometry() == workspace()->clientArea(FullArea, geometry().center(), desktop)
+            || geometry() == workspace()->clientArea(ScreenArea, geometry().center(), desktop)) {
         ToplevelList stacking = workspace()->xStackingOrder();
         for (int pos = stacking.count() - 1;
                 pos >= 0;

@@ -129,12 +129,12 @@ RootInfo::RootInfo(Workspace* ws, Display *dpy, Window w, const char *name, unsi
 
 void RootInfo::changeNumberOfDesktops(int n)
 {
-    workspace->setNumberOfDesktops(n);
+    VirtualDesktopManager::self()->setCount(n);
 }
 
 void RootInfo::changeCurrentDesktop(int d)
 {
-    workspace->setCurrentDesktop(d);
+    VirtualDesktopManager::self()->setCurrent(d);
 }
 
 void RootInfo::changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window)
@@ -232,9 +232,9 @@ bool Workspace::workspaceEvent(XEvent * e)
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
         rootInfo->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
         if (dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames)
-            saveDesktopSettings();
+            VirtualDesktopManager::self()->save();
         if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)
-            updateDesktopLayout();
+            VirtualDesktopManager::self()->updateLayout();
     }
 
     // events that should be handled before Clients can get them
@@ -889,7 +889,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         if (options->isAutoRaise() && !isDesktop() &&
                 !isDock() && workspace()->focusChangeEnabled() &&
                 currentPos != workspace()->focusMousePosition() &&
-                workspace()->topClientOnDesktop(workspace()->currentDesktop(),
+                workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(),
                                                 options->isSeparateScreenFocus() ? screen() : -1) != this) {
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer(this);
@@ -1000,7 +1000,7 @@ void Client::updateMouseGrab()
     if (workspace()->globalShortcutsDisabled()) {
         XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
         // keep grab for the simple click without modifiers if needed (see below)
-        bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
+        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
         if (!(!options->isClickRaise() || not_obscured))
             grabButton(None);
         return;
@@ -1015,7 +1015,7 @@ void Client::updateMouseGrab()
         // is unobscured or if the user doesn't want click raise
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
         // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop(workspace()->currentDesktop(), -1, true, false) == this;
+        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
         if (!options->isClickRaise() || not_obscured)
             ungrabButton(None);
         else

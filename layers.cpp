@@ -282,7 +282,7 @@ void Workspace::raiseOrLowerClient(Client *c)
             most_recently_raised->isShown(true) && c->isOnCurrentDesktop())
         topmost = most_recently_raised;
     else
-        topmost = topClientOnDesktop(c->isOnAllDesktops() ? currentDesktop() : c->desktop(),
+        topmost = topClientOnDesktop(c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop(),
                                      options->isSeparateScreenFocus() ? c->screen() : -1);
 
     if (c == topmost)
@@ -443,7 +443,7 @@ void Workspace::restack(Client* c, Client* under)
     }
 
     assert(unconstrained_stacking_order.contains(c));
-    for (int desktop = 1; desktop <= numberOfDesktops(); ++desktop) {
+    for (uint desktop = 1; desktop <= VirtualDesktopManager::self()->count(); ++desktop) {
         // do for every virtual desktop to handle the case of onalldesktop windows
         if (c->wantsTabFocus() && c->isOnDesktop(desktop) && focus_chain[ desktop ].contains(under)) {
             if (Client::belongToSameApplication(under, c)) {
@@ -893,7 +893,7 @@ bool Client::isActiveFullScreen() const
 
     // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
     // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
-    const Client* top = workspace()->topClientOnDesktop(workspace()->currentDesktop(), screen(), true, false);
+    const Client* top = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), screen(), true, false);
     if (!top)
         return false;
 

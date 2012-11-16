@@ -172,7 +172,7 @@ void Bridge::setShade(bool set)
 
 int Bridge::currentDesktop() const
 {
-    return c->workspace()->currentDesktop();
+    return VirtualDesktopManager::self()->current();
 }
 
 QWidget* Bridge::initialParentWidget() const

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 
 #include "utils.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <X11/extensions/Xdamage.h>
@@ -612,7 +613,7 @@ inline bool Toplevel::isOnActivity(const QString &activity) const
 
 inline bool Toplevel::isOnCurrentDesktop() const
 {
-    return isOnDesktop(workspace()->currentDesktop());
+    return isOnDesktop(VirtualDesktopManager::self()->current());
 }
 
 inline bool Toplevel::isOnCurrentActivity() const

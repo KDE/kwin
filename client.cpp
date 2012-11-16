@@ -1434,9 +1434,10 @@ void Client::setModal(bool m)
 
 void Client::setDesktop(int desktop)
 {
+    const int numberOfDesktops = VirtualDesktopManager::self()->count();
     if (desktop != NET::OnAllDesktops)   // Do range check
-        desktop = qMax(1, qMin(workspace()->numberOfDesktops(), desktop));
-    desktop = qMin(workspace()->numberOfDesktops(), rules()->checkDesktop(desktop));
+        desktop = qMax(1, qMin(numberOfDesktops, desktop));
+    desktop = qMin(numberOfDesktops, rules()->checkDesktop(desktop));
     if (desk == desktop)
         return;
 
@@ -1582,7 +1583,7 @@ void Client::setOnAllDesktops(bool b)
     if (b)
         setDesktop(NET::OnAllDesktops);
     else
-        setDesktop(workspace()->currentDesktop());
+        setDesktop(VirtualDesktopManager::self()->current());
 
     // Update states of all other windows in this group
     if (tabGroup())

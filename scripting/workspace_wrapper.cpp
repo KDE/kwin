@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "../client.h"
 #include "../outline.h"
+#include "../virtualdesktops.h"
 
 #include <QtGui/QDesktopWidget>
 
@@ -30,13 +31,14 @@ namespace KWin {
 WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
 {
     KWin::Workspace *ws = KWin::Workspace::self();
+    KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)));
     connect(ws, SIGNAL(currentDesktopChanged(int,KWin::Client*)), SIGNAL(currentDesktopChanged(int,KWin::Client*)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), SIGNAL(clientAdded(KWin::Client*)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
     connect(ws, SIGNAL(clientRemoved(KWin::Client*)), SIGNAL(clientRemoved(KWin::Client*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), SIGNAL(clientActivated(KWin::Client*)));
-    connect(ws, SIGNAL(numberDesktopsChanged(int)), SIGNAL(numberDesktopsChanged(int)));
+    connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
     connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
     connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
     connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activitiesChanged(QString)));
@@ -50,18 +52,25 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     }
 }
 
-#define GETTERSETTER( rettype, getterName, setterName ) \
-rettype WorkspaceWrapper::getterName( ) const { \
-    return Workspace::self()->getterName(); \
-} \
-void WorkspaceWrapper::setterName( rettype val ) { \
-    Workspace::self()->setterName( val ); \
+int WorkspaceWrapper::currentDesktop() const
+{
+    return VirtualDesktopManager::self()->current();
 }
 
-GETTERSETTER(int, numberOfDesktops, setNumberOfDesktops)
-GETTERSETTER(int, currentDesktop, setCurrentDesktop)
+int WorkspaceWrapper::numberOfDesktops() const
+{
+    return VirtualDesktopManager::self()->count();
+}
 
-#undef GETTERSETTER
+void WorkspaceWrapper::setCurrentDesktop(int desktop)
+{
+    VirtualDesktopManager::self()->setCurrent(desktop);
+}
+
+void WorkspaceWrapper::setNumberOfDesktops(int count)
+{
+    VirtualDesktopManager::self()->setCount(count);
+}
 
 #define GETTER( rettype, getterName ) \
 rettype WorkspaceWrapper::getterName( ) const { \
@@ -69,11 +78,6 @@ rettype WorkspaceWrapper::getterName( ) const { \
 }
 GETTER(KWin::Client*, activeClient)
 GETTER(QList< KWin::Client* >, clientList)
-GETTER(int, workspaceWidth)
-GETTER(int, workspaceHeight)
-GETTER(QSize, desktopGridSize)
-GETTER(int, desktopGridWidth)
-GETTER(int, desktopGridHeight)
 GETTER(int, activeScreen)
 GETTER(int, numScreens)
 GETTER(QString, currentActivity)
@@ -85,13 +89,6 @@ GETTER(QStringList, activityList)
 void WorkspaceWrapper::name( ) { \
     Workspace::self()->name(); \
 }
-
-SLOTWRAPPER(slotSwitchDesktopNext)
-SLOTWRAPPER(slotSwitchDesktopPrevious)
-SLOTWRAPPER(slotSwitchDesktopRight)
-SLOTWRAPPER(slotSwitchDesktopLeft)
-SLOTWRAPPER(slotSwitchDesktopUp)
-SLOTWRAPPER(slotSwitchDesktopDown)
 
 SLOTWRAPPER(slotSwitchToNextScreen)
 SLOTWRAPPER(slotWindowToNextScreen)
@@ -148,6 +145,20 @@ SLOTWRAPPER(slotWindowToDesktopDown)
 
 #undef SLOTWRAPPER
 
+#define SLOTWRAPPER( name, direction ) \
+void WorkspaceWrapper::name( ) { \
+    VirtualDesktopManager::self()->moveTo<direction>(options->isRollOverDesktops()); \
+}
+
+SLOTWRAPPER(slotSwitchDesktopNext, DesktopNext)
+SLOTWRAPPER(slotSwitchDesktopPrevious, DesktopPrevious)
+SLOTWRAPPER(slotSwitchDesktopRight, DesktopRight)
+SLOTWRAPPER(slotSwitchDesktopLeft, DesktopLeft)
+SLOTWRAPPER(slotSwitchDesktopUp, DesktopAbove)
+SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
+
+#undef SLOTWRAPPER
+
 void WorkspaceWrapper::setActiveClient(KWin::Client* client)
 {
     KWin::Workspace::self()->activateClient(client);
@@ -190,7 +201,7 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desk
 
 QString WorkspaceWrapper::desktopName(int desktop) const
 {
-    return Workspace::self()->desktopName(desktop);
+    return VirtualDesktopManager::self()->name(desktop);
 }
 
 QString WorkspaceWrapper::supportInformation() const
@@ -225,6 +236,31 @@ void WorkspaceWrapper::hideOutline()
 Client *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     return Workspace::self()->findClient(WindowMatchPredicate(windowId));
+}
+
+QSize WorkspaceWrapper::desktopGridSize() const
+{
+    return VirtualDesktopManager::self()->grid().size();
+}
+
+int WorkspaceWrapper::desktopGridWidth() const
+{
+    return desktopGridSize().width();
+}
+
+int WorkspaceWrapper::desktopGridHeight() const
+{
+    return desktopGridSize().height();
+}
+
+int WorkspaceWrapper::workspaceHeight() const
+{
+    return desktopGridHeight() * displayHeight();
+}
+
+int WorkspaceWrapper::workspaceWidth() const
+{
+    return desktopGridWidth() * displayWidth();
 }
 
 } // KWin
