@@ -144,8 +144,11 @@ namespace Oxygen
     void Config::save( KConfigGroup& )
     {
 
-        // create configuration from UI
-        Configuration configuration;
+        // create configuration from group
+        KConfigGroup configurationGroup( _configuration, "Windeco" );
+        Configuration configuration( configurationGroup );
+
+        // apply modifications from ui
         configuration.setTitleAlignment( Configuration::titleAlignment( ui->ui.titleAlignment->currentText(), true ) );
         configuration.setCenterTitleOnFullWidth( ui->ui.titleAlignment->currentText() == Configuration::titleAlignmentName( Qt::AlignHCenter, true, true ) );
         configuration.setButtonSize( Configuration::buttonSize( ui->ui.buttonSize->currentText(), true ) );
@@ -173,7 +176,6 @@ namespace Oxygen
         }
 
         // save standard configuration
-        KConfigGroup configurationGroup( _configuration, "Windeco");
         configurationGroup.deleteGroup();
         configuration.write( configurationGroup );
 
