@@ -12,7 +12,7 @@ set( testTabBoxClientModel_SRCS
      mock_tabboxclient.cpp
 )
 
-kde4_add_unit_test( testTabBoxClientModel TESTNAME testTabBoxClientModel ${testTabBoxClientModel_SRCS} )
+kde4_add_unit_test( testTabBoxClientModel TESTNAME kwin-testTabBoxClientModel ${testTabBoxClientModel_SRCS} )
 
 target_link_libraries( testTabBoxClientModel ${KDE4_KDEUI_LIBS} ${QT_QTDECLARATIVE_LIBRARY} ${X11_LIBRARIES} ${QT_QTTEST_LIBRARY} )
 
@@ -30,7 +30,7 @@ set( testTabBoxHandler_SRCS
      mock_tabboxclient.cpp
 )
 
-kde4_add_unit_test( testTabBoxHandler TESTNAME testTabBoxHandler ${testTabBoxHandler_SRCS} )
+kde4_add_unit_test( testTabBoxHandler TESTNAME kwin-testTabBoxHandler ${testTabBoxHandler_SRCS} )
 
 target_link_libraries( testTabBoxHandler ${KDE4_KDEUI_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTTEST_LIBRARY} ${X11_LIBRARIES} )
 
@@ -42,5 +42,5 @@ set( testTabBoxConfig_SRCS
     test_tabbox_config.cpp
 )
 
-kde4_add_unit_test( testTabBoxConfig TESTNAME testTabBoxConfig ${testTabBoxConfig_SRCS} )
+kde4_add_unit_test( testTabBoxConfig TESTNAME kwin-testTabBoxConfig ${testTabBoxConfig_SRCS} )
 target_link_libraries( testTabBoxConfig ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
