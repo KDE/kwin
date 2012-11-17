@@ -150,6 +150,7 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabbox.cpp
         tabbox/clientmodel.cpp
         tabbox/declarative.cpp
+        tabbox/desktopchain.cpp
         tabbox/desktopmodel.cpp
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp

@@ -190,6 +190,11 @@ Workspace::Workspace(bool restore)
                  ExposureMask
                 );
 
+    // VirtualDesktopManager needs to be created prior to init shortcuts
+    // and prior to TabBox, due to TabBox connecting to signals
+    // actual initialization happens in init()
+    VirtualDesktopManager::create(this);
+
 #ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
     tab_box = new TabBox::TabBox(this);
@@ -200,10 +205,6 @@ Workspace::Workspace(bool restore)
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
 
     new DBusInterface(this);
-
-    // VirtualDesktopManager needs to be created prior to init shortcuts
-    // actual initialization happens in init()
-    VirtualDesktopManager::create(this);
 
     // Compatibility
     long data = 1;
@@ -350,9 +351,6 @@ void Workspace::init()
 
     QX11Info info;
     rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen());
-
-    // Create an entry with empty activity name, it will be used if activities are not supported. Otherwise, it will be removed.
-    m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<uint>());
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -1173,7 +1171,6 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     --block_focus;
 
     activateClientOnNewDesktop(newDesktop);
-    updateDesktopFocusChain(newDesktop);
     emit currentDesktopChanged(oldDesktop, movingClient);
 }
 
@@ -1278,14 +1275,6 @@ Client *Workspace::findClientToActivateOnDesktop(uint desktop)
     return NULL;
 }
 
-void Workspace::updateDesktopFocusChain(uint desktop)
-{
-    QVector<uint> &chain = m_desktopFocusChain.value();
-    for (int i = chain.indexOf(desktop); i > 0; --i)
-        chain[i] = chain[i-1];
-    chain[0] = desktop;
-}
-
 #ifdef KWIN_BUILD_ACTIVITIES
 
 //BEGIN threaded activity list fetching
@@ -1341,6 +1330,7 @@ void Workspace::handleActivityReply()
         if (QFutureWatcher<CurrentAndList>* watcher = dynamic_cast< QFutureWatcher<CurrentAndList>* >(sender())) {
             allActivities_ = watcher->result().second;
             updateCurrentActivity(watcher->result().first);
+            emit currentActivityChanged(currentActivity());
             watcherObject = watcher;
         }
     }
@@ -1463,25 +1453,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     else
         focusToNull();
 
-    // Update focus chain:
-#ifdef KWIN_BUILD_ACTIVITIES
-    // Replace initial dummy with actual activity, preserving the current chain.
-    if (m_desktopFocusChain.key().isNull()) {
-        QVector<uint> val(m_desktopFocusChain.value());
-        m_activitiesDesktopFocusChain.erase(m_desktopFocusChain);
-        m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, val);
-    } else {
-        m_desktopFocusChain = m_activitiesDesktopFocusChain.find(activity_);
-        if (m_desktopFocusChain == m_activitiesDesktopFocusChain.end()) {
-            m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(activity_, QVector<uint>(VirtualDesktopManager::self()->count()));
-
-            for (uint i = 0; i < VirtualDesktopManager::self()->count(); ++i) {
-                m_desktopFocusChain.value()[i] = i + 1;
-            }
-        }
-    }
-#endif
-
     // Not for the very first time, only if something changed and there are more than 1 desktops
 
     //if ( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
@@ -1523,32 +1494,12 @@ void Workspace::moveClientsFromRemovedDesktops()
 
 void Workspace::slotDesktopCountChanged(uint previousCount, uint newCount)
 {
+    Q_UNUSED(previousCount)
     Placement::self()->reinitCascading(0);
     // Make it +1, so that it can be accessed as [1..numberofdesktops]
     focus_chain.resize(newCount + 1);
 
     resetClientAreas(newCount);
-    resizeDesktopFocusChain(previousCount, newCount);
-}
-
-void Workspace::resizeDesktopFocusChain(uint previousCount, uint newCount)
-{
-    for (DesktopFocusChains::iterator it = m_activitiesDesktopFocusChain.begin(), end = m_activitiesDesktopFocusChain.end(); it != end; ++it) {
-        QVector<uint> &chain = it.value();
-        chain.resize(newCount);
-
-        // We do not destroy the chain in case new desktops are added;
-        if (newCount >= previousCount) {
-            for (uint i = previousCount; i < newCount; ++i)
-                chain[i] = i + 1;
-
-        // But when desktops are removed, we may have to modify the chain a bit,
-        // otherwise invalid desktops may show up.
-        } else {
-            for (int i = 0; i < chain.size(); ++i)
-               chain[i] = qMin(chain[i], newCount);
-        }
-    }
 }
 
 void Workspace::resetClientAreas(uint desktopCount)

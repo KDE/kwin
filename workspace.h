@@ -258,9 +258,6 @@ public:
 #endif
     bool hasTabBox() const;
 
-    const QVector<uint> &desktopFocusChain() const {
-        return m_desktopFocusChain.value();
-    }
     const ClientList &globalFocusChain() const {
         return global_focus_chain;
     }
@@ -604,16 +601,10 @@ private:
 
     void closeActivePopup();
     void updateClientArea(bool force);
-    void resizeDesktopFocusChain(uint previousCount, uint newCount);
     void resetClientAreas(uint desktopCount);
     void updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop);
     void activateClientOnNewDesktop(uint desktop);
     Client *findClientToActivateOnDesktop(uint desktop);
-    void updateDesktopFocusChain(uint desktop);
-
-    typedef QHash< QString, QVector<uint> > DesktopFocusChains;
-    DesktopFocusChains::Iterator m_desktopFocusChain;
-    DesktopFocusChains m_activitiesDesktopFocusChain;
 
     QWidget* active_popup;
     Client* active_popup_client;

@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/clientmodel.h"
 #include "tabbox/desktopmodel.h"
 #include "tabbox/tabboxconfig.h"
+#include "tabbox/desktopchain.h"
 // kwin
 #include "client.h"
 #include "effects.h"
@@ -63,7 +64,13 @@ namespace TabBox
 TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
     : TabBoxHandler()
     , m_tabBox(tabBox)
+    , m_desktopFocusChain(new DesktopChainManager(this))
 {
+    // connects for DesktopFocusChainManager
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    connect(vds, SIGNAL(countChanged(uint,uint)), m_desktopFocusChain, SLOT(resize(uint,uint)));
+    connect(vds, SIGNAL(currentChanged(uint,uint)), m_desktopFocusChain, SLOT(addDesktop(uint,uint)));
+    connect(Workspace::self(), SIGNAL(currentActivityChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
 }
 
 TabBoxHandlerImpl::~TabBoxHandlerImpl()
@@ -123,7 +130,7 @@ bool TabBoxHandlerImpl::isInFocusChain(TabBoxClient *client) const
 
 int TabBoxHandlerImpl::nextDesktopFocusChain(int desktop) const
 {
-    return m_tabBox->nextDesktopFocusChain(desktop);
+    return m_desktopFocusChain->next(desktop);
 }
 
 int TabBoxHandlerImpl::numberOfDesktops() const
@@ -1503,30 +1510,6 @@ void TabBox::keyRelease(const XKeyEvent& ev)
             VirtualDesktopManager::self()->setCurrent(desktop);
         }
     }
-}
-
-int TabBox::nextDesktopFocusChain(int iDesktop) const
-{
-    const QVector<uint> &desktopFocusChain = Workspace::self()->desktopFocusChain();
-    int i = desktopFocusChain.indexOf(iDesktop);
-    if (i >= 0 && i + 1 < desktopFocusChain.size())
-        return desktopFocusChain[i+1];
-    else if (desktopFocusChain.size() > 0)
-        return desktopFocusChain[ 0 ];
-    else
-        return 1;
-}
-
-int TabBox::previousDesktopFocusChain(int iDesktop) const
-{
-    const QVector<uint> &desktopFocusChain = Workspace::self()->desktopFocusChain();
-    int i = desktopFocusChain.indexOf(iDesktop);
-    if (i - 1 >= 0)
-        return desktopFocusChain[i-1];
-    else if (desktopFocusChain.size() > 0)
-        return desktopFocusChain[desktopFocusChain.size()-1];
-    else
-        return VirtualDesktopManager::self()->count();
 }
 
 int TabBox::nextDesktopStatic(int iDesktop) const

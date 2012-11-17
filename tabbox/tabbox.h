@@ -37,6 +37,7 @@ class Workspace;
 class Client;
 namespace TabBox
 {
+class DesktopChainManager;
 class TabBoxConfig;
 class TabBox;
 class TabBoxHandlerImpl : public TabBoxHandler
@@ -74,6 +75,7 @@ private:
     bool checkMultiScreen(TabBoxClient* client) const;
 
     TabBox* m_tabBox;
+    DesktopChainManager* m_desktopFocusChain;
 };
 
 class TabBoxClientImpl : public TabBoxClient
@@ -168,8 +170,6 @@ public:
     Client* firstClientFocusChain() const;
     Client* nextClientStatic(Client*) const;
     Client* previousClientStatic(Client*) const;
-    int nextDesktopFocusChain(int iDesktop) const;
-    int previousDesktopFocusChain(int iDesktop) const;
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
     void keyPress(int key);
