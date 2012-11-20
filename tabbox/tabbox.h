@@ -165,9 +165,6 @@ public:
 
     void initShortcuts(KActionCollection* keys);
 
-    Client* nextClientFocusChain(Client*) const;
-    Client* previousClientFocusChain(Client*) const;
-    Client* firstClientFocusChain() const;
     Client* nextClientStatic(Client*) const;
     Client* previousClientStatic(Client*) const;
     int nextDesktopStatic(int iDesktop) const;

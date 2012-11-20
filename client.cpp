@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client_machine.h"
 #include "composite.h"
 #include "group.h"
+#include "focuschain.h"
 #include "workspace.h"
 #include "atoms.h"
 #include "notifications.h"
@@ -865,7 +866,7 @@ void Client::minimize(bool avoid_animation)
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules(Rules::Minimize);
-    workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
+    FocusChain::self()->update(this, FocusChain::MakeLast);
     // TODO: merge signal with s_minimized
     emit clientMinimized(this, !avoid_animation);
 
@@ -1406,8 +1407,8 @@ void Client::setSkipTaskbar(bool b, bool from_outside)
     info->setState(b ? NET::SkipTaskbar : 0, NET::SkipTaskbar);
     updateWindowRules(Rules::SkipTaskbar);
     if (was_wants_tab_focus != wantsTabFocus())
-        workspace()->updateFocusChains(this,
-                                       isActive() ? Workspace::FocusChainMakeFirst : Workspace::FocusChainUpdate);
+        FocusChain::self()->update(this,
+                                          isActive() ? FocusChain::MakeFirst : FocusChain::Update);
     emit skipTaskbarChanged();
 }
 
@@ -1478,7 +1479,7 @@ void Client::setDesktop(int desktop)
         c2->setDesktop(desktop);
     }
 
-    workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
+    FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
     updateWindowRules(Rules::Desktop);
 
@@ -1552,7 +1553,7 @@ void Client::updateActivities(bool includeTransients)
         */
     if (includeTransients)
         workspace()->updateOnAllActivitiesOfTransients(this);
-    workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
+    FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
     updateWindowRules(Rules::Activity);
 
@@ -1947,12 +1948,12 @@ void Client::setClientShown(bool shown)
         map(Allowed);
         takeFocus(Allowed);
         autoRaise();
-        workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
+        FocusChain::self()->update(this, FocusChain::MakeFirst);
     } else {
         unmap(Allowed);
         // Don't move tabs to the end of the list when another tab get's activated
         if (isCurrentTab())
-            workspace()->updateFocusChains(this, Workspace::FocusChainMakeLast);
+            FocusChain::self()->update(this, FocusChain::MakeLast);
         addWorkspaceRepaint(visibleRect());
     }
 }

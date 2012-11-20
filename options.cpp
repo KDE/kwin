@@ -294,7 +294,7 @@ void Options::setSeparateScreenFocus(bool separateScreenFocus)
         return;
     }
     m_separateScreenFocus = separateScreenFocus;
-    emit separateScreenFocusChanged();
+    emit separateScreenFocusChanged(m_separateScreenFocus);
 }
 
 void Options::setActiveMouseScreen(bool activeMouseScreen)

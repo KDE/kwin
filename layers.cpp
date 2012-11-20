@@ -78,6 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "utils.h"
 #include "client.h"
+#include "focuschain.h"
 #include "workspace.h"
 #include "tabbox.h"
 #include "group.h"
@@ -459,40 +460,7 @@ void Workspace::restack(Client* c, Client* under)
     }
 
     assert(unconstrained_stacking_order.contains(c));
-    for (uint desktop = 1; desktop <= VirtualDesktopManager::self()->count(); ++desktop) {
-        // do for every virtual desktop to handle the case of onalldesktop windows
-        if (c->wantsTabFocus() && c->isOnDesktop(desktop) && focus_chain[ desktop ].contains(under)) {
-            if (Client::belongToSameApplication(under, c)) {
-                // put it after the active window if it's the same app
-                focus_chain[ desktop ].removeAll(c);
-                focus_chain[ desktop ].insert(focus_chain[ desktop ].indexOf(under), c);
-            } else {
-                // put it in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
-                focus_chain[ desktop ].removeAll(c);
-                for (int i = focus_chain[ desktop ].size() - 1; i >= 0; --i) {
-                    if (Client::belongToSameApplication(under, focus_chain[ desktop ].at(i))) {
-                        focus_chain[ desktop ].insert(i, c);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    // the same for global_focus_chain
-    if (c->wantsTabFocus() && global_focus_chain.contains(under)) {
-        if (Client::belongToSameApplication(under, c)) {
-            global_focus_chain.removeAll(c);
-            global_focus_chain.insert(global_focus_chain.indexOf(under), c);
-        } else {
-            global_focus_chain.removeAll(c);
-            for (int i = global_focus_chain.size() - 1; i >= 0; --i) {
-                if (Client::belongToSameApplication(under, global_focus_chain.at(i))) {
-                    global_focus_chain.insert(i, c);
-                    break;
-                }
-            }
-        }
-    }
+    FocusChain::self()->moveAfterClient(c, under);
     updateStackingOrder();
 }
 

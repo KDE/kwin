@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "composite.h"
+#include "focuschain.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -269,6 +270,14 @@ void Workspace::init()
     connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
     connect(this, SIGNAL(clientActivated(KWin::Client*)), screenEdges, SIGNAL(checkBlocking()));
 #endif
+
+    FocusChain *focusChain = FocusChain::create(this);
+    connect(this, SIGNAL(clientRemoved(KWin::Client*)), focusChain, SLOT(remove(KWin::Client*)));
+    connect(this, SIGNAL(clientActivated(KWin::Client*)), focusChain, SLOT(setActiveClient(KWin::Client*)));
+    connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), focusChain, SLOT(resize(uint,uint)));
+    connect(VirtualDesktopManager::self(), SIGNAL(currentChanged(uint,uint)), focusChain, SLOT(setCurrentDesktop(uint,uint)));
+    connect(options, SIGNAL(separateScreenFocusChanged(bool)), focusChain, SLOT(setSeparateScreenFocus(bool)));
+    focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
     XLowerWindow(display(), supportWindow->winId());   // See usage in layers.cpp
@@ -610,7 +619,7 @@ void Workspace::addClient(Client* c, allowed_t)
         if (active_client == NULL && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
             requestFocus(c);   // TODO: Make sure desktop is active after startup if there's no other window active
     } else {
-        updateFocusChains(c, FocusChainUpdate);   // Add to focus chain if not already there
+        FocusChain::self()->update(c, FocusChain::Update);
         clients.append(c);
     }
     if (!unconstrained_stacking_order.contains(c))
@@ -685,9 +694,6 @@ void Workspace::removeClient(Client* c, allowed_t)
     clients.removeAll(c);
     desktops.removeAll(c);
     x_stacking_dirty = true;
-    for (uint i = 1; i <= VirtualDesktopManager::self()->count(); ++i)
-        focus_chain[i].removeAll(c);
-    global_focus_chain.removeAll(c);
     attention_chain.removeAll(c);
     showing_desktop_clients.removeAll(c);
     Group* group = findGroup(c->window());
@@ -754,71 +760,6 @@ void Workspace::removeDeleted(Deleted* c, allowed_t)
     unconstrained_stacking_order.removeAll(c);
     stacking_order.removeAll(c);
     x_stacking_dirty = true;
-}
-
-void Workspace::updateFocusChains(Client* c, FocusChainChange change)
-{
-    if (!c->wantsTabFocus()) { // Doesn't want tab focus, remove
-        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); ++i)
-            focus_chain[i].removeAll(c);
-        global_focus_chain.removeAll(c);
-        return;
-    }
-    if (c->desktop() == NET::OnAllDesktops) {
-        // Now on all desktops, add it to focus_chains it is not already in
-        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); i++) {
-            // Making first/last works only on current desktop, don't affect all desktops
-            if (i == VirtualDesktopManager::self()->current()
-                    && (change == FocusChainMakeFirst || change == FocusChainMakeLast)) {
-                focus_chain[i].removeAll(c);
-                if (change == FocusChainMakeFirst)
-                    focus_chain[i].append(c);
-                else
-                    focus_chain[i].prepend(c);
-            } else if (!focus_chain[i].contains(c)) {
-                // Add it after the active one
-                if (active_client != NULL && active_client != c &&
-                        !focus_chain[i].isEmpty() && focus_chain[i].last() == active_client)
-                    focus_chain[i].insert(focus_chain[i].size() - 1, c);
-                else
-                    focus_chain[i].append(c);   // Otherwise add as the first one
-            }
-        }
-    } else { // Now only on desktop, remove it anywhere else
-        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); i++) {
-            if (c->isOnDesktop(i)) {
-                if (change == FocusChainMakeFirst) {
-                    focus_chain[i].removeAll(c);
-                    focus_chain[i].append(c);
-                } else if (change == FocusChainMakeLast) {
-                    focus_chain[i].removeAll(c);
-                    focus_chain[i].prepend(c);
-                } else if (!focus_chain[i].contains(c)) {
-                    // Add it after the active one
-                    if (active_client != NULL && active_client != c &&
-                            !focus_chain[i].isEmpty() && focus_chain[i].last() == active_client)
-                        focus_chain[i].insert(focus_chain[i].size() - 1, c);
-                    else
-                        focus_chain[i].append(c);   // Otherwise add as the first one
-                }
-            } else
-                focus_chain[i].removeAll(c);
-        }
-    }
-    if (change == FocusChainMakeFirst) {
-        global_focus_chain.removeAll(c);
-        global_focus_chain.append(c);
-    } else if (change == FocusChainMakeLast) {
-        global_focus_chain.removeAll(c);
-        global_focus_chain.prepend(c);
-    } else if (!global_focus_chain.contains(c)) {
-        // Add it after the active one
-        if (active_client != NULL && active_client != c &&
-                !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client)
-            global_focus_chain.insert(global_focus_chain.size() - 1, c);
-        else
-            global_focus_chain.append(c);   // Otherwise add as the first one
-    }
 }
 
 void Workspace::updateToolWindows(bool also_hide)
@@ -1230,7 +1171,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
 Client *Workspace::findClientToActivateOnDesktop(uint desktop)
 {
     if (movingClient != NULL && active_client == movingClient &&
-        focus_chain[desktop].contains(active_client) &&
+        FocusChain::self()->contains(active_client, desktop) &&
         active_client->isShown(true) && active_client->isOnCurrentDesktop()) {
         // A requestFocus call will fail, as the client is already active
         return active_client;
@@ -1255,14 +1196,7 @@ Client *Workspace::findClientToActivateOnDesktop(uint desktop)
             }
         }
     }
-    for (int i = focus_chain[desktop].size() - 1; i >= 0; --i) {
-        Client* tmp = focus_chain[desktop].at(i);
-        if (tmp->isShown(false) && tmp->isOnCurrentActivity()
-            && ( !options->isSeparateScreenFocus() || tmp->screen() == activeScreen() )) {
-            return tmp;
-        }
-    }
-    return NULL;
+    return FocusChain::self()->getForActivation(desktop);
 }
 
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -1410,19 +1344,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     //FIXME below here is a lot of focuschain stuff, probably all wrong now
     if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
-        if (movingClient != NULL && active_client == movingClient &&
-                focus_chain[VirtualDesktopManager::self()->current()].contains(active_client) &&
-                active_client->isShown(true) && active_client->isOnCurrentDesktop())
-            c = active_client; // The requestFocus below will fail, as the client is already active
-        if (!c) {
-            for (int i = focus_chain[VirtualDesktopManager::self()->current()].size() - 1; i >= 0; --i) {
-                if (focus_chain[VirtualDesktopManager::self()->current()].at(i)->isShown(false) &&
-                        focus_chain[VirtualDesktopManager::self()->current()].at(i)->isOnCurrentActivity()) {
-                    c = focus_chain[VirtualDesktopManager::self()->current()].at(i);
-                    break;
-                }
-            }
-        }
+        c = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->current());
     }
     // If "unreasonable focus policy" and active_client is on_all_desktops and
     // under mouse (Hence == old_active_client), conserve focus.
@@ -1486,8 +1408,6 @@ void Workspace::slotDesktopCountChanged(uint previousCount, uint newCount)
 {
     Q_UNUSED(previousCount)
     Placement::self()->reinitCascading(0);
-    // Make it +1, so that it can be accessed as [1..numberofdesktops]
-    focus_chain.resize(newCount + 1);
 
     resetClientAreas(newCount);
 }

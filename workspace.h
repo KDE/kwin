@@ -253,9 +253,6 @@ public:
 #endif
     bool hasTabBox() const;
 
-    const ClientList &globalFocusChain() const {
-        return global_focus_chain;
-    }
     KActionCollection* actionCollection() const {
         return keys;
     }
@@ -374,12 +371,6 @@ public:
     bool checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data);
 
     void focusToNull(); // SELI TODO: Public?
-    enum FocusChainChange {
-        FocusChainMakeFirst,
-        FocusChainMakeLast,
-        FocusChainUpdate
-    };
-    void updateFocusChains(Client* c, FocusChainChange change);
 
     bool forcedGlobalMouseGrab() const;
     void clientShortcutUpdated(Client* c);
@@ -653,8 +644,6 @@ private:
     bool force_restacking;
     mutable ToplevelList x_stacking; // From XQueryTree()
     mutable bool x_stacking_dirty;
-    QVector< ClientList > focus_chain; // Currently ative last
-    ClientList global_focus_chain; // This one is only for things like tabbox's MRU
     ClientList should_get_focus; // Last is most recent
     ClientList attention_chain;
 

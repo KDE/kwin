@@ -744,7 +744,7 @@ Q_SIGNALS:
     void delayFocusIntervalChanged();
     void shadeHoverChanged();
     void shadeHoverIntervalChanged();
-    void separateScreenFocusChanged();
+    void separateScreenFocusChanged(bool);
     void activeMouseScreenChanged();
     void placementChanged();
     void borderSnapZoneChanged();

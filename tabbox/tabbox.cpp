@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "client.h"
 #include "effects.h"
+#include "focuschain.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 // Qt
@@ -104,7 +105,7 @@ QString TabBoxHandlerImpl::desktopName(int desktop) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) const
 {
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
-        Client* next = Workspace::self()->tabBox()->nextClientFocusChain(c->client());
+        Client* next = FocusChain::self()->nextMostRecentlyUsed(c->client());
         if (next)
             return next->tabBoxClient();
     }
@@ -113,7 +114,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient*
 
 QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
 {
-    if (Client *c = m_tabBox->firstClientFocusChain()) {
+    if (Client *c = FocusChain::self()->firstMostRecentlyUsed()) {
         return QWeakPointer<TabBoxClient>(c->tabBoxClient());
     } else {
         return QWeakPointer<TabBoxClient>();
@@ -123,7 +124,7 @@ QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
 bool TabBoxHandlerImpl::isInFocusChain(TabBoxClient *client) const
 {
     if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl*>(client)) {
-        return Workspace::self()->globalFocusChain().contains(c->client());
+        return FocusChain::self()->contains(c->client());
     }
     return false;
 }
@@ -1491,50 +1492,6 @@ int TabBox::previousDesktopStatic(int iDesktop) const
 {
     DesktopPrevious functor;
     return functor(iDesktop, true);
-}
-
-/*!
-  auxiliary functions to travers all clients according to the focus
-  order. Useful for kwms Alt-tab feature.
-*/
-Client* TabBox::nextClientFocusChain(Client* c) const
-{
-    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
-    if (globalFocusChain.isEmpty())
-        return 0;
-    int pos = globalFocusChain.indexOf(c);
-    if (pos == -1)
-        return globalFocusChain.last();
-    if (pos == 0)
-        return globalFocusChain.last();
-    pos--;
-    return globalFocusChain[ pos ];
-}
-
-/*!
-  auxiliary functions to travers all clients according to the focus
-  order. Useful for kwms Alt-tab feature.
-*/
-Client* TabBox::previousClientFocusChain(Client* c) const
-{
-    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
-    if (globalFocusChain.isEmpty())
-        return 0;
-    int pos = globalFocusChain.indexOf(c);
-    if (pos == -1)
-        return globalFocusChain.first();
-    pos++;
-    if (pos == globalFocusChain.count())
-        return globalFocusChain.first();
-    return globalFocusChain[ pos ];
-}
-
-Client *TabBox::firstClientFocusChain() const
-{
-    const ClientList &globalFocusChain = Workspace::self()->globalFocusChain();
-    if (globalFocusChain.isEmpty())
-        return NULL;
-    return globalFocusChain.first();
 }
 
 /*!

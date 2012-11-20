@@ -95,6 +95,7 @@ set(kwin_KDEINIT_SRCS
    client.cpp 
    client_machine.cpp
    tabgroup.cpp
+   focuschain.cpp
    placement.cpp 
    atoms.cpp 
    utils.cpp 

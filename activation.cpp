@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "client.h"
+#include "focuschain.h"
 #include "workspace.h"
 
 #include <fixx11h.h>
@@ -244,7 +245,7 @@ void Workspace::setActiveClient(Client* c, allowed_t)
     if (active_client != NULL)
         last_active_client = active_client;
     if (active_client) {
-        updateFocusChains(active_client, FocusChainMakeFirst);
+        FocusChain::self()->update(active_client, FocusChain::MakeFirst);
         active_client->demandAttention(false);
     }
     pending_take_activity = NULL;
@@ -401,13 +402,6 @@ void Workspace::clientHidden(Client* c)
     activateNextClient(c);
 }
 
-static inline bool isUsableFocusCandidate(Client *c, Client *prev, bool respectScreen)
-{
-    return c != prev &&
-           c->isShown(false) && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
-           (!respectScreen || c->isOnScreen(prev ? prev->screen() : Workspace::self()->activeScreen()));
-}
-
 Client *Workspace::clientUnderMouse(int screen) const
 {
     ToplevelList::const_iterator it = stackingOrder().constEnd();
@@ -478,18 +472,11 @@ bool Workspace::activateNextClient(Client* c)
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
-        if (c  && (get_focus = c->transientFor()) && isUsableFocusCandidate(get_focus, c, options->isSeparateScreenFocus())) {
+        if (c  && (get_focus = c->transientFor()) && FocusChain::self()->isUsableFocusCandidate(get_focus, c)) {
             raiseClient(get_focus);   // also raise - we don't know where it came from
         } else {
             // nope, ask the focus chain for the next candidate
-            get_focus = NULL; // reset from the inline assignment above
-            for (int i = focus_chain[desktop].size() - 1; i >= 0; --i) {
-                Client* ci = focus_chain[desktop].at(i);
-                if (isUsableFocusCandidate(ci, c, options->isSeparateScreenFocus())) {
-                    get_focus = ci;
-                    break; // we're done
-                }
-            }
+            get_focus = FocusChain::self()->nextForDesktop(c, desktop);
         }
     }
 
@@ -512,19 +499,8 @@ void Workspace::setCurrentScreen(int new_screen)
     if (!options->focusPolicyIsReasonable())
         return;
     closeActivePopup();
-    Client* get_focus = NULL;
     const int desktop = VirtualDesktopManager::self()->current();
-    for (int i = focus_chain[desktop].count() - 1;
-            i >= 0;
-            --i) {
-        Client* ci = focus_chain[desktop].at(i);
-        if (!ci->isShown(false) || !ci->isOnCurrentDesktop() || !ci->isOnCurrentActivity())
-            continue;
-        if (ci->screen() == new_screen) {
-            get_focus = ci;
-            break;
-        }
-    }
+    Client *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
     if (get_focus == NULL)
         get_focus = findDesktop(true, desktop);
     if (get_focus != NULL && get_focus != mostRecentlyActivatedClient())

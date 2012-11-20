@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-X11.h>
 
 #include "client.h"
+#include "focuschain.h"
 #include "workspace.h"
 #include "atoms.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -354,7 +355,7 @@ bool Workspace::workspaceEvent(XEvent * e)
             // e->xmaprequest.window is different from e->xany.window
             // TODO this shouldn't be necessary now
             c->windowEvent(e);
-            updateFocusChains(c, FocusChainUpdate);
+            FocusChain::self()->update(c, FocusChain::Update);
         } else if ( true /*|| e->xmaprequest.parent != root */ ) {
             // NOTICE don't check for the parent being the root window, this breaks when some app unmaps
             // a window, changes something and immediately maps it back, without giving KWin
