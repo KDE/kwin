@@ -58,8 +58,6 @@ class KActionCollection;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
-class QSlider;
-class QPushButton;
 
 namespace KWin
 {
@@ -858,9 +856,6 @@ private:
     Window null_focus_window;
     bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
-
-    QSlider* transSlider;
-    QPushButton* transButton;
 
 #ifdef KWIN_BUILD_KAPPMENU
     //used for menu available before window is mapped
