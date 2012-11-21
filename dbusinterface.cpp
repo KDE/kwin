@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "dbusinterface.h"
 // kwin
+// TODO: remove together with deprecated methods
+#include "client.h"
 #include "composite.h"
 #include "effects.h"
 #include "kwinadaptor.h"
@@ -48,6 +50,21 @@ DBusInterface::~DBusInterface()
 {
 }
 
+void DBusInterface::circulateDesktopApplications()
+{
+    Workspace *ws = Workspace::self();
+    const QList<Client*> &desktops = ws->desktopList();
+    if (desktops.count() > 1) {
+        bool change_active = ws->activeClient()->isDesktop();
+        ws->raiseClient(ws->findDesktop(false, currentDesktop()));
+        if (change_active)   // if the previously topmost Desktop was active, activate this new one
+            ws->activateClient(ws->findDesktop(true, currentDesktop()));
+    }
+    // if there's no active client, make desktop the active one
+    if (desktops.count() > 0 && ws->activeClient() == NULL && ws->mostRecentlyActivatedClient() == NULL)
+        ws->activateClient(ws->findDesktop(true, currentDesktop()));
+}
+
 // wrap void methods with no arguments to Workspace
 #define WRAP(name) \
 void DBusInterface::name() \
@@ -56,7 +73,6 @@ void DBusInterface::name() \
 }
 
 WRAP(cascadeDesktop)
-WRAP(circulateDesktopApplications)
 WRAP(killWindow)
 WRAP(nextDesktop)
 WRAP(previousDesktop)

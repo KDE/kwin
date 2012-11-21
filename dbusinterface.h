@@ -59,6 +59,9 @@ public:
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
     Q_NOREPLY void cascadeDesktop();
+    /**
+     * @deprecated
+     **/
     void circulateDesktopApplications();
     int currentDesktop();
     QList<int> decorationSupportedColors();

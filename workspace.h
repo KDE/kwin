@@ -458,7 +458,6 @@ public:
     QList<int> decorationSupportedColors() const;
     void nextDesktop();
     void previousDesktop();
-    void circulateDesktopApplications();
     bool waitForCompositingSetup();
     bool stopActivity(const QString &id);
     bool startActivity(const QString &id);

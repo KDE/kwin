@@ -510,20 +510,6 @@ void Workspace::restoreSessionStackingOrder(Client* c)
     unconstrained_stacking_order.append(c);
 }
 
-void Workspace::circulateDesktopApplications()
-{
-    if (desktops.count() > 1) {
-        bool change_active = activeClient()->isDesktop();
-        raiseClient(findDesktop(false, currentDesktop()));
-        if (change_active)   // if the previously topmost Desktop was active, activate this new one
-            activateClient(findDesktop(true, currentDesktop()));
-    }
-    // if there's no active client, make desktop the active one
-    if (desktops.count() > 0 && activeClient() == NULL && should_get_focus.count() == 0)
-        activateClient(findDesktop(true, currentDesktop()));
-}
-
-
 /*!
   Returns a stacking order based upon \a list that fulfills certain contained.
  */
