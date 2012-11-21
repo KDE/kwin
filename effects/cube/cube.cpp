@@ -298,7 +298,6 @@ bool CubeEffect::loadShader()
         return false;
     }
 
-    ShaderManager *shaderManager = ShaderManager::instance();
     // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
     cylinderShader = new GLShader(cylinderVertexshader, fragmentshader);
     if (!cylinderShader->isValid()) {
