@@ -714,10 +714,6 @@ private:
 
     Window findSpecialEventWindow(XEvent* e);
 
-    void randomPlacement(Client* c);
-    void smartPlacement(Client* c);
-    void cascadePlacement(Client* c, bool re_init = false);
-
     // Desktop names and number of desktops
     void loadDesktopSettings();
     void saveDesktopSettings();
