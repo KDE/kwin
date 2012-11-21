@@ -120,11 +120,6 @@ bool CubeEffect::supported()
 
 void CubeEffect::reconfigure(ReconfigureFlags)
 {
-    loadConfig("Cube");
-}
-
-void CubeEffect::loadConfig(QString config)
-{
     CubeConfig::self()->readConfig();
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border);

@@ -165,7 +165,6 @@ private:
     void paintCylinderCap();
     void paintSphereCap();
     bool loadShader();
-    void loadConfig(QString config);
     void rotateCube();
     void rotateToDesktop(int desktop);
     void setActive(bool active);
