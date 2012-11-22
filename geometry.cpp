@@ -763,43 +763,6 @@ void Workspace::setClientIsMoving(Client *c)
         --block_focus;
 }
 
-/*!
-  Cascades all clients on the current desktop
- */
-void Workspace::cascadeDesktop()
-{
-// TODO XINERAMA this probably is not right for xinerama
-    Q_ASSERT(block_stacking_updates == 0);
-    initPositioning->reinitCascading(currentDesktop());
-    QRect area = clientArea(PlacementArea, QPoint(0, 0), currentDesktop());
-    foreach (Toplevel *toplevel, stackingOrder()) {
-        Client *client = qobject_cast<Client*>(toplevel);
-        if (!client ||
-                (!client->isOnDesktop(currentDesktop())) ||
-                (client->isMinimized())                  ||
-                (client->isOnAllDesktops())              ||
-                (!client->isMovable()))
-            continue;
-        initPositioning->placeCascaded(client, area);
-    }
-}
-
-/*!
-  Unclutters the current desktop by smart-placing all clients
-  again.
- */
-void Workspace::unclutterDesktop()
-{
-    for (int i = clients.size() - 1; i >= 0; i--) {
-        if ((!clients.at(i)->isOnDesktop(currentDesktop())) ||
-                (clients.at(i)->isMinimized())                  ||
-                (clients.at(i)->isOnAllDesktops())              ||
-                (!clients.at(i)->isMovable()))
-            continue;
-        initPositioning->placeSmart(clients.at(i), QRect());
-    }
-}
-
 // When kwin crashes, windows will not be gravitated back to their original position
 // and will remain offset by the size of the decoration. So when restarting, fix this
 // (the property with the size of the frame remains on the window after the crash).

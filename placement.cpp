@@ -543,6 +543,40 @@ void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement)
     }
 }
 
+void Placement::cascadeDesktop()
+{
+// TODO XINERAMA this probably is not right for xinerama
+    Workspace *ws = Workspace::self();
+    const int desktop = ws->currentDesktop();
+    reinitCascading(desktop);
+    // TODO: make area const once placeFoo methods are fixed to take a const QRect&
+    QRect area = ws->clientArea(PlacementArea, QPoint(0, 0), desktop);
+    foreach (Toplevel *toplevel, ws->stackingOrder()) {
+        Client *client = qobject_cast<Client*>(toplevel);
+        if (!client ||
+                (!client->isOnCurrentDesktop()) ||
+                (client->isMinimized())         ||
+                (client->isOnAllDesktops())     ||
+                (!client->isMovable()))
+            continue;
+        placeCascaded(client, area);
+    }
+}
+
+void Placement::unclutterDesktop()
+{
+    const ClientList &clients = Workspace::self()->clientList();
+    for (int i = clients.size() - 1; i >= 0; i--) {
+        Client *client = clients.at(i);
+        if ((!client->isOnCurrentDesktop()) ||
+                (client->isMinimized())     ||
+                (client->isOnAllDesktops()) ||
+                (!client->isMovable()))
+            continue;
+        placeSmart(client, QRect());
+    }
+}
+
 QRect Placement::checkArea(const Client* c, const QRect& area)
 {
     if (area.isNull())

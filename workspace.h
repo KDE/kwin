@@ -448,8 +448,6 @@ public:
     bool decorationSupportsBlurBehind() const;
 
     // D-Bus interface
-    void cascadeDesktop();
-    void unclutterDesktop();
     void doNotManage(const QString&);
     /**
      * @deprecated

@@ -72,11 +72,20 @@ void DBusInterface::name() \
     Workspace::self()->name();\
 }
 
-WRAP(cascadeDesktop)
 WRAP(killWindow)
 WRAP(nextDesktop)
 WRAP(previousDesktop)
 WRAP(reconfigure)
+
+#undef WRAP
+
+#define WRAP(name) \
+void DBusInterface::name() \
+{\
+    Placement::self()->name();\
+}
+
+WRAP(cascadeDesktop)
 WRAP(unclutterDesktop)
 
 #undef WRAP

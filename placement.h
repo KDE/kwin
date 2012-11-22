@@ -71,6 +71,15 @@ public:
 
     void reinitCascading(int desktop);
 
+    /**
+     * Cascades all clients on the current desktop
+     **/
+    void cascadeDesktop();
+    /**
+     *   Unclutters the current desktop by smart-placing all clients again.
+     **/
+    void unclutterDesktop();
+
     static Policy policyFromString(const QString& policy, bool no_special);
     static const char* policyToString(Policy policy);
 
