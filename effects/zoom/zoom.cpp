@@ -151,6 +151,8 @@ void ZoomEffect::showCursor()
 
 void ZoomEffect::hideCursor()
 {
+    if (mouseTracking == MouseTrackingProportional && mousePointer == MousePointerKeep)
+        return; // don't replace the actual cursor by a static image for no reason.
     if (!isMouseHidden) {
         // try to load the cursor-theme into a OpenGL texture and if successful then hide the mouse-pointer
         recreateTexture();
