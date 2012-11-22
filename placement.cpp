@@ -39,11 +39,25 @@ namespace KWin
 
 #ifndef KCMRULES
 
+Placement *Placement::s_self = NULL;
+
+Placement *Placement::create(Workspace *ws)
+{
+    Q_ASSERT(!s_self);
+    s_self = new Placement(ws);
+    return s_self;
+}
+
 Placement::Placement(Workspace* w)
 {
     m_WorkspacePtr = w;
 
     reinitCascading(0);
+}
+
+Placement::~Placement()
+{
+    s_self = NULL;
 }
 
 /*!

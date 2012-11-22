@@ -36,8 +36,7 @@ class Client;
 class Placement
 {
 public:
-
-    Placement(Workspace* w);
+    virtual ~Placement();
 
     /**
      * Placement policies. How workspace decides the way windows get positioned
@@ -75,14 +74,23 @@ public:
     static Policy policyFromString(const QString& policy, bool no_special);
     static const char* policyToString(Policy policy);
 
+    /**
+     * Singleton getter for this Placement object once the Placement has been created.
+     * @see create
+     **/
+    static Placement *self();
+    /**
+     * Creates the Placement singleton.
+     **/
+    static Placement *create(Workspace *ws);
+
 private:
+    explicit Placement(Workspace* w);
 
     void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(Client* c, QRect& area, Policy next = Unknown);
     void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown);
     QRect checkArea(const Client*c, const QRect& area);
-
-    Placement();
 
     //CT needed for cascading+
     struct DesktopCascadingInfo {
@@ -94,7 +102,14 @@ private:
     QList<DesktopCascadingInfo> cci;
 
     Workspace* m_WorkspacePtr;
+    static Placement *s_self;
 };
+
+inline
+Placement *Placement::self()
+{
+    return s_self;
+}
 
 } // namespace
 

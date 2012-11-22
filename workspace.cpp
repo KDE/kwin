@@ -374,7 +374,7 @@ void Workspace::init()
     m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<int>(numberOfDesktops()));
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
-    initPositioning = new Placement(this);
+    initPositioning = Placement::create(this);
 
     loadDesktopSettings();
     updateDesktopLayout();
