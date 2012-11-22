@@ -73,7 +73,6 @@ class Client;
 class Outline;
 class RootInfo;
 class PluginMgr;
-class Placement;
 class Rules;
 class Scripting;
 class UserActionsMenu;
@@ -827,8 +826,6 @@ private:
     bool workspaceInit;
 
     KStartupInfo* startup;
-
-    Placement* initPositioning;
 
     QVector<QRect> workarea; // Array of workareas for virtual desktops
     // Array of restricted areas that window cannot be moved into

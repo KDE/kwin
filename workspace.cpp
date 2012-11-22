@@ -374,7 +374,7 @@ void Workspace::init()
     m_desktopFocusChain = m_activitiesDesktopFocusChain.insert(QString(), QVector<int>(numberOfDesktops()));
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
-    initPositioning = Placement::create(this);
+    Placement::create(this);
 
     loadDesktopSettings();
     updateDesktopLayout();
@@ -546,7 +546,7 @@ Workspace::~Workspace()
     delete supportWindow;
     delete mgr;
     delete startup;
-    delete initPositioning;
+    delete Placement::self();
     delete client_keys_dialog;
     while (!rules.isEmpty()) {
         delete rules.front();
@@ -1640,7 +1640,7 @@ void Workspace::setNumberOfDesktops(int n)
         return;
     int old_number_of_desktops = numberOfDesktops();
     desktopCount_ = n;
-    initPositioning->reinitCascading(0);
+    Placement::self()->reinitCascading(0);
     updateDesktopLayout(); // Make sure the layout is still valid
 
     if (currentDesktop() > n)
