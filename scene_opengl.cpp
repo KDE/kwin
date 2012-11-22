@@ -145,10 +145,11 @@ void OpenGLBackend::idle()
 
 SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     : Scene(ws)
-    , init_ok(false)
+    , init_ok(true)
     , m_backend(backend)
 {
     if (m_backend->isFailed()) {
+        init_ok = false;
         return;
     }
 
@@ -158,11 +159,13 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     if (!hasGLExtension("GL_ARB_texture_non_power_of_two")
             && !hasGLExtension("GL_ARB_texture_rectangle")) {
         kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        init_ok = false;
         return; // error
     }
 #endif
     if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(8, 0)) {
         kError(1212) << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
+        init_ok = false;
         return;
     }
 #ifndef KWIN_HAVE_OPENGLES
@@ -472,6 +475,10 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     : SceneOpenGL(Workspace::self(), backend)
     , m_colorCorrection(new ColorCorrection(this))
 {
+    if (!init_ok) {
+        // base ctor already failed
+        return;
+    }
     // Initialize color correction before the shaders
     kDebug(1212) << "Color correction:" << options->isColorCorrected();
     m_colorCorrection->setEnabled(options->isColorCorrected());
@@ -480,6 +487,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
 
     if (!ShaderManager::instance()->isValid()) {
         kDebug(1212) << "No Scene Shaders available";
+        init_ok = false;
         return;
     }
 
@@ -487,11 +495,10 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
     if (checkGLError("Init")) {
         kError(1212) << "OpenGL 2 compositing setup failed";
+        init_ok = false;
         return; // error
     }
     kDebug(1212) << "OpenGL 2 compositing successfully initialized";
-
-    init_ok = true;
 }
 
 SceneOpenGL2::~SceneOpenGL2()
@@ -599,15 +606,19 @@ SceneOpenGL1::SceneOpenGL1(OpenGLBackend *backend)
     : SceneOpenGL(Workspace::self(), backend)
     , m_resetModelViewProjectionMatrix(true)
 {
+    if (!init_ok) {
+        // base ctor already failed
+        return;
+    }
     ShaderManager::disable();
     setupModelViewProjectionMatrix();
     if (checkGLError("Init")) {
         kError(1212) << "OpenGL 1 compositing setup failed";
+        init_ok = false;
         return; // error
     }
 
     kDebug(1212) << "OpenGL 1 compositing successfully initialized";
-    init_ok = true;
 }
 
 SceneOpenGL1::~SceneOpenGL1()
