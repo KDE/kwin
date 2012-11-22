@@ -367,7 +367,7 @@ bool Client::manage(Window w, bool isMapped)
     }
     if (!placementDone) {
         // Placement needs to be after setting size
-        workspace()->place(this, area);
+        Placement::self()->place(this, area);
         placementDone = true;
     }
 

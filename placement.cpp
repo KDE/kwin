@@ -885,19 +885,6 @@ int Workspace::packPositionDown(const Client* cl, int oldy, bool bottom_edge) co
     return newy;
 }
 
-/*!
-  Asks the internal positioning object to place a client
-*/
-void Workspace::place(Client* c, QRect& area)
-{
-    initPositioning->place(c, area);
-}
-
-void Workspace::placeSmart(Client* c, const QRect& area)
-{
-    initPositioning->placeSmart(c, area);
-}
-
 #endif
 
 } // namespace
