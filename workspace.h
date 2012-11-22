@@ -522,7 +522,6 @@ public:
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
-    void toggleTopDockShadows(bool on);
     Client* getMovingClient() {
         return movingClient;
     }
