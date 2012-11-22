@@ -922,11 +922,7 @@ void Client::updateUrgency()
 
 void Client::shortcutActivated()
 {
-    Client* raised_client = workspace()->topClientOnDesktop(desktop(), -1);
-    if (isActive() && this == raised_client) // if client is already raised, pressing its shorcut hides it, giving the shortcut a 'toggle' effect
-        setMinimized(true);
-    else
-        workspace()->activateClient(this, true);   // force
+    workspace()->activateClient(this, true);   // force
 }
 
 //****************************************
