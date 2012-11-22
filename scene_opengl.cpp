@@ -577,6 +577,7 @@ void SceneOpenGL2::slotColorCorrectedChanged()
 #ifdef KWIN_HAVE_OPENGL_1
 bool SceneOpenGL1::supported(OpenGLBackend *backend)
 {
+    Q_UNUSED(backend)
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
         if (qstrcmp(forceEnv, "O1") == 0) {
