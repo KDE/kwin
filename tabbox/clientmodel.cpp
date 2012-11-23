@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabboxconfig.h"
 #include "tabboxhandler.h"
 // Qt
+// TODO: remove with Qt 5, only for HTML escaping the caption
+#include <QTextDocument>
 #include <QTextStream>
 // KDE
 #include <KLocale>
@@ -69,8 +71,13 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     }
     switch(role) {
     case Qt::DisplayRole:
-    case CaptionRole:
-        return client->caption();
+    case CaptionRole: {
+        QString caption = client->caption();
+        if (Qt::mightBeRichText(caption)) {
+            caption = Qt::escape(caption);
+        }
+        return caption;
+    }
     case ClientRole:
         return qVariantFromValue((void*)client.data());
     case DesktopNameRole: {
