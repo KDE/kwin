@@ -27,6 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <kdebug.h>
 #include <QApplication>
+#include <QMenu>
 #include <kglobal.h>
 #include <assert.h>
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
@@ -225,6 +226,13 @@ void KDecoration::showWindowMenu(QPoint pos)
 
 void KDecoration::showApplicationMenu(const QPoint &p)
 {
+    //FIXME: Remove this workaround
+    // Without showing/hiding this fake widget,
+    // menu showed by kded-appmenu will fail to grab input
+    //TODO: Find a proper solution
+    QMenu fake;
+    fake.show();
+    fake.hide();
     bridge_->showApplicationMenu(p);
 }
 
