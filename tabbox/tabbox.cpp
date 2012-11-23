@@ -1340,12 +1340,29 @@ void TabBox::keyPress(int keyQt)
         }
         forward = forwardShortcut.contains(keyQt);
         backward = backwardShortcut.contains(keyQt);
-        if (!forward && !backward) {
+        if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
             // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
             // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
             keyQt &= ~Qt::ShiftModifier;
             forward = forwardShortcut.contains(keyQt);
             backward = backwardShortcut.contains(keyQt);
+            if (!(forward || backward)) {
+                // the tabkey is however overly special and withdrawing the shift state will not turn backtab into tab
+                // yet kglobalaccel fires for both. since we ensure this is in a Shift condition, try the other key
+                // TODO: Check requirement regarding Qt5
+
+                // NOTICE: it is very important to restore the Shift modifier, since otherwise we can't distiguish
+                // between the regular alt+tab / alt+shift+tab anymore!!
+                if ((keyQt & Qt::Key_Backtab) == Qt::Key_Backtab) {// regular case
+                    keyQt &= ~Qt::Key_Backtab;
+                    keyQt |= (Qt::Key_Tab|Qt::ShiftModifier);
+                } else if ((keyQt & Qt::Key_Tab) == Qt::Key_Tab) { // just to be very sure ... :-(
+                    keyQt &= ~Qt::Key_Tab;
+                    keyQt |= (Qt::Key_Backtab|Qt::ShiftModifier);
+                }
+                forward = forwardShortcut.contains(keyQt);
+                backward = backwardShortcut.contains(keyQt);
+            }
         }
         if (forward || backward) {
             kDebug(125) << "== " << forwardShortcut.toString()
@@ -1357,6 +1374,34 @@ void TabBox::keyPress(int keyQt)
                   m_cutWalkThroughDesktopList.contains(keyQt);
         backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
                    m_cutWalkThroughDesktopListReverse.contains(keyQt);
+        if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
+            // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
+            // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
+            keyQt &= ~Qt::ShiftModifier;
+            forward = m_cutWalkThroughDesktops.contains(keyQt) ||
+                  m_cutWalkThroughDesktopList.contains(keyQt);
+            backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
+                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
+            if (!(forward || backward)) {
+                // the tabkey is however overly special and withdrawing the shift state will not turn backtab into tab
+                // yet kglobalaccel fires for both. since we ensure this is in a Shift condition, try the other key
+                // TODO: Check requirement regarding Qt5
+
+                // NOTICE: it is very important to restore the Shift modifier, since otherwise we can't distiguish
+                // between the regular alt+tab / alt+shift+tab anymore!!
+                if ((keyQt & Qt::Key_Backtab) == Qt::Key_Backtab) {// regular case
+                    keyQt &= ~Qt::Key_Backtab;
+                    keyQt |= (Qt::Key_Tab|Qt::ShiftModifier);
+                } else if ((keyQt & Qt::Key_Tab) == Qt::Key_Tab) { // just to be very sure ... :-(
+                    keyQt &= ~Qt::Key_Tab;
+                    keyQt |= (Qt::Key_Backtab|Qt::ShiftModifier);
+                }
+                forward = m_cutWalkThroughDesktops.contains(keyQt) ||
+                  m_cutWalkThroughDesktopList.contains(keyQt);
+                backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
+                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
+            }
+        }
         if (forward || backward)
             walkThroughDesktops(forward);
     }
