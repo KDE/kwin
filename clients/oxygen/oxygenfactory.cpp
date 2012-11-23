@@ -27,8 +27,8 @@
 #include "oxygenfactory.h"
 #include "oxygenfactory.moc"
 #include "oxygenclient.h"
+#include "oxygenexceptionlist.h"
 
-#include <cassert>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
@@ -63,35 +63,19 @@ namespace Oxygen
     {
 
         if( changed & SettingColors )
-        { shadowCache().invalidateCaches(); }
+        { _shadowCache.invalidateCaches(); }
 
         // read in the configuration
         setInitialized( false );
-        bool _configurationchanged = readConfig();
+        readConfig();
         setInitialized( true );
-
-        if( _configurationchanged || (changed & (SettingDecoration | SettingButtons | SettingBorder)) )
-        {
-
-            // returning true triggers all decorations to be re-created
-            return true;
-
-        } else {
-
-            // no need to re-create the decorations
-            // trigger repaint only
-            resetDecorations(changed);
-            return false;
-
-        }
+        return true;
 
     }
 
     //___________________________________________________
-    bool Factory::readConfig()
+    void Factory::readConfig()
     {
-
-        bool changed( false );
 
         /*
         always reload helper
@@ -101,34 +85,28 @@ namespace Oxygen
         helper().invalidateCaches();
         helper().reloadConfig();
 
+        // initialize default configuration and read
+        if( !_defaultConfiguration ) _defaultConfiguration = ConfigurationPtr(new Configuration());
+        _defaultConfiguration->setCurrentGroup( "Windeco" );
+        _defaultConfiguration->readConfig();
+
         // create a config object
         KConfig config("oxygenrc");
-        KConfigGroup group( config.group("Windeco") );
-        Configuration configuration( group );
-        if( !( configuration == defaultConfiguration() ) )
-        {
-            setDefaultConfiguration( configuration );
-            changed = true;
-        }
 
-        // read exceptionsreadConfig
-        ExceptionList exceptions( config );
-        if( !( exceptions == _exceptions ) )
-        {
-            _exceptions = exceptions;
-            changed = true;
-        }
+        // clear exceptions and read
+        ExceptionList exceptions;
+        exceptions.readConfig( config );
+        _exceptions = exceptions.get();
 
         // read shadowCache configuration
-        changed |= shadowCache().readConfig( config );
+        _shadowCache.readConfig();
+        _shadowCache.setAnimationsDuration( _defaultConfiguration->shadowAnimationsDuration() );
 
         // background pixmap
         {
             KConfigGroup group( config.group("Common") );
             helper().setBackgroundPixmap( group.readEntry( "BackgroundPixmap", "" ) );
         }
-
-        return changed;
 
     }
 
@@ -155,13 +133,8 @@ namespace Oxygen
             case AbilityButtonSpacer:
             case AbilityButtonShade:
 
-            //       // colors
-            //       case AbilityColorTitleBack:
-            //       case AbilityColorTitleFore:
-            //       case AbilityColorFrame:
-
             // compositing
-            case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
+            case AbilityProvidesShadow:
             return true;
 
             case AbilityUsesAlphaChannel:
@@ -181,59 +154,59 @@ namespace Oxygen
 
 
     //____________________________________________________________________
-    Configuration Factory::configuration( const Client& client )
+    Factory::ConfigurationPtr Factory::configuration( const Client& client )
     {
 
-        QString window_title;
-        QString class_name;
-        for( ExceptionList::const_iterator iter = _exceptions.constBegin(); iter != _exceptions.constEnd(); ++iter )
+        QString windowTitle;
+        QString className;
+        foreach( const ConfigurationPtr& configuration, _exceptions )
         {
 
             // discard disabled exceptions
-            if( !iter->enabled() ) continue;
+            if( !configuration->enabled() ) continue;
+
+            // discard exceptions with empty exception pattern
+            if( configuration->exceptionPattern().isEmpty() ) continue;
 
             /*
             decide which value is to be compared
             to the regular expression, based on exception type
             */
             QString value;
-            switch( iter->type() )
+            switch( configuration->exceptionType() )
             {
-                case Exception::WindowTitle:
+                case Configuration::ExceptionWindowTitle:
                 {
-                    value = window_title.isEmpty() ? (window_title = client.caption()):window_title;
+                    value = windowTitle.isEmpty() ? (windowTitle = client.caption()):windowTitle;
                     break;
                 }
 
-                case Exception::WindowClassName:
+                default:
+                case Configuration::ExceptionWindowClassName:
                 {
-                    if( class_name.isEmpty() )
+                    if( className.isEmpty() )
                     {
                         // retrieve class name
                         KWindowInfo info( client.windowId(), 0, NET::WM2WindowClass );
-                        QString window_class_name( info.windowClassName() );
+                        QString window_className( info.windowClassName() );
                         QString window_class( info.windowClassClass() );
-                        class_name = window_class_name + ' ' + window_class;
+                        className = window_className + ' ' + window_class;
                     }
 
-                    value = class_name;
+                    value = className;
                     break;
                 }
 
-                default: assert( false );
-
             }
 
-            if( iter->regExp().indexIn( value ) < 0 ) continue;
-
-            Configuration configuration( defaultConfiguration() );
-            configuration.readException( *iter );
-            return configuration;
+            // check matching
+            if( QRegExp( configuration->exceptionPattern() ).indexIn( value ) >= 0 )
+            { return configuration; }
 
         }
 
-        return defaultConfiguration();
+        return _defaultConfiguration;
 
     }
 
-} //namespace Oxygen
+}

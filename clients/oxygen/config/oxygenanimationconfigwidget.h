@@ -27,8 +27,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "../oxygendecorationdefines.h"
 #include "oxygenbaseanimationconfigwidget.h"
-#include "../oxygenconfiguration.h"
 
 namespace Oxygen
 {
@@ -51,12 +51,8 @@ namespace Oxygen
         virtual ~AnimationConfigWidget( void );
 
         //! configuration
-        void setConfiguration( const Configuration& configuration )
+        void setConfiguration( ConfigurationPtr configuration )
         { _configuration = configuration; }
-
-        //! configuration
-        const Configuration& configuration( void )  const
-        { return _configuration; }
 
         public slots:
 
@@ -74,7 +70,7 @@ namespace Oxygen
         private:
 
         //! local configuration, needed to handle I/O
-        Configuration _configuration;
+        ConfigurationPtr _configuration;
 
         //!@name animations
         //@{

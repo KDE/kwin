@@ -26,55 +26,56 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenlistmodel.h"
-#include "../oxygenexception.h"
+#include "oxygenconfiguration.h"
+#include "../oxygendecorationdefines.h"
 
 namespace Oxygen
 {
-    
+
     //! qlistview for object counters
-    class ExceptionModel: public ListModel<Exception>
+    class ExceptionModel: public ListModel<ConfigurationPtr>
     {
-        
+
         public:
-        
+
         //! number of columns
         enum { nColumns = 3 };
-        
+
         //! column type enumeration
         enum ColumnType {
             ENABLED,
             TYPE,
             REGEXP
         };
-        
-        
+
+
         //!@name methods reimplemented from base class
         //@{
-        
+
         // return data for a given index
         virtual QVariant data(const QModelIndex &index, int role) const;
-        
+
         //! header data
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-        
+
         //! number of columns for a given index
         virtual int columnCount(const QModelIndex& ) const
         { return nColumns; }
-        
+
         //@}
-        
+
         protected:
-        
+
         //! sort
         virtual void privateSort( int, Qt::SortOrder )
         {}
-        
+
         private:
-        
+
         //! column titles
         static const QString _columnTitles[ nColumns ];
-        
+
     };
-    
+
 }
 #endif

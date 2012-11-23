@@ -27,7 +27,6 @@
 
 #include "ui_oxygenexceptionlistwidget.h"
 #include "oxygenexceptionmodel.h"
-#include "../oxygenexceptionlist.h"
 
 //! QDialog used to commit selected files
 namespace Oxygen
@@ -42,13 +41,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit ExceptionListWidget( QWidget* = 0, Configuration defaultConfiguration = Configuration() );
+        explicit ExceptionListWidget( QWidget* = 0 );
 
         //! set exceptions
-        void setExceptions( const ExceptionList& );
+        void setExceptions( const ConfigurationList& );
 
         //! get exceptions
-        ExceptionList exceptions( void ) const;
+        ConfigurationList exceptions( void ) const;
 
         signals:
 
@@ -94,12 +93,9 @@ namespace Oxygen
         void resizeColumns( void ) const;
 
         //! check exception
-        bool checkException( Exception& );
+        bool checkException( ConfigurationPtr );
 
         private:
-
-        //! default configuration
-        Configuration _defaultConfiguration;
 
         //! model
         ExceptionModel _model;

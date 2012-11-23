@@ -294,7 +294,7 @@ namespace Oxygen
             } else {
 
                 QPoint position(
-                    item._boundingRect.right() - _client.configuration().buttonSize() - _client.layoutMetric(KCommonDecoration::LM_TitleEdgeRight),
+                    item._boundingRect.right() - _client.buttonSize() - _client.layoutMetric(KCommonDecoration::LM_TitleEdgeRight),
                     item._boundingRect.top() + _client.layoutMetric( KCommonDecoration::LM_TitleEdgeTop ) );
 
                 if( item._closeButton.data()->isHidden() ) item._closeButton.data()->show();

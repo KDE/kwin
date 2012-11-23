@@ -30,7 +30,9 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <map>
+#include "oxygenconfiguration.h"
+#include "ui_oxygendetectwidget.h"
+
 #include <KDialog>
 #include <QtCore/QEvent>
 #include <QtCore/QByteArray>
@@ -38,9 +40,6 @@
 #include <QtGui/QLabel>
 
 #include <kwindowsystem.h>
-
-#include "../oxygenexception.h"
-#include "ui_oxygendetectwidget.h"
 
 namespace Oxygen
 {
@@ -66,11 +65,11 @@ namespace Oxygen
         { return _info; }
 
         //! exception type
-        Exception::Type exceptionType() const
+        Configuration::EnumExceptionType exceptionType() const
         {
-            if( ui.windowClassCheckBox->isChecked() ) return Exception::WindowClassName;
-            else if( ui.windowTitleCheckBox->isChecked() ) return Exception::WindowTitle;
-            else return Exception::WindowClassName;
+            if( ui.windowClassCheckBox->isChecked() ) return Configuration::ExceptionWindowClassName;
+            else if( ui.windowTitleCheckBox->isChecked() ) return Configuration::ExceptionWindowTitle;
+            else return Configuration::ExceptionWindowClassName;
         }
 
         signals:

@@ -25,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenexceptionlist.h"
+#include "oxygenutil.h"
 
 #include <QtCore/QTextStream>
 
@@ -32,61 +33,82 @@ namespace Oxygen
 {
 
     //______________________________________________________________
-    void ExceptionList::read( const KConfig& config )
+    void ExceptionList::readConfig( KConfig& config )
     {
 
-        clear();
+        _exceptions.clear();
 
-        for( int index = 0; true; index++ )
+        QString groupName;
+        for( int index = 0; KConfigGroup( &config, groupName = exceptionGroupName( index ) ).exists(); ++index )
         {
 
+            // create exception
+            Configuration exception;
+
+            // reset group
+            Util::readConfig( &exception, &config, groupName );
+
+            // create new configuration
+            ConfigurationPtr configuration( new Configuration() );
+            Util::readConfig( configuration.data(), &config );
+
+            // apply changes from exception
+            configuration->setEnabled( exception.enabled() );
+            configuration->setExceptionType( exception.exceptionType() );
+            configuration->setExceptionPattern( exception.exceptionPattern() );
+            configuration->setMask( exception.mask() );
+
+            // propagate all features found in mask to the output configuration
+            if( exception.mask() & FrameBorder ) configuration->setFrameBorder( exception.frameBorder() );
+            if( exception.mask() & BlendColor ) configuration->setBlendStyle( exception.blendStyle() );
+            if( exception.mask() & DrawSeparator ) configuration->setSeparatorMode( exception.separatorMode() );
+            if( exception.mask() & TitleOutline ) configuration->setDrawTitleOutline( exception.drawTitleOutline() );
+            if( exception.mask() & SizeGripMode ) configuration->setDrawSizeGrip( exception.drawSizeGrip() );
+            configuration->setHideTitleBar( exception.hideTitleBar() );
+
+            // append to exceptions
+            _exceptions.append( configuration );
+
+        }
+
+    }
+
+    //______________________________________________________________
+    void ExceptionList::writeConfig( KConfig& config )
+    {
+
+        // remove all existing exceptions
+        int index(0);
+        while( true )
+        {
             KConfigGroup group( &config, exceptionGroupName( index ) );
             if( group.exists() )
             {
-                Exception exception( group );
-                if( exception.regExp().isValid() ) push_back( exception );
+
+                group.deleteGroup();
+                ++index;
+
             } else break;
+        }
+
+        // rewrite current exceptions
+        index = 0;
+        foreach( const ConfigurationPtr& exception, _exceptions )
+        {
+
+            Util::writeConfig( exception.data(), &config, exceptionGroupName( index ) );
+            ++index;
 
         }
 
     }
-
-    //______________________________________________________________
-    void ExceptionList::write( KConfig& config )
-    {
-
-        // remove previous group
-        for( int index = 0; true ;index++ )
-        {
-            KConfigGroup group( &config, exceptionGroupName( index ) );
-            if( group.exists() ) group.deleteGroup();
-            else break;
-        }
-
-        // also add exceptions
-        int index(0);
-        for( ExceptionList::const_iterator iter = constBegin(); iter != constEnd(); ++iter, index++ )
-        {
-
-            KConfigGroup group( &config, exceptionGroupName( index ) );
-            iter->write( group );
-
-        }
-
-
-    }
-
-    //______________________________________________________________
-    ExceptionList ExceptionList::defaultList( void )
-    { return ExceptionList(); }
 
     //_______________________________________________________________________
     QString ExceptionList::exceptionGroupName( int index )
     {
-        QString out;
-        QTextStream( &out ) << "Windeco Exception " << index;
-        return out;
+      QString out;
+      QTextStream( &out ) << "Windeco Exception " << index;
+      return out;
     }
-
 
 }

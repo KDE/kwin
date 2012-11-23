@@ -1,0 +1,6 @@
+File=oxygenconfigdata.kcfgc
+ClassName=Configuration
+NameSpace=Oxygen
+Singleton=false
+Mutators=true
+GlobalEnums=true

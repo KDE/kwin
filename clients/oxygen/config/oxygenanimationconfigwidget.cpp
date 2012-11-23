@@ -84,38 +84,38 @@ namespace Oxygen
     void AnimationConfigWidget::load( void )
     {
 
-        animationsEnabled()->setChecked( _configuration.animationsEnabled() );
+        animationsEnabled()->setChecked( _configuration->animationsEnabled() );
 
-        _buttonAnimations->setEnabled( _configuration.buttonAnimationsEnabled() );
-        _buttonAnimations->setDuration( _configuration.buttonAnimationsDuration() );
+        _buttonAnimations->setEnabled( _configuration->buttonAnimationsEnabled() );
+        _buttonAnimations->setDuration( _configuration->buttonAnimationsDuration() );
 
-        _titleAnimations->setEnabled( _configuration.titleAnimationsEnabled() );
-        _titleAnimations->setDuration( _configuration.titleAnimationsDuration() );
+        _titleAnimations->setEnabled( _configuration->titleAnimationsEnabled() );
+        _titleAnimations->setDuration( _configuration->titleAnimationsDuration() );
 
-        _shadowAnimations->setEnabled( _configuration.shadowAnimationsEnabled() );
-        _shadowAnimations->setDuration( _configuration.shadowAnimationsDuration() );
+        _shadowAnimations->setEnabled( _configuration->shadowAnimationsEnabled() );
+        _shadowAnimations->setDuration( _configuration->shadowAnimationsDuration() );
 
-        _tabAnimations->setEnabled( _configuration.tabAnimationsEnabled() );
-        _tabAnimations->setDuration( _configuration.tabAnimationsDuration() );
+        _tabAnimations->setEnabled( _configuration->tabAnimationsEnabled() );
+        _tabAnimations->setDuration( _configuration->tabAnimationsDuration() );
     }
 
     //_______________________________________________
     void AnimationConfigWidget::save( void )
     {
 
-        _configuration.setAnimationsEnabled( animationsEnabled()->isChecked() );
+        _configuration->setAnimationsEnabled( animationsEnabled()->isChecked() );
 
-        _configuration.setButtonAnimationsEnabled( _buttonAnimations->enabled() );
-        _configuration.setButtonAnimationsDuration( _buttonAnimations->duration() );
+        _configuration->setButtonAnimationsEnabled( _buttonAnimations->enabled() );
+        _configuration->setButtonAnimationsDuration( _buttonAnimations->duration() );
 
-        _configuration.setTitleAnimationsEnabled( _titleAnimations->enabled() );
-        _configuration.setTitleAnimationsDuration( _titleAnimations->duration() );
+        _configuration->setTitleAnimationsEnabled( _titleAnimations->enabled() );
+        _configuration->setTitleAnimationsDuration( _titleAnimations->duration() );
 
-        _configuration.setShadowAnimationsEnabled( _shadowAnimations->enabled() );
-        _configuration.setShadowAnimationsDuration( _shadowAnimations->duration() );
+        _configuration->setShadowAnimationsEnabled( _shadowAnimations->enabled() );
+        _configuration->setShadowAnimationsDuration( _shadowAnimations->duration() );
 
-        _configuration.setTabAnimationsEnabled( _tabAnimations->enabled() );
-        _configuration.setTabAnimationsDuration( _tabAnimations->duration() );
+        _configuration->setTabAnimationsEnabled( _tabAnimations->enabled() );
+        _configuration->setTabAnimationsDuration( _tabAnimations->duration() );
 
         setChanged( false );
 
@@ -127,18 +127,18 @@ namespace Oxygen
 
         bool modified( false );
 
-        if( animationsEnabled()->isChecked() != _configuration.animationsEnabled() ) modified = true;
-        else if( _buttonAnimations->enabled() != _configuration.buttonAnimationsEnabled() ) modified = true;
-        else if( _buttonAnimations->duration() != _configuration.buttonAnimationsDuration() ) modified = true;
+        if( animationsEnabled()->isChecked() != _configuration->animationsEnabled() ) modified = true;
+        else if( _buttonAnimations->enabled() != _configuration->buttonAnimationsEnabled() ) modified = true;
+        else if( _buttonAnimations->duration() != _configuration->buttonAnimationsDuration() ) modified = true;
 
-        else if( _titleAnimations->enabled() != _configuration.titleAnimationsEnabled() ) modified = true;
-        else if( _titleAnimations->duration() != _configuration.titleAnimationsDuration() ) modified = true;
+        else if( _titleAnimations->enabled() != _configuration->titleAnimationsEnabled() ) modified = true;
+        else if( _titleAnimations->duration() != _configuration->titleAnimationsDuration() ) modified = true;
 
-        else if( _shadowAnimations->enabled() != _configuration.shadowAnimationsEnabled() ) modified = true;
-        else if( _shadowAnimations->duration() != _configuration.shadowAnimationsDuration() ) modified = true;
+        else if( _shadowAnimations->enabled() != _configuration->shadowAnimationsEnabled() ) modified = true;
+        else if( _shadowAnimations->duration() != _configuration->shadowAnimationsDuration() ) modified = true;
 
-        else if( _tabAnimations->enabled() != _configuration.tabAnimationsEnabled() ) modified = true;
-        else if( _tabAnimations->duration() != _configuration.tabAnimationsDuration() ) modified = true;
+        else if( _tabAnimations->enabled() != _configuration->tabAnimationsEnabled() ) modified = true;
+        else if( _tabAnimations->duration() != _configuration->tabAnimationsDuration() ) modified = true;
 
         setChanged( modified );
 

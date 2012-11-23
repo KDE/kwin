@@ -11,14 +11,14 @@ set(kwin_oxygen_SRCS
      oxygenbutton.cpp
      oxygenclient.cpp
      oxygenclientgroupitemdata.cpp
-     oxygenconfiguration.cpp
      oxygendecohelper.cpp
-     oxygenexception.cpp
      oxygenexceptionlist.cpp
      oxygenfactory.cpp
      oxygensizegrip.cpp
      oxygentitleanimationdata.cpp
   )
+
+kde4_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 
 kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})
 target_link_libraries(

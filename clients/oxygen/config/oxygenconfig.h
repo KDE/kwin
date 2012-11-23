@@ -30,15 +30,16 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenconfigurationui.h"
+#include "oxygenconfiguration.h"
+#include "../oxygendecorationdefines.h"
+
 #include <KConfig>
 #include <QtGui/QPalette>
-
-#include "oxygenconfigurationui.h"
 
 namespace Oxygen {
 
     class Configuration;
-    class ShadowConfiguration;
 
     // oxygen configuration object
     class Config: public QObject
@@ -84,16 +85,7 @@ namespace Oxygen {
         private:
 
         //! load configuration
-        void loadConfiguration( const Configuration& );
-
-        //! load configuration
-        void loadShadowConfiguration( QPalette::ColorGroup, const ShadowConfiguration& );
-
-        //! load configuration
-        void saveShadowConfiguration( QPalette::ColorGroup, const ShadowConfigurationUi& ) const;
-
-        //! returns true if shadow configuration changed
-        bool shadowConfigurationChanged( const ShadowConfiguration&, const ShadowConfigurationUi& ) const;
+        void loadConfiguration( ConfigurationPtr );
 
         //! returns true if exception list is changed
         bool exceptionListChanged( void ) const;

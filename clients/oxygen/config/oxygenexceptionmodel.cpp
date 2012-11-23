@@ -27,7 +27,7 @@
 #include <KLocale>
 namespace Oxygen
 {
-    
+
     //_______________________________________________
     const QString ExceptionModel::_columnTitles[ ExceptionModel::nColumns ] =
     {
@@ -35,57 +35,71 @@ namespace Oxygen
         i18n("Exception Type"),
         i18n("Regular Expression")
     };
-    
+
     //__________________________________________________________________
     QVariant ExceptionModel::data( const QModelIndex& index, int role ) const
     {
-        
+
         // check index, role and column
         if( !index.isValid() ) return QVariant();
-        
+
         // retrieve associated file info
-        const Exception& exception( get(index) );
-        
+        const ConfigurationPtr& configuration( get(index) );
+
         // return text associated to file and column
         if( role == Qt::DisplayRole )
         {
-            
+
             switch( index.column() )
             {
-                case TYPE: return exception.typeName( true );
-                case REGEXP: return exception.regExp().pattern();
+                case TYPE:
+                {
+                    switch( configuration->exceptionType() )
+                    {
+
+                        case Configuration::ExceptionWindowTitle:
+                        return i18n( "Window Title" );
+
+                        default:
+                        case Configuration::ExceptionWindowClassName:
+                        return i18n( "Window Class Name" );
+                    }
+
+                }
+
+                case REGEXP: return configuration->exceptionPattern();
                 default: return QVariant();
                 break;
             }
-            
+
         } else if( role == Qt::CheckStateRole &&  index.column() == ENABLED ) {
-            
-            return exception.enabled() ? Qt::Checked : Qt::Unchecked;
-            
+
+            return configuration->enabled() ? Qt::Checked : Qt::Unchecked;
+
         } else if( role == Qt::ToolTipRole &&  index.column() == ENABLED ) {
-            
+
             return i18n("Enable/disable this exception");
-            
+
         }
-        
-        
+
+
         return QVariant();
     }
-    
+
     //__________________________________________________________________
     QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        
+
         if(
             orientation == Qt::Horizontal &&
             role == Qt::DisplayRole &&
             section >= 0 &&
             section < nColumns )
         { return _columnTitles[section]; }
-        
+
         // return empty
         return QVariant();
-        
+
     }
-    
+
 }

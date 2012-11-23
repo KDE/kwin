@@ -1,7 +1,7 @@
-#ifndef ShadowConfigurationUi_h
-#define ShadowConfigurationUi_h
+#ifndef oxygendecorationdefines_h
+#define oxygendecorationdefines_h
 //////////////////////////////////////////////////////////////////////////////
-// ShadowConfigurationUi.h
+// oxygendecorationdefines.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,35 +25,58 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QGroupBox>
-#include <ui_oxygenshadowconfigurationui.h>
+#include "oxygenconfiguration.h"
+
+#include <QtCore/QSharedPointer>
+#include <QtCore/QList>
+
 namespace Oxygen
 {
 
-    //_____________________________________________
-    class ShadowConfigurationUi: public QGroupBox
+    //! this should move to some global declaration
+    typedef QSharedPointer<Configuration> ConfigurationPtr;
+    typedef QList<ConfigurationPtr> ConfigurationList;
+    typedef QListIterator<ConfigurationPtr> ConfigurationListIterator;
+
+    //! buttons
+    enum ButtonType {
+        ButtonHelp=0,
+        ButtonMax,
+        ButtonMin,
+        ButtonClose,
+        ButtonMenu,
+        ButtonSticky,
+        ButtonAbove,
+        ButtonBelow,
+        ButtonShade,
+        ButtonApplicationMenu,
+        ButtonTypeCount,
+
+        // Close only one tab
+        ButtonItemClose=100,
+
+        // shows the window menu for one tab
+        ButtonItemMenu
+
+    };
+
+    //! buttons status
+    enum ButtonStatus {
+        Normal = 0,
+        Hovered = 1<<0,
+        Pressed = 1<<1
+    };
+
+    //! exception
+    enum ExceptionMask
     {
-
-        Q_OBJECT
-
-        public:
-
-        //! constructor
-        explicit ShadowConfigurationUi( QWidget* );
-        Ui_ShadowConfiguraionUI ui;
-
-        signals:
-
-        //! emmitted when configuration is changed
-        void changed( void );
-
-        protected slots:
-
-        //! update enable state of outer color chooser
-        void enableOuterColor( void )
-        { ui.outerColor->setEnabled( isChecked() && ui.useOuterColor->isChecked() ); }
-
+        None = 0,
+        TitleAlignment = 1<<0,
+        DrawSeparator = 1<<2,
+        TitleOutline = 1<<3,
+        FrameBorder = 1<<4,
+        BlendColor = 1<<5,
+        SizeGripMode = 1<<6,
     };
 
 }

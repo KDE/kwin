@@ -25,7 +25,6 @@
 
 #include "oxygenconfigurationui.h"
 #include "oxygenanimationconfigwidget.h"
-#include "../oxygenconfiguration.h"
 
 #include <kdeversion.h>
 
@@ -47,49 +46,12 @@ namespace Oxygen
 
         ui.setupUi( this );
 
-        // basic configuration
-        ui.frameBorder->insertItems(0, QStringList()
-            << Configuration::frameBorderName( Configuration::BorderNone, true )
-            << Configuration::frameBorderName( Configuration::BorderNoSide, true )
-            << Configuration::frameBorderName( Configuration::BorderTiny, true )
-            << Configuration::frameBorderName( Configuration::BorderDefault, true )
-            << Configuration::frameBorderName( Configuration::BorderLarge, true )
-            << Configuration::frameBorderName( Configuration::BorderVeryLarge, true )
-            << Configuration::frameBorderName( Configuration::BorderHuge, true )
-            << Configuration::frameBorderName( Configuration::BorderVeryHuge, true )
-            << Configuration::frameBorderName( Configuration::BorderOversized, true )
-            );
+        // shadow configuration
+        ui.activeShadowConfiguration->setGroup( QPalette::Active );
+        ui.inactiveShadowConfiguration->setGroup( QPalette::Inactive );
 
-        ui.titleAlignment->insertItems(0, QStringList()
-            << Configuration::titleAlignmentName( Qt::AlignLeft, true )
-            << Configuration::titleAlignmentName( Qt::AlignHCenter, true, false )
-            << Configuration::titleAlignmentName( Qt::AlignHCenter, true, true )
-            << Configuration::titleAlignmentName( Qt::AlignRight, true )
-            );
-
-        ui.buttonSize->insertItems(0, QStringList()
-            << Configuration::buttonSizeName( Configuration::ButtonSmall, true )
-            << Configuration::buttonSizeName( Configuration::ButtonDefault, true )
-            << Configuration::buttonSizeName( Configuration::ButtonLarge, true )
-            << Configuration::buttonSizeName( Configuration::ButtonVeryLarge, true )
-            << Configuration::buttonSizeName( Configuration::ButtonHuge, true )
-            );
-
-        // advanced configuration
-        ui.blendColor->insertItems(0, QStringList()
-            << Configuration::blendColorName( Configuration::NoBlending, true )
-            << Configuration::blendColorName( Configuration::RadialBlending, true )
-            << Configuration::blendColorName( Configuration::BlendFromStyle, true )
-            );
-
-        // draw size grip
-        ui.sizeGripMode->insertItems(0, QStringList()
-            << Configuration::sizeGripModeName( Configuration::SizeGripNever, true )
-            << Configuration::sizeGripModeName( Configuration::SizeGripWhenNeeded, true )
-            );
-
-        shadowConfigurations.push_back( ui.activeShadowConfiguration );
-        shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
+        shadowConfigurations.append( ui.activeShadowConfiguration );
+        shadowConfigurations.append( ui.inactiveShadowConfiguration );
 
         // connections
         connect( ui.titleOutline, SIGNAL(toggled(bool)), ui.separatorMode, SLOT(setDisabled(bool)) );
@@ -104,11 +66,11 @@ namespace Oxygen
         connect( ui.buttonSize, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.frameBorder, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
         connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
-        connect( ui.sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
 
+        connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
+        connect( ui.drawSizeGrip, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
-        connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
         connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
         connect( ui._expertModeButton, SIGNAL(pressed()), SLOT(toggleExpertModeInternal()) );
@@ -146,9 +108,8 @@ namespace Oxygen
         // narrow button spacing
         ui.narrowButtonSpacing->setVisible( _expertMode );
 
-        // size grip mode
-        ui.sizeGripModeLabel->setVisible( _expertMode );
-        ui.sizeGripMode->setVisible( _expertMode );
+        // size grip
+        ui.drawSizeGrip->setVisible( _expertMode );
 
         // 'basic' animations enabled flag
         ui.animationsEnabled->setVisible( !_expertMode );

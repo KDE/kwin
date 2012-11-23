@@ -81,7 +81,7 @@ namespace Oxygen
 
         //! true if animations are used
         bool animationsEnabled( void ) const
-        { return configuration().animationsEnabled(); }
+        { return _configuration->animationsEnabled(); }
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
@@ -94,8 +94,8 @@ namespace Oxygen
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
         {
-            if( configuration().drawTitleOutline() ) return false;
-            switch( configuration().separatorMode() )
+            if( _configuration->drawTitleOutline() ) return false;
+            switch( _configuration->separatorMode() )
             {
                 case Configuration::SeparatorAlways:
                 return true;
@@ -114,7 +114,7 @@ namespace Oxygen
         bool hideTitleBar( void ) const
         {
             return
-                configuration().hideTitleBar() &&
+                _configuration->hideTitleBar() &&
                 !isShade() &&
                 tabCount() == 1;
         }
@@ -131,7 +131,7 @@ namespace Oxygen
         virtual void reset( unsigned long changed );
 
         //! return associated configuration
-        const Configuration& configuration( void ) const
+        Factory::ConfigurationPtr configuration( void ) const
         { return _configuration; }
 
         //!@name glow animation
@@ -201,6 +201,15 @@ namespace Oxygen
         //! default buttons located on the right
         virtual QString defaultButtonsRight() const;
 
+        //! title alignment
+        inline Qt::Alignment titleAlignment( void ) const;
+
+        //! button size
+        inline int buttonSize( void ) const;
+
+        //! frame border
+        inline int frameBorder( void ) const;
+
         //!@name status change methods (overloaded from KCommonDecorationUnstable)
         //@{
 
@@ -243,9 +252,9 @@ namespace Oxygen
         ShadowCache::Key key( void ) const
         {
             ShadowCache::Key key;
-            key.active = ( isActive() || isForcedActive() ) && configuration().useOxygenShadows();
+            key.active = ( isActive() || isForcedActive() ) && shadowCache().isEnabled( QPalette::Active );
             key.isShade = isShade();
-            key.hasBorder = ( configuration().frameBorder() > Configuration::BorderNone );
+            key.hasBorder = ( _configuration->frameBorder() > Configuration::BorderNone );
             return key;
         }
 
@@ -344,15 +353,15 @@ namespace Oxygen
 
         //! return true when activity change are animated
         bool shadowAnimationsEnabled( void ) const
-        { return ( animationsEnabled() && configuration().shadowAnimationsEnabled() && !isPreview() ); }
+        { return ( animationsEnabled() && _configuration->shadowAnimationsEnabled() && !isPreview() ); }
 
         //! return true when activity change are animated
         bool titleAnimationsEnabled( void ) const
         {
             return
                 animationsEnabled() &&
-                configuration().titleAnimationsEnabled() &&
-                !configuration().drawTitleOutline() &&
+                _configuration->titleAnimationsEnabled() &&
+                !_configuration->drawTitleOutline() &&
                 !hideTitleBar() &&
                 !isPreview();
         }
@@ -363,7 +372,7 @@ namespace Oxygen
             return
                 tabCount() >= 2 ||
                 _itemData.isAnimated() ||
-                ( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() );
+                ( (isActive()||glowIsAnimated()) && _configuration->drawTitleOutline() );
         }
 
         //! calculate mask
@@ -438,7 +447,7 @@ namespace Oxygen
         SizeGrip* _sizeGrip;
 
         //! configuration
-        Configuration _configuration;
+        Factory::ConfigurationPtr _configuration;
 
         //! glow animation
         Animation* _glowAnimation;
@@ -481,4 +490,56 @@ namespace Oxygen
 
 } // namespace Oxygen
 
-#endif // EXAMPLECLIENT_H
+//____________________________________________________
+Qt::Alignment Oxygen::Client::titleAlignment( void ) const
+{
+    switch( _configuration->titleAlignment() )
+    {
+        case Configuration::AlignLeft: return Qt::AlignLeft;
+        case Configuration::AlignRight: return Qt::AlignRight;
+
+        default:
+        case Configuration::AlignCenter:
+        case Configuration::AlignCenterFullWidth:
+        return Qt::AlignCenter;
+    }
+
+}
+
+//____________________________________________________
+int Oxygen::Client::buttonSize( void ) const
+{
+    switch( _configuration->buttonSize() )
+    {
+        case Configuration::ButtonSmall: return 18;
+
+        default:
+        case Configuration::ButtonDefault: return 20;
+        case Configuration::ButtonLarge: return 24;
+        case Configuration::ButtonVeryLarge: return 32;
+        case Configuration::ButtonHuge: return 48;
+    }
+
+}
+
+//____________________________________________________
+int Oxygen::Client::frameBorder( void ) const
+{
+    switch( _configuration->frameBorder() )
+    {
+        case Configuration::BorderNone: return 0;
+        case Configuration::BorderNoSide: return 1;
+
+        default:
+        case Configuration::BorderTiny: return 2;
+        case Configuration::BorderDefault: return 4;
+        case Configuration::BorderLarge: return 8;
+        case Configuration::BorderVeryLarge: return 12;
+        case Configuration::BorderHuge: return 18;
+        case Configuration::BorderVeryHuge: return 27;
+        case Configuration::BorderOversized: return 40;
+    }
+
+}
+
+#endif

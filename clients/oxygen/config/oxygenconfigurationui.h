@@ -25,15 +25,14 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <kdeversion.h>
+#include "ui_oxygenconfigurationui.h"
+#include "oxygenshadowconfigurationui.h"
+#include "oxygenexceptionlistwidget.h"
+
 #include <KComboBox>
 #include <QtGui/QWidget>
 #include <QtGui/QCheckBox>
 #include <QtCore/QVector>
-
-#include "ui_oxygenconfigurationui.h"
-#include "oxygenshadowconfigurationui.h"
-#include "oxygenexceptionlistwidget.h"
 
 namespace Oxygen
 {

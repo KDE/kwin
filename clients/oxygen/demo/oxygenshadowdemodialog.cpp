@@ -26,7 +26,6 @@
 
 #include "oxygenshadowdemodialog.h"
 #include "oxygenshadowdemodialog.moc"
-#include "oxygenshadowconfiguration.h"
 
 #include <QtGui/QDialogButtonBox>
 #include <QtDBus/QDBusConnection>
@@ -94,11 +93,8 @@ namespace Oxygen
     {
 
         // read shadow configurations
-        KConfig config( "oxygenrc" );
         _cache.invalidateCaches();
         _cache.setEnabled( true );
-        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Inactive, KConfigGroup( &config, "InactiveShadow") ) );
-        _cache.setShadowConfiguration( ShadowConfiguration( QPalette::Active, KConfigGroup( &config, "ActiveShadow") ) );
 
         // pass tileSets to UI
         ShadowCache::Key key;

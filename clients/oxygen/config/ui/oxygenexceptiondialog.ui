@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>460</width>
+    <width>512</width>
     <height>352</height>
    </rect>
   </property>
@@ -58,7 +58,18 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="KComboBox" name="exceptionType"/>
+       <widget class="KComboBox" name="exceptionType">
+        <item>
+         <property name="text">
+          <string>Window Class Name</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Window Title</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -79,7 +90,7 @@
       <item row="3" column="0">
        <widget class="QCheckBox" name="sizeGripCheckBox">
         <property name="text">
-         <string>Extra size grip display:</string>
+         <string>Add handle to resize windows with no border</string>
         </property>
        </widget>
       </item>
@@ -122,16 +133,100 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="KComboBox" name="frameBorderComboBox"/>
+       <widget class="KComboBox" name="frameBorderComboBox">
+        <item>
+         <property name="text">
+          <string>No Border</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No Side Borders</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Tiny</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Large</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Very Large</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Huge</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Very Huge</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Oversized</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="2" column="2">
-       <widget class="KComboBox" name="blendColorComboBox"/>
+       <widget class="KComboBox" name="blendColorComboBox">
+        <item>
+         <property name="text">
+          <string>Solid Color</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Radial Gradient</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Follow Style Hint</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="3" column="2">
-       <widget class="KComboBox" name="sizeGripComboBox"/>
+       <widget class="KComboBox" name="sizeGripComboBox">
+        <item>
+         <property name="text">
+          <string>Disabled</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Enabled</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="4" column="2">
-       <widget class="KComboBox" name="titleOutlineComboBox"/>
+       <widget class="KComboBox" name="titleOutlineComboBox">
+        <item>
+         <property name="text">
+          <string>Disabled</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Enabled</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="5" column="2">
        <widget class="KComboBox" name="separatorComboBox">

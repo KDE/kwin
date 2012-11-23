@@ -25,15 +25,14 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "ui_oxygenexceptiondialog.h"
+#include "../oxygendecorationdefines.h"
+
 #include <KDialog>
 #include <KLineEdit>
 #include <KComboBox>
 #include <QtGui/QCheckBox>
-
-#include <map>
-
-#include "../oxygenexception.h"
-#include "ui_oxygenexceptiondialog.h"
+#include <QtCore/QMap>
 
 namespace Oxygen
 {
@@ -52,10 +51,10 @@ namespace Oxygen
         explicit ExceptionDialog( QWidget* parent );
 
         //! set exception
-        void setException( Exception );
+        void setException( ConfigurationPtr );
 
-        //! get exception
-        Exception exception( void ) const;
+        //! save exception
+        void save( void );
 
         private slots:
 
@@ -68,13 +67,13 @@ namespace Oxygen
         Ui_OxygenExceptionWidget ui;
 
         //! map mask and checkbox
-        typedef std::map< Exception::AttributesMask, QCheckBox*> CheckBoxMap;
+        typedef QMap< ExceptionMask, QCheckBox*> CheckBoxMap;
 
         //! map mask and checkbox
         CheckBoxMap _checkBoxes;
 
         //! internal exception
-        Exception _exception;
+        ConfigurationPtr _exception;
 
         //! detection dialog
         DetectDialog* _detectDialog;

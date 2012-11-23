@@ -57,7 +57,7 @@ namespace Oxygen
         setAutoFillBackground(false);
         setAttribute(Qt::WA_NoSystemBackground);
 
-        unsigned int size( _client.configuration().buttonSize() );
+        int size( _client.buttonSize() );
         setFixedSize( size, size );
 
         setCursor(Qt::ArrowCursor);
@@ -96,18 +96,18 @@ namespace Oxygen
 
     //___________________________________________________
     bool Button::buttonAnimationsEnabled( void ) const
-    { return _client.animationsEnabled() && _client.configuration().buttonAnimationsEnabled(); }
+    { return _client.animationsEnabled() && _client.configuration()->buttonAnimationsEnabled(); }
 
     //___________________________________________________
     QSize Button::sizeHint() const
     {
-        unsigned int size( _client.configuration().buttonSize() );
+        unsigned int size( _client.buttonSize() );
         return QSize( size, size );
     }
 
     //___________________________________________________
     void Button::reset( unsigned long )
-    { _glowAnimation->setDuration( _client.configuration().buttonAnimationsDuration() ); }
+    { _glowAnimation->setDuration( _client.configuration()->buttonAnimationsDuration() ); }
 
     //___________________________________________________
     void Button::paint( QPainter& painter )
@@ -156,7 +156,7 @@ namespace Oxygen
         if( hasDecoration() )
         {
             // scale
-            qreal scale( (21.0*_client.configuration().buttonSize())/22.0 );
+            qreal scale( (21.0*_client.buttonSize())/22.0 );
 
             // pressed state
             const bool pressed(
@@ -175,7 +175,19 @@ namespace Oxygen
         if( isMenuButton() )
         {
 
-            const QPixmap& pixmap( _client.icon().pixmap( _client.configuration().iconScale() ) );
+            int iconScale( 0 );
+            switch( _client.buttonSize() )
+            {
+                case Configuration::ButtonSmall: iconScale = 13; break;
+
+                default:
+                case Configuration::ButtonDefault: iconScale = 16; break;
+                case Configuration::ButtonLarge: iconScale = 20; break;
+                case Configuration::ButtonVeryLarge: iconScale = 24; break;
+                case Configuration::ButtonHuge: iconScale = 35; break;
+            }
+
+            const QPixmap& pixmap( _client.icon().pixmap( iconScale ) );
             const double offset = 0.5*(width()-pixmap.width() );
             painter.drawPixmap(offset, offset-1, pixmap );
 

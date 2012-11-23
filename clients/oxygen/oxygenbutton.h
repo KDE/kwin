@@ -28,20 +28,15 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <kcommondecoration.h>
-
-#include "oxygenfactory.h"
 #include "oxygenanimation.h"
+#include "oxygendecorationdefines.h"
+#include "oxygendecohelper.h"
+
+#include <kcommondecoration.h>
 
 namespace Oxygen
 {
     class Client;
-
-    enum ButtonStatus {
-        Normal = 0,
-        Hovered = 1<<0,
-        Pressed = 1<<1
-    };
 
     Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 

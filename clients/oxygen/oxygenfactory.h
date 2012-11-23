@@ -27,43 +27,19 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenconfiguration.h"
+#include "oxygendecorationdefines.h"
+#include "oxygendecohelper.h"
+#include "oxygenshadowcache.h"
+
 #include <QtCore/QObject>
 #include <kdecorationfactory.h>
 #include <kdeversion.h>
-
-#include "oxygenconfiguration.h"
-#include "oxygendecohelper.h"
-#include "oxygenexceptionlist.h"
-#include "oxygenshadowcache.h"
 
 namespace Oxygen
 {
 
     class Client;
-
-    //! buttons
-    enum ButtonType {
-        ButtonHelp=0,
-        ButtonMax,
-        ButtonMin,
-        ButtonClose,
-        ButtonMenu,
-        ButtonSticky,
-        ButtonAbove,
-        ButtonBelow,
-        ButtonShade,
-        ButtonApplicationMenu,
-        ButtonTypeCount,
-
-        // Close only one tab
-        ButtonItemClose=100,
-
-        // shows the window menu for one tab
-        ButtonItemMenu
-
-    };
-
-    Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
     enum {
 
@@ -83,10 +59,10 @@ namespace Oxygen
 
         Q_OBJECT
 
-            public:
+        public:
 
-            //! constructor
-            Factory();
+        //! constructor
+        Factory();
 
         //! destructor
         virtual ~Factory();
@@ -116,29 +92,30 @@ namespace Oxygen
         virtual const ShadowCache& shadowCache( void ) const
         { return _shadowCache; }
 
-        //! get configuration for a give client
-        virtual Configuration configuration( const Client& );
+        //! pointer to configuration
+        typedef QSharedPointer<Configuration> ConfigurationPtr;
 
-        private:
+        //! get configuration for a give client
+        virtual ConfigurationPtr configuration( const Client& );
+
+        protected:
 
         //! read configuration from KConfig
-        bool readConfig();
-
-        //! default configuration
-        const Configuration& defaultConfiguration( void ) const
-        { return _defaultConfiguration; }
-
-        //! default configuration
-        Configuration& defaultConfiguration( void )
-        { return _defaultConfiguration; }
+        void readConfig();
 
         //! initialization
         void setInitialized( bool value )
         { _initialized = value; }
 
-        //! set default configuration
-        void setDefaultConfiguration( Configuration value )
-        { _defaultConfiguration = value; }
+        //! exception group name
+        QString exceptionGroupName( int index ) const
+        {
+            QString out;
+            QTextStream( &out ) << "Windeco Exception " << index;
+            return out;
+        }
+
+        private:
 
         //! initialization flag
         bool _initialized;
@@ -150,10 +127,10 @@ namespace Oxygen
         ShadowCache _shadowCache;
 
         //! default configuration
-        Configuration _defaultConfiguration;
+        ConfigurationPtr _defaultConfiguration;
 
-        //! exceptions
-        ExceptionList _exceptions;
+        //! list of exceptiosn
+        QList<ConfigurationPtr> _exceptions;
 
     };
 
