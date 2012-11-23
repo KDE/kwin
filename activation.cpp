@@ -517,10 +517,10 @@ void Workspace::setCurrentScreen(int new_screen)
         Client* ci = focus_chain[ currentDesktop()].at(i);
         if (!ci->isShown(false) || !ci->isOnCurrentDesktop() || !ci->isOnCurrentActivity())
             continue;
-        if (!ci->screen() == new_screen)
-            continue;
-        get_focus = ci;
-        break;
+        if (ci->screen() == new_screen) {
+            get_focus = ci;
+            break;
+        }
     }
     if (get_focus == NULL)
         get_focus = findDesktop(true, currentDesktop());
