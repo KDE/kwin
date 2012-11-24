@@ -47,17 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-static int nominalCursorSize(int iconSize)
-{
-    for (int i = 512; i > 8; i /= 2) {
-        if (i < iconSize)
-            return i;
-        if ((i * .75) < iconSize)
-            return int(i * .75);
-    }
-    return 8;
-}
-
 KWIN_EFFECT(zoom, ZoomEffect)
 
 ZoomEffect::ZoomEffect()
@@ -179,7 +168,6 @@ void ZoomEffect::recreateTexture()
     int iconSize = size.toInt(&ok);
     if (!ok)
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
-    iconSize = nominalCursorSize(iconSize);
 
     // load the cursor-theme image from the Xcursor-library
     XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", theme.toLocal8Bit(), iconSize);
