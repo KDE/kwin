@@ -132,7 +132,6 @@ QRegion KCommonDecorationWrapper::region(KDecorationDefines::Region r)
     QMetaObject::invokeMethod(decoration, "region",
         Qt::DirectConnection,
         Q_RETURN_ARG(QRegion, region),
-        Q_ARG(KDecorationDefines::Region,
-        KDecorationDefines::ExtendedBorderRegion));
+        Q_ARG(KDecorationDefines::Region, r));
     return region;
 }
