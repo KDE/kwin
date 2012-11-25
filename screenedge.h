@@ -114,6 +114,18 @@ public Q_SLOTS:
      * actions or disabled desktop switching.
      */
     void update(bool force=false);
+    /**
+     * Reconfigures the screen edges. That is reserves required borders.
+     **/
+    void reconfigure();
+    /**
+     * Reconfigures for virtual desktop switching, that is updates m_virtualDesktopSwitching.
+     **/
+    void reconfigureVirtualDesktopSwitching();
+    /**
+     * Updates the layout of virtual desktops, that is updates m_virtualDesktopLayout.
+     **/
+    void updateLayout();
 Q_SIGNALS:
     /**
      * Emitted when the @p border got activated and there is neither an effect nor a global
@@ -139,6 +151,18 @@ private:
     Time m_screenEdgeTimeLast;
     Time m_screenEdgeTimeLastTrigger;
     QPoint m_screenEdgePushPoint;
+    /**
+     * The virtual desktop switching mode when hitting screen edges. Either:
+     * @li never enabled
+     * @li enabled when moving windows
+     * @li always enabled
+     **/
+    int m_virtualDesktopSwitching;
+    /**
+     * Used to know whether desktop switching at top/bottom or left/right borders is supported
+     * by the layout of virtual desktops.
+     **/
+    Qt::Orientations m_virtualDesktopLayout;
 };
 }
 #endif // KWIN_SCREENEDGE_H

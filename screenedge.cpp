@@ -49,6 +49,8 @@ ScreenEdge::ScreenEdge()
     : QObject(NULL)
     , m_screenEdgeWindows(ELECTRIC_COUNT, None)
     , m_screenEdgeReserved(ELECTRIC_COUNT, 0)
+    , m_virtualDesktopSwitching(Options::ElectricDisabled)
+    , m_virtualDesktopLayout(0)
 {
 }
 
@@ -128,6 +130,52 @@ void ScreenEdge::restoreSize(ElectricBorder border)
     };
     XMoveResizeWindow(display(), m_screenEdgeWindows[border],
                       xywh[border][0], xywh[border][1], xywh[border][2], xywh[border][3]);
+}
+
+void ScreenEdge::reconfigureVirtualDesktopSwitching()
+{
+    const int newMode = options->electricBorders();
+    if (m_virtualDesktopSwitching == newMode) {
+        return;
+    }
+    if (m_virtualDesktopSwitching == Options::ElectricAlways) {
+        reserveDesktopSwitching(false, m_virtualDesktopLayout);
+    }
+    m_virtualDesktopSwitching = newMode;
+    if (m_virtualDesktopSwitching == Options::ElectricAlways) {
+        reserveDesktopSwitching(true, m_virtualDesktopLayout);
+    }
+    update();
+}
+
+void ScreenEdge::reconfigure()
+{
+    reserveActions(true);
+    reconfigureVirtualDesktopSwitching();
+    updateLayout();
+    update();
+}
+
+void ScreenEdge::updateLayout()
+{
+    const QSize desktopMatrix = VirtualDesktopManager::self()->grid().size();
+    Qt::Orientations newLayout = 0;
+    if (desktopMatrix.width() > 1) {
+        newLayout |= Qt::Horizontal;
+    }
+    if (desktopMatrix.height() > 1) {
+        newLayout |= Qt::Vertical;
+    }
+    if (newLayout == m_virtualDesktopLayout) {
+        return;
+    }
+    if (m_virtualDesktopSwitching == Options::ElectricAlways) {
+        reserveDesktopSwitching(false, m_virtualDesktopLayout);
+    }
+    m_virtualDesktopLayout = newLayout;
+    if (m_virtualDesktopSwitching == Options::ElectricAlways) {
+        reserveDesktopSwitching(true, m_virtualDesktopLayout);
+    }
 }
 
 void ScreenEdge::reserveActions(bool isToReserve)
@@ -255,11 +303,11 @@ void ScreenEdge::check(const QPoint& pos, Time now, bool forceNoPushback)
             m_screenEdgeTimeLastTrigger = now;
             if (Workspace::self()->getMovingClient()) {
                 // If moving a client or have force doing the desktop switch
-                if (options->electricBorders() != Options::ElectricDisabled)
+                if (m_virtualDesktopSwitching != Options::ElectricDisabled)
                     switchDesktop(border, pos);
                 return; // Don't reset cursor position
             } else {
-                if (options->electricBorders() == Options::ElectricAlways &&
+                if (m_virtualDesktopSwitching == Options::ElectricAlways &&
                         (border == ElectricTop || border == ElectricRight ||
                          border == ElectricBottom || border == ElectricLeft)) {
                     // If desktop switching is always enabled don't apply it to the corners if
@@ -290,7 +338,7 @@ void ScreenEdge::check(const QPoint& pos, Time now, bool forceNoPushback)
                     if (effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated(border))
                         {} // Handled by effects
                     else {
-                        if (options->electricBorders() == Options::ElectricAlways) {
+                        if (m_virtualDesktopSwitching == Options::ElectricAlways) {
                             switchDesktop(border, pos);
                             return; // Don't reset cursor position
                         }

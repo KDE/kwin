@@ -93,9 +93,6 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
     : QObject(0)
-#ifdef KWIN_BUILD_SCREENEDGES
-    , m_screenEdgeOrientation(0)
-#endif
     , m_compositor(NULL)
     // Unsorted
     , active_popup(NULL)
@@ -255,6 +252,9 @@ void Workspace::init()
 {
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.init();
+    connect(options, SIGNAL(configChanged()), &m_screenEdge, SLOT(reconfigure()));
+    connect(options, SIGNAL(electricBordersChanged()), &m_screenEdge, SLOT(reconfigureVirtualDesktopSwitching()));
+    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), &m_screenEdge, SLOT(updateLayout()));
 #endif
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
@@ -997,8 +997,6 @@ void Workspace::slotReconfigure()
 
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.reserveActions(false);
-    if (options->electricBorders() == Options::ElectricAlways)
-        m_screenEdge.reserveDesktopSwitching(false, m_screenEdgeOrientation);
 #endif
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
@@ -1033,19 +1031,6 @@ void Workspace::slotReconfigure()
             c->triggerDecorationRepaint();
     }
 
-#ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge.reserveActions(true);
-    if (options->electricBorders() == Options::ElectricAlways) {
-        QSize desktopMatrix = rootInfo->desktopLayoutColumnsRows();
-        m_screenEdgeOrientation = 0;
-        if (desktopMatrix.width() > 1)
-            m_screenEdgeOrientation |= Qt::Horizontal;
-        if (desktopMatrix.height() > 1)
-            m_screenEdgeOrientation |= Qt::Vertical;
-        m_screenEdge.reserveDesktopSwitching(true, m_screenEdgeOrientation);
-    }
-    m_screenEdge.update();
-#endif
     loadWindowRules();
     for (ClientList::Iterator it = clients.begin();
             it != clients.end();

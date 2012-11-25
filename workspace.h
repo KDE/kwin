@@ -218,7 +218,6 @@ private:
     Outline* m_outline;
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge m_screenEdge;
-    Qt::Orientations m_screenEdgeOrientation;
 #endif
     Compositor *m_compositor;
 
