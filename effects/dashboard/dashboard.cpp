@@ -71,10 +71,9 @@ void DashboardEffect::reconfigure(ReconfigureFlags)
 {
     brightness = DashboardConfig::brightness()/ 100.0;
     saturation = DashboardConfig::saturation()/ 100.0;
-    duration = DashboardConfig::duration() != 0  ? DashboardConfig::duration() : 500;
     blur = DashboardConfig::blur();
 
-    timeline.setDuration(animationTime(duration));
+    timeline.setDuration(animationTime<DashboardConfig>(500));
 }
 
 void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)

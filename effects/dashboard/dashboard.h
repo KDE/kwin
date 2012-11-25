@@ -73,7 +73,6 @@ private:
     long atom;
     qreal brightness;
     qreal saturation;
-    int duration;
     EffectWindow* window;
 };
 

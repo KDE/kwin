@@ -478,6 +478,12 @@ public:
      */
     static double animationTime(int defaultTime);
     /**
+     * @overload Use this variant if animation time is provided through a KConfigXT generated class
+     * having a property called "duration".
+     **/
+    template <typename T>
+    int animationTime(int defaultDuration);
+    /**
      * Linearly interpolates between @p x and @p y.
      *
      * Returns @p x when @p a = 0; returns @p y when @p a = 1.
@@ -2711,6 +2717,15 @@ void Motion<T>::finish()
 {
     m_value = m_target;
     m_velocity = T();
+}
+
+/***************************************************************
+ Effect
+***************************************************************/
+template <typename T>
+int Effect::animationTime(int defaultDuration)
+{
+    return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
 }
 
 } // namespace

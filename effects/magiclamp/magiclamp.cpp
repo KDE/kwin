@@ -52,6 +52,7 @@ bool MagicLampEffect::supported()
 void MagicLampEffect::reconfigure(ReconfigureFlags)
 {
     MagicLampConfig::self()->readConfig();
+    // TODO: rename animationDuration to duration
     mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
 
     KConfigGroup conf = effects->effectConfig("MagicLamp");

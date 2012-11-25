@@ -159,6 +159,7 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     opacityDesktopOnly = CubeConfig::opacityDesktopOnly();
     displayDesktopName = CubeConfig::displayDesktopName();
     reflection = CubeConfig::reflection();
+    // TODO: rename rotationDuration to duration
     rotationDuration = animationTime(CubeConfig::rotationDuration() != 0 ? CubeConfig::rotationDuration() : 500);
     backgroundColor = CubeConfig::backgroundColor();
     capColor = CubeConfig::capColor();

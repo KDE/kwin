@@ -57,6 +57,7 @@ bool CubeSlideEffect::supported()
 void CubeSlideEffect::reconfigure(ReconfigureFlags)
 {
     CubeSlideConfig::self()->readConfig();
+    // TODO: rename rotationDuration to duration
     rotationDuration = animationTime(CubeSlideConfig::rotationDuration() != 0 ? CubeSlideConfig::rotationDuration() : 500);
     timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     timeLine.setDuration(rotationDuration);

@@ -114,7 +114,7 @@ void FlipSwitchEffect::reconfigure(ReconfigureFlags)
     }
     m_tabbox = FlipSwitchConfig::tabBox();
     m_tabboxAlternative = FlipSwitchConfig::tabBoxAlternative();
-    const int duration = animationTime(FlipSwitchConfig::duration() != 0 ? FlipSwitchConfig::duration() : 200);
+    const int duration = animationTime<FlipSwitchConfig>(200);
     m_timeLine.setDuration(duration);
     m_startStopTimeLine.setDuration(duration);
 

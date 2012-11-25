@@ -112,6 +112,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
         effects->reserveElectricBorder(ElectricBorder(i));
     }
 
+    // TODO: rename zoomDuration to duration
     zoomDuration = animationTime(DesktopGridConfig::zoomDuration() != 0 ? DesktopGridConfig::zoomDuration() : 300);
     timeline.setCurveShape(QTimeLine::EaseInOutCurve);
     timeline.setDuration(zoomDuration);
