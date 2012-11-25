@@ -1071,7 +1071,7 @@ void DesktopGridEffect::setup()
     qDeleteAll(hoverTimeline);
     hoverTimeline.clear();
     for (int i = 0; i < effects->numberOfDesktops(); i++) {
-        QTimeLine *newTimeline = new QTimeLine(animationTime(zoomDuration), this);
+        QTimeLine *newTimeline = new QTimeLine(zoomDuration, this);
         newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
         hoverTimeline.append(newTimeline);
     }
@@ -1292,7 +1292,7 @@ void DesktopGridEffect::desktopsAdded(int old)
     const int desktop = effects->numberOfDesktops();
     for (int i = old; i <= effects->numberOfDesktops(); i++) {
         // add a timeline for the new desktop
-        QTimeLine *newTimeline = new QTimeLine(animationTime(zoomDuration), this);
+        QTimeLine *newTimeline = new QTimeLine(zoomDuration, this);
         newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
         hoverTimeline.append(newTimeline);
     }
