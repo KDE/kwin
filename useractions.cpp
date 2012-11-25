@@ -260,7 +260,7 @@ void UserActionsMenu::init()
     m_menu = new QMenu;
     m_menu->setFont(KGlobalSettings::menuFont());
     connect(m_menu, SIGNAL(aboutToShow()), this, SLOT(menuAboutToShow()));
-    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)));
+    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)), Qt::QueuedConnection);
 
     QMenu *advancedMenu = new QMenu(m_menu);
     advancedMenu->setFont(KGlobalSettings::menuFont());
