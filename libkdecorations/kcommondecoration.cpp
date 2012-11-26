@@ -334,7 +334,7 @@ void KCommonDecoration::objDestroyed(QObject *obj)
         m_previewWidget = 0;
 }
 
-QRegion KCommonDecoration::region(KDecorationDefines::Region r)
+QRegion KCommonDecoration::region(KDecorationDefines::Region)
 {
     return QRegion();
 }
