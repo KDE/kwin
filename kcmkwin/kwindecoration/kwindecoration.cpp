@@ -77,20 +77,13 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     : KCModule(KWinDecoFactory::componentData(), parent)
     , kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_showTooltips(false)
+    , m_model(NULL)
+    , m_proxyModel(NULL)
     , m_configLoaded(false)
     , m_decorationButtons(new DecorationButtons(this))
     , m_lastPreviewWidth(-1)
     , m_previewUpdateTimer(NULL)
 {
-    const QString mainQmlPath = KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml");
-    if (mainQmlPath.isNull()) {
-        // TODO 4.10 i18n this
-        KMessageBox::error(this, "<h1>Installation error</h1>"
-        "The resource<h2>kwin/kcm_kwindecoration/main.qml</h2>could not be located in any application data path."
-        "<h2>Please contact your distribution</h2>"
-        "The application will now abort", "Installation Error");
-        abort();
-    }
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
     m_ui->configureDecorationButton->setIcon(KIcon("configure"));
@@ -99,6 +92,41 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
+    KAboutData *about =
+        new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
+                       ki18n("Window Decoration Control Module"),
+                       0, KLocalizedString(), KAboutData::License_GPL,
+                       ki18n("(c) 2001 Karol Szwed"));
+    about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
+    setAboutData(about);
+}
+
+
+KWinDecorationModule::~KWinDecorationModule()
+{
+}
+
+void KWinDecorationModule::showEvent(QShowEvent *ev)
+{
+    KCModule::showEvent(ev);
+    init();
+}
+
+void KWinDecorationModule::init()
+{
+    if (m_model) {
+        // init already called
+        return;
+    }
+    const QString mainQmlPath = KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml");
+    if (mainQmlPath.isNull()) {
+        // TODO 4.11 i18n this
+        KMessageBox::error(this, "<h1>Installation error</h1>"
+        "The resource<h2>kwin/kcm_kwindecoration/main.qml</h2>could not be located in any application data path."
+        "<h2>Please contact your distribution</h2>"
+        "The application will now abort", "Installation Error");
+        abort();
+    }
     KConfigGroup style(kwinConfig, "Style");
 
     // Set up the decoration lists and other UI settings
@@ -140,20 +168,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
     m_ui->decorationList->installEventFilter(this);
     m_ui->decorationList->viewport()->installEventFilter(this);
-
-    KAboutData *about =
-        new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
-                       ki18n("Window Decoration Control Module"),
-                       0, KLocalizedString(), KAboutData::License_GPL,
-                       ki18n("(c) 2001 Karol Szwed"));
-    about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
-    setAboutData(about);
     QMetaObject::invokeMethod(this, "updatePreviews", Qt::QueuedConnection);
-}
-
-
-KWinDecorationModule::~KWinDecorationModule()
-{
+    updateScrollbarRange();
 }
 
 int KWinDecorationModule::itemWidth() const
@@ -476,6 +492,9 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
 
 void KWinDecorationModule::updatePreviews()
 {
+    if (!m_model) {
+        return;
+    }
     m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
     const int newWidth = m_ui->decorationList->rootObject()->property("width").toInt();
     if (newWidth == m_lastPreviewWidth)

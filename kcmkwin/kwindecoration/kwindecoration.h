@@ -107,6 +107,7 @@ signals:
 
 protected:
     bool eventFilter(QObject *o, QEvent *e);
+    virtual void showEvent(QShowEvent *ev);
 
 protected slots:
     // Allows us to turn "save" on
@@ -116,6 +117,7 @@ protected slots:
     void slotConfigureDecoration();
 
 private:
+    void init();
     void readConfig(const KConfigGroup& conf);
     void writeConfig(KConfigGroup &conf);
 private slots:
