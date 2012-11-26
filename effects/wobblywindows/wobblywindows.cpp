@@ -417,7 +417,7 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
     qreal x_increment = rect.width() / (wwi.width - 1.0);
     qreal y_increment = rect.height() / (wwi.height - 1.0);
 
-    Pair picked = {cursorPos().x(), cursorPos().y()};
+    Pair picked = {static_cast<qreal>(cursorPos().x()), static_cast<qreal>(cursorPos().y())};
     int indx = (picked.x - rect.x()) / x_increment + 0.5;
     int indy = (picked.y - rect.y()) / y_increment + 0.5;
     int pickedPointIndex = indy * wwi.width + indx;

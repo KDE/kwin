@@ -201,7 +201,8 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
             } else {
 #ifdef KWIN_HAVE_OPENGL_1
                 // texture transformation
-                float color[4] = { blinkingColor.redF(), blinkingColor.greenF(), blinkingColor.blueF(), 1.0f };
+                float color[4] = { static_cast<float>(blinkingColor.redF()), static_cast<float>(blinkingColor.greenF()),
+                                   static_cast<float>(blinkingColor.blueF()), 1.0f };
                 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
                 glColor4fv(color);
                 glActiveTexture(GL_TEXTURE1);

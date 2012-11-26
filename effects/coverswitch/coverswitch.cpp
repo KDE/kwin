@@ -275,11 +275,13 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float reflectionScaleFactor = 100000 * tan(60.0 * M_PI / 360.0f) / area.width();
+            const float width = area.width();
+            const float height = area.height();
             float vertices[] = {
-                -area.width() * 0.5f, area.height(), 0.0,
-                area.width() * 0.5f, area.height(), 0.0,
-                (float)area.width()*reflectionScaleFactor, area.height(), -5000,
-                -(float)area.width()*reflectionScaleFactor, area.height(), -5000
+                -width * 0.5f, height, 0.0,
+                width * 0.5f, height, 0.0,
+                width*reflectionScaleFactor, height, -5000,
+                -width*reflectionScaleFactor, height, -5000
             };
             // foreground
             if (start) {
