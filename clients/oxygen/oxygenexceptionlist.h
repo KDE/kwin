@@ -30,7 +30,7 @@
 #include "oxygenconfiguration.h"
 #include "oxygendecorationdefines.h"
 
-#include <KConfig>
+#include <KSharedConfig>
 
 namespace Oxygen
 {
@@ -51,10 +51,10 @@ namespace Oxygen
         { return _exceptions; }
 
         //! read from KConfig
-        void readConfig( KConfig& );
+        void readConfig( KSharedConfig::Ptr );
 
         //! write to kconfig
-        void writeConfig( KConfig& );
+        void writeConfig( KSharedConfig::Ptr );
 
         protected:
 

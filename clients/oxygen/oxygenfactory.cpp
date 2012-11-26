@@ -29,6 +29,7 @@
 #include "oxygenclient.h"
 #include "oxygenexceptionlist.h"
 
+#include <KSharedConfig>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
@@ -91,7 +92,7 @@ namespace Oxygen
         _defaultConfiguration->readConfig();
 
         // create a config object
-        KConfig config("oxygenrc");
+        KSharedConfig::Ptr config( KSharedConfig::openConfig( "oxygenrc" ) );
 
         // clear exceptions and read
         ExceptionList exceptions;
@@ -104,7 +105,7 @@ namespace Oxygen
 
         // background pixmap
         {
-            KConfigGroup group( config.group("Common") );
+            KConfigGroup group( config->group("Common") );
             helper().setBackgroundPixmap( group.readEntry( "BackgroundPixmap", "" ) );
         }
 

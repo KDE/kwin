@@ -33,24 +33,24 @@ namespace Oxygen
 {
 
     //______________________________________________________________
-    void ExceptionList::readConfig( KConfig& config )
+    void ExceptionList::readConfig( KSharedConfig::Ptr config )
     {
 
         _exceptions.clear();
 
         QString groupName;
-        for( int index = 0; KConfigGroup( &config, groupName = exceptionGroupName( index ) ).exists(); ++index )
+        for( int index = 0; KConfigGroup( config, groupName = exceptionGroupName( index ) ).exists(); ++index )
         {
 
             // create exception
             Configuration exception;
 
             // reset group
-            Util::readConfig( &exception, &config, groupName );
+            Util::readConfig( &exception, config.data(), groupName );
 
             // create new configuration
             ConfigurationPtr configuration( new Configuration() );
-            Util::readConfig( configuration.data(), &config );
+            Util::readConfig( configuration.data(), config.data() );
 
             // apply changes from exception
             configuration->setEnabled( exception.enabled() );
@@ -74,14 +74,14 @@ namespace Oxygen
     }
 
     //______________________________________________________________
-    void ExceptionList::writeConfig( KConfig& config )
+    void ExceptionList::writeConfig( KSharedConfig::Ptr config )
     {
 
         // remove all existing exceptions
         int index(0);
         while( true )
         {
-            KConfigGroup group( &config, exceptionGroupName( index ) );
+            KConfigGroup group( config.data(), exceptionGroupName( index ) );
             if( group.exists() )
             {
 
@@ -96,7 +96,7 @@ namespace Oxygen
         foreach( const ConfigurationPtr& exception, _exceptions )
         {
 
-            Util::writeConfig( exception.data(), &config, exceptionGroupName( index ) );
+            Util::writeConfig( exception.data(), config.data(), exceptionGroupName( index ) );
             ++index;
 
         }

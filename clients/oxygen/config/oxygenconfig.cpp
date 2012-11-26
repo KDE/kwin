@@ -60,14 +60,15 @@ namespace Oxygen
         QObject( parent )
     {
 
+        // cataloh
         KGlobal::locale()->insertCatalog("kwin_clients");
 
-        _configuration = new KConfig( "oxygenrc" );
-        KConfigGroup configurationGroup( _configuration, "Windeco");
+        // configuration
+        _configuration = KSharedConfig::openConfig( "oxygenrc" );
 
         _configWidget = new ConfigWidget( parent );
 
-        load( configurationGroup );
+        load( KConfigGroup() );
         connect( _configWidget, SIGNAL( changed( bool ) ), SLOT(updateChanged()) );
         _configWidget->show();
 
@@ -75,10 +76,7 @@ namespace Oxygen
 
     //_______________________________________________________________________
     Config::~Config()
-    {
-        delete _configWidget;
-        delete _configuration;
-    }
+    { delete _configWidget; }
 
     //_______________________________________________________________________
     void Config::toggleExpertMode( bool value )
@@ -95,11 +93,11 @@ namespace Oxygen
 
         // load shadows
         foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
-        { ui->readConfig( _configuration ); }
+        { ui->readConfig( _configuration.data() ); }
 
         // load exceptions
         ExceptionList exceptions;
-        exceptions.readConfig( *_configuration );
+        exceptions.readConfig( _configuration );
         _configWidget->exceptionListWidget()->setExceptions( exceptions.get() );
         updateChanged();
 
@@ -135,15 +133,15 @@ namespace Oxygen
         _configWidget->save();
 
         // save standard configuration
-        Util::writeConfig( configuration.data(), _configuration );
+        Util::writeConfig( configuration.data(), _configuration.data() );
 
         // get list of exceptions and write
         ConfigurationList exceptions( _configWidget->exceptionListWidget()->exceptions() );
-        ExceptionList( exceptions ).writeConfig( *_configuration );
+        ExceptionList( exceptions ).writeConfig( _configuration );
 
         // write shadow configuration
         foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
-        { ui->writeConfig( _configuration ); }
+        { ui->writeConfig( _configuration.data() ); }
 
         // sync configuration
         _configuration->sync();
@@ -164,7 +162,7 @@ namespace Oxygen
 
         // load shadows
         foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
-        { ui->readDefaults( _configuration ); }
+        { ui->readDefaults( _configuration.data() ); }
 
         updateChanged();
 

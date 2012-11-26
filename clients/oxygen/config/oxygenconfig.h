@@ -34,7 +34,7 @@
 #include "oxygenconfiguration.h"
 #include "../oxygendecorationdefines.h"
 
-#include <KConfig>
+#include <KSharedConfig>
 #include <QtGui/QPalette>
 
 namespace Oxygen {
@@ -91,7 +91,7 @@ namespace Oxygen {
         ConfigWidget* _configWidget;
 
         //! kconfiguration object
-        KConfig* _configuration;
+        KSharedConfig::Ptr _configuration;
 
     };
 
