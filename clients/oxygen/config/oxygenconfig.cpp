@@ -65,24 +65,24 @@ namespace Oxygen
         _configuration = new KConfig( "oxygenrc" );
         KConfigGroup configurationGroup( _configuration, "Windeco");
 
-        ui = new ConfigurationUi( parent );
+        _configWidget = new ConfigWidget( parent );
 
         load( configurationGroup );
-        connect( ui, SIGNAL(changed()), SLOT(updateChanged()) );
-        ui->show();
+        connect( _configWidget, SIGNAL( changed( bool ) ), SLOT(updateChanged()) );
+        _configWidget->show();
 
     }
 
     //_______________________________________________________________________
     Config::~Config()
     {
-        delete ui;
+        delete _configWidget;
         delete _configuration;
     }
 
     //_______________________________________________________________________
     void Config::toggleExpertMode( bool value )
-    { ui->toggleExpertMode( value ); }
+    { _configWidget->toggleExpertMode( value ); }
 
     //_______________________________________________________________________
     void Config::load( const KConfigGroup& )
@@ -94,13 +94,13 @@ namespace Oxygen
         loadConfiguration( configuration );
 
         // load shadows
-        foreach( ShadowConfigurationUi* ui, ui->shadowConfigurations )
+        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
         { ui->readConfig( _configuration ); }
 
         // load exceptions
         ExceptionList exceptions;
         exceptions.readConfig( *_configuration );
-        ui->ui.exceptions->setExceptions( exceptions.get() );
+        _configWidget->exceptionListWidget()->setExceptions( exceptions.get() );
         updateChanged();
 
     }
@@ -113,25 +113,9 @@ namespace Oxygen
         configuration->readConfig();
         bool modified( false );
 
-        if( ui->ui.titleAlignment->currentIndex() != configuration->titleAlignment() ) modified = true;
-        else if( ui->ui.buttonSize->currentIndex() != configuration->buttonSize() ) modified = true;
-        else if( ui->ui.blendColor->currentIndex() != configuration->blendStyle() ) modified = true;
-        else if( ui->ui.frameBorder->currentIndex() != configuration->frameBorder() ) modified = true;
-        else if( ui->ui.separatorMode->currentIndex() != configuration->separatorMode() ) modified = true;
-        else if( ui->ui.drawSizeGrip->isChecked() != configuration->drawSizeGrip() ) modified = true;
-        else if( ui->ui.titleOutline->isChecked() !=  configuration->drawTitleOutline() ) modified = true;
-        else if( ui->ui.narrowButtonSpacing->isChecked() !=  configuration->useNarrowButtonSpacing() ) modified = true;
-
-        // shadow configurations
-        else if( ui->shadowConfigurations[0]->isModified() ) modified = true;
-        else if( ui->shadowConfigurations[1]->isModified() ) modified = true;
-
         // exceptions
+        if( _configWidget->isChanged() ) modified = true;
         else if( exceptionListChanged() ) modified = true;
-
-        // animations
-        else if( !ui->expertMode() && ui->ui.animationsEnabled->isChecked() !=  configuration->animationsEnabled() ) modified = true;
-        else if( ui->expertMode() && ui->animationConfigWidget()->isChanged() ) modified = true;
 
         // emit relevant signals
         if( modified ) emit changed();
@@ -147,38 +131,19 @@ namespace Oxygen
         ConfigurationPtr configuration( new Configuration() );
         configuration->readConfig();
 
-        // apply modifications from ui
-        configuration->setTitleAlignment( ui->ui.titleAlignment->currentIndex() );
-        configuration->setButtonSize( ui->ui.buttonSize->currentIndex() );
-        configuration->setBlendStyle( ui->ui.blendColor->currentIndex() );
-        configuration->setFrameBorder( ui->ui.frameBorder->currentIndex() );
-        configuration->setSeparatorMode( ui->ui.separatorMode->currentIndex() );
-        configuration->setDrawSizeGrip( ui->ui.drawSizeGrip->isChecked() );
-        configuration->setDrawTitleOutline( ui->ui.titleOutline->isChecked() );
-        configuration->setUseNarrowButtonSpacing( ui->ui.narrowButtonSpacing->isChecked() );
-        configuration->setCloseWindowFromMenuButton( ui->ui.closeFromMenuButton->isChecked() );
-
-        if( ui->expertMode() )
-        {
-
-            ui->animationConfigWidget()->setConfiguration( configuration );
-            ui->animationConfigWidget()->save();
-
-        } else {
-
-            configuration->setAnimationsEnabled( ui->ui.animationsEnabled->isChecked() );
-
-        }
+        // save config widget
+        _configWidget->setConfiguration( configuration );
+        _configWidget->save();
 
         // save standard configuration
         Util::writeConfig( configuration.data(), _configuration );
 
         // get list of exceptions and write
-        ConfigurationList exceptions( ui->ui.exceptions->exceptions() );
+        ConfigurationList exceptions( _configWidget->exceptionListWidget()->exceptions() );
         ExceptionList( exceptions ).writeConfig( *_configuration );
 
         // write shadow configuration
-        foreach( ShadowConfigurationUi* ui, ui->shadowConfigurations )
+        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
         { ui->writeConfig( _configuration ); }
 
         // sync configuration
@@ -199,11 +164,8 @@ namespace Oxygen
         loadConfiguration( configuration );
 
         // load shadows
-        foreach( ShadowConfigurationUi* ui, ui->shadowConfigurations )
+        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
         { ui->readDefaults( _configuration ); }
-
-        // install default exceptions
-        // ui->ui.exceptions->setExceptions( ExceptionList::defaultList() );
 
         updateChanged();
 
@@ -213,35 +175,13 @@ namespace Oxygen
     void Config::loadConfiguration( ConfigurationPtr configuration )
     {
 
-        ui->ui.titleAlignment->setCurrentIndex( configuration->titleAlignment() );
-        ui->ui.buttonSize->setCurrentIndex( configuration->buttonSize() );
-        ui->ui.blendColor->setCurrentIndex( configuration->blendStyle() );
-        ui->ui.frameBorder->setCurrentIndex( configuration->frameBorder() );
-        ui->ui.separatorMode->setCurrentIndex( configuration->separatorMode() );
-        ui->ui.drawSizeGrip->setChecked( configuration->drawSizeGrip() );
-        ui->ui.titleOutline->setChecked( configuration->drawTitleOutline() );
-        ui->ui.animationsEnabled->setChecked( configuration->animationsEnabled() );
-        ui->ui.narrowButtonSpacing->setChecked( configuration->useNarrowButtonSpacing() );
-        ui->ui.closeFromMenuButton->setChecked( configuration->closeWindowFromMenuButton() );
-
-        ui->animationConfigWidget()->setConfiguration( configuration );
-        ui->animationConfigWidget()->load();
+        _configWidget->setConfiguration( configuration );
+        _configWidget->load();
 
     }
 
     //_______________________________________________________________________
     bool Config::exceptionListChanged( void ) const
-    {
-        return true;
-//         // get saved list
-//         ExceptionList exceptions;
-//         exceptions.read( *_configuration );
-//         if( exceptions.empty() )
-//         { exceptions = ExceptionList::defaultList(); }
-//
-//         // compare to current
-//         return exceptions != ui->ui.exceptions->exceptions();
-
-    }
+    { return true; }
 
 }

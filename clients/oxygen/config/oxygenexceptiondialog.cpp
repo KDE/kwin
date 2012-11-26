@@ -42,33 +42,33 @@ namespace Oxygen
         ui.setupUi( local );
         setMainWidget( local );
 
-        connect( ui.detectDialogButton, SIGNAL(clicked()), SLOT(selectWindowProperties()) );
+        connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT(selectWindowProperties()) );
 
         // border size
         ui.frameBorderComboBox->setEnabled( false );
         _checkBoxes.insert( FrameBorder, ui.frameBorderCheckBox );
-        connect( ui.frameBorderCheckBox, SIGNAL(toggled(bool)), ui.frameBorderComboBox, SLOT(setEnabled(bool)) );
+        connect( ui.frameBorderCheckBox, SIGNAL( toggled( bool ) ), ui.frameBorderComboBox, SLOT(setEnabled(bool)) );
 
         // blend color
         ui.blendColorComboBox->setEnabled( false );
         _checkBoxes.insert( BlendColor, ui.blendColorCheckBox );
-        connect( ui.blendColorCheckBox, SIGNAL(toggled(bool)), ui.blendColorComboBox, SLOT(setEnabled(bool)) );
+        connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT(setEnabled(bool)) );
 
         // size grip
         ui.sizeGripComboBox->setEnabled( false );
         _checkBoxes.insert( SizeGripMode, ui.sizeGripCheckBox );
-        connect( ui.sizeGripCheckBox, SIGNAL(toggled(bool)), ui.sizeGripComboBox, SLOT(setEnabled(bool)) );
+        connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT(setEnabled(bool)) );
 
         // outline active window title
         ui.titleOutlineComboBox->insertItems(0, QStringList() << i18nc( "outline window title", "Enabled" ) << i18nc( "outline window title", "Disabled" ) );
         ui.titleOutlineComboBox->setEnabled( false );
         _checkBoxes.insert( TitleOutline, ui.titleOutlineCheckBox );
-        connect( ui.titleOutlineCheckBox, SIGNAL(toggled(bool)), ui.titleOutlineComboBox, SLOT(setEnabled(bool)) );
+        connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT(setEnabled(bool)) );
 
         // separator
         ui.separatorComboBox->setEnabled( false );
         _checkBoxes.insert( DrawSeparator, ui.separatorCheckBox );
-        connect( ui.separatorCheckBox, SIGNAL(toggled(bool)), ui.separatorComboBox, SLOT(setEnabled(bool)) );
+        connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT(setEnabled(bool)) );
 
     }
 

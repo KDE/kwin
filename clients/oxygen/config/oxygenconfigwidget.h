@@ -28,6 +28,7 @@
 #include "ui_oxygenconfigurationui.h"
 #include "oxygenshadowconfigurationui.h"
 #include "oxygenexceptionlistwidget.h"
+#include "../oxygendecorationdefines.h"
 
 #include <KComboBox>
 #include <QtGui/QWidget>
@@ -40,7 +41,7 @@ namespace Oxygen
     class AnimationConfigWidget;
 
     //_____________________________________________
-    class ConfigurationUi: public QWidget
+    class ConfigWidget: public QWidget
     {
 
         Q_OBJECT
@@ -48,14 +49,28 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit ConfigurationUi( QWidget* );
+        explicit ConfigWidget( QWidget* );
 
         //! destructor
-        virtual ~ConfigurationUi( void )
+        virtual ~ConfigWidget( void )
         {}
 
-        //! ui
-        Ui_OxygenConfigurationUI ui;
+        //! set configuration
+        void setConfiguration( ConfigurationPtr );
+
+        //! load configuration
+        void load( void );
+
+        //! save configuration
+        void save( void );
+
+        //! true if changed
+        virtual bool isChanged( void ) const
+        { return _changed; }
+
+        //! exceptions
+        ExceptionListWidget* exceptionListWidget( void ) const
+        { return ui.exceptions; }
 
         //! shadow configuration
         QVector<ShadowConfigurationUi*> shadowConfigurations;
@@ -63,18 +78,15 @@ namespace Oxygen
         //! toggle expert mode
         void toggleExpertMode( bool );
 
-        //! expert mode
-        bool expertMode( void ) const
-        { return _expertMode; }
-
-        //! animation config widget
-        AnimationConfigWidget* animationConfigWidget( void ) const
-        { return _animationConfigWidget; }
-
         //! event filter
         virtual bool eventFilter( QObject*, QEvent* );
 
-        protected Q_SLOTS:
+        signals:
+
+        //! emmited when changed
+        void changed( bool );
+
+        protected slots:
 
         //! toggle expert mode
         void toggleExpertModeInternal( void )
@@ -83,22 +95,38 @@ namespace Oxygen
         //! toggle expert mode
         void toggleExpertModeInternal( bool );
 
+        //! check whether configuration is changed and emit appropriate signal if yes
+        virtual void updateChanged();
+
         //! update layout
         /*! needed in expert mode to accommodate with animations config widget size changes */
         void updateLayout( void );
 
-        signals:
+        protected:
 
-        //! emmited when changed
-        void changed( void );
+        //! set changed state
+        virtual void setChanged( bool value )
+        {
+            _changed = value;
+            emit changed( value );
+        }
 
         private:
+
+        //! ui
+        Ui_OxygenConfigurationUI ui;
+
+        //! internal exception
+        ConfigurationPtr _configuration;
 
         //! expert mode
         bool _expertMode;
 
         //! animation config (expert mode only)
         AnimationConfigWidget* _animationConfigWidget;
+
+        //! changed state
+        bool _changed;
 
     };
 

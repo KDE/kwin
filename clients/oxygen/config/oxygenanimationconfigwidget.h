@@ -48,7 +48,8 @@ namespace Oxygen
         explicit AnimationConfigWidget( QWidget* = 0 );
 
         //! destructor
-        virtual ~AnimationConfigWidget( void );
+        virtual ~AnimationConfigWidget( void )
+        {}
 
         //! configuration
         void setConfiguration( ConfigurationPtr configuration )

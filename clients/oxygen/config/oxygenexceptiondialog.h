@@ -50,6 +50,10 @@ namespace Oxygen
         //! constructor
         explicit ExceptionDialog( QWidget* parent );
 
+        //! destructor
+        virtual ~ExceptionDialog( void )
+        {}
+
         //! set exception
         void setException( ConfigurationPtr );
 

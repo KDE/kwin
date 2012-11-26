@@ -67,22 +67,21 @@ namespace Oxygen
         layout->addItem( new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding ), _row, 1, 1, 1 );
         ++_row;
 
-        connect( animationsEnabled(), SIGNAL(toggled(bool)), SLOT(updateChanged()) );
+        connect( animationsEnabled(), SIGNAL( toggled( bool ) ), SLOT(updateChanged()) );
         foreach( AnimationConfigItem* item, findChildren<AnimationConfigItem*>() )
         {
             item->QWidget::setEnabled( false );
-            connect( animationsEnabled(), SIGNAL(toggled(bool)), item, SLOT(setEnabled(bool)) );
+            connect( animationsEnabled(), SIGNAL( toggled( bool ) ), item, SLOT(setEnabled(bool)) );
         }
 
     }
 
     //_______________________________________________
-    AnimationConfigWidget::~AnimationConfigWidget( void )
-    {}
-
-    //_______________________________________________
     void AnimationConfigWidget::load( void )
     {
+
+        // check configuration
+        if( !_configuration ) return;
 
         animationsEnabled()->setChecked( _configuration->animationsEnabled() );
 
@@ -103,6 +102,10 @@ namespace Oxygen
     void AnimationConfigWidget::save( void )
     {
 
+        // check configuration
+        if( !_configuration ) return;
+
+        // save modifications
         _configuration->setAnimationsEnabled( animationsEnabled()->isChecked() );
 
         _configuration->setButtonAnimationsEnabled( _buttonAnimations->enabled() );
@@ -125,8 +128,11 @@ namespace Oxygen
     void AnimationConfigWidget::updateChanged( void )
     {
 
-        bool modified( false );
+        // check configuration
+        if( !_configuration ) return;
 
+        // track modifications
+        bool modified( false );
         if( animationsEnabled()->isChecked() != _configuration->animationsEnabled() ) modified = true;
         else if( _buttonAnimations->enabled() != _configuration->buttonAnimationsEnabled() ) modified = true;
         else if( _buttonAnimations->duration() != _configuration->buttonAnimationsDuration() ) modified = true;

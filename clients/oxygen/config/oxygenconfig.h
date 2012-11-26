@@ -30,7 +30,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygenconfigurationui.h"
+#include "oxygenconfigwidget.h"
 #include "oxygenconfiguration.h"
 #include "../oxygendecorationdefines.h"
 
@@ -91,10 +91,10 @@ namespace Oxygen {
         bool exceptionListChanged( void ) const;
 
         //! user interface
-        ConfigurationUi *ui;
+        ConfigWidget* _configWidget;
 
         //! kconfiguration object
-        KConfig *_configuration;
+        KConfig* _configuration;
 
     };
 
