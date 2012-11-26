@@ -673,7 +673,7 @@ void Compositor::setCompositeTimer()
     else // w/o vsync we just jump to the next demanded tick
         // the "1" will ensure we don't block out the eventloop - the system's just not faster
         // "0" would be sufficient, but the compositor isn't the WMs only task
-        m_nextFrameDelay = padding = (padding > (int)fpsInterval) ? 1 : ((fpsInterval - padding) >> 10);
+        m_nextFrameDelay = padding = (padding > fpsInterval) ? 1 : ((fpsInterval - padding) >> 10);
     compositeTimer.start(qMin(padding, 250u), this); // force 4fps minimum
 }
 
