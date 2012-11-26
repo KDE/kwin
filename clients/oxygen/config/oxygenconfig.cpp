@@ -94,7 +94,7 @@ namespace Oxygen
         loadConfiguration( configuration );
 
         // load shadows
-        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
+        foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
         { ui->readConfig( _configuration ); }
 
         // load exceptions
@@ -115,7 +115,7 @@ namespace Oxygen
 
         // exceptions
         if( _configWidget->isChanged() ) modified = true;
-        else if( exceptionListChanged() ) modified = true;
+        // else if( exceptionListChanged() ) modified = true;
 
         // emit relevant signals
         if( modified ) emit changed();
@@ -143,7 +143,7 @@ namespace Oxygen
         ExceptionList( exceptions ).writeConfig( *_configuration );
 
         // write shadow configuration
-        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
+        foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
         { ui->writeConfig( _configuration ); }
 
         // sync configuration
@@ -164,7 +164,7 @@ namespace Oxygen
         loadConfiguration( configuration );
 
         // load shadows
-        foreach( ShadowConfigurationUi* ui, _configWidget->shadowConfigurations )
+        foreach( ShadowConfigWidget* ui, _configWidget->shadowConfigurations )
         { ui->readDefaults( _configuration ); }
 
         updateChanged();

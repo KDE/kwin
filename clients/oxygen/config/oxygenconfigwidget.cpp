@@ -133,6 +133,8 @@ namespace Oxygen
         _configuration->setUseNarrowButtonSpacing( ui.narrowButtonSpacing->isChecked() );
         _configuration->setCloseWindowFromMenuButton( ui.closeFromMenuButton->isChecked() );
 
+        setChanged( false );
+
         if( _expertMode )
         { _animationConfigWidget->save(); }
 
@@ -229,6 +231,7 @@ namespace Oxygen
         else if( ui.drawSizeGrip->isChecked() != _configuration->drawSizeGrip() ) modified = true;
         else if( ui.titleOutline->isChecked() !=  _configuration->drawTitleOutline() ) modified = true;
         else if( ui.narrowButtonSpacing->isChecked() !=  _configuration->useNarrowButtonSpacing() ) modified = true;
+        else if( ui.closeFromMenuButton->isChecked() != _configuration->closeWindowFromMenuButton() ) modified = true;
 
         // shadow configurations
         else if( shadowConfigurations[0]->isModified() ) modified = true;

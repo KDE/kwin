@@ -345,7 +345,7 @@
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
-          <widget class="Oxygen::ShadowConfigurationUi" name="inactiveShadowConfiguration">
+          <widget class="Oxygen::ShadowConfigWidget" name="inactiveShadowConfiguration">
            <property name="title">
             <string>Window Drop-Down Shadow</string>
            </property>
@@ -355,7 +355,7 @@
           </widget>
          </item>
          <item>
-          <widget class="Oxygen::ShadowConfigurationUi" name="activeShadowConfiguration">
+          <widget class="Oxygen::ShadowConfigWidget" name="activeShadowConfiguration">
            <property name="title">
             <string>Active Window Glow</string>
            </property>
@@ -431,9 +431,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Oxygen::ShadowConfigurationUi</class>
+   <class>Oxygen::ShadowConfigWidget</class>
    <extends>QGroupBox</extends>
-   <header>oxygenshadowconfigurationui.h</header>
+   <header>oxygenshadowconfigwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

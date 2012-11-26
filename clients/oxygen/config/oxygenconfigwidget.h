@@ -26,7 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "ui_oxygenconfigurationui.h"
-#include "oxygenshadowconfigurationui.h"
+#include "oxygenshadowconfigwidget.h"
 #include "oxygenexceptionlistwidget.h"
 #include "../oxygendecorationdefines.h"
 
@@ -73,7 +73,7 @@ namespace Oxygen
         { return ui.exceptions; }
 
         //! shadow configuration
-        QVector<ShadowConfigurationUi*> shadowConfigurations;
+        QVector<ShadowConfigWidget*> shadowConfigurations;
 
         //! toggle expert mode
         void toggleExpertMode( bool );
