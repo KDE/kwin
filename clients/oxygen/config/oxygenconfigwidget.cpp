@@ -63,7 +63,6 @@ namespace Oxygen
         toggleExpertModeInternal( false );
 
         // connections
-        connect( ui.titleOutline, SIGNAL( toggled( bool ) ), ui.separatorMode, SLOT(setDisabled(bool)) );
         connect( ui._expertModeButton, SIGNAL( clicked( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
         connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT(updateLayout( void ) ) );
 

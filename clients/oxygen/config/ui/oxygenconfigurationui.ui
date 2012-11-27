@@ -458,5 +458,38 @@
   <tabstop>activeShadowConfiguration</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>titleOutline</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>separatorMode</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleOutline</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>53</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
