@@ -64,12 +64,10 @@ namespace Oxygen
 
         // connections
         connect( ui.titleOutline, SIGNAL( toggled( bool ) ), ui.separatorMode, SLOT(setDisabled(bool)) );
-        connect( shadowConfigurations[0], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( ui._expertModeButton, SIGNAL( clicked( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
+        connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT(updateLayout( void ) ) );
 
-        connect( shadowConfigurations[1], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[1], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
-
+        // track ui changes
         connect( ui.titleAlignment, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
         connect( ui.buttonSize, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
         connect( ui.frameBorder, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
@@ -80,14 +78,19 @@ namespace Oxygen
         connect( ui.narrowButtonSpacing, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
         connect( ui.closeFromMenuButton, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
         connect( ui.separatorMode, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.exceptions, SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
 
-        connect( ui._expertModeButton, SIGNAL( clicked( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
+        // track exception changes
+        connect( ui.exceptions, SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
 
-        // animation config widget
+        // track shadow configuration changes
+        connect( shadowConfigurations[0], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[1], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[1], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
+
+        // track animations changes
         connect( ui.animationsEnabled, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
         connect( _animationConfigWidget, SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
-        connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT(updateLayout( void ) ) );
 
     }
 
@@ -234,6 +237,9 @@ namespace Oxygen
         else if( ui.titleOutline->isChecked() !=  _configuration->drawTitleOutline() ) modified = true;
         else if( ui.narrowButtonSpacing->isChecked() !=  _configuration->useNarrowButtonSpacing() ) modified = true;
         else if( ui.closeFromMenuButton->isChecked() != _configuration->closeWindowFromMenuButton() ) modified = true;
+
+        // exceptions
+        else if( ui.exceptions->isChanged() ) modified = true;
 
         // shadow configurations
         else if( shadowConfigurations[0]->isModified() ) modified = true;

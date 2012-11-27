@@ -47,12 +47,16 @@ namespace Oxygen
         void setExceptions( const ConfigurationList& );
 
         //! get exceptions
-        ConfigurationList exceptions( void ) const;
+        ConfigurationList exceptions( void );
+
+        //! true if changed
+        virtual bool isChanged( void ) const
+        { return _changed; }
 
         signals:
 
-        //! emitted when list is changed
-        void changed( void );
+        //! emitted when changed
+        void changed( bool );
 
         protected:
 
@@ -95,6 +99,13 @@ namespace Oxygen
         //! check exception
         bool checkException( ConfigurationPtr );
 
+        //! set changed state
+        virtual void setChanged( bool value )
+        {
+            _changed = value;
+            emit changed( value );
+        }
+
         private:
 
         //! model
@@ -102,6 +113,9 @@ namespace Oxygen
 
         //! ui
         Ui_OxygenExceptionListWidget ui;
+
+        //! changed state
+        bool _changed;
 
     };
 

@@ -37,7 +37,8 @@ namespace Oxygen
 
     //__________________________________________________________
     ExceptionListWidget::ExceptionListWidget( QWidget* parent ):
-        QWidget( parent )
+        QWidget( parent ),
+        _changed( false )
     {
 
         //! ui
@@ -79,11 +80,15 @@ namespace Oxygen
     {
         model().set( exceptions );
         resizeColumns();
+        setChanged( false );
     }
 
     //__________________________________________________________
-    ConfigurationList ExceptionListWidget::exceptions( void ) const
-    { return model().get(); }
+    ConfigurationList ExceptionListWidget::exceptions( void )
+    {
+        return model().get();
+        setChanged( false );
+    }
 
     //__________________________________________________________
     void ExceptionListWidget::updateButtons( void )
@@ -124,6 +129,7 @@ namespace Oxygen
 
         // create new item
         model().add( exception );
+        setChanged( true );
 
         // make sure item is selected
         QModelIndex index( model().index( exception ) );
@@ -134,7 +140,6 @@ namespace Oxygen
         }
 
         resizeColumns();
-        emit changed();
         return;
 
     }
@@ -160,15 +165,19 @@ namespace Oxygen
             return;
         }
 
+        // check modifications
+        if( !dialog->isChanged() ) return;
+
         // retrieve exception
         dialog->save();
         delete dialog;
 
         // check new exception validity
         checkException( exception );
-
         resizeColumns();
-        emit changed();
+
+        setChanged( true );
+
         return;
 
     }
@@ -184,7 +193,9 @@ namespace Oxygen
         model().remove( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
         resizeColumns();
         updateButtons();
-        emit changed();
+
+        setChanged( true );
+
         return;
 
     }
@@ -199,8 +210,7 @@ namespace Oxygen
         // get matching exception
         ConfigurationPtr exception( model().get( index ) );
         exception->setEnabled( !exception->enabled() );
-
-        emit changed();
+        setChanged( true );
         return;
 
     }
@@ -245,7 +255,8 @@ namespace Oxygen
         for( ConfigurationList::const_iterator iter = selectedExceptions.constBegin(); iter != selectedExceptions.constEnd(); ++iter )
         { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
-        emit changed();
+        setChanged( true );
+
         return;
 
     }
@@ -296,7 +307,8 @@ namespace Oxygen
         for( ConfigurationList::const_iterator iter = selectedExceptions.constBegin(); iter != selectedExceptions.constEnd(); ++iter )
         { ui.exceptionListView->selectionModel()->select( model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
-        emit changed();
+        setChanged( true );
+
         return;
 
     }

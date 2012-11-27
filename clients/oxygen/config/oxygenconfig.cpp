@@ -115,7 +115,6 @@ namespace Oxygen
 
         // exceptions
         if( _configWidget->isChanged() ) modified = true;
-        // else if( exceptionListChanged() ) modified = true;
 
         // emit relevant signals
         if( modified ) emit changed();
@@ -179,9 +178,5 @@ namespace Oxygen
         _configWidget->load();
 
     }
-
-    //_______________________________________________________________________
-    bool Config::exceptionListChanged( void ) const
-    { return true; }
 
 }

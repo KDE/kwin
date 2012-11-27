@@ -87,9 +87,6 @@ namespace Oxygen {
         //! load configuration
         void loadConfiguration( ConfigurationPtr );
 
-        //! returns true if exception list is changed
-        bool exceptionListChanged( void ) const;
-
         //! user interface
         ConfigWidget* _configWidget;
 
