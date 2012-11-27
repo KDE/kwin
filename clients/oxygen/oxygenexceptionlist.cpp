@@ -39,7 +39,7 @@ namespace Oxygen
         _exceptions.clear();
 
         QString groupName;
-        for( int index = 0; KConfigGroup( config, groupName = exceptionGroupName( index ) ).exists(); ++index )
+        for( int index = 0; config->hasGroup( groupName = exceptionGroupName( index ) ); ++index )
         {
 
             // create exception
@@ -78,21 +78,12 @@ namespace Oxygen
     {
 
         // remove all existing exceptions
-        int index(0);
-        while( true )
-        {
-            KConfigGroup group( config.data(), exceptionGroupName( index ) );
-            if( group.exists() )
-            {
-
-                group.deleteGroup();
-                ++index;
-
-            } else break;
-        }
+        QString groupName;
+        for( int index = 0; config->hasGroup( groupName = exceptionGroupName( index ) ); ++index )
+        { config->deleteGroup( groupName ); }
 
         // rewrite current exceptions
-        index = 0;
+        int index = 0;
         foreach( const ConfigurationPtr& exception, _exceptions )
         {
 
