@@ -68,7 +68,7 @@ namespace Oxygen
 
         _configWidget = new ConfigWidget( parent );
 
-        load( KConfigGroup() );
+        load();
         connect( _configWidget, SIGNAL( changed( bool ) ), SLOT(updateChanged()) );
         _configWidget->show();
 
@@ -83,7 +83,7 @@ namespace Oxygen
     { _configWidget->toggleExpertMode( value ); }
 
     //_______________________________________________________________________
-    void Config::load( const KConfigGroup& )
+    void Config::load( void )
     {
 
         // load standard configuration
@@ -121,7 +121,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________
-    void Config::save( KConfigGroup& )
+    void Config::save( void )
     {
 
         // create configuration from group
@@ -152,7 +152,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________
-    void Config::defaults()
+    void Config::defaults( void )
     {
 
         // install default configuration

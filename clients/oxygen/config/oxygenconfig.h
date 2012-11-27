@@ -66,10 +66,20 @@ namespace Oxygen {
         public slots:
 
         //! load configuration
-        void load( const KConfigGroup& );
+        /*! although kconfiggroup argument is not used. It is required by KWin API */
+        void load( const KConfigGroup& )
+        { load(); }
 
         //! save configuration
-        void save( KConfigGroup& );
+        /*! although kconfiggroup argument is not used. It is required by KWin API */
+        void save( KConfigGroup& )
+        { save(); }
+
+        //! load configuration
+        void load( void );
+
+        //! save configuration
+        void save( void );
 
         //! restore defaults
         void defaults( void );
