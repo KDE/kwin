@@ -41,7 +41,8 @@ namespace Oxygen
     ConfigWidget::ConfigWidget( QWidget* parent ):
         QWidget( parent ),
         _expertMode( false ),
-        _animationConfigWidget(0)
+        _animationConfigWidget(0),
+        _changed( false )
     {
 
         ui.setupUi( this );
@@ -111,6 +112,7 @@ namespace Oxygen
         ui.animationsEnabled->setChecked( _configuration->animationsEnabled() );
         ui.narrowButtonSpacing->setChecked( _configuration->useNarrowButtonSpacing() );
         ui.closeFromMenuButton->setChecked( _configuration->closeWindowFromMenuButton() );
+        setChanged( false );
 
         _animationConfigWidget->load();
 

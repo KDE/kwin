@@ -96,6 +96,9 @@ namespace Oxygen
 
         _tabAnimations->setEnabled( _configuration->tabAnimationsEnabled() );
         _tabAnimations->setDuration( _configuration->tabAnimationsDuration() );
+
+        setChanged( false );
+
     }
 
     //_______________________________________________
