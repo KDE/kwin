@@ -95,7 +95,7 @@ namespace Oxygen
         //! toggle expert mode
         void toggleExpertModeInternal( bool );
 
-        //! check whether configuration is changed and emit appropriate signal if yes
+        //! update changed state
         virtual void updateChanged();
 
         //! update layout

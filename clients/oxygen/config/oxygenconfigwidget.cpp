@@ -82,10 +82,8 @@ namespace Oxygen
         connect( ui.exceptions, SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
 
         // track shadow configuration changes
-        connect( shadowConfigurations[0], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[1], SIGNAL( changed( void ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[1], SIGNAL( toggled( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[0], SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[1], SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
 
         // track animations changes
         connect( ui.animationsEnabled, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
@@ -241,8 +239,8 @@ namespace Oxygen
         else if( ui.exceptions->isChanged() ) modified = true;
 
         // shadow configurations
-        else if( shadowConfigurations[0]->isModified() ) modified = true;
-        else if( shadowConfigurations[1]->isModified() ) modified = true;
+        else if( shadowConfigurations[0]->isChanged() ) modified = true;
+        else if( shadowConfigurations[1]->isChanged() ) modified = true;
 
         // animations
         else if( !_expertMode && ui.animationsEnabled->isChecked() !=  _configuration->animationsEnabled() ) modified = true;
