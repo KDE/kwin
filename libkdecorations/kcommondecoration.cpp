@@ -543,7 +543,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                 btn->setLeft(isLeft);
                 btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn), layoutMetric(LM_ButtonHeight, true, btn)));
                 // will be shown later on window registration
-                if (btn->type() == AppMenuButton && !wrapper->menuAvailable()) {
+                if (btn->type() == AppMenuButton && !isPreview() && !wrapper->menuAvailable()) {
                     btn->hide();
                 } else {
                     btn->show();
