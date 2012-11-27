@@ -399,7 +399,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                     if (!btn) break;
                     btn->setTipText(i18nc("Button showing application menu", "Application Menu"));
                     btn->setRealizeButtons(Qt::LeftButton);
-                    connect(btn, SIGNAL(pressed()), SLOT(appMenuButtonPressed()));
+                    connect(btn, SIGNAL(clicked()), SLOT(appMenuButtonPressed()), Qt::QueuedConnection);
                     // Application want to show it menu
                     connect(decoration(), SIGNAL(showRequest()), this, SLOT(appMenuButtonPressed()), Qt::UniqueConnection);
                     // Wait for menu to become available before displaying any button

@@ -226,13 +226,6 @@ void KDecoration::showWindowMenu(QPoint pos)
 
 void KDecoration::showApplicationMenu(const QPoint &p)
 {
-    //FIXME: Remove this workaround
-    // Without showing/hiding this fake widget,
-    // menu showed by kded-appmenu will fail to grab input
-    //TODO: Find a proper solution
-    QMenu fake;
-    fake.show();
-    fake.hide();
     bridge_->showApplicationMenu(p);
 }
 
