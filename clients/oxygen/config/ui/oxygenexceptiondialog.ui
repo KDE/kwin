@@ -134,6 +134,9 @@
       </item>
       <item row="0" column="2">
        <widget class="KComboBox" name="frameBorderComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
           <string>No Border</string>
@@ -183,6 +186,9 @@
       </item>
       <item row="2" column="2">
        <widget class="KComboBox" name="blendColorComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
           <string>Solid Color</string>
@@ -202,34 +208,43 @@
       </item>
       <item row="3" column="2">
        <widget class="KComboBox" name="sizeGripComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
-          <string>Disabled</string>
+          <string comment="Add handle to resize windows with no border">Disabled</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Enabled</string>
+          <string comment="Add handle to resize windows with no border">Enabled</string>
          </property>
         </item>
        </widget>
       </item>
       <item row="4" column="2">
        <widget class="KComboBox" name="titleOutlineComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
-          <string>Disabled</string>
+          <string comment="outline window title">Disabled</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Enabled</string>
+          <string comment="outline window title">Enabled</string>
          </property>
         </item>
        </widget>
       </item>
       <item row="5" column="2">
        <widget class="KComboBox" name="separatorComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
           <string>Never Draw Separator</string>
@@ -281,5 +296,86 @@
   <tabstop>hideTitleBar</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>frameBorderCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameBorderComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>297</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>blendColorCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>blendColorComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sizeGripCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sizeGripComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>147</x>
+     <y>236</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleOutlineCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>titleOutlineComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>302</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>separatorCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>separatorComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>297</x>
+     <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

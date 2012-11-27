@@ -33,7 +33,8 @@ namespace Oxygen
     //___________________________________________
     ExceptionDialog::ExceptionDialog( QWidget* parent ):
         KDialog( parent ),
-        _detectDialog(0)
+        _detectDialog(0),
+        _changed( false )
     {
 
         // define buttons
@@ -42,34 +43,29 @@ namespace Oxygen
         ui.setupUi( local );
         setMainWidget( local );
 
+        // store checkboxes from ui into list
+        _checkBoxes.insert( FrameBorder, ui.frameBorderCheckBox );
+        _checkBoxes.insert( BlendColor, ui.blendColorCheckBox );
+        _checkBoxes.insert( SizeGripMode, ui.sizeGripCheckBox );
+        _checkBoxes.insert( TitleOutline, ui.titleOutlineCheckBox );
+        _checkBoxes.insert( DrawSeparator, ui.separatorCheckBox );
+
+        // detect window properties
         connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT(selectWindowProperties()) );
 
-        // border size
-        ui.frameBorderComboBox->setEnabled( false );
-        _checkBoxes.insert( FrameBorder, ui.frameBorderCheckBox );
-        connect( ui.frameBorderCheckBox, SIGNAL( toggled( bool ) ), ui.frameBorderComboBox, SLOT(setEnabled(bool)) );
+        // connections
+        connect( ui.exceptionType, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.exceptionEditor, SIGNAL( textChanged( const QString& ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.frameBorderComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.blendColorComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.sizeGripComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.titleOutlineComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.separatorComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
 
-        // blend color
-        ui.blendColorComboBox->setEnabled( false );
-        _checkBoxes.insert( BlendColor, ui.blendColorCheckBox );
-        connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT(setEnabled(bool)) );
+        for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
+        { connect( iter.value(), SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) ); }
 
-        // size grip
-        ui.sizeGripComboBox->setEnabled( false );
-        _checkBoxes.insert( SizeGripMode, ui.sizeGripCheckBox );
-        connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT(setEnabled(bool)) );
-
-        // outline active window title
-        ui.titleOutlineComboBox->insertItems(0, QStringList() << i18nc( "outline window title", "Enabled" ) << i18nc( "outline window title", "Disabled" ) );
-        ui.titleOutlineComboBox->setEnabled( false );
-        _checkBoxes.insert( TitleOutline, ui.titleOutlineCheckBox );
-        connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT(setEnabled(bool)) );
-
-        // separator
-        ui.separatorComboBox->setEnabled( false );
-        _checkBoxes.insert( DrawSeparator, ui.separatorCheckBox );
-        connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT(setEnabled(bool)) );
-
+        connect( ui.hideTitleBar, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
     }
 
     //___________________________________________
@@ -93,6 +89,8 @@ namespace Oxygen
         for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
         { iter.value()->setChecked( _exception->mask() & iter.key() ); }
 
+        setChanged( false );
+
     }
 
     //___________________________________________
@@ -103,18 +101,47 @@ namespace Oxygen
         _exception->setFrameBorder( ui.frameBorderComboBox->currentIndex() );
         _exception->setBlendStyle( ui.blendColorComboBox->currentIndex() );
         _exception->setDrawSizeGrip( ui.sizeGripComboBox->currentIndex() );
-
-        // flags
         _exception->setSeparatorMode( ui.separatorComboBox->currentIndex() );
         _exception->setDrawTitleOutline( ui.titleOutlineComboBox->currentIndex() );
         _exception->setHideTitleBar( ui.hideTitleBar->isChecked() );
 
         // mask
         unsigned int mask = None;
-        for( CheckBoxMap::const_iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
+        for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
         { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
         _exception->setMask( mask );
+
+        setChanged( false );
+
+    }
+
+    //___________________________________________
+    void ExceptionDialog::updateChanged( void )
+    {
+        bool modified( false );
+        if( _exception->exceptionType() != ui.exceptionType->currentIndex() ) modified = true;
+        else if( _exception->exceptionPattern() != ui.exceptionEditor->text() ) modified = true;
+        else if( _exception->frameBorder() != ui.frameBorderComboBox->currentIndex() ) modified = true;
+        else if( _exception->blendStyle() != ui.blendColorComboBox->currentIndex() ) modified = true;
+        else if( _exception->drawSizeGrip() != ui.sizeGripComboBox->currentIndex() ) modified = true;
+        else if( _exception->separatorMode() != ui.separatorComboBox->currentIndex() ) modified = true;
+        else if( _exception->drawTitleOutline() != ui.titleOutlineComboBox->currentIndex() ) modified = true;
+        else if( _exception->hideTitleBar() != ui.hideTitleBar->isChecked() ) modified = true;
+        else
+        {
+            // check mask
+            for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
+            {
+                if( iter.value()->isChecked() != (bool)( _exception->mask() & iter.key() ) )
+                {
+                    modified = true;
+                    break;
+                }
+            }
+        }
+
+        setChanged( modified );
 
     }
 

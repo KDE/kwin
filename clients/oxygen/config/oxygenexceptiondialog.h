@@ -60,10 +60,35 @@ namespace Oxygen
         //! save exception
         void save( void );
 
+        //! true if changed
+        virtual bool isChanged( void ) const
+        { return _changed; }
+
+        signals:
+
+        //! emmited when changed
+        void changed( bool );
+
+        protected:
+
+        //! set changed state
+        virtual void setChanged( bool value )
+        {
+            _changed = value;
+            emit changed( value );
+        }
+
+        protected slots:
+
+        //! check whether configuration is changed and emit appropriate signal if yes
+        virtual void updateChanged();
+
         private slots:
 
+        //! select window properties from grabbed pointers
         void selectWindowProperties( void );
 
+        //! read properties of selected window
         void readWindowProperties( bool );
 
         private:
@@ -81,6 +106,9 @@ namespace Oxygen
 
         //! detection dialog
         DetectDialog* _detectDialog;
+
+        //! changed state
+        bool _changed;
 
     };
 
