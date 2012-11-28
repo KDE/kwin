@@ -1,0 +1,5 @@
+# update decoration options for KDE 4.11
+Id=1
+File=oxygenrc
+Options=overwrite
+Script=update_oxygen.pl,perl
