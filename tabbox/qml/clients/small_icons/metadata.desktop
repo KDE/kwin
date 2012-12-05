@@ -69,6 +69,7 @@ Comment[tr]=Küçük simgeleri kullanan bir pencere değiştirme düzeni pencere
 Comment[uk]=Компонування засобу перемикання вікон з малими піктограмами вікон
 Comment[vi]=Một kiểu chuyển đổi cửa sổ sử dụng các biểu tượng để đại diện cho cửa sổ
 Comment[x-test]=xxA window switcher layout using small icons to represent the windowxx
+Comment[zh_CN]=一个用小图标表示窗口的窗口切换器布局
 Comment[zh_TW]=使用小圖示來表示視窗的視窗切換器佈局
 Icon=preferences-system-windows-switcher-small-icons
 

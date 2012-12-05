@@ -68,6 +68,7 @@ Comment[sv]=En informativ layout för fönsterbyte som inkluderar skrivbordsnamn
 Comment[tr]=Masaüstü adını içeren, bilgilendirici bir pencere değiştirme düzeni
 Comment[uk]=Інформативне компонування засобу перемикання вікон з назвами стільниць
 Comment[x-test]=xxAn informative window switcher layout including desktop namexx
+Comment[zh_CN]=一个包含有用信息例如桌面名称的窗口切换器布局
 Comment[zh_TW]=有較多資訊，包含桌面名稱的視窗切換器佈局
 Icon=preferences-system-windows-switcher-informative
 

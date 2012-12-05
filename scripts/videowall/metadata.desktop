@@ -34,6 +34,7 @@ Name[sv]=Videovägg
 Name[tr]=Video Duvarı
 Name[uk]=Відеостіна
 Name[x-test]=xxVideo Wallxx
+Name[zh_CN]=视频墙
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
 Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per totes les pantalles enganxades per crear un mur de vídeo.
@@ -65,6 +66,7 @@ Comment[sv]=Utökar en videospelare med fullskärm över alla anslutna bildskär
 Comment[tr]=Bir Video Duvarı oluşturmak için tüm ekranlara iliştirilen tam ekran video oynatıcıları koparır
 Comment[uk]=Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни
 Comment[x-test]=xxSpans fullscreen video player over all attached screens to create a Video Wallxx
+Comment[zh_CN]=将全屏视频播放器显示在所有连接的屏幕上从而创建视频墙
 Comment[zh_TW]=將全螢幕的影像播放器擴展到所有的螢幕，建立一個影像牆
 Icon=preferences-system-windows-script-test
 

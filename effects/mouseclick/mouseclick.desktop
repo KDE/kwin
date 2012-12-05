@@ -23,6 +23,7 @@ Name[sr@latin]=Animacija na klik mišem
 Name[sv]=Animering av musklick
 Name[uk]=Анімація за клацанням миші
 Name[x-test]=xxMouse Click Animationxx
+Name[zh_CN]=鼠标点击动画
 Name[zh_TW]=滑鼠點擊動畫
 Icon=preferences-system-windows-effect-mouseclick
 
@@ -49,6 +50,7 @@ Comment[sr@latin]=Animacija svaki put kada se pritisne dugme miša. Korisno pri 
 Comment[sv]=Skapar en animering så fort en musknapp klickas. Det är användbart för skärminspelningar och presentationer.
 Comment[uk]=Створення анімацій у відповідь на клацання кнопкою миші. Корисне для записів демонстрацій та презентацій.
 Comment[x-test]=xxCreates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.xx
+Comment[zh_CN]=鼠标按键按下时显示动画。屏幕录制和演示时非常有用。
 Comment[zh_TW]=建立當滑鼠點擊時要顯示的動畫。在螢幕錄影或展示時相當有用。
 
 Type=Service
