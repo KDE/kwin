@@ -481,11 +481,18 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     Client *client = dynamic_cast<Client*>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     const QRect decorationRect = toplevel->decorationRect();
-    if ((client || deleted) && Workspace::self()->decorationHasAlpha())
+    if ((client && !client->noBorder()) || (deleted && !deleted->noBorder()) &&
+                                                        Workspace::self()->decorationHasAlpha()) {
+        // decorated client
         transformed_shape = decorationRect;
-    else
+        if (toplevel->shape()) {
+            // "xeyes" + decoration
+            transformed_shape -= cr;
+            transformed_shape += shape();
+        }
+    } else {
         transformed_shape = shape();
-
+    }
     if (toplevel->hasShadow())
         transformed_shape |= toplevel->shadow()->shadowRegion();
 
