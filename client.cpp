@@ -983,6 +983,8 @@ void Client::setShade(ShadeMode mode)
             setActive(true);
         if (shade_mode == ShadeHover) {
             ToplevelList order = workspace()->stackingOrder();
+            // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
+            shade_below = NULL;
             // this is likely related to the index parameter?!
             for (int idx = order.indexOf(this) + 1; idx < order.count(); ++idx) {
                 shade_below = qobject_cast<Client*>(order.at(idx));
