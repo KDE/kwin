@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Animation for a window going to maximize/restore from maximize
 Comment[ca]=Animació per una finestra que es maximitza/restaura des de maximització
+Comment[da]=Animation til et vindue der er ved at maksimere/gendanne fra maksimering
 Comment[el]=Εφέ κίνησης για παράθυρο που πρόκειται να εκτελέσει μεγιστοποίηση / επαναφορά από μεγιστοποίηση
 Comment[es]=Animación para una ventana que se va a maximizar o restaurar de una maximización
 Comment[et]=Maksimeeritava või maksimeeritust taastatava akna animatsioon
@@ -29,6 +30,7 @@ Icon=preferences-system-windows-effect-maximize
 Name=Maximize
 Name[ca]=Maximitza
 Name[cs]=Maximalizovat
+Name[da]=Maksimér
 Name[el]=Μεγιστοποίηση
 Name[es]=Maximizar
 Name[et]=Maksimeerimine

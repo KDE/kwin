@@ -2,6 +2,7 @@
 Name=Mouse Click Animation
 Name[ca]=Animació de clic de ratolí
 Name[cs]=Animace kliknutí myši
+Name[da]=Animation af museklik
 Name[el]=Εφέ κίνησης με κλικ του ποντικιού
 Name[es]=Animación del clic de ratón
 Name[et]=Hiireklõpsu animeerimine
@@ -29,6 +30,7 @@ Icon=preferences-system-windows-effect-mouseclick
 
 Comment=Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.
 Comment[ca]=Crea una animació quan es fa clic amb un botó del ratolí. Això és útil per enregistrar la pantalla o en presentacions.
+Comment[da]=Opretter en animation når der klikkes på en museknap. Dette er nyttigt til skærmoptagelser/præsentationer.
 Comment[el]=Σχηματίζει εφέ κίνησης όποτε γίνεται κλικ σε κουμπί του ποντικιού. Αυτό είναι χρήσιμο για βιντεοσκόπηση οθόνης / παρουσιάσεις.
 Comment[es]=Crea una animación cada vez que se pulsa un botón del ratón. Esto resulta útil para las grabaciones de pantalla y para las presentaciones.
 Comment[et]=Animatsiooni loomine hiirenupu klõpsamise peale. See on kasulik näiteks ekraanisalvestuste või esitluste jaoks.
