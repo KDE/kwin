@@ -69,13 +69,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
-#include <kxerrorhandler.h>
 
 #include <X11/extensions/shape.h>
 
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrandr.h>
 
+#include <xcb/composite.h>
 #include <xcb/damage.h>
 
 namespace KWin
@@ -886,33 +886,45 @@ void Toplevel::finishCompositing()
 void Toplevel::discardWindowPixmap()
 {
     addDamageFull();
-    if (window_pix == None)
+    if (window_pix == XCB_PIXMAP_NONE)
         return;
-    XFreePixmap(display(), window_pix);
-    window_pix = None;
+    xcb_free_pixmap(connection(), window_pix);
+    window_pix = XCB_PIXMAP_NONE;
     if (effectWindow() != NULL && effectWindow()->sceneWindow() != NULL)
         effectWindow()->sceneWindow()->pixmapDiscarded();
 }
 
-Pixmap Toplevel::createWindowPixmap()
+xcb_pixmap_t Toplevel::createWindowPixmap()
 {
     assert(compositing());
     if (unredirected())
-        return None;
-    grabXServer();
-    KXErrorHandler err;
-    Pixmap pix = XCompositeNameWindowPixmap(display(), frameId());
+        return XCB_PIXMAP_NONE;
+    XServerGrabber grabber();
+    xcb_pixmap_t pix = xcb_generate_id(connection());
+    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), frameId(), pix);
+    xcb_get_window_attributes_cookie_t attribsCookie = xcb_get_window_attributes(connection(), frameId());
+    xcb_get_geometry_cookie_t geometryCookie = xcb_get_geometry(connection(), frameId());
+    if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
+        kDebug(1212) << "Creating window pixmap failed: " << error->error_code;
+        free(error);
+        return XCB_PIXMAP_NONE;
+    }
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
-    XWindowAttributes attrs;
-    if (!XGetWindowAttributes(display(), frameId(), &attrs)
-            || err.error(false)
-            || attrs.width != width() || attrs.height != height() || attrs.map_state != IsViewable) {
+    ScopedCPointer<xcb_generic_error_t> error;
+    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(connection(), attribsCookie, &error));
+    if (!error.isNull() || attribs.isNull() || attribs->map_state != XCB_MAP_STATE_VIEWABLE) {
         kDebug(1212) << "Creating window pixmap failed: " << this;
-        XFreePixmap(display(), pix);
-        pix = None;
+        xcb_free_pixmap(connection(), pix);
+        return XCB_PIXMAP_NONE;
     }
-    ungrabXServer();
+    ScopedCPointer<xcb_get_geometry_reply_t> geometry(xcb_get_geometry_reply(connection(), geometryCookie, &error));
+    if (!error.isNull() || geometry.isNull() ||
+        geometry->width != width() || geometry->height != height()) {
+        kDebug(1212) << "Creating window pixmap failed: " << this;
+        xcb_free_pixmap(connection(), pix);
+        return XCB_PIXMAP_NONE;
+    }
     return pix;
 }
 

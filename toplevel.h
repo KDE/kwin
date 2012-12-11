@@ -329,7 +329,7 @@ protected:
     void detectShape(Window id);
     virtual void propertyNotifyEvent(XPropertyEvent* e);
     virtual void damageNotifyEvent(XDamageNotifyEvent* e);
-    Pixmap createWindowPixmap();
+    xcb_pixmap_t createWindowPixmap();
     void discardWindowPixmap();
     void addDamageFull();
     void getWmClientLeader();
