@@ -70,11 +70,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <klocale.h>
 
-#include <X11/extensions/shape.h>
-
-#include <X11/extensions/Xcomposite.h>
-#include <X11/extensions/Xrandr.h>
-
 #include <xcb/composite.h>
 #include <xcb/damage.h>
 
@@ -247,7 +242,7 @@ void Compositor::slotCompositingOptionsInitialized()
         vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
-    XCompositeRedirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
+    xcb_composite_redirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
@@ -298,7 +293,7 @@ void Compositor::finish()
     c->finishCompositing();
     foreach (Deleted * c, Workspace::self()->deletedList())
     c->finishCompositing();
-    XCompositeUnredirectSubwindows(display(), rootWindow(), CompositeRedirectManual);
+    xcb_composite_unredirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     delete effects;
     effects = NULL;
     delete m_scene;
@@ -1126,12 +1121,12 @@ bool Toplevel::updateUnredirectedState()
     if (should && !unredirect) {
         unredirect = true;
         kDebug(1212) << "Unredirecting:" << this;
-        XCompositeUnredirectWindow(display(), frameId(), CompositeRedirectManual);
+        xcb_composite_unredirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
         return true;
     } else if (!should && unredirect) {
         unredirect = false;
         kDebug(1212) << "Redirecting:" << this;
-        XCompositeRedirectWindow(display(), frameId(), CompositeRedirectManual);
+        xcb_composite_redirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
         discardWindowPixmap();
         return true;
     }
