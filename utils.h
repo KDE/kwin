@@ -286,6 +286,22 @@ bool grabbedXServer();
 bool grabXKeyboard(Window w = rootWindow());
 void ungrabXKeyboard();
 
+/**
+ * Small helper class which performs @link grabXServer in the ctor and
+ * @link ungrabXServer in the dtor. Use this class to ensure that grab and
+ * ungrab are matched.
+ **/
+class XServerGrabber
+{
+public:
+    XServerGrabber() {
+        grabXServer();
+    }
+    ~XServerGrabber() {
+        ungrabXServer();
+    }
+};
+
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint
 #define UrgencyHint XUrgencyHint
