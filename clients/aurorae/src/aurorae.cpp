@@ -244,6 +244,10 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
 
 AuroraeClient::~AuroraeClient()
 {
+    m_item->setParent(NULL);
+    m_item->deleteLater();
+    m_scene->setParent(NULL);
+    m_scene->deleteLater();
     m_view->setParent(NULL);
     m_view->deleteLater();
 }
