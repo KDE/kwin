@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_OVERLAYWINDOW_H
 
 #include <QRegion>
-
-#include <X11/Xlib.h>
+// xcb
+#include <xcb/xcb.h>
 
 namespace KWin {
 class OverlayWindow {
@@ -33,21 +33,23 @@ public:
     /// Creates XComposite overlay window, call initOverlay() afterwards
     bool create();
     /// Init overlay and the destination window in it
-    void setup(Window window);
+    void setup(xcb_window_t window);
     void show();
     void hide(); // hides and resets overlay window
     void setShape(const QRegion& reg);
     void resize(const QSize &size);
     /// Destroys XComposite overlay window
     void destroy();
-    Window window() const;
+    xcb_window_t window() const;
     bool isVisible() const;
     void setVisibility(bool visible);
 private:
+    void setNoneBackgroundPixmap(xcb_window_t window);
+    void setupInputShape(xcb_window_t window);
     bool m_visible;
     bool m_shown; // For showOverlay()
     QRegion m_shape;
-    Window m_window;
+    xcb_window_t m_window;
 };
 } // namespace
 
