@@ -66,15 +66,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_highlightedDropTarget(NULL)
     , m_dragToClose(false)
 {
-    m_atomDesktop = XInternAtom(display(), "_KDE_PRESENT_WINDOWS_DESKTOP", False);
-    m_atomWindows = XInternAtom(display(), "_KDE_PRESENT_WINDOWS_GROUP", False);
-    effects->registerPropertyType(m_atomDesktop, true);
-    effects->registerPropertyType(m_atomWindows, true);
-
-    // Announce support by creating a dummy version on the root window
-    unsigned char dummy = 0;
-    XChangeProperty(display(), rootWindow(), m_atomDesktop, m_atomDesktop, 8, PropModeReplace, &dummy, 1);
-    XChangeProperty(display(), rootWindow(), m_atomWindows, m_atomWindows, 8, PropModeReplace, &dummy, 1);
+    m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
+    m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = (KAction*)actionCollection->addAction("Expose");
@@ -105,10 +98,6 @@ PresentWindowsEffect::PresentWindowsEffect()
 
 PresentWindowsEffect::~PresentWindowsEffect()
 {
-    XDeleteProperty(display(), rootWindow(), m_atomDesktop);
-    effects->registerPropertyType(m_atomDesktop, false);
-    XDeleteProperty(display(), rootWindow(), m_atomWindows);
-    effects->registerPropertyType(m_atomWindows, false);
     foreach (ElectricBorder border, m_borderActivate) {
         effects->unreserveElectricBorder(border);
     }

@@ -149,6 +149,8 @@ public:
     virtual void registerPropertyType(long atom, bool reg);
     virtual QByteArray readRootProperty(long atom, long type, int format) const;
     virtual void deleteRootProperty(long atom) const;
+    virtual xcb_atom_t announceSupportProperty(const QByteArray& propertyName, Effect* effect);
+    virtual void removeSupportProperty(const QByteArray& propertyName, Effect* effect);
 
     virtual bool hasDecorationShadows() const;
 
@@ -235,6 +237,9 @@ private:
     QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
     QList< Effect* >::iterator m_currentPaintScreenIterator;
     QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    typedef QHash< QByteArray, QList< Effect*> > PropertyEffectMap;
+    PropertyEffectMap m_propertiesForEffects;
+    QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
     Scene *m_scene;
 };

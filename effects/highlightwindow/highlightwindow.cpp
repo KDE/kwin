@@ -32,12 +32,7 @@ HighlightWindowEffect::HighlightWindowEffect()
     , m_fadeDuration(float(animationTime(150)))
     , m_monitorWindow(NULL)
 {
-    m_atom = XInternAtom(display(), "_KDE_WINDOW_HIGHLIGHT", False);
-    effects->registerPropertyType(m_atom, true);
-
-    // Announce support by creating a dummy version on the root window
-    unsigned char dummy = 0;
-    XChangeProperty(display(), rootWindow(), m_atom, m_atom, 8, PropModeReplace, &dummy, 1);
+    m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
@@ -46,8 +41,6 @@ HighlightWindowEffect::HighlightWindowEffect()
 
 HighlightWindowEffect::~HighlightWindowEffect()
 {
-    XDeleteProperty(display(), rootWindow(), m_atom);
-    effects->registerPropertyType(m_atom, false);
 }
 
 static bool isInitiallyHidden(EffectWindow* w)

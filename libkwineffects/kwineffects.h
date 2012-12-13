@@ -807,6 +807,37 @@ public:
     virtual void registerPropertyType(long atom, bool reg) = 0;
     virtual QByteArray readRootProperty(long atom, long type, int format) const = 0;
     virtual void deleteRootProperty(long atom) const = 0;
+    /**
+     * @brief Announces support for the feature with the given name. If no other Effect
+     * has announced support for this feature yet, an X11 property will be installed on
+     * the root window.
+     *
+     * The Effect will be notified for events through the signal propertyNotify().
+     *
+     * To remove the support again use @link removeSupportProperty. When an Effect is
+     * destroyed it is automatically taken care of removing the support. It is not
+     * required to call @link removeSupportProperty in the Effect's cleanup handling.
+     *
+     * @param propertyName The name of the property to announce support for
+     * @param effect The effect which announces support
+     * @return xcb_atom_t The created X11 atom
+     * @see removeSupportProperty
+     * @since 4.11
+     **/
+    virtual xcb_atom_t announceSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
+    /**
+     * @brief Removes support for the feature with the given name. If there is no other Effect left
+     * which has announced support for the given property, the property will be removed from the
+     * root window.
+     *
+     * In case the Effect had not registered support, calling this function does not change anything.
+     *
+     * @param propertyName The name of the property to remove support for
+     * @param effect The effect which had registered the property.
+     * @see announceSupportProperty
+     * @since 4.11
+     **/
+    virtual void removeSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
 
     /**
      * Returns @a true if the active window decoration has shadow API hooks.

@@ -625,6 +625,57 @@ void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)
     }
 }
 
+xcb_atom_t EffectsHandlerImpl::announceSupportProperty(const QByteArray &propertyName, Effect *effect)
+{
+    PropertyEffectMap::iterator it = m_propertiesForEffects.find(propertyName);
+    if (it != m_propertiesForEffects.end()) {
+        // property has already been registered for an effect
+        // just append Effect and return the atom stored in m_managedProperties
+        if (!it.value().contains(effect)) {
+            it.value().append(effect);
+        }
+        return m_managedProperties.value(propertyName);
+    }
+    // get the atom for the propertyName
+    QScopedPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(connection(),
+        xcb_intern_atom_unchecked(connection(), false, propertyName.size(), propertyName.constData()),
+        NULL));
+    if (atomReply.isNull()) {
+        return XCB_ATOM_NONE;
+    }
+    // announce property on root window
+    unsigned char dummy = 0;
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, rootWindow(), atomReply->atom, atomReply->atom, 8, 1, &dummy);
+    // TODO: add to _NET_SUPPORTED
+    m_managedProperties.insert(propertyName, atomReply->atom);
+    m_propertiesForEffects.insert(propertyName, QList<Effect*>() << effect);
+    registerPropertyType(atomReply->atom, true);
+    return atomReply->atom;
+}
+
+void EffectsHandlerImpl::removeSupportProperty(const QByteArray &propertyName, Effect *effect)
+{
+    PropertyEffectMap::iterator it = m_propertiesForEffects.find(propertyName);
+    if (it == m_propertiesForEffects.end()) {
+        // property is not registered - nothing to do
+        return;
+    }
+    if (!it.value().contains(effect)) {
+        // property is not registered for given effect - nothing to do
+        return;
+    }
+    it.value().removeAll(effect);
+    if (!it.value().isEmpty()) {
+        // property still registered for another effect - nothing further to do
+        return;
+    }
+    // remove property from root window
+    const xcb_atom_t atom = m_managedProperties.take(propertyName);
+    deleteRootProperty(atom);
+    registerPropertyType(atom, false);
+    m_propertiesForEffects.remove(propertyName);
+}
+
 QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format) const
 {
     return readWindowProperty(rootWindow(), atom, type, format);
@@ -1357,6 +1408,11 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
             kDebug(1212) << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
             if (activeFullScreenEffect() == it.value().second) {
                 setActiveFullScreenEffect(0);
+            }
+            // remove support properties for the effect
+            const QList<QByteArray> properties = m_propertiesForEffects.keys();
+            foreach (const QByteArray &property, properties) {
+                removeSupportProperty(property, it.value().second);
             }
             delete it.value().second;
             effect_order.erase(it);

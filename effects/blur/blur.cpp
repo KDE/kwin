@@ -48,18 +48,14 @@ BlurEffect::BlurEffect()
 
     target = new GLRenderTarget(tex);
 
-    net_wm_blur_region = XInternAtom(display(), "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
-    effects->registerPropertyType(net_wm_blur_region, true);
-
     reconfigure(ReconfigureAll);
 
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid() && target->valid()) {
-        XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
-                        32, PropModeReplace, 0, 0);
+        net_wm_blur_region = effects->announceSupportProperty("_KDE_NET_WM_BLUR_BEHIND_REGION", this);
     } else {
-        XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
+        net_wm_blur_region = 0;
     }
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
@@ -69,9 +65,6 @@ BlurEffect::BlurEffect()
 
 BlurEffect::~BlurEffect()
 {
-    effects->registerPropertyType(net_wm_blur_region, false);
-    XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
-
     windows.clear();
 
     delete shader;

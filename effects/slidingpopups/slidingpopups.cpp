@@ -31,11 +31,7 @@ KWIN_EFFECT(slidingpopups, SlidingPopupsEffect)
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
-    mAtom = XInternAtom(display(), "_KDE_SLIDE", False);
-    effects->registerPropertyType(mAtom, true);
-    // TODO hackish way to announce support, make better after 4.0
-    unsigned char dummy = 0;
-    XChangeProperty(display(), rootWindow(), mAtom, mAtom, 8, PropModeReplace, &dummy, 1);
+    mAtom = effects->announceSupportProperty("_KDE_SLIDE", this);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
@@ -45,8 +41,6 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
 {
-    XDeleteProperty(display(), rootWindow(), mAtom);
-    effects->registerPropertyType(mAtom, false);
 }
 
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
