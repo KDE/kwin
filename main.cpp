@@ -48,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <KComboBox>
 #include <QVBoxLayout>
+#include <KGlobalSettings>
 
 #include "config-workspace.h"
 
@@ -442,7 +443,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     int number_of_screens = ScreenCount(dpy);
 
     // multi head
-    if (number_of_screens != 1) {
+    if (number_of_screens != 1 && KGlobalSettings::isMultiHead()) {
         KWin::is_multihead = true;
         KWin::screen_number = DefaultScreen(dpy);
         int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
