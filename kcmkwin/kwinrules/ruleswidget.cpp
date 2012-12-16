@@ -137,7 +137,10 @@ RulesWidget::RulesWidget(QWidget* parent)
     foreach (const QString & activityId, activities.listActivities()) {
         activity->addItem(KActivities::Info::name(activityId), activityId);
     }
-    activity->addItem(i18n("All Activities"), QString::fromLatin1("ALL"));
+    // cloned from kactivities/src/lib/core/consumer.cpp
+    #define NULL_UUID "00000000-0000-0000-0000-000000000000"
+    activity->addItem(i18n("All Activities"), QString::fromLatin1(NULL_UUID));
+    #undef NULL_UUID
 }
 
 #undef SETUP

@@ -50,7 +50,7 @@ install( TARGETS kwin_update_settings_410 DESTINATION ${LIB_INSTALL_DIR}/kconf_u
 
 install( FILES fsp_workarounds_1.kwinrules  DESTINATION  ${DATA_INSTALL_DIR}/kwin/default_rules )
 install( FILES pop.wav  DESTINATION  ${SOUND_INSTALL_DIR} )
-install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd kwin_update_410.upd DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
-install( PROGRAMS kwin_remove_delay_focus.sh DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
+install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd kwin_update_410.upd kwin_translate_activity_rule.upd DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
+install( PROGRAMS kwin_remove_delay_focus.sh kwin_translate_activity_rule.sh DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 install( FILES stripTitle.js  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 

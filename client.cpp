@@ -1520,6 +1520,8 @@ void Client::setOnActivity(const QString &activity, bool enable)
 /**
  * set exactly which activities this client is on
  */
+// cloned from kactivities/src/lib/core/consumer.cpp
+#define NULL_UUID "00000000-0000-0000-0000-000000000000"
 void Client::setOnActivities(QStringList newActivitiesList)
 {
     QString joinedActivitiesList = newActivitiesList.join(",");
@@ -1529,10 +1531,10 @@ void Client::setOnActivities(QStringList newActivitiesList)
     QStringList allActivities = workspace()->activityList();
     if ( newActivitiesList.isEmpty() ||
         (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count()) ||
-        (newActivitiesList.count() == 1 && newActivitiesList.at(0) == "ALL")) {
+        (newActivitiesList.count() == 1 && newActivitiesList.at(0) == NULL_UUID)) {
         activityList.clear();
         XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
-                        PropModeReplace, (const unsigned char *)"ALL", 3);
+                        PropModeReplace, (const unsigned char *)NULL_UUID, 36);
 
     } else {
         QByteArray joined = joinedActivitiesList.toAscii();
@@ -2364,7 +2366,7 @@ void Client::checkActivities()
     QStringList newActivitiesList;
     QByteArray prop = getStringProperty(window(), atoms->activities);
     activitiesDefined = !prop.isEmpty();
-    if (prop == "ALL") {
+    if (prop == NULL_UUID) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
         if (!activityList.isEmpty()) {
             activityList.clear();
@@ -2400,6 +2402,9 @@ void Client::checkActivities()
     }
     setOnActivities(newActivitiesList);
 }
+
+#undef NULL_UUID
+
 
 void Client::setSessionInteract(bool needed)
 {
