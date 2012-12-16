@@ -246,7 +246,7 @@ ColorCorrection::ColorCorrection(QObject *parent)
     : QObject(parent)
     , d_ptr(new ColorCorrectionPrivate(this))
 {
-
+    connect(this, SIGNAL(errorOccured()), this, SIGNAL(changed()));
 }
 
 ColorCorrection::~ColorCorrection()
@@ -284,22 +284,28 @@ ColorCorrectionPrivate::~ColorCorrectionPrivate()
 
 }
 
-void ColorCorrection::setEnabled(bool enabled)
+bool ColorCorrection::isEnabled() const
+{
+    Q_D(const ColorCorrection);
+    return d->m_enabled;
+}
+
+bool ColorCorrection::setEnabled(bool enabled)
 {
     Q_D(ColorCorrection);
 
     if (enabled == d->m_enabled)
-        return;
+        return true;
 
     if (enabled && d->m_hasError) {
-        kError(1212) << "cannot enable color correction";
-        return;
+        kError(1212) << "cannot enable color correction because of a previous error";
+        return false;
     }
 
     const GLPlatform *gl = GLPlatform::instance();
     if (enabled && gl->isGLES() && (gl->glVersion() >> 32) < 3) {
         kError(1212) << "color correction is not supported with OpenGL ES < 3.0";
-        return;
+        return false;
     }
 
     if (enabled) {
@@ -312,16 +318,31 @@ void ColorCorrection::setEnabled(bool enabled)
     d->m_enabled = enabled;
     GLShader::sColorCorrect = enabled;
     kDebug(1212) << enabled;
+    return true;
 }
 
 void ColorCorrection::setupForOutput(int screen)
 {
     Q_D(ColorCorrection);
 
+    if (d->m_hasError)
+        return;
+
+    // Clear any previous GL errors
+    checkGLError("setupForOutput-clearErrors");
+
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     if (!shader) {
         kError(1212) << "no bound shader for color correction setup";
+        d->m_hasError = true;
+        emit errorOccured();
         return;
+    }
+
+    if (d->m_ccTextureUnit < 0) {
+        GLint maxUnits = 0;
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
+        d->m_ccTextureUnit = maxUnits - 1;
     }
 
     if (!shader->setUniform("u_ccLookupTexture", d->m_ccTextureUnit)) {
@@ -329,9 +350,18 @@ void ColorCorrection::setupForOutput(int screen)
         if (!d->m_enabled)
             return;
         kError(1212) << "unable to set uniform for the color correction lookup texture";
+        d->m_hasError = true;
+        emit errorOccured();
+        return;
     }
+    checkGLError("setupForOutput-setUniform");
 
-    d->setupCCTextures();
+    if (!d->setupCCTextures()) {
+        kError(1212) << "unable to setup color correction textures";
+        d->m_hasError = true;
+        emit errorOccured();
+        return;
+    }
 
     GLint activeTexture;
     glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
@@ -342,13 +372,18 @@ void ColorCorrection::setupForOutput(int screen)
         Q_ASSERT(d->m_dummyCCTexture != 0);
         glBindTexture(GL_TEXTURE_3D, d->m_dummyCCTexture);
     } else {
-        // Everything looks ok, configure with the proper color correctiont texture
+        // Everything looks ok, configure with the proper color correction texture
         glBindTexture(GL_TEXTURE_3D, d->m_outputCCTextures[screen]);
     }
 
     glActiveTexture(activeTexture);
 
-    checkGLError("setupForOutput");
+    if (checkGLError("setupForOutput")) {
+        kError(1212) << "GL error while setting up color correction for output" << screen;
+        d->m_hasError = true;
+        emit errorOccured();
+        return;
+    }
 
     d->m_lastOutput = screen;
 }
@@ -533,19 +568,27 @@ QByteArray ColorCorrection::prepareFragmentShader(const QByteArray &sourceCode)
     return cfSource;
 }
 
-void ColorCorrectionPrivate::setupCCTextures()
+bool ColorCorrectionPrivate::setupCCTextures()
 {
-    if (m_ccTextureUnit < 0) {
-        GLint maxUnits = 0;
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
-        m_ccTextureUnit = maxUnits - 1;
+    if (!m_enabled || m_hasError) {
+        kWarning(1212) << "Color correction not enabled or an error occurred, refusing to set up textures";
+        return false;
     }
+
+    // Clear any previous GL errors
+    checkGLError("setupCCTextures-clearErrors");
 
     // Dummy texture first
     if (!m_dummyCCTexture) {
         glGenTextures(1, &m_dummyCCTexture);
-        setupCCTexture(m_dummyCCTexture, m_dummyClut);
+        if (!setupCCTexture(m_dummyCCTexture, m_dummyClut)) {
+            kError(1212) << "unable to setup dummy color correction texture";
+            m_dummyCCTexture = 0;
+            return false;
+        }
     }
+
+    bool success = true;
 
     // Setup actual color correction textures
     if (m_outputCCTextures.isEmpty() && !m_outputCluts->isEmpty()) {
@@ -556,15 +599,21 @@ void ColorCorrectionPrivate::setupCCTextures()
         glGenTextures(outputCount, m_outputCCTextures.data());
 
         for (int i = 0; i < outputCount; ++i)
-            setupCCTexture(m_outputCCTextures[i], m_outputCluts->at(i));
+            if (!setupCCTexture(m_outputCCTextures[i], m_outputCluts->at(i))) {
+                kError(1212) << "unable to set up color correction texture for output" << i;
+                success = false;
+            }
     }
 
-    // TODO Handle errors (what if a texture isn't generated?)
-    checkGLError("setupCCTextures");
+    success = success && !checkGLError("setupCCTextures");
+    return success;
 }
 
-void ColorCorrectionPrivate::deleteCCTextures()
+bool ColorCorrectionPrivate::deleteCCTextures()
 {
+    // Clear any previous GL errors
+    checkGLError("deleteCCTextures-clearErrors");
+
     // Delete dummy texture
     if (m_dummyCCTexture) {
         glDeleteTextures(1, &m_dummyCCTexture);
@@ -577,17 +626,18 @@ void ColorCorrectionPrivate::deleteCCTextures()
         m_outputCCTextures.clear();
     }
 
-    checkGLError("deleteCCTextures");
+    return !checkGLError("deleteCCTextures");
 }
 
-void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
+bool ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
 {
     if ((uint) clut.size() != CLUT_ELEMENT_COUNT) {
         kError(1212) << "cannot setup CC texture: invalid color lookup table";
-        return;
+        return false;
     }
 
-    kDebug(1212) << texture;
+    // Clear any previous GL errors
+    checkGLError("setupCCTexture-clearErrors");
 
     glBindTexture(GL_TEXTURE_3D, texture);
 
@@ -601,8 +651,7 @@ void ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
                  LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
                  0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
 
-
-    checkGLError("setupCCTexture");
+    return !checkGLError("setupCCTexture");
 }
 
 void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()

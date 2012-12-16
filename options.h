@@ -649,7 +649,6 @@ public:
     void setUnredirectFullscreen(bool unredirectFullscreen);
     void setGlSmoothScale(int glSmoothScale);
     void setGlVSync(bool glVSync);
-    void setColorCorrected(bool colorCorrected);
     void setXrenderSmoothScale(bool xrenderSmoothScale);
     void setMaxFpsInterval(uint maxFpsInterval);
     void setRefreshRate(uint refreshRate);
@@ -973,6 +972,9 @@ Q_SIGNALS:
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
     void glLegacyChanged();
+
+public Q_SLOTS:
+    void setColorCorrected(bool colorCorrected = false);
 
 private:
     void setElectricBorders(int borders);

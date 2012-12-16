@@ -440,7 +440,8 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     kDebug(1212) << "Color correction:" << options->isColorCorrected();
     m_colorCorrection->setEnabled(options->isColorCorrected());
     connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
-    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()));
+    connect(m_colorCorrection, SIGNAL(errorOccured()), options, SLOT(setColorCorrected()), Qt::QueuedConnection);
+    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     if (!ShaderManager::instance()->isValid()) {
         kDebug(1212) << "No Scene Shaders available";
@@ -491,7 +492,7 @@ SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)
 
 void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (options->isColorCorrected()) {
+    if (m_colorCorrection->isEnabled()) {
         // Split the painting for separate screens
         int numScreens = Workspace::self()->numScreens();
         for (int screen = 0; screen < numScreens; ++ screen) {
@@ -528,12 +529,13 @@ ColorCorrection *SceneOpenGL2::colorCorrection()
 
 void SceneOpenGL2::slotColorCorrectedChanged()
 {
-    m_colorCorrection->setEnabled(options->isColorCorrected());
-
-    // Reload all shaders
-    ShaderManager::cleanup();
-    ShaderManager::instance();
+    if (m_colorCorrection->setEnabled(options->isColorCorrected())) {
+        // Reload all shaders
+        ShaderManager::cleanup();
+        ShaderManager::instance();
+    }
 }
+
 
 //****************************************
 // SceneOpenGL1
@@ -1268,7 +1270,7 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
     }
     if (!opaque) {
         glEnable(GL_BLEND);
-        if (options->isColorCorrected()) {
+        if (static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->isEnabled()) {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         } else {
             if (alpha) {

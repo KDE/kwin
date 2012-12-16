@@ -80,9 +80,9 @@ public:
     explicit ColorCorrectionPrivate(ColorCorrection* parent);
     virtual ~ColorCorrectionPrivate();
 
-    void setupCCTextures();
-    void deleteCCTextures();
-    static void setupCCTexture(GLuint texture, const Clut &clut);
+    bool setupCCTextures();
+    bool deleteCCTextures();
+    static bool setupCCTexture(GLuint texture, const Clut &clut);
 
 public slots:
     void colorServerUpdateSucceededSlot();
