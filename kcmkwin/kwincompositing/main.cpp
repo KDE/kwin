@@ -86,6 +86,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     KGlobal::locale()->insertCatalog("kwin_effects");
     ui.setupUi(this);
     layout()->setMargin(0);
+    layout()->activate();
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
     ui.rearmGlSupport->hide();
