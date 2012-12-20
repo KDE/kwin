@@ -164,10 +164,10 @@ void TranslucencyEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& dat
     else if (m_activeDialogs && w->isDialog()) {
         data.setTranslucent();
     }
-    else if (m_activeMenus && (dropdownmenus != 1.0 && w->isDropdownMenu())
+    else if (m_activeMenus && ((dropdownmenus != 1.0 && w->isDropdownMenu())
             || (popupmenus != 1.0 && w->isPopupMenu())
             || (tornoffmenus != 1.0 && w->isMenu())
-            || (comboboxpopups != 1.0 && w->isComboBox())) {
+            || (comboboxpopups != 1.0 && w->isComboBox()))) {
         data.setTranslucent();
     }
 
