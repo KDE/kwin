@@ -72,7 +72,6 @@ class ScreenPrePaintData;
 class ScreenPaintData;
 
 typedef QPair< QString, Effect* > EffectPair;
-typedef QPair< Effect*, Window > InputWindowPair;
 typedef QList< KWin::EffectWindow* > EffectWindowList;
 
 
@@ -634,10 +633,10 @@ public:
     // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
     // covering the whole screen is created and all mouse events will be intercepted by it.
     // The effect's windowInputMouseEvent() will get called with such events.
-    virtual Window createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor) = 0;
-    Window createInputWindow(Effect* e, const QRect& r, const QCursor& cursor);
-    virtual Window createFullScreenInputWindow(Effect* e, const QCursor& cursor);
-    virtual void destroyInputWindow(Window w) = 0;
+    virtual xcb_window_t createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor) = 0;
+    xcb_window_t createInputWindow(Effect* e, const QRect& r, const QCursor& cursor);
+    virtual xcb_window_t createFullScreenInputWindow(Effect* e, const QCursor& cursor);
+    virtual void destroyInputWindow(xcb_window_t w) = 0;
     virtual QPoint cursorPos() const = 0;
     virtual bool grabKeyboard(Effect* effect) = 0;
     virtual void ungrabKeyboard() = 0;
@@ -1161,7 +1160,6 @@ Q_SIGNALS:
 protected:
     QVector< EffectPair > loaded_effects;
     QHash< QString, KLibrary* > effect_libraries;
-    QList< InputWindowPair > input_windows;
     //QHash< QString, EffectFactory* > effect_factories;
     CompositingType compositing_type;
 };

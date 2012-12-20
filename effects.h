@@ -36,6 +36,7 @@ class KService;
 
 namespace KWin
 {
+typedef QPair< Effect*, xcb_window_t > InputWindowPair;
 
 class ThumbnailItem;
 
@@ -133,9 +134,9 @@ public:
     virtual double animationTimeFactor() const;
     virtual WindowQuadType newWindowQuadType();
 
-    virtual Window createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor);
+    virtual xcb_window_t createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor);
     using EffectsHandler::createInputWindow;
-    virtual void destroyInputWindow(Window w);
+    virtual void destroyInputWindow(xcb_window_t w);
     virtual bool checkInputWindowEvent(XEvent* e);
     virtual void checkInputWindowStacking();
 
@@ -242,6 +243,7 @@ private:
     QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
     Scene *m_scene;
+    QList< InputWindowPair > input_windows;
 };
 
 class EffectWindowImpl : public EffectWindow

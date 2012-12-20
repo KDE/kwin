@@ -55,6 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 #include "composite.h"
+#include "xcbutils.h"
 
 
 namespace KWin
@@ -152,8 +153,9 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
         ungrabKeyboard();
     foreach (const EffectPair & ep, loaded_effects)
     unloadEffect(ep.first);
-    foreach (const InputWindowPair & pos, input_windows)
-    XDestroyWindow(display(), pos.second);
+    foreach (const InputWindowPair & pos, input_windows) {
+        xcb_destroy_window(connection(), pos.second);
+    }
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
@@ -1026,46 +1028,52 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int 
     return Workspace::self()->clientArea(opt, p, desktop);
 }
 
-Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor)
+xcb_window_t EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor)
 {
-    Window win = 0;
+    xcb_window_t win = XCB_WINDOW_NONE;
     QList<InputWindowPair>::iterator it = input_windows.begin();
     while (it != input_windows.end()) {
         if (it->first != e) {
             ++it;
             continue;
         }
-        XWindowAttributes attr;
-        if (!XGetWindowAttributes(display(), it->second, &attr)) {
+        Xcb::WindowAttributes attributes(it->second);
+        Xcb::WindowGeometry geometry(it->second);
+        if (!attributes) {
             // this is some random junk that certainly should no be here
             kDebug(1212) << "found input window that is NOT on the server, something is VERY broken here";
             Q_ASSERT(false); // exit in debug mode - for releases we'll be a bit more graceful
             it = input_windows.erase(it);
             continue;
         }
-        if (attr.x == x && attr.y == y && attr.width == w && attr.height == h) {
+        if (geometry.rect() == QRect(x, y, w, h)) {
             win = it->second; // re-use
             break;
-        } else if (attr.map_state == IsUnmapped) {
+        } else if (attributes->map_state == XCB_MAP_STATE_UNMAPPED) {
             // probably old one, likely no longer of interest
-            XDestroyWindow(display(), it->second);
+            xcb_destroy_window(connection(), it->second);
             it = input_windows.erase(it);
             continue;
         }
         ++it;
     }
-    if (!win) {
-        XSetWindowAttributes attrs;
-        attrs.override_redirect = True;
-        win = XCreateWindow(display(), rootWindow(), x, y, w, h, 0, 0, InputOnly, CopyFromParent,
-                                CWOverrideRedirect, &attrs);
+    if (win == XCB_WINDOW_NONE) {
+        win = xcb_generate_id(connection());
         // TODO keeping on top?
         // TODO enter/leave notify?
-        XSelectInput(display(), win, ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
-        XDefineCursor(display(), win, cursor.handle());
+        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK | XCB_CW_CURSOR;
+        const uint32_t values[] = {
+            true,
+            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION,
+            static_cast<uint32_t>(cursor.handle())
+        };
+        xcb_create_window(connection(), 0, win, rootWindow(), x, y, w, h, 0, XCB_WINDOW_CLASS_INPUT_ONLY,
+                          XCB_COPY_FROM_PARENT, mask, values);
         input_windows.append(qMakePair(e, win));
     }
-    XMapRaised(display(), win);
+    xcb_map_window(connection(), win);
+    const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+    xcb_configure_window(connection(), win, XCB_CONFIG_WINDOW_STACK_MODE, values);
     // Raise electric border windows above the input windows
     // so they can still be triggered.
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -1077,11 +1085,11 @@ Window EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int
     return win;
 }
 
-void EffectsHandlerImpl::destroyInputWindow(Window w)
+void EffectsHandlerImpl::destroyInputWindow(xcb_window_t w)
 {
     foreach (const InputWindowPair & pos, input_windows) {
         if (pos.second == w) {
-            XUnmapWindow(display(), w);
+            xcb_unmap_window(connection(), w);
 #ifdef KWIN_BUILD_SCREENEDGES
             Workspace::self()->screenEdge()->raisePanelProxies();
 #endif
@@ -1136,16 +1144,28 @@ void EffectsHandlerImpl::checkInputWindowStacking()
 {
     if (input_windows.count() == 0)
         return;
-    Window* wins = new Window[input_windows.count()];
-    int pos = 0;
+    xcb_window_t* wins = new xcb_window_t[input_windows.count()];
+    QList<Xcb::WindowAttributes> attributes;
     foreach (const InputWindowPair &it, input_windows) {
-        XWindowAttributes attr;
-        if (XGetWindowAttributes(display(), it.second, &attr) && attr.map_state != IsUnmapped)
-            wins[pos++] = it.second;
+        attributes << Xcb::WindowAttributes(it.second);
+    }
+    int pos = 0;
+    for (QList<Xcb::WindowAttributes>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
+        if (*it && (*it)->map_state != XCB_MAP_STATE_UNMAPPED) {
+            wins[pos++] = (*it).window();
+        }
     }
     if (pos) {
-        XRaiseWindow(display(), wins[0]);
-        XRestackWindows(display(), wins, pos);
+        const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+        xcb_configure_window(connection(), wins[0], XCB_CONFIG_WINDOW_STACK_MODE, values);
+        for (int i=1; i<pos; ++i) {
+            const uint16_t mask = XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE;
+            const uint32_t stackingValues[] = {
+                wins[i-1],
+                XCB_STACK_MODE_BELOW
+            };
+            xcb_configure_window(connection(), wins[i], mask, stackingValues);
+        }
     }
     delete[] wins;
     // Raise electric border windows above the input windows

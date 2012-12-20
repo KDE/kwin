@@ -595,12 +595,12 @@ EffectsHandler::~EffectsHandler()
     assert(loaded_effects.count() == 0);
 }
 
-Window EffectsHandler::createInputWindow(Effect* e, const QRect& r, const QCursor& cursor)
+xcb_window_t EffectsHandler::createInputWindow(Effect* e, const QRect& r, const QCursor& cursor)
 {
     return createInputWindow(e, r.x(), r.y(), r.width(), r.height(), cursor);
 }
 
-Window EffectsHandler::createFullScreenInputWindow(Effect* e, const QCursor& cursor)
+xcb_window_t EffectsHandler::createFullScreenInputWindow(Effect* e, const QCursor& cursor)
 {
     return createInputWindow(e, 0, 0, displayWidth(), displayHeight(), cursor);
 }
