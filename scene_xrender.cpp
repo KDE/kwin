@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "paintredirector.h"
+#include "xcbutils.h"
 #include "kwinxrenderutils.h"
 
 #include <X11/extensions/Xcomposite.h>
@@ -73,11 +74,11 @@ SceneXrender::SceneXrender(Workspace* ws)
     , m_overlayWindow(new OverlayWindow())
     , init_ok(false)
 {
-    if (!Extensions::renderAvailable()) {
+    if (!Xcb::Extensions::self()->isRenderAvailable()) {
         kError(1212) << "No XRender extension available";
         return;
     }
-    if (!Extensions::fixesRegionAvailable()) {
+    if (!Xcb::Extensions::self()->isFixesRegionAvailable()) {
         kError(1212) << "No XFixes v3+ extension available";
         return;
     }

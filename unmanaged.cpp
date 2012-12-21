@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "effects.h"
 #include "deleted.h"
+#include "xcbutils.h"
 
 #include <X11/extensions/shape.h>
 
@@ -69,7 +70,7 @@ bool Unmanaged::track(Window w)
     getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
-    if (Extensions::shapeAvailable())
+    if (Xcb::Extensions::self()->isShapeAvailable())
         XShapeSelectInput(display(), w, ShapeNotifyMask);
     detectShape(w);
     getWmOpaqueRegion();
@@ -89,7 +90,7 @@ void Unmanaged::release(bool on_shutdown)
     emit windowClosed(this, del);
     finishCompositing();
     if (!QWidget::find(window())) { // don't affect our own windows
-        if (Extensions::shapeAvailable())
+        if (Xcb::Extensions::self()->isShapeAvailable())
             XShapeSelectInput(display(), window(), NoEventMask);
         XSelectInput(display(), window(), NoEventMask);
     }

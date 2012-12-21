@@ -33,11 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 
-#include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xfixes.h>
 #include <X11/extensions/Xdamage.h>
 #include <X11/extensions/Xrandr.h>
-#include <X11/extensions/Xcomposite.h>
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
@@ -45,34 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-int Extensions::shape_version = 0;
-int Extensions::shape_event_base = 0;
-bool Extensions::has_randr = false;
-int Extensions::randr_event_base = 0;
-bool Extensions::has_damage = false;
-int Extensions::damage_event_base = 0;
-int Extensions::composite_version = 0;
-int Extensions::fixes_version = 0;
-int Extensions::render_version = 0;
-bool Extensions::has_sync = false;
-int Extensions::sync_event_base = 0;
 bool Extensions::non_native_pixmaps = false;
-// for fillExtensionsData()
-const char* Extensions::data_extensions[ 32 ];
-int Extensions::data_nextensions;
-int Extensions::data_opcodes[ 32 ];
-int Extensions::data_error_bases[ 32 ];
-
-void Extensions::addData(const char* name)
-{
-    assert(data_nextensions < 32);
-    int opcode, event_base, error_base;
-    XQueryExtension(display(), name, &opcode, &event_base, &error_base);
-    data_extensions[ data_nextensions ] = name;
-    data_opcodes[ data_nextensions ] = opcode;
-    data_error_bases[ data_nextensions ] = error_base;
-    ++data_nextensions;
-}
 
 void Extensions::init()
 {
@@ -80,127 +50,21 @@ void Extensions::init()
     if (initPerformed) {
         return;
     }
+    //  it seems like no events are delivered to XLib when the extension is not queried
     int event_base, error_base;
-    data_nextensions = 0;
-    shape_version = 0;
-    if (XShapeQueryExtension(display(), &shape_event_base, &error_base)) {
-        int major, minor;
-        if (XShapeQueryVersion(display(), &major, &minor)) {
-            shape_version = major * 0x10 + minor;
-            addData("SHAPE");
-        }
-    }
-    has_randr = XRRQueryExtension(display(), &randr_event_base, &error_base);
-    if (has_randr) {
-        int major, minor;
-        XRRQueryVersion(display(), &major, &minor);
-        has_randr = (major > 1 || (major == 1 && minor >= 1));
-        addData("RANDR");
-    }
-    has_damage = XDamageQueryExtension(display(), &damage_event_base, &error_base);
-    if (has_damage)
-        addData("DAMAGE");
-    composite_version = 0;
-    if (XCompositeQueryExtension(display(), &event_base, &error_base)) {
-        int major = 0, minor = 0;
-        XCompositeQueryVersion(display(), &major, &minor);
-        composite_version = major * 0x10 + minor;
-        addData("Composite");
-    }
-    fixes_version = 0;
-    if (XFixesQueryExtension(display(), &event_base, &error_base)) {
-        int major = 0, minor = 0;
-        XFixesQueryVersion(display(), &major, &minor);
-        fixes_version = major * 0x10 + minor;
-        addData("XFIXES");
-    }
-    render_version = 0;
-    if (XRenderQueryExtension(display(), &event_base, &error_base)) {
-        int major = 0, minor = 0;
-        XRenderQueryVersion(display(), &major, &minor);
-        render_version = major * 0x10 + minor;
-        addData("RENDER");
-    }
+    XShapeQueryExtension(display(), &event_base, &error_base);
+    XRRQueryExtension(display(), &event_base, &error_base);
+    XDamageQueryExtension(display(), &event_base, &error_base);
 #ifdef HAVE_XSYNC
-    if (XSyncQueryExtension(display(), &sync_event_base, &error_base)) {
-        int major = 0, minor = 0;
-        if (XSyncInitialize(display(), &major, &minor)) {
-            has_sync = true;
-            addData("SYNC");
-        }
-    }
+    XSyncQueryExtension(display(), &event_base, &error_base);
 #endif
+
     QPixmap pix(1,1);
     QPainter p(&pix);
     non_native_pixmaps = p.paintEngine()->type() != QPaintEngine::X11;
     p.end();
-    kDebug(1212) << "Extensions: shape: 0x" << QString::number(shape_version, 16)
-                 << " composite: 0x" << QString::number(composite_version, 16)
-                 << " render: 0x" << QString::number(render_version, 16)
-                 << " fixes: 0x" << QString::number(fixes_version, 16)
-                 << " non_native_pixmaps: " << non_native_pixmaps << endl;
+    kDebug(1212) << " non_native_pixmaps: " << non_native_pixmaps << endl;
     initPerformed = true;
-}
-
-void Extensions::fillExtensionsData(const char**& extensions, int& nextensions, int*&opcodes, int*& error_bases)
-{
-    extensions = data_extensions;
-    nextensions = data_nextensions;
-    opcodes = data_opcodes;
-    error_bases = data_error_bases;
-}
-
-int Extensions::shapeNotifyEvent()
-{
-    return shape_event_base + ShapeNotify;
-}
-
-// does the window w need a shape combine mask around it?
-bool Extensions::hasShape(Window w)
-{
-    int xws, yws, xbs, ybs;
-    unsigned int wws, hws, wbs, hbs;
-    int boundingShaped = 0, clipShaped = 0;
-    if (!shapeAvailable())
-        return false;
-    XShapeQueryExtents(display(), w,
-                       &boundingShaped, &xws, &yws, &wws, &hws,
-                       &clipShaped, &xbs, &ybs, &wbs, &hbs);
-    return boundingShaped != 0;
-}
-
-bool Extensions::shapeInputAvailable()
-{
-    return shape_version >= 0x11; // 1.1
-}
-
-int Extensions::randrNotifyEvent()
-{
-    return randr_event_base + RRScreenChangeNotify;
-}
-
-int Extensions::damageNotifyEvent()
-{
-    return damage_event_base + XDamageNotify;
-}
-
-bool Extensions::compositeOverlayAvailable()
-{
-    return composite_version >= 0x03; // 0.3
-}
-
-bool Extensions::fixesRegionAvailable()
-{
-    return fixes_version >= 0x30; // 3
-}
-
-int Extensions::syncAlarmNotifyEvent()
-{
-#ifdef HAVE_XSYNC
-    return sync_event_base + XSyncAlarmNotify;
-#else
-    return 0;
-#endif
 }
 
 } // namespace

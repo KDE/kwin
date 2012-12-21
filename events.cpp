@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "effects.h"
+#include "xcbutils.h"
 
 #include <QWhatsThis>
 #include <QApplication>
@@ -460,7 +461,7 @@ bool Workspace::workspaceEvent(XEvent * e)
         }
         break;
     default:
-        if (e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable()) {
+        if (e->type == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
             XRRUpdateConfiguration(e);
             if (compositing()) {
                 // desktopResized() should take care of when the size or
@@ -470,7 +471,7 @@ bool Workspace::workspaceEvent(XEvent * e)
                     m_compositor->setCompositeResetTimer(0);
             }
 
-        } else if (e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable()) {
+        } else if (e->type == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
 #ifdef HAVE_XSYNC
             foreach (Client * c, clients)
                 c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
@@ -662,13 +663,13 @@ bool Client::windowEvent(XEvent* e)
         break;
     default:
         if (e->xany.window == window()) {
-            if (e->type == Extensions::shapeNotifyEvent()) {
+            if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
                 detectShape(window());  // workaround for #19644
                 updateShape();
             }
         }
         if (e->xany.window == frameId()) {
-            if (e->type == Extensions::damageNotifyEvent())
+            if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
                 damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
         }
         break;
@@ -1610,13 +1611,13 @@ bool Unmanaged::windowEvent(XEvent* e)
         propertyNotifyEvent(&e->xproperty);
         break;
     default: {
-        if (e->type == Extensions::shapeNotifyEvent()) {
+        if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
             detectShape(window());
             addRepaintFull();
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
             emit geometryShapeChanged(this, geometry());
         }
-        if (e->type == Extensions::damageNotifyEvent())
+        if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
             damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
         break;
     }

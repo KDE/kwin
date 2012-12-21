@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"
+#include "xcbutils.h"
 
 namespace KWin
 {
@@ -109,7 +110,7 @@ bool Client::manage(Window w, bool isMapped)
     setupWindowRules(false);
     setCaption(cap_normal, true);
 
-    if (Extensions::shapeAvailable())
+    if (Xcb::Extensions::self()->isShapeAvailable())
         XShapeSelectInput(display(), window(), ShapeNotifyMask);
     detectShape(window());
     detectNoBorder();

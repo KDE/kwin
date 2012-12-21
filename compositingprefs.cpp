@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "compositingprefs.h"
 
-#include "kwinglobals.h"
+#include "xcbutils.h"
 #include "kwinglplatform.h"
 
 #include <kconfiggroup.h>
@@ -59,19 +59,18 @@ bool CompositingPrefs::compositingPossible()
         gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
         return false;
 
-    Extensions::init();
-    if (!Extensions::compositeAvailable()) {
+    if (!Xcb::Extensions::self()->isCompositeAvailable()) {
         kDebug(1212) << "No composite extension available";
         return false;
     }
-    if (!Extensions::damageAvailable()) {
+    if (!Xcb::Extensions::self()->isDamageAvailable()) {
         kDebug(1212) << "No damage extension available";
         return false;
     }
     if (hasGlx())
         return true;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (Extensions::renderAvailable() && Extensions::fixesAvailable())
+    if (Xcb::Extensions::self()->isRenderAvailable() && Xcb::Extensions::self()->isFixesAvailable())
         return true;
 #endif
 #ifdef KWIN_HAVE_OPENGLES
@@ -93,8 +92,7 @@ QString CompositingPrefs::compositingNotPossibleReason()
                     "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>"
                     "<p>Alternatively, you might want to use the XRender backend instead.</p>");
 
-    Extensions::init();
-    if (!Extensions::compositeAvailable() || !Extensions::damageAvailable()) {
+    if (!Xcb::Extensions::self()->isCompositeAvailable() || !Xcb::Extensions::self()->isDamageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
     }
 #if !defined( KWIN_HAVE_XRENDER_COMPOSITING )
@@ -102,7 +100,7 @@ QString CompositingPrefs::compositingNotPossibleReason()
         return i18n("GLX/OpenGL are not available and only OpenGL support is compiled.");
 #else
     if (!(hasGlx()
-            || (Extensions::renderAvailable() && Extensions::fixesAvailable()))) {
+            || (Xcb::Extensions::self()->isRenderAvailable() && Xcb::Extensions::self()->isFixesAvailable()))) {
         return i18n("GLX/OpenGL and XRender/XFixes are not available.");
     }
 #endif

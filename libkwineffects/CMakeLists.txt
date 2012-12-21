@@ -14,7 +14,6 @@ target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}
     ${X11_LIBRARIES}
     ${X11_Xrender_LIB}
     ${X11_Xrandr_LIB}
-    ${X11_Xcomposite_LIB}
     ${X11_Xdamage_LIB}
     ${X11_Xfixes_LIB}
 )

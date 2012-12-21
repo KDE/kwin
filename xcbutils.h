@@ -96,6 +96,69 @@ public:
     }
 };
 
+class ExtensionData
+{
+public:
+    ExtensionData();
+    int version;
+    int eventBase;
+    bool present;
+};
+
+class Extensions
+{
+public:
+    bool isShapeAvailable() const {
+        return m_shape.version > 0;
+    }
+    bool isShapeInputAvailable() const;
+    int shapeNotifyEvent() const;
+    bool hasShape(xcb_window_t w) const;
+    bool isRandrAvailable() const {
+        return m_randr.present;
+    }
+    int randrNotifyEvent() const;
+    bool isDamageAvailable() const {
+        return m_damage.present;
+    }
+    int damageNotifyEvent() const;
+    bool isCompositeAvailable() const {
+        return m_composite.version > 0;
+    }
+    bool isCompositeOverlayAvailable() const;
+    bool isRenderAvailable() const {
+        return m_render.version > 0;
+    }
+    bool isFixesAvailable() const {
+        return m_fixes.version > 0;
+    }
+    bool isFixesRegionAvailable() const;
+    bool isSyncAvailable() const {
+        return m_sync.present;
+    }
+    int syncAlarmNotifyEvent() const;
+
+    static Extensions *self();
+    static void destroy();
+private:
+    Extensions();
+    ~Extensions();
+    void init();
+    template <typename reply, typename T, typename F>
+    void initVersion(T cookie, F f, ExtensionData *dataToFill);
+    void extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill);
+
+    ExtensionData m_shape;
+    ExtensionData m_randr;
+    ExtensionData m_damage;
+    ExtensionData m_composite;
+    ExtensionData m_render;
+    ExtensionData m_fixes;
+    ExtensionData m_sync;
+
+    static Extensions *s_self;
+};
+
 } // namespace X11
 
 } // namespace KWin

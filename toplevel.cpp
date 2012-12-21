@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client_machine.h"
 #include "effects.h"
 #include "shadow.h"
+#include "xcbutils.h"
 
 namespace KWin
 {
@@ -107,7 +108,7 @@ QRect Toplevel::decorationRect() const
 void Toplevel::detectShape(Window id)
 {
     const bool wasShape = is_shape;
-    is_shape = Extensions::hasShape(id);
+    is_shape = Xcb::Extensions::self()->hasShape(id);
     if (wasShape != is_shape) {
         emit shapedChanged();
     }

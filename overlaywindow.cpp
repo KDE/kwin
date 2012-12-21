@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglobals.h"
 #include "utils.h"
+#include "xcbutils.h"
 
 #include "assert.h"
 
@@ -48,9 +49,9 @@ OverlayWindow::~OverlayWindow()
 bool OverlayWindow::create()
 {
     assert(m_window == XCB_WINDOW_NONE);
-    if (!Extensions::compositeOverlayAvailable())
+    if (!Xcb::Extensions::self()->isCompositeOverlayAvailable())
         return false;
-    if (!Extensions::shapeInputAvailable())  // needed in setupOverlay()
+    if (!Xcb::Extensions::self()->isShapeInputAvailable())  // needed in setupOverlay()
         return false;
 #ifdef KWIN_HAVE_XCOMPOSITE_OVERLAY
     ScopedCPointer<xcb_composite_get_overlay_window_reply_t> overlay =

@@ -63,6 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include "xcbutils.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #ifdef KWIN_BUILD_SCRIPTING
@@ -152,6 +153,7 @@ Workspace::Workspace(bool restore)
 
     // first initialize the extensions
     Extensions::init();
+    Xcb::Extensions::self();
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
@@ -551,6 +553,7 @@ Workspace::~Workspace()
 
     // TODO: ungrabXServer();
 
+    Xcb::Extensions::destroy();
     _self = 0;
 }
 

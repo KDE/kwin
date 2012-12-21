@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "deleted.h"
 #include "paintredirector.h"
+#include "xcbutils.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -720,7 +721,7 @@ void Client::updateInputShape()
 {
     if (hiddenPreview())   // Sets it to none, don't change
         return;
-    if (Extensions::shapeInputAvailable()) {
+    if (Xcb::Extensions::self()->isShapeInputAvailable()) {
         // There appears to be no way to find out if a window has input
         // shape set or not, so always propagate the input shape
         // (it's the same like the bounding shape by default).
@@ -1252,7 +1253,7 @@ void Client::updateHiddenPreview()
 {
     if (hiddenPreview()) {
         workspace()->forceRestacking();
-        if (Extensions::shapeInputAvailable())
+        if (Xcb::Extensions::self()->isShapeInputAvailable())
             XShapeCombineRectangles(display(), frameId(), ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
     } else {
         workspace()->forceRestacking();
@@ -2115,7 +2116,7 @@ void Client::getWindowProtocols()
 void Client::getSyncCounter()
 {
 #ifdef HAVE_XSYNC
-    if (!Extensions::syncAvailable())
+    if (!Xcb::Extensions::self()->isSyncAvailable())
         return;
 
     Atom retType;

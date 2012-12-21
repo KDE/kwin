@@ -164,60 +164,15 @@ KWIN_EXPORT int displayHeight()
 }
 
 /** @internal */
+// TODO: QT5: remove
 class KWIN_EXPORT Extensions
 {
 public:
     static void init();
-    static bool shapeAvailable() {
-        return shape_version > 0;
-    }
-    static bool shapeInputAvailable();
-    static int shapeNotifyEvent();
-    static bool hasShape(Window w);
-    static bool randrAvailable() {
-        return has_randr;
-    }
-    static int randrNotifyEvent();
-    static bool damageAvailable() {
-        return has_damage;
-    }
-    static int damageNotifyEvent();
-    static bool compositeAvailable() {
-        return composite_version > 0;
-    }
-    static bool compositeOverlayAvailable();
-    static bool renderAvailable() {
-        return render_version > 0;
-    }
-    static bool fixesAvailable() {
-        return fixes_version > 0;
-    }
-    static bool fixesRegionAvailable();
-    static bool syncAvailable() {
-        return has_sync;
-    }
     static bool nonNativePixmaps() {
         return non_native_pixmaps;
     }
-    static int syncAlarmNotifyEvent();
-    static void fillExtensionsData(const char**& extensions, int& nextensions, int*&majors, int*& error_bases);
 private:
-    static void addData(const char* name);
-    static int shape_version;
-    static int shape_event_base;
-    static bool has_randr;
-    static int randr_event_base;
-    static bool has_damage;
-    static int damage_event_base;
-    static int composite_version;
-    static int render_version;
-    static int fixes_version;
-    static bool has_sync;
-    static int sync_event_base;
-    static const char* data_extensions[ 32 ];
-    static int data_nextensions;
-    static int data_opcodes[ 32 ];
-    static int data_error_bases[ 32 ];
     static bool non_native_pixmaps;
 };
 

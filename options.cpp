@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "compositingprefs.h"
+#include "xcbutils.h"
 #include <kwinglplatform.h>
 
 #include <X11/extensions/Xrandr.h>
@@ -98,7 +99,7 @@ int currentRefreshRate()
         }
     }
 #endif
-    else if (Extensions::randrAvailable()) {
+    else if (Xcb::Extensions::self()->isRandrAvailable()) {
         XRRScreenConfiguration *config = XRRGetScreenInfo(display(), rootWindow());
         rate = XRRConfigCurrentRate(config);
         XRRFreeScreenConfigInfo(config);
