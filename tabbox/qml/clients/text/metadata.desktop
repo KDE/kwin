@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Text Icons
+Name[bs]=Tekst ikone
 Name[ca]=Icones de text
 Name[cs]=Textové ikony
 Name[da]=Tekstikoner
@@ -38,6 +39,7 @@ Name[x-test]=xxText Iconsxx
 Name[zh_CN]=文本图标
 Name[zh_TW]=文字圖示
 Comment=A window switcher layout only showing window captions
+Comment[bs]=Izgled prozora Switcher samo pokazuje prozora naslove
 Comment[ca]=Una disposició del commutador de finestres que només mostra els títols de finestra
 Comment[da]=Et vinduesskifter-layout som kun viser vinduestitler
 Comment[de]=Ein Fensterwechsler-Layout, das nur die Titel der Fenster anzeigt
