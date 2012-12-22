@@ -149,6 +149,7 @@ Comment[zh_CN]=配置活动窗口边缘
 Comment[zh_TW]=設定作用的螢幕邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords[bs]=kwin,prozor,upravitelj,efekt,ivica,granica,akcija,zamjena,podloga,kwin ivice ekrana,ivice podloge,ivice ekrana,uvećati prozor,ploča prozora,strana ekrana,ponašanje ekrana,zamjena podloge,virtuelna podloga,kutovi ekrana
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla
 X-KDE-Keywords[da]=kwin,vindue,håndtering,manager,effekt,kant,handling,skift,skrivebord,kwin skærmkanter,skrivebordskanter,skærmkanter,maksimer vinduer,tile windows,fliser,felter,siden af skærmen,skærmens opførsel,skift skrivebord,virtuelle skriveborde,skærmhjørner,hjørner
 X-KDE-Keywords[el]=kwin,παράθυρο,διαχειριστής,εφέ,άκρη,περίγραμμα,ενέργεια,εναλλαγή,επιφάνεια εργασίας,άκρες οθόνης kwin,άκρες επιφάνειας εργασίας,άκρες οθόνης,μεγιστοποίηση παραθύρων,παράθεση παραθύρων,πλευρά οθόνης,συμπεριφορά οθόνης,εναλλαγή επιφάνειας εργασίας,εικονική επιφάνεια εργασίας,γωνίες οθόνης

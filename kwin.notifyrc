@@ -7125,6 +7125,7 @@ Action=Popup
 
 [Event/fullscreen]
 Name=Window Fullscreen Set
+Name[bs]=Postavi preko cijelog ekrana
 Name[ca]=Estableix a pantalla completa
 Name[cs]=Okno nastaveno na celou obrazovku
 Name[da]=Fuldskærmsvindue sat
@@ -7160,6 +7161,7 @@ Name[x-test]=xxWindow Fullscreen Setxx
 Name[zh_CN]=窗口全屏已设置
 Name[zh_TW]=已設定成全螢幕
 Comment=A window has been set to fullscreen
+Comment[bs]=Prozor je postavljen na cijeli ekran
 Comment[ca]=Una finestra s'ha definit a pantalla completa
 Comment[cs]=Okno bylo nastaveno na celou obrazovku
 Comment[da]=Et vindue er blevet sat til fuldskærm
@@ -7199,6 +7201,7 @@ Comment[zh_TW]=已將視窗設定成全螢幕
 
 [Event/unfullscreen]
 Name=Window Fullscreen Restored
+Name[bs]=Obnoviti puni zaslon prozora
 Name[ca]=Finestra a pantalla completa restaurada
 Name[cs]=Okno obnoveno z celé obrazovky
 Name[da]=Fuldskærmsvindue gendannet
@@ -7235,6 +7238,7 @@ Name[x-test]=xxWindow Fullscreen Restoredxx
 Name[zh_CN]=窗口全屏已恢复
 Name[zh_TW]=已還原全螢幕
 Comment=A window has been restored from fullscreen
+Comment[bs]=Prozor je vraćen na puni zaslon
 Comment[ca]=Una finestra s'ha restaurat des de pantalla completa
 Comment[cs]=Okno bylo obnoveno z celé obrazovky
 Comment[da]=Et vindue er blevet gendannet fra fuldskærm
