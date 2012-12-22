@@ -127,7 +127,7 @@ bool UserActionsMenu::isShown() const
 
 bool UserActionsMenu::hasClient() const
 {
-    return !m_client.isNull();
+    return !m_client.isNull() && isShown();
 }
 
 void UserActionsMenu::close()
@@ -136,7 +136,7 @@ void UserActionsMenu::close()
         return;
     }
     m_menu->close();
-    m_client.clear();;
+    m_client.clear();
 }
 
 bool UserActionsMenu::isMenuClient(const Client *c) const
@@ -153,7 +153,7 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
         return;
     if (cl.isNull())
         return;
-    if (!m_client.isNull())   // recursion
+    if (isShown())   // recursion
         return;
     if (cl.data()->isDesktop()
             || cl.data()->isDock())
@@ -175,7 +175,6 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
         else
             m_menu->exec(QPoint(x, pos.top() - popupHeight));
     }
-    m_client.clear();;
 }
 
 void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Client> &c)

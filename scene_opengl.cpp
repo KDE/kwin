@@ -462,7 +462,9 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     }
     if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
         kDebug(1212) << "Driver does not recommend OpenGL 2 compositing";
+#ifndef KWIN_HAVE_OPENGLES
         return false;
+#endif
     }
     if (options->isGlLegacy()) {
         kDebug(1212) << "OpenGL 2 disabled by config option";
