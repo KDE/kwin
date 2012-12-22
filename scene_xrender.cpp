@@ -701,9 +701,10 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         }
 #undef RENDER_DECO_PART
 
-        if (data.brightness() < 1.0) {
+        if (data.brightness() != 1.0) {
             // fake brightness change by overlaying black
-            XRenderColor col = { 0, 0, 0, static_cast<unsigned short>(0xffff *(1 - data.brightness()) * data.opacity()) };
+            const float alpha = (1 - data.brightness()) * data.opacity();
+            XRenderColor col = preMultiply(data.brightness() < 1.0 ? QColor(0,0,0,255*alpha) : QColor(255,255,255,-alpha*255));
             if (blitInTempPixmap) {
                 XRenderFillRectangle(display(), PictOpOver, renderTarget, &col,
                                      -temp_visibleRect.left(), -temp_visibleRect.top(), width(), height());
