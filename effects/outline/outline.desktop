@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=Outline
-Name[bs]=Kontura
 Name[ca]=Contorn
 Name[ca@valencia]=Contorn
 Name[cs]=Obrys
@@ -50,7 +49,6 @@ Name[zh_CN]=概要
 Name[zh_TW]=輪廓
 Icon=preferences-system-windows-effect-outline
 Comment=Helper effect to render an outline
-Comment[bs]=Pomoćni efekt za crtanje konture
 Comment[ca]=Efecte auxiliar per dibuixar un contorn
 Comment[ca@valencia]=Efecte auxiliar per dibuixar un contorn
 Comment[cs]=Pomocný efekt pro vykreslení obrysu

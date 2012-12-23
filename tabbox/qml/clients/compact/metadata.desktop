@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=Compact
-Name[bs]=Kompaktan
 Name[ca]=Compacta
 Name[cs]=Kompaktní
 Name[da]=Kompakt
@@ -40,7 +39,6 @@ Name[x-test]=xxCompactxx
 Name[zh_CN]=兼容
 Name[zh_TW]=簡潔模式
 Comment=A compact window switcher layout
-Comment[bs]=Kompaktan prozor izgled Switchera
 Comment[ca]=Una disposició del commutador de finestres compacta
 Comment[da]=Et kompakt layout til vinduesskifter
 Comment[de]=Ein kompaktes Fensterwechsler-Layout
