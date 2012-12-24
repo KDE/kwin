@@ -2,7 +2,6 @@
 # Name of the effect
 Name=WindowGeometry
 Name[bg]=Геометрия на прозореца
-Name[bs]=Geometrija prozora
 Name[ca]=WindowGeometry
 Name[ca@valencia]=WindowGeometry
 Name[cs]=Geometrie okna
@@ -55,7 +54,6 @@ Name[zh_CN]=窗口形状
 Name[zh_TW]=視窗位置
 Comment=Display window geometries on move/resize
 Comment[bg]=Показване размерите на прозорците при местене и преоразмеряване
-Comment[bs]=Prikaz geometrije prozora pri premještanju i preuveličavanju
 Comment[ca]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[ca@valencia]=Visualitza la geometria de les finestres en moure/redimensionar
 Comment[cs]=Zobrazit geometrii okna při přesunu/změně velikosti
