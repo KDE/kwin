@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Window Strip
+Name[bs]=Traka Prozora
 Name[ca]=Cinta de finestres
 Name[cs]=Pruh oken
 Name[da]=Vinduesstribe
@@ -35,6 +36,7 @@ Name[x-test]=xxWindow Stripxx
 Name[zh_CN]=窗口列表
 Name[zh_TW]=視窗帶
 Comment=Window switcher layout for Plasma Active
+Comment[bs]=Prozor Switcher izgled za Plasma Active
 Comment[ca]=Disposició del commutador de finestres pel Plasma Active
 Comment[da]=Et vinduesskifter-layout til Plasma Active
 Comment[el]=Διάταξη εναλλαγής παραθύρων για το Plasma Active

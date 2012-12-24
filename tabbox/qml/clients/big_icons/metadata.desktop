@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Large Icons
+Name[bs]=Velike ikone
 Name[ca]=Icones grans
 Name[cs]=Velké ikony
 Name[da]=Store ikoner
@@ -39,6 +40,7 @@ Name[x-test]=xxLarge Iconsxx
 Name[zh_CN]=大图标
 Name[zh_TW]=大圖示
 Comment=A window switcher layout using large icons to represent the window
+Comment[bs]=Izgled prozora Switcher pomoću velike ikone za zastupanje prozor
 Comment[ca]=Una disposició del commutador de finestres que utilitza icones grans per representar la finestra
 Comment[da]=Et vinduesskifter-layout som bruger store ikoner til at repræsentere vinduet
 Comment[de]=Ein Fensterwechsler-Layout, das große Symbole zur Darstellung der Fenster verwendet
