@@ -145,6 +145,9 @@ public:
     int buttonWidthMenu() const {
         return m_buttonWidthMenu;
     }
+    int buttonWidthAppMenu() const {
+        return m_buttonWidthAppMenu;
+    }
     int buttonHeight() const {
         return m_buttonHeight;
     }
@@ -308,6 +311,9 @@ public:
     static int defaultButtonWidthMenu() {
         return defaultButtonWidth();
     }
+    static int defaultButtonWidthAppMenu() {
+        return defaultButtonWidthMenu();
+    }
     static int defaultButtonHeight() {
         return 20;
     }
@@ -389,6 +395,7 @@ private:
     int m_buttonWidthShade;
     int m_buttonWidthHelp;
     int m_buttonWidthMenu;
+    int m_buttonWidthAppMenu;
     int m_buttonHeight;
     int m_buttonSpacing;
     int m_buttonMarginTop;

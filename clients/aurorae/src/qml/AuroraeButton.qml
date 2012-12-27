@@ -23,6 +23,9 @@ DecorationButton {
         case "M":
             // menu
             return auroraeTheme.buttonWidthMenu;
+        case "N":
+            // app menu
+            return auroraeTheme.buttonWidthAppMenu;
         case "S":
             // all desktops
             return auroraeTheme.buttonWidthAllDesktops;

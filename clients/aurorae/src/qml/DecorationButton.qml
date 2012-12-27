@@ -62,6 +62,10 @@ Item {
                 // menu
                 decoration.menuClicked();
                 break;
+            case "N":
+                // app menu
+                decoration.appMenuClicked();
+                break;
             case "S":
                 // all desktops
                 decoration.toggleOnAllDesktops();

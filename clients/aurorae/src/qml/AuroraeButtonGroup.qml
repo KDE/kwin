@@ -27,6 +27,9 @@ Item {
             } else if (buttons.charAt(i) == "M") {
                 Qt.createQmlObject("import QtQuick 1.1; MenuButton { width: auroraeTheme.buttonWidthMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "menuButton" + buttons + i);
+            } else if (buttons.charAt(i) == "N") {
+                Qt.createQmlObject("import QtQuick 1.1; AppMenuButton { width: auroraeTheme.buttonWidthAppMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
+                    groupRow, "appMenuButton" + buttons + i);
             } else if (buttons.charAt(i) == "A") {
                 var maximizeComponent = Qt.createComponent("AuroraeMaximizeButton.qml");
                 maximizeComponent.createObject(groupRow);

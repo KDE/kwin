@@ -41,11 +41,13 @@ install( FILES
     qml/Decoration.qml
     qml/DecorationButton.qml
     qml/MenuButton.qml
+    qml/AppMenuButton.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/aurorae )
 install( FILES
     qml/Decoration.qml
     qml/DecorationButton.qml
     qml/MenuButton.qml
+    qml/AppMenuButton.qml
     qml/ButtonGroup.qml
     qml/qmldir
     DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/kwin/decoration )

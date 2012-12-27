@@ -41,6 +41,7 @@ Item {
         property bool keepBelow: false
         property bool maximized: false
         property bool providesContextHelp: true
+        property bool appMenu: true
         property string leftButtons: "MS"
         property string rightButtons: "HIA__X"
         function titleMouseMoved() {}

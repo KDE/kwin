@@ -167,6 +167,8 @@ QLatin1String AuroraeTheme::mapButtonToName(AuroraeButtonType type)
         return QLatin1String("help");
     case MenuButton:
         return QLatin1String("menu");
+    case AppMenuButton:
+        return QLatin1String("appmenu");
     default:
         return QLatin1String("");
     }
@@ -363,6 +365,7 @@ THEME_CONFIG(buttonWidthKeepBelow)
 THEME_CONFIG(buttonWidthShade)
 THEME_CONFIG(buttonWidthHelp)
 THEME_CONFIG(buttonWidthMenu)
+THEME_CONFIG(buttonWidthAppMenu)
 THEME_CONFIG(buttonHeight)
 THEME_CONFIG(buttonSpacing)
 THEME_CONFIG(buttonMarginTop)

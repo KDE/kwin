@@ -67,6 +67,7 @@ ThemeConfig::ThemeConfig()
     , m_buttonWidthShade(defaultButtonWidthShade())
     , m_buttonWidthHelp(defaultButtonWidthHelp())
     , m_buttonWidthMenu(defaultButtonWidthMenu())
+    , m_buttonWidthAppMenu(defaultButtonWidthAppMenu())
     , m_buttonHeight(defaultButtonHeight())
     , m_buttonSpacing(defaultButtonSpacing())
     , m_buttonMarginTop(defaultButtonMarginTop())
@@ -155,6 +156,7 @@ void ThemeConfig::load(const KConfig &conf)
     m_buttonWidthShade = border.readEntry("ButtonWidthShade", m_buttonWidth);
     m_buttonWidthHelp = border.readEntry("ButtonWidthHelp", m_buttonWidth);
     m_buttonWidthMenu = border.readEntry("ButtonWidthMenu", m_buttonWidth);
+    m_buttonWidthAppMenu = border.readEntry("ButtonWidthAppMenu", m_buttonWidthMenu);
     m_buttonHeight = border.readEntry("ButtonHeight", defaultButtonHeight());
     m_buttonSpacing = border.readEntry("ButtonSpacing", defaultButtonSpacing());
     m_buttonMarginTop = border.readEntry("ButtonMarginTop", defaultButtonMarginTop());
