@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_KILLWINDOW_H
 #define KWIN_KILLWINDOW_H
 
-#include "workspace.h"
+#include <xcb/xcb.h>
+
+typedef union  _XEvent XEvent;
 
 namespace KWin
 {
@@ -31,13 +34,25 @@ class KillWindow
 {
 public:
 
-    KillWindow(Workspace* ws);
+    KillWindow();
     ~KillWindow();
 
     void start();
+    bool isActive() const {
+        return m_active;
+    }
+    bool isResponsibleForEvent(int eventType) const;
+    // TODO: remove once event handling is ported to XCB
+    void processEvent(XEvent *event);
+    void processEvent(xcb_generic_event_t *event);
 
 private:
-    Workspace* workspace;
+    xcb_cursor_t createCursor();
+    void release();
+    void performKill();
+    void handleKeyPress(xcb_keycode_t keycode, uint16_t state);
+    void handleButtonRelease(xcb_button_t button, xcb_window_t window);
+    bool m_active;
 };
 
 } // namespace

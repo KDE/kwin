@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
 #include "sm.h"
+#include "killwindow.h"
 
 #include <X11/Xlib.h>
 
@@ -725,6 +726,8 @@ private:
 #endif
 
     Scripting *m_scripting;
+
+    QScopedPointer<KillWindow> m_windowKiller;
 
 private:
     friend bool performTransiencyCheck();
