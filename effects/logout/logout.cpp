@@ -21,11 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "logout.h"
+// KConfigSkeleton
+#include "logoutconfig.h"
 
 #include "kwinglutils.h"
 
 #include <math.h>
-#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <KDE/KStandardDirs>
 
@@ -80,9 +81,9 @@ LogoutEffect::~LogoutEffect()
 
 void LogoutEffect::reconfigure(ReconfigureFlags)
 {
+    LogoutConfig::self()->readConfig();
     frameDelay = 0;
-    KConfigGroup conf = effects->effectConfig("Logout");
-    useBlur = conf.readEntry("UseBlur", true);
+    useBlur = LogoutConfig::useBlur();
     delete blurTexture;
     blurTexture = NULL;
     delete blurTarget;
