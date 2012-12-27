@@ -222,12 +222,16 @@ void Compositor::slotCompositingOptionsInitialized()
     new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
-    foreach (Client * c, Workspace::self()->clientList())
+    foreach (Client * c, Workspace::self()->clientList()) {
         c->setupCompositing();
+        c->getShadow();
+    }
     foreach (Client * c,  Workspace::self()->desktopList())
         c->setupCompositing();
-    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
+    foreach (Unmanaged * c, Workspace::self()->unmanagedList()) {
         c->setupCompositing();
+        c->getShadow();
+    }
 
     emit compositingToggled(true);
 
