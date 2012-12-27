@@ -43,6 +43,7 @@ private:
         NoKeepBelowIcon,
         ShadeIcon,
         UnShadeIcon,
+        AppMenuIcon,
         NumButtonIcons
     };
     enum Object {

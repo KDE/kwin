@@ -91,6 +91,8 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
         } else {
             button = ShadeIcon;
         }
+    } else if (idParts[0] == "N") {
+        button = AppMenuIcon;
     } else {
         // not recognized icon
         return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
@@ -358,6 +360,13 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
             drawObject(p, VerticalLine, r.x(), r.y(), h, lw2);
             drawObject(p, VerticalLine, r.right()-(lw2-1), r.y(), h, lw2);
 
+            break;
+        }
+        case AppMenuIcon:
+        {
+            drawObject(p, HorizontalLine, r.x(), r.top()+(lwTitleBar-1), r.width(), lwTitleBar);
+            drawObject(p, HorizontalLine, r.x(), r.center().y(), r.width(), lwTitleBar);
+            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lwTitleBar-1), r.width(), lwTitleBar);
             break;
         }
 
