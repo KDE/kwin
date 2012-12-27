@@ -166,6 +166,8 @@ public slots:
     void titlebarDblClickOperation();
     void maximize(int button);
 
+    QRegion region(KDecorationDefines::Region r);
+
 private slots:
     void themeChanged();
     void doCloseWindow();

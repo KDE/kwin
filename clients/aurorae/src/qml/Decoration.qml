@@ -31,6 +31,10 @@ Item {
     property int borderRightMaximized
     property int borderTopMaximized
     property int borderBottomMaximized
+    property int extendedBorderTop : 0
+    property int extendedBorderRight : 0
+    property int extendedBorderBottom : 0
+    property int extendedBorderLeft : 0
     property bool alpha: true
     onAlphaChanged: alphaChanged()
 

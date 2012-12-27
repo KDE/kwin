@@ -576,6 +576,36 @@ void AuroraeClient::slotAlphaChanged()
     }
 }
 
+QRegion AuroraeClient::region(KDecorationDefines::Region r)
+{
+    if (r != ExtendedBorderRegion) {
+        return QRegion();
+    }
+    if (!m_item) {
+        return QRegion();
+    }
+    if (isMaximized()) {
+        // empty region for maximized windows
+        return QRegion();
+    }
+    const int top = m_item->property("extendedBorderTop").toInt();
+    const int right = m_item->property("extendedBorderRight").toInt();
+    const int bottom = m_item->property("extendedBorderBottom").toInt();
+    const int left = m_item->property("extendedBorderLeft").toInt();
+    if (top == 0 && right == 0 && bottom == 0 && left == 0) {
+        // no extended borders
+        return QRegion();
+    }
+
+    int paddingLeft, paddingRight, paddingTop, paddingBottom;
+    paddingLeft = paddingRight = paddingTop = paddingBottom = 0;
+    padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+    QRect rect = widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
+    rect.translate(-paddingLeft, -paddingTop);
+
+    return QRegion(rect.adjusted(-left, -bottom, right, top)).subtract(rect);
+}
+
 } // namespace Aurorae
 
 extern "C"

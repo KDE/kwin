@@ -19,29 +19,48 @@ import org.kde.kwin.decoration 0.1
 import org.kde.kwin.decorations.plastik 1.0
 
 Decoration {
+    function enableExtendedBorders() {
+        root.extendedBorderTop = 0;
+        root.extendedBorderRight = 3;
+        root.extendedBorderBottom = 3;
+        root.extendedBorderLeft = 3;
+    }
+    function disableExtendedBorders() {
+        root.extendedBorderTop = 0;
+        root.extendedBorderRight = 0;
+        root.extendedBorderBottom = 0;
+        root.extendedBorderLeft = 0;
+    }
     function readConfig() {
         switch (decoration.readConfig("BorderSize", DecorationOptions.BorderNormal)) {
         case DecorationOptions.BorderTiny:
             root.borderSize = 3;
+            enableExtendedBorders();
             break;
         case DecorationOptions.BorderLarge:
             root.borderSize = 8;
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderVeryLarge:
             root.borderSize = 12;
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderHuge:
             root.borderSize = 18;
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderVeryHuge:
             root.borderSize = 27;
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderOversized:
             root.borderSize = 40;
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderNormal: // fall through to default
         default:
             root.borderSize = 4;
+            disableExtendedBorders();
             break;
         }
         var titleAlignLeft = decoration.readConfig("titleAlignLeft", true);
