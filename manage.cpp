@@ -633,8 +633,8 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
     const uint32_t cw_values[] = {
         0,                                // back_pixmap
         0,                                // border_pixel
-        attr.colormap,                    // colormap
-        QCursor(Qt::ArrowCursor).handle() // cursor
+        static_cast<uint32_t>(attr.colormap),                    // colormap
+        static_cast<uint32_t>(QCursor(Qt::ArrowCursor).handle()) // cursor
     };
 
     const uint32_t cw_mask = XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL |
