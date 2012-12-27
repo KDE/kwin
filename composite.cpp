@@ -17,26 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
-/*
- Code related to compositing (redirecting windows to pixmaps and tracking
- window damage).
-
- Docs:
-
- XComposite (the protocol, but the function calls map to it):
- http://gitweb.freedesktop.org/?p=xorg/proto/compositeproto.git;a=blob_plain;hb=HEAD;f=compositeproto.txt
-
- XDamage (again the protocol):
- http://gitweb.freedesktop.org/?p=xorg/proto/damageproto.git;a=blob_plain;hb=HEAD;f=damageproto.txt
-
- Paper including basics on compositing, XGL vs AIGLX, XRender vs OpenGL, etc.:
- http://www.vis.uni-stuttgart.de/~hopf/pub/LinuxTag2007_compiz_NextGenerationDesktop_Paper.pdf
-
- Composite HOWTO from Fredrik:
- http://ktown.kde.org/~fredrik/composite_howto.html
-
-*/
 #include "composite.h"
 #include "compositingadaptor.h"
 
@@ -78,10 +58,6 @@ namespace KWin
 
 Compositor *Compositor::s_compositor = NULL;
 extern int currentRefreshRate();
-
-//****************************************
-// Workspace
-//****************************************
 
 Compositor *Compositor::createCompositor(QObject *parent)
 {

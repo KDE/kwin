@@ -19,9 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 /*
- (NOTE: The compositing code is work in progress. As such this design
- documentation may get outdated in some areas.)
-
  The base class for compositing, implementing shared functionality
  between the OpenGL and XRender backends.
 
@@ -31,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  drawing of windows to pixmaps and XDamage extension is used to get informed
  about damage (changes) to window contents. This code is mostly in composite.cpp .
 
- Workspace::performCompositing() starts one painting pass. Painting is done
+ Compositor::performCompositing() starts one painting pass. Painting is done
  by painting the screen, which in turn paints every window. Painting can be affected
  using effects, which are chained. E.g. painting a screen means that actually
  paintScreen() of the first effect is called, which possibly does modifications

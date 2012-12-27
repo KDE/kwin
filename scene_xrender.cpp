@@ -18,26 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
-/*
- This is the XRender-based compositing code. The primary compositing
- backend is the OpenGL-based one, which should be more powerful
- and also possibly better documented. This backend is mostly for cases
- when the OpenGL backend cannot be used for some reason (insufficient
- performance, no usable OpenGL support at all, etc.)
- The plan is to keep it around as long as needed/possible, but if it
- proves to be too much hassle it will be dropped in the future.
-
- Docs:
-
- XRender (the protocol, but the function calls map to it):
- http://gitweb.freedesktop.org/?p=xorg/proto/renderproto.git;a=blob_plain;hb=HEAD;f=renderproto.txt
-
- XFixes (again, the protocol):
- http://gitweb.freedesktop.org/?p=xorg/proto/fixesproto.git;a=blob_plain;hb=HEAD;f=fixesproto.txt
-
-*/
-
 #include "scene_xrender.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

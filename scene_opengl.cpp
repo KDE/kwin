@@ -21,51 +21,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
-
-/*
- This is the OpenGL-based compositing code. It is the primary and most powerful
- compositing backend.
-
-Sources and other compositing managers:
-=======================================
-
-- http://opengl.org
-    - documentation
-        - OpenGL Redbook (http://opengl.org/documentation/red_book/ - note it's only version 1.1)
-        - GLX docs (http://opengl.org/documentation/specs/glx/glx1.4.pdf)
-        - extensions docs (http://www.opengl.org/registry/)
-
-- glcompmgr
-    - http://lists.freedesktop.org/archives/xorg/2006-July/017006.html ,
-    - http://www.mail-archive.com/compiz%40lists.freedesktop.org/msg00023.html
-    - simple and easy to understand
-    - works even without texture_from_pixmap extension
-    - claims to support several different gfx cards
-    - compile with something like
-      "gcc -Wall glcompmgr-0.5.c `pkg-config --cflags --libs glib-2.0` -lGL -lXcomposite -lXdamage -L/usr/X11R6/lib"
-
-- compiz
-    - git clone git://anongit.freedesktop.org/git/xorg/app/compiz
-    - the ultimate <whatever>
-    - glxcompmgr
-        - git clone git://anongit.freedesktop.org/git/xorg/app/glxcompgr
-        - a rather old version of compiz, but also simpler and as such simpler
-            to understand
-
-- beryl
-    - a fork of Compiz
-    - http://beryl-project.org
-    - git clone git://anongit.beryl-project.org/beryl/beryl-core (or beryl-plugins etc. ,
-        the full list should be at git://anongit.beryl-project.org/beryl/)
-
-- libcm (metacity)
-    - cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
-    - not much idea about it, the model differs a lot from KWin/Compiz/Beryl
-    - does not seem to be very powerful or with that much development going on
-
-*/
-
 #include "scene_opengl.h"
 #ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"

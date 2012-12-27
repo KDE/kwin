@@ -91,16 +91,6 @@ static const char *KDED_INTERFACE = "org.kde.kded";
 
 Workspace* Workspace::_self = 0;
 
-//-----------------------------------------------------------------------------
-// Rikkus: This class is too complex. It needs splitting further.
-// It's a nightmare to understand, especially with so few comments :(
-//
-// Matthias: Feel free to ask me questions about it. Feel free to add
-// comments. I dissagree that further splittings makes it easier. 2500
-// lines are not too much. It's the task that is complex, not the
-// code.
-//-----------------------------------------------------------------------------
-
 Workspace::Workspace(bool restore)
     : QObject(0)
     // Desktop layout
@@ -270,10 +260,6 @@ void Workspace::init()
 #ifdef KWIN_BUILD_SCREENEDGES
     m_screenEdge.init();
 #endif
-
-    // Not used yet
-    //topDock = 0L;
-    //maximizedWindowCounter = 0;
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
     XLowerWindow(display(), supportWindow->winId());   // See usage in layers.cpp
