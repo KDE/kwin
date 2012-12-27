@@ -148,6 +148,8 @@ void ScreenShotEffect::postPaintScreen()
                 QPainter p(&m_lastScreenshot);
                 p.setCompositionMode(QPainter::CompositionMode_Source);
                 p.drawImage(QPoint(0, 0), img);
+                p.end();
+                XSync(display(), False);
             }
             emit screenshotCreated(m_lastScreenshot.handle());
         }
