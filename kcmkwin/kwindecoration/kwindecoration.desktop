@@ -194,6 +194,7 @@ X-KDE-Keywords[sv]=kwin,fönster,hantering,kant,stil,tema,utseende,känsla,layou
 X-KDE-Keywords[tr]=kwin,pencere,yönetici,kenarlık,biçim,tema,görünüm,şekil,düzen,düğme,kullanım,kenar,kwm,dekorasyon
 X-KDE-Keywords[uk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення
 X-KDE-Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
+X-KDE-Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理,边框,样式,主题,外怪,布局,按钮,边界,装饰
 X-KDE-Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
