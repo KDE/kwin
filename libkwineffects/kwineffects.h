@@ -618,7 +618,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QPoint cursorPos READ cursorPos)
     friend class Effect;
 public:
-    EffectsHandler(CompositingType type);
+    explicit EffectsHandler(CompositingType type);
     virtual ~EffectsHandler();
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData& data, int time) = 0;
@@ -1348,7 +1348,7 @@ public:
         PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
     };
 
-    EffectWindow(QObject *parent = NULL);
+    explicit EffectWindow(QObject *parent = NULL);
     virtual ~EffectWindow();
 
     virtual void enablePainting(int reason) = 0;
@@ -1565,7 +1565,7 @@ public:
 class KWIN_EXPORT GlobalShortcutsEditor : public KShortcutsEditor
 {
 public:
-    GlobalShortcutsEditor(QWidget *parent);
+    explicit GlobalShortcutsEditor(QWidget *parent);
 };
 
 /**
@@ -1834,7 +1834,7 @@ private:
 class KWIN_EXPORT WindowPaintData : public PaintData
 {
 public:
-    WindowPaintData(EffectWindow* w);
+    explicit WindowPaintData(EffectWindow* w);
     WindowPaintData(const WindowPaintData &other);
     virtual ~WindowPaintData();
     /**
@@ -2047,7 +2047,7 @@ public:
     /**
      * Calls push().
      */
-    PaintClipper(const QRegion& allowed_area);
+    explicit PaintClipper(const QRegion& allowed_area);
     /**
      * Calls pop().
      */

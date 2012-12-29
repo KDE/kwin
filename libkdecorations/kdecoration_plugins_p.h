@@ -46,7 +46,7 @@ class KWIN_EXPORT KDecorationPlugins
     : public KDecorationProvides
 {
 public:
-    KDecorationPlugins(const KSharedConfigPtr &cfg);
+    explicit KDecorationPlugins(const KSharedConfigPtr &cfg);
     virtual ~KDecorationPlugins();
     /** Whether the plugin with @p name can be loaded
      * if @p loadedLib is passed, the library is NOT unloaded and freed

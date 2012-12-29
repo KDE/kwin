@@ -42,7 +42,7 @@ class CloseWindowView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    CloseWindowView(QWidget* parent = 0);
+    explicit CloseWindowView(QWidget* parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     virtual void drawBackground(QPainter* painter, const QRectF& rect);
 

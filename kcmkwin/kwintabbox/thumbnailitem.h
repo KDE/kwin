@@ -31,7 +31,7 @@ class ThumbnailItem : public QDeclarativeItem
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
 public:
-    ThumbnailItem(QDeclarativeItem *parent = 0);
+    explicit ThumbnailItem(QDeclarativeItem *parent = 0);
     virtual ~ThumbnailItem();
 
     qulonglong wId() const {

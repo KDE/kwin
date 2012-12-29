@@ -46,7 +46,7 @@ class WindowRules
     : public KDecorationDefines
 {
 public:
-    WindowRules(const QVector< Rules* >& rules);
+    explicit WindowRules(const QVector< Rules* >& rules);
     WindowRules();
     void update(Client*, int selection);
     void discardTemporary();
@@ -99,7 +99,7 @@ class Rules
 {
 public:
     Rules();
-    Rules(const KConfigGroup&);
+    explicit Rules(const KConfigGroup&);
     Rules(const QString&, bool temporary);
     enum Type {
         Position = 1<<0, Size = 1<<1, Desktop = 1<<2,

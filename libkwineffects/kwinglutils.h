@@ -424,14 +424,14 @@ public:
      * @param reset Whether all uniforms should be reset to their default values. Defaults to false.
      * @see ShaderManager::pushShader
      **/
-    ShaderBinder(ShaderManager::ShaderType type, bool reset = false);
+    explicit ShaderBinder(ShaderManager::ShaderType type, bool reset = false);
     /**
      * @brief Pushes the given @p shader to the ShaderManager's stack.
      *
      * @param shader The Shader to push on the stack
      * @see ShaderManager::pushShader
      **/
-    ShaderBinder(GLShader *shader);
+    explicit ShaderBinder(GLShader *shader);
     ~ShaderBinder();
 
     /**
@@ -499,7 +499,7 @@ public:
      * Constructs a GLRenderTarget
      * @param color texture where the scene will be rendered onto
      **/
-    GLRenderTarget(const GLTexture& color);
+    explicit GLRenderTarget(const GLTexture& color);
     ~GLRenderTarget();
 
     /**
@@ -596,7 +596,7 @@ public:
         Stream ///< Data only used once for rendering, updated very frequently
     };
 
-    GLVertexBuffer(UsageHint hint);
+    explicit GLVertexBuffer(UsageHint hint);
     ~GLVertexBuffer();
 
     /**

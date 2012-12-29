@@ -123,7 +123,7 @@ class KDecorationPreviewPlugins
     : public KDecorationPlugins
 {
 public:
-    KDecorationPreviewPlugins(KConfig* cfg);
+    explicit KDecorationPreviewPlugins(KConfig* cfg);
     virtual bool provides(Requirement);
 };
 

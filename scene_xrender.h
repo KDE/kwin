@@ -38,7 +38,7 @@ class SceneXrender
     Q_OBJECT
 public:
     class EffectFrame;
-    SceneXrender(Workspace* ws);
+    explicit SceneXrender(Workspace* ws);
     virtual ~SceneXrender();
     virtual bool initFailed() const;
     virtual CompositingType compositingType() const {
@@ -153,7 +153,7 @@ class SceneXRenderShadow
     : public Shadow
 {
 public:
-    SceneXRenderShadow(Toplevel *toplevel);
+    explicit SceneXRenderShadow(Toplevel *toplevel);
     using Shadow::ShadowElements;
     using Shadow::ShadowElementTop;
     using Shadow::ShadowElementTopRight;

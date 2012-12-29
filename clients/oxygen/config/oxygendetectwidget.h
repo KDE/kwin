@@ -53,7 +53,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        DetectDialog( QWidget* );
+        explicit DetectDialog( QWidget* );
 
         //! read window properties or select one from mouse grab
         void detect( WId window );

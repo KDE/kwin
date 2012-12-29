@@ -36,7 +36,7 @@ class DesktopNamesWidget : public QWidget
 {
     Q_OBJECT
 public:
-    DesktopNamesWidget(QWidget *parent);
+    explicit DesktopNamesWidget(QWidget *parent);
     ~DesktopNamesWidget();
     QString name(int desktop);
     void setName(int desktop, QString desktopName);

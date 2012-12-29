@@ -243,7 +243,7 @@ class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    EffectWindowImpl(Toplevel *toplevel);
+    explicit EffectWindowImpl(Toplevel *toplevel);
     virtual ~EffectWindowImpl();
 
     virtual void enablePainting(int reason);
@@ -295,7 +295,7 @@ class EffectWindowGroupImpl
     : public EffectWindowGroup
 {
 public:
-    EffectWindowGroupImpl(Group* g);
+    explicit EffectWindowGroupImpl(Group* g);
     virtual EffectWindowList members() const;
 private:
     Group* group;

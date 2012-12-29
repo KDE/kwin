@@ -281,7 +281,7 @@ class Client
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 public:
-    Client(Workspace* ws);
+    explicit Client(Workspace* ws);
     Window wrapperId() const;
     Window decorationId() const;
     Window inputId() const { return input_window; }
@@ -1002,7 +1002,7 @@ private:
 class GeometryUpdatesBlocker
 {
 public:
-    GeometryUpdatesBlocker(Client* c)
+    explicit GeometryUpdatesBlocker(Client* c)
         : cl(c) {
         cl->blockGeometryUpdates(true);
     }

@@ -49,7 +49,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        ExceptionDialog( QWidget* parent );
+        explicit ExceptionDialog( QWidget* parent );
 
         //! set exception
         void setException( Exception );

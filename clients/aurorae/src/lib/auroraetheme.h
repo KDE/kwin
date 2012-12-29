@@ -110,7 +110,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(QString defaultButtonsLeft READ defaultButtonsLeft NOTIFY themeChanged)
     Q_PROPERTY(QString defaultButtonsRight READ defaultButtonsRight NOTIFY themeChanged)
 public:
-    AuroraeTheme(QObject* parent = 0);
+    explicit AuroraeTheme(QObject* parent = 0);
     virtual ~AuroraeTheme();
     // TODO: KSharedConfigPtr
     void loadTheme(const QString &name, const KConfig &config);

@@ -42,7 +42,7 @@ class TabBox;
 class TabBoxHandlerImpl : public TabBoxHandler
 {
 public:
-    TabBoxHandlerImpl(TabBox* tabBox);
+    explicit TabBoxHandlerImpl(TabBox* tabBox);
     virtual ~TabBoxHandlerImpl();
 
     virtual int activeScreen() const;
@@ -79,7 +79,7 @@ private:
 class TabBoxClientImpl : public TabBoxClient
 {
 public:
-    TabBoxClientImpl(Client *client);
+    explicit TabBoxClientImpl(Client *client);
     virtual ~TabBoxClientImpl();
 
     virtual QString caption() const;
@@ -107,7 +107,7 @@ class TabBox : public QObject
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin")
 public:
-    TabBox(QObject *parent = NULL);
+    explicit TabBox(QObject *parent = NULL);
     ~TabBox();
 
     Client* currentClient();

@@ -53,7 +53,7 @@ namespace Oxygen
         typedef QWeakPointer<TitleAnimationData> Pointer;
 
         //! constructor
-        TitleAnimationData( QObject* );
+        explicit TitleAnimationData( QObject* );
 
         //! reset
         void reset( void )

@@ -33,7 +33,7 @@ class Unmanaged
 {
     Q_OBJECT
 public:
-    Unmanaged(Workspace *ws);
+    explicit Unmanaged(Workspace *ws);
     bool windowEvent(XEvent* e);
     void release(bool on_shutdown = false);
     bool track(Window w);

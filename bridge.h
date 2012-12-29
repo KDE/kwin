@@ -31,7 +31,7 @@ class Client;
 class Bridge : public KDecorationBridgeUnstable
 {
 public:
-    Bridge(Client* cl);
+    explicit Bridge(Client* cl);
     virtual bool isActive() const;
     virtual bool isCloseable() const;
     virtual bool isMaximizable() const;

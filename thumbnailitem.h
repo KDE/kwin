@@ -37,7 +37,7 @@ class ThumbnailItem : public QDeclarativeItem
     Q_PROPERTY(bool clip READ isClip WRITE setClip NOTIFY clipChanged SCRIPTABLE true)
     Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
 public:
-    ThumbnailItem(QDeclarativeItem *parent = 0);
+    explicit ThumbnailItem(QDeclarativeItem *parent = 0);
     virtual ~ThumbnailItem();
 
     qulonglong wId() const {

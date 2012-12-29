@@ -257,7 +257,7 @@ private:
 class ScriptUnloaderAgent : public QScriptEngineAgent
 {
 public:
-    ScriptUnloaderAgent(Script *script);
+    explicit ScriptUnloaderAgent(Script *script);
     virtual void scriptUnload(qint64 id);
 
 private:
@@ -298,7 +298,7 @@ private:
     void runScripts();
 
 public:
-    Scripting(QObject *parent = NULL);
+    explicit Scripting(QObject *parent = NULL);
     ~Scripting();
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());

@@ -109,7 +109,7 @@ namespace Oxygen
         enum { NoItem = -1 };
 
         //! constructor
-        ClientGroupItemDataList( Client* parent );
+        explicit ClientGroupItemDataList( Client* parent );
 
         //! dirty state
         void setDirty( const bool& value )

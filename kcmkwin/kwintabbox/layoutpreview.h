@@ -34,7 +34,7 @@ class LayoutPreview : public QDeclarativeView
 {
     Q_OBJECT
 public:
-    LayoutPreview(QWidget *parent = NULL);
+    explicit LayoutPreview(QWidget *parent = NULL);
     virtual ~LayoutPreview();
 
     void setLayout(const QString &path, const QString &name);
@@ -43,7 +43,7 @@ public:
 class TabBoxImageProvider : public QDeclarativeImageProvider
 {
 public:
-    TabBoxImageProvider(QAbstractListModel *model);
+    explicit TabBoxImageProvider(QAbstractListModel *model);
     virtual QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 private:
     QAbstractListModel *m_model;
@@ -53,7 +53,7 @@ class ExampleClientModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    ExampleClientModel(QObject *parent = NULL);
+    explicit ExampleClientModel(QObject *parent = NULL);
     virtual ~ExampleClientModel();
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

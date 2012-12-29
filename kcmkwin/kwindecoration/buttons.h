@@ -61,7 +61,7 @@ public:
 class ButtonDrag : public QMimeData
 {
 public:
-    ButtonDrag(Button btn);
+    explicit ButtonDrag(Button btn);
     ~ButtonDrag() {}
 
     static bool canDecode(QDropEvent* e);
@@ -74,7 +74,7 @@ public:
 class ButtonDropSiteItem
 {
 public:
-    ButtonDropSiteItem(const Button& btn);
+    explicit ButtonDropSiteItem(const Button& btn);
     ~ButtonDropSiteItem();
 
     Button button();
@@ -112,7 +112,7 @@ class ButtonSource : public QListWidget
     Q_OBJECT
 
 public:
-    ButtonSource(QWidget *parent = 0);
+    explicit ButtonSource(QWidget *parent = 0);
     virtual ~ButtonSource();
 
     QSize sizeHint() const;

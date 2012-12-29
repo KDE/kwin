@@ -38,7 +38,7 @@ class RulesWidget
 {
     Q_OBJECT
 public:
-    RulesWidget(QWidget* parent = NULL);
+    explicit RulesWidget(QWidget* parent = NULL);
     void setRules(Rules* r);
     Rules* rules() const;
     bool finalCheck();
@@ -125,7 +125,7 @@ class EditShortcut
 {
     Q_OBJECT
 public:
-    EditShortcut(QWidget* parent = NULL);
+    explicit EditShortcut(QWidget* parent = NULL);
 protected slots:
     void editShortcut();
     void clearShortcut();

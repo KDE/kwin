@@ -43,7 +43,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        SizeGrip( Client* );
+        explicit SizeGrip( Client* );
 
         //! constructor
         virtual ~SizeGrip( void );

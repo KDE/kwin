@@ -45,7 +45,7 @@ public:
     //       and an inactive window.
     enum Windows { Inactive = 0, Active, NumWindows };
 
-    KDecorationPreview(QWidget* parent = NULL);
+    explicit KDecorationPreview(QWidget* parent = NULL);
     virtual ~KDecorationPreview();
     bool recreateDecoration(KDecorationPlugins* plugin);
     void enablePreview();
@@ -166,7 +166,7 @@ class KDecorationPreviewPlugins
     : public KDecorationPlugins
 {
 public:
-    KDecorationPreviewPlugins(const KSharedConfigPtr &cfg);
+    explicit KDecorationPreviewPlugins(const KSharedConfigPtr &cfg);
     virtual bool provides(Requirement);
 };
 

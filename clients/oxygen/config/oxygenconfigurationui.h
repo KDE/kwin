@@ -49,7 +49,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        ConfigurationUi( QWidget* );
+        explicit ConfigurationUi( QWidget* );
 
         //! destructor
         virtual ~ConfigurationUi( void )

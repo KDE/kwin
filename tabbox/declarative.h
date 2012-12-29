@@ -42,7 +42,7 @@ namespace TabBox
 class ImageProvider : public QDeclarativeImageProvider
 {
 public:
-    ImageProvider(QAbstractItemModel *model);
+    explicit ImageProvider(QAbstractItemModel *model);
     virtual QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
 private:

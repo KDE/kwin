@@ -34,7 +34,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        DecoHelper(const QByteArray &componentName);
+        explicit DecoHelper(const QByteArray &componentName);
 
         //! destructor
         virtual ~DecoHelper()

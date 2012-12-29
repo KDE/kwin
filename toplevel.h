@@ -165,7 +165,7 @@ class Toplevel
      **/
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
 public:
-    Toplevel(Workspace *ws);
+    explicit Toplevel(Workspace *ws);
     Window frameId() const;
     Window window() const;
     Workspace* workspace() const;

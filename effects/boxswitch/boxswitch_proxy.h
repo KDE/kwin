@@ -31,7 +31,7 @@ class BoxSwitchEffect;
 class BoxSwitchEffectProxy
 {
 public:
-    BoxSwitchEffectProxy(BoxSwitchEffect* effect);
+    explicit BoxSwitchEffectProxy(BoxSwitchEffect* effect);
     ~BoxSwitchEffectProxy();
 
     /**

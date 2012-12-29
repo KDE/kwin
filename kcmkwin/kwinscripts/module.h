@@ -37,7 +37,7 @@ public:
      * @param parent Parent widget of the module
      * @param args Arguments for the module
      */
-    Module(QWidget *parent, const QVariantList &args = QVariantList());
+    explicit Module(QWidget *parent, const QVariantList &args = QVariantList());
 
     /**
      * Destructor.

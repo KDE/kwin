@@ -87,7 +87,7 @@ class B2Titlebar : public QWidget
 {
     friend class B2Client;
 public:
-    B2Titlebar(B2Client *parent);
+    explicit B2Titlebar(B2Client *parent);
     ~B2Titlebar(){;}
     bool isFullyObscured() const {return isfullyobscured;}
     void recalcBuffer();

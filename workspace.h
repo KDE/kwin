@@ -83,7 +83,7 @@ class Workspace : public QObject, public KDecorationDefines
 {
     Q_OBJECT
 public:
-    Workspace(bool restore = false);
+    explicit Workspace(bool restore = false);
     virtual ~Workspace();
 
     static Workspace* self() {
@@ -860,7 +860,7 @@ private:
 class StackingUpdatesBlocker
 {
 public:
-    StackingUpdatesBlocker(Workspace* w)
+    explicit StackingUpdatesBlocker(Workspace* w)
         : ws(w) {
         ws->blockStackingUpdates(true);
     }

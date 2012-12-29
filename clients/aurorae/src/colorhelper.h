@@ -36,7 +36,7 @@ class ColorHelper : public QObject
      **/
     Q_PROPERTY(qreal contrast READ contrast CONSTANT)
 public:
-    ColorHelper(QObject *parent = 0);
+    explicit ColorHelper(QObject *parent = 0);
     ~ColorHelper();
     /**
      * This enumeration describes the color shade being selected from the given

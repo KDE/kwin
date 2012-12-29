@@ -46,7 +46,7 @@ class LanczosFilter
     Q_OBJECT
 
 public:
-    LanczosFilter(QObject* parent = 0);
+    explicit LanczosFilter(QObject* parent = 0);
     ~LanczosFilter();
     void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 

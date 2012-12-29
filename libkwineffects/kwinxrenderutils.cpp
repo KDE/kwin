@@ -84,7 +84,7 @@ XRenderPicture xRenderFill(const QColor &c)
     return xRenderFill(&xc);
 }
 
-static XRenderPicture _blendPicture = X::None;
+static XRenderPicture _blendPicture(X::None);
 static XRenderColor _blendColor;
 XRenderPicture xRenderBlendPicture(double opacity)
 {

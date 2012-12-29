@@ -206,7 +206,7 @@ class Options : public QObject, public KDecorationOptions
     Q_PROPERTY(bool glLegacy READ isGlLegacy WRITE setGlLegacy NOTIFY glLegacyChanged)
 public:
 
-    Options(QObject *parent = NULL);
+    explicit Options(QObject *parent = NULL);
     ~Options();
 
     virtual unsigned long updateSettings();

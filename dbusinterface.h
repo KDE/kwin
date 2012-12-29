@@ -53,7 +53,7 @@ class DBusInterface: public QObject
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
 public:
-    DBusInterface(QObject *parent);
+    explicit DBusInterface(QObject *parent);
     virtual ~DBusInterface();
 
 public: // PROPERTIES

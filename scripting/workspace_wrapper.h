@@ -163,7 +163,7 @@ public:
         ElectricNone
     };
 
-    WorkspaceWrapper(QObject* parent = 0);
+    explicit WorkspaceWrapper(QObject* parent = 0);
 #define GETTERSETTERDEF( rettype, getter, setter ) \
 rettype getter() const; \
 void setter( rettype val );

@@ -53,7 +53,7 @@ public:
     /**
      * Creates a new group containing \p c.
      */
-    TabGroup(Client* c);
+    explicit TabGroup(Client* c);
     ~TabGroup();
 
     enum State {

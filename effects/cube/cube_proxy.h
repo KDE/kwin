@@ -30,7 +30,7 @@ class CubeInsideEffect;
 class CubeEffectProxy
 {
 public:
-    CubeEffectProxy(CubeEffect* effect);
+    explicit CubeEffectProxy(CubeEffect* effect);
     ~CubeEffectProxy();
 
     void registerCubeInsideEffect(CubeInsideEffect* effect);

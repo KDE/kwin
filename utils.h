@@ -215,7 +215,7 @@ class KWinSelectionOwner
 {
     Q_OBJECT
 public:
-    KWinSelectionOwner(int screen);
+    explicit KWinSelectionOwner(int screen);
 protected:
     virtual bool genericReply(Atom target, Atom property, Window requestor);
     virtual void replyTargets(Atom property, Window requestor);
@@ -383,7 +383,7 @@ class ShortcutDialog
 {
     Q_OBJECT
 public:
-    ShortcutDialog(const QKeySequence& cut);
+    explicit ShortcutDialog(const QKeySequence& cut);
     virtual void accept();
     QKeySequence shortcut() const;
 public Q_SLOTS:

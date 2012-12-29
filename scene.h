@@ -40,7 +40,7 @@ class Scene : public QObject
 {
     Q_OBJECT
 public:
-    Scene(Workspace* ws);
+    explicit Scene(Workspace* ws);
     virtual ~Scene() = 0;
     class EffectFrame;
     class Window;

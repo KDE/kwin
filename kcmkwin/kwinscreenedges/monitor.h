@@ -46,7 +46,7 @@ class Monitor
 {
     Q_OBJECT
 public:
-    Monitor(QWidget* parent);
+    explicit Monitor(QWidget* parent);
     void setEdge(int edge, bool set);
     bool edge(int edge) const;
     void setEdgeHidden(int edge, bool set);

@@ -46,7 +46,7 @@ namespace Oxygen
         {}
 
         //! default constructor
-        ExceptionList( const KConfig& config )
+        explicit ExceptionList( const KConfig& config )
         { read( config ); }
 
         //! read from KConfig

@@ -130,7 +130,7 @@ namespace Oxygen
         Configuration( void );
 
         //! constructor from KConfig
-        Configuration( KConfigGroup );
+        explicit Configuration( KConfigGroup );
 
         //! destructor
         virtual ~Configuration( void )

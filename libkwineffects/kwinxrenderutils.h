@@ -58,7 +58,7 @@ class KWIN_EXPORT XRenderPictureData
     : public QSharedData
 {
 public:
-    XRenderPictureData(Picture pic = None);
+    explicit XRenderPictureData(Picture pic = None);
     ~XRenderPictureData();
     Picture value();
 private:
@@ -76,8 +76,8 @@ private:
 class KWIN_EXPORT XRenderPicture
 {
 public:
-    XRenderPicture(Picture pic = None);
-    XRenderPicture(QPixmap pix);
+    explicit XRenderPicture(Picture pic = None);
+    explicit XRenderPicture(QPixmap pix);
     XRenderPicture(Pixmap pix, int depth);
     operator Picture();
 private:

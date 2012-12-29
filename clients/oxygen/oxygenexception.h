@@ -78,7 +78,7 @@ namespace Oxygen
         {}
 
         //! constructor
-        Exception( KConfigGroup );
+        explicit Exception( KConfigGroup );
 
         //! destructor
         virtual ~Exception( void )
