@@ -1046,7 +1046,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
             oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), workspace()->oldDisplayHeight());   // Full screen height
             oldGeomWide = QRect(0, oldGeometry.y(), workspace()->oldDisplayWidth(), oldGeometry.height());   // Full screen width
             int distance = INT_MAX;
-            foreach( QRect r, workspace()->previousScreenSizes()) {
+            foreach(const QRect &r, workspace()->previousScreenSizes()) {
                 int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
                 if( d < distance ) {
                     distance = d;

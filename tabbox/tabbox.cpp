@@ -600,7 +600,7 @@ ClientList TabBox::currentClientList()
 {
     TabBoxClientList list = m_tabBox->clientList();
     ClientList ret;
-    foreach (QWeakPointer<TabBoxClient> clientPointer, list) {
+    foreach (const QWeakPointer<TabBoxClient> &clientPointer, list) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
         if (!client)
             continue;

@@ -455,7 +455,7 @@ void TabBoxHandler::createModel(bool partialReset)
         // TODO: C++11 use lambda function
         bool lastRaised = false;
         bool lastRaisedSucc = false;
-        foreach (QWeakPointer<TabBoxClient> clientPointer, stackingOrder()) {
+        foreach (const QWeakPointer<TabBoxClient> &clientPointer, stackingOrder()) {
             QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
             if (!client) {
                 continue;
