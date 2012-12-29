@@ -1902,14 +1902,20 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             if (!isResize() || syncRequest.counter == None)
 #endif
                 XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
+            // SELI - won't this be too expensive?
+            // THOMAS - yes, but gtk+ clients will not resize without ...
+            sendSyntheticConfigureNotify();
         }
         updateShape();
     } else {
-        if (moveResizeMode && compositing()) {
-            // Defer the X update until we leave this mode
-            needsXWindowMove = true;
+        if (moveResizeMode) {
+            if (compositing())  // Defer the X update until we leave this mode
+                needsXWindowMove = true;
+            else
+                XMoveWindow(display(), frameId(), x, y); // sendSyntheticConfigureNotify() on finish shall be sufficient
         } else {
             XMoveWindow(display(), frameId(), x, y);
+            sendSyntheticConfigureNotify();
         }
 
         // Unconditionally move the input window: it won't affect rendering
@@ -1918,8 +1924,6 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             XMoveWindow(display(), inputId(), pos.x(), pos.y());
         }
     }
-    // SELI TODO won't this be too expensive?
-    sendSyntheticConfigureNotify();
     updateWindowRules(Rules::Position|Rules::Size);
 
     // keep track of old maximize mode
@@ -2683,6 +2687,8 @@ void Client::leaveMoveResize()
         XMoveWindow(display(), frameId(), geom.x(), geom.y());
         needsXWindowMove = false;
     }
+    if (!isResize())
+        sendSyntheticConfigureNotify(); // tell the client about it's new final position
     if (geometryTip) {
         geometryTip->hide();
         delete geometryTip;
@@ -3063,7 +3069,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             sendSyncRequest();
         } else {                            // for clients not supporting the XSYNC protocol, we
             syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
-            syncRequest.timeout->start(33); // and the client, the mouse is still moved a full speed
+            syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
         }                                   // and no human can control faster resizes anyway
         XMoveResizeWindow(display(), window(), 0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
     } else
