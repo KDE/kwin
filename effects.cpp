@@ -440,6 +440,7 @@ void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
 
 void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c)
 {
+    c->disconnect(this);
     emit windowClosed(c->effectWindow());
 }
 
