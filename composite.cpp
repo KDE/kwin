@@ -107,6 +107,7 @@ Compositor::~Compositor()
 {
     finish();
     delete cm_selection;
+    s_compositor = NULL;
 }
 
 
