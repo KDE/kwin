@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kcrash.h>
-#include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <QX11Info>
