@@ -906,7 +906,7 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
     m_isDamaged = true;
 
     // Note: The rect is supposed to specify the damage extents,
-    //       but we dont't know it at this point. No one who connects
+    //       but we don't know it at this point. No one who connects
     //       to this signal uses the rect however.
     emit damaged(this, QRect());
 }
