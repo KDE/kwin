@@ -147,6 +147,8 @@ Q_SIGNALS: // SIGNALS
      * @deprecated
      **/
     void compositingToggled(bool active);
+private Q_SLOTS:
+    void becomeKWinService(const QString &service);
 };
 
 } // namespace

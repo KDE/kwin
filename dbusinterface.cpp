@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // own
 #include "dbusinterface.h"
+
 // kwin
 // TODO: remove together with deprecated methods
 #include "client.h"
@@ -27,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "kwinadaptor.h"
 #include "workspace.h"
+
+// Qt
+#include <QDBusServiceWatcher>
 
 namespace KWin
 {
@@ -38,7 +42,10 @@ DBusInterface::DBusInterface(QObject *parent)
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KWin", this);
-    dbus.registerService("org.kde.KWin");
+    if (!dbus.registerService("org.kde.KWin")) {
+        QDBusServiceWatcher *dog = new QDBusServiceWatcher("org.kde.KWin", dbus, QDBusServiceWatcher::WatchForUnregistration, this);
+        connect (dog, SIGNAL(serviceUnregistered(const QString&)), SLOT(becomeKWinService(const QString&)));
+    }
     connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig",
                  Workspace::self(), SLOT(slotReloadConfig()));
@@ -46,8 +53,20 @@ DBusInterface::DBusInterface(QObject *parent)
                  Compositor::self(), SLOT(slotReinitialize()));
 }
 
+void DBusInterface::becomeKWinService(const QString &service)
+{
+    // TODO: this watchdog exists to make really safe that we at some point get the service
+    // but it's probably no longer needed since we explicitly unregister the service with the deconstructor
+    if (service == "org.kde.KWin" && QDBusConnection::sessionBus().registerService("org.kde.KWin") && sender()) {
+        sender()->deleteLater(); // bye doggy :'(
+    }
+}
+
 DBusInterface::~DBusInterface()
 {
+    QDBusConnection::sessionBus().unregisterService("org.kde.KWin"); // this is the long standing legal service
+    // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
+    QDBusConnection::sessionBus().unregisterService("org.kde.kwin");
 }
 
 void DBusInterface::circulateDesktopApplications()
