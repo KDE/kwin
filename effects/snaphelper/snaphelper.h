@@ -45,6 +45,7 @@ public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
+    void slotWindowResized(KWin::EffectWindow *w, const QRect &r);
 
 private:
     bool m_active;

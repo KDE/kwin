@@ -39,6 +39,7 @@ SnapHelperEffect::SnapHelperEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*, const QRect&)), this, SLOT(slotWindowResized(KWin::EffectWindow*, const QRect&)));
 
     /*if ( effects->compositingType() == XRenderCompositing )
         {
@@ -94,7 +95,7 @@ void SnapHelperEffect::postPaintScreen()
             glLineWidth(4.0);
             QVector<float> verts;
             verts.reserve(effects->numScreens() * 24);
-            for (int i = 0; i < effects->numScreens(); i++) {
+            for (int i = 0; i < effects->numScreens(); ++i) {
                 const QRect& rect = effects->clientArea(ScreenArea, i, 0);
                 int midX = rect.x() + rect.width() / 2;
                 int midY = rect.y() + rect.height() / 2 ;
@@ -126,7 +127,7 @@ void SnapHelperEffect::postPaintScreen()
         }
         if ( effects->compositingType() == XRenderCompositing ) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            for ( int i = 0; i < effects->numScreens(); i++ ) {
+            for (int i = 0; i < effects->numScreens(); ++i) {
                 const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
                 int midX = rect.x() + rect.width() / 2;
                 int midY = rect.y() + rect.height() / 2 ;
@@ -198,6 +199,17 @@ void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
     if (m_active) {
         m_active = false;
         effects->addRepaintFull();
+    }
+}
+
+void SnapHelperEffect::slotWindowResized(KWin::EffectWindow *w, const QRect &oldRect)
+{
+    if (w == m_window) {
+        QRect r(oldRect);
+        for (int i = 0; i < effects->numScreens(); ++i) {
+            r.moveCenter(effects->clientArea( ScreenArea, i, 0 ).center());
+            effects->addRepaint(r);
+        }
     }
 }
 
