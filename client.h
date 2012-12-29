@@ -556,7 +556,7 @@ public:
      * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
      */
     Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
-    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect());
+    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
     /**
      * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
      */

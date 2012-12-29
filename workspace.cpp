@@ -663,7 +663,7 @@ void Workspace::removeClient(Client* c, allowed_t)
         m_userActionsMenu->close();
     }
 
-    c->untab();
+    c->untab(QRect(), true);
 
     if (client_keys_client == c)
         setupWindowShortcutDone(false);

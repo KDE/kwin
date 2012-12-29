@@ -1849,13 +1849,15 @@ bool Client::tabTo(Client *other, bool behind, bool activate)
     return true;
 }
 
-bool Client::untab(const QRect &toGeometry)
+bool Client::untab(const QRect &toGeometry, bool clientRemoved)
 {
     TabGroup *group = tab_group;
     if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
         if (group->isEmpty()) {
             delete group;
         }
+        if (clientRemoved)
+            return true; // there's been a broadcast signal that this client is now removed - don't touch it
         setClientShown(!(isMinimized() || isShade()));
         bool keepSize = toGeometry.size() == size();
         bool changedSize = false;
