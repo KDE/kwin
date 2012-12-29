@@ -196,7 +196,7 @@ void KWinCompositingConfig::showConfirmDialog(bool reinitCompositing)
     bool revert = false;
     // Feel free to extend this to support several kwin instances (multihead) if you
     // think it makes sense.
-    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
     if (reinitCompositing ? !kwin.compositingActive().value() : !kwin.waitForCompositingSetup().value()) {
         KMessageBox::sorry(this, i18n(
                                "Failed to activate desktop effects using the given "
@@ -399,7 +399,7 @@ void KWinCompositingConfig::updateStatusUI(bool compositingIsPossible)
         ui.rearmGlSupport->hide();
     }
     else {
-        OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
         ui.compositingOptionsContainer->hide();
         QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
         text += "<hr>";
@@ -416,7 +416,7 @@ void KWinCompositingConfig::load()
 {
     initEffectSelector();
     mKWinConfig->reparseConfiguration();
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "compositingPossible");
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.kde.KWin", "/KWin", "org.kde.KWin", "compositingPossible");
     QDBusConnection::sessionBus().callWithCallback(msg, this, SLOT(updateStatusUI(bool)));
 
     // Copy Plugins group to temp config file
@@ -527,7 +527,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
 
 void KWinCompositingConfig::save()
 {
-    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
     if (ui.compositingType->currentIndex() == OPENGL_INDEX &&
         kwin.openGLIsBroken() && !ui.rearmGlSupport->isVisible())
     {
@@ -595,7 +595,7 @@ void KWinCompositingConfig::checkLoadedEffects()
 {
     // check for effects not supported by Backend or hardware
     // such effects are enabled but not returned by DBus method loadedEffects
-    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
     KConfigGroup effectConfig = KConfigGroup(mKWinConfig, "Compositing");
     bool enabledAfter = effectConfig.readEntry("Enabled", true);
 
@@ -626,7 +626,7 @@ void KWinCompositingConfig::checkLoadedEffects()
 void KWinCompositingConfig::showDetailedEffectLoadingInformation()
 {
     QStringList disabledEffects = m_showDetailedErrors->data().toStringList();
-    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
     QDBusPendingReply< QString > pendingCompositingType = kwin.compositingType();
     QString compositingType = pendingCompositingType.isError() ? "none" : pendingCompositingType.value();
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
