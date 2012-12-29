@@ -218,7 +218,7 @@ bool Client::manage(Window w, bool isMapped)
     QString activitiesList;
     activitiesList = rules()->checkActivity(activitiesList, !isMapped);
     if (!activitiesList.isEmpty())
-        setOnActivities(activitiesList.split(","));
+        setOnActivities(activitiesList.split(','));
 
     QRect geom(attr.x, attr.y, attr.width, attr.height);
     bool placementDone = false;
