@@ -131,6 +131,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
 #endif
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
+        emit stackingOrderChanged();
         if (m_compositor) {
             m_compositor->addRepaintFull();
         }

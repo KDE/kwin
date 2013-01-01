@@ -569,6 +569,11 @@ signals:
      * @param id id of the removed activity
      */
     void activityRemoved(const QString &id);
+    /**
+     * This signels is emitted when ever the stacking order is change, ie. a window is risen
+     * or lowered
+     */
+    void stackingOrderChanged();
 
 private:
     void init();

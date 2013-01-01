@@ -131,6 +131,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
     connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
     connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+    connect(ws, SIGNAL(stackingOrderChanged()), SIGNAL(stackingOrderChanged()));
 #ifdef KWIN_BUILD_TABBOX
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
     connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
