@@ -30,10 +30,10 @@ QElapsedTimer AnimationEffect::s_clock;
 
 struct AnimationEffectPrivate {
 public:
-    AnimationEffectPrivate() { m_animated = m_damageDirty = false; }
+    AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = false; }
     AnimationEffect::AniMap m_animations;
     EffectWindowList m_zombies;
-    bool m_animated, m_damageDirty, m_needSceneRepaint;
+    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched;
 };
 }
 
@@ -182,6 +182,8 @@ void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, 
     it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource));
     it->second = QRect();
 
+    d->m_animationsTouched = true;
+
     if (delay > 0) {
         QTimer::singleShot(delay, this, SLOT(triggerRepaint()));
         if (waitAtSource)
@@ -200,16 +202,19 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         return;
     }
 
+    d->m_animationsTouched = false;
     AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end();
     d->m_animated = false;
 //     short int transformed = 0;
     while (entry != mapEnd) {
         bool invalidateLayerRect = false;
         QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end();
+        int animCounter = 0;
         while (anim != animEnd) {
             if (anim->startTime > clock()) {
                 if (!anim->waitAtSource) {
                     ++anim;
+                    ++animCounter;
                     continue;
                 }
             } else {
@@ -221,8 +226,25 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 //                     transformed = true;
                 d->m_animated = true;
                 ++anim;
+                ++animCounter;
             } else {
-                animationEnded(entry.key(), anim->attribute, anim->meta);
+                EffectWindow *oldW = entry.key();
+                AniData *aData = &(*anim);
+                animationEnded(oldW, anim->attribute, anim->meta);
+                // NOTICE animationEnded is an external call and might have called "::animate"
+                // as a result our iterators could now point random junk on the heap
+                // so we've to restore the former states, ie. find our window list and animation
+                if (d->m_animationsTouched) {
+                    d->m_animationsTouched = false;
+                    entry = d->m_animations.begin(), mapEnd = d->m_animations.end();
+                    while (entry.key() != oldW && entry != mapEnd)
+                        ++entry;
+                    Q_ASSERT(entry != mapEnd); // usercode should not delete animations from animationEnded (not even possible atm.)
+                    anim = entry->first.begin(), animEnd = entry->first.end();
+                    Q_ASSERT(animCounter < entry->first.count());
+                    for (int i = 0; i < animCounter; ++i)
+                        ++anim;
+                }
                 anim = entry->first.erase(anim);
                 invalidateLayerRect = d->m_damageDirty = true;
                 animEnd = entry->first.end();
