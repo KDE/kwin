@@ -32,14 +32,7 @@
         my $key = $1;
         my $value = $2;
 
-        if( $key eq "VerticalOffset" )
-        {
-            # shadow vertical offset
-            $value = int(10*$value);
-            print( "$key=$value\n" );
-            next;
-
-        } elsif( $key eq "BlendColor" ) {
+        if( $key eq "BlendColor" ) {
 
             # Blend style
             # delete key (renamed to BlendStyle )
