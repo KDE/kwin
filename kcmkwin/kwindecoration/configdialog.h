@@ -34,6 +34,7 @@ class KWinAuroraeConfigForm : public QWidget, public Ui::KWinAuroraeConfigForm
 
 public:
     explicit KWinAuroraeConfigForm(QWidget* parent);
+    void enableNoSideBorderSupport(bool enable);
 };
 
 class KWinDecorationConfigForm : public QWidget, public Ui::KWinDecorationConfigForm

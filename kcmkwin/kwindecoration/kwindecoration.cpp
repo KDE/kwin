@@ -377,6 +377,7 @@ void KWinDecorationModule::slotConfigureDecoration()
         dlg->setCaption(i18n("Decoration Options"));
         dlg->setButtons(KDialog::Ok | KDialog::Cancel);
         KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm(dlg);
+        form->enableNoSideBorderSupport(index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration);
         dlg->setMainWidget(form);
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());

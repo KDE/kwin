@@ -176,6 +176,8 @@ public:
         BorderHuge,      ///< Huge borders
         BorderVeryHuge,  ///< Very huge borders
         BorderOversized, ///< Oversized borders
+        BorderNoSides,   ///< No borders on sides @since 4.11
+        BorderNone,      ///< No borders except title @since 4.11
         BordersCount     ///< @internal
     };
 

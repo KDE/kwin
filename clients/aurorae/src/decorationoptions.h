@@ -120,7 +120,9 @@ public:
         BorderVeryLarge, ///< Very large borders
         BorderHuge,      ///< Huge borders
         BorderVeryHuge,  ///< Very huge borders
-        BorderOversized ///< Oversized borders
+        BorderOversized, ///< Oversized borders
+        BorderNoSides,   ///< No borders on sides
+        BorderNone       ///< No borders except title
     };
     explicit DecorationOptions(QObject *parent = 0);
     virtual ~DecorationOptions();

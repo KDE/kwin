@@ -35,13 +35,24 @@ static const char* const border_names[ KDecorationDefines::BordersCount ] = {
     I18N_NOOP2("@item:inlistbox Border size:", "Very Large"),
     I18N_NOOP2("@item:inlistbox Border size:", "Huge"),
     I18N_NOOP2("@item:inlistbox Border size:", "Very Huge"),
-    I18N_NOOP2("@item:inlistbox Border size:", "Oversized")
+    I18N_NOOP2("@item:inlistbox Border size:", "Oversized"),
+    I18N_NOOP2("@item:inlistbox Border size:", "No Side Border"),
+    I18N_NOOP2("@item:inlistbox Border size:", "No Border"),
 };
 
 KWinAuroraeConfigForm::KWinAuroraeConfigForm(QWidget* parent)
     : QWidget(parent)
 {
     setupUi(this);
+}
+
+void KWinAuroraeConfigForm::enableNoSideBorderSupport(bool enable)
+{
+    if (!enable) {
+        return;
+    }
+    borderSizesCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[KDecorationDefines::BorderBottom]));
+    borderSizesCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[KDecorationDefines::BorderNone]));
 }
 
 KWinDecorationConfigForm::KWinDecorationConfigForm(QWidget* parent)

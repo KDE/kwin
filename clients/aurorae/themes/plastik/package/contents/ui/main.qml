@@ -31,35 +31,50 @@ Decoration {
         root.extendedBorderBottom = 0;
         root.extendedBorderLeft = 0;
     }
+    function setBorderSize(value) {
+        root.borderLeft = value;
+        root.borderRight = value;
+        root.borderBottom = value;
+    }
     function readConfig() {
         switch (decoration.readConfig("BorderSize", DecorationOptions.BorderNormal)) {
         case DecorationOptions.BorderTiny:
-            root.borderSize = 3;
-            enableExtendedBorders();
+            setBorderSize(3);
+            disableExtendedBorders();
             break;
         case DecorationOptions.BorderLarge:
-            root.borderSize = 8;
+            setBorderSize(8);
             disableExtendedBorders();
             break;
         case DecorationOptions.BorderVeryLarge:
-            root.borderSize = 12;
+            setBorderSize(12);
             disableExtendedBorders();
             break;
         case DecorationOptions.BorderHuge:
-            root.borderSize = 18;
+            setBorderSize(18);
             disableExtendedBorders();
             break;
         case DecorationOptions.BorderVeryHuge:
-            root.borderSize = 27;
+            setBorderSize(27);
             disableExtendedBorders();
             break;
         case DecorationOptions.BorderOversized:
-            root.borderSize = 40;
+            setBorderSize(40);
             disableExtendedBorders();
+            break;
+        case DecorationOptions.BorderNoSides:
+            root.borderLeft = 1;
+            root.borderRight = 1;
+            root.borderBottom = 4;
+            enableExtendedBorders();
+            break;
+        case DecorationOptions.BorderNone:
+            setBorderSize(1);
+            enableExtendedBorders();
             break;
         case DecorationOptions.BorderNormal: // fall through to default
         default:
-            root.borderSize = 4;
+            setBorderSize(4);
             disableExtendedBorders();
             break;
         }
@@ -99,12 +114,11 @@ Decoration {
             duration: root.animationDuration
         }
     }
-    property int borderSize: 4
     id: root
-    borderLeft: borderSize
-    borderRight: borderSize
+    borderLeft: 4
+    borderRight: 4
     borderTop: top.normalHeight
-    borderBottom: borderSize
+    borderBottom: 4
     borderLeftMaximized: 0
     borderRightMaximized: 0
     borderBottomMaximized: 0
