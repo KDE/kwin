@@ -603,7 +603,7 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
     QRect rect = widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
     rect.translate(-paddingLeft, -paddingTop);
 
-    return QRegion(rect.adjusted(-left, -bottom, right, top)).subtract(rect);
+    return QRegion(rect.adjusted(-left, -top, right, bottom)).subtract(rect);
 }
 
 } // namespace Aurorae
