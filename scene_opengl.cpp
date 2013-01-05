@@ -1240,8 +1240,6 @@ void SceneOpenGL2Window::beginRenderWindow(int mask, const WindowPaintData &data
     }
 
     shader->setUniform(GLShader::WindowTransformation, transformation(mask, data));
-
-    static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->setupForOutput(data.screen());
 }
 
 void SceneOpenGL2Window::endRenderWindow(const WindowPaintData &data)
@@ -1270,15 +1268,11 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
     }
     if (!opaque) {
         glEnable(GL_BLEND);
-        if (static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->isEnabled()) {
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        if (alpha) {
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         } else {
-            if (alpha) {
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-            } else {
-                glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
-            }
+            glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
     }
     m_blendingEnabled = !opaque;

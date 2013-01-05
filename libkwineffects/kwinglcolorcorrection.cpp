@@ -235,7 +235,7 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
 static const char s_ccVars[] =
     "uniform sampler3D u_ccLookupTexture;\n";
 static const char s_ccAlteration[] =
-    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb / gl_FragColor.a).rgb;\n";
+    "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb / gl_FragColor.a).rgb * gl_FragColor.a;\n";
 
 
 /*
