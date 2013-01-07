@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "compositingprefs.h"
 #include "notifications.h"
+#include "xcbutils.h"
 
 #include <stdio.h>
 
@@ -874,8 +875,8 @@ xcb_pixmap_t Toplevel::createWindowPixmap()
     XServerGrabber grabber();
     xcb_pixmap_t pix = xcb_generate_id(connection());
     xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), frameId(), pix);
-    xcb_get_window_attributes_cookie_t attribsCookie = xcb_get_window_attributes(connection(), frameId());
-    xcb_get_geometry_cookie_t geometryCookie = xcb_get_geometry(connection(), frameId());
+    Xcb::WindowAttributes windowAttributes(frameId());
+    Xcb::WindowGeometry windowGeometry(frameId());
     if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
         kDebug(1212) << "Creating window pixmap failed: " << error->error_code;
         free(error);
@@ -883,16 +884,13 @@ xcb_pixmap_t Toplevel::createWindowPixmap()
     }
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
-    ScopedCPointer<xcb_generic_error_t> error;
-    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(connection(), attribsCookie, &error));
-    if (!error.isNull() || attribs.isNull() || attribs->map_state != XCB_MAP_STATE_VIEWABLE) {
+    if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
         kDebug(1212) << "Creating window pixmap failed: " << this;
         xcb_free_pixmap(connection(), pix);
         return XCB_PIXMAP_NONE;
     }
-    ScopedCPointer<xcb_get_geometry_reply_t> geometry(xcb_get_geometry_reply(connection(), geometryCookie, &error));
-    if (!error.isNull() || geometry.isNull() ||
-        geometry->width != width() || geometry->height != height()) {
+    if (!windowGeometry ||
+        windowGeometry->width != width() || windowGeometry->height != height()) {
         kDebug(1212) << "Creating window pixmap failed: " << this;
         xcb_free_pixmap(connection(), pix);
         return XCB_PIXMAP_NONE;

@@ -54,10 +54,7 @@ bool OverlayWindow::create()
     if (!Xcb::Extensions::self()->isShapeInputAvailable())  // needed in setupOverlay()
         return false;
 #ifdef KWIN_HAVE_XCOMPOSITE_OVERLAY
-    ScopedCPointer<xcb_composite_get_overlay_window_reply_t> overlay =
-        xcb_composite_get_overlay_window_reply(connection(),
-                                               xcb_composite_get_overlay_window(connection(), rootWindow()),
-                                               NULL);
+    Xcb::OverlayWindow overlay(rootWindow());
     if (overlay.isNull()) {
         return false;
     }

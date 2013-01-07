@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 
 #include <xcb/xcb.h>
+#include <xcb/composite.h>
 
 namespace KWin {
 
@@ -149,6 +150,7 @@ private:
 };
 
 typedef Wrapper<xcb_get_window_attributes_reply_t, xcb_get_window_attributes_cookie_t, &xcb_get_window_attributes_reply, &xcb_get_window_attributes_unchecked> WindowAttributes;
+typedef Wrapper<xcb_composite_get_overlay_window_reply_t, xcb_composite_get_overlay_window_cookie_t, &xcb_composite_get_overlay_window_reply, &xcb_composite_get_overlay_window_unchecked> OverlayWindow;
 
 
 class WindowGeometry : public Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>
@@ -163,6 +165,16 @@ public:
             return QRect();
         }
         return QRect(geometry->x, geometry->y, geometry->width, geometry->height);
+    }
+};
+
+class Tree : public Wrapper<xcb_query_tree_reply_t, xcb_query_tree_cookie_t, &xcb_query_tree_reply, &xcb_query_tree_unchecked>
+{
+public:
+    explicit Tree(WindowId window) : Wrapper<xcb_query_tree_reply_t, xcb_query_tree_cookie_t, &xcb_query_tree_reply, &xcb_query_tree_unchecked>(window) {}
+
+    inline WindowId *children() {
+        return xcb_query_tree_children(data());
     }
 };
 
