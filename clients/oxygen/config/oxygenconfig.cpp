@@ -69,7 +69,7 @@ namespace Oxygen
         _configWidget = new ConfigWidget( parent );
 
         load();
-        connect( _configWidget, SIGNAL( changed( bool ) ), SLOT(updateChanged()) );
+        connect( _configWidget, SIGNAL(changed(bool)), SLOT(updateChanged()) );
         _configWidget->show();
 
     }

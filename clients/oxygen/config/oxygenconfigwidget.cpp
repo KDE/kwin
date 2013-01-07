@@ -63,31 +63,31 @@ namespace Oxygen
         toggleExpertModeInternal( false );
 
         // connections
-        connect( ui._expertModeButton, SIGNAL( clicked( void ) ), SLOT( toggleExpertModeInternal( void ) ) );
-        connect( _animationConfigWidget, SIGNAL( layoutChanged( void ) ), SLOT(updateLayout( void ) ) );
+        connect( ui._expertModeButton, SIGNAL(clicked()), SLOT(toggleExpertModeInternal()) );
+        connect( _animationConfigWidget, SIGNAL(layoutChanged()), SLOT(updateLayout()) );
 
         // track ui changes
-        connect( ui.titleAlignment, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.buttonSize, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.frameBorder, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.blendColor, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.buttonSize, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.frameBorder, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
 
-        connect( ui.titleOutline, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.drawSizeGrip, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.narrowButtonSpacing, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.closeFromMenuButton, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.separatorMode, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.titleOutline, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( ui.drawSizeGrip, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( ui.closeFromMenuButton, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
 
         // track exception changes
-        connect( ui.exceptions, SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.exceptions, SIGNAL(changed(bool)), SLOT(updateChanged()) );
 
         // track shadow configuration changes
-        connect( shadowConfigurations[0], SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
-        connect( shadowConfigurations[1], SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( shadowConfigurations[0], SIGNAL(changed(bool)), SLOT(updateChanged()) );
+        connect( shadowConfigurations[1], SIGNAL(changed(bool)), SLOT(updateChanged()) );
 
         // track animations changes
-        connect( ui.animationsEnabled, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
-        connect( _animationConfigWidget, SIGNAL( changed( bool ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.animationsEnabled, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( _animationConfigWidget, SIGNAL(changed(bool)), SLOT(updateChanged()) );
 
     }
 

@@ -51,21 +51,21 @@ namespace Oxygen
         _checkBoxes.insert( DrawSeparator, ui.separatorCheckBox );
 
         // detect window properties
-        connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT(selectWindowProperties()) );
+        connect( ui.detectDialogButton, SIGNAL(clicked()), SLOT(selectWindowProperties()) );
 
         // connections
-        connect( ui.exceptionType, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.exceptionEditor, SIGNAL( textChanged( const QString& ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.frameBorderComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.blendColorComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.sizeGripComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.titleOutlineComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
-        connect( ui.separatorComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.exceptionType, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.exceptionEditor, SIGNAL(textChanged(QString)), SLOT(updateChanged()) );
+        connect( ui.frameBorderComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.blendColorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.sizeGripComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.titleOutlineComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.separatorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
 
         for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
-        { connect( iter.value(), SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) ); }
+        { connect( iter.value(), SIGNAL(clicked()), SLOT(updateChanged()) ); }
 
-        connect( ui.hideTitleBar, SIGNAL( clicked( void ) ), SLOT( updateChanged( void ) ) );
+        connect( ui.hideTitleBar, SIGNAL(clicked()), SLOT(updateChanged()) );
     }
 
     //___________________________________________
