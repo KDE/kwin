@@ -60,7 +60,7 @@ ExtensionData::ExtensionData()
 template<typename reply, typename T, typename F>
 void Extensions::initVersion(T cookie, F f, ExtensionData *dataToFill)
 {
-    ScopedCPointer<reply> version = f(connection(), cookie, NULL);
+    ScopedCPointer<reply> version(f(connection(), cookie, NULL));
     dataToFill->version = version->major_version * 0x10 + version->minor_version;
 }
 
@@ -197,8 +197,8 @@ bool Extensions::hasShape(xcb_window_t w) const
     if (!isShapeAvailable()) {
         return false;
     }
-    ScopedCPointer<xcb_shape_query_extents_reply_t> extents = xcb_shape_query_extents_reply(
-        connection(), xcb_shape_query_extents_unchecked(connection(), w), NULL);
+    ScopedCPointer<xcb_shape_query_extents_reply_t> extents(xcb_shape_query_extents_reply(
+        connection(), xcb_shape_query_extents_unchecked(connection(), w), NULL));
     if (extents.isNull()) {
         return false;
     }
