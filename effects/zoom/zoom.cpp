@@ -227,7 +227,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
+    bool altered = false;
     if (zoom != target_zoom) {
+        altered = true;
         double diff = time / animationTime(500.0);
         if (target_zoom > zoom)
             zoom = qMin(zoom * qMax(1 + diff, 1.2), target_zoom);
@@ -237,6 +239,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
     if (zoom == 1.0) {
         showCursor();
+        if (altered) // reset the generic shader to avoid artifacts in plenty other effects
+            ShaderBinder binder(ShaderManager::GenericShader, true);
     } else {
         hideCursor();
         data.mask |= PAINT_SCREEN_TRANSFORMED;
