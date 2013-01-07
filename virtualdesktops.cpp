@@ -467,6 +467,7 @@ void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &na
 void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const QString &label, const char *slot)
 {
     KAction *a = keys->addAction(name, this, slot);
+    a->setGlobalShortcut(KShortcut());
     a->setText(label);
 }
 
