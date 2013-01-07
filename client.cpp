@@ -353,8 +353,22 @@ void Client::destroyClient()
     deleteClient(this, Allowed);
 }
 
+// DnD handling for input shaping is broken in the clients for all Qt versions before 4.8.3
+// NOTICE do not query the Qt version macro, this is a runtime problem!
+// TODO KDE5 remove this 
+static inline bool qtBefore483()
+{
+    QStringList l = QString(qVersion()).split(".");
+    // "4.x.y"
+    return l.at(1).toUInt() < 5 && l.at(1).toUInt() < 9 && l.at(2).toUInt() < 3;
+}
+
 void Client::updateInputWindow()
 {
+    static bool brokenQtInputHandling = qtBefore483();
+    if (brokenQtInputHandling)
+        return;
+
     QRegion region;
 
     if (!noBorder()) {
