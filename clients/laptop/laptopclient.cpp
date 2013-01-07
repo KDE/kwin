@@ -36,6 +36,9 @@ static const unsigned char iconify_bits[] = {
 static const unsigned char close_bits[] = {
     0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42};
 
+static const unsigned char appmenu_bits[] = {
+    0xff, 0xff, 0x00, 0xff, 0xff, 0x00, 0xff, 0xff};
+
 static const unsigned char maximize_bits[] = {
     0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0xff, 0xff };
 
@@ -263,6 +266,9 @@ void LaptopButton::reset(unsigned long changed)
             case CloseButton:
                 setBitmap(close_bits);
                 break;
+            case AppMenuButton:
+                setBitmap(appmenu_bits);
+                break;
             case HelpButton:
                 setBitmap(question_bits);
                 break;
@@ -460,6 +466,9 @@ KCommonDecorationButton *LaptopClient::createButton(ButtonType type)
 
         case CloseButton:
             return new LaptopButton(CloseButton, this, "close");
+
+        case AppMenuButton:
+            return new LaptopButton(AppMenuButton, this, "Application Menu");
 
         default:
             return 0;
@@ -739,6 +748,7 @@ bool LaptopClientFactory::supports( Ability ability ) const
         case AbilityButtonMaximize:
         case AbilityButtonClose:
         case AbilityButtonSpacer:
+        case AbilityButtonApplicationMenu:
         // colors
         case AbilityColorTitleBack:
         case AbilityColorTitleFore:
