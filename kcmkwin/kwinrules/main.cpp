@@ -27,6 +27,7 @@
 
 #include "ruleswidget.h"
 #include "../../rules.h"
+#include "../../client_machine.h"
 #include <QByteArray>
 
 namespace KWin
@@ -72,6 +73,8 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
                        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine);
     if (!info.valid())  // shouldn't really happen
         return NULL;
+    ClientMachine clientMachine;
+    clientMachine.resolve(info.win(), info.groupLeader());
     QByteArray wmclass_class = info.windowClassClass().toLower();
     QByteArray wmclass_name = info.windowClassName().toLower();
     QByteArray role = info.windowRole().toLower();
@@ -79,7 +82,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
                                            | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
                                            | NET::UtilityMask | NET::SplashMask);
     QString title = info.name();
-    QByteArray machine = info.clientMachine().toLower();
+    QByteArray machine = clientMachine.hostName();
     Rules* best_match = NULL;
     int match_quality = 0;
     for (QList< Rules* >::ConstIterator it = rules.constBegin();
@@ -126,7 +129,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
         if (!rule->matchType(type)
                 || !rule->matchRole(role)
                 || !rule->matchTitle(title)
-                || !rule->matchClientMachine(machine))
+                || !rule->matchClientMachine(machine, clientMachine.isLocal()))
             continue;
         if (quality > match_quality) {
             best_match = rule;

@@ -24,3 +24,4 @@
 #include "../../placement.cpp"
 #include "../../options.cpp"
 #include "../../utils.cpp"
+#include "../../client_machine.cpp"

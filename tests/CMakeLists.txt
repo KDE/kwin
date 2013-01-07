@@ -33,3 +33,20 @@ target_link_libraries( testVirtualDesktops
                        ${QT_QTCORE_LIBRARY}
                        ${QT_QTTEST_LIBRARY}
 )
+
+########################################################
+# Test ClientMachine
+########################################################
+set( testClientMachine_SRCS
+     test_client_machine.cpp
+     ../client_machine.cpp
+)
+kde4_add_unit_test( testClientMachine TESTNAME kwin-TestClientMachine ${testClientMachine_SRCS} )
+
+target_link_libraries( testClientMachine
+                       ${QT_QTTEST_LIBRARY}
+                       ${QT_QTCORE_LIBRARY}
+                       ${KDE4_KDEUI_LIBS}
+                       ${XCB_XCB_LIBRARIES}
+                       ${X11_XCB_LIBRARIES}
+)

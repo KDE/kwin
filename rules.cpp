@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KCMRULES
 #include <QDesktopWidget>
 #include "client.h"
+#include "client_machine.h"
 #include "workspace.h"
 #endif
 
@@ -394,12 +395,12 @@ bool Rules::matchTitle(const QString& match_title) const
     return true;
 }
 
-bool Rules::matchClientMachine(const QByteArray& match_machine) const
+bool Rules::matchClientMachine(const QByteArray& match_machine, bool local) const
 {
     if (clientmachinematch != UnimportantMatch) {
         // if it's localhost, check also "localhost" before checking hostname
-        if (match_machine != "localhost" && isLocalMachine(match_machine)
-                && matchClientMachine("localhost"))
+        if (match_machine != "localhost" && local
+                && matchClientMachine("localhost", true))
             return true;
         if (clientmachinematch == RegExpMatch
                 && QRegExp(clientmachine).indexIn(match_machine) == -1)
@@ -425,7 +426,7 @@ bool Rules::match(const Client* c) const
         return false;
     if (!matchTitle(c->caption(false)))
         return false;
-    if (!matchClientMachine(c->wmClientMachine(false)))
+    if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal()))
         return false;
     return true;
 }

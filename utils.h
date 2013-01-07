@@ -363,8 +363,6 @@ Time timestampDiff(Time time1, Time time2)   // returns time2 - time1
     return NET::timestampDiff(time1, time2);
 }
 
-bool isLocalMachine(const QByteArray& host);
-
 QPoint cursorPos();
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states

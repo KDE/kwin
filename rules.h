@@ -160,7 +160,7 @@ private:
     bool matchWMClass(const QByteArray& match_class, const QByteArray& match_name) const;
     bool matchRole(const QByteArray& match_role) const;
     bool matchTitle(const QString& match_title) const;
-    bool matchClientMachine(const QByteArray& match_machine) const;
+    bool matchClientMachine(const QByteArray& match_machine, bool local) const;
     // All these values are saved to the cfg file, and are also used in kstart!
     enum {
         Unused = 0,

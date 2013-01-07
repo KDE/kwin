@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "atoms.h"
 #include "client.h"
+#include "client_machine.h"
 #include "effects.h"
 #include "shadow.h"
 
@@ -42,6 +43,7 @@ Toplevel::Toplevel(Workspace* ws)
     , damage_handle(None)
     , is_shape(false)
     , effect_window(NULL)
+    , m_clientMachine(new ClientMachine(this))
     , wmClientLeaderWin(0)
     , unredirect(false)
     , unredirectSuspend(false)
@@ -132,7 +134,8 @@ void Toplevel::copyToDeleted(Toplevel* c)
         effect_window->setWindow(this);
     resource_name = c->resourceName();
     resource_class = c->resourceClass();
-    client_machine = c->wmClientMachine(false);
+    m_clientMachine = c->m_clientMachine;
+    m_clientMachine->setParent(this);
     wmClientLeaderWin = c->wmClientLeader();
     window_role = c->windowRole();
     opaque_region = c->opaqueRegion();
@@ -233,11 +236,7 @@ QByteArray Toplevel::wmCommand()
 
 void Toplevel::getWmClientMachine()
 {
-    client_machine = getStringProperty(window(), XA_WM_CLIENT_MACHINE);
-    if (client_machine.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
-        client_machine = getStringProperty(wmClientLeaderWin, XA_WM_CLIENT_MACHINE);
-    if (client_machine.isEmpty())
-        client_machine = "localhost";
+    m_clientMachine->resolve(window(), wmClientLeader());
 }
 
 /*!
@@ -246,13 +245,15 @@ void Toplevel::getWmClientMachine()
 */
 QByteArray Toplevel::wmClientMachine(bool use_localhost) const
 {
-    QByteArray result = client_machine;
-    if (use_localhost) {
-        // special name for the local machine (localhost)
-        if (result != "localhost" && isLocalMachine(result))
-            result = "localhost";
+    if (!m_clientMachine) {
+        // this should never happen
+        return QByteArray();
     }
-    return result;
+    if (use_localhost && m_clientMachine->isLocal()) {
+        // special name for the local machine (localhost)
+        return ClientMachine::localhost();
+    }
+    return m_clientMachine->hostName();
 }
 
 /*!

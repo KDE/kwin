@@ -1,7 +1,7 @@
 ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
 
-set (kwinrules_MOC_HDRS yesnobox.h)
+set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h)
 qt4_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 

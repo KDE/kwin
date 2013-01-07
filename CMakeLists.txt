@@ -93,6 +93,7 @@ set(kwin_KDEINIT_SRCS
    workspace.cpp 
    dbusinterface.cpp
    client.cpp 
+   client_machine.cpp
    tabgroup.cpp
    placement.cpp 
    atoms.cpp 

@@ -41,6 +41,7 @@ class NETWinInfo2;
 namespace KWin
 {
 
+class ClientMachine;
 class Workspace;
 class EffectWindowImpl;
 class Shadow;
@@ -223,6 +224,7 @@ public:
     QByteArray resourceClass() const;
     QByteArray wmCommand();
     QByteArray wmClientMachine(bool use_localhost) const;
+    const ClientMachine *clientMachine() const;
     Window wmClientLeader() const;
     pid_t pid() const;
     static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);
@@ -383,7 +385,7 @@ private:
     EffectWindowImpl* effect_window;
     QByteArray resource_name;
     QByteArray resource_class;
-    QByteArray client_machine;
+    ClientMachine *m_clientMachine;
     WId wmClientLeaderWin;
     QByteArray window_role;
     bool unredirect;
@@ -644,6 +646,11 @@ inline pid_t Toplevel::pid() const
 inline bool Toplevel::unredirected() const
 {
     return unredirect;
+}
+
+inline const ClientMachine *Toplevel::clientMachine() const
+{
+    return m_clientMachine;
 }
 
 QDebug& operator<<(QDebug& stream, const Toplevel*);

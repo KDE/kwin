@@ -27,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "utils.h"
 
-#include <unistd.h>
+#include <kxerrorhandler.h>
+#include <X11/Xatom.h>
 
 #ifndef KCMRULES
 #include <QLabel>
 #include <QVBoxLayout>
-#include <kxerrorhandler.h>
 #include <assert.h>
 #include <kdebug.h>
 #include <kglobalaccel.h>
@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
-#include <X11/Xatom.h>
 #include <QX11Info>
 #include <QtGui/QKeySequence>
 
@@ -179,6 +178,8 @@ bool KWinSelectionOwner::genericReply(Atom target_P, Atom property_P, Window req
 Atom KWinSelectionOwner::xa_version = None;
 
 
+#endif
+
 QByteArray getStringProperty(WId w, Atom prop, char separator)
 {
     Atom type;
@@ -204,6 +205,7 @@ QByteArray getStringProperty(WId w, Atom prop, char separator)
     return result;
 }
 
+#ifndef KCMRULES
 static Time next_x_time;
 static Bool update_x_time_predicate(Display*, XEvent* event, XPointer)
 {
@@ -405,33 +407,6 @@ Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
 }
 
 #endif
-
-bool isLocalMachine(const QByteArray& host)
-{
-#ifdef HOST_NAME_MAX
-    char hostnamebuf[HOST_NAME_MAX];
-#else
-    char hostnamebuf[256];
-#endif
-    if (gethostname(hostnamebuf, sizeof hostnamebuf) >= 0) {
-        hostnamebuf[sizeof(hostnamebuf)-1] = 0;
-        if (host == hostnamebuf)
-            return true;
-        if (char *dot = strchr(hostnamebuf, '.')) {
-            *dot = '\0';
-            if (host == hostnamebuf)
-                return true;
-        } else { // e.g. LibreOffice likes to give FQDN, even if gethostname() doesn't include domain
-            QByteArray h = hostnamebuf;
-            if( getdomainname( hostnamebuf, sizeof hostnamebuf ) >= 0 ) {
-                hostnamebuf[sizeof(hostnamebuf)-1] = 0;
-                if( host == h + '.' + QByteArray( hostnamebuf ))
-                    return true;
-            }
-        }
-    }
-    return false;
-}
 
 #ifndef KCMRULES
 ShortcutDialog::ShortcutDialog(const QKeySequence& cut)

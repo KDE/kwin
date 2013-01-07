@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <signal.h>
 
 #include "bridge.h"
+#include "client_machine.h"
 #include "composite.h"
 #include "group.h"
 #include "workspace.h"
@@ -210,6 +211,8 @@ Client::Client(Workspace* ws)
     connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
     connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
+
+    connect(clientMachine(), SIGNAL(localhostChanged()), SLOT(updateCaption()));
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -1373,21 +1376,20 @@ void Client::killProcess(bool ask, Time timestamp)
     if (m_killHelperPID && !::kill(m_killHelperPID, 0)) // means the process is alive
         return;
     Q_ASSERT(!ask || timestamp != CurrentTime);
-    QByteArray machine = wmClientMachine(true);
     pid_t pid = info->pid();
-    if (pid <= 0 || machine.isEmpty())  // Needed properties missing
+    if (pid <= 0 || clientMachine()->hostName().isEmpty())  // Needed properties missing
         return;
-    kDebug(1212) << "Kill process:" << pid << "(" << machine << ")";
+    kDebug(1212) << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
     if (!ask) {
-        if (machine != "localhost") {
+        if (!clientMachine()->isLocal()) {
             QStringList lst;
-            lst << machine << "kill" << QString::number(pid);
+            lst << clientMachine()->hostName() << "kill" << QString::number(pid);
             QProcess::startDetached("xon", lst);
         } else
             ::kill(pid, SIGTERM);
     } else {
         QProcess::startDetached(KStandardDirs::findExe("kwin_killer_helper"),
-                                QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << machine
+                                QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << clientMachine()->hostName()
                                 << "--windowname" << caption()
                                 << "--applicationname" << resourceClass()
                                 << "--wid" << QString::number(window())
@@ -1774,8 +1776,8 @@ void Client::setCaption(const QString& _s, bool force)
     cap_suffix.clear();
     QString machine_suffix;
     if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
-        if (wmClientMachine(false) != "localhost" && !isLocalMachine(wmClientMachine(false)))
-            machine_suffix = QString(" <@") + wmClientMachine(true) + '>' + LRM;
+        if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal())
+            machine_suffix = QString(" <@") + clientMachine()->hostName() + '>' + LRM;
     }
     QString shortcut_suffix = !shortcut().isEmpty() ? (" {" + shortcut().toString() + '}') : QString();
     cap_suffix = machine_suffix + shortcut_suffix;
