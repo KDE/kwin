@@ -59,55 +59,55 @@ void ScreenShotEffect::postPaintScreen()
 {
     effects->postPaintScreen();
     if (m_scheduledScreenshot) {
-        int w = displayWidth();
-        int h = displayHeight();
-        bool validTarget = true;
-        GLTexture* offscreenTexture = 0;
-        GLRenderTarget* target = 0;
-        if (effects->isOpenGLCompositing()) {
-            if (!GLTexture::NPOTTextureSupported()) {
-                w = nearestPowerOfTwo(w);
-                h = nearestPowerOfTwo(h);
+        WindowPaintData d(m_scheduledScreenshot);
+        double left = 0;
+        double top = 0;
+        double right = m_scheduledScreenshot->width();
+        double bottom = m_scheduledScreenshot->height();
+        if (m_scheduledScreenshot->hasDecoration() && m_type & INCLUDE_DECORATION) {
+            foreach (const WindowQuad & quad, d.quads) {
+                // we need this loop to include the decoration padding
+                left   = qMin(left, quad.left());
+                top    = qMin(top, quad.top());
+                right  = qMax(right, quad.right());
+                bottom = qMax(bottom, quad.bottom());
             }
-            offscreenTexture = new GLTexture(w, h);
-            offscreenTexture->setFilter(GL_LINEAR);
-            offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-            target = new GLRenderTarget(*offscreenTexture);
-            validTarget = target->valid();
-        }
-        if (validTarget) {
-            WindowPaintData d(m_scheduledScreenshot);
-            double left = 0;
-            double top = 0;
-            double right = m_scheduledScreenshot->width();
-            double bottom = m_scheduledScreenshot->height();
-            if (m_scheduledScreenshot->hasDecoration() && m_type & INCLUDE_DECORATION) {
-                foreach (const WindowQuad & quad, d.quads) {
-                    // we need this loop to include the decoration padding
+        } else if (m_scheduledScreenshot->hasDecoration()) {
+            WindowQuadList newQuads;
+            left = m_scheduledScreenshot->width();
+            top = m_scheduledScreenshot->height();
+            right = 0;
+            bottom = 0;
+            foreach (const WindowQuad & quad, d.quads) {
+                if (quad.type() == WindowQuadContents) {
+                    newQuads << quad;
                     left   = qMin(left, quad.left());
                     top    = qMin(top, quad.top());
                     right  = qMax(right, quad.right());
                     bottom = qMax(bottom, quad.bottom());
                 }
-            } else if (m_scheduledScreenshot->hasDecoration()) {
-                WindowQuadList newQuads;
-                left = m_scheduledScreenshot->width();
-                top = m_scheduledScreenshot->height();
-                right = 0;
-                bottom = 0;
-                foreach (const WindowQuad & quad, d.quads) {
-                    if (quad.type() == WindowQuadContents) {
-                        newQuads << quad;
-                        left   = qMin(left, quad.left());
-                        top    = qMin(top, quad.top());
-                        right  = qMax(right, quad.right());
-                        bottom = qMax(bottom, quad.bottom());
-                    }
-                }
-                d.quads = newQuads;
             }
-            int width = right - left;
-            int height = bottom - top;
+            d.quads = newQuads;
+        }
+        const int width = right - left;
+        const int height = bottom - top;
+        bool validTarget = true;
+        QScopedPointer<GLTexture> offscreenTexture;
+        QScopedPointer<GLRenderTarget> target;
+        if (effects->isOpenGLCompositing()) {
+            int w = width;
+            int h = height;
+            if (!GLTexture::NPOTTextureSupported()) {
+                w = nearestPowerOfTwo(w);
+                h = nearestPowerOfTwo(h);
+            }
+            offscreenTexture.reset(new GLTexture(w, h));
+            offscreenTexture->setFilter(GL_LINEAR);
+            offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+            target.reset(new GLRenderTarget(*offscreenTexture));
+            validTarget = target->valid();
+        }
+        if (validTarget) {
             d.setXTranslation(-m_scheduledScreenshot->x() - left);
             d.setYTranslation(-m_scheduledScreenshot->y() - top);
 
@@ -115,14 +115,16 @@ void ScreenShotEffect::postPaintScreen()
             int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
             QImage img;
             if (effects->isOpenGLCompositing()) {
-                GLRenderTarget::pushRenderTarget(target);
+                GLRenderTarget::pushRenderTarget(target.data());
                 glClearColor(0.0, 0.0, 0.0, 0.0);
                 glClear(GL_COLOR_BUFFER_BIT);
                 glClearColor(0.0, 0.0, 0.0, 1.0);
-                effects->drawWindow(m_scheduledScreenshot, mask, QRegion(0, 0, width, height), d);
+                setMatrix(offscreenTexture->width(), offscreenTexture->height());
+                effects->drawWindow(m_scheduledScreenshot, mask, infiniteRegion(), d);
+                restoreMatrix();
                 // copy content from framebuffer into image
                 img = QImage(QSize(width, height), QImage::Format_ARGB32);
-                glReadPixels(0, offscreenTexture->height() - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+                glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
                 GLRenderTarget::popRenderTarget();
                 ScreenShotEffect::convertFromGLImage(img, width, height);
             }
@@ -153,9 +155,51 @@ void ScreenShotEffect::postPaintScreen()
             }
             emit screenshotCreated(m_lastScreenshot.handle());
         }
-        delete offscreenTexture;
-        delete target;
         m_scheduledScreenshot = NULL;
+    }
+}
+
+static QMatrix4x4 s_origProjection;
+static QMatrix4x4 s_origModelview;
+
+void ScreenShotEffect::setMatrix(int width, int height)
+{
+    QMatrix4x4 projection;
+    QMatrix4x4 identity;
+    projection.ortho(QRect(0, 0, width, height));
+    if (effects->compositingType() == OpenGL2Compositing) {
+        ShaderBinder binder(ShaderManager::GenericShader);
+        GLShader *shader = binder.shader();
+        s_origProjection = shader->getUniformMatrix4x4("projection");
+        s_origModelview = shader->getUniformMatrix4x4("modelview");
+        shader->setUniform(GLShader::ProjectionMatrix, projection);
+        shader->setUniform(GLShader::ModelViewMatrix, identity);
+    } else if (effects->compositingType() == OpenGL1Compositing) {
+#ifdef KWIN_HAVE_OPENGL_1
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        loadMatrix(projection);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+#endif
+    }
+}
+
+void ScreenShotEffect::restoreMatrix()
+{
+    if (effects->compositingType() == OpenGL2Compositing) {
+        ShaderBinder binder(ShaderManager::GenericShader);
+        GLShader *shader = binder.shader();
+        shader->setUniform(GLShader::ProjectionMatrix, s_origProjection);
+        shader->setUniform(GLShader::ModelViewMatrix, s_origModelview);
+    } else if (effects->compositingType() == OpenGL1Compositing) {
+#ifdef KWIN_HAVE_OPENGL_1
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+#endif
     }
 }
 
