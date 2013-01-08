@@ -259,22 +259,6 @@ static QSize strToSize(const QString& str)
     return QSize(reg.cap(1).toInt(), reg.cap(2).toInt());
 }
 
-//used for opacity settings
-static QString intToStr(const int& s)
-{
-    if (s < 1 || s > 100)
-        return QString();
-    return QString::number(s);
-}
-
-static int strToInt(const QString& str)
-{
-    int tmp = str.toInt();
-    if (tmp < 1 || tmp > 100)
-        return 100;
-    return tmp;
-}
-
 int RulesWidget::desktopToCombo(int d) const
 {
     if (d >= 1 && d < desktop->count())
