@@ -1274,7 +1274,7 @@ void DesktopGridEffect::slotNumberDesktopsChanged(uint old)
 {
     if (!activated)
         return;
-    const int desktop = effects->numberOfDesktops();
+    const uint desktop = effects->numberOfDesktops();
     bool enableAdd = desktop < 20;
     bool enableRemove = desktop > 1;
     for (QHash< DesktopButtonsView*, EffectWindow* >::iterator it = m_desktopButtonsViews.begin();

@@ -207,7 +207,7 @@ bool Client::manage(Window w, bool isMapped)
     }
 
     if (desk == 0)   // Assume window wants to be visible on the current desktop
-        desk = isDesktop() ? NET::OnAllDesktops : VirtualDesktopManager::self()->current();
+        desk = isDesktop() ? static_cast<int>(NET::OnAllDesktops) : VirtualDesktopManager::self()->current();
     desk = rules()->checkDesktop(desk, !isMapped);
     if (desk != NET::OnAllDesktops)   // Do range check
         desk = qBound(1, desk, static_cast<int>(VirtualDesktopManager::self()->count()));
