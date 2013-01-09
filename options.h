@@ -673,10 +673,10 @@ public:
         return false;
     }
     static int defaultAutoRaiseInterval() {
-        return 0;
+        return 750;
     }
     static int defaultDelayFocusInterval() {
-        return 0;
+        return 300;
     }
     static bool defaultShadeHover() {
         return false;

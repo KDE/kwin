@@ -241,7 +241,7 @@ void KFocusConfig::load(void)
     int k = cg.readEntry(KWIN_AUTORAISE_INTERVAL, 750);
     setAutoRaiseInterval(k);
 
-    k = cg.readEntry(KWIN_DELAYFOCUS_INTERVAL, 750);
+    k = cg.readEntry(KWIN_DELAYFOCUS_INTERVAL, 300);
     setDelayFocusInterval(k);
 
     setAutoRaise(cg.readEntry(KWIN_AUTORAISE, false));
