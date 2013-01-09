@@ -287,6 +287,7 @@ void TestVirtualDesktops::testDirection(const QString &actionName)
     vds->initShortcuts(keys.data());
     QAction *action = keys->action(actionName);
     QVERIFY(action);
+    QVERIFY(static_cast<KAction*>(action)->isGlobalShortcutEnabled());
     action->trigger();
     QCOMPARE(vds->current(), result);
     QCOMPARE(functor(initCurrent, wrap), result);
@@ -571,6 +572,7 @@ void TestVirtualDesktops::switchToShortcuts()
         const QString desktop(toDesktop.arg(i));
         QAction *action = keys->action(desktop);
         QVERIFY2(action, desktop.toUtf8().constData());
+        QVERIFY(static_cast<KAction*>(action)->isGlobalShortcutEnabled());
         action->trigger();
         QCOMPARE(vds->current(), i);
     }
