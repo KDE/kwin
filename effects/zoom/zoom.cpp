@@ -79,25 +79,26 @@ ZoomEffect::ZoomEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     a = static_cast< KAction* >(actionCollection->addAction("MoveZoomLeft"));
-    a->setText(i18n("Move Left"));
+    a->setText(i18n("Move Zoomed Area to Left"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Left));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomLeft()));
 
     a = static_cast< KAction* >(actionCollection->addAction("MoveZoomRight"));
-    a->setText(i18n("Move Right"));
+    a->setText(i18n("Move Zoomed Area to Right"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Right));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomRight()));
 
     a = static_cast< KAction* >(actionCollection->addAction("MoveZoomUp"));
-    a->setText(i18n("Move Up"));
+    a->setText(i18n("Move Zoomed Area Upwards"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Up));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomUp()));
 
     a = static_cast< KAction* >(actionCollection->addAction("MoveZoomDown"));
-    a->setText(i18n("Move Down"));
+    a->setText(i18n("Move Zoomed Area Downwards"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Down));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomDown()));
 
+    // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
     a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToFocus"));
     a->setText(i18n("Move Mouse to Focus"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F5));
