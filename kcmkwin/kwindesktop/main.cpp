@@ -91,35 +91,16 @@ void KWinDesktopConfig::init()
     m_switchDesktopCollection->setConfigGlobal(true);
 
     // actions for switch desktop collection - other action is filled dynamically
-    KAction* a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch to Next Desktop"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch to Next Desktop"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-
-    a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch to Previous Desktop"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch to Previous Desktop"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-
-    a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch One Desktop to the Right"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch One Desktop to the Right"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-
-    a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch One Desktop to the Left"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch One Desktop to the Left"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-
-    a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch One Desktop Up"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch One Desktop Up"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-
-    a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction("Switch One Desktop Down"));
-    a->setProperty("isConfigurationAction", true);
-    a->setText(i18n("Switch One Desktop Down"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+    addAction("Switch to Next Desktop", i18n("Switch to Next Desktop"));
+    addAction("Switch to Previous Desktop", i18n("Switch to Previous Desktop"));
+    addAction("Switch One Desktop to the Right", i18n("Switch One Desktop to the Right"));
+    addAction("Switch One Desktop to the Left", i18n("Switch One Desktop to the Left"));
+    addAction("Switch One Desktop Up", i18n("Switch One Desktop Up"));
+    addAction("Switch One Desktop Down", i18n("Switch One Desktop Down"));
+    addAction("Walk Through Desktops", i18n("Walk Through Desktops"));
+    addAction("Walk Through Desktops (Reverse)", i18n("Walk Through Desktops (Reverse)"));
+    addAction("Walk Through Desktop List", i18n("Walk Through Desktop List"));
+    addAction("Walk Through Desktop List (Reverse)", i18n("Walk Through Desktop List (Reverse)"));
 
     m_editor->addCollection(m_switchDesktopCollection, i18n("Desktop Switching"));
 
@@ -221,6 +202,14 @@ void KWinDesktopConfig::init()
 KWinDesktopConfig::~KWinDesktopConfig()
 {
     undo();
+}
+
+void KWinDesktopConfig::addAction(const QString &name, const QString &label)
+{
+    KAction* a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction(name));
+    a->setProperty("isConfigurationAction", true);
+    a->setText(label);
+    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
 }
 
 void KWinDesktopConfig::defaults()

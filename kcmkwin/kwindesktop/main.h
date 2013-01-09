@@ -70,6 +70,7 @@ private slots:
 
 private:
     void init();
+    void addAction(const QString &name, const QString &label);
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
     QString extrapolatedShortcut(int desktop) const;
 
