@@ -47,6 +47,7 @@ public:
     ThumbnailAsideEffect();
     virtual void reconfigure(ReconfigureFlags);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
 
     // for properties
     int configuredMaxWidth() const {
@@ -82,6 +83,7 @@ private:
     int spacing;
     double opacity;
     int screen;
+    QRegion painted;
 };
 
 } // namespace
