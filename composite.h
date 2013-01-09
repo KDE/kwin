@@ -66,6 +66,8 @@ class Compositor : public QObject {
      **/
     Q_PROPERTY(QString compositingType READ compositingType)
 public:
+    enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1<<0, BlockRuleSuspend = 1<<1, ScriptSuspend = 1<<2, AllReasonSuspend = 0xff };
+    Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
     ~Compositor();
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
@@ -186,7 +188,8 @@ public Q_SLOTS:
      * @see resume
      * @see isActive
      **/
-    Q_SCRIPTABLE void suspend();
+    Q_SCRIPTABLE inline void suspend() { suspend(ScriptSuspend); }
+    void suspend(Compositor::SuspendReason reason);
     /**
      * @brief Resumes the Compositor if it is currently suspended.
      *
@@ -204,7 +207,8 @@ public Q_SLOTS:
      * @see isCompositingPossible
      * @see isOpenGLBroken
      **/
-    Q_SCRIPTABLE void resume();
+    Q_SCRIPTABLE inline void resume() { resume(ScriptSuspend); }
+    void resume(Compositor::SuspendReason reason);
     /**
      * @brief Tries to suspend or resume the Compositor based on @p active.
      *
@@ -218,6 +222,10 @@ public Q_SLOTS:
      * Note: The starting of the Compositor can require some time and is partially done threaded.
      * After this method returns the setup may not have been completed.
      *
+     * Note: This function only impacts whether compositing is suspended or resumed by scripts
+     * or dbus calls. Compositing may be suspended for user will or a window rule - no matter how
+     * often you call this function!
+     *
      * @param active Whether the Compositor should be resumed (@c true) or suspended (@c false)
      * @return void
      * @see suspend
@@ -226,6 +234,8 @@ public Q_SLOTS:
      * @see isCompositingPossible
      * @see isOpenGLBroken
      **/
+    // NOTICE this is atm. for script usage *ONLY* and needs to be extended like resume / suspend are
+    // if intended to be used from within KWin code!
     Q_SCRIPTABLE void setCompositing(bool active);
     /**
      * Actual slot to perform the toggling compositing.
@@ -289,13 +299,10 @@ private:
     void restartKWin(const QString &reason);
 
     /**
-     * Whether the Compositor is currently suspended.
+     * Whether the Compositor is currently suspended, 8 bits encoding the reason
      **/
-    bool m_suspended;
-    /**
-     * Whether the Compositor is currently blocked by at least one Client requesting full resources.
-     **/
-    bool m_blocked;
+    SuspendReasons m_suspended;
+
     QBasicTimer compositeTimer;
     KSelectionOwner* cm_selection;
     QTimer m_releaseSelectionTimer;

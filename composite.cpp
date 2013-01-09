@@ -53,6 +53,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/composite.h>
 #include <xcb/damage.h>
 
+Q_DECLARE_METATYPE(KWin::Compositor::SuspendReason)
+
 namespace KWin
 {
 
@@ -68,8 +70,7 @@ Compositor *Compositor::createCompositor(QObject *parent)
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
-    , m_suspended(!options->isUseCompositing())
-    , m_blocked(false)
+    , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
     , cm_selection(NULL)
     , vBlankInterval(0)
     , fpsInterval(0)
@@ -80,6 +81,7 @@ Compositor::Compositor(QObject* workspace)
     , m_nextFrameDelay(0)
     , m_scene(NULL)
 {
+    qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     new CompositingAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/Compositor", this);
@@ -116,7 +118,7 @@ void Compositor::setup()
     if (hasScene())
         return;
     if (m_suspended) {
-        kDebug(1212) << "Compositing is suspended";
+        kDebug(1212) << "Compositing is suspended, reason:" << m_suspended;
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
         kError(1212) << "Compositing is not possible";
@@ -365,7 +367,7 @@ void Compositor::slotReinitialize()
     // Restart compositing
     finish();
     // resume compositing if suspended
-    m_suspended = false;
+    m_suspended = NoReasonSuspend;
     options->setCompositingInitialized(false);
     setup();
 
@@ -377,13 +379,17 @@ void Compositor::slotReinitialize()
 // for the shortcut
 void Compositor::slotToggleCompositing()
 {
-    setCompositing(m_suspended);
+    if (m_suspended) { // direct user call; clear all bits
+        resume(AllReasonSuspend);
+    } else { // but only set the user one (sufficient to suspend)
+        suspend(UserSuspend);
+    }
 }
 
 // for the dbus call
 void Compositor::toggleCompositing()
 {
-    slotToggleCompositing();
+    slotToggleCompositing(); // TODO only operate on script level here?
     if (m_suspended) {
         // when disabled show a shortcut how the user can get back compositing
         QString shortcut, message;
@@ -407,14 +413,11 @@ void Compositor::updateCompositeBlocking(Client *c)
 {
     if (c) { // if c == 0 we just check if we can resume
         if (c->isBlockingCompositing()) {
-            if (!m_blocked) // do NOT attempt to call suspend(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection);
-            m_blocked = true;
+            if (!(m_suspended & BlockRuleSuspend)) // do NOT attempt to call suspend(true); from within the eventchain!
+                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, BlockRuleSuspend));
         }
     }
-    else if (m_blocked) {  // lost a client and we're blocked - can we resume?
-        // NOTICE do NOT check for "m_Suspended" or "!compositing()"
-        // only "resume" if it was really disabled for a block
+    else if (m_suspended & BlockRuleSuspend) {  // lost a client and we're blocked - can we resume?
         bool resume = true;
         for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
@@ -423,38 +426,31 @@ void Compositor::updateCompositeBlocking(Client *c)
             }
         }
         if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
-            m_blocked = false;
-            if (m_suspended)
-                QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, BlockRuleSuspend));
         }
     }
 }
 
-void Compositor::suspend()
+void Compositor::suspend(Compositor::SuspendReason reason)
 {
-    if (m_suspended) {
-        return;
-    }
-    m_suspended = true;
+    Q_ASSERT(reason != NoReasonSuspend);
+    m_suspended |= reason;
     finish();
 }
 
-void Compositor::resume()
+void Compositor::resume(Compositor::SuspendReason reason)
 {
-    if (!m_suspended && hasScene()) {
-        return;
-    }
-    m_suspended = false;
-    // signal toggled is eventually emitted from within setup
-    setup();
+    Q_ASSERT(reason != NoReasonSuspend);
+    m_suspended &= ~reason;
+    setup(); // signal "toggled" is eventually emitted from within setup
 }
 
 void Compositor::setCompositing(bool active)
 {
     if (active) {
-        resume();
+        resume(ScriptSuspend);
     } else {
-        suspend();
+        suspend(ScriptSuspend);
     }
 }
 
