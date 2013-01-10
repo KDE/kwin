@@ -139,7 +139,6 @@ public:
      * @see createCompositor
      **/
     static Compositor *self() {
-        Q_ASSERT(s_compositor);
         return s_compositor;
     }
     /**

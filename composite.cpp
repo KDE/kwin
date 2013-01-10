@@ -935,8 +935,7 @@ void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
 
 bool Toplevel::compositing() const
 {
-    Compositor *c = Compositor::self();
-    return c && c->hasScene();
+    return Workspace::self()->compositing();
 }
 
 void Client::damageNotifyEvent(XDamageNotifyEvent* e)
