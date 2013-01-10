@@ -30,6 +30,11 @@ Item {
     property int optimalHeight: 0.9*screenHeight
     property int imagePathPrefix: (new Date()).getTime()
     property int standardMargin: 2
+    property string maskImagePath: "dialogs/background"
+    property double maskWidth: background.centerWidth
+    property double maskHeight: background.centerHeight
+    property int maskTopMargin: background.centerTopMargin
+    property int maskLeftMargin: background.centerLeftMargin
     width: optimalWidth
     height: optimalHeight
     focus: true
@@ -43,10 +48,9 @@ Item {
         thumbnailListView.imageId++;
     }
 
-    PlasmaCore.FrameSvgItem {
+    ShadowedSvgItem {
         id: background
         anchors.fill: parent
-        imagePath: "dialogs/background"
     }
     // just to get the margin sizes
     PlasmaCore.FrameSvgItem {
@@ -73,10 +77,10 @@ Item {
         clip: true
         anchors {
             fill: parent
-            leftMargin: background.margins.left
-            rightMargin: background.margins.right
-            topMargin: background.margins.top
-            bottomMargin: background.margins.bottom
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            topMargin: background.topMargin
+            bottomMargin: background.bottomMargin
         }
         delegate: Item {
             width: thumbnailListView.cellWidth

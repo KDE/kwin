@@ -179,16 +179,31 @@ void DeclarativeView::showEvent(QShowEvent *event)
 
 void DeclarativeView::resizeEvent(QResizeEvent *event)
 {
-    m_frame->resizeFrame(event->size());
-    if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled() && !tabBox->embedded()) {
-        // blur background
-        Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame->mask());
-        Plasma::WindowEffects::overrideShadow(winId(), true);
-    } else if (tabBox->embedded()) {
+    if (tabBox->embedded()) {
         Plasma::WindowEffects::enableBlurBehind(winId(), false);
     } else {
-        // do not trim to mask with compositing enabled, otherwise shadows are cropped
-        setMask(m_frame->mask());
+        const QString maskImagePath = rootObject()->property("maskImagePath").toString();
+        if (maskImagePath.isEmpty()) {
+            clearMask();
+            Plasma::WindowEffects::enableBlurBehind(winId(), false);
+        } else {
+            const double maskWidth = rootObject()->property("maskWidth").toDouble();
+            const double maskHeight = rootObject()->property("maskHeight").toDouble();
+            const int maskTopMargin = rootObject()->property("maskTopMargin").toInt();
+            const int maskLeftMargin = rootObject()->property("maskLeftMargin").toInt();
+            m_frame->setImagePath(maskImagePath);
+            m_frame->resizeFrame(QSizeF(maskWidth, maskHeight));
+            QRegion mask = m_frame->mask().translated(maskLeftMargin, maskTopMargin);
+            if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled()) {
+                // blur background
+                Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
+                Plasma::WindowEffects::overrideShadow(winId(), true);
+                clearMask();
+            } else {
+                // do not trim to mask with compositing enabled, otherwise shadows are cropped
+                setMask(mask);
+            }
+        }
     }
     QDeclarativeView::resizeEvent(event);
 }

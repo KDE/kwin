@@ -26,10 +26,15 @@ Item {
     property int screenWidth : 0
     property int screenHeight : 0
     property int imagePathPrefix: (new Date()).getTime()
-    property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.margins.left + background.margins.bottom
-    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.margins.top + background.margins.bottom + 40
+    property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.leftMargin + background.bottomMargin
+    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.topMargin + background.bottomMargin + 40
     property bool canStretchX: false
     property bool canStretchY: false
+    property string maskImagePath: "dialogs/background"
+    property double maskWidth: background.centerWidth
+    property double maskHeight: background.centerHeight
+    property int maskTopMargin: background.centerTopMargin
+    property int maskLeftMargin: background.centerLeftMargin
     width: Math.min(Math.max(screenWidth * 0.1, optimalWidth), screenWidth * 0.9)
     height: Math.min(Math.max(screenHeight * 0.05, optimalHeight), screenHeight * 0.5)
 
@@ -42,24 +47,22 @@ Item {
         icons.modelChanged();
     }
 
-    PlasmaCore.FrameSvgItem {
+    ShadowedSvgItem {
         id: background
         anchors.fill: parent
-        imagePath: "dialogs/background"
     }
 
     IconTabBox {
         id: icons
         iconSize: 16
-        height: iconSize + background.margins.top + background.margins.bottom
+        height: iconSize + background.topMargin + icons.margins.top + icons.margins.bottom
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
-            topMargin: background.margins.top
-            rightMargin: background.margins.right
-            bottomMargin: background.margins.bottom
-            leftMargin: background.margins.left
+            topMargin: background.topMargin
+            rightMargin: background.rightMargin
+            leftMargin: background.leftMargin
         }
     }
     Item {
@@ -68,13 +71,14 @@ Item {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            leftMargin: background.margins.left
-            rightMargin: background.margins.right
-            bottomMargin: background.margins.bottom
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            bottomMargin: background.bottomMargin
         }
         Text {
             id: textItem
             text: icons.currentItem ? icons.currentItem.data.caption : ""
+            height: paintedHeight
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: theme.textColor
@@ -86,7 +90,6 @@ Item {
                 right: parent.right
                 left: parent.left
                 verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
             }
         }
     }

@@ -21,6 +21,10 @@ install( FILES clients/text/metadata.desktop         DESTINATION ${SERVICES_INST
 install( FILES clients/thumbnails/metadata.desktop   DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_thumbnails.desktop )
 install( FILES clients/window_strip/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_window_strip.desktop )
 
-# install additional icon tabbox into those that need it
-install (FILES IconTabBox.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
-install (FILES IconTabBox.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
+install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
+install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/compact/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/informative/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/present_windows/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/thumbnails/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/text/contents/ui)

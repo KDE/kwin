@@ -26,6 +26,11 @@ Loader {
     property int screenHeight : 0
     property bool allDesktops: true
     property string longestCaption: ""
+    property string maskImagePath: item && item.maskImagePath != undefined ? item.maskImagePath : ""
+    property double maskWidth: item && item.maskWidth != undefined ? item.maskWidth : 0
+    property double maskHeight: item && item.maskHeight != undefined ? item.maskHeight : 0
+    property int maskTopMargin: item && item.maskTopMargin != undefined ? item.maskTopMargin : 0
+    property int maskLeftMargin: item && item.maskLeftMargin != undefined ? item.maskLeftMargin : 0
     onLoaded: {
         if (item.screenWidth != undefined) {
             item.screenWidth = screenWidth;
