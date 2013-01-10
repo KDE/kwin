@@ -115,6 +115,7 @@ ZoomEffect::ZoomEffect()
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
 
+    source_zoom = -1; // used to trigger initialZoom reading
     reconfigure(ReconfigureAll);
 }
 
@@ -219,10 +220,15 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     focusDelay = qMax(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
     moveFactor = qMax(0.1, ZoomConfig::moveFactor());
-    // Load the saved zoom value.
-    target_zoom = ZoomConfig::initialZoom();
-    if (target_zoom > 1.0)
-        zoomIn(target_zoom);
+    if (source_zoom < 0) {
+        // Load the saved zoom value.
+        source_zoom = 1.0;
+        target_zoom = ZoomConfig::initialZoom();
+        if (target_zoom > 1.0)
+            zoomIn(target_zoom);
+    } else {
+        source_zoom = 1.0;
+    }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -230,11 +236,11 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     bool altered = false;
     if (zoom != target_zoom) {
         altered = true;
-        double diff = time / animationTime(500.0);
+        const float zoomDist = qAbs(target_zoom - source_zoom);
         if (target_zoom > zoom)
-            zoom = qMin(zoom * qMax(1 + diff, 1.2), target_zoom);
+            zoom = qMin(zoom + ((zoomDist * time) / animationTime(150*zoomFactor)), target_zoom);
         else
-            zoom = qMax(zoom * qMin(1 - diff, 0.8), target_zoom);
+            zoom = qMax(zoom - ((zoomDist * time) / animationTime(150*zoomFactor)), target_zoom);
     }
 
     if (zoom == 1.0) {
@@ -371,6 +377,7 @@ void ZoomEffect::postPaintScreen()
 
 void ZoomEffect::zoomIn(double to)
 {
+    source_zoom = zoom;
     if (to < 0.0)
         target_zoom *= zoomFactor;
     else
@@ -386,6 +393,7 @@ void ZoomEffect::zoomIn(double to)
 
 void ZoomEffect::zoomOut()
 {
+    source_zoom = zoom;
     target_zoom /= zoomFactor;
     if (target_zoom < 1) {
         target_zoom = 1;
@@ -401,6 +409,7 @@ void ZoomEffect::zoomOut()
 
 void ZoomEffect::actualSize()
 {
+    source_zoom = zoom;
     target_zoom = 1;
     if (polling) {
         polling = false;
