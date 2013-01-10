@@ -28,10 +28,15 @@ Item {
     property int screenHeight : 1
     property real screenFactor: screenWidth/screenHeight
     property int imagePathPrefix: (new Date()).getTime()
-    property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right) * thumbnailListView.count + background.margins.left + background.margins.bottom
-    property int optimalHeight: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + hoverItem.margins.top + hoverItem.margins.bottom + background.margins.top + background.margins.bottom + 40
+    property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right) * thumbnailListView.count + background.leftMargin + background.bottomMargin
+    property int optimalHeight: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + hoverItem.margins.top + hoverItem.margins.bottom + background.topMargin + background.bottomMargin + 40
     property bool canStretchX: false
     property bool canStretchY: false
+    property string maskImagePath: "dialogs/background"
+    property double maskWidth: background.centerWidth
+    property double maskHeight: background.centerHeight
+    property int maskTopMargin: background.centerTopMargin
+    property int maskLeftMargin: background.centerLeftMargin
     width: Math.min(Math.max(screenWidth * 0.3, optimalWidth), screenWidth * 0.9)
     height: Math.min(Math.max(screenHeight * 0.15, optimalHeight), screenHeight * 0.7)
     clip: true
@@ -47,10 +52,9 @@ Item {
         thumbnailListView.imageId++;
     }
 
-    PlasmaCore.FrameSvgItem {
+    ShadowedSvgItem {
         id: background
         anchors.fill: parent
-        imagePath: "dialogs/background"
     }
     // just to get the margin sizes
     PlasmaCore.FrameSvgItem {
@@ -78,10 +82,10 @@ Item {
         width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
         anchors {
             top: parent.top
-            topMargin: background.margins.top
-            leftMargin: background.margins.left
-            rightMargin: background.margins.right
-            bottomMargin: background.margins.bottom
+            topMargin: background.topMargin
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            bottomMargin: background.bottomMargin
             horizontalCenter: parent.horizontalCenter
         }
         clip: true
@@ -128,9 +132,9 @@ Item {
             right: parent.right
             bottom: parent.bottom
             topMargin: hoverItem.margins.bottom
-            leftMargin: background.margins.left
-            rightMargin: background.margins.right
-            bottomMargin: background.margins.bottom
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            bottomMargin: background.bottomMargin
         }
         Image {
             id: iconItem

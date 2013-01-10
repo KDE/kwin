@@ -28,9 +28,14 @@ Item {
     property string longestCaption: ""
     property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: compactListView.maxRowWidth
-    property int optimalHeight: compactListView.rowHeight * compactListView.count + background.margins.top + background.margins.bottom
+    property int optimalHeight: compactListView.rowHeight * compactListView.count + background.topMargin + background.bottomMargin
     property bool canStretchX: true
     property bool canStretchY: false
+    property string maskImagePath: "dialogs/background"
+    property double maskWidth: background.centerWidth
+    property double maskHeight: background.centerHeight
+    property int maskTopMargin: background.centerTopMargin
+    property int maskLeftMargin: background.centerLeftMargin
     width: Math.min(Math.max(screenWidth * 0.2, optimalWidth), screenWidth * 0.8)
     height: Math.min(Math.max(screenHeight * 0.2, optimalHeight), screenHeight * 0.8)
     focus: true
@@ -77,10 +82,9 @@ Item {
         visible: false
     }
 
-    PlasmaCore.FrameSvgItem {
+    ShadowedSvgItem {
         id: background
         anchors.fill: parent
-        imagePath: "dialogs/background"
     }
 
     // delegate
@@ -147,7 +151,7 @@ Item {
                 compactListView, "calculateMaxRowWidth");
             width = Math.max(textElement.width, width);
             textElement.destroy();
-            return width + 16 + 2 * compactTabBox.textMargin + hoverItem.margins.right + hoverItem.margins.left + background.margins.left + background.margins.right;
+            return width + 16 + 2 * compactTabBox.textMargin + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.right;Margin
         }
         /**
         * Calculates the height of one row based on the text height and icon size.
@@ -177,10 +181,10 @@ Item {
         property int imageId: 0
         anchors {
             fill: parent
-            topMargin: background.margins.top
-            leftMargin: background.margins.left
-            rightMargin: background.margins.right
-            bottomMargin: background.margins.bottom
+            topMargin: background.topMargin
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            bottomMargin: background.bottomMargin
         }
         clip: true
         delegate: listDelegate
