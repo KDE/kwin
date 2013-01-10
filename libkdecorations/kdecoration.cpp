@@ -30,11 +30,9 @@ DEALINGS IN THE SOFTWARE.
 #include <QMenu>
 #include <kglobal.h>
 #include <assert.h>
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 #include <QX11Info>
-#endif
 
 #include "kdecorationfactory.h"
 #include "kdecorationbridge.h"

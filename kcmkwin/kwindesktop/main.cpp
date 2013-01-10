@@ -36,9 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
 
-#ifdef Q_WS_X11
 #include <QX11Info>
-#endif
 
 #include <netwm.h>
 
@@ -104,7 +102,6 @@ void KWinDesktopConfig::init()
 
     m_editor->addCollection(m_switchDesktopCollection, i18n("Desktop Switching"));
 
-#ifdef Q_WS_X11
     // get number of desktops
     NETRootInfo info(QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames);
     int n = info.numberOfDesktops();
@@ -122,7 +119,6 @@ void KWinDesktopConfig::init()
     m_ui->numberSpinBox->setValue(n);
 
     m_editor->addCollection(m_actionCollection, i18n("Desktop Switching"));
-#endif
 
     // search the effect names
     // TODO: way to recognize if a effect is not found
@@ -167,11 +163,7 @@ void KWinDesktopConfig::init()
     connect(m_ui->effectConfigButton, SIGNAL(clicked()), SLOT(slotConfigureEffectClicked()));
 
     // Begin check for immutable - taken from old desktops kcm
-#ifdef Q_WS_X11
     int kwin_screen_number = DefaultScreen(QX11Info::display());
-#else
-    int kwin_screen_number = 0;
-#endif
 
     m_config = KSharedConfig::openConfig("kwinrc");
 
@@ -245,7 +237,6 @@ void KWinDesktopConfig::load()
     // This method is called on reset(). So undo all changes.
     undo();
 
-#ifdef Q_WS_X11
     // get number of desktops
     unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
     NETRootInfo info(QX11Info::display(), properties, 2);
@@ -256,7 +247,6 @@ void KWinDesktopConfig::load()
         m_ui->desktopNames->setName(i, name);
     }
     m_ui->rowsSpinBox->setValue(info.desktopLayoutColumnsRows().height());
-#endif
 
     // Popup info
     KConfigGroup effectconfig(m_config, "Plugins");
@@ -295,7 +285,6 @@ void KWinDesktopConfig::load()
 void KWinDesktopConfig::save()
 {
     // TODO: plasma stuff
-#ifdef Q_WS_X11
     unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
     NETRootInfo info(QX11Info::display(), properties, 2);
     // set desktop names
@@ -331,7 +320,6 @@ void KWinDesktopConfig::save()
         groupname.sprintf("Desktops-screen-%d", screenNumber);
     KConfigGroup group(m_config, groupname);
     group.writeEntry("Rows", rows);
-#endif
 
     // Popup info
     KConfigGroup effectconfig(m_config, "Plugins");
