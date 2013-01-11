@@ -1,82 +1,272 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
- <kcfgfile name="kwinrc" />
- <group name="Desktops" >
-  <entry key="Name_1" type="String" />
-  <entry key="Name_2" type="String" />
-  <entry key="Name_3" type="String" />
-  <entry key="Name_4" type="String" />
-  <entry key="Number" type="Int" />
- </group>
- <group name="FakeSession" >
-  <entry key="count" type="Int" />
- </group>
- <group name="MouseBindings" >
-  <entry key="CommandActiveTitlebar2" type="String" />
-  <entry key="CommandActiveTitlebar3" type="String" />
-  <entry key="CommandActiveTitlebar1" type="String" />
-  <entry key="CommandInactiveTitlebar1" type="String" />
-  <entry key="CommandInactiveTitlebar2" type="String" />
-  <entry key="CommandInactiveTitlebar3" type="String" />
- </group>
- <group name="Style" >
-  <entry key="ButtonsOnLeft" type="String" />
-  <entry key="ButtonsOnRight" type="String" />
-  <entry key="PluginLib" type="String" />
-  <entry key="BorderSize" type="Int" />
-  <entry key="CustomButtonPositions" type="Bool" />
-  <entry key="ShowToolTips" type="Bool" />
- </group>
- <group name="Windows" >
-  <entry key="AltTabStyle" type="String" />
-  <entry key="FocusPolicy" type="String" />
-  <entry key="MoveMode" type="String" />
-  <entry key="ResizeMode" type="String" />
-  <entry key="TitlebarDoubleClickCommand" type="String" />
-  <entry key="IgnoreFocusStealingClasses" type="StringList" />
-  <entry key="MoveResizeMaximizedWindows" type="Bool" />
-  <entry key="ShadeHover" type="Bool" />
-  <entry key="GeometryTip" type="Bool" />
-  <entry key="RollOverDesktops" type="Bool" />
-  <entry key="FocusStealingPreventionLevel" type="Int" />
-  <entry key="Placement" type="String" />
-  <entry key="AutoRaise" type="Bool" />
-  <entry key="AutoRaiseInterval" type="Int" />
-  <entry key="DelayFocus" type="Bool" />
-  <entry key="DelayFocusInterval" type="Int" />
-  <entry key="ShadeHoverInterval" type="Int" />
-  <entry key="ClickRaise" type="Bool" />
-  <entry key="BorderSnapZone" type="Int" />
-  <entry key="WindowSnapZone" type="Int" />
-  <entry key="SnapOnlyWhenOverlapping" type="Bool" />
-  <entry key="ElectricBorders" type="Int" />
-  <entry key="ElectricBorderDelay" type="Int" />
-  <entry key="IgnorePositionClasses" type="StringList" />
-  <entry key="KillPingTimeout" type="Int" />
-  <entry key="ShowDesktopIsMinimizeAll" type="Bool" />
-  <entry key="SeparateScreenFocus" type="Bool" />
-  <entry key="ActiveMouseScreen" type="Bool" />
-  <entry key="XineramaPlacementScreen" type="Int" />
- </group>
- <group name="WM" >
-  <entry key="frame" type="Color" />
-  <entry key="handle" type="Color" />
-  <entry key="activeBackground" type="Color" />
-  <entry key="activeBlend" type="Color" />
-  <entry key="activeFont" type="Font" />
-  <entry key="activeFontSmall" type="Font" />
-  <entry key="activeForeground" type="Color" />
-  <entry key="activeTitleBtnBg" type="Color" />
-  <entry key="inactiveBackground" type="Color" />
-  <entry key="inactiveBlend" type="Color" />
-  <entry key="inactiveFont" type="Color" />
-  <entry key="inactiveFontSmall" type="Color" />
-  <entry key="inactiveForeground" type="Color" />
-  <entry key="inactiveFrame" type="Color" />
-  <entry key="inactiveHandle" type="Color" />
-  <entry key="inactiveTitleBtnBg" type="Color" />
- </group>
+    <kcfgfile name="kwinrc" />
+    <group name="MouseBindings">
+        <entry name="CommandTitlebarWheel" type="String">
+            <default>Switch to Window Tab to the Left/Right</default>
+        </entry>
+        <entry name="CommandAllKey" type="String">
+            <default>Alt</default>
+        </entry>
+        <entry name="CommandAllWheel" type="String">
+            <default>Nothing</default>
+        </entry>
+        <entry name="CommandActiveTitlebar1" type="String">
+            <default>Raise</default>
+        </entry>
+        <entry name="CommandActiveTitlebar2" type="String">
+            <default>Start Window Tab Drag</default>
+        </entry>
+        <entry name="CommandActiveTitlebar3" type="String">
+            <default>Operations menu</default>
+        </entry>
+        <entry name="CommandInactiveTitlebar1" type="String">
+            <default>Activate and raise</default>
+        </entry>
+        <entry name="CommandInactiveTitlebar2" type="String">
+            <default>Start Window Tab Drag</default>
+        </entry>
+        <entry name="CommandInactiveTitlebar3" type="String">
+            <default>Operations menu</default>
+        </entry>
+        <entry name="CommandWindow1" type="String">
+            <default>Activate, raise and pass click</default>
+        </entry>
+        <entry name="CommandWindow2" type="String">
+            <default>Activate and pass click</default>
+        </entry>
+        <entry name="CommandWindow3" type="String">
+            <default>Activate and pass click</default>
+        </entry>
+        <entry name="CommandWindowWheel" type="String">
+            <default>Scroll</default>
+        </entry>
+        <entry name="CommandAll1" type="String">
+            <default>Move</default>
+        </entry>
+        <entry name="CommandAll2" type="String">
+            <default>Toggle raise and lower</default>
+        </entry>
+        <entry name="CommandAll3" type="String">
+            <default>Resize</default>
+        </entry>
+    </group>
+    <group name="ElectricBorders">
+        <entry name="Top" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="TopRight" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="Right" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="BottomRight" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="Bottom" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="BottomLeft" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="Left" type="String">
+            <default>None</default>
+        </entry>
+        <entry name="TopLeft" type="String">
+            <default>None</default>
+        </entry>
+    </group>
+    <group name="Windows">
+        <entry name="GeometryTip" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="CondensedTitle" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="FocusPolicy" type="Enum">
+            <choices>
+                <choice name="ClickToFocus"/>
+                <choice name="FocusFollowsMouse"/>
+                <choice name="FocusUnderMouse"/>
+                <choice name="FocusStrictlyUnderMouse"/>
+            </choices>
+            <default>ClickToFocus</default>
+        </entry>
+        <entry name="NextFocusPrefersMouse" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="SeparateScreenFocus" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="ActiveMouseScreen" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="RollOverDesktops" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="LegacyFullscreenSupport" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="FocusStealingPreventionLevel" type="Int">
+            <default>1</default>
+            <min>0</min>
+            <max>4</max>
+        </entry>
+        <entry name="Placement" type="Enum">
+            <choices>
+                <choice name="NoPlacement"/>
+                <choice name="Default"/>
+                <choice name="Unknown"/>
+                <choice name="Random"/>
+                <choice name="Smart"/>
+                <choice name="Cascade"/>
+                <choice name="Centered"/>
+                <choice name="ZeroCornered"/>
+                <choice name="UnderMouse"/>
+                <choice name="OnMainWindow"/>
+                <choice name="Maximizing"/>
+            </choices>
+            <default>Default</default>
+        </entry>
+        <entry name="AutoRaise" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="AutoRaiseInterval" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="DelayFocusInterval" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="ShadeHover" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="ShadeHoverInterval" type="Int">
+            <default>250</default>
+        </entry>
+        <entry name="ClickRaise" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="BorderSnapZone" type="Int">
+            <default>10</default>
+        </entry>
+        <entry name="WindowSnapZone" type="Int">
+            <default>10</default>
+        </entry>
+        <entry name="CenterSnapZone" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="SnapOnlyWhenOverlapping" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="ElectricBorders" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="ElectricBordersDelay" type="Int">
+            <default>150</default>
+        </entry>
+        <entry name="ElectricBordersCooldown" type="Int">
+            <default>350</default>
+        </entry>
+        <entry name="ElectricBordersPushbackPixels" type="Int">
+            <default>1</default>
+        </entry>
+        <entry name="ElectricBordersMaximize" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ElectricBordersTiling" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ElectricBorderCornerRatio" type="Double">
+            <default>0.25</default>
+            <min>0.0</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="TitlebarDoubleClickCommand" type="String">
+            <default>Maximize</default>
+        </entry>
+        <entry name="MaximizeButtonLeftClickCommand" type="String">
+            <default>Maximize</default>
+        </entry>
+        <entry name="MaximizeButtonMiddleClickCommand" type="String">
+            <default>Maximize (vertical only)</default>
+        </entry>
+        <entry name="MaximizeButtonRightClickCommand" type="String">
+            <default>Maximize (horizontal only)</default>
+        </entry>
+        <entry name="KillPingTimeout" type="Int">
+            <default>5000</default>
+        </entry>
+        <entry name="HideUtilityWindowsForInactive" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="InactiveTabsSkipTaskbar" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="AutogroupSimilarWindows" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="AutogroupInForeground" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ShowDesktopIsMinimizeAll" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="BorderlessMaximizedWindows" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+    <group name="Compositing">
+        <entry name="MaxFPS" type="UInt">
+            <default>60</default>
+        </entry>
+        <entry name="RefreshRate" type="UInt">
+            <default>0</default>
+        </entry>
+        <entry name="VBlankTime" type="UInt">
+            <default>6144</default>
+        </entry>
+        <entry name="Backend" type="String">
+            <default>OpenGL</default>
+        </entry>
+        <entry name="Enabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="GLVSync" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="GLTextureFilter" type="Int">
+            <default>2</default>
+            <min>-1</min>
+            <max>2</max>
+        </entry>
+        <entry name="GLStrictBinding" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="GLLegacy" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="GLColorCorrection" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="XRenderSmoothScale" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="HiddenPreviews" type="Int">
+            <default>5</default>
+            <min>4</min>
+            <max>6</max>
+        </entry>
+        <entry name="UnredirectFullscreen" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="AnimationSpeed" type="Int">
+            <default>3</default>
+            <min>0</min>
+            <max>6</max>
+        </entry>
+    </group>
 </kcfg>
