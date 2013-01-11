@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <kconfiggroup.h>
 #include <kcmdlineargs.h>
+#include <kdeversion.h>
 #include <QtDBus/QtDBus>
 
 #include "client.h"
@@ -1973,6 +1974,20 @@ QString Workspace::supportInformation() const
     // all following strings are intended for support. They need to be pasted to e.g forums.kde.org
     // it is expected that the support will happen in English language or that the people providing
     // help understand English. Because of that all texts are not translated
+    support.append("Version\n");
+    support.append("=======\n");
+    support.append("KWin version: ");
+    support.append(KWIN_VERSION_STRING);
+    support.append('\n');
+    support.append("KDE SC version (runtime): ");
+    support.append(KDE::versionString());
+    support.append('\n');
+    support.append("KDE SC version (compile): ");
+    support.append(KDE_VERSION_STRING);
+    support.append('\n');
+    support.append("Qt Version: ");
+    support.append(qVersion());
+    support.append("\n\n");
     support.append("Options\n");
     support.append("=======\n");
     const QMetaObject *metaOptions = options->metaObject();
