@@ -23,6 +23,14 @@
                 <read></read>
                 <detaileddescription>Global property to the core wrapper of KWin.</detaileddescription>
             </memberdef>
+            <memberdef kind="property" writable="no">
+                <type>object</type>
+                <definition></definition>
+                <argsstring></argsstring>
+                <name>KWin</name>
+                <read></read>
+                <detaileddescription>Provides access to enums defined in KWin::WorkspaceWrapper</detaileddescription>
+            </memberdef>
         </sectiondef>
         <sectiondef kind="public-func">
             <memberdef kind="function">
