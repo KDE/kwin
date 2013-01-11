@@ -818,6 +818,13 @@ bool EffectWindow::hasDecoration() const
     return contentsRect() != QRect(0, 0, width(), height());
 }
 
+bool EffectWindow::isVisible() const
+{
+    return !isMinimized()
+           && isOnCurrentDesktop()
+           && isOnCurrentActivity();
+}
+
 
 //****************************************
 // EffectWindowGroup

@@ -1360,6 +1360,16 @@ class KWIN_EXPORT EffectWindow : public QObject
      * @since 4.10
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
+    /**
+     * Whether the window is currently visible to the user, that is:
+     * <ul>
+     * <li>Not minimized</li>
+     * <li>On current desktop</li>
+     * <li>On current activity</li>
+     * </ul>
+     * @since 4.11
+     **/
+    Q_PROPERTY(bool visible READ isVisible)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -1576,6 +1586,11 @@ public:
     Q_SCRIPTABLE void closeWindow() const;
 
     bool isCurrentTab() const;
+
+    /**
+     * @since 4.11
+     **/
+    bool isVisible() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

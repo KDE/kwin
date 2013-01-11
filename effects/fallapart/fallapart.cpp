@@ -148,11 +148,7 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
 {
     if (!isRealWindow(c))
         return;
-    if (c->isMinimized())
-        return;
-    if (!c->isOnCurrentDesktop())
-        return;
-    if (!c->isOnCurrentActivity())
+    if (!c->isVisible())
         return;
     const void* e = c->data(WindowClosedGrabRole).value<void*>();
     if (e && e != this)
