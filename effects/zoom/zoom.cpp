@@ -283,30 +283,28 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             data.setXTranslation(qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - prevPoint.x() * zoom))));
             data.setYTranslation(qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - prevPoint.y() * zoom))));
             break;
-        case MouseTrackingPush:
-            if (timeline.state() != QTimeLine::Running) {
+        case MouseTrackingPush: {
                 // touching an edge of the screen moves the zoom-area in that direction.
                 int x = cursorPoint.x() * zoom - prevPoint.x() * (zoom - 1.0);
                 int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
-                int threshold = 1; //qMax(1, int(10.0 / zoom));
+                int threshold = 4;
                 xMove = yMove = 0;
                 if (x < threshold)
-                    xMove = - qMax(1.0, displayWidth() / zoom / moveFactor);
+                    xMove = (x - threshold) / zoom;
                 else if (x + threshold > displayWidth())
-                    xMove = qMax(1.0, displayWidth() / zoom / moveFactor);
+                    xMove = (x + threshold - displayWidth()) / zoom;
                 if (y < threshold)
-                    yMove = - qMax(1.0, displayHeight() / zoom / moveFactor);
+                    yMove = (y - threshold) / zoom;
                 else if (y + threshold > displayHeight())
-                    yMove = qMax(1.0, displayHeight() / zoom / moveFactor);
-                if (xMove != 0 || yMove != 0) {
+                    yMove = (y + threshold - displayHeight()) / zoom;
+                if (xMove)
                     prevPoint.setX(qMax(0, qMin(displayWidth(), prevPoint.x() + xMove)));
+                if (yMove)
                     prevPoint.setY(qMax(0, qMin(displayHeight(), prevPoint.y() + yMove)));
-                    timeline.start();
-                }
+                data.setXTranslation(- int(prevPoint.x() * (zoom - 1.0)));
+                data.setYTranslation(- int(prevPoint.y() * (zoom - 1.0)));
+                break;
             }
-            data.setXTranslation(- int(prevPoint.x() * (zoom - 1.0)));
-            data.setYTranslation(- int(prevPoint.y() * (zoom - 1.0)));
-            break;
         }
 
         // use the focusPoint if focus tracking is enabled
