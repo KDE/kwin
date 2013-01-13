@@ -139,47 +139,47 @@
         </property>
         <item>
          <property name="text">
-          <string>No Border</string>
+          <string comment="@item:inlistbox Border size:">No Border</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>No Side Borders</string>
+          <string comment="@item:inlistbox Border size:">No Side Borders</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Tiny</string>
+          <string comment="@item:inlistbox Border size:">Tiny</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Normal</string>
+          <string comment="@item:inlistbox Border size:">Normal</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Large</string>
+          <string comment="@item:inlistbox Border size:">Large</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Very Large</string>
+          <string comment="@item:inlistbox Border size:">Very Large</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Huge</string>
+          <string comment="@item:inlistbox Border size:">Huge</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Very Huge</string>
+          <string comment="@item:inlistbox Border size:">Very Huge</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Oversized</string>
+          <string comment="@item:inlistbox Border size:">Oversized</string>
          </property>
         </item>
        </widget>
