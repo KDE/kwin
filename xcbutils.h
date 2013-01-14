@@ -40,48 +40,112 @@ template <typename Reply,
 class Wrapper
 {
 public:
+    Wrapper()
+        : m_retrieved(false)
+        , m_window(XCB_WINDOW_NONE)
+        , m_reply(NULL)
+        {
+            m_cookie.sequence = 0;
+        }
     explicit Wrapper(WindowId window)
         : m_retrieved(false)
         , m_cookie(requestFunc(connection(), window))
         , m_window(window)
+        , m_reply(NULL)
     {
     }
+    explicit Wrapper(const Wrapper &other)
+        : m_retrieved(other.m_retrieved)
+        , m_cookie(other.m_cookie)
+        , m_window(other.m_window)
+        , m_reply(NULL)
+    {
+        takeFromOther(const_cast<Wrapper&>(other));
+    }
     virtual ~Wrapper() {
-        if (!m_retrieved) {
-            xcb_discard_reply(connection(), m_cookie.sequence);
+        cleanup();
+    }
+    inline Wrapper &operator=(const Wrapper &other) {
+        if (this != &other) {
+            // if we had managed a reply, free it
+            cleanup();
+            // copy members
+            m_retrieved = other.m_retrieved;
+            m_cookie = other.m_cookie;
+            m_window = other.m_window;
+            m_reply = other.m_reply;
+            // take over the responsibility for the reply pointer
+            takeFromOther(const_cast<Wrapper&>(other));
         }
+        return *this;
     }
 
     inline const Reply *operator->() {
         getReply();
-        return m_reply.data();
+        return m_reply;
+    }
+    inline bool isNull() {
+        getReply();
+        return m_reply == NULL;
     }
     inline operator bool() {
-        getReply();
-        return !m_reply.isNull();
+        return !isNull();
     }
-    inline const QSharedPointer<Reply> &data() {
+    inline const Reply *data() {
         getReply();
         return m_reply;
     }
     inline WindowId window() const {
         return m_window;
     }
+    inline bool isRetrieved() const {
+        return m_retrieved;
+    }
+    /**
+     * Returns the value of the reply pointer referenced by this object. The reply pointer of
+     * this object will be reset to null. Calling any method which requires the reply to be valid
+     * will crash.
+     *
+     * Callers of this function take ownership of the pointer.
+     **/
+    inline Reply *take() {
+        getReply();
+        Reply *ret = m_reply;
+        m_reply = NULL;
+        m_window = XCB_WINDOW_NONE;
+        return ret;
+    }
 
 protected:
     void getReply() {
-        if (m_retrieved) {
+        if (m_retrieved || !m_cookie.sequence) {
             return;
         }
-        m_reply = QSharedPointer<Reply>(replyFunc(connection(), m_cookie, NULL), &free);
+        m_reply = replyFunc(connection(), m_cookie, NULL);
         m_retrieved = true;
     }
 
 private:
+    inline void cleanup() {
+        if (!m_retrieved && m_cookie.sequence) {
+            xcb_discard_reply(connection(), m_cookie.sequence);
+        } else if (m_reply) {
+            free(m_reply);
+        }
+    }
+    inline void takeFromOther(Wrapper &other) {
+        if (m_retrieved) {
+            m_reply = other.take();
+        } else {
+            //ensure that other object doesn't try to get the reply or discards it in the dtor
+            other.m_retrieved = true;
+            other.m_window = XCB_WINDOW_NONE;
+        }
+    }
     bool m_retrieved;
     Cookie m_cookie;
     WindowId m_window;
-    QSharedPointer<Reply> m_reply;
+    Reply *m_reply;
 };
 
 typedef Wrapper<xcb_get_window_attributes_reply_t, xcb_get_window_attributes_cookie_t, &xcb_get_window_attributes_reply, &xcb_get_window_attributes_unchecked> WindowAttributes;
@@ -90,11 +154,12 @@ typedef Wrapper<xcb_get_window_attributes_reply_t, xcb_get_window_attributes_coo
 class WindowGeometry : public Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>
 {
 public:
+    WindowGeometry() : Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>() {}
     explicit WindowGeometry(xcb_window_t window) : Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>(window) {}
 
     inline QRect rect() {
-        const QSharedPointer<xcb_get_geometry_reply_t> &geometry = data();
-        if (geometry.isNull()) {
+        const xcb_get_geometry_reply_t *geometry = data();
+        if (!geometry) {
             return QRect();
         }
         return QRect(geometry->x, geometry->y, geometry->width, geometry->height);

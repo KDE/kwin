@@ -50,3 +50,19 @@ target_link_libraries( testClientMachine
                        ${XCB_XCB_LIBRARIES}
                        ${X11_XCB_LIBRARIES}
 )
+
+########################################################
+# Test XcbWrapper
+########################################################
+set( testXcbWrapper_SRCS
+     test_xcb_wrapper.cpp
+)
+kde4_add_unit_test( testXcbWrapper TESTNAME kwin-TestXcbWrapper ${testXcbWrapper_SRCS} )
+
+target_link_libraries( testXcbWrapper
+                       ${QT_QTTEST_LIBRARY}
+                       ${QT_QTCORE_LIBRARY}
+                       ${QT_QTGUI_LIBRARY}
+                       ${XCB_XCB_LIBRARIES}
+                       ${X11_XCB_LIBRARIES}
+)

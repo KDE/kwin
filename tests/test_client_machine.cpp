@@ -17,6 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+#include "testutils.h"
 // KWin
 #include "../client_machine.h"
 #include "../utils.h"
@@ -66,23 +67,11 @@ private slots:
     void emptyHostName();
 
 private:
-    xcb_window_t createWindow();
     void setClientMachineProperty(xcb_window_t window, const QByteArray &hostname);
     xcb_window_t m_testWindow;
     QByteArray m_hostName;
     QByteArray m_fqdn;
 };
-
-xcb_window_t TestClientMachine::createWindow()
-{
-    xcb_window_t w = xcb_generate_id(connection());
-    const uint32_t values[] = { true };
-    xcb_create_window(connection(), 0, w, rootWindow(),
-                      0, 0, 10, 10,
-                      0, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_COPY_FROM_PARENT,
-                      XCB_CW_OVERRIDE_REDIRECT, values);
-    return w;
-}
 
 void TestClientMachine::setClientMachineProperty(xcb_window_t window, const QByteArray &hostname)
 {
@@ -188,10 +177,5 @@ void TestClientMachine::emptyHostName()
     QCOMPARE(spy.isEmpty(), false);
 }
 
-// need to implement main manually as we need a QApplication for X11 interaction
-int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
-    TestClientMachine tc;
-    return QTest::qExec(&tc, argc, argv);
-}
+KWIN_TEST_MAIN(TestClientMachine)
 #include "test_client_machine.moc"

@@ -1145,12 +1145,14 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     if (input_windows.count() == 0)
         return;
     xcb_window_t* wins = new xcb_window_t[input_windows.count()];
-    QList<Xcb::WindowAttributes> attributes;
-    foreach (const InputWindowPair &it, input_windows) {
-        attributes << Xcb::WindowAttributes(it.second);
-    }
+    QVector<Xcb::WindowAttributes> attributes(input_windows.count());
     int pos = 0;
-    for (QList<Xcb::WindowAttributes>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
+    foreach (const InputWindowPair &it, input_windows) {
+        attributes[pos] = Xcb::WindowAttributes(it.second);
+        pos++;
+    }
+    pos = 0;
+    for (QVector<Xcb::WindowAttributes>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
         if (*it && (*it)->map_state != XCB_MAP_STATE_UNMAPPED) {
             wins[pos++] = (*it).window();
         }
