@@ -81,6 +81,7 @@ set( kwin4_effect_include_directories )
 
 # scripted effects
 add_subdirectory( fade )
+add_subdirectory( login )
 
 # scripted effects only relevant to desktop
 if( NOT KWIN_MOBILE_EFFECTS )
@@ -93,7 +94,6 @@ endif( NOT KWIN_MOBILE_EFFECTS )
 
 # Common effects
 include( dialogparent/CMakeLists.txt )
-include( login/CMakeLists.txt )
 include( outline/CMakeLists.txt )
 include( presentwindows/CMakeLists.txt )
 include( screenedge/CMakeLists.txt )
