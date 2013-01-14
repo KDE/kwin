@@ -83,6 +83,7 @@ namespace KWin
 {
 
 extern int screen_number;
+extern bool is_multihead;
 
 #ifdef KWIN_BUILD_KAPPMENU
 static const char *KDED_SERVICE = "org.kde.kded";
@@ -1997,6 +1998,25 @@ QString Workspace::supportInformation() const
             continue;
         }
         support.append(QLatin1String(property.name()) % ": " % options->property(property.name()).toString() % '\n');
+    }
+    support.append("\nScreens\n");
+    support.append(  "=======\n");
+    support.append("Multi-Head: ");
+    if (is_multihead) {
+        support.append("yes\n");
+        support.append(QString("Head: %1\n").arg(screen_number));
+    } else {
+        support.append("no\n");
+    }
+    support.append(QString("Number of Screens: %1\n").arg(QApplication::desktop()->screenCount()));
+    for (int i=0; i<QApplication::desktop()->screenCount(); ++i) {
+        const QRect geo = QApplication::desktop()->screenGeometry(i);
+        support.append(QString("Screen %1 Geometry: %2,%3,%4x%5\n")
+                              .arg(i)
+                              .arg(geo.x())
+                              .arg(geo.y())
+                              .arg(geo.width())
+                              .arg(geo.height()));
     }
     support.append("\nCompositing\n");
     support.append(  "===========\n");
