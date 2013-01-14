@@ -46,6 +46,11 @@ public:
         , m_window(window)
     {
     }
+    virtual ~Wrapper() {
+        if (!m_retrieved) {
+            xcb_discard_reply(connection(), m_cookie.sequence);
+        }
+    }
 
     inline const Reply *operator->() {
         getReply();
