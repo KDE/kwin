@@ -51,7 +51,7 @@ void KWinAuroraeConfigForm::enableNoSideBorderSupport(bool enable)
     if (!enable) {
         return;
     }
-    borderSizesCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[KDecorationDefines::BorderBottom]));
+    borderSizesCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[KDecorationDefines::BorderNoSides]));
     borderSizesCombo->addItem(i18nc("@item:inlistbox Border size:", border_names[KDecorationDefines::BorderNone]));
 }
 
