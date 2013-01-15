@@ -10,7 +10,7 @@
     <height>398</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
+  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1,2">
    <item>
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
