@@ -123,6 +123,59 @@ void DecorationOptions::slotActiveChanged()
     emit fontChanged();
 }
 
+Borders::Borders(QObject *parent)
+    : QObject(parent)
+    , m_left(0)
+    , m_right(0)
+    , m_top(0)
+    , m_bottom(0)
+{
+}
+
+Borders::~Borders()
+{
+}
+
+#define SETTER( methodName, name ) \
+void Borders::methodName(int name) \
+{ \
+    if (m_##name == name) { \
+        return; \
+    } \
+    m_##name = name; \
+    emit name##Changed(); \
+}
+
+SETTER(setLeft, left)
+SETTER(setRight, right)
+SETTER(setTop, top)
+SETTER(setBottom, bottom)
+
+#undef SETTER
+
+void Borders::setAllBorders(int border)
+{
+    setBorders(border);
+    setTitle(border);
+}
+
+void Borders::setBorders(int border)
+{
+    setSideBorders(border);
+    setBottom(border);
+}
+
+void Borders::setSideBorders(int border)
+{
+    setLeft(border);
+    setRight(border);
+}
+
+void Borders::setTitle(int value)
+{
+    setTop(value);
+}
+
 } // namespace
 
 #include "decorationoptions.moc"

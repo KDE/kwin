@@ -152,5 +152,71 @@ private:
     bool m_active;
     QObject *m_decoration;
 };
+
+class Borders : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(int left READ left WRITE setLeft NOTIFY leftChanged)
+    Q_PROPERTY(int right READ right WRITE setRight NOTIFY rightChanged)
+    Q_PROPERTY(int top READ top WRITE setTop NOTIFY topChanged)
+    Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
+public:
+    Borders(QObject *parent = NULL);
+    virtual ~Borders();
+    int left() const;
+    int right() const;
+    int top() const;
+    int bottom() const;
+
+    void setLeft(int left);
+    void setRight(int right);
+    void setTop(int top);
+    void setBottom(int bottom);
+
+public Q_SLOTS:
+    /**
+     * Sets all four borders to @p value.
+     **/
+    void setAllBorders(int value);
+    /**
+     * Sets all borders except the title border to @p value.
+     **/
+    void setBorders(int value);
+    /**
+     * Sets the side borders (e.g. if title is on top, the left and right borders)
+     * to @p value.
+     **/
+    void setSideBorders(int value);
+    /**
+     * Sets the title border to @p value.
+     **/
+    void setTitle(int value);
+
+Q_SIGNALS:
+    void leftChanged();
+    void rightChanged();
+    void topChanged();
+    void bottomChanged();
+
+private:
+    int m_left;
+    int m_right;
+    int m_top;
+    int m_bottom;
+};
+
+#define GETTER( name ) \
+inline int Borders::name() const \
+{ \
+    return m_##name;\
+}\
+
+GETTER(left)
+GETTER(right)
+GETTER(top)
+GETTER(bottom)
+
+#undef GETTER
+
 } // namespace
 #endif // KWIN_DECORATION_OPTIONS_H

@@ -19,63 +19,45 @@ import org.kde.kwin.decoration 0.1
 import org.kde.kwin.decorations.plastik 1.0
 
 Decoration {
-    function enableExtendedBorders() {
-        root.extendedBorderTop = 0;
-        root.extendedBorderRight = 3;
-        root.extendedBorderBottom = 3;
-        root.extendedBorderLeft = 3;
-    }
-    function disableExtendedBorders() {
-        root.extendedBorderTop = 0;
-        root.extendedBorderRight = 0;
-        root.extendedBorderBottom = 0;
-        root.extendedBorderLeft = 0;
-    }
-    function setBorderSize(value) {
-        root.borderLeft = value;
-        root.borderRight = value;
-        root.borderBottom = value;
-    }
     function readConfig() {
         switch (decoration.readConfig("BorderSize", DecorationOptions.BorderNormal)) {
         case DecorationOptions.BorderTiny:
-            setBorderSize(3);
-            disableExtendedBorders();
+            borders.setBorders(3);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderLarge:
-            setBorderSize(8);
-            disableExtendedBorders();
+            borders.setBorders(8);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderVeryLarge:
-            setBorderSize(12);
-            disableExtendedBorders();
+            borders.setBorders(12);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderHuge:
-            setBorderSize(18);
-            disableExtendedBorders();
+            borders.setBorders(18);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderVeryHuge:
-            setBorderSize(27);
-            disableExtendedBorders();
+            borders.setBorders(27);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderOversized:
-            setBorderSize(40);
-            disableExtendedBorders();
+            borders.setBorders(40);
+            extendedBorders.setAllBorders(0);
             break;
         case DecorationOptions.BorderNoSides:
-            root.borderLeft = 1;
-            root.borderRight = 1;
-            root.borderBottom = 4;
-            enableExtendedBorders();
+            borders.setBorders(4);
+            borders.setSideBorders(1);
+            extendedBorder.setSideBorders(3);
             break;
         case DecorationOptions.BorderNone:
-            setBorderSize(1);
-            enableExtendedBorders();
+            borders.setBorders(1);
+            extendedBorders.setBorders(3);
             break;
         case DecorationOptions.BorderNormal: // fall through to default
         default:
-            setBorderSize(4);
-            disableExtendedBorders();
+            borders.setBorders(4);
+            extendedBorders.setAllBorders(0);
             break;
         }
         var titleAlignLeft = decoration.readConfig("titleAlignLeft", true);
@@ -115,18 +97,6 @@ Decoration {
         }
     }
     id: root
-    borderLeft: 4
-    borderRight: 4
-    borderTop: top.normalHeight
-    borderBottom: 4
-    borderLeftMaximized: 0
-    borderRightMaximized: 0
-    borderBottomMaximized: 0
-    borderTopMaximized: top.maximizedHeight
-    paddingLeft: 0
-    paddingRight: 0
-    paddingBottom: 0
-    paddingTop: 0
     alpha: false
     Rectangle {
         color: root.titleBarColor
@@ -148,7 +118,7 @@ Decoration {
                 topMargin: 1
             }
             visible: !decoration.maximized
-            width: root.borderLeft
+            width: root.borders.left
             color: root.titleBarColor
             Rectangle {
                 width: 1
@@ -171,7 +141,7 @@ Decoration {
                 topMargin: 1
             }
             visible: !decoration.maximzied
-            width: root.borderRight -1
+            width: root.borders.right -1
             color: root.titleBarColor
             Rectangle {
                 width: 1
@@ -192,7 +162,7 @@ Decoration {
                 leftMargin: 1
                 rightMargin: 1
             }
-            height: root.borderBottom
+            height: root.borders.bottom
             visible: !decoration.maximzied
             color: root.titleBarColor
             Rectangle {
@@ -342,10 +312,10 @@ Decoration {
             id: innerBorder
             anchors {
                 fill: parent
-                leftMargin: root.borderLeft - 1
-                rightMargin: root.borderRight
-                topMargin: root.borderTop - 1
-                bottomMargin: root.borderBottom
+                leftMargin: root.borders.left - 1
+                rightMargin: root.borders.right
+                topMargin: root.borders.top - 1
+                bottomMargin: root.borders.bottom
             }
             border {
                 width: 1
@@ -425,7 +395,12 @@ Decoration {
             size: root.buttonSize
         }
     }
-    Component.onCompleted: readConfig()
+    Component.onCompleted: {
+        borders.setBorders(4);
+        borders.setTitle(top.normalHeight);
+        maximizedBorders.setTitle(top.maximizedHeight);
+        readConfig();
+    }
     Connections {
         target: decoration
         onConfigChanged: readConfig()

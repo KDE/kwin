@@ -179,6 +179,7 @@ private slots:
     void slotAlphaChanged();
 
 private:
+    void sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const;
     QGraphicsView *m_view;
     QGraphicsScene *m_scene;
     QDeclarativeItem *m_item;

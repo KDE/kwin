@@ -354,17 +354,13 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
         return;
     }
     const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
+    QObject *borders = NULL;
     if (maximized) {
-        left = m_item->property("borderLeftMaximized").toInt();
-        right = m_item->property("borderRightMaximized").toInt();
-        top = m_item->property("borderTopMaximized").toInt();
-        bottom = m_item->property("borderBottomMaximized").toInt();
+        borders = m_item->findChild<QObject*>("maximizedBorders");
     } else {
-        left = m_item->property("borderLeft").toInt();
-        right = m_item->property("borderRight").toInt();
-        top = m_item->property("borderTop").toInt();
-        bottom = m_item->property("borderBottom").toInt();
+        borders = m_item->findChild<QObject*>("borders");
     }
+    sizesFromBorders(borders, left, right, top, bottom);
 }
 
 void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
@@ -377,10 +373,18 @@ void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    left = m_item->property("paddingLeft").toInt();
-    right = m_item->property("paddingRight").toInt();
-    top = m_item->property("paddingTop").toInt();
-    bottom = m_item->property("paddingBottom").toInt();
+    sizesFromBorders(m_item->findChild<QObject*>("padding"), left, right, top, bottom);
+}
+
+void AuroraeClient::sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const
+{
+    if (!borders) {
+        return;
+    }
+    left = borders->property("left").toInt();
+    right = borders->property("right").toInt();
+    top = borders->property("top").toInt();
+    bottom = borders->property("bottom").toInt();
 }
 
 QSize AuroraeClient::minimumSize() const
@@ -596,10 +600,9 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
         // empty region for maximized windows
         return QRegion();
     }
-    const int top = m_item->property("extendedBorderTop").toInt();
-    const int right = m_item->property("extendedBorderRight").toInt();
-    const int bottom = m_item->property("extendedBorderBottom").toInt();
-    const int left = m_item->property("extendedBorderLeft").toInt();
+    int left, right, top, bottom;
+    left = right = top = bottom = 0;
+    sizesFromBorders(m_item->findChild<QObject*>("extendedBorders"), left, right, top, bottom);
     if (top == 0 && right == 0 && bottom == 0 && left == 0) {
         // no extended borders
         return QRegion();

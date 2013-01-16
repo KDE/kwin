@@ -20,18 +20,20 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 
 Decoration {
     id: root
-    borderLeft: Math.max(0, auroraeTheme.borderLeft)
-    borderRight: Math.max(0, auroraeTheme.borderRight)
-    borderTop: Math.max(0, auroraeTheme.borderTop)
-    borderBottom: Math.max(0, auroraeTheme.borderBottom)
-    borderLeftMaximized: Math.max(0, auroraeTheme.borderLeftMaximized)
-    borderRightMaximized: Math.max(0, auroraeTheme.borderRightMaximized)
-    borderBottomMaximized: Math.max(0, auroraeTheme.borderBottomMaximized)
-    borderTopMaximized: Math.max(0, auroraeTheme.borderTopMaximized)
-    paddingLeft: auroraeTheme.paddingLeft
-    paddingRight: auroraeTheme.paddingRight
-    paddingBottom: auroraeTheme.paddingBottom
-    paddingTop: auroraeTheme.paddingTop
+    Component.onCompleted: {
+        borders.left   = Math.max(0, auroraeTheme.borderLeft);
+        borders.right  = Math.max(0, auroraeTheme.borderRight);
+        borders.top    = Math.max(0, auroraeTheme.borderTop);
+        borders.bottom = Math.max(0, auroraeTheme.borderBottom);
+        maximizedBorders.left   = Math.max(0, auroraeTheme.borderLeftMaximized);
+        maximizedBorders.right  = Math.max(0, auroraeTheme.borderRightMaximized);
+        maximizedBorders.bottom = Math.max(0, auroraeTheme.borderBottomMaximized);
+        maximizedBorders.top    = Math.max(0, auroraeTheme.borderTopMaximized);
+        padding.left   = auroraeTheme.paddingLeft;
+        padding.right  = auroraeTheme.paddingRight;
+        padding.bottom = auroraeTheme.paddingBottom;
+        padding.top    = auroraeTheme.paddingTop;
+    }
     DecorationOptions {
         id: options
         deco: decoration
@@ -106,7 +108,7 @@ Decoration {
         }
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized-inactive"
-        height: parent.borderTopMaximized
+        height: parent.maximizedBorders.top
         opacity: (!decoration.active && decoration.maximized && backgroundSvg.supportsMaximizedInactive) ? 1 : 0
         enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
@@ -121,7 +123,7 @@ Decoration {
         width: childrenRect.width
         anchors {
             left: parent.left
-            leftMargin: decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.paddingLeft)
+            leftMargin: decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.padding.left)
         }
         Behavior on anchors.leftMargin {
             NumberAnimation {
@@ -135,7 +137,7 @@ Decoration {
         width: childrenRect.width
         anchors {
             right: parent.right
-            rightMargin: decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.paddingRight)
+            rightMargin: decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.padding.right)
         }
         Behavior on anchors.rightMargin {
             NumberAnimation {
@@ -157,7 +159,7 @@ Decoration {
             left: leftButtonGroup.right
             right: rightButtonGroup.left
             top: root.top
-            topMargin: decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.paddingTop)
+            topMargin: decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
             leftMargin: auroraeTheme.titleBorderLeft
             rightMargin: auroraeTheme.titleBorderRight
         }
@@ -189,10 +191,10 @@ Decoration {
         id: innerBorder
         anchors {
             fill: parent
-            leftMargin: parent.paddingLeft + parent.borderLeft - margins.left
-            rightMargin: parent.paddingRight + parent.borderRight - margins.right
-            topMargin: parent.paddingTop + parent.borderTop - margins.top
-            bottomMargin: parent.paddingBottom + parent.borderBottom - margins.bottom
+            leftMargin: parent.padding.left + parent.borders.left - margins.left
+            rightMargin: parent.padding.right + parent.borders.right - margins.right
+            topMargin: parent.padding.top + parent.borders.top - margins.top
+            bottomMargin: parent.padding.bottom + parent.borders.bottom - margins.bottom
         }
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder"
@@ -207,10 +209,10 @@ Decoration {
         id: innerBorderInactive
         anchors {
             fill: parent
-            leftMargin: parent.paddingLeft + parent.borderLeft - margins.left
-            rightMargin: parent.paddingRight + parent.borderRight - margins.right
-            topMargin: parent.paddingTop + parent.borderTop - margins.top
-            bottomMargin: parent.paddingBottom + parent.borderBottom - margins.bottom
+            leftMargin: parent.padding.left + parent.borders.left - margins.left
+            rightMargin: parent.padding.right + parent.borders.right - margins.right
+            topMargin: parent.padding.top + parent.borders.top - margins.top
+            bottomMargin: parent.padding.bottom + parent.borders.bottom - margins.bottom
         }
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder-inactive"
