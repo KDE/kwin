@@ -32,7 +32,7 @@ Item {
     property int optimalHeight: listView.rowHeight * listView.count + background.topMargin + background.bottomMargin
     property bool canStretchX: true
     property bool canStretchY: false
-    property string maskImagePath: "dialogs/background"
+    property string maskImagePath: background.maskImagePath
     property double maskWidth: background.centerWidth
     property double maskHeight: background.centerHeight
     property int maskTopMargin: background.centerTopMargin

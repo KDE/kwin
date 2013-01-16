@@ -23,6 +23,7 @@ install( FILES clients/window_strip/metadata.desktop DESTINATION ${SERVICES_INST
 
 install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
 install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/compact/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/informative/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/present_windows/contents/ui)

@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "thumbnailitem.h"
 #include <kwindowsystem.h>
+#include "../effects.h"
 #include "../client.h"
 #include "../workspace.h"
 
@@ -101,6 +102,19 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     return icon;
 }
 
+static bool compositing()
+{
+#ifndef TABBOX_KCM
+    if (!Workspace::self()->compositing() || !effects) {
+        return false;
+    }
+    if (!static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur)) {
+        return false;
+    }
+#endif
+    return Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background");
+}
+
 DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
     : QDeclarativeView(parent)
     , m_model(model)
@@ -131,6 +145,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     kdeclarative.setupBindings();
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
+    rootContext()->setContextProperty("compositing", compositing());
     if (m_mode == TabBoxConfig::ClientTabBox) {
         rootContext()->setContextProperty("clientModel", model);
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
@@ -173,6 +188,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
         item->setProperty("currentIndex", tabBox->first().row());
         connect(item, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
     }
+    rootContext()->setContextProperty("compositing", compositing());
     slotUpdateGeometry();
     QGraphicsView::showEvent(event);
 }
@@ -194,10 +210,9 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
             m_frame->setImagePath(maskImagePath);
             m_frame->resizeFrame(QSizeF(maskWidth, maskHeight));
             QRegion mask = m_frame->mask().translated(maskLeftMargin, maskTopMargin);
-            if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled()) {
+            if (compositing()) {
                 // blur background
                 Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
-                Plasma::WindowEffects::overrideShadow(winId(), true);
                 clearMask();
             } else {
                 // do not trim to mask with compositing enabled, otherwise shadows are cropped

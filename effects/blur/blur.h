@@ -55,6 +55,7 @@ public:
     bool isCacheTexture() const {
         return m_shouldCache;
     }
+    virtual bool provides(Feature feature);
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
@@ -93,6 +94,16 @@ private:
     QHash< const EffectWindow*, BlurWindowInfo > windows;
     typedef QHash<const EffectWindow*, BlurWindowInfo>::iterator CacheEntry;
 };
+
+inline
+bool BlurEffect::provides(Effect::Feature feature)
+{
+    if (feature == Blur) {
+        return true;
+    }
+    return KWin::Effect::provides(feature);
+}
+
 
 } // namespace KWin
 

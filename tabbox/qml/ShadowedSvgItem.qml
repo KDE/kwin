@@ -22,24 +22,26 @@ import QtQuick 1.0
 import org.kde.plasma.core 0.1 as PlasmaCore
 
 Item {
-    property double leftMargin: background.margins.left + shadow.margins.left
-    property double topMargin: background.margins.top + shadow.margins.top
-    property double rightMargin: background.margins.right + shadow.margins.right
-    property double bottomMargin: background.margins.bottom + shadow.margins.bottom
-    property double centerWidth: background.width
-    property double centerHeight: background.height
+    property double leftMargin: shadow.margins.left + background.margins.left
+    property double topMargin: shadow.margins.top + background.margins.top
+    property double rightMargin: shadow.margins.right + background.margins.right
+    property double bottomMargin: shadow.margins.bottom + background.margins.bottom
+    property double centerWidth: shadow.width - shadow.margins.left - shadow.margins.right
+    property double centerHeight: shadow.height - shadow.margins.bottom - shadow.margins.top
     property int centerTopMargin: shadow.margins.top
     property int centerLeftMargin: shadow.margins.left
+    property alias maskImagePath: shadow.imagePath
 
     PlasmaCore.FrameSvgItem {
         id: shadow
-        imagePath: "dialogs/background"
+        imagePath: (compositing ? "translucent" : "opaque") + "/dialogs/background"
         prefix: "shadow"
         anchors.fill: parent
 
         PlasmaCore.FrameSvgItem {
             id: background
-            imagePath: "dialogs/background"
+            imagePath: shadow.imagePath
+            visible: false
             anchors {
                 fill: parent
                 leftMargin: shadow.margins.left
