@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
-    <height>352</height>
+    <width>624</width>
+    <height>354</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1,5">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_2" columnminimumwidth="0,0,100">
+   <item row="0" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -24,45 +24,51 @@
      </property>
     </spacer>
    </item>
-   <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="100,1,0">
-     <item row="1" column="1">
+   <item row="0" column="1">
+    <layout class="QGridLayout" name="gridLayout" columnminimumwidth="1,18,2">
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>90</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1" colspan="2">
       <widget class="QCheckBox" name="geometryTipOn">
        <property name="whatsThis">
         <string>Enable this option if you want a window's geometry to be displayed while it is being moved or resized. The window position relative to the top-left corner of the screen is displayed together with its size.</string>
        </property>
        <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
         <string>Display window &amp;geometry when moving or resizing</string>
        </property>
-       <property name="buddy">
-        <cstring>geometryTipOn</cstring>
-       </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="2" column="0">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>100</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="1" colspan="2">
       <widget class="QCheckBox" name="moveResizeMaximized">
        <property name="whatsThis">
         <string>When enabled, this feature activates the border of maximized windows and allows you to move or resize them, just like for normal windows</string>
        </property>
        <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
         <string>Display borders on &amp;maximized windows</string>
-       </property>
-       <property name="buddy">
-        <cstring>moveResizeMaximized</cstring>
        </property>
       </widget>
      </item>
@@ -196,23 +202,26 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
+     <item row="8" column="0">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>107</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="8" column="1" colspan="2">
       <widget class="QCheckBox" name="OverlapSnap">
        <property name="whatsThis">
         <string>Here you can set that windows will be only snapped if you try to overlap them, i.e. they will not be snapped if the windows comes only near another window or border.</string>
        </property>
        <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="2">
-      <widget class="QLabel" name="label">
-       <property name="text">
         <string>Snap windows onl&amp;y when overlapping</string>
-       </property>
-       <property name="buddy">
-        <cstring>OverlapSnap</cstring>
        </property>
       </widget>
      </item>
@@ -249,22 +258,9 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="2">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
     </layout>
    </item>
-   <item>
+   <item row="0" column="2">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -273,6 +269,19 @@
       <size>
        <width>40</width>
        <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>112</height>
       </size>
      </property>
     </spacer>
