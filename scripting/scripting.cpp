@@ -182,7 +182,12 @@ QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
     QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
     QVariantList arguments;
     for (int i=4; i<argumentsCount; ++i) {
-        arguments << context->argument(i).toVariant();
+        if (context->argument(i).isArray()) {
+            QStringList stringArray = engine->fromScriptValue<QStringList>(context->argument(i));
+            arguments << qVariantFromValue(stringArray);
+        } else {
+            arguments << context->argument(i).toVariant();
+        }
     }
     if (!arguments.isEmpty()) {
         msg.setArguments(arguments);
