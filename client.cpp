@@ -1092,7 +1092,8 @@ void Client::updateVisibility()
             internalHide(Allowed);
         return;
     }
-    resetShowingDesktop(true);
+    if (isManaged())
+        resetShowingDesktop(true);
     internalShow(Allowed);
 }
 
