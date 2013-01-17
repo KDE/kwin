@@ -28,7 +28,7 @@ Item {
     property bool allDesktops: true
     property string longestCaption: ""
     property int optimalWidth: listView.maxRowWidth
-    property int optimalHeight: listView.rowHeight * listView.count + background.topMargin + background.bottomMargin
+    property int optimalHeight: listView.rowHeight * listView.count + clientArea.height + 4 + background.topMargin + background.bottomMargin
     property bool canStretchX: true
     property bool canStretchY: false
     property string maskImagePath: background.maskImagePath
@@ -47,7 +47,14 @@ Item {
 
     function setModel(model) {
         listView.model = model;
+        desktopClientModel.model = model;
+        desktopClientModel.imageId++;
         listView.maxRowWidth = listView.calculateMaxRowWidth();
+    }
+
+    function modelChanged() {
+        listView.currentIndex = -1;
+        desktopClientModel.imageId++;
     }
 
     PlasmaCore.Theme {
@@ -153,11 +160,14 @@ Item {
         // used for image provider URL to trick Qt into reloading icons when the model changes
         property int imageId: 0
         anchors {
-            fill: parent
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: clientArea.top
             topMargin: background.topMargin
             leftMargin: background.leftMargin
             rightMargin: background.rightMargin
-            bottomMargin: background.bottomMargin
+            bottomMargin: clientArea.top
         }
         clip: true
         delegate: listDelegate
@@ -169,5 +179,56 @@ Item {
         }
         highlightMoveDuration: 250
         boundsBehavior: Flickable.StopAtBounds
+    }
+    Component {
+        id: clientIconDelegate
+        Image {
+            sourceSize {
+                width: 16
+                height: 16
+            }
+            width: 16
+            height: 16
+            Component.onCompleted: {
+                source = "image://client/" + index + "/" + listView.currentIndex + "/" + desktopClientModel.imagePathPrefix + "-" + desktopClientModel.imageId;
+            }
+        }
+    }
+    Item {
+        id: clientArea
+        VisualDataModel {
+            property alias desktopIndex: listView.currentIndex
+            property int imagePathPrefix: (new Date()).getTime()
+            property int imageId: 0
+            id: desktopClientModel
+            model: clientModel
+            delegate: clientIconDelegate
+            onDesktopIndexChanged: {
+                desktopClientModel.imageId++;
+                desktopClientModel.rootIndex = desktopClientModel.parentModelIndex();
+                desktopClientModel.rootIndex = desktopClientModel.modelIndex(desktopClientModel.desktopIndex);
+            }
+        }
+        ListView {
+            id: iconsListView
+            model: desktopClientModel
+            clip: true
+            orientation: ListView.Horizontal
+            spacing: 4
+            anchors {
+                fill: parent
+                leftMargin: 34
+            }
+        }
+        height: 18
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: 2
+            leftMargin: background.leftMargin
+            rightMargin: background.rightMargin
+            bottomMargin: background.bottomMargin
+        }
     }
 }

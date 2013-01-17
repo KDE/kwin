@@ -62,7 +62,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    int clientIndex = index.row() * columnCount() + index.column();
+    int clientIndex = index.row();
     if (clientIndex >= m_clientList.count())
         return QVariant();
     QSharedPointer<TabBoxClient> client = m_clientList[ clientIndex ].toStrongRef();
