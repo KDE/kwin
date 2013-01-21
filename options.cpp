@@ -176,18 +176,6 @@ Options::Options(QObject *parent)
     , CmdAll3(Options::defaultCommandAll3())
     , CmdAllWheel(Options::defaultCommandAllWheel())
     , CmdAllModKey(Options::defaultKeyCmdAllModKey())
-    , electric_border_top(Options::defaultElectricBorderTop())
-    , electric_border_top_right(Options::defaultElectricBorderTopRight())
-    , electric_border_right(Options::defaultElectricBorderRight())
-    , electric_border_bottom_right(Options::defaultElectricBorderBottomRight())
-    , electric_border_bottom(Options::defaultElectricBorderBottom())
-    , electric_border_bottom_left(Options::defaultElectricBorderBottomLeft())
-    , electric_border_left(Options::defaultElectricBorderLeft())
-    , electric_border_top_left(Options::defaultElectricBorderTopLeft())
-    , electric_borders(Options::defaultElectricBorders())
-    , electric_border_delay(Options::defaultElectricBorderDelay())
-    , electric_border_cooldown(Options::defaultElectricBorderCooldown())
-    , electric_border_pushback_pixels(Options::defaultElectricBorderPushbackPixels())
     , electric_border_maximize(Options::defaultElectricBorderMaximize())
     , electric_border_tiling(Options::defaultElectricBorderTiling())
     , electric_border_corner_ratio(Options::defaultElectricBorderCornerRatio())
@@ -551,33 +539,6 @@ void Options::setCondensedTitle(bool condensedTitle)
     emit condensedTitleChanged();
 }
 
-void Options::setElectricBorderDelay(int electricBorderDelay)
-{
-    if (electric_border_delay == electricBorderDelay) {
-        return;
-    }
-    electric_border_delay = electricBorderDelay;
-    emit electricBorderDelayChanged();
-}
-
-void Options::setElectricBorderCooldown(int electricBorderCooldown)
-{
-    if (electric_border_cooldown == electricBorderCooldown) {
-        return;
-    }
-    electric_border_cooldown = electricBorderCooldown;
-    emit electricBorderCooldownChanged();
-}
-
-void Options::setElectricBorderPushbackPixels(int electricBorderPushbackPixels)
-{
-    if (electric_border_pushback_pixels == electricBorderPushbackPixels) {
-        return;
-    }
-    electric_border_pushback_pixels = electricBorderPushbackPixels;
-    emit electricBorderPushbackPixelsChanged();
-}
-
 void Options::setElectricBorderMaximize(bool electricBorderMaximize)
 {
     if (electric_border_maximize == electricBorderMaximize) {
@@ -803,15 +764,6 @@ void Options::setGlLegacy(bool glLegacy)
     emit glLegacyChanged();
 }
 
-void Options::setElectricBorders(int borders)
-{
-    if (electric_borders == borders) {
-        return;
-    }
-    electric_borders = borders;
-    emit electricBordersChanged();
-}
-
 void Options::reparseConfiguration()
 {
     KGlobal::config()->reparseConfiguration();
@@ -893,20 +845,6 @@ unsigned long Options::loadConfig()
     setSnapOnlyWhenOverlapping(config.readEntry("SnapOnlyWhenOverlapping", Options::defaultSnapOnlyWhenOverlapping()));
 
     // Electric borders
-    KConfigGroup borderConfig(_config, "ElectricBorders");
-    // TODO: add setters
-    electric_border_top = electricBorderAction(borderConfig.readEntry("Top", "None"));
-    electric_border_top_right = electricBorderAction(borderConfig.readEntry("TopRight", "None"));
-    electric_border_right = electricBorderAction(borderConfig.readEntry("Right", "None"));
-    electric_border_bottom_right = electricBorderAction(borderConfig.readEntry("BottomRight", "None"));
-    electric_border_bottom = electricBorderAction(borderConfig.readEntry("Bottom", "None"));
-    electric_border_bottom_left = electricBorderAction(borderConfig.readEntry("BottomLeft", "None"));
-    electric_border_left = electricBorderAction(borderConfig.readEntry("Left", "None"));
-    electric_border_top_left = electricBorderAction(borderConfig.readEntry("TopLeft", "None"));
-    setElectricBorders(config.readEntry("ElectricBorders", Options::defaultElectricBorders()));
-    setElectricBorderDelay(config.readEntry("ElectricBorderDelay", Options::defaultElectricBorderDelay()));
-    setElectricBorderCooldown(config.readEntry("ElectricBorderCooldown", Options::defaultElectricBorderCooldown()));
-    setElectricBorderPushbackPixels(config.readEntry("ElectricBorderPushbackPixels", Options::defaultElectricBorderPushbackPixels()));
     setElectricBorderMaximize(config.readEntry("ElectricBorderMaximize", Options::defaultElectricBorderMaximize()));
     setElectricBorderTiling(config.readEntry("ElectricBorderTiling", Options::defaultElectricBorderTiling()));
     const float ebr = config.readEntry("ElectricBorderCornerRatio", Options::defaultElectricBorderCornerRatio());
@@ -1052,17 +990,6 @@ void Options::reloadCompositingSettings(bool force)
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", Options::defaultAnimationSpeed()), 6);
 }
 
-
-ElectricBorderAction Options::electricBorderAction(const QString& name)
-{
-    QString lowerName = name.toLower();
-    if (lowerName == "dashboard") return ElectricActionDashboard;
-    else if (lowerName == "showdesktop") return ElectricActionShowDesktop;
-    else if (lowerName == "lockscreen") return ElectricActionLockScreen;
-    else if (lowerName == "preventscreenlocking") return ElectricActionPreventScreenLocking;
-    return ElectricActionNone;
-}
-
 // restricted should be true for operations that the user may not be able to repeat
 // if the window is moved out of the workspace (e.g. if the user moves a window
 // by the titlebar, and moves it too high beneath Kicker at the top edge, they
@@ -1145,47 +1072,6 @@ bool Options::showGeometryTip() const
 bool Options::condensedTitle() const
 {
     return condensed_title;
-}
-
-ElectricBorderAction Options::electricBorderAction(ElectricBorder edge) const
-{
-    switch(edge) {
-    case ElectricTop:
-        return electric_border_top;
-    case ElectricTopRight:
-        return electric_border_top_right;
-    case ElectricRight:
-        return electric_border_right;
-    case ElectricBottomRight:
-        return electric_border_bottom_right;
-    case ElectricBottom:
-        return electric_border_bottom;
-    case ElectricBottomLeft:
-        return electric_border_bottom_left;
-    case ElectricLeft:
-        return electric_border_left;
-    case ElectricTopLeft:
-        return electric_border_top_left;
-    default:
-        // fallthrough
-        break;
-    }
-    return ElectricActionNone;
-}
-
-int Options::electricBorders() const
-{
-    return electric_borders;
-}
-
-int Options::electricBorderDelay() const
-{
-    return electric_border_delay;
-}
-
-int Options::electricBorderCooldown() const
-{
-    return electric_border_cooldown;
 }
 
 Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const

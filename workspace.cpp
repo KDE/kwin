@@ -66,6 +66,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "screenedge.h"
+#endif
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
 #endif
@@ -96,6 +99,9 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
     : QObject(0)
+#ifdef KWIN_BUILD_SCREENEDGES
+    , m_screenEdge(new ScreenEdges(this))
+#endif
     , m_compositor(NULL)
     // Unsorted
     , active_popup(NULL)
@@ -255,10 +261,10 @@ void Workspace::screenChangeTimeout()
 void Workspace::init()
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge.init();
-    connect(options, SIGNAL(configChanged()), &m_screenEdge, SLOT(reconfigure()));
-    connect(options, SIGNAL(electricBordersChanged()), &m_screenEdge, SLOT(reconfigureVirtualDesktopSwitching()));
-    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), &m_screenEdge, SLOT(updateLayout()));
+    m_screenEdge->setConfig(KGlobal::config());
+    m_screenEdge->init();
+    connect(options, SIGNAL(configChanged()), m_screenEdge, SLOT(reconfigure()));
+    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), m_screenEdge, SLOT(updateLayout()));
 #endif
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
@@ -991,10 +997,6 @@ void Workspace::slotReconfigure()
 {
     kDebug(1212) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
-
-#ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge.reserveActions(false);
-#endif
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
@@ -1933,9 +1935,9 @@ Outline* Workspace::outline()
 }
 
 #ifdef KWIN_BUILD_SCREENEDGES
-ScreenEdge* Workspace::screenEdge()
+ScreenEdges* Workspace::screenEdge()
 {
-    return &m_screenEdge;
+    return m_screenEdge;
 }
 #endif
 
@@ -1994,6 +1996,18 @@ QString Workspace::supportInformation() const
         }
         support.append(QLatin1String(property.name()) % ": " % options->property(property.name()).toString() % '\n');
     }
+#ifdef KWIN_BUILD_SCREENEDGES
+    support.append("\nScreen Edges\n");
+    support.append(  "============\n");
+    const QMetaObject *metaScreenEdges = m_screenEdge->metaObject();
+    for (int i=0; i<metaScreenEdges->propertyCount(); ++i) {
+        const QMetaProperty property = metaScreenEdges->property(i);
+        if (QLatin1String(property.name()) == "objectName") {
+            continue;
+        }
+        support.append(QLatin1String(property.name()) % ": " % m_screenEdge->property(property.name()).toString() % '\n');
+    }
+#endif
     support.append("\nScreens\n");
     support.append(  "=======\n");
     support.append("Multi-Head: ");

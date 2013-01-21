@@ -40,6 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "geometrytip.h"
 #include "rules.h"
 #include "effects.h"
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "screenedge.h"
+#endif
 #include <QtGui/QDesktopWidget>
 #include <QPainter>
 #include <QVarLengthArray>
@@ -76,9 +79,12 @@ void Workspace::desktopResized()
 
     updateClientArea();
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
+
+    // TODO: emit a signal instead and remove the deep function calls into edges and effects
 #ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge.update(true);
+    m_screenEdge->recreateEdges();
 #endif
+
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
     }
@@ -2574,7 +2580,7 @@ bool Client::startMoveResize()
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     emit clientStartUserMovedResized(this);
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (options->electricBorders() == Options::ElectricMoveOnly)
+    if (workspace()->screenEdge()->isDesktopSwitchingMovingClients())
         workspace()->screenEdge()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
 #endif
     if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
@@ -2656,7 +2662,7 @@ void Client::leaveMoveResize()
     syncRequest.timeout = NULL;
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (options->electricBorders() == Options::ElectricMoveOnly)
+    if (workspace()->screenEdge()->isDesktopSwitchingMovingClients())
         workspace()->screenEdge()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
 #endif
 }
@@ -3023,7 +3029,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     if (isMove()) {
 #ifdef KWIN_BUILD_SCREENEDGES
-        workspace()->screenEdge()->check(globalPos, xTime());
+        workspace()->screenEdge()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
 #endif
     }
 }

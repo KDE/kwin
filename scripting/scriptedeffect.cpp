@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "../screenedge.h"
+#endif
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>

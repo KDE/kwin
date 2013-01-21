@@ -134,24 +134,6 @@ class Options : public QObject, public KDecorationOptions
     */
     Q_PROPERTY(bool condensedTitle READ condensedTitle WRITE setCondensedTitle NOTIFY condensedTitleChanged)
     /**
-    * Whether electric borders are enabled. With electric borders
-    * you can change desktop by moving the mouse pointer towards the edge
-    * of the screen
-    */
-    Q_PROPERTY(bool electricBorders READ electricBorders NOTIFY electricBordersChanged)
-    /**
-    * the activation delay for electric borders in milliseconds.
-    */
-    Q_PROPERTY(int electricBorderDelay READ electricBorderDelay WRITE setElectricBorderDelay NOTIFY electricBorderDelayChanged)
-    /**
-    * the trigger cooldown for electric borders in milliseconds.
-    */
-    Q_PROPERTY(int electricBorderCooldown READ electricBorderCooldown WRITE setElectricBorderCooldown NOTIFY electricBorderCooldownChanged)
-    /**
-    * the number of pixels the mouse cursor is pushed back when it reaches the screen edge.
-    */
-    Q_PROPERTY(int electricBorderPushbackPixels READ electricBorderPushbackPixels WRITE setElectricBorderPushbackPixels NOTIFY electricBorderPushbackPixelsChanged)
-    /**
     * Whether a window gets maximized when it reaches top screen edge while being moved.
     */
     Q_PROPERTY(bool electricBorderMaximize READ electricBorderMaximize WRITE setElectricBorderMaximize NOTIFY electricBorderMaximizeChanged)
@@ -439,7 +421,6 @@ public:
         return CmdAllModKey;
     }
 
-    static ElectricBorderAction electricBorderAction(const QString& name);
     static WindowOperation windowOperation(const QString &name, bool restricted);
     static MouseCommand mouseCommand(const QString &name, bool restricted);
     static MouseWheelCommand mouseWheelCommand(const QString &name);
@@ -454,32 +435,6 @@ public:
      */
     bool condensedTitle() const;
 
-    enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
-    /**
-    * @returns The action assigned to the specified electric border
-    */
-    ElectricBorderAction electricBorderAction(ElectricBorder edge) const;
-    /**
-    * @returns true if electric borders are enabled. With electric borders
-    * you can change desktop by moving the mouse pointer towards the edge
-    * of the screen
-    */
-    int electricBorders() const;
-    /**
-    * @returns the activation delay for electric borders in milliseconds.
-    */
-    int electricBorderDelay() const;
-    /**
-    * @returns the trigger cooldown for electric borders in milliseconds.
-    */
-    int electricBorderCooldown() const;
-    /**
-    * @returns the number of pixels the mouse cursor is pushed back when it
-    * reaches the screen edge.
-    */
-    int electricBorderPushbackPixels() const {
-        return electric_border_pushback_pixels;
-    }
     /**
     * @returns true if a window gets maximized when it reaches top screen edge
     * while being moved.
@@ -630,9 +585,6 @@ public:
     void setKeyCmdAllModKey(uint keyCmdAllModKey);
     void setShowGeometryTip(bool showGeometryTip);
     void setCondensedTitle(bool condensedTitle);
-    void setElectricBorderDelay(int electricBorderDelay);
-    void setElectricBorderCooldown(int electricBorderCooldown);
-    void setElectricBorderPushbackPixels(int electricBorderPushbackPixels);
     void setElectricBorderMaximize(bool electricBorderMaximize);
     void setElectricBorderTiling(bool electricBorderTiling);
     void setElectricBorderCornerRatio(float electricBorderCornerRatio);
@@ -774,42 +726,6 @@ public:
     static bool defaultCondensedTitle() {
         return false;
     }
-    static ElectricBorderAction defaultElectricBorderTop() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderTopRight() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderRight() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderBottomRight() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderBottom() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderBottomLeft() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderLeft() {
-        return ElectricActionNone;
-    }
-    static ElectricBorderAction defaultElectricBorderTopLeft() {
-        return ElectricActionNone;
-    }
-    static int defaultElectricBorders() {
-        return 0;
-    }
-    static int defaultElectricBorderDelay() {
-        return 150;
-    }
-    static int defaultElectricBorderCooldown() {
-        return 350;
-    }
-    static int defaultElectricBorderPushbackPixels() {
-        return 1;
-    }
     static bool defaultElectricBorderMaximize() {
         return true;
     }
@@ -943,10 +859,6 @@ Q_SIGNALS:
     void keyCmdAllModKeyChanged();
     void showGeometryTipChanged();
     void condensedTitleChanged();
-    void electricBordersChanged();
-    void electricBorderDelayChanged();
-    void electricBorderCooldownChanged();
-    void electricBorderPushbackPixelsChanged();
     void electricBorderMaximizeChanged();
     void electricBorderTilingChanged();
     void electricBorderCornerRatioChanged();
@@ -1041,18 +953,6 @@ private:
     MouseWheelCommand CmdAllWheel;
     uint CmdAllModKey;
 
-    ElectricBorderAction electric_border_top;
-    ElectricBorderAction electric_border_top_right;
-    ElectricBorderAction electric_border_right;
-    ElectricBorderAction electric_border_bottom_right;
-    ElectricBorderAction electric_border_bottom;
-    ElectricBorderAction electric_border_bottom_left;
-    ElectricBorderAction electric_border_left;
-    ElectricBorderAction electric_border_top_left;
-    int electric_borders;
-    int electric_border_delay;
-    int electric_border_cooldown;
-    int electric_border_pushback_pixels;
     bool electric_border_maximize;
     bool electric_border_tiling;
     float electric_border_corner_ratio;

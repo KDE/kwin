@@ -41,9 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "plugins.h"
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
-#ifdef KWIN_BUILD_SCREENEDGES
-#include "screenedge.h"
-#endif
 #include "sm.h"
 
 #include <X11/Xlib.h>
@@ -78,6 +75,7 @@ class Scripting;
 class UserActionsMenu;
 class WindowRules;
 class Compositor;
+class ScreenEdges;
 
 class Workspace : public QObject, public KDecorationDefines
 {
@@ -202,7 +200,7 @@ public:
 
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
-    ScreenEdge* screenEdge();
+    ScreenEdges* screenEdge();
 #endif
 
 public:
@@ -217,7 +215,7 @@ private:
 
     Outline* m_outline;
 #ifdef KWIN_BUILD_SCREENEDGES
-    ScreenEdge m_screenEdge;
+    ScreenEdges *m_screenEdge;
 #endif
     Compositor *m_compositor;
 

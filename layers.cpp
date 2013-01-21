@@ -87,6 +87,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include <QX11Info>
 #include "composite.h"
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "screenedge.h"
+#endif
 
 namespace KWin
 {
@@ -160,7 +163,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // windows (e.g. popups).
     newWindowStack << (Window*)supportWindow->winId();
 #ifdef KWIN_BUILD_SCREENEDGES
-    QVectorIterator<Window> it(m_screenEdge.windows());
+    QVectorIterator<xcb_window_t> it(m_screenEdge->windows());
     while (it.hasNext()) {
         if ((Window)it.next() != None) {
             newWindowStack << (Window*)&it;
