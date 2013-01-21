@@ -140,10 +140,8 @@ public:
     virtual bool checkInputWindowEvent(XEvent* e);
     virtual void checkInputWindowStacking();
 
-    virtual void checkElectricBorder(const QPoint &pos, Time time);
     virtual void reserveElectricBorder(ElectricBorder border);
     virtual void unreserveElectricBorder(ElectricBorder border);
-    virtual void reserveElectricBorderSwitching(bool reserve, Qt::Orientations o);
 
     virtual unsigned long xrenderBufferPicture();
     virtual void reconfigure();

@@ -651,10 +651,8 @@ public:
     virtual void startMousePolling() = 0;
     virtual void stopMousePolling() = 0;
 
-    virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
     virtual void reserveElectricBorder(ElectricBorder border) = 0;
     virtual void unreserveElectricBorder(ElectricBorder border) = 0;
-    virtual void reserveElectricBorderSwitching(bool reserve, Qt::Orientations o) = 0;
 
     // functions that allow controlling windows/desktop
     virtual void activateWindow(KWin::EffectWindow* c) = 0;

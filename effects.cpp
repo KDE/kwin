@@ -1184,16 +1184,6 @@ QPoint EffectsHandlerImpl::cursorPos() const
     return Workspace::self()->cursorPos();
 }
 
-void EffectsHandlerImpl::checkElectricBorder(const QPoint &pos, Time time)
-{
-#ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->check(pos, time);
-#else
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
-#endif
-}
-
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -1209,15 +1199,6 @@ void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border)
     Workspace::self()->screenEdge()->unreserve(border);
 #else
     Q_UNUSED(border)
-#endif
-}
-
-void EffectsHandlerImpl::reserveElectricBorderSwitching(bool reserve, Qt::Orientations o)
-{
-#ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->reserveDesktopSwitching(reserve, o);
-#else
-    Q_UNUSED(reserve)
 #endif
 }
 
