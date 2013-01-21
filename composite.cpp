@@ -361,10 +361,6 @@ void Compositor::slotReinitialize()
         return;
     }
 
-    // Update any settings that can be set in the compositing kcm.
-#ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->update();
-#endif
     // Restart compositing
     finish();
     // resume compositing if suspended
