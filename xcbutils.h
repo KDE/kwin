@@ -452,6 +452,55 @@ void Window::setBackgroundPixmap(xcb_pixmap_t pixmap)
     xcb_change_window_attributes(connection(), m_window, XCB_CW_BACK_PIXMAP, values);
 }
 
+// helper functions
+static inline void moveResizeWindow(WindowId window, const QRect &geometry)
+{
+    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    const uint32_t values[] = {
+        static_cast<uint32_t>(geometry.x()),
+        static_cast<uint32_t>(geometry.y()),
+        static_cast<uint32_t>(geometry.width()),
+        static_cast<uint32_t>(geometry.height())
+    };
+    xcb_configure_window(connection(), window, mask, values);
+}
+
+static inline WindowId createInputWindow(const QRect &geometry, uint32_t mask, const uint32_t *values)
+{
+    WindowId window = xcb_generate_id(connection());
+    xcb_create_window(connection(), 0, window, rootWindow(),
+                      geometry.x(), geometry.y(), geometry.width(), geometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_ONLY,
+                      XCB_COPY_FROM_PARENT, mask, values);
+    return window;
+}
+
+static inline void restackWindows(const QVector<xcb_window_t> &windows)
+{
+    if (windows.count() < 2) {
+        // only one window, nothing to do
+        return;
+    }
+    for (int i=1; i<windows.count(); ++i) {
+        const uint16_t mask = XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE;
+        const uint32_t stackingValues[] = {
+            windows.at(i-1),
+            XCB_STACK_MODE_BELOW
+        };
+        xcb_configure_window(connection(), windows.at(i), mask, stackingValues);
+    }
+}
+
+static inline void restackWindowsWithRaise(const QVector<xcb_window_t> &windows)
+{
+    if (windows.isEmpty()) {
+        return;
+    }
+    const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+    xcb_configure_window(connection(), windows.first(), XCB_CONFIG_WINDOW_STACK_MODE, values);
+    restackWindows(windows);
+}
+
 } // namespace X11
 
 } // namespace KWin
