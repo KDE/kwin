@@ -2574,45 +2574,12 @@ bool Client::startMoveResize()
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     emit clientStartUserMovedResized(this);
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (options->electricBorders() == Options::ElectricMoveOnly ||
-            options->electricBorderMaximize() ||
-            options->electricBorderTiling())
+    if (options->electricBorders() == Options::ElectricMoveOnly)
         workspace()->screenEdge()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
 #endif
     if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
         handleMoveResize(QCursor::pos().x(), QCursor::pos().y(), QCursor::pos().x(), QCursor::pos().y());
     return true;
-}
-
-static ElectricBorder electricBorderFromMode(QuickTileMode mode)
-{
-    // special case, currently maxmizing is done from the electric top corner
-    if (mode == QuickTileMaximize)
-        return ElectricTop;
-
-    // sanitize the mode, ie. simplify "invalid" combinations
-    if ((mode & QuickTileHorizontal) == QuickTileHorizontal)
-        mode &= ~QuickTileHorizontal;
-    if ((mode & QuickTileVertical) == QuickTileVertical)
-        mode &= ~QuickTileVertical;
-
-    if (mode == QuickTileLeft)
-        return ElectricLeft;
-    if (mode == QuickTileRight)
-        return ElectricRight;
-    if (mode == (QuickTileTop|QuickTileLeft))
-        return ElectricTopLeft;
-    if (mode == (QuickTileTop|QuickTileRight))
-        return ElectricTopRight;
-    if (mode == (QuickTileBottom|QuickTileLeft))
-        return ElectricBottomLeft;
-    if (mode == (QuickTileBottom|QuickTileRight))
-        return ElectricBottomRight;
-    if (mode == QuickTileTop)
-        return ElectricTop;
-    if (mode == QuickTileBottom)
-        return ElectricBottom;
-    return ElectricNone;
 }
 
 void Client::finishMoveResize(bool cancel)
@@ -2642,14 +2609,6 @@ void Client::finishMoveResize(bool cancel)
 
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricMode);
-        const ElectricBorder border = electricBorderFromMode(electricMode);
-        if (border == ElectricNone)
-            kDebug(1212) << "invalid electric mode" << electricMode << "leading to invalid array access,\
-                                                                        this should not have happened!";
-#ifdef KWIN_BUILD_SCREENEDGES
-        else
-            workspace()->screenEdge()->restoreSize(border);
-#endif
         electricMaximizing = false;
         workspace()->outline()->hide();
     } else if (!cancel) {
@@ -2697,9 +2656,7 @@ void Client::leaveMoveResize()
     syncRequest.timeout = NULL;
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (options->electricBorders() == Options::ElectricMoveOnly ||
-            options->electricBorderMaximize() ||
-            options->electricBorderTiling())
+    if (options->electricBorders() == Options::ElectricMoveOnly)
         workspace()->screenEdge()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
 #endif
 }
