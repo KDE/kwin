@@ -68,7 +68,8 @@ MouseClickEffect::~MouseClickEffect()
     if (!s_XrBuffer.isNull())
         XFreePixmap(display(), s_XrBuffer.handle());
 #endif
-    effects->stopMousePolling();
+    if (m_enabled)
+        effects->stopMousePolling();
     foreach (const MouseEvent* click, m_clicks) {
         delete click;
     }
