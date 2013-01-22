@@ -67,6 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sm.h"
 #include "utils.h"
 #include "effects.h"
+#include "xcbutils.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -129,24 +130,22 @@ static QByteArray errorMessage(const XErrorEvent& event, Display* dpy)
         // - Fetching it at startup means a bunch of roundtrips.
 
         // KWin here explicitly uses known extensions.
-        int nextensions;
-        const char** extensions;
-        int* majors;
-        int* error_bases;
-        Extensions::fillExtensionsData(extensions, nextensions, majors, error_bases);
         XGetErrorText(dpy, event.error_code, tmp, 255);
         int index = -1;
         int base = 0;
-        for (int i = 0; i < nextensions; ++i)
-            if (error_bases[i] != 0 &&
-                    event.error_code >= error_bases[i] && (index == -1 || error_bases[i] > base)) {
+        QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
+        for (int i = 0; i < extensions.size(); ++i) {
+            const Xcb::ExtensionData &extension = extensions.at(i);
+            if (extension.errorBase != 0 &&
+                    event.error_code >= extension.errorBase && (index == -1 || extension.errorBase > base)) {
                 index = i;
-                base = error_bases[i];
+                base = extension.errorBase;
             }
+        }
         if (tmp == QString::number(event.error_code)) {
             // XGetErrorText() failed or it has a bug that causes not finding all errors, check ourselves
             if (index != -1) {
-                snprintf(num, 255, "%s.%d", extensions[index], event.error_code - base);
+                snprintf(num, 255, "%s.%d", extensions.at(index).name.constData(), event.error_code - base);
                 XGetErrorDatabaseText(dpy, "XProtoError", num, "<unknown>", tmp, 255);
             } else
                 strcpy(tmp, "<unknown>");
@@ -154,17 +153,17 @@ static QByteArray errorMessage(const XErrorEvent& event, Display* dpy)
         if (char* paren = strchr(tmp, '('))
             * paren = '\0';
         if (index != -1)
-            ret = QByteArray("error: ") + (const char*)(tmp) + '[' + (const char*)(extensions[index]) +
+            ret = QByteArray("error: ") + (const char*)(tmp) + '[' + extensions.at(index).name +
                   '+' + QByteArray::number(event.error_code - base) + ']';
         else
             ret = QByteArray("error: ") + (const char*)(tmp) + '[' + QByteArray::number(event.error_code) + ']';
         tmp[0] = '\0';
-        for (int i = 0; i < nextensions; ++i)
-            if (majors[i] == event.request_code) {
-                snprintf(num, 255, "%s.%d", extensions[i], event.minor_code);
+        for (int i = 0; i < extensions.size(); ++i)
+            if (extensions.at(i).majorOpcode == event.request_code) {
+                snprintf(num, 255, "%s.%d", extensions.at(i).name.constData(), event.minor_code);
                 XGetErrorDatabaseText(dpy, "XRequest", num, "<unknown>", tmp, 255);
                 ret += QByteArray(", request: ") + (const char*)(tmp) + '[' +
-                       (const char*)(extensions[i]) + '+' + QByteArray::number(event.minor_code) + ']';
+                       extensions.at(i).name + '+' + QByteArray::number(event.minor_code) + ']';
             }
         if (tmp[0] == '\0')   // Not found?
             ret += QByteArray(", request <unknown> [") + QByteArray::number(event.request_code) + ':'

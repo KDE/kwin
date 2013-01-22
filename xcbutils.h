@@ -102,7 +102,10 @@ public:
     ExtensionData();
     int version;
     int eventBase;
+    int errorBase;
+    int majorOpcode;
     bool present;
+    QByteArray name;
 };
 
 class Extensions
@@ -137,6 +140,7 @@ public:
         return m_sync.present;
     }
     int syncAlarmNotifyEvent() const;
+    QVector<ExtensionData> extensions() const;
 
     static Extensions *self();
     static void destroy();

@@ -51,6 +51,8 @@ static const int XFIXES_MAX_MINOR = 0;
 ExtensionData::ExtensionData()
     : version(0)
     , eventBase(0)
+    , errorBase(0)
+    , majorOpcode(0)
     , present(0)
 {
 }
@@ -97,6 +99,14 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_xfixes_id);
     xcb_prefetch_extension_data(c, &xcb_render_id);
     xcb_prefetch_extension_data(c, &xcb_sync_id);
+
+    m_shape.name     = QByteArray("SHAPE");
+    m_randr.name     = QByteArray("RANDR");
+    m_damage.name    = QByteArray("DAMAGE");
+    m_composite.name = QByteArray("Composite");
+    m_fixes.name     = QByteArray("XFIXES");
+    m_render.name    = QByteArray("RENDER");
+    m_sync.name      = QByteArray("SYNC");
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
@@ -173,6 +183,8 @@ void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extensio
     }
     dataToFill->present = extension->present;
     dataToFill->eventBase = extension->first_event;
+    dataToFill->errorBase = extension->first_error;
+    dataToFill->majorOpcode = extension->major_opcode;
 }
 
 int Extensions::damageNotifyEvent() const
@@ -221,6 +233,19 @@ int Extensions::shapeNotifyEvent() const
 int Extensions::syncAlarmNotifyEvent() const
 {
     return m_sync.eventBase + XCB_SYNC_ALARM_NOTIFY;
+}
+
+QVector<ExtensionData> Extensions::extensions() const
+{
+    QVector<ExtensionData> extensions;
+    extensions << m_shape
+               << m_randr
+               << m_damage
+               << m_composite
+               << m_render
+               << m_fixes
+               << m_sync;
+    return extensions;
 }
 
 } // namespace Xcb
