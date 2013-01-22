@@ -148,6 +148,24 @@ void Placement::placeAtRandom(Client* c, const QRect& area, Policy /*next*/)
     c->move(tx, ty);
 }
 
+// TODO: one day, there'll be C++11 ...
+static inline bool isIrrelevant(Client *client, Client *regarding, int desktop)
+{
+    if (!client)
+        return true;
+    if (client == regarding)
+        return true;
+    if (!client->isCurrentTab())
+        return true;
+    if (!client->isShown(false))
+        return true;
+    if (!client->isOnDesktop(desktop))
+        return true;
+    if (!client->isOnCurrentActivity())
+        return true;
+    return false;
+}
+
 /*!
   Place the client \a c according to a really smart placement algorithm :-)
 */
@@ -198,27 +216,23 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
                 Client *client = qobject_cast<Client*>(*l);
-                if (!client) {
+                if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
-                if (client->isOnDesktop(desktop) &&
-                        client->isShown(false) && client != c) {
+                xl = client->x();          yt = client->y();
+                xr = xl + client->width(); yb = yt + client->height();
 
-                    xl = client->x();          yt = client->y();
-                    xr = xl + client->width(); yb = yt + client->height();
-
-                    //if windows overlap, calc the overall overlapping
-                    if ((cxl < xr) && (cxr > xl) &&
-                            (cyt < yb) && (cyb > yt)) {
-                        xl = qMax(cxl, xl); xr = qMin(cxr, xr);
-                        yt = qMax(cyt, yt); yb = qMin(cyb, yb);
-                        if (client->keepAbove())
-                            overlap += 16 * (xr - xl) * (yb - yt);
-                        else if (client->keepBelow() && !client->isDock()) // ignore KeepBelow windows
-                            overlap += 0; // for placement (see Client::belongsToLayer() for Dock)
-                        else
-                            overlap += (xr - xl) * (yb - yt);
-                    }
+                //if windows overlap, calc the overall overlapping
+                if ((cxl < xr) && (cxr > xl) &&
+                        (cyt < yb) && (cyb > yt)) {
+                    xl = qMax(cxl, xl); xr = qMin(cxr, xr);
+                    yt = qMax(cyt, yt); yb = qMin(cyb, yb);
+                    if (client->keepAbove())
+                        overlap += 16 * (xr - xl) * (yb - yt);
+                    else if (client->keepBelow() && !client->isDock()) // ignore KeepBelow windows
+                        overlap += 0; // for placement (see Client::belongsToLayer() for Dock)
+                    else
+                        overlap += (xr - xl) * (yb - yt);
                 }
             }
         }
@@ -251,25 +265,21 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
                 Client *client = qobject_cast<Client*>(*l);
-                if (!client) {
+                if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
 
-                if (client->isOnDesktop(desktop) &&
-                        client->isShown(false) && client != c) {
+                xl = client->x();          yt = client->y();
+                xr = xl + client->width(); yb = yt + client->height();
 
-                    xl = client->x();          yt = client->y();
-                    xr = xl + client->width(); yb = yt + client->height();
+                // if not enough room above or under the current tested client
+                // determine the first non-overlapped x position
+                if ((y < yb) && (yt < ch + y)) {
 
-                    // if not enough room above or under the current tested client
-                    // determine the first non-overlapped x position
-                    if ((y < yb) && (yt < ch + y)) {
+                    if ((xr > x) && (possible > xr)) possible = xr;
 
-                        if ((xr > x) && (possible > xr)) possible = xr;
-
-                        basket = xl - cw;
-                        if ((basket > x) && (possible > basket)) possible = basket;
-                    }
+                    basket = xl - cw;
+                    if ((basket > x) && (possible > basket)) possible = basket;
                 }
             }
             x = possible;
@@ -286,22 +296,19 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             ToplevelList::ConstIterator l;
             for (l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) {
                 Client *client = qobject_cast<Client*>(*l);
-                if (!client) {
+                if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
-                if (client->isOnDesktop(desktop) &&
-                        client != c   &&  c->isShown(false)) {
 
-                    xl = client->x();          yt = client->y();
-                    xr = xl + client->width(); yb = yt + client->height();
+                xl = client->x();          yt = client->y();
+                xr = xl + client->width(); yb = yt + client->height();
 
-                    // if not enough room to the left or right of the current tested client
-                    // determine the first non-overlapped y position
-                    if ((yb > y) && (possible > yb)) possible = yb;
+                // if not enough room to the left or right of the current tested client
+                // determine the first non-overlapped y position
+                if ((yb > y) && (possible > yb)) possible = yb;
 
-                    basket = yt - ch;
-                    if ((basket > y) && (possible > basket)) possible = basket;
-                }
+                basket = yt - ch;
+                if ((basket > y) && (possible > basket)) possible = basket;
             }
             y = possible;
         }
