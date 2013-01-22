@@ -89,9 +89,6 @@ DesktopGridEffect::DesktopGridEffect()
 
 DesktopGridEffect::~DesktopGridEffect()
 {
-    foreach (ElectricBorder border, borderActivate) {
-        effects->unreserveElectricBorder(border);
-    }
     QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
     while (i != m_desktopButtonsViews.end()) {
         DesktopButtonsView *view = i.key();
@@ -105,12 +102,12 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     DesktopGridConfig::self()->readConfig();
 
     foreach (ElectricBorder border, borderActivate) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     borderActivate.clear();
     foreach (int i, DesktopGridConfig::borderActivate()) {
         borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
 
     // TODO: rename zoomDuration to duration

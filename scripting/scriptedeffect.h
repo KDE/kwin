@@ -128,6 +128,7 @@ public:
 
 public Q_SLOTS:
     void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    virtual bool borderActivated(ElectricBorder border);
 
 Q_SIGNALS:
     /**
@@ -138,7 +139,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);
     void globalShortcutTriggered();
-    void slotBorderActivated(ElectricBorder edge);
 private:
     ScriptedEffect();
     bool init(const QString &effectName, const QString &pathToScript);

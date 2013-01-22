@@ -134,7 +134,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void globalShortcutTriggered();
-    void borderActivated(ElectricBorder edge);
+    bool borderActivated(ElectricBorder edge);
     /**
      * @brief Slot invoked when a menu action is destroyed. Used to remove the action and callback
      * from the map of actions.

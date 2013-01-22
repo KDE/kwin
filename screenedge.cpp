@@ -74,12 +74,27 @@ void Edge::reserve()
     }
 }
 
+void Edge::reserve(QObject *object, const char *slot)
+{
+    connect(object, SIGNAL(destroyed(QObject*)), SLOT(unreserve(QObject*)));
+    m_callBacks.insert(object, QByteArray(slot));
+    reserve();
+}
+
 void Edge::unreserve()
 {
     m_reserved--;
     if (m_reserved == 0) {
         // got deactivated
         deactivate();
+    }
+}
+void Edge::unreserve(QObject *object)
+{
+    if (m_callBacks.contains(object)) {
+        m_callBacks.remove(object);
+        disconnect(object, SIGNAL(destroyed(QObject*)), this, SLOT(unreserve(QObject*)));
+        unreserve();
     }
 }
 
@@ -149,17 +164,14 @@ void Edge::handle(const QPoint &cursorPos)
         switchDesktop(cursorPos);
         return;
     }
-    if (handleAction() || handleByEffects()) {
+    if (handleAction() || handleByCallback()) {
         pushCursorBack(cursorPos);
         return;
     }
     if (edges()->isDesktopSwitching() && isCorner()) {
         // try again desktop switching for the corner
         switchDesktop(cursorPos);
-        return;
     }
-    // fallback notify world that edge got activated
-    emit activated(m_border);
 }
 
 bool Edge::handleAction()
@@ -184,12 +196,21 @@ bool Edge::handleAction()
     }
 }
 
-bool Edge::handleByEffects()
+bool Edge::handleByCallback()
 {
-    if (!effects) {
+    if (m_callBacks.isEmpty()) {
         return false;
     }
-    return static_cast<EffectsHandlerImpl*>(effects)->borderActivated(m_border);
+    for (QHash<QObject *, QByteArray>::iterator it = m_callBacks.begin();
+        it != m_callBacks.end();
+        ++it) {
+        bool retVal = false;
+        QMetaObject::invokeMethod(it.key(), it.value().constData(), Q_RETURN_ARG(bool, retVal), Q_ARG(ElectricBorder, m_border));
+        if (retVal) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Edge::switchDesktop(const QPoint &cursorPos)
@@ -333,14 +354,6 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
 {
-    m_externalReservations.insert(ElectricTopLeft, 0);
-    m_externalReservations.insert(ElectricTop, 0);
-    m_externalReservations.insert(ElectricTopRight, 0);
-    m_externalReservations.insert(ElectricRight, 0);
-    m_externalReservations.insert(ElectricBottomRight, 0);
-    m_externalReservations.insert(ElectricBottom, 0);
-    m_externalReservations.insert(ElectricBottomLeft, 0);
-    m_externalReservations.insert(ElectricLeft, 0);
 }
 
 ScreenEdges::~ScreenEdges()
@@ -568,7 +581,7 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
 
 void ScreenEdges::recreateEdges()
 {
-    qDeleteAll(m_edges);
+    QList<WindowBasedEdge*> oldEdges(m_edges);
     m_edges.clear();
     const QRect fullArea(0, 0, displayWidth(), displayHeight());
     const QDesktopWidget *desktop = QApplication::desktop();
@@ -591,6 +604,25 @@ void ScreenEdges::recreateEdges()
             createHorizontalEdge(ElectricBottom, screen, fullArea);
         }
     }
+    // copy over the effect/script reservations from the old edges
+    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        WindowBasedEdge *edge = *it;
+        for (QList<WindowBasedEdge*>::const_iterator oldIt = oldEdges.constBegin();
+                oldIt != oldEdges.constEnd();
+                ++oldIt) {
+            WindowBasedEdge *oldEdge = *oldIt;
+            if (oldEdge->border() != edge->border()) {
+                continue;
+            }
+            const QHash<QObject *, QByteArray> &callbacks = oldEdge->callBacks();
+            for (QHash<QObject *, QByteArray>::const_iterator callback = callbacks.begin();
+                    callback != callbacks.end();
+                    ++callback) {
+                edge->reserve(callback.key(), callback.value().constData());
+            }
+        }
+    }
+    qDeleteAll(oldEdges);
 }
 
 void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea)
@@ -662,13 +694,6 @@ WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, in
             }
         }
     }
-    QHash<ElectricBorder, int>::const_iterator it = m_externalReservations.constFind(border);
-    if (it != m_externalReservations.constEnd()) {
-        for (int i=0; i<it.value(); ++i) {
-            edge->reserve();
-        }
-    }
-    connect(edge, SIGNAL(activated(ElectricBorder)), SIGNAL(activated(ElectricBorder)));
     return edge;
 }
 
@@ -717,28 +742,20 @@ void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
     }
 }
 
-void ScreenEdges::reserve(ElectricBorder border)
+void ScreenEdges::reserve(ElectricBorder border, QObject *object, const char *slot)
 {
-    QHash<ElectricBorder, int>::iterator it = m_externalReservations.find(border);
-    if (it != m_externalReservations.end()) {
-        m_externalReservations.insert(border, it.value() + 1);
-    }
     for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
-            (*it)->reserve();
+            (*it)->reserve(object, slot);
         }
     }
 }
 
-void ScreenEdges::unreserve(ElectricBorder border)
+void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
 {
-    QHash<ElectricBorder, int>::iterator it = m_externalReservations.find(border);
-    if (it != m_externalReservations.end()) {
-        m_externalReservations.insert(border, it.value() - 1);
-    }
     for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
-            (*it)->unreserve();
+            (*it)->unreserve(object);
         }
     }
 }

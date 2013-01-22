@@ -59,20 +59,16 @@ public:
     bool isReserved() const;
 
     ElectricBorder border() const;
+    void reserve(QObject *object, const char *slot);
+    const QHash<QObject *, QByteArray> &callBacks() const;
 
 public Q_SLOTS:
     void reserve();
     void unreserve();
+    void unreserve(QObject *object);
     void setBorder(ElectricBorder border);
     void setAction(ElectricBorderAction action);
     void setGeometry(const QRect &geometry);
-Q_SIGNALS:
-    /**
-     * Emitted when the @p border got activated and there is neither an effect nor a global
-     * action configured for this @p border.
-     * @param border The border which got activated
-     **/
-    void activated(ElectricBorder border);
 protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
@@ -84,7 +80,7 @@ private:
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
     bool handleAction();
-    bool handleByEffects();
+    bool handleByCallback();
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
     ScreenEdges *m_edges;
@@ -95,6 +91,7 @@ private:
     QDateTime m_lastTrigger;
     QDateTime m_lastReset;
     QPoint m_triggeredPoint;
+    QHash<QObject *, QByteArray> m_callBacks;
 };
 
 class WindowBasedEdge : public Edge
@@ -200,20 +197,23 @@ public:
      * like effects and scripts. When the effect/script does no longer need the edge it is supposed
      * to call @link unreserve.
      * @param border the screen edge to mark as reserved
+     * @param object The object on which the @p callback needs to be invoked
+     * @param callback The method name to be invoked - uses QMetaObject::invokeMethod
      * @see unreserve
      * @todo: add pointer to script/effect
      */
-    void reserve(ElectricBorder border);
+    void reserve(ElectricBorder border, QObject *object, const char *callback);
     /**
      * Mark the specified screen edge as unreserved. This method is provided for external activation
      * like effects and scripts. This method is only allowed to be called if @link reserve had been
      * called before for the same @p border. An unbalanced calling of reserve/unreserve leads to the
      * edge never being active or never being able to deactivate again.
      * @param border the screen edge to mark as unreserved
-     * @see unreserve
+     * @param object the object on which the callback had been invoked
+     * @see reserve
      * @todo: add pointer to script/effect
      */
-    void unreserve(ElectricBorder border);
+    void unreserve(ElectricBorder border, QObject *object);
     /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param reserve indicated weather desktop switching should be reserved or unreseved
@@ -272,13 +272,6 @@ public Q_SLOTS:
      * Recreates all edges e.g. after the screen size changes.
      **/
     void recreateEdges();
-Q_SIGNALS:
-    /**
-     * Emitted when the @p border got activated and there is neither an effect nor a global
-     * action configured for this @p border.
-     * @param border The border which got activated
-     **/
-    void activated(ElectricBorder border);
 private:
     enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
     void setDesktopSwitching(bool enable);
@@ -307,7 +300,6 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
-    QHash<ElectricBorder, int> m_externalReservations;
 };
 
 /**********************************************************
@@ -392,6 +384,11 @@ inline void Edge::setGeometry(const QRect &geometry)
 inline ElectricBorder Edge::border() const
 {
     return m_border;
+}
+
+inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
+{
+    return m_callBacks;
 }
 
 /**********************************************************

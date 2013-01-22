@@ -437,8 +437,6 @@ public:
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
-    virtual bool borderActivated(ElectricBorder border);
-
     /**
      * Overwrite this method to indicate whether your effect will be doing something in
      * the next frame to be rendered. If the method returns @c false the effect will be
@@ -495,6 +493,9 @@ public:
      **/
     static void setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                            const QRect& r, Qt::AspectRatioMode aspect);
+
+public Q_SLOTS:
+    virtual bool borderActivated(ElectricBorder border);
 };
 
 
@@ -651,8 +652,8 @@ public:
     virtual void startMousePolling() = 0;
     virtual void stopMousePolling() = 0;
 
-    virtual void reserveElectricBorder(ElectricBorder border) = 0;
-    virtual void unreserveElectricBorder(ElectricBorder border) = 0;
+    virtual void reserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
+    virtual void unreserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
 
     // functions that allow controlling windows/desktop
     virtual void activateWindow(KWin::EffectWindow* c) = 0;

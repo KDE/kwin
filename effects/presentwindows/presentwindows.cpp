@@ -103,12 +103,6 @@ PresentWindowsEffect::PresentWindowsEffect()
 
 PresentWindowsEffect::~PresentWindowsEffect()
 {
-    foreach (ElectricBorder border, m_borderActivate) {
-        effects->unreserveElectricBorder(border);
-    }
-    foreach (ElectricBorder border, m_borderActivateAll) {
-        effects->unreserveElectricBorder(border);
-    }
     delete m_filterFrame;
     delete m_closeView;
 }
@@ -117,24 +111,24 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
 {
     PresentWindowsConfig::self()->readConfig();
     foreach (ElectricBorder border, m_borderActivate) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     foreach (ElectricBorder border, m_borderActivateAll) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     m_borderActivate.clear();
     m_borderActivateAll.clear();
     foreach (int i, PresentWindowsConfig::borderActivate()) {
         m_borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     foreach (int i, PresentWindowsConfig::borderActivateAll()) {
         m_borderActivateAll.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     foreach (int i, PresentWindowsConfig::borderActivateClass()) {
         m_borderActivateClass.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     m_layoutMode = PresentWindowsConfig::layoutMode();
     m_showCaptions = PresentWindowsConfig::drawWindowCaptions();

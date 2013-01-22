@@ -79,12 +79,6 @@ FlipSwitchEffect::FlipSwitchEffect()
 
 FlipSwitchEffect::~FlipSwitchEffect()
 {
-    foreach (ElectricBorder border, m_borderActivate) {
-        effects->unreserveElectricBorder(border);
-    }
-    foreach (ElectricBorder border, m_borderActivateAll) {
-        effects->unreserveElectricBorder(border);
-    }
     delete m_captionFrame;
 }
 
@@ -97,20 +91,20 @@ void FlipSwitchEffect::reconfigure(ReconfigureFlags)
 {
     FlipSwitchConfig::self()->readConfig();
     foreach (ElectricBorder border, m_borderActivate) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     foreach (ElectricBorder border, m_borderActivateAll) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     m_borderActivate.clear();
     m_borderActivateAll.clear();
     foreach (int i, FlipSwitchConfig::borderActivate()) {
         m_borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     foreach (int i, FlipSwitchConfig::borderActivateAll()) {
         m_borderActivateAll.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     m_tabbox = FlipSwitchConfig::tabBox();
     m_tabboxAlternative = FlipSwitchConfig::tabBoxAlternative();

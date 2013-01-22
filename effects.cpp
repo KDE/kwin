@@ -536,15 +536,6 @@ Effect* EffectsHandlerImpl::activeFullScreenEffect() const
     return fullscreen_effect;
 }
 
-bool EffectsHandlerImpl::borderActivated(ElectricBorder border)
-{
-    bool ret = false;
-    foreach (const EffectPair & ep, loaded_effects)
-    if (ep.second->borderActivated(border))
-        ret = true; // bail out or tell all?
-    return ret;
-}
-
 bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
 {
     if (keyboard_grab_effect != NULL)
@@ -1187,21 +1178,23 @@ QPoint EffectsHandlerImpl::cursorPos() const
     return Workspace::self()->cursorPos();
 }
 
-void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border)
+void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->reserve(border);
+    Workspace::self()->screenEdge()->reserve(border, effect, "borderActivated");
 #else
     Q_UNUSED(border)
+    Q_UNUSED(effect)
 #endif
 }
 
-void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border)
+void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border, Effect *effect)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->unreserve(border);
+    Workspace::self()->screenEdge()->unreserve(border, effect);
 #else
     Q_UNUSED(border)
+    Q_UNUSED(effect)
 #endif
 }
 

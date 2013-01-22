@@ -215,20 +215,10 @@ KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginN
     if (m_pluginName.isNull()) {
         m_pluginName = scriptName;
     }
-#ifdef KWIN_BUILD_SCREENEDGES
-    connect(KWin::Workspace::self()->screenEdge(), SIGNAL(activated(ElectricBorder)), SLOT(borderActivated(ElectricBorder)));
-#endif
 }
 
 KWin::AbstractScript::~AbstractScript()
 {
-#ifdef KWIN_BUILD_SCREENEDGES
-    for (QHash<int, QList<QScriptValue> >::const_iterator it = m_screenEdgeCallbacks.constBegin();
-            it != m_screenEdgeCallbacks.constEnd();
-            ++it) {
-        KWin::Workspace::self()->screenEdge()->unreserve(static_cast<KWin::ElectricBorder>(it.key()));
-    }
-#endif
 }
 
 KConfigGroup KWin::AbstractScript::config() const
@@ -258,9 +248,10 @@ void KWin::AbstractScript::globalShortcutTriggered()
     callGlobalShortcutCallback<KWin::AbstractScript*>(this, sender());
 }
 
-void KWin::AbstractScript::borderActivated(KWin::ElectricBorder edge)
+bool KWin::AbstractScript::borderActivated(KWin::ElectricBorder edge)
 {
     screenEdgeActivated(this, edge);
+    return true;
 }
 
 void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)

@@ -140,8 +140,8 @@ public:
     virtual bool checkInputWindowEvent(XEvent* e);
     virtual void checkInputWindowStacking();
 
-    virtual void reserveElectricBorder(ElectricBorder border);
-    virtual void unreserveElectricBorder(ElectricBorder border);
+    virtual void reserveElectricBorder(ElectricBorder border, Effect *effect);
+    virtual void unreserveElectricBorder(ElectricBorder border, Effect *effect);
 
     virtual unsigned long xrenderBufferPicture();
     virtual void reconfigure();
@@ -163,7 +163,6 @@ public:
 
     // internal (used by kwin core or compositing code)
     void startPaint();
-    bool borderActivated(ElectricBorder border);
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
     void desktopResized(const QSize &size);

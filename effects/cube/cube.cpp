@@ -122,13 +122,13 @@ void CubeEffect::reconfigure(ReconfigureFlags)
 {
     CubeConfig::self()->readConfig();
     foreach (ElectricBorder border, borderActivate) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     foreach (ElectricBorder border, borderActivateCylinder) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     foreach (ElectricBorder border, borderActivateSphere) {
-        effects->unreserveElectricBorder(border);
+        effects->unreserveElectricBorder(border, this);
     }
     borderActivate.clear();
     borderActivateCylinder.clear();
@@ -138,21 +138,21 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     borderList = CubeConfig::borderActivate();
     foreach (int i, borderList) {
         borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
     borderList = CubeConfig::borderActivateCylinder();
     foreach (int i, borderList) {
         borderActivateCylinder.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
     borderList = CubeConfig::borderActivateSphere();
     foreach (int i, borderList) {
         borderActivateSphere.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
     }
 
     cubeOpacity = (float)CubeConfig::opacity() / 100.0f;
@@ -217,15 +217,6 @@ void CubeEffect::reconfigure(ReconfigureFlags)
 
 CubeEffect::~CubeEffect()
 {
-    foreach (ElectricBorder border, borderActivate) {
-        effects->unreserveElectricBorder(border);
-    }
-    foreach (ElectricBorder border, borderActivateCylinder) {
-        effects->unreserveElectricBorder(border);
-    }
-    foreach (ElectricBorder border, borderActivateSphere) {
-        effects->unreserveElectricBorder(border);
-    }
     delete wallpaper;
     delete capTexture;
     delete cylinderShader;
