@@ -74,7 +74,7 @@ bool OverlayWindow::create()
 void OverlayWindow::setup(xcb_window_t window)
 {
     assert(m_window != XCB_WINDOW_NONE);
-    assert(Extensions::shapeInputAvailable());
+    assert(Xcb::Extensions::self()->isShapeInputAvailable());
     setNoneBackgroundPixmap(m_window);
     m_shape = QRegion();
     setShape(QRect(0, 0, displayWidth(), displayHeight()));
