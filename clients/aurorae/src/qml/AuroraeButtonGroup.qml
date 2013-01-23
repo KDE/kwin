@@ -40,6 +40,7 @@ Item {
     }
     id: group
     property string buttons
+    property bool animate: false
 
     Row {
         id: groupRow
@@ -56,6 +57,7 @@ Item {
         topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop + root.padding.top) + auroraeTheme.buttonMarginTop
     }
     Behavior on anchors.topMargin {
+        enabled: group.animate
         NumberAnimation {
             duration: auroraeTheme.animationTime
         }
