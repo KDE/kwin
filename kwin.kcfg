@@ -88,13 +88,13 @@
             <default>false</default>
         </entry>
         <entry name="FocusPolicy" type="Enum">
-            <choices>
+            <choices name="KWin::Options::FocusPolicy">
                 <choice name="ClickToFocus"/>
                 <choice name="FocusFollowsMouse"/>
                 <choice name="FocusUnderMouse"/>
                 <choice name="FocusStrictlyUnderMouse"/>
             </choices>
-            <default>ClickToFocus</default>
+            <default>Options::ClickToFocus</default>
         </entry>
         <entry name="NextFocusPrefersMouse" type="Bool">
             <default>false</default>
@@ -103,7 +103,7 @@
             <default>false</default>
         </entry>
         <entry name="ActiveMouseScreen" type="Bool">
-            <default>false</default>
+            <default code="true">focusPolicy() != Options::ClickToFocus</default>
         </entry>
         <entry name="RollOverDesktops" type="Bool">
             <default>true</default>
@@ -117,7 +117,7 @@
             <max>4</max>
         </entry>
         <entry name="Placement" type="Enum">
-            <choices>
+            <choices name="KWin::Placement::Policy">
                 <choice name="NoPlacement"/>
                 <choice name="Default"/>
                 <choice name="Unknown"/>
@@ -130,16 +130,16 @@
                 <choice name="OnMainWindow"/>
                 <choice name="Maximizing"/>
             </choices>
-            <default>Default</default>
+            <default>Placement::Smart</default>
         </entry>
         <entry name="AutoRaise" type="Bool">
             <default>false</default>
         </entry>
         <entry name="AutoRaiseInterval" type="Int">
-            <default>0</default>
+            <default>750</default>
         </entry>
         <entry name="DelayFocusInterval" type="Int">
-            <default>0</default>
+            <default>300</default>
         </entry>
         <entry name="ShadeHover" type="Bool">
             <default>false</default>
