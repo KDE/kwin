@@ -407,7 +407,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
         const QString message = i18n("<h1>OpenGL desktop effects not possible</h1>"
                                      "Your system cannot perform OpenGL Desktop Effects at the "
                                      "current resolution<br><br>"
-                                     "You can try to select the XRender backend , but it "
+                                     "You can try to select the XRender backend, but it "
                                      "might be very slow for this resolution as well.<br>"
                                      "Alternatively, lower the combined resolution of all screens "
                                      "to %1x%2 ", limit[0], limit[1]);
@@ -415,7 +415,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
                                      "limitation of your GPU and is therefore not compatible "
                                      "with the OpenGL compositor.<br>"
                                      "XRender does not know such limitation, but the performance "
-                                     "will usually be impacted by the hardware limitations that"
+                                     "will usually be impacted by the hardware limitations that "
                                      "restrict the OpenGL viewport size.");
         const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
         QDBusConnection::sessionBus().interface()->setTimeout(500);
