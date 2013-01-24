@@ -36,6 +36,7 @@ namespace KWin
 
 class Client;
 class CompositingPrefs;
+class Settings;
 
 class Options : public QObject, public KDecorationOptions
 {
@@ -611,64 +612,6 @@ public:
     void setGlLegacy(bool glLegacy);
 
     // default values
-    static FocusPolicy defaultFocusPolicy() {
-        return ClickToFocus;
-    }
-    static bool defaultNextFocusPrefersMouse() {
-        return false;
-    }
-    static bool defaultClickRaise() {
-        return true;
-    }
-    static bool defaultAutoRaise() {
-        return false;
-    }
-    static int defaultAutoRaiseInterval() {
-        return 750;
-    }
-    static int defaultDelayFocusInterval() {
-        return 300;
-    }
-    static bool defaultShadeHover() {
-        return false;
-    }
-    static int defaultShadeHoverInterval() {
-        return 250;
-    }
-    static bool defaultSeparateScreenFocus() {
-        return false;
-    }
-    static bool defaultActiveMouseScreen() {
-        // TODO: used to be m_focusPolicy != ClickToFocus
-        return true;
-    }
-    static Placement::Policy defaultPlacement() {
-        return Placement::Default;
-    }
-    static int defaultBorderSnapZone() {
-        return 10;
-    }
-    static int defaultWindowSnapZone() {
-        return 10;
-    }
-    static int defaultCenterSnapZone() {
-        return 0;
-    }
-    static bool defaultSnapOnlyWhenOverlapping() {
-        return false;
-    }
-    static bool defaultShowDesktopIsMinimizeAll() {
-        return false;
-    }
-    static bool defaultRollOverDesktops() {
-        return true;
-    }
-    static int defaultFocusStealingPreventionLevel() {
-        return 1;
-    }
-    static bool defaultLegacyFullscreenSupport() {
-        return false;
-    }
     static WindowOperation defaultOperationTitlebarDblClick() {
         return MaximizeOp;
     }
@@ -719,36 +662,6 @@ public:
     }
     static uint defaultKeyCmdAllModKey() {
         return Qt::Key_Alt;
-    }
-    static bool defaultShowGeometryTip() {
-        return false;
-    }
-    static bool defaultCondensedTitle() {
-        return false;
-    }
-    static bool defaultElectricBorderMaximize() {
-        return true;
-    }
-    static bool defaultElectricBorderTiling() {
-        return true;
-    }
-    static float defaultElectricBorderCornerRatio() {
-        return 0.25;
-    }
-    static bool defaultBorderlessMaximizedWindows() {
-        return false;
-    }
-    static int defaultKillPingTimeout() {
-        return 5000;
-    }
-    static bool defaultHideUtilityWindowsForInactive() {
-        return true;
-    }
-    static bool defaultInactiveTabsSkipTaskbar() {
-        return false;
-    }
-    static bool defaultAutogroupSimilarWindows() {
-        return false;
     }
     static bool defaultAutogroupInForeground() {
         return true;
@@ -890,6 +803,8 @@ public Q_SLOTS:
 
 private:
     void setElectricBorders(int borders);
+    void syncFromKcfgc();
+    QScopedPointer<Settings> m_settings;
     FocusPolicy m_focusPolicy;
     bool m_nextFocusPrefersMouse;
     bool m_clickRaise;
