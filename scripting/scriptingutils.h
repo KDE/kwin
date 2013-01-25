@@ -162,7 +162,7 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
     if (it == script->screenEdgeCallbacks().end()) {
         // not yet registered
 #ifdef KWIN_BUILD_SCREENEDGES
-        KWin::Workspace::self()->screenEdge()->reserve(static_cast<KWin::ElectricBorder>(edge), script, "borderActivated");
+        ScreenEdges::self()->reserve(static_cast<KWin::ElectricBorder>(edge), script, "borderActivated");
 #endif
         script->screenEdgeCallbacks().insert(edge, QList<QScriptValue>() << context->argument(1));
     } else {

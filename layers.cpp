@@ -163,7 +163,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // windows (e.g. popups).
     newWindowStack << (Window*)supportWindow->winId();
 #ifdef KWIN_BUILD_SCREENEDGES
-    QVectorIterator<xcb_window_t> it(m_screenEdge->windows());
+    QVectorIterator<xcb_window_t> it(ScreenEdges::self()->windows());
     while (it.hasNext()) {
         if ((Window)it.next() != None) {
             newWindowStack << (Window*)&it;

@@ -82,7 +82,7 @@ void Workspace::desktopResized()
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
 #ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge->recreateEdges();
+    ScreenEdges::self()->recreateEdges();
 #endif
 
     if (effects) {
@@ -2580,8 +2580,8 @@ bool Client::startMoveResize()
     Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     emit clientStartUserMovedResized(this);
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (workspace()->screenEdge()->isDesktopSwitchingMovingClients())
-        workspace()->screenEdge()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
+    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
+        ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
 #endif
     if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
         handleMoveResize(QCursor::pos().x(), QCursor::pos().y(), QCursor::pos().x(), QCursor::pos().y());
@@ -2662,8 +2662,8 @@ void Client::leaveMoveResize()
     syncRequest.timeout = NULL;
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (workspace()->screenEdge()->isDesktopSwitchingMovingClients())
-        workspace()->screenEdge()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
+    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
+        ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
 #endif
 }
 
@@ -3027,11 +3027,11 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 #endif
         performMoveResize();
 
-    if (isMove()) {
 #ifdef KWIN_BUILD_SCREENEDGES
-        workspace()->screenEdge()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
-#endif
+    if (isMove()) {
+        ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
     }
+#endif
 }
 
 void Client::performMoveResize()

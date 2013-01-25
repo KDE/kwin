@@ -1072,7 +1072,7 @@ xcb_window_t EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int 
     // Raise electric border windows above the input windows
     // so they can still be triggered.
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->ensureOnTop();
+    ScreenEdges::self()->ensureOnTop();
 #endif
     if (input_windows.count() > 10) // that sounds like some leak - could still be correct, thoug - so NO ABORT HERE!
         kDebug() << "** warning ** there are now " << input_windows.count() <<
@@ -1086,7 +1086,7 @@ void EffectsHandlerImpl::destroyInputWindow(xcb_window_t w)
         if (pos.second == w) {
             xcb_unmap_window(connection(), w);
 #ifdef KWIN_BUILD_SCREENEDGES
-            Workspace::self()->screenEdge()->raisePanelProxies();
+            ScreenEdges::self()->raisePanelProxies();
 #endif
             return;
         }
@@ -1169,7 +1169,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     // so they can still be triggered. TODO: Do both at once.
 #ifdef KWIN_BUILD_SCREENEDGES
     if (pos)
-        Workspace::self()->screenEdge()->ensureOnTop();
+        ScreenEdges::self()->ensureOnTop();
 #endif
 }
 
@@ -1181,7 +1181,7 @@ QPoint EffectsHandlerImpl::cursorPos() const
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->reserve(border, effect, "borderActivated");
+    ScreenEdges::self()->reserve(border, effect, "borderActivated");
 #else
     Q_UNUSED(border)
     Q_UNUSED(effect)
@@ -1191,7 +1191,7 @@ void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *ef
 void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border, Effect *effect)
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    Workspace::self()->screenEdge()->unreserve(border, effect);
+    ScreenEdges::self()->unreserve(border, effect);
 #else
     Q_UNUSED(border)
     Q_UNUSED(effect)

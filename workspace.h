@@ -75,7 +75,6 @@ class Scripting;
 class UserActionsMenu;
 class WindowRules;
 class Compositor;
-class ScreenEdges;
 
 class Workspace : public QObject, public KDecorationDefines
 {
@@ -199,9 +198,6 @@ public:
     }
 
     Outline* outline();
-#ifdef KWIN_BUILD_SCREENEDGES
-    ScreenEdges* screenEdge();
-#endif
 
 public:
     QPoint cascadeOffset(const Client *c) const;
@@ -214,9 +210,6 @@ private:
 #endif
 
     Outline* m_outline;
-#ifdef KWIN_BUILD_SCREENEDGES
-    ScreenEdges *m_screenEdge;
-#endif
     Compositor *m_compositor;
 
     //-------------------------------------------------

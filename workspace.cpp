@@ -99,9 +99,6 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
     : QObject(0)
-#ifdef KWIN_BUILD_SCREENEDGES
-    , m_screenEdge(new ScreenEdges(this))
-#endif
     , m_compositor(NULL)
     // Unsorted
     , active_popup(NULL)
@@ -197,6 +194,10 @@ Workspace::Workspace(bool restore)
                  ExposureMask
                 );
 
+#ifdef KWIN_BUILD_SCREENEDGES
+    ScreenEdges::create(this);
+#endif
+
     // VirtualDesktopManager needs to be created prior to init shortcuts
     // and prior to TabBox, due to TabBox connecting to signals
     // actual initialization happens in init()
@@ -261,10 +262,11 @@ void Workspace::screenChangeTimeout()
 void Workspace::init()
 {
 #ifdef KWIN_BUILD_SCREENEDGES
-    m_screenEdge->setConfig(KGlobal::config());
-    m_screenEdge->init();
-    connect(options, SIGNAL(configChanged()), m_screenEdge, SLOT(reconfigure()));
-    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), m_screenEdge, SLOT(updateLayout()));
+    ScreenEdges *screenEdges = ScreenEdges::self();
+    screenEdges->setConfig(KGlobal::config());
+    screenEdges->init();
+    connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
+    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
 #endif
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
@@ -1934,13 +1936,6 @@ Outline* Workspace::outline()
     return m_outline;
 }
 
-#ifdef KWIN_BUILD_SCREENEDGES
-ScreenEdges* Workspace::screenEdge()
-{
-    return m_screenEdge;
-}
-#endif
-
 bool Workspace::hasTabBox() const
 {
 #ifdef KWIN_BUILD_TABBOX
@@ -1999,13 +1994,13 @@ QString Workspace::supportInformation() const
 #ifdef KWIN_BUILD_SCREENEDGES
     support.append("\nScreen Edges\n");
     support.append(  "============\n");
-    const QMetaObject *metaScreenEdges = m_screenEdge->metaObject();
+    const QMetaObject *metaScreenEdges = ScreenEdges::self()->metaObject();
     for (int i=0; i<metaScreenEdges->propertyCount(); ++i) {
         const QMetaProperty property = metaScreenEdges->property(i);
         if (QLatin1String(property.name()) == "objectName") {
             continue;
         }
-        support.append(QLatin1String(property.name()) % ": " % m_screenEdge->property(property.name()).toString() % '\n');
+        support.append(QLatin1String(property.name()) % ": " % ScreenEdges::self()->property(property.name()).toString() % '\n');
     }
 #endif
     support.append("\nScreens\n");

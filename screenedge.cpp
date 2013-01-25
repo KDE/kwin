@@ -338,6 +338,15 @@ void WindowBasedEdge::doGeometryUpdate()
 /**********************************************************
  * ScreenEdges
  *********************************************************/
+ScreenEdges *ScreenEdges::s_self = NULL;
+
+ScreenEdges *ScreenEdges::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+    s_self = new ScreenEdges(parent);
+    return s_self;
+}
+
 ScreenEdges::ScreenEdges(QObject *parent)
     : QObject(parent)
     , m_desktopSwitching(false)
@@ -358,6 +367,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
 
 ScreenEdges::~ScreenEdges()
 {
+    s_self = NULL;
 }
 
 void ScreenEdges::init()

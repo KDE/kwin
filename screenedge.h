@@ -261,6 +261,20 @@ public:
     ElectricBorderAction actionBottom() const;
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
+
+    /**
+     * Singleton getter for this manager.
+     *
+     * Does not create a new instance. If the manager has not been created yet a @c null pointer
+     * is returned.
+     * @see create
+     **/
+    static ScreenEdges *self();
+    /**
+     * Factory method to create the ScreenEdges.
+     * @see self
+     **/
+    static ScreenEdges *create(QObject *parent = NULL);
 public Q_SLOTS:
     void reconfigure();
     /**
@@ -300,6 +314,8 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
+
+    static ScreenEdges *s_self;
 };
 
 /**********************************************************
@@ -478,6 +494,12 @@ ACTION(actionBottomLeft)
 ACTION(actionLeft)
 
 #undef ACTION
+
+inline ScreenEdges *ScreenEdges::self()
+{
+    Q_ASSERT(s_self);
+    return s_self;
+}
 
 }
 #endif // KWIN_SCREENEDGE_H
