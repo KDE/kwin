@@ -40,7 +40,13 @@ namespace KWin
 {
 GlxBackend::GlxBackend()
     : OpenGLBackend()
+    , gcroot(None)
+    , buffer(None)
+    , fbcbuffer_db(NULL)
+    , fbcbuffer_nondb(NULL)
+    , fbcbuffer(NULL)
     , glxbuffer(None)
+    , ctxbuffer(None)
     , haveSwapInterval(false)
 {
     init();
@@ -52,16 +58,21 @@ GlxBackend::~GlxBackend()
     // do cleanup after initBuffer()
     cleanupGL();
     glXMakeCurrent(display(), None, NULL);
-    glXDestroyContext(display(), ctxbuffer);
+    if (ctxbuffer)
+        glXDestroyContext(display(), ctxbuffer);
     if (overlayWindow()->window()) {
-        if (hasGLXVersion(1, 3))
+        if (hasGLXVersion(1, 3) && glxbuffer)
             glXDestroyWindow(display(), glxbuffer);
-        XDestroyWindow(display(), buffer);
+        if (buffer)
+            XDestroyWindow(display(), buffer);
         overlayWindow()->destroy();
     } else {
-        glXDestroyPixmap(display(), glxbuffer);
-        XFreeGC(display(), gcroot);
-        XFreePixmap(display(), buffer);
+        if (glxbuffer)
+            glXDestroyPixmap(display(), glxbuffer);
+        if (gcroot)
+            XFreeGC(display(), gcroot);
+        if (buffer)
+            XFreePixmap(display(), buffer);
     }
     checkGLError("Cleanup");
 }
