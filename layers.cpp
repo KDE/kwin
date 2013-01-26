@@ -756,8 +756,6 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
         ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                     begin = workspace()->stackingOrder().constBegin();
         while (--it != begin) {
-            if (*it == this)
-                return; // we're already above
 
             if (*it == other) { // the other one is top on stack
                 it = begin; // invalidate
