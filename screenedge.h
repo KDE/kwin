@@ -57,10 +57,13 @@ public:
     bool triggersFor(const QPoint &cursorPos) const;
     void check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack = false);
     bool isReserved() const;
+    const QRect &approachGeometry() const;
 
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
     const QHash<QObject *, QByteArray> &callBacks() const;
+    void startApproaching();
+    void stopApproaching();
 
 public Q_SLOTS:
     void reserve();
@@ -69,6 +72,9 @@ public Q_SLOTS:
     void setBorder(ElectricBorder border);
     void setAction(ElectricBorderAction action);
     void setGeometry(const QRect &geometry);
+    void updateApproaching(const QPoint &point);
+Q_SIGNALS:
+    void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
 protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
@@ -76,6 +82,8 @@ protected:
     virtual void doGeometryUpdate();
     virtual void activate();
     virtual void deactivate();
+    virtual void doStartApproaching();
+    virtual void doStopApproaching();
 private:
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
@@ -88,10 +96,13 @@ private:
     ElectricBorderAction m_action;
     int m_reserved;
     QRect m_geometry;
+    QRect m_approachGeometry;
     QDateTime m_lastTrigger;
     QDateTime m_lastReset;
     QPoint m_triggeredPoint;
     QHash<QObject *, QByteArray> m_callBacks;
+    bool m_approaching;
+    qreal m_lastApproachingFactor;
 };
 
 class WindowBasedEdge : public Edge
@@ -102,16 +113,25 @@ public:
     virtual ~WindowBasedEdge();
 
     xcb_window_t window() const;
+    /**
+     * The approach window is a special window to notice when get close to the screen border but
+     * not yet triggering the border.
+     **/
+    xcb_window_t approachWindow() const;
 
 protected:
     virtual void doGeometryUpdate();
     virtual void activate();
     virtual void deactivate();
+    virtual void doStartApproaching();
+    virtual void doStopApproaching();
 
 private:
     void destroyWindow();
     void createWindow();
+    void createApproachWindow();
     xcb_window_t m_window;
+    xcb_window_t m_approachWindow;
 };
 
 /**
@@ -261,6 +281,8 @@ public:
     ElectricBorderAction actionBottom() const;
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
+    void startMousePolling();
+    void stopMousePolling();
 
     /**
      * Singleton getter for this manager.
@@ -286,6 +308,19 @@ public Q_SLOTS:
      * Recreates all edges e.g. after the screen size changes.
      **/
     void recreateEdges();
+
+Q_SIGNALS:
+    /**
+     * Signal emitted during approaching of mouse towards @p border. The @p factor indicates how
+     * far away the mouse is from the approaching area. The values are clamped into [0.0,1.0] with
+     * @c 0.0 meaning far away from the border, @c 1.0 in trigger distance.
+     **/
+    void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
+    void mousePollingTimerEvent(QPoint cursorPos);
+
+private Q_SLOTS:
+    void performMousePoll();
+
 private:
     enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
     void setDesktopSwitching(bool enable);
@@ -314,6 +349,8 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
+    int m_mousePolling;
+    QTimer *m_mousePollingTimer;
 
     static ScreenEdges *s_self;
 };
@@ -388,13 +425,9 @@ inline const QRect &Edge::geometry() const
     return m_geometry;
 }
 
-inline void Edge::setGeometry(const QRect &geometry)
+inline const QRect &Edge::approachGeometry() const
 {
-    if (m_geometry == geometry) {
-        return;
-    }
-    m_geometry = geometry;
-    doGeometryUpdate();
+    return m_approachGeometry;
 }
 
 inline ElectricBorder Edge::border() const
@@ -414,6 +447,11 @@ inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
 inline xcb_window_t WindowBasedEdge::window() const
 {
     return m_window;
+}
+
+inline xcb_window_t WindowBasedEdge::approachWindow() const
+{
+    return m_approachWindow;
 }
 
 /**********************************************************

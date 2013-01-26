@@ -58,6 +58,8 @@ Edge::Edge(ScreenEdges *parent)
     , m_border(ElectricNone)
     , m_action(ElectricActionNone)
     , m_reserved(0)
+    , m_approaching(false)
+    , m_lastApproachingFactor(0.0)
 {
 }
 
@@ -268,6 +270,52 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     QCursor::setPos(x, y);
 }
 
+void Edge::setGeometry(const QRect &geometry)
+{
+    if (m_geometry == geometry) {
+        return;
+    }
+    m_geometry = geometry;
+    int x = m_geometry.x();
+    int y = m_geometry.y();
+    int width = m_geometry.width();
+    int height = m_geometry.height();
+    // TODO: better not hard coded value
+    const int size = 20;
+    if (isCorner()) {
+        if (isRight()) {
+            x = x - size +1;
+        }
+        if (isBottom()) {
+            y = y - size +1;
+        }
+        width = size;
+        height = size;
+    } else {
+        if (isLeft()) {
+            y += size + 1;
+            width = size;
+            height = height - size * 2;
+        } else if (isRight()) {
+            x = x - size + 1;
+            y += size;
+            width = size;
+            height = height - size * 2;
+        } else if (isTop()) {
+            x += size;
+            width = width - size * 2;
+            height = size;
+        } else if (isBottom()) {
+            x += size;
+            y = y - size +1;
+            width = width - size * 2;
+            height = size;
+        }
+    }
+    m_approachGeometry = QRect(x, y, width, height);
+    doGeometryUpdate();
+}
+
 void Edge::doGeometryUpdate()
 {
 }
@@ -280,12 +328,88 @@ void Edge::deactivate()
 {
 }
 
+void Edge::startApproaching()
+{
+    if (m_approaching) {
+        return;
+    }
+    m_approaching = true;
+    doStartApproaching();
+    m_lastApproachingFactor = 0.0;
+    emit approaching(border(), 0.0, m_approachGeometry);
+}
+
+void Edge::doStartApproaching()
+{
+}
+
+void Edge::stopApproaching()
+{
+    if (!m_approaching) {
+        return;
+    }
+    m_approaching = false;
+    doStopApproaching();
+    m_lastApproachingFactor = 0.0;
+    emit approaching(border(), 0.0, m_approachGeometry);
+}
+
+void Edge::doStopApproaching()
+{
+}
+
+void Edge::updateApproaching(const QPoint &point)
+{
+    if (approachGeometry().contains(point)) {
+        qreal factor = 0.0;
+        // manhattan length for our edge
+        const qreal cornerDistance = 40.0;
+        const qreal edgeDistance = 20.0;
+        switch (border()) {
+        case ElectricTopLeft:
+            factor = point.manhattanLength() / cornerDistance;
+            break;
+        case ElectricTopRight:
+            factor = (point - approachGeometry().topRight()).manhattanLength() / cornerDistance;
+            break;
+        case ElectricBottomRight:
+            factor = (point - approachGeometry().bottomRight()).manhattanLength() / cornerDistance;
+            break;
+        case ElectricBottomLeft:
+            factor = (point - approachGeometry().bottomLeft()).manhattanLength() / cornerDistance;
+            break;
+        case ElectricTop:
+            factor = qAbs(point.y() - approachGeometry().y()) / edgeDistance;
+            break;
+        case ElectricRight:
+            factor = qAbs(point.x() - approachGeometry().right()) / edgeDistance;
+            break;
+        case ElectricBottom:
+            factor = qAbs(point.y() - approachGeometry().bottom()) / edgeDistance;
+            break;
+        case ElectricLeft:
+            factor = qAbs(point.x() - approachGeometry().x()) / edgeDistance;
+            break;
+        default:
+            break;
+        }
+        factor = 1.0 - factor;
+        if (m_lastApproachingFactor != factor) {
+            m_lastApproachingFactor = factor;
+            emit approaching(border(), m_lastApproachingFactor, m_approachGeometry);
+        }
+    } else {
+        stopApproaching();
+    }
+}
+
 /**********************************************************
  * ScreenEdges
  *********************************************************/
 WindowBasedEdge::WindowBasedEdge(ScreenEdges *parent)
     : Edge(parent)
     , m_window(XCB_WINDOW_NONE)
+    , m_approachWindow(XCB_WINDOW_NONE)
 {
 }
 
@@ -297,6 +421,7 @@ WindowBasedEdge::~WindowBasedEdge()
 void WindowBasedEdge::activate()
 {
     createWindow();
+    createApproachWindow();
 }
 
 void WindowBasedEdge::deactivate()
@@ -322,17 +447,56 @@ void WindowBasedEdge::createWindow()
                         atoms->xdnd_aware, XCB_ATOM_ATOM, 32, 1, (unsigned char*)(&version));
 }
 
+void WindowBasedEdge::createApproachWindow()
+{
+    if (m_approachWindow != XCB_WINDOW_NONE) {
+        return;
+    }
+    if (!approachGeometry().isValid()) {
+        return;
+    }
+    const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
+    const uint32_t values[] = {
+        true,
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+    };
+    const QRect geo = approachGeometry();
+    m_approachWindow = Xcb::createInputWindow(geo, mask, values);
+    xcb_map_window(connection(), m_approachWindow);
+}
+
 void WindowBasedEdge::destroyWindow()
 {
     if (m_window != XCB_WINDOW_NONE) {
         xcb_destroy_window(connection(), m_window);
         m_window = XCB_WINDOW_NONE;
     }
+    if (m_approachWindow != XCB_WINDOW_NONE) {
+        xcb_destroy_window(connection(), m_approachWindow);
+        m_approachWindow = XCB_WINDOW_NONE;
+    }
 }
 
 void WindowBasedEdge::doGeometryUpdate()
 {
     Xcb::moveResizeWindow(m_window, geometry());
+    Xcb::moveResizeWindow(m_approachWindow, approachGeometry());
+}
+
+void WindowBasedEdge::doStartApproaching()
+{
+    xcb_unmap_window(connection(), m_approachWindow);
+    connect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), SLOT(updateApproaching(QPoint)));
+    edges()->startMousePolling();
+}
+
+void WindowBasedEdge::doStopApproaching()
+{
+    disconnect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), this, SLOT(updateApproaching(QPoint)));
+    edges()->stopMousePolling();
+    if (m_approachWindow != XCB_WINDOW_NONE) {
+        xcb_map_window(connection(), m_approachWindow);
+    }
 }
 
 /**********************************************************
@@ -362,7 +526,10 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionBottom(ElectricActionNone)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
+    , m_mousePolling(0)
+    , m_mousePollingTimer(new QTimer(this))
 {
+    connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
 }
 
 ScreenEdges::~ScreenEdges()
@@ -704,6 +871,7 @@ WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, in
             }
         }
     }
+    connect(edge, SIGNAL(approaching(ElectricBorder,qreal,QRect)), SIGNAL(approaching(ElectricBorder,qreal,QRect)));
     return edge;
 }
 
@@ -782,8 +950,16 @@ bool ScreenEdges::isEntered(XEvent* e)
     if (e->type == EnterNotify) {
         for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
             WindowBasedEdge *edge = *it;
-            if (edge->isReserved() && edge->window() == e->xcrossing.window) {
+            if (!edge->isReserved()) {
+                continue;
+            }
+            if (edge->window() == e->xcrossing.window) {
                 edge->check(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), QDateTime::fromMSecsSinceEpoch(e->xcrossing.time));
+                return true;
+            }
+            if (edge->approachWindow() == e->xcrossing.window) {
+                edge->startApproaching();
+                // TODO: if it's a corner, it should also trigger for other windows
                 return true;
             }
         }
@@ -806,6 +982,28 @@ bool ScreenEdges::isEntered(XEvent* e)
 void ScreenEdges::ensureOnTop()
 {
     Xcb::restackWindowsWithRaise(windows());
+}
+
+void ScreenEdges::startMousePolling()
+{
+    m_mousePolling++;
+    if (m_mousePolling == 1) {
+        m_mousePollingTimer->start(100);   // TODO: How often do we really need to poll?
+    }
+}
+
+void ScreenEdges::stopMousePolling()
+{
+    m_mousePolling--;
+    if (m_mousePolling == 0) {
+        m_mousePollingTimer->stop();
+    }
+}
+
+void ScreenEdges::performMousePoll()
+{
+    Workspace::self()->checkCursorPos();
+    emit mousePollingTimerEvent(Workspace::self()->cursorPos());
 }
 
 /*
@@ -879,6 +1077,11 @@ QVector< xcb_window_t > ScreenEdges::windows() const
             it != m_edges.constEnd();
             ++it) {
         xcb_window_t w = (*it)->window();
+        if (w != XCB_WINDOW_NONE) {
+            wins.append(w);
+        }
+        // TODO:  lambda
+        w = (*it)->approachWindow();
         if (w != XCB_WINDOW_NONE) {
             wins.append(w);
         }

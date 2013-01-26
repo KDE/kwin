@@ -1162,6 +1162,18 @@ Q_SIGNALS:
      * @since 4.10
      */
     void stackingOrderChanged();
+    /**
+     * This signal is emitted when the user starts to approach the @p border with the mouse.
+     * The @p factor describes how far away the mouse is in a relative mean. The values are in
+     * [0.0, 1.0] with 0.0 being emitted when first entered and on leaving. The value 1.0 means that
+     * the @p border is reached with the mouse. So the values are well suited for animations.
+     * The signal is always emitted when the mouse cursor position changes.
+     * @param border The screen edge which is being approached
+     * @param factor Value in range [0.0,1.0] to describe how close the mouse is to the border
+     * @param geometry The geometry of the edge which is being approached
+     * @since 4.11
+     **/
+    void screenEdgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
 
 protected:
     QVector< EffectPair > loaded_effects;
