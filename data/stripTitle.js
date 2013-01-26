@@ -98,7 +98,7 @@ function isBrowser(appName) {
     ret = ret.replace("[modified]", "❖");
 
     // in general, remove leading [and trailing] blanks and special chars
-    ret = ret.replace(/^\W*/, '');
+    // ret = ret.replace(/^\W*/, ''); - this does not work - Umlauts and pot. other chars are considered "non Word"
     ret = ret.replace(/^\s*/, '').replace(/\s*$/, '');
     return ret;
 })
