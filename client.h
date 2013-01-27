@@ -499,7 +499,6 @@ public:
     void updateCompositeBlocking(bool readProperty = false);
 
     QString caption(bool full = true, bool stripped = false) const;
-    void updateCaption();
 
     void keyPressEvent(uint key_code);   // FRAME ??
     void updateMouseGrab();
@@ -654,6 +653,7 @@ public:
 
 public slots:
     void closeWindow();
+    void updateCaption();
 
 private slots:
     void autoRaise();
