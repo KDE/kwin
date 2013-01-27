@@ -151,7 +151,7 @@ Item {
                 compactListView, "calculateMaxRowWidth");
             width = Math.max(textElement.width, width);
             textElement.destroy();
-            return width + 16 + 2 * compactTabBox.textMargin + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.right;Margin
+            return width + 16 + 2 * compactTabBox.textMargin + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.rightMargin
         }
         /**
         * Calculates the height of one row based on the text height and icon size.
