@@ -143,7 +143,7 @@ void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, 
             to.set( relative[0] ? to[0] * area.width() : to[0],
                     relative[1] ? to[1] * area.height() : to[1] );
         } else {
-            from.set(w->width(), w->height());
+            to.set(w->width(), w->height());
         }
 
 
