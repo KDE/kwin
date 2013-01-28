@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_OUTLINE_H
 #define KWIN_OUTLINE_H
-#include <X11/X.h>
-#include <fixx11h.h>
+#include "xcbutils.h"
 #include <QtCore/QRect>
 #include <QtCore/QVector>
 
@@ -77,7 +76,7 @@ public:
      * Return outline window ids
      * @return The window ids created to represent the outline
      */
-    QVector<Window> windowIds() const;
+    QVector<xcb_window_t> windowIds() const;
 private:
 
     /**
@@ -85,19 +84,28 @@ private:
      */
     void showWithX();
 
-    /**
-     * Hide previously shown outline used the X implementation
-     */
-    void hideWithX();
+    // TODO: variadic template arguments for adding method arguments
+    template <typename T>
+    void forEachWindow(T method);
 
-    Window m_topOutline;
-    Window m_rightOutline;
-    Window m_bottomOutline;
-    Window m_leftOutline;
+    Xcb::Window m_topOutline;
+    Xcb::Window m_rightOutline;
+    Xcb::Window m_bottomOutline;
+    Xcb::Window m_leftOutline;
     QRect m_outlineGeometry;
     bool m_initialized;
     bool m_active;
 };
+
+template <typename T>
+inline
+void Outline::forEachWindow(T method)
+{
+    (m_topOutline.*method)();
+    (m_rightOutline.*method)();
+    (m_bottomOutline.*method)();
+    (m_leftOutline.*method)();
+}
 
 }
 

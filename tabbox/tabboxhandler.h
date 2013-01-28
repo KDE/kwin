@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <X11/Xlib.h>
 #include <fixx11h.h>
+#include <xcb/xcb.h>
 
 /**
 * @file
@@ -351,7 +352,7 @@ protected:
      * @return The outline window ids given in the order left, top, right, bottom
      * @since 4.7
      **/
-    virtual QVector<Window> outlineWindowIds() const = 0;
+    virtual QVector<xcb_window_t> outlineWindowIds() const = 0;
 
 signals:
     /**

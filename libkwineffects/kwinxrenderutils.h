@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-
 #include <QtCore/QSharedData>
 #include <QtGui/QColor>
 #include <ksharedptr.h>
@@ -163,8 +161,6 @@ KWIN_EXPORT void scene_setXRenderOffscreenTarget(QPixmap *pix);
 KWIN_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
 
 } // namespace
-
-#endif
 
 /** @} */
 

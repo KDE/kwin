@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #include "kwinglobals.h"
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-
 #include <QStack>
 #include <QVector>
 #include <QPixmap>
@@ -263,5 +261,3 @@ QPixmap *xRenderOffscreenTarget()
 }
 
 } // namespace
-
-#endif

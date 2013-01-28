@@ -326,7 +326,7 @@ void TabBoxHandlerImpl::hideOutline()
     Workspace::self()->outline()->hide();
 }
 
-QVector< Window > TabBoxHandlerImpl::outlineWindowIds() const
+QVector< xcb_window_t > TabBoxHandlerImpl::outlineWindowIds() const
 {
     return Workspace::self()->outline()->windowIds();
 }

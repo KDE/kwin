@@ -186,7 +186,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     }
     data[ 0 ] = currentClient ? currentClient->window() : 0L;
     if (config.isShowOutline()) {
-        QVector<Window> outlineWindows = q->outlineWindowIds();
+        QVector<xcb_window_t> outlineWindows = q->outlineWindowIds();
         data.resize(2+outlineWindows.size());
         for (int i=0; i<outlineWindows.size(); ++i) {
             data[2+i] = outlineWindows[i];

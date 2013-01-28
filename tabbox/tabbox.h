@@ -64,7 +64,7 @@ public:
     virtual QWeakPointer< TabBoxClient > desktopClient() const;
     virtual void hideOutline();
     virtual void showOutline(const QRect &outline);
-    virtual QVector< Window > outlineWindowIds() const;
+    virtual QVector< xcb_window_t > outlineWindowIds() const;
     virtual void activateAndClose();
 
 private:

@@ -68,8 +68,8 @@ public:
     virtual int numberOfDesktops() const {
         return 1;
     }
-    virtual QVector< Window > outlineWindowIds() const {
-        return QVector<Window>();
+    virtual QVector< xcb_window_t > outlineWindowIds() const {
+        return QVector<xcb_window_t>();
     }
     virtual void raiseClient(TabBox::TabBoxClient *c) const {
         Q_UNUSED(c)
