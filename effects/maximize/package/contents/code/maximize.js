@@ -35,14 +35,14 @@ var maximizeEffect = {
             window: window,
             duration: maximizeEffect.duration,
             animations: [{
-                type: Effect.Scale,
+                type: Effect.Size,
                 to: {
-                    value1: 1.0,
-                    value2: 1.0
+                    value1: newGeometry.width,
+                    value2: newGeometry.height
                 },
                 from: {
-                    value1: oldGeometry.width / newGeometry.width,
-                    value2: oldGeometry.height / newGeometry.height
+                    value1: oldGeometry.width,
+                    value2: oldGeometry.height
                 }
             }, {
                 type: Effect.Translation,
