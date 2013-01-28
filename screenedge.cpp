@@ -948,32 +948,63 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
 bool ScreenEdges::isEntered(XEvent* e)
 {
     if (e->type == EnterNotify) {
-        for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-            WindowBasedEdge *edge = *it;
-            if (!edge->isReserved()) {
-                continue;
-            }
-            if (edge->window() == e->xcrossing.window) {
-                edge->check(QPoint(e->xcrossing.x_root, e->xcrossing.y_root), QDateTime::fromMSecsSinceEpoch(e->xcrossing.time));
-                return true;
-            }
-            if (edge->approachWindow() == e->xcrossing.window) {
-                edge->startApproaching();
-                // TODO: if it's a corner, it should also trigger for other windows
-                return true;
-            }
-        }
+        return handleEnterNotifiy(e->xcrossing.window,
+                                  QPoint(e->xcrossing.x_root, e->xcrossing.y_root),
+                                  QDateTime::fromMSecsSinceEpoch(e->xcrossing.time));
     }
     if (e->type == ClientMessage) {
         if (e->xclient.message_type == atoms->xdnd_position) {
-            for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-                WindowBasedEdge *edge = *it;
-                if (edge->isReserved() && edge->window() == e->xclient.window) {
-                    updateXTime();
-                    edge->check(QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff), QDateTime::fromMSecsSinceEpoch(xTime()), true);
-                    return true;
-                }
-            }
+            return handleDndNotify(e->xclient.window,
+                                   QPoint(e->xclient.data.l[2] >> 16, e->xclient.data.l[2] & 0xffff));
+        }
+    }
+    return false;
+}
+
+bool ScreenEdges::isEntered(xcb_generic_event_t *e)
+{
+    if (e->response_type == XCB_ENTER_NOTIFY) {
+        xcb_enter_notify_event_t *event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
+        return handleEnterNotifiy(event->event,
+                                  QPoint(event->root_x, event->root_y),
+                                  QDateTime::fromMSecsSinceEpoch(event->time));
+    }
+    if (e->response_type == XCB_CLIENT_MESSAGE) {
+        xcb_client_message_event_t *event = reinterpret_cast<xcb_client_message_event_t*>(e);
+        return handleDndNotify(event->window,
+                              QPoint(event->data.data32[2] >> 16, event->data.data32[2] & 0xffff));
+    }
+    return false;
+}
+
+bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp)
+{
+    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        WindowBasedEdge *edge = *it;
+        if (!edge->isReserved()) {
+            continue;
+        }
+        if (edge->window() == window) {
+            edge->check(point, timestamp);
+            return true;
+        }
+        if (edge->approachWindow() == window) {
+            edge->startApproaching();
+            // TODO: if it's a corner, it should also trigger for other windows
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
+{
+    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        WindowBasedEdge *edge = *it;
+        if (edge->isReserved() && edge->window() == window) {
+            updateXTime();
+            edge->check(point, QDateTime::fromMSecsSinceEpoch(xTime()), true);
+            return true;
         }
     }
     return false;

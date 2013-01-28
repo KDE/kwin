@@ -255,6 +255,7 @@ public:
     * @param e the X event which is passed to this method.
     */
     bool isEntered(XEvent * e);
+    bool isEntered(xcb_generic_event_t *e);
 
     /**
      * Returns a QVector of all existing screen edge windows
@@ -333,6 +334,8 @@ private:
     WindowBasedEdge *createEdge(ElectricBorder border, int x, int y, int width, int height);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
+    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
+    bool handleDndNotify(xcb_window_t window, const QPoint &point);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
     QSize m_cursorPushBackDistance;
