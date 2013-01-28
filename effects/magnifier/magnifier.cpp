@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <kwinxrenderutils.h>
+#include <xcb/render.h>
 #endif
 
 namespace KWin
@@ -49,7 +50,9 @@ MagnifierEffect::MagnifierEffect()
     , polling(false)
     , m_texture(0)
     , m_fbo(0)
-    , m_pixmap(0)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    , m_pixmap(XCB_PIXMAP_NONE)
+#endif
 {
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a;
@@ -68,11 +71,24 @@ MagnifierEffect::~MagnifierEffect()
 {
     delete m_fbo;
     delete m_texture;
-    delete m_pixmap;
+    destroyPixmap();
     // Save the zoom value.
     KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
     conf.writeEntry("InitialZoom", target_zoom);
     conf.sync();
+}
+
+void MagnifierEffect::destroyPixmap()
+{
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if (effects->compositingType() != XRenderCompositing) {
+        return;
+    }
+    m_picture.reset();
+    if (m_pixmap != XCB_PIXMAP_NONE) {
+        xcb_free_pixmap(connection(), m_pixmap);
+    }
+#endif
 }
 
 bool MagnifierEffect::supported()
@@ -106,10 +122,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
                 // zoom ended - delete FBO and texture
                 delete m_fbo;
                 delete m_texture;
-                delete m_pixmap;
                 m_fbo = NULL;
                 m_texture = NULL;
-                m_pixmap = NULL;
+                destroyPixmap();
             }
         }
     }
@@ -174,39 +189,46 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         }
         if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            if (!m_pixmap || m_pixmap->size() != srcArea.size()) {
-                delete m_pixmap;
-                m_pixmap = new QPixmap(srcArea.size());
+            if (m_pixmap == XCB_PIXMAP_NONE || m_pixmapSize != srcArea.size()) {
+                destroyPixmap();
+                m_pixmap = xcb_generate_id(connection());
+                m_pixmapSize = srcArea.size();
+                xcb_create_pixmap(connection(), 32, m_pixmap, rootWindow(), m_pixmapSize.width(), m_pixmapSize.height());
+                m_picture.reset(new XRenderPicture(m_pixmap, 32));
             }
-            static XTransform identity = {{
-                    { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
-                    { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
-                    { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) }
-                }
+#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+            static xcb_render_transform_t identity = {
+                DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
+                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
+                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
             };
-            static XTransform xform = {{
-                    { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
-                    { XDoubleToFixed(0), XDoubleToFixed(1),  XDoubleToFixed(0) },
-                    { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) }
-                }
+            static xcb_render_transform_t xform = {
+                DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
+                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
+                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
             };
-            XRenderComposite( display(), PictOpSrc, effects->xrenderBufferPicture(), 0, m_pixmap->x11PictureHandle(),
-                                srcArea.x(), srcArea.y(), 0, 0, 0, 0, srcArea.width(), srcArea.height() );
-            XFlush(display());
-            xform.matrix[0][0] = XDoubleToFixed(1.0/zoom);
-            xform.matrix[1][1] = XDoubleToFixed(1.0/zoom);
-            XRenderSetPictureTransform(display(), m_pixmap->x11PictureHandle(), &xform);
-            XRenderSetPictureFilter(display(), m_pixmap->x11PictureHandle(), const_cast<char*>("good"), NULL, 0);
-            XRenderComposite( display(), PictOpSrc, m_pixmap->x11PictureHandle(), 0, effects->xrenderBufferPicture(),
-                                0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
-            XRenderSetPictureFilter(display(), m_pixmap->x11PictureHandle(), const_cast<char*>("fast"), NULL, 0);
-            XRenderSetPictureTransform(display(), m_pixmap->x11PictureHandle(), &identity);
-            const XRectangle rects[4] = { { area.x()+FRAME_WIDTH, area.y(), area.width()-FRAME_WIDTH, FRAME_WIDTH},
-                                          { area.right()-FRAME_WIDTH, area.y()+FRAME_WIDTH, FRAME_WIDTH, area.height()-FRAME_WIDTH},
-                                          { area.x(), area.bottom()-FRAME_WIDTH, area.width()-FRAME_WIDTH, FRAME_WIDTH},
-                                          { area.x(), area.y(), FRAME_WIDTH, area.height()-FRAME_WIDTH} };
-            XRenderColor c = preMultiply(QColor(0,0,0,255));
-            XRenderFillRectangles(display(), PictOpSrc, effects->xrenderBufferPicture(), &c, rects, 4);
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), 0, *m_picture,
+                                srcArea.x(), srcArea.y(), 0, 0, 0, 0, srcArea.width(), srcArea.height());
+            xcb_flush(connection());
+            xform.matrix11 = DOUBLE_TO_FIXED(1.0/zoom);
+            xform.matrix22 = DOUBLE_TO_FIXED(1.0/zoom);
+#undef DOUBLE_TO_FIXED
+            xcb_render_set_picture_transform(connection(), *m_picture, xform);
+            xcb_render_set_picture_filter(connection(), *m_picture, 4, const_cast<char*>("good"), 0, NULL);
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, *m_picture, 0, effects->xrenderBufferPicture(),
+                                 0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
+            xcb_render_set_picture_filter(connection(), *m_picture, 4, const_cast<char*>("fast"), 0, NULL);
+            xcb_render_set_picture_transform(connection(), *m_picture, identity);
+            const xcb_rectangle_t rects[4] = {
+                { int16_t(area.x()+FRAME_WIDTH), int16_t(area.y()), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
+                { int16_t(area.right()-FRAME_WIDTH), int16_t(area.y()+FRAME_WIDTH), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)},
+                { int16_t(area.x()), int16_t(area.bottom()-FRAME_WIDTH), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
+                { int16_t(area.x()), int16_t(area.y()), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)}
+            };
+            // TODO: remove XRenderColor
+            const XRenderColor xc = preMultiply(QColor(0,0,0,255));
+            const xcb_render_color_t c = {xc.red, xc.green, xc.blue, xc.alpha};
+            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, 4, rects);
 #endif
         }
     }
@@ -254,10 +276,9 @@ void MagnifierEffect::zoomOut()
         if (zoom == target_zoom) {
             delete m_fbo;
             delete m_texture;
-            delete m_pixmap;
             m_fbo = NULL;
             m_texture = NULL;
-            m_pixmap = NULL;
+            destroyPixmap();
         }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));

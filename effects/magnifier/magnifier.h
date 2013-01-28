@@ -29,6 +29,7 @@ namespace KWin
 
 class GLRenderTarget;
 class GLTexture;
+class XRenderPicture;
 
 class MagnifierEffect
     : public Effect
@@ -60,6 +61,7 @@ private slots:
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void destroyPixmap();
 private:
     QRect magnifierArea(QPoint pos = cursorPos()) const;
     double zoom;
@@ -68,7 +70,11 @@ private:
     QSize magnifier_size;
     GLTexture *m_texture;
     GLRenderTarget *m_fbo;
-    QPixmap *m_pixmap;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    xcb_pixmap_t m_pixmap;
+    QSize m_pixmapSize;
+    QScopedPointer<XRenderPicture> m_picture;
+#endif
 };
 
 } // namespace
