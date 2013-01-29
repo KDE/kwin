@@ -25,8 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <X11/Xlib.h>
-#include <X11/extensions/Xrender.h>
+#include <xcb/render.h>
 #endif
 
 #include <math.h>
@@ -100,16 +99,19 @@ void ShowPaintEffect::paintGL()
 void ShowPaintEffect::paintXrender()
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    XRenderColor col;
+    xcb_render_color_t col;
     float alpha = 0.2;
     const QColor& color = colors[ color_index ];
     col.alpha = int(alpha * 0xffff);
     col.red = int(alpha * 0xffff * color.red() / 255);
     col.green = int(alpha * 0xffff * color.green() / 255);
     col.blue = int(alpha * 0xffff * color.blue() / 255);
-    foreach (const QRect & r, painted.rects())
-    XRenderFillRectangle(display(), PictOpOver, effects->xrenderBufferPicture(),
-                         &col, r.x(), r.y(), r.width(), r.height());
+    QVector<xcb_rectangle_t> rects;
+    foreach (const QRect & r, painted.rects()) {
+        xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
+        rects << rect;
+    }
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
 #endif
 }
 
