@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "snaphelper.h"
 
-#include "kwinglutils.h"
+#include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "kwinxrenderutils.h"
+#include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
 
@@ -41,20 +41,10 @@ SnapHelperEffect::SnapHelperEffect()
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*, const QRect&)), this, SLOT(slotWindowResized(KWin::EffectWindow*, const QRect&)));
-
-    /*if ( effects->compositingType() == XRenderCompositing )
-        {
-        XGCValues gcattr;
-        // TODO: Foreground color
-        gcattr.line_width = 4;
-        m_gc = XCreateGC( display(), rootWindow(), GCLineWidth, &gcattr );
-        }*/
 }
 
 SnapHelperEffect::~SnapHelperEffect()
 {
-    //if ( effects->compositingType() == XRenderCompositing )
-    //    XFreeGC( display(), m_gc );
 }
 
 void SnapHelperEffect::reconfigure(ReconfigureFlags)
