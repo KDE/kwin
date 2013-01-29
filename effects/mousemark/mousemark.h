@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 
+struct xcb_render_color_t;
+
 namespace KWin
 {
 
@@ -58,7 +60,7 @@ private:
     typedef QVector< QPoint > Mark;
     static Mark createArrow(QPoint arrow_start, QPoint arrow_end);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    void addRect(const QPoint &p1, const QPoint &p2, XRectangle *r, XRenderColor *c);
+    void addRect(const QPoint &p1, const QPoint &p2, xcb_rectangle_t *r, xcb_render_color_t *c);
 #endif
     QVector< Mark > marks;
     Mark drawing;
