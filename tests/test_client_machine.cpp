@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../client_machine.h"
 #include "../utils.h"
+#include "../xcbutils.h"
 // Qt
 #include <QApplication>
 #include <QtTest/QtTest>
@@ -62,15 +63,12 @@ class TestClientMachine : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    void init();
-    void cleanup();
     void hostName_data();
     void hostName();
     void emptyHostName();
 
 private:
     void setClientMachineProperty(xcb_window_t window, const QByteArray &hostname);
-    xcb_window_t m_testWindow;
     QByteArray m_hostName;
     QByteArray m_fqdn;
 };
@@ -111,18 +109,6 @@ void TestClientMachine::cleanupTestCase()
 {
 }
 
-void TestClientMachine::init()
-{
-    m_testWindow = XCB_WINDOW_NONE;
-}
-
-void TestClientMachine::cleanup()
-{
-    if (m_testWindow != XCB_WINDOW_NONE) {
-        xcb_destroy_window(connection(), m_testWindow);
-    }
-}
-
 void TestClientMachine::hostName_data()
 {
     QTest::addColumn<QByteArray>("hostName");
@@ -147,14 +133,16 @@ void TestClientMachine::hostName_data()
 
 void TestClientMachine::hostName()
 {
-    m_testWindow = createWindow();
+    const QRect geometry(0, 0, 10, 10);
+    const uint32_t values[] = { true };
+    Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QFETCH(QByteArray, hostName);
     QFETCH(bool, local);
-    setClientMachineProperty(m_testWindow, hostName);
+    setClientMachineProperty(window, hostName);
 
     ClientMachine clientMachine;
     QSignalSpy spy(&clientMachine, SIGNAL(localhostChanged()));
-    clientMachine.resolve(m_testWindow, XCB_WINDOW_NONE);
+    clientMachine.resolve(window, XCB_WINDOW_NONE);
     QTEST(clientMachine.hostName(), "expectedHost");
 
     int i=0;
@@ -169,10 +157,12 @@ void TestClientMachine::hostName()
 
 void TestClientMachine::emptyHostName()
 {
-    m_testWindow = createWindow();
+    const QRect geometry(0, 0, 10, 10);
+    const uint32_t values[] = { true };
+    Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     ClientMachine clientMachine;
     QSignalSpy spy(&clientMachine, SIGNAL(localhostChanged()));
-    clientMachine.resolve(m_testWindow, XCB_WINDOW_NONE);
+    clientMachine.resolve(window, XCB_WINDOW_NONE);
     QCOMPARE(clientMachine.hostName(), ClientMachine::localhost());
     QVERIFY(clientMachine.isLocal());
     // should be local

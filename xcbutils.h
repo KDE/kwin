@@ -245,6 +245,213 @@ private:
     static Extensions *s_self;
 };
 
+/**
+ * This class is an RAII wrapper for an xcb_window_t. An xcb_window_t hold by an instance of this class
+ * will be freed when the instance gets destroyed.
+ *
+ * Furthermore the class provides wrappers around some xcb methods operating on an xcb_window_t.
+ **/
+class Window
+{
+public:
+    /**
+     * Takes over responsibility of @p window. If @p window is not provided an invalid Window is
+     * created. Use @link create to set an xcb_window_t later on.
+     * @param window The window to manage.
+     **/
+    Window(xcb_window_t window = XCB_WINDOW_NONE);
+    /**
+     * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
+     * depth, class and visual being copied from parent and border being @c 0.
+     * @param geometry The geometry for the window to be created
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     **/
+    Window(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    /**
+     * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
+     * depth and visual being copied from parent and border being @c 0.
+     * @param geometry The geometry for the window to be created
+     * @param class The window class
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     **/
+    Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    ~Window();
+
+    /**
+     * Creates a new window for which the responsibility is taken over. If a window had been managed
+     * before it is freed.
+     *
+     * Depth, class and visual are being copied from parent and border is @c 0.
+     * @param geometry The geometry for the window to be created
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     **/
+    void create(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    /**
+     * Creates a new window for which the responsibility is taken over. If a window had been managed
+     * before it is freed.
+     *
+     * Depth and visual are being copied from parent and border is @c 0.
+     * @param geometry The geometry for the window to be created
+     * @param class The window class
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     **/
+    void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    /**
+     * @returns @c true if a window is managed, @c false otherwise.
+     **/
+    bool isValid() const;
+    /**
+     * Configures the window with a new geometry.
+     * @param geometry The new window geometry to be used
+     **/
+    void setGeometry(const QRect &geometry);
+    void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
+    void map();
+    void unmap();
+    /**
+     * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
+     **/
+    void clear();
+    void setBackgroundPixmap(xcb_pixmap_t pixmap);
+    operator xcb_window_t() const;
+private:
+    Window(const Window &other);
+    xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    void destroy();
+    xcb_window_t m_window;
+};
+
+inline
+Window::Window(xcb_window_t window)
+    : m_window(window)
+{
+}
+
+inline
+Window::Window(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+    : m_window(doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent))
+{
+}
+
+inline
+Window::Window(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+    : m_window(doCreate(geometry, windowClass, mask, values, parent))
+{
+}
+
+inline
+Window::~Window()
+{
+    destroy();
+}
+
+inline
+void Window::destroy()
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_destroy_window(connection(), m_window);
+    m_window = XCB_WINDOW_NONE;
+}
+
+inline
+bool Window::isValid() const
+{
+    return m_window != XCB_WINDOW_NONE;
+}
+
+inline
+Window::operator xcb_window_t() const
+{
+    return m_window;
+}
+
+inline
+void Window::create(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+{
+    destroy();
+    m_window = doCreate(geometry, windowClass, mask, values, parent);
+}
+
+inline
+void Window::create(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+{
+    create(geometry, XCB_COPY_FROM_PARENT, mask, values, parent);
+}
+
+inline
+xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+{
+    xcb_window_t w = xcb_generate_id(connection());
+    xcb_create_window(connection(), XCB_COPY_FROM_PARENT, w, parent,
+                      geometry.x(), geometry.y(), geometry.width(), geometry.height(),
+                      0, windowClass, XCB_COPY_FROM_PARENT, mask, values);
+    return w;
+}
+
+inline
+void Window::setGeometry(const QRect &geometry)
+{
+    setGeometry(geometry.x(), geometry.y(), geometry.width(), geometry.height());
+}
+
+inline
+void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+{
+    if (!isValid()) {
+        return;
+    }
+    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    const uint32_t values[] = { x, y, width, height };
+    xcb_configure_window(connection(), m_window, mask, values);
+}
+
+inline
+void Window::map()
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_map_window(connection(), m_window);
+}
+
+inline
+void Window::unmap()
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_unmap_window(connection(), m_window);
+}
+
+inline
+void Window::clear()
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_clear_area(connection(), false, m_window, 0, 0, 0, 0);
+}
+
+inline
+void Window::setBackgroundPixmap(xcb_pixmap_t pixmap)
+{
+    if (!isValid()) {
+        return;
+    }
+    const uint32_t values[] = {pixmap};
+    xcb_change_window_attributes(connection(), m_window, XCB_CW_BACK_PIXMAP, values);
+}
+
 } // namespace X11
 
 } // namespace KWin
