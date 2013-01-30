@@ -41,6 +41,7 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(screenLockingChanged()));
 }
 
 TaskbarThumbnailEffect::~TaskbarThumbnailEffect()
@@ -147,9 +148,16 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
     }
 }
 
+void TaskbarThumbnailEffect::screenLockingChanged()
+{
+    foreach (EffectWindow *window, thumbnails.uniqueKeys()) {
+        window->addRepaintFull();
+    }
+}
+
 bool TaskbarThumbnailEffect::isActive() const
 {
-    return !thumbnails.isEmpty();
+    return !thumbnails.isEmpty() && !effects->isScreenLocked();
 }
 
 } // namespace

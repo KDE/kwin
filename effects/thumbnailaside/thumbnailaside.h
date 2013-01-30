@@ -68,11 +68,11 @@ private slots:
     void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     void slotWindowDamaged(KWin::EffectWindow* w, const QRect& damage);
     virtual bool isActive() const;
+    void repaintAll();
 private:
     void addThumbnail(EffectWindow* w);
     void removeThumbnail(EffectWindow* w);
     void arrange();
-    void repaintAll();
     struct Data {
         EffectWindow* window; // the same like the key in the hash (makes code simpler)
         int index;

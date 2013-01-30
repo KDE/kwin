@@ -876,6 +876,18 @@ public:
     virtual void reloadEffect(Effect *effect) = 0;
 
     /**
+     * Whether the screen is currently considered as locked.
+     * Note for technical reasons this is not always possible to detect. The screen will only
+     * be considered as locked if the screen locking process implements the
+     * org.freedesktop.ScreenSaver interface.
+     *
+     * @returns @c true if the screen is currently locked, @c false otherwise
+     * @see screenLockingChanged
+     * @since 4.11
+     **/
+    virtual bool isScreenLocked() const = 0;
+
+    /**
      * Sends message over DCOP to reload given effect.
      * @param effectname effect's name without "kwin4_effect_" prefix.
      * Can be called from effect's config module to apply config changes.
@@ -1155,6 +1167,12 @@ Q_SIGNALS:
      * @since 4.9
      */
     void activityRemoved(const QString &id);
+    /**
+     * This signal is emitted when the screen got locked or unlocked.
+     * @param locked @c true if the screen is now locked, @c false if it is now unlocked
+     * @since 4.11
+     **/
+    void screenLockingChanged(bool locked);
 
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen

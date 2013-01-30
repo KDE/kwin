@@ -42,6 +42,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(KWin::EffectWindow*,QRect)));
+    connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(repaintAll()));
     reconfigure(ReconfigureAll);
 }
 
@@ -182,7 +183,7 @@ void ThumbnailAsideEffect::repaintAll()
 
 bool ThumbnailAsideEffect::isActive() const
 {
-    return !windows.isEmpty();
+    return !windows.isEmpty() && !effects->isScreenLocked();
 }
 
 } // namespace

@@ -45,6 +45,7 @@ public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowDamaged(KWin::EffectWindow* w, const QRect& damage);
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
+    void screenLockingChanged();
 private:
     struct Data {
         Window window; // thumbnail of this window

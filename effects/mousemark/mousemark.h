@@ -56,6 +56,7 @@ private slots:
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void screenLockingChanged(bool locked);
 private:
     typedef QVector< QPoint > Mark;
     static Mark createArrow(QPoint arrow_start, QPoint arrow_end);

@@ -353,7 +353,7 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::isActive() const
 {
-    return m_scheduledScreenshot != NULL;
+    return m_scheduledScreenshot != NULL && !effects->isScreenLocked();
 }
 
 void ScreenShotEffect::windowClosed( EffectWindow* w )

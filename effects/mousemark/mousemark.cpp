@@ -59,6 +59,7 @@ MouseMarkEffect::MouseMarkEffect()
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(screenLockingChanged(bool)));
     reconfigure(ReconfigureAll);
     arrow_start = NULL_POINT;
     effects->startMousePolling(); // We require it to detect activation as well
@@ -239,9 +240,22 @@ MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint ar
     return ret;
 }
 
+void MouseMarkEffect::screenLockingChanged(bool locked)
+{
+    if (!marks.isEmpty() || !drawing.isEmpty()) {
+        effects->addRepaintFull();
+    }
+    // disable mouse polling while screen is locked.
+    if (locked) {
+        effects->stopMousePolling();
+    } else {
+        effects->startMousePolling();
+    }
+}
+
 bool MouseMarkEffect::isActive() const
 {
-    return !marks.isEmpty() || !drawing.isEmpty();
+    return (!marks.isEmpty() || !drawing.isEmpty()) && !effects->isScreenLocked();
 }
 
 
