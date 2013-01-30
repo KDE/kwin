@@ -44,9 +44,10 @@ public:
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
-    void slotWindowActivated(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowUnminimized(KWin::EffectWindow *w);
+    void slotStackingOrderChanged();
+    void slotTabBoxAdded();
     void slotTabBoxClosed();
 
 private:
@@ -56,20 +57,17 @@ private:
     EffectWindowList oldStackingOrder;
     EffectWindowList coveringWindows;
     EffectWindowList elevatedList;
-    EffectWindow* unminimizedWindow;
+    EffectWindow *m_justMapped, *m_upmostWindow;
     QHash<EffectWindow *, QRect> destinationList;
-    bool disabled;
+    int m_tabboxActive;
     QList <QRegion> clippedRegions;
 
     QRect getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
-    void updateStackingOrder();
-    bool isWindowOnTop(EffectWindow *w);
     bool isWindowUsable(EffectWindow *w);
-    bool stackingOrderChanged();
     bool intersects(EffectWindow *windowUnder, const QRect &windowOverGeometry);
     EffectWindowList usableWindows(const EffectWindowList &allWindows);
-    EffectWindow *newTopWindow();
     QRect getModalGroupGeometry(EffectWindow *w);
+    void windowRaised(EffectWindow *w);
 
 };
 

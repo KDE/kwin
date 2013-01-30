@@ -30,14 +30,14 @@ KWIN_EFFECT(slideback, SlideBackEffect)
 
 SlideBackEffect::SlideBackEffect()
 {
-    updateStackingOrder();
-    disabled = false;
-    unminimizedWindow = NULL;
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowActivated(KWin::EffectWindow*)), this, SLOT(slotWindowActivated(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
+    m_tabboxActive = 0;
+    m_justMapped = m_upmostWindow = NULL;
+    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(slotWindowAdded(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(stackingOrderChanged()), SLOT(slotStackingOrderChanged()));
+    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), SLOT(slotWindowDeleted(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(tabBoxAdded(int)), SLOT(slotTabBoxAdded()));
+    connect(effects, SIGNAL(tabBoxClosed()), SLOT(slotTabBoxClosed()));
 }
 
 static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
@@ -45,29 +45,37 @@ static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
     return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
 }
 
-void SlideBackEffect::slotWindowActivated(EffectWindow* w)
+
+void SlideBackEffect::slotStackingOrderChanged()
 {
-    if (w == NULL || w->keepAbove()) { // plasma popups, yakuake etc...
+    if (effects->activeFullScreenEffect() || m_tabboxActive) {
+        oldStackingOrder = effects->stackingOrder();
+        usableOldStackingOrder = usableWindows(oldStackingOrder);
         return;
     }
 
-    if (disabled || effects->activeFullScreenEffect()) {  // TabBox or PresentWindows/Cube in progress
-        updateStackingOrder();
-        disabled = false;
+    EffectWindowList newStackingOrder = effects->stackingOrder(),
+                     usableNewStackingOrder = usableWindows(newStackingOrder);
+    if (usableNewStackingOrder == usableOldStackingOrder || usableNewStackingOrder.isEmpty()) {
+        oldStackingOrder = newStackingOrder;
+        usableOldStackingOrder = usableNewStackingOrder;
         return;
     }
 
-    if (!isWindowUsable(w) || !stackingOrderChanged() || !isWindowOnTop(w)) {         // Focus changed but stacking still the same
-        updateStackingOrder();
-        return;
-    }
+    m_upmostWindow = usableNewStackingOrder.last();
 
-    if (unminimizedWindow == w) {   // A window was activated by being unminimized. Don't trigger SlideBack.
-        unminimizedWindow = NULL;
-        updateStackingOrder();
-        return;
-    }
+    if (m_upmostWindow == m_justMapped ) // a window was added, got on top, stacking changed. Nothing impressive
+        m_justMapped = 0;
+    else if (m_upmostWindow != usableOldStackingOrder.last())
+        windowRaised(m_upmostWindow);
 
+    oldStackingOrder = newStackingOrder;
+    usableOldStackingOrder = usableNewStackingOrder;
+
+}
+
+void SlideBackEffect::windowRaised(EffectWindow *w)
+{
     // Determine all windows on top of the activated one
     bool currentFound = false;
     foreach (EffectWindow * tmp, oldStackingOrder) {
@@ -112,7 +120,6 @@ void SlideBackEffect::slotWindowActivated(EffectWindow* w)
             effects->setElevatedWindow(tmp, false);
         }
     }
-    updateStackingOrder();
 }
 
 QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry)
@@ -139,12 +146,6 @@ QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, con
         slideRect.moveTop(slideRect.y() + vertSlide);
     }
     return slideRect;
-}
-
-void SlideBackEffect::updateStackingOrder()
-{
-    usableOldStackingOrder = usableWindows(effects->stackingOrder());
-    oldStackingOrder = effects->stackingOrder();
 }
 
 void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, int time)
@@ -175,21 +176,6 @@ void SlideBackEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
 
 void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    if (stackingOrderChanged() && (w == newTopWindow()) && !disabled) {
-        /* This can happen because of two reasons:
-           - a window has received the focus earlier without being raised and is raised now. -> call windowActivated() now
-           - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
-        foreach (EffectWindow * tmp, oldStackingOrder) {
-            if (oldStackingOrder.lastIndexOf(tmp) > oldStackingOrder.lastIndexOf(w) && isWindowUsable(tmp) && windowsShareDesktop(tmp, w)) {
-                kDebug(1212) << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
-                clippedRegions << region.subtracted(tmp->geometry());
-                PaintClipper::push(clippedRegions.last());
-//                region = region.subtracted( tmp->geometry() );
-            }
-        }
-        // Finally call windowActivated in case a already active window is raised.
-        slotWindowActivated(w);
-    }
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
     }
@@ -207,7 +193,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
     if (motionManager.isManaging(w)) {
         if (destinationList.contains(w)) {
             if (!motionManager.isWindowMoving(w)) { // has window reched its destination?
-                // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
+                // If we are still intersecting with the upmostWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
@@ -216,9 +202,9 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                         if (motionManager.isManaging(tmp)) {
                             elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
                         }
-                        if (effects->activeWindow() && !tmp->isDock() && !tmp->keepAbove() && effects->activeWindow()->geometry().intersects(elevatedGeometry)) {
+                        if (m_upmostWindow && !tmp->isDock() && !tmp->keepAbove() && m_upmostWindow->geometry().intersects(elevatedGeometry)) {
                             QRect newDestination;
-                            newDestination = getSlideDestination(getModalGroupGeometry(effects->activeWindow()), elevatedGeometry);
+                            newDestination = getSlideDestination(getModalGroupGeometry(m_upmostWindow), elevatedGeometry);
                             if (!motionManager.isManaging(tmp)) {
                                 motionManager.manage(tmp);
                             }
@@ -256,7 +242,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
         if (coveringWindows.contains(w)) {
             // It could happen that there is no aciveWindow() here if the user clicks the close-button on an inactive window.
             // Just skip... the window will be removed in windowDeleted() later
-            if (effects->activeWindow() && !intersects(effects->activeWindow(), motionManager.transformedGeometry(w).toAlignedRect())) {
+            if (m_upmostWindow && !intersects(m_upmostWindow, motionManager.transformedGeometry(w).toAlignedRect())) {
                 coveringWindows.removeAll(w);
                 if (coveringWindows.isEmpty()) {
                     // Restore correct stacking order
@@ -273,6 +259,10 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
 
 void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
 {
+    if (w == m_upmostWindow)
+        m_upmostWindow = 0;
+    if (w == m_justMapped)
+        m_justMapped = 0;
     usableOldStackingOrder.removeAll(w);
     oldStackingOrder.removeAll(w);
     coveringWindows.removeAll(w);
@@ -284,34 +274,23 @@ void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
 
 void SlideBackEffect::slotWindowAdded(EffectWindow *w)
 {
-    Q_UNUSED(w);
-    updateStackingOrder();
+    m_justMapped = w;
 }
 
 void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
 {
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
-    // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not
-    // followed by a windowActivated().
-    if (isWindowOnTop(w)) {
-        unminimizedWindow = w;
-    } else {
-        unminimizedWindow = NULL;
-    }
+    m_justMapped = w;
+}
+
+void SlideBackEffect::slotTabBoxAdded()
+{
+    ++m_tabboxActive;
 }
 
 void SlideBackEffect::slotTabBoxClosed()
 {
-    disabled = true;
-}
-
-bool SlideBackEffect::isWindowOnTop(EffectWindow* w)
-{
-    EffectWindowList openWindows = usableWindows(effects->stackingOrder());
-    if (!openWindows.isEmpty() && (openWindows.last() == w)) {
-        return true;
-    }
-    return false;
+    m_tabboxActive = qMax(m_tabboxActive-1, 0);
 }
 
 bool SlideBackEffect::isWindowUsable(EffectWindow* w)
@@ -335,17 +314,6 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWind
         }
     }
     return retList;
-}
-
-bool SlideBackEffect::stackingOrderChanged()
-{
-    return !(usableOldStackingOrder == usableWindows(effects->stackingOrder()));
-}
-
-EffectWindow* SlideBackEffect::newTopWindow()
-{
-    EffectWindowList stacking = usableWindows(effects->stackingOrder());
-    return stacking.isEmpty() ? NULL : stacking.last();
 }
 
 QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
