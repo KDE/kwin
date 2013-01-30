@@ -58,6 +58,7 @@ private:
     EffectWindow *myResizeWindow;
     EffectFrame *myMeasure[3];
     QRect myOriginalGeometry, myCurrentGeometry;
+    QRect myExtraDirtyArea;
     bool iAmActive, iAmActivated, iHandleMoves, iHandleResizes;
     QString myCoordString[2], myResizeString;
 };

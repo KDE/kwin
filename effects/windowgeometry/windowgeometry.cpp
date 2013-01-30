@@ -116,7 +116,10 @@ void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
     if (iAmActive && w == myResizeWindow) {
         iAmActive = false;
         myResizeWindow = 0L;
-        effects->addRepaint(myCurrentGeometry.adjusted(-20, -20, 20, 20));
+        w->addRepaintFull();
+        if (myExtraDirtyArea.isValid())
+            w->addLayerRepaint(myExtraDirtyArea);
+        myExtraDirtyArea = QRect();
     }
 }
 
@@ -139,6 +142,11 @@ static inline QString number(int n)
 void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry)
 {
     if (iAmActivated && iAmActive && w == myResizeWindow) {
+        if (myExtraDirtyArea.isValid())
+            w->addLayerRepaint(myExtraDirtyArea);
+
+        myExtraDirtyArea = QRect();
+
         myCurrentGeometry = geometry;
         const QRect &r = geometry;
         const QRect &r2 = myOriginalGeometry;
@@ -152,7 +160,7 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
             myMeasure[0]->setText( i18nc(myCoordString_1, r.x(), r.y(), number(dx), number(dy) ) );
         else
             myMeasure[0]->setText( i18nc(myCoordString_0, r.x(), r.y() ) );
-        myMeasure[0]->setPosition(geometry.topLeft());
+        myMeasure[0]->setPosition(w->expandedGeometry().topLeft() + QPoint(6,6)); // "6" is magic number because the unstyled effectframe has 5px padding
 
         // center ----------------------
         if (w->isUserResize()) {
@@ -181,9 +189,17 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
             myMeasure[2]->setText( i18nc(myCoordString_1, r.right(), r.bottom(), number(dx), number(dy) ) );
         else
             myMeasure[2]->setText( i18nc(myCoordString_0, r.right(), r.bottom() ) );
-        myMeasure[2]->setPosition(geometry.bottomRight());
+        myMeasure[2]->setPosition(w->expandedGeometry().bottomRight() - QPoint(6,6));  // "6" is magic number because the unstyled effectframe has 5px padding
 
-        effects->addRepaint(geometry.adjusted(-20, -20, 20, 20));
+        myExtraDirtyArea |= myMeasure[0]->geometry();
+        myExtraDirtyArea |= myMeasure[1]->geometry();
+        myExtraDirtyArea |= myMeasure[2]->geometry();
+        myExtraDirtyArea.adjust(-6,-6,6,6);
+        if (w->expandedGeometry().contains(myExtraDirtyArea))
+            myExtraDirtyArea = QRect();
+
+        if (myExtraDirtyArea.isValid())
+            w->addLayerRepaint(myExtraDirtyArea);
     }
 }
 
