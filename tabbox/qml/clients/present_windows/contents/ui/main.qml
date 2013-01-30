@@ -30,7 +30,7 @@ Item {
     property int optimalHeight: 0.9*screenHeight
     property int imagePathPrefix: (new Date()).getTime()
     property int standardMargin: 2
-    property string maskImagePath: "dialogs/background"
+    property string maskImagePath: background.maskImagePath
     property double maskWidth: background.centerWidth
     property double maskHeight: background.centerHeight
     property int maskTopMargin: background.centerTopMargin

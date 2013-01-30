@@ -32,7 +32,7 @@ Item {
     property int optimalHeight: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + hoverItem.margins.top + hoverItem.margins.bottom + background.topMargin + background.bottomMargin + 40
     property bool canStretchX: false
     property bool canStretchY: false
-    property string maskImagePath: "dialogs/background"
+    property string maskImagePath: background.maskImagePath
     property double maskWidth: background.centerWidth
     property double maskHeight: background.centerHeight
     property int maskTopMargin: background.centerTopMargin

@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QGraphicsLinearLayout>
 #include <Plasma/FrameSvg>
 #include <Plasma/PushButton>
+#include <Plasma/Theme>
 #include <Plasma/WindowEffects>
 #include <netwm_def.h>
 
@@ -1950,7 +1951,11 @@ CloseWindowView::CloseWindowView(QWidget* parent)
     scene->addItem(form);
 
     m_frame = new Plasma::FrameSvg(this);
-    m_frame->setImagePath("dialogs/background");
+    if (Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background")) {
+        m_frame->setImagePath("translucent/dialogs/background");
+    } else {
+        m_frame->setImagePath("dialogs/background");
+    }
     m_frame->setCacheAllRenderedFrames(true);
     m_frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
     qreal left, top, right, bottom;
@@ -1959,7 +1964,6 @@ CloseWindowView::CloseWindowView(QWidget* parent)
     qreal height = form->size().height() + top + bottom;
     m_frame->resizeFrame(QSizeF(width, height));
     Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame->mask());
-    Plasma::WindowEffects::overrideShadow(winId(), true);
     form->setPos(left, top);
     scene->setSceneRect(QRectF(QPointF(0, 0), QSizeF(width, height)));
     setScene(scene);

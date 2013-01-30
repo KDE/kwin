@@ -323,7 +323,7 @@ public:
     };
 
     enum Feature {
-        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion
+        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur
     };
 
     /**
