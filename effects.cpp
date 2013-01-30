@@ -1496,6 +1496,10 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
     switch (kwopt) {
     case CloseButtonCorner:
         return Workspace::self()->decorationCloseButtonCorner();
+    case SwitchDesktopOnScreenEdge:
+        return ScreenEdges::self()->isDesktopSwitching();
+    case SwitchDesktopOnScreenEdgeMovingWindows:
+        return ScreenEdges::self()->isDesktopSwitchingMovingClients();
     }
     return QVariant(); // an invalid one
 }

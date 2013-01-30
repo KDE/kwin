@@ -519,6 +519,8 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
 {
     if (!useWindowMoving)
         return;
+    if (!effects->kwinOption(SwitchDesktopOnScreenEdgeMovingWindows).toBool())
+        return;
     if (w->isUserResize())
         return;
     const QPoint cursor = effects->cursorPos();
@@ -555,6 +557,8 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
 void CubeSlideEffect::slotWindowFinishUserMovedResized(EffectWindow* w)
 {
     if (!useWindowMoving)
+        return;
+    if (!effects->kwinOption(SwitchDesktopOnScreenEdgeMovingWindows).toBool())
         return;
     if (w->isUserResize())
         return;

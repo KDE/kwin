@@ -124,7 +124,9 @@ enum TabBoxMode {
 };
 
 enum KWinOption {
-    CloseButtonCorner
+    CloseButtonCorner,
+    SwitchDesktopOnScreenEdge,
+    SwitchDesktopOnScreenEdgeMovingWindows
 };
 
 inline
