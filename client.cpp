@@ -214,6 +214,7 @@ Client::Client(Workspace* ws)
     connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
 
     connect(clientMachine(), SIGNAL(localhostChanged()), SLOT(updateCaption()));
+    connect(options, SIGNAL(condensedTitleChanged()), SLOT(updateCaption()));
 
     // SELI TODO: Initialize xsizehints??
 }
