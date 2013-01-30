@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>630</width>
-    <height>580</height>
+    <height>588</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
@@ -1887,6 +1887,13 @@ like your complete screen area.</string>
        <string>Appearance &amp;&amp; &amp;Fixes</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="22" column="1" rowspan="2">
+        <widget class="QCheckBox" name="enable_blockcompositing">
+         <property name="text">
+          <string>Block compositing</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="1">
         <widget class="QCheckBox" name="enable_noborder">
          <property name="text">
@@ -1931,7 +1938,7 @@ like your complete screen area.</string>
          </item>
         </widget>
        </item>
-       <item row="1" column="1" rowspan="2" colspan="7">
+       <item row="1" column="1" rowspan="2" colspan="6">
         <widget class="Line" name="line_9">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -1944,6 +1951,19 @@ like your complete screen area.</string>
           <string>A&amp;ctive opacity</string>
          </property>
         </widget>
+       </item>
+       <item row="9" column="0" rowspan="3">
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="2" column="2" rowspan="2" colspan="3">
         <widget class="KComboBox" name="rule_opacityactive">
@@ -1967,7 +1987,7 @@ like your complete screen area.</string>
          </item>
         </widget>
        </item>
-       <item row="3" column="5" colspan="3">
+       <item row="3" column="5" colspan="2">
         <widget class="QSpinBox" name="opacityactive">
          <property name="enabled">
           <bool>false</bool>
@@ -2012,7 +2032,7 @@ like your complete screen area.</string>
          </item>
         </widget>
        </item>
-       <item row="4" column="5" colspan="3">
+       <item row="4" column="5" colspan="2">
         <widget class="QSpinBox" name="opacityinactive">
          <property name="enabled">
           <bool>false</bool>
@@ -2028,7 +2048,7 @@ like your complete screen area.</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="3">
+       <item row="8" column="3">
         <spacer name="verticalSpacer_9">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -2044,20 +2064,7 @@ like your complete screen area.</string>
          </property>
         </spacer>
        </item>
-       <item row="12" column="0" rowspan="3">
-        <spacer name="horizontalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="13" column="1" rowspan="2">
+       <item row="10" column="1" rowspan="2">
         <widget class="QCheckBox" name="enable_acceptfocus">
          <property name="toolTip">
           <string>Windows may prevent to get the focus (activate) when being clicked.
@@ -2069,7 +2076,7 @@ from getting focused on a mouse click.</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="2" rowspan="2" colspan="3">
+       <item row="10" column="2" rowspan="2" colspan="3">
         <widget class="KComboBox" name="rule_acceptfocus">
          <property name="enabled">
           <bool>false</bool>
@@ -2091,14 +2098,14 @@ from getting focused on a mouse click.</string>
          </item>
         </widget>
        </item>
-       <item row="13" column="5" rowspan="2" colspan="3">
+       <item row="10" column="5" rowspan="2" colspan="2">
         <widget class="YesNoBox" name="acceptfocus" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="enable_disableglobalshortcuts">
          <property name="toolTip">
           <string>When used, a window will receive
@@ -2118,7 +2125,7 @@ while it's active!</string>
          </property>
         </widget>
        </item>
-       <item row="15" column="2" colspan="3">
+       <item row="12" column="2" colspan="3">
         <widget class="KComboBox" name="rule_disableglobalshortcuts">
          <property name="enabled">
           <bool>false</bool>
@@ -2140,35 +2147,35 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="16" column="1" rowspan="3" colspan="7">
+       <item row="13" column="1" rowspan="3" colspan="6">
         <widget class="Line" name="line_6">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="19" column="5" rowspan="2" colspan="3">
+       <item row="16" column="5" rowspan="2" colspan="2">
         <widget class="YesNoBox" name="closeable" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="19" column="1" rowspan="2">
+       <item row="16" column="1" rowspan="2">
         <widget class="QCheckBox" name="enable_closeable">
          <property name="text">
           <string>&amp;Closeable</string>
          </property>
         </widget>
        </item>
-       <item row="21" column="1">
+       <item row="18" column="1">
         <widget class="QCheckBox" name="enable_type">
          <property name="text">
           <string>Window &amp;type</string>
          </property>
         </widget>
        </item>
-       <item row="21" column="2" colspan="3">
+       <item row="18" column="2" colspan="3">
         <widget class="KComboBox" name="rule_type">
          <property name="enabled">
           <bool>false</bool>
@@ -2190,7 +2197,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="21" column="5" colspan="3">
+       <item row="18" column="5" colspan="2">
         <widget class="KComboBox" name="type">
          <property name="enabled">
           <bool>false</bool>
@@ -2242,68 +2249,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="22" column="1" rowspan="3" colspan="7">
-        <widget class="Line" name="line_7">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="25" column="1" rowspan="2">
-        <widget class="QCheckBox" name="enable_blockcompositing">
-         <property name="text">
-          <string>Block compositing</string>
-         </property>
-        </widget>
-       </item>
-       <item row="25" column="5" rowspan="2" colspan="3">
-        <widget class="YesNoBox" name="blockcompositing" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="27" column="2" colspan="2">
-        <spacer name="verticalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="15" column="5" colspan="3">
-        <widget class="YesNoBox" name="disableglobalshortcuts" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="8" rowspan="3">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="10" column="0" colspan="9">
-        <widget class="Line" name="line_15">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="3">
+       <item row="6" column="3">
         <spacer name="verticalSpacer_4">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -2319,14 +2265,68 @@ while it's active!</string>
          </property>
         </spacer>
        </item>
-       <item row="0" column="5" colspan="3">
+       <item row="19" column="1" rowspan="3" colspan="6">
+        <widget class="Line" name="line_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="5" rowspan="2" colspan="2">
+        <widget class="YesNoBox" name="blockcompositing" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="2" colspan="2">
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="12" column="5" colspan="2">
+        <widget class="YesNoBox" name="disableglobalshortcuts" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="7" rowspan="3">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="7" column="0" colspan="8">
+        <widget class="Line" name="line_15">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5" colspan="2">
         <widget class="YesNoBox" name="noborder" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="19" column="2" rowspan="2" colspan="3">
+       <item row="16" column="2" rowspan="2" colspan="3">
         <widget class="KComboBox" name="rule_closeable">
          <property name="enabled">
           <bool>false</bool>
@@ -2348,7 +2348,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="25" column="2" rowspan="2" colspan="3">
+       <item row="22" column="2" rowspan="2" colspan="3">
         <widget class="KComboBox" name="rule_blockcompositing">
          <property name="enabled">
           <bool>false</bool>
@@ -2370,7 +2370,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="12" column="2" colspan="3">
+       <item row="9" column="2" colspan="3">
         <widget class="KComboBox" name="rule_fsplevel">
          <property name="enabled">
           <bool>false</bool>
@@ -2392,7 +2392,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="12" column="5" colspan="3">
+       <item row="9" column="5" colspan="2">
         <widget class="KComboBox" name="fsplevel">
          <property name="enabled">
           <bool>false</bool>
@@ -2424,7 +2424,7 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="9" column="1">
         <widget class="QCheckBox" name="enable_fsplevel">
          <property name="toolTip">
           <string>KWin tries to prevent windows from taking the focus
@@ -2435,59 +2435,6 @@ but this may sometimes fail or superact.
          </property>
          <property name="text">
           <string>&amp;Focus stealing prevention</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1" rowspan="2" colspan="7">
-        <widget class="Line" name="line_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_moveresizemode">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="8" column="5" colspan="3">
-        <widget class="KComboBox" name="moveresizemode">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Opaque</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Transparent</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="enable_moveresizemode">
-         <property name="text">
-          <string>&amp;Moving/resizing</string>
          </property>
         </widget>
        </item>
@@ -2610,9 +2557,6 @@ but this may sometimes fail or superact.
   <tabstop>enable_opacityinactive</tabstop>
   <tabstop>rule_opacityinactive</tabstop>
   <tabstop>opacityinactive</tabstop>
-  <tabstop>enable_moveresizemode</tabstop>
-  <tabstop>rule_moveresizemode</tabstop>
-  <tabstop>moveresizemode</tabstop>
   <tabstop>enable_fsplevel</tabstop>
   <tabstop>rule_fsplevel</tabstop>
   <tabstop>fsplevel</tabstop>
