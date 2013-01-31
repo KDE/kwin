@@ -269,4 +269,100 @@
             <max>6</max>
         </entry>
     </group>
+    <group name="TabBox">
+        <entry name="ShowDelay" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="DelayTime" type="Int">
+            <default>90</default>
+        </entry>
+        <entry name="DesktopMode" type="UInt">
+            <label>Defines whether windows from the current desktop or from all desktops are included. Default:OnlyCurrentDesktopClients</label>
+            <default>1</default>
+        </entry>
+        <entry name="ActivitiesMode" type="UInt">
+            <label>Defines whether windows from the current activity or from all activities are included.Default:OnlyCurrentActivityClients</label>
+            <default>1</default>
+        </entry>
+        <entry name="ApplicationsMode" type="UInt">
+            <label>Defines which windows from the current application or from all applications are included.Default:AllWindowsAllApplications</label>
+            <default>0</default>
+        </entry>
+        <entry name="MinimizedMode" type="UInt">
+            <label>Defines which windows are included based on whether they are minimized or not.Default:IgnoreMinimizedStatus</label>
+            <default>0</default>
+        </entry>
+        <entry name="ShowDesktopMode" type="UInt">
+            <label>Defines whether a TabBoxClient representing the desktop is included.Default:DoNotShowDesktopClient</label>
+            <default>0</default>
+        </entry>
+        <entry name="MultiScreenMode" type="UInt">
+            <label>Default:IgnoreMultiScreen</label>
+            <default>0</default>
+        </entry>
+        <entry name="SwitchingMode" type="UInt">
+            <label>Defines the sorting of the TabBoxClients in the TabBoxClientModel.Default:FocusChainSwitching</label>
+            <default>0</default>
+        </entry>
+        <entry name="ShowOutline" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ShowTabBox" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="HighlightWindows" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="LayoutName" type="String">
+            <default>thumbnails</default>
+        </entry>
+    </group>
+    <group name="TabBoxAlternative">
+        <entry name="ShowDelay" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="DelayTime" type="Int">
+            <default>90</default>
+        </entry>
+        <entry name="DesktopMode" type="UInt">
+            <label>Defines whether windows from the current desktop or from all desktops are included. Default:OnlyCurrentDesktopClients</label>
+            <default>1</default>
+        </entry>
+        <entry name="ActivitiesMode" type="UInt">
+            <label>Defines whether windows from the current activity or from all activities are included.Default:OnlyCurrentActivityClients</label>
+            <default>1</default>
+        </entry>
+        <entry name="ApplicationsMode" type="UInt">
+            <label>Defines which windows from the current application or from all applications are included.Default:AllWindowsAllApplications</label>
+            <default>0</default>
+        </entry>
+        <entry name="MinimizedMode" type="UInt">
+            <label>Defines which windows are included based on whether they are minimized or not.Default:IgnoreMinimizedStatus</label>
+            <default>0</default>
+        </entry>
+        <entry name="ShowDesktopMode" type="UInt">
+            <label>Defines whether a TabBoxClient representing the desktop is included.Default:DoNotShowDesktopClient</label>
+            <default>0</default>
+        </entry>
+        <entry name="MultiScreenMode" type="UInt">
+            <label>Default:IgnoreMultiScreen</label>
+            <default>0</default>
+        </entry>
+        <entry name="SwitchingMode" type="UInt">
+            <label>Defines the sorting of the TabBoxClients in the TabBoxClientModel.Default:FocusChainSwitching</label>
+            <default>0</default>
+        </entry>
+        <entry name="ShowOutline" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ShowTabBox" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="HighlightWindows" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="LayoutName" type="String">
+            <default>thumbnails</default>
+        </entry>
+    </group>
 </kcfg>
