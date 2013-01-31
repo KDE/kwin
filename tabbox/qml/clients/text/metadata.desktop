@@ -2,6 +2,7 @@
 Name=Text Icons
 Name[bs]=Tekst ikone
 Name[ca]=Icones de text
+Name[ca@valencia]=Icones de text
 Name[cs]=Textové ikony
 Name[da]=Tekstikoner
 Name[de]=Text-Symbole
@@ -43,6 +44,7 @@ Name[zh_TW]=文字圖示
 Comment=A window switcher layout only showing window captions
 Comment[bs]=Izgled prozora Switcher samo pokazuje prozora naslove
 Comment[ca]=Una disposició del commutador de finestres que només mostra els títols de finestra
+Comment[ca@valencia]=Una disposició del commutador de finestres que només mostra els títols de finestra
 Comment[da]=Et vinduesskifter-layout som kun viser vinduestitler
 Comment[de]=Ein Fensterwechsler-Layout, das nur die Titel der Fenster anzeigt
 Comment[el]=Μια διάταξη εναλλαγής παραθύρων που εμφανίζει μόνο τίτλους παραθύρων
