@@ -60,6 +60,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_reserved(0)
     , m_approaching(false)
     , m_lastApproachingFactor(0.0)
+    , m_blocked(false)
 {
 }
 
@@ -102,6 +103,9 @@ void Edge::unreserve(QObject *object)
 
 bool Edge::triggersFor(const QPoint &cursorPos) const
 {
+    if (isBlocked()) {
+        return false;
+    }
     if (!m_geometry.contains(cursorPos)) {
         return false;
     }
@@ -316,6 +320,26 @@ void Edge::setGeometry(const QRect &geometry)
     doGeometryUpdate();
 }
 
+void Edge::checkBlocking()
+{
+    if (isCorner()) {
+        return;
+    }
+    bool newValue = false;
+    if (Client *client = Workspace::self()->activeClient()) {
+        newValue = client->isFullScreen() && client->geometry().contains(m_geometry.center());
+    }
+    if (newValue == m_blocked) {
+        return;
+    }
+    m_blocked = newValue;
+    doUpdateBlocking();
+}
+
+void Edge::doUpdateBlocking()
+{
+}
+
 void Edge::doGeometryUpdate()
 {
 }
@@ -422,6 +446,7 @@ void WindowBasedEdge::activate()
 {
     createWindow();
     createApproachWindow();
+    doUpdateBlocking();
 }
 
 void WindowBasedEdge::deactivate()
@@ -495,6 +520,20 @@ void WindowBasedEdge::doStopApproaching()
     disconnect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), this, SLOT(updateApproaching(QPoint)));
     edges()->stopMousePolling();
     if (m_approachWindow != XCB_WINDOW_NONE) {
+        xcb_map_window(connection(), m_approachWindow);
+    }
+}
+
+void WindowBasedEdge::doUpdateBlocking()
+{
+    if (!isReserved()) {
+        return;
+    }
+    if (isBlocked()) {
+        xcb_unmap_window(connection(), m_window);
+        xcb_unmap_window(connection(), m_approachWindow);
+    } else {
+        xcb_map_window(connection(), m_window);
         xcb_map_window(connection(), m_approachWindow);
     }
 }
@@ -872,6 +911,9 @@ WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, in
         }
     }
     connect(edge, SIGNAL(approaching(ElectricBorder,qreal,QRect)), SIGNAL(approaching(ElectricBorder,qreal,QRect)));
+    if (edge->isScreenEdge()) {
+        connect(this, SIGNAL(checkBlocking()), edge, SLOT(checkBlocking()));
+    }
     return edge;
 }
 

@@ -73,17 +73,20 @@ public Q_SLOTS:
     void setAction(ElectricBorderAction action);
     void setGeometry(const QRect &geometry);
     void updateApproaching(const QPoint &point);
+    void checkBlocking();
 Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
 protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
     const QRect &geometry() const;
+    bool isBlocked() const;
     virtual void doGeometryUpdate();
     virtual void activate();
     virtual void deactivate();
     virtual void doStartApproaching();
     virtual void doStopApproaching();
+    virtual void doUpdateBlocking();
 private:
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
@@ -103,6 +106,7 @@ private:
     QHash<QObject *, QByteArray> m_callBacks;
     bool m_approaching;
     qreal m_lastApproachingFactor;
+    bool m_blocked;
 };
 
 class WindowBasedEdge : public Edge
@@ -125,6 +129,7 @@ protected:
     virtual void deactivate();
     virtual void doStartApproaching();
     virtual void doStopApproaching();
+    virtual void doUpdateBlocking();
 
 private:
     void destroyWindow();
@@ -318,6 +323,7 @@ Q_SIGNALS:
      **/
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void mousePollingTimerEvent(QPoint cursorPos);
+    void checkBlocking();
 
 private Q_SLOTS:
     void performMousePoll();
@@ -441,6 +447,11 @@ inline ElectricBorder Edge::border() const
 inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
 {
     return m_callBacks;
+}
+
+inline bool Edge::isBlocked() const
+{
+    return m_blocked;
 }
 
 /**********************************************************

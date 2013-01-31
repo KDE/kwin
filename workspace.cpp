@@ -267,6 +267,7 @@ void Workspace::init()
     screenEdges->init();
     connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
     connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
+    connect(this, SIGNAL(clientActivated(KWin::Client*)), screenEdges, SIGNAL(checkBlocking()));
 #endif
 
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
@@ -567,6 +568,9 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
+#ifdef KWIN_BUILD_SCREENEDGES
+    connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
+#endif
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c, Allowed);
         return NULL;
