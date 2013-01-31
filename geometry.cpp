@@ -2109,6 +2109,12 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             return;
     }
 
+    QRect clientArea;
+    if (isElectricBorderMaximizing())
+        clientArea = workspace()->clientArea(MaximizeArea, cursorPos(), desktop());
+    else
+        clientArea = workspace()->clientArea(MaximizeArea, this);
+
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
@@ -2116,6 +2122,24 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             max_mode = MaximizeMode(max_mode ^ MaximizeVertical);
         if (horizontal)
             max_mode = MaximizeMode(max_mode ^ MaximizeHorizontal);
+    }
+
+    // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
+    // out of screen bounds and take that as a "full maximization with aspect check" then
+    if ((xSizeHint.flags & PAspect) && // fixed aspect
+        (max_mode == MaximizeVertical || max_mode == MaximizeHorizontal) && // ondimensional maximization
+        rules()->checkStrictGeometry(true)) { // obey aspect
+        if (max_mode == MaximizeVertical || (old_mode & MaximizeVertical)) {
+            const double fx = xSizeHint.min_aspect.x; // use doubles, because the values can be MAX_INT
+            const double fy = xSizeHint.max_aspect.y; // use doubles, because the values can be MAX_INT
+            if (fx*clientArea.height()/fy > clientArea.width()) // too big
+                max_mode = old_mode & MaximizeHorizontal ? MaximizeRestore : MaximizeFull;
+        } else { // max_mode == MaximizeHorizontal
+            const double fx = xSizeHint.max_aspect.x;
+            const double fy = xSizeHint.min_aspect.y;
+            if (fy*clientArea.width()/fx > clientArea.height()) // too big
+                max_mode = old_mode & MaximizeVertical ? MaximizeRestore : MaximizeFull;
+        }
     }
 
     max_mode = rules()->checkMaximize(max_mode);
@@ -2132,12 +2156,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             || (old_mode == MaximizeHorizontal && max_mode == MaximizeVertical)) {
         changeMaximize(false, false, false);   // restore
     }
-
-    QRect clientArea;
-    if (isElectricBorderMaximizing())
-        clientArea = workspace()->clientArea(MaximizeArea, cursorPos(), desktop());
-    else
-        clientArea = workspace()->clientArea(MaximizeArea, this);
 
     // save sizes for restoring, if maximalizing
     QSize sz;
@@ -2256,6 +2274,9 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             if (geom_restore.height() > 0)
                 restore.moveTop(geom_restore.y());
             geom_restore = restore; // relevant for mouse pos calculation, bug #298646
+        }
+        if (xSizeHint.flags & PAspect) {
+            restore.setSize(adjustedSize(restore.size(), SizemodeAny));
         }
         setGeometry(restore, geom_mode);
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
