@@ -1390,6 +1390,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 void Client::getWmNormalHints()
 {
     long msize;
+    const bool hadFixedAspect = xSizeHint.flags & PAspect;
     if (XGetWMNormalHints(display(), window(), &xSizeHint, &msize) == 0)
         xSizeHint.flags = 0;
     // set defined values for the fields, even if they're not in flags
@@ -1423,6 +1424,8 @@ void Client::getWmNormalHints()
         // no dividing by zero
         xSizeHint.min_aspect.y = qMax(xSizeHint.min_aspect.y, 1);
         xSizeHint.max_aspect.y = qMax(xSizeHint.max_aspect.y, 1);
+        if (!hadFixedAspect)
+            maximize(max_mode); // align to eventual new contraints
     } else {
         xSizeHint.min_aspect.x = 1;
         xSizeHint.min_aspect.y = INT_MAX;
