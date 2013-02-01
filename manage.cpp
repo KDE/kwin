@@ -386,20 +386,41 @@ bool Client::manage(Window w, bool isMapped)
         if (isMaximizable() && (width() >= area.width() || height() >= area.height())) {
             // Window is too large for the screen, maximize in the
             // directions necessary
-            if (width() >= area.width() && height() >= area.height()) {
-                dontKeepInArea = true;
-                maximize(Client::MaximizeFull);
-                geom_restore = QRect(); // Use placement when unmaximizing
-            } else if (width() >= area.width()) {
-                maximize(Client::MaximizeHorizontal);
-                geom_restore = QRect(); // Use placement when unmaximizing
-                geom_restore.setY(y());   // But only for horizontal direction
-                geom_restore.setHeight(height());
-            } else if (height() >= area.height()) {
-                maximize(Client::MaximizeVertical);
-                geom_restore = QRect(); // Use placement when unmaximizing
-                geom_restore.setX(x());   // But only for vertical direction
-                geom_restore.setWidth(width());
+            const QSize ss = workspace()->clientArea(ScreenArea, area.center(), desktop()).size();
+            const QSize fs = workspace()->clientArea(FullArea, geom.center(), desktop()).size();
+            const QSize cs = clientSize();
+            int pseudo_max = Client::MaximizeRestore;
+            if (width() >= area.width())
+                pseudo_max |=  Client::MaximizeHorizontal;
+            if (height() >= area.height())
+                pseudo_max |=  Client::MaximizeVertical;
+
+            // heuristics:
+            // if decorated client is smaller than the entire screen, the user might want to move it around (multiscreen)
+            // in this case, if the decorated client is bigger than the screen (+1), we don't take this as an
+            // attempt for maximization, but just constrain the size (the window simply wants to be bigger)
+            // NOTICE
+            // i intended a second check on cs < area.size() ("the managed client ("minus border") is smaller
+            // than the workspace") but gtk / gimp seems to store it's size including the decoration,
+            // thus a former maximized window wil become non-maximized
+            if (width() < fs.width() && (cs.width() > ss.width()+1))
+                pseudo_max &= ~Client::MaximizeHorizontal;
+            if (height() < fs.height() && (cs.height() > ss.height()+1))
+                pseudo_max &= ~Client::MaximizeVertical;
+
+            if (pseudo_max != Client::MaximizeRestore) {
+                maximize((MaximizeMode)pseudo_max);
+                // from now on, care about maxmode, since the maximization call will override mode for fix aspects
+                dontKeepInArea = (max_mode == Client::MaximizeFull);
+                geom_restore = QRect(); // Use placement when unmaximizing ...
+                if (!(max_mode & Client::MaximizeVertical)) {
+                    geom_restore.setY(y());   // ...but only for horizontal direction
+                    geom_restore.setHeight(height());
+                }
+                if (!(max_mode & Client::MaximizeHorizontal)) {
+                    geom_restore.setX(x());   // ...but only for vertical direction
+                    geom_restore.setWidth(width());
+                }
             }
         }
     }
