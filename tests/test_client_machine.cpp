@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xcb.h>
 // system
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netdb.h>
 
 namespace KWin {
