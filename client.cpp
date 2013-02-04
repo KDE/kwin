@@ -693,11 +693,12 @@ void Client::updateShape()
             noborder = rules()->checkNoBorder(true);
             updateDecoration(true);
         }
-        if (noBorder())
-            XShapeCombineShape(display(), frameId(), ShapeBounding,
-                           clientPos().x(), clientPos().y(), window(), ShapeBounding, ShapeSet);
+        if (noBorder()) {
+            xcb_shape_combine(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
+                              frameId(), clientPos().x(), clientPos().y(), window());
+        }
     } else if (app_noborder) {
-        XShapeCombineMask(display(), frameId(), ShapeBounding, 0, 0, None, ShapeSet);
+        xcb_shape_mask(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder = rules()->checkNoBorder(noborder);
         updateDecoration(true);
@@ -713,7 +714,7 @@ void Client::updateShape()
     emit geometryShapeChanged(this, geometry());
 }
 
-static Window shape_helper_window = None;
+static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
 
 void Client::updateInputShape()
 {
@@ -730,18 +731,18 @@ void Client::updateInputShape()
         // until the real shape of the client is added and that can make
         // the window lose focus (which is a problem with mouse focus policies)
         // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
-        if (shape_helper_window == None)
-            shape_helper_window = XCreateSimpleWindow(display(), rootWindow(),
-                                  0, 0, 1, 1, 0, 0, 0);
-        XResizeWindow(display(), shape_helper_window, width(), height());
-        XShapeCombineShape(display(), shape_helper_window, ShapeInput, 0, 0,
-                           frameId(), ShapeBounding, ShapeSet);
-        XShapeCombineShape(display(), shape_helper_window, ShapeInput,
-                           clientPos().x(), clientPos().y(), window(), ShapeBounding, ShapeSubtract);
-        XShapeCombineShape(display(), shape_helper_window, ShapeInput,
-                           clientPos().x(), clientPos().y(), window(), ShapeInput, ShapeUnion);
-        XShapeCombineShape(display(), frameId(), ShapeInput, 0, 0,
-                           shape_helper_window, ShapeInput, ShapeSet);
+        if (!shape_helper_window.isValid())
+            shape_helper_window.create(QRect(0, 0, 1, 1));
+        shape_helper_window.resize(width(), height());
+        xcb_connection_t *c = connection();
+        xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
+                          shape_helper_window, 0, 0, frameId());
+        xcb_shape_combine(c, XCB_SHAPE_SO_SUBTRACT, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
+                          shape_helper_window, clientPos().x(), clientPos().y(), window());
+        xcb_shape_combine(c, XCB_SHAPE_SO_UNION, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
+                          shape_helper_window, clientPos().x(), clientPos().y(), window());
+        xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
+                          frameId(), 0, 0, shape_helper_window);
     }
 }
 
@@ -751,41 +752,41 @@ void Client::setMask(const QRegion& reg, int mode)
     if (_mask == r)
         return;
     _mask = r;
-    Window shape_window = frameId();
+    xcb_connection_t *c = connection();
+    xcb_window_t shape_window = frameId();
     if (shape()) {
         // The same way of applying a shape without strange intermediate states like above
-        if (shape_helper_window == None)
-            shape_helper_window = XCreateSimpleWindow(display(), rootWindow(),
-                                  0, 0, 1, 1, 0, 0, 0);
+        if (!shape_helper_window.isValid())
+            shape_helper_window.create(QRect(0, 0, 1, 1));
         shape_window = shape_helper_window;
     }
-    if (_mask.isEmpty())
-        XShapeCombineMask(display(), shape_window, ShapeBounding, 0, 0, None, ShapeSet);
-    else if (mode == X::Unsorted)
-        XShapeCombineRegion(display(), shape_window, ShapeBounding, 0, 0, _mask.handle(), ShapeSet);
-    else {
-        QVector< QRect > rects = _mask.rects();
-        XRectangle* xrects = new XRectangle[rects.count()];
+    if (_mask.isEmpty()) {
+        xcb_shape_mask(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, shape_window, 0, 0, XCB_PIXMAP_NONE);
+    } else {
+        const QVector< QRect > rects = _mask.rects();
+        QVector< xcb_rectangle_t > xrects(rects.count());
         for (int i = 0; i < rects.count(); ++i) {
-            xrects[i].x = rects[i].x();
-            xrects[i].y = rects[i].y();
-            xrects[i].width = rects[i].width();
-            xrects[i].height = rects[i].height();
+            const QRect &rect = rects.at(i);
+            xcb_rectangle_t xrect;
+            xrect.x = rect.x();
+            xrect.y = rect.y();
+            xrect.width = rect.width();
+            xrect.height = rect.height();
+            xrects[i] = xrect;
         }
-        XShapeCombineRectangles(display(), shape_window, ShapeBounding, 0, 0,
-                                xrects, rects.count(), ShapeSet, mode);
-        delete[] xrects;
+        xcb_shape_rectangles(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, mode, shape_window,
+                             0, 0, xrects.count(), xrects.constData());
     }
     if (shape()) {
-        // The rest of the applyign using a temporary window
-        XRectangle rec = { 0, 0, static_cast<unsigned short>(clientSize().width()),
-                           static_cast<unsigned short>(clientSize().height()) };
-        XShapeCombineRectangles(display(), shape_helper_window, ShapeBounding,
-                                clientPos().x(), clientPos().y(), &rec, 1, ShapeSubtract, Unsorted);
-        XShapeCombineShape(display(), shape_helper_window, ShapeBounding,
-                           clientPos().x(), clientPos().y(), window(), ShapeBounding, ShapeUnion);
-        XShapeCombineShape(display(), frameId(), ShapeBounding, 0, 0,
-                           shape_helper_window, ShapeBounding, ShapeSet);
+        // The rest of the applying using a temporary window
+        xcb_rectangle_t rec = { 0, 0, static_cast<uint16_t>(clientSize().width()),
+                           static_cast<uint16_t>(clientSize().height()) };
+        xcb_shape_rectangles(c, XCB_SHAPE_SO_SUBTRACT, XCB_SHAPE_SK_BOUNDING, XCB_CLIP_ORDERING_UNSORTED,
+                             shape_helper_window, clientPos().x(), clientPos().y(), 1, &rec);
+        xcb_shape_combine(c, XCB_SHAPE_SO_UNION, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
+                          shape_helper_window, clientPos().x(), clientPos().y(), window());
+        xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
+                          frameId(), 0, 0, shape_helper_window);
     }
     emit geometryShapeChanged(this, geometry());
     updateShape();
@@ -1248,8 +1249,10 @@ void Client::updateHiddenPreview()
 {
     if (hiddenPreview()) {
         workspace()->forceRestacking();
-        if (Xcb::Extensions::self()->isShapeInputAvailable())
-            XShapeCombineRectangles(display(), frameId(), ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted);
+        if (Xcb::Extensions::self()->isShapeInputAvailable()) {
+            xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
+                                 XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, NULL);
+        }
     } else {
         workspace()->forceRestacking();
         updateInputShape();

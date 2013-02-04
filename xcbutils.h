@@ -335,6 +335,8 @@ public:
     void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     void move(const QPoint &pos);
     void move(uint32_t x, uint32_t y);
+    void resize(const QSize &size);
+    void resize(uint32_t width, uint32_t height);
     void map();
     void unmap();
     /**
@@ -457,6 +459,23 @@ void Window::move(uint32_t x, uint32_t y)
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     const uint32_t values[] = { x, y };
+    xcb_configure_window(connection(), m_window, mask, values);
+}
+
+inline
+void Window::resize(const QSize &size)
+{
+    resize(size.width(), size.height());
+}
+
+inline
+void Window::resize(uint32_t width, uint32_t height)
+{
+    if (!isValid()) {
+        return;
+    }
+    const uint16_t mask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    const uint32_t values[] = { width, height };
     xcb_configure_window(connection(), m_window, mask, values);
 }
 

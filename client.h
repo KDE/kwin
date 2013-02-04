@@ -438,7 +438,7 @@ public:
     }
     void demandAttention(bool set = true);
 
-    void setMask(const QRegion& r, int mode = X::Unsorted);
+    void setMask(const QRegion& r, int mode = XCB_CLIP_ORDERING_UNSORTED);
     QRegion mask() const;
 
     void updateDecoration(bool check_workspace_pos, bool force = false);
